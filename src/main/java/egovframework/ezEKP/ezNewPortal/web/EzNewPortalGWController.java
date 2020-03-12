@@ -452,6 +452,13 @@ public class EzNewPortalGWController {
 				usePortalAutoRefreshInterval = ezCommonService.getTenantConfig("usePortalAutoRefreshInterval", tenantId);
 			}
 			
+			if ("YES".equals(useEzWorkspace)) {
+				String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", tenantId);
+				String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", tenantId);
+				data.put("workspaceHostUrl", workspaceHostUrl);
+				data.put("workspaceContextRootUrl", workspaceContextRootUrl);
+			}
+			
 			data.put("usedTheme", userThemeSetting.getUsedTheme());
 			data.put("usedFrame", userThemeSetting.getUsedFrame());
 //			data.put("portletOrder", portletOrder);
@@ -1538,6 +1545,8 @@ public class EzNewPortalGWController {
 			String useMail = request.getParameter("useMail");
 			String useApproval = request.getParameter("useApproval");
 			String useSchedule = request.getParameter("useSchedule");
+			//2020-02-24 김정언
+			String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", tenantId);
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
 			JSONObject data = new JSONObject();
@@ -1553,13 +1562,13 @@ public class EzNewPortalGWController {
 //				
 //			}
 			
-			if (useSurvey.equals("YES")) {
+			if ("YES".equals(useSurvey)) {
 				int surveyCnt = ezSurveyService.getSurveyIngCnt(info);
 				data.put("surveyCnt", surveyCnt);
 			}
 
 			// 오늘 일정 개수 불러오기
-			if (useSchedule.equals("YES")) {
+			if ("YES".equals(useSchedule)) {
 				String startDate = nowDate + " 00:00:00";
 				String endDate = nowDate + " 23:59:59";
 				String startTime = commonUtil.getDateStringInUTC(nowDate + " 00:00:00", offset, true);
@@ -1639,19 +1648,19 @@ public class EzNewPortalGWController {
 				}
 
 				pidList += pidListSub;
-				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId);
+				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
 				int scheduleCount = sList.size();
 				data.put("scheduleCount", scheduleCount);
 			}
 
 			// 회람판 개수 불러오기
-			if (useCircular.equals("YES")) {
+			if ("YES".equals(useCircular)) {
 				int circularCount = ezCircularSerivce.getListCount("newCircular", userId, tenantId, companyId);
 				data.put("circularCount", circularCount);
 			}
 
 			// 결재할 문서 개수 불러오기
-			if (useApproval.equals("YES")) {
+			if ("YES".equals(useApproval)) {
 				String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
 				String lang = portletLang;
 				int approvalCount = ezNewPortalService.getApprovalDoingListCount(userId, companyId, tenantId, info.getOffSet(), approvalFlag, lang);
@@ -1659,7 +1668,7 @@ public class EzNewPortalGWController {
 			}
 
 			// 읽지 않은 메일 가져오기
-			if (useMail.equals("YES")) {
+			if ("YES".equals(useMail)) {
 				int unreadMailCount = 0;
 
 				try {
@@ -3654,7 +3663,6 @@ public class EzNewPortalGWController {
 			
 			String offset = info.getOffSet();
 			String offSetMin = commonUtil.getMinuteUTC(offset);
-
 			
 			String startDate = (request.getParameter("STARTDATE") == null || request.getParameter("STARTDATE").equals("")) ? request.getParameter("selectDate") : request.getParameter("STARTDATE");
 			String endDate = (request.getParameter("ENDDATE") == null || request.getParameter("ENDDATE").equals("")) ? request.getParameter("selectDate") : request.getParameter("ENDDATE");
@@ -3688,6 +3696,8 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 			String deptId = info.getDeptId();
+			//2020-02-24 김정언
+			String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", tenantId);
 			
 			List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(userId, lang, tenantId ,companyId);
 			List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(userId, lang, tenantId ,companyId);
@@ -3779,7 +3789,7 @@ public class EzNewPortalGWController {
 				pidList = idList;
 			}		
 			
-			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",tenantId, companyId, userId);		
+			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",tenantId, companyId, userId, deptId, useAnnualScheduleYN);		
 			
 			LOGGER.debug("sList : " + sList.toString());
 			result.put("status", "ok");
@@ -4067,6 +4077,8 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 			String deptId = info.getDeptId();
+			//2020-02-24 김정언
+			String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", tenantId);
 			
 			// 메일, 결재, 일정, 전자설문, 회람판, 근태관리 권한이 있는지 확인
 //			String useQuestion = "NO";
@@ -4262,7 +4274,7 @@ public class EzNewPortalGWController {
 				}
 
 				pidList += pidListSub;
-				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId);
+				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
 				int scheduleCount = sList.size();
 				data.put("scheduleCount", scheduleCount);
 			}

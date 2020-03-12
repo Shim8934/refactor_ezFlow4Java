@@ -1332,6 +1332,13 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("workspace author: " + userInfo.getId() + " " + hasWorkspace.toString());		
 		model.addAttribute("hasWorkspace", hasWorkspace);
 		
+		if (hasWorkspace) {
+			String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", userInfo.getTenantId());
+			String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", userInfo.getTenantId());
+			model.addAttribute("workspaceHostUrl", workspaceHostUrl);
+			model.addAttribute("workspaceContextRootUrl", workspaceContextRootUrl);
+		}
+
 		logger.debug("wpTotalSection ended");
 		
 		return "/ezPortal/portalWpTotalSection";
@@ -1876,7 +1883,11 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("dMaxCount", dMaxCount);
 			model.addAttribute("list", list);
 		} else {
+			String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", userInfo.getTenantId());
+			String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", userInfo.getTenantId());
 			model.addAttribute("userID", userInfo.getId());
+			model.addAttribute("workspaceHostUrl", workspaceHostUrl);
+			model.addAttribute("workspaceContextRootUrl", workspaceContextRootUrl);
 		}
 		model.addAttribute("hasWorkspace", hasWorkspace);
 

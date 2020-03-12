@@ -176,7 +176,7 @@
                     	</c:choose>
                     </li>
                     <li>
-					<c:if test="${useEzWorkspace eq 'YES' }">
+					<c:if test="${useEzWorkspace}">
                     <dl class="writebannerDL" id="ezWorkspace">
                         <dt><img src="/images/ezNewPortal/theme2Img/writebanner06.png" alt="협업"></dt>
                         <dt><spring:message code='ezNewPortal.pjg01' /></dt>
@@ -663,19 +663,37 @@
         data.forEach(function(item, index) {
         	if(index > 4) return;
         	var li = document.createElement('li');
-        	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
-        	li.style.cursor = "pointer";
-        	li.addEventListener('click', function() {
-			    var wWeight = "760";
-			    var wHeight = "670";
-			    var heigth = window.screen.availHeight;
-			    var width = window.screen.availWidth;
-			    var left = (width - wWeight) / 2;
-			    var top = (heigth - wHeight) / 2;
-			
-		        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(item.scheduleId) + "&type=" + item.scheduleType + "&datetype=" + item.dateType + "&repeatcount=" + item.repeatCount + "&date=" + item.startDate.substr(0, 10) + "&pattern=0","",
-			        "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");        		
-        	});
+        	
+        	// 2020-02-25 김정언
+        	if(item.dateType == "4") {
+        		li.textContent = item.title + " : " + item.creatorName;
+            	li.style.cursor = "pointer";
+            	li.addEventListener('click', function() {  			    
+            		if (CrossYN()) {
+    					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + encodeURIComponent(item.scheduleId) + "&typeId=" + item.parentId, "", GetOpenWindowfeature(672, 640));
+    					
+    					try { OpenWin.focus(); } catch (e) { }
+    				} else {
+    					window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + encodeURIComponent(item.scheduleId) + "&typeId=" + item.parentId, "", 
+    					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+    				}   		
+            	});
+        	}
+        	else {        		
+	        	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
+	        	li.style.cursor = "pointer";
+	        	li.addEventListener('click', function() {
+				    var wWeight = "760";
+				    var wHeight = "670";
+				    var heigth = window.screen.availHeight;
+				    var width = window.screen.availWidth;
+				    var left = (width - wWeight) / 2;
+				    var top = (heigth - wHeight) / 2;
+				
+			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(item.scheduleId) + "&type=" + item.scheduleType + "&datetype=" + item.dateType + "&repeatcount=" + item.repeatCount + "&date=" + item.startDate.substr(0, 10) + "&pattern=0","",
+				        "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");        		
+	        	});
+        	}
         	schList.appendChild(li);
         });
 	}
@@ -960,18 +978,19 @@
 	});
 </script>
 <!-- 협업 시작-->
-<c:if test="${useEzWorkspace eq 'YES' }">
-    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js"></script>
-    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/Groupwareapi.js"></script>
+<c:if test="${useEzWorkspace}">
+    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/Groupwareapi.js"></script>
     <script type="text/javascript">
 	    var g_UserID = "${userId}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
-	    var WorkspaceUrl = "http://space.kaoni.com"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+	    var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+	    var workspaceContextRootUrl = "${workspaceContextRootUrl}";
 	    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
 	    var feedListCount = 10;
 	    var g_bRayful = false;
 	    var g_bVisible = true; // 문서탭 선택 시 원문에 포함된 첨부파일 포함 여부 (false: 포함)	    
-	        
-    	ezWorkspaceData();
+	    
+    	ezWorkspaceData(workspaceContextRootUrl);
     </script>		
 </c:if>	
 <!-- 협업 끝 -->	

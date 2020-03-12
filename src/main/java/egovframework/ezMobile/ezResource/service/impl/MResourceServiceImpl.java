@@ -1564,5 +1564,15 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		
 		return mResourceDAO.getResAdminAuth(map);
 	}
+	
+	@Override
+	public String getResUpperBrdID(String ownerId, int tenantId, String companyId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("ownerId", ownerId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		return mResourceDAO.getResUpperBrdID(map);
+	}
 }
 

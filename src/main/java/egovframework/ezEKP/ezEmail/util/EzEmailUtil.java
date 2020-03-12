@@ -5037,7 +5037,28 @@ public class EzEmailUtil {
     	return cryptResult;
     }
     
-    /**
+    // 메일 완료/완료취소 flag
+    public boolean hasMailConfirmFlag(Message message) throws MessagingException {
+		boolean isMailConfirmFlag = false;
+		String[] flags = message.getFlags().getUserFlags();		
+		
+		for (String flag : flags) {
+			if (flag.equals("$MailConfirm")) {
+				isMailConfirmFlag = true;
+				break;
+			}
+		}
+
+		return isMailConfirmFlag;
+	}
+	
+    // 메일 완료/완료취소 flag
+	public void setMailConfirmFlag(Message message, boolean isSet) throws MessagingException {
+		Flags MailConfirmFlag = new Flags("$MailConfirm");
+		message.setFlags(MailConfirmFlag, isSet);
+	}
+
+	/**
      * 발신자 메일 주소와 이름이 같을 경우 (혹은 이름이 없어서 메일주소로 이름을 생성할 때)
      * 이름에 ; : , 가 들어가면 수신거부 안되는 현상 때문에 추가
      */

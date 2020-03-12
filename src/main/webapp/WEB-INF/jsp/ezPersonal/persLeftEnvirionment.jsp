@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript">
+			var configFlag = "true";
 		 	window.onload = function () {
 		 		// 20181018 조진호 - 패키지타입이 standard가 아닐때 일어나는 오류 수정
 		 		if ("${funCode}" == "1" || "${packageType}" != "standard" || "${firstScreen_Mail}" == "YES" || "${portalEnv}" == "3") {
@@ -208,6 +209,16 @@
 	        $( window ).resize(function() {
 	        	leftResize();
         	});
+	        
+	        function showProgress() {
+			    document.getElementById("progressPanel").style.display = "block";
+			    document.getElementById("progressPanel").style.opacity = 0.5;
+			    document.getElementById("progressPanel").style.background = "rgba(0,0,0,0.7)";
+			}
+	        
+	        function hideProgress() {
+	        	document.getElementById("progressPanel").style.display = "none";
+	        }
 		</script>
 	</head>
 	<body  class="newLeft">
@@ -252,7 +263,7 @@
                     </c:if>
                     <c:if test="${firstScreen_Mail != 'YES' && packageType != 'mail'}">
        					<c:if test="${isScheduleUsed == 'Y'}">
-                          	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()"><spring:message code='ezSchedule.t1012' /></span></li>
+                          	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()"><spring:message code='ezPersonal.t999900007' /></span></li>
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="TaskEnv" name="TaskEnv" onClick="Task_Config()"><spring:message code='ezTask.hyh001' /></span></li>
 	                   </c:if>
 	                    <c:if test="${packageType == 'standard'}">
@@ -279,7 +290,8 @@
 		        </ul>
 		        <h2><span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="Open_Func(this)"><spring:message code='ezSystem.x0021' /></span></h2>
 	        </div>
-	    </div>    
+	    </div>
+	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>    
 		<%-- <div id="left">
 			<div class="left_env"><span><spring:message code='ezBoard.t0005' /></span></div>
 			<c:if test="${packageType == 'standard'}">

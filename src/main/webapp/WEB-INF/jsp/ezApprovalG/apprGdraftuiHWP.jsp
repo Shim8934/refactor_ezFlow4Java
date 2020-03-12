@@ -169,6 +169,7 @@
 			//원문정보공개
 			var useOpenGov = "<c:out value='${useOpenGov}' />";
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
+			var newpDocID = "";
 
 	        window.onload = function () {
 	            try {
@@ -1420,6 +1421,10 @@
 // 			        if (ListType == "21" && DraftFlag == "REDRAFT") {
 // 			            RemoveTmpDoc(DocSN);
 // 			        }
+			        
+			        if(Saveflag) {
+		        		newpDocID = createNewDoc();
+		        	}
 			
 			        var rtnVal = SaveTMPFile();
 			        if (rtnVal == "TRUE") {
@@ -1429,7 +1434,7 @@
 			                    var pAlertContent = "<spring:message code='ezApprovalG.t1581'/>";
 			                    OpenAlertUI(pAlertContent);
 			                    Saveflag = true;
-			                    window.close();
+			                    //window.close();
 			                } else {
 			                    Saveflag = true;
 			                }

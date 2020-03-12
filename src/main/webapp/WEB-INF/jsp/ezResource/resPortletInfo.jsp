@@ -171,8 +171,17 @@
 					}
 				});	    		
 	        }
-	    	
-
+			
+			// 18-10-19 김민성 - 작성자 이름 클릭 시 사원정보보기 팝업
+			function OpenUserInfo(userID, deptID) {
+	        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+	            feature = feature + GetOpenPosition(420, 438);
+	            window.open("/ezCommon/showPersonInfo.do?id=" + userID + "&dept=" + deptID, "", feature);
+	        }
+			
+			function btnClose_onclick() {
+		        window.close();
+		    }
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:hidden; margin: 0; padding: 0;">
@@ -180,10 +189,10 @@
         	<div class="popupJQLayer">
 				<div class="title" id="brdNm" style="overflow:hidden; text-overflow:ellipsis; width:100%; white-space:nowrap; margin-bottom:2px;"></div>
 				<div id="close">
-		            <ul>
-		                <li><a rel="modal:close"><span></span></a></li>
-		            </ul>
-		        </div>
+		        <ul>
+		          <li><span onclick="btnClose_onclick()"></span></li>
+		        </ul>
+		      </div>
 	        	<table id="resourceDataTable" style="width:100%;">
 					<tr>
 						<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>

@@ -657,8 +657,7 @@
 				} else if (objThis.id == "ModInfo") {
 					window.open("/ezPortal/environmentMain.do?funCode=1", "main");
 				} else if (objThis.id == "Workspace") {
-					window.open("http://space.kaoni.com/myoffice/ezWorkspace/Account/SSO", "main");
-					//OpenWindow(event, "http://space.kaoni.com/myoffice/ezWorkspace/Account/SSO", "main", "")
+					window.open("${workspaceContextRootUrl}/ezWorkspace/Account/SSO", "main");
 				} else {
 					ifrw.topMenuToggle(objThis.id);
 				}
@@ -1541,11 +1540,11 @@
 	</body>
 	<!-- 협업 연동 script -->
 	<c:if test="${hasWorkspace == true }">
-	    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js?ver=20180828150036"></script>
-	    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/Groupwareapi.js?ver=20180828150036"></script>
+	    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/moment.min.js"></script>
+	    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/Groupwareapi.js"></script>
 	    <script type="text/javascript">
 		    var g_UserID = "${userInfo.id}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
-		    var WorkspaceUrl = "http://space.kaoni.com"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+		    var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
 		    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
 		    var feedListCount = 10;
 		    var g_bRayful = false;

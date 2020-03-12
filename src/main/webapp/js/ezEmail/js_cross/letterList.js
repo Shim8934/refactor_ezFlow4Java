@@ -164,57 +164,42 @@ function addLetterList(jsonArr) {
 	if (listCount !== 0) {
 		for (i = 0; i < listCount; i++) {
 			var langDisplayName = strLang == 1 ? jsonArr[i].displayname : jsonArr[i].displayname2;
+			langDisplayName = langDisplayName.replace(/</gi, "&lt;");
 			letterListHtml += "<li id='lt" + jsonArr[i].letterNo + "' data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + 
-			"' data-letterBoxNo='" + jsonArr[i].letterBoxNo + "'>"; 
+			"' data-letterBoxNo='" + jsonArr[i].letterBoxNo + "'>";
 			
 			if (pageType == 'letter_user') {
-				letterListHtml += "<span style='float:left; width:100%'>" + langDisplayName.replace(/</gi, "&lt;") + "</span>";
+				var boxNameTag = "";
 				if (searchMode) {
-					$(".lmLetterTitle").empty();
-					$(".lmLetterTitle").html("<span id='span1'>" + letterListMsg + "</span><b id='b1'>" + letterPathMsg + "</b>");
-					
-					var boxName = "";
-					$.ajax({
-						type:"POST",
-						url:"/ezEmail/selectLetterBoxName.do",
-						dataType:"json",
-						data : {"letterBoxNo" : jsonArr[i].letterBoxNo},
-						async: false,
-						success:function(data) {
-							boxName = data.displayname;
-						},
-						error:function(data){
-							alert("error");
-						}
-					});
-					
-					letterListHtml += "<b title='" + boxName + "'>" + boxName + "</b>";
-				}
+					try {
+						$.ajax({
+							type:"POST",
+							url:"/ezEmail/selectLetterBoxName.do",
+							dataType:"json",
+							data : {"letterBoxNo" : jsonArr[i].letterBoxNo},
+							async: false,
+							success:function(data) {
+								var boxName = data.displayname;
+								boxNameTag = "<b title='" + boxName + "'>" + boxName + "</b>";
+							}
+						});
+					} catch(e) {}
+				}	
+				
+				letterListHtml += "<span style='width:100%'>" + langDisplayName + "</span>" + boxNameTag;
 			} else {
-				letterListHtml += "<span style='float:left;'>" + langDisplayName.replace(/</gi, "&lt;") + "</span>";
-				letterListHtml += "<div style='float:right;'><button class='lmLetterModifyBtn' onClick='letterEditPopUp(this)'>" + modifyMsg + "</button>";
+				letterListHtml += "<span style='max-width:65%; padding-right:10px;'>" + langDisplayName + "</span>";
+				letterListHtml += "<div><button class='lmLetterModifyBtn' onClick='letterEditPopUp(this)'>" + modifyMsg + "</button>";
 				letterListHtml += "<button class='lmLetterDeleteBtn'>" + deleteMsg + "</button></div>";
 			}
 			
 			letterListHtml += "</li>";
 		}
 	} else {
-		
-		if (searchMode == true && pageType == "letter_user") {
-			$(".lmLetterTitle").empty();
-			$(".lmLetterTitle").html("<span id='span1'>" + letterListMsg + "</span><b id='b1'>" + letterPathMsg + "</b>");
-		}
-		
-    	letterListHtml = "<li class='lmNoData'><span style='width:100%'>" + dataNoMsg + "<span></li>";
+    	letterListHtml = "<li class='lmNoData'><span style='width:100%;'>" + dataNoMsg + "<span></li>";
 	}
 	
 	$(".lmLetterListUl").html(letterListHtml);
-	
-	// 편지지명 span width
-	var lmLetterListUlLiW = $(".lmLetterListUl li").width() - 12; // padding
-	var lmLetterListUlDivW = $(".lmLetterListUl li > div").width();
-	var lmLetterListUlSpanW = lmLetterListUlLiW - lmLetterListUlDivW;
-	$(".lmLetterListUl li > span").width(lmLetterListUlSpanW);
 	
 	// 선택한 편지지 목록 유지
 	if (nowSelect !== undefined && nowSelect !== "") {
@@ -233,17 +218,13 @@ function letterSearchEnter() {
 
 function letterListCss(pageType, searchMode) {
 	if (pageType === 'letter_user' && searchMode === true) {
-		$(".lmLetterListUl li > span").css({
-			"width":"70%",
-			"margin":"0"
-		});
-		
 		$(".lmLetterListUl li > b").css({
-			"width":"30%",
+			"width":"45%",
 			"display":"inline-block",
 			"overflow":"hidden",
 			"text-overflow":"ellipsis",
-			"white-space":"nowrap"
+			"white-space":"nowrap",
+			"line-height":"30px"
 		});
 	}
 }

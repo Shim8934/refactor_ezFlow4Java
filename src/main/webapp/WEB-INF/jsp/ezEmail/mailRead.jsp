@@ -129,25 +129,15 @@
 		        	btnDelete.style.display = "none";
 		        }
 		        
-		        if (useCountryIP == "YES") {
-		        	if (useShowSystemCountry == "YES") {
-		        		if (countryCode != "") {
-		        			if (countryCode == "unknown") {
-		        				countryCode = "qm";
-        					}
-				        	document.getElementById("nationalFlag").src = "/images/countryIcon/" + countryCode + ".png";
+		        if (useCountryIP == "YES" && mailWritePreview != "true") {
+		        	if (useShowSystemCountry == "YES" || (useShowSystemCountry != "YES" && countryCode != systemCountryCode)) {
+			        	
+		        		if (document.getElementById("nationalFlag") != null) {
+			        		countryCode = countryCode == "unknown" ? "qm" : countryCode;
+			        		
+			        		document.getElementById("nationalFlag").src = "/images/countryIcon/" + countryCode + ".png";
 				        	document.getElementById("nationalFlag").style.display = "";
-		        		}
-		        	} else {
-		        		if (countryCode != systemCountryCode) {
-		        			if (countryCode == "unknown") {
-		        				countryCode = "qm";
-        					}
-				        	document.getElementById("nationalFlag").src = "/images/countryIcon/" + countryCode + ".png";
-				        	document.getElementById("nationalFlag").style.display = "";
-		        		} else {
-		        			document.getElementById("nationalFlag").style.display = "none";
-		        		}
+			        	}
 		        	}
 		        } 
 		        

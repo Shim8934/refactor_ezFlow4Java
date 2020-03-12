@@ -1088,6 +1088,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public void insertTblTenantConfig(Map<String, Object> map) {
+		try {
+			if (getTenantConfig(map) == null) {throw new Exception(); }
+		} catch (Exception e) {
+			logger.debug("tbl_tenant_config. add config...");
+			insertUseSession(map);
+		}
+	}
+
 	public void insertThemeAuthInit(Map<String, Object> map) {
 		String companyId = checkThemeAuthInit(map);
 		
@@ -1142,6 +1151,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertSurveyMenuName", map);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void addIsBeforeDoc() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddIsBeforeDoc");
+		} catch (Exception e) {
+			logger.debug("tbl_historydocinfo ISBEFOREDOC column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAddIsBeforeDoc");
+		}
+	}
+
+	public void addBeforeDocUrl() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddBeforeDocUrl");
+		} catch (Exception e) {
+			logger.debug("tbl_historydocinfo BEFOREDOCURL column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAddBeforeDocUrl");
 		}
 	}
 }

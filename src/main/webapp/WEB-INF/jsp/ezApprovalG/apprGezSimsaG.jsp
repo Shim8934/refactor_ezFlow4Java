@@ -550,8 +550,10 @@
 		            }
 		        }
 		    }
-		
+		    
+		    /* 2020-02-26 홍승비 - 발송문서 게시 성공 이후 자동발송 > 발송된 문서에 관인 이미지가 부여되지 않는 오류 수정 */
 		    function SuccessBoard() {
+				SaveFile();
 		        var rtnVal = SetContainer();
 		        if (rtnVal == "TRUE") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t211'/>";

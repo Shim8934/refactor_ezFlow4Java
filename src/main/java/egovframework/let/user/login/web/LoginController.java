@@ -894,7 +894,7 @@ public class LoginController {
         	
 			logger.debug("actionLogout redirectUri=" + redirectUri);
 			
-        	return "redirect:https://login.microsoftonline.com/common/OAuth2/logout?post_logout_redirect_uri=" + redirectUri;         	
+        	return "redirect:https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=" + redirectUri;         	
         }
         
         // 2018.10.22 이석화 추가 - 세션 제거 

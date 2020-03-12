@@ -1544,7 +1544,7 @@ function GetMailAddresses(name) {
             m_addrBook["title"][count + adCount] = SelectSingleNodeValue(contactList[count], "STITLE");
         }
         
-        /*rows = SelectNodes(xmlDOM, "RESULT/DL/ROW");
+        rows = SelectNodes(xmlDOM, "RESULT/DL/ROW");
         adCount += contactList.length;
         
         for (count = 0 ; count < rows.length ; count++) {
@@ -1555,7 +1555,7 @@ function GetMailAddresses(name) {
             m_addrBook["company"][count + adCount] = strLang114;
             m_addrBook["dept"][count + adCount] = "";
             m_addrBook["title"][count + adCount] = "";
-        }*/
+        }
         
         adCount += rows.length;
         rows = SelectNodes(xmlDOM, "RESULT/SHAREDMAILBOX/ROW");
@@ -2518,7 +2518,8 @@ function ConvertEmbedImagToXml(xmlDoc, rootNode) {
 
     var imgColl = tempDiv.getElementsByTagName("IMG");
     for (var i = 0; i < imgColl.length; i++) {
-        if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0 || imgColl.item(i).src.toLowerCase().indexOf("mailsignimage") > 0) {
+        if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0 || imgColl.item(i).src.toLowerCase().indexOf("mailsignimage") > 0
+        	|| imgColl.item(i).src.toLowerCase().indexOf("letterboxupload") > 0 ) {
             var imagePath = imgColl.item(i).src;            
         	var srcValue = imgColl.item(i).getAttribute("src");
 

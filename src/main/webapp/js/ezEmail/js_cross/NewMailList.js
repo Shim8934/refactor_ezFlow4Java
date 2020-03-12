@@ -240,6 +240,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_countryCode = SelectSingleNodeValue(XmlRows[Cnt], "countryCode");
                 var p_mailIP = SelectSingleNodeValue(XmlRows[Cnt], "mailIP");
                 var p_countryName = SelectSingleNodeValue(XmlRows[Cnt], "countryName");
+                var p_mailConfirm = SelectSingleNodeValue(XmlRows[Cnt], "mailConfirm");
                 var recipients = [];
             	var recipientsLen = 1;
                 
@@ -494,7 +495,11 @@ function MakeListInfoHTML(ConentObject) {
             						_TR.lastChild.appendChild(_img);
             					}
             				}
-                    	} 
+                    	}
+                    	
+                    	if (useMailConfirm == "YES" && p_mailConfirm == "true") {
+                            _TR.setAttribute("class", "mail_confirm");
+                    	}
                     	
                     	_TR.lastChild.appendChild(_TDColumSpan);
                     }
@@ -1392,20 +1397,16 @@ function event_listContextMenu(event) {
         EventMouseX = EventMouseX - Div_;
     }
     if (g_foldertype == "draft") {
-    	$("#ContextMenuDiv tbody :nth-child(3)").css("display","none");
+    	$("#ContextMenuDiv tbody #replyMenu").css("display","none");
     }
     
     var target = event.target ? event.target : event.srcElement;
     var targetTag = target.tagName;
 
     if (targetTag == 'SPAN'){ 
-		$("#ContextMenuDiv tbody :nth-child(9)").css("display","");
-		$("#ContextMenuDiv tbody :nth-child(10)").css("display","");
-		$("#ContextMenuDiv tbody :nth-child(11)").css("display","");
+		$("#ContextMenuDiv tbody #searchName, #searchInThisBoxByName, #searchAllBoxByName").css("display","");
 	} else {
-		$("#ContextMenuDiv tbody :nth-child(9)").css("display","none");
-	    $("#ContextMenuDiv tbody :nth-child(10)").css("display","none");
-	    $("#ContextMenuDiv tbody :nth-child(11)").css("display","none"); 	
+		$("#ContextMenuDiv tbody #searchName, #searchInThisBoxByName, #searchAllBoxByName").css("display","none");
 	}
 //    document.getElementById("mailPanel").style.display = "";
     document.getElementById("ContextMenuDiv").style.left = EventMouseX + "px";

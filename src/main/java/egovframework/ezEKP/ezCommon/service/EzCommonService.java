@@ -178,7 +178,13 @@ public interface EzCommonService {
 	public int checkDeptId(String userID, String deptID, String tenantId);
 
 	public void createRsFavoriteTable();
+	
+	public void insertTblTenantConfig(String configName) throws Exception;
 
 	public void addThemeAndPorteltAuthInit() throws Exception;
+	
+	public void addIsBeforeDoc() throws Exception;
+
+	public void addBeforeDocUrl() throws Exception;
 }
 

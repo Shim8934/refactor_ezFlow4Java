@@ -1754,5 +1754,18 @@
 				BRD_COMPANY = #companyId#
 		]]>
 	</select>
+	
+	<select id="MResourceDAO.getResUpperBrdID" parameterClass="Map" resultClass="String">	
+			SELECT
+				DECODE(BRD_GB, '1', #ownerId#, BRD_UPPER) BRD_UPPER
+			FROM 
+				TBL_RS_BRD
+			WHERE 
+				BRD_ID = #ownerId#
+			AND 
+				TENANT_ID = #tenantId#  
+			AND
+				BRD_COMPANY = #companyId#
+	</select>
 </sqlMap>
 

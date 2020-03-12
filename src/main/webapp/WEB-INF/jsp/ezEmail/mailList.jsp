@@ -102,6 +102,7 @@
 		    var systemCountryCode = "${systemCountryCode}";
 		    var useShowSystemCountry = "${useShowSystemCountry}";
 		    var file 		 = new Array();
+		    var useMailConfirm = "${useMailConfirm}";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -1050,6 +1051,9 @@
 	          <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="icon16 icon16_star"></span></li>
 	          <li id="trashBtn"><span class="icon16 icon16_delete" onClick="deleteWork(false)"></span></li>
 	          <li onClick="MailListRefresh()"><span class="icon16 icon16_refresh"></span></li>
+	          <c:if test="${useMailConfirm == 'YES'}">
+	          <li onClick="mailConfirm_flag_btn()"><span class="icon_mail_Confirm"></span><span>/</span></span><span class="icon_mail_Cancle"></span></li>
+			  </c:if>			 
 			 <!--  <li id="right">
 	          	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	           	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
@@ -1163,7 +1167,7 @@
 			                        			<span id="PreH_sub_MailSender"></span>
 			                        		</span>
 			                        	</span>
-			                        	<span class="t_right">
+			                        	<span class="t_right" style="margin-right:3px;">
 			                        		 <c:if test="${folderType == 'sent' or folderType == 'draft'}">
 				                        		<span class="cblack"><spring:message code="ezEmail.t704" /> : </span>
                   							</c:if>
@@ -1221,7 +1225,7 @@
 				                        		<span id="PreW_sub_MailSender"></span>
 				                        	</span>
 			                        	</span>
-			                        	<span class="t_right">
+			                        	<span class="t_right" style="margin-right:3px;">
 			                        		<c:if test="${folderType == 'sent' or folderType == 'draft'}">
 				                        		<span class="cblack"><spring:message code="ezEmail.t704" /> : </span>
                   							</c:if>
@@ -1263,7 +1267,7 @@
 			</div>
 		</div>
 		<div id="ContextMenuDiv" style="position:absolute;top:180px;z-index:6000;display:none;">
-		    <table cellpadding=2 cellspacing=1 border=0 style="width:150px;" class="popuplist">
+		    <table cellpadding=2 cellspacing=1 border=0 class="popuplist">
 		    <tr id="replyAllMenu">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="all_reply_mail_onclick();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_reall.gif" alt=""  align="absmiddle" hspace="5"><spring:message code="ezEmail.t512" /></span></td>
 		    </tr>
@@ -1288,13 +1292,18 @@
 		    <tr>
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="toggle_flag();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/icon-flag.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t550" /></span></td>
 		    </tr>
-		    <tr>
+		    <c:if test="${useMailConfirm == 'YES'}">
+		    <tr id="mailConfirm">
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailConfirm_flag_btn();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/view-document-confirm.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.ksa11" /></span></td>
+		    </tr>
+		    </c:if>
+		    <tr id="searchName">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/i_nsearch.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.kr.lsd03" /></span></td>
 		    </tr>
-		    <tr>
+		    <tr id="searchInThisBoxByName">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="searchInThisBoxByName();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;">&nbsp;&nbsp; - <spring:message code="ezEmail.kr.lsd06" /></span></td>
 		    </tr>
-		    <tr>
+		    <tr id="searchAllBoxByName">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="searchAllBoxByName();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;">&nbsp;&nbsp; - <spring:message code="ezEmail.kr.lsd07" /></span></td>
 		    </tr>
 		    </table>

@@ -3380,6 +3380,14 @@ function getDocInfo() {
         cabinetID = SelectSingleNodeValueNew(result, "DATA/CABINETID");
         TaskCode = SelectSingleNodeValueNew(result, "DATA/TASKCODE");
         tempSecurityDate = SelectSingleNodeValueNew(result, "DATA/SECURITYAPPROVAL");
+
+        if (useOpenGov == "YES") {
+            basis = SelectSingleNodeValueNew(result, "DATA/BASIS");
+            reason = SelectSingleNodeValueNew(result, "DATA/REASON");
+            listOpenFlag = SelectSingleNodeValueNew(result, "DATA/LISTOPENFLAG");
+            fileOpenFlagList = SelectSingleNodeValueNew(result, "DATA/FILEOPENFLAGLIST");
+            limitDate = SelectSingleNodeValueNew(result, "DATA/LIMITDATE");
+        }
     }
 }
 
@@ -4100,8 +4108,15 @@ function SaveTMPFile(AutoSave) {
     mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
     mhtBody = ConvertHTMLtoMHT(mhtBody);
 	
+    var docID = "";
+    if(Saveflag) {
+    	docID = newpDocID;
+    }
+    else {
+    	docID = pDocID
+    }
 	var data = {
-		docID : pDocID,
+		docID : docID,
         formId : pFormID,
 		html  : mhtBody
 	}
@@ -4136,7 +4151,10 @@ function SaveTMPDocInfo(AutoSave) {
         var objNode;
         createNodeInsert(xmlpara, objNode, "PARAMETER");
 
-        createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+        if(Saveflag) 
+        	createNodeAndInsertText(xmlpara, objNode, "DOCID", newpDocID);
+        else
+        	createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
         createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
             createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
@@ -4236,6 +4254,11 @@ function SaveTMPDocInfo(AutoSave) {
         if (isUsed == "reuse") {
             createNodeAndInsertText(xmlpara, objNode, "beforeDocID", beforeDocID);
             createNodeAndInsertText(xmlpara, objNode, "isUsed", isUsed);
+        }
+        
+        if(Saveflag) {
+        	createNodeAndInsertText(xmlpara, objNode, "saveFlag", Saveflag);
+        	createNodeAndInsertText(xmlpara, objNode, "oldDocID", pDocID);
         }
 
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);

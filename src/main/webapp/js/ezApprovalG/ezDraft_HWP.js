@@ -1713,8 +1713,16 @@ function putSignXML(SignXML)
 function SaveTMPFile() {
     var result = "";
 
+    var docID = "";
+    if(Saveflag) {
+    	docID = newpDocID;
+    }
+    else {
+    	docID = pDocID
+    }
+    
 	var data = {
-		docID : pDocID,
+		docID : docID,
 		formId : pFormID,
 		html  : HwpCtrl.GetCloneData("", "HWP")
 	}
@@ -1734,7 +1742,7 @@ function SaveTMPFile() {
     return result;
 }
 
-function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
+function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
     try {
         var objRoot;
         var objNode;
@@ -1744,7 +1752,10 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         var objNode;
         createNodeInsert(xmlpara, objNode, "PARAMETER");
 
-        createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+        if(Saveflag) 
+        	createNodeAndInsertText(xmlpara, objNode, "DOCID", newpDocID);
+        else
+        	createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
         createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
             createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
@@ -1832,6 +1843,11 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME2", arr_userinfo[16]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
+        
+        if(Saveflag) {
+        	createNodeAndInsertText(xmlpara, objNode, "saveFlag", Saveflag);
+        	createNodeAndInsertText(xmlpara, objNode, "oldDocID", pDocID);
+        }
         //수상하지만 일단 지움
 //        if (Saveflag)
 //            xmlhttp.open("POST", "/ezApprovalG/doDraftTmpHWP.do", false);

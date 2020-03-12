@@ -50,6 +50,7 @@
 			var spamSniperUrl = '<c:out value="${spamSniperUrl}"/>';
 			var useSpamSniper = '<c:out value="${useSpamSniper}"/>';
 			var shareCryptResult = "";
+			var configFlag = "false";
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -682,7 +683,7 @@
 	            try {
 	                var url;
 	                
-	                url = "http://gwspam.bizmeka.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
+	                url = "https://gwspam.bizmeka.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
 	                window.open(url, "right");
 	            } catch (e) {	                
 	            }	            

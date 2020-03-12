@@ -763,7 +763,6 @@
 		</isNotEmpty>
 		<![CDATA[
                 ALERTTIME = #v_PALERTTIME#,
-                APPROVEFLAG = IFNULL(#v_PAPPROVEFLAG#,'0'),
                 ALLDAY = IFNULL(#v_PALLDAY#,'0'),             
                 IMPORTANCE = #v_PIMPORTANCE#
 			WHERE
@@ -1751,6 +1750,19 @@
 			AND
 				BRD_COMPANY = #companyId#
 		]]>
+	</select>
+	
+	<select id="MResourceDAO.getResUpperBrdID" parameterClass="Map" resultClass="String">	
+			SELECT
+				if(BRD_GB = '1', #ownerId#, BRD_UPPER) BRD_UPPER
+			FROM 
+				TBL_RS_BRD
+			WHERE 
+				BRD_ID = #ownerId#
+			AND 
+				TENANT_ID = #tenantId#  
+			AND
+				BRD_COMPANY = #companyId#
 	</select>
 </sqlMap>
 
