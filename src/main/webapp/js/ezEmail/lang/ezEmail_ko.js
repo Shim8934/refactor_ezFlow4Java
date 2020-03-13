@@ -315,6 +315,10 @@ var strLangSharedMailbox03 = "암호를 변경하였습니다.";
 var strLangReceiverCount01 = "수신인은 최대 ";
 var strLangReceiverCount02 = "명까지 가능합니다.";
 
+var strLangHDP01 = "회까지";
+var strLangHDP02 = "다운로드 가능";
+var strLangHDP03 = "대용량파일 첨부는 {0}개까지 가능합니다.";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

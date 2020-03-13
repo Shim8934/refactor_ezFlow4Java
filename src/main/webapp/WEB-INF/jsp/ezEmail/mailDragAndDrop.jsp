@@ -677,7 +677,7 @@
 		        var BigSizeAttachLimitCount = window.parent.BigSizeAttachLimitCount;
 		        var curBigAttachCount = document.querySelectorAll("#filelist tr[_big='Y']").length;
 		        if (BigSizeAttachLimitCount > 0 && curBigAttachCount + newBigAttachCount > BigSizeAttachLimitCount) {
-		        	alert("대용량파일 첨부는 " + BigSizeAttachLimitCount + "개까지 가능합니다.");
+		        	alert(strLangHDP03.replace("{0}", BigSizeAttachLimitCount));
 		        	return false;
 		        }
 		        return true;

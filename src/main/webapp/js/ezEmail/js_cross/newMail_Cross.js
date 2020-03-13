@@ -2709,7 +2709,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
 	                strLang247 + "<span style='color:#FF0000 ;'>" + _pBigAttachDownloadDay + strLang248 + "</span>" + strLang249;
         
         if(BigSizeAttachDownloadLimitCount > 0) {
-        	TempText += " / <span style='color:#FF0000 ;'>" + BigSizeAttachDownloadLimitCount + "회까지" + "</span> 다운로드 가능"
+        	TempText += " / <span style='color:#FF0000 ;'>" + BigSizeAttachDownloadLimitCount + strLangHDP01 + "</span> " + strLangHDP02;
         }
         
         TempText += "</div></td></tr></table></div>";

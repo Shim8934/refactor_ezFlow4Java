@@ -1399,7 +1399,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				String exceededFilelimit = ezEmailService.checkBigAttachDownloadCount(fileId, tenantId);
 				if (exceededFilelimit != null) {
 					response.setContentType("text/plain; charset=utf-8");
-					response.getWriter().print("해당 파일은 " + exceededFilelimit + "회 이상 다운로드 되어, 더 이상 내려받을 수 없습니다.");
+					response.getWriter().print(egovMessageSource.getMessageExtend("ezEmail.hdp05", new Object[] {exceededFilelimit}, locale));
 					
 					return;
 				} else {

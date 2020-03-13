@@ -315,6 +315,10 @@ var strLangSharedMailbox03 = "Changed password.";
 var strLangReceiverCount01 = "The maximum number of recipients is ";
 var strLangReceiverCount02 = ".";
 
+var strLangHDP01 = "Up to";
+var strLangHDP02 = "Downloadable";
+var strLangHDP03 = "Up to {0} files can be attached to a large file.";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")
