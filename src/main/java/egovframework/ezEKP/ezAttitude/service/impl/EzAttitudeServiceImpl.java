@@ -3540,7 +3540,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public int approvalGConn(String userId, String deptId, String content, String mobile, String attitudeTypeList, String startDateList, String endDateList, String docId, String offset, String companyId, int tenantId) throws Exception {
+	public int approvalGConn(String userId, String deptId, String content, String mobile, String attitudeTypeList, String startDateList, String endDateList, String startTimeList, String endTimeList, String docId, String offset, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("approvalGConn started");
 		
 		String[] attitudeTypeList2 = attitudeTypeList.split(",");
@@ -3564,9 +3564,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		//근태등록
 		for (int i = 0; i < attitudeTypeList2.length; i++) {
+			String startDate = "";
+			String endDate = "";
 			
-			String startDate = startDateList2[i] + " " + "00:00:00"; 
-			String endDate = endDateList2[i] + " " + "23:59:59";
+			if(attitudeTypeList2[i].equals("A21")){
+				String[] startTimeList2 = startTimeList.split(",");
+				String[] endTimeList2 = endTimeList.split(",");
+				
+				startDate = startDateList2[i] + " " + startTimeList2[i]; 
+				endDate = endDateList2[i] + " " + endTimeList2[i];
+			}else{
+				startDate = startDateList2[i] + " " + "00:00:00"; 
+				endDate = endDateList2[i] + " " + "23:59:59";
+			}
 			
 			map.put("typeId", attitudeTypeList2[i]);
 			map.put("startDate", startDate);

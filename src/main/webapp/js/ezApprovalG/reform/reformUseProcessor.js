@@ -1071,7 +1071,19 @@ reformUseProc.onLoadHandler = function() {
 				});
 				
 				if (stageName == "draft" && (!(isRedraft || isReuse) || $(controlElement).val() === "")) {
-					$(controlElement).timepicker('setTime', new Date());
+					//2020-03-12 김정언 : 근태관리 연동 양식 일때
+					if (document.getElementById('attitude_annual_conn') || parent.document.getElementById('attitude_annual_conn')){
+						var currentTime = new Date().getHours();
+				    	  if(i == 0){
+				    		  $(controlElement).timepicker('setTime', new Date(0,0,0,currentTime,0,0));    		  
+				    	  }else{
+				    		  var plusTime = currentTime + 2;
+				    		  $(controlElement).timepicker('setTime', new Date(0,0,0,plusTime,0,0));
+				    	  }						
+					}else{
+						$(controlElement).timepicker('setTime', new Date());
+					}
+					
 				}
 			}
 		}

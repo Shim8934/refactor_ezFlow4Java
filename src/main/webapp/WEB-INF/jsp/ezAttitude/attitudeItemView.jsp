@@ -119,7 +119,9 @@
 						showTime = startDate.substring(0, 16) + " ~ " + endDate.substring(11, 16);
 						break;
 					case "4":
-						showTime = startDate.substring(0, 10) + " ~ " + endDate.substring(0, 10);
+						//2020-03-13 김정언 : 반반차
+						if(typeId === 'A21') showTime = startDate.substring(0, 16) + " ~ " + endDate.substring(0, 16);
+						else showTime = startDate.substring(0, 10) + " ~ " + endDate.substring(0, 10);
 						break;
 					case "5":
 						showTime = startDate.substring(0, 16) + " ~ " + endDate.substring(0, 16);
