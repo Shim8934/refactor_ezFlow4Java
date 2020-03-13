@@ -8471,6 +8471,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
 		
+		//부서합의문 서명 이미지타입일때 이미지랑 부서아이디 같이 들어가는 버그 수정 20200313 윤상원
+		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId()); 
+		
 		//부서합의문에서 채번하기 위해 수정 2019-02-08 홍대표
 		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
 		String orgCompanyID = request.getParameter("orgCompanyID");
@@ -8524,6 +8527,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("draftDeptID", draftDeptID);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("docNumZeroCnt", docNumZeroCnt);
+		model.addAttribute("signImageType", signImageType);
 		
 		logger.debug("recev ended");
 

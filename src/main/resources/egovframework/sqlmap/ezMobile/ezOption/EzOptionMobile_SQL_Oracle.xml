@@ -125,5 +125,21 @@
    		]]>
   	</insert>
   	
+  	<update id="EzOptionDAO.updateOption" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_USERMOBILEINFO
+			SET 
+				LANG = #lang#	
+				,TIMEZONE = #timeZone#
+				,MAINTYPE = #mainType#
+				,LISTCNT = #listCnt#					
+				,USESECURITY = #useSecurity#	
+			WHERE 
+				USERID = #userId#
+			AND 
+				TENANT_ID = #tenantId#
+		]]>
+  	</update>
+  	
 </sqlMap>
 

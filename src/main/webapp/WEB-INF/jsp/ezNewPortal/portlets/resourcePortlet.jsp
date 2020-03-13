@@ -9,7 +9,7 @@
 <body>
 <article class="resources_portlet box_shadow">
     <div class="layDIV">
-        <dl class="portlet_title">
+        <dl class="portlet_title sortablePortlet">
             <dt class="portletText"><spring:message code="main.t00034"/></dt>
             <dd class="portletPlus" id="resourcePlus"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>
             <dd class="resources_setting" id="resourceSetting"><img src="/images/ezNewPortal/resources_setting.png"></dd>
