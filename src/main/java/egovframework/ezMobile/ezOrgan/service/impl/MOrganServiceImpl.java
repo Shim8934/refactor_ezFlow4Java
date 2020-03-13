@@ -80,10 +80,17 @@ public class MOrganServiceImpl implements MOrganService {
 	@Override
 	public MPersonListVO getPersonInfo(String userID, int tenantID) throws Exception {
 		LOGGER.debug("getPersonInfo started");
+		return getPersonInfo(userID, tenantID, "1");
+	}
+	
+	@Override
+	public MPersonListVO getPersonInfo(String userID, int tenantID, String lang) throws Exception {
+		LOGGER.debug("getPersonInfo started lang=" + lang);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("tenantID", tenantID);
+		map.put("lang", lang);
 
 		LOGGER.debug("getPersonInfo ended");
 		

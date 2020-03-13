@@ -2114,4 +2114,33 @@
 	    	(0, 'MailBigSizeAttachDownloadLimitCount', 0, '대용량첨부 다운로드 횟수 제한, 0일 경우 무제한', current_timestamp(), '대용량첨부 다운로드 횟수 제한', '메일'),
 	    	(0, 'MailBigSizeAttachLimitCount', 0, '대용량첨부 개수 제한, 0일 경우 무제한', current_timestamp(), '대용량첨부 개수 제한', '메일')
 	</statement>
+
+	<select id="EzCommonDAO.checkAddIsBeforeDoc">
+		SELECT 
+			ISBEFOREDOC 
+		FROM 
+			TBL_HISTORYDOCINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAddIsBeforeDoc">
+		ALTER TABLE 
+			TBL_HISTORYDOCINFO
+		ADD COLUMN 
+			ISBEFOREDOC VARCHAR(4) DEFAULT NULL 
+	</statement>
+	
+	<select id="EzCommonDAO.checkAddBeforeDocUrl">
+		SELECT 
+			BEFOREDOCURL 
+		FROM 
+			TBL_HISTORYDOCINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAddBeforeDocUrl">
+		ALTER TABLE 
+			TBL_HISTORYDOCINFO
+		ADD COLUMN 
+			BEFOREDOCURL varchar(1020) DEFAULT NULL 
+	</statement>
+	
 </sqlMap>

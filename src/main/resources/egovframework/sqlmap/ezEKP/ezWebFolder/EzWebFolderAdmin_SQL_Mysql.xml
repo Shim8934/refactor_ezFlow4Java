@@ -84,8 +84,41 @@
 						)
 		]]>
 		</isEqual>
+		<![CDATA[
+				)
+			) AS TOTAL_USED,
+			(
+				SELECT
+					COUNT(FILE.FILE_NAME)
+				FROM
+					TBL_WEBFOLDER_FILE FILE
+						JOIN
+							TBL_WEBFOLDER_FOLDER FOLDER2
+						ON
+							FILE.TENANT_ID = FOLDER2.TENANT_ID
+						AND
+							FILE.FOLDER_ID = FOLDER2.FOLDER_ID
+				WHERE
+					FILE.TENANT_ID = FOLDER.TENANT_ID
+				AND 
+				(
+					(
+						FOLDER2.FOLDER_PATH LIKE CONCAT(FOLDER.FOLDER_PATH, '%')
+					AND
+						FILE.USE_STATUS = 'Y' 
 					)
-				) AS TOTAL_USED
+		]]>
+		<isEqual property="type" compareValue="U">
+		<![CDATA[
+						OR (
+							FILE.DELETER_ID = MAIN.CN
+						AND
+							FILE.USE_STATUS <> 'Y'
+						)
+		]]>
+		</isEqual>
+					)
+				) AS TOTAL_COUNT
 			FROM
 		<isEqual property="type" compareValue="C">
 				(
@@ -327,6 +360,7 @@
 		<result property="jobTitle"            column="JOB_TITLE" />
 		<result property="totalUsed"           column="TOTAL_USED" />
 		<result property="companyId"           column="COMPANY_ID" />
+		<result property="totalCount"          column="TOTAL_COUNT" />
 		<result property="tenantId"            column="TENANT_ID" />
 	</resultMap>
 	

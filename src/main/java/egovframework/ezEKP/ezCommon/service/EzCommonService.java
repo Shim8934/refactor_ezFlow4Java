@@ -186,5 +186,9 @@ public interface EzCommonService {
 	public void createJmochaBigAttachDownloadLimit() throws Exception;
 	
 	public void insertMailBigSizeAttachLimit() throws Exception;
+
+	public void addIsBeforeDoc() throws Exception;
+
+	public void addBeforeDocUrl() throws Exception;
 }
 

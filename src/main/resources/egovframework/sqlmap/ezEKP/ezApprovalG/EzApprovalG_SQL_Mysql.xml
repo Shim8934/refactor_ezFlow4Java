@@ -6810,27 +6810,30 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getHistoryForDoc" parameterClass="Map" resultClass="ApprGHistoryDocVO">
 		SELECT 
-				DOCID, 
-				CHANGESN, 
+				DOCID,
+				ROW_NUMBER() OVER (ORDER BY CHANGEDATE ASC) AS CHANGESN, 
 				URL, 
 				CHANGEUSERID, 
 				CHANGEUSERJOBTITLE, 
 				CHANGEUSERJOBTITLE2,
-   				CHANGEUSERNAME, 
-   				CHANGEUSERNAME2, 
-   				CHANGEUSERDEPTID, 
-   				CHANGEUSERDEPTNAME, 
-   				CHANGEUSERDEPTNAME2, 
-   				CHANGEDATE, 
-   				CHKFLAG
+				CHANGEUSERNAME, 
+				CHANGEUSERNAME2, 
+				CHANGEUSERDEPTID, 
+				CHANGEUSERDEPTNAME, 
+				CHANGEUSERDEPTNAME2, 
+				CHANGEDATE, 
+				CHKFLAG,
+				IFNULL(BEFOREDOCURL, '') AS BEFOREDOCURL
    		FROM 
-   				TBL_HISTORYDOCINFO 
+				TBL_HISTORYDOCINFO 
    		WHERE 
    				DOCID = #v_DOCID#
    		AND
    				TENANT_ID = #v_TENANTID#
    		AND
    				COMPANYID = #companyID#
+		AND
+   				(ISBEFOREDOC = 'N' OR ISBEFOREDOC IS NULL OR TRIM(ISBEFOREDOC) = '')
    		<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
    			<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="10">
    				<isEqual property="v_ORDEROPTIONVALUE" compareValue="changedate">
@@ -6847,10 +6850,10 @@
    			 			$v_ORDEROPTION$, CHANGEDATE DESC
    			</isLessThan>
    		</isGreaterThan>
-   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="0">
+   		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
    			  ORDER BY 
    			 			CHANGEDATE DESC
-   		</isLessThan>
+   		</isLessEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getHistoryForLine" parameterClass="Map" resultClass="ApprGHistoryLineVO"> -->
 <!-- 		{CALL EZSP_GETHISTORYFORLINE(#v_DOCID#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -7690,6 +7693,25 @@
               		  COMPANYID = #companyID#
                 ORDER BY 
                       APRMEMBERSN 
+         </isEqual>
+		<isEqual property="v_FLAG" compareValue="4">
+			SELECT
+				APRMEMBERSN ,
+				APRTYPE ,
+				APRMEMBERID ,
+				APRMEMBERDEPTID ,
+				ISPROPOSERYN ,
+				ISBRIEFUSERYN 
+			FROM 
+				TBL_ENDAPRLINEINFO
+			WHERE
+				DOCID = #v_DOCID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			ORDER BY 
+				APRMEMBERSN
          </isEqual>
 	</select>
 	
@@ -19580,6 +19602,32 @@
           			COMPANYID = #companyID#)
 	</insert>
 	
+	<insert id="EzApprovalG.updateHistoryForLine2" parameterClass="Map">
+		 INSERT INTO 
+		 			TBL_HISTORYLINEINFO
+        			( DOCID,   APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, MODIFYDATE, MODIFYSN, MODIFYUSERID, MODIFYUSERNAME, MODIFYUSERNAME2, MODIFYUSERJOBTITLE, MODIFYUSERJOBTITLE2, MODIFYUSERDEPTID, MODIFYUSERDEPTNAME, MODIFYUSERDEPTNAME2, CHKFLAG , TENANT_ID, COMPANYID)
+        ( SELECT 
+        			#v_DOCID#, APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, #v_SYSDATE#, (
+        																																																																				SELECT 
+        																																																																					IFNULL(MAX(MODIFYSN),0) + 1 
+																																																																					    FROM 
+																																																																					    	TBL_HISTORYLINEINFO 
+																																																																					    WHERE  
+																																																																					    	DOCID = #v_DOCID#
+																																																																					    AND
+																																																																					    	TENANT_ID = #v_TENANTID#
+																																																																					    AND
+																																																																					    	COMPANYID = #companyID#), #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, ' ' , TENANT_ID, COMPANYID
+          FROM 
+        			TBL_ENDAPRLINEINFO 
+          WHERE  
+          			DOCID = #v_DOCID#
+          AND
+          			TENANT_ID = #v_TENANTID#
+          AND
+          			COMPANYID = #companyID#)
+	</insert>
+	
 <!-- 	<procedure id="EzApprovalG.setJijung" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_SETJIJUNG(#v_DOCID#, #v_RECEIVESN#, #v_DOCSTATE#, #v_PROCESSORID#, #v_PROCESSORNAME#, #v_PROCESSORNAME2#, #v_PROCESSORJOBTITLE#, #v_PROCESSORJOBTITLE2#, #v_RECEIVEDDEPTID#, #v_RECEIVEDDEPTNAME#, #v_RECEIVEDDEPTNAME2#, #v_CHARGEID#, #v_CHARGENAME#, #v_CHARGENAME2#, #v_MANAGEDEPTID#, #v_GFLAG#)} -->
 <!-- 	</procedure> -->
@@ -26482,9 +26530,9 @@
    	<insert id="EzApprovalG.insertHistoryDocInfo" parameterClass="Map" > 
    	 	INSERT INTO 
    	 		TBL_HISTORYDOCINFO
-        ( DOCID, CHANGESN, URL, CHANGEUSERID, CHANGEUSERNAME, CHANGEUSERNAME2, CHANGEUSERJOBTITLE, CHANGEUSERJOBTITLE2, CHANGEUSERDEPTID, CHANGEUSERDEPTNAME, CHANGEUSERDEPTNAME2, CHANGEDATE, CHKFLAG, TENANT_ID, COMPANYID )
+        ( DOCID, CHANGESN, URL, CHANGEUSERID, CHANGEUSERNAME, CHANGEUSERNAME2, CHANGEUSERJOBTITLE, CHANGEUSERJOBTITLE2, CHANGEUSERDEPTID, CHANGEUSERDEPTNAME, CHANGEUSERDEPTNAME2, CHANGEDATE, CHKFLAG, ISBEFOREDOC, BEFOREDOCURL, TENANT_ID, COMPANYID )
         VALUES 
-        ( #v_DOCID#, #v_SN#, #v_URL#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_USERDEPTID#, #v_USERDEPTNAME#, #v_USERDEPTNAME2#, #v_SYSDATE#, ' ', #v_TENANTID#, #companyID#)
+        ( #v_DOCID#, #v_SN#, #v_URL#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_USERDEPTID#, #v_USERDEPTNAME#, #v_USERDEPTNAME2#, #v_SYSDATE#, ' ', #v_ISBEFOREDOC#, #v_BEFOREDOCURL#, #v_TENANTID#, #companyID#)
    	</insert>
    	
    	<select id="EzApprovalG.getKeepType" parameterClass="Map" resultClass="ApprGLeftVO">

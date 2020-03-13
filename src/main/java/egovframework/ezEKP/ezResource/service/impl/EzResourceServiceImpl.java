@@ -672,7 +672,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						String deptPath = ezOrganService.getDeptPath(deptID, tenantID);			// 부서 권한 체크
 						List<String> deptIds = new ArrayList<String>();
 						Collections.addAll(deptIds, deptPath.split(","));
-						deptIds.remove(0);				// companyID 삭제
+						//deptIds.remove(0);				// companyID 삭제
 						
 						if(deptIds.size() > 0) {
 							Collections.reverse(deptIds);
@@ -720,7 +720,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 								String addJobDeptPath = ezOrganService.getDeptPath(userAddJobList.get(i).getDepartment(), tenantID);
 								List<String> addJobDeptIds = new ArrayList<String>();
 								Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
-								addJobDeptIds.remove(0);				// companyID 삭제
+								//addJobDeptIds.remove(0);				// companyID 삭제
 								
 								if(addJobDeptIds.size() > 0) {
 									Collections.reverse(addJobDeptIds);
@@ -2100,7 +2100,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String deptPath = ezOrganService.getDeptPath(deptID, tenantID);
 			List<String> deptIds = new ArrayList<String>();
 			Collections.addAll(deptIds, deptPath.split(","));
-			deptIds.remove(0);				// companyID 삭제
+			//deptIds.remove(0);				// companyID 삭제
 			if(deptIds.size() > 0) {
 				Collections.reverse(deptIds);
 				
@@ -2148,7 +2148,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					String addJobDeptPath = ezOrganService.getDeptPath(userAddJobList.get(i).getDepartment(), tenantID);
 					List<String> addJobDeptIds = new ArrayList<String>();
 					Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
-					addJobDeptIds.remove(0);				// companyID 삭제
+					//addJobDeptIds.remove(0);				// companyID 삭제
 					if(addJobDeptIds.size() > 0) {
 						Collections.reverse(addJobDeptIds);
 						
@@ -4214,7 +4214,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String deptPath = ezOrganService.getDeptPath(deptID, tenantID);	
 		List<String> deptIds = new ArrayList<String>();
 		Collections.addAll(deptIds, deptPath.split(","));
-		deptIds.remove(0);				// companyID 삭제
+		//deptIds.remove(0);				// companyID 삭제
 		if(deptIds.size() > 1) {
 			Collections.reverse(deptIds);
 			deptIds.remove(0);				// 부서 ID 삭제
@@ -4246,7 +4246,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				String addJobDeptPath = ezOrganService.getDeptPath(userAddJobList.get(i).getDepartment(), tenantID);
 				List<String> addJobDeptIds = new ArrayList<String>();
 				Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
-				addJobDeptIds.remove(0);				// companyID 삭제
+				//addJobDeptIds.remove(0);				// companyID 삭제
 				
 				if(addJobDeptIds.size() > 0) {
 					Collections.reverse(addJobDeptIds);

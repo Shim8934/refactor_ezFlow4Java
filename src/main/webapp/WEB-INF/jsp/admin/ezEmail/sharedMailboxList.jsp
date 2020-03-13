@@ -449,7 +449,7 @@
 			</div>
 			<div id="userSearchRayer" style="float:right; display: inline-block; line-height: 30px;">
 				<div style="display: inline-block; float:left;">
-				<select id="searchType" style="height: 26px; width: 130px;">
+				<select id="searchType" style="height: 26px; width: 143px;">
 					<option value="displayname"><spring:message code='ezEmail.sharedMailbox18' /></option> <!-- 공유사서함 이름 -->
 					<option value="groupID"><spring:message code='ezEmail.sharedMailbox19' /></option> <!-- 공유사서함 ID -->
 					<option value="memberName"><spring:message code='ezEmail.ksaSharedMailbox25' /></option> <!-- 공유자 이름 -->
@@ -457,7 +457,7 @@
 				</select>
 				</div>
 				<div style="display: inline-block;box-sizing: border-box; padding-right: 2px;width: 518px;padding-left: 5px;">
-					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px; width:89%">
+					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px; width:86%">
 					<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
 				</div>
 			</div>

@@ -1562,13 +1562,13 @@ public class EzNewPortalGWController {
 //				
 //			}
 			
-			if (useSurvey.equals("YES")) {
+			if ("YES".equals(useSurvey)) {
 				int surveyCnt = ezSurveyService.getSurveyIngCnt(info);
 				data.put("surveyCnt", surveyCnt);
 			}
 
 			// 오늘 일정 개수 불러오기
-			if (useSchedule.equals("YES")) {
+			if ("YES".equals(useSchedule)) {
 				String startDate = nowDate + " 00:00:00";
 				String endDate = nowDate + " 23:59:59";
 				String startTime = commonUtil.getDateStringInUTC(nowDate + " 00:00:00", offset, true);
@@ -1654,13 +1654,13 @@ public class EzNewPortalGWController {
 			}
 
 			// 회람판 개수 불러오기
-			if (useCircular.equals("YES")) {
+			if ("YES".equals(useCircular)) {
 				int circularCount = ezCircularSerivce.getListCount("newCircular", userId, tenantId, companyId);
 				data.put("circularCount", circularCount);
 			}
 
 			// 결재할 문서 개수 불러오기
-			if (useApproval.equals("YES")) {
+			if ("YES".equals(useApproval)) {
 				String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
 				String lang = portletLang;
 				int approvalCount = ezNewPortalService.getApprovalDoingListCount(userId, companyId, tenantId, info.getOffSet(), approvalFlag, lang);
@@ -1668,7 +1668,7 @@ public class EzNewPortalGWController {
 			}
 
 			// 읽지 않은 메일 가져오기
-			if (useMail.equals("YES")) {
+			if ("YES".equals(useMail)) {
 				int unreadMailCount = 0;
 
 				try {

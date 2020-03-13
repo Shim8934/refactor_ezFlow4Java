@@ -50,6 +50,7 @@
 			var spamSniperUrl = '<c:out value="${spamSniperUrl}"/>';
 			var useSpamSniper = '<c:out value="${useSpamSniper}"/>';
 			var shareCryptResult = "";
+			var configFlag = "false";
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {

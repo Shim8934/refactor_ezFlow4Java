@@ -371,7 +371,7 @@ function TableView() {
 				tdElmt5.setAttribute("title", tdElmt5.textContent);
 				
 				tdElmt6.setAttribute("style", "text-align: center;");
-				tdElmt6.textContent = getFileSize(_dataSource[i]["totalUsed"]);
+				tdElmt6.textContent = getFileSize(_dataSource[i]["totalUsed"]) + "(" + strLang41 + " " + _dataSource[i]["totalCount"] + "" + strLang42 + ")";
 				
 				tdElmt7.setAttribute("style", "text-align: center;");
 				tdElmt7.textContent = _dataSource[i]["totalCapacity"] + "GB";
@@ -478,7 +478,7 @@ function TableView() {
 //				tdElmt5.setAttribute("title", tdElmt5.textContent);
 				
 				tdElmt6.setAttribute("style", "text-align: center;");
-				tdElmt6.textContent = getFileSize(_dataSource[i]["totalUsed"]);
+				tdElmt6.textContent = getFileSize(_dataSource[i]["totalUsed"]) + "(" + strLang41 + " " + _dataSource[i]["totalCount"] + "" + strLang42 + ")";
 				
 				tdElmt7.setAttribute("style", "text-align: center;");
 				tdElmt7.textContent = _dataSource[i]["totalCapacity"] + "GB";
@@ -585,10 +585,10 @@ function TableView() {
 //				tdElmt5.setAttribute("title", tdElmt5.textContent);
 				
 				tdElmt6.setAttribute("style", "text-align: center;");
-				tdElmt6.textContent = getFileSize(_dataSource[i]["totalUsed"]);
+				tdElmt6.textContent = getFileSize(_dataSource[i]["totalUsed"]) + "(" + strLang41 + " " + _dataSource[i]["totalCount"] + "" + strLang42 + ")";
 				
 				tdElmt7.setAttribute("style", "text-align: center;");
-				tdElmt7.textContent = _dataSource[i]["totalCapacity"] + "GB";
+				tdElmt7.textContent = _dataSource[i]["totalCapacity"] + "GB"; 
 				
 				tdElmt8.setAttribute("style", "white-space:nowrap; text-align:center; word-wrap: normal;");
 				

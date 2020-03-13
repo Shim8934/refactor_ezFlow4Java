@@ -906,7 +906,7 @@ function SendDraftMappingSign(ret) {
 	    strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
 	    strimg = strimg + " width=" + signWidth;
 	    
-	    if (signImageType = "NAME") {
+	    if (signImageType == "NAME") { // 부서합의문 서명 이미지타입일때 이미지랑 부서아이디 같이 들어가는 버그 수정 20200313 윤상원
 	    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'> " + "<br>" + arr_userinfo[2];
 	    } else {
 	    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'> ";

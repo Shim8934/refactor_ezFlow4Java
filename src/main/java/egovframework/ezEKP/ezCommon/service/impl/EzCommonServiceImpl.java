@@ -1865,4 +1865,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.insertMailBigSizeAttachLimit();
 		logger.debug("insertMailBigSizeAttachLimit ended");
 	}
+	
+	@Override
+	public void addIsBeforeDoc() throws Exception {
+		ezCommonDAO.addIsBeforeDoc();
+	}
+	
+	@Override
+	public void addBeforeDocUrl() throws Exception {
+		ezCommonDAO.addBeforeDocUrl();
+	}
 }

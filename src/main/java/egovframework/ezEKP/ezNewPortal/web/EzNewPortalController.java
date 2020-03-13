@@ -94,7 +94,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	/**
 	 * 포탈 호출 함수
 	 */
-	@RequestMapping(value = "/ezNewPortal/newPortalMain.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/ezNewPortal/newPortalMain.do", method={RequestMethod.GET, RequestMethod.POST})
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalMain Start");
 		//초기화면 설정 확인
