@@ -700,7 +700,7 @@ public class EzAttitudeController {
 			
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("userId", userInfo.getId())
-					.queryParam("typeIdArr", "A11,A12,A13");
+					.queryParam("typeIdArr", "A11,A12,A13,A21");
 			
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 			
@@ -717,6 +717,7 @@ public class EzAttitudeController {
 			model.addAttribute("A11typeInfo", typeList.get(0));
 			model.addAttribute("A12typeInfo", typeList.get(1));
 			model.addAttribute("A13typeInfo", typeList.get(2));
+			model.addAttribute("A21typeInfo", typeList.get(3));
 		}
 		
 		model.addAttribute("userInfo", userInfo);
@@ -4545,6 +4546,8 @@ public class EzAttitudeController {
 					.queryParam("attitudeTypeList", request.getParameter("attitudeTypeList"))
 					.queryParam("startDateList", request.getParameter("startDateList"))
 					.queryParam("endDateList", request.getParameter("endDateList"))
+					.queryParam("startTimeList", request.getParameter("startTimeList"))
+					.queryParam("endTimeList", request.getParameter("endTimeList"))
 					.queryParam("docId", request.getParameter("docId"));	
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 		} else if (request.getParameter("status").equals("1")) {

@@ -351,7 +351,9 @@
 				INNER JOIN 
 					tbl_attitude_type B 
 				ON 
-					(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
+				]]>
+					(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID AND ISDEL = 0)
+				<![CDATA[
 				INNER JOIN 
 					tbl_usermaster C
 				ON
