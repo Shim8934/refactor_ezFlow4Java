@@ -1,481 +1,336 @@
 --------------------------------------------------------
---  File created - Friday-January-03-2020   
---------------------------------------------------------
---------------------------------------------------------
---  DDL for Sequence DBOBJECTID_SEQUENCE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "DBOBJECTID_SEQUENCE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 50 START WITH 1 CACHE 50 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence LIGHTPOLLOPTIONID_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "LIGHTPOLLOPTIONID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence POPUPOPTIONID_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "POPUPOPTIONID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_DBOBJECTID_SEQUENCE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_DBOBJECTID_SEQUENCE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 50 START WITH 1 CACHE 50 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_ADDRESS_FOLDER
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_JMOCHA_ADDRESS_FOLDER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_ADDRESS_INFO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_JMOCHA_ADDRESS_INFO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_ADDRESS_SIMPLE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_JMOCHA_ADDRESS_SIMPLE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_CONNECTION_INFO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_JMOCHA_CONNECTION_INFO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_INBOX_RULE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_JMOCHA_INBOX_RULE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_INBOX_RULE_SUB
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_JMOCHA_INBOX_RULE_SUB"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_LETTER
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_JMOCHA_LETTER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_LETTER_BOX
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_JMOCHA_LETTER_BOX"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_MAIL_POP3
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_JMOCHA_MAIL_POP3"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_MAIL_RECALL
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_JMOCHA_MAIL_RECALL"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_MAIL_SECURE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_JMOCHA_MAIL_SECURE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_STAT_MAIL_LOG
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_JMOCHA_STAT_MAIL_LOG"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TALK_TBLNOTIFICATION
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TALK_TBLNOTIFICATION"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_ADMINRECEIPTGROUP_MAIN
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_ADMINRECEIPTGROUP_MAIN"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_ADMINRECEIPTGROUP_SUB
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_ADMINRECEIPTGROUP_SUB"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_ATTITUDE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_ATTITUDE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_ATTITUDE_HISTORY
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_ATTITUDE_HISTORY"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_ATTITUDE_TYPE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_ATTITUDE_TYPE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_ATTI_ANNUAL_HISTORY
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_ATTI_ANNUAL_HISTORY"  MINVALUE 1 MAXVALUE 99999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_ATTI_MODAPPL_HISTORY
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_ATTI_MODAPPL_HISTORY"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_COMM_ITEM_ATTACHMENTS
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_COMM_ITEM_ATTACHMENTS"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_COMM_SCHEDULE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_COMM_SCHEDULE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_COMM_SCHEDULEATTACH
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_COMM_SCHEDULEATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_COMM_SCHEDULECOMMENT
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_COMM_SCHEDULECOMMENT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_CONNECTION_INFO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_CONNECTION_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_BOARD
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_C_BOARD"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_CLUBGUEST
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_C_CLUBGUEST"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_CLUBNOTICE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_C_CLUBNOTICE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_CLUBPHOTO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_C_CLUBPHOTO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_CLUBPHOTO_ATTACH
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_C_CLUBPHOTO_ATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_CLUBPHOTO_REPLY
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_C_CLUBPHOTO_REPLY"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_NOTICE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_C_NOTICE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_POLLANSWER
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_C_POLLANSWER"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_POLLMANAGER
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_C_POLLMANAGER"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_POLLQUESTION
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_C_POLLQUESTION"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_POLLRESPONSE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_C_POLLRESPONSE"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_DTPROPERTIES
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_DTPROPERTIES"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_BOARD1
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_D_C_BOARD1"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_BOARD2
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_D_C_BOARD2"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_BOARD3
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_D_C_BOARD3"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_CLUBBOARD
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_D_C_CLUBBOARD"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_CLUBBOARD1
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_D_C_CLUBBOARD1"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_CLUBBOARD2
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_D_C_CLUBBOARD2"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_CLUBPDS
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_D_C_CLUBPDS"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_CLUBPDS1
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_D_C_CLUBPDS1"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_CLUBPDS_BACK
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_D_C_CLUBPDS_BACK"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_FORMCONNINFO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_FORMCONNINFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_HOLIDAYLIST
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_HOLIDAYLIST"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_JOURNAL
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_JOURNAL"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_JOURNAL_FILE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_JOURNAL_FILE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_JOURNAL_FORM
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_JOURNAL_FORM"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_JOURNAL_RECV_FAVORITE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_JOURNAL_RECV_FAVORITE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_JOURNAL_REPLY
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_JOURNAL_REPLY"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_MEMO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_MEMO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_MEMO_FOLDER
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_MEMO_FOLDER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_NOTIFICATION_ITEMSEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_NOTIFICATION_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_PS_COMPANYLINK_ITEMSEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_PS_COMPANYLINK_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_PS_NOTICE_ITEMSEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_PS_NOTICE_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_PS_POPUP_ITEMSEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_PS_POPUP_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_PS_USERLINK_ITEMSEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_PS_USERLINK_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_RECRELAYINFO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_RECRELAYINFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_RS_ATTACH
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_RS_ATTACH"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SCHEDULE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_SCHEDULE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SCHEDULEATTACH
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_SCHEDULEATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SCHEDULECOMMENT
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_SCHEDULECOMMENT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SCHEDULE_PUBLIC_DEPT
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_SCHEDULE_PUBLIC_DEPT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SCHEDULE_REPEDEL
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_SCHEDULE_REPEDEL"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SERIALNUMGEN
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_SERIALNUMGEN"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_STAT_MAIL_TEMP_IDX
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_STAT_MAIL_TEMP_IDX"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SURVEY_ATTACHFILE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_SURVEY_ATTACHFILE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SURVEY_PARTICIPANT
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_SURVEY_PARTICIPANT"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_TASK
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_TASK"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_TASKATTACH
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_TASKATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_TASKCODEHISTORY
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_TASKCODEHISTORY"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_TASKCOMMENT
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_TASKCOMMENT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_TASKREQUEST
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_TASKREQUEST"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_TT_V_TBLBOARDORDER
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_TT_V_TBLBOARDORDER"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_TT_V_TBLPARENTBOARDS
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_TT_V_TBLPARENTBOARDS"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_USER_JOBMASTER
---------------------------------------------------------
-
-   CREATE SEQUENCE  "SEQ_TBL_USER_JOBMASTER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence TBL_LADDER_BMUSER_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "TBL_LADDER_BMUSER_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence TBL_LADDER_BM_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "TBL_LADDER_BM_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence TBL_LADDER_COMMENT_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "TBL_LADDER_COMMENT_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence TBL_LADDER_LINE_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "TBL_LADDER_LINE_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence TBL_LADDER_ORDER_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "TBL_LADDER_ORDER_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence TBL_LADDER_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "TBL_LADDER_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence TBL_PORTAL_FRAME_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "TBL_PORTAL_FRAME_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence TBL_PORTAL_MENU_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "TBL_PORTAL_MENU_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence TBL_PORTAL_PORTLET_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "TBL_PORTAL_PORTLET_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence TBL_PORTAL_THEME_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "TBL_PORTAL_THEME_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
---------------------------------------------------------
---  DDL for Sequence TT_SQ_TMPCLASSINFO_SN
---------------------------------------------------------
-
-   CREATE SEQUENCE  "TT_SQ_TMPCLASSINFO_SN"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--  파일이 생성됨 - 금요일-3월-13-2020   
+--------------------------------------------------------
+--------------------------------------------------------
+--  DDL for View SVTASKCLASS
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE EDITIONABLE VIEW "SVTASKCLASS" ("CATEGORYCODE", "CNAME", "CNAME2", "MCATEGORYCODE", "MCNAME", "MCNAME2", "SUBCATEGORYCODE", "SCNAME", "SCNAME2", "TASKCODE", "TASKNAME", "TASKNAME2", "KEEPINGPERIOD", "DISPLAYRECFLAG", "SPECIALCATALOGFLAG", "TEMPFLAG", "COMPANYID", "TENANT_ID", "PROCESSDEPTCODE", "PROCESSDEPTNAME", "PROCESSDEPTNAME2", "KEEPINGMETHOD", "KEEPINGPLACE", "DISPLAYRECTRASTIME", "ISPUBLIC", "ITEMSECURITY", "DELFLAG") AS 
+  SELECT
+        tbl_taskcategory.CATEGORYCODE AS CATEGORYCODE,
+        tbl_taskcategory.NAME AS CNAME,
+        tbl_taskcategory.NAME2 AS CNAME2,
+        tbl_taskmiddlecategory.MCATEGORYCODE AS MCATEGORYCODE,
+        tbl_taskmiddlecategory.NAME AS MCNAME,
+        tbl_taskmiddlecategory.NAME2 AS MCNAME2,
+        tbl_tasksubcategory.SUBCATEGORYCODE AS SUBCATEGORYCODE,
+        tbl_tasksubcategory.NAME AS SCNAME,
+        tbl_tasksubcategory.NAME2 AS SCNAME2,
+        tbl_taskcode.TASKCODE AS TASKCODE,
+        tbl_taskcode.TASKNAME AS TASKNAME,
+        tbl_taskcode.TASKNAME2 AS TASKNAME2,
+        tbl_taskcode.KEEPINGPERIOD AS KEEPINGPERIOD,
+        tbl_taskcode.DISPLAYRECFLAG AS DISPLAYRECFLAG,
+        tbl_taskcode.SPECIALCATALOGFLAG AS SPECIALCATALOGFLAG,
+        tbl_taskcode.TEMPFLAG AS TEMPFLAG,
+        tbl_taskcode.COMPANYID AS COMPANYID,
+        tbl_taskcode.TENANT_ID AS TENANT_ID,
+        tbl_task_deptinfo.PROCESSDEPTCODE AS PROCESSDEPTCODE,
+        tbl_task_deptinfo.PROCESSDEPTNAME AS PROCESSDEPTNAME,
+        tbl_task_deptinfo.PROCESSDEPTNAME2 AS PROCESSDEPTNAME2,
+        tbl_taskcode.KEEPINGMETHOD AS KEEPINGMETHOD,
+        tbl_taskcode.KEEPINGPLACE AS KEEPINGPLACE,
+        tbl_taskcode.DISPLAYRECTRASTIME AS DISPLAYRECTRASTIME,
+        tbl_taskcode.ISPUBLIC AS ISPUBLIC,
+        tbl_taskcode.ITEMSECURITY AS ITEMSECURITY,
+        tbl_task_deptinfo.DELFLAG AS DELFLAG
+    FROM
+        ((((tbl_taskcategory
+        JOIN tbl_taskmiddlecategory ON (((tbl_taskcategory.CATEGORYCODE = tbl_taskmiddlecategory.CATEGORYCODE)
+            AND (tbl_taskcategory.TENANT_ID = tbl_taskmiddlecategory.TENANT_ID)
+            AND (tbl_taskcategory.COMPANYID = tbl_taskmiddlecategory.COMPANYID))))
+        JOIN tbl_tasksubcategory ON (((tbl_taskmiddlecategory.MCATEGORYCODE = tbl_tasksubcategory.MCATEGORYCODE)
+            AND (tbl_taskmiddlecategory.TENANT_ID = tbl_tasksubcategory.TENANT_ID)
+            AND (tbl_taskmiddlecategory.COMPANYID = tbl_tasksubcategory.COMPANYID))))
+        JOIN tbl_taskcode ON (((tbl_tasksubcategory.SUBCATEGORYCODE = tbl_taskcode.SUBCATEGORYCODE)
+            AND (tbl_tasksubcategory.TENANT_ID = tbl_taskcode.TENANT_ID)
+            AND (tbl_tasksubcategory.COMPANYID = tbl_taskcode.COMPANYID))))
+        LEFT JOIN tbl_task_deptinfo ON (((tbl_taskcode.TASKCODE = tbl_task_deptinfo.TASKCODE)
+            AND (tbl_taskcode.TENANT_ID = tbl_task_deptinfo.TENANT_ID)
+            AND (tbl_taskcode.COMPANYID = tbl_task_deptinfo.COMPANYID))))
+    WHERE
+        tbl_task_deptinfo.DELFLAG = '0'
+            OR tbl_task_deptinfo.DELFLAG is null
+            OR tbl_task_deptinfo.DELFLAG = '2';
+--------------------------------------------------------
+--  DDL for View VAPRDOINGDOCLIST
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE EDITIONABLE VIEW "VAPRDOINGDOCLIST" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "RECEIVEDDATE", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL", "COMPANYNAME", "COMPANYNAME2") AS 
+  SELECT tbl_aprdocinfo.docid,
+       tbl_aprdocinfo.formid, 
+       tbl_aprdocinfo.orgdocid, 
+       tbl_aprdocinfo.doctype, 
+       CASE 
+              WHEN ( tbl_aprlineinfo.aprstate = '002' and tbl_aprlineinfo.aprtype = '007' )THEN '017' 
+              ELSE tbl_aprdocinfo.docstate 
+       END AS DOCSTATE, 
+       CASE 
+              WHEN ( tbl_aprlineinfo.aprstate = '000' 
+              AND    tbl_aprdocinfo.functiontype <> '004' ) THEN '002' 
+              ELSE tbl_aprdocinfo.functiontype 
+       END AS FUNCTIONTYPE, 
+       tbl_aprdocinfo.href, 
+       tbl_aprdocinfo.doctitle, 
+       tbl_aprdocinfo.docno, 
+       tbl_aprdocinfo.hasattachyn, 
+       tbl_aprdocinfo.hasopinionyn, 
+       tbl_aprdocinfo.startdate, 
+       tbl_aprdocinfo.enddate, 
+       tbl_aprdocinfo.writerid, 
+       tbl_aprdocinfo.writername, 
+       tbl_aprdocinfo.writerjobtitle, 
+       tbl_aprdocinfo.writerdeptid, 
+       tbl_aprdocinfo.writerdeptname, 
+       tbl_aprdocinfo.ispublic, 
+       tbl_aprdocinfo.writername2, 
+       tbl_aprdocinfo.writerjobtitle2, 
+       tbl_aprdocinfo.writerdeptname2 , 
+       tbl_aprdocinfo.tenant_id, 
+       tbl_aprdocinfo.companyid, 
+       tbl_aprlineinfo.aprmembersn        AprMemberSN , 
+       tbl_aprlineinfo.aprtype            AprType , 
+       tbl_aprlineinfo.aprstate           AprState , 
+       tbl_aprlineinfo.aprmemberid        AprMemberID , 
+       tbl_aprlineinfo.aprmembername      AprMemberName , 
+       tbl_aprlineinfo.aprmembername2     AprMemberName2 , 
+       tbl_aprlineinfo.aprmemberjobtitle  AprMemberJobTitle , 
+       tbl_aprlineinfo.aprmemberjobtitle2 AprMemberJobTitle2 , 
+       tbl_aprlineinfo.aprmemberdeptid    AprMemberDeptID , 
+       tbl_aprlineinfo.aprmemberdeptname  AprMemberDeptName , 
+       tbl_aprlineinfo.aprmemberdeptname2 AprMemberDeptName2 , 
+       tbl_aprlineinfo.receiveddate       ReceivedDate , 
+       tbl_expaprdocinfo.formname         FormName , 
+       tbl_expaprdocinfo.formname2        FormName2 , 
+       tbl_expaprdocinfo.urgentapproval   UrgentApproval,
+       tbl_deptmaster.extensionattribute3 companyname,
+       tbl_deptmaster.compnm2 companyname2
+FROM   tbl_aprdocinfo 
+JOIN   tbl_aprlineinfo 
+ON     tbl_aprdocinfo.docid = tbl_aprlineinfo.docid 
+AND    tbl_aprdocinfo.tenant_id = tbl_aprlineinfo.tenant_id 
+AND    tbl_aprdocinfo.companyid = tbl_aprlineinfo.companyid 
+JOIN   tbl_expaprdocinfo 
+ON     tbl_aprdocinfo.docid = tbl_expaprdocinfo.docid 
+AND    tbl_aprdocinfo.tenant_id = tbl_expaprdocinfo.tenant_id 
+AND    tbl_aprdocinfo.companyid = tbl_expaprdocinfo.companyid 
+JOIN   tbl_deptmaster
+on     tbl_aprdocinfo.companyid = tbl_deptmaster.cn
+and    tbl_aprdocinfo.tenant_id = tbl_deptmaster.tenant_id
+WHERE  ((tbl_aprlineinfo.aprstate = '002' 
+       OR     tbl_aprlineinfo.aprstate = '005')
+       AND ( tbl_aprdocinfo.functiontype <> '004'
+       OR   tbl_aprlineinfo.aprtype <> '007' )
+       AND     tbl_aprdocinfo.startdate is not null);
+--------------------------------------------------------
+--  DDL for View VAPRWILLDOCLIST
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE EDITIONABLE VIEW "VAPRWILLDOCLIST" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL", "COMPANYNAME", "COMPANYNAME2") AS 
+  SELECT TBL_APRDOCINFO."DOCID",TBL_APRDOCINFO."FORMID",TBL_APRDOCINFO."ORGDOCID",TBL_APRDOCINFO."DOCTYPE",TBL_APRDOCINFO."DOCSTATE",TBL_APRDOCINFO."FUNCTIONTYPE",TBL_APRDOCINFO."HREF",TBL_APRDOCINFO."DOCTITLE",TBL_APRDOCINFO."DOCNO",TBL_APRDOCINFO."HASATTACHYN",TBL_APRDOCINFO."HASOPINIONYN",TBL_APRDOCINFO."STARTDATE",TBL_APRDOCINFO."ENDDATE",TBL_APRDOCINFO."WRITERID",TBL_APRDOCINFO."WRITERNAME",TBL_APRDOCINFO."WRITERJOBTITLE",TBL_APRDOCINFO."WRITERDEPTID",TBL_APRDOCINFO."WRITERDEPTNAME",TBL_APRDOCINFO."ISPUBLIC",TBL_APRDOCINFO."WRITERNAME2",TBL_APRDOCINFO."WRITERJOBTITLE2",TBL_APRDOCINFO."WRITERDEPTNAME2" ,TBL_APRDOCINFO."TENANT_ID",TBL_APRDOCINFO."COMPANYID",
+          TBL_APRLINEINFO.AprMemberSN AprMemberSN  ,
+          TBL_APRLINEINFO.AprType AprType  ,
+          TBL_APRLINEINFO.AprState AprState  ,
+          TBL_APRLINEINFO.AprMemberID AprMemberID  ,
+          TBL_APRLINEINFO.AprMemberName AprMemberName  ,
+          TBL_APRLINEINFO.AprMemberName2 AprMemberName2  ,
+          TBL_APRLINEINFO.AprMemberJobTitle AprMemberJobTitle  ,
+          TBL_APRLINEINFO.AprMemberJobTitle2 AprMemberJobTitle2  ,
+          TBL_APRLINEINFO.AprMemberDeptID AprMemberDeptID  ,
+          TBL_APRLINEINFO.AprMemberDeptName AprMemberDeptName  ,
+          TBL_APRLINEINFO.AprMemberDeptName2 AprMemberDeptName2  ,
+          TBL_EXPAPRDOCINFO.FormName FormName  ,
+          TBL_EXPAPRDOCINFO.FormName2 FormName2  ,
+          TBL_EXPAPRDOCINFO.UrgentApproval UrgentApproval  ,
+          TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 COMPANYNAME  ,
+		  TBL_DEPTMASTER.COMPNM2 COMPANYNAME2
+     FROM TBL_APRDOCINFO
+            JOIN TBL_APRLINEINFO    ON TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID AND  TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID AND  TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID
+            JOIN TBL_EXPAPRDOCINFO    ON TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID
+			JOIN TBL_DEPTMASTER ON TBL_APRDOCINFO.COMPANYID = TBL_DEPTMASTER.CN AND TBL_APRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+    WHERE  ( TBL_APRDOCINFO.StartDate IS NOT NULL );
+--------------------------------------------------------
+--  DDL for View VENDCHAMJODOCINFO
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE EDITIONABLE VIEW "VENDCHAMJODOCINFO" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "RECEIVEDDATE", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL", "COMPANYNAME", "COMPANYNAME2") AS 
+  SELECT
+        tbl_endaprdocinfo.DOCID AS DOCID,
+        tbl_endaprdocinfo.FORMID AS FORMID,
+        tbl_endaprdocinfo.ORGDOCID AS ORGDOCID,
+        tbl_endaprdocinfo.DOCTYPE AS DOCTYPE,
+        '017' AS DOCSTATE,
+        '002' AS FUNCTIONTYPE,
+        tbl_endaprdocinfo.HREF AS HREF,
+        tbl_endaprdocinfo.DOCTITLE AS DOCTITLE,
+        tbl_endaprdocinfo.DOCNO AS DOCNO,
+        tbl_endaprdocinfo.HASATTACHYN AS HASATTACHYN,
+        tbl_endaprdocinfo.HASOPINIONYN AS HASOPINIONYN,
+        tbl_endaprdocinfo.STARTDATE AS STARTDATE,
+        tbl_endaprdocinfo.ENDDATE AS ENDDATE,
+        tbl_endaprdocinfo.WRITERID AS WRITERID,
+        tbl_endaprdocinfo.WRITERNAME AS WRITERNAME,
+        tbl_endaprdocinfo.WRITERJOBTITLE AS WRITERJOBTITLE,
+        tbl_endaprdocinfo.WRITERDEPTID AS WRITERDEPTID,
+        tbl_endaprdocinfo.WRITERDEPTNAME AS WRITERDEPTNAME,
+        tbl_endaprdocinfo.ISPUBLIC AS ISPUBLIC,
+        tbl_endaprdocinfo.WRITERNAME2 AS WRITERNAME2,
+        tbl_endaprdocinfo.WRITERJOBTITLE2 AS WRITERJOBTITLE2,
+        tbl_endaprdocinfo.WRITERDEPTNAME2 AS WRITERDEPTNAME2,
+        tbl_endaprdocinfo.TENANT_ID AS TENANT_ID,
+        tbl_endaprdocinfo.COMPANYID AS COMPANYID,
+        tbl_endaprlineinfo.APRMEMBERSN AS APRMEMBERSN,
+        tbl_endaprlineinfo.APRTYPE AS APRTYPE,
+        tbl_endaprlineinfo.APRSTATE AS APRSTATE,
+        tbl_endaprlineinfo.APRMEMBERID AS APRMEMBERID,
+        tbl_endaprlineinfo.APRMEMBERNAME AS APRMEMBERNAME,
+        tbl_endaprlineinfo.APRMEMBERNAME2 AS APRMEMBERNAME2,
+        tbl_endaprlineinfo.APRMEMBERJOBTITLE AS APRMEMBERJOBTITLE,
+        tbl_endaprlineinfo.APRMEMBERJOBTITLE2 AS APRMEMBERJOBTITLE2,
+        tbl_endaprlineinfo.APRMEMBERDEPTID AS APRMEMBERDEPTID,
+        tbl_endaprlineinfo.APRMEMBERDEPTNAME AS APRMEMBERDEPTNAME,
+        tbl_endaprlineinfo.APRMEMBERDEPTNAME2 AS APRMEMBERDEPTNAME2,
+        tbl_endaprlineinfo.RECEIVEDDATE AS RECEIVEDDATE,
+        tbl_expendaprdocinfo.FORMNAME AS FORMNAME,
+        tbl_expendaprdocinfo.FORMNAME2 AS FORMNAME2,
+        tbl_expendaprdocinfo.URGENTAPPROVAL AS URGENTAPPROVAL,
+        tbl_deptmaster.extensionattribute3    AS COMPANYNAME,
+        tbl_deptmaster.compnm2 AS COMPANYNAME2
+    FROM
+        ((tbl_endaprdocinfo
+        JOIN tbl_endaprlineinfo ON (((tbl_endaprdocinfo.DOCID = tbl_endaprlineinfo.DOCID)
+            AND (tbl_endaprdocinfo.TENANT_ID = tbl_endaprlineinfo.TENANT_ID)
+            AND (tbl_endaprdocinfo.COMPANYID = tbl_endaprlineinfo.COMPANYID))))
+        JOIN tbl_expendaprdocinfo ON (((tbl_endaprdocinfo.DOCID = tbl_expendaprdocinfo.DOCID)
+            AND (tbl_endaprdocinfo.TENANT_ID = tbl_expendaprdocinfo.TENANT_ID)
+            AND (tbl_endaprdocinfo.COMPANYID = tbl_expendaprdocinfo.COMPANYID)))
+        JOIN tbl_deptmaster ON ( 
+              tbl_endaprdocinfo.companyid = tbl_deptmaster.cn 
+       AND    tbl_endaprdocinfo.tenant_id = tbl_deptmaster.tenant_id)) 
+    WHERE
+        ((tbl_endaprlineinfo.APRTYPE = '007')
+            AND (tbl_endaprlineinfo.APRSTATE = '002')
+            AND (tbl_endaprdocinfo.docstate <> '031'));
+--------------------------------------------------------
+--  DDL for View VGONGRAMAPRDOINGDOCLIST
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE EDITIONABLE VIEW "VGONGRAMAPRDOINGDOCLIST" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "RECEIVEDDATE", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL", "COMPANYNAME", "COMPANYNAME2") AS 
+  SELECT tbl_aprdocinfo.docid,
+       tbl_aprdocinfo.formid, 
+       tbl_aprdocinfo.orgdocid, 
+       tbl_aprdocinfo.doctype, 
+       tbl_aprdocinfo.docstate, 
+       tbl_aprdocinfo.functiontype,
+       tbl_aprdocinfo.href, 
+       tbl_aprdocinfo.doctitle, 
+       tbl_aprdocinfo.docno, 
+       tbl_aprdocinfo.hasattachyn, 
+       tbl_aprdocinfo.hasopinionyn, 
+       tbl_aprdocinfo.startdate, 
+       tbl_aprdocinfo.enddate, 
+       tbl_aprdocinfo.writerid, 
+       tbl_aprdocinfo.writername, 
+       tbl_aprdocinfo.writerjobtitle, 
+       tbl_aprdocinfo.writerdeptid, 
+       tbl_aprdocinfo.writerdeptname, 
+       tbl_aprdocinfo.ispublic, 
+       tbl_aprdocinfo.writername2, 
+       tbl_aprdocinfo.writerjobtitle2, 
+       tbl_aprdocinfo.writerdeptname2 , 
+       tbl_aprdocinfo.tenant_id, 
+       tbl_aprdocinfo.companyid, 
+       tbl_aprlineinfo.aprmembersn        AprMemberSN , 
+       tbl_aprlineinfo.aprtype            AprType , 
+       tbl_aprlineinfo.aprstate           AprState , 
+       tbl_aprlineinfo.aprmemberid        AprMemberID , 
+       tbl_aprlineinfo.aprmembername      AprMemberName , 
+       tbl_aprlineinfo.aprmembername2     AprMemberName2 , 
+       tbl_aprlineinfo.aprmemberjobtitle  AprMemberJobTitle , 
+       tbl_aprlineinfo.aprmemberjobtitle2 AprMemberJobTitle2 , 
+       tbl_aprlineinfo.aprmemberdeptid    AprMemberDeptID , 
+       tbl_aprlineinfo.aprmemberdeptname  AprMemberDeptName , 
+       tbl_aprlineinfo.aprmemberdeptname2 AprMemberDeptName2 , 
+       tbl_aprlineinfo.receiveddate       ReceivedDate , 
+       tbl_expaprdocinfo.formname         FormName , 
+       tbl_expaprdocinfo.formname2        FormName2 , 
+       tbl_expaprdocinfo.urgentapproval   UrgentApproval,
+       tbl_deptmaster.extensionattribute3 AS companyname, 
+       tbl_deptmaster.compnm2             AS companyname2
+FROM   tbl_aprdocinfo 
+JOIN   tbl_aprlineinfo 
+ON     tbl_aprdocinfo.docid = tbl_aprlineinfo.docid 
+AND    tbl_aprdocinfo.tenant_id = tbl_aprlineinfo.tenant_id 
+AND    tbl_aprdocinfo.companyid = tbl_aprlineinfo.companyid 
+JOIN   tbl_expaprdocinfo 
+ON     tbl_aprdocinfo.docid = tbl_expaprdocinfo.docid 
+AND    tbl_aprdocinfo.tenant_id = tbl_expaprdocinfo.tenant_id 
+AND    tbl_aprdocinfo.companyid = tbl_expaprdocinfo.companyid 
+JOIN   tbl_deptmaster 
+ON    ( tbl_aprdocinfo.companyid = tbl_deptmaster.cn 
+AND    tbl_aprdocinfo.tenant_id = tbl_deptmaster.tenant_id)
+WHERE  (( tbl_aprlineinfo.aprstate = '002') 
+AND    ( tbl_aprdocinfo.docstate = '015') 
+AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
+--------------------------------------------------------
+--  DDL for View VSEARCH_CLUBGUEST
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE EDITIONABLE VIEW "VSEARCH_CLUBGUEST" ("C_CLUBNO", "NO", "ID", "USERNAME", "COMPANYID", "TITLE", "CONTENT", "WRITEDAY", "C_CLUBNAME", "TENANT_ID") AS 
+  SELECT TBL_C_CLUBGUEST.c_clubno ,
+          TBL_C_CLUBGUEST.no ,
+          TBL_C_CLUBGUEST.id ,
+          TBL_C_CLUBGUEST.UserName ,
+          TBL_C_CLUBGUEST.companyID ,
+          TBL_C_CLUBGUEST.title ,
+          TBL_C_CLUBGUEST.content ,
+          TBL_C_CLUBGUEST.writeday ,
+          TBL_C_CLUB.C_ClubName,
+          TBL_C_CLUBGUEST.tenant_ID
+     FROM TBL_C_CLUBGUEST
+            JOIN TBL_C_CLUB    ON TBL_C_CLUBGUEST.c_clubno = TBL_C_CLUB.C_ClubNo
+                                AND TBL_C_CLUBGUEST.tenant_ID = TBL_C_CLUB.tenant_ID;
+--------------------------------------------------------
+--  DDL for View VTASKCLASS
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE EDITIONABLE VIEW "VTASKCLASS" ("CATEGORYCODE", "CNAME", "CNAME2", "MCATEGORYCODE", "MCNAME", "MCNAME2", "SUBCATEGORYCODE", "SCNAME", "SCNAME2", "TASKCODE", "TASKNAME", "TASKNAME2", "KEEPINGPERIOD", "DISPLAYRECFLAG", "SPECIALCATALOGFLAG", "SC1", "SC2", "SC3", "TEMPFLAG", "COMPANYID", "TENANT_ID", "PROCESSDEPTCODE", "PROCESSDEPTNAME", "PROCESSDEPTNAME2", "KEEPINGMETHOD", "KEEPINGPLACE", "DISPLAYRECTRASTIME", "DELFLAG") AS 
+  SELECT TBL_TASKCATEGORY.CategoryCode ,
+          TBL_TASKCATEGORY.Name CName  ,
+          TBL_TASKCATEGORY.Name2 CName2  ,
+          TBL_TASKMIDDLECATEGORY.MCategoryCode ,
+          TBL_TASKMIDDLECATEGORY.Name MCName  ,
+          TBL_TASKMIDDLECATEGORY.Name2 MCName2  ,
+          TBL_TASKSUBCATEGORY.SubCategoryCode ,
+          TBL_TASKSUBCATEGORY.Name SCName  ,
+          TBL_TASKSUBCATEGORY.Name2 SCName2  ,
+          TBL_TASKCODE.TaskCode ,
+          TBL_TASKCODE.TaskName ,
+          TBL_TASKCODE.TaskName2 ,
+          TBL_TASKCODE.KeepingPeriod ,
+          TBL_TASKCODE.DisplayRecFlag ,
+          TBL_TASKCODE.SpecialCatalogFlag ,
+          TBL_TASKCODE.SC1 ,
+          TBL_TASKCODE.SC2 ,
+          TBL_TASKCODE.SC3 ,
+          TBL_TASKCODE.TempFlag ,
+          TBL_TASKCODE.COMPANYID,
+          TBL_TASKCODE.TENANT_ID ,
+          TBL_TASK_DEPTINFO.ProcessDeptCode ,
+          TBL_TASK_DEPTINFO.ProcessDeptName ,
+          TBL_TASK_DEPTINFO.ProcessDeptName2 ,
+          TBL_TASKCODE.KeepingMethod ,
+          TBL_TASKCODE.KeepingPlace ,
+          TBL_TASKCODE.DisplayRecTrasTime ,
+          TBL_TASK_DEPTINFO.DelFlag
+     FROM TBL_TASKCATEGORY
+            JOIN TBL_TASKMIDDLECATEGORY    ON TBL_TASKCATEGORY.CategoryCode = TBL_TASKMIDDLECATEGORY.CategoryCode AND TBL_TASKCATEGORY.TENANT_ID = TBL_TASKMIDDLECATEGORY.TENANT_ID AND TBL_TASKCATEGORY.COMPANYID = TBL_TASKMIDDLECATEGORY.COMPANYID
+            JOIN TBL_TASKSUBCATEGORY    ON TBL_TASKMIDDLECATEGORY.MCategoryCode = TBL_TASKSUBCATEGORY.MCategoryCode AND TBL_TASKMIDDLECATEGORY.TENANT_ID = TBL_TASKSUBCATEGORY.TENANT_ID AND TBL_TASKMIDDLECATEGORY.COMPANYID = TBL_TASKSUBCATEGORY.COMPANYID
+            JOIN TBL_TASKCODE    ON TBL_TASKSUBCATEGORY.SubCategoryCode = TBL_TASKCODE.SubCategoryCode AND TBL_TASKSUBCATEGORY.TENANT_ID = TBL_TASKCODE.TENANT_ID AND TBL_TASKSUBCATEGORY.COMPANYID = TBL_TASKCODE.COMPANYID
+            LEFT JOIN TBL_TASK_DEPTINFO    ON TBL_TASKCODE.TaskCode = TBL_TASK_DEPTINFO.TaskCode AND TBL_TASKCODE.TENANT_ID = TBL_TASK_DEPTINFO.TENANT_ID AND TBL_TASKCODE.COMPANYID = TBL_TASK_DEPTINFO.COMPANYID
+    WHERE  ( TBL_TASK_DEPTINFO.DelFlag = '0' )
+             OR ( TBL_TASK_DEPTINFO.DelFlag IS NULL )
+             OR ( TBL_TASK_DEPTINFO.DelFlag = '2' );
 --------------------------------------------------------
 --  DDL for Table ACAPHOTO
 --------------------------------------------------------
@@ -758,6 +613,16 @@
   CREATE TABLE "JMOCHA_ALIAS" 
    (	"TARGET_ADDRESS" NVARCHAR2(100), 
 	"ALIAS_ADDRESS" NVARCHAR2(100)
+   ) ;
+--------------------------------------------------------
+--  DDL for Table JMOCHA_BIGATTACH_DOWNLOAD_LIMIT
+--------------------------------------------------------
+
+  CREATE TABLE "JMOCHA_BIGATTACH_DOWNLOAD_LIMIT" 
+   (	"FILE_ID" NVARCHAR2(100), 
+	"DOWNLOAD_COUNT" NUMBER, 
+	"LIMIT_COUNT" NUMBER, 
+	"TENANT_ID" NUMBER DEFAULT 0
    ) ;
 --------------------------------------------------------
 --  DDL for Table JMOCHA_CONNECTION_INFO
@@ -1279,6 +1144,28 @@
   CREATE TABLE "JMOCHA_TENANT_SERVERNAME" 
    (	"SERVER_NAME" VARCHAR2(100 BYTE), 
 	"TENANT_ID" NUMBER(11,0)
+   ) ;
+--------------------------------------------------------
+--  DDL for Table JMOCHA_USER_DISTRIBUTION
+--------------------------------------------------------
+
+  CREATE TABLE "JMOCHA_USER_DISTRIBUTION" 
+   (	"DOMAIN_NAME" NVARCHAR2(100), 
+	"USER_NAME" NVARCHAR2(100), 
+	"OWNER_ID" NVARCHAR2(100), 
+	"DISCLOSURE_POLICY" NVARCHAR2(100), 
+	"EXPLAINATION" NVARCHAR2(100) DEFAULT NULL, 
+	"DL_END_DATE" DATE DEFAULT NULL
+   ) ;
+--------------------------------------------------------
+--  DDL for Table JMOCHA_USER_DISTRIBUTION_MEMBER
+--------------------------------------------------------
+
+  CREATE TABLE "JMOCHA_USER_DISTRIBUTION_MEMBER" 
+   (	"DOMAIN_NAME" NVARCHAR2(100), 
+	"USER_NAME" NVARCHAR2(100), 
+	"MEMBER_ID" NVARCHAR2(100), 
+	"REG_DATE" DATE DEFAULT NULL
    ) ;
 --------------------------------------------------------
 --  DDL for Table JMOCHA_USER_LOCAL_INFO
@@ -4534,10 +4421,10 @@
 	"CHANGEUSERNAME2" NVARCHAR2(100), 
 	"CHANGEUSERJOBTITLE2" NVARCHAR2(100), 
 	"CHANGEUSERDEPTNAME2" NVARCHAR2(100), 
-	"ISBEFOREDOC" CHAR(1 CHAR), 
-	"BEFOREDOCURL" VARCHAR2(255 CHAR), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
-	"COMPANYID" VARCHAR2(20 BYTE)
+	"COMPANYID" VARCHAR2(20 BYTE), 
+	"ISBEFOREDOC" CHAR(1 CHAR), 
+	"BEFOREDOCURL" VARCHAR2(255 CHAR)
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_HISTORYLINEINFO
@@ -6606,7 +6493,7 @@
 	"RESLOCATION" NVARCHAR2(50), 
 	"BRD_UPPER2" NVARCHAR2(4), 
 	"APPROVEFLAG" NCHAR(1) DEFAULT TO_NCHAR('0'), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0,
+	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
 	"RETURNFLAG" NCHAR(1) DEFAULT TO_NCHAR('0')
    ) ;
 --------------------------------------------------------
@@ -6629,20 +6516,6 @@
 	"BRD_COMPANY" NVARCHAR2(80), 
 	"TENANT_ID" NUMBER(5,0)
    ) ;
---------------------------------------------------------
---  DDL for Table TBL_RS_FAVORITE
---------------------------------------------------------
-
-  CREATE TABLE "EZEKP2017"."TBL_RS_FAVORITE" 
-   (	"RESID" NVARCHAR2(40), 
-	"RESCOMPANY" NVARCHAR2(40), 
-	"USERID" NVARCHAR2(40), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) SEGMENT CREATION IMMEDIATE 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RS_RESACL
 --------------------------------------------------------
@@ -6687,7 +6560,7 @@
 	"PUBLICFLAG" NCHAR(1), 
 	"APPROVEFLAG" NCHAR(1) DEFAULT TO_NCHAR('0'), 
 	"SCHEDULEID" NVARCHAR2(500), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0,
+	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
 	"RETURNFLAG" NCHAR(1) DEFAULT TO_NCHAR('0')
    ) ;
 --------------------------------------------------------
@@ -8402,218 +8275,485 @@
 	"TYPE" VARCHAR2(50 BYTE)
    ) ;
 --------------------------------------------------------
---  DDL for View SVTASKCLASS
+--  DDL for Sequence DBOBJECTID_SEQUENCE
 --------------------------------------------------------
 
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "SVTASKCLASS" ("CATEGORYCODE", "CNAME", "CNAME2", "MCATEGORYCODE", "MCNAME", "MCNAME2", "SUBCATEGORYCODE", "SCNAME", "SCNAME2", "TASKCODE", "TASKNAME", "TASKNAME2", "KEEPINGPERIOD", "DISPLAYRECFLAG", "SPECIALCATALOGFLAG", "TEMPFLAG", "COMPANYID", "TENANT_ID", "PROCESSDEPTCODE", "PROCESSDEPTNAME", "PROCESSDEPTNAME2", "KEEPINGMETHOD", "KEEPINGPLACE", "DISPLAYRECTRASTIME", "ISPUBLIC", "ITEMSECURITY", "DELFLAG") AS 
-  SELECT
-        tbl_taskcategory.CATEGORYCODE AS CATEGORYCODE,
-        tbl_taskcategory.NAME AS CNAME,
-        tbl_taskcategory.NAME2 AS CNAME2,
-        tbl_taskmiddlecategory.MCATEGORYCODE AS MCATEGORYCODE,
-        tbl_taskmiddlecategory.NAME AS MCNAME,
-        tbl_taskmiddlecategory.NAME2 AS MCNAME2,
-        tbl_tasksubcategory.SUBCATEGORYCODE AS SUBCATEGORYCODE,
-        tbl_tasksubcategory.NAME AS SCNAME,
-        tbl_tasksubcategory.NAME2 AS SCNAME2,
-        tbl_taskcode.TASKCODE AS TASKCODE,
-        tbl_taskcode.TASKNAME AS TASKNAME,
-        tbl_taskcode.TASKNAME2 AS TASKNAME2,
-        tbl_taskcode.KEEPINGPERIOD AS KEEPINGPERIOD,
-        tbl_taskcode.DISPLAYRECFLAG AS DISPLAYRECFLAG,
-        tbl_taskcode.SPECIALCATALOGFLAG AS SPECIALCATALOGFLAG,
-        tbl_taskcode.TEMPFLAG AS TEMPFLAG,
-        tbl_taskcode.COMPANYID AS COMPANYID,
-        tbl_taskcode.TENANT_ID AS TENANT_ID,
-        tbl_task_deptinfo.PROCESSDEPTCODE AS PROCESSDEPTCODE,
-        tbl_task_deptinfo.PROCESSDEPTNAME AS PROCESSDEPTNAME,
-        tbl_task_deptinfo.PROCESSDEPTNAME2 AS PROCESSDEPTNAME2,
-        tbl_taskcode.KEEPINGMETHOD AS KEEPINGMETHOD,
-        tbl_taskcode.KEEPINGPLACE AS KEEPINGPLACE,
-        tbl_taskcode.DISPLAYRECTRASTIME AS DISPLAYRECTRASTIME,
-        tbl_taskcode.ISPUBLIC AS ISPUBLIC,
-        tbl_taskcode.ITEMSECURITY AS ITEMSECURITY,
-        tbl_task_deptinfo.DELFLAG AS DELFLAG
-    FROM
-        ((((tbl_taskcategory
-        JOIN tbl_taskmiddlecategory ON (((tbl_taskcategory.CATEGORYCODE = tbl_taskmiddlecategory.CATEGORYCODE)
-            AND (tbl_taskcategory.TENANT_ID = tbl_taskmiddlecategory.TENANT_ID)
-            AND (tbl_taskcategory.COMPANYID = tbl_taskmiddlecategory.COMPANYID))))
-        JOIN tbl_tasksubcategory ON (((tbl_taskmiddlecategory.MCATEGORYCODE = tbl_tasksubcategory.MCATEGORYCODE)
-            AND (tbl_taskmiddlecategory.TENANT_ID = tbl_tasksubcategory.TENANT_ID)
-            AND (tbl_taskmiddlecategory.COMPANYID = tbl_tasksubcategory.COMPANYID))))
-        JOIN tbl_taskcode ON (((tbl_tasksubcategory.SUBCATEGORYCODE = tbl_taskcode.SUBCATEGORYCODE)
-            AND (tbl_tasksubcategory.TENANT_ID = tbl_taskcode.TENANT_ID)
-            AND (tbl_tasksubcategory.COMPANYID = tbl_taskcode.COMPANYID))))
-        LEFT JOIN tbl_task_deptinfo ON (((tbl_taskcode.TASKCODE = tbl_task_deptinfo.TASKCODE)
-            AND (tbl_taskcode.TENANT_ID = tbl_task_deptinfo.TENANT_ID)
-            AND (tbl_taskcode.COMPANYID = tbl_task_deptinfo.COMPANYID))))
-    WHERE
-        tbl_task_deptinfo.DELFLAG = '0'
-            OR tbl_task_deptinfo.DELFLAG is null
-            OR tbl_task_deptinfo.DELFLAG = '2'
-;
+   CREATE SEQUENCE  "DBOBJECTID_SEQUENCE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 50 START WITH 1 CACHE 50 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
 --------------------------------------------------------
---  DDL for View VAPRDOINGDOCLIST
+--  DDL for Sequence LIGHTPOLLOPTIONID_SEQ
 --------------------------------------------------------
 
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "VAPRDOINGDOCLIST" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "RECEIVEDDATE", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL") AS 
-  SELECT  TBL_APRDOCINFO."DOCID",TBL_APRDOCINFO."FORMID",TBL_APRDOCINFO."ORGDOCID",TBL_APRDOCINFO."DOCTYPE",case when TBL_APRLINEINFO."APRSTATE" = '000' then '017' else  TBL_APRDOCINFO."DOCSTATE" end as DOCSTATE,case when TBL_APRLINEINFO."APRSTATE" = '000' and TBL_APRDOCINFO."FUNCTIONTYPE" <> '004' THEN '002' ELSE TBL_APRDOCINFO."FUNCTIONTYPE" END as FUNCTIONTYPE,TBL_APRDOCINFO."HREF",TBL_APRDOCINFO."DOCTITLE",TBL_APRDOCINFO."DOCNO",TBL_APRDOCINFO."HASATTACHYN",TBL_APRDOCINFO."HASOPINIONYN",TBL_APRDOCINFO."STARTDATE",TBL_APRDOCINFO."ENDDATE",TBL_APRDOCINFO."WRITERID",TBL_APRDOCINFO."WRITERNAME",TBL_APRDOCINFO."WRITERJOBTITLE",TBL_APRDOCINFO."WRITERDEPTID",TBL_APRDOCINFO."WRITERDEPTNAME",TBL_APRDOCINFO."ISPUBLIC",TBL_APRDOCINFO."WRITERNAME2",TBL_APRDOCINFO."WRITERJOBTITLE2",TBL_APRDOCINFO."WRITERDEPTNAME2" ,TBL_APRDOCINFO."TENANT_ID",TBL_APRDOCINFO."COMPANYID",          TBL_APRLINEINFO.AprMemberSN AprMemberSN  ,          TBL_APRLINEINFO.AprType AprType  ,          TBL_APRLINEINFO.AprState AprState  ,          TBL_APRLINEINFO.AprMemberID AprMemberID  ,          TBL_APRLINEINFO.AprMemberName AprMemberName  ,          TBL_APRLINEINFO.AprMemberName2 AprMemberName2  ,          TBL_APRLINEINFO.AprMemberJobTitle AprMemberJobTitle  ,          TBL_APRLINEINFO.AprMemberJobTitle2 AprMemberJobTitle2  ,          TBL_APRLINEINFO.AprMemberDeptID AprMemberDeptID  ,          TBL_APRLINEINFO.AprMemberDeptName AprMemberDeptName  ,          TBL_APRLINEINFO.AprMemberDeptName2 AprMemberDeptName2  ,          TBL_APRLINEINFO.ReceivedDate ReceivedDate  ,          TBL_EXPAPRDOCINFO.FormName FormName  ,          TBL_EXPAPRDOCINFO.FormName2 FormName2  ,          TBL_EXPAPRDOCINFO.UrgentApproval UrgentApproval       FROM TBL_APRDOCINFO             JOIN TBL_APRLINEINFO    ON TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID            JOIN TBL_EXPAPRDOCINFO    ON TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID     WHERE  ( TBL_APRLINEINFO.AprState = '002'             OR TBL_APRLINEINFO.AprState = '005'             OR TBL_APRLINEINFO.AprState = '000')             AND ( TBL_APRDOCINFO.StartDate IS NOT NULL )
-;
+   CREATE SEQUENCE  "LIGHTPOLLOPTIONID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
 --------------------------------------------------------
---  DDL for View VAPRWILLDOCLIST
+--  DDL for Sequence POPUPOPTIONID_SEQ
 --------------------------------------------------------
 
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "VAPRWILLDOCLIST" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL", "COMPANYNAME", "COMPANYNAME2") AS 
-  SELECT TBL_APRDOCINFO."DOCID",TBL_APRDOCINFO."FORMID",TBL_APRDOCINFO."ORGDOCID",TBL_APRDOCINFO."DOCTYPE",TBL_APRDOCINFO."DOCSTATE",TBL_APRDOCINFO."FUNCTIONTYPE",TBL_APRDOCINFO."HREF",TBL_APRDOCINFO."DOCTITLE",TBL_APRDOCINFO."DOCNO",TBL_APRDOCINFO."HASATTACHYN",TBL_APRDOCINFO."HASOPINIONYN",TBL_APRDOCINFO."STARTDATE",TBL_APRDOCINFO."ENDDATE",TBL_APRDOCINFO."WRITERID",TBL_APRDOCINFO."WRITERNAME",TBL_APRDOCINFO."WRITERJOBTITLE",TBL_APRDOCINFO."WRITERDEPTID",TBL_APRDOCINFO."WRITERDEPTNAME",TBL_APRDOCINFO."ISPUBLIC",TBL_APRDOCINFO."WRITERNAME2",TBL_APRDOCINFO."WRITERJOBTITLE2",TBL_APRDOCINFO."WRITERDEPTNAME2" ,TBL_APRDOCINFO."TENANT_ID",TBL_APRDOCINFO."COMPANYID",
-          TBL_APRLINEINFO.AprMemberSN AprMemberSN  ,
-          TBL_APRLINEINFO.AprType AprType  ,
-          TBL_APRLINEINFO.AprState AprState  ,
-          TBL_APRLINEINFO.AprMemberID AprMemberID  ,
-          TBL_APRLINEINFO.AprMemberName AprMemberName  ,
-          TBL_APRLINEINFO.AprMemberName2 AprMemberName2  ,
-          TBL_APRLINEINFO.AprMemberJobTitle AprMemberJobTitle  ,
-          TBL_APRLINEINFO.AprMemberJobTitle2 AprMemberJobTitle2  ,
-          TBL_APRLINEINFO.AprMemberDeptID AprMemberDeptID  ,
-          TBL_APRLINEINFO.AprMemberDeptName AprMemberDeptName  ,
-          TBL_APRLINEINFO.AprMemberDeptName2 AprMemberDeptName2  ,
-          TBL_EXPAPRDOCINFO.FormName FormName  ,
-          TBL_EXPAPRDOCINFO.FormName2 FormName2  ,
-          TBL_EXPAPRDOCINFO.UrgentApproval UrgentApproval  ,
-          TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 COMPANYNAME  ,
-		  TBL_DEPTMASTER.COMPNM2 COMPANYNAME2
-     FROM TBL_APRDOCINFO
-            JOIN TBL_APRLINEINFO    ON TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID AND  TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID AND  TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID
-            JOIN TBL_EXPAPRDOCINFO    ON TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID
-			JOIN TBL_DEPTMASTER ON TBL_APRDOCINFO.COMPANYID = TBL_DEPTMASTER.CN AND TBL_APRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
-    WHERE  ( TBL_APRDOCINFO.StartDate IS NOT NULL )
-;
+   CREATE SEQUENCE  "POPUPOPTIONID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
 --------------------------------------------------------
---  DDL for View VENDCHAMJODOCINFO
+--  DDL for Sequence SEQ_DBOBJECTID_SEQUENCE
 --------------------------------------------------------
 
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "VENDCHAMJODOCINFO" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "RECEIVEDDATE", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL") AS 
-  SELECT
-        tbl_endaprdocinfo.DOCID AS DOCID,
-        tbl_endaprdocinfo.FORMID AS FORMID,
-        tbl_endaprdocinfo.ORGDOCID AS ORGDOCID,
-        tbl_endaprdocinfo.DOCTYPE AS DOCTYPE,
-        '017' AS DOCSTATE,
-        '002' AS FUNCTIONTYPE,
-        tbl_endaprdocinfo.HREF AS HREF,
-        tbl_endaprdocinfo.DOCTITLE AS DOCTITLE,
-        tbl_endaprdocinfo.DOCNO AS DOCNO,
-        tbl_endaprdocinfo.HASATTACHYN AS HASATTACHYN,
-        tbl_endaprdocinfo.HASOPINIONYN AS HASOPINIONYN,
-        tbl_endaprdocinfo.STARTDATE AS STARTDATE,
-        tbl_endaprdocinfo.ENDDATE AS ENDDATE,
-        tbl_endaprdocinfo.WRITERID AS WRITERID,
-        tbl_endaprdocinfo.WRITERNAME AS WRITERNAME,
-        tbl_endaprdocinfo.WRITERJOBTITLE AS WRITERJOBTITLE,
-        tbl_endaprdocinfo.WRITERDEPTID AS WRITERDEPTID,
-        tbl_endaprdocinfo.WRITERDEPTNAME AS WRITERDEPTNAME,
-        tbl_endaprdocinfo.ISPUBLIC AS ISPUBLIC,
-        tbl_endaprdocinfo.WRITERNAME2 AS WRITERNAME2,
-        tbl_endaprdocinfo.WRITERJOBTITLE2 AS WRITERJOBTITLE2,
-        tbl_endaprdocinfo.WRITERDEPTNAME2 AS WRITERDEPTNAME2,
-        tbl_endaprdocinfo.TENANT_ID AS TENANT_ID,
-        tbl_endaprdocinfo.COMPANYID AS COMPANYID,
-        tbl_endaprlineinfo.APRMEMBERSN AS APRMEMBERSN,
-        tbl_endaprlineinfo.APRTYPE AS APRTYPE,
-        tbl_endaprlineinfo.APRSTATE AS APRSTATE,
-        tbl_endaprlineinfo.APRMEMBERID AS APRMEMBERID,
-        tbl_endaprlineinfo.APRMEMBERNAME AS APRMEMBERNAME,
-        tbl_endaprlineinfo.APRMEMBERNAME2 AS APRMEMBERNAME2,
-        tbl_endaprlineinfo.APRMEMBERJOBTITLE AS APRMEMBERJOBTITLE,
-        tbl_endaprlineinfo.APRMEMBERJOBTITLE2 AS APRMEMBERJOBTITLE2,
-        tbl_endaprlineinfo.APRMEMBERDEPTID AS APRMEMBERDEPTID,
-        tbl_endaprlineinfo.APRMEMBERDEPTNAME AS APRMEMBERDEPTNAME,
-        tbl_endaprlineinfo.APRMEMBERDEPTNAME2 AS APRMEMBERDEPTNAME2,
-        tbl_endaprlineinfo.RECEIVEDDATE AS RECEIVEDDATE,
-        tbl_expendaprdocinfo.FORMNAME AS FORMNAME,
-        tbl_expendaprdocinfo.FORMNAME2 AS FORMNAME2,
-        tbl_expendaprdocinfo.URGENTAPPROVAL AS URGENTAPPROVAL
-    FROM
-        ((tbl_endaprdocinfo
-        JOIN tbl_endaprlineinfo ON (((tbl_endaprdocinfo.DOCID = tbl_endaprlineinfo.DOCID)
-            AND (tbl_endaprdocinfo.TENANT_ID = tbl_endaprlineinfo.TENANT_ID)
-            AND (tbl_endaprdocinfo.COMPANYID = tbl_endaprlineinfo.COMPANYID))))
-        JOIN tbl_expendaprdocinfo ON (((tbl_endaprdocinfo.DOCID = tbl_expendaprdocinfo.DOCID)
-            AND (tbl_endaprdocinfo.TENANT_ID = tbl_expendaprdocinfo.TENANT_ID)
-            AND (tbl_endaprdocinfo.COMPANYID = tbl_expendaprdocinfo.COMPANYID))))
-    WHERE
-        ((tbl_endaprlineinfo.APRSTATE <> '002')
-            AND (tbl_endaprlineinfo.APRSTATE <> '005')
-            AND (tbl_endaprlineinfo.APRSTATE = '000'))
-;
+   CREATE SEQUENCE  "SEQ_DBOBJECTID_SEQUENCE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 50 START WITH 1 CACHE 50 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
 --------------------------------------------------------
---  DDL for View VGONGRAMAPRDOINGDOCLIST
+--  DDL for Sequence SEQ_JMOCHA_ADDRESS_FOLDER
 --------------------------------------------------------
 
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "VGONGRAMAPRDOINGDOCLIST" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "RECEIVEDDATE", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL") AS 
-  SELECT  TBL_APRDOCINFO."DOCID",TBL_APRDOCINFO."FORMID",TBL_APRDOCINFO."ORGDOCID",TBL_APRDOCINFO."DOCTYPE",case when TBL_APRLINEINFO."APRSTATE" = '000' then '017' else  TBL_APRDOCINFO."DOCSTATE" end as DOCSTATE,case when TBL_APRLINEINFO."APRSTATE" = '000' and TBL_APRDOCINFO."FUNCTIONTYPE" <> '004' THEN '002' ELSE TBL_APRDOCINFO."FUNCTIONTYPE" END as FUNCTIONTYPE,TBL_APRDOCINFO."HREF",TBL_APRDOCINFO."DOCTITLE",TBL_APRDOCINFO."DOCNO",TBL_APRDOCINFO."HASATTACHYN",TBL_APRDOCINFO."HASOPINIONYN",TBL_APRDOCINFO."STARTDATE",TBL_APRDOCINFO."ENDDATE",TBL_APRDOCINFO."WRITERID",TBL_APRDOCINFO."WRITERNAME",TBL_APRDOCINFO."WRITERJOBTITLE",TBL_APRDOCINFO."WRITERDEPTID",TBL_APRDOCINFO."WRITERDEPTNAME",TBL_APRDOCINFO."ISPUBLIC",TBL_APRDOCINFO."WRITERNAME2",TBL_APRDOCINFO."WRITERJOBTITLE2",TBL_APRDOCINFO."WRITERDEPTNAME2" ,TBL_APRDOCINFO."TENANT_ID",TBL_APRDOCINFO."COMPANYID",          TBL_APRLINEINFO.AprMemberSN AprMemberSN  ,          TBL_APRLINEINFO.AprType AprType  ,          TBL_APRLINEINFO.AprState AprState  ,          TBL_APRLINEINFO.AprMemberID AprMemberID  ,          TBL_APRLINEINFO.AprMemberName AprMemberName  ,          TBL_APRLINEINFO.AprMemberName2 AprMemberName2  ,          TBL_APRLINEINFO.AprMemberJobTitle AprMemberJobTitle  ,          TBL_APRLINEINFO.AprMemberJobTitle2 AprMemberJobTitle2  ,          TBL_APRLINEINFO.AprMemberDeptID AprMemberDeptID  ,          TBL_APRLINEINFO.AprMemberDeptName AprMemberDeptName  ,          TBL_APRLINEINFO.AprMemberDeptName2 AprMemberDeptName2  ,          TBL_APRLINEINFO.ReceivedDate ReceivedDate  ,          TBL_EXPAPRDOCINFO.FormName FormName  ,          TBL_EXPAPRDOCINFO.FormName2 FormName2  ,          TBL_EXPAPRDOCINFO.UrgentApproval UrgentApproval       FROM TBL_APRDOCINFO             JOIN TBL_APRLINEINFO    ON TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID            JOIN TBL_EXPAPRDOCINFO    ON TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID     WHERE  (( TBL_APRLINEINFO.AprState = '002') AND (TBL_APRDOCINFO.DOCSTATE = '015') AND ( TBL_APRDOCINFO.StartDate IS NOT NULL ))
-;
+   CREATE SEQUENCE  "SEQ_JMOCHA_ADDRESS_FOLDER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
 --------------------------------------------------------
---  DDL for View VSEARCH_CLUBGUEST
+--  DDL for Sequence SEQ_JMOCHA_ADDRESS_INFO
 --------------------------------------------------------
 
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "VSEARCH_CLUBGUEST" ("C_CLUBNO", "NO", "ID", "USERNAME", "COMPANYID", "TITLE", "CONTENT", "WRITEDAY", "C_CLUBNAME", "TENANT_ID") AS 
-  SELECT TBL_C_CLUBGUEST.c_clubno ,
-          TBL_C_CLUBGUEST.no ,
-          TBL_C_CLUBGUEST.id ,
-          TBL_C_CLUBGUEST.UserName ,
-          TBL_C_CLUBGUEST.companyID ,
-          TBL_C_CLUBGUEST.title ,
-          TBL_C_CLUBGUEST.content ,
-          TBL_C_CLUBGUEST.writeday ,
-          TBL_C_CLUB.C_ClubName,
-          TBL_C_CLUBGUEST.tenant_ID
-     FROM TBL_C_CLUBGUEST
-            JOIN TBL_C_CLUB    ON TBL_C_CLUBGUEST.c_clubno = TBL_C_CLUB.C_ClubNo
-                                AND TBL_C_CLUBGUEST.tenant_ID = TBL_C_CLUB.tenant_ID
-;
+   CREATE SEQUENCE  "SEQ_JMOCHA_ADDRESS_INFO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
 --------------------------------------------------------
---  DDL for View VTASKCLASS
+--  DDL for Sequence SEQ_JMOCHA_ADDRESS_SIMPLE
 --------------------------------------------------------
 
-  CREATE OR REPLACE FORCE EDITIONABLE VIEW "VTASKCLASS" ("CATEGORYCODE", "CNAME", "CNAME2", "MCATEGORYCODE", "MCNAME", "MCNAME2", "SUBCATEGORYCODE", "SCNAME", "SCNAME2", "TASKCODE", "TASKNAME", "TASKNAME2", "KEEPINGPERIOD", "DISPLAYRECFLAG", "SPECIALCATALOGFLAG", "SC1", "SC2", "SC3", "TEMPFLAG", "COMPANYID", "TENANT_ID", "PROCESSDEPTCODE", "PROCESSDEPTNAME", "PROCESSDEPTNAME2", "KEEPINGMETHOD", "KEEPINGPLACE", "DISPLAYRECTRASTIME", "DELFLAG") AS 
-  SELECT TBL_TASKCATEGORY.CategoryCode ,
-          TBL_TASKCATEGORY.Name CName  ,
-          TBL_TASKCATEGORY.Name2 CName2  ,
-          TBL_TASKMIDDLECATEGORY.MCategoryCode ,
-          TBL_TASKMIDDLECATEGORY.Name MCName  ,
-          TBL_TASKMIDDLECATEGORY.Name2 MCName2  ,
-          TBL_TASKSUBCATEGORY.SubCategoryCode ,
-          TBL_TASKSUBCATEGORY.Name SCName  ,
-          TBL_TASKSUBCATEGORY.Name2 SCName2  ,
-          TBL_TASKCODE.TaskCode ,
-          TBL_TASKCODE.TaskName ,
-          TBL_TASKCODE.TaskName2 ,
-          TBL_TASKCODE.KeepingPeriod ,
-          TBL_TASKCODE.DisplayRecFlag ,
-          TBL_TASKCODE.SpecialCatalogFlag ,
-          TBL_TASKCODE.SC1 ,
-          TBL_TASKCODE.SC2 ,
-          TBL_TASKCODE.SC3 ,
-          TBL_TASKCODE.TempFlag ,
-          TBL_TASKCODE.COMPANYID,
-          TBL_TASKCODE.TENANT_ID ,
-          TBL_TASK_DEPTINFO.ProcessDeptCode ,
-          TBL_TASK_DEPTINFO.ProcessDeptName ,
-          TBL_TASK_DEPTINFO.ProcessDeptName2 ,
-          TBL_TASKCODE.KeepingMethod ,
-          TBL_TASKCODE.KeepingPlace ,
-          TBL_TASKCODE.DisplayRecTrasTime ,
-          TBL_TASK_DEPTINFO.DelFlag
-     FROM TBL_TASKCATEGORY
-            JOIN TBL_TASKMIDDLECATEGORY    ON TBL_TASKCATEGORY.CategoryCode = TBL_TASKMIDDLECATEGORY.CategoryCode AND TBL_TASKCATEGORY.TENANT_ID = TBL_TASKMIDDLECATEGORY.TENANT_ID AND TBL_TASKCATEGORY.COMPANYID = TBL_TASKMIDDLECATEGORY.COMPANYID
-            JOIN TBL_TASKSUBCATEGORY    ON TBL_TASKMIDDLECATEGORY.MCategoryCode = TBL_TASKSUBCATEGORY.MCategoryCode AND TBL_TASKMIDDLECATEGORY.TENANT_ID = TBL_TASKSUBCATEGORY.TENANT_ID AND TBL_TASKMIDDLECATEGORY.COMPANYID = TBL_TASKSUBCATEGORY.COMPANYID
-            JOIN TBL_TASKCODE    ON TBL_TASKSUBCATEGORY.SubCategoryCode = TBL_TASKCODE.SubCategoryCode AND TBL_TASKSUBCATEGORY.TENANT_ID = TBL_TASKCODE.TENANT_ID AND TBL_TASKSUBCATEGORY.COMPANYID = TBL_TASKCODE.COMPANYID
-            LEFT JOIN TBL_TASK_DEPTINFO    ON TBL_TASKCODE.TaskCode = TBL_TASK_DEPTINFO.TaskCode AND TBL_TASKCODE.TENANT_ID = TBL_TASK_DEPTINFO.TENANT_ID AND TBL_TASKCODE.COMPANYID = TBL_TASK_DEPTINFO.COMPANYID
-    WHERE  ( TBL_TASK_DEPTINFO.DelFlag = '0' )
-             OR ( TBL_TASK_DEPTINFO.DelFlag IS NULL )
-             OR ( TBL_TASK_DEPTINFO.DelFlag = '2' )
-;
+   CREATE SEQUENCE  "SEQ_JMOCHA_ADDRESS_SIMPLE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_CONNECTION_INFO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_JMOCHA_CONNECTION_INFO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_INBOX_RULE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_JMOCHA_INBOX_RULE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_INBOX_RULE_SUB
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_JMOCHA_INBOX_RULE_SUB"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_LETTER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_JMOCHA_LETTER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_LETTER_BOX
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_JMOCHA_LETTER_BOX"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_MAIL_POP3
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_JMOCHA_MAIL_POP3"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_MAIL_RECALL
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_JMOCHA_MAIL_RECALL"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_MAIL_SECURE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_JMOCHA_MAIL_SECURE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_STAT_MAIL_LOG
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_JMOCHA_STAT_MAIL_LOG"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TALK_TBLNOTIFICATION
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TALK_TBLNOTIFICATION"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ADMINRECEIPTGROUP_MAIN
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_ADMINRECEIPTGROUP_MAIN"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ADMINRECEIPTGROUP_SUB
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_ADMINRECEIPTGROUP_SUB"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ATTITUDE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_ATTITUDE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ATTITUDE_HISTORY
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_ATTITUDE_HISTORY"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ATTITUDE_TYPE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_ATTITUDE_TYPE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ATTI_ANNUAL_HISTORY
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_ATTI_ANNUAL_HISTORY"  MINVALUE 1 MAXVALUE 99999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ATTI_MODAPPL_HISTORY
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_ATTI_MODAPPL_HISTORY"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_COMM_ITEM_ATTACHMENTS
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_COMM_ITEM_ATTACHMENTS"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_COMM_SCHEDULE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_COMM_SCHEDULE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_COMM_SCHEDULEATTACH
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_COMM_SCHEDULEATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_COMM_SCHEDULECOMMENT
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_COMM_SCHEDULECOMMENT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_CONNECTION_INFO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_CONNECTION_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_BOARD
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_C_BOARD"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_CLUBGUEST
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_C_CLUBGUEST"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_CLUBNOTICE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_C_CLUBNOTICE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_CLUBPHOTO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_C_CLUBPHOTO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_CLUBPHOTO_ATTACH
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_C_CLUBPHOTO_ATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_CLUBPHOTO_REPLY
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_C_CLUBPHOTO_REPLY"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_NOTICE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_C_NOTICE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_POLLANSWER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_C_POLLANSWER"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_POLLMANAGER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_C_POLLMANAGER"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_POLLQUESTION
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_C_POLLQUESTION"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_POLLRESPONSE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_C_POLLRESPONSE"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_DTPROPERTIES
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_DTPROPERTIES"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_BOARD1
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_D_C_BOARD1"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_BOARD2
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_D_C_BOARD2"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_BOARD3
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_D_C_BOARD3"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_CLUBBOARD
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_D_C_CLUBBOARD"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_CLUBBOARD1
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_D_C_CLUBBOARD1"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_CLUBBOARD2
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_D_C_CLUBBOARD2"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_CLUBPDS
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_D_C_CLUBPDS"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_CLUBPDS1
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_D_C_CLUBPDS1"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_CLUBPDS_BACK
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_D_C_CLUBPDS_BACK"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_FORMCONNINFO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_FORMCONNINFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_HOLIDAYLIST
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_HOLIDAYLIST"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_JOURNAL
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_JOURNAL"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_JOURNAL_FILE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_JOURNAL_FILE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_JOURNAL_FORM
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_JOURNAL_FORM"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_JOURNAL_RECV_FAVORITE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_JOURNAL_RECV_FAVORITE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_JOURNAL_REPLY
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_JOURNAL_REPLY"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_MEMO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_MEMO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_MEMO_FOLDER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_MEMO_FOLDER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_NOTIFICATION_ITEMSEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_NOTIFICATION_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_PS_COMPANYLINK_ITEMSEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_PS_COMPANYLINK_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_PS_NOTICE_ITEMSEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_PS_NOTICE_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_PS_POPUP_ITEMSEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_PS_POPUP_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_PS_USERLINK_ITEMSEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_PS_USERLINK_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_RECRELAYINFO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_RECRELAYINFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_RS_ATTACH
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_RS_ATTACH"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SCHEDULE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_SCHEDULE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SCHEDULEATTACH
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_SCHEDULEATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SCHEDULECOMMENT
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_SCHEDULECOMMENT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SCHEDULE_PUBLIC_DEPT
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_SCHEDULE_PUBLIC_DEPT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SCHEDULE_REPEDEL
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_SCHEDULE_REPEDEL"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SERIALNUMGEN
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_SERIALNUMGEN"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_STAT_MAIL_TEMP_IDX
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_STAT_MAIL_TEMP_IDX"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SURVEY_ATTACHFILE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_SURVEY_ATTACHFILE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SURVEY_PARTICIPANT
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_SURVEY_PARTICIPANT"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_TASK
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_TASK"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_TASKATTACH
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_TASKATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_TASKCODEHISTORY
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_TASKCODEHISTORY"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_TASKCOMMENT
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_TASKCOMMENT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_TASKREQUEST
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_TASKREQUEST"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_TT_V_TBLBOARDORDER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_TT_V_TBLBOARDORDER"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_TT_V_TBLPARENTBOARDS
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_TT_V_TBLPARENTBOARDS"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_USER_JOBMASTER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_USER_JOBMASTER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_ACCESS_IP_SEQ2
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "TBL_ACCESS_IP_SEQ2"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_LADDER_BMUSER_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "TBL_LADDER_BMUSER_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_LADDER_BM_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "TBL_LADDER_BM_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_LADDER_COMMENT_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "TBL_LADDER_COMMENT_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_LADDER_LINE_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "TBL_LADDER_LINE_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_LADDER_ORDER_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "TBL_LADDER_ORDER_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_LADDER_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "TBL_LADDER_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_PORTAL_FRAME_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "TBL_PORTAL_FRAME_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_PORTAL_MENU_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "TBL_PORTAL_MENU_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_PORTAL_PORTLET_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "TBL_PORTAL_PORTLET_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_PORTAL_THEME_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "TBL_PORTAL_THEME_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence TT_SQ_TMPCLASSINFO_SN
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "TT_SQ_TMPCLASSINFO_SN"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
 --------------------------------------------------------
 --  DDL for Index APPROVCONNKAMCO_PK
 --------------------------------------------------------
@@ -8871,6 +9011,12 @@
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "JMOCHA_ADDRESS_SEARCH_PK" ON "JMOCHA_ADDRESS_SEARCH" ("ID") 
+  ;
+--------------------------------------------------------
+--  DDL for Index JMOCHA_BIGATTACH_DOWNLOAD_LIMIT_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "JMOCHA_BIGATTACH_DOWNLOAD_LIMIT_PK" ON "JMOCHA_BIGATTACH_DOWNLOAD_LIMIT" ("FILE_ID") 
   ;
 --------------------------------------------------------
 --  DDL for Index JMOCHA_DISTRIBUTION_SUB_PK
@@ -9183,6 +9329,18 @@
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "PK_JMOCHA_TENANT_SERVERNAME" ON "JMOCHA_TENANT_SERVERNAME" ("SERVER_NAME") 
+  ;
+--------------------------------------------------------
+--  DDL for Index PK_JMOCHA_USER_DISTRIBUTION
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_JMOCHA_USER_DISTRIBUTION" ON "JMOCHA_USER_DISTRIBUTION" ("DOMAIN_NAME", "USER_NAME") 
+  ;
+--------------------------------------------------------
+--  DDL for Index PK_JMOCHA_USER_DISTRIBUTION_MEMBER
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_JMOCHA_USER_DISTRIBUTION_MEMBER" ON "JMOCHA_USER_DISTRIBUTION_MEMBER" ("DOMAIN_NAME", "USER_NAME", "MEMBER_ID") 
   ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_USER_LOCAL_INFO
@@ -10049,15 +10207,6 @@
   CREATE UNIQUE INDEX "PK_TBL_RS_FAVORITE" ON "TBL_RS_FAVORITE" ("RESID", "USERID", "TENANT_ID") 
   ;
 --------------------------------------------------------
---  DDL for Index PK_TBL_RS_FAVORITE
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "EZEKP2017"."PK_TBL_RS_FAVORITE" ON "EZEKP2017"."TBL_RS_FAVORITE" ("RESID", "USERID", "TENANT_ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
 --  DDL for Index PK_TBL_RS_RESACL
 --------------------------------------------------------
 
@@ -10649,7 +10798,7 @@
 --  DDL for Index SYS_C0034629
 --------------------------------------------------------
 
-  CREATE UNIQUE INDEX "SYS_C0034629" ON "JMOCHA_MAIL_COPYRIGHT" ("TENANT_ID") 
+  CREATE UNIQUE INDEX "SYS_C0034629" ON "JMOCHA_MAIL_COPYRIGHT" ("COMPANY_ID") 
   ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0034686
@@ -12578,6 +12727,14 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "JMOCHA_ALIAS" MODIFY ("ALIAS_ADDRESS" NOT NULL ENABLE);
   ALTER TABLE "JMOCHA_ALIAS" MODIFY ("TARGET_ADDRESS" NOT NULL ENABLE);
 --------------------------------------------------------
+--  Constraints for Table JMOCHA_BIGATTACH_DOWNLOAD_LIMIT
+--------------------------------------------------------
+
+  ALTER TABLE "JMOCHA_BIGATTACH_DOWNLOAD_LIMIT" MODIFY ("FILE_ID" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_BIGATTACH_DOWNLOAD_LIMIT" MODIFY ("TENANT_ID" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_BIGATTACH_DOWNLOAD_LIMIT" ADD CONSTRAINT "JMOCHA_BIGATTACH_DOWNLOAD_LIMIT_PK" PRIMARY KEY ("FILE_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
 --  Constraints for Table JMOCHA_CONNECTION_INFO
 --------------------------------------------------------
 
@@ -12665,10 +12822,8 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
 --  Constraints for Table JMOCHA_MAIL_COPYRIGHT
 --------------------------------------------------------
 
-  ALTER TABLE "JMOCHA_MAIL_COPYRIGHT" ADD CONSTRAINT "SYS_C0034629" PRIMARY KEY ("TENANT_ID")
+  ALTER TABLE "JMOCHA_MAIL_COPYRIGHT" ADD CONSTRAINT "SYS_C0034629" PRIMARY KEY ("COMPANY_ID")
   USING INDEX  ENABLE;
-  ALTER TABLE "JMOCHA_MAIL_COPYRIGHT" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
-  ALTER TABLE "JMOCHA_MAIL_COPYRIGHT" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_MAIL_COUNTRYIP
 --------------------------------------------------------
@@ -12932,6 +13087,25 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX  ENABLE;
   ALTER TABLE "JMOCHA_TENANT_SERVERNAME" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "JMOCHA_TENANT_SERVERNAME" MODIFY ("SERVER_NAME" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table JMOCHA_USER_DISTRIBUTION
+--------------------------------------------------------
+
+  ALTER TABLE "JMOCHA_USER_DISTRIBUTION" MODIFY ("DOMAIN_NAME" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_USER_DISTRIBUTION" MODIFY ("USER_NAME" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_USER_DISTRIBUTION" MODIFY ("OWNER_ID" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_USER_DISTRIBUTION" MODIFY ("DISCLOSURE_POLICY" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_USER_DISTRIBUTION" ADD CONSTRAINT "PK_JMOCHA_USER_DISTRIBUTION" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table JMOCHA_USER_DISTRIBUTION_MEMBER
+--------------------------------------------------------
+
+  ALTER TABLE "JMOCHA_USER_DISTRIBUTION_MEMBER" MODIFY ("DOMAIN_NAME" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_USER_DISTRIBUTION_MEMBER" MODIFY ("USER_NAME" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_USER_DISTRIBUTION_MEMBER" MODIFY ("MEMBER_ID" NOT NULL ENABLE);
+  ALTER TABLE "JMOCHA_USER_DISTRIBUTION_MEMBER" ADD CONSTRAINT "PK_JMOCHA_USER_DISTRIBUTION_MEMBER" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME", "MEMBER_ID")
+  USING INDEX  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_USER_LOCAL_INFO
 --------------------------------------------------------
@@ -13265,7 +13439,7 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "TBL_ADMINRECEIPTGROUP_SUB" MODIFY ("SUBID" NOT NULL ENABLE);
   ALTER TABLE "TBL_ADMINRECEIPTGROUP_SUB" MODIFY ("MAINID" NOT NULL ENABLE);
   ALTER TABLE "TBL_ADMINRECEIPTGROUP_SUB" ADD CONSTRAINT "PK_TBL_ADMINRECEIPTGROUP_SUB" PRIMARY KEY ("TENANT_ID", "SUBID", "COMPANYID")
-  USING INDEX  ENABLE;
+  USING INDEX ENABLE;
   ALTER TABLE "TBL_ADMINRECEIPTGROUP_SUB" MODIFY ("COMPANYID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_APRATTACHINFO
@@ -13637,7 +13811,7 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
 
   ALTER TABLE "TBL_BOARD_ITEM_LISTOPTION_BOAR" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "TBL_BOARD_ITEM_LISTOPTION_BOAR" ADD CONSTRAINT "PK_TBL_BOARD_ITEM_LISTOPTION_1" PRIMARY KEY ("TENANT_ID", "BOARDID", "SN")
-  USING INDEX  ENABLE;
+  USING INDEX ENABLE;
   ALTER TABLE "TBL_BOARD_ITEM_LISTOPTION_BOAR" MODIFY ("VIEW_FG" NOT NULL ENABLE);
   ALTER TABLE "TBL_BOARD_ITEM_LISTOPTION_BOAR" MODIFY ("WIDTH" NOT NULL ENABLE);
   ALTER TABLE "TBL_BOARD_ITEM_LISTOPTION_BOAR" MODIFY ("COLNAME" NOT NULL ENABLE);
@@ -13755,7 +13929,7 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "TBL_CABINETCLASS" ADD CONSTRAINT "SYS_C0023431" CHECK ("TERMINATEFLAG" IS NOT NULL) DISABLE;
   ALTER TABLE "TBL_CABINETCLASS" ADD CONSTRAINT "SYS_C0023430" CHECK ("REGSERIALNO" IS NOT NULL) DISABLE;
   ALTER TABLE "TBL_CABINETCLASS" ADD CONSTRAINT "PK__TBL_CABINETCLASS__10216507" PRIMARY KEY ("TENANT_ID", "CABINETCLASSNO", "COMPANYID")
-  USING INDEX  ENABLE;
+  USING INDEX ENABLE;
   ALTER TABLE "TBL_CABINETCLASS" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "TBL_CABINETCLASS" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "TBL_CABINETCLASS" MODIFY ("PRODUCTIONYEAR" NOT NULL ENABLE);
@@ -16072,15 +16246,6 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "TBL_RS_PERSPORTLET" MODIFY ("BRD_COMPANY" NOT NULL ENABLE);
   ALTER TABLE "TBL_RS_PERSPORTLET" MODIFY ("BRD_ID" NOT NULL ENABLE);
   ALTER TABLE "TBL_RS_PERSPORTLET" MODIFY ("CN" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table TBL_RS_FAVORITE
---------------------------------------------------------
-
-  ALTER TABLE "EZEKP2017"."TBL_RS_FAVORITE" ADD CONSTRAINT "PK_TBL_RS_FAVORITE" PRIMARY KEY ("RESID", "USERID", "TENANT_ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_RS_RESACL
 --------------------------------------------------------
