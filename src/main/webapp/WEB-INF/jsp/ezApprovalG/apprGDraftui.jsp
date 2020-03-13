@@ -566,7 +566,7 @@
 			            
 	                    //2017.07.12 건국대 시행문일경우 본문에 이미지 삽입되어있으면 상신안되게 변경
 	                    //2020-01-20 홍대표. 외부발송문서 본문에 이미지와 링크를 입력하지 못하도록 수정. 닷넷참고
-	                    if (pDocType == "001") {
+	                    if (approvalFlag == "G" && pDocType == "001") {
 	                        var objElem = document.createElement("div");
 	                        objElem.innerHTML = message.GetBodyHTML();
 	                        var objElems = objElem.getElementsByTagName("*");
