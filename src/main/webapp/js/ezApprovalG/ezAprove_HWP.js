@@ -1509,6 +1509,7 @@ function setRecevInfo(ret) {
     }
 }
 
+/* 2020-02-27 홍승비 - mht 문서 수정이력 비교용 파라미터 추가 (데이터 삽입 시 오류 방지) */
 function UpdateDocHistory(pHtml) {
 	var xmlhttp2 = createXMLHttpRequest();
 	var xmlpara = createXmlDom();
@@ -1517,6 +1518,7 @@ function UpdateDocHistory(pHtml) {
 	createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
 	createNodeAndInsertText(xmlpara, objNode, "pHtml", pHtml);
 	createNodeAndInsertText(xmlpara, objNode, "mode", "hwp");
+    createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", "");
 
     xmlhttp2.open("POST", "/ezApprovalG/uploadDocHistory.do", false);
 	xmlhttp2.send(xmlpara);
@@ -1538,6 +1540,8 @@ function UpdateDocHistory(pHtml) {
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
         createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
+        createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", "");
+        createNodeAndInsertText(xmlpara, objNode, "BEFOREDOCURL", "");
         
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);

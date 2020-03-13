@@ -2103,10 +2103,8 @@
 	
 	<delete id="EzBoardAdminDAO.trunkBoard" parameterClass="Integer">
 		<![CDATA[
-			DELETE FROM
+			TRUNCATE
 				TBL_BOARD_TREECACHE
-			WHERE
-				tenant_id = #tenantID#
 		]]>
 	</delete>
 		

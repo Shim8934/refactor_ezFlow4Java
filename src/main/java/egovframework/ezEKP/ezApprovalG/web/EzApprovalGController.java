@@ -8359,9 +8359,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = doc.getElementsByTagName("pDocID").item(0).getTextContent();
 		String mode = doc.getElementsByTagName("mode").item(0).getTextContent();
 		String pHTML = doc.getElementsByTagName("pHtml").item(0).getTextContent().replace("\r\n", "\n").replace("\n", "\r\n");
+		String isBeforeDoc = doc.getElementsByTagName("ISBEFOREDOC").item(0).getTextContent();
 
+		/* 2020-02-24 홍승비 - 편집전후 판단을 위하여 파일명에 문자 추가 */
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-		String fileName = docID + "-" + commonUtil.getTodayUTCTime("yyyyMMddHHmmss")+ "." + mode;
+		String fileName = docID + "-" + commonUtil.getTodayUTCTime("yyyyMMddHHmmss") + isBeforeDoc + "." + mode;
 		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)  + commonUtil.separator + "history" ;
 		String dirPath2 = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID);
 		String realPath = commonUtil.getRealPath(request);
@@ -8432,12 +8434,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userName2 = doc.getElementsByTagName("PUSERNAME2").item(0).getTextContent();
 		String userJobTitle2 = doc.getElementsByTagName("PUSERJOBTITLE2").item(0).getTextContent();
 		String userDeptName2 = doc.getElementsByTagName("PUSERDEPTNAME2").item(0).getTextContent();
+		String isBeforeDoc = doc.getElementsByTagName("ISBEFOREDOC").item(0).getTextContent();
+		String beforeDocURL = doc.getElementsByTagName("BEFOREDOCURL").item(0).getTextContent();
 		
 		if (doc.getElementsByTagName("ORGCOMPANYID").getLength() > 0 && !doc.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent().equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(doc.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
 		}
-
-		String result = ezApprovalGService.updateHistoryForDoc(docID, url, userID, userName, userName2, userJobTitle, userJobTitle2, userDeptID, userDeptName, userDeptName2, userInfo);
+		
+		/* 2020-02-24 홍승비 - 편집 전후 문서를 판단하기 위한 플래그 isBeforeDoc, 편집전문서 파일경로 beforeDocURL 추가 */
+		String result = ezApprovalGService.updateHistoryForDoc(docID, url, userID, userName, userName2, userJobTitle, userJobTitle2, userDeptID, userDeptName, userDeptName2, isBeforeDoc, beforeDocURL, userInfo);
 		
 		logger.debug("updateDocHistory ended");
 		
@@ -8520,6 +8525,23 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("docViewerCK ended");
 		
 		return "ezApprovalG/apprGdocViewerCK";
+	}
+	
+	/**
+	 * 2020-02-25 홍승비 - 전자결재 문서정보이력 상세보기 (수정사항 비교가능)
+	 */	
+	@RequestMapping(value = "/ezApprovalG/docViewerCompare.do", method = RequestMethod.GET)
+	public String docViewerCompare(HttpServletRequest request, Model model) throws Exception {
+		logger.debug("docViewerCompare started");
+
+		String pDocHrefAfter = request.getParameter("docHrefAfter");
+		String pDocHrefBefore = request.getParameter("docHrefBefore");
+		
+		model.addAttribute("docHrefAfter", commonUtil.cleanValue(pDocHrefAfter));
+		model.addAttribute("docHrefBefore", commonUtil.cleanValue(pDocHrefBefore));
+		
+		logger.debug("docViewerCompare ended");
+		return "ezApprovalG/apprGdocViewerCompare";
 	}
 	
 	/**

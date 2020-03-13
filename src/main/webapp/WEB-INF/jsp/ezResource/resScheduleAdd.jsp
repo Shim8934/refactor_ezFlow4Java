@@ -631,6 +631,13 @@
 	        $(document).on('click', ".ui-timepicker-list li", function() {
 	        	timeSelect = true;
 	        })
+	        
+	        function KeEventControl(obj) {
+	            if ((window.event.keyCode >= 48 && window.event.keyCode <= 57) || (window.event.keyCode >= 96 && window.event.keyCode <= 105)) {
+	                return false;
+	            }
+	            else obj.value = obj.value.replace(/[\a-zㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+	        }
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${content}</xmp>
@@ -718,9 +725,11 @@
 	          				<th> <spring:message code="ezResource.t197"/></th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
 	          					<input type="checkbox" id="AllDay" <c:if test="${allDay eq '1' && dayView ne 0}">checked</c:if> onClick="display_time_Unshow()" /><spring:message code="ezResource.t211"/>
-	          					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+	          					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+	          					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
 	           						~
-	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+	           					<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
 	          				</td>
 	        			</tr>
 				        <tr>

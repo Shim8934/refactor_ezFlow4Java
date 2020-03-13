@@ -1599,6 +1599,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateHistoryForLine(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.updateHistoryForLine", map);
 	}
+	public void updateHistoryForLine2(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.updateHistoryForLine2", map);
+	}
 	
 	public void insertFormRecvTB(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertFormRecvTB", map);

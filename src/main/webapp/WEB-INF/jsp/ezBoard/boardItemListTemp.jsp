@@ -609,6 +609,9 @@
 		            if (xmlhttp.responseText == "NO") {
 		                alert("<spring:message code='ezBoard.t265'/>");
 		                return;
+		            } else if (xmlhttp.responseText == "ERROR") {
+		                alert("<spring:message code='ezBoard.t1020'/>");
+		                return;
 		            }
 		
 		            xmlhttp = null;

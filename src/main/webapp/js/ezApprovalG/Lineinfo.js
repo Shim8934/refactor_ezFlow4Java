@@ -18,6 +18,9 @@ function list2_onSel_DBclick() {
     var pSelRow = pAPRLINE.GetSelectedRows();
     if (RtnVal) {
     	if (approvalFlag == "S") {
+    		var lineArea = CheckLineArea_BeforeAdd();
+    		if (!lineArea) {return;}
+    		
     		SAPRLINEATTENDADDFunction(selnode, "PERSON");
             initJunGyul();
     	} else {
@@ -2917,6 +2920,65 @@ function CheckLineArea()
 		return false;
 	}
     return true;
+}
+
+function CheckLineArea_BeforeAdd()
+{
+	var pAlertContent = "";
+	var pAPRLINE = new ListView();    
+	pAPRLINE.LoadFromID("lvAPRLINE");
+	
+	var AprLineRow = pAPRLINE.GetDataRows();
+	var SelRow = pAPRLINE.GetSelectedRows();
+	var NodeListLen = AprLineRow.length;
+	
+	var pCurAprilban = 0;
+	var pCurAprPersonLen = 0;
+	var pCurAprDeptLen = 0;
+	var pCurAprChamLen = 0;
+	var pCurAprHainLen = 0;
+	var pCurAprGongramLen = 0;
+	var pAlertContent = "";
+	
+	if(pAprLineArea == 0)
+	{
+		var pChkFlag = chkJunkyul(AprLineRow)
+		if(pChkFlag == "false"){
+			pAlertContent = pAlertContent + strLangS286 + "<br>"
+		}else if(pChkFlag == "another"){
+			pAlertContent = pAlertContent + strLangS287 + "<br>"
+		}else if(pChkFlag == "junkyul"){
+			pAlertContent = pAlertContent + strLangS288 + "<br>"
+		}
+		
+		var pAprTypeFlag = "001";
+		pCurAprilban = getAprLineGyulJeLen(AprLineRow , NodeListLen , pAprTypeFlag);
+		
+		var pAprTypeFlag = "004";
+		pCurAprilban = pCurAprilban + getAprLineGyulJeLen(AprLineRow , NodeListLen , pAprTypeFlag);
+		
+		var pAprTypeFlag = "003";
+		pCurAprilban = pCurAprilban + getAprLineGyulJeLen(AprLineRow , NodeListLen , pAprTypeFlag);
+		
+		var pAprTypeFlag = "040";
+		pCurAprilban = pCurAprilban + getAprLineGyulJeLen(AprLineRow , NodeListLen , pAprTypeFlag);
+		
+		var pAprTypeFlag = "020";
+		pCurAprilban = pCurAprilban + getAprLineGyulJeLen(AprLineRow , NodeListLen , pAprTypeFlag);
+		
+		if(pCurAprilban >= pSignCount)  
+		{ 
+			pAlertContent = pAlertContent + strLangS276 + pSignCount + strLangS277 + "<br>";
+		}
+	}
+	
+	if (pAlertContent != "")
+	{
+		var pAlertContent =  pAlertContent + "" + strLangS304;
+		OpenAlertUI(pAlertContent);
+		return false;
+	}
+	return true;
 }
 //############################################################################################################################################# 결재 라인 체크 이벤트
 function CheckLineUser() {
