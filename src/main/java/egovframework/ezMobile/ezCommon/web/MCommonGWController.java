@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.fcc.service.MimeTypes;
@@ -61,6 +62,9 @@ public class MCommonGWController {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name = "loginService")
+    private LoginService loginService;
 	
 	@RequestMapping(value = "/mobile/ezcommon/filedown", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mFileDown(HttpServletRequest request) throws Exception {
@@ -120,6 +124,29 @@ public class MCommonGWController {
 		}
 		
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/filedown] ended.");
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/mobile/ezcommon/getTenantConfigWithServerName", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getTenantConfigWithServerName(HttpServletRequest request) throws Exception {
+		LOGGER.debug("MCommonGWController getTenantConfigWithServerName started");
+		
+		String serverName = request.getHeader("x-user-host");
+		int tenantId = loginService.getTenantId(serverName);
+		String tenantConfig = request.getParameter("tenantConfig");		
+		
+		LOGGER.debug("serverName=" + serverName + ",tenantId=" + tenantId + ",tenantConfig=" + tenantConfig);
+						
+		String config = ezCommonService.getTenantConfig(tenantConfig, tenantId);
+		
+		JSONObject result = new JSONObject();
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		result.put("data", config);
+
+		LOGGER.debug("MCommonGWController getTenantConfigWithServerName ended");
 		
 		return result;
 	}

@@ -222,7 +222,9 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			}
     	
 	        if (ezOffice365Auth.equals("YES")) {
-	        	return performEzOffice365Auth(request, response, tenantId);
+	        	performEzOffice365Auth(request, response, tenantId);
+	        	
+	        	return false;
 	        } else {
 	        	logger.debug("No login cookie exists. Redirecting to login page...");
 	        		        	
@@ -262,7 +264,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	 * @param tenantId
 	 * @return
 	 */
-	private boolean performEzOffice365Auth(HttpServletRequest request, HttpServletResponse response, int tenantId) {
+	private void performEzOffice365Auth(HttpServletRequest request, HttpServletResponse response, int tenantId) {
 		String ezOffice365ClientId = "";
 		String ezOffice365ClientSecret = "";
     	
@@ -272,7 +274,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		return false;
+    		return;
     	}
     	
 		String currentUri = request.getScheme()
@@ -326,12 +328,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 							userId = userId.substring(0, atSignPos);
 							
 							logger.debug("split userId=" + userId + ",domainName=" + domainName);
-							
-							// Full 이메일 주소로 구성된 아이디로부터 추출한 도메인명으로 Tenant ID를 다시 구한다.
-							tenantId = loginService.getTenantId(domainName);
-							
-							logger.debug("new tenantId=" + tenantId);
-							
+														
 							LoginVO loginVO = new LoginVO();	
 							
 							loginVO.setId(userId);
@@ -340,33 +337,35 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 							
 							LoginVO	resultVO = loginService.selectUser(loginVO);			
 							
-							logger.debug("resultVO=" + resultVO);
-							
-	    					String ip = ClientUtil.getClientIP(request);		
-	    					loginVO.setIp(ip);
-	    					
-	    					//IP Address,  마지막 login시간 저장
-	    					loginService.updateUser(loginVO);
-	    					
-	    					//접속 로그정보 저장
-	    					resultVO.setIp(ip);
-	    					resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
-	    					resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
-	    					resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
-	    					resultVO.setTenantId(tenantId);
-	    	
-	    					if (resultVO.getTitle2() == null) {
-	    						resultVO.setTitle2("");
-	    					}
-	    					
-	    					loginService.insertLog(resultVO);	    					
-							loginController.createLoginCookie(userId, " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
-							
-	    		        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
-	    		        	cookieName.setPath("/");
-	    		        	response.addCookie(cookieName);
-							
-							response.sendRedirect(request.getRequestURI());							
+							if (resultVO.getId() != null) {							
+		    					String ip = ClientUtil.getClientIP(request);		
+		    					loginVO.setIp(ip);
+		    					
+		    					//IP Address,  마지막 login시간 저장
+		    					loginService.updateUser(loginVO);
+		    					
+		    					//접속 로그정보 저장
+		    					resultVO.setIp(ip);
+		    					resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
+		    					resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
+		    					resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+		    					resultVO.setTenantId(tenantId);
+		    	
+		    					if (resultVO.getTitle2() == null) {
+		    						resultVO.setTitle2("");
+		    					}
+		    					
+		    					loginService.insertLog(resultVO);	    					
+								loginController.createLoginCookie(userId, " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
+								
+		    		        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
+		    		        	cookieName.setPath("/");
+		    		        	response.addCookie(cookieName);
+								
+								response.sendRedirect(request.getRequestURI());	
+							} else {
+								logger.debug("resultVO.getId is null");
+							}
 						}						
 					}														
 				} else {
@@ -380,17 +379,27 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				e.printStackTrace();												
 			}
 			
-			return false;
+			return;
 		} else {
         	logger.debug("No authentication data exists. Redirecting to Azure login page...");
         	
 			try {					
-				response.sendRedirect(getRedirectUrl("common", ezOffice365ClientId, currentUri));
+				String redirectUri = request.getScheme()
+						+ "://"
+						+ request.getServerName()
+						+ ("http".equals(request.getScheme())
+								&& request.getServerPort() == 80
+								|| "https".equals(request.getScheme())
+								&& request.getServerPort() == 443 ? "" : ":"
+								+ request.getServerPort())
+						+ "/ezNewPortal/newPortalMain.do";
+				
+				response.sendRedirect(getRedirectUrl("common", ezOffice365ClientId, redirectUri));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			
-			return false;					
+			return;					
 		}		
 	}
 	
