@@ -20,7 +20,7 @@ function onDrop(evt) {
 		if (evt.dataTransfer.items == undefined || evt.dataTransfer.items == null) {
 			
 			if (evt.dataTransfer.files.length == 0) {
-				alert(strLangDragNDrop);
+				alert(messages.strLangDragNDrop);
 				return;
 			}
 			
@@ -43,7 +43,7 @@ function onDrop(evt) {
 		    		
 		    		fileupload();
 		    	} else if (entry.isDirectory) {
-		    		alert(strLangDragNDrop);
+		    		alert(messages.strLangDragNDrop);
 		      		return;
 		    	}
 		  	}
