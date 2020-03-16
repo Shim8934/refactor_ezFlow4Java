@@ -99,7 +99,7 @@ var strLang197 = "발송의뢰를 취소하셨습니다."
 var strLang198 = "문서를 발송의뢰 하였습니다."
 var strLang199 = "오류가 발생하였습니다."
 var strLang200 = "발송의뢰 가능여부를 조회하는데 실패하였습니다."
-var strLang201 = "이미 모든 수신자에 발송을 하거나 발송의뢰를 하셨습니다."
+var strLang201 = "이미 모든 수신자에 발송이나 발송의뢰를 하셨습니다."
 var strLang202 = "재발송을 하시겠습니까?"
 var strLang203 = "수신자가 존재하지 않는 문서입니다."
 var strLang204 = "시행문 겸용 양식이 아닙니다."
@@ -682,10 +682,12 @@ var strLang1028 = "년";
 var strLang1029 = "월";
 var strLang1030 = "일";
 var strLang1031 = "익명게시판 또는 포토게시판 또는 URL링크 게시판에는 메일/결재문서 게시를 할 수 없습니다.";
+var strLang1038 = "외부발송문서 본문에는 이미지와 링크가 들어갈 수 없습니다.";
 
 // DocType : 문서형태 A01
 var strDocType4 = "004";
 var strLangDocType4 = "시행문";
+var strLangDocType5 = "합의";
 
 // DocState : 문서상태A02
 var strDocState1 = "001";

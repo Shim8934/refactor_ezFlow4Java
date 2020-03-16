@@ -37,9 +37,10 @@
 													<div>
 														<select id="searchType">
 															<option selected value="displayname"              ><spring:message code="ezSurvey.t57"/></option>
-															<option          value="cn"                       ><spring:message code="ezSurvey.t58" /></option>
+															<%-- <option          value="cn"                       ><spring:message code="ezSurvey.t58" /></option> --%>
 															<option          value="description"              ><spring:message code="ezSurvey.t59" /></option>
 															<option          value="title"                    ><spring:message code="ezSurvey.t60" /></option>
+															<option          value="extensionAttribute10"     ><spring:message code="ezSurvey.t107" /></option>
 															<option          value="telephonenumber"          ><spring:message code="ezSurvey.t61" /></option>
 															<option          value="mobile"                   ><spring:message code="ezSurvey.t62" /></option>
 															<option          value="homePhone"                ><spring:message code="ezSurvey.t63"/></option>

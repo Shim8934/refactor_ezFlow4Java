@@ -34,7 +34,7 @@
 		            
 		            TxtAprDeptTempletName.focus();
 		        }
-		        else if (p_AprDeptTempletName.length > 7) {
+		        else if (p_AprDeptTempletName.length > 20) {
 		            //var pAlertContent = "<spring:message code='ezApprovalG.t310'/>";
 		            //OpenAlertUI(pAlertContent);
 		            alert("<spring:message code='ezApprovalG.t310'/>");

@@ -69,8 +69,9 @@
 		    var pButtonHidden = '<c:out value="${boardInfo.buttonHidden}"/>';
 		    var pNoneActiveX = "YES";
 		    var useRunTime = "${useRunTime}"
+		    var useNotReadCnt = "${useNotReadCnt}";
+		    	
 			var window_onunload_Event = false;
-		    
 			window.onunload = Window_onunload;
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
@@ -89,6 +90,9 @@
 		        document.getElementById("divList").style.height = height + "px";
 		        getBoardList();
 		        window_onunload_Event = true;
+		        
+		        /* 2020-02-03 홍승비 - 아무것도 선택하지 않은 상태의 하단 미리보기 영역 마진 수정 */
+		      	ifrmPreViewW.document.getElementById("ifrmPreViewW_div").style.marginTop = "-2px";
 		    }
 		    
 		    $(document).ready(function() {
@@ -471,7 +475,8 @@
 		        var pLeft = (pwidth - 765) / 2;
 		
 		        if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-					window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=793,width=764,top=" + pTop + ",left=" + pLeft, "");
+		        	pLeft = (pwidth - 790) / 2;
+					window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=793,width=790,top=" + pTop + ",left=" + pLeft, "");
 	            } else if (obj.getAttribute("DATA10") == "7") {
 					window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=764,top=" + pTop + ",left=" + pLeft, "");
 	            }
@@ -501,7 +506,10 @@
 		        if (xmlhttp.responseText == "NO") {
 		        	alert(strLang176);
 		            return;
-		        }
+		        } else if (xmlhttp.responseText == "ERROR") {
+	                alert("<spring:message code='ezBoard.t1020'/>");
+	                return;
+	            }
 		
 		        xmlhttp = null;
 		        getBoardList();
@@ -538,47 +546,59 @@
 		
 		        window.location.href = "/ezBoard/boardItemList_new.do?page=" + CurPage.toString() + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType;
 		    }
+		    
+		    /* 2019-07-04 홍승비 - 읽음표시 시 strListInfo가 아닌 실시간 체크박스를 확인하도록 수정 */
 		    var SetReadCheckCnt = 0;
 		    var setReadFlag = false;
-		    //FFFF...의 새게시물 boardID가 아닌, 게시물의 원래 boardID로 한 번 더 읽음표시를 실행한다.
 		    function SetReadNew_onclick() {
 		        if (Read_FG != "true") {
 		            alert(strLang175);
 					return;
 				}
-		        if (strListInfo == "" || strBoardListInfo == "") {
+		        
+		        var checkedItemChkBox = $("#BoardListDiv").find("input:checkbox:checked");
+		        var checkedBoxLength = checkedItemChkBox.length;
+		        
+		        if (checkedBoxLength <= 0) {
 		            alert(strLang177);
 					return;
 				}
+		        
 		        var ret = confirm(strLang178);
 				if (ret) {
-					 //게시물의  Item ID
-				    var arrList = new Array();
-				    var strItemList = "";
-				    var i = 0;
-				    arrList = strListInfo.split(";");
-				    for (i = 0; i < arrList.length - 1; i++) {
-				    	SetReadCheckCnt++;
-				        strItemList += arrList[i].split(",")[0] + ";";
-				    }
-				    
-				    //게시물의 기존 Board ID
-				    var arrList2 = new Array();
-				    var strBoardList = "";
-				    var j = 0;
-				    arrList2 = strBoardListInfo.split(";");
-				    for (j = 0; j < arrList2.length - 1; j++) {
-				        strBoardList += arrList2[j].split(",")[0] + ";";
-				    }
-				    
-				    arrList = null;   
-				    arrList2 = null;
+					var checkedItemTR = checkedItemChkBox.parent().parent();
+				 	var strItemIDList = "";
+				 	var strBoardIDList = "";
+				 	
+				 	for (var i = 0; i < checkedBoxLength; i++) {
+				 		strItemIDList += (checkedItemTR.get(i).getAttribute("data2") + ";");
+				 		strBoardIDList += (checkedItemTR.get(i).getAttribute("data1") + ";");
+				 	}
+				 	
 				    var xmlhttp = createXMLHttpRequest();
-				    xmlhttp.open("POST", "/ezBoard/setReadNew.do?boardID=" + encodeURIComponent(pBoardID) + "&pBoardIDList=" + encodeURIComponent(strBoardList) + "&itemIDList=" + encodeURIComponent(strItemList), false);		    
+				    xmlhttp.open("POST", "/ezBoard/setReadNew.do?pBoardIDList=" + encodeURIComponent(strBoardIDList) + "&itemIDList=" + encodeURIComponent(strItemIDList), false);		    
 				    xmlhttp.send();
 				    xmlhttp = null;
 				    setReadFlag = true;
 				    refresh_onclick();
+				    
+				    /* 2019-07-04 홍승비 -  게시물 읽음표시 할 경우 좌측메뉴의 미독건수 갱신하도록 수정 */
+				    if (useNotReadCnt == "YES") {
+						var boardLeftFrame;
+						
+			            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) { // 즐겨찾기에서 읽기창 진입
+							boardLeftFrame = window.parent.parent.frames["left"];
+						} else { // 해당 게시판 내부에서 읽기창 진입
+			        		boardLeftFrame = window.parent.frames["left"];
+			        	}
+			            
+			            if (boardLeftFrame != null && boardLeftFrame != undefined && boardLeftFrame.location.href.indexOf("/ezBoard/boardLeft.do")> -1) {
+			            	for (var i = 0; i < checkedBoxLength; i++) {
+			     				boardLeftFrame.getBoardNotReadCountByID(checkedItemTR.get(i).getAttribute("boardgroupid"), "", "GROUP");
+			     				boardLeftFrame.getBoardNotReadCountByID(checkedItemTR.get(i).getAttribute("data1"), checkedItemTR.get(i).getAttribute("data10"), "SUB");
+			            	}
+				    	}
+				    }
 				}
 			}
 		    
@@ -658,6 +678,16 @@
 			    }
 			    pSIPUriList = null;
 			}
+			
+			/* 2020-02-03 홍승비 - 하단 미리보기 사용 시 아무 게시물도 선택되지 않은 상태라면 최소 높이 설정 */
+		    function checkPreViewWSrc() {
+	    	  if (document.getElementById("ifrmPreViewW").src.indexOf("/blank") > -1) {
+	            	document.getElementById("ifrmPreViewW").style.minHeight = "130px";
+	            } else { // 게시물 선택 시 최소 높이 해제
+	            	document.getElementById("ifrmPreViewW").style.minHeight = "";
+	            }
+		    }
+			
 		</script>
 		<style type="text/css">
 		    .datepicker {
@@ -825,7 +855,7 @@
 							</dl>
 		                </div>
 		                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
-		                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
+		                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" onLoad="checkPreViewWSrc();" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
 		    		</div>
 				</div>
 		    </div>

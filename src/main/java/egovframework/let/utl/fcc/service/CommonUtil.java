@@ -89,6 +89,7 @@ import org.xml.sax.InputSource;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -195,12 +196,22 @@ public class CommonUtil {
 		return src;		
 	}
     
+    public String stripScriptTagsAndFunctions(String src) {
+    	if (src != null && !src.isEmpty()) {
+	        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert\\(.*?\\)|confirm\\(.*?\\)|prompt\\(.*?\\)|window.*?location",
+	        				Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+	        Matcher m = p.matcher(src);
+	        src = m.replaceAll("");
+    	}
+
+        return src;
+    }
+
 	public LoginVO userInfo(String loginCookie){
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
 
 			String[] decDataArray = decData.split("///");
-			
 			String serverName = decDataArray[0];
 			String userID = decDataArray[1];
 			String locale = decDataArray[5];
@@ -535,7 +546,8 @@ public class CommonUtil {
 		}
 		
 		// 2018.10.22 이석화 변경 - 세션 0이면 세션 사용 안 함
-		if (!useSession.equals("") && !useSession.equals("0")) {
+		// 2019.09.10 127.0.0.1 일 때는 세션 확인 안 함 (인사연동)
+		if (!useSession.equals("") && !useSession.equals("0") && !request.getRemoteAddr().equals("127.0.0.1")) {
 			/* session time을 위한 처리 주석 */	
 			/* 세션 사용 위해 주석 해제*/
 			HttpSession session = request.getSession(false);
@@ -551,8 +563,9 @@ public class CommonUtil {
 		                        //쿠기에 저장되어 있는 IP
 		                        cValue = egovFileScrty.decryptAES(cookie.getValue());
 		
-		                        if(cValue.split("///")[3].equals(ip)){                  
+		                        if(cValue.split("///")[3].equals(ip) && checkDeptId(cValue)){                  
 		                            isCookie = true;
+		                            break;
 		                        }
 		                    } catch (Exception e) {
 		                        e.printStackTrace();
@@ -584,8 +597,9 @@ public class CommonUtil {
 							//쿠기에 저장되어 있는 IP
 							cValue = egovFileScrty.decryptAES(cookie.getValue());
 							
-							if(cValue.split("///")[3].equals(ip)){                  
+							if(cValue.split("///")[3].equals(ip) && checkDeptId(cValue)){                  
 								isCookie = true;
+								break;
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -597,9 +611,42 @@ public class CommonUtil {
         return isCookie;
 	}
 	
+	public boolean checkDeptId(String cValue){
+		String[] decDataArray = cValue.split("///");
+		
+		String userID = decDataArray[1];
+        String tenantId = "0";
+        String deptID = "";
+        
+        if (decDataArray.length >= 9) {
+            tenantId = decDataArray[8];	
+        }
+        if(decDataArray.length >= 10) {
+        	deptID = decDataArray[9];
+        }
+        
+        // ezSyncServer에서 ezFlow를 호출하는 경우에는 쿠키안에 부서 아이디가 포함되어 있지 않으므로
+        // 이 경우엔 true를 반환한다.
+        if ("".equals(deptID)) {
+        	return true;
+        }
+        
+		int isDept = ezCommonService.checkDeptId(userID, deptID, tenantId);
+		
+		if(isDept>0){
+			return true;
+		} else {
+			logger.debug("checkDeptId isDept=" + isDept + ",userID=" + userID + ",deptID=" + deptID);
+			
+			return false;
+		}
+	}
+	
 	public Document convertStringToDocument(String xmlStr) {
 		String replaceData = xmlStr.trim().replaceFirst("^([\\W]+)<","<");
 		replaceData = replaceData.replace("&shy;", "");
+		replaceData = replaceData.replace("\uffff", "");
+		replaceData = replaceData.replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", "");
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
         DocumentBuilder builder;
@@ -1772,4 +1819,50 @@ public class CommonUtil {
 		
 		return String.format("<DIV id=\"msgBody\" style=\"font-size: %s; font-family: %s;\" name=\"urn:schemas:httpmail:textdescription\">%s</DIV>", fontSize, fontFamily, content);
 	}
+	
+	public List<CountryVO> getCountryInfo(String ip) throws Exception {
+		List<CountryVO> countryInfo = new ArrayList<CountryVO>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		try {
+    		String[] iparr = ip.split("\\.");
+    		
+    		long changeIp = (long) Math.pow(256, 3) * Integer.parseInt(iparr[0])
+    				+ (long) Math.pow(256, 2) * Integer.parseInt(iparr[1])
+    				+ (long) Math.pow(256, 1) * Integer.parseInt(iparr[2])
+    				+ (long) Math.pow(256, 0) * Integer.parseInt(iparr[3]);
+    		
+    		logger.debug("changeIp=" + changeIp);
+    		map.put("changeIp", changeIp);
+    		
+    		countryInfo = ezCommonService.getCountryInfo(map);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return countryInfo;
+	}
+	
+	public Boolean checkLocalIP (String ip) {
+		Boolean result = false;
+		
+		if (ip.startsWith("10.") || ip.startsWith("127.") || ip.startsWith("192.168.") || ip.startsWith("169.254.") || ip.startsWith("0:")) {
+			result = true;
+		} else {
+			String[] iparr = ip.split("\\.");
+			long changeIp = 0;
+			
+			// 172.16.0.0 ~ 172.31.255.255
+			changeIp = (long) Math.pow(256, 3) * Integer.parseInt(iparr[0])
+    				+ (long) Math.pow(256, 2) * Integer.parseInt(iparr[1])
+    				+ (long) Math.pow(256, 1) * Integer.parseInt(iparr[2])
+    				+ (long) Math.pow(256, 0) * Integer.parseInt(iparr[3]);
+			if (changeIp >= 2886729728L && changeIp <= 2887778303L) {
+				result = true;
+			}
+		}
+		
+		return result;
+	}
+	
 }

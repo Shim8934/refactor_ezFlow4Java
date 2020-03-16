@@ -727,14 +727,14 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			
 			if (strErrChk.equals("True")) {
 				if (intSubResCnt > 0 || intSubClsCnt > 0) {
-					pWrnMsg = egovMessageSource.getMessage("ezResource.t66", locale)+ " <b>'" + intSubClsCnt + "'</b> " + egovMessageSource.getMessage("ezResource.t67", locale);
+					pWrnMsg = "<dd style='font-size:15px'>" + egovMessageSource.getMessage("ezResource.t66", locale)+ " <b>'" + intSubClsCnt + "'</b> " + egovMessageSource.getMessage("ezResource.t67", locale);
 					pWrnMsg = pWrnMsg + egovMessageSource.getMessage("ezResource.t68", locale) + " <b>'" + 
 									 intSubResCnt + "'</b> " + egovMessageSource.getMessage("ezResource.t69", locale) + 
-									 egovMessageSource.getMessage("ezResource.t9900005", locale) + " <br><br>";
-					pWrnMsg = pWrnMsg + egovMessageSource.getMessage("ezResource.t70", locale);
+									 egovMessageSource.getMessage("ezResource.t9900005", locale) + " <br>";
+					pWrnMsg = pWrnMsg + egovMessageSource.getMessage("ezResource.t70", locale) + "</dd>";
 				} else {
 					/*pWrnMsg = egovMessageSource.getMessage("ezResource.t71", locale) + " <b style='overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;word-wrap:break-word;' >'" + upNm + "'</b> " + egovMessageSource.getMessage("ezResource.t72", locale) + " <BR>";*/
-					pWrnMsg = egovMessageSource.getMessage("ezResource.t71", locale) + " <b style='overflow:hidden;text-overflow:ellipsis;display:contents;-webkit-line-clamp:5;-webkit-box-orient:vertical;word-wrap:break-word;' >'" + upNm + "'</b> " + egovMessageSource.getMessage("ezResource.t72", locale) + " <BR>";
+					pWrnMsg = "<dd style='font-size:15px'>" + egovMessageSource.getMessage("ezResource.t71", locale) + " <b style='overflow:hidden;text-overflow:ellipsis;display:contents;-webkit-line-clamp:5;-webkit-box-orient:vertical;word-wrap:break-word;' >'" + upNm + "'</b><br> " + egovMessageSource.getMessage("ezResource.t72", locale) + " <BR></dd>";
 					blnChkDelBtn = true;
 				}
 			} else {
@@ -742,7 +742,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 				resp.getWriter().write(egovMessageSource.getMessage("ezResource.t73", locale));
 			}
 		} else {
-			pWrnMsg = egovMessageSource.getMessage("ezResource.t74", locale);
+			pWrnMsg = "<dd>" + egovMessageSource.getMessage("ezResource.t74", locale) + "</dd>";
 		}
 		
 		model.addAttribute("userInfo", userInfo);

@@ -553,7 +553,7 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 							
 							List<String> deptIds = new ArrayList<String>();
 							Collections.addAll(deptIds, deptPath.split(","));
-							deptIds.remove(0);				// companyID 삭제
+							//deptIds.remove(0);				// companyID 삭제
 							if(deptIds.size() > 0) {
 								Collections.reverse(deptIds);
 								deptIds.remove(0);				// 부서 ID 삭제
@@ -579,7 +579,7 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 								
 								List<String> addJobDeptIds = new ArrayList<String>();
 								Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
-								addJobDeptIds.remove(0);				// companyID 삭제
+								//addJobDeptIds.remove(0);				// companyID 삭제
 								if(addJobDeptIds.size() > 0) {
 									Collections.reverse(addJobDeptIds);
 									addJobDeptIds.remove(0);				// 부서 ID 삭제

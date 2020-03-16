@@ -217,44 +217,59 @@
 		        		error : function() {
 // 		        			"FALSE";
 		        		}
-		        });
+		        	});
+				}
 		    }
-		    }
+		    
+		    /* 2020-02-26 홍승비 - 관인 이미지 업로드 시 파일 확장자 체크 */
 		    function btn_AttachAdd_onclick() {
 		        if (document.form.file1.value != "") {
 		            var frm = document.getElementById('form');
 		            var form = new FormData(frm);
 		            
-		            $.ajax({
-		            	type :'POST',
-		            	url : "/admin/ezApprovalG/sealImageUpload.do",
-		            	dataType : 'json',
-		            	data : form,
-		            	processData : false,
-		            	contentType : false,
-		            	success : function(result) {
-		            		fileName = result["fileName"];
-		            		dirPath = result["path"];
-		            		
-		            		try {
-			            		if (fileName.length > 1000) {
-			                        var pInformationString = imgName + "<spring:message code = 'ezApprovalG.t1246' />";
+		            var file1val = document.getElementById("file1").value;
+			        var exIndex = file1val.lastIndexOf('.');
+					var extension = file1val.substring(exIndex+1, file1val.lenght);
+			        var check = false;
+			        check = compareExtension(check, extension);	
+		            
+			        if (!check) {
+			        	document.getElementById("file1").value = "";
+			        	OpenAlertUI("<spring:message code ='ezBoard.hsbImg01' />");
+			        	return;
+			        }
+			        else {
+			            $.ajax({
+			            	type :'POST',
+			            	url : "/admin/ezApprovalG/sealImageUpload.do",
+			            	dataType : 'json',
+			            	data : form,
+			            	processData : false,
+			            	contentType : false,
+			            	success : function(result) {
+			            		fileName = result["fileName"];
+			            		dirPath = result["path"];
+			            		
+			            		try {
+				            		if (fileName.length > 1000) {
+				                        var pInformationString = imgName + "<spring:message code = 'ezApprovalG.t1246' />";
+				                        OpenAlertUI(pInformationString);
+				                        
+				                        return;
+				                    }
+			            		} catch (e) {
+			                        var pInformationString = imgName + "<spring:message code = 'ezApprovalG.t1247' />" + "\n\n" + e.number + " - " + e.description;
 			                        OpenAlertUI(pInformationString);
 			                        
 			                        return;
 			                    }
-		            		} catch (e) {
-		                        var pInformationString = imgName + "<spring:message code = 'ezApprovalG.t1247' />" + "\n\n" + e.number + " - " + e.description;
-		                        OpenAlertUI(pInformationString);
-		                        
-		                        return;
-		                    }
-		            		
-		            		pSealPath = dirPath + fileName;
-		            		var fileinfo = document.getElementById("file1").value.substring(document.getElementById("file1").value.lastIndexOf("\\") + 1, document.getElementById("file1").value.length);
-				            document.getElementById("filename").value = fileinfo;
-		            	}
-		            });
+			            		
+			            		pSealPath = dirPath + fileName;
+			            		var fileinfo = document.getElementById("file1").value.substring(document.getElementById("file1").value.lastIndexOf("\\") + 1, document.getElementById("file1").value.length);
+					            document.getElementById("filename").value = fileinfo;
+			            	}
+			            });
+			        }
 		        }
 		    }
 		    
@@ -268,6 +283,19 @@
 					return false;
 				}
 			}
+		    
+		    /* 2020-02-26 홍승비 - 이미지파일 확장자체크 추가 */
+		    function compareExtension(check, extension) {
+	    		var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
+	    		for (var i = 0; i < filterExtension.length; i++) {
+	        		if (extension.toLowerCase() == filterExtension[i]) {
+	            		check = true;
+	            		break;
+	        		}
+	    		}
+	    		return check;
+			}
+		    
 		</script>
 	</head>
 	<body class="popup">		
@@ -322,7 +350,7 @@
 		  	</tr>
 		  	<tr>
 	            <td colspan="2" style="text-align:center; padding-top:5px; padding-bottom:5px;">
-	            	<div id="SIGNVIEW" style="width:405px;height:165px;overflow:auto;"></div>
+	            	<div id="SIGNVIEW" style="width:405px;height:195px;overflow:auto;"></div>
 	            </td>
 	        </tr>
 		</table>

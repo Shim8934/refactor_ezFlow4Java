@@ -26,7 +26,7 @@
 		.tooltip_span img {background-color : white; border-radius:30px; margin : 10px 10px;vertical-align:middle;}
 		
 		/* Show the tooltip text when you mouse over the tooltip container */
-		.concurrentLI:hover > .tooltip_span {visibility: visible;opacity: 1;}
+		.conlistDL:hover ~ .tooltip_span {visibility: visible;opacity: 1;}
 		.concurrentLI .tooltip_span::after {  content: " ";
 			position: absolute;
 			bottom: 100%;  /* At the top of the tooltip */
@@ -502,12 +502,12 @@
 		                }	
 
 	                    //tooltip addeventlistener
-	                    var tooltipList = document.getElementsByClassName("concurrentLI");
+	                    var tooltipList = document.getElementsByClassName("conlistDL");
 	                    HTMLCollection.prototype.forEach = Array.prototype.forEach;
 	                    
 	                    tooltipList.forEach(function(item, index) {
 	                    	item.addEventListener("mouseover", function() {
-	                    		var tooltip = item.getElementsByClassName("tooltip_span")[0];
+	                    		var tooltip = item.parentElement.getElementsByClassName("tooltip_span")[0];
 	                    		tooltip.style.top = positionY;
 	                    		tooltip.style.left = positionX;
 	                    	});
@@ -609,7 +609,7 @@
 						return;
 					}
 
-					if (confirm(strLang30)) {
+					if (confirm(strLangKJE01)) {
 						var inputElmt = document.getElementsByName("checks");
 						var length    = inputElmt.length;
 
@@ -1044,7 +1044,7 @@
 		                 <div id="preview_nodata" class="preview_nodata" style="margin-top: 70px;">
 			                  <dl class="nodata_sIcon">
 				              <dt><img src="/images/kr/main/noData_sIcon.png"></dt>
-				              <dd id="nodata_title" style="font-family: malgun gothic"><spring:message code='ezOrgan.mse5'/></dd>
+				              <dd id="nodata_title"><spring:message code='ezOrgan.mse5'/></dd>
 			                  </dl>
 		                 </div>
 		              <div class="previewmail" id="previewmail">

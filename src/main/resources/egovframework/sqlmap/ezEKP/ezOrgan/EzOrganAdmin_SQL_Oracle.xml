@@ -7,6 +7,7 @@
 	<typeAlias alias="OrganDeptVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganProxyVO" type="egovframework.ezEKP.ezOrgan.vo.OrganProxyVO"/>
 	<typeAlias alias="OrganJobVO" type="egovframework.ezEKP.ezOrgan.vo.OrganJobVO"/>
+	<typeAlias alias="OrganLoginStopUserVO" type="egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO"/>
 	
 	<resultMap id="userAddJobList" class="OrganUserVO">
 		<result property="cn" 									column="CN" 							columnIndex="1"/>
@@ -20,6 +21,7 @@
 		<result property="title2" 								column="T2" 							columnIndex="9"/>		
 		<result property="jobID" 								column="JOBID" 							columnIndex="10"/>
 		<result property="physicalDeliveryOfficeName" 			column="physicaldeliveryofficename" 	columnIndex="11"/>
+		<result property="manualFlag"							column="MANUAL_FLAG"					columnIndex="12"/>
 	</resultMap>
 	
 	<resultMap id="permissionList" class="OrganUserVO">
@@ -46,6 +48,19 @@
 		<result property="extensionAttribute14" 				column="extensionAttribute14" 			columnIndex="10"/>
 		<result property="mobile" 								column="mobile" 						columnIndex="11"/>
 		<result property="updateDT" 							column="UpdateDT" 						columnIndex="12"/>
+	</resultMap>
+	
+	<resultMap id="loginStopList" class="OrganLoginStopUserVO">
+		<result property="cn" 									column="CN" 							columnIndex="1"/>
+		<result property="displayName" 							column="DisplayName" 					columnIndex="2"/>
+		<result property="displayName2" 						column="DisplayName2"					columnIndex="3"/>
+		<result property="department" 							column="department"						columnIndex="4"/>
+		<result property="description" 							column="Description"					columnIndex="5"/>
+		<result property="description2" 						column="Description2"					columnIndex="6"/>
+		<result property="company" 								column="company" 						columnIndex="7"/>
+		<result property="company2" 							column="company2" 						columnIndex="8"/>
+		<result property="passwordUpdateDT" 					column="passwordUpdateDT"				columnIndex="9"/>
+		<result property="loginStopDT" 							column="loginStopDT"					columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap id="userCnList" class="OrganUserVO">
@@ -84,6 +99,29 @@
 			<isNotEmpty property="searchEndDate">
 				<![CDATA[
 					UPDATEDT > to_date(#searchStartDate#, 'yyyy-MM-dd HH24:MI:SS') AND UPDATEDT < to_date(#searchEndDate#, 'yyyy-MM-dd HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="EzOrganAdminDAO.searchQueryForLoginStop">
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword" >
+					<isEqual property="search_keycode" compareValue="userName">
+						a.DISPLAYNAME LIKE '%' || #search_keyword# || '%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="deptName">
+						a.DESCRIPTION LIKE '%' || #search_keyword# || '%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="userId">
+						a.CN LIKE '%' || #search_keyword# || '%' ESCAPE '\'
+					</isEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="searchStartDate" prepend="AND">
+			<isNotEmpty property="searchEndDate">
+				<![CDATA[
+					a.UPDATEDT > to_date(#searchStartDate#, 'yyyy-MM-dd HH24:MI:SS') AND a.UPDATEDT < to_date(#searchEndDate#, 'yyyy-MM-dd HH24:MI:SS')
 				]]>
 			</isNotEmpty>
 		</isNotEmpty>
@@ -138,7 +176,7 @@
 			INSERT INTO
 				TBL_USERMASTER
    				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE7, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, MANUAL_FLAG, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID,
-                    DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, PASSWORD_UPDATEDT 
+                    DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, PASSWORD_UPDATEDT, FURIGANA, EXTENSIONPHONE, OFFICEMOBILE
                 )
    			VALUES
    				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR7#, #v_EXTATTR8#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_MANUAL_FLAG#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID#,
@@ -147,7 +185,7 @@
                     (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT COMPNM2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
-                    to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')       
+                    to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_FURIGANA#, #v_EXTENSION_PHONE#, #v_OFFICE_MOBILE#     
                 )
 		]]>
 	</insert>
@@ -274,25 +312,20 @@
 		]]>
 	</update>
 	
-	<statement id="EzOrganAdminDAO.moveDBData_U3" parameterClass="Map">
+	<update id="EzOrganAdminDAO.moveDBData_U3" parameterClass="Map">
 		<![CDATA[
-			MERGE INTO
-				TBL_USERMASTER B
-      		USING (	SELECT B.ROWID ROW_ID, A.EXTENSIONATTRIBUTE3, COMPNM2, A.EXTENSIONATTRIBUTE2
-      					FROM TBL_DEPTMASTER A
-      					JOIN TBL_USERMASTER B   ON A.CN = B.DEPARTMENT AND A.TENANT_ID = B.TENANT_ID 
-      					WHERE A.CN = #v_CN#
-      					AND A.TENANT_ID = #v_TENANT_ID#) src
-      		ON ( B.ROWID = src.row_id )
-      		WHEN
-      			MATCHED
-      		THEN
-      			UPDATE SET
-      				COMPANY = src.EXTENSIONATTRIBUTE3,
-                    COMPANY2 = COMPNM2,
-                    PHYSICALDELIVERYOFFICENAME = src.EXTENSIONATTRIBUTE2
+            UPDATE
+                TBL_USERMASTER
+            SET 
+                PHYSICALDELIVERYOFFICENAME = #v_EXTENSIONATTRIBUTE2#,
+                COMPANY = #v_EXTENSIONATTRIBUTE3#,
+                COMPANY2 = #v_COMPNM2#
+            WHERE
+                DEPARTMENT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE #v_DEPT_CD_PATH# || ',%' AND TENANT_ID = #v_TENANT_ID#)
+            AND
+                TENANT_ID = #v_TENANT_ID#  
 		]]>
-	</statement>
+	</update>
 	
 	<!-- <procedure id="EzOrganAdminDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
@@ -1956,7 +1989,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A17','002','반송의견','1','반송의견','Rejection','差し戻し','退回意见',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('A17','003','보류의견','1','보류의견','Holding','保留意見','保存意见',#tenantID#, #companyID#)
+			VALUES ('A17','003','보류의견','1','보류의견','Holding','保留','保存意见',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A17','004','회송의견','1','회송의견','Returning','返送','退回意见',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -2397,7 +2430,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID,TENANT_ID) 
 			VALUES ('SA04','001','대기','1','대기','Waiting','待機','待机',#companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID,TENANT_ID) 
-			VALUES ('SA04','002','진행','1','진행','In progress','進行','进行中',#companyID#, #tenantID#)
+			VALUES ('SA04','002','진행','1','진행','In progress','进行中','进行中',#companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID,TENANT_ID) 
 			VALUES ('SA04','003','승인','1','승인','Approved','決裁','审批',#companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID,TENANT_ID) 
@@ -4031,45 +4064,45 @@
     	    <![CDATA[
 		    	INSERT ALL
 	    		INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A01', #companyID#, #tenantID#, '출근', 'inCom', '1', 'inOut', null, 1)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A01', #companyID#, #tenantID#, '出勤', 'inCom', '1', 'inOut', null, 1)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A02', #companyID#, #tenantID#, '지각', 'late', '1', 'inOut', null, 2)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A02', #companyID#, #tenantID#, '遅刻', 'late', '1', 'inOut', null, 2)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A03', #companyID#, #tenantID#, '퇴근', 'outCom', '1', 'inOut', null, 3)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A03', #companyID#, #tenantID#, '退勤', 'outCom', '1', 'inOut', null, 3)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', 'inOut', null, 6)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A07', #companyID#, #tenantID#, '休出', 'working Holiday', '1', 'inOut', null, 6)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A04', #companyID#, #tenantID#, '외근', 'outside work', '1', 'trip', null, 8)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A04', #companyID#, #tenantID#, '外部勤務', 'outside work', '1', 'trip', null, 8)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A06', #companyID#, #tenantID#, '외출', 'outing', '1', 'trip', null, 6)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A06', #companyID#, #tenantID#, '外出', 'outing', '1', 'trip', null, 6)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A05', #companyID#, #tenantID#, '휴가', 'vacation', '1', 'refresh', null, 0)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A05', #companyID#, #tenantID#, '休暇', 'vacation', '1', 'refresh', null, 0)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A09', #companyID#, #tenantID#, '출장', 'business trip', '1', 'trip', null, 7)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A09', #companyID#, #tenantID#, '出張', 'business trip', '1', 'trip', null, 7)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A10', #companyID#, #tenantID#, '파견', 'dispatch', '1', 'trip', null, 7)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A10', #companyID#, #tenantID#, '派遣', 'dispatch', '1', 'trip', null, 7)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A08', #companyID#, #tenantID#, '조퇴', 'early leave', '1', 'absence', null, 5)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A08', #companyID#, #tenantID#, '早退', 'early leave', '1', 'absence', null, 5)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', 'absence', null, 4)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A17', #companyID#, #tenantID#, '欠勤', 'absenteeism', '1', 'absence', null, 4)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A11', #companyID#, #tenantID#, '연차', 'annual leave', '1', 'refresh', 'A05', 9)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A11', #companyID#, #tenantID#, '有給休暇', 'annual leave', '1', 'refresh', 'A05', 9)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A12', #companyID#, #tenantID#, '오전반차', 'morning off', '1', 'refresh', 'A05', 4)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A12', #companyID#, #tenantID#, '午前有給', 'morning off', '1', 'refresh', 'A05', 4)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', '1', 'refresh', 'A05', 4)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A13', #companyID#, #tenantID#, '午後有給', 'afternoon off', '1', 'refresh', 'A05', 4)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A14', #companyID#, #tenantID#, '공가', 'official leave', '1', 'refresh', 'A05', 9)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A14', #companyID#, #tenantID#, '公暇', 'official leave', '1', 'refresh', 'A05', 9)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A15', #companyID#, #tenantID#, '오전공가', 'morning official leave', '1', 'refresh', 'A05', 9)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A15', #companyID#, #tenantID#, '午前公暇', 'morning official leave', '1', 'refresh', 'A05', 9)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A16', #companyID#, #tenantID#, '오후공가', 'after official leave', '1', 'refresh', 'A05', 9)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A16', #companyID#, #tenantID#, '午後公暇', 'after official leave', '1', 'refresh', 'A05', 9)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A18', #companyID#, #tenantID#, '산휴', 'maternity leave', '1', 'refresh', 'A05', 9)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A18', #companyID#, #tenantID#, '産休', 'maternity leave', '1', 'refresh', 'A05', 9)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A19', #companyID#, #tenantID#, '慶弔', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', 'refresh', 'A05', 9)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A20', #companyID#, #tenantID#, '病休', 'sick leave', '1', 'refresh', 'A05', 9)
 		    SELECT
 		    	*
 		    FROM DUAL
@@ -4252,6 +4285,8 @@
 		    VALUES (#companyID#, #tenantID#, 17, 1, 1, 17)
 		    INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER) 
 		    VALUES (#companyID#, #tenantID#, 18, 1, 1, 18)
+		    INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER) 
+		    VALUES (#companyID#, #tenantID#, 42, 1, 1, 19)
 	    SELECT
 	    	*
 	    FROM DUAL
@@ -4260,44 +4295,46 @@
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I26" parameterClass="Map">
   		<![CDATA[
   		INSERT ALL
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (0, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (1, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (2, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (3, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (4, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (5, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (6, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (7, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (8, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (9, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (10, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (11, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (12, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (13, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (14, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (15, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (16, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (17, #companyID#, #tenantID#, #companyID#, 1, 0)
-		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
-		    VALUES (18, #companyID#, #tenantID#, #companyID#, 1, 0)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (0, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (1, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (2, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (3, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (4, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (5, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (6, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (7, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (8, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (9, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (10, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (11, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (12, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (13, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (14, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (15, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (16, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (17, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (18, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (42, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
 	    SELECT
 	    	*
 	    FROM DUAL
@@ -4381,7 +4418,7 @@
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (13, 1, #companyID#, #tenantID#, '주소록')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
-		    VALUES (13, 2, #companyID#, #tenantID#, 'Address')
+		    VALUES (13, 2, #companyID#, #tenantID#, 'Contacts')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (13, 3, #companyID#, #tenantID#, 'アドレス帳')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
@@ -4413,7 +4450,13 @@
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (18, 2, #companyID#, #tenantID#, 'Memo')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
-		    VALUES (18, 3, #companyID#, #tenantID#, 'メモ')
+		    VALUES (18, 3, #companyID#, #tenantID#, 'メモ帳')
+		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
+		    VALUES (42, 1, #companyID#, #tenantID#, '전자설문')
+		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
+		    VALUES (42, 2, #companyID#, #tenantID#, 'Survey')
+		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
+		    VALUES (42, 3, #companyID#, #tenantID#, '電子アンケート')
 		SELECT
 	    	*
 	    FROM DUAL
@@ -4456,6 +4499,12 @@
 		    VALUES (#companyID#, #tenantID#, 47, 4, 1, 17, null)
 		    INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) 
 		    VALUES (#companyID#, #tenantID#, 49, 0, 1, 18, null)
+		    INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) 
+		    VALUES (#companyID#, #tenantID#, 51, 6, 1, 21, null)
+		    INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) 
+		    VALUES (#companyID#, #tenantID#, 70, 10, 1, 22, null)
+		    INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) 
+		    VALUES (#companyID#, #tenantID#, 73, 19, 1, 20, null)
 		SELECT
 	    	*
 	    FROM DUAL
@@ -4469,7 +4518,7 @@
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (1, 1, 2, #tenantID#, #companyID#, 'Received Mail')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-		    VALUES (1, 1, 3, #tenantID#, #companyID#, '受信したメール')
+		    VALUES (1, 1, 3, #tenantID#, #companyID#, '受信トレイ')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (2, 4, 1, #tenantID#, #companyID#, '공지사항')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
@@ -4483,17 +4532,17 @@
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (4, 15, 3, #tenantID#, #companyID#, '投票')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-		    VALUES (5, 14, 1, #tenantID#, #companyID#, '전자설문')
+		    VALUES (5, 0, 1, #tenantID#, #companyID#, '빠른설문')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-		    VALUES (5, 14, 2, #tenantID#, #companyID#, 'Poll')
+		    VALUES (5, 0, 2, #tenantID#, #companyID#, 'Quick Poll')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-		    VALUES (5, 14, 3, #tenantID#, #companyID#, '電子アンケート')
+		    VALUES (5, 0, 3, #tenantID#, #companyID#, '簡単アンケート')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (6, 2, 1, #tenantID#, #companyID#, '일정')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (6, 2, 2, #tenantID#, #companyID#, 'Schedule')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-		    VALUES (6, 2, 3, #tenantID#, #companyID#, 'スケジュール')
+		    VALUES (6, 2, 3, #tenantID#, #companyID#, '日程')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (7, 3, 1, #tenantID#, #companyID#, '결재리스트')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
@@ -4505,7 +4554,7 @@
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (8, 3, 2, #tenantID#, #companyID#, 'Favorite Forms')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-		    VALUES (8, 3, 3, #tenantID#, #companyID#, 'お気に入りフォーム')
+		    VALUES (8, 3, 3, #tenantID#, #companyID#, 'お気に入り様式')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (9, 4, 1, #tenantID#, #companyID#, '포토 갤러리')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
@@ -4566,6 +4615,24 @@
 		    VALUES (49, 0, 2, #tenantID#, #companyID#, 'Count')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (49, 0, 3, #tenantID#, #companyID#, 'カウント')
+		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+		    VALUES (51, 6, 1, #tenantID#, #companyID#, '자원관리')
+		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		    VALUES (51, 6, 2, #tenantID#, #companyID#, 'Resource')
+		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		    VALUES (51, 6, 3, #tenantID#, #companyID#, '設備管理')
+		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+		    VALUES (70, 10, 1, #tenantID#, #companyID#, '개인폴더')
+		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		    VALUES (70, 10, 2, #tenantID#, #companyID#, 'Personal Folder')
+		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		    VALUES (70, 10, 3, #tenantID#, #companyID#, 'Webフォルダ')
+		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+		    VALUES (73, 19, 1, #tenantID#, #companyID#, '전자설문')
+		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		    VALUES (73, 19, 2, #tenantID#, #companyID#, 'Survey')
+		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		    VALUES (73, 19, 3, #tenantID#, #companyID#, '電子アンケート')
 		SELECT
 	    	*
 	    FROM DUAL
@@ -4581,7 +4648,7 @@
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
 		    VALUES (1, #tenantID#, #companyID#, 4, 1, 3, 15, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
-		    VALUES (1, #tenantID#, #companyID#, 5, 1, 4, 14, 0)
+		    VALUES (1, #tenantID#, #companyID#, 5, 1, 4, 0, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
 		    VALUES (1, #tenantID#, #companyID#, 6, 1, 5, 2, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
@@ -4610,6 +4677,12 @@
 		    VALUES (1, #tenantID#, #companyID#, 48, 1, 17, 4, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
 		    VALUES (1, #tenantID#, #companyID#, 49, 1, 18, 0, 0)
+			INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
+		    VALUES (1, #tenantID#, #companyID#, 51, 1, 21, 6, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
+		    VALUES (1, #tenantID#, #companyID#, 70, 1, 22, 10, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
+		    VALUES (1, #tenantID#, #companyID#, 73, 1, 20, 19, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
 		    VALUES (2, #tenantID#, #companyID#, 1, 1, 1, 1, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
@@ -4617,7 +4690,7 @@
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
 		    VALUES (2, #tenantID#, #companyID#, 4, 1, 3, 15, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
-		    VALUES (2, #tenantID#, #companyID#, 5, 1, 4, 14, 0)
+		    VALUES (2, #tenantID#, #companyID#, 5, 1, 4, 0, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
 		    VALUES (2, #tenantID#, #companyID#, 6, 1, 5, 2, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
@@ -4647,13 +4720,19 @@
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
 		    VALUES (2, #tenantID#, #companyID#, 49, 1, 18, 0, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
+		    VALUES (2, #tenantID#, #companyID#, 51, 1, 21, 6, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
+		    VALUES (2, #tenantID#, #companyID#, 70, 1, 22, 10, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
+		    VALUES (2, #tenantID#, #companyID#, 73, 1, 20, 19, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
 		    VALUES (3, #tenantID#, #companyID#, 1, 1, 1, 1, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
 		    VALUES (3, #tenantID#, #companyID#, 2, 1, 2, 4, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
 		    VALUES (3, #tenantID#, #companyID#, 4, 1, 3, 15, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
-		    VALUES (3, #tenantID#, #companyID#, 5, 1, 4, 14, 0)
+		    VALUES (3, #tenantID#, #companyID#, 5, 1, 4, 0, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
 		    VALUES (3, #tenantID#, #companyID#, 6, 1, 5, 2, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
@@ -4682,10 +4761,82 @@
 		    VALUES (3, #tenantID#, #companyID#, 48, 1, 17, 4, 0)
 		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
 		    VALUES (3, #tenantID#, #companyID#, 49, 1, 18, 0, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
+		    VALUES (3, #tenantID#, #companyID#, 51, 1, 21, 6, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
+		    VALUES (3, #tenantID#, #companyID#, 70, 1, 22, 10, 0)
+		    INTO TBL_PORTAL_THEME_PORTLET (THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED) 
+		    VALUES (3, #tenantID#, #companyID#, 73, 1, 20, 19, 0)
 		SELECT
 	    	*
 	    FROM DUAL
   		]]>
+    </insert>
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I31" parameterClass="Map">
+  		<![CDATA[
+  		INSERT ALL
+		    INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (1, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (2, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+		    INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (3, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+	    SELECT
+	    	*
+	    FROM DUAL
+  		]]>
+    </insert>
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I32" parameterClass="Map">
+  		<![CDATA[
+  		INSERT ALL
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (1, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (2, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (4, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (5, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (6, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (7, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (8, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (9, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (10, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (11, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (12, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (14, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (26, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (34, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (36, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (47, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (49, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+	    SELECT
+	    	*
+	    FROM DUAL
+  		]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_IJHS1" parameterClass="Map">
+	    <![CDATA[
+	    	INSERT INTO
+	    		TBL_ATTITUDE_ANNUAL_CONF
+	    			(COMPANY_ID, TENANT_ID, ANNUAL_CANCEL_RULE, USE_ANNUAL_AUTO_GNRT, ANNUAL_GNRT_STD, INITIAL_DATE, USE_MINUS_ANNUAL, USE_ANNUAL_TMNT, ROUND_OFF_RULE, CONF_SET_DATE)
+	    	VALUES
+	    			(#companyID#, #tenantID#, '1', '1', '1', to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), '1', '1', '1', to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'))
+	    ]]>
     </insert>
     
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
@@ -4933,7 +5084,8 @@
                 	COMPANYNAME  ,
              	A.TITLE T1  ,
              	A.TITLE2 T2  ,
-             	A.JOBID
+             	A.JOBID,
+             	A.MANUAL_FLAG
         	FROM
         		TBL_ADDJOBMASTER A
             JOIN
@@ -4972,9 +5124,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_ADDJOBMASTER
-              	( CN, DEPTID, TITLE, TITLE2, TENANT_ID, ORDERBY, JOBID )
+              	( CN, DEPTID, TITLE, TITLE2, TENANT_ID, ORDERBY, JOBID, MANUAL_FLAG )
            VALUES
-           		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_TENANT_ID#, 0, #v_JOBID# )
+           		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_TENANT_ID#, 0, #v_JOBID#, #v_MANUAL_FLAG# )
 		]]>
 	</insert>
 	
@@ -5004,25 +5156,25 @@
 		
 		<isNotEmpty property="searchValue" prepend="AND">
 			<isEqual property="searchType" compareValue="cn">
-				cn LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				cn LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="displayname">
-				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="title">
-				title LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				title LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="description">
-				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="mail">
-				mail LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				mail LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="telephonenumber">
-				telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="company">
-				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
 			</isEqual>
 		</isNotEmpty>
 	</select>
@@ -5103,25 +5255,25 @@
     	
     	<isNotEmpty property="searchValue" prepend="AND">
 			<isEqual property="searchType" compareValue="cn">
-				cn LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				cn LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="displayname">
-				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="title">
-				title LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				title LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="description">
-				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="mail">
-				mail LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				mail LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="telephonenumber">
-				telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="company">
-				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
 			</isEqual>
 		</isNotEmpty>
 		
@@ -5500,6 +5652,18 @@
 	    ]]>    		 				
 	</select>
 	
+	<select id="EzOrganAdminDAO.allUserList" parameterClass="int" resultMap="userCnList">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_USERMASTER a
+            WHERE
+				a.tenant_id = #tenantID#
+	    	ORDER BY cn
+	    ]]>
+	</select>
+	
     <select id="EzOrganAdminDAO.userCount" parameterClass="int" resultClass="int">
         <![CDATA[
             SELECT 
@@ -5681,6 +5845,8 @@
 	  		<isNotNull property="extensionAttribute8" prepend=","> <![CDATA[extensionAttribute8 = #extensionAttribute8#]]></isNotNull>
 	  		<isNotNull property="mailboxUsage" prepend=","> <![CDATA[mailboxUsage = #mailboxUsage#]]></isNotNull>
 	  		<isNotNull property="mailboxQuota" prepend=","> <![CDATA[mailboxQuota = #mailboxQuota#]]></isNotNull>
+	  		<isNotNull property="extensionPhone" prepend=","> <![CDATA[extensionPhone = #extensionPhone#]]></isNotNull>
+	  		<isNotNull property="officeMobile" prepend=","> <![CDATA[officeMobile = #officeMobile#]]></isNotNull>
 	  	</dynamic>
 	  	<![CDATA[
       		WHERE
@@ -5929,13 +6095,20 @@
  				CN,
  				displayName,
  				department,
- 				description
+ 				description,
+				to_number(mailboxquota) as mailboxquota,
+				to_number(mailboxusage) as mailboxusage,
+				displayName2,
+				description2
  			FROM
  				TBL_USERMASTER
  			WHERE
- 				tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN') AND PHYSICALDELIVERYOFFICENAME = #companyId#
+ 				tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
  				<include refid="EzOrganAdminDAO.searchQuery"/>
  			ORDER BY
+ 			<isNotEmpty property="sortColumn">
+		    	$orderbyData$,
+		    </isNotEmpty>
  				displayName
  			)
  		<isNotEqual property="v_start" compareValue="-1">
@@ -5953,7 +6126,7 @@
 			COUNT(CN) 
 		FROM 
             TBL_USERMASTER 
-		WHERE	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN') AND PHYSICALDELIVERYOFFICENAME = #companyId#
+		WHERE	tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
   		<include refid="EzOrganAdminDAO.searchQuery"/>
 	</select>
 	
@@ -6614,6 +6787,224 @@
 				TENANT_ID = #v_TENANT_ID#
 		]]>
 	</select>
+	
+	<select id="EzOrganAdminDAO.getLoginStopUserList" parameterClass="map" resultMap="loginStopList">
+		<isNotEqual property="stopFlag" compareValue="Y">
+			SELECT
+				CN,
+				displayName,
+				displayName2,
+				department,
+				description,
+				description2,
+				company,
+				company2,
+				passwordUpdateDT,
+				loginStopDT
+			FROM
+				<![CDATA[
+				(
+				SELECT 
+					CN,
+					displayName,
+					displayName2,
+					department,
+					description,
+					description2,
+					company,
+					company2,
+					TO_CHAR(PASSWORD_UPDATEDT + NUMTODSINTERVAL(#offset#, 'MINUTE'), 'yyyy-MM-dd HH24:mi:ss') AS passwordUpdateDT,
+					'' as loginStopDT,
+					ROWNUM NUM
+				FROM 
+			    	TBL_USERMASTER
+			    ]]>
+		        WHERE 
+		            TENANT_ID = #tenantID#
+		        AND
+	       			DEPARTMENT NOT LIKE 'shared_mailbox%'
+		        <isNotEmpty property="companyId">
+	           	AND
+	           		PHYSICALDELIVERYOFFICENAME = #companyId#
+	           	</isNotEmpty>
+	           	AND
+	           		CN NOT IN ( SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+					<include refid="EzOrganAdminDAO.searchQuery"/>
+			    ORDER BY 
+			    	PASSWORD_UPDATEDT, displayName
+			    )
+		    <isNotEqual property="v_start" compareValue="-1">
+		    <![CDATA[
+		    WHERE
+		    	NUM >= #v_start# + 1
+			AND
+				NUM <= #v_start# + #pageCount#
+			]]>
+			</isNotEqual>
+		</isNotEqual>
+		<isEqual property="stopFlag" compareValue="Y">
+			SELECT
+				CN,
+				displayName,
+				displayName2,
+				department,
+				description,
+				description2,
+				company,
+				company2,
+				passwordUpdateDT,
+				loginStopDT
+			FROM
+				<![CDATA[
+				(
+				SELECT 
+					a.CN,
+					a.displayName,
+					a.displayName2,
+					a.department,
+					a.description,
+					a.description2,
+					a.company,
+					a.company2,
+					TO_CHAR(a.PASSWORD_UPDATEDT + NUMTODSINTERVAL(#offset#, 'MINUTE'), 'yyyy-MM-dd HH24:mi:ss') AS passwordUpdateDT,
+					TO_DATE(b.PROPERTY_VALUE, 'yyyy-MM-dd HH24:mi:ss') + $offset$ / (24 * 60) AS loginStopDT,
+					ROWNUM NUM
+				FROM 
+			    	TBL_USERMASTER a
+			    JOIN
+			    	TBL_USER_CONFIG b
+			    ON
+			    	a.TENANT_ID = b. TENANT_ID
+			    AND
+			    	a.CN = b.USER_ID
+			    AND
+			    	b.PROPERTY_NAME = 'LoginStopUser'
+		        WHERE
+		        ]]>
+		            a.TENANT_ID = #tenantID#
+       	        AND
+	       			a.DEPARTMENT NOT LIKE 'shared_mailbox%'
+		        <isNotEmpty property="companyId">
+	            AND
+					a.PHYSICALDELIVERYOFFICENAME = #companyId#
+				</isNotEmpty>
+					<include refid="EzOrganAdminDAO.searchQueryForLoginStop"/>
+			    ORDER BY 
+			    	a.PASSWORD_UPDATEDT, a.displayName
+			    )
+		    <isNotEqual property="v_start" compareValue="-1">
+		    <![CDATA[
+		    WHERE
+		    	NUM >= #v_start# + 1
+			AND
+				NUM <= #v_start# + #pageCount#
+			]]>
+			</isNotEqual>
+		</isEqual>
+	</select>
+	
+	<select id="EzOrganAdminDAO.getLoginStopUserListCount" parameterClass="map" resultClass="Integer">
+		<isNotEqual property="stopFlag" compareValue="Y">
+			<![CDATA[
+			SELECT 
+				COUNT(CN)
+			FROM 
+		    	TBL_USERMASTER
+	        WHERE 
+	            TENANT_ID = #tenantID#
+	        AND
+	       		DEPARTMENT NOT LIKE 'shared_mailbox%'
+		    ]]>
+		    <isNotEmpty property="companyId">
+	        AND
+	        	PHYSICALDELIVERYOFFICENAME = #companyId#
+	        </isNotEmpty>
+	        AND
+	        	CN NOT IN ( SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+	        AND
+	       		DEPARTMENT NOT LIKE 'shared_mailbox%'
+				<include refid="EzOrganAdminDAO.searchQuery"/>
+		</isNotEqual>
+		<isEqual property="stopFlag" compareValue="Y">
+			<![CDATA[
+			SELECT
+				COUNT(CN)
+			FROM
+		    	TBL_USERMASTER a
+		    JOIN
+		    	TBL_USER_CONFIG b
+		    ON
+		    	a.TENANT_ID = b. TENANT_ID
+		    AND
+		    	a.CN = b.USER_ID
+		    AND
+		    	b.PROPERTY_NAME = 'LoginStopUser'
+		    ]]>
+	        WHERE
+	            a.TENANT_ID = #tenantID#
+	        AND
+	       		a.DEPARTMENT NOT LIKE 'shared_mailbox%'
+	        <isNotEmpty property="companyId">
+			AND
+	            a.PHYSICALDELIVERYOFFICENAME = #companyId#
+	        </isNotEmpty>
+				<include refid="EzOrganAdminDAO.searchQueryForLoginStop"/>
+		</isEqual>
+	</select>
+	
+	<insert id="EzOrganAdminDAO.insertStopUser" parameterClass="map">
+		INSERT INTO TBL_USER_CONFIG
+			(TENANT_ID, USER_ID, PROPERTY_NAME, PROPERTY_VALUE)
+		<iterate property="cnArr" conjunction="UNION ALL">
+		SELECT #tenantID#, #cnArr[]#, 'LoginStopUser', #nowDate# FROM DUAL
+		</iterate>
+	</insert>
+	
+	<update id="EzOrganAdminDAO.deleteStopUser" parameterClass="map">
+		DELETE FROM
+			TBL_USER_CONFIG
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID IN (<iterate property="cnArr" conjunction=","> #cnArr[]# </iterate>)
+	</update>
+	
+	<select id="EzOrganAdminDAO.checkStopUser" parameterClass="map" resultClass="Integer">
+		SELECT
+			count(*)
+		FROM
+			TBL_USER_CONFIG
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID = #userID#
+		AND
+			PROPERTY_NAME = 'LoginStopUser'
+	</select>
+	
+	<update id="EzOrganAdminDAO.setDeptMail" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_DEPTMASTER
+			SET
+     			mail = #MAIL#
+     		WHERE
+      			cn = #CN#
+      		AND 
+            	tenant_id = #TENANT_ID#
+		]]>
+	</update>
+	
+	<delete id="EzOrganAdminDAO.deleteCompanyConfig" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_COMPANY_CONFIG
+          	WHERE
+          		COMPANY_ID = #v_CN#
+          	AND
+          		TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</delete>
 	
  	 <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}

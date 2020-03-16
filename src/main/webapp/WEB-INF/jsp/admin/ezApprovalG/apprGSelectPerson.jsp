@@ -412,6 +412,9 @@
 				<h1> <spring:message code='ezPersonal.t299'/></h1>
 			</c:when>
 			<c:otherwise>
+				<h1><spring:message code='ezPersonal.gha01'/></h1>
+			</c:otherwise>
+			<%-- <c:otherwise>
 				<h1>
 					<c:choose>
 						<c:when test="${type != 'Proxy'}">
@@ -422,7 +425,7 @@
 						</c:otherwise>
 					</c:choose> 
 				</h1>
-			</c:otherwise>
+			</c:otherwise> --%>
 		</c:choose>
 		<div id="close">
 			<ul>
@@ -433,14 +436,17 @@
 			</ul>
 		</div>
 		<table>
-			<tr style="height:33px">
+			<tr style="height:33px; background-color: #f8f8fa; margin-bottom : 3px; padding: 0px; border: 1px solid #eaeaea;">
 			    <td style="padding-right:5px">
+			    	<div style="padding-top: 3px;">
 			    	<c:if test="${type != 'Proxy'}">
-					    <input type="text" id="deptkeyword" onKeyPress="deptsearch_press(event)" style="WIDTH:115px" maxLength="50">
-					    <a class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezPersonal.t71'/></span></a>
+					    <input type="text" id="deptkeyword" onKeyPress="deptsearch_press(event)" style="WIDTH:120px; height:22px; margin-left:5px;" maxLength="50">
+					    <a class="imgbtn" style="margin-right:5px;"><span onclick="deptsearch_click()"><spring:message code='ezPersonal.t71'/></span></a>
 			    	</c:if>
+			    	</div>
 			    </td>
-			    <td>
+			    <td align="right">
+			    	<div style="padding-top:3px;">
 			    	<c:if test="${type != 'Proxy'}">
 						<select id="search_type">
 				            <option selected value="displayname"><spring:message code='ezPersonal.t9'/></option>
@@ -453,15 +459,19 @@
 				            <option value="mail"><spring:message code='ezPersonal.t75'/></option>
 				            <option value="streetAddress"><spring:message code='ezPersonal.t76'/></option>
 				        </select>
-				        <input type="text" id="keyword" onKeyPress="search_press(event)" style="WIDTH:130px" maxLength="50">
-				        <a class="imgbtn"><span onClick="search_click()"><spring:message code='ezPersonal.t77'/></span></a>
+				        <input type="text" id="keyword" onKeyPress="search_press(event)" style="WIDTH:130px; height:22px;" maxLength="50">
+				        <a class="imgbtn" style="margin-right:5px;"><span onClick="search_click()"><spring:message code='ezPersonal.t77'/></span></a>
 			    	</c:if>			    	
+			    	</div>	    	
 			    </td>
 		  	</tr>
 		  	<tr>
-			    <td style="padding-right:5px"><div class="box" style="overflow:auto; WIDTH:235px; HEIGHT:340px;" id="TreeView" ></div></td>
+		  		<td colspan="2" style="padding:2px;"/>
+		  	</tr>
+		  	<tr>
+			    <td style="padding-right:5px"><div class="box" style="overflow:auto; WIDTH:235px; HEIGHT:380px;" id="TreeView" ></div></td>
 			    <td class="listview">
-			        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 485px; HEIGHT: 340px; BACKGROUND-COLOR: white"></div>
+			        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 495px; HEIGHT: 380px; BACKGROUND-COLOR: white"></div>
 				</td>
 		  	</tr>
 		</table>

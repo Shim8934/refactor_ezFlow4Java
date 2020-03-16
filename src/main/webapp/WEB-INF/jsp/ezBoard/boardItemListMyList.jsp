@@ -85,6 +85,9 @@
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
+	        var arrListSetForMove = new Set();
+	        var arrListStrForMove = "";
+	        
 	        window.onunload = Window_onunload;
 	        var window_onunload_Event = false;
 	
@@ -111,6 +114,9 @@
 	            document.getElementById("divList").style.height = height + "px";
 	            window_onunload_Event = true;
 	            getBoardList();
+	            
+		        /* 2020-02-03 홍승비 - 아무것도 선택하지 않은 상태의 하단 미리보기 영역 마진 수정 */
+		      	ifrmPreViewW.document.getElementById("ifrmPreViewW_div").style.marginTop = "-2px";
 	        };
 	        
 	        /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
@@ -582,7 +588,8 @@
 	            var pLeft = (pwidth - 765) / 2;
 	
 	            if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-	                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=793,width=764,top=" + pTop + ",left=" + pLeft, "");
+	            	pLeft = (pwidth - 790) / 2;
+	                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=793,width=790,top=" + pTop + ",left=" + pLeft, "");
 	            } else if (obj.getAttribute("DATA10") == "7") {
 					window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=764,top=" + pTop + ",left=" + pLeft, "");
 	            } else {
@@ -610,10 +617,13 @@
 		    }
 		    function DeleteItem() {
 		        var xmlhttp;
+		        var arrListSet = new Set();
 		        
 		        arrList = strListInfo.split(";");
 		        for (var i = 0; i < arrList.length - 1; i++) {
 		            xmlhttp = createXMLHttpRequest();
+		            arrListSet.add(document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1") + ";");
+		            
 		            try {
 			            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1")) + "&itemList=" + encodeURIComponent(arrList[i].split(",")[0]) + ";", false);
 					} catch (e) {
@@ -623,6 +633,9 @@
 		
 		            if (xmlhttp.responseText == "NO") {
 		                alert("<spring:message code='ezBoard.t265'/>");
+		                return;
+		            } else if (xmlhttp.responseText == "ERROR") {
+		                alert("<spring:message code='ezBoard.t1020'/>");
 		                return;
 		            }
 		            xmlhttp = null;
@@ -649,8 +662,12 @@
 		        
 		        getBoardList();
 		        
+		        var arrListStr = "";
+		        arrListSet.forEach(function callback (value1, value2, Set) {
+		        	arrListStr += value1;
+		        });
 		        try {
-			    	window.opener.leftCountRf();
+			    	leftCountRf(arrListStr);
 				} catch (e) {}
 		    }
 		
@@ -866,8 +883,12 @@
 	            var guBun = "";
 	            var i = 0;
 	            arrList = strListInfo.split(";");
+	            arrListSetForMove.clear();
+	            arrListStrForMove = "";
+	            
 	            for (i = 0; i < arrList.length - 1; i++) {
 	                strItemList += arrList[i].split(",")[0] + ";";
+	                arrListSetForMove.add(document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1") + ";");
 	                try {
 		                strBoardItemList += document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1") + ";";
 		                guBun += document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA10") + ";";
@@ -877,7 +898,11 @@
 					}
 	            }
 	            arrList = null;
-	
+	            
+	            arrListSetForMove.forEach(function callback (value1, value2, Set) {
+	            	arrListStrForMove += value1;
+		        });
+		        
 	            if (CrossYN()) {
 	                moveboarditem_cross_dialogArguments[1] = MoveItem_onclick_Complete;
 	                var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(strBoardItemList) + "&guBun=" + guBun, "MoveBoardItem_Cross", GetOpenWindowfeature(355, 600));
@@ -890,12 +915,13 @@
 	                pwidth = parseInt(pwidth) / 2;
 	                pheigth = pheigth - 200;
 	                pwidth = pwidth - 127;
+	                
 	                var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(strBoardItemList) + "&guBun=" + guBun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
-	
-	                if (typeof (ret) != "undefined") {
-	                    if (ret == "OK") {
+	                
+	                if (typeof (ret) != "undefined" && ret != "") {
+	                    if (ret != "ERROR") {
 	                    	try {
-	    				    	window.opener.leftCountRf();
+	    				    	leftCountRf(ret + ";" + arrListStrForMove);
 	    					} catch (e) {}
 	                        window.location.reload();
 	                        window.close();
@@ -903,23 +929,24 @@
 	                }
 	            }
 	        }
+	        
+	        /* 2019-07-08 홍승비 - 게시물 등록, 삭제, 복사, 이동시 좌측메뉴의 선택된 하위게시판 확장 닫히지 않도록 수정 */
 	        function MoveItem_onclick_Complete(ret) {
-	            if (typeof (ret) != "undefined") {
-	                if (ret == "OK") {
+	            if (typeof (ret) != "undefined" && ret != "") {
+	                if (ret != "ERROR") {
 	                	try {
-					    	window.opener.leftCountRf();
+					    	leftCountRf(ret + ";" + arrListStrForMove);
 						} catch (e) {}
 	                    window.location.reload();
 	                    window.close();
 	                }
 	            }
 	        }
-	        
 	        function CopyItem_onclick_Complete(ret) {
-	            if (typeof (ret) != "undefined") {
-	                if (ret == "OK") {
+	            if (typeof (ret) != "undefined" && ret != "") {
+	                if (ret != "ERROR") {
 	                	try {
-					    	window.opener.leftCountRf();
+					    	leftCountRf(ret);
 						} catch (e) {}
 	                    window.location.reload();
 	                    window.close();
@@ -1113,6 +1140,16 @@
 	        function keyword_Clear() {
 	            document.getElementById('txt_keyword').value = "";
 	        }
+	        
+			/* 2020-02-03 홍승비 - 하단 미리보기 사용 시 아무 게시물도 선택되지 않은 상태라면 최소 높이 설정 */
+		    function checkPreViewWSrc() {
+	    	  if (document.getElementById("ifrmPreViewW").src.indexOf("/blank") > -1) {
+	            	document.getElementById("ifrmPreViewW").style.minHeight = "130px";
+	            } else { // 게시물 선택 시 최소 높이 해제
+	            	document.getElementById("ifrmPreViewW").style.minHeight = "";
+	            }
+		    }
+			
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
@@ -1128,7 +1165,7 @@
 	    </h1>
 	    <div id="mainmenu">
 	        <ul>
-	            <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
+	            <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.hsbJP02'/></span></li>
 	            <li id="btn_copy"><span onClick="CopyItem_onclick()"><spring:message code='ezBoard.t274'/></span></li>
 	            <li id="btn_move"><span onClick="MoveItem_onclick()"><spring:message code='ezBoard.t134'/></span></li>
 	            <li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup(this)"></span></li>
@@ -1238,7 +1275,7 @@
 						</dl>
 	                </div>
 	                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
-	                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
+	                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" onLoad="checkPreViewWSrc();" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
 	            </div>
 	        </div>
 	    </div>

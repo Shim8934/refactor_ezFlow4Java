@@ -157,6 +157,7 @@ public class EzAttitudeController {
 			typeList = (JSONArray) resultBody.get("data");
 		}
 		
+		model.addAttribute("useLang", userInfo.getLang());
 		model.addAttribute("typeList", typeList);
 		model.addAttribute("deptList", deptList);		
 		model.addAttribute("companyId", userInfo.getCompanyID());
@@ -605,6 +606,46 @@ public class EzAttitudeController {
 				int totalAtt = Integer.parseInt(resultBody.get("data").toString());
 				model.addAttribute("totalAtt", totalAtt);
 			}
+			
+			//취소신청 갯수
+			url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/cancelannual/count";
+			
+			headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			entity = new HttpEntity<>(headers);
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", userInfo.getCompanyID())
+					.queryParam("tenantId", userInfo.getTenantId())
+					.queryParam("apprUserName", "")
+					.queryParam("writerName", "")
+					.queryParam("writerDeptName", "")
+					.queryParam("startDate", "")
+					.queryParam("endDate", "")
+					.queryParam("offset", offsetMin)
+					.queryParam("pageNum", "")
+					.queryParam("type", "0")
+					.queryParam("orderCell", "")
+					.queryParam("orderOption", "")
+					.queryParam("adminFlag", "true")
+					.queryParam("deptid", "ALL")
+					.queryParam("isAllDept", isAllDept);
+			
+			rest = new RestTemplate();
+
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+
+			jp = new JSONParser();
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			
+			if(status.equals("ok")) {
+				model.addAttribute("totalAnnual", resultBody.get("data").toString());
+			}
 		}
 		
 		model.addAttribute("serverTime", serverTime);
@@ -659,7 +700,7 @@ public class EzAttitudeController {
 			
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("userId", userInfo.getId())
-					.queryParam("typeIdArr", "A11,A12,A13");
+					.queryParam("typeIdArr", "A11,A12,A13,A21");
 			
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 			
@@ -676,6 +717,7 @@ public class EzAttitudeController {
 			model.addAttribute("A11typeInfo", typeList.get(0));
 			model.addAttribute("A12typeInfo", typeList.get(1));
 			model.addAttribute("A13typeInfo", typeList.get(2));
+			model.addAttribute("A21typeInfo", typeList.get(3));
 		}
 		
 		model.addAttribute("userInfo", userInfo);
@@ -2445,6 +2487,7 @@ public class EzAttitudeController {
 	
 		model.addAttribute("font", font);
 		model.addAttribute("authFlag", authFlag);
+		model.addAttribute("userInfo",userInfo);
 		
 		LOGGER.debug("/ezAttitude/attitudeItemDetail ended");
 		return "/ezAttitude/attitudeItemDetail";
@@ -2790,6 +2833,7 @@ public class EzAttitudeController {
 		String ruleKind = request.getParameter("ruleKind") == null ? "" : request.getParameter("ruleKind").trim();
 		String companyID = request.getParameter("companyID") == null ? userInfo.getCompanyID() : request.getParameter("companyID");
 		String useOcs = config.getProperty("config.USE_OCS") == null ? "" : config.getProperty("config.USE_OCS");
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
@@ -2861,6 +2905,7 @@ public class EzAttitudeController {
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("companyID", companyID);
+		model.addAttribute("primaryLang", primaryLang);
 		
 		LOGGER.debug("attNewReceiverChoose ended.");
 		return "ezAttitude/attNewReceiverChoose";
@@ -4501,6 +4546,8 @@ public class EzAttitudeController {
 					.queryParam("attitudeTypeList", request.getParameter("attitudeTypeList"))
 					.queryParam("startDateList", request.getParameter("startDateList"))
 					.queryParam("endDateList", request.getParameter("endDateList"))
+					.queryParam("startTimeList", request.getParameter("startTimeList"))
+					.queryParam("endTimeList", request.getParameter("endTimeList"))
 					.queryParam("docId", request.getParameter("docId"));	
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 		} else if (request.getParameter("status").equals("1")) {
@@ -4724,5 +4771,69 @@ public class EzAttitudeController {
 		LOGGER.debug("getHoliDays ended");
 		return data;
 	}
+	
+	/**
+	 * left 취소신청 갯수
+	 * @param loginCookie
+	 * @param model
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ezAttitude/getTotalAnnualCount.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String getTotalAttCount(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("getTotalAttCount started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String isAllDept = "";
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);			
 
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/cancelannual/count";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("apprUserName", "")
+				.queryParam("writerName", "")
+				.queryParam("writerDeptName", "")
+				.queryParam("startDate", "")
+				.queryParam("endDate", "")
+				.queryParam("offset", offsetMin)
+				.queryParam("pageNum", "")
+				.queryParam("type", "0")
+				.queryParam("orderCell", "")
+				.queryParam("orderOption", "")
+				.queryParam("adminFlag", "true")
+				.queryParam("deptid", "ALL")
+				.queryParam("isAllDept", isAllDept);
+		
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		String totalAnnual = "";
+		
+		if (status.equals("ok")) {
+			totalAnnual = resultBody.get("data").toString();
+		}
+		
+		LOGGER.debug("getTotalAttCount ended.");
+		
+		return totalAnnual;
+	}
 }

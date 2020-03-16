@@ -7,6 +7,7 @@ import java.util.Map;
 
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
@@ -17,8 +18,12 @@ public interface EzSystemAdminService {
 	public void updateSysParam(int tenantId, List<Map<String, String>> list, Locale locale, String companyID) throws Exception;
 	public List<ConnectionInfoVO> getLoginHist(int tenantID, String offset, int startPage, int maxItemPerPage, 
 			String keyword, String keycode, String lang, String startDate, String endDate, String companyId) throws Exception;
+	public List<ConnectionInfoVO> getLoginHistNotAdmin(int tenantID, String offset, int startPage, int maxItemPerPage, 
+			String keyword, String keycode, String lang, String startDate, String endDate, String companyId, String userId) throws Exception;
 	public int getLoginHistCount(int tenantID, String offset, String keyword, String keycode, 
 			String lang, String startDate, String endDate, String companyId) throws Exception;
+	public int getLoginHistCountNotAdmin(int tenantID, String offset, String keyword, String keycode, 
+			String lang, String startDate, String endDate, String companyId, String userId) throws Exception;
 	public ArrayList<String> getServerInfo(String ip, String curServer, String serverName, ArrayList<String> getServerList) throws Exception;
 	public String getSysMonitorInfo(String ip, String serverName, String address, boolean chkServer) throws Exception;
 	public void deleteLoginHist(int keepLogPeriod, int tenantID) throws Exception;
@@ -37,4 +42,6 @@ public interface EzSystemAdminService {
 	public void deleteWebfolderLog (int keepLogPeriod, int tenantID) throws Exception;
 	public void setMultiLoginType(String multiLoginType, int tenantID, String companyID, String editType) throws Exception;
 	public void updateNewPortalMenuByPackageType(String newPackageType, int tenantID, String companyID) throws Exception;
+	public String getAccessCountryList(int tenantId) throws Exception;
+	public void setAccessCountry(int tenantId, String countryCode) throws Exception;
 }

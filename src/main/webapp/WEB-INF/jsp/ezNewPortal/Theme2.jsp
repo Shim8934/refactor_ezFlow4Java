@@ -12,7 +12,6 @@
 <link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 <style type="text/css">
 	#theme2Body .two_column{width:48%;}
-	.mainbg {min-width:1280px;}
 	#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}
 	.top_two_column {margin : 0px 0px 25px 0px;}
 	.orbit-wrapper .timer {display:none;}
@@ -132,6 +131,7 @@
                     </li>
                     <li>
                     	<c:choose>
+                    		<%-- 
                     		<c:when test="${useQuestion eq 'NO' }">								
                     			<dl id="Poll" class="icon_disabled writebannerDL">
 									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
@@ -142,6 +142,19 @@
                             		<dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
                             		<dt><spring:message code='ezNewPortal.gu4' /></dt>
                             		<dd id="pollCount" class="iconCount_none">0</dd>
+                       			</dl>
+                    		</c:otherwise>
+                    		 --%>
+                    		<c:when test="${useSurvey eq 'NO' }">								
+                    			<dl id="Survey" class="icon_disabled writebannerDL">
+									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+								</dl>
+                    		</c:when>
+                    		<c:otherwise>
+                        		<dl class="writebannerDL" id="Survey">
+                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
+                            		<dt><spring:message code='ezNewPortal.gu4' /></dt>
+                            		<dd id="surveyCount" class="iconCount_none">0</dd>
                        			</dl>
                     		</c:otherwise>
                     	</c:choose>
@@ -163,7 +176,7 @@
                     	</c:choose>
                     </li>
                     <li>
-					<c:if test="${useEzWorkspace eq 'YES' }">
+					<c:if test="${useEzWorkspace}">
                     <dl class="writebannerDL" id="ezWorkspace">
                         <dt><img src="/images/ezNewPortal/theme2Img/writebanner06.png" alt="협업"></dt>
                         <dt><spring:message code='ezNewPortal.pjg01' /></dt>
@@ -560,7 +573,7 @@
 					emPic.appendChild(img);
 					
 					document.getElementById("exellentDeptName").innerText = "";
-					document.getElementById("exellentEmpName").innerText = '\"<spring:message code="ezNewPortal.t018" />\"';
+					document.getElementById("exellentEmpName").innerText = '<spring:message code="ezNewPortal.t018" />';
 					
 					var nodata = document.getElementById("exellentEmpName");
 					nodata.style.color = "#c0c0c0";
@@ -638,7 +651,7 @@
 			
 			dt.appendChild(img);
 			var dd = document.createElement('dd');
-			dd.textContent = '\"<spring:message code="ezNewPortal.t018" />\"';
+			dd.textContent = '<spring:message code="ezNewPortal.t018" />';
 			
 			dl.appendChild(dt);
 			dl.appendChild(dd);
@@ -650,19 +663,37 @@
         data.forEach(function(item, index) {
         	if(index > 4) return;
         	var li = document.createElement('li');
-        	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
-        	li.style.cursor = "pointer";
-        	li.addEventListener('click', function() {
-			    var wWeight = "760";
-			    var wHeight = "670";
-			    var heigth = window.screen.availHeight;
-			    var width = window.screen.availWidth;
-			    var left = (width - wWeight) / 2;
-			    var top = (heigth - wHeight) / 2;
-			
-		        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(item.scheduleId) + "&type=" + item.scheduleType + "&datetype=" + item.dateType + "&repeatcount=" + item.repeatCount + "&date=" + item.startDate.substr(0, 10) + "&pattern=0","",
-			        "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");        		
-        	});
+        	
+        	// 2020-02-25 김정언
+        	if(item.dateType == "4") {
+        		li.textContent = item.title + " : " + item.creatorName;
+            	li.style.cursor = "pointer";
+            	li.addEventListener('click', function() {  			    
+            		if (CrossYN()) {
+    					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + encodeURIComponent(item.scheduleId) + "&typeId=" + item.parentId, "", GetOpenWindowfeature(672, 640));
+    					
+    					try { OpenWin.focus(); } catch (e) { }
+    				} else {
+    					window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + encodeURIComponent(item.scheduleId) + "&typeId=" + item.parentId, "", 
+    					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+    				}   		
+            	});
+        	}
+        	else {        		
+	        	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
+	        	li.style.cursor = "pointer";
+	        	li.addEventListener('click', function() {
+				    var wWeight = "760";
+				    var wHeight = "670";
+				    var heigth = window.screen.availHeight;
+				    var width = window.screen.availWidth;
+				    var left = (width - wWeight) / 2;
+				    var top = (heigth - wHeight) / 2;
+				
+			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(item.scheduleId) + "&type=" + item.scheduleType + "&datetype=" + item.dateType + "&repeatcount=" + item.repeatCount + "&date=" + item.startDate.substr(0, 10) + "&pattern=0","",
+				        "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");        		
+	        	});
+        	}
         	schList.appendChild(li);
         });
 	}
@@ -723,7 +754,49 @@
 			}		    		
 	    });
 	}
- 	
+
+	var tryCount = 0;
+	
+	var sortableEvent = function () {
+		//포틀릿 드래그 앤 드롭
+		try {
+			$(".portlet_area").sortable({
+				handle : ".sortablePortlet",
+				helper : "clone",
+				scroll: false,
+				start : function (event, block) {
+					/* 
+					$(".portlet.ui-sortable-helper").css("width", $(".portlet").not(block.item).not(block.placeholder).outerWidth());
+					
+					$(".ui-sortable-placeholder").css({
+						'width' : $(".portlet").not(block.item).not(block.placeholder).outerWidth(),
+						'height' : $(".portlet").not(".ui-sortable-helper").outerHeight()
+					}); */
+				},
+				update : function(event, ui) {
+					updatePortletOrderUser(usedTheme);
+				}
+			});
+		} catch (e) {
+			tryCount++;
+			if (tryCount <= 5) {
+				setTimeout(sortableEvent(), 100);
+			} else {
+				return;
+			}
+		}
+	}
+	
+	var settingPortalInterval = function () {
+		var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
+		
+		if (refreshInterval != null && refreshInterval != "0") {
+			window.setInterval(function() {
+				parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+			}, Number(refreshInterval) * 60000);
+		}
+	}
+	
 	$(function() {
 		$("#featured").orbit();
 		
@@ -741,9 +814,10 @@
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
+			var portletCode = portletOrder[i].portletCode;
 			
 			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
-				(function (portletId, portletUrl, portletName) {
+				(function (portletId, portletUrl, portletName, portletCode) {
 					$.ajax({
 						type : "GET",
 						dataType : "html",
@@ -753,7 +827,12 @@
 						retryLimit : 3,
 						success : function(result) {
 							$("#" + portletId + "Portlet").append(result);
-							eventSetting(portletId, usedTheme);
+							
+							eventSetting(portletId, usedTheme, portletCode, false);
+							
+							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+								sortableEvent();
+							}
 						},
 						error : function() {
 							this.url = "/ezNewPortal/errorPortlet.do";
@@ -765,14 +844,19 @@
 								return;
 							}
 							
+							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+								sortableEvent();
+							}
+							
 							return;
 						}
 					});
-				}(portletId, portletUrl, portletName));
+				}(portletId, portletUrl, portletName, portletCode));
 			/* } */
 		}
 
 		var useQuestion = "<c:out value='${useQuestion}'/>";
+		var useSurvey = "<c:out value='${useSurvey}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";
 		var useMail = "<c:out value='${useMail}'/>";
 		var useApproval = "<c:out value='${useApproval}'/>";
@@ -786,9 +870,13 @@
 		if (useSchedule !== "NO") {
 			document.getElementById("Schedule").addEventListener('click', function(){quickMenuOpen('Schedule');}, false);
 		}
-		
+		/* 
 		if (useQuestion !== "NO") {
 			document.getElementById("Poll").addEventListener('click', function(){quickMenuOpen('Poll');}, false);
+		}
+		 */
+		if (useSurvey !== "NO") {
+			document.getElementById("Survey").addEventListener('click', function(){quickMenuOpen('Survey');}, false);
 		}
 		
 		if (useCircular !== "NO") {
@@ -800,7 +888,7 @@
 		}
 		
 		//ajax로 count 불러오기
-		getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule);
+		getUnreadCounts(useSurvey, useCircular, useMail, useApproval, useSchedule);
 		
 		//근태관리 연동
 		var useAttitude = "<c:out value='${useAttitude}'/>";
@@ -845,25 +933,11 @@
 		getQuickLink();		
 		
 		//포틀릿 드래그 앤 드롭
-		$(".portlet_area").sortable({
-			handle : ".sortablePortlet",
-			helper : "clone",
-			scroll: false,
-			start : function (event, block) {
-				/* 
-				$(".portlet.ui-sortable-helper").css("width", $(".portlet").not(block.item).not(block.placeholder).outerWidth());
-				
-				$(".ui-sortable-placeholder").css({
-					'width' : $(".portlet").not(block.item).not(block.placeholder).outerWidth(),
-					'height' : $(".portlet").not(".ui-sortable-helper").outerHeight()
-				}); */
-			},
-			update : function(event, ui) {
-				updatePortletOrderUser(usedTheme);
-			}
-		});
+		if (navigator.userAgent.toLowerCase().indexOf("firefox") == -1) {
+			sortableEvent();
+		}
 		
-		$(".portlet_area").disableSelection();
+		/* $(".portlet_area").disableSelection(); */
 		
 		//CalendarMiniView_Top("CalendarMini_Top");
 		getScheduleList_Top(nowDay, "P");
@@ -900,21 +974,23 @@
 		assembleScheduleList(pScheduleList);
 		
 		schedule_get_holiday_top(); // getholiday를 2번 부른다. 1번만 호출하도록 수정할 필요 있음.
+		settingPortalInterval();
 	});
 </script>
 <!-- 협업 시작-->
-<c:if test="${useEzWorkspace eq 'YES' }">
-    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js"></script>
-    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/Groupwareapi.js"></script>
+<c:if test="${useEzWorkspace}">
+    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/Groupwareapi.js"></script>
     <script type="text/javascript">
 	    var g_UserID = "${userId}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
-	    var WorkspaceUrl = "http://space.kaoni.com"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+	    var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+	    var workspaceContextRootUrl = "${workspaceContextRootUrl}";
 	    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
 	    var feedListCount = 10;
 	    var g_bRayful = false;
 	    var g_bVisible = true; // 문서탭 선택 시 원문에 포함된 첨부파일 포함 여부 (false: 포함)	    
-	        
-    	ezWorkspaceData();
+	    
+    	ezWorkspaceData(workspaceContextRootUrl);
     </script>		
 </c:if>	
 <!-- 협업 끝 -->	

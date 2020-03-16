@@ -233,7 +233,24 @@ var strLang583 = "结束时间比今天时间早。";
 
 var strLang584 = "它被批准。";
 var strLang585 = "认证已被取消。";
-
+var strLang586 = "1월";
+var strLang587 = "2월";
+var strLang588 = "3월";
+var strLang589 = "4월";
+var strLang590 = "5월";
+var strLang591 = "6월";
+var strLang592 = "7월";
+var strLang593 = "8월";
+var strLang594 = "9월";
+var strLang595 = "10월";
+var strLang596 = "11월";
+var strLang597 = "12월";
+var strLang598 = "오늘";
+var strLang599 = "이전달";
+var strLang600 = "다음달";
+var strLang601 = "닫기";
+var strLang602 = "ko";
+var strLang603 = "자원목록은 최대 5개까지 등록 가능합니다.";
 //추가
 var strLangLHM01 = "default_cn";
 var strLangLHM02 = "인쇄 미리보기";
@@ -248,3 +265,22 @@ var strLangkmsr01 = "이미 추가된 이용자입니다.";
 
 //2019-04-08 김민성
 var strLangkmsr02 = "자원관리자는 사용자 또는 관리자 권한이 있어야 합니다.";
+
+//2019-05-14
+var strLangkmsr03 = "승인을 거부 하시겠습니까?"
+var strLang321 = "승인대기";
+var strLang322 = "승인거부";
+var strLang323 = "승인";
+var strLang324 = "대여중";
+var strLang325 = "반납";
+var strLang326 = "미반납";
+var strLang327 = "종료";
+var strLang331 = "반납 요청을 하시겠습니까?";
+var strLang332 = "반납 요청을 승인하시겠습니까?";
+var strLang333 = "반납하시겠습니까?";
+var strLang334 = "반납 요청이 완료되었습니다.";
+var strLang335 = "반납되었습니다.";
+var strLang336 = "자원이 사용안함으로 설정된 경우 예약할 수 없습니다.";
+
+//2019-05-28
+var strLang337 = "승인거부 되었습니다."

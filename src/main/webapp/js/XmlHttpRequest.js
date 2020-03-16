@@ -935,8 +935,9 @@ function GetOpenWindowJun(popUpW, popUpH) {
     return feature;
 }
 
-function GetOpenWindowfeature(popUpW, popUpH) {
+function GetOpenWindowfeature(popUpW, popUpH, resizable) {
 
+	var resiableAttr = !!resizable ? ',resizable=yes' : ',resizable=no';
 	var heigth = window.screen.availHeight;
 	var width = window.screen.availWidth;
 	var left = 0;
@@ -947,7 +948,7 @@ function GetOpenWindowfeature(popUpW, popUpH) {
 	width = parseInt(width) - pleftpos;
 	left = pleftpos / 2;
 	top = heigth / 2;
-	var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+	var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, scrollbars=yes" + resiableAttr;
 	return feature;
 }
 function GetOpenWindow(url, target, popUpW, popUpH, resizeFlag) {

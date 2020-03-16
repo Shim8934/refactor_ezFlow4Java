@@ -65,6 +65,8 @@
 		    var useReform = "${useReform}" === "true";
 		    var reformUrl = "${reformUrl}";
 		    // FormBuilder end
+		    var useOpenGov = "<c:out value = '${useOpenGov}'/>";
+		    var openGovFlag = "<c:out value = '${openGovFlag}'/>";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -252,6 +254,10 @@
 		        			selFormKind.value = result.vo.formDocType;
 		        			formURL = encodeURI(result.vo.formFileLocation);
 		        			
+		        			if (!(result.vo.formDocType == "003" || result.vo.formDocType == "004")) {
+			        			$("#ApvForm_sub5").hide();
+		        			}
+		        			
 		        			if (result.vo.formConnFlag == "Y") {
 			                    document.getElementById("setConnFlag").checked = true;
 			                }
@@ -267,6 +273,10 @@
 				                    document.getElementById("keepperiod").value = result.vo.keepPeriodCode;
 				                    document.getElementById("securitylevel").value = result.vo.securityLevel;
 			                	}
+			                } else {
+								if (useOpenGov == "YES" && result.vo.openGovFlag == "Y") {
+									document.getElementById("setOpenGovFlag").checked = true;	
+								}
 			                }
 			            }
 						
@@ -710,7 +720,7 @@
 		        itemcode_dialogArgument[0] = "";
 		        itemcode_dialogArgument[1] = btnItemCode_Complete;
 		        var url = "/admin/ezApprovalG/apprGDocNumUI.do";
-		        GetOpenWindow(url, "docnumui_Cross", 745, 370, "NO");
+		        GetOpenWindow(url, "docnumui_Cross", 795, 370, "NO");
 		    }
 		
 		    function btnItemCode_Complete(retVal) {
@@ -992,6 +1002,14 @@
 		            CurSelRow[0].cells[0].innerText = AddressName;
 		        }
 		    }
+		    
+		    function changeSelFormKind(value) {
+		        if (!(value == "003" || value == "004")) {
+					$("#ApvForm_sub5").hide();		        
+		        } else {
+		        	$("#ApvForm_sub5").show();
+		        }
+		    }
 		</script>
 		
 		<!-- FormBuilder -->
@@ -1067,7 +1085,7 @@
                     </td>
                     <th style="width:100px; text-align:center"><spring:message code='ezApproval.t758'/></th>
                     <td style="width:40%;" colspan="5">
-                        <select id="selFormKind" name="selFormKind" style="width: 100%;">${docType}</select>
+                        <select id="selFormKind" name="selFormKind" style="width: 100%;" onchange="changeSelFormKind(this.value)">${docType}</select>
                     </td>
                 </tr>
                 <tr>
@@ -1079,6 +1097,9 @@
 							<label for="reform-checkbox"><span><spring:message code='reform.using'/></span></label>
 						</c:if>
 						<!-- FormBuilder - end -->
+                        <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> 원문정보공개</span>
+                        <%--<input type="checkbox" id="setDraftAllFlag" onclick="changePassAprFlag()" style="<c:if test="${useDraftAll != 'YES' && approvalFlag != 'G'}">display:none;</c:if>"/> 일괄기안
+						<input type="checkbox" id="setPassAprLineFlag" /> 기결재통과--%>
 					</td>
 				</tr>
 			</table>
@@ -1405,7 +1426,7 @@
 		        <table class="content">
 		            <tr>
 		                <td>
-		                    <textarea class="textarea" id="txt_reformFunction" onkeydown="if (event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'    '+v.substring(e);this.selectionStart=this.selectionEnd=s+4;return false;}" style="font-size:12pt; width:820px; height:790px; ime-mode: inactive;"><c:if test="${!empty reformFunction}">${reformFunction}</c:if></textarea>
+		                    <textarea class="textarea" id="txt_reformFunction" onkeydown="if (event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'    '+v.substring(e);this.selectionStart=this.selectionEnd=s+4;return false;}" style="font-size:12pt; width:820px; height:790px; ime-mode: inactive;"><c:if test="${!empty reformFunction}"><c:out value='${reformFunction}'/></c:if></textarea>
 		                </td>
 		            </tr>
 		        </table>

@@ -21,6 +21,10 @@ public class ResScheGetHolidayVO {
 	private String useCompany;
 	/** 캘린더 날짜*/
 	private String calendarDay;
+	/** 날짜 설정 플래그*/
+	private String holidayFlag;
+	/** 날짜 반복*/
+	private String holidayRepeat;
 
 	public String getCalendarDay() {
 		return calendarDay;
@@ -82,5 +86,17 @@ public class ResScheGetHolidayVO {
 	}
 	public void setUseCompany(String useCompany) {
 		this.useCompany = useCompany;
+	}
+	public String getHolidayFlag() {
+		return holidayFlag;
+	}
+	public void setHolidayFlag(String holidayFlag) {
+		this.holidayFlag = holidayFlag;
+	}
+	public String getHolidayRepeat() {
+		return holidayRepeat;
+	}
+	public void setHolidayRepeat(String holidayRepeat) {
+		this.holidayRepeat = holidayRepeat;
 	}
 }

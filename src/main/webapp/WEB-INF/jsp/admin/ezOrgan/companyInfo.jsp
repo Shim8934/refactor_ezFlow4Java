@@ -235,7 +235,7 @@
         </div>
 		<table class="content"> 
 			<tr> 
-		    	<th><spring:message code='ezOrgan.t121' /></th> 
+		    	<th><spring:message code='ezOrgan.t121' /><span style="color:red"> *</span></th> 
 		    	<td><input id="CompanyID" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="20"></td> 
 		  	</tr> 
 		  	<tr> 
@@ -247,7 +247,7 @@
 		    	<td> <input id="operatorID" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="50"></td> 
 		  	</tr> 
 		  	<tr>
-			    <th><spring:message code='ezOrgan.t123' /></th>
+			    <th><spring:message code='ezOrgan.t123' /><span style="color:red"> *</span></th>
 			    <td style="padding:0;">
 			    	<table style="width:100%;-moz-box-sizing:border-box;box-sizing:border-box;">
 			    		<tr class="primary">

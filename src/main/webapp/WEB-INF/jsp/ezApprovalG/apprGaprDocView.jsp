@@ -81,7 +81,11 @@
 		    
 		    function btnOpinion_onclick() {
 		        //openOpinionViewUI();
-		        openOpinionUI_New("Show");
+		        if (ListTypeValue == "99") {
+			        openOpinionUI_New("");
+		        } else {
+			        openOpinionUI_New("Show");
+		        }
 		    }
 		    function DocumentComplete() {
 		        if (flag == false) {
@@ -267,6 +271,11 @@
 			    	}
 		    	} else {
 		        	if (forceCallBackYN == "YES") {
+		        		//강제회수는 기안자만 가능하도록 수정
+		        		if (!checkIsDrafter()) {
+		        			return;
+		        		}
+		        		
 						var result = "";
 
 						$.ajax({
@@ -470,7 +479,7 @@
 		    }
 		    
 		    function btncallback_onclick() {
-	            var pMsg = "<spring:message code='ezApprovalG.t68'/>";
+	            var pMsg = "<spring:message code='ezApprovalG.ryobi.csj14'/>";
 	            var Ans = OpenInformationUI(pMsg, doCancel);
 	        }
 		    
@@ -514,7 +523,7 @@
 		        		type : "POST",
 		        		dataType : "text",
 		        		async : false,
-		        		url : "/ezApprovalG/doCancelForce.do",
+		        		url : "/ezApprovalG/doCancel.do",
 		        		data : {
 		        			docID : pDocID,
 		        			userID : pUserID,
@@ -680,6 +689,34 @@
 	        			OpenAlertUI(pAlertContent);
 	        		}
 	        	}
+	        }
+	        
+	        function checkIsDrafter() {
+	        	var rtnVal = false;
+	        	
+	        	try {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezApprovalG/getDocData.do",
+						data : {
+							docID : pDocID,
+							mode : "APR",
+							sel : "WRITERID"
+						},
+						success: function(xml) {
+							var docXml = loadXMLString(xml);
+							if (SelectSingleNodeValueNew(docXml, "DATA/WRITERID") == arr_userinfo[1]) {
+								rtnVal = true;
+							}
+						}
+	        		});
+	        	} catch (e) {
+	        		console.error(e);
+	        	}
+	        	
+	        	return rtnVal;
 	        }
 		</script>
 	</head>

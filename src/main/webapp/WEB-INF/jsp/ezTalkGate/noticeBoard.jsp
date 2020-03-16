@@ -37,7 +37,7 @@
 		    
 		    // TODO : 톡게이트에 하나 추가 하여서 처리할 예정 (redirect할때 id넘겨서 인증스트링 으로 로그인 처리한 다음에 처리!!!!!!!ㅎ) 
 		    // window.open("/myoffice/ezMsn/shownotice.aspx?itemid=" + itemseq, "", "height=657,width=720px, status=no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth,""); 
-		    var pURL = "/ezTalkGate/showNoticeBoardItem.do?itemId=" + itemseq;
+		    var pURL = "/ezTalkGate/showNoticeBoardItem.do?itemId=" + encodeURIComponent(itemseq);
 		    window.showModalDialog(pURL, null, "dialogHeight:604px; dialogWidth:773px; status:no; scroll:no; help:no; edge:sunken; resizable=yes; center:yes"); 
 		}
 			

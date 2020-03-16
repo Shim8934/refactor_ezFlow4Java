@@ -126,8 +126,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		if (status.equals("ok")) {
 			String checkResult = (String) resultBody.get("data");
 			model.addAttribute("isWfAdmin", checkResult);
-			model.addAttribute("folderType", folderType);
 		}
+		model.addAttribute("folderType", folderType);
 		
 		logger.debug("webfolderLeft end");
 		return "ezWebFolder/webfolderLeft";

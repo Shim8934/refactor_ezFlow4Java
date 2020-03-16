@@ -635,17 +635,20 @@
 		<![CDATA[
 			AND
 			 f.FOLDER_ID = #folderId#
+			ORDER BY
 		]]>
 		
+		<isNotEqual property="sortColumn" compareValue="">
+			$orderByData$,
+		</isNotEqual>
+		
 		<isNotEqual property="realColmn" compareValue="">
-			ORDER BY
 				$realColmn$ $order$,
 				f.UPDATE_DATE DESC,
 				CAST(f.FILE_ID AS INT) DESC
 		</isNotEqual>
 		<isEqual property="realColmn" compareValue="">
 			<![CDATA[
-			ORDER BY
 				f.UPDATE_DATE DESC,
 				CAST(f.FILE_ID AS INT) DESC
 			]]>
@@ -686,7 +689,7 @@
 						ELSE '' 
 					END
 				)                                                                                                                                                                AS FILE_POSITION,
-				''                                                                                                                                                               AS FOLDER_NAME,
+				''				                                                                                                                     							 AS FOLDER_NAME,
 				u.FOLDER_PATH                                                                                                                                                    AS FOLDER_PATH,
 				f.DELETER_ID                                                                                                                                                     AS DELETER_ID,
 				f.TENANT_ID                                                                                                                                                      AS TENANT_ID
@@ -698,16 +701,16 @@
 		<![CDATA[
 			AND
 				u.FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+			ORDER BY
+				$orderByData$,
 		]]>
 		<isNotEqual property="realColmn" compareValue="">
-			ORDER BY
 				$realColmn$ $order$,
 				f.UPDATE_DATE DESC,
 				CAST(f.FILE_ID AS INT) DESC
 		</isNotEqual>
 		<isEqual property="realColmn" compareValue="">
 			<![CDATA[
-			ORDER BY
 				f.UPDATE_DATE DESC,
 				CAST(f.FILE_ID AS INT) DESC
 			]]>

@@ -34,6 +34,7 @@ import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -246,9 +247,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	
     	result = userCheckForLocal(map);
     	
+    	// 모든 Inner Domain에 대해 cn@Inner Domain이 이미 존재하는 지를 체크하였으나
+    	// 특정 Inner Domain에서 Alias로 사용되는 아이디인 경우에도 Full 주소로 중복되는 것이
+    	// 아니라면 등록 가능하도록 하기 위해 제거함.
+    	/* 
     	if (result == 0) {
     		result = userCheckForJMocha(map);
     	}
+    	*/
     	
         return result;    
 	}
@@ -1404,6 +1410,18 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public void insertCompanyInfo_I30(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I30", map);
     }
+
+	public void insertCompanyInfo_I31(Map<String, Object> map) {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I31", map);
+	}
+
+	public void insertCompanyInfo_I32(Map<String, Object> map) {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I32", map);
+	}
+    
+    public void insertCompanyInfo_IJHS1(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IJHS1", map);
+    }
     
     public void insertCompanyInfo_IKMS(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS", map);
@@ -2198,5 +2216,34 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<OrganUserVO> getDeptAddJobUserList(Map<String, Object> map) throws Exception {
 		return (List<OrganUserVO>) list("EzOrganAdminDAO.getDeptAddJobUserList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganLoginStopUserVO> getLoginStopUserList(Map<String, Object> map) throws Exception {
+		return (List<OrganLoginStopUserVO>) list("EzOrganAdminDAO.getLoginStopUserList", map);
+	}
+	
+    public int getLoginStopUserListCount(Map<String, Object> map) throws Exception {
+    	return (int) select("EzOrganAdminDAO.getLoginStopUserListCount", map);        
+    }
+    
+    public void insertStopUser(Map<String, Object> map) throws Exception {
+    	insert ("EzOrganAdminDAO.insertStopUser", map);
+    }
+    
+    public void deleteStopUser(Map<String, Object> map) throws Exception {
+    	delete ("EzOrganAdminDAO.deleteStopUser", map);
+    }
+    
+    public int checkStopUser(Map<String, Object> map) throws Exception {
+    	return (int) select ("EzOrganAdminDAO.checkStopUser", map);
+    }
+
+    public void setDeptPrimaryMail (Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.setDeptMail", map);
+	}
+	
+	public void deleteCompanyConfig(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompanyConfig", map);
 	}
 }

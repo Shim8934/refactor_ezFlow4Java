@@ -54,42 +54,47 @@
 		            return;
 		        }
 
-		        if (oldguBun > 0) {
-			    	if (oldguBun != newguBun) {
+		        /* 2019-07-16 홍승비 - 게시물 복사 시 경고 메세지 발생 분기 수정 */
+//		        if (oldguBun > 0) {
+			    	if (oldguBun != newguBun) { // 게시판 타입 불일치
 			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
 // 			        	alert("<spring:message code='ezBoard.hsb02'/>");
 			            return;
 			        }
-			    	if (oldguBun == "3" && newguBun == "3") {
+			    	if (oldguBun == "3" && newguBun == "3") { // 이후 CheckIfAnonyBoard에서도 익명, 포토, 썸네일, URL게시판 여부 체크함
 			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
 // 			        	alert("<spring:message code='ezBoard.hsb02'/>");
 			            return;
 			        }
-		    	} else {
+		    	/* } else {
 		    		if (newguBun != "0") {
 		    			var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
 // 			        	alert("<spring:message code='ezBoard.hsb02'/>");
 			            return;
 			        }
-		    	}
+		    	} */
 
 		        CopyItem(selectedBoard);
 		    }
+		    
 		    function cancel() {
 		        window.close();
 		    }
+		    
 		    function CopyItem(pDestBoardID) {
-		        if (CheckIfAnonyBoard(pDestBoardID) == "1") {
+		    	
+				/* 2020-02-11 홍승비 - 익명게시판의 경우, 관리자 권한이 있다면 이동 및 복사가 가능하도록 주석처리 */
+/* 		        if (CheckIfAnonyBoard(pDestBoardID) == "1") { // 익명게시판
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 // 		            alert("<spring:message code='ezBoard.hsb02'/>");
 		            return;
-		        }
-		
-		        if (CheckIfAnonyBoard(pDestBoardID) == "2") {
+		        } */
+		        
+		        if (CheckIfAnonyBoard(pDestBoardID).indexOf("2") > -1) { // 확장칼럼
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t999069'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t999069'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 // 		            alert("<spring:message code='ezBoard.t999069'/>");
@@ -104,17 +109,20 @@
 		        }
 		        xmlhttp.open("POST", "/ezBoard/copyItem.do?orgItemIDList=" + encodeURIComponent(ItemIDList) + "&orgBoardID=" + encodeURIComponent(BoardID) + "&destBoardID=" + encodeURIComponent(pDestBoardID), false);
 		        xmlhttp.send();
-		        if (xmlhttp.responseText.indexOf("OK") > -1) {
+		        
+		        var returnItemIDStr = xmlhttp.responseText;
+		        if (returnItemIDStr != null && returnItemIDStr.indexOf("OK") > -1) {
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t355'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t355'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 // 		            alert("<spring:message code='ezBoard.t355'/>");
 					board_alertArguments[1] = window.close;
-		            window.returnValue = "OK";
-		            rtnVal = "OK";
-		            try {
-				        window.opener.leftCountRf();
-					} catch (e) {
-					}
+		            window.returnValue = pDestBoardID;
+		            rtnVal = pDestBoardID;
+		            
+			        /* 2019-07-02 홍승비 - 승인게시판에 게시물 복사, 이동 시에도 승인메일 보내도록 수정 */
+			        sendApprMail(pDestBoardID, returnItemIDStr);
+			        /* 2019-12-17 홍승비 - 게시물 복사 시에도 게시알림 메일을 보내도록 수정 */
+			        sendNotiMail(pDestBoardID, returnItemIDStr);
 // 		            window.close();
 		        } 
 		        //else if (window.parent.strListInfo == "" || typeof (window.parent.strListInfo) == "undefined") {
@@ -131,26 +139,35 @@
 // 		            alert("<spring:message code='ezBoard.t181'/>" + xmlhttp.responseText);
 		        }
 		    }
+		    
 		    function CheckIfCanWrite(pBoardID) {
 		        xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp.send();
 		        var ret = xmlhttp.responseText;
-		        if (ret.indexOf("<WRITE>true</WRITE>") != -1) return true;
-		        return false;
+		        if (ret.indexOf("<WRITE>true</WRITE>") != -1 || ret.indexOf("<BOARDGROUPADMIN>OK</BOARDGROUPADMIN>") != -1) {
+		        	return true;
+		        } else {
+		        	return false;
+		        }
 		    }
+		    
 		    function CheckIfAnonyBoard(pBoardID) {
 		        var xmlhttp2 = createXMLHttpRequest();
 		        xmlhttp2.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp2.send();
+		        
 		        var retval = "0";
-		        if (xmlhttp2.responseText.indexOf("anonyboard") > -1)
+		        if (xmlhttp2.responseText.indexOf("anonyboard") > -1) { // 익명게시판
 		            retval = "1";
-		        else if (xmlhttp2.responseText.indexOf("attributeextension") > -1)
-		            retval = "2";
+		        }
+		        if (xmlhttp2.responseText.indexOf("attributeextension") > -1) { // 확장칼럼
+		            retval += ";2";
+		        }
 		
 		        xmlhttp2 = null;
 		        return retval;
 		    }
+		    
 		    window.onload = function () {
 		    	try {
 		            ReturnFunction = opener.copyboarditem_cross_dialogArguments[1];
@@ -287,6 +304,46 @@
 		            }
 		        }
 		    }
+		    
+		    /* 2019-12-17 홍승비 - 승인메일 발송 동작 함수로 분리 */
+		    function sendApprMail(pDestBoardID, returnItemIDStr) {
+		        $.ajax({
+					type : "GET",
+					dataType : "text",
+					async : true,
+					url : "/ezBoard/getBoardApprProperty.do",
+					data : {
+						boardID : pDestBoardID
+					},
+					success: function(result){
+						var xmlhttp;
+						var itemIDs = returnItemIDStr.split(";");
+						
+					 	if (result == "Y") {
+							for (var i = 0; i < itemIDs.length - 1 ;i++) {
+			                    xmlhttp = createXMLHttpRequest();
+			                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
+			                    xmlhttp.send();
+			                    xmlhttp = null;
+							}
+						}
+					}
+				});
+		    }
+		    
+		    /* 2019-12-17 홍승비 - 게시물 복사 시에도 게시알림 메일을 보내도록 수정 */
+	        function sendNotiMail(pDestBoardID, returnItemIDStr) {
+				var xmlhttp;
+				var itemIDs = returnItemIDStr.split(";");
+				
+				for (var i = 0; i < itemIDs.length - 1 ;i++) {
+					xmlhttp = createXMLHttpRequest();
+	                xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
+	                xmlhttp.send();
+	                xmlhttp = null;
+				}
+		    }
+		    
 		</script>
 	</head>
 	<body class="popup"> 

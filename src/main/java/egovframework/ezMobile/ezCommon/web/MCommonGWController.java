@@ -1,8 +1,14 @@
 package egovframework.ezMobile.ezCommon.web;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URLConnection;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
@@ -19,9 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
+import egovframework.let.utl.fcc.service.MimeTypes;
 
 /** 
  * @Description [Controller] 모바일GW - 공통
@@ -54,12 +63,17 @@ public class MCommonGWController {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
+	@Resource(name = "loginService")
+    private LoginService loginService;
+	
 	@RequestMapping(value = "/mobile/ezcommon/filedown", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mFileDown(HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/filedown] started.");
 		
 		String filePath = request.getParameter("filePath");
 		LOGGER.debug("filePath = " + filePath);
+		String fileName = (request.getParameter("fileName") == null) ? "" : request.getParameter("fileName");
+		LOGGER.debug("fileName = " + fileName);
 		String realPath = commonUtil.getRealPath(request);
 		
 		filePath = realPath + filePath;
@@ -85,11 +99,18 @@ public class MCommonGWController {
 				if (filePath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
 					bytes = klibUtil.decrypt(bytes);
 				}
+				
+				String fileType = MimeTypes.getContentType(bytes, fileName);
+				
+				if (fileType == null || fileType.equalsIgnoreCase("")) {
+					fileType = "application/octet-stream";
+				}
 
 				JSONObject data = new JSONObject();
 				
 				data.put("bytes", bytes);
 				data.put("fileSize", fSize);
+				data.put("fileType", fileType);
 				
 				result.put("status", "ok");
 				result.put("code", 0);
@@ -103,6 +124,29 @@ public class MCommonGWController {
 		}
 		
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/filedown] ended.");
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/mobile/ezcommon/getTenantConfigWithServerName", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getTenantConfigWithServerName(HttpServletRequest request) throws Exception {
+		LOGGER.debug("MCommonGWController getTenantConfigWithServerName started");
+		
+		String serverName = request.getHeader("x-user-host");
+		int tenantId = loginService.getTenantId(serverName);
+		String tenantConfig = request.getParameter("tenantConfig");		
+		
+		LOGGER.debug("serverName=" + serverName + ",tenantId=" + tenantId + ",tenantConfig=" + tenantConfig);
+						
+		String config = ezCommonService.getTenantConfig(tenantConfig, tenantId);
+		
+		JSONObject result = new JSONObject();
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		result.put("data", config);
+
+		LOGGER.debug("MCommonGWController getTenantConfigWithServerName ended");
 		
 		return result;
 	}
@@ -139,5 +183,26 @@ public class MCommonGWController {
     	return result;
     }
 	
+	// 20190829 김수아 : tenantConfig 가져오기
+	@RequestMapping(value = "/mobile/ezcommon/getTenantConfig", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getTenantConfig(HttpServletRequest request) throws Exception {
+		LOGGER.debug("MCommonGWController getTenantConfig Start");
+		
+		int tenantId = Integer.parseInt(request.getParameter("tenantID"));
+		String tenantConfig = request.getParameter("tenantConfig");
+		LOGGER.debug("tenantID=" + tenantId + ", tenantConfig=" + tenantConfig);
+		
+		String config = ezCommonService.getTenantConfig(tenantConfig, tenantId);
+		config = config == null ? "" : config;
+		LOGGER.debug("config=" + config);
+		
+		JSONObject result = new JSONObject();
+		result.put("status", "ok");
+		result.put("code", 0);
+		result.put("data", config);
+
+		LOGGER.debug("MCommonGWController getTenantConfig End");
+		return result;
+	}
 	
 }

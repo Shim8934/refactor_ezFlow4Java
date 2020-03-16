@@ -157,7 +157,7 @@
 		            
 		            extension = document.getElementById("file1").value.split('.');
 				    var check = false;
-				    check = compareExtension(check, extension[1]);
+				    check = compareExtension(check, extension[extension.length - 1]);
 				    
 				    if (!check || extension == null) {
 		    		    alert("<spring:message code='ezPersonal.t206'/>" + " <spring:message code='ezPersonal.t200'/>");

@@ -33,6 +33,7 @@ import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezResource.dao.EzResourceAdminDAO;
 import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -73,6 +74,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     
     @Autowired
     private Properties config;
+    
+   	@Autowired
+	private Properties globals;
     
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;
@@ -287,8 +291,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				compId = userVO.getPhysicalDeliveryOfficeName();
 			}
 			
-			// 회사 간 사원/부서 이동하지 못하도록 막음
-			if (!parentDept.getExtensionAttribute2().equals(compId)) {
+			// 회사 간 부서 이동하지 못하도록 막음
+			if (type.equalsIgnoreCase("group") && !parentDept.getExtensionAttribute2().equals(compId)) {
 				result = "DIFF_COMPANY";
 				logger.debug("moveEntry ended. result=" + result);
 				return result;
@@ -748,6 +752,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_I28(map1);
 				ezOrganAdminDao.insertCompanyInfo_I29(map1);
 				ezOrganAdminDao.insertCompanyInfo_I30(map1);
+				ezOrganAdminDao.insertCompanyInfo_I31(map1);
+				ezOrganAdminDao.insertCompanyInfo_I32(map1);
+				
+				//회사등록시 근태설정(연차설정관리) 기본값 insert
+				ezOrganAdminDao.insertCompanyInfo_IJHS1(map1);
 				
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
@@ -949,6 +958,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PASS", vo.getPassword());
 		map.put("v_INSERTADPASS", oriPass);
 		map.put("v_MANUAL_FLAG", vo.getManualFlag() != null ? vo.getManualFlag() : "N");
+		map.put("v_FURIGANA", vo.getFurigana() != null ? vo.getFurigana() : "");
+		map.put("v_EXTENSION_PHONE", vo.getExtensionPhone() != null ? vo.getExtensionPhone() : "");
+		map.put("v_OFFICE_MOBILE", vo.getOfficeMobile() != null ? vo.getOfficeMobile() : "");
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -987,7 +999,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     public void updateDBData_user(OrganUserVO vo) throws Exception {
         logger.debug("updateDBData_user started");
         logger.debug("tenantId=" + vo.getTenantId() + ",cn=" + vo.getCn() + ",displayName=" + vo.getDisplayName()
-                + ",displayName2=" + vo.getDisplayName2() + ",parentCn=" + vo.getParentCn());
+                + ",displayName2=" + vo.getDisplayName2() + ",parentCn=" + vo.getParentCn()
+                + ",ExtensionPhone=" + vo.getExtensionPhone() + ",OfficeMobile=" + vo.getOfficeMobile());
                 
         if (vo.getDisplayName2() == null || vo.getDisplayName2().equals("")) {
             vo.setDisplayName2(vo.getDisplayName());
@@ -1061,6 +1074,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    	ezOrganAdminDao.deleteAddJob(map2);
 	    	
 	    	deleteUserAddJob(cn, tenantID);
+	    	
+	    	// company_config 삭제
+	    	deleteCompanyConfig(cn, tenantID);
 	    	
 	        ezOrganAdminDao.deleteDBData(map);
 	        
@@ -1164,6 +1180,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		String sTitle1 = "";
         String sTitle2 = "";
         String pDeptID = "";
+        String manualFlag = "";
         
         if (!titleInfo.equals("")) {
             String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
@@ -1174,14 +1191,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             for (int i = 0; i < addJobinfo.length; i++) {
             	String[] userInfo = addJobinfo[i].split(":");
             	pDeptID = userInfo[0];
+            	manualFlag = userInfo[userInfo.length - 1];
+            	
+            	if (manualFlag.equals("null")) {
+            		manualFlag = null;
+            	}
             	            	
-            	if (userInfo.length > 1) {
+            	if (userInfo.length > 2) {
             		sTitle1 = userInfo[1];
             	}
                 
                 sTitle2 = "";
                 
-                if (userInfo.length > 2) {
+                if (userInfo.length > 3) {
                     sTitle2 = userInfo[2];
                 } else {
                     sTitle2 = sTitle1;
@@ -1205,6 +1227,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_EXTATTR15", "0");
             		map.put("v_PARENTCN", pDeptID);
             		map.put("v_JOBID", jobIDinfo[i]);
+            		map.put("v_MANUAL_FLAG", manualFlag);
             		
             		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             		date.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -1242,6 +1265,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         					
         				}       
             		} catch (Exception e) { // Exception이 발생하면 Group Email 주소로부터 취소 처리를 한다.
+            			e.printStackTrace();
             		    ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
             		}
                 } else {
@@ -1358,7 +1382,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	// 사용자 이름,부서 목록을 반환한다.
     @Override
     public List<OrganUserVO> getUserList(int tenantID,int startPage, int maxItemPerPage,
-    									 String keycode,String keyword,String companyId) throws Exception {     
+    									 String keycode,String keyword,String companyId, String sortColumn, String sortType) throws Exception {     
     	logger.debug("getUserList started");
     	
     	Map<String, Object> params = new HashMap<String, Object>();
@@ -1370,7 +1394,22 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
 		params.put("companyId", companyId);
+		params.put("sortColumn", sortColumn);      
+		params.put("sortType", sortType);
 		
+		String orderByData = "";
+		if(!sortColumn.equals("")){
+			if(sortColumn.equals("persent")){
+				orderByData = " (MAILBOXUSAGE/MAILBOXQUOTA)*100 " + sortType;
+			}else if (sortColumn.equals("mailboxusage")){
+				orderByData = sortColumn +"/1024 " + sortType;
+			}				
+			 else {
+				orderByData = sortColumn + " " + sortType;
+			}
+		}
+		
+		params.put("orderbyData", orderByData);
     	List<OrganUserVO> list = ezOrganAdminDao.getUserList(params);
     	
     	logger.debug("getUserList ended");
@@ -1568,16 +1607,35 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_TENANTID", tenantID);
 		
 		if (!pageNum.equals("") && !pageSize.equals("")) {
-			pageNum = String.valueOf((Integer.parseInt(pageNum) * Integer.parseInt(pageSize)) - Integer.parseInt(pageSize));
-			map.put("v_PAGESIZE", pageSize);
-			map.put("v_PAGENUM", pageNum);
+			int pPageSize = Integer.parseInt(pageSize);
+			int pPageNum = Integer.parseInt(pageNum);
+			pPageNum = (pPageNum * pPageSize) - pPageSize;
+			
+			logger.debug("getTitleUserList pageSize : " + pPageSize + " pageNum : " + pPageNum);
+			
+			map.put("v_PAGESIZE", pPageSize);
+			map.put("v_PAGENUM", pPageNum);
 		}
 		
 		if (!searchType.equals("") && !searchValue.equals("")) {
 			StringBuffer sb = new StringBuffer();
+			
 			if (searchType.equals("displayname")) {
-				sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%'");
+				if (primary.equals("1")) {
+					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+		            	sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%' ESCAPE '\\' " );
+		            } else {
+		            	sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%'");
+		            }
+				} else {
+					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+						sb.append("DISPLAYNAME2 LIKE '%" + searchValue.trim() + "%' ESCAPE '\\' ");
+					} else{
+						sb.append("DISPLAYNAME2 LIKE '%" + searchValue.trim() + "%'");
+					}
+				}
 			}
+			
 			map.put("v_SUBQUERY", "WHERE " + sb.toString());
 		}
 		
@@ -1782,4 +1840,134 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			}
     	}
     }
+	
+    @Override
+    public List<OrganLoginStopUserVO> getLoginStopUserList(int tenantID,int startPage, int maxItemPerPage, String keycode, String keyword, String stopFlag, String offset, String companyId) throws Exception {
+    	logger.debug("getLoginStopUserList started");
+    	
+    	Map<String, Object> params = new HashMap<String, Object>();
+    	
+    	params.put("tenantID", tenantID);
+		params.put("v_start", startPage);
+		params.put("v_end",   startPage + maxItemPerPage - 1);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("stopFlag", stopFlag);
+		params.put("offset", commonUtil.getMinuteUTC(offset));
+		params.put("companyId", companyId);
+		
+    	List<OrganLoginStopUserVO> list = ezOrganAdminDao.getLoginStopUserList(params);
+    	
+    	logger.debug("getLoginStopUserList ended");
+    	
+    	return list;
+    }
+
+    @Override
+    public int getLoginStopUserListCount(int tenantID, String keycode, String keyword, String stopFlag, String companyId) throws Exception {     
+    	logger.debug("getLoginStopUserListCount started");
+   		
+    	Map<String, Object> params = new HashMap<String, Object>();
+    	
+    	params.put("tenantID", tenantID);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("stopFlag", stopFlag);
+		params.put("companyId", companyId);
+		
+		int userCount = ezOrganAdminDao.getLoginStopUserListCount(params);
+		
+		logger.debug("getLoginStopUserListCount ended. userCount=" + userCount);
+    	
+		return userCount;
+    }
+
+	@Override
+	public String insertStopUser(String[] cnArr, String companyID, int tenantID) throws Exception {
+		logger.debug("insertStopUser started.");
+		
+		String rtnVal = "";
+
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("cnArr", cnArr);
+		map.put("nowDate", nowDate);
+		
+		try {
+			ezOrganAdminDao.insertStopUser(map);
+			rtnVal = "TRUE";
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtnVal = "FALSE";
+		}
+		
+		logger.debug("insertStopUser ended. result = " + rtnVal);
+		return rtnVal;
+	}
+
+	@Override
+	public String deleteStopUser(String[] cnArr, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteStopUser started.");
+		
+		String rtnVal = "";
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("cnArr", cnArr);
+		
+		try {
+			ezOrganAdminDao.deleteStopUser(map);
+			rtnVal = "TRUE";
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtnVal = "FALSE";
+		}
+		
+		logger.debug("deleteStopUser ended. result = " + rtnVal);
+		return rtnVal;
+	}
+	
+	@Override
+	public int checkStopUser(String userID, int tenantID) throws Exception {
+		logger.debug("checkStopUser started.");
+		
+		int flag = 0;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
+		try {
+			flag = ezOrganAdminDao.checkStopUser(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("checkStopUser ended. result = " + flag);
+		return flag;
+	}
+	
+	private void deleteCompanyConfig(String compId, int tenantId) throws Exception {
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("v_CN", compId);
+		map1.put("v_TENANT_ID", tenantId);
+    	
+		Map<String, Object> map2 = new HashMap<String, Object>(map1);
+		map2.put("v_FIELD", "EXTENSIONATTRIBUTE2");
+		
+    	String extensionAttr2 = ezOrganDao.getPropertyValue_S5(map2);
+    	logger.debug("companyID=" + compId + "extenstionAttr2=" + extensionAttr2);
+    	
+    	if (compId.equals(extensionAttr2)) { // 회사면
+        	ezOrganAdminDao.deleteCompanyConfig(map1);    		
+    	}
+     }
+	
 }

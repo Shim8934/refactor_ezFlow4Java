@@ -93,6 +93,7 @@
 						alert("<spring:message code='ezOrgan.t1' />" + g_xmlHTTP.statusText);
 						g_xmlHTTP = null;
 					}
+					isScroll();
 				}
 			}			
 			
@@ -117,6 +118,7 @@
 			    createNodeInsert(xmlpara, objNode, "DATA");
 			    createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 			    createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName");
+			    createNodeAndInsertText(xmlpara, objNode, "DISPLAY_TRASH_DEPT", "");
 			    
 			    xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 			    xmlHTTP.send(xmlpara);
@@ -234,6 +236,7 @@
 							sawonDataParsing();
 						}
 						moveDisplay(false);
+						isScroll();
 					},
 					error : function(error){
 						alert("<spring:message code='ezOrgan.t2'/>" + error);	
@@ -344,15 +347,17 @@
 				args[0] = treeNode.GetNodeData("CN");
 				args[1] = "";
 				
+				var deptInfoURL = "/admin/ezOrgan/deptInfo.do?selectCN=" + args[0]; 
+				
 				if (CrossYN()) {
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = add_dept_Complete;
 				    
-				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 320));
+				    var OpenWin = window.open(deptInfoURL , "DeptInfo", GetOpenWindowfeature(435, 350));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else{
-				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args,"dialogHeight:320px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 320));
+				    var rtnValue = window.showModalDialog(deptInfoURL, args,"dialogHeight:350px; dialogWidth:435px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(435, 350));
                     
 				    if (typeof (rtnValue) != "undefined"){
 				        getDeptFullTree(rtnValue);
@@ -430,16 +435,18 @@
 				args[0] = treeNode.GetNodeData("CN");
 				args[1] = treeNode.GetNodeData("VALUE");
 				
+				var deptInfoURL = "/admin/ezOrgan/deptInfo.do?selectCN=" + args[0] + "&pageType=modify"; 
+				
 				if (CrossYN()) {
 				    deptinfo_dialogArguments = new Array();
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = info_dept_Complete;
 				    
-				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 320));
+				    var OpenWin = window.open(deptInfoURL, "DeptInfo", GetOpenWindowfeature(435, 350));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else {
-				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args, "dialogHeight:320px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 320));
+				    var rtnValue = window.showModalDialog(deptInfoURL, args, "dialogHeight:350px; dialogWidth:435px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(435, 350));
 
 				    if (typeof (rtnValue) != "undefined") {
 				        alert("<spring:message code='ezOrgan.t7' />");
@@ -707,6 +714,9 @@
 							sawonDataParsing();
 							moveDisplay(true);
 							makePageSelPage();
+							
+							windowResize();
+							isScroll();
 						},
 						error : function(error){
 							alert("<spring:message code='ezOrgan.t59' />" + error);
@@ -768,6 +778,13 @@
 		    function mail_manage(){
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
+		        
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
 
 		        if (listview.GetSelectedRows().length == 0) {
 					alert("<spring:message code='ezOrgan.t50' />");
@@ -783,9 +800,34 @@
 					return;
 			    }
 
-			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
+		        var selectId = GetAttribute(listview.GetSelectedRows()[0],"DATA2");
+		        var selectCompanyId = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+		        var url = "/admin/ezOrgan/configEmail.do?id=" + selectId + "&type=user" + "&companyId=" + selectCompanyId;
+			    window.open(url, "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
 			}
-
+		    
+		    function deptMail_manage() {
+		    	var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+				
+		        if (nodeIdx.length == 0) {
+		        	alert("<spring:message code='ezEmail.multiDomain.ksa23' />");
+					return;
+		        } else if (treeNode.GetNodeData("EXTENSIONATTRIBUTE2") == treeNode.GetNodeData("CN")) {
+		        	alert(strLangKSM01);
+		        	return;
+		        }
+				
+		        var selectId = treeNode.GetNodeData("CN");
+		        var selectCompanyId = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+		        var url = "/admin/ezOrgan/configEmail.do?id=" + selectId + "&type=dept" + "&companyId=" + selectCompanyId;
+			    window.open(url, "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
+		    }
+		    
 			function Change_List(){
 				var treeView = new TreeView();
 				treeView.LoadFromID("FromTreeView");
@@ -1262,16 +1304,16 @@
 	    		}
 		    	
 	    		var trIdx = listview.GetSelectedRows()[0];
-	    		var mobileOwner = $(trIdx).children().eq(0).text();
+	    		var mobileOwner = $(trIdx).children().eq(1).text();
 	    		var data = listview.GetSelectedRows()[0].getAttribute("DATA2");
 		    	document.getElementById("userSend").value = data;
 		    	
 		    	var agent = navigator.userAgent.toLowerCase();
 		    	
 		    	if (agent.indexOf("chrome") != -1) {
-		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 310));
+		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 330));
 		    	} else {
-			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 310));
+			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 330));
 		    	}
 		    }
 		   
@@ -1400,12 +1442,14 @@
 				userID = userID.substring(indexCN);
 				inputpassword_dialogArguments[1] = mod_pwd_complete;
 
+				/* 2020-01-02 홍승비 - 크롬과 IE의 창 크기 통일 */
 				//크롬일때 alert창 크기때문에 크롬일때 구별
 				var agent = navigator.userAgent.toLowerCase();
 				if (agent.indexOf("chrome") != -1) {
 					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 192));
 				} else {
-					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 200));	
+					//var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 200));
+					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 192));
 				}
 			}
 
@@ -1490,8 +1534,8 @@
 								alert("<spring:message code='ezOrgan.t15' />");
 							} else if (result == "SAME") {
 								alert("<spring:message code='ezOrgan.t15' />");
-							} else if (result == "DIFF_COMPANY") {
-								alert("<spring:message code='ezOrgan.lhm4' />");
+							//} else if (result == "DIFF_COMPANY") {
+							//	alert("<spring:message code='ezOrgan.lhm4' />");
 							} else {
 								alert("<spring:message code='ezOrgan.hyh05' />");
 							}
@@ -1784,6 +1828,7 @@
 						sawonDataParsing();
 						moveDisplay(true);
 						makePageSelPage();
+						isScroll();
 					},
 					error : function(error){
 						alert("<spring:message code='ezOrgan.t59' />" + error);
@@ -1794,8 +1839,14 @@
 			var windowResize = function() {
 				var doc = window.document;
 				var height = window.innerHeight * 0.8 - 62;
-				doc.getElementById('TreeView').style.height = (height + 9.6) + "px";
-				doc.getElementsByClassName('OrganListView')[0].style.height = (height -63) + "px";
+				var treeViewH = (height + 9.6);
+				var organListBottomH = doc.getElementById("organListBottom").offsetHeight;
+				var organListHeaderH = doc.getElementsByClassName("organHeader")[0].offsetHeight;
+				
+				doc.getElementById('TreeView').style.height =  treeViewH + "px";
+				doc.getElementsByClassName('OrganListView')[0].style.height = (treeViewH - (organListBottomH + organListHeaderH)) + "px";
+				
+				isScroll();
 			}
 
 			/*
@@ -1821,6 +1872,20 @@
 				saveBtn.addEventListener("click", MoveConfirm_onclick);
 			}
 			
+			function isScroll(){
+				var forScroll = $(".organHeader #maillist_user #forScroll"); 
+				
+				if (listOpt2.checked == true) {
+					var forScroll = $(".organHeader #maillist_dept #forScroll"); 
+				}
+			
+				if ($("#OrganListView").height() < $("#OrganListView table").height()) {
+					forScroll.css("display", "");
+				} else {
+					forScroll.css("display", "none");
+				}
+			}
+			
 		</script>
 		<style>
 			.OrganListView {width:100%;}
@@ -1838,7 +1903,7 @@
 				<HEADERS>
 					<HEADER><WIDTH>4%</WIDTH></HEADER>
 					<HEADER><WIDTH>20%</WIDTH></HEADER>
-					<HEADER><WIDTH></WIDTH></HEADER>
+					<HEADER><WIDTH>18%</WIDTH></HEADER>
 					<HEADER><WIDTH>15%</WIDTH></HEADER>
 					<HEADER><WIDTH>10%</WIDTH></HEADER>
 					<HEADER><WIDTH>10%</WIDTH></HEADER>
@@ -1877,6 +1942,10 @@
 					<option value="HomePhone"><spring:message code='ezOrgan.t97' /></option>
 					<option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98' /></option>
 					<option value="mail"><spring:message code='ezOrgan.t99' /></option>
+					<c:if test="${primaryLang eq '3' }">
+                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+                    </c:if>
 					<option value="streetAddress"><spring:message code='ezOrgan.t100' /></option>
 				</select>
 				<input id="keyword" class="organSearchKeyword" onKeyPress="search_press()" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;"/>
@@ -1899,6 +1968,7 @@
 					<li id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></li>
 				</c:if>
 				<li id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
+				<li id="usermenu6"><span onClick="deptMail_manage()"><spring:message code='ezEmail.multiDomain.ksa22' /></span></li>
 				<li id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></li>
 				<c:if test="${useSyncServer == 'YES'}">			
 					<li id="usermenu24"><span onClick="syncOrganAccounts()"><spring:message code='ezOrgan.lhm5' /></span></li>
@@ -1920,53 +1990,60 @@
 				</dl>
 			</ul>
 		</div>
-
 		<div>
-			<div style="border: 1px solid #ddd; height: 530px; width: 30%;  overflow: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
-			<div class="organHeader">
-	 		 	<table id="maillist_user" class="mainlist" style="width:100%;">
-					<tr class="header">
-						<th width="4%"></th> 
-						<th width="20%"><spring:message code='ezOrgan.t67' /></th> 
-						<th ><spring:message code='ezAttitude.t218' /></th>
-						<th  width="15%"><spring:message code='main.t75' /></th>
-						<th width="10%"><spring:message code='main.t77' /></th>
-						<th  width="10%"><spring:message code='ezOrgan.t1500' /></th>
-						<th width="8%"><spring:message code='ezOrgan.t90' /></</th>
-						<th width="8%"><spring:message code='ezOrgan.t86' /></th>
-						<th  width="7%"><spring:message code='ezOrgan.hyh01' /></th>
-					</tr>
-				</table>
- 				<table id="maillist_dept" class="mainlist" style="width:100%;display:none;">
-					<tr class="header">
-						<th width="4%"></th>
-						<th width="46%"><spring:message code='ezOrgan.t70' /></th>
-						<th width="50%"><spring:message code='ezOrgan.t71' /></th>
-					</tr>
-				</table>
-			</div> 
-			<div class="listview organ" style="width:69%; float:right;">
-				<c:if test="${dotNetIntegration != 'YES'}">
-					<div id="OrganListView" class="OrganListView"></div>
-				</c:if>
-				<c:if test="${dotNetIntegration == 'YES'}">
-					<div id="OrganListView" class="OrganListView"></div>
-				</c:if>
-			</div>
+			<div style="border: 1px solid #ddd; height: 530px; width: 25%;  overflow: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
+			<div id="organListDIv" style="width: 74%; float:right;">
+				<div style="width:100%; float:left; box-sizing: border-box;">
+					<div class="organHeader">
+			 		 	<table id="maillist_user" class="mainlist" style="width:100%;">
+							<tr class="header">
+								<th width="4%"></th> 
+								<th width="20%"><spring:message code='ezOrgan.t67' /></th> 
+								<th width="18%"><spring:message code='ezAttitude.t218' /></th>
+								<th  width="15%"><spring:message code='main.t75' /></th>
+								<th width="10%"><spring:message code='main.t77' /></th>
+								<th  width="10%"><spring:message code='ezOrgan.t1500' /></th>
+								<th width="8%"><spring:message code='ezOrgan.t90' /></</th>
+								<th width="8%"><spring:message code='ezOrgan.t86' /></th>
+								<th  width="7%"><spring:message code='ezOrgan.hyh01' /></th>
+								<th  width="10" style="display:none" id="forScroll"></th>
+							</tr>
+						</table>
+		 				<table id="maillist_dept" class="mainlist" style="width:100%;display:none;">
+							<tr class="header">
+								<th width="4%"></th>
+								<th width="46%"><spring:message code='ezOrgan.t70' /></th>
+								<th width="50%"><spring:message code='ezOrgan.t71' /></th>
+								<th  width="10" style="display:none" id="forScroll"></th>
+							</tr>
+						</table>
+					</div>
+					
+					<div class="listview organ" style="width:100%; float:right; box-sizing: border-box;">
+						<c:if test="${dotNetIntegration != 'YES'}">
+							<div id="OrganListView" class="OrganListView"></div>
+						</c:if>
+						<c:if test="${dotNetIntegration == 'YES'}">
+							<div id="OrganListView" class="OrganListView"></div>
+						</c:if>
+					</div> 
+				</div>
+				<div id="organListBottom" style="width:100%; float:left; box-sizing: border-box;  border: 1px solid #ddd; ">
+					<c:if test="${dotNetIntegration != 'YES'}">
+						<div class="moveWrap" style="width:100%; vertical-align:middle; text-align:center; float:right; background-color: #f8f8fa; padding:5px 0px;">
+							<span class="upBtn" id="upBtn"><img src="/images/admin/arrowUp.png"/></span>
+							<span class="downBtn" id="downBtn"><img src="/images/admin/arrowDown.png"/></span>
+							<span class="btnpositionJsp"><a class="imgbtn" id="saveBtn"><span><spring:message code='ezOrgan.t104' /></span></a></span>
+							<!--<span class="imgbtn" id="saveBtn" ><spring:message code='ezOrgan.t104' /></span>-->
+							<%-- <img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
+							<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
+							<a class="imgbtn order" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a> --%>
+						</div>
+					</c:if>
+					<div id="tblPageRayer" class="tblPageRayerOrgan" style="width: 100%;"></div>
+				</div>
+			</div><!-- organListDIv END -->
 		</div>	
-		<c:if test="${dotNetIntegration != 'YES'}">
-			<div class="moveWrap" style="width:69%; vertical-align:middle; text-align:center; float:right; border: 1px solid #ddd;background-color: #f8f8fa; padding:5px 0px;">
-				<span class="upBtn" id="upBtn"><img src="/images/admin/arrowUp.png"/></span>
-				<span class="downBtn" id="downBtn"><img src="/images/admin/arrowDown.png"/></span>
-				<span class="btnpositionJsp"><a class="imgbtn" id="saveBtn"><span><spring:message code='ezOrgan.t104' /></span></a></span>
-				<!--<span class="imgbtn" id="saveBtn" ><spring:message code='ezOrgan.t104' /></span>-->
-				<%-- <img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
-				<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
-				<a class="imgbtn order" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a> --%>
-			</div>
-			
-		</c:if>
-		<div id="tblPageRayer" class="tblPageRayerOrgan" style="width: 69% !important;"></div>
 
 	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
 	<span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>  

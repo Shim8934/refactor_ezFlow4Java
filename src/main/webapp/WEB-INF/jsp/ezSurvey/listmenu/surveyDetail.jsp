@@ -23,7 +23,7 @@
 	<div class="header-wrapper">
 		<div class="surveydetail-header">
 			<ul class="on">	
-				<c:if test="${survey.draftFlag ne 1}">
+				<c:if test="${(survey.draftFlag ne 1) && (participation eq 'yes')}">
 					<li class="off"><span id="saveResult"><spring:message code="ezSurvey.t17"/></span></li>
 				</c:if>
 				<c:if test="${empty mode and user == creator.id}">
@@ -456,11 +456,24 @@
 		
 		function afterSaveSuccessfully(data) {
 			var code = data.code;
+			
 			switch(code) {
 				case 0 : alert(SurveyMessages.strSave2)    ;
 						 resposeObj.responses = [];
-						 if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload(); window.close();}
-						 if (parent && parent.SurveyItem)               {parent.SurveyItem.reload();}
+						 
+						 if (window.opener.getPotletSurveyList != undefined) {
+							 window.opener.getPotletSurveyList();
+							 // 일단 현 상황에 맞춰 주석처리
+							 // 나중에 필요하면 주석 풀면 됌
+							 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
+							 window.close();
+						 }
+						 
+						 if (window.opener.SurveyItem != null) {
+							 if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload(); window.close();}
+							 if (parent && parent.SurveyItem)               {parent.SurveyItem.reload();}
+						 } 
+						 
 						 break;
 				case 1 : alert(SurveyMessages.strParamErr)  ; resposeObj.responses = []; break;
 				case 2 : alert(SurveyMessages.strError)     ; resposeObj.responses = []; break;
@@ -748,6 +761,15 @@
 		
 		function afterDeleteSuccessfully() {
 			alert(SurveyMessages.strDel);
+			
+			if (window.opener.getPotletSurveyList != undefined) {
+				 window.opener.getPotletSurveyList();
+				 // 일단 현 상황에 맞춰 주석처리
+				 // 나중에 필요하면 주석 풀면 됌
+				 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
+				 window.close();
+			 }
+			
 			if (window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
 			window.close();
 		}
@@ -893,7 +915,9 @@
 		
 		// 슬라이더 질문 답변 유무 체크
 		function checkSliderResponse(id) {
-			var sliderValue = $("#slider" + id).val();
+			// IE 버그로 수정
+			// var sliderValue = $("#slider" + id).val();
+			var sliderValue = $("#slider" + id)[0].textContent;
 			return sliderValue;
 		}
 		

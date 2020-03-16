@@ -755,10 +755,12 @@ public class EzTaskController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Locale locale = userInfo.getLocale();
 		String type = request.getParameter("type");
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		model.addAttribute("type", type);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("title", type.equals("1") ? egovMessageSource.getMessage("ezTask.t2005", locale) : egovMessageSource.getMessage("ezTask.t157", locale));
+		model.addAttribute("primaryLang", primaryLang);
 		
 		logger.debug("taskSelectEntity ended.");
 		

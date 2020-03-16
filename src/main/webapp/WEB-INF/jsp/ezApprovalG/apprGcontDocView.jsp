@@ -339,8 +339,8 @@
 		            var pwidth = window.screen.availWidth;
 		            var pTop = (pheight - 720) / 2;
 		            var pLeft = (pwidth - 765) / 2;
-		
-		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[3] != "") {
+		            
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
 		                alert(strLang1031);
 		            }
 		            else {
@@ -524,16 +524,19 @@
 			        mhtBody = message.Get_EditorBodyHTML();
 			        mhtBody = "<HTML>" + mhtBody + "</HTML>";
 			        mhtBody = ConvertHTMLtoMHT(mhtBody);
+			    	
+			    	var data = {
+		    			docID : pDocID,
+		    			html  : mhtBody
+			    	}
 			        
 			        $.ajax({
 			    		type : "POST",
 			    		dataType : "text",
 			    		async : false,
 			    		url : "/ezApprovalG/saveEndFile.do",
-			    		data : {
-			    			docID : pDocID,
-			    			html  : mhtBody
-			    		},
+			    		contentType : "application/json",
+			    		data : JSON.stringify(data),
 			    		success: function(xml){
 			    			result = xml;
 			    		}        			
@@ -823,6 +826,7 @@
 		        <ul>
 		          <li id="btnWhoKyul" style="display:none"><span onClick="return btnWhoKyul_onclick()"><spring:message code='ezApproval.pjj35'/></span></li>
 		          <li id="btnDocInfo"><span id="span_btnDocInfo" onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+		          <li id="btnOpinion"><span id="span_btnOpinion" onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 		          <li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 				  <li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>

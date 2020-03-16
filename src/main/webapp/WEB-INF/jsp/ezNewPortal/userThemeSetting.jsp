@@ -71,13 +71,15 @@ function updateUserThemeSetting(event) {
 <style type="text/css">
 .themeImg {
 	height:400px;
+	width : 800px;
 }
 .themeImage{
-	 width: 800px;
+	width: 800px;
     height: 450px;
     background-color: #e0e0e0;
     padding: 20px;
     text-align: center;
+    margin : auto;
 }
 #themeList {
 	height : 700px;
@@ -88,6 +90,9 @@ function updateUserThemeSetting(event) {
     text-align: center;
     background: #4e9aec;
     color: #fff;
+    width : 820px;
+    margin : auto;
+    margin-top : 12px;
 }
 
 .btnpositionJsp a.imgbtn span {
@@ -117,7 +122,7 @@ function updateUserThemeSetting(event) {
 			<c:forEach items="${themeList }" var="theme">
 				<li data-flip-title="${theme.themeName }" id="T${theme.themeId }">
 					<div class="themeImage">
-						<img src="/images/ezNewPortal/Theme${theme.themeId }.JPG" class="themeImg">
+						<img src="/images/ezNewPortal/themeImg/${imgFolder }/Theme${theme.themeId }.png" class="themeImg">
 						<c:choose>
 							<c:when test="${theme.themeId eq usedTheme }">
 								<div id="usedTheme"><span>"<spring:message code='ezNewPortal.t036' />"</span></div>	

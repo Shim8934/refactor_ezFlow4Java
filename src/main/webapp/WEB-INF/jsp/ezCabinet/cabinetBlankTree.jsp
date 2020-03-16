@@ -13,7 +13,7 @@
 		<div class="cabBlankMain">
 			<div class="blankDiv">
 				<img src="/images/cabinet/notree.png">
-				<div class="blankMsg"><spring:message code="${message}"/> <spring:message code="ezCabinet.t163"/></div>
+				<div class="blankMsg"><spring:message code="ezCabinet.t163"/></div>
 			</div>
 		</div>
 	</body>

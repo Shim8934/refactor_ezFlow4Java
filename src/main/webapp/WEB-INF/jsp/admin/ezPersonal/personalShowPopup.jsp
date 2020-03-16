@@ -10,7 +10,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/popup.css')}">
+		<link rel="stylesheet" href="${util.addVer('ezNewPortal.e2', 'msg')}">
 		
 		<style type="text/css">
 			P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm }

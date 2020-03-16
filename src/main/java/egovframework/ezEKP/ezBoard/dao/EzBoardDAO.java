@@ -686,10 +686,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.getSearchAllBoardItemCount", map);
 	}
 	
-	public int isDeptChk(String id, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", id);
-		map.put("tenantID", tenantID);
+	public int isDeptChk(Map<String, Object> map) throws Exception {
 		return (int) select("EzBoardDAO.isDeptChk", map);
 	}
 	
@@ -742,5 +739,25 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<String> getPDOAddJobDeptID(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzBoardDAO.getPDOAddJobDeptID", map);
+	}
+	
+	/* 2019-05-15 홍승비 - 해당 부서ID로 상위부서ID(회사포함) 가져오기*/
+	public String getUpperDeptID(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.getUpperDeptID", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<BoardPropertyVO> getAllSubBoardProperty(Map<String, Object> map) throws Exception {
+		return (List<BoardPropertyVO>) list("EzBoardDAO.getAllSubBoardProperty", map);
+	}
+
+	/* 2019-12-13 홍승비 - 게시물 이동 시 조회자 정보를 삭제하지 않고 유지하는 쿼리 */
+	public void updateBoardItemRead(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.updateBoardItemRead", map);
+	}
+
+	/* 2019-12-16 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라 기존 게시물의 조회자정보를 삽입하는 쿼리 */
+	public void insertBoardItemReadForCopy(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.insertBoardItemReadForCopy", map);
 	}
 }

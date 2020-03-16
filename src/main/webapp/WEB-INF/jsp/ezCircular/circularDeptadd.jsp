@@ -98,7 +98,7 @@
 	            </td>
 	        </tr>
 	        <tr>
-	        	<th style="width:200px; text-align:center"><spring:message code='ezCircular.t34' /><br/><spring:message code='ezCircular.t42' /></th>
+	        	<th style="width:200px; text-align:center"><spring:message code='ezCircular.t82' /></th>
 	        	<td>
 		        	<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 100px;margin:5px 2px"/></div>
 		        	<div id="receiverlist2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>

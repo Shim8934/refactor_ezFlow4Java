@@ -7,7 +7,7 @@
 		<title><spring:message code="ezBoard.t135" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
-	    <link rel="stylesheet" href="${util.addVer('/css/email_tree.css')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css" />
 	    <style>
 			.groupBoard {
 				width:266px;
@@ -18,6 +18,7 @@
 			.node_div span {
 				overflow:hidden;
 				text-overflow:ellipsis;
+				font-family:inherit;
 			}
 		</style>
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>

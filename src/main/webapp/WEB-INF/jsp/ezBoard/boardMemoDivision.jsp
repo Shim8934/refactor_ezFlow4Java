@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />	
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script>
     	<script>
 	    	$(function() {
 	    		memoFoldersInfo();
@@ -36,7 +37,12 @@
 							}
 							memoFolderList += "<tr id=" + list.folder_id + " style='cursor:pointer' onclick='event_click(this);' ondblclick='modify_onclick(this);' data1='" + list.folder_id + "' data2='" + list.folder_name +"'>";
 							memoFolderList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' data2='" + list.folder_name +"' data3='" + list.count + "' value=" + list.folder_id + " type='checkbox' onclick='selectRow(this)'></td>";
-							memoFolderList += "<td class='title' style='color:gray;' title='" + list.folder_name + "'>" + list.folder_name + "</td>";
+
+							if (parseInt(list.orders) === 0) {
+								memoFolderList += "<td class='title' style='color:gray;' title='" + memoMessages.strLangMemo22 + "'>" + memoMessages.strLangMemo22 + "</td>";
+							} else {
+								memoFolderList += "<td class='title' style='color:gray;' title='" + list.folder_name + "'>" + list.folder_name + "</td>";
+							}
 							memoFolderList += "<td style='color:gray;'>" + list.reg_date.substring(0,10) + "</td>";  
 							memoFolderList += "</tr>";
 						});
@@ -116,7 +122,8 @@
 		     	}
 	    		
 	    		if($(obj).attr('data1') == inputNameDlg_cross_dialogArguments[4] ) {
-	    			var strLangTemp = "<spring:message code='ezMemo.t0050' arguments='" + inputNameDlg_cross_dialogArguments[5].trim() + "' />"
+	    			// var strLangTemp = "<spring:message code='ezMemo.t0050' arguments='" + inputNameDlg_cross_dialogArguments[5].trim() + "' />"
+	    			var strLangTemp = "<spring:message code='ezMemo.t0050' arguments='" + memoMessages.strLangMemo22 + "' />"
 					alert(strLangTemp);
 		     		return;
 		     	}
@@ -153,7 +160,8 @@
 				
 				// 기본메모함이 선택 되었다면 종료
 				if(deleteAble === "off" ) {
-					var strLangTemp = "<spring:message code='ezMemo.t0049' arguments='" + inputNameDlg_cross_dialogArguments[5].trim() + "' />"
+					//var strLangTemp = "<spring:message code='ezMemo.t0049' arguments='" + inputNameDlg_cross_dialogArguments[5].trim() + "' />"
+					var strLangTemp = "<spring:message code='ezMemo.t0049' arguments='" + memoMessages.strLangMemo22 + "' />"
 					alert(strLangTemp);
 					return;
 				}
@@ -181,6 +189,8 @@
 			    			"methodType" : "delete",
 			    			"folder_ids" : deleteList.join()
 			    		}, success: function() {
+			    			parent.parent.parent.parent.memoFoldersInfo("delete");
+			    			window.parent.parent.frames["left"].memoFolderList();
 			    			memoFoldersInfo();
 			    		}, error: function(err) {
 			    			alert("<spring:message code='ezMemo.t0045' />");

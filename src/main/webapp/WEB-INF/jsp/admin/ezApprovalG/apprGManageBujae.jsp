@@ -178,6 +178,10 @@
 			var type_Complete;
 			var NoneActiveX = "YES";
 			function select_person(type) {
+				if (document.getElementById("deptList") != null && document.getElementById("deptList") != "undefined") {
+					buJaedeptid = document.getElementById("deptList").value;
+				}
+				
 				if(document.getElementById('TextName1').value=='' || document.getElementById('TextName1').value == undefined){
 					//2018-08-10 구해안 추후에 resource 추가
 					alert("<spring:message code='main.t0630'/>");
@@ -385,10 +389,17 @@
 		
 		        if (gIsAppoint != '2') {
 		        	/* document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>"*/
-		            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "") {
-		                alert("<spring:message code='ezPersonal.t36'/>");
-		                return;
-		            }
+		        	if (approvalFlag == "G") {
+			            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "") {
+			                alert("<spring:message code='ezPersonal.t36'/>");
+			                return;
+			            }
+		        	} else {
+			            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
+			                alert("<spring:message code='ezPersonal.t36'/>");
+			                return;
+			            }
+		        	}
 		        }
 				var pProxy = "";
 				var pBujae = "";
@@ -481,7 +492,7 @@
 		
 		    function Sel_Change()
 		    {
-		        if (document.getElementById("absentreason").value == "<spring:message code='ezPersonal.t35'/>") {
+		        if (document.getElementById("absentreason").value == "<spring:message code='ezPersonal.t35'/>" || document.getElementById("absentreason").value == "") {
 		            document.getElementById("TR_Appoint").style.display = "";
 		        }
 		        else {

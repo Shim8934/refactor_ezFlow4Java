@@ -700,6 +700,10 @@
 								                            <option value="mobile"><spring:message code='ezOrgan.t96'/></option>
 								                            <option value="HomePhone"><spring:message code='ezOrgan.t97'/></option>
 								                            <option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98'/></option>
+								                            <c:if test="${primaryLang eq '3' }">
+		                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+		                                                    </c:if>
 								                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
 								                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
 				                                        </select>

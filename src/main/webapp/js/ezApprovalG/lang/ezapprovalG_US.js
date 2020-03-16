@@ -686,6 +686,7 @@ var strLang1031 = "Can not post E-mail / approval-document to photo-board or ano
 // DocType : 문서형태 A01
 var strDocType4 = "004";
 var strLangDocType4 = "Enforcement";
+var strLangDocType5 = "Agreement";
 
 // DocState : 문서상태A02
 var strDocState1 = "001";

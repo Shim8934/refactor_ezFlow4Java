@@ -29,6 +29,8 @@
 			var sRadio = "<c:out value='${sRadio}'/>";
 			var keyword = "<c:out value='${keyword}'/>";
 			var fileName = "<c:out value='${fileName}'/>";
+			var defaultFont  = "${defaultFont}";
+			var defaultSize  = "${defaultSize}";
 			
 			window.onload = function () {
 		        GetFileURL();
@@ -47,6 +49,14 @@
 						html = result;
 					}        			
 				});
+				
+				/* 2019-10-28 홍승비 - 커뮤니티 공지사항에 기본 폰트와 사이즈 적용 */
+				var defaultStyleTag = "<HTML><META content='text/html; charset=utf-8' http-equiv='Content-Type'><STYLE>";
+				defaultStyleTag += "P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px; font-family:" + defaultFont + "; font-size:" + defaultSize + "}";
+				defaultStyleTag += "DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;}</STYLE>";
+				
+				html = (defaultStyleTag + html.replace("<HTML>", ""));
+				
 				var doc = document.getElementById('message').contentWindow.document;
 				doc.open();
 				doc.write(html);

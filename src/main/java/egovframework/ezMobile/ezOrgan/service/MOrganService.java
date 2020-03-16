@@ -10,6 +10,8 @@ public interface MOrganService {
 	
 	public MPersonListVO getPersonInfo(String userID, int tenantID) throws Exception;
 	
+	public MPersonListVO getPersonInfo(String userID, int tenantID, String lang) throws Exception;
+	
 	public int getPersonListCount(String companyID, int tenantID, String pSearchText) throws Exception;
 
 	public List<MOrganListVO> getDeptInfo(String organType, String companyID, String deptId, String lang, int tenantId) throws Exception;

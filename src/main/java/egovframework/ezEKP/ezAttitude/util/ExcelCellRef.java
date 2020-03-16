@@ -1,14 +1,30 @@
 package egovframework.ezEKP.ezAttitude.util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Resource;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.util.CellReference;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import egovframework.com.cmm.EgovMessageSource;
+
+@Component
 public class ExcelCellRef {
 	
-    public static String getName(Cell cell, int cellIndex) {
+	@Autowired
+	EgovMessageSource msg;
+	
+    public String getName(Cell cell, int cellIndex) {
         int cellNum = 0;
         if(cell != null) {
             cellNum = cell.getColumnIndex();
@@ -20,7 +36,7 @@ public class ExcelCellRef {
         return CellReference.convertNumToColString(cellNum);
     }
 
-    public static String getValue(Cell cell) {
+    public String getValue(Cell cell) {
         String value = "";
 
         if(cell == null) {
@@ -33,8 +49,13 @@ public class ExcelCellRef {
             else if( cell.getCellType() == Cell.CELL_TYPE_NUMERIC ) {
                 //텍스트값으로 읽도록 CELL타입을 변경
                 //value = cell.getNumericCellValue() + "";
-                cell.setCellType(Cell.CELL_TYPE_STRING);
-                value = cell.getStringCellValue() + "";
+            	if( DateUtil.isCellDateFormatted(cell)) {
+    				Date date = cell.getDateCellValue();
+    				value = new SimpleDateFormat("yyyy-MM-dd").format(date)+"";
+    			} else {
+    				cell.setCellType(Cell.CELL_TYPE_STRING);
+    				value = cell.getStringCellValue() + "";
+    			}
             }
             else if( cell.getCellType() == Cell.CELL_TYPE_STRING ) {
                 value = cell.getStringCellValue();
@@ -48,7 +69,7 @@ public class ExcelCellRef {
             else if( cell.getCellType() == Cell.CELL_TYPE_BLANK ) {
                 value = "";
             }
-            else {
+            else { 
                 value = cell.getStringCellValue();
             }
         }
@@ -62,7 +83,7 @@ public class ExcelCellRef {
      * @param obj
      * @return String[]
      */
-    public static String[] removeNullString(String[] obj) {
+    public String[] removeNullString(String[] obj) {
         return removeNullString(obj, true);
     }
 
@@ -73,7 +94,7 @@ public class ExcelCellRef {
      * @param trimYN
      * @return String[]
      */
-    public static String[] removeNullString(String[] obj, boolean trimYN) {
+    public String[] removeNullString(String[] obj, boolean trimYN) {
         String[] tempData = null;
 
         //값이 있으면 처리
@@ -98,7 +119,7 @@ public class ExcelCellRef {
      * @param String
      * @return boolean
      */
-    public static boolean nullCheck(String checkStr){
+    public boolean nullCheck(String checkStr){
         if(checkStr == null || checkStr.length() == 0){
             return true;
         }
@@ -110,7 +131,7 @@ public class ExcelCellRef {
      * @param String
      * @return boolean
      */
-    public static boolean byteCheck(String checkStr, int maxByte){
+    public boolean byteCheck(String checkStr, int maxByte){
         int en=0;
         int ko=0;
         int etc=0;
@@ -140,7 +161,7 @@ public class ExcelCellRef {
      * @param String
      * @return boolean
      */
-    public static boolean intCheck(String checkStr){
+    public boolean intCheck(String checkStr){
         try {
             Integer.parseInt(checkStr);
             return true;
@@ -154,7 +175,7 @@ public class ExcelCellRef {
      * @param String
      * @return boolean
      */
-    public static boolean floatCheck(String checkStr){
+    public boolean floatCheck(String checkStr){
     	try {
     		Float.parseFloat(checkStr);
     		return true;
@@ -168,7 +189,7 @@ public class ExcelCellRef {
      * @param String
      * @return boolean
      */
-    public static boolean annualCheck(String checkStr){
+    public boolean annualCheck(String checkStr){
     	int commaIdx = checkStr.lastIndexOf(".");
     	if(commaIdx != -1) {
     		String decimal = checkStr.substring(commaIdx+1);
@@ -184,39 +205,48 @@ public class ExcelCellRef {
      * @param String
      * @return boolean
      */
-    public static String validateCheck(int iRow, String titleStr, String checkStr, int maxLength, String optionStr){
-
+    public String validateCheck(int iRow, String titleStr, String checkStr, int maxLength, String optionStr, Locale locale){
+    	
         //널체크
         if(titleStr != null) {
         	if(nullCheck(checkStr)) {
-        		return String.valueOf(iRow)+"행 "+ titleStr+"은(는) 필수 입력값입니다.\n";
+        		return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319", locale) + titleStr+ msg.getMessage("ezAttitude.t318", locale);
             }
         } else {
-            return "문서의 양식이 업로드 양식과 일치하지 않습니다.\n";
+            return msg.getMessage("ezAttitude.t317", locale);
         }
 
         //입력최대크기
         if(!nullCheck(checkStr)){
             if(byteCheck(checkStr,maxLength)){
-                return String.valueOf(iRow)+"행 " + titleStr+"은(는) "+String.valueOf(maxLength)+"자 이상 입력할수 없습니다.\n";
+                return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319", locale) + titleStr+ msg.getMessage("ezAttitude.t320", locale) +String.valueOf(maxLength)+ msg.getMessage("ezAttitude.t321", locale);
             }
         }
 
         //년도(정수) 체크
         if("1".equals(optionStr) && !nullCheck(checkStr)) {
             if(!intCheck(checkStr)) {
-                return String.valueOf(iRow)+"행 "+ titleStr+"은(는) 년도값만 입력할 수 있습니다.\n";
+                return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319", locale)+ titleStr+ msg.getMessage("ezAttitude.t322", locale);
             }
         }
         
         //연차체크
         if("3".equals(optionStr) && !nullCheck(checkStr)) {
         	if(!floatCheck(checkStr)) {
-        		return String.valueOf(iRow)+"행 "+ titleStr+"은(는) 숫자만 입력할 수 있습니다.\n";
+        		return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319", locale)+ titleStr+ msg.getMessage("ezAttitude.t323", locale);
         	} else {
         		if(!annualCheck(checkStr)) {
-        			return String.valueOf(iRow)+"행 "+ titleStr+"은(는) 연차형식에 맞지 않습니다.\n";
+        			return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319", locale)+ titleStr+ msg.getMessage("ezAttitude.t324", locale);
         		}
+        	}
+        }
+        
+      //입사일 체크
+        if("4".equals(optionStr) && !nullCheck(checkStr)) {
+        	Pattern p = Pattern.compile("^(\\d+)[/|\\-|\\s]+[0|1](\\d)[/|\\-|\\s]+([0|1|2|3]\\d)$");
+        	Matcher m = p.matcher(checkStr);
+        	if(!m.find()) {
+        		return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319", locale)+ titleStr+ msg.getMessage("ezAttitude.t325", locale);
         	}
         }
 

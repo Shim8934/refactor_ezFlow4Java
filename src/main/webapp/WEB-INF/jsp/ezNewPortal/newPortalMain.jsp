@@ -40,6 +40,9 @@
 			}
 			
 			#noticePopupArea {visibility:hidden;position:absolute;top:0;left:0;}
+			.popup_notice{display:inline-block;position:absolute;}
+			#popupArea {display:none;height: 100% !important; width: 100%; position: fixed;left: 0;overflow: auto; top: 0;}
+			#noticePopupLayer {width: 100%; overflow: auto;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -131,7 +134,7 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
     		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-
+		<div id="popupArea"><div id="noticePopupLayer"></div></div>
 		<div id="noticePopupArea"></div>
   		<div id="contextMenuBlock" class="contextMenuBlock">
 			<div id="contextMenuBtn" class="contextMenuBtn" style="display: block;visibility:hidden;">

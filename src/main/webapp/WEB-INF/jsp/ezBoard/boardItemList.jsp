@@ -108,6 +108,9 @@
 		    var endtime;
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 			var likeFlag = "${boardInfo.likeFlag}";
+		    var useNotReadCnt = "${useNotReadCnt}";
+		    var BoardGroupID = "${boardInfo.boardGroupID}";
+		    
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onresize = function ()
@@ -133,15 +136,16 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-		
-		        if (BoardAdmin_FG == "true"){
+		    	
+		        if (BoardAdmin_FG == "true") {
 		            document.getElementById("noti").style.display = "";
 		        }
-		
-		        if (pBoardType == "2") {
+		        
+		        /* 2020-02-11 홍승비 - 익명게시판의 경우, 관리자 권한이 있다면 이동 및 복사가 가능하도록 수정 */
+		        if (pBoardType == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 		            document.getElementById("btn_copy").style.display = "none";
 		            document.getElementById("btn_move").style.display = "none";
-		            document.getElementById("noti").style.display = "none";
+		            document.getElementById("noti").style.display = "none"; // 익명게시판은 공지사항이 없음
 		        }
 		        
 		        /* 2019-01-30 홍승비 - 그룹사게시판의 경우, 사용자단에서 권한설정 버튼 숨김 */
@@ -158,6 +162,8 @@
 		        }
 		        
 		        window_onunload_Event = true;
+		        
+		      	ifrmPreViewW.document.getElementById("ifrmPreViewW_div").style.marginTop = "-2px";
 		    };
 		    
 		    /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
@@ -749,12 +755,12 @@
 		        if (gubun == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(strItemList[0]), "CheckPassWord", GetOpenWindowfeature(340, 200));
+		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(strItemList[0]), "CheckPassWord", GetOpenWindowfeature(470, 200));
 		                try { OpenWin.focus(); } catch (e) { }
 		            } else {
-		                var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-		                feature = feature + GetShowModalPosition(330, 200);
-		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(arrList[0]), "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+		                var feature = "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no";
+		                feature = feature + GetShowModalPosition(470, 200);
+		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(arrList[0]), "", "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no");
 		
 		                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
 		
@@ -770,7 +776,10 @@
 		                    if (xmlhttp.responseText == "NO") {
 		                        alert("<spring:message code='ezBoard.t265' />");
 		                        return;
-		                    }
+		                    } else if (xmlhttp.responseText == "ERROR") {
+				                alert("<spring:message code='ezBoard.t1020'/>");
+				                return;
+				            }
 		
 		                    xmlhttp = null;
 		                    alert("<spring:message code='ezBoard.t268' />");
@@ -794,7 +803,7 @@
 		        }
 		        
 		        try {
-					leftCountRf();
+					leftCountRf(pBoardID);
 				} catch (e) {
 				}
 		    }
@@ -814,11 +823,11 @@
                     if (xmlhttp.responseText == "NO") {
                         alert("<spring:message code='ezBoard.t265' />");
                         return;
-                    }
-                    if (xmlhttp.responseText == "ERROR") {
-                        alert("<spring:message code='ezBoard.t55' />");
-                        return;
-                    }
+                    } else if (xmlhttp.responseText == "ERROR") {
+		                alert("<spring:message code='ezBoard.t1020'/>");
+		                return;
+		            }
+                    
                     xmlhttp = null;
                     alert("<spring:message code='ezBoard.t268' />");
 
@@ -844,7 +853,7 @@
                     getBoardList();
                     
                     try {
-    			        leftCountRf();
+    			        leftCountRf(pBoardID);
     				} catch (e) {
     				}
                 }
@@ -869,7 +878,10 @@
 		        if (xmlhttp.responseText == "NO") {
 		            alert("<spring:message code='ezBoard.t265' />");
 		            return;
-		        }
+		        } else if (xmlhttp.responseText == "ERROR") {
+	                alert("<spring:message code='ezBoard.t1020'/>");
+	                return;
+	            }
 		
 		        xmlhttp = null;
 		
@@ -976,10 +988,10 @@
 		    }
 		    /* 2019-04-17 홍승비 - 복사 후 좌측 게시물카운트 갱신 */
 		    function CopyItem_onclick_Complete(ret) {
-		        if (typeof (ret) != "undefined") {
-		            if (ret == "OK") {
+		        if (typeof (ret) != "undefined" && ret != "") {
+		            if (ret != "ERROR") {
 			            try {
-							leftCountRf();
+							leftCountRf(ret);
 						} catch (e) {}
 		                window.location.reload();
 		                window.close();
@@ -1034,9 +1046,9 @@
 		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
 		
 		            if (typeof (ret) != "undefined") {
-		                if (ret == "OK") {
+		                if (ret != "ERROR" && ret != "") {
 		                	try {
-								leftCountRf();
+								leftCountRf(ret + ";" + pBoardID);
 							} catch (e) {}
 							
 		                    window.location.reload();
@@ -1047,9 +1059,9 @@
 		    }
 		    function MoveItem_onclick_Complete(ret) {
 		        if (typeof (ret) != "undefined") {
-		            if (ret == "OK") {
+		            if (ret != "ERROR" && ret != "") {
 			            try {
-							leftCountRf();
+							leftCountRf(ret + ";" + pBoardID);
 						} catch (e) {}
 		                window.location.reload();
 		                window.close();
@@ -1080,8 +1092,25 @@
 		            xmlhttp.send();
 		            xmlhttp = null;
 		            getBoardList();
+		            
+		            /* 2019-07-03 홍승비 - 게시물 읽음표시 할 경우 좌측메뉴의 미독건수 갱신하도록 수정 */
+		            if (useNotReadCnt == "YES") {
+			            var boardLeftFrame;
+			            
+			            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) { // 즐겨찾기에서 읽기창 진입
+							boardLeftFrame = window.parent.parent.frames["left"];
+						} else { // 해당 게시판 내부에서 읽기창 진입
+			        		boardLeftFrame = window.parent.frames["left"];
+			        	}
+			            
+			            if (boardLeftFrame != null && boardLeftFrame != undefined && boardLeftFrame.location.href.indexOf("/ezBoard/boardLeft.do")> -1) {
+			     			boardLeftFrame.getBoardNotReadCountByID(BoardGroupID, "", "GROUP");
+			     			boardLeftFrame.getBoardNotReadCountByID(pBoardID, gubun, "SUB");
+				    	}
+		            }
 		        }
 		    }
+		    
 		    /* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
 		    function MemberInfo_onclick(pUserID, pDeptID) {
 		        if (gubun == "2") return;
@@ -1281,6 +1310,16 @@
 		            alert("ERROR");
 		        }
 		    }
+		    
+		    /* 2020-02-03 홍승비 - 하단 미리보기 사용 시 아무 게시물도 선택되지 않은 상태라면 최소 높이 설정 */
+		    function checkPreViewWSrc() {
+	    	  if (document.getElementById("ifrmPreViewW").src.indexOf("/blank") > -1) {
+	            	document.getElementById("ifrmPreViewW").style.minHeight = "130px";
+	            } else { // 게시물 선택 시 최소 높이 해제
+	            	document.getElementById("ifrmPreViewW").style.minHeight = "";
+	            }
+		    }
+		    
 		</script>
 	</head>
 	<c:choose>
@@ -1326,7 +1365,7 @@
 		<c:if test="${boardInfo.buttonHidden == 'N'}">
 			<div id="mainmenu">
 			  <ul>
-		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321' /></span></li>
+		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.hsbJP02' /></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204' /></span></li>
 		        <li id="btn_copy"><span onClick="CopyItem_onclick()"><spring:message code='ezBoard.t274' /></span></li>
 		        <li id="btn_move"><span onClick="MoveItem_onclick()"><spring:message code='ezBoard.t134' /></span></li>
@@ -1457,7 +1496,7 @@
 							</dl>
 		                </div>
 		                
-		                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
+		                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" onLoad="checkPreViewWSrc();" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
 		            </div>
 		        </div>
 		    </div>

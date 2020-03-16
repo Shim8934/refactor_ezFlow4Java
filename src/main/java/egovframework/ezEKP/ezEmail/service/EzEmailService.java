@@ -14,6 +14,7 @@ import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
+import egovframework.ezEKP.ezEmail.vo.MailDeletedIdVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
@@ -39,6 +40,7 @@ public interface EzEmailService {
 	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName) throws Exception;
 	public void deleteMailDelete(int tenantId, String pUserID, String pFolderPath) throws Exception;
 	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception;
+	public List<MailDeletedIdVO> getMailDeletedIdList() throws Exception;
 	public List<MailDeleteVO> getMailDeleteList() throws Exception;
 	public List<MailReservationVO> getMailReserved(int tenantId, String pUserId) throws Exception;
 	public List<MailReservationVO> getMailReserved2() throws Exception;
@@ -56,12 +58,16 @@ public interface EzEmailService {
 	public void setMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId, List<String> pMessageIds) throws Exception;
 	public List<String> getMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId) throws Exception;
 	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList) throws Exception;
+	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList, String type, String companyId) throws Exception;
 	public int deleteIndividualAlias(String userId, int tenantID) throws Exception;
 	public String checkIndividualAlias(String individualAlias, int tenantId) throws Exception;
+	String checkIndividualAliasWithoutOwned(String userEmail, String individualAlias, int tenantId) throws Exception;
+	String updatePrimaryIndividualAlias(String userEmail, String originAlias, String updateAlias, int tenantId) throws Exception;
 	public Map<String, String> getAliasAddressMap(List<String> addressList, int tenantId) throws Exception;
 	
 	public void sendMail(String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception;
 	public void sendMail(String userEmail, String password, Locale userLocale, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved, EmailImportance importance) throws Exception;
+	public void sendMail(String userEmail, String password, Locale userLocale, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content) throws Exception;
 	public void sendMailWithExplicitRecipients(InternetAddress[] recipients, String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception;
 	
 	public String mailContentDownload(String loginCookie, String url, String realPath) throws Exception;
@@ -71,7 +77,9 @@ public interface EzEmailService {
 	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count) throws Exception;
 	public List<MailDistributionVO> getDistributionList(String companyId, int tenantId) throws Exception;
 	public List<MailDistributionVO> getDistributionSearchList(String companyId, int tenantId, String searchValue) throws Exception;
+	public List<MailDistributionVO> getDistributionSearchListByItem(String companyId, int tenantId, String searchValue, String searchType) throws Exception;
 	public MailSignatureVO getInitMailSignature(int tenantId) throws Exception;
+	public boolean addEzTalkNotification(String userId, String senderName, String subject, String type);
 	public boolean setInitInboxRule(int tenantId, String userId) throws Exception;
 	public List<String> getInitInboxRuleMailbox(int tenantId) throws Exception;
 	public int setMailSecure(int tenantId, String userId, String password, int maxReadCount, String maxReadDate) throws Exception;
@@ -93,9 +101,13 @@ public interface EzEmailService {
 	 * 
 	 * permissionType
 	 *   0: 공유자인지 체크
-	 *   1: 삭제(이동/복사 포함) 권한이 있는지 체크
-	 *   2: 메일 전송 권한이 있는지 체크
-	 *   3: 삭제(이동/복사 포함), 메일 전송 권한이 있는지 체크
+	 *   1(001): 삭제(이동/복사 포함) 권한이 있는지 체크
+	 *   2(010): 메일 보내기 권한이 있는지 체크
+	 *   3(011): 메일 보내기, 삭제 권한이 있는지 체크
+	 *   4(100): 관리(편지함 관리/메일 환경설정) 권한이 있는지 체크
+	 *   5(101): 관리, 삭제 권한이 있는지 체크
+	 *   6(110): 관리, 메일 보내기 권한이 있는지 체크
+	 *   7(111): 관리, 메일 보내기, 삭제 권한이 있는지 체크
 	 * </pre>
 	 */
 	public boolean checkUserShareId(String userId, String shareId, int permissionType, int tenantId) throws Exception;
@@ -104,6 +116,7 @@ public interface EzEmailService {
 	public String delSharedMailboxAllUser(String shareId, int tenantId) throws Exception;
 	public String setSharedMailboxUsers(String shareId, JSONArray userList, int tenantId) throws Exception;
 	public List<MailSharedMailboxVO> getSharedMailboxSearchList(String companyId, int tenantId, String searchValue) throws Exception;
+	public List<MailSharedMailboxVO> getSharedMailboxListSearchByItem(String companyId, int tenantId, String searchType, String searchValue) throws Exception;
 	public MailSharedMailboxUserVO getSharedMailboxPermissionInfo(String shareId, int tenantId, String userId) throws Exception;
 	public int deleteUserFromAllSharedMailbox(String userId, int tenantId) throws Exception;
 	public JSONArray selectAllSignatureTemplate(String companyId, String tenantId) throws Exception;
@@ -117,4 +130,19 @@ public interface EzEmailService {
 	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
 	public JSONObject recallMailByMessageId(String address, String messageId) throws Exception;
 	public int getTotalUnreadCount(String userId, int tenantId) throws Exception;
+	public JSONObject getUnreadCountAll(JSONObject requestObject, String userId, Locale locale, int tenantId) throws Exception;
+	/**
+	 * 멀티도메인
+	 */
+	public String getMultiDomainList(int tenantId) throws Exception;
+	public int addMultiDomain(int tenantId, String domainName) throws Exception;
+	public int delMultiDomain(int tenantId, String delDomain, String saveDomainList) throws Exception;
+	public String getCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception;
+	public int saveCompanyMultiDomain(int tenantId, String companyId, String primaryDomain, String saveDomainList) throws Exception;
+	
+	public int addDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId, String selectDomain) throws Exception;
+	public String setIndividualAliasForMig(String userId, int tenantID, String targetAddr, String individualAliasList) throws Exception;
+	
+	public MailDistributionVO getDistributionInfo(String cn, int tenantId) throws Exception;
+	public JSONArray getFolderQuota(String String, Locale locale) throws Exception;
 }

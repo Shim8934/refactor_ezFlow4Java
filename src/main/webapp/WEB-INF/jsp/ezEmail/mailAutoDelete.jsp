@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
 		<script  type="text/javascript">
+	        var shareId = "${shareId}";
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -27,45 +28,73 @@
 		        if (!confirm("<spring:message code='ezEmail.t113' />"))
 		            return;
 		
-		        window.location.href = "/ezEmail/mailAutoDeleteDelete.do?itemseq=" + encodeURIComponent(seqno) + "&folderPath=" + encodeURIComponent(path);
+		        var requestUrl = "/ezEmail/mailAutoDeleteDelete.do?itemseq=" + encodeURIComponent(seqno) + "&folderPath=" + encodeURIComponent(path);
+		        if (shareId != "") {
+		        	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+		        }
+		        window.location.href = requestUrl;
 		    }
 
 		    function add_condition() {
-			var addedFolders = new Array();
-			<c:forEach var="item" items="${list}">
-				addedFolders.push("${item.path}"); 
-			</c:forEach>
-			    
-			for (var i = 0; i < addedFolders.length; i++){
-
-				if (document.getElementById("folderpath").lealfolderPath == addedFolders[i]) {
-					alert("<spring:message code='ezQuestion.t18' />");
-				    return;
+				var addedFolders = new Array();
+				<c:forEach var="item" items="${list}">
+					addedFolders.push("${item.path}"); 
+				</c:forEach>
+				    
+				for (var i = 0; i < addedFolders.length; i++){
+	
+					if (document.getElementById("folderpath").lealfolderPath == addedFolders[i]) {
+						alert("<spring:message code='ezQuestion.t18' />");
+					    return;
+					}
+				        
 				}
-			        
-			}
 		 
-		    if (document.getElementById("folderpath").value == "") {
-		            alert("<spring:message code='ezEmail.t114' />");
-		            return;
-		        }
+			    if (document.getElementById("folderpath").value == "") {
+			            alert("<spring:message code='ezEmail.t114' />");
+			            return;
+				}
+			    
 		        if (document.getElementById("expiretime").value == "") {
 		            alert("<spring:message code='ezEmail.t115' />");
 		            return;
 		        }
+		        
 		        if (parseInt(document.getElementById("expiretime").value) != document.getElementById("expiretime").value || parseInt(document.getElementById("expiretime").value) < 1) {
 		            alert("<spring:message code='ezEmail.t116' />");
 		            return;
 		        }
-		        if (document.getElementById("deleteunread").checked == true)
-		            window.location.href = "/ezEmail/mailAutoDeleteAdd.do?path=" + encodeURIComponent(document.getElementById("folderpath").lealfolderPath) + "&expiretime=" + encodeURIComponent(document.getElementById("expiretime").value) + "&unread=1" + "&foldername=" + encodeURIComponent(document.getElementById("folderpath").value);
-		        else
-		            window.location.href = "/ezEmail/mailAutoDeleteAdd.do?path=" + encodeURIComponent(document.getElementById("folderpath").lealfolderPath) + "&expiretime=" + encodeURIComponent(document.getElementById("expiretime").value) + "&unread=0" + "&foldername=" + encodeURIComponent(document.getElementById("folderpath").value);
+		        
+		        var requestUrl = "";	
+		        if (document.getElementById("deleteunread").checked == true){
+		        	requestUrl = "/ezEmail/mailAutoDeleteAdd.do?path=" + encodeURIComponent(document.getElementById("folderpath").lealfolderPath) + 
+		        			"&expiretime=" + encodeURIComponent(document.getElementById("expiretime").value) + "&unread=1" + 
+		        			"&foldername=" + encodeURIComponent(document.getElementById("folderpath").value);
+		        	if (shareId != "") {
+			        	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+			        }
+		            window.location.href = requestUrl;
+		        } else {
+		        	requestUrl = "/ezEmail/mailAutoDeleteAdd.do?path=" + encodeURIComponent(document.getElementById("folderpath").lealfolderPath) + 
+		        			"&expiretime=" + encodeURIComponent(document.getElementById("expiretime").value) + "&unread=0" + 
+		        			"&foldername=" + encodeURIComponent(document.getElementById("folderpath").value);
+		        	if (shareId != "") {
+			        	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+			        }
+		            window.location.href = requestUrl;
+		        }
 		    }
 		    var mail_selectfolder_cross_dialogArguments = new Array();
 		    function getFolder() {
 		        mail_selectfolder_cross_dialogArguments[1] = getFolder_Complete;
-		        var OpenWin = window.open("/ezEmail/mailSelectFolder.do", "mail_selectfolder_Cross", GetOpenWindowfeature(465, 355));
+				var requestUrl = "/ezEmail/mailSelectFolder.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		        }
+		        var OpenWin = window.open(requestUrl, "mail_selectfolder_Cross", GetOpenWindowfeature(465, 355));
+		        
+		        
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function getFolder_Complete(mailBoxInfo) {

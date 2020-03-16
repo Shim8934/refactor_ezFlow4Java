@@ -47,6 +47,7 @@
 	        var first = 1;
 	        var items = "${resultCount}";
 	        var rightFrame = "";
+	        var useLeftCnt = "${useLeftCnt}";
 	        
 		    window.onresize = function () {
 		        var menuSize = (parseInt(items) + 2) * 30;
@@ -102,9 +103,17 @@
 		                ReservationItem_onclick();
 		            }
 		            else {
+		            	/* 2019-09-16 홍승비 - 게시판 리다이렉트로 이동하는 경우, 게시판 좌측메뉴 스크롤 미생성 오류 수정 */
 		                if (RedirectBoardID != "") {
 		                    if (RedirectBoardGroupID != "" && RedirectBoardGroupID != "null" && g_ReadyState == "") {
 		                        BoardRedirect();
+		                        
+		                        document.getElementById('TreeCtrl_MyBoardTree').scrollTop = 0;
+		                        leftResize();
+		        		        $(".boardListBox").mCustomScrollbar({
+		        	        		theme : "dark"
+		        	        	});
+		        		        
 		                        return;
 		                    }
 
@@ -484,13 +493,6 @@
 		            var SelectedBoardID = treeNode.GetNodeData("DATA1");
 		            var SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
 		            var chkPhotoBrd = treeNode.GetNodeData("DATA5");
-		            var orgBoardTitle = treeNode.GetNodeData("DATA2"); // personalizedPortal용 변수 설정
-		            var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
-				    var orgItemCount = orgBoardName.substring(orgBoardTitle.length + 1, orgBoardName.length);
-				    
-				    if (orgBoardTitle == orgBoardName) {
-				    	orgItemCount = 0;
-				    }
 				    
 		            /* 2018-08-07 홍승비 - url게시판 접근 후 window.parent.frames["right"]이 undefined인 경우, 다른 방법으로 게시판 접근 */
 				  	if (typeof window.parent.frames["right"] == "undefined") {
@@ -526,30 +528,8 @@
 			           }
 					}
 		            
-		            /* 2019-04-23 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신(personalizedPortal 게시판용 수정) */
-			    	$.ajax({
-						type : "GET",
-						dataType : "text",
-						async : false,
-						url : "/ezBoard/getItemCount.do",
-						data : {
-							boardID : SelectedBoardID
-						},
-						success: function(resultCount) {
-							if (orgItemCount != resultCount) {
-								var newNodeName = "";
-								if (resultCount > 0) {
-									newNodeName = orgBoardTitle + " " + resultCount;
-								} else {
-									newNodeName = orgBoardTitle;
-								}
-								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
-							}
-						},
-						error: function() {
-							return;
-						}
-					});
+				    /* 2019-07-08 홍승비 - 게시물 카운트 갱신 동작 함수로 분리 */
+				  	refreshItemCnt(pNodeID);
 		        }
 		        catch (e) {
 		            alert(e.description);
@@ -566,7 +546,8 @@
 		        xmlhttp = null;
 		    }
 		
-		    function ShowMyBoardItem(val01) {		// 마이 게시판 선택
+		    /* 2019-12-02 홍승비 - 게시판 좌측메뉴에서 마이게시판 설정 아이콘 표출, 의미없는 함수 파라미터 제거 */
+		    function ShowMyBoardItem() {		// 마이 게시판 선택
 		    	/* $(".on").attr("class", "off");
 		    	$(".myb h2").attr("class", "on");
 		    	$(".myb").next().attr("class", "on"); */
@@ -899,7 +880,10 @@
 		       		window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
 				}
 		    }
+		    /* 2019-12-02 홍승비 - 마이게시판 설정 아이콘 표출, 이벤트 전파 방지 */
 		    function ConfigMyBoard() {
+		    	event.stopPropagation();
+		    	
 		        var OpenWin = window.open("/ezBoard/myBoardConfig.do?type=CONFIG", "MyBoardConfig", GetOpenWindowfeature(525, 418));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1011,6 +995,52 @@
 		    /* function spanClick(divID) {
 		    	document.getElementById(divID).click();
 		    } */
+		    
+		    /* 2019-07-08 홍승비 - 게시물 등록, 삭제, 복사, 이동시 좌측메뉴의 선택된 하위게시판 게시물 개수 갱신 함수 추가 */
+		    function refreshItemCnt(pNodeID) {
+		       	if (useLeftCnt == "YES") {
+			    	var SelectedBoardID = "";
+			    	if(document.getElementById(pNodeID).id.indexOf("FromTreeView") > -1) {
+			    		SelectedBoardID = document.getElementById(pNodeID).getAttribute("data3");
+			    	} else {
+			    		SelectedBoardID = document.getElementById(pNodeID).getAttribute("data1");
+			    	}
+			    	
+			    	 /* 2019-04-19 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신 */
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/getItemCount.do",
+						data : {
+							boardID : SelectedBoardID
+						},
+						success: function(resultCount) {
+							var subBoardDiv = $('.node_div[data1="' +  SelectedBoardID + '"]');
+							var subBoardDivMy = $('#TreeCtrl_MyBoardTree_ul').find('.node_div[data3="' +  SelectedBoardID + '"]');
+							
+							var subBoardSpan = subBoardDiv.children('span').last();
+							var subBoardSpanMy = subBoardDivMy.children('span[id^="spn_"]'); // 마이게시판에는 동일한 하위게시판 중복 등록 가능
+							var subBoardName = subBoardDiv.attr("data2");
+							
+							if (subBoardName == undefined || subBoardName.length < 0) {
+								subBoardName = subBoardDivMy.attr("data2");
+							}
+							
+							if (resultCount > 0) {
+								subBoardName += (" " + resultCount);
+							}
+							
+							subBoardSpanMy.text(subBoardName);
+							subBoardSpan.text(subBoardName);
+						},
+						error: function() {
+							return;
+						}
+					});
+		       	}
+		    }
+
 	    </script>
 	</head>
 	<body class="newLeft">
@@ -1029,12 +1059,15 @@
 			        <h2 onclick="favoriteList()">
 			            <span class="sub_iconLNB tree_board_star"></span><span class="h2Title"><spring:message code="ezBoard.t00010" /></span>
 			        </h2>
-			        <c:if test="${MyBoardTopFlag == 'NO'}">
-				        <h2 class="off" id="myBoardList">
-				            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="ShowMyBoardItem()"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
+			        <c:if test="${MyBoardTopFlag != 'NO'}">
+				        <h2 class="off" id="myBoardList"  onclick="ShowMyBoardItem()">
+				            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" style="display:inline-block;"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
 				        </h2>
 				        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul">
 				        	<div class="tree onlytree" id='TreeCtrl_MyBoardTree'></div>
+				        	<li><span class="sub_iconLNB tree_board_my"></span><span class="list_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></li>
+							<li><span class="sub_iconLNB tree_board_reservation"></span><span class="list_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></li>
+							<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></li>
 				        </ul>
 			        </c:if>
 			        <div id='TopBoardsList'>
@@ -1059,9 +1092,9 @@
 		        			});
 			        	</script>
 			        </div>
-			        <c:if test="${MyBoardTopFlag != 'NO'}">
-			        	<h2 class="off" id="myBoardList">
-				            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="ShowMyBoardItem(this)"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
+			        <c:if test="${MyBoardTopFlag == 'NO'}">
+			        	<h2 class="off" id="myBoardList" onclick="ShowMyBoardItem()">
+				            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" style="display:inline-block;"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
 				        </h2>
 				        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul" style="overflow:hidden">
 				        	<div class="tree onlytree" id='TreeCtrl_MyBoardTree'></div>

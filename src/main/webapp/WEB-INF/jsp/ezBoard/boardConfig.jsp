@@ -93,7 +93,7 @@
     <h1><spring:message code="ezBoard.t10010" /></h1>
     <div class="portlet_tabpart01">
         <div class="portlet_tabpart01_top" id="tab1">
-            <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="1tab1"><spring:message code="ezBoard.t0006" /></span></p>
+            <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="1tab1"><spring:message code="ezPersonal.yej01" /></span></p>
             <p id="BoardEnv_sub2"><span divname="BoardEnv_div2" id="1tab2"><spring:message code="ezBoard.t00010" /></span></p>
         </div>
     </div>

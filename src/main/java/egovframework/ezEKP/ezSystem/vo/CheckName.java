@@ -17,5 +17,7 @@ public enum CheckName {
 	MaxAllowedCountOfLoginFail,
 	USE_HTMLMODE,
 	editorFontStyle,
-	useSession
+	useSession,
+	useSessionMobile,
+	useMailConfirm
 }

@@ -8,9 +8,21 @@ function DisplayLineCnt(Resultxml, viewtype) {
 
 function getDataInfo() {
 	var pUrl = "";
-	
+
+    var DocList = new ListView();
+    DocList.LoadFromID("DocList");
+    var selRow = DocList.GetSelectedRows()[0];
+    //DocList_Flag 지워도 되면 삭제
+    if (DocList_Flag == "RECORD") {
+        if (trim_Cross(selRow.getAttribute("DATA14")) != "null" && trim_Cross(selRow.getAttribute("DATA14")) != "" && trim_Cross(selRow.getAttribute("DATA14")) >= GetTodayDate()) {
+            if (CheckAprLine(selRow.getAttribute("DATA1")) != "TRUE") {
+                getdoclistSub_after("NOTPERMISSION");
+                return;
+            }
+        }
+    }
+
     switch (jobState) {
-   
         case "ATTACH":
         	pUrl = "/ezApprovalG/getTotalAttachInfo.do";
             break;
@@ -27,6 +39,7 @@ function getDataInfo() {
         	pUrl = "/ezApprovalG/getReceiptinfo.do";
             break;
     }
+
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -141,15 +154,19 @@ function OpenReceiptHistory() {
         var pDeptID = tr[0].getAttribute("DATA1");
         var isExtYN = tr[0].getAttribute("DATA3");
 
+        /* 2019-08-20 홍승비 - 기록물대장 하단 수신자 > 수신자(부서)명 더블클릭 시 팝업창 사이즈 조절 */
         var Url, OpenWin;
+        var windowFeature;
         if (isExtYN.toUpperCase() == "Y") {
+        	windowFeature = GetOpenWindowfeature(610, 270);
             Url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + pDocID + "&deptID=" + pDeptID;
         }
         else {
+        	windowFeature = GetOpenWindowfeature(1155, 460);
             Url = "/ezApprovalG/ezLineInfo.do?docID=" + pDocID + "&deptID=" + pDeptID + "&docState=011";
         }
 
-        var OpenWin = window.open(Url, "OpenReceiptHistory", GetOpenWindowfeature(610, 270));
+        var OpenWin = window.open(Url, "OpenReceiptHistory", windowFeature);
         try { OpenWin.focus(); } catch (e) { }
     }
 }
@@ -166,7 +183,9 @@ function openUserInfo() {
             var width = window.screen.availWidth;
             var left = (width - 650) / 2;
             var top = (heigth - 300) / 2;
-            window.open("/myoffice/ezApprovalG/ezDocInfo/ezLineInfo_Cross.aspx?pDocID=" + tr.getAttribute("DATA3") + "&pDeptID=" + tr.getAttribute("DATA4") + "&pDocState=012", "", "height=270px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+            //G버전 부서순차합의에서 합의부서 결재선 보일 수 있도록 수정. 2019-02-14 홍대표
+//            window.open("/myoffice/ezApprovalG/ezDocInfo/ezLineInfo_Cross.aspx?pDocID=" + tr.getAttribute("DATA3") + "&pDeptID=" + tr.getAttribute("DATA4") + "&pDocState=012", "", "height=270px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr[0].getAttribute("DATA3") + "&deptID=" + tr[0].getAttribute("DATA4") + "&docState=012", "", "height=460px,width=1155px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + GetOpenPosition(1155, 460));
         } else {
             var heigth = window.screen.availHeight;
             var width = window.screen.availWidth;

@@ -110,10 +110,11 @@ function PreviewRayerChange(pGubun) {
 
             /* 2018-09-17 홍승비 - 즐겨찾기 탭에서 하단 미리보기 사용 시 스크롤 잘리지 않도록 수정 */
             if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
-            	document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 98) + "px";
+            	document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 114) + "px";
             } else {
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
             }
+            
             document.getElementById("PreW_subject").style.width = (CurrenWidth - 200) + "px";
             
             pPreviewShow_HOW = "W";
@@ -398,6 +399,9 @@ var WriterDeptName;
 var WriterCompanyName;
 var ContentLocation;
 var UserIMG;
+var OneLineReplyFlag;
+var Gubun;
+var BoardID;
 
 function event_ItemPreviewRead_photo() {
     if (xmlhttp != null && xmlhttp.readyState == 4) {
@@ -468,7 +472,7 @@ function event_ItemPreviewRead_photo() {
 
             setNodeText(document.getElementById("PreH_sub_subject"), Title);
             document.getElementById("PreH_MailReceiver").innerHTML = pOCS;
-            setNodeText(document.getElementById("PreH_date"), WriteDate);
+            setNodeText(document.getElementById("PreH_date"), WriteDate.substring(0, 16));
             var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + javaURLEncode(ContentLocation);
             
             /* 20118-11-07 홍승비 - 동영상게시물 미리보기 분기 추가 */
@@ -513,16 +517,18 @@ function event_ItemPreviewRead() {
             UserIMG =  SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/UserIMG");
             BoardID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/BoardID");
             LikeCount = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/LikeCount");
+            /* 2019-11-06 홍승비 - 게시물 미리보기 시 댓글옵션 표출용 변수 추가 */
+            OneLineReplyFlag = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ONELINEREPLY");
            
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
                 document.getElementById("Preview_HeaderH").style.display = "none";
-                document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount;
+                document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag;
             }
             else if (pPreviewShow_HOW.trim() == "H") {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "";
-                document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount;
+                document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag;
             }
             else {
                 document.getElementById("Preview_HeaderW").style.display = "none";
@@ -575,7 +581,7 @@ function previewItemSet() {
     } else {
         document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
         document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = pOCS;
-        document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = WriteDate;
+        document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = WriteDate.substring(0, 16);
         var readHTML = WriteContent(ContentLocation, ItemID);
         var tempText = xmlhttp2.responseText;
 
@@ -620,7 +626,7 @@ function loadsetInterval(readHTML, responseText) {
 function event_downContent(result, result2) {
         document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_sub_subject").textContent = Title;
         document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_MailReceiver").innerHTML = pOCS;
-        document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_date").textContent = WriteDate;
+        document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_date").textContent = WriteDate.substring(0, 16);
         document.getElementById("ifrmPreView" + pPreviewShow_HOW.trim()).contentWindow.makeWriteContent(result, result2);
 }
 
@@ -734,7 +740,7 @@ function MailPreviewEnd(e) {
             
             /* 2018-09-17 홍승비 - 즐겨찾기 탭에서 하단 미리보기 사용 시 스크롤 잘리지 않도록 수정 */
             if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
-				document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 98) + "px";
+				document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 114) + "px";
             } else {
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
             }
@@ -817,7 +823,8 @@ function MailReadOpen() {
 		}
 		
 		pTop = (pheight - 789) / 2;
-		window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height +",width=765,top=" + pTop + ",left=" + pLeft, "");
+		pLeft = (pwidth - 790) / 2;
+		window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height +",width=790,top=" + pTop + ",left=" + pLeft, "");
     } else if (previewType == "MOVIE" || selobj.getAttribute("DATA10") == "7" ) {
     	 pTop = (pheight - 679) / 2;
          window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=765,top=" + pTop + ",left=" + pLeft, "");
@@ -908,7 +915,7 @@ function Window_resize() {
 
                 /* 2018-09-17 홍승비 - 즐겨찾기 탭에서 하단 미리보기 사용 시 스크롤 잘리지 않도록 수정 */
                 if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
-                    document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 98) + "px";
+                    document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 114) + "px";
                 } else {
                     document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
                 }
@@ -1133,16 +1140,19 @@ function Set_BoardConfig() {
 	});
 }
 
+/* 2019-07-08 홍승비 - 게시물 등록, 삭제, 복사, 이동시 좌측메뉴의 선택된 하위게시판 확장 닫히지 않도록 수정 */
 //레프트 메뉴카운트 업뎃용
-function leftCountRf() {
-	var pDiv, pId, pValue, pNodeID, pTreeID;
+function leftCountRf(pDestBoardIDs) {
+	// 기존 코드 주석처리
+/*	var pDiv, pId, pValue, pNodeID, pTreeID;
 
 	if (window.parent.frames["left"] != undefined) {
 	    var h2 = window.parent.frames["left"].document.getElementsByTagName("h2");
 	    var span = window.parent.frames["left"].document.getElementsByTagName("span");
 	    
+	    
 	    // 2018-02-23 천성준 
-	    /* 게시판  게시물 등록, 삭제, 복사, 이동시 왼쪽 게시판 폴더 볼드 해제되는 버그 수정 */
+	     게시판  게시물 등록, 삭제, 복사, 이동시 왼쪽 게시판 폴더 볼드 해제되는 버그 수정 
 	    for (var j = 0; j < span.length; j++) {
 	    	if (span[j].className == "node_selected") {
 	    		pNodeID = span[j].id.replace("spn_","");
@@ -1150,7 +1160,7 @@ function leftCountRf() {
 	    	}
 	    }
 	    
-	    /* 2018-12-31 홍승비 - 게시판명의 변경된 태그(div -> span)로 id 찾기 + 게시판 클릭 동작 변경 */
+	    // 2018-12-31 홍승비 - 게시판명의 변경된 태그(div -> span)로 id 찾기 + 게시판 클릭 동작 변경
 	    for (var i = 0; i < h2.length; i++) {
 	        if (h2[i].className == "on") {
 	            pId = h2[i].getElementsByClassName("h2Title")[0].id;
@@ -1161,8 +1171,64 @@ function leftCountRf() {
 	            break;
 	        }
 	    }
+	}*/
+	var pNodeID = "";
+	var leftFrame;
+	
+	// 즐겨찾기탭, 관리자단탭에서 좌측메뉴 접근
+	if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
+		leftFrame = window.parent.parent.frames["left"];
+    } else if (window.parent.location.href.indexOf("/admin/ezBoard") > -1) {
+    	leftFrame = window.parent.parent.frames["board_menu"];
+    } else {
+    	leftFrame = window.parent.frames["left"];
+    }
+	
+	if (leftFrame != undefined) {
+	    var h2 = leftFrame.document.getElementsByTagName("h2");
+	    var span = leftFrame.document.getElementsByTagName("span");
+	    
+	    // 현재 선택된 하위게시판명 div의 id 저장
+	    for (var j = 0; j < span.length; j++) {
+	    	if (span[j].className == "node_selected") {
+	    		pNodeID = span[j].id.replace("spn_","");
+	    	}
+	    }
+	    
+	    if (pNodeID != "") {
+	    	leftFrame.refreshItemCnt(pNodeID);
+	    }
+	    
+	    // 게시판을 선택하여 등록, 복사, 이동 시의 목표게시판 게시물 카운트 갱신 (해당 게시판트리가 확장된 경우에만 게시물 개수 갱신 확인 가능)
+	    if (pDestBoardIDs != null && pDestBoardIDs != "") {
+	    	var destBoardIDs = pDestBoardIDs.split(";"); // 갱신 대상 게시판이 여러개인 경우 ';' 기호로 잘라서 루프
+	    	var destBoardLength = destBoardIDs.length;
+	    	var tempDestBoardDiv = leftFrame.document.getElementsByClassName("node_div");
+	    	var tempLength = tempDestBoardDiv.length;
+	    	
+	    	for (var d = 0; d < destBoardLength; d++) {
+	    		if (destBoardIDs[d] != null && destBoardIDs[d].trim() != "") {
+			    	for (var i = 0; i < tempLength; i++) {
+			    		if (tempDestBoardDiv[i].id.indexOf("FromTreeView") > -1) { // 마이게시판에 등록된 하위게시판 
+			    		    if (tempDestBoardDiv[i].getAttribute("data3") == destBoardIDs[d]) { 
+			    		    	leftFrame.refreshItemCnt(tempDestBoardDiv[i].id); 
+			    		    	break; 
+			    		    	} 
+		    		    } else { // 일반 하위게시판 
+		    		    	if (tempDestBoardDiv[i].getAttribute("data1") == destBoardIDs[d]) { 
+		    		    		leftFrame.refreshItemCnt(tempDestBoardDiv[i].id); 
+		    		    		break; 
+		    		    	} 
+		    		    } 
+			    	}
+	    		} else {
+	    			break;
+	    		}
+	    	}
+	    }
 	}
 }
+
 
 //무적의 자바 인코더
 function javaURLEncode(str) {

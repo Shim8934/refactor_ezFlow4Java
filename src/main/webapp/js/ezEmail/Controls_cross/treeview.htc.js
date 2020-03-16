@@ -596,7 +596,7 @@
         var elementid;
         if (GetAttribute(targetEl, "id") == "" || GetAttribute(targetEl, "id") == null) {
             for (var i = 0; i < GetChildNodes(targetEl).length; i++) {
-                if (GetChildNodes(targetEl)[i].id.indexOf("PostTreeView_node") > -1) 
+                if (GetChildNodes(targetEl)[i].id.indexOf(treeviewStr + "_node") > -1) 
                     elementid = GetAttribute(GetChildNodes(targetEl)[i], "id");
             }
         }
@@ -606,9 +606,9 @@
         if (elementid.indexOf(g_nodeid) == 0) {
             event.returnValue = false;
             if (window.event.ctrlKey)
-                parent.frames["right"].Mail_CopyPostSend("COPY", PostTreeView.getvalue(elementid.split(g_nodeid)[1], "href"), event.dataTransfer.getData("text"));
+                parent.frames["right"].Mail_CopyPostSend("COPY", window[treeviewStr].getvalue(elementid.split(g_nodeid)[1], "href"), event.dataTransfer.getData("text"));
             else
-                parent.frames["right"].Mail_CopyPostSend("MOVE", PostTreeView.getvalue(elementid.split(g_nodeid)[1], "href"), event.dataTransfer.getData("text"));
+                parent.frames["right"].Mail_CopyPostSend("MOVE", window[treeviewStr].getvalue(elementid.split(g_nodeid)[1], "href"), event.dataTransfer.getData("text"));
         }
     }
 
@@ -852,8 +852,11 @@
             }
 */
             if (GetAttribute(childNode, "title") != null) {
-                SPAN_TAG.setAttribute("title",GetAttribute(childNode, "title"));
+            	if (mydepth != "1") {
+            		SPAN_TAG.setAttribute("title", GetAttribute(childNode, "caption"));
+            	}
             }
+            
             
             var folderCount = GetAttribute(childNode, "foldercount");
             if (folderCount > 0) {
@@ -873,11 +876,13 @@
             
             if (document.getElementById("left")) {
 	            if (_foldername == "_INBOX") {
-		            var SPAN_TAG_MNG = document.createElement("SPAN");
-		            SPAN_TAG_MNG.setAttribute("class", "sub_iconLNB tree_manage");
-		            SPAN_TAG_MNG.setAttribute("onclick", "folder_manage()");
-		            
-		            SPAN3.appendChild(SPAN_TAG_MNG);
+	            	if (shareId == "" || managePermission == "Y") {
+	            		var SPAN_TAG_MNG = document.createElement("SPAN");
+			            SPAN_TAG_MNG.setAttribute("class", "sub_iconLNB tree_manage");
+			            SPAN_TAG_MNG.setAttribute("onclick", "folder_manage()");
+			            
+			            SPAN3.appendChild(SPAN_TAG_MNG);
+	            	}
 	            } else if (_foldername == "_SENT") {
 	            	/*if (useMailReceiveScreen == "YES") {
 			            var SPAN_TAG_MNG = document.createElement("SPAN");

@@ -181,6 +181,12 @@
 	    var receiverCount = 0;
         var groupAddressCountMap = {};
         var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
+        var preview_g_url = "";
+        var preview_g_url_delete = "";
+        var preview_g_url_forRead = "";
+        var previewChk = false;
+        var ReadMailOpenNewWin;
+        var g_useAdditionalInfo = ${useAdditionalInfo};
         
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -296,6 +302,7 @@
 				document.getElementById("bodyType").options[1].selected = true;
 	        	document.getElementById("SelMailSign").disabled = true;
 	        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
+	        	document.getElementById("SelMailSign").classList.add("disabled"); // plainTextDisable style
 			} else {
 				document.getElementById("tbContentElement").style.display = "";
 			}
@@ -380,6 +387,11 @@
             	$( "#MsgBCC" ).autocomplete("disable");
         	</c:if>
             
+			$("textarea").keydown(function(e) {
+				if (e.keyCode == 27) {
+					return false;
+				}
+			});
 		}
 	    
 		var isAutoSave = false;
@@ -475,10 +487,17 @@
 	            window.close();
 	    }
 	    var isDelted = false;
-	    function delDrafts() {
+	    function delDrafts(del_uid) {
+	    	var delDraftsURL = g_url;
+	    	var delDraftsFiledate = filedate;
+	    	
+	    	if (typeof del_uid != "undefined"){
+	    		delDraftsURL = del_uid;
+	    		delDraftsFiledate = "";
+	    	}
+	    	
 	        var xmlhttp = createXMLHttpRequest();
-	        var requestUrl = "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url) + "&delid=" + filedate;
-	        
+	        var requestUrl = "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(delDraftsURL) + "&delid=" + delDraftsFiledate;
 	    	if (typeof(shareId) != "undefined" && shareId != "") {
 	    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	    	}
@@ -1287,6 +1306,7 @@
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
 		        	document.getElementById("SelMailSign").disabled = true;
 		        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
+		        	document.getElementById("SelMailSign").classList.add("disabled"); // plainTextDisable style
 	        	} else {
 	        		document.getElementById("bodyType").options[0].selected = true;
 	        	}
@@ -1297,6 +1317,7 @@
 				document.getElementById("plainTextArea").style.display = "none";
 	    		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
         		document.getElementById("SelMailSign").disabled = false;
+	        	document.getElementById("SelMailSign").classList.remove("disabled"); // plainTextDisable style remove
         		if(totBigSizeAttachMBSize == 0){
 	        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
         		} else {
@@ -1755,13 +1776,13 @@
 						//2018-10-04 배현상, 근태관리 미입력자 메일 안내문구 삭제
 						var resultHtml = "<hr>";
 						
-						resultHtml += "<p></p><p><span style='font-size:18px;'><strong>&nbsp;근태미입력자</strong></span></p><p></p>";
+						resultHtml += "<p></p><p><span style='font-size:18px;'><strong>&nbsp;<spring:message code='ezAttitude.t75' /></strong></span></p><p></p>";
 						resultHtml += "<table style='border-collapse:collapse; width:800px;'>";
 						resultHtml += "<thead><tr>";
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>날짜</th>" ;
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>이름</th>";
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>직위</th>";
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>부서</th>";
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'><spring:message code='ezAttitude.t133' /></th>" ;
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'><spring:message code='ezAttitude.t10' /></th>";
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'><spring:message code='ezAttitude.t11' /></th>";
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'><spring:message code='ezAttitude.t9' /></th>";
 						resultHtml += "</thead><tbody>";
 						
 						result.list.forEach(function(vo, index) {
@@ -1773,7 +1794,7 @@
 						
 						resultHtml += "</tbody></table>";
 						
-						$("#eSubject").val("[근태미입력공지] " + searchStartDate + " ~ " + searchEndDate);
+						$("#eSubject").val("[<spring:message code='ezAttitude.t313'/>] " + searchStartDate + " ~ " + searchEndDate);
 						
 						switch (mailsel) {
 		                case "0": 
@@ -1992,7 +2013,8 @@
 								url : "/ezEmail/autoCompleteList.do",
 								dataType : "json",
 								data : {
-									value : request.term
+									value : request.term,
+									company : ''
 								},
 								success : function(data) {
 									var susinList = data.susinList;
@@ -2068,7 +2090,8 @@
 								url : "/ezEmail/autoCompleteList.do",
 								dataType : "json",
 								data : {
-									value : request.term
+									value : request.term,
+									company : ''
 								},
 								success : function(data) {
 									var susinList = data.susinList;
@@ -2145,7 +2168,9 @@
 								url : "/ezEmail/autoCompleteList.do",
 								dataType : "json",
 								data : {
-									value : request.term
+									value : request.term,
+									// useShowAllCompanies config가 YES일 경우 그룹사 전체 조직도를 대상으로 검색하기 위해 추가함.
+									company : ''
 								},
 								success : function(data) {
 									var susinList = data.susinList;
@@ -2220,6 +2245,21 @@
 				evt.stopPropagation();
 				evt.preventDefault();
 		}
+		
+		/*
+		   20190807 김수아 : 메일 작성 창의 미리보기 버튼 클릭 시
+		*/
+		function mailWritePreview() {
+			if (Save_onClick_Complete.savemode == "tempsave" && MailStatus == "SEND" && !previewChk) { // 저장 중
+				setTimeout(function() {
+					mailWritePreview();
+		        }, 1000);
+			} else if (!previewChk){
+				previewChk = true;
+				Save_onClick('preview');
+			}
+		}
+		
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -2251,6 +2291,8 @@
 	                            <spring:message code='ezEmail.t331' /></span></li>
 	                        <li><span onclick="Option_onClick()" id="Span1">
 	                            <spring:message code='ezEmail.t353' /></span></li>
+	                        <li><span onclick="mailWritePreview()">
+	                            <spring:message code='ezEmail.t487' /></span></li>
 	                    </ul>
 	                    <ul style="float:right;margin-right:50px">
 	                    	<li class="sel securemail" style="background:none; border:none; padding:0px; padding-top:4px; display:none;">

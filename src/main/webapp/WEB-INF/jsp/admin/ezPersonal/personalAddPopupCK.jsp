@@ -20,7 +20,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<!-- <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/datepicker.htc.js')}"></script> -->
 		<!-- <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/composeappt.js')}"></script> -->
-		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/popup.css')}">
+		<link rel="stylesheet" href="${util.addVer('ezNewPortal.e2', 'msg')}">
 		
 		<script type="text/javascript">
 			var compid = "<c:out value = '${companyID}' />";
@@ -91,8 +91,10 @@
 				var SDate;
 				var EDate;
 				if (startdate != "") {
-					SDate = new Date(startdate);
-					EDate = new Date(enddate);
+					var startArr = startdate.split("-"); 
+					SDate = new Date(startArr[0] + "/" + startArr[1] + "/" + startArr[2]);
+					var endArr = enddate.split("-"); 
+					EDate = new Date(endArr[0] + "/" + endArr[1] + "/" + endArr[2]);
 				} else {
 					SDate = new Date();
 					EDate = new Date();

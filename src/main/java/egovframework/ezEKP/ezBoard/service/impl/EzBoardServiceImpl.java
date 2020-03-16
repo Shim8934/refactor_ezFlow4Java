@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -61,6 +62,7 @@ import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzBoardService")
@@ -90,6 +92,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
+	@Autowired
+	private KlibUtil klibUtil;
+
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardServiceImpl.class);
 
 	@Override
@@ -567,32 +572,51 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public void updateCopyItem(String destItemID, int tenantID) throws Exception {
+	public void updateCopyItem(String destItemID, String orgItemID, String destBoardID, String orgBoardID, int tenantID) throws Exception {
 		logger.debug("updateCopyItem started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("destItemID", destItemID);
+		map.put("orgItemID", orgItemID); // 복사 전의 게시물ID
+		map.put("destItemID", destItemID); // 복사 후의 게시물ID
+		map.put("orgBoardID", orgBoardID); // 복사 전의 게시판ID
+		map.put("destBoardID", destBoardID); // 복사 후의 게시판ID
 		map.put("tenantID", tenantID);
 		
 		ezBoardDAO.updateCopyItem(map);
+		
+		/* 2019-12-17 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라 조회자정보 유지 */
+		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", tenantID);
+		if (isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("COPY") || isReadCountCopyUsed.equals("ALL"))) {
+			ezBoardDAO.insertBoardItemReadForCopy(map);
+		}
 
 		logger.debug("updateCopyItem ended");
 	}
 
 	@Override
-	public void updateMoveItem(String destItemID, String orgItemID, int tenantID) throws Exception {
+	public void updateMoveItem(String destItemID, String orgItemID, String destBoardID, String orgBoardID, int tenantID) throws Exception {
 		logger.debug("updateMoveItem started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("itemID", orgItemID);
-		map.put("destItemID", destItemID);
+		map.put("itemID", orgItemID); // 이동 전의 게시물ID
+		map.put("destItemID", destItemID); // 이동 후의 게시물ID
+		map.put("orgBoardID", orgBoardID); // 이동 전의 게시판ID
+		map.put("destBoardID", destBoardID); // 이동 후의 게시판ID
 		map.put("tenantID", tenantID);
 		
 		ezBoardDAO.updateMoveItem(map);
 		ezBoardDAO.deleteBoardItem(map);
-		ezBoardDAO.deleteBoardItemRead2(map);
+		
+		/* 2019-12-17 홍승비 - 게시물 이동 시, 테넌트 컨피그에 따라 기존의 조회자정보를 유지함 */
+		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", tenantID);
+		if (isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("MOVE") || isReadCountCopyUsed.equals("ALL"))) {
+			ezBoardDAO.updateBoardItemRead(map);
+		} else {
+			ezBoardDAO.deleteBoardItemRead2(map);
+		}
+		
 		ezBoardDAO.deleteBoardReply(map);
 
 		logger.debug("updateMoveItem ended");
@@ -697,7 +721,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		ezBoardDAO.deleteBoardItemRead2(map);
 		
 		ezBoardDAO.insertDeleteReservedItem(map);
-
+		
 		logger.debug("deleteTempItem ended");
 	}
 
@@ -1341,7 +1365,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public int getCheckItemID(String itemID, String boardType, String userDeptPath, int tenantID) throws Exception {
+	public int getCheckItemID(String itemID, String boardType, String userDeptPath, int tenantID, int isDept, int isEqualDept) throws Exception {
 		logger.debug("getCheckItemID started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1350,6 +1374,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_BOARDTYPE", boardType);
 		map.put("v_ACCESSID", userDeptPath);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_ISDEPT", isDept);
+		map.put("v_ISEQUALDEPT", isEqualDept);
 
 		logger.debug("getCheckItemID ended");
 		return ezBoardDAO.getCheckItemID(map);
@@ -1381,7 +1407,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_pItemID", itemID);
 		map.put("lang", multiLang);
 		map.put("v_TENANTID", tenantID);
-
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
 		logger.debug("getBrdGetItemInfoTemp ended");
 		return ezBoardDAO.getBrdGetItemInfoTemp(map);
 	}
@@ -2011,6 +2038,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}			
 			sb.append("<UserIMG>" + commonUtil.cleanValue(userImg) + "</UserIMG>");
 			
+			/* 2019-11-06 홍승비 - 게시물 미리보기 시 댓글옵션 정보 추가 */
+			sb.append("<ONELINEREPLY>" + commonUtil.cleanValue(itemInfo.getOneLineReply()) + "</ONELINEREPLY>");
 			sb.append("</NODE>");
 			sb.append("</NODES>");
 		} else {
@@ -2643,42 +2672,64 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	/**
 	 * 게시판 트리 표출 Method
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang, String isAdminLeft, boolean isCompanyAdmin, int tenantID) throws Exception {
+	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang, String isAdminLeft, boolean isCompanyAdmin, String boardGroupAdmin_FG, String rollInfo, int tenantID) throws Exception {
 		logger.debug("getBoardTree started");
 		int count = 0;
-		String strForbiddenBoardIDList = "";
 		String showAllGroupBoard = "";
+		boolean isNormalAdmin = false; // 전체관리자가 아닌 관리자 플래그 (게시관리자, 회사관리자)
 		String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID + "," + isAdminLeft, tenantID);
 		
 		if (retValue != null && retValue.length() > 30) {
 			return retValue;
 		}
 		
-		StringBuilder pAccessBld = new StringBuilder();
-		pAccessBld.append(pUserID);
+		StringJoiner pAccessID = new StringJoiner(",");
+		pAccessID.add(pUserID);
+		String[] reverseDeptPath = ezOrganService.getDeptFullPath(pDeptID, tenantID).split(",");
+		List<String> addJobDeptList = new ArrayList<String>();
 		
-		/* 2019-04-16 홍승비 - 원회사의 사내겸직이 존재하면 사내겸직부서ID를 권한체크에 포함하도록 수정 */
+		for (int i = reverseDeptPath.length -1; i >= 0 ; i--) {
+			pAccessID.add(reverseDeptPath[i]);
+		}
+		
+		String pAccessIDStr = pAccessID.toString();
+		addJobDeptList.add(pAccessIDStr);
+		
+		/* 2019-05-28 홍승비 - 현재 소속 회사의 사내겸직이 존재하면 사내겸직부서ID와 그 상위부서ID까지 권한체크에 포함하도록 수정 */
 		List<String> addJobList = getPDOAddJobDeptID(pUserID, pCompanyID, tenantID);
-		String addJobStr = "";
+		StringJoiner addJobStr = new StringJoiner(",");
+		addJobStr.add(pDeptID);
 		if (addJobList != null && addJobList.size() > 0) {
 			for (int i = 0; i < addJobList.size(); i++) {
-				addJobStr += addJobList.get(i) + ",";
+				addJobStr.add(addJobList.get(i));
+				String upperDept = getUpperDeptID(addJobList.get(i), tenantID);
+				
+				if (upperDept != null && !upperDept.equals("")) {
+					boolean loopContinue = true;
+					StringJoiner upperDeptStr = new StringJoiner(",");
+					upperDeptStr.add(upperDept);
+					
+					while (loopContinue) {
+						String upperDeptLoop = getUpperDeptID(upperDept, tenantID);
+						if (upperDeptLoop != null && !upperDeptLoop.equals("")) {
+							upperDeptStr.add(upperDeptLoop);
+							upperDept = upperDeptLoop;
+						} else {
+							loopContinue = false;
+						}
+					}
+					addJobDeptList.add(addJobList.get(i) + "," + upperDeptStr.toString());
+				}
 			}
 		}
 		
-		String[] reverseDeptPath = ezOrganService.getDeptFullPath(pDeptID, tenantID).split(",");
-		for (int i = reverseDeptPath.length -1; i >= 0 ; i--) {
-			pAccessBld.append("," + reverseDeptPath[i]);
-			if (i == 0) {
-				pAccessBld.append(",everyone");
-			} else if (i == 3 && !addJobStr.equals("")) {
-				pAccessBld.append("," + addJobStr.substring(0, addJobStr.length() - 1));
-			}
+		/* 2019-06-05 홍승비 - 사간겸직으로 회사변경 시 변경된 관리자 권한 반영되도록 수정 */
+		// 전체관리자가 아닌 회사관리자/게시판관리자 플래그 추가
+		if (rollInfo != null && (rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
+			isNormalAdmin = true;
 		}
-		
-		String pAccessID   = pAccessBld.toString();
-		String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
 		
 		/* 2018-10-16 홍승비 - 그룹사게시판 표출을 제어하는 showAllGroupBoard 플래그 설정 */
 		if (!isAdminLeft.equals("Y") || (isAdminLeft.equals("Y") && isCompanyAdmin == true)) {
@@ -2688,66 +2739,91 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		List<BoardTreeVO> brdBoardTreeList = new ArrayList<BoardTreeVO>();
+		List<HashSet<String>> strBanBoardIDListSetDept = new ArrayList<HashSet<String>>();
+		HashSet<String> strBanBoardIDListSetUser = new HashSet<String>();
+		String tempDeptList = addJobStr.toString();
 		
-		for (int i = 0; i < pAccessID.split(",").length; i++) {
-			String boardID = "";
+		/* 2019-06-03 홍승비 - 전체관리자와 해당 게시판/게시판그룹 관리자(해당 pRootBoardID에 대하여 관리자권한 설정됨)의 게시판 트리 생성 분기를 for 바깥으로 분리 (그룹사게시판을 포함하여 모든 게시판 접근 가능) */
+		if ((pMode == 0 && isCompanyAdmin == true) || boardGroupAdmin_FG.equals("OK")) {
+			brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, 0, 0, showAllGroupBoard, isCompanyAdmin, boardGroupAdmin_FG);
+		} else {
 			
-			if (pMode == 0) {
-				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, 0, 0, showAllGroupBoard);            
-			} else {
-				// 게시판 권한 추가시 하위부서 권한 상관없이 리스트가 보여지던 현상 수정
-				/* 2019-04-16 홍승비 - 원회사의 사내겸직도 isEqaulDept값을 체크하도록 수정 */
-				int isEqaulDept = 0;
-				String tempDeptList = addJobStr + pDeptID;
-				for (int j = 0; j < tempDeptList.split(",").length; j++) {
-					if(pAccessID.split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
-						isEqaulDept = 1;
-						break;
-					} else {
-						isEqaulDept = 0;
-					}
-				}
-				
-				int isDept = ezBoardDAO.isDeptChk(pAccessID.split(",")[i].trim(), tenantID);
-				List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, isDept, isEqaulDept, showAllGroupBoard);
-
-				if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
-					for (BoardTreeVO k : tempBrdBoardTreeList) {
-						if (!brdBoardTreeList.isEmpty()) {
-							int tempCnt = 0;
-							
-							for (BoardTreeVO h : brdBoardTreeList) {
-								if (h.equals(k)) {
-									tempCnt++;
-								}
-							}
-							
-							if (tempCnt == 0) {
-								brdBoardTreeList.add(k);
-							}
+			/* 2019-06-05 홍승비 - 게시판 트리 생성 시 사내겸직 부서경로 각각에 대해 게시판 가져오고, 접근불가 게시판 제거하도록 수정 */
+			int addJobDeptListSize = addJobDeptList.size();
+			for (int jl = 0; jl < addJobDeptListSize; jl++) {
+				HashSet<String> strBanBoardIDListSetTemp = new HashSet<String>();
+				int addJobDeptListPathSize = addJobDeptList.get(jl).split(",").length;
+				for (int i = 0; i < addJobDeptListPathSize; i++) {
+					String boardID = "";
+					// 게시판 권한 추가시 하위부서 권한 상관없이 리스트가 보여지던 현상 수정
+					/* 2019-05-30 홍승비 - 현재 소속 회사의 사내겸직도 isEqaulDept값을 체크하도록 수정 */
+					int isEqaulDept = 0;
+					for (int j = 0; j < tempDeptList.split(",").length; j++) {
+						// 사원ID, 부서ID, 회사ID에 대하여 해당부서 직속여부 판단
+						if(addJobDeptList.get(jl).split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
+							isEqaulDept = 1;
+							break;
 						} else {
-							brdBoardTreeList.add(k);
-						}
-					}
-				}
-			}
-			
-			if (pMode != 0) {
-				List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(), pRootBoardID, tenantID);
-				
-				if (!boardTreeList.isEmpty()) {
-					StringBuilder strForbiddenBoardIDListBld = new StringBuilder();
-					for (int r = 0; r < boardTreeList.size(); r++) {
-						boardID = boardTreeList.get(r).getBoardId();
-						if (strForbiddenBoardIDListBld.indexOf(boardID.split(",")[0]) == -1) {
-							strForbiddenBoardIDListBld.append(boardID.trim());
+							isEqaulDept = 0;
 						}
 					}
 					
-					strForbiddenBoardIDList = strForbiddenBoardIDListBld.toString();
+					int isDept = isDeptChk(addJobDeptList.get(jl).split(",")[i].trim(), tenantID);
+					List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, addJobDeptList.get(jl).split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, isDept, isEqaulDept, showAllGroupBoard, isCompanyAdmin, boardGroupAdmin_FG);
+					
+					if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
+						for (BoardTreeVO k : tempBrdBoardTreeList) {
+							if (brdBoardTreeList.size() > 0) {
+								int tempCnt = 0;
+								
+								for (BoardTreeVO h : brdBoardTreeList) {
+									if (h.equals(k)) {
+										tempCnt++;
+									}
+								}
+								
+								if (tempCnt == 0) {
+									brdBoardTreeList.add(k);
+								}
+							} else {
+								brdBoardTreeList.add(k);
+							}
+						}
+					}
+					
+					/* 2019-06-04 홍승비 - 전체관리자가 아닌 관리자라면(isNormalAdmin), 그룹사게시판의 경우에만 불가/허용여부 판단용 게시판ID와 accessID를 가져오도록 수정 */
+					List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(addJobDeptList.get(jl).split(",")[i].trim(), pRootBoardID, tenantID, isNormalAdmin, isDept, isEqaulDept);
+					if (boardTreeList.size() > 0) {
+						for (int r = 0; r < boardTreeList.size(); r++) {
+							boardID = boardTreeList.get(r).getBoardId();
+							
+							if (addJobDeptList.get(jl).split(",")[i].equals(pUserID)) { // 개인권한은 따로 저장 (맨 처음 한 번만 동작)
+								strBanBoardIDListSetUser.add(boardID);
+							} else {
+								if (strBanBoardIDListSetTemp.contains(boardID.substring(0, boardID.indexOf("|")) + "|0;") || 
+										strBanBoardIDListSetTemp.contains(boardID.substring(0, boardID.indexOf("|")) + "|1;")) {
+									continue;
+								} else {
+									strBanBoardIDListSetTemp.add(boardID);
+								}
+							}
+						}
+					}
 				}
+				
+				if (!strBanBoardIDListSetTemp.isEmpty()) {
+					strBanBoardIDListSetDept.add((HashSet<String>)strBanBoardIDListSetTemp.clone());
+				}
+				
+				strBanBoardIDListSetTemp.clear();
 			}
 		}
+		
+		HashSet<String> strBanBoardIDListSet = new HashSet<String>();
+		for (int i = 0; i < strBanBoardIDListSetDept.size(); i++) {
+			strBanBoardIDListSet.addAll(strBanBoardIDListSetDept.get(i));
+		}
+		
 		StringBuilder result = new StringBuilder();
 		
 		if (pSubFlag == 1) {
@@ -2764,14 +2840,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 		});
 		
+		/* 2019-06-04 홍승비 - 접근 불가한 게시판 체크 시 전체관리자가 아닌 관리자도 해당 분기 타도록 수정 */
 		for (int i = 0; i < brdBoardTreeList.size(); i++) {
-			if (strRollInfo != null && strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
-				if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()) > -1) {
-					//boardID의 accessID를 가져옴 (boardID1,access_;boardID2,access_;)
-					int boardAccessIndex = strForbiddenBoardIDList.indexOf(",", strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()));
-					if (strForbiddenBoardIDList.substring(boardAccessIndex + 1, boardAccessIndex + 2).equals("0")) {
-						continue;
-					}
+			if (!isCompanyAdmin) {
+				// 개인권한 최우선 확인 (strBanBoardIDListSetUser 직접 사용)
+				if (strBanBoardIDListSetUser.contains(brdBoardTreeList.get(i).getBoardId() + "|0;") ||
+						(!strBanBoardIDListSetUser.contains(brdBoardTreeList.get(i).getBoardId() + "|1;") && strBanBoardIDListSet.contains(brdBoardTreeList.get(i).getBoardId() + "|0;") && !strBanBoardIDListSet.contains(brdBoardTreeList.get(i).getBoardId() + "|1;"))) {
+					continue;
 				}
 			}
 			
@@ -3260,52 +3335,74 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			
 			for (int i = 0; i < strAttachments.split("\\|").length; i++) {
+				String tempAttachmentPath = commonUtil.detectPathTraversal(strAttachments.split("\\|")[i]);
+				boolean isKlibEncrypted = tempAttachmentPath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT);
+				String uploadAttachmentPath;
+				
+				if (isKlibEncrypted) {
+					uploadAttachmentPath = tempAttachmentPath.substring(0, tempAttachmentPath.lastIndexOf('.'));
+				} else {
+					uploadAttachmentPath = tempAttachmentPath;
+				}
+				
 				if (strType.equals("BOARD")) {
-					if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
-						filePath = strAttachments.split("\\|")[i];
+					if (tempAttachmentPath.indexOf("upload_board") > -1) {
+						filePath = tempAttachmentPath;
 					} else {
-						filePath = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
+						filePath = strFilePath + commonUtil.separator + tempAttachmentPath;
 					}
 					
 					File file = new File(realPath + commonUtil.detectPathTraversal(filePath));
 					fileSize = file.length();
 					
-					if (strAttachments.split("\\|")[i].indexOf("tempUploadFile") > -1) {
-						filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split("\\|")[i].replace("tempUploadFile", "");
+					if (tempAttachmentPath.indexOf("tempUploadFile") > -1) {
+						filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + uploadAttachmentPath.replace("tempUploadFile", "");
 						
 						File fileinfo = new File(realPath + commonUtil.detectPathTraversal(filePath2));
 						
 						if (!fileinfo.exists()) {
-							FileUtils.moveFile(file, fileinfo);
+							if (isKlibEncrypted) {
+								byte[] fileBytes = FileUtils.readFileToByteArray(file);
+								fileBytes = klibUtil.decrypt(fileBytes);
+								FileUtils.writeByteArrayToFile(fileinfo, fileBytes);
+							} else {
+								FileUtils.moveFile(file, fileinfo);
+							}
 						}
-					} else if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
-						filePath2 = strAttachments.split("\\|")[i];
+					} else if (tempAttachmentPath.indexOf("upload_board") > -1) {
+						filePath2 = tempAttachmentPath;
 					} else {
-						filePath2 = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
+						filePath2 = strFilePath + commonUtil.separator + tempAttachmentPath;
 					}
 					
 					file = null;
 				} else {
-					String checkPath = commonUtil.detectPathTraversal(strAttachments.split("\\|")[i].split("/")[2]);
-					File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + checkPath);
+					File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + tempAttachmentPath.split("/")[2]);
 					fileSize = file.length();
 					
-					filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + checkPath;
+					filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + uploadAttachmentPath.split("/")[2];
 					
 					File fileinfo = new File(realPath + filePath2);
 					
 					if (!fileinfo.exists()) {
-						FileUtils.moveFile(file, fileinfo);
+						if (isKlibEncrypted) {
+							byte[] fileBytes = FileUtils.readFileToByteArray(file);
+							fileBytes = klibUtil.decrypt(fileBytes);
+							FileUtils.writeByteArrayToFile(fileinfo, fileBytes);
+						} else {
+							FileUtils.moveFile(file, fileinfo);
+						}
+						
 						file.delete();
 					}
 				}
 				
 				fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
 				
-				// 2018.07.05 - KLIB - ezd 확장자 없애기
-				if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
-					fileName = fileName.substring(0, fileName.lastIndexOf("."));
-				}
+//				// 2018.07.05 - KLIB - ezd 확장자 없애기
+//				if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+//					fileName = fileName.substring(0, fileName.lastIndexOf("."));
+//				}
 				
 				saveAttachInfo(strItemID, i, filePath2, fileSize, fileName, tenantID);
 			}
@@ -3444,21 +3541,21 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					}
 				}
 			} else {
-				BoardListVO boardListVO = getItemInfo(mode, itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
-				boardID = boardListVO.getBoardID();
-				
-				if (!boardInfo.getDelete_FG().equals("true")) {
-					if (!boardInfo.getBoardAdmin_FG().equals("true")) {
-						if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
-							return "NO";
-						}
-					} else {
-						if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
-							return "NO";
+					BoardListVO boardListVO = getItemInfo(mode, itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
+					boardID = boardListVO.getBoardID();
+					
+					if (!boardInfo.getDelete_FG().equals("true")) {
+						if (!boardInfo.getBoardAdmin_FG().equals("true")) {
+							if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
+								return "NO";
+							}
+						} else {
+							if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
+								return "NO";
+							}
 						}
 					}
 				}
-			}
 			
 			for (int i = 0; i < itemListArray.length; i++) {
 				//중복제거 구문
@@ -3478,7 +3575,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("deleteItem error");
-			return "NO";
+			return "ERROR";
 		}
 	}
 
@@ -3604,6 +3701,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String destItemID = "";
 		String orgBoardID = "";
 		String[] itemIDArray = orgItemIDList.split(";");
+		String useAppr = "N";
+		StringBuilder destItemIDStr = new StringBuilder();
+		StringBuilder resultStr = new StringBuilder();
+		
+		// 목표 게시판이 승인을 사용하는지 체크
+		BoardPropertyVO destBoardProp = getBoardProperty(destBoardID, userInfo.getTenantId());
+		if (destBoardProp != null && destBoardProp.getApprFlag() != null) {
+			useAppr = destBoardProp.getApprFlag();
+		}
 		
 		itemIDArray = new LinkedHashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
 		
@@ -3644,6 +3750,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			if (boardListVO.getExtensionAttribute5() == null) {
 				boardListVO.setExtensionAttribute5("0");
 			}
+			
+			if (boardListVO.getDocPassword() == null) { // 익명게시물 이동 시 비밀번호
+				boardListVO.setDocPassword("");
+			}
+			
 			copyFiles(orgItemID, orgBoardID, destItemID, destBoardID, realPath + uploadFilePath, "move");
 			
 			List<String> attachmentList = getCopyItemAttach(orgItemID, userInfo.getTenantId());
@@ -3689,22 +3800,32 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        sb.append("<EXTENSIONATTRIBUTE32>" + commonUtil.cleanValue(boardListVO.getExtensionAttribute32()) + "</EXTENSIONATTRIBUTE32>");
 	        sb.append("<EXTENSIONATTRIBUTE4>" + commonUtil.cleanValue(boardListVO.getExtensionAttribute4()) + "</EXTENSIONATTRIBUTE4>");
 	        sb.append("<EXTENSIONATTRIBUTE5>" + commonUtil.cleanValue(boardListVO.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
-	        sb.append("<DOCPASSWORD></DOCPASSWORD>");
+	        /* 2020-02-11 홍승비 - 게시물 이동 시 비밀번호값도 이동하도록 수정 */
+	        sb.append("<DOCPASSWORD>" + boardListVO.getDocPassword() + "</DOCPASSWORD>");
 	        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
 	        sb.append("<GUBUN>M</GUBUN>");
 	        sb.append("<DOCCONTENT>" + commonUtil.cleanValue(boardListVO.getContent()) + "</DOCCONTENT>");
+	        
+	        if (useAppr.equals("Y")) {
+	        	sb.append("<APPRFLAG>N</APPRFLAG>");
+	        }
+	        /* 2019-12-13 홍승비 - 게시물 이동 시 조회수, 조회자정보 유지 */
+	        sb.append("<READCOUNT>" + boardListVO.getReadCount() + "</READCOUNT>");
+	        
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
-	        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo);
+	        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "move", realPath, userInfo);
 	        
 	        if (result.equals("OK")) {
-	        	updateMoveItem(destItemID, orgItemID, userInfo.getTenantId());
+	        	updateMoveItem(destItemID, orgItemID, destBoardID, orgBoardID, userInfo.getTenantId());
+	        	destItemIDStr.append(destItemID).append(";");
+	        	resultStr.append(result).append("|");
 	        }
 		}
 
 		logger.debug("moveItem ended");
-		return result;
+		return destItemIDStr.toString() + resultStr.toString();
 	}
 
 	public String copyAttachments(String orgBoardID, String destItemID, String destBoardID, List<String> attachmentList, String path, String mode, int tenantID) throws Exception {
@@ -3769,9 +3890,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		if (doc.getElementsByTagName("DOCCONTENT").item(0) != null) {
 			boardListVO.setContent(commonUtil.stripScriptTags(commonUtil.htmlUnescape(doc.getElementsByTagName("DOCCONTENT").item(0).getTextContent())));
-		}		
-		
-		if (pMode.equals("copy")) {
+		}
+
+		if (pMode.equals("copy") || pMode.equals("move")) {
 			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
 		} else {
 			boardListVO.setContentLocation(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
@@ -3796,9 +3917,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
 		
-		if (!pMode.equals("copy")) {
+		if (!pMode.equals("copy") && !pMode.equals("move")) {
 			boardListVO.setMainContent(commonUtil.stripScriptTags(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("@r!n@", "\r\n")));
-			
+
 			if (pMode.equals("reply") || pMode.equals("modify")) {
 				boardListVO.setParentWriteDate(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
 			} else {
@@ -3857,7 +3978,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardListVO.setExtensionAttribute10("");
 		}
 		
-		if (!pMode.equals("copy")) {
+		if (!pMode.equals("copy") && !pMode.equals("move")) {
 			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath);
 			if (saveMHTResult == false) {
 				return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
@@ -3875,6 +3996,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		//구분 추가
 		boardListVO.setGuBun(doc.getElementsByTagName("GUBUN").item(0).getTextContent());
+		
+		/* 2019-12-17 홍승비 - 게시물 복사/이동 시 테넌트 컨피그에 따라 조회수 유지 */
+		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", userInfo.getTenantId());
+		if ((pMode.equals("copy") && isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("COPY") || isReadCountCopyUsed.equals("ALL"))) ||
+				(pMode.equals("move") && isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("MOVE") || isReadCountCopyUsed.equals("ALL")))) {
+			boardListVO.setReadCount(Integer.valueOf(doc.getElementsByTagName("READCOUNT").item(0).getTextContent()));
+		} else { // READCOUNT값은 기본적으로 0으로 삽입된다.
+			boardListVO.setReadCount(0);
+		}
 		
 		if (pMode.equals("modify")) {
 			brdUpdateItem(boardListVO, "BOARD");
@@ -3925,6 +4055,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("copyFiles ended");
 	}
 
+	/* 2019-07-02 홍승비 - 게시물 복사 후 복사한 게시물의 ItemID를 문자열로 리턴하도록 수정 */
 	@Override
 	public String copyItem(String orgItemIDList, String orgBoardIDList, String destBoardID, String uploadFilePath, String realPath, LoginVO userInfo) throws Exception {
 		logger.debug("copyItem started");
@@ -3933,13 +4064,22 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String destItemID = "";
 		String orgBoardID = "";
 		String[] itemIDArray = orgItemIDList.split(";");
+		String useAppr = "N";
+		StringBuilder destItemIDStr = new StringBuilder();
+		StringBuilder resultStr = new StringBuilder();
+		
+		// 목표 게시판이 승인을 사용하는지 체크
+		BoardPropertyVO destBoardProp = getBoardProperty(destBoardID, userInfo.getTenantId());
+		if (destBoardProp != null && destBoardProp.getApprFlag() != null) {
+			useAppr = destBoardProp.getApprFlag();
+		}
 		
 		itemIDArray = new LinkedHashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
 
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
 			
-			destItemID = "{" + UUID.randomUUID() + "}";		
+			destItemID = "{" + UUID.randomUUID() + "}";
 
 			BoardListVO boardLisitVO = getCopyItem(orgItemID, userInfo.getTenantId());
 			
@@ -3972,6 +4112,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			if (boardLisitVO.getExtensionAttribute5() == null) {
 				boardLisitVO.setExtensionAttribute5("0");
 			}
+			
+			if (boardLisitVO.getDocPassword() == null) { // 익명게시물 복사 시 비밀번호
+				boardLisitVO.setDocPassword("");
+			}
+			
 			copyFiles(orgItemID, orgBoardID, destItemID, destBoardID, realPath + uploadFilePath, "copy");
 			
 			List<String> attachmentList = getCopyItemAttach(orgItemID, userInfo.getTenantId());
@@ -4014,21 +4159,33 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        sb.append("<EXTENSIONATTRIBUTE4>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute4()) + "</EXTENSIONATTRIBUTE4>");
 	        sb.append("<EXTENSIONATTRIBUTE5>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
 	        sb.append("<DOCCONTENT>" + commonUtil.cleanValue(boardLisitVO.getContent()) + "</DOCCONTENT>");
-	        sb.append("<DOCPASSWORD></DOCPASSWORD>");
+	        /* 2020-02-11 홍승비 - 게시물 복사 시 비밀번호값도 복사하도록 수정 */
+	        sb.append("<DOCPASSWORD>" + boardLisitVO.getDocPassword() + "</DOCPASSWORD>");
 	        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
 	        sb.append("<GUBUN>C</GUBUN>");
+	        
+	        if (useAppr.equals("Y")) {
+	        	sb.append("<APPRFLAG>N</APPRFLAG>");
+	        }
+	        
+	        /* 2019-12-16 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라  조회수, 조회자정보 유지 */
+	        sb.append("<READCOUNT>" + boardLisitVO.getReadCount() + "</READCOUNT>");
+	        
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
 	        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo);
 	        
 	        if (result.equals("OK")) {
-	        	updateCopyItem(destItemID, userInfo.getTenantId());
+	        	/* 2019-12-16 홍승비 - 조회자정보 저장을 위한 파라미터 추가 */
+	        	updateCopyItem(destItemID, orgItemID, destBoardID, orgBoardID, userInfo.getTenantId());
+	        	destItemIDStr.append(destItemID).append(";");
+	        	resultStr.append(result).append("|");
 	        }
 		}
-
+		
 		logger.debug("copyItem ended");
-		return result;
+		return destItemIDStr.toString() + resultStr.toString();
 	}
 
 	//baonk added
@@ -4382,4 +4539,68 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getPDOAddJobDeptID(map);
 	}
 	
+	/* 2019-05-15 홍승비 - 해당 부서ID로 상위부서ID(회사포함) 가져오기*/
+	@Override
+	public String getUpperDeptID(String deptID, int tenantID) throws Exception {
+		logger.debug("getUpperDeptID started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("v_DEPTID", deptID);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getUpperDeptID ended.");
+		return ezBoardDAO.getUpperDeptID(map);
+	}
+	
+	/* 2019-05-29 홍승비 - 해당 ID가 부서(회사)ID인지 확인하는 기능 서비스로 분리 */
+	@Override
+	public int isDeptChk(String id, int tenantID) throws Exception {
+		logger.debug("isDeptChk started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("id", id);
+		map.put("tenantID", tenantID);
+		
+		logger.debug("isDeptChk ended.");
+		return ezBoardDAO.isDeptChk(map);
+	}
+	
+	/* 2019-11-08 홍승비 - 해당 게시판을 포함하여 하위에 속한 모든 게시판들을 가져오는 메서드 */
+	@Override
+	public List<BoardPropertyVO> getAllSubBoardProperty(String boardID, int tenantID) throws Exception {
+		logger.debug("getAllSubBoardProperty started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BOARDID", boardID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("getAllSubBoardProperty ended");
+		return ezBoardDAO.getAllSubBoardProperty(map);
+	}
+	
+	/* 2019-11-08 홍승비 - 주어진 게시판ID에 대하여, 새로운 BOARDTREEPATH를 생성해 리턴하는 메서드 */
+	@Override
+	public String getNewBoardTreePath(String boardID, int tenantID) throws Exception {
+		logger.debug("getNewBoardTreePath started");
+		
+		StringJoiner addJobStr = new StringJoiner(",");
+		String tempParentBoardID = boardID;
+		
+		boolean isBoardPropertyExist = true;
+		while (isBoardPropertyExist == true) {
+			BoardPropertyVO boardProperty = getBoardProperty(tempParentBoardID, tenantID);
+			if (boardProperty != null && !boardProperty.getParentBoardID().equals("top")) {
+				addJobStr.add(boardProperty.getParentBoardID());
+				tempParentBoardID = boardProperty.getParentBoardID();
+			} else {
+				isBoardPropertyExist = false;
+			}
+		}
+		
+		logger.debug("getNewBoardTreePath ended");
+		return addJobStr.toString();
+	}
 }

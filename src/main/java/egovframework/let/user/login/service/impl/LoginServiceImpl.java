@@ -12,15 +12,18 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovNumberUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.util.ADConnection;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 
 import javax.annotation.Resource;
 
+import org.jasypt.commons.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -346,6 +349,23 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 		
 		logger.debug("updateDeviceInfo ended.");
 
+		return result;
+	}
+	
+	/**
+	 *
+	 */
+	@Override
+	public CountryVO getLoginIPCountry(long loginIP) throws Exception {
+		logger.debug("getLoginIPCountry started.");
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("loginIP", loginIP);
+		
+		CountryVO result = loginDAO.getLoginIPCountry(paramMap);
+		
+		
+		logger.debug("getLoginIPCountry ended.");
 		return result;
 	}
 	

@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}"       type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
 	</head>
-	<body class="popup cabAddMain">
+	<body class="popup cabAddMain" style="margin-top:0px;">
 		<%-- <h1><spring:message code="ezCabinet.t67"/></h1> --%>
 		<div id="cabAddStore" class="cabStore">
 			<a class="cabStoreBttn"><span><spring:message code='ezCabinet.t14' /></span></a>
@@ -20,8 +20,8 @@
 		
 		<div class="divInfo">
 			<table class="tblFileInf">
-				<tr><th><spring:message code='ezCabinet.t51'/></th><td><input class="tblFileInput" maxlength="150" type="text" placeholder="<spring:message code='ezCabinet.t70'/>" id="itemTtl"></td></tr>
-				<tr><th><spring:message code='ezCabinet.t52'/></th><td><input class="tblFileInput" maxlength="250" type="text" placeholder="<spring:message code='ezCabinet.t71'/>" id="itemSum"></td></tr>
+				<tr><th><spring:message code='ezCabinet.t51'/></th><td><input class="tblFileInput" maxlength="150" type="text" id="itemTtl"></td></tr>
+				<tr><th><spring:message code='ezCabinet.t52'/></th><td><input class="tblFileInput" maxlength="250" type="text" id="itemSum"></td></tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
 					<td><div class="rlFileDiv">

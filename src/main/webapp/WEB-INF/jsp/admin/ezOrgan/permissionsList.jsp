@@ -183,20 +183,22 @@
 				
 				cnt = acList.children[1].childElementCount;
 				
+				var noItemsChk = acList.children[1].children[0].getAttribute("id");
+				
+				if (cnt <= 1 && noItemsChk == "lvPermissionList_TR_noItems") {
+					return;
+				}
+				
 				var i = 0;
 				for (i; i < cnt; i++) {
 					var seq = acList.children[1].children[i].children[0].innerHTML;
 					
-					if (seq == "<spring:message code = 'ezOrgan.0hun07' />") {
-						
-					} else {
-						acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" 
-						+ seq 
-						+ "' value='" 
-						+ seq 
-						+ "' onchange='inputFunc(event,"
-						+ seq + ")'></input>";
-					}
+					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" 
+					+ seq 
+					+ "' value='" 
+					+ seq 
+					+ "' onchange='inputFunc(event,"
+					+ seq + ")'></input>";
 				} 
 			}
 			

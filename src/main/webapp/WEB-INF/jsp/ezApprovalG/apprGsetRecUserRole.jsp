@@ -534,7 +534,7 @@
 		<td style="vertical-align:top">
 		<h2 class="h2_dot" style="font-weight: normal; margin-top: 0px;">
 			<spring:message code='ezApprovalG.t1166'/>
-			<span style="margin-left:145px;">
+			<span style="margin-left:136px;">
 				<select id="selSearchType" style="height:22px;">
 					<option selected value="displayname"><spring:message code='ezApprovalG.t379'/></option>
 					<option value="description"><spring:message code='ezApprovalG.t108'/></option>

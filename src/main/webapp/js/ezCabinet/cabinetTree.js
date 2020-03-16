@@ -92,8 +92,8 @@ function CabinetTree() {
 			case 1 : alert(CabinetMessages.strParamErr) ; return;
 			case 2 : alert(CabinetMessages.strError)    ; return;
 			case 4 : while (divTree.hasChildNodes()) {divTree.removeChild(divTree.lastChild);};
-					 if (_errorHandler) {_errorHandler(_relatedUrl) }; return; //alert(CabinetMessages.strTreeErr2);
-			case 5 : if (_errorHandler) {_errorHandler(_shareErrUrl)}; return; //alert(CabinetMessages.strShareErr2); return;
+					 if (_errorHandler) {_errorHandler(_relatedUrl) }; return;
+			case 5 : if (_errorHandler) {_errorHandler(_shareErrUrl)}; return;
 		}
 		
 		var nodesTree   = data.tree;
@@ -109,7 +109,7 @@ function CabinetTree() {
 			case "listshare":
 				var len = nodesTree.length;
 				
-				if (len == 0 && _genType == "listshare") {if (_errorHandler) {_errorHandler(_myshareErrUrl)}; return;} //alert(CabinetMessages.strShareErr3); return;
+				if (len == 0 && _genType == "listshare") {if (_errorHandler) {_errorHandler(_myshareErrUrl)}; return;}
 				
 				for (var i = 0; i < len; i++) {
 					var divChildNode  = document.createElement("div");

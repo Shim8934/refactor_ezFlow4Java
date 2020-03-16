@@ -118,6 +118,10 @@ public class MResourceDAO extends EgovAbstractDAO {
 		delete("MResourceDAO.delResFavor", map);
 	}
 	
+	public String getResUpperBrdID(Map<String, Object> map){
+		return (String)select("MResourceDAO.getResUpperBrdID", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<ResGetScheduleVO> getScheduleList(Map<String, Object> map){
 		return  (List<ResGetScheduleVO>) list("MResourceDAO.getScheduleList", map);
@@ -175,6 +179,11 @@ public class MResourceDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdListCheck(Map<String, Object> map){
 		return  (List<MResourceGetAdmSubClsTreeVO>) list("MResourceDAO.getResApprBrdListCheck", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdListCheck2(Map<String, Object> map){
+		return  (List<MResourceGetAdmSubClsTreeVO>) list("MResourceDAO.getResApprBrdListCheck2", map);
 	}
 	
 	@SuppressWarnings("unchecked")

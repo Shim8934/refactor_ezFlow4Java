@@ -25,10 +25,10 @@
 		<div class="cabiMain">
 			<div id="mainmenu">
 				<ul>
-					<li><a><span><spring:message code='ezCabinet.t48' /></span></a></li>
-					<li><a><span><spring:message code='ezCabinet.t49' /></span></a></li>
+					<li><a><span class="icon16 icon16_refresh"></span></a></li>
+					<li><a><span class="icon16 icon16_search"></span></span></a></li>
 					<li><a><span><spring:message code='ezCabinet.t112'/></span></a></li>
-					<li id="right"><img src="/images/kr/cm/btn_arrow_down.gif" role="off" id="sltView"></li>
+					<li id="right" style="padding-right:2px;"><img src="/images/kr/cm/btn_arrow_down.gif" role="off" id="sltView"></li>
 				</ul>
 			</div>
 			

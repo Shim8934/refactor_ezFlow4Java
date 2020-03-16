@@ -150,7 +150,7 @@ function start_search() {
     PressShiftKey = false;
     PressCtrlKey = false;
     
-    if (TrimText(keyword.value) == null || TrimText(keyword.value) == "") {
+    if (!searchKArray) {
         alert(strLang254);
         return;
     }
@@ -162,8 +162,6 @@ function start_search() {
     recordCount = 0;
 
     var sYear, sMonth, sDay, eYear, eMonth, eDay, sTime, eTime;
-    var sCategory;
-    var sKeyword;
     var i;
     var bError = false;
     var startDate = "", endDate = "";
@@ -186,63 +184,14 @@ function start_search() {
         return;
     }
 
-    sKeyword = TrimText(keyword.value);
-    sCategory = TrimText(select.value);
-
     var baseURL = document.location.protocol + "//" + g_servername + "/" + g_expath + "/" + g_userID + "/";
 
     var sMailFolder = TrimText(select2.value);
     ShowMailProgress();
-    searchRecurMail(sKeyword, sCategory, sMailFolder, startDate, endDate);
-    prekeyword.value = keyword.value;
+    searchRecurMail(sMailFolder, startDate, endDate);
 }
 
-function GetBoxPath(Url, boxinfo, sKeyword, sCategory, startDate, endDate) {
-    var strXml = "<?xml version='1.0' encoding='utf-8'?>" +
-		"<a:propfind xmlns:a='DAV:' xmlns:b='urn:schemas:httpmail:'>" +
-		"<a:prop>" +
-		"<b:" + boxinfo + "/>" +
-		"</></>";
-
-    g_searchHttp = new ActiveXObject("Microsoft.XMLHttp");
-    g_searchHttp.open("PROPFIND", Url, true);
-    g_searchHttp.setRequestHeader("Content-Type", "text/xml;charset=utf-8");
-    g_searchHttp.setRequestHeader("Depth", "0");
-    event_GetBoxPath.boxinfo = boxinfo;
-    event_GetBoxPath.sKeyword = sKeyword;
-    event_GetBoxPath.sCategory = sCategory;
-    event_GetBoxPath.startDate = startDate;
-    event_GetBoxPath.endDate = endDate;
-    g_searchHttp.onreadystatechange = event_GetBoxPath;
-    g_searchHttp.send(strXml);
-}
-
-function event_GetBoxPath() {
-    if (g_searchHttp == null || g_searchHttp.readyState != 4) {
-    	return;
-    }
-    
-    if (g_searchHttp.status > 199 && g_searchHttp.status < 300) {
-        var path = g_searchHttp.responseXML.getElementsByTagName("d:" + event_GetBoxPath.boxinfo).item(0).text
-        g_searchHttp = null;
-        
-        searchRecurMail(path, event_GetBoxPath.sKeyword, event_GetBoxPath.sCategory, event_GetBoxPath.startDate, event_GetBoxPath.endDate, true);
-    } else {
-        HiddenMailProgress();
-
-        alert(strLang150)
-        g_searchHttp = null;
-    }
-}
-
-function searchRecurMail(sKeyword, sCategory, sMailFolder, startDate, endDate) {
-    if (sKeyword.length && sCategory.length) {
-        sKeyword = ReplaceText(sKeyword, "&", "&amp;");
-        sKeyword = ReplaceText(sKeyword, "<", "&lt;");
-        sKeyword = ReplaceText(sKeyword, ">", "&gt;");
-        sKeyword = ReplaceText(sKeyword, "'", "''");
-    }
-    
+function searchRecurMail(sMailFolder, startDate, endDate) {
     var pageNum = parseInt(document.getElementById("resultTD").getAttribute("curPage"));
     var startIndex = listSize * (pageNum - 1);
     
@@ -252,8 +201,15 @@ function searchRecurMail(sKeyword, sCategory, sMailFolder, startDate, endDate) {
     var objNode;
     createNodeInsert(xmlDOM, objNode, "DATA");
     createNodeAndInsertText(xmlDOM, objNode, "MAILFOLDER", sMailFolder);
-    createNodeAndInsertText(xmlDOM, objNode, "KEYWORD", sKeyword);
-    createNodeAndInsertText(xmlDOM, objNode, "CATEGORY", sCategory);
+
+    for (var i = 0 ; i < searchCArray.length; i++ ){
+    	searchKArray[i] = ReplaceText(searchKArray[i], "&", "&amp;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], "<", "&lt;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], ">", "&gt;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], "'", "''");
+    	createNodeAndInsertText(xmlDOM, objNode, "KEYWORD", searchKArray[i]);
+    	createNodeAndInsertText(xmlDOM, objNode, "CATEGORY", searchCArray[i]);
+    }
     createNodeAndInsertText(xmlDOM, objNode, "STARTDATE", startDate);
     createNodeAndInsertText(xmlDOM, objNode, "ENDDATE", endDate);
 
@@ -265,8 +221,14 @@ function searchRecurMail(sKeyword, sCategory, sMailFolder, startDate, endDate) {
     createNodeAndInsertText(xmlDOM, objNode, "ORDERBY", p_ListOrderObject.getAttribute("orderoption"));
     createNodeAndInsertText(xmlDOM, objNode, "STARTINDEX", startIndex);
     createNodeAndInsertText(xmlDOM, objNode, "LISTCOUNT", listSize);
-
-    g_searchHttp.open("POST", "/ezEmail/mailSearch.do", true);
+    
+    var requestUrl = "/ezEmail/mailSearch.do";
+    
+    if (shareId != "") {
+    	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    }
+    
+    g_searchHttp.open("POST", requestUrl, true);
     g_searchHttp.onreadystatechange = event_searchRecurMail;
     g_searchHttp.send(xmlDOM);
 }
@@ -735,9 +697,21 @@ function view_click() {
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     
     if (this.parentname == ("/" + strLang65)) {
-    	window.open("/ezEmail/mailWrite.do?URL=" + encodeURIComponent(this.getAttribute("targeturl")) + "&cmd=EDIT", "", feature);
+    	var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(this.getAttribute("targeturl")) + "&cmd=EDIT";
+    	
+    	if (shareId != "") {
+    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+    	}
+    	
+    	window.open(requestUrl, "", feature);
     } else {
-    	window.open("/ezEmail/mailRead.do?URL=" + encodeURIComponent(this.getAttribute("targeturl")) + "&SEARCHPAGE=1&CONTENTCLASS=" + this.getAttribute("contentclass"), "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+    	var requestUrl = "/ezEmail/mailRead.do?URL=" + encodeURIComponent(this.getAttribute("targeturl")) + "&SEARCHPAGE=1&CONTENTCLASS=" + this.getAttribute("contentclass");
+    	
+    	if (shareId != "") {
+    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+    	}
+    	
+    	window.open(requestUrl, "", feature);
     }
 }
 

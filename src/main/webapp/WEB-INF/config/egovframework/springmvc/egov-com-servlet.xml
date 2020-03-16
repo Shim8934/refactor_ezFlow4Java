@@ -85,7 +85,15 @@
             <mvc:mapping path="/rest/ezwebfolderadmin/**"/>
             <mvc:exclude-mapping path="/rest/ezwebfolder/login"/>
 		    <bean class="egovframework.com.cmm.interceptor.WebfolderAuthenticInterceptor" />
-        </mvc:interceptor>    
+        </mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/" />
+			<mvc:mapping path="/ezNewPortal/**" />
+			<mvc:mapping path="/user/login/email.do" />
+			<!-- <mvc:exclude-mapping path="/rest/ezwebfolder/**" /> -->
+			<bean class="egovframework.com.cmm.interceptor.UserEmailInterceptor" />
+		</mvc:interceptor>
 	</mvc:interceptors>
 
     <!-- Annotation 을 사용하지 않는 경우에 대한 MVC 처리 설정 -->

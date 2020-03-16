@@ -91,7 +91,7 @@
 			    			case "Clear" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm01'/>");
 			    						   break;
 			
-			    			case "Clouds" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm02'/>");
+			    			case "Clouds" : $("#mainWeather").text("<spring:message code='ezNewPortal.yej05'/>");
 			    						   break;
 			    			
 			    			case "Haze" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm03'/>");
@@ -103,8 +103,14 @@
 			    			case "Snow" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm05'/>");
 			    						   break;
 			    			
-			    			case "Thunderstrom" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm06'/>");
+			    			case "Thunderstorm" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm06'/>");
 			    						   break;
+			    						   
+			    			case "Drizzle" : $("#mainWeather").text("<spring:message code='ezNewPortal.yej09'/>");
+			    						   break;
+			    						   
+			    			case "Fog" : $("#mainWeather").text("<spring:message code='ezNewPortal.yej10'/>");
+ 										   break;
 			    			
 			    			default : $("#mainWeather").text(currentMain);
 			    						   break;
@@ -272,7 +278,7 @@
 			case "Clear" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm01'/>");
 						   break;
 		
-			case "Clouds" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm02'/>");
+			case "Clouds" : $("#mainWeather").text("<spring:message code='ezNewPortal.yej05'/>");
 						   break;
 			case "Mist" :
 			case "Haze" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm03'/>");
@@ -284,9 +290,15 @@
 			
 			case "Snow" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm05'/>");
 						   break;
-			
-			case "Thunderstrom" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm06'/>");
+			    			
+			case "Thunderstorm" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm06'/>");
 						   break;
+						   
+			case "Drizzle" : $("#mainWeather").text("<spring:message code='ezNewPortal.yej09'/>");
+						   break;
+						   
+			case "Fog" : $("#mainWeather").text("<spring:message code='ezNewPortal.yej10'/>");
+							   break;
 			
 			default : $("#mainWeather").text(currentMain);
 						   break;

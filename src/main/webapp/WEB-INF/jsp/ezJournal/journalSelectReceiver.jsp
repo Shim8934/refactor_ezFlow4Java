@@ -46,6 +46,9 @@
 	   		var CurPage = "1";
 	   		var totalPage = "";
 	   		
+	   		/* 2019-12-04 홍승비 - 다국어 스타일 적용을 위한 lang 변수 */
+	   		var lang = "<c:out value='${lang}'/>";
+	   		
 	   		document.onselectstart = function () { return false; };
 	   		function close_Click(){
 	   			window.close();
@@ -250,7 +253,7 @@
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");
 	   					if(picList.length == 0 && key != "DEPARTMENT"){
-	   						alert("<spring:message code='ezCommunity.t1379'/>");
+	   						alert("<spring:message code='ezJournal.t207'/>");
 	   						issearch = false;
 	   					}
 	   					$("#orglistView").empty();
@@ -270,7 +273,7 @@
 	   			var value = $("#keyword").val().trim();
 	   			
 	   			if (value == '' || value == undefined) {
-	   				alert("<spring:message code='ezSchedule.t8'/>");	
+	   				alert("<spring:message code='ezJournal.t208'/>");	
 	   			} else {
 	   				search_click(type);	
 	   			}
@@ -292,7 +295,7 @@
 	   				}
 		   			setUserList(key, searchKey);
 	   			} else {
-	   				alert("<spring:message code='ezSchedule.t8'/>")
+	   				alert("<spring:message code='ezJournal.t208'/>")
 	   			}
 	   		}
 	   		
@@ -538,6 +541,13 @@
 		   				}
 	   				},"#lplistView tr");
 	   			});
+	   			
+	   			/* 2019-12-04 홍승비 - 다국어 환경에서 즐겨찾기 버튼 마진 수정 */
+	   			if (lang == "2") {
+	   				document.getElementById("addFavoriteLineA").style.marginLeft = "53px";
+	   			} else if (lang == "3") {
+	   				document.getElementById("addFavoriteLineA").style.marginLeft = "57px";
+	   			}
    			});
 	   		
 	   		var Tab1_SelectID = "1tab1";
@@ -581,7 +591,7 @@
 	   		
 	   		function infoview_click() { 
 	            if (selUserId == null || selUserId == "") {
-	                alert("<spring:message code='ezCircular.t148' />");
+	                alert("<spring:message code='ezJournal.t209' />");
 	                return;
 	            }
 	            var pheight = window.screen.availHeight;
@@ -649,24 +659,28 @@
 				                                <td>
 				                                    <div style="float: left; margin-left: 5px;">
 				                                        <select id="search_type" style="height:22px">
-				                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
-								                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
-								                            <option value="description"><spring:message code='ezOrgan.t68'/></option>
-								                            <option value="title"><spring:message code='ezOrgan.t69'/></option>
-								                            <option value="telephonenumber"><spring:message code='ezOrgan.t95'/></option>
-								                            <option value="mobile"><spring:message code='ezOrgan.t96'/></option>
-								                            <option value="HomePhone"><spring:message code='ezOrgan.t97'/></option>
-								                            <option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98'/></option>
-								                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
-								                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
+				                                            <option selected value="displayname"><spring:message code='ezJournal.t38'/></option>
+								                            <option value="cn"><spring:message code='ezJournal.t210'/></option>
+								                            <option value="description"><spring:message code='ezJournal.t40'/></option>
+								                            <option value="title"><spring:message code='ezJournal.t39'/></option>
+								                            <option value="telephonenumber"><spring:message code='ezJournal.t46'/></option>
+								                            <option value="mobile"><spring:message code='ezJournal.t211'/></option>
+								                            <option value="HomePhone"><spring:message code='ezJournal.t212'/></option>
+								                            <option value="facsimileTelephoneNumber"><spring:message code='ezJournal.t213'/></option>
+								                            <c:if test="${primaryLang eq '3' }">
+		                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+		                                                    </c:if>
+								                            <option value="mail"><spring:message code='ezJournal.t214'/></option>
+								                            <option value="streetAddress"><spring:message code='ezJournal.t215'/></option>
 				                                        </select>
 				                                        <input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){fn_serach('search'); return false;}" value="" style="width: 130px; margin: 0px;height:22px" />
-				                                        <a class="imgbtn"><span onclick="fn_serach('search')"><spring:message code='ezOrgan.t101'/></span></a>
+				                                        <a class="imgbtn"><span onclick="fn_serach('search')"><spring:message code='ezJournal.t43'/></span></a>
 				                                    </div>
 				                                </td>
 				                                <td>
 				                                    <div style="float: right; margin-right: 5px; position: relative;">
-				                                    	<a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezCircular.t161' /></span></a>  
+				                                    	<a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezJournal.t216' /></span></a>  
 				                                    </div>
 				                                </td> 
 				                                <td></td>   
@@ -745,7 +759,7 @@
 		                            <h2 class="receiver_tltype01" style="margin-top:4px; border-bottom:none;">
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
 									</h2>
-								 	<a class="imgbtn imgbck" style="margin-top: 6px; margin-left: 65px;">
+								 	<a id="addFavoriteLineA" class="imgbtn imgbck" style="margin-top: 6px; margin-left: 65px;">
 								 		<span onclick="addFavoriteLine()"><spring:message code='ezJournal.t92'/></span>
 								 	</a>
 								</div>

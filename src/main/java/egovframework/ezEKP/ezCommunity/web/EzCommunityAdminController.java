@@ -95,8 +95,8 @@ public class EzCommunityAdminController {
 		String companyId    = userInfo.getCompanyID();
 		int tenantId        = userInfo.getTenantId();
 		
-		int admitTotalCount = ezCommunityAdminService.aspAdmitComGet2("", "", commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
-		int closeTotalCount = ezCommunityAdminService.aspCloseComGet2("", "", commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
+		int admitTotalCount = ezCommunityAdminService.aspAdmitComGet2("", "", "", commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
+		int closeTotalCount = ezCommunityAdminService.aspCloseComGet2("", "", "", commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
 		
 		model.addAttribute("count", admitTotalCount + closeTotalCount);
 		
@@ -230,6 +230,7 @@ public class EzCommunityAdminController {
 		int pageSize       = 10;
 		int pageNum        = request.getParameter("pageNum") != null ? Integer.parseInt(request.getParameter("pageNum")) : 1;
 		String searchType  = request.getParameter("searchType") != null ? request.getParameter("searchType")   : "" ;
+		String searchType2  = request.getParameter("searchType2") != null ? request.getParameter("searchType2")   : "" ;
 		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
 		String offSetMin   = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
@@ -237,7 +238,8 @@ public class EzCommunityAdminController {
 		logger.debug("searchType=" + searchType + ",searchValue=" + searchValue);
 		logger.debug("offSetMin=" + offSetMin);
 		
-		int totalCount = ezCommunityAdminService.aspSearchKeyGet2(commonUtil.getMultiData(lang, tenantId), searchType, searchValue, companyId, tenantId);
+		/* 2020-01-03 홍승비 - 커뮤니티 검색 시 커뮤니티소개 검색옵션 다시 추가 */
+		int totalCount = ezCommunityAdminService.aspSearchKeyGet2(commonUtil.getMultiData(lang, tenantId), searchType, searchType2, searchValue, companyId, tenantId);
 		int totalPage  = 1;
 		
 		if (totalCount > 0) {
@@ -252,7 +254,7 @@ public class EzCommunityAdminController {
 		
 		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
 		
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(primary, pageNum, searchType, searchValue, offSetMin, companyId, tenantId);
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(primary, pageNum, searchType, searchType2, searchValue, offSetMin, companyId, tenantId);
 		if (clubList.size() > 0) {
 			for(CommunityClubVO club : clubList) {
 				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), primary, companyId, tenantId));
@@ -287,13 +289,15 @@ public class EzCommunityAdminController {
 		int pageSize       = 10;
 		int pageNum        = request.getParameter("pageNum") != null ? Integer.parseInt(request.getParameter("pageNum")) : 1;
 		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
+		String searchType2 = request.getParameter("searchType2") != null ? request.getParameter("searchType2") : "" ;
 		String offSetMin   = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
 		logger.debug("pageNum=" + pageNum);
 		logger.debug("searchValue=" + searchValue);
 		logger.debug("offSetMin=" + offSetMin);
 		
-		int totalCount = ezCommunityAdminService.getClosedCommuListCount(commonUtil.getMultiData(lang, tenantId), userInfo.getLocale(), searchValue, companyId, tenantId);
+		/* 2020-01-06 홍승비 - 폐쇄한 커뮤니티 검색 시 폐쇄사유 추가 */
+		int totalCount = ezCommunityAdminService.getClosedCommuListCount(commonUtil.getMultiData(lang, tenantId), userInfo.getLocale(), searchType2, searchValue, companyId, tenantId);
 		int totalPage  = 1;
 		
 		if (totalCount > 0) {
@@ -308,7 +312,7 @@ public class EzCommunityAdminController {
 		
 		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
 		
-		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.getClosedCommuList(primary, userInfo.getLocale(), pageNum, searchValue, offSetMin, companyId, tenantId);
+		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.getClosedCommuList(primary, userInfo.getLocale(), pageNum, searchType2, searchValue, offSetMin, companyId, tenantId);
 		if (clubList.size() > 0) {
 			for(CommunityCComCloseVO club : clubList) {
 				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), primary, companyId, tenantId));
@@ -376,7 +380,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 폐쇄한 커뮤니티 상세정보 수정 호출함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/closeCom.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/closeCommunityInfo.do", method = RequestMethod.GET)
 	public String closeCommunityInfo(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		logger.debug("closeCommunityInfo started.");
 
@@ -483,8 +487,8 @@ public class EzCommunityAdminController {
 			String commName2  = clubVO.getC_ClubName2();
 			String sysopID    = clubVO.getC_SysopID();
 			
-			ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, companyId, commonUtil.getTodayUTCTime(""), egovMessageSource.getMessage("ezCommunity.khj01", userInfo.getLocale()), egovMessageSource.getMessage("ezCommunity.t38", userInfo.getLocale()), tenantId);
-			ezCommunityAdminService.commCloseAll(code, userInfo.getLocale(), tenantId);
+			ezCommunityAdminService.aspCommCloseAllDel(code, tenantId);
+			ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, companyId, commonUtil.getTodayUTCTime(""), egovMessageSource.getMessage("ezCommunity.khj01", userInfo.getLocale()), "1", tenantId);
 		}
 		
 		return "json";
@@ -563,18 +567,20 @@ public class EzCommunityAdminController {
 		int pageSize       = 10;
 		int pageNum        = request.getParameter("pageNum") != null ? Integer.parseInt(request.getParameter("pageNum")) : 1;
 		String searchType  = request.getParameter("searchType") != null ? request.getParameter("searchType") : "" ;
+		String searchType2  = request.getParameter("searchType2") != null ? request.getParameter("searchType2") : "" ;
 		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
 		String code        = request.getParameter("code") != null ? request.getParameter("code") : "" ; //언제쓰이는지?
 		String offSetMin   = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
 		logger.debug("pageNum=" + pageNum);
-		logger.debug("searchType=" + searchType + ",searchValue=" + searchValue);
+		logger.debug("searchType=" + searchType + ", searchType2=" + searchType2 + ", searchValue=" + searchValue);
 		logger.debug("offSetMin=" + offSetMin);
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), companyId, tenantId);
 		
+		/* 2020-01-06 홍승비 - 커뮤니티소개 검색옵션 추가 */
 		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(총 n개 카운트) */
-		int totalCount = ezCommunityAdminService.aspAdmitComGet2(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
+		int totalCount = ezCommunityAdminService.aspAdmitComGet2(searchValue, searchType, searchType2, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
 		int totalPage = 1;
 		
 		if (totalCount > 0) {
@@ -590,10 +596,10 @@ public class EzCommunityAdminController {
 		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
 		
 		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) -> 사간겸직한 회원이 만든 커뮤니티는 겸직한 회사만큼 전부 표출됨(수정필요) */
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), pageNum, offSetMin, companyId, tenantId);
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(searchValue, searchType, searchType2, commonUtil.getMultiData(lang, tenantId), pageNum, offSetMin, companyId, tenantId);
 		
 		/* 2019-01-17 김혜정 - 관리자 > 폐쇄승인 커뮤니티 카운트  추가 */ 
-		int tabCount = ezCommunityAdminService.aspCloseComGet2("", "", commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
+		int tabCount = ezCommunityAdminService.aspCloseComGet2("", "", "", commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
 		
 		model.addAttribute("clubList", clubList);
 		model.addAttribute("pageNum", pageNum);
@@ -619,6 +625,7 @@ public class EzCommunityAdminController {
 		int pageSize       = 10;
 		int pageNum        = request.getParameter("pageNum") != null ? Integer.parseInt(request.getParameter("pageNum")) : 1;
 		String searchType  = request.getParameter("searchType") != null ? request.getParameter("searchType") : "" ;
+		String searchType2  = request.getParameter("searchType2") != null ? request.getParameter("searchType2") : "" ;
 		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
 		String code        = request.getParameter("code") != null ? request.getParameter("code") : "" ; //언제쓰이는지?
 		String offSetMin   = commonUtil.getMinuteUTC(userInfo.getOffset());
@@ -629,8 +636,9 @@ public class EzCommunityAdminController {
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), companyId, tenantId);
 		
+		/* 2020-01-06 홍승비 - 폐쇄사유 검색옵션 추가 */
 		/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(총 n개 카운트) */
-		int totalCount = ezCommunityAdminService.aspCloseComGet2(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
+		int totalCount = ezCommunityAdminService.aspCloseComGet2(searchValue, searchType, searchType2, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
 		int totalPage = 1;
 		
 		if (totalCount > 0) {
@@ -646,10 +654,10 @@ public class EzCommunityAdminController {
 		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
 		
 		/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
-		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), pageNum, offSetMin, companyId, tenantId);
+		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(searchValue, searchType, searchType2, commonUtil.getMultiData(lang, tenantId), pageNum, offSetMin, companyId, tenantId);
 		
 		/* 2019-01-17 김혜정 - 관리자 > 신청승인 커뮤니티 카운트  추가 */ 
-		int tabCount = ezCommunityAdminService.aspAdmitComGet2("", "", commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
+		int tabCount = ezCommunityAdminService.aspAdmitComGet2("", "", "", commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
 		
 		model.addAttribute("clubList", clubList);
 		model.addAttribute("pageNum", pageNum);

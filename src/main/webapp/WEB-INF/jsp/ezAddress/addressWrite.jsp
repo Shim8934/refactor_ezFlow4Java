@@ -26,6 +26,7 @@
 		    var compAdmin = "${compAdmin}";
 		    var xmlHttpAddressTree;
 		    var closeAlertMsg = "<spring:message code='ezAddress.t337' />";
+		    var useAnyoneEdit = "<c:out value='${useAnyoneEdit}'/>";
 		    window.onload = function () {
 				if(addressid == "")
 				{
@@ -40,6 +41,10 @@
 		            document.getElementById("selectfolder").style.display = "";
 		            changetype();
 		        }
+		        
+		        var name = '<c:out value="${addressInfo.sName}"/>'
+		        name = replaceEntityCodeToStr(name);
+		        document.getElementById("TextName").value = name;
 		        
 		        var getMemo = document.getElementById("TextMemo").value;
 		        getMemo = getMemo.replace(/\\\\/gi, "\\");
@@ -206,17 +211,19 @@
 				
 		        if (pTextName.indexOf("&") > -1 || pTextName.indexOf("<") > -1 || pTextName.indexOf(">") > -1 
 		        		 || pTextName.indexOf("\"") > -1 || pTextName.indexOf("'") > -1 || pTextName.indexOf(';') != -1) {
-	           		alert("<spring:message code='ezAddress.t124' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ; ]");
+	           		alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' ; ]");
 	           		document.getElementById("TextName").focus();
 		            return;
 		        }
 		        
-		        if (foldertype == "D" && deptAdmin != "Y") {
-		        	alert("<spring:message code='ezAddress.t999900003' />");
-		        	return;
-		        } else if (foldertype == "C" && compAdmin != "Y") {
-		        	alert("<spring:message code='ezAddress.t999900004' />");
-		        	return;
+		        if (useAnyoneEdit != "YES") {
+		        	if (foldertype == "D" && deptAdmin != "Y") {
+			        	alert("<spring:message code='ezAddress.t999900003' />");
+			        	return;
+			        } else if (foldertype == "C" && compAdmin != "Y") {
+			        	alert("<spring:message code='ezAddress.t999900004' />");
+			        	return;
+			        }	
 		        }
 		        
 		        if (!check_length(document.getElementById("TextCompanyPhone").value, 20, "<spring:message code='ezAddress.t222' />")) return;
@@ -273,6 +280,7 @@
 		        createNodeAndInsertText(xmlDom, objNode, "STYPE", "P");
 		        createNodeAndInsertCDataText(xmlDom, objNode, "USERNM", usernm);
 		        createNodeAndInsertCDataText(xmlDom, objNode, "USERNM2", usernm2);
+		        createNodeAndInsertCDataText(xmlDom, objNode, "FURIGANA", document.getElementById("TextFurigana").value);
 		        objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTACHLIST");
 		        
 		        /* if(foldertype=="P")
@@ -365,6 +373,7 @@
 		        if(document.getElementById("TextComAddr").value != "") return false;
 		        if(document.getElementById("TextHomeAddr").value != "") return false;
 		        if (document.getElementById("TextEmail").value != "") return false;
+		        if (document.getElementById("TextFurigana").value != "") return false;
 		        
 		        return true;
 		    }
@@ -455,6 +464,18 @@
 			    folderid = document.getElementById("selectfolder").options[selectedindex].value;
 			    ownerid = document.getElementById("selectfolder").options[selectedindex].getAttribute("ownerid");
 			}
+			// 모바일과 함께 적용되어있는 사항 때문에  XmlHttpRequest.js와 다르게 &#34 형태로 적용
+			function replaceEntityCodeToStr(str) {
+				return str.replace(/&amp;/g, "&")
+						  .replace(/&lt;/g, "<")
+						  .replace(/&gt;/g, ">")
+						  .replace(/&quot;/g, '\"')
+						  .replace(/&#40;/g, "\(")
+						  .replace(/&#41;/g, "\)")
+						  .replace(/&#39;/g, "'")
+						  .replace(/&#34;/g, '\"')
+						  .replace(/&amp;/g, "&");
+			}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
@@ -477,10 +498,14 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		  </script>
 		  <table class="content">
+		  	<tr style=<c:out value="${primaryLang eq '3' ? 'display:table-row' : 'display:none' }"/>>
+	        	<th style="width: 71px;"><spring:message code='main.ksa01' /></th>
+	            <td style="width: 240px"><input id="TextFurigana" style="width: 100%;" maxlength="20" value="<c:out value='${addressInfo.sFurigana}' />"></td>
+	        </tr>
 		    <tr>
 		      <!-- <th rowspan="4" align="center" ><span id="LiteralPhoto" width="119"></span></th> -->
 		      <th><spring:message code='ezAddress.t124' /></th>
-		      <td><input type="text" id="TextName" name="TextName" style="width:100%" maxlength="24" class="txtClass" value="<c:out value="${addressInfo.sName}"/>"></td>
+		      <td><input type="text" id="TextName" name="TextName" style="width:100%" maxlength="24" class="txtClass"></td>
 		    </tr>
 		    <tr>
 		      <th><spring:message code='ezAddress.t51' /></th>

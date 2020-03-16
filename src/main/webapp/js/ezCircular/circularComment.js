@@ -155,7 +155,7 @@ function showEdit(obj) {
 		$(".circularCommentEdit").remove();
 		
 		var circularEdit = "<tr class='circularCommentEdit' circularUserID='" + circularUserID + "' style='border:1px solid #e2e2e2; padding:10px'>";
-		circularEdit += "<td style='background-color:#ececec;' colspan='2'><textarea style='width:105%;height:50px;resize:none;overflow:auto;vertical-align:middle;margin:5px;border:1px solid #ddd'></textarea></td>";
+		circularEdit += "<td style='background-color:#ececec;' colspan='2'><textarea style='width:105%;height:50px;resize:none;overflow:auto;vertical-align:middle;margin:5px;border:1px solid #ddd' maxlength='5000'></textarea></td>";
 		circularEdit += "<td style='background-color:#ececec; text-align:center;'><a class='imgbtn' style='margin-left:47px;padding-left:2px;'>&nbsp;<span onclick='editCircularComment(this);' style='padding-right:3px;'>" + strLang3 + "</span>&nbsp;</a><br/><div style='margin-left:35px;'><input type='checkbox' id='commentStatus' style='vertical-align:middle;'>" + strLang4 + "</input></div></td>";
 		circularEdit += "</tr>";
 		
@@ -266,6 +266,11 @@ function getCommentShareUser() {
 			shareUserList = "<colgroup><col width='10%' /><col width='90%' /></colgroup>";
 			
 			list = result.shareUserList;
+			
+			if(result.shareUserList.length == 0) {
+				shareUserList += "<td style='border-top:0px;border-right:0px;border-left:0px;text-align:center;background-color:white;' colspan='2'>"+ strLang50 + "</td>";
+			}
+			
 			list.forEach(function(vo, index) {
 				if (vo.memberID != userInfoID) {
 					shareUserList += "<tr class='shareUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";

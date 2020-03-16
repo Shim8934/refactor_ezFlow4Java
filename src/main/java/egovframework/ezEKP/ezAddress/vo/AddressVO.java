@@ -28,6 +28,7 @@ public class AddressVO {
 	private String sHomeAddr;
 	private String sMemo;
 	private String sType;
+	private String sFurigana;
 	
 	public String getAddressId() {
 		return addressId;
@@ -191,17 +192,27 @@ public class AddressVO {
 	public void setsType(String sType) {
 		this.sType = sType;
 	}
-	
+	public String getsFurigana() {
+		return sFurigana;
+	}
+	public void setsFurigana(String sFurigana) {
+		this.sFurigana = sFurigana;
+	}
 	@Override
 	public String toString() {
-		return "AddressVO [addressId=" + addressId + ", folderId=" + folderId + ", ownerId=" + ownerId + ", creatorId="
-				+ creatorId + ", creatorName=" + creatorName + ", createDate=" + createDate + ", modifierId="
-				+ modifierId + ", modifierName=" + modifierName + ", modifyDate=" + modifyDate + ", hasAttach="
-				+ hasAttach + ", hasComment=" + hasComment + ", photoPath=" + photoPath + ", sName=" + sName
-				+ ", sCompany=" + sCompany + ", sDept=" + sDept + ", sTitle=" + sTitle + ", sCompanyPhone="
-				+ sCompanyPhone + ", sFax=" + sFax + ", sMobile=" + sMobile + ", sEmail=" + sEmail + ", sHomePage="
-				+ sHomePage + ", sCompanyZip=" + sCompanyZip + ", sCompanyAddr=" + sCompanyAddr + ", sHomeZip="
-				+ sHomeZip + ", sHomeAddr=" + sHomeAddr + ", sMemo=" + sMemo + ", sType=" + sType + "]";
+		return "AddressVO [addressId=" + addressId + ", folderId=" + folderId
+				+ ", ownerId=" + ownerId + ", creatorId=" + creatorId
+				+ ", creatorName=" + creatorName + ", createDate=" + createDate
+				+ ", modifierId=" + modifierId + ", modifierName="
+				+ modifierName + ", modifyDate=" + modifyDate + ", hasAttach="
+				+ hasAttach + ", hasComment=" + hasComment + ", photoPath="
+				+ photoPath + ", sName=" + sName + ", sCompany=" + sCompany
+				+ ", sDept=" + sDept + ", sTitle=" + sTitle
+				+ ", sCompanyPhone=" + sCompanyPhone + ", sFax=" + sFax
+				+ ", sMobile=" + sMobile + ", sEmail=" + sEmail
+				+ ", sHomePage=" + sHomePage + ", sCompanyZip=" + sCompanyZip
+				+ ", sCompanyAddr=" + sCompanyAddr + ", sHomeZip=" + sHomeZip
+				+ ", sHomeAddr=" + sHomeAddr + ", sMemo=" + sMemo + ", sType="
+				+ sType + ", sFurigana=" + sFurigana + "]";
 	}
-	
 }

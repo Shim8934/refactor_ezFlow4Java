@@ -61,7 +61,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	private CommonUtil commonUtil;
 	
 	@Override
-	public List<ShareVO> getSharingList(String subSearchFlag, String userId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+	public List<ShareVO> getSharingList(String subSearchFlag, String userId, String primary, String offset, int startPoint, int pageSize, 
+			SearchVO searchInfo, int tenantId, String sortColumn, String sortType) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();
 		
@@ -84,6 +85,22 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("searchStartDate",   searchStartDate);
 		map.put("searchEndDate",     searchEndDate);
 		map.put("subSearchFlag",     subSearchFlag);
+		map.put("sortColumn",     	 sortColumn);
+		map.put("sortType",     	 sortType);
+		
+		String secondSort = "";
+		if (sortType.equals("")){
+			secondSort = ", S.SHARE_DATE DESC";
+		} else {
+			if (sortColumn.equals("TYPE_ICON") && sortType.equals("DESC")){
+				secondSort = " DESC , " + sortColumn + " " + sortType;
+			} else {
+				secondSort = " , " + sortColumn + " " + sortType;
+			}
+			secondSort += ", SHARE_DATE DESC " ;
+		}
+		
+		map.put("orderByData", secondSort); 
 		
 		List<ShareVO> list = ezWebFolderDAO_m.getSharingList(map);
 		
@@ -103,7 +120,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public List<ShareVO> getSharedList(String subSearchFlag, String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+	public List<ShareVO> getSharedList(String subSearchFlag, String userId, String deptId, String compId, String primary, String offset, 
+			int startPoint, int pageSize, SearchVO searchInfo, int tenantId, String sortColumn, String sortType) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();
 		
@@ -129,6 +147,23 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("searchStartDate",   searchStartDate);
 		map.put("searchEndDate",     searchEndDate);
 		map.put("subSearchFlag",     subSearchFlag);
+		map.put("sortColumn",     	 sortColumn);
+		map.put("sortType",     	 sortType);
+
+		String secondSort = "";
+		
+		if (sortType.equals("")){
+			secondSort = ", S.SHARE_DATE DESC";
+		} else {
+			if (sortColumn.equals("TYPE_ICON") && sortType.equals("DESC")){
+				secondSort = " DESC , " + sortColumn + " " + sortType;
+			} else {
+				secondSort = " , " + sortColumn + " " + sortType;
+			}
+			secondSort += ", S.SHARE_DATE DESC";
+		}
+		
+		map.put("orderByData", secondSort); 
 		
 		List<ShareVO> list = ezWebFolderDAO_m.getSharedList(map);
 		
@@ -527,7 +562,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public List<ShareVO> getHiddenSharedList(String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, int tenantId) throws Exception {
+	public List<ShareVO> getHiddenSharedList(String userId, String deptId, String compId, String primary, String offset, 
+			int startPoint, int pageSize, int tenantId, String sortType, String sortColumn) throws Exception {
 		List<Map<String, String>> idList = getPermissionIdMapList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -538,6 +574,23 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("pageSize",	         pageSize);
 		map.put("idList",	         idList);
 		map.put("tenantId",	         tenantId);
+		map.put("sortType",	         sortType);
+		map.put("sortColumn",	     sortColumn);
+		
+		String secondSort = "";
+		
+		if (sortType.equals("")){
+			secondSort = ", S.SHARE_DATE DESC";
+		} else {
+			if (sortColumn.equals("TYPE_ICON") && sortType.equals("DESC")){
+				secondSort = " DESC , " + sortColumn + " " + sortType;
+			} else {
+				secondSort = " , " + sortColumn + " " + sortType;
+			}
+			secondSort += ", S.SHARE_DATE DESC";
+		}
+		
+		map.put("orderByData", secondSort);
 		
 		List<ShareVO> list = ezWebFolderDAO_m.getHiddenSharedList(map);
 		
@@ -665,7 +718,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	@Override
 	public JSONObject getTrashCanList(String realColmn, String order, String userId, String offset, int tenantId, int currPage, int pEnd, 
 			String searchExt, String searchFileName, String searchCreateName,String searchFileType, String enrollStartDate, String enrollEndDate,
-			String delStartDate, String delEndDate, String mode) throws Exception {
+			String delStartDate, String delEndDate, String mode, String sortType, String sortColumn) throws Exception {
 		int totalRows  = 0;
 		int totalPages = 0;
 		int pStart 	   = 0;
@@ -695,6 +748,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("realColmn", realColmn);
 		map.put("order", order);
 		map.put("mode", mode);
+		map.put("sortType", sortType);
+		map.put("sortColumn", sortColumn);
 		
 		JSONObject result = new JSONObject();
 		
@@ -709,6 +764,17 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		map.put("pStart", pStart);
 		map.put("pEnd", pEnd);
+		
+		String secondSort = "";
+		if (!sortType.equals("")){
+			if (sortColumn.equals("TRASHCAN_ICON_URL") && sortType.equals("DESC")){
+				secondSort = " DESC , " + sortColumn + " " + sortType;
+			} else {
+				secondSort = " , " + sortColumn + " " + sortType;
+			}
+		} 
+		
+		map.put("orderByData", secondSort);
 		
 		List<TrashCanVO> trashCanList = ezWebFolderDAO.getTrashCanList(map);
 		
@@ -746,7 +812,16 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		int tenantId     = userInfo.getTenantId();
 		String offset    = userInfo.getOffset();
 		String userId    = userInfo.getId();
-		System.out.println("flag : " + flag);
+		
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("companyId"		, companyId);
+		map2.put("userInfo"		, userInfo);
+		map2.put("offset"		, offset);
+		map2.put("userId"		, userId);
+		map2.put("userName1"		, userName1);
+		map2.put("userName2"		, userName2);
+		map2.put("realPath"		, realPath);
+		
 		if (flag == null ) {
 			flag = "";
 		}
@@ -767,26 +842,24 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		}
 		
 		for (String folder : folderIDList) {
-			LOGGER.debug("folderDelete");
+			
 			if (!folder.equals("")) {
 				FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
-				LOGGER.debug("folderVO != null");
+				
 				if (folderVO != null) {
-					LOGGER.debug("!folder.equals('')");
-					deleteAllFilesInFolder(folderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2, flag);
 					
-					List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId(), flag);
-					
-					for (String currentFolder : lowerFolders) {
-						LOGGER.debug("currentFolder" + currentFolder);
+					if (flag =="delete") {
+						deleteAllFilesInFolder(folderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2, flag);
+						List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId(), flag);
 						
-						// 현재 폴더의 정보 가져오기 
-						FolderVO currentFolderVO = ezWebFolderService.getFolderByFolderId(currentFolder, offset, tenantId);
-						// 현재 및 하위 폴더들 정보 모두 가져오기 
-						// 현재 아래와 같이 진행할 경우 아에 자신의 모든것을 지우는 형태임 하지만 모든 것을 지우는 형태로 할게 아니고 그 하위를 지우게 할 거니까 
-						// 수정해야함 ( 현재 하위의 폴더를 찾는 )
-						System.out.println(flag);
-						if (flag =="delete") {
+						for (String currentFolder : lowerFolders) {
+							LOGGER.debug("currentFolder" + currentFolder);
+							
+							// 현재 폴더의 정보 가져오기 
+							FolderVO currentFolderVO = ezWebFolderService.getFolderByFolderId(currentFolder, offset, tenantId);
+							// 현재 및 하위 폴더들 정보 모두 가져오기 
+							// 현재 아래와 같이 진행할 경우 아에 자신의 모든것을 지우는 형태임 하지만 모든 것을 지우는 형태로 할게 아니고 그 하위를 지우게 할 거니까 
+							// 수정해야함 ( 현재 하위의 폴더를 찾는 )
 							List<Map<String, Object>> subAllFolder = ezWebFolderService_y.getFolderTree(userId, userInfo.getDeptID(), userInfo.getCompanyID(), currentFolderVO.getFolderType(), 
 								userInfo.getPrimary(), tenantId, "delete");
 							ObjectMapper oMapper = new ObjectMapper();
@@ -808,19 +881,23 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 									ezWebFolderService_y.deleteToken(userId, tenantId);
 								}
 							}
+								
+						}
+					} else {
+						if (!folder.equals("")) {
 							
-						} else {
-							List<FolderVO> subAllFolder = ezWebFolderService.getAllSubFolders(currentFolder, offset, tenantId);
-							subAllFolder.add(subAllFolder.size(),folderVO);
-							
-							FolderVO lowerFolderVO = ezWebFolderService.getFolderByFolderId(currentFolder, offset, tenantId);
-									
-							int isFolderDeleted = deleteFolder(lowerFolderVO, flag);
-							deleteFavoritesInFolder(folderVO.getFolderId(), tenantId);
-							deleteShareWithSub(folderVO.getFolderId(), "D", tenantId);
-							
-							if (isFolderDeleted > 0) {
-								deleteAllFilesInFolder(lowerFolderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2, flag);
+							if (folderVO != null) {
+								deleteAllFilesInFolder(folderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2, flag);
+								List<Map<String, String>> subFolders = subFolders(folderVO.getFolderId(), folderVO.getOwnerId(), tenantId);
+								
+								subFolderRealDeleteRecursive(subFolders, tenantId, map2, userInfo, flag);
+								
+								int isFolderDeleted = deleteFolder(folderVO, flag);
+								deleteFavoritesInFolder(folderVO.getFolderId(), tenantId);
+								deleteShareWithSub(folderVO.getFolderId(), "D", tenantId);
+								if (isFolderDeleted > 0) {
+									deleteAllFilesInFolder(folderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2, flag);
+								}
 							}
 						}
 					}
@@ -831,6 +908,56 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		LOGGER.debug("permanetDeleteSelectedFiles end." );
 	}
 
+	/**
+	 * 현재폴더의 하위폴더 가져오는 값 - folderId를 upp로 가지고 있는 폴더 id, folderPath, folder_status 
+	 *
+	 */	
+	@Override
+	public List<Map<String, String>> subFolders(String folderId, String folderOwner, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("folderId"		, folderId);
+		map.put("folderOwner"	, folderOwner);
+		map.put("tenantId"		, tenantId);
+		
+		List<Map<String, String>> subFolders = new ArrayList<Map<String,String>>();
+		subFolders = ezWebFolderDAO.selectSubFolders(map);
+		
+		return subFolders; 
+	}
+	
+	@Override
+	public String subFolderRealDeleteRecursive(List<Map<String, String>> subFolders, int tenantId, Map<String, Object> map, LoginVO userInfo, String flag) throws Exception {
+		LOGGER.debug("subFolderRealDeleteRecursive start.");
+		String status  = "";
+		for (int i=0; i < subFolders.size(); i++) {
+			
+			String folderStatus = subFolders.get(i).get("folderStatus");
+			
+			if (!folderStatus.equals("T")){
+				FolderVO subFolder = new FolderVO();
+				subFolder.setFolderId(subFolders.get(i).get("folderId"));
+				subFolder.setTenantId(tenantId);
+				
+				int isFolderDeleted = deleteFolder(subFolder, flag);
+				deleteFavoritesInFolder(subFolder.getFolderId(), tenantId);
+				deleteShareWithSub(subFolder.getFolderId(), "D", tenantId);
+
+				if (isFolderDeleted > 0) {
+					deleteAllFilesInFolder(subFolder, map.get("companyId").toString(), map.get("realPath").toString(), userInfo,  
+							map.get("offset").toString(), tenantId, map.get("userId").toString(), map.get("userName1").toString(), map.get("userName2").toString(), flag);
+				}
+				List<Map<String, String>> subFolders2 = subFolders(subFolders.get(i).get("folderId"), userInfo.getId(), tenantId);
+				if (subFolders2.size() != 0){
+					subFolderRealDeleteRecursive(subFolders2, tenantId, map, userInfo, flag);
+				} 
+			} else {
+				continue;
+			}
+		}
+		LOGGER.debug("subFolderRealDeleteRecursive end.");
+		return status; 
+	}
+	
 	@Override
 	public int realFileDelete(FileVO fileVO, String realPath, LoginVO userInfo, String userName1, String userName2) throws Exception {
 		String pDirPath = realPath.substring(0, realPath.length() -1) + fileVO.getFilePath();
@@ -913,7 +1040,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			
 			if (result > 0) {
 				realFileDelete(fileVO, realPath, userInfo, userName1, userName2);
-				ezWebFolderService.saveLog("P", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+				//ezWebFolderService.saveLog("P", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 				deleteFavoriteAnyUser(fileVO.getFileId(), "F", tenantId);
 				deleteShareWithSub(fileVO.getFileId(), "F", tenantId);
 			}
@@ -1074,7 +1201,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				}
 			}
 
-			if ("Y".equals(upperFolderVO.getUseStatus())) {
+			if (upperFolderVO != null && "Y".equals(upperFolderVO.getUseStatus())) {
 				// 중복된 파일이 있으면 스킵 및 list에 추가
 				if (duplicateList.addAll(ezWebFolderService.getAllDuplicateInfo(DuplicateInfoVO.Type.DIRECTORY, folder, folderVO.getFolderUpper(), offset, tenantId))) {
 					continue;
@@ -1138,7 +1265,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 			
 	@Override
-	public List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception {
+	public List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, 
+			int startIndex, int listCount, String sortType, String sortColumn) throws Exception {
 		SearchVO searchDateInfo = createSearchDateInfo(searchInfo, offset);
 		
 		Map<String, Object> parameterMap = new HashMap<>();
@@ -1155,6 +1283,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("searchEndDate", searchDateInfo.getSearchEndDate());
 		parameterMap.put("startIndex", startIndex);
 		parameterMap.put("listCount", listCount);
+		parameterMap.put("sortType", sortType);
+		parameterMap.put("sortColumn", sortColumn);
 		
 		String[] searchTargets = { searchInfo.getSearchExt(), searchInfo.getSearchFileName(), searchInfo.getSearchCreateName() };
 		boolean hasSearchKeyword = Arrays.stream(searchTargets).anyMatch(str -> !str.toString().isEmpty());
@@ -1162,7 +1292,32 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		if (hasSearchKeyword) {
 			parameterMap.put("isContainsSubList", "test");
 		}
-		 
+		
+		String secondSort = "";
+		String dbType = commonUtil.getDatabaseType();
+		
+		if (sortType.equals("")){
+			if(!dbType.equals("oracle")){
+				secondSort = ", RESULT.CREATE_DATE DESC" ;
+			} else {
+				secondSort = "ASC, CREATE_DATE DESC" ;
+			}
+		} else {
+			if (sortColumn.equals("TARGET_ICON_URL") && sortType.equals("DESC")){
+				secondSort = " DESC , " + sortColumn + " " + sortType;
+			} else {
+				secondSort = ", " + sortColumn + " " + sortType;
+			}
+			
+			if(!dbType.equals("oracle")){
+				secondSort += ", RESULT.CREATE_DATE DESC" ;
+			} else {
+				secondSort += ", CREATE_DATE DESC" ;
+			}
+		}
+		
+		parameterMap.put("orderByData", secondSort);
+		
 		List<FavoriteVO> result = ezWebFolderDAO.getFavorites(parameterMap);
 		String targetPath;
 		

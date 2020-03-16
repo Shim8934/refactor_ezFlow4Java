@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html style="height: 99%;">
+<html style="height: 99%;" ondragover="bodydragover(event)">
 	<head>
 		<c:choose>
 			<c:when test="${mode == 'new' || mode == 'new1' || mode == 'boardAttach' || mode == 'boardContent' || url != ''}">
@@ -123,7 +123,7 @@
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		    var mailShareId = "${mailShareId}";
 		    
-		    window.onload = function () {		    	
+		    window.onload = function () {
 		        if (pUseBackGround == "TRUE") {
 		            document.getElementById("pUseBackGroundTR").style.display = "";
 		            GetBackGroundImage();
@@ -173,7 +173,8 @@
 			        }
 			    }
 
-			    if (pMode == "new" || pMode == "new1") {
+			    /* 2019-12-02 홍승비 - 임시저장된 게시물 재작성하는 경우 예약게시일 설정 가능, 초기화 동작 추가 */
+			    if (pMode == "new" || pMode == "new1" || (pMode == "temp" && pReservedItem != "true")) {
 			        btn_PostDate_Clear();
 			    } else {
 			        if (pReservedItem != "true") {
@@ -299,7 +300,7 @@
 		        var settime = "${startDateTime}";
 		        var NowDate = new Date(settime.substring(0, 4), settime.substring(5, 7), settime.substring(8, 10), settime.substring(11, 13), settime.substring(14, 16));
 		        NowDate.setMonth(NowDate.getMonth() - 1);
-		
+		        
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', NowDate);
 		        $('#Stimepicker').timepicker();
@@ -526,10 +527,11 @@
 		                return;
 		            }
 		        }
-		        if (document.getElementById("chk_reservation").checked && pMode == "temp") {
+		        /* 2019-12-02 홍승비 - 임시저장 기능과 예약게시 기능을 동시에 사용할 수 있도록 변경 */
+/* 		        if (document.getElementById("chk_reservation").checked && pMode == "temp") {
 		            alert("<spring:message code='ezBoard.t00029' />");
 		            return;
-		        }
+		        } */
 		        if (document.getElementById("chk_reservation").checked && pStartDate == "") {
 		            alert("<spring:message code='ezBoard.t385' />");
 		            return;
@@ -824,10 +826,11 @@
 		            }
 		            
 		            try {
-						window.opener.leftCountRf();
+						window.opener.leftCountRf(pBoardID);
 					} catch (e) {
 					}
 					
+					// 전자결재문서(시행문, 문서발송)를 게시한 경우의 자동발송 처리 (SuccessBoard 함수)
 		            try {
 			            if (window.parent != null && window.parent.SuccessBoard != undefined) {
 			                try {
@@ -853,7 +856,15 @@
 		                                    return;
 		                                }
 		                                if (checkboard.indexOf("mailReadContent.do") < 0) {
-		                                    window.opener.getBoardList();
+		                                	/* 2019-10-24 홍승비 - 게시물 임시보관함에서 저장 또는 임시저장 시, 미리보기가 열려있으면 전체 새로고침 (일반/QNA게시판) */
+		                					if ((window.opener.location.href.indexOf("/ezBoard/boardItemListTemp.do") > -1) &&
+		                							((window.opener.document.getElementById("PreviewRayerH").style.display != "none" && window.opener.document.getElementById("PreviewRayerH").style.display != "") ||
+		                							(window.opener.document.getElementById("PreviewRayerW").style.display != "none" && window.opener.document.getElementById("PreviewRayerW").style.display != ""))) {
+		                						window.opener.refresh_onclick();
+		                					}
+		                					else {
+		                						window.opener.getBoardList();
+		                					}
 		                                }
 		                            } catch (e) {
 		                            }
@@ -1310,9 +1321,9 @@
 		                for (i = 0; i < nodes.length; i++) {
 		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "");
 		                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
-		                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
-		                    	filepath = filepath + ".ezd";
-		                    }
+		                    //if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
+		                    //	filepath = filepath + ".ezd";
+		                    //}
 		                    
 		                    strRet += "tempUploadFile/" + filepath + "|";
 		                }
@@ -2088,7 +2099,7 @@
 			</script>
 	    </c:if>
 	</head>
-	<body class="popup" style="height: 97%;" ondragover="bodydragover(event)">
+	<body class="popup" style="height: 97%;">
 	    <table class="layout" style="width: 100%;">
 	        <tr>
 	            <td style="height: 20px">
@@ -2127,8 +2138,8 @@
 	            <td>
 	                <div class="portlet_tabpart03" style="margin:0px;border-top:0px;padding:0px;margin-bottom:4px">
 	                    <div class="portlet_tabpart03_top" id="tab1">
-	                        <p id="MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezBoard.t321' /></span></p>
-	                        <p id="MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezBoard.t60' /></span></p>
+	                        <p id="MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezBoard.hsbJP02' /></span></p>
+	                        <p id="MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezBoard.hsbJP01' /></span></p>
 	                    </div>
 	                </div>
 	            </td>
@@ -2253,7 +2264,8 @@
 	                </table>
 	                <table id="tab02" class="content" style="display: none;">
 	                	<c:choose>
-	                		<c:when test="${(mode== 'new' || mode== 'new1' || reservedItem == 'true' || url != '') && boardInfo.guBun != '2'}">
+	                	<%-- 2019-12-02 홍승비 - 임시저장과 예약게시 기능을 동시에 사용 가능하도록 수정 --%>
+	                		<c:when test="${(mode== 'new' || mode== 'new1' || mode == 'temp' || reservedItem == 'true' || url != '') && boardInfo.guBun != '2'}">
 			                    <tr id="tdReservationDate">
 	                		</c:when>
 	                		<c:otherwise>
@@ -2281,7 +2293,8 @@
 	                        <th><spring:message code='ezBoard.t156' /></th>
 	                        <td>
 	                        	<c:choose>
-	                        		<c:when test="${(mode != 'modify' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999') || (url != '') }">
+	                        	<%-- 2019-11-22 홍승비 - 임시저장한 게시물 재작성 시에도 게시만료일 설정 여부가 제대로 반영되도록 수정 --%>
+	                        		<c:when test="${(mode != 'modify' && mode != 'temp' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999') || (url != '') }">
 			                            <span id="Chkbox">
 			                                <span style="line-height: 20px; height: 20px; display: inline-block;">
 			                                    <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;"><spring:message code='ezBoard.t433' /></span>
@@ -2312,7 +2325,7 @@
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t209' /></th>
 	                        <td>
-	                            <input type="text" id="txtAbstract" style="WIDTH: 95%; word-break: break-all" value="" maxlength="100">
+	                            <input type="text" id="txtAbstract" style="WIDTH: 100%; word-break: break-all" value="" maxlength="100">
 							</td>
 	                    </tr>
 	                    <tr id="pUseBackGroundTR" style="display:none;" height="50px">
@@ -2421,7 +2434,7 @@
 	                    <tr style="display: none">
 	                        <th><spring:message code='ezBoard.t209' /></th>
 	                        <td style="vertical-align: middle" colspan="2">
-	                            <input type="text" id="txtAbstract" style="WIDTH: 95%; word-break: break-all" value="" maxlength="100"></td>
+	                            <input type="text" id="txtAbstract" style="WIDTH: 100%; word-break: break-all" value="" maxlength="100"></td>
 	                    </tr>
 	                </table>
 	            </td>

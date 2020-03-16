@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezEmail.service.impl;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
@@ -13,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -35,11 +35,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import com.google.gson.JsonArray;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -55,6 +54,7 @@ import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
+import egovframework.ezEKP.ezEmail.vo.MailDeletedIdVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
@@ -108,11 +108,19 @@ public class EzEmailServiceImpl implements EzEmailService {
 	@Autowired
 	private EzEmailDAO ezEmailDAO;
 
+	@Resource(name = "jspw")
+	private String jspw;
+
 	@Override
 	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception {
 		return ezEmailDAO.getOrphanedMailBlobList();
 	}
-		
+
+	@Override
+	public List<MailDeletedIdVO> getMailDeletedIdList() throws Exception {
+		return ezEmailDAO.getMailDeletedIdList();
+	}
+	
 	@Override
 	public List<MailGeneralVO> getMailGeneral(int tenantId, String userId) throws Exception {
 		logger.debug("getMailGeneral started. tenantId=" + tenantId + ",userId=" + userId);
@@ -139,7 +147,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		MailGeneralVO mailGeneral = new MailGeneralVO();
         		String textOption = (String)obj.get("textOption");
         		
-        		if (textOption == null) {
+        		if (textOption == null || textOption.trim().equals("")) {
         			if (usePlainForDefaultTextOption.equalsIgnoreCase("YES")) {
         				textOption = "PLAIN";
         			} else {
@@ -1039,6 +1047,15 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("setIndividualAlias started.");
 		logger.debug("userId=" + userId + ",tenantID=" + tenantID + ",primaryMail=" + primaryMail);
 		
+		return  setIndividualAlias(userId, tenantID, primaryMail, individualAliasList, "user", "");
+	}
+	
+	@Override
+	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList, String type, String companyId) throws Exception {
+		logger.debug("setIndividualAlias(2) started.");
+		type = type.equals("") ? "user" : type;
+		logger.debug("userId=" + userId + ",tenantID=" + tenantID + ",primaryMail=" + primaryMail, ", type=" + type + ", companyId=" + companyId);
+		
 		String returnValue = "ERROR";
 		
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
@@ -1058,13 +1075,30 @@ public class EzEmailServiceImpl implements EzEmailService {
 			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
 			
 			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
-				ezOrganAdminDao.setUserPrimaryMail(userId, tenantID, primaryMail);
+				logger.debug("== setPrimaryMail");
+
+				if (type.equals("user") || type.equals("share")) {
+					ezOrganAdminDao.setUserPrimaryMail(userId, tenantID, primaryMail);
+				} else if (type.equals("dept")) {
+					Map<String, Object> deptMap = new HashMap<String, Object>();
+					
+					deptMap.put("MAIL", primaryMail);
+					deptMap.put("CN", userId);
+					deptMap.put("TENANT_ID", tenantID);
+					
+					ezOrganAdminDao.setDeptPrimaryMail(deptMap);
+				} else if (type.equals("ml")) {
+					inputParams = "userId=" + userId + "&companyId=" + companyId + "&primaryMail=" + primaryMail;
+					requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setDistributionPrimaryMail";
+					response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+					logger.debug("ml response=" + response);
+				}
 				
 				returnValue = "OK";
 			}
 		}						
 		
-		logger.debug("setIndividualAlias ended. returnValue=" + returnValue);
+		logger.debug("setIndividualAlias(2) ended. returnValue=" + returnValue);
 		
 		return returnValue;
 	}
@@ -1134,6 +1168,93 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return returnValue;
 	}
 	
+	@Override
+	public String checkIndividualAliasWithoutOwned(String userEmail, String individualAlias, int tenantId) throws Exception {
+		logger.debug("checkIndividualAliasWithoutOwned started. userEmail={}, individualAlias={}", userEmail, individualAlias);
+
+		String returnValue = "ERROR";
+
+		String inputParams = new StringBuilder("userEmail=").append(URLEncoder.encode(userEmail, "UTF-8"))
+				.append("&individualAlias=").append(URLEncoder.encode(individualAlias, "UTF-8"))
+				.append("&tenantId=").append(tenantId).toString();
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/checkIndividualAliasWithoutOwned";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+
+			if (((String) responseObj.get("resultCode")).equals("OK")) {
+				int reasonCode = ((Long) responseObj.get("reasonCode")).intValue();
+				if (reasonCode == 0) {
+					returnValue = "OK";
+				} else if (reasonCode == -1) {
+					returnValue = "OTHERDOMAIN";
+				} else if (reasonCode == -2) {
+					returnValue = "OTHERUSER";
+				} else if (reasonCode == -4) {
+					returnValue = "INVALIDFORMAT";
+				}
+			}
+		}
+
+		logger.debug("checkIndividualAliasWithoutOwned ended. returnValue=" + returnValue);
+		return returnValue;
+	}
+
+	@Override
+	public String updatePrimaryIndividualAlias(String userEmail, String originAlias, String updateAlias, int tenantId) throws Exception {
+		logger.debug("updatePrimaryIndividualAlias started.");
+		logger.debug("userEmail={}, originAlias={}, updateAlias={}", userEmail, originAlias, updateAlias);
+
+		String returnValue = "ERROR";
+
+		String inputParams = "userEmail=" + URLEncoder.encode(userEmail, "UTF-8")
+				+ "&originAlias=" + URLEncoder.encode(originAlias, "UTF-8")
+				+ "&updateAlias=" + URLEncoder.encode(updateAlias, "UTF-8")
+				+ "&tenantId=" + tenantId;
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/updatePrimaryIndividualAlias";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+			String resultCode = (String) responseObj.get("resultCode");
+			Long reasonCode = (Long) responseObj.get("reasonCode");
+
+			if (resultCode.equals("OK") && (reasonCode == 0 || reasonCode == 2)) {
+				try {
+					String userId = userEmail.substring(0, userEmail.indexOf("@"));
+					ezOrganAdminDao.setUserPrimaryMail(userId, tenantId, updateAlias);
+
+					if (originAlias.isEmpty()) {
+						ezCommonService.insertUserConfigInfo(tenantId, userId, "userFriendlyEmailAddress", updateAlias);
+					} else {
+						ezCommonService.updateUserConfigInfo(tenantId, userId, "userFriendlyEmailAddress", updateAlias);
+					}
+					returnValue = "OK";
+				} catch (Exception ex) {
+					logger.debug("set primary error!");
+					ex.printStackTrace();
+				}
+			} else if (reasonCode == -1) {
+				returnValue = "OTHERUSER";
+			} else if (reasonCode == -2) {
+				returnValue = "INVALIDFORMAT";
+			}
+		}
+
+		logger.debug("updatePrimaryIndividualAlias ended. returnValue=" + returnValue);
+
+		return returnValue;
+	}
+
 	@Override
 	public Map<String, String> getAliasAddressMap(List<String> addressList, int tenantId) throws Exception {
 		logger.debug("getAliasAddressMap started. tenantId=" + tenantId);
@@ -1227,90 +1348,192 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("sendMail started.");
 		logger.debug("from=" + from + ",subject=" + subject + ",isSaved=" + isSaved);
 		
-		IMAPAccess ia = null;
+//		IMAPAccess ia = null;
+//		
+//		try {
+//			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+//					userEmail, password);
+//			
+//			MimeMessage message = sa.createMimeMessage();
+//			
+//			// set from
+//			logger.debug("from=" + from.getAddress());
+//			message.setFrom(from);
+//			
+//			// set to
+//			for (InternetAddress to : toArr) {
+//				logger.debug("to=" + to.getAddress());
+//				message.addRecipient(RecipientType.TO, to);
+//			}
+//			
+//			// set cc
+//			if (ccArr != null) {
+//				for (InternetAddress cc : ccArr) {
+//					logger.debug("cc=" + cc.getAddress());
+//					message.addRecipient(RecipientType.CC, cc);
+//				}
+//			}
+//			
+//			// set bcc
+//			if (bccArr != null) {
+//				for (InternetAddress bcc : bccArr) {
+//					logger.debug("bcc=" + bcc.getAddress());
+//					message.addRecipient(RecipientType.BCC, bcc);
+//				}
+//			}
+//			
+//			// set subject
+//			logger.debug("subject=" + subject);
+//			message.setSubject(subject, "UTF-8");
+//			
+//			// set content
+//			message.setContent(content, "text/html; charset=utf-8");
+//			
+//			// set sentDate
+//	        message.setSentDate(Calendar.getInstance().getTime());
+//	        
+//	        // set User-Agent header
+//	        message.setHeader("User-Agent", "JMocha Mail 1.0");
+//	        
+//			// set importance header
+//			if (importance != null && importance != EmailImportance.NORMAL) {
+//				message.setHeader("Importance", importance.getMappingValue());
+//				message.setHeader("X-Priority", importance.getPriority());
+//			}
+//	        
+//	        // set X-JMocha-Noti header
+//	        message.setHeader("X-JMocha-Noti", "true");
+//	        
+//	        Transport.send(message);
+//	        logger.debug("Mail send success.");
+//	        
+//	        if (isSaved) {
+//	        	//보낸편지함에 저장
+//	        	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+//	        			userEmail, password, egovMessageSource, userLocale, ezEmailUtil);
+//	        	
+//	    		Folder sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(userLocale));
+//	    		
+//	    		if (!sentFolder.exists()) {
+//	    			ia.createFolder(sentFolder.getFullName());
+//	    		}
+//	    		
+//	    		message.setFlag(Flags.Flag.SEEN, true);
+//    			sentFolder.open(Folder.READ_WRITE);
+//    			sentFolder.appendMessages(new Message[]{message});
+//    			sentFolder.close(true);
+//    			logger.debug("Mail is successfully saved in sent folder.");
+//	        }
+//        
+//		} catch (MessagingException e) {
+//			e.printStackTrace();
+//		} finally {
+//			if (ia != null) {
+//				ia.close();
+//			}
+//		}
 		
-		try {
-			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-					userEmail, password);
-			
-			MimeMessage message = sa.createMimeMessage();
-			
-			// set from
-			logger.debug("from=" + from.getAddress());
-			message.setFrom(from);
-			
-			// set to
-			for (InternetAddress to : toArr) {
-				logger.debug("to=" + to.getAddress());
-				message.addRecipient(RecipientType.TO, to);
-			}
-			
-			// set cc
-			if (ccArr != null) {
-				for (InternetAddress cc : ccArr) {
-					logger.debug("cc=" + cc.getAddress());
-					message.addRecipient(RecipientType.CC, cc);
-				}
-			}
-			
-			// set bcc
-			if (bccArr != null) {
-				for (InternetAddress bcc : bccArr) {
-					logger.debug("bcc=" + bcc.getAddress());
-					message.addRecipient(RecipientType.BCC, bcc);
-				}
-			}
-			
-			// set subject
-			logger.debug("subject=" + subject);
-			message.setSubject(subject, "UTF-8");
-			
-			// set content
-			message.setContent(content, "text/html; charset=utf-8");
-			
-			// set sentDate
-	        message.setSentDate(Calendar.getInstance().getTime());
-	        
-	        // set User-Agent header
-	        message.setHeader("User-Agent", "JMocha Mail 1.0");
-	        
-			// set importance header
-			if (importance != EmailImportance.NORMAL) {
-				message.setHeader("Importance", importance.getMappingValue());
-				message.setHeader("X-Priority", importance.getPriority());
-			}
-	        
-	        // set X-JMocha-Noti header
-	        message.setHeader("X-JMocha-Noti", "true");
-	        
-	        Transport.send(message);
-	        logger.debug("Mail send success.");
-	        
-	        if (isSaved) {
-	        	//보낸편지함에 저장
-	        	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	        			userEmail, password, egovMessageSource, userLocale, ezEmailUtil);
-	        	
-	    		Folder sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(userLocale));
-	    		
-	    		if (!sentFolder.exists()) {
-	    			ia.createFolder(sentFolder.getFullName());
-	    		}
-	    		
-	    		message.setFlag(Flags.Flag.SEEN, true);
-    			sentFolder.open(Folder.READ_WRITE);
-    			sentFolder.appendMessages(new Message[]{message});
-    			sentFolder.close(true);
-    			logger.debug("Mail is successfully saved in sent folder.");
-	        }
-        
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
-		}
+		ezEmailUtil.createMail(userEmail, password)
+			.from(from)
+			.to(toArr)
+			.cc(ccArr)
+			.bcc(bccArr)
+			.subject(subject)
+			.content(content)
+			.importance(importance)
+			.saveSentMailbox(isSaved)
+		.send();
+		
+        logger.debug("sendMail ended.");
+	}
+	
+	/**
+	 * 메일 보내기 서비스
+	 * @param userEmail 유저 메일 주소
+	 * @param password 유저 메일 패스워드(JMochaSuperPassword)
+	 * @param userLocale 유저 로케일(메세지 프로퍼티를 판별하기 위함)
+	 * @param from 보내는 사람
+	 * @param toArr 받는 사람
+	 * @param ccArr 참조(없으면 null)
+	 * @param bccArr 숨은 참조(없으면 null)
+	 * @param subject 메일 제목
+	 * @param content 메일 내용(html형식)
+	 * @throws Exception
+	 */
+	@Override
+	public void sendMail(String userEmail, String password, Locale userLocale, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content) throws Exception {
+		logger.debug("sendMail started.");
+		logger.debug("from=" + from + ",subject=" + subject);
+		
+//		IMAPAccess ia = null;
+//		
+//		try {
+//			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+//					userEmail, password);
+//			
+//			MimeMessage message = sa.createMimeMessage();
+//			
+//			// set from
+//			logger.debug("from=" + from.getAddress());
+//			message.setFrom(from);
+//			
+//			// set to
+//			for (InternetAddress to : toArr) {
+//				logger.debug("to=" + to.getAddress());
+//				message.addRecipient(RecipientType.TO, to);
+//			}
+//			
+//			// set cc
+//			if (ccArr != null) {
+//				for (InternetAddress cc : ccArr) {
+//					logger.debug("cc=" + cc.getAddress());
+//					message.addRecipient(RecipientType.CC, cc);
+//				}
+//			}
+//			
+//			// set bcc
+//			if (bccArr != null) {
+//				for (InternetAddress bcc : bccArr) {
+//					logger.debug("bcc=" + bcc.getAddress());
+//					message.addRecipient(RecipientType.BCC, bcc);
+//				}
+//			}
+//			
+//			// set subject
+//			logger.debug("subject=" + subject);
+//			message.setSubject(subject, "UTF-8");
+//			
+//			// set content
+//			message.setContent(content, "text/html; charset=utf-8");
+//			
+//			// set sentDate
+//	        message.setSentDate(Calendar.getInstance().getTime());
+//	        
+//	        // set User-Agent header
+//	        message.setHeader("User-Agent", "JMocha Mail 1.0");
+//	        	        
+//	        // set X-JMocha-Noti header
+//	        message.setHeader("X-JMocha-Noti", "true");
+//	        
+//	        Transport.send(message);
+//	        
+//	        logger.debug("Mail send success.");	                
+//		} catch (MessagingException e) {
+//			e.printStackTrace();
+//		} finally {
+//			if (ia != null) {
+//				ia.close();
+//			}
+//		}
+		
+		ezEmailUtil.createMail(userEmail, password)
+			.from(from)
+			.to(toArr)
+			.cc(ccArr)
+			.bcc(bccArr)
+			.subject(subject)
+			.content(content)
+		.send();
 		
         logger.debug("sendMail ended.");
 	}
@@ -1784,6 +2007,59 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return distributionList;
 	}
+
+	@Override
+	public List<MailDistributionVO> getDistributionSearchListByItem(String companyId, int tenantId, String searchValue, String searchType) throws Exception {
+		logger.debug("getDistributionSearchListByItem started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchValue=" + searchValue + ",searchType=" + searchType);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
+		inputParams += "&searchType=" + URLEncoder.encode(searchType, "UTF-8");
+		inputParams += "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionSearchListByItem";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100;
+		List<MailDistributionVO> distributionList = new ArrayList<MailDistributionVO>();	
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONArray resultArray = (JSONArray)responseObj.get("result");
+					
+					for (int i=0; i<resultArray.size(); i++) {
+						MailDistributionVO vo = new MailDistributionVO();
+						
+						JSONObject obj = (JSONObject)resultArray.get(i);
+						
+						vo.setName((String)obj.get("distributionName"));
+						vo.setId((String)obj.get("distributionId"));
+						vo.setMail((String)obj.get("distributionMail"));
+						
+						distributionList.add(vo);
+					}
+				}
+			}
+		}
+		
+		logger.debug("getDistributionSearchListByItem ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug(distributionList.toString());
+		
+		return distributionList;
+	}
 	
 	@Override
 	public MailSignatureVO getInitMailSignature(int tenantId) throws Exception {
@@ -1818,6 +2094,48 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		logger.debug("getInitMailSignature ended.");
 		return mailSignatureVO;
+	}
+	
+	@Override
+	public boolean addEzTalkNotification(String userId, String senderName, String subject, String type) {
+		logger.debug("addEzTalkNotification started. userId=" + userId + ",senderName=" + senderName + ",type=" + type);
+		
+		boolean returnValue = false;
+		
+		try {
+			// null 인 경우는 empty string으로 대체한다.
+			userId = userId != null ? userId : "";
+			senderName = senderName != null ? senderName : "";
+			subject = subject != null ? subject : "";
+			type = type != null ? type : "";
+			
+			String userIdParam = "userId=" + userId;
+			String senderNameParam = "senderName=" + URLEncoder.encode(senderName, "UTF-8");
+			String subjectParam = "subject=" + URLEncoder.encode(subject, "UTF-8");
+			String typeParam = "type=" + type;
+			
+			String inputParams = userIdParam + "&" + senderNameParam + "&" + subjectParam + "&" + typeParam;
+	
+			logger.debug("inputParams=" + inputParams);
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/ezTalkGate/addNotification";			
+			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			
+			if (response != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+				
+				if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+					returnValue = true;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("addEzTalkNotification ended. returnValue=" + returnValue);
+		
+		return returnValue;
 	}
 	
 	@Override
@@ -2350,6 +2668,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         			map.put("shareId", (String)obj.get("shareId"));
         			map.put("deletePermission", (String)obj.get("deletePermission"));
         			map.put("sendPermission", (String)obj.get("sendPermission"));
+        			map.put("managePermission", (String)obj.get("managePermission"));
     				map.put("shareName", (String)obj.get("shareName"));
         			map.put("mail", (String)obj.get("mail"));
         			map.put("compId", (String)obj.get("compId"));
@@ -2490,6 +2809,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         			userVO.setCompName((String)user.get("compName"));
         			userVO.setDeletePermission((String)user.get("deletePermission"));
         			userVO.setSendPermission((String)user.get("sendPermission"));
+        			userVO.setManagePermission((String)user.get("managePermission"));
         			
         			userList.add(userVO);
         		}
@@ -2523,11 +2843,45 @@ public class EzEmailServiceImpl implements EzEmailService {
         	shareMailBoxPermissonInfo.setShareId((String)result.get("shareId"));
         	shareMailBoxPermissonInfo.setDeletePermission((String)result.get("delete_permission"));
         	shareMailBoxPermissonInfo.setSendPermission((String)result.get("send_permission"));
+        	shareMailBoxPermissonInfo.setManagePermission((String)result.get("manage_permission"));
         	shareMailBoxPermissonInfo.setShareName((String)result.get("displayname"));
         }
 		
 		logger.debug("getSharedMailboxPermissionInfo ended.");
 		return shareMailBoxPermissonInfo;
+	}
+	
+	@Override
+	public JSONArray getFolderQuota(String email, Locale locale) throws Exception {
+		logger.debug("getFolderQuota started.");
+		String userIdParam = "primaryMail=" + URLEncoder.encode(email, "UTF-8");
+		String inputParams = userIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getFolderQuota";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		
+		JSONArray jsonArr =  (JSONArray) object.get("resultData");
+		List<JSONObject> list = (List<JSONObject>) object.get("resultData");
+		
+		for(int i = 0; i <list.size(); i++){
+			
+			String mailboxName = (String) list.get(i).get("mailboxName");
+			list.get(i).put("mailboxChangeName", ezEmailUtil.getDisplayNameFromFolderId(mailboxName, locale));
+			String mailboxId = (String) list.get(i).get("mailboxId");
+			double size = Double.parseDouble(list.get(i).get("mailboxQuota").toString());
+			String mailboxQuota = ezEmailUtil.getSizeWithUnit(size);
+			list.get(i).replace("mailboxQuota", mailboxQuota);
+			String notReadCount = (String) list.get(i).get("notReadCount");
+			String mailCount = (String) list.get(i).get("mailCount");
+		}
+			
+		logger.debug("getFolderQuota ended.");
+		return jsonArr;
 	}
 	
 	@Override
@@ -2652,6 +3006,54 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}
 		
 		logger.debug("getSharedMailboxSearchList ended. listSize=" + list.size());
+		return list;
+	}
+	
+	
+	@Override
+	public List<MailSharedMailboxVO> getSharedMailboxListSearchByItem(String companyId, int tenantId, String searchType, String searchValue) throws Exception {
+		logger.debug("getSharedMailboxListSearchByItem started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchType=" + searchType + ",searchValue=" + searchValue);
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+		List<MailSharedMailboxVO> list = new ArrayList<>();
+		
+		if (useSharedMailbox.equals("YES")) {
+			String deptId = "shared_mailbox_" + companyId;
+			
+			String inputParams = "tenantId=" + tenantId + "&deptId=" + URLEncoder.encode(deptId, "UTF-8") 
+					+ "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8") + "&searchType=" + URLEncoder.encode(searchType, "UTF-8");
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getSharedMailboxListSearchByItem";
+			String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			logger.debug("strJson=" + strJson);
+
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+			
+			if (object.get("resultCode").equals("OK")) {
+	        	JSONArray array = (JSONArray)object.get("result");
+	        	
+	        	if (array != null) {
+	        		int length = array.size();
+	        		
+	        		MailSharedMailboxVO vo = null;
+	        		
+	        		for (int i = 0; i < length; i++) {
+	        			JSONObject sharedMailbox = (JSONObject)array.get(i);
+	        			vo = new MailSharedMailboxVO();
+	        			
+	        			vo.setShareId((String)sharedMailbox.get("shareId"));
+	        			vo.setShareMail((String)sharedMailbox.get("shareMail"));
+	        			vo.setShareName((String)sharedMailbox.get("shareName"));
+	        			
+	        			list.add(vo);
+	        		}
+	        	}
+	        }
+		}
+		
+		logger.debug("getSharedMailboxListSearchByItem ended. listSize=" + list.size());
 		return list;
 	}
 	
@@ -2935,6 +3337,67 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	/**
+	 * 공용배포그룹 추가 (도메인 설정)
+	 */
+	@Override
+	public int addDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, 
+			String compId, int tenantId, String selectDomain) throws Exception {
+		logger.debug("addDistributionList started.");
+		logger.debug("id=" + id + ",name=" + name + ",memberList.size=" + memberList.size() + ",subList.size=" + subList.size() 
+			+ ",compId=" + compId + ",tenantId=" + tenantId + ", selectDomain=" + selectDomain);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String companyDomainName = ezCommonService.getCompanyConfig(tenantId, compId, "DomainName");
+		companyDomainName = !selectDomain.equals("") ? selectDomain : companyDomainName;
+
+		String inputParams = "companyId=" + URLEncoder.encode(compId, "UTF-8") 
+			+ "&name=" + URLEncoder.encode(name, "UTF-8") 
+			+ "&id=" + URLEncoder.encode(id, "UTF-8") 
+			+ "&domain=" + URLEncoder.encode(domain, "UTF-8");
+
+		// 공용배포그룹 맴버가 조직도 or 공용그룹인 경우
+		for (int i = 0; i < memberList.size(); i++) {
+			inputParams += "&memberId=" + URLEncoder.encode(memberList.get(i), "UTF-8");
+		}
+
+		// 공용배포그룹 멤버가 주소록 or 직접입력인 경우
+		for (int i = 0; i < subList.size(); i++) {
+			String subName = subList.get(i).get("subName");
+			String subEmail = subList.get(i).get("subEmail");
+			inputParams += "&subName=" + URLEncoder.encode(subName, "UTF-8") + "&subEmail=" + URLEncoder.encode(subEmail, "UTF-8");
+		}
+		
+		// companyDomainName != tenantDomain > 선택한 도메인이 tenant domain일 경우 아래의 처리는 하지 않는다.
+		if (!companyDomainName.isEmpty() && !companyDomainName.equals(domain)) {
+		// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.
+			String email = id + "@" + companyDomainName;
+			inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
+		}
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setDistributionList";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			resultCode = (String)responseObj.get("resultCode");		
+
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}
+
+		logger.debug("addDistributionList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		return reasonCode;
+	}
+	
+	/**
 	 * 공용배포그룹 수정
 	 */
 	@Override
@@ -3048,4 +3511,310 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getTotalUnreadCount ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		return totalUnreadCount;
 	}
+	
+	/** 
+	 * 공유사서함까지 포함하여 전체 메일함 안 읽은 갯수 가져오기
+	 * @param requestObject null 값을 허용하며 unreadCountMap 이 필요할때만 넘김
+	 */
+	@Override
+	public JSONObject getUnreadCountAll(JSONObject requestObject, String userId, Locale locale, int tenantId) throws Exception {
+		Map<String, Object> resultObject = new HashMap<>();
+		IMAPAccess ia = null;
+
+		try {
+			requestObject = Optional.ofNullable(requestObject).orElse(new JSONObject());
+			JSONArray requestMailboxList = (JSONArray) requestObject.get("mailboxList");
+
+			String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+			String userAccount = userId + "@" + domainName;
+
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+			String shareId = null;
+
+			if (useSharedMailbox.equals("YES")) {
+				shareId = (String) requestObject.get("shareId");
+
+				if (shareId != null) {
+					logger.debug("shareId=" + shareId);
+
+					if (!checkUserShareId(userId, shareId, tenantId)) {
+						logger.debug("the user cannot access the shareId.");
+						logger.debug("getFolderUnreadCount ended.");
+
+						throw new Exception("CANNOT_ACCESS_SHAREID");
+					}
+
+					userAccount = shareId + "@" + domainName;
+				}
+			}
+
+			logger.debug("userId=" + userId + ",userAccount=" + userAccount);
+
+			Map<String, Object> unreadCountMap = new HashMap<>();
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userAccount, jspw, egovMessageSource, locale, ezEmailUtil);
+
+			if (requestMailboxList != null) {
+				for (int i = 0; i < requestMailboxList.size(); i++) {
+					String mailboxName = (String) requestMailboxList.get(i);
+					unreadCountMap.put(mailboxName, ia.getUnreadCount(mailboxName));
+				}
+			}
+
+			int totalUnreadCount = getTotalUnreadCount(userId, tenantId);
+			int totalUnreadCountInAllAccounts = totalUnreadCount;
+
+			if (useSharedMailbox.equals("YES")) {
+				List<Map<String, String>> shareInfoList = getUserSharedMailboxList(userId, true, tenantId);
+				resultObject.put("shareInfoList", shareInfoList);
+
+				for (Map<String, String> item : shareInfoList) {
+					String unreadCountStr = item.get("totalUnreadCount");
+
+					if (unreadCountStr != null) {
+						try {
+							int unreadCountInShared = Integer.parseInt(unreadCountStr);
+
+							totalUnreadCountInAllAccounts += unreadCountInShared;
+						} catch (NumberFormatException ne) {
+							ne.printStackTrace();
+						}
+					}
+				}
+			}
+
+			resultObject.put("shareId", shareId == null ? "" : shareId);
+			resultObject.put("unreadCountMap", unreadCountMap);
+			resultObject.put("totalUnreadCount", totalUnreadCount);
+			resultObject.put("totalUnreadCountInAllAccounts", totalUnreadCountInAllAccounts);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new JSONObject(resultObject);
+	}
+
+	/**
+	 * 전체 도메인 가져오기(tbl_tenant_config:MailInnerDomain)
+	 */
+	@Override
+	public String getMultiDomainList(int tenantId) throws Exception {
+		logger.debug("getMultiDomainList started.");
+		logger.debug("tenantId=" + tenantId);
+		
+		String domainList = "";
+		
+		String inputParams = "tenantId=" + URLEncoder.encode(Integer.toString(tenantId), "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL")+ "/jMochaAccess/getMailInnerDomain";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+
+			String resultCode = (String) responseObj.get("resultCode");
+
+			if (resultCode.equalsIgnoreCase("OK")) {
+				domainList = (String)responseObj.get("result");
+			}
+		}
+
+		logger.debug("getMultiDomainList ended.");
+		return domainList;
+	}
+	
+	/**
+	 * 전체 도메인 추가
+	 */
+	@Override
+	public int addMultiDomain(int tenantId, String domainName) throws Exception { 
+		logger.debug("addMultiDomain started.");
+		logger.debug("tenantId=" + tenantId + ", domainName=" + domainName);
+		
+		String resultCode = "";
+		int reasonCode = -100;
+		
+		String inputParams = "tenantId=" + URLEncoder.encode(Integer.toString(tenantId), "UTF-8")
+				+ "&domain=" + URLEncoder.encode(domainName, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL")+ "/jMochaAccess/addMailDomain";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			resultCode = (String)responseObj.get("resultCode");	
+			reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+
+			logger.debug("resultCode=" + resultCode + ", reasonCode=" + reasonCode);
+		}
+		
+		logger.debug("addMultiDomain ended.");
+		return reasonCode;
+	}
+	
+	/**
+	 * 전체 도메인 삭제
+	 */
+	@Override
+	public int delMultiDomain(int tenantId, String delDomain, String saveDomainList) throws Exception { 
+		logger.debug("delMultiDomain started.");
+		logger.debug("tenantId=" + tenantId + ", delDomain=" + delDomain + ", saveDomainList=" + saveDomainList);
+		
+		String resultCode = "";
+		int reasonCode = -100;
+		
+		String inputParams = "tenantId=" + URLEncoder.encode(Integer.toString(tenantId), "UTF-8")
+				+ "&delDomain=" + URLEncoder.encode(delDomain, "UTF-8") 
+				+ "&saveDomainList=" + URLEncoder.encode(saveDomainList, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL")+ "/jMochaAccess/delMailDomain";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			resultCode = (String)responseObj.get("resultCode");	
+			reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+
+			logger.debug("resultCode=" + resultCode + ", reasonCode=" + reasonCode);
+		}
+		
+		logger.debug("delMultiDomain ended.");
+		return reasonCode;
+	}
+	
+	/**
+	 * companyConfig 가져오기
+	 */
+	@Override
+	public String getCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception {
+		logger.debug("getCompanyConfig started.");
+		logger.debug("tenantId=" + tenantId + ", companyId=" + companyId + ", propertyName=" + propertyName);
+
+		String returnStr = "";
+		
+		String inputParams = "tenantId=" + URLEncoder.encode(Integer.toString(tenantId), "UTF-8")
+				+ "&companyId=" + URLEncoder.encode(companyId, "UTF-8") 
+				+ "&propertyName=" + URLEncoder.encode(propertyName, "UTF-8") ;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL")+ "/jMochaEzHrMaster/getTblCompanyConfig";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+
+			String resultCode = (String) responseObj.get("resultCode");
+			int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+
+			if (resultCode.equalsIgnoreCase("OK") && reasonCode == 0) {
+				JSONObject re = (JSONObject) responseObj.get("result");
+				returnStr = (String) re.get("propertyValue");
+			}
+		}
+
+		logger.debug("getCompanyConfig ended.");
+		return returnStr;
+	}
+
+	/**
+	 * 회사 도메인 저장
+	 */
+	@Override
+	public int saveCompanyMultiDomain(int tenantId, String companyId, String primaryDomain, String saveDomainList) throws Exception {
+		logger.debug("saveCompanyMultiDomain started.");
+		logger.debug("tenantId=" + tenantId + ", companyId=" + companyId + ", primaryDomain=" + primaryDomain + ", saveDomainList=" + saveDomainList);
+
+		String resultCode = "";
+		int reasonCode = -100;
+		
+		String inputParams = "tenantId=" + URLEncoder.encode(Integer.toString(tenantId), "UTF-8")
+				+ "&companyId=" + URLEncoder.encode(companyId, "UTF-8") 
+				+ "&primaryDomain=" + URLEncoder.encode(primaryDomain, "UTF-8")
+				+ "&saveDomainList=" + URLEncoder.encode(saveDomainList, "UTF-8") ;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL")+ "/jMochaAccess/saveCompanyMailDomain";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			resultCode = (String)responseObj.get("resultCode");	
+			reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+
+			logger.debug("resultCode=" + resultCode + ", reasonCode=" + reasonCode);
+		}
+		
+		logger.debug("saveCompanyMultiDomain ended.");
+		return reasonCode;
+	}
+	
+	@Override
+	public String setIndividualAliasForMig(String userId, int tenantID, String targetAddr, String individualAlias) throws Exception {
+		logger.debug("setIndividualAliasForMig started.");
+		logger.debug("targetAddr=" + targetAddr + ",individualAlias=" + individualAlias);
+
+		String returnValue = "ERROR";
+		
+		String inputParams = "userId=" + URLEncoder.encode(targetAddr, "UTF-8")
+						+ "&individualAlias=" + URLEncoder.encode(individualAlias, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/setIndividualAliasForMig";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				logger.debug("setIndividualAliasForMig OK");
+				returnValue = "OK";
+			}
+		}						
+		
+		logger.debug("setIndividualAliasForMig ended. returnValue=" + returnValue);
+		
+		return returnValue;
+	}
+
+	@Override
+	public MailDistributionVO getDistributionInfo(String cn, int tenantId)
+			throws Exception {
+		logger.debug("getDistributionInfo started.");
+		
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		MailDistributionVO vo = new MailDistributionVO();
+		logger.debug("cn=" + cn + ",tenantId=" + tenantId + ", tenantDomain=" + tenantDomain);
+		
+		String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8") + "&domain=" + tenantDomain;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionInfo";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			JSONObject resultObj = (JSONObject)	responseObj.get("result");
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0 && resultObj != null) {
+				vo.setName((String)resultObj.get("groupName"));
+				vo.setId((String)resultObj.get("userName"));
+				vo.setMail((String)resultObj.get("mail"));
+			}
+		}		
+		
+		logger.debug("getDistributionInfo ended.");
+		return vo;
+	}
+	
 }

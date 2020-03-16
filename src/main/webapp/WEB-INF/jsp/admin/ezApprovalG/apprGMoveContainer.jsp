@@ -39,7 +39,10 @@
 			 border-top: 1px dotted #eee;
 			 background-color: #f8f8fa;
 		}
-		.mainlist tr th {border-top:0px}
+		.mainlist tr th {
+			border-top:0px;
+			border-bottom:1.5px solid #e2e3e6;
+		}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>

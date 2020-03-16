@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -21,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,6 +39,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -113,6 +116,16 @@ public class LoginController {
         int tenantId = loginService.getTenantId(serverName);
         
         logger.debug("serverName=" + serverName + ",tenantId=" + tenantId);
+    	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
+    	String userOs = ClientUtil.getClientInfo(request, "os");
+    	
+    	if (userOs.equals("iPhone") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
+    		logger.debug("mobileRedirection : " + mobileRedirection);
+    		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
+    			response.sendRedirect(mobileRedirection);
+    			return null;
+    		}
+    	}
     	
         String ezOffice365Auth = ezCommonService.getTenantConfig("ezOffice365Auth", tenantId);
         
@@ -197,12 +210,12 @@ public class LoginController {
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 
 		String _uid = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID());
-		
 		if (_uid == null || _uid.equals("")) {
 		    logger.debug("invalid _uid=" + _uid);		    
 		    return "";
 		}
 		
+		String loginId = _uid;
         String serverName = request.getServerName();
         int serverPort = request.getServerPort();
         int tenantId = loginService.getTenantId(serverName);
@@ -373,6 +386,16 @@ public class LoginController {
     			}
     		}
         	
+			// 사용자 이메일 alias 설정 페이지
+			String useMailAliasSettingOnLogin = ezCommonService.getTenantConfig("useMailAliasSettingOnLogin", tenantId);
+
+			if ("YES".equals(useMailAliasSettingOnLogin)
+					&& ezCommonService.getUserConfigInfo(tenantId, _uid, "userFriendlyEmailAddress").isEmpty()) {
+				Cookie loginIdCookie = new Cookie("loginId", loginId);
+				loginIdCookie.setPath("/");
+				response.addCookie(loginIdCookie);
+			}
+
         	// masteradmin의 암호로 로그인 가능하여 masteradmin 암호가 맞는 경우
         	// usermaster 테이블의 ip정보/loginCount는 업데이트하지 않고 접속 로그정보만 저장한다.
         	if (masteradminLogin) {
@@ -397,16 +420,6 @@ public class LoginController {
 	        	cookieName.setPath("/");
 	        	response.addCookie(cookieName);
 	        	
-	        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
-	        	if (!useSession.equals("")) {
-	        		int sessionTime = Integer.parseInt(useSession);
-	        		
-	        		if (sessionTime != 0) {
-	        			session = request.getSession(); 
-	        			session.setMaxInactiveInterval(sessionTime * 60);	// 세션 유지 시간 설정
-	        		}
-	        	}
-//	        	return "redirect:/ezPortal/portalMain.do";
 	        	return "redirect:/ezNewPortal/newPortalMain.do";
         		
         	} else {
@@ -466,10 +479,26 @@ public class LoginController {
     	        		diff = 1;
     	        	}
     	        	
+    	        	// 사용자정지 여부를 체크
+    	        	String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+    	        	
+    	        	if (useLoginStop != null && useLoginStop.equals("YES")) {
+    	        		int flag = checkStopUser(tenantId, resultVO.getId());
+    	        		if(flag > 0) {
+    	        			model.addAttribute("message", "stopUser");
+    	        			return "forward:/user/login/login.do";
+    	        		}
+    	        	}
+    	        	
     				//0보다 작아지면 패스워드 변경기한 Expired
-    				if (diff <= 0) {				
+    	        	//패스워드 다음에 변경 기능 추가. 2019-09-17 홍대표
+    	        	String passwordUpdateNextTime = request.getParameter("nextTime") != null ? request.getParameter("nextTime") : "";
+    				if (diff <= 0 && !passwordUpdateNextTime.equals("YES")) {				
     					model.addAttribute("isExpireDate", "Y");
     					model.addAttribute("userId", _uid);
+    					model.addAttribute("encryptID", loginVO.getEncryptID());
+    					model.addAttribute("encryptPass", loginVO.getEncryptPass());
+    					model.addAttribute("loginId", loginId);
     					
     		        	return "forward:/user/login/login.do";
     				} else {			
@@ -600,6 +629,7 @@ public class LoginController {
     
     public boolean ipAccessCheck(LoginVO loginVO) throws Exception {
     	logger.debug("ipAccessCheck start");
+    	logger.debug("userIP=" + loginVO.getIp());
     	
     	String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", loginVO.getTenantId());
     	
@@ -665,8 +695,36 @@ public class LoginController {
         			checkCnt = 0;
         		}
         		
-        	} else { // 대역이 등록 안돼있으면 무조건 false (useIPAccess컨피그 사용O -> id체크X -> 부서체크X -> 등록된 대역도 없으므로)
+        	} /*else { // 대역이 등록 안돼있으면 무조건 false (useIPAccess컨피그 사용O -> id체크X -> 부서체크X -> 등록된 대역도 없으므로)
         		return false;
+        	}*/
+        	
+        	// 허용 국가 리스트
+        	String countryCodeList = ezSystemAdminService.getAccessCountryList(loginVO.getTenantId());
+        	if (!countryCodeList.trim().equals("")) {
+        		String loginCountryCode = "";
+        		String loginCountryName = "";
+        		Boolean localIpChk = commonUtil.checkLocalIP(loginVO.getIp());
+        		
+        		if (localIpChk) {
+        			loginCountryCode = ezCommonService.getTenantConfig("systemCountryCode", loginVO.getTenantId());
+        		} else { 
+            		long changeIP = changeIPtoInteger(loginVO.getIp());
+            		logger.debug("changeIP=" + changeIP);
+            		
+            		CountryVO countryVo = loginService.getLoginIPCountry(changeIP);
+            		if (countryVo != null){
+            			loginCountryCode = countryVo.getCountryCode();
+            			loginCountryName = countryVo.getCountryName();
+            		}
+        		} // localIPChk end
+
+    			logger.debug("countryCodeList=" + countryCodeList);
+    			logger.debug("LoginIpCountry=" + loginCountryCode + ":" + loginCountryName);
+    			
+    			if (countryCodeList.indexOf(loginCountryCode) > -1){
+    				returnValue = true;
+    			}
         	}
         	
         	logger.debug("ipAccessCheck ended");
@@ -739,7 +797,8 @@ public class LoginController {
 		}
 		
 		// Cookie 생성
-		String cInfo = serverName + "///" + userId + "///" + encryptedUserPw + "///" + ipAddress + "///" + userPw + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId+ "///" + deptID + "///" + companyID;
+		//2019-09-16 김보미 - 사용하지 않으므로 패스워드 부분 주석 : userPw 값이 '/'로 끝나면 나중에 "///"으로 split할때 locale앞에 '/'가 붙어 문제 발생 
+		String cInfo = serverName + "///" + userId + "///" + "encryptedUserPw" + "///" + ipAddress + "///" + "userPw" + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId+ "///" + deptID + "///" + companyID;
 		String loginCookie = egovFileScrty.encryptAES(cInfo);
 		
     	Cookie cookieID = new Cookie("loginCookie", loginCookie);
@@ -773,7 +832,23 @@ public class LoginController {
     	Cookie multiLoginCookieID = new Cookie("multiLoginCookie", multiLoginTime);
     	multiLoginCookieID.setPath("/");
     	response.addCookie(multiLoginCookieID);
-    	// end
+
+		String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+		
+    	if (!useSession.isEmpty()) {
+    		int sessionTime = 0;
+    		
+    		try {
+    			sessionTime = Integer.parseInt(useSession);
+    		} catch (NumberFormatException nfe) {  
+    			nfe.printStackTrace();
+    		}
+    		
+        	if (sessionTime != 0) {
+        		HttpSession session = request.getSession();
+	        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
+        	}
+    	}    	
     }
     
     /**
@@ -819,7 +894,7 @@ public class LoginController {
         	
 			logger.debug("actionLogout redirectUri=" + redirectUri);
 			
-        	return "redirect:https://login.microsoftonline.com/common/OAuth2/logout?post_logout_redirect_uri=" + redirectUri;         	
+        	return "redirect:https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=" + redirectUri;         	
         }
         
         // 2018.10.22 이석화 추가 - 세션 제거 
@@ -945,6 +1020,17 @@ public class LoginController {
         }    	
     }
     
+	@RequestMapping(value = "/user/login/email.do", produces = "text/html; charset=utf-8", method = RequestMethod.GET)
+	public String emailSetting(@CookieValue("loginCookie") String loginCookie, @CookieValue("loginId") Optional<String> loginId, Model model) throws Exception {
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
+		model.addAttribute("domainName", domainName);
+		model.addAttribute("loginId", loginId.orElse(loginVO.getId()));
+
+		return "/user/login/email";
+	}
+
     private int checkState(int tenantID, String userId, int numberOfLoginFailPermit) throws Exception {        
         if (numberOfLoginFailPermit <= 0) {        	
         	//Users will never be blocked
@@ -975,5 +1061,23 @@ public class LoginController {
         	}
         } 
     }   
-
+    
+    private int checkStopUser(int tenantID, String userID) throws Exception {
+    	int flag = ezOrganAdminService.checkStopUser(userID, tenantID);
+    	return flag;
+    }   
+    
+    private long changeIPtoInteger(String changeIP) throws Exception {
+    	String[] iparr = changeIP.split("\\.");
+    	long returnChangeIp = 0;
+    	
+		if (iparr.length == 4) {
+			returnChangeIp = (long) Math.pow(256, 3) * Integer.parseInt(iparr[0])
+					+ (long) Math.pow(256, 2) * Integer.parseInt(iparr[1])
+					+ (long) Math.pow(256, 1) * Integer.parseInt(iparr[2])
+					+ (long) Math.pow(256, 0) * Integer.parseInt(iparr[3]);
+		}
+		
+		return returnChangeIp;
+    }
 }

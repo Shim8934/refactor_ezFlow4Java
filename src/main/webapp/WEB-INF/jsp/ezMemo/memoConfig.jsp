@@ -84,7 +84,7 @@
     </script>
 </head>
 <body class="mainbody">
-    <h1><spring:message code='ezMemo.t001'/><spring:message code="ezBoard.t0005" /></h1>
+    <h1><spring:message code='ezMemo.t0071'/></h1>
     <div class="portlet_tabpart01">
         <div class="portlet_tabpart01_top" id="tab1">
             <p id="BoardEnv_sub4"><span divname="BoardEnv_div4" id="1tab4"><spring:message code="ezMemo.t0066" /></span></p>

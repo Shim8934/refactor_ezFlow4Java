@@ -47,7 +47,7 @@
 						window.open(url, "authorView", GetOpenWindowfeature(520, 200));
 					}
 				} else {
-					alert("<spring:message code='ezPortal.t85' />");
+					alert("<spring:message code='ezJournal.t219' />");
 				}
 			}
 			
@@ -60,7 +60,7 @@
 			
 		    function deleteAuthor() {
 		    	if (selectedUser) {
-			    	var flag =confirm("<spring:message code='ezResource.t351' />");
+			    	var flag =confirm("<spring:message code='ezJournal.t220' />");
 			    	if(flag){
 				    	$.ajax({
 			   				type:"post",
@@ -76,7 +76,7 @@
 			   			});
 			    	}
 				} else {
-					alert("<spring:message code='ezBoard.t601' />");
+					alert("<spring:message code='ezJournal.t221' />");
 				}
 		    }
 		</script>

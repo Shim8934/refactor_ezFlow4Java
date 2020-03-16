@@ -81,7 +81,7 @@
 			<div class="admin_left_title" title="Community"><spring:message code = 'ezCommunity.t1529' /></div>
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code = 'ezCommunity.khj02' /></span></h2>
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='main.t272'/>&nbsp;<spring:message code='ezCommunity.t863'/></span></h2>
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code = 'ezCommunity.khj07'/></span></h2>
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code = 'ezCommunity.khj06' /><span id="listCount" style="color: #017BEC;"></span></span></h2>
 			</div>
 		</div>

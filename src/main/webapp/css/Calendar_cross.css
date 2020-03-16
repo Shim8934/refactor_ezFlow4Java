@@ -211,17 +211,32 @@
 .calendar_layer .text .td_list td .resource_no{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -286px -52px;}/* 비승인 */
 .calendar_layer .text .td_list td .width_16{display:inline-block; width:16px; height:16px; background:transparent; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 공백width */
 
-.calendar_month .td_list td.resource_ok{color:#666666;}
-.calendar_month .td_list td .resource_ok{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -260px -52px;}/* 승인 */
+/* .calendar_month .td_list td.resource_ok{color:#666666;}
+.calendar_month .td_list td .resource_ok{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -260px -52px;}승인
 .calendar_month .td_list td.resource_no{color:#666666;}
-.calendar_month .td_list td .resource_no{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -286px -52px;}/* 비승인 */
+.calendar_month .td_list td .resource_no{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -286px -52px;}비승인 */
+ 
+ /* 2019-05-17 김민성 - 자원관리 개선 */
+.calendar_month .td_list td .resource_ok{background:url(../images/ezResource/state_approval.gif); background-position: center; margin: 2px 5px 0px 0px; padding: 5px;}
+.calendar_month .td_list td .resource_no{background:url(../images/ezResource/state_approvalPending.gif); background-position: center; margin: 2px 5px 0px 0px; padding: 5px;}
+.calendar_month .td_list td .resource_refuse{background:url('../images/ezResource/state_approvalrefuse.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 5px;}
+.calendar_month .td_list td .resource_rental{background:url('../images/ezResource/state_rental.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 5px;}
+.calendar_month .td_list td .resource_return{background:url('../images/ezResource/state_return.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 5px;}
+.calendar_month .td_list td .resource_noreturn{background:url('../images/ezResource/state_noreturn.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 5px;}
 
-.calendar_data_ok{background:#eaf6ff; border:1.2px solid #eaf6ff; line-height:150%; color:black; padding-left:3px}/* 자원관리 승인 백그라운드 주보기,일보기 데이터 */
-.calendar_data_ok .resource_ok{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -260px -52px;}/* 자원관리 승인 주보기,일보기 데이터 */
-.calendar_data_ok table td{background:#eaf6ff !important;} /* 20130418_임의로 작업 추후변경 */
+.calendar_data_ok{background:rgb(250, 255, 243); border:1.2px solid #e9ffcc; line-height:150%; color:black; padding-left:3px}/* 자원관리 승인 백그라운드 주보기,일보기 데이터 */
+/* .calendar_data_ok .resource_ok{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -260px -52px;} *//* 자원관리 승인 주보기,일보기 데이터 */
+.calendar_data_ok table td{background:rgb(250, 255, 243) !important;} /* 20130418_임의로 작업 추후변경 */
 .calendar_data_no{background:rgba(255, 250, 250, 1); border:1.2px solid #ffedeb; line-height:150%; color:black; padding-left:3px}/* 자원관리 비승인 백그라운드 주보기,일보기 데이터 */
-.calendar_data_no .resource_no{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -286px -52px;}/* 자원관리 비승인 주보기,일보기 데이터 */
+/* .calendar_data_no .resource_no{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -286px -52px;} *//* 자원관리 비승인 주보기,일보기 데이터 */
 .calendar_data_no table td{background:rgba(255, 250, 250, 1) !important; color:black} /* 20130418_임의로 작업 추후변경 */
+
+.calendar_data_ok .resource_ok{background:url(../images/ezResource/state_approval.gif); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px;}
+.calendar_data_no .resource_no{background:url(../images/ezResource/state_approvalPending.gif); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px;}
+.calendar_data_no .resource_refuse{background:url('../images/ezResource/state_approvalrefuse.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px;}
+.calendar_data_ok .resource_rental{background:url('../images/ezResource/state_rental.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px;}
+.calendar_data_ok .resource_return{background:url('../images/ezResource/state_return.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px;}
+.calendar_data_ok .resource_noreturn{background:url('../images/ezResource/state_noreturn.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px;}
 
 td.sun {background: #fdf7f7;}
 td.sat {background: #f7f9fd;}

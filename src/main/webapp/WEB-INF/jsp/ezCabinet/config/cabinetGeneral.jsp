@@ -20,7 +20,7 @@
 		
 		<table class="content config">
 			<tr>
-				<th class="large"><spring:message code='ezWebFolder.t241'/></th>
+				<th class="large"><spring:message code='ezJournal.t68'/></th>
 				<td>
 					<select id="listcount" style="width: 100px">
 						<option value='10' ${config.listCount == '10'? 'selected' : ''}>10</option>
@@ -29,7 +29,7 @@
 						<option value='40' ${config.listCount == '40'? 'selected' : ''}>40</option>
 						<option value='50' ${config.listCount == '50'? 'selected' : ''}>50</option>
 					</select>
-					<spring:message code="ezWebFolder.t138" />
+					<spring:message code="ezAttitude.t78" />
 				</td>
 			</tr>
 			<tr>

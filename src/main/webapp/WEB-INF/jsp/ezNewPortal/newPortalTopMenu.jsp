@@ -8,7 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/popup.css')}">
+		<link rel="stylesheet" href="${util.addVer('ezNewPortal.e2', 'msg')}">
         <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>			
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -21,19 +21,22 @@
 			#editBtn img {width: 19px;height: 19px;margin-right: 10px;	margin-top: 8px;cursor: pointer;}
 			#editMenuBtn {display: none;}
 			.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
-			#logoUrl {width:106px; height:42px;}
-			.popup_notice{display:inline-block;position:absolute;}
+			#logoUrl {height:42px;}
+			/*-- top_totalSearch --*/
+			.top_totalSearch {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; font-size:12px;float:right; margin:9px 30px 0px 0px; padding:0px; width:243px; height:34px; background:url(../images/kr/cm/top_search_bg.gif) no-repeat;vertical-align:middle; }
+			#input_totalSearch { float:left; width:196px; height:31px; border:0px ;padding:1px 0px 0px 9px; margin:1px 0px 0px 1px;  color:#555555; font-size:12px;}
 		</style>
 	</head>
 	<body>
 		<header id="top"></header>
 		<c:if test="${useActiveX == 'YES'}">
-			<script type="text/javascript">ezIcd_ActiveX("i_icd2");</script>
-			<iframe id="if_Progress" src="/ezNewPortal/progress.do" style="display: none;"></iframe>
+			<script type="text/javascript">
+				ezIcd_ActiveX("i_icd2");
+			</script>
+			<iframe id="if_Progress" src="/admin/ezApprovalG/progressAdmin.do?" style="display: none;"></iframe>
 		</c:if>
 
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
-		<div id="popupArea"></div>
 		<script type="text/javascript">
 		
 		var newPortalTopMenu = {
@@ -262,7 +265,10 @@
 		var setEvent = function (id, url, location, option) {
 			var element = document.getElementById(id);
 			element.addEventListener('click', function () {
-				if (id != 'util_employee_search' && id != 'util_admin') {
+			    if (id == 'util_logout') {
+			        subMenuClickEvent('off');
+			        self.top.location.href = url;
+			    } if (id != 'util_employee_search' && id != 'util_admin') {
 					subMenuClickEvent('off', url);
 				} else {
 					subMenuClickEvent('off');
@@ -276,7 +282,10 @@
 			var str = '';
 			
 				str += '<ul class="util">';
-				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' +'"></span></li>';
+				//통합검색
+				if ('${useTotalSearch}' === 'YES') str += "<li><div class='top_totalSearch'><input id='input_totalSearch' class='input_text' type='text' onkeyup='totalSearch_key_event()' onfocus=\"this.placeholder=' '\"/><input type='image' src='/images/kr/cm/top_search_btn.gif' alt='' id='topsearch_btn' class=\"topsearch_btn\" ></div></li>";
+				if ('${useUtilTalk}' === 'YES') str += '<li><span class="icon_topmenu util_messenger" id="util_messenger" title="' + '<spring:message code="ezNewPortal.kje01" />' + '"></span></li>'; // 메신저 다운로드 추가
+				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' + '"></span></li>';
 				str += '<li><span class="icon_topmenu util_employee_search" id="util_employee_search" title="' + '<spring:message code="ezNewPortal.t005" />' + '"></span></li>';
 				/* str += '<li><span class="icon_topmenu util_frame" id="util_frame" title="프레임설정"></span></li>'; */
 				str += '<li><span class="icon_topmenu util_set" id="util_set" title="' + '<spring:message code="ezNewPortal.t006" />' + '"></span></li>';
@@ -285,6 +294,33 @@
 				str += '</ul>';
 			
 			return str;
+		}
+		
+		/* 통합검색 */
+		var totalSearch = function () {
+			var keyword = $("#input_totalSearch").val();
+			//$("#input_totalSearch").val("");
+// 			OpenWindow(event, "/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
+			window.open("/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
+		}
+		
+		var deleteTotalSearchValue = function () {
+			$("#input_totalSearch").val("");
+		}
+		
+		function totalSearch_key_event(e,obj) {
+		    var curevent = (typeof event == 'undefined' ? e : event);
+		        if (curevent.keyCode == "13") {
+		            totalSearch();
+		        }
+		}
+		
+		//2019-09-20 메신저 다운로드 추가
+		var talkDowmClick = function () {
+			if ("${talkFilePath}" != "") {
+				var DownloadUrl = "/ezCommon/talkDownloadAttach.do?filePath=" + "${talkFilePath}";
+				AttachDownFrame.location.href = DownloadUrl;				
+			}
 		}
 		
 		/* 2019-01-04 김민성 - 웹도움말 팝업창으로 변경 */
@@ -311,8 +347,15 @@
 			//setEvent('util_help', '/ezNewPortal/help/index.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
 			setEvent('util_logout', '/user/login/actionLogout.do', 'top', '');
 			
-			document.getElementById("util_help").addEventListener('click', helpDetail );	
+			document.getElementById("util_help").addEventListener('click', helpDetail );
+			if ('${useUtilTalk}' === 'YES') {
+				document.getElementById("util_messenger").addEventListener('click', talkDowmClick );	
+			}
 			/* document.getElementById("util_frmae").addEventListener("click", viewPortletEnv); */
+			/*통합검색*/
+			if ('${useTotalSearch}' === 'YES') {				
+				document.getElementById("topsearch_btn").addEventListener("click", totalSearch);
+			}
 		}
 
 		/* //포틀릿 및 프레임 환경설정 열기
@@ -407,6 +450,7 @@
 				if(item.menuUrl.indexOf('ezMemo') > -1 && item.menuUsed) {
 					parent.useMemoContextMenu = true;
 				}
+
 				str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ ConvertCharToEntityReference(item.menuName) +'</dd></dl></li>';
 			});
 
@@ -439,6 +483,7 @@
 				// 드래그앤드롭
 				$('#toggleMenu').sortable({
 					scroll: false,
+				    helper: 'clone',
 					activate: function () {
 						$("li.ui-sortable-placeholder").css("visibility", "visible");
 						$("li.ui-sortable-placeholder").css("border-right", "1px dashed #898989");
@@ -455,7 +500,7 @@
 					}
 				});
 				$('#toggleMenu').sortable("option", "disabled", false);
-				$('#toggleMenu').disableSelection();	
+				/* $('#toggleMenu').disableSelection(); */	
 				var sortedMenu = document.getElementById('toggleMenu');
 				sortedMenu.className = 'full_menu_toggleUL_edit';
 				
@@ -677,8 +722,8 @@
 				topFrame.style.minHeight = screenHeight+"px";
 				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
 				
-				var popupArea = document.getElementById("popupArea");
-				popupArea.style.height = (screenHeight - 57) + "px";
+				var popupArea = parent.document.getElementById("popupArea");
+				popupArea.style.height = (screenHeight) + "px";
 				popupArea.style.width = "100%";
 				showProgress("notice");
 			}
@@ -688,28 +733,29 @@
 		//위치 지정하여 팝업 열기 --- 팝업 공지사항
 		var openNotiPopup = function (popup_number, wWidth, wHeight, wPosition, index) {
 		    var wVertical, wHorizontal;
-		    console.log(index);
+		    
 			if(wPosition == 0) {
-		        wVertical = Math.floor(window.innerHeight/2) - (wHeight/2) - 90 + (index*10);
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
+				console.log(window.outerHeight);
+		        wVertical = Math.floor(window.outerHeight/2) - (wHeight/2) - 56 + (index * 10);
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
 		    } else if(wPosition == 1) {
 		        wVertical = 100 + (index*10); 
 		        wHorizontal = 100 + (index*10);
 		    } else if(wPosition == 2) {
-		        wVertical = screen.height - wHeight - 100 + (index*10); 
-		        wHorizontal = 100 + (index*10);
+		        wVertical = window.outerHeight - wHeight - 100 + (index * 10); 
+		        wHorizontal = 100 + (index * 10);
 		    } else if(wPosition == 3) {
-		        wVertical = 100 + (index*10); 
-		        wHorizontal = screen.width - wWidth - 100 + (index*10);
+		        wVertical = 100 + (index * 10); 
+		        wHorizontal = window.outerWidth - wWidth - 100 + (index * 10);
 		    } else if(wPosition == 4) {
-		        wVertical = screen.height - wHeight - 100 + (index*10); 
-		        wHorizontal = screen.width - wWidth - 100 + (index*10);
+		        wVertical = window.outerHeight - wHeight - 100 + (index * 10); 
+		        wHorizontal = window.outerWidth - wWidth - 100 + (index * 10);
 		    } else if(wPosition == 5) {
 		        wVertical = 100 + (index*10); 
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
 		    } else if(wPosition == 6) {
-		        wVertical = screen.height - wHeight - 100 - (index*10); 
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
+		        wVertical = window.outerHeight - wHeight - 100 - (index * 10); 
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
 		    } else {
 		        wVertical = 0 + (index*10); 
 		        wHorizontal = 0 + (index*10);
@@ -811,29 +857,29 @@
 		    		 */
 		    		 
 		    		//document.getElementById("popupArea").appendChild(popupDiv);
-		    		document.getElementById("popupArea").appendChild(popupDiv);
+		    		parent.document.getElementById("popupArea").querySelector("#noticePopupLayer").appendChild(popupDiv);
 		    		//$("#popupArea").append(resultHTML);
 		    		
-		    		document.getElementById("popup" + popup_number).style.height = wHeight - 40 + "px";
-		    		document.getElementById("popup" + popup_number).style.width = wWidth - 40 + "px";
-		    		document.getElementById("popup" + popup_number).style.left = wLeft + "px";
-		    		document.getElementById("popup" + popup_number).style.top = wTop + "px";
-		    		document.getElementById("popup" + popup_number).style.zIndex = index + 1;
-		    		document.getElementById("popup" + popup_number).addEventListener("click", changeZIndex);
-		    		document.getElementById("inp_noticeCheck" + popup_number).addEventListener("change", function() {
+		    		parent.document.getElementById("popup" + popup_number).style.height = wHeight - 40 + "px";
+		    		parent.document.getElementById("popup" + popup_number).style.width = wWidth - 40 + "px";
+		    		parent.document.getElementById("popup" + popup_number).style.left = wLeft + "px";
+		    		parent.document.getElementById("popup" + popup_number).style.top = wTop + "px";
+		    		parent.document.getElementById("popup" + popup_number).style.zIndex = index + 1;
+		    		parent.document.getElementById("popup" + popup_number).addEventListener("click", changeZIndex);
+		    		parent.document.getElementById("inp_noticeCheck" + popup_number).addEventListener("change", function() {
 		    			notice_close(popup_number, result.userId, "checkbox");
 		    		});
 		    		
-		    		document.getElementById("closeBtn" + popup_number).addEventListener("click", function() {
+		    		parent.document.getElementById("closeBtn" + popup_number).addEventListener("click", function() {
 		    			notice_close(popup_number, result.userId, "btn");
 		    		});
 		    		
-		    		var popupContent = document.getElementById("popup" + popup_number).getElementsByClassName("popup_noticeList")[0];
-		    		popupContent.style.height = document.getElementById("popup" + popup_number).clientHeight - 175 + "px";
+		    		var popupContent = parent.document.getElementById("popup" + popup_number).getElementsByClassName("popup_noticeList")[0];
+		    		popupContent.style.height = parent.document.getElementById("popup" + popup_number).clientHeight - 175 + "px"; 
 		    		
-					$("#popup" + popup_number).draggable({
-						containment : "#popupArea",
-						cancel : ".popup_noticeList",
+		    		parent.$("#popup" + popup_number).draggable({
+						containment : parent.$("#popupArea"),
+						cancel : parent.$(".popup_noticeList"),
 						scroll: false 
 					});
 		    	}
@@ -853,7 +899,7 @@
 		}
 		
 		var changeZIndex = function () {
-			var popupList = document.getElementsByClassName("popup_notice");
+			var popupList = parent.document.getElementsByClassName("popup_notice");
 			var popupListCount = popupList.length;
 			var popupId = this.id;
 			var popupZIndex = Number(this.style.zIndex);
@@ -872,19 +918,19 @@
 		}
 		
 		var notice_close = function (popupId, userId, position) {
-			var isChecked = document.getElementById("inp_noticeCheck" + popupId).checked;
+			var isChecked = parent.document.getElementById("inp_noticeCheck" + popupId).checked;
 			
 			if (isChecked) {
 				setCookie("POPUP_" + popupId + "_" + userId, "1", 1); 
 			}
 			
-			var popupList = document.getElementsByClassName("popup_notice");
+			var popupList = parent.document.getElementsByClassName("popup_notice");
 			
-			var popup = document.getElementById("popup" + popupId);
+			var popup = parent.document.getElementById("popup" + popupId);
 			popup.parentNode.removeChild(popup);
 			
 			if (popupList.length < 1) {
-				hideProgress();
+				hideProgress("notice");
 				var topFrame = parent.document.getElementById('topFrame');
 				document.getElementsByTagName("body")[0].style.backgroundColor = "";
 				topFrame.style.position = "";
@@ -892,12 +938,12 @@
 		}
 		
 		var notice_all_close = function () {
-			var popupList = document.getElementsByClassName("popup_notice");
+			var popupList = parent.document.getElementsByClassName("popup_notice");
 			var popupListCount = popupList.length;
 			
 			for (var i = 0; i < popupListCount; i++) {
 				var popupId = popupList[0].id; 
-				var popup = document.getElementById(popupId);
+				var popup = parent.document.getElementById(popupId);
 				
 				popup.parentNode.removeChild(popup);
 			}
@@ -955,7 +1001,6 @@
 			getNotiPopup();          // 팝업공지 불러오기
 			setExpandMenuListEvent();// 확장메뉴 이벤트 설정
 			setExpandMenuEvent();    // 확장메뉴 이벤트 설정
-			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
 			
 		}
  		
@@ -963,6 +1008,7 @@
  			
  			if (position == "notice") {
  				document.getElementById("progressPanel").style.height = "56px"; 
+ 				parent.document.getElementById("popupArea").style.display = "block";
  			} else {
  				document.getElementById("progressPanel").style.height = "100%";
  			}
@@ -972,8 +1018,12 @@
 		    document.getElementById("progressPanel").style.background = "rgba(0,0,0,0.7)";
 		}
         
-        var hideProgress = function() {
+        var hideProgress = function(area) {
         	document.getElementById("progressPanel").style.display = "none";
+        	
+        	if (area === "notice") {
+        		parent.document.getElementById("popupArea").style.display = "none";
+        	}
         }
  		
  		// 시작지점
@@ -982,6 +1032,11 @@
 		window.onresize = function () {
 			countTopMenuList();      // 메인메뉴 카운팅
 		}
-		</script>	
+		
+		window.onload = function() {
+			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
+		}
+		</script>
+		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>	
 	</body>
 </html>

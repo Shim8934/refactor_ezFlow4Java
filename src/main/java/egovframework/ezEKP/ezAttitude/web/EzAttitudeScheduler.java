@@ -24,6 +24,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
+import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
@@ -39,21 +40,28 @@ public class EzAttitudeScheduler {
 	@Resource(name = "EzAttitudeService")
 	private EzAttitudeService ezAttitudeService;
 	
+	@Autowired
+	private EzEmailScheduler ezEmailScheduler;
 	
 	@Scheduled(cron = "${config.cron.autoSetAnnualHoliday}")
-//	@Scheduled(cron = "0 * 10 * * *")
 	public void autoSetAnnualHoliday() throws Exception{
 		logger.debug("autoSetAnnualHoliday scheduler started.");
+		
+		//choose scheduler running server
+		if (!ezEmailScheduler.preScheduler("attitudeAnnualGarbageClear")) {
+			logger.debug("communityGarbageClear scheduler ended.");
+			return;
+		}
 		
 		List<Map<String, Object>> tenantCompanyIdList = ezAttitudeService.getTenantCompanyId();
 		
 		for ( Map<String, Object> tenantCompanyMap : tenantCompanyIdList) {
 			
-			int tenantId = (int)tenantCompanyMap.get("tenantId");
+			int tenantId = Integer.parseInt(String.valueOf(tenantCompanyMap.get("tenantId")));
 			String companyId = (String)tenantCompanyMap.get("companyId");
 			Map<String, Object> annualConf = ezAttitudeService.getAttitudeAnnualConfig(tenantId, companyId);
 			
-			String useAnnualAutoGnrt = (String)annualConf.get("useAnnualAutoGnrt");// 1:사용 1:미사용
+			String useAnnualAutoGnrt = (String)annualConf.get("useAnnualAutoGnrt");// 1:사용 0:미사용
 			String annualGnrtStd = (String)annualConf.get("annualGnrtStd");// 0:입사일기준 1:회계연도기준
 			String useAnnualTmnt = (String)annualConf.get("useAnnualTmnt");//연차소멸 여부 1:사용 0:미사용
 			String initialDate = (String)annualConf.get("initialDate"); // 기산일 
@@ -69,43 +77,46 @@ public class EzAttitudeScheduler {
 	
 			String yesterday = sdf.format(cal.getTime());
 			
+			// 입사년도 기준
 			if (useAnnualAutoGnrt.equals("1")) {
 
 				List<Map<String, Object>> list = ezAttitudeService.getJoinDateUserList(yesterday.split("-")[2], companyId, tenantId);
 				
 				if (annualGnrtStd.equals("0")) {
 					for (Map<String, Object> m : list) {
-						int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
+						int workingMonthCnt = Integer.parseInt(String.valueOf(m.get("workingMonthCnt")));
 						if (workingMonthCnt < 24) {
 							if (workingMonthCnt == 12) {
-								ezAttitudeService.updateAnnualHoliday(m);
+								ezAttitudeService.updateAnnualHoliday(m); // 입사 후 1년이 되었을 때 연차 발생 (출근율 계산)
 							} else if (workingMonthCnt < 12) {
-								ezAttitudeService.updateMonthlyHoliday(m);
+								ezAttitudeService.updateMonthlyHoliday(m); // 입사 후 1년까지 달마다 월차 개념으로 연차가 최대 11개 발생
 							} else {
 								if (useAnnualTmnt.equals("1")) {
 									m.put("today",today);
-									ezAttitudeService.extinctionMonthlyHoliday(m);
+									ezAttitudeService.extinctionMonthlyHoliday(m); // 13개월이 되었을 때 달마다 연차 1개씩 소멸
 								}
 							}
 						} else {
-							ezAttitudeService.updateExceedAnnualHoliday(m);
+							ezAttitudeService.updateExceedAnnualHoliday(m); // 3년 차부터는 일반적인 계산법에 의해 연차 발생
 						}
 					}
+			//회계년도 기준
 				} else {
 					for (Map<String, Object> m : list) {
-						int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
+						int workingMonthCnt = Integer.parseInt(String.valueOf(m.get("workingMonthCnt")));
 						if (workingMonthCnt < 12) {
-							ezAttitudeService.updateMonthlyHoliday(m);
+							ezAttitudeService.updateMonthlyHoliday(m); // 입사 후 1년까지 달마다 월차 개념으로 연차가 최대 11개 발생
 						} else if (workingMonthCnt > 12) {
 							if (workingMonthCnt < 24) {
 								if (useAnnualTmnt.equals("1")) {
 									m.put("today",today);
-									ezAttitudeService.extinctionMonthlyHoliday(m);
+									ezAttitudeService.extinctionMonthlyHoliday(m); // 입사 후 12개월이 초과하고 24개월 미만이면 월차를 달마다 1개씩 소멸
 								}
 							}
 						}
 					}
 					
+					// 기산일에 연차를 발생시키는 메소드
 					if (initialDate.substring(initialDate.indexOf("-") + 1).equals(yesterday.substring(yesterday.indexOf("-") + 1))) {
 						ezAttitudeService.updateFiscalYearAnnualHoliday(annualConf);
 					}	

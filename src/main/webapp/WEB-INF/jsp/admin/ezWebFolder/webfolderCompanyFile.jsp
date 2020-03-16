@@ -15,6 +15,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/capacity.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminFile.js')}"></script>
@@ -37,6 +38,15 @@
 			var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
 			var resultErr4 = "<spring:message code='ezWebFolder.t249'/>";
 			var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
+			var _selectedCell = null;
+			var _cellInfo        = {};
+			var sortColumn = null;
+			var sortType = null;
+			var strLang43  = "<spring:message code='ezWebFolder.t308'/>";
+			
+			capacity.setFolderIdProvider(function() {
+				return "<c:out value='${folderId}'/>";
+			});
 			
 			$(function () {
 				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
@@ -89,12 +99,52 @@
 					optionView(event.target);
 				});
 				
+				var listHeader = document.getElementsByClassName("headListClick");
+				for(var i = 0 ; i <listHeader.length; i++) {
+					listHeader[i].addEventListener("click", function(event) {
+						sortByHeader(this);
+					});
+				}
+				
 				document.getElementById("listCount").addEventListener("change", function() {
 					optionHidden();
 					pagination.setListSize(this.value);
 					refreshView();
 				});
 			});
+			
+			function sortByHeader(cell) {
+				var column = cell.getAttribute("data-column");
+				
+				if (!column) {return;}
+				
+				if (_selectedCell != null) {
+					var orderOption = cell.getAttribute("orderoption") == "DESC" ? "ASC" : "DESC";
+					cell.setAttribute("orderoption", orderOption);
+					
+					if (cell.cellIndex != _selectedCell) {
+						var lastSelectedCell = document.getElementById("BoardList_THEAD").rows[0].cells[_selectedCell];
+						lastSelectedCell.removeChild(lastSelectedCell.lastElementChild);
+						var spanElmt = document.createElement("span");
+						cell.appendChild(spanElmt);
+					}
+					
+					var spanImg       = cell.lastElementChild;
+					spanImg.className = orderOption == "DESC" ? "spanDown" : "spanUp";
+				} else {
+					cell.setAttribute("orderoption", "DESC");
+					var spanElmt       = document.createElement("span");
+					spanElmt.className = "spanDown";
+					cell.appendChild(spanElmt);
+				}
+				
+				_selectedCell = cell.cellIndex;
+				
+				var order     = cell.getAttribute("orderoption");
+				this.sortType = order;
+				this.sortColumn = column;
+				search_Set(currentPage);
+			}
 			
 			function optionHidden() {
 		 	    document.getElementById("layer_Viewpopup").style.display = "none";
@@ -116,49 +166,6 @@
 		   	    }
 		   	}
 			
-			function loadCapacity() {
-				$.ajax({
-					type: "POST",
-					async: true,
-					url: "/ezWebFolder/getCapacity.do",
-					data: {
-						folderId: "<c:out value='${folderId}'/>"
-					},
-					success: function(data) {
-						var capacity = data.capacity;
-						var usedRate = Math.min(capacity.usedRate, 100);
-						var progressColor = null;
-						var progressElement = document.getElementById("capacity-bar");
-						
-						if (progressElement.style.width === usedRate + "%") {
-							return;
-						}
-						
-						switch (true) {
-						case usedRate >= 80:
-							progressColor = "#ff4040";
-							break;
-						case usedRate >= 70:
-							progressColor = "#ffb600";
-							break;
-						default:
-							progressColor = "#82b9f6";
-						}
-						
-						$("#capacity-wrapper").css("display", "inline");
-						$("#capacity-bar").css("backgroundColor", progressColor);
-						$("#capacity-bar").stop().animate({width: usedRate + "%"},
-							{
-								step: function(x) {
-									$("#capacity-percent").text(Math.round(x) + "%");
-								},
-								duration: 500
-							}
-						);
-					}
-				});
-			}
-			
 	        function leftFolderCPMV(functionType, folderList, toTargetId) {
 				closeAllPopup();
 				window.close();
@@ -169,11 +176,11 @@
 		<h1>
 			<spring:message code='ezWebFolder.t127'/>
 			<span id="mailBoxInfo"></span>
-			<div id="capacity-wrapper" style="display: none;">
-				<div class="progressbar" style="float: inherit; width: 150px; display: inline-block; vertical-align: middle; margin-left: 15px; border-radius: 15px;">
-					<div id="capacity-bar" class="proggress" style="background-color: #82b9f6; height: 15px; border-radius: 15px; width: 0px;"></div>
+			<div id="capacity-wrapper">
+				<div class="progressbar">
+					<div id="capacity-bar" class="proggress"></div>
 				</div>
-				<span id="capacity-percent" style="width: 15px; display: inline-block; text-align: right; border-radius: 15px;"></span>
+				<span id="capacity-percent"></span>
 			</div>
 		</h1>
 		<div id="companySelect" style="margin-left: 5px;">
@@ -198,7 +205,7 @@
 				<li><span class="icon16 icon16_delete" onclick="fileDelete();"></span></li>
 				<li><span class="icon16 icon16_refresh" onclick="refreshView();"></span></li>
 				<li id="">
-					<select id="fileTypeSelect">
+					<select id="fileTypeSelect" onchange="search_Set('1');">
 						<option value="1" selected><spring:message code='ezWebFolder.t191'/></option>
 						<option value="2"         ><spring:message code='ezWebFolder.t192'/></option>
 						<option value="3"         ><spring:message code='ezWebFolder.t193'/></option>
@@ -261,7 +268,7 @@
 			</div>
 			<div class="wfdivBttn">
 				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t123'/></span></a>
-				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t112'/></span></a>
+				<a class="webfolderBttn" style="display:none"><span><spring:message code='ezWebFolder.t112'/></span></a>
 			</div>
 		</div>
 		</div>
@@ -276,14 +283,14 @@
 					<thead id ="BoardList_THEAD">
 						<tr>
 							<th class="wfFilecheck" style="text-align: center; "><input type="checkbox"></th>
-							<th headers="ft" class="wfFileType" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
-							<th headers="fn" class="wfFileName" ><spring:message code='ezWebFolder.t156'/></th>
-							<th headers="fs" class="wfFileSize" style="text-align: center; " ><spring:message code='ezWebFolder.t157'/></th>
-							<th headers="un" class="wfFileCreator" ><spring:message code='ezWebFolder.t189'/></th>
-							<th headers="cd" class="wfFileAdminDate" ><spring:message code='ezWebFolder.t190'/></th>
-							<th headers="ud" class="wfFileAdminDate" ><spring:message code='ezWebFolder.t198'/></th>
-							<th              class="wfFilePath"><spring:message code='ezWebFolder.t199'/></th>
-							<th headers="dt" class="wfFileDownload" style="text-align: center;"><spring:message code='ezWebFolder.t200'/></th>
+							<th headers="ft" class="wfFileType		headListClick" data-column="FILETYPE_ICON" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
+							<th headers="fn" class="wfFileName		headListClick" data-column="FILE_NAME" ><spring:message code='ezWebFolder.t156'/></th>
+							<th headers="fs" class="wfFileSize		headListClick" data-column="FILE_SIZE" style="text-align: center; " ><spring:message code='ezWebFolder.t157'/></th>
+							<th headers="un" class="wfFileCreator	headListClick" data-column="CREATE_NAME1" ><spring:message code='ezWebFolder.t189'/></th>
+							<th headers="cd" class="wfFileAdminDate	headListClick" data-column="CREATE_DATE" ><spring:message code='ezWebFolder.t190'/></th>
+							<th headers="ud" class="wfFileAdminDate	headListClick" data-column="UPDATE_DATE" ><spring:message code='ezWebFolder.t198'/></th>
+							<th              class="wfFilePath		" data-column="FILE_PATH" ><spring:message code='ezWebFolder.t199'/></th>
+							<th headers="dt" class="wfFileDownload	headListClick" data-column="DOWN_COUNT" style="text-align: center;"><spring:message code='ezWebFolder.t200'/></th>
 						</tr>
 					</thead>
 				</table>

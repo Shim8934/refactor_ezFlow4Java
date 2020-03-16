@@ -163,15 +163,15 @@
 		            var cnt = tr.length;
 		            var i, j;
 		            var chkVal;
-		            if (cnt > 0 && tr[0].id != "AprLine_TR_noItems") {
+		            /* if (cnt > 0 && tr[0].id != "AprLine_TR_noItems") {
 		                for (i = 0; i < cnt; i++) {
-		                    tr[i].cells[2].setAttribute("title", tr[i].cells[2].innerHTML);
+		                    tr[i].cells[2].setAttribute("title", tr[i].cells[2].innerText);
 		                }
-		            }
+		            } */
 		            
 		            var content = document.getElementById("AprLine_TH_2");
 		            
-		            if (content.innerText == "내용") {
+		            if (content.innerText == strLang30) {
 		            	content.setAttribute("width" , "356px");
 		            }
 		        }

@@ -643,16 +643,18 @@
 							<![CDATA[
 								AND
 								 f.FOLDER_ID = #folderId#
+								 ORDER BY
 							]]>
+							<isNotEqual property="sortColumn" compareValue="">
+								$orderByData$,
+							</isNotEqual>
 							<isNotEqual property="realColmn" compareValue="">
-								ORDER BY
 									$realColmn$ $order$,
 									f.UPDATE_DATE DESC,
 									TO_NUMBER(f.FILE_ID) DESC
 							</isNotEqual>
 							<isEqual property="realColmn" compareValue="">
 								<![CDATA[
-								ORDER BY
 									f.UPDATE_DATE DESC,
 									TO_NUMBER(f.FILE_ID) DESC
 								]]>
@@ -722,16 +724,18 @@
 						<![CDATA[
 							AND
 								u.FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
-						]]>
-						<isNotEqual property="realColmn" compareValue="">
 							ORDER BY
+						]]>
+						<isNotEqual property="sortColumn" compareValue="">
+							$orderByData$,
+						</isNotEqual>
+						<isNotEqual property="realColmn" compareValue="">
 								$realColmn$ $order$,
 								f.UPDATE_DATE DESC,
 								TO_NUMBER(f.FILE_ID) DESC
 						</isNotEqual>
 						<isEqual property="realColmn" compareValue="">
 							<![CDATA[
-							ORDER BY
 								f.UPDATE_DATE DESC,
 								TO_NUMBER(f.FILE_ID) DESC
 							]]>

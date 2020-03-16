@@ -21,16 +21,16 @@
 					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 				</dd>
 			</dl>
-			<div class="community_list">
+			<div id="communityList" class="community_list">
 				<c:choose>
 					<c:when test="${fn:length(CommunityList) == 0 }">
 						<ul class="portlet_list">
 							<dl class="comListDL01">
 								<dt class="comPic">
-									<img src="/images/kr/main/noData_sIcon.png">
+									<img src="/images/kr/main/comImg_none.png">
 								</dt>
 								<dd class="comTit_none">
-									"<spring:message code='main.t00026' />"
+									<spring:message code='ezNewPortal.t018' />
 								</dd>
 							</dl>
 							<dl class="comListDL02">
@@ -38,7 +38,7 @@
 									<img src="/images/kr/main/comImg_none.png">
 								</dt>
 								<dd class="comTit_none">
-									"<spring:message code='main.t00026' />"
+									<spring:message code='ezNewPortal.t018' />
 								</dd>
 							</dl>
 						</ul>

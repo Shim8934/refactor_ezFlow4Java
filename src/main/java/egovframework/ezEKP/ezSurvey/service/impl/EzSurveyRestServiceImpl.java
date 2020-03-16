@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.compress.utils.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -37,6 +39,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import egovframework.ezEKP.ezSurvey.service.EzSurveyRestService;
 
 @Service
@@ -426,4 +429,15 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
+
+	@Override
+	public JSONObject checkRespondent(HttpServletRequest request, String userId, int itemId) throws Exception {
+		String url                = "/rest/ezsurvey/check/respondent/";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("itemId", itemId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+
 }

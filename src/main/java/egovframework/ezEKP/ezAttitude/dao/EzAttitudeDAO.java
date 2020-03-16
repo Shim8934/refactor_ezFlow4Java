@@ -22,6 +22,7 @@ import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzAttitudeDAO")
@@ -386,6 +387,16 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
     public void changeAnnual(Map<String, Object> map) throws Exception {
     	update("ezAttitudeAdminDAO.changeAnnual", map);
     }
+
+    @SuppressWarnings("unchecked")
+    public void excelInsertAnnual(Map<String, Object> map) throws Exception {
+    	insert("ezAttitudeAdminDAO.excelInsertAnnual", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void excelChangeAnnual(Map<String, Object> map) throws Exception {
+    	update("ezAttitudeAdminDAO.excelChangeAnnual", map);
+    }
     
     @SuppressWarnings("unchecked")
     public AttitudeAnnualVO getAnnualCnt(Map<String, Object> map) throws Exception {
@@ -522,6 +533,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public void updateAnnualConfig(Map<String, Object> map) throws Exception {
 		update("ezAttitudeAdminDAO.updateAnnualConfig", map);
 	}
+
+	public void updateAnnualHistory(Map<String, Object> map) throws Exception {
+		update("ezAttitudeAdminDAO.updateAnnualHistory", map);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getJoinDate(Map<String, Object> map) throws Exception{
@@ -534,5 +549,15 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 
 	public List<AttitudeVO> getDisabledAttitudeList(Map<String, Object> map) {
 		return (List<AttitudeVO>) list("ezAttitudeDAO.getDisabledAttitudeList", map);
+	}
+
+	public void deleteAnnualHistory(Map<String, Object> map) {
+		delete("ezAttitudeAdminDAO.deleteAnnualHistory", map);
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<AttitudeVO> getAnuualListSchedule(Map<String, Object> map) {
+		return (List<AttitudeVO>) list("ezAttitudeDAO.getAnuualListSchedule", map);
 	}
 }

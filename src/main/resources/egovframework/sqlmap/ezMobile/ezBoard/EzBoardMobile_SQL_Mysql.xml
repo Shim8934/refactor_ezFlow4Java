@@ -106,6 +106,14 @@
 				boardid = #boardID# 
 			AND 
 				accessid = #userDeptPath#
+		]]>
+		<isEqual property="v_ISDEPT" compareValue="1">
+			<isEqual property="v_ISEQUALDEPT" compareValue="0">
+	 			AND
+	 				boardgroupacl = 'Y'
+			</isEqual>
+		</isEqual>
+		<![CDATA[
 			LIMIT 1
 		]]>
 	</select>
@@ -1059,7 +1067,15 @@
                          AND 
                             boardid <> #excludeBoardID#
                          AND 
-                            ( accessid = #userID# OR accessid = #deptID# OR accessid = #companyID# ) 
+                            accessid = #userID#
+						]]>
+	                      <isEqual property="v_ISDEPT" compareValue="1">
+	                      	<isEqual property="v_ISEQUALDEPT" compareValue="0">
+		                      AND
+		                      	BoardGroupACL = 'Y'
+	                      	</isEqual>
+	                      </isEqual>
+						<![CDATA[
                          ) B   
                     ON 
                         A.TENANT_ID = B.TENANT_ID
@@ -1076,108 +1092,260 @@
               <isNotEqual property="selectBy" compareValue="3">
               <!--        접근 권한이 있는 게시판만 가져옴(DEFAULT) -->
               <!--         하위부서 권한체크(BOARDGROUPACL) 조건 추가 18.10.05   -->
-                <![CDATA[
-                    SELECT 
-                        DISTINCT A.BoardID BoardID,
-                        CASE #primary#
-                            WHEN
-                                '1'
-                            THEN
-                                A.boardname
-                            ELSE
-                                CASE
-                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
-                                    THEN A.boardname
-                                    ELSE A.boardname2
-                                END
-                        END BoardName,
-                        A.TreeViewOrder TreeViewOrder  ,
-                        A.BoardColor BoardColor  ,
-                        A.Gubun ,
-                        B.BOARDGROUPACL BOARDGROUPACL  
-                    FROM 
-                        TBL_Board_BoardInfo A
-                    JOIN 
-                        (SELECT 
-                            C.BoardID ,
-                            C.AccessID ,
-                            C.Access_ ,
-                            C.BoardGroupACL ,
-                            C.tenant_id
-                         FROM 
-                            TBL_Board_BoardManage C
-                         LEFT JOIN 
-                            TBL_Board_BoardInfo D   
-                         ON
-                            C.TENANT_ID = D.TENANT_ID 
-                         AND
-                            C.BoardID = D.BoardID
-                         WHERE
-                            C.TENANT_ID = #tenantID#
-                         AND
-                            C.Access_ = 1
-                         AND 
-                            C.BoardID <> #excludeBoardID#
-                         AND 
-                            ( C.AccessID = #userID# )
-                         AND 
-                            D.ParentBoardID = #rootBoardID#
-						]]>
-	                      <isEqual property="v_ISDEPT" compareValue="1">
-	                      	<isEqual property="v_ISEQUALDEPT" compareValue="0">
+              <!-- 2019-06-11 홍승비 - 게시판그룹의 관리자권한이 존재하는 경우, 하위게시판을 전부 가져오도록 수정 -->
+				<isEqual property="v_boardGroupAdmin_FG" compareValue="OK">
+	                <![CDATA[
+	                    SELECT 
+	                        DISTINCT A.BoardID BoardID,
+	                        CASE #primary#
+	                            WHEN
+	                                '1'
+	                            THEN
+	                                A.boardname
+	                            ELSE
+	                                CASE
+	                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+	                                    THEN A.boardname
+	                                    ELSE A.boardname2
+	                                END
+	                        END BoardName,
+	                        A.TreeViewOrder TreeViewOrder  ,
+	                        A.BoardColor BoardColor  ,
+	                        A.Gubun ,
+	                        B.BOARDGROUPACL BOARDGROUPACL  
+	                    FROM 
+	                        TBL_Board_BoardInfo A
+	                   WHERE
+		          			A.TENANT_ID = #tenantID#
+		          		AND
+			                (A.companyid = #companyID# OR	TRIM(A.companyid) = ''	OR	A.companyid IS NULL)
+		          		AND
+		          			A.PARENTBOARDID = #rootBoardID#
+		                AND 
+		                	A.BoardID <> #excludeBoardID#
+		           		ORDER BY 
+		           			A.TreeViewOrder ASC
+					]]>
+				</isEqual>
+				<isNotEqual property="v_boardGroupAdmin_FG" compareValue="OK">
+					<![CDATA[
+						(SELECT 
+	                        DISTINCT A.BoardID BoardID,
+	                        CASE #primary#
+	                            WHEN
+	                                '1'
+	                            THEN
+	                                A.boardname
+	                            ELSE
+	                                CASE
+	                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+	                                    THEN A.boardname
+	                                    ELSE A.boardname2
+	                                END
+	                        END BoardName,
+	                        A.TreeViewOrder TreeViewOrder  ,
+	                        A.BoardColor BoardColor  ,
+	                        A.Gubun ,
+	                        B.BOARDGROUPACL BOARDGROUPACL  
+		                FROM 
+		                	TBL_Board_BoardInfo A
+		                JOIN 
+		                	( SELECT 
+		                		C.BoardID ,
+		                        C.AccessID ,
+		                        C.Access_ ,
+		                        C.BoardGroupACL ,
+		                        C.tenant_id
+		                      FROM 
+		                      	TBL_Board_BoardManage C
+		                      LEFT JOIN 
+		                      	TBL_Board_BoardInfo D   
+		                      ON
+		                      	C.TENANT_ID = D.TENANT_ID 
 		                      AND
-		                      	C.BoardGroupACL = 'Y'
-	                      	</isEqual>
-	                      </isEqual>
-	                      <![CDATA[
-							 ) B   
-                         ON 
-                            A.TENANT_ID = B.TENANT_ID
-                         AND
-                            A.BoardID = B.BOARDID
-                         WHERE
-                            A.TENANT_ID = #tenantID#
-						AND
-	                		(A.companyid = #companyID# OR TRIM(A.COMPANYID) = '' OR A.COMPANYID IS NULL)
-                         ORDER BY 
-                            A.TreeViewOrder ASC
-                      ]]>
+		                      	C.BoardID = D.BoardID
+		                      WHERE
+		                      	C.TENANT_ID = #tenantID#
+		                      AND
+		                      	C.Access_ = 1
+		                      AND 
+		                      	C.BoardID <> #excludeBoardID#
+		                      AND 
+		                      	( C.AccessID = #userID# )
+		                      AND 
+		                      	D.ParentBoardID = #rootBoardID#
+		                      ]]>
+		                      <isEqual property="v_ISDEPT" compareValue="1">
+		                      	<isEqual property="v_ISEQUALDEPT" compareValue="0">
+			                      AND
+			                      	C.BoardGroupACL = 'Y'
+		                      	</isEqual>
+		                      </isEqual>
+		                      <![CDATA[
+		                      	) B   
+		                ON 
+		                	A.TENANT_ID = B.TENANT_ID
+		                AND
+		                	A.BoardID = B.BOARDID
+		                WHERE
+		                	A.TENANT_ID = #tenantID#
+		                AND
+		                	(A.companyid = #companyID# OR TRIM(A.companyid) = ''	OR	A.companyid IS NULL)
+		                )
+		                ORDER BY 
+		                	TreeViewOrder ASC
+		        	]]>
+					</isNotEqual>
                 </isNotEqual>
             </isEqual>
             <isNotEqual property="mode" compareValue="1">
 <!-- 			게시판관리자 '허용' 권한 & ADMIN권한 -->
-                <![CDATA[
-                    SELECT 
-                        DISTINCT A.BoardID ,
-                        CASE #primary#
-                            WHEN
-                                '1'
-                            THEN
-                                A.boardname
-                            ELSE
-                                CASE
-                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
-                                    THEN A.boardname
-                                    ELSE A.boardname2
-                                END
-                        END BoardName,
-                        A.TreeViewOrder ,
-                        A.BoardColor BoardColor,
-                        A.Gubun ,
-                        '' BoardGroupACL
-                    FROM 
-                        TBL_Board_BoardInfo A
-                    WHERE
-                        A.TENANT_ID = #tenantID#
-					AND
-	                	(A.companyid = #companyID# OR TRIM(A.COMPANYID) = '' OR A.COMPANYID IS NULL)
-                    AND
-                        A.PARENTBOARDID = #rootBoardID#
-                    AND 
-                        A.BoardID <> #excludeBoardID#
-                    ORDER BY 
-                        A.TreeViewOrder ASC
-                ]]>
+<!-- 2019-06-11 홍승비 - 전체관리자를 제외한 관리자는 그룹사게시판의 권한을 체크하도록 수정 -->
+				<isEqual property="v_isCompanyAdmin" compareValue="true">
+	                <![CDATA[
+	                    SELECT 
+	                        DISTINCT A.BoardID ,
+	                        CASE #primary#
+	                            WHEN
+	                                '1'
+	                            THEN
+	                                A.boardname
+	                            ELSE
+	                                CASE
+	                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+	                                    THEN A.boardname
+	                                    ELSE A.boardname2
+	                                END
+	                        END BoardName,
+	                        A.TreeViewOrder ,
+	                        A.BoardColor BoardColor,
+	                        A.Gubun ,
+	                        '' BoardGroupACL
+	                    FROM 
+	                        TBL_Board_BoardInfo A
+	                    WHERE
+	                        A.TENANT_ID = #tenantID#
+						AND
+		                	(A.companyid = #companyID# OR TRIM(A.COMPANYID) = '' OR A.COMPANYID IS NULL)
+	                    AND
+	                        A.PARENTBOARDID = #rootBoardID#
+	                    AND 
+	                        A.BoardID <> #excludeBoardID#
+	                    ORDER BY 
+	                        A.TreeViewOrder ASC
+	                ]]>
+                </isEqual>
+				<isNotEqual property="v_isCompanyAdmin" compareValue="true">
+	          		<![CDATA[
+	          			(SELECT 
+	                        DISTINCT A.BoardID ,
+	                        CASE #primary#
+	                            WHEN
+	                                '1'
+	                            THEN
+	                                A.boardname
+	                            ELSE
+	                                CASE
+	                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+	                                    THEN A.boardname
+	                                    ELSE A.boardname2
+	                                END
+	                        END BoardName,
+	                        A.TreeViewOrder ,
+	                        A.BoardColor BoardColor,
+	                        A.Gubun ,
+	                        '' BoardGroupACL
+		           		FROM 
+		           			TBL_Board_BoardInfo A
+		          		WHERE
+		          			A.TENANT_ID = #tenantID#
+		          		AND
+			                (A.companyid = #companyID#)
+		          		AND
+		          			A.PARENTBOARDID = #rootBoardID#
+		                AND 
+		                	A.BoardID <> #excludeBoardID#
+		           		ORDER BY 
+		           			A.TreeViewOrder ASC)
+		           			
+	          		UNION
+	          		
+	          			(SELECT 
+	                        DISTINCT A.BoardID ,
+	                        CASE #primary#
+	                            WHEN
+	                                '1'
+	                            THEN
+	                                A.boardname
+	                            ELSE
+	                                CASE
+	                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+	                                    THEN A.boardname
+	                                    ELSE A.boardname2
+	                                END
+	                        END BoardName,
+	                        A.TreeViewOrder ,
+	                        A.BoardColor BoardColor,
+	                        A.Gubun ,
+	                        '' BoardGroupACL
+		           		FROM 
+		           			TBL_Board_BoardInfo A
+					]]>
+		           	<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
+		           		<![CDATA[
+		           		 JOIN 
+		                	( SELECT 
+		                		C.BoardID ,
+		                        C.AccessID ,
+		                        C.Access_ ,
+		                        C.BoardGroupACL ,
+		                        C.tenant_id
+		                      FROM 
+		                      	TBL_Board_BoardManage C
+		                      LEFT JOIN 
+		                      	TBL_Board_BoardInfo D   
+		                      ON
+		                      	C.TENANT_ID = D.TENANT_ID 
+		                      AND
+		                      	C.BoardID = D.BoardID
+		                      WHERE
+		                      	C.TENANT_ID = #tenantID#
+		                      AND
+		                      	C.Access_ = 1
+		                      AND 
+		                      	C.BoardID <> #excludeBoardID#
+		                      AND 
+		                      	C.AccessID = #userID#
+		                      AND 
+		                      	D.ParentBoardID = #rootBoardID#
+						]]>
+						<isEqual property="v_ISDEPT" compareValue="1">
+							<isEqual property="v_ISEQUALDEPT" compareValue="0">
+								AND
+									C.BoardGroupACL = 'Y'
+							</isEqual>
+						</isEqual>
+						<![CDATA[
+			                      	) B   
+			                ON 
+			                	A.TENANT_ID = B.TENANT_ID
+			                AND
+			                	A.BoardID = B.BOARDID
+						]]>
+					</isEqual>
+					<![CDATA[
+			          		WHERE
+			          			A.TENANT_ID = #tenantID#
+			          		AND
+				                (TRIM(A.companyid) = ''	OR	A.companyid IS NULL)
+			          		AND
+			          			A.PARENTBOARDID = #rootBoardID#
+			                AND 
+			                	A.BoardID <> #excludeBoardID#
+			           		ORDER BY 
+			           			A.TreeViewOrder ASC)
+				]]>
+			</isNotEqual>
           </isNotEqual>
       </select>
       
@@ -1640,5 +1808,45 @@
 				TENANT_ID = #tenantID#
 		]]>  	
   </select>
+  
+  <select id="MBoardDAO.getPDOAddJobDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				AM.DEPTID
+			FROM
+				tbl_usermaster UM
+			INNER JOIN
+				TBL_ADDJOBMASTER AM
+			ON
+				UM.TENANT_ID = AM.TENANT_ID
+			AND
+				UM.CN = AM.CN
+			AND
+				UM.CN = #v_pUserID#
+			INNER JOIN
+				TBL_DEPTMASTER DM
+			ON
+				UM.TENANT_ID = DM.TENANT_ID
+			AND
+				AM.DEPTID = DM.CN
+			AND
+				DM.EXTENSIONATTRIBUTE2 = #v_pCompanyID#
+			WHERE
+				UM.TENANT_ID = #v_TENANTID# 
+		]]>
+	</select>
+	
+	<select id="MBoardDAO.getUpperDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				EXTENSIONATTRIBUTE1
+			FROM
+				tbl_deptmaster
+			WHERE
+				CN = #v_DEPTID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
 </sqlMap>
 

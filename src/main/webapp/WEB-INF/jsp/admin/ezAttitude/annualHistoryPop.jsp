@@ -53,7 +53,7 @@
 		    	    $(this).val($(this).val().replace(/[^0-9]/g,""));
 		    	});
 		    	
-		    	if ($("#contentlist tr").length > 6) { //스크롤이 생길 경우 처리
+		    	if ($("#contentlist tr").length > 13) { //스크롤이 생길 경우 처리
 		    		var addTh = "<th class='borderRight' style='width: 9px;'></th>";
 		    		$(".mainlist tr th:eq(4)").after(addTh);
 		    		$(".mainlist tr th:eq(4)").removeClass("borderRight");

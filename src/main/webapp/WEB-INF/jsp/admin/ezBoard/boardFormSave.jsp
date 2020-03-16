@@ -14,7 +14,12 @@
 			var pBoardId = "<c:out value='${boardID}'/>";
 	        var pcheckForm = "<c:out value='${checkForm}'/>";
 	        
-	        function Editor_Complete() {	        	
+	        /* 2020-02-10 홍승비 - 관리자 > 게시판 > 양식 설정 진입 시 상단 메뉴명 변경되도록 수정 */
+	        $(document).ready(function(){
+	        	parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t999026'/>";
+			});
+	        
+	        function Editor_Complete() {
                 if (pcheckForm.toUpperCase() == "TRUE") {
                 	var fullPath = "";
                 	$.ajax({

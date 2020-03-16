@@ -104,13 +104,34 @@
 				document.getElementById("searchValue").value = "";
 				document.getElementsByName("cCateA")[0].value = "0";
 				
+				/* 2020-01-03 홍승비 - 폐쇄신청 커뮤니티의 경우, 검색옵션으로 커뮤니티이름과 폐쇄사유를 사용 */
+				var commuName = $("#searchType").find("option[value='C_ClubName']");
+				var commuDesc = $("#searchType").find("option[value='C_ClubDesc']");
+				var commuCR = $("#searchType").find("option[value='C_CloseReason']");
+				
+				if (selectedTabId == "closeCommu") { // 폐쇄승인
+					commuDesc.css("display", "none"); // 커뮤니티소개
+					commuDesc.attr("selected", false);
+					commuCR.css("display", ""); // 폐쇄사유
+					commuCR.attr("selected", false);
+					commuName.attr("selected", true); // 커뮤니티이름 (default)
+				} else { // 신청승인
+					commuDesc.css("display", ""); // 커뮤니티소개
+					commuDesc.attr("selected", false);
+					commuCR.css("display", "none"); // 폐쇄사유
+					commuCR.attr("selected", false);
+					commuName.attr("selected", true); // 커뮤니티 이름 (default)
+				}
+				
 				pCurPage = 1;
 				applicationCommuList();
 			}
 			
+			/* 2020-01-06 홍승비 - 커뮤니티소개 검색옵션 추가 */
 			// (신청승인 / 폐쇄승인 ) 리스트 호출
 			function applicationCommuList() {
 				var url = (selectedTabId == "admitCommu" ? "/admin/ezCommunity/admitCom.do" : "/admin/ezCommunity/closeCom.do");
+				var searchType2 = document.getElementById("searchType");
 				
 				$.ajax({
 					type : "POST",
@@ -120,8 +141,9 @@
 					data : 
 					{
 						pageNum     : pCurPage,
-						searchType  : document.getElementsByName("cCateA")[0].value,
-						searchValue : make_searchstring(document.getElementById("searchValue").value)
+						searchType  : document.getElementsByName("cCateA")[0].value, // 카테고리 종류
+						searchType2  : searchType2.options[searchType2.selectedIndex].value, // 커뮤니티 검색옵션
+						searchValue : make_searchstring(document.getElementById("searchValue").value) // 검색값
 					},
 					success : function (data) {
 						pCurPage   = data.pageNum;
@@ -395,7 +417,7 @@
 				setTimeout(function() {
 					if (confirm("<spring:message code = 'ezCommunity.t61' />")) {
 						$.ajax({
-							type : "POST",
+							type : "GET",
 							dataType : "json",
 							url : "/admin/ezCommunity/commAdmitOk.do",
 							async : false,
@@ -431,7 +453,7 @@
 				setTimeout(function() {
 					if (confirm("<spring:message code = 'ezCommunity.t63' />")) {
 						$.ajax({
-							type : "POST",
+							type : "GET",
 							dataType : "json",
 							url : "/admin/ezCommunity/commAdmitOk.do",
 							async : false,
@@ -464,7 +486,7 @@
 			function closeBtnClick(code) {
 				if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
 					$.ajax({
-						type : "POST",
+						type : "GET",
 						dataType : "json",
 						url : "/admin/ezCommunity/commCloseAll.do",
 						async : false,
@@ -596,6 +618,9 @@
 				<span id="idSpan" class="idSpan">${idSpanValue}</span>
 				<select id="searchType" name="QuerySelect" style="vertical-align: middle; height: 22px;">
 					<option selected value="C_ClubName"><spring:message code = 'ezCommunity.t9991' /></option>
+					<%-- 2020-01-06 홍승비 - 커뮤니티소개, 폐쇄사유 검색옵션 추가 --%>
+					<option value="C_ClubDesc"><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></option>
+					<option value="C_CloseReason" style="display:none;"><spring:message code = 'ezCommunity.t71' /></option>
 				</select>
 						
 				<input name="text" type="text" style="WIDTH:200px; vertical-align:middle; height: 22px;" id="searchValue" onkeydown="return keyword_onkeydown()"> 

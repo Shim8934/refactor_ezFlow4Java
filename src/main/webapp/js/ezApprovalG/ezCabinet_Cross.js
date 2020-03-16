@@ -32,7 +32,7 @@ function ChkCabRoleInfo(selRow) {
     var ConfirmFlag;
     var CabClassNo;
     var MenuType;
-    
+
     if (selRow != null) {
         if (ListTypeFlag == "2" || ListTypeFlag == "3") {
             MenuCtl_Trans();
@@ -60,8 +60,13 @@ function ChkCabRoleInfo(selRow) {
                 g_bConfirm = true;
             else
                 g_bConfirm = false;
-
-            g_bCabCharger = ISCabCharger(CabClassNo, UserID);
+            
+            if (MenuType == "1" && g_bDeptCharger) {
+            	g_bCabCharger = true;
+            } else {
+            	g_bCabCharger = ISCabCharger(CabClassNo, UserID);
+            }
+            
             ezCabMunuCtl(MenuType, selRow);
         }
     }
@@ -1649,21 +1654,25 @@ function makePageSelPage(pTotalCnt) {
     		var startDate = g_searchDate.startDate;
     		var endDate = g_searchDate.endDate;
     		
-    		period = startDate.getFullYear() + strLang1028 + " " + (startDate.getMonth() + 1) + strLang1029 + " " + startDate.getDate() + strLang1030 + " ~ ";
-    		period += endDate.getFullYear() + strLang1028 + " " + (endDate.getMonth() + 1) + strLang1029 + " " + endDate.getDate() + strLang1030;
+    		period = getDatePeriod(UserLang, startDate.getFullYear(), (startDate.getMonth() + 1), startDate.getDate(), endDate.getFullYear(), (endDate.getMonth() + 1), endDate.getDate());
     	} else if (GetSelectVal("rec_year") == "ALL" && GetSelectVal("cab_year") == "ALL" && GetSelectVal("del_year") == "ALL") {
             var nowyear = new Date().getFullYear();
             var nowmonth = new Date().getMonth() + 1;
             var nowday = new Date().getDate();
-            period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+            period = getDatePeriod(UserLang, (nowyear - 1), nowmonth, nowday, nowyear, nowmonth, nowday);
         }
         else {
-            if (GetSelectVal("rec_year") != "ALL")
-                period = document.getElementById("rec_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("rec_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
-            else if (GetSelectVal("cab_year") != "ALL")
-                period = document.getElementById("cab_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("cab_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
-            else
-                period = document.getElementById("del_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("del_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
+            if (GetSelectVal("rec_year") != "ALL"){
+            	period = getDatePeriod(UserLang, document.getElementById("rec_year").value, 1, 1, document.getElementById("rec_year").value, 12, 31);
+            	//period = document.getElementById("rec_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("rec_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
+            } else if (GetSelectVal("cab_year") != "ALL") {
+            	period = getDatePeriod(UserLang, document.getElementById("cab_year").value, 1, 1, document.getElementById("cab_year").value, 12, 31);
+            	//period = document.getElementById("cab_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("cab_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
+            } else {
+            	period = getDatePeriod(UserLang, document.getElementById("del_year").value, 1, 1, document.getElementById("del_year").value, 12, 31);
+            	//period = document.getElementById("del_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("del_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
+            	
+            }
         }
 
         if (!isPeriodYear)
@@ -1880,4 +1889,61 @@ function orgmakePageSelPage(pTotalCnt) {
     td_pTotalCount.textContent = totalPage;
     txt_PageInputNum.value = curpage;
     return;
+}
+
+function getEngMonth(month) {
+	var engMonthStr = "";
+	
+	switch(Number(month)) {
+		case 1 :
+			engMonthStr = "Jan";
+			break;
+		case 2 :
+			engMonthStr = "Feb";
+			break;
+		case 3 :
+			engMonthStr = "Mar";
+			break;
+		case 4 :
+			engMonthStr = "Apr";
+			break;
+		case 5 :
+			engMonthStr = "May";
+			break;
+		case 6 :
+			engMonthStr = "Jun";
+			break;
+		case 7 :
+			engMonthStr = "Jul";
+			break;
+		case 8 :
+			engMonthStr = "Aug";
+			break;
+		case 9 :
+			engMonthStr = "Sep";
+			break;
+		case 10 :
+			engMonthStr = "Oct";
+			break;
+		case 11 :
+			engMonthStr = "Nov";
+			break;
+		case 12 :
+			engMonthStr = "Dec";
+			break;
+	}
+	
+	return engMonthStr;
+}
+
+function getDatePeriod(userLang, startYear, startMonth, startDate, endYear, endMonth, endDate) {
+	return getDateStrByLang(userLang, startYear, startMonth, startDate) + " ~ " + getDateStrByLang(userLang, endYear, endMonth, endDate);
+}
+
+function getDateStrByLang(userLang, year, month, date) {
+	if (userLang == "2") {
+		return getEngMonth(month) + " " + date + ", " + year;
+	} else {
+		return year + strLang1028 + " " + month + strLang1029 + " " + date + strLang1030
+	}
 }

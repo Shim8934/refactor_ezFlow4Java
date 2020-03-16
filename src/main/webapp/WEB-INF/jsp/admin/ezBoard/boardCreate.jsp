@@ -83,7 +83,7 @@
 		<table class="content">
 			<tr>
 		    	<th><spring:message code="ezBoard.t110" /></th>
-		    	<td><b>&nbsp;<c:out value='${parentBoardName}' /></b></td>
+  			  	<td><b>&nbsp;<c:out value='${parentBoardName}' /></b></td>
 		    </tr>
 		    <tr>		
 		    	<th><spring:message code="ezBoard.t111" /></th>

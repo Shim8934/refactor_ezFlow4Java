@@ -359,15 +359,15 @@
 			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
 			            case "1":
 			            case "4":	
-			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
+			                div.style.background = "url(/images/icon/section_Individualbg.png)";
 			                break;
 			            case "2":
 			            case "5":
-			                div.style.background = "url(/images/icon/section_orderbg.gif)";
+			                div.style.background = "url(/images/icon/section_orderbg.png)";
 			                break;
 			            case "3":
 			            case "6":
-			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
+			                div.style.background = "url(/images/icon/section_Cooperativebg.png)";
 			                break;
 			        }
 
@@ -478,9 +478,9 @@
  				feature = GetOpenPosition(750, 740);
 	        	
 	        	if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 		        } else {
-	                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 		        }
 			}
 

@@ -25,16 +25,22 @@
 	        var pRegDate, pDelDate, pRegUserID, pRegUserName;
 	        var RetValue;
 	        var ReturnFunction;
+	        var pDeptID;
+	        var pCompanyID;
+	        var pDeptYN = "<c:out value='${pDeptYN}'/>";
+	        var ReturnFunctionDel;
 	        
 	        $(document).ready(function(){
 	            try {
 	                try {
 	                    RetValue = parent.ezsealinfo_dialogArguments[0];
 	                    ReturnFunction = parent.ezsealinfo_dialogArguments[1];
+	                    ReturnFunctionDel = parent.ezsealinfo_dialogArguments[2];
 	                } catch (e) {
 	                    try {
 	                        RetValue = opener.ezsealinfo_dialogArguments[0];
 	                        ReturnFunction = opener.ezsealinfo_dialogArguments[1];
+	                        ReturnFunctionDel = opener.ezsealinfo_dialogArguments[2];
 	                    } catch (e) {
 	                        RetValue = window.dialogArguments;
 	                    }
@@ -49,6 +55,8 @@
 	                pDelDate = RetValue[6];
 	                pRegUserID = RetValue[7];
 	                pRegUserName = RetValue[8];
+	                pDeptID = RetValue[9]; // 선택한 관인의 부서ID (부서별관인/직인에서만 사용)
+	                pCompanyID = RetValue[10]; // 선택한 관인의 회사ID
 	
                     $("#SealName").html(pSealName);
                     $("#SealSize").html(pSealWidth + "mm * " + pSealHeight + "mm");
@@ -76,6 +84,43 @@
 	                dialogArguments.window.open("/ezCommon/showPersonInfo.do?id=" + tempUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(420, 438));
 	            }
 	        }
+	        
+	        /* 2020-02-17 홍승비 - 관인정보 팝업창에 관인삭제 기능 추가 */
+	        function btnDel_onclick() {
+	        	if (pDelDate != "") { // 이미 삭제된 경우
+	        		alert("<spring:message code = 'ezApprovalG.hsbSl02' />");
+	        		return;
+	        	}
+			    if (!confirm("<spring:message code = 'ezApprovalG.hsbSl01' />")) {
+			        return;
+			    }
+			    
+				DeleteSealInfo();
+	        }
+	        
+	        // 회사관인 또는 부서별관인을 삭제하는 기능 (다른 URL 호출)
+		    function DeleteSealInfo() {
+	        	var pUrl = "/admin/ezApprovalG/deleteSealInfo.do";
+	        	if (pDeptYN == "Y") { // 부서별관인
+	        		pUrl = "/admin/ezApprovalG/deleteDeptSealInfo.do";
+	        	}
+	        	
+		    	$.ajax({
+		    		type : "POST",
+		    		url : pUrl,
+		    		async : false,
+		    		data : {
+		    			pSealNum : pSealNum,
+		    			deptID : pDeptID,
+		    			companyID : pCompanyID
+		    		},
+		    		success : function (result) {
+		    			window.close();
+		    			ReturnFunctionDel(); // 관인삭제 후 리스트 갱신
+		    		}
+		    	});
+		    }
+	        
 		</script>
 	</head>
 	<body class="popup" style="overflow:auto">
@@ -98,14 +143,14 @@
 	        <tr>
 	        	<c:choose>
 					<c:when test="${pDeptYN == 'Y' }">
-						<th style="width:80px"><spring:message code = 'ezApprovalG.t1250' /></th>
+						<th style="width:35%;"><spring:message code = 'ezApprovalG.t1250' /></th>
 					</c:when>
 					<c:otherwise>
-						<th><spring:message code = 'ezApprovalG.t1262' /></th>
+						<th style="width:35%;"><spring:message code = 'ezApprovalG.t1262' /></th>
 					</c:otherwise>
 				</c:choose>
 	            
-	            <td id="SealName"></td>
+	            <td id="SealName" style="width:355px;"></td>
 	        </tr>
 	        <tr>
 	        	<c:choose>
@@ -133,11 +178,15 @@
 	        </tr>
 	        <tr>
 	            <td colspan="2" style="text-align:center; padding-top:5px; padding-bottom:5px;">
-	            	<div style="width:475px;height:190px;overflow: auto">
+	            	<div style="width:475px; height:195px; overflow:auto;">
 	                  <img id="signimage" alt="" src="" />
 	                </div> 
 	            </td>
 	        </tr>
 	    </table>
+	    <%-- 2020-02-17 홍승비 - 관인삭제버튼 추가 --%>
+	    <div class="btnposition btnpositionNew">
+	    	<a class="imgbtn" onclick="btnDel_onclick()"><span><spring:message code = 'ezApprovalG.t266' /></span></a>
+	    </div>
 	</body>
 </html>

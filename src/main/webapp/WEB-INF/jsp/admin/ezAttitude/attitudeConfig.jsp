@@ -100,7 +100,7 @@
 	    			return;
 	    		}
 	        	//시간
-	        	if( $("#endTime").val() < $("#startTime").val() ) {
+	        	if( $("#endTime").val() <= $("#startTime").val() ) {
 	        		alert("<spring:message code='ezAttitude.t131' />");
 	        		return;
 	        	}
@@ -200,7 +200,7 @@
 				</c:forEach>
       		</select>
 	    </h1>
-	  	<h2 style="font-weight: normal;font-size:12px;margin-top:30px">▒&nbsp;휴무요일 외 휴일은 일정관리메뉴의 기념일관리에서 추가하실 수 있습니다.</h2>
+	  	<h2 style="font-weight: normal;font-size:12px;margin-top:30px"><spring:message code="ezAttitude.t312"/></h2>
 		<table class="content" style="width:500px;margin-top:5px">
 			<tr style="height:30px;">
 	        	<th style="width: 70px; text-align:center">
@@ -228,7 +228,8 @@
 	            	<input type="checkbox"/><spring:message code='ezAttitude.t27' />
 	            </td>
 	        </tr>
-	        <tr style="height:30px;">
+	        <!-- 2019.07.05 연차관리 기능 추가로 인해 사용하는곳이 없으므로 display none으로 해둠. -->
+	        <tr style="height:30px;display: none;">
 	        	<th style="width: 70px; text-align:center">
 					<spring:message code='ezAttitude.t31' />
 	            </th>

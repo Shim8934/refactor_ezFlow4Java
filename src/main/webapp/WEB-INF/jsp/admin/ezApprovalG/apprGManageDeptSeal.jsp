@@ -188,26 +188,34 @@
 	                parameter[6] = getNodeText(selRow[0].cells[4]);
 	                parameter[7] = GetAttribute(selRow[0], "DATA3")
 	                parameter[8] = getNodeText(selRow[0].cells[5]);
-		
+	                parameter[9] = pDeptID;  // 현재 선택된 부서ID (부서직인 관리 시에만 사용)
+	                parameter[10] = $("#ListCompany option:selected").val();  // 현재 선택된 회사ID
+	                
 		            if (CrossYN()) {
 		                ezsealinfo_dialogArguments[0] = parameter;
+		                ezsealinfo_dialogArguments[2] = btnInfo_onDelete_Complete; // 관인삭제 후 동작
 		
-		                var ezSealInfo = window.open("/admin/ezApprovalG/sealInfo.do?pDeptYN=Y", "ezSealInfo", GetOpenWindowfeature(500, 420));
+		                var ezSealInfo = window.open("/admin/ezApprovalG/sealInfo.do?pDeptYN=Y", "ezSealInfo", GetOpenWindowfeature(504, 470));
 		                try { ezSealInfo.focus(); } catch (e) {
 		                }
-		            } else {
+		            } else { // 사실상 사용되지 않는 분기이므로 이 부분은 처리하지 않음 (IE 9 이하 분기)
 		                var url = "/admin/ezApprovalG/sealInfo.do?pDeptYN=Y";
 		                var feature = GetShowModalPosition(610, 265);
-		                var retVal = window.showModalDialog(url, parameter, "dialogWidth:500px;dialogHeight:420px;status:no;help:no;scroll:no;edge:sunken" + feature);
+		                var retVal = window.showModalDialog(url, parameter, "dialogWidth:504px;dialogHeight:470px;status:no;help:no;scroll:no;edge:sunken" + feature);
 		            }
 		        } else {
-		            var pInformationString = "<spring:message code = 'ezApprovalG.t1280' />";
+		            var pInformationString = "<spring:message code = 'ezApprovalG.deptSeal001' />";
 		            OpenAlertUI(pInformationString);
 		            
 		            return;
 		        }
 		    }
 			
+		    /* 2020-02-17 홍승비 - 관인삭제 이후 리스트 갱신 함수 */
+		    function btnInfo_onDelete_Complete() {
+		    	getSealList();
+		    }
+		    
 		    var AddDeptSealInfo_dialogArguments = new Array();
 	        function btnAdd_onclick() {
 	            var parameter = new Array();
@@ -220,15 +228,16 @@
 	            AddDeptSealInfo_dialogArguments[1] = btnAdd_onclick_complete;
 	            
 	            var url = "/admin/ezApprovalG/addDeptSealInfo.do";
-	            var addSealWindow = window.open(url, "", GetOpenWindowfeature(430, 360));
+	            var addSealWindow = window.open(url, "", GetOpenWindowfeature(435, 390));
 	            try { addSealWindow.focus(); } catch (e) {}   
 	    	}
 	        
+	        /* 2020-02-17 홍승비 - 부서관인(직인)등록 완료 시, 기존 부서관인(직인)을 삭제하지 않도록 수정 */
 	        function btnAdd_onclick_complete(ret) {
 	        	if (ret[0] == "OK") {
-	                var RtnVal = DeleteSealInfo("");
-	                if (RtnVal == "TRUE") {
-	                    RtnVal = InsertSealInfo(ret[1], ret[2], ret[3], ret[4], ret[5]);
+/* 	                var RtnVal = DeleteSealInfo("");
+	                if (RtnVal == "TRUE") { */
+	                    var RtnVal = InsertSealInfo(ret[1], ret[2], ret[3], ret[4], ret[5]);
 	                    if (RtnVal == "TRUE") {
 	                        var pInformationString = "<spring:message code = 'ezApprovalG.t1269' />";
 	     		            OpenAlertUI(pInformationString);
@@ -240,12 +249,12 @@
 		                    
 		                    return;
 		                }
-		            } else {
+/* 		            } else {
 		                var pInformationString = "<spring:message code = 'ezApprovalG.t1270' />";
 	 		            OpenAlertUI(pInformationString);
 		                
 		                return;
-	            	}
+	            	} */
 	        	}
 	        }
 	        

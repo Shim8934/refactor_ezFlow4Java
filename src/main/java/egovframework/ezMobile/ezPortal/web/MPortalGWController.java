@@ -98,7 +98,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 	 */
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezPortal/{type}/main-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezPortal/{type}/main-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject portalMainList(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("portalMainList Start");
 		
@@ -326,7 +326,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 	}
 		
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezPortal/{menu}/footer-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezPortal/{menu}/footer-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject portalFooterList(@PathVariable String menu, @PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
 		LOGGER.debug("portalFooterList Start");
 		
@@ -377,7 +377,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 	 */
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezPortal/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezPortal/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject portalUserInfo(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("portalUserInfo Start");
 		
@@ -406,7 +406,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 	 */
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezPortal/{type}/right-panel/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezPortal/{type}/right-panel/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject portalRightPanel(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("portalMainList Start");
 		

@@ -24,6 +24,9 @@
 			.content th {
 				white-space: normal;
 			}
+			.ui-datepicker-year {
+				display: none;
+			}
 	    </style>
 	    
 	    <script type="text/javascript">
@@ -33,7 +36,8 @@
 		    var monthStr = monthMsg.split(";");		    
 		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
 		    var dayStr = dayMsg.split(";");
-	    
+	    	var nowYear = new Date().getFullYear();
+	    	
 	        $(document).ready(function() {
 		        if (document.getElementById("ListCompany").length == 0) {
 		            alert("<spring:message code = 'ezAttitude.t32' />");
@@ -65,7 +69,7 @@
 			        }
 			        else
 			            NowDate = new Date();
-			        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+			        $("#Sdatepicker").datepicker("option", "dateFormat", "mm-dd");
 			        $("#Sdatepicker").datepicker('setDate', NowDate);
 			    });
 			    
@@ -102,7 +106,7 @@
 		            	attitudeConfigSet(result);
 	            	},
 	            	error : function() {
-	            		alert("해당 회사의 설정 데이터가 없습니다.");
+	            		alert("<spring:message code='ezAttitude.t329' />");
 	            		$("#Sdatepicker").datepicker('setDate', new Date());
 	            		$('input[name=use_annual_auto_gnrt]').eq(1).prop('checked', true);
 	            		$('input[name=use_minus_annual]').eq(1).prop('checked', true);
@@ -168,8 +172,9 @@
         		
         		//회계년도 기산일
         		initialDate = result.initialDate;
-        		$("#Sdatepicker").datepicker('setDate', initialDate);
-        		
+				$("#Sdatepicker").datepicker("option", "changeYear", false);
+				$("#Sdatepicker").datepicker("option", "dateFormat", "mm-dd");
+        		$("#Sdatepicker").datepicker('setDate', initialDate.split("-")[1]+"-"+initialDate.split("-")[2]);
         		//잔여연차 음수허용
         		var useMinusAnnual = result.useMinusAnnual;
         		if (useMinusAnnual == 0) {
@@ -205,7 +210,7 @@
 	            			annualCancelRule : $('input[name=annual_cancel_rule]:checked').val(),
 	            			useAnnualAutoGnrt : $('input[name=use_annual_auto_gnrt]:checked').val(),
 	            			annualGnrtStd : $('input[name=annual_gnrt_std]:checked').val(),
-	            			initialDate : $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val(),
+	            			initialDate : nowYear+"-"+$("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val(),
 	            			useMinusAnnual : $('input[name=use_minus_annual]:checked').val(),
 	            			useAnnualTmnt : $('input[name=use_annual_tmnt]:checked').val(),
 	            			roundOffRule : $('input[name=round_off_rule]:checked').val()

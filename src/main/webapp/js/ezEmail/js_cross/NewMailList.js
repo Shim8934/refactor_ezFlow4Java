@@ -184,23 +184,20 @@ function MakeHeaderHTML_SUB(HeaderObject) {
 }
 
 function drag(ev) {
-    var szItemID = "";
-
-    for (var i = 0; i < listContentArry.length; i++) {
-        szItemID += GetAttribute(document.getElementById(listContentArry[i]), "_href") + ",";
-    }
-
-    if (szItemID != "") {
-        ev.dataTransfer.setData("text", szItemID);
-    }
-    else {
-        if (typeof (ev.target) == "undefined") {
-            ev.dataTransfer.setData("text", GetAttribute(ev.srcElement, "_href") + ",");
-        }
-        else {
-            ev.dataTransfer.setData("text", GetAttribute(ev.target, "_href") + ",");
-        }
-    }
+	var eventTarget = ev.srcElement || ev.target;
+	var listContentLength = listContentArry.length;
+	
+	if (listContentLength > 1 && listContentArry.indexOf(eventTarget.id) > -1) {
+		var szItemID = "";
+		
+		for (var i = 0; i < listContentArry.length; i++) {
+			szItemID += GetAttribute(document.getElementById(listContentArry[i]), "_href") + ",";
+		}
+		
+		ev.dataTransfer.setData("text", szItemID);
+	} else {
+		ev.dataTransfer.setData("text", GetAttribute(eventTarget, "_href") + ",");
+	}
 }
 
 var xmlhttp_MailReceiverList = null;
@@ -241,6 +238,9 @@ function MakeListInfoHTML(ConentObject) {
                 var p_Group = SelectSingleNodeValue(XmlRows[Cnt], "group");
                 var p_RecipientCount = SelectSingleNodeValue(XmlRows[Cnt], "recipientCount");
                 var p_countryCode = SelectSingleNodeValue(XmlRows[Cnt], "countryCode");
+                var p_mailIP = SelectSingleNodeValue(XmlRows[Cnt], "mailIP");
+                var p_countryName = SelectSingleNodeValue(XmlRows[Cnt], "countryName");
+                var p_mailConfirm = SelectSingleNodeValue(XmlRows[Cnt], "mailConfirm");
                 var recipients = [];
             	var recipientsLen = 1;
                 
@@ -442,6 +442,15 @@ function MakeListInfoHTML(ConentObject) {
                     	var _TDColumSpan = document.createElement("span");
                     	_TDColumSpan.style.padding = "7px 3px";
                     	_TDColumSpan.innerHTML = innerHTML;
+                    	var countryTitle = "";
+                    	
+                    	if (useCountryIP == "YES") {
+                    		countryTitle = p_countryName;
+                    		if (p_mailIP != "") {
+                    			countryTitle += "( " + p_mailIP + " )";
+                    		}
+                    		_TDColumSpan.title = countryTitle;
+                    	}
                     	
                     	if (useMailWriteSenderClick == "YES") {
                     		if (shareId == "" || (shareId != "" && sendPermission == "Y")) {
@@ -468,9 +477,10 @@ function MakeListInfoHTML(ConentObject) {
             					}
             					
             					_img.src = "/images/countryIcon/" + p_countryCode + ".png";
+            					_img.title = countryTitle;
             					_TR.lastChild.appendChild(_img);
             				} else {
-            					// 본인국가 표시 안함 
+            					// 본인국가 표시 안함 p_mailIP p_countryName
             					if ( p_countryCode != systemCountryCode.toLowerCase() ) {
             						var _img = document.createElement("img");
             						_img.style.verticalAlign = "middle";
@@ -481,10 +491,15 @@ function MakeListInfoHTML(ConentObject) {
             						}
             						
             						_img.src = "/images/countryIcon/" + p_countryCode + ".png";
+            						_img.title = countryTitle;
             						_TR.lastChild.appendChild(_img);
             					}
             				}
-                    	} 
+                    	}
+                    	
+                    	if (useMailConfirm == "YES" && p_mailConfirm == "true") {
+                            _TR.setAttribute("class", "mail_confirm");
+                    	}
                     	
                     	_TR.lastChild.appendChild(_TDColumSpan);
                     }
@@ -1382,20 +1397,16 @@ function event_listContextMenu(event) {
         EventMouseX = EventMouseX - Div_;
     }
     if (g_foldertype == "draft") {
-    	$("#ContextMenuDiv tbody :nth-child(3)").css("display","none");
+    	$("#ContextMenuDiv tbody #replyMenu").css("display","none");
     }
     
     var target = event.target ? event.target : event.srcElement;
     var targetTag = target.tagName;
 
     if (targetTag == 'SPAN'){ 
-		$("#ContextMenuDiv tbody :nth-child(9)").css("display","");
-		$("#ContextMenuDiv tbody :nth-child(10)").css("display","");
-		$("#ContextMenuDiv tbody :nth-child(11)").css("display","");
+		$("#ContextMenuDiv tbody #searchName, #searchInThisBoxByName, #searchAllBoxByName").css("display","");
 	} else {
-		$("#ContextMenuDiv tbody :nth-child(9)").css("display","none");
-	    $("#ContextMenuDiv tbody :nth-child(10)").css("display","none");
-	    $("#ContextMenuDiv tbody :nth-child(11)").css("display","none"); 	
+		$("#ContextMenuDiv tbody #searchName, #searchInThisBoxByName, #searchAllBoxByName").css("display","none");
 	}
 //    document.getElementById("mailPanel").style.display = "";
     document.getElementById("ContextMenuDiv").style.left = EventMouseX + "px";

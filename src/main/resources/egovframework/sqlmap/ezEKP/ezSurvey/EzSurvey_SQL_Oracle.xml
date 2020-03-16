@@ -227,6 +227,11 @@
 			<isEqual property="userMode" compareValue="0" prepend=" and ">
 				draft_flag = 0
 			</isEqual>
+			<isEqual property="userMode" compareValue="1" prepend=" and ">
+				(
+					survey_id not in ( select survey_id from tbl_survey where draft_flag = 1 and user_id != #userId# and tenant_id = #tenantId# )
+				)
+			</isEqual>
 			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1 or user_id = #userId#)</isEmpty>
 			<isNotEmpty property="surveyIds" prepend=" and ">
 				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
@@ -905,12 +910,22 @@
 								r.column_id,
 								r.ranking_level,
 								r.slider_value,
-								d.image,
+								u.extensionattribute2 as image,
 								TO_CHAR(TO_DATE(response_date, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') as response_date,
 								case when #primary# = '1' then d.user_name1 else d.user_name2 end as user_name,
 								case when #primary# = '1' then d.dept_name1 else d.dept_name2 end as dept_name
-						from tbl_survey_response r join tbl_survey_respondent d on r.response_id = d.response_id and r.company_id = d.company_id and r.tenant_id = d.tenant_id
-					 		where r.survey_id = #surveyId# and r.company_id = #companyId# and r.tenant_id = #tenantId# 
+						from
+							tbl_survey_response r 
+						join
+							tbl_survey_respondent d on r.response_id = d.response_id
+						left join
+							TBL_USERMASTER u on d.TENANT_ID = U.TENANT_ID 
+						and
+							r.company_id = d.company_id and r.tenant_id = d.tenant_id
+						and
+					 		d.user_id = u.cn
+					 	where
+					 		r.survey_id = #surveyId# and r.company_id = #companyId# and r.tenant_id = #tenantId# 
 					) rs
 				order by question_level asc, response_id asc
 		]]>
@@ -938,5 +953,60 @@
 			)
 		]]>
 	</insert>
+	
+	<select id="EzSurveyDAO.checkRespondent" resultClass="Long">
+		select
+			count(*) 
+		from
+			tbl_survey_respondent
+		where
+			survey_id = #surveyId#
+		and
+			user_id = #userId#
+		and
+			company_id = #companyId#
+		and
+			tenant_id = #tenantId#
+	</select>
+	
+	<select id="EzSurveyDAO.getNoAnsweredIngSurveyList" resultClass="Integer">
+		select
+			count(distinct(P.survey_id))
+		from 
+			tbl_survey_participant P
+		inner join
+			tbl_survey S
+		on
+			P.survey_id = S.survey_id
+		where
+			(
+				(P.user_id = #userId# and P.user_type = 'user')
+				or 
+				(P.user_id in
+				<iterate property="deptList" open="(" close=")" conjunction=",">
+					#deptList[]#
+				</iterate>
+				and 
+				(P.user_type = 'dept' or P.user_type = 'comp')
+				)
+			)
+		and 
+			P.survey_id not in (select 
+									survey_id 
+								from 
+									tbl_survey_respondent 
+								where 
+									user_id = #userId#)
+		and
+			S.use_status = 1
+		and
+			P.tenant_id = #tenantId#
+		and 
+			P.company_id = #companyId#
+		<![CDATA[
+		and
+			S.start_date <= #today# and S.end_date >= #today#
+		]]>
+	</select>
 	
 </sqlMap>
