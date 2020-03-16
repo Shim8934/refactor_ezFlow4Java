@@ -66,6 +66,196 @@
 				b.tenant_id = (select tenant_id from TBL_TENANT_SERVERNAME WHERE server_name = #serverName#)
 		]]>		
   	</select>
+  	
+  	<select id="EzOptionDAO.getTimeLineList" parameterClass="Map" resultClass="MPortalTimeLineVO">
+  		SELECT * FROM (
+   		<![CDATA[
+   			(SELECT 
+				DOCTITLE as title,
+				TO_DATE(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset#/(24*60) AS STARTDATE,
+				1 as module,
+		]]>	
+				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
+				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
+		<![CDATA[
+				DOCID as APPRID,
+				APRMEMBERSN as APRMEMBERSN,
+				'' as BOARDID,
+				'' as BOARDITEMID,
+				TO_CHAR(URGENTAPPROVAL) as BOARDGUBUN,
+				'APR' as "MODE", 
+				ROW_NUMBER() OVER(ORDER BY STARTDATE DESC) rnum
+			FROM 
+				VAPRDOINGDOCLIST
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userID#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userID#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+			AND 
+				APRMEMBERID IN ($userIDS$)
+			AND 
+				APRTYPE <> '015' 
+			AND
+   				APRMEMBERSN <> 1
+   			AND
+				STARTDATE < TO_DATE(#sessionDate#, 'YYYY-MM-DD HH24:MI:SS'))
+			
+			UNION
+			
+   			(SELECT 
+				DOCTITLE as title,
+				TO_DATE(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset#/(24*60) AS STARTDATE,
+				1 as module,
+		]]>	
+				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
+				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
+		<![CDATA[
+				DOCID as APPRID,
+				APRMEMBERSN as APRMEMBERSN,
+				'' as BOARDID,
+				'' as BOARDITEMID,
+				TO_CHAR(URGENTAPPROVAL) as BOARDGUBUN,
+				'END' as "MODE", 
+				ROW_NUMBER() OVER(ORDER BY STARTDATE DESC) rnum
+			FROM 
+				VENDCHAMJODOCINFO
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userID#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userID#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+			AND 
+				APRMEMBERID IN ($userIDS$)
+			AND 
+				APRTYPE <> '015' 
+			AND
+   				APRMEMBERSN <> 1
+   			AND
+				STARTDATE < TO_DATE(#sessionDate#, 'YYYY-MM-DD HH24:MI:SS'))
+			
+			UNION
+			
+			( SELECT 
+				A.TITLE,	
+				TO_DATE(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset#/(24*60) AS STARTDATE,
+				4 as module,
+		]]>		 
+				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
+				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
+		<![CDATA[		
+				'' as APPRID,
+				A.IMPORTANCE as APRMEMBERSN,
+				TO_CHAR(A.BOARDID),
+				TO_CHAR(A.ITEMID) as BOARDITEMID,
+				TO_CHAR(P.GUBUN) as BOARDGUBUN,
+				'' as "MODE", 
+				ROW_NUMBER() OVER(ORDER BY STARTDATE DESC) rnum
+			  FROM 
+				TBL_BOARD_ITEM A 
+			  INNER JOIN 
+					( SELECT 
+						BOARDID, 
+						BOARDNAME, 
+						BOARDNAME2,
+						TENANT_ID 
+					  FROM 
+						TBL_BOARD_MYBOARDS 
+					  WHERE   
+						TENANT_ID = #tenantID#
+					  AND
+						USERID = #userID# ) B 
+			  ON 
+				A.TENANT_ID = B.TENANT_ID
+			  AND
+				A.BOARDID = B.BOARDID                
+			  INNER JOIN 
+				TBL_BOARD_BOARDINFO P  
+			  ON 
+				A.TENANT_ID = P.TENANT_ID
+			  AND
+				A.BOARDID = P.BOARDID
+			  AND 
+				A.TENANT_ID = #tenantID#
+			  AND
+				(A.APPRFLAG = 'Y' 
+				 	OR 
+				 A.APPRFLAG IS NULL)
+			  AND
+			  	A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS')
+			  AND
+				A.STARTDATE < #sessionDate#
+			  AND
+			  	A.ENDDATE > #nowDate#	
+			  AND 
+                (NOT EXISTS
+		                (SELECT 
+		                  USERID 
+		                 FROM 
+		                  TBL_BOARD_ITEM_READ S 
+		                 WHERE 
+		                  S.TENANT_ID = A.TENANT_ID
+		                 AND
+		                  S.BOARDID = A.BOARDID 
+		                 AND 
+		                  S.ITEMID = A.ITEMID 
+		                 AND 
+		                  S.TENANT_ID = #tenantID#
+		                 AND
+		                  S.USERID = #userID# 
+		                 AND 
+		                  S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)))
+		                  )
+             WHERE
+			 	rnum <= #listCnt#
+		]]>
+  	</select>
     
   	<select id="EzOptionDAO.commonInfoWeb" parameterClass="Map" resultMap="MCommonVO">
     	<![CDATA[
