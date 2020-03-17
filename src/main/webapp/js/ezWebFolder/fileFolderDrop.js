@@ -48,6 +48,18 @@ function onDrop(evt) {
 		    	}
 		  	}
 		}
+	} else {
+		var filelist = (evt == undefined) ? document.getElementById("file").files : evt.dataTransfer.files;
+		
+		if (filelist.length == 0) {
+			return;
+		}
+		
+		for (var i = 0; i < filelist.length; i++) {
+			file[i] = filelist[i];
+		}
+		
+		fileupload();
 	}
 	
 }
