@@ -932,13 +932,15 @@
 	                </c:if>
 	                <c:if test="${model.replyNotify != '1'}">	                   
 	                	<span style="display:inline-block;"><input type="checkbox" id="chkNotify" onclick="checkboardtype()" /><spring:message code="ezBoard.t168" />&nbsp;</span>
-	                </c:if>		             
+	                </c:if>
+	                <%--
 	        		<c:if test="${model.oneLineReply == '1'}">	                
 	                	<span style="display:inline-block;"><input type="checkbox" id="chkOneLine" onclick="checkboardtype()" checked /><spring:message code="ezBoard.t81" />&nbsp;</span>
 	                </c:if>
 	                <c:if test="${model.oneLineReply != '1'}">	                  
 	                	<span style="display:inline-block;"><input type="checkbox" id="chkOneLine" onclick="checkboardtype()" /><spring:message code="ezBoard.t81" />&nbsp;</span>
 	                </c:if>
+	                --%>
 	        	</td>
 	        </tr>
 	        
@@ -995,6 +997,36 @@
 	            </td>
 	        </tr>
 	        --%>
+			<%-- 2019-11-05 홍승비 - 댓글의 옵션처리 추가 --%>
+	        <tr id="oneLineTr" style="${style}">
+				<th><spring:message code="ezBoard.t81" /></th>
+	            <td>
+	                <c:if test="${model.oneLineReply == '2'}">	                
+	                	<input type="checkbox" id="chkOneLineBottom" onclick="checkboardtype();checkReplyType(this);" checked/>
+	                	<spring:message code="ezBoard.hsbRp02" />
+	                </c:if>
+					<c:if test="${model.oneLineReply != '2'}">	                
+	                	<input type="checkbox" id="chkOneLineBottom" onclick="checkboardtype();checkReplyType(this);"/>
+	                	<spring:message code="ezBoard.hsbRp02" />
+	                </c:if>
+	            	<c:if test="${model.oneLineReply == '1'}">	                
+	                	<input type="checkbox" id="chkOneLineLayer" onclick="checkboardtype();checkReplyType(this);" checked/>
+	                	<spring:message code="ezBoard.hsbRp01" />
+	                </c:if>
+					<c:if test="${model.oneLineReply != '1'}">	                
+	                	<input type="checkbox" id="chkOneLineLayer" onclick="checkboardtype();checkReplyType(this);"/>
+	                	<spring:message code="ezBoard.hsbRp01" />
+	                </c:if>
+	            	<c:if test="${model.oneLineReply == '0'}">	                
+	                	<input type="checkbox" id="chkOneLineNone" onclick="checkboardtype();checkReplyType(this);" checked/>
+	                	<spring:message code="ezBoard.hsbRp03" />
+	                </c:if>
+					<c:if test="${model.oneLineReply != '0'}">	                
+	                	<input type="checkbox" id="chkOneLineNone" onclick="checkboardtype();checkReplyType(this);"/>
+	                	<spring:message code="ezBoard.hsbRp03" />
+	                </c:if>
+	            </td>
+	        </tr>
 	        <%-- 첨부크기제한 --%>
 	        <tr id="attachLimitTr" style="${style}">
 	            <th><spring:message code="ezBoard.t167" /></th>
@@ -1028,7 +1060,6 @@
 	            </td>
 	        </tr>
 	        --%>
-	        <%-- 2019-11-05 홍승비 - 댓글의 옵션처리 추가 --%>
 	        <%--2011-04 : 한줄 답변 옵션화 처리.--%>
 	        <%--
 	        <tr id="oneLineTr" style="${style}">
@@ -1042,34 +1073,7 @@
 	                	<input type="checkbox" id="chkOneLine" onclick="checkboardtype()" />
 	                	<spring:message code="ezBoard.t496" />
 	                </c:if> --%>
-	                <c:if test="${model.oneLineReply == '2'}">	                
-	                	<input type="checkbox" id="chkOneLineBottom" onclick="checkboardtype();checkReplyType(this);" checked/>
-	                	<spring:message code="ezBoard.hsbRp02" />
-	                </c:if>
-					<c:if test="${model.oneLineReply != '2'}">	                
-	                	<input type="checkbox" id="chkOneLineBottom" onclick="checkboardtype();checkReplyType(this);"/>
-	                	<spring:message code="ezBoard.hsbRp02" />
-	                </c:if>
-	            	<c:if test="${model.oneLineReply == '1'}">	                
-	                	<input type="checkbox" id="chkOneLineLayer" onclick="checkboardtype();checkReplyType(this);" checked/>
-	                	<spring:message code="ezBoard.hsbRp01" />
-	                </c:if>
-					<c:if test="${model.oneLineReply != '1'}">	                
-	                	<input type="checkbox" id="chkOneLineLayer" onclick="checkboardtype();checkReplyType(this);"/>
-	                	<spring:message code="ezBoard.hsbRp01" />
-	                </c:if>
-	            	<c:if test="${model.oneLineReply == '0'}">	                
-	                	<input type="checkbox" id="chkOneLineNone" onclick="checkboardtype();checkReplyType(this);" checked/>
-	                	<spring:message code="ezBoard.hsbRp03" />
-	                </c:if>
-					<c:if test="${model.oneLineReply != '0'}">	                
-	                	<input type="checkbox" id="chkOneLineNone" onclick="checkboardtype();checkReplyType(this);"/>
-	                	<spring:message code="ezBoard.hsbRp03" />
-	                </c:if>
-	            </td>
-	        </tr>	
-	        --%>
-	        
+	                	        
 	        <%-- 확장칼럼 --%>
 	        <tr id="trAttribute" style="${style}">
 	            <th><spring:message code="ezBoard.t999028" /></th>
