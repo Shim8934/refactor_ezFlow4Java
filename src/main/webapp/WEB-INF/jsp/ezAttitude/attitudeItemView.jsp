@@ -280,7 +280,7 @@
 	            <div class="btnpositionNew" id="menuTable">
 	            	<c:if test="${userId == attitudeInfo.writerId}">
 	            		<c:choose>
-	            			<c:when test="${attitudeInfo.typeId == 'A11' || attitudeInfo.typeId == 'A12' || attitudeInfo.typeId == 'A13'}">
+	            			<c:when test="${attitudeInfo.typeId == 'A11' || attitudeInfo.typeId == 'A12' || attitudeInfo.typeId == 'A13' || attitudeInfo.typeId == 'A21'}">
 	            				<c:if test="${attitudeInfo.annualApprStatus == '1'}">
 		            				<c:if test="${attitudeInfo.modAppl == '0'}">
 		            					<a class="imgbtn"><span onclick="attitudeCancelAnnual()"><spring:message code='ezAttitude.t272' /></span></a>

@@ -402,13 +402,19 @@
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWMAILIMAGE", previewMailImage);
 	            createNodeAndInsertText(xmlpara, objNode, "TEXTOPTION", "${mailGeneral.textOption}");
 	            
-	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", false);
+	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", true);
+	            xmlhttp.onreadystatechange = function() {
+		        	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		        	}
+	            }
 	            xmlhttp.send(xmlpara);		  
 		    }
 		    
 		    var Save_unloadSave = false;
 		    
 		    function Window_onunload() {
+		        console.log("Window_onunload started. Save_unloadSave=" + Save_unloadSave);
+		        
 		        if (window_onunload_Event && !Save_unloadSave) {		        	
 		            mailGeneralSave();
 		            

@@ -50,5 +50,6 @@ var messages = {
 	successMoveFile: "You have successfully moved the file.",
 	successCopyFile: "You have successfully copied the files.",
 	outOfStorageSpaceForOneTime: "It has exceeded the one-time upload capacity.",
-	outOfStorageSpace: "The capacity has been exceeded."
+	outOfStorageSpace: "The capacity has been exceeded.",
+	strLangDragNDrop: "Folders can not be uploaded."
 }
