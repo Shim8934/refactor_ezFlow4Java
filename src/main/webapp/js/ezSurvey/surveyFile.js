@@ -235,6 +235,12 @@ var SurveyFile = function() {
 			var liElmt   = imgObj.parentElement;
 			var filePath = liElmt.getAttribute("path");
 			
+			// 2020-03-13 김민성 - 질문 수정 > url 삭제시 url 삭제 메소드 분기 타도록 추가
+			if(filePath == null) {
+				deleteUrlFile(imgObj, event);
+				return;
+			}
+			
 			$.ajax({
 				type: "POST",
 				url: "/ezSurvey/deleteAttachFile.do",
