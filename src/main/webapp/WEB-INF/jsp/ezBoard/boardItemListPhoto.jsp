@@ -564,7 +564,7 @@
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 789) / 2;
-		        var pLeft = (pwidth - 764) / 2;
+		        var pLeft = (pwidth - 790) / 2;
 	    	    if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
 	    	    	var height = 789;
 	    	    } else {
@@ -577,7 +577,7 @@
 		        }	
 		        // if (tr != null && oArrRows.length > 0) {
 		
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=790,top=" + pTop + ",left=" + pLeft, "");
 		        //}       
 		    }
 		    /*  2019-04-12 홍승비 - 사용되지 않는 함수 주석처리 */
@@ -593,51 +593,26 @@
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 720) / 2;
-		        var pLeft = (pwidth - 765) / 2;
+		        var pLeft = (pwidth - 790) / 2;
 		
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=790,top=" + pTop + ",left=" + pLeft, "");
 		
 		    } */
 		    
+		    /* 2020-02-14 홍승비 - 불필요한 구분값 체크 코드 정리 (포토게시판의 구분값은 "3") */
 		    var checkpassword_dialogArguments = new Array();
 		    var strItemList = "";
 		    function DeleteItem_onclick() {
-		        if (gubun == "2") {
-		            if (strListInfo == "" || strListInfo === "undefined") {
-		                alert("<spring:message code='ezBoard.t195'/>");
-						return;
-					}
-		
-		            if (CrossYN()) {
-		                arrList2 = strListInfo.split(";");
-		                for (var i = 0; i < arrList2.length - 1; i++) {
-		                    strItemList += arrList2[i].split(",")[0] + ";";
-		                }
-		                strItemList = strItemList.split(";");
-		                if (strItemList.length > 2) {
-		                    alert("<spring:message code='ezBoard.t264'/>");
-		                    return;
-		                }
-		            } else {
-		                arrList = strListInfo.split(",;");
-		                if (arrList.length > 2) {
-		                    alert("<spring:message code='ezBoard.t264'/>");
-		                    return;
-		                }
-		            }
-		        }
-		        else {
-		            if (strListInfo == "" || strListInfo === "undefined") {
-		                alert("<spring:message code='ezBoard.t195'/>");
-						return;
-					}
-		        }
+	            if (strListInfo == "" || strListInfo === "undefined") {
+	                alert("<spring:message code='ezBoard.t195'/>");
+					return;
+				}
 		
 		        if (Delete_FG != "true") {
 		            alert("<spring:message code='ezBoard.t265'/>");
 					return;
 				}
-		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false && gubun != "2") {
+		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
 		            alert("<spring:message code='ezBoard.t202'/>");
 					return;
 				}
@@ -646,52 +621,10 @@
 		            alert("<spring:message code='ezBoard.t196'/>");
 					return;
 				}
-		        if (gubun == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
-		            if (CrossYN()) {
-		                checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(strItemList[0]), "CheckPassWord", GetOpenWindowfeature(340, 200));
-		                try { OpenWin.focus(); } catch (e) { }
-		            } else {
-		                var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-		                feature = feature + GetShowModalPosition(330, 200);
-		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(arrList[0]), "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
-		
-		                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
-		
-		                if (ret == "NO") {
-		                    alert("<spring:message code='ezBoard.t267'/>");
-		                    return;
-		                }
-		                else {
-		                    var xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=PHOTO&boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(arrList[0]) + ";", false);
-		                    xmlhttp.send();
-		
-		                    if (xmlhttp.responseText == "NO") {
-		                        alert("<spring:message code='ezBoard.t265'/>");
-		                        return;
-		                    }
-		
-		                    xmlhttp = null;
-		                    alert('<spring:message code='ezBoard.t268'/>');
-		
-		                    if (CurPage == totalPage) {
-		                        var SelList = new ListView();
-		                        SelList.LoadFromID("BoardList");
-		                        var DeleteCount = strListInfo.split(';').length - 1;
-		                        if (SelList.GetRowCount() == DeleteCount) {
-		                            CurPage = CurPage - 1;
-		                        }
-		                    }
-		                    if (CurPage == 0) CurPage = 1;
-		                    getBoardList();
-		                }
-		            }
-		        }
-		        else {
-		            var ret = confirm("<spring:message code='ezBoard.t197'/>");
-					if (ret)
-					    DeleteItem();
+		        
+	            var ret = confirm("<spring:message code='ezBoard.t197'/>");
+				if (ret) {
+				    DeleteItem();
 				}
 		        
 		        try {
@@ -713,6 +646,9 @@
 		
 		            if (xmlhttp.responseText == "NO") {
 		                alert("<spring:message code='ezBoard.t265'/>");
+		                return;
+		            } else if (xmlhttp.responseText == "ERROR") {
+		                alert("<spring:message code='ezBoard.t1020'/>");
 		                return;
 		            }
 		
@@ -755,7 +691,10 @@
 		        if (xmlhttp.responseText == "NO") {
 		            alert("<spring:message code='ezBoard.t265'/>");
 		            return;
-		        }
+		        } else if (xmlhttp.responseText == "ERROR") {
+	                alert("<spring:message code='ezBoard.t1020'/>");
+	                return;
+	            }
 		
 		        xmlhttp = null;
 		
@@ -958,7 +897,6 @@
 		    
 		    /* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
 			function MemberInfo_onclick(pUserID, pDeptID) {
-			    if (gubun == "2") return;
 			    var heigth = window.screen.availHeight;
 			    var width = window.screen.availWidth;
 			    var left = (width - 500) / 2;

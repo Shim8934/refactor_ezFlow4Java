@@ -122,6 +122,8 @@
 		    var useReceiveDocNo = "<c:out value = '${useReceiveDocNo}'/>";
 		    var orgCompanyID = "";
 		    var docNumZeroCnt = "<c:out value = '${docNumZeroCnt}'/>";
+			//원문정보공개
+			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -1458,6 +1460,12 @@
 			        parameter[50] = g_szSCListXml; // 특수목록
 			        parameter[51] = sepAttachCheckYN; // 분첨 확인여부
 		        }
+			    
+		        parameter[52] = basis;
+		        parameter[53] = reason;
+		        parameter[54] = listOpenFlag;
+		        parameter[55] = fileOpenFlagList;
+		        parameter[56] = limitDate;
 			    
 			    if (tempItemCode != "") {
 			        tempdocnumcode = tempItemCode;

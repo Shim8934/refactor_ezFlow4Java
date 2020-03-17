@@ -1,13 +1,8 @@
 package egovframework.ezEKP.ezApprovalG.dao;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAutoRuleVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
@@ -16,12 +11,17 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovModifyHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 @Repository("EzApprovalGAdminDAO")
 public class EzApprovalGAdminDAO extends EgovAbstractDAO{
@@ -525,5 +525,28 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 	public void removeAutoDoc(Map<String, Object> map) {
 		update("EzApprovalGAdminDAO.removeAutoDoc", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGAttachInfoVO> getAdminTotalDownload(Map<String, Object> map) throws Exception{
+		return (List<ApprGAttachInfoVO>) list("EzApprovalGAdminDAO.getAdminTotalDownload", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGAttachInfoVO> getAdminTotalDownloadCnt(Map<String, Object> map) throws Exception{
+		return (List<ApprGAttachInfoVO>) list("EzApprovalGAdminDAO.getAdminTotalDownloadCnt", map);
+	}
+
+	public void resendOpenGov(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdminDAO.resendOpenGov", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGOpenGovModifyHistoryVO> getOpenGovModifyHistory(Map<String, Object> map1) throws Exception {
+		return (List<ApprGOpenGovModifyHistoryVO>) list("EzApprovalGAdminDAO.getOpenGovModifyHistory", map1);
+	}
+
+	public String getOpenGovModifyHistoryReason(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalGAdminDAO.getOpenGovModifyHistoryReason", map);
 	}
 }

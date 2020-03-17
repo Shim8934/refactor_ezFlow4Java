@@ -15,6 +15,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
+			var lang = "${userInfo.lang}";
+			
 			$(function() {
 				getCircularDeptList();
 			});
@@ -30,7 +32,11 @@
 					success : function(result) {
 						var list = result.circularDeptList;
 						
-						circularDeptList = "<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>";
+						if(lang == "2") {
+							circularDeptList = "<colgroup><col width='7%' /><col width='40%' /><col width='18%' /><col width='18%' /><col width='17%' /></colgroup>";
+						} else {
+							circularDeptList = "<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>";
+						}
 						
 						// 2018-02-13 주홍선 String replaceAll function 선언
 						String.prototype.replaceAll = function (search, replacement) {
@@ -55,7 +61,7 @@
 								circularDeptList += "<td style='color:gray;'>" + vo.memberName + "</td>";
 								circularDeptList += "<td id='pop'><a href='javascript:memberList();' style='color:gray;'>[<spring:message code='ezCircular.t82' />]</a></td>";
 							} else {
-								circularDeptList += "<td style='color:gray;'>" + vo.memberName + "&nbsp;<spring:message code='ezCircular.t50' />" + vo.memberNameCount + "<spring:message code='ezCircular.t51' /></td>"
+								circularDeptList += "<td style='color:gray;'>" + vo.memberName + "&nbsp;<spring:message code='ezCircular.t50' />&nbsp;" + vo.memberNameCount + "<spring:message code='ezCircular.t51' /></td>"
 								circularDeptList += "<td id='pop'><a href='javascript:memberList();' style='color:gray;'>[<spring:message code='ezCircular.t82' />]</a></td>";
 							}
 								
@@ -214,8 +220,12 @@
 		            <td>
 		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 750px; height: 385px; display: inline-table;">
 		                    <table class="mainlist" style="width: 100%;">
+		                    <c:if test="${userInfo.lang ne 2}">
 		                    	<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>
-		                    	
+		                    </c:if>
+		                    <c:if test="${userInfo.lang eq 2}">
+		                    	<colgroup><col width='7%' /><col width='40%' /><col width='18%' /><col width='18%' /><col width='17%' /></colgroup>
+		                    </c:if>
 		                    	<!-- 18-05-24 김민성 - 회람판 > 즐겨찾기 단어 수정 -->
 		                        <tr>
 									<th><input id="checkboxAll" type="checkbox" onclick="selectAll()"></th>

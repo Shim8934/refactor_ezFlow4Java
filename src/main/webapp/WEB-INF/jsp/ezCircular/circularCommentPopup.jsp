@@ -214,7 +214,7 @@
 	       			</div>
 	       		</div>
       	 	</div>			
-			<table id="circularUserList" style="width:99.5%;margin-top:0px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225);margin-top:10px"></table>
+			<table id="circularUserList" style="width:99.5%;margin-top:0px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225);margin-top:10px; word-break:break-all;"></table>
 		</div>
 	
 		<!-- 18-05-25 김민성 - 회람판 > 상세정보 > 의견목록 회람확인 UI 수정  -->

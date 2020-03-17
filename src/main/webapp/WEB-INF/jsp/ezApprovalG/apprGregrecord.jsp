@@ -81,10 +81,14 @@
         else {
             btnChangeCabinet_onclick();
         }
-
+        
         selRegisterType_onchange();
 
         rdoSecType_onclick("1");
+
+        // 등록구분에서 일반문서 접수가 디폴트로 선택 되도록 수정. 2019-09-26 홍대표
+        selRegisterType.value = 2;
+        selRegisterType_onchange()
     }
     function KeEventControl(obj) {
         useragt = navigator.userAgent.toUpperCase();
@@ -154,8 +158,9 @@
             alert("<spring:message code='ezApprovalG.t1049'/>");
             return false;
         }
-
-        if (!ValidateNumber(txtRegMi.value)) {
+        
+     	// 등록일자의 분에 00을 입력할 경우, 등록되지 않던 버그 수정. 2019-12-03 홍대표.
+        if (!ValidateMinuteNumber(txtRegMi.value)) {
             alert("<spring:message code='ezApprovalG.t1050'/>");
             return false;
         }

@@ -7,7 +7,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/Calendar_cross.css')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" />
+<%-- 		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" /> --%>
+		<link rel="stylesheet" href="${util.addVer('ezAttitude.i2', 'msg')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css" >		
@@ -432,7 +433,7 @@
 			});
 			
 			function scheduleGetLunarUse() {
-				if (uselang != 3) {
+				if (uselang == 1) {
 				    $.ajax({
 			    		type : "GET",
 			    		dataType : "text",
@@ -549,7 +550,7 @@
 						for (var i = 0; i < result.length; i++) {
 							$("#" + result[i].typeId).text(result[i].count);
 							
-							if (result[i].typeId == "A02" || result[i].typeId == "A11" || result[i].typeId == "A12" || result[i].typeId == "A13") {
+							if (result[i].typeId == "A02" || result[i].typeId == "A11" || result[i].typeId == "A12" || result[i].typeId == "A13" || result[i].typeId == "A21") {
 								$("#F" + result[i].typeId).text(result[i].count);
 							}
 						}
@@ -1448,7 +1449,7 @@
 				    		} else if (vo.dateType == 3) {
 				    			objTr.append("<td><div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16) + "</span>\u00a0~\u00a0<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span></div></td>");
 				    		} else if (vo.dateType == 4 && vo.typeId != 'A04') {
-				    			objTr.append($("<td></td>").append($("<div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
+			    				objTr.append($("<td></td>").append($("<div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
 				    		} else if (vo.typeId == 'A04') {
 				    			if (vo.dateType == 4) {
 				    				objTr.append($("<td></td>").append($("<div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
@@ -1997,7 +1998,12 @@
 					    			
 						    		//일시
 					    			if (vo.dateType == 4 && vo.typeId != 'A04') {
-						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").html(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10) + " " +  iconStr);
+					    				//2020-03-13 김정언 : 반반차
+					    				if(vo.typeId == 'A21') {
+					    					$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").html(vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16)+ "</span>\u00a0~\u00a0" + vo.endDate.substring(0,11) + "<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span>" + " " +  iconStr);
+					    				} else {
+							    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").html(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10) + " " +  iconStr);
+					    				}
 						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").attr("attitudeid", vo.attitudeId);
 						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").attr("typeid", vo.typeId);
 						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").css("cursor", "pointer");
@@ -2202,8 +2208,8 @@
 				<c:if test="${adminFlag == 'true'}">
 		        	<li id="btnAbsentedList"><span onClick="popupAbsentedList()"><spring:message code='ezAttitude.t6'/></span></li>
 		        	<li id="btnExcelDown"><span onClick="excelDown()"><spring:message code='ezAttitude.t145'/></span></li>
-					<li>
-						<select id="authDeptList" style="width:130px; height:28px;<c:if test="${displayFlag == 'false'}"> display:none </c:if>" onchange="deptChange()">
+					<li style="<c:if test="${displayFlag == 'false'}"> display:none </c:if>">
+						<select id="authDeptList" style="width:130px; height:28px;" onchange="deptChange()">
 							<c:forEach var="dept" items="${deptList}">
 								<c:if test="${dept.mine != 'yes' }">
 									<c:if test="${selectedDeptID == dept.deptId}">
@@ -2280,11 +2286,19 @@
 			            <dd class="timeIconDD"><spring:message code="ezAttitude.t256"/><span class="timeCountR" id="FA13">0</span></dd>
 			        </dl>
 			    </c:if>
+			    <!-- 2020-03-12  김정언 : 반반차 -->
+			    <c:if test="${A21typeInfo.isuse eq '1' }">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
+			            <dd class="timeIconDD"><spring:message code="ezAttitude.kje04"/><span class="timeCountR" id="FA21">0</span></dd>
+			        </dl>
+			    </c:if>
 		    </div>
 	    </c:if>
 		
 		<!-- 근태관리 달력형 테이블(개인근태현황, 부서근태현황)-->
-		<table id="attiCalendarTB" <c:if test="${deptFlag != 'true'}">style="display:none"</c:if>>
+		<!-- 2020.01.10 김정언 - 부서근태현황의 근태통계에 silde 추가 -->
+		<table id="attiCalendarTB">
 			<tr>
 				<td style="vertical-align:top; width:100%;">
 					<div style="vertical-align:top;" id="attiCalendar"></div>
@@ -2295,7 +2309,8 @@
 						<div id="slideBtn" style="position:absolute;top:164px;right:2px;"><img id="slideImg" onclick="javascript:slideTd()" src="/images/ImgIcon/slideLeft.png" /></div>
 					</c:if>
 					<c:if test="${deptFlag == 'true'}">
-						<div style="vertical-align:top;" class="time_stats" id="attiStatis"></div>
+						<div style="vertical-align:top;width:0px;height:0px;overflow:hidden;" class="time_stats" id="attiStatis"></div>
+						<div id="slideBtn" style="position:absolute;top:83px;right:2px;"><img id="slideImg" onclick="javascript:slideTd()" src="/images/ImgIcon/slideLeft.png" /></div>
 					</c:if>	
 				</td>
 			</tr>

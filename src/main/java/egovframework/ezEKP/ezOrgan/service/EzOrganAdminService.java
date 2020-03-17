@@ -1,20 +1,14 @@
 package egovframework.ezEKP.ezOrgan.service;
 
 import java.util.List;
-
-
-
-
-
-
-
-
+import java.util.Map;
 
 
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -91,7 +85,8 @@ public interface EzOrganAdminService {
 	
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception;
 	
-	public List<OrganUserVO> getUserList(int tenantID, int startPage, int maxItemPerPage, String keycode,String keyword,String companyId) throws Exception;
+	public List<OrganUserVO> getUserList(int tenantID, int startPage, int maxItemPerPage, String keycode,String keyword,
+			String companyId, String sortColumn, String sortType) throws Exception;
 	
 	public int getUserCount(int tenantID,String keycode,String keyword,String companyId) throws Exception;
 	
@@ -147,4 +142,13 @@ public interface EzOrganAdminService {
 
 	public String getTitleListBoard(String type, String companyID, int tenantID, String lang) throws Exception;
 	
+	public List<OrganLoginStopUserVO> getLoginStopUserList(int tenantID, int startPage, int maxItemPerPage, String keycode, String keyword, String stopFlag, String offset, String companyId) throws Exception;
+		
+	public int getLoginStopUserListCount(int tenantID, String keycode, String keyword, String stopFlag, String companyId) throws Exception;
+	
+	public String insertStopUser(String[] cnArr, String companyID, int tenantID) throws Exception;
+	
+	public String deleteStopUser(String[] cnArr, String companyID, int tenantID) throws Exception;
+	
+	public int checkStopUser(String userID, int tenantID) throws Exception;
 }

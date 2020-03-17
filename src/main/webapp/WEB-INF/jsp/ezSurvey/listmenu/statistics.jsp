@@ -22,7 +22,7 @@
 	
 	<body class="surveyBody">
 		<div class="header-wrapper">
-			<div class="surveydetail-header"><spring:message code="ezSurvey.t33"/></div>
+			<div class="surveydetail-header" style="font-weight:bold"><spring:message code="ezSurvey.t33"/></div>
 			<div id="close"><ul><li><span id="cancelBttn"></span></li></ul></div>
 		</div>
 		<div class="surveydetail-body" id="mainSurveyBody">

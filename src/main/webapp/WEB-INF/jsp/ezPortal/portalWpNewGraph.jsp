@@ -4,8 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:if test="${hasWorkspace == true}">
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-<script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js?ver=20180828150036"></script>
-<script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/Groupwareapi.js?ver=20180828150036"></script>
+<script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/moment.min.js"></script>
+<script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/Groupwareapi.js"></script>
 <link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 </c:if>
 <!DOCTYPE html>
@@ -27,7 +27,7 @@
 		<c:if test="${hasWorkspace == true}">
 		<script type="text/javascript">
 		    var g_UserID = "${userID}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
-		    var WorkspaceUrl = "http://space.kaoni.com"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+		    var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
 		    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
 		    var feedListCount = 10;
 		    var g_bRayful = false;

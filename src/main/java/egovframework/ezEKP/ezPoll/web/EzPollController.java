@@ -139,14 +139,15 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		if (!mode.equals("") && qstId != -1) {
 			String qstParams = Integer.toString(qstId);
-			session.setAttribute("modifying_question", qstParams);						
+			session.setAttribute("modifying_question", qstParams);
 			//Get question
-			try {				
+			try {
 				PollQuestionVO pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, loginVO.getTenantId());
 				
+				/* 2020-02-07 홍승비 - 투표 수정 시 기존 첨부파일 구분자를 변경 (; -> \\|) */
 				if (pollQuestionVO.getFilePath() != null && !pollQuestionVO.getFilePath().equals("")) {
-					filePath = pollQuestionVO.getFilePath().split(";");
-				}	
+					filePath = pollQuestionVO.getFilePath().split("\\|");
+				}
 				
 				content = pollQuestionVO.getContent();
 				
@@ -778,7 +779,7 @@ public class EzPollController extends EgovFileMngUtil {
 		int numberOfCmt = -1;
 		String[] files = null;
 		String userPhoto = "";
-		String params = (request.getParameter("params") != null) ? request.getParameter("params") : "";
+		String params = (request.getParameter("params") != null) ? request.getParameter("params") : ""; // currentPage, checkSeeAll, radioBttn, mode1, pollType
 		String searchStr = (request.getParameter("search") != null) ? request.getParameter("search") : "";
 		String searchN = (request.getParameter("searchN") != null) ? request.getParameter("searchN") : "";
 		int resultFirst = 0; //0:투표 종료 후 결과보기, 1:투표 종료 전 결과보기, 2:작성자만 결과보기.
@@ -846,9 +847,11 @@ public class EzPollController extends EgovFileMngUtil {
 		//게시자만 결과 보기 판별 2018-04-16 홍대표
 		resultFirst = pollQuestionVO.getResultFirst();
 		if(resultFirst == 2 && !pollQuestionVO.getCreator().equals(loginVO.getId()) && pollQuestionVO.getStatus() == 0){
+			String pollType = params.split(",")[4];
 			redirectAttributes.addAttribute("brdID", 6);
 			redirectAttributes.addAttribute("resultFirst", resultFirst);
 			redirectAttributes.addAttribute("status", pollQuestionVO.getStatus());
+			redirectAttributes.addAttribute("pollType", pollType);
 			return "redirect:/ezPoll/pollList.do";
 		}
 		

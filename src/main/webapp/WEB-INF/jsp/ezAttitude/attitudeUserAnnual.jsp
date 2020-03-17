@@ -152,6 +152,9 @@
 	    		});
 	    		
 	    		makeoptionyear();
+	    		//2020.01.06 김정언 - 개인연차현황 selectBox option 최근 날짜로 선택 되도록 변경
+	    		$("#searchYear option:eq(0)").prop("selected", true);
+	    		getUserAnnualList();
 	    		
 	    		var height = parseInt(document.documentElement.clientHeight - 235);
 	        	$("#contentlist").css("height", height +"px");
@@ -196,7 +199,7 @@
 	            var startDate = "";
 	            var endDate = "";
 	    		
-				if ($("#searchYear").val() == null && $("#searchYear").val() == "") {
+				if ($("#searchYear").val() == null || $("#searchYear").val() == "") {
 					selyear = joinDate.split("-")[0];
 	    		}
 
@@ -239,7 +242,7 @@
 	                $("#searchYear").html(optionHtml);
 	                $("#searchYear").val(selyear);
 	    		}
-	    		
+
 	    		//리스트
 	    		getUserAnnualList();
 	    		//통계
@@ -386,6 +389,8 @@
 	    		var annualCnt = 0;//연차 수
 	    		var morningCnt = 0;//오전반차 수
 	    		var afternoonCnt = 0;//오후반차 수
+	    		//2020-03-12 김정언
+	    		var halfOffCnt = 0; //반반차 수
 	    		var i = 1; //NO
 	    		
 	    		$("#contentlist .mainlist tr").remove();
@@ -408,10 +413,14 @@
 		    			} else if (vo.typeId === "A12") { //오전반차
 			    			html += vo.startDate.substr(0,10);
 			    			morningCnt += useAnnualCnt;
-		    			} else { //오후반차
+		    			} else if (vo.typeId === "A13"){ //오후반차
 		    				html += vo.startDate.substr(0,10);
 		    				afternoonCnt += useAnnualCnt;
+		    			} else if (vo.typeId === "A21") { //반반차
+		    				html += vo.startDate.substr(0,10) + " ~ " + vo.endDate.substr(0,10);
+		    				halfOffCnt += useAnnualCnt;
 		    			}
+		    			
 		    			html += "</a>";
 		    			html += "</td>";
 		    			html += "<td style='width:15%'>" + vo.typeName + "</td>";
@@ -466,6 +475,7 @@
 	    		$("#FA11").text(annualCnt);
 	    		$("#FA12").text(morningCnt);
 	    		$("#FA13").text(afternoonCnt);
+	    		$("#FA21").text(halfOffCnt);
 	    	}
 	    	
 	    	/**
@@ -727,6 +737,10 @@
 			        <dl class="timeIcconDL">
 			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
 			            <dd class="timeIconDD"><spring:message code='ezAttitude.t256' /> <span class="timeCountR" id="FA13">0</span></dd>
+			        </dl>
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
+			            <dd class="timeIconDD"><spring:message code='ezAttitude.kje04' /> <span class="timeCountR" id="FA21">0</span></dd>
 			        </dl>
 			     </dl>
 		    </div>

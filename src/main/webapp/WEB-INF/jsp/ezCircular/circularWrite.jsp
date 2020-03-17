@@ -54,9 +54,9 @@
 
 		    window.onload = function () {
 		    	//2018-02-13 주홍선 IE10에서 창이 정상적으로 열리지 않던 것 수정
-		    	if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
-		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
-		    	}
+		    	//2019-09-20 김민성 - 크롬 & CK 에디터 환경에서 회람 작성창 하단 첨부파일 영역 나타나지 않는 현상 수정
+		    	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
+		    	
 				if (listSize != 0) {
 		        	document.getElementById("title").value = "${result.title}";
 		        	document.getElementById("receiverlist").innerHTML = "<c:out value='${userName}'/>";
@@ -312,7 +312,7 @@
 							window.opener.getLeftCount();
 							window.opener.refresh_onclick();
 							window.close();
-		                	alert("<spring:message code='ezBoard.t10033'/>");	
+		                	alert("<spring:message code='ezCircular.t73'/>");	
 		                },
 		                error: function() {
 		                	alert("<spring:message code='ezCircular.t102'/>");	
@@ -424,24 +424,24 @@
 	          					<select id="importance" class="select">
 	          						<c:choose>
 	          							<c:when test="${result.importance eq '0' }">
-	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
-			          						<option value="1" ><spring:message code="ezCircular.t116"/></option>
 		   									<option value="0" selected><spring:message code="ezCircular.t185"/></option>
+			          						<option value="1" ><spring:message code="ezCircular.t116"/></option>
+	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
 	          							</c:when>
 	          							<c:when test="${result.importance eq '1' }">
-	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
-	          								<option value="1" selected><spring:message code="ezCircular.t116"/></option>
    											<option value="0" ><spring:message code="ezCircular.t185"/></option>
+	          								<option value="1" selected><spring:message code="ezCircular.t116"/></option>
+	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
 	          							</c:when>
 	          							<c:when test="${result.importance eq '2' }">
-	          								<option value="2" selected><spring:message code="ezCircular.t117"/></option>
-			          						<option value="1" ><spring:message code="ezCircular.t116"/></option>
 		   									<option value="0" ><spring:message code="ezCircular.t185"/></option>
+			          						<option value="1" ><spring:message code="ezCircular.t116"/></option>
+	          								<option value="2" selected><spring:message code="ezCircular.t117"/></option>
 	          							</c:when>
 	          							<c:otherwise>
-	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
-			          						<option value="1" selected><spring:message code="ezCircular.t116"/></option>
 		   									<option value="0" ><spring:message code="ezCircular.t185"/></option>
+			          						<option value="1" selected><spring:message code="ezCircular.t116"/></option>
+	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
 	          							</c:otherwise>
 	          						</c:choose>
    								</select>	

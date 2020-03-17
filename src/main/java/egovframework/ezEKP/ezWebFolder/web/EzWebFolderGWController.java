@@ -631,6 +631,8 @@ public class EzWebFolderGWController {
 		String column     = request.getParameter("column")      != null ? request.getParameter("column")                        : "";
 		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
 		String listCnt    = request.getParameter("listCnt")     != null ? request.getParameter("listCnt")                       : "";
+		String sortType   = request.getParameter("sortType")    != null ? request.getParameter("sortType")                      : "";
+		String sortColumn = request.getParameter("sortColumn")  != null ? request.getParameter("sortColumn")                    : "";
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		fileExt = commonUtil.getWildcardEscapedString(fileExt, dbName);
@@ -703,7 +705,9 @@ public class EzWebFolderGWController {
 				startPoint = (currPage -1 )* pageSize;
 			}
 			
-			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(realColmn, order.toUpperCase(), companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, startPoint, pageSize, primary, offset, tenantId);
+			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(realColmn, order.toUpperCase(), 
+					companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, startPoint, 
+					pageSize, primary, offset, tenantId, sortType, sortColumn);
 			
 			result.put("fileLogList", listFileLogs);
 			result.put("currPage", currPage);
@@ -792,7 +796,8 @@ public class EzWebFolderGWController {
 			
 			logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
 			
-			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(realColmn, order.toUpperCase(), companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, 0, 0, primary, offset, tenantId);
+			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(realColmn, order.toUpperCase(), companyId, 
+					searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, 0, 0, primary, offset, tenantId, "", "");
 			String realPath              = request.getServletContext().getRealPath("");
 			String pDirPath              = ezWebFolderService.getWebFolderDirPath(tenantId);
 			pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
@@ -1583,12 +1588,12 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		String serverName  = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host")       : "";
-		String userId      = jsonObject.get("userId")       != null ? (String) jsonObject.get("userId")    : "";
-		String pFolderId   = jsonObject.get("pFolderId")    != null ? (String) jsonObject.get("pFolderId") : "";
-		String folderName  = jsonObject.get("fName")        != null ? (String) jsonObject.get("fName")     : "";
-		String folderName2 = jsonObject.get("fName2")       != null ? (String) jsonObject.get("fName2")    : "";
-		String folderUsers = jsonObject.get("fUsers")       != null ? (String) jsonObject.get("fUsers")    : "";
+		String serverName  = request.getHeader("x-user-host") 		!= null ? request.getHeader("x-user-host")       : "";
+		String userId      = jsonObject.get("userId")       		!= null ? (String) jsonObject.get("userId")    : "";
+		String pFolderId   = jsonObject.get("pFolderId")    		!= null ? (String) jsonObject.get("pFolderId") : "";
+		String folderName  = jsonObject.get("fName")        		!= null ? (String) jsonObject.get("fName")     : "";
+		String folderName2 = jsonObject.get("fName2")       		!= null ? (String) jsonObject.get("fName2")    : "";
+		String folderUsers = jsonObject.get("fUsers")       		!= null ? (String) jsonObject.get("fUsers")    : "";
 		
 		logger.debug("serverName: " + serverName + " || UserId: " + userId + " || Folder user: " + folderUsers + " || folderName1: " + folderName + " || FolderName2: " + folderName2 + " || ParentFolderID: " + pFolderId);
 		
@@ -2189,7 +2194,7 @@ public class EzWebFolderGWController {
 	@RequestMapping(value="/rest/ezwebfolderadmin/folders/{folderid}/file-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFileList(@PathVariable(value="folderid") String folderId, HttpServletRequest request, Locale locale) {
 		logger.debug("getFileList start");
-		String serverName = request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host")    : "";
+		String serverName = request.getHeader("x-user-host")    != null ? request.getHeader("x-user-host")  : "";
 		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")    : "";
 		String startDate  = request.getParameter("startDate")   != null ? request.getParameter("startDate") : "";
 		String endDate    = request.getParameter("endDate")     != null ? request.getParameter("endDate")   : "";
@@ -2200,6 +2205,9 @@ public class EzWebFolderGWController {
 		String column     = request.getParameter("column")      != null ? request.getParameter("column")    : "";
 		String order      = request.getParameter("order")       != null ? request.getParameter("order")     : "";
 		String listCnt    = request.getParameter("listCnt")     != null ? request.getParameter("listCnt")   : "";
+		String sortType   = request.getParameter("sortType") 	!= null ? request.getParameter("sortType") 	: "" ;
+		String sortColumn = request.getParameter("sortColumn") 	!= null ? request.getParameter("sortColumn"): "" ;
+		
 		String searchChk  = "1";
 		int currPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) :  1;
 		int totalRows     = 0;
@@ -2283,7 +2291,9 @@ public class EzWebFolderGWController {
 				currPage                        = currPage > totalPages ? totalPages : currPage;
 				currPage                        = currPage == 0         ? 1          : currPage;
 				startPoint                      = (currPage - 1) * pageSize;
-				fileList                        = ezWebFolderService.getAllFiles(realColmn, order.toUpperCase(), folder.getFolderPath(), originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
+				fileList                        = ezWebFolderService.getAllFiles(realColmn, order.toUpperCase(), folder.getFolderPath(), 
+						originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, 
+						offset, tenantId, sortType, sortColumn);
 				
 				//New way 30-50% faster
 				if (fileList.size() > 0) {
@@ -2320,7 +2330,9 @@ public class EzWebFolderGWController {
 				currPage   = currPage > totalPages ? totalPages : currPage;
 				currPage   = currPage == 0         ? 1          : currPage;
 				startPoint = (currPage - 1) * pageSize;
-				fileList   = ezWebFolderService.getAllFilesInFolder(realColmn, order.toUpperCase(), folderId, originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
+				fileList   = ezWebFolderService.getAllFilesInFolder(realColmn, order.toUpperCase(), folderId, originalPath, 
+						searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, 
+						primary, offset, tenantId, sortType, sortColumn);
 			}
 			
 			result.put("fileList", fileList);
@@ -2353,6 +2365,8 @@ public class EzWebFolderGWController {
 		String column     = request.getParameter("column")      != null ? request.getParameter("column")    : "";
 		String order      = request.getParameter("order")       != null ? request.getParameter("order")     : "";
 		String listCnt    = request.getParameter("listCnt")     != null ? request.getParameter("listCnt")   : "";
+		String sortType   = request.getParameter("sortType") 	!= null ? request.getParameter("sortType") 	: "" ;
+		String sortColumn = request.getParameter("sortColumn") 	!= null ? request.getParameter("sortColumn"): "" ;
 		String searchChk  = "1";
 		int currPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) :  1;
 		int totalRows     = 0;
@@ -2434,7 +2448,9 @@ public class EzWebFolderGWController {
 			currPage   = currPage > totalPages ? totalPages : currPage;
 			currPage   = currPage == 0         ? 1          : currPage;
 			startPoint = (currPage - 1) * pageSize;
-			fileList   = ezWebFolderService.getAllFilesInFolder(realColmn, order.toUpperCase(), folderId, originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
+			fileList   = ezWebFolderService.getAllFilesInFolder(realColmn, order.toUpperCase(), folderId, originalPath, 
+					searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, 
+					primary, offset, tenantId, sortType, sortColumn);
 			
 			result.put("fileList", fileList);
 			result.put("totalPages", totalPages);

@@ -72,6 +72,7 @@
 	        arr_userinfo[14] = "<c:out value ='${userInfo.title2}'/>"; 			// 사용자 직위(S)
 	        arr_userinfo[15] = "${userInfo.deptName1}"; 		// 사용자 부서 이름(P)
 	        arr_userinfo[16] = "${userInfo.deptName2}"; 		// 사용자 부서 이름(S)
+	        arr_userinfo[17] = "<c:out value ='${userInfo.companyID}'/>";
 	        var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
 	        var companyID = "<c:out value ='${userInfo.companyID}'/>";
 	        var UserLang = "<c:out value ='${userInfo.lang}'/>";
@@ -205,6 +206,12 @@
 	        var nonElecRecInfoXml = "";
 	        var g_CabID = "";
 	        var useReceiveInfoName = "<c:out value ='${useReceiveInfoName}'/>";
+	        var useConfirmParallelAgreement = "<c:out value ='${useConfirmParallelAgreement}'/>";
+	        var filterTimerId;
+	        //원문정보공개
+	        var useOpenGov = "<c:out value ='${useOpenGov}'/>";
+	        var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate = "";
+	        var OrgAprUserDeptID = "";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -213,7 +220,22 @@
 	        		$("#idDatepicker").attr('disabled',true);
 	        	}
 	        	
+	        	if (document.getElementById("openGovLimitDate").checked){
+	        		$("#idDatepickerForOpenGov").attr('disabled',false);
+	        	} else {
+	        		$("#idDatepickerForOpenGov").attr('disabled',true);
+	        	}
+	        	
 	        	$("#idDatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
+		            buttonImageOnly: true
+		        });
+	        	
+	        	$("#idDatepickerForOpenGov").datepicker({
 		            changeMonth: true,
 		            changeYear: true,
 		            autoSize: true,
@@ -327,6 +349,14 @@
 	                 }
 
 	            }
+	            
+	            if (approvalFlag != "G" || useOpenGov != "YES") {
+	            	$(".openGov").hide();
+	            }
+
+                if (pReDraftFlag == "SUSIN") {
+                	$('.openGov').hide();
+				}
 	        };
 	
 	        function KeEventControl(obj) {
@@ -368,7 +398,7 @@
 	            pSignCount = RetValue[2];        //사인칸 수
 	            pSignInfo = RetValue[3];        //사인정보
 	            pHapYuiCount = RetValue[4];        //합의칸 수
-	            pReDraftFlag = RetValue[5];        //재기안 Flag : REDRAFT / DRAFT
+                pReDraftFlag = RetValue[5];        //기안 Flag : REDRAFT / DRAFT / SUSIN
 	            pSuSinFlag = RetValue[6];        //수신자유뮤 Flag : Y  / N
 	            pChamJoFlag = RetValue[7];        //참조유무 Flag : Y / N
 	            pGongramCount = RetValue[8];       //공람수
@@ -401,8 +431,8 @@
 	            vAprSecurity = RetValue[38];
 	            SummaryFlag = RetValue[39];
 	            vPublicFlag2 = RetValue[45];
-	            
 	            nonElecRec = RetValue[46];
+	            OrgAprUserDeptID = RetValue[52];
 	            
 	            if (nonElecRec == "Y") {
 	            	g_CabID = RetValue[47];
@@ -416,6 +446,12 @@
 	                    document.getElementById("h1_header").innerHTML = "문서정보";
 		        	}
 	            }
+	            
+	            basis = RetValue[52];
+	            reason = RetValue[53];
+	            listOpenFlag = RetValue[54];
+	            fileOpenFlagList = RetValue[55];
+	            limitDate = RetValue[56];
 	            
 	            if (pSuSinFlag == "N" || pDocType == "002") {
 	                document.getElementById("showReceptinfo").style.display = "none";//.innerHTML = "";
@@ -435,7 +471,11 @@
 	                    document.getElementById("trSummaryOuterReceiverList").style.display = "";
 	                }
 	            } catch (e) { alert(e.description); }
-	            
+
+	            if(useOpenGov == "YES") {
+                    getAttachList();
+				}
+
 	            if (approvalFlag == "S") {
 	            	//(재)기안, 수신접수, 합의접수가 아닌 구분 상태에서는 결재선 즐겨찾기(탭, 버튼) 숨김처리
 		            if (pIniGubun != "1" && pIniGubun != "9" && pIniGubun != "11") {
@@ -961,6 +1001,13 @@
 			                    return;
 			                }
 			                
+			                if (useOpenGov == 'YES' && document.getElementById("openListFlag").checked == false) {
+			                	if ($("#txt_Basis").val() == "") {
+			                		OpenAlertUI("목록비공개사유를 입력해주세요");
+			                		return;
+			                	}
+			                }
+			                
 			                ret[0] = "OK";
 			                ret[1] = SaveAprLineList(); //결재선 저장 XML
 		                } else {
@@ -1117,6 +1164,34 @@
 			                	ret[25] = g_szSCListXml; // 특수목록
 			                	ret[26] = sepAttachCheckYN; // 분리첨부 확인여부
 			                }
+			                if (useOpenGov == "YES") {
+                                //원문정보공개 목록공개
+                                if (document.getElementById("openListFlag").checked) {
+                                    ret[27] = "Y"
+                                } else {
+                                    ret[27] = "N"
+                                }
+
+                                // 원문정보 첨부파일 공개/비공개
+                                ret[28] = "";
+
+                                for (var i = 0; i < document.getElementsByClassName('fileOpenFlagChk').length; i++) {
+                                    if (document.getElementsByClassName('fileOpenFlagChk')[i].checked) {
+                                        ret[28] += "Y";
+                                    } else {
+                                        ret[28] += "N";
+                                    }
+                                }
+
+                                ret[29] = $("#txt_Basis").val();
+                                ret[30] = $("#txt_Reason").val();
+
+                                if (document.getElementById("openGovLimitDate").checked) {
+                                    ret[31] = document.getElementById("idDatepickerForOpenGov").value.substring(0, 10);
+                                } else {
+                                    ret[31] = "";
+                                }
+							}
 		                }
 		
 		                if (ReturnFunction != null) {
@@ -1408,13 +1483,45 @@
 
 		        if (vAprSecurity.trim() != "") {
 		            document.getElementById("AprSecurity").checked = true;
-		            
+		            document.getElementById("idDatepicker").disabled = "";
 		            $("#idDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 			        $("#idDatepicker").datepicker('setDate', new Date(vAprSecurity));
 		        }
 		        else {
 		            document.getElementById("AprSecurity").checked = false;
 		            AprSecurity_onClick();
+		        }
+		        
+		        // basis, reason, listOpenFlag, fileOpenFlagList;
+	            
+		        if (limitDate != "") {
+		        	document.getElementById("openGovLimitDate").checked = true;
+		        	document.getElementById("idDatepickerForOpenGov").disabled = "";
+		        	$("#idDatepickerForOpenGov").datepicker("option", "dateFormat", "yy-mm-dd");
+			        $("#idDatepickerForOpenGov").datepicker('setDate', new Date(limitDate));
+		        }
+		        
+		        if (listOpenFlag != "") {
+		        	if (listOpenFlag == "Y") {
+			        	document.getElementById("openListFlag").checked = true;
+			        	$("#basis").hide();
+			        	$("#txt_Basis").val("");
+		        	} else {
+			        	document.getElementById("openListFlag").checked = false;
+			        	$("#txt_Basis").val(basis);
+		        	}
+		        } else {
+		        	document.getElementById("openListFlag").checked = true;
+		        	$("#basis").hide();
+		        }
+		        
+		        if (vPublicFlag != "") {
+		        	if (vPublicFlag == "1") {
+			        	$("#txt_Reason").val("");
+		        	} else {
+		        		$("#txt_Reason").attr("disabled", false);		        		
+			        	$("#txt_Reason").val(reason);
+		        	}
 		        }
 
 		        document.getElementById("txtLimitRange").value = vtreatment;
@@ -1782,6 +1889,218 @@
 		        if (CurSelRow.length != 0) {
 	                listview.DeleteRow(GetAttribute(CurSelRow[0], "id"));
 		        } */
+		    }
+
+		    function showTooltip_MouseOver(obj, e) {
+		        var tTip = document.getElementById('tooltip');
+		        var tTable = document.createElement("TABLE");
+		        var tTr = document.createElement("TR");
+		        var tTh = document.createElement("TH");
+		        
+		        tTip.innerHTML = "";
+		        tTable.className = "calendar_layer";
+		        tTable.setAttribute("cellpadding", "0");
+		        tTable.setAttribute("cellspacing", "0");
+		        tTable.setAttribute("border", "0");
+		        tTable.setAttribute("width", "100%");
+		        tTh.setAttribute("scope", "col");
+		        tTh.style.background = "#edf4fd";
+		        tTh.style.border = "1px solid #d1ddec";
+		        
+		        setNodeText(tTh,obj.innerHTML);
+		        tTr.appendChild(tTh);
+		        tTable.appendChild(tTr);
+
+		        var tTr = document.createElement("TR");
+		        var tTd = document.createElement("TD");
+		        
+		        tTd.style.borderTop = "0px";
+		        tTd.style.backgroundColor = "white";
+		        tTd.className = "text";
+		        
+		        var sTable = document.createElement("TABLE");
+		        var sTr = document.createElement("TR");
+		        var sTd = document.createElement("TD");
+		        
+		        sTable.style.backgroundColor = "white";
+		        sTable.className = "td_list";
+		        sTable.setAttribute("cellpadding", "0");
+		        sTable.setAttribute("cellspacing", "0");
+		        sTable.setAttribute("border", "0");
+		        sTable.setAttribute("width", "100%");
+		        sTd.className = "individual";
+
+		        var sSpan = document.createElement("SPAN");
+		        sTd.appendChild(sSpan);
+		        
+		        var strHTML = "";
+
+				switch ($(obj).prev().attr('id')) {
+				case 'selSecLevel1':
+					strHTML = "법률 또는 명령에 의하여 비밀로 유지되거나 비공개사항으로 규정된 항목";
+					break;
+
+				case 'selSecLevel2':
+					strHTML = "공개될 경우 국가안보,국방,통일 외교관계 등 국익을 해할 우려가 있는 정보";
+					break;
+				case 'selSecLevel3':
+					strHTML = "공개될 경우 국민의 생명,신체,재산 등 공공안전 및 이익을 해할 우려가 있는 정보";
+					break;
+				case 'selSecLevel4':
+					strHTML = "수사,재판,범죄예방 등의 관련정보로서 공개될 경우 직무수행이 곤란하거나 형사피고인의 공정한 재판받을 권리를 침해할 우려가 있는 정보";
+					break;
+				case 'selSecLevel5':
+					strHTML = "감사,감독,검사,시험,규제,입찰계약,기술개발,인사관리,의사결정 또는 내부검토과정에 있는 사항으로서 공개될 경우 업무수행 등에 지장을 초래할 우려가 있는 정보";
+					break;
+				case 'selSecLevel6':
+					strHTML = "이름,주민등록번호 등에 의해 특정인을 식별할 수 있는 개인에 관한 정보";
+					break;
+				case 'selSecLevel7':
+					strHTML = "법인,단체 또는 개인의 영업상 비밀에 관한 정보로서 공개될 경우 법인 등의 정당한 이익을 해할 우려가 있는 정보";
+					break;
+				case 'selSecLevel8':
+					strHTML = "공개될 경우 부동산투기,매점매석 등으로 특정인에게 이익 보는 불이익을 줄 우려가 있는 정보";
+					break;
+				}
+		        
+		        sTd.innerHTML = "<b>" + strHTML + "</b>";
+	            sTr.appendChild(sTd);
+	            sTable.appendChild(sTr);
+	            tTd.appendChild(sTable);
+	            tTr.appendChild(tTd);
+	            tTable.appendChild(tTr);
+		            
+		        tTip.appendChild(tTable);
+		        tTip.style.left = getMouseXLocation(e) + 'px';
+		        tTip.style.top = getMouseYLocation(e) + 'px';
+		        tTip.style.visibility = 'visible';
+		    }
+		    
+		    function getMouseXLocation(e) {
+		        if (e)
+		            var E = e;
+		        else
+		            var E = window.event;
+
+		        if (E.clientX > 1000) {
+		            var tTip = document.getElementById("tooltip");
+		            var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
+		        } else {
+		        	var locationX = E.clientX + document.body.scrollLeft + 20;
+		        }
+
+		        return locationX
+		    }
+		    
+		    function getMouseYLocation(e) {
+		        if (e)
+		            var E = e;
+		        else
+		            var E = window.event;
+
+		        var tTip = document.getElementById("tooltip");
+		        if (navigator.userAgent.indexOf('Firefox') != -1) {
+		            if (E.clientY > 500) {
+		                var locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
+		            } else {
+		                if (document.documentElement.scrollTop > 0) {
+		                    //var locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
+		                    var locationY
+		                    //이벤트 발생 Y좌표보다 toolTip의 높이가 더 크면 - 메디톡스 수정
+		                    if (tTip.clientHeight > E.clientY) {
+		                        locationY = E.clientY + document.documentElement.scrollTop;
+		                    } else {
+		                        locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
+		                    }
+		                } else {
+		                    var locationY = E.clientY + document.documentElement.scrollTop;
+		                }
+		            }
+		        } else {
+		            if (E.clientY > 500) {
+		                var locationY = E.clientY + document.body.scrollTop - tTip.clientHeight;
+		            } else {
+		                if (document.body.scrollTop > 0) {
+		                    var locationY
+		                    //이벤트 발생 Y좌표보다 toolTip의 높이가 더 크면 - 메디톡스 수정
+		                    if (tTip.clientHeight > E.clientY) {
+		                        locationY = E.clientY + document.body.scrollTop;
+		                    } else {
+		                        locationY = E.clientY + document.body.scrollTop - tTip.clientHeight;
+		                    }
+		                } else {
+		                    var locationY = E.clientY + document.body.scrollTop;
+		                }
+		            }
+		        }
+
+		        return locationY
+		    }
+		    
+		    function hideTooltip() {
+		        document.getElementById('tooltip').style.visibility = 'hidden';
+		    }
+		    
+		    function getAttachList() {
+            	$.ajax({
+            		type : "POST",
+            		dataType : "json",
+            		async : false,
+            		url : "/ezApprovalG/getAttachListForOpenGov.do",
+            		data : {
+            			docID : pDocID
+            		},
+            		success: function(xml){
+            			result = xml;
+            			if (result.length > 0) {
+           					var attachTr;
+	            			$.each(result, function(index, item) {
+	            				attachTr = "";
+	            				if (item.fileOpenFlag == "Y") {
+	            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked /></td>"
+		            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
+		            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
+		            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "공개" + "</td></tr>";
+	            				} else {
+	            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/></td>"
+		            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
+		            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
+		            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "비공개" + "</td></tr>";
+	            				}
+	            				
+	            				$("#attachList").append(attachTr);	
+	            			});
+	            			
+	            			$("#attachList > tr").children("td").css({"border-bottom": "1px solid #e0e0e0", "overflow": "hidden", "text-overflow": "ellipsis", "white-space":"nowrap", "padding-left":"10px", "height":"10px"});
+            			} else {
+	            			$("#attachList").append("<td colspan='5' align='center'>데이터가 존재하지 않습니다.</td>")
+            			}
+            		}
+            	});
+		    }
+		    
+		    function fileOpenFlagChk_onClick(chk) {
+		    	if (chk.checked == true) {
+		    		chk.parentElement.parentElement.lastElementChild.textContent = "공개";
+		    	} else {
+		    		chk.parentElement.parentElement.lastElementChild.textContent = "비공개";
+		    	}
+		    }
+		    
+		    function openListFlag_onClick(chk) {
+		    	if (chk.checked == true) {
+		    		$("#basis").hide();
+		    	} else {
+		    		$("#basis").show();
+		    	}
+		    }
+		    
+		    function openGovLimitDate_onClick() {
+		        if (document.getElementById("openGovLimitDate").checked) {
+		            document.getElementById("idDatepickerForOpenGov").disabled = "";
+		        } else {
+		            document.getElementById("idDatepickerForOpenGov").disabled = "disabled";
+		        }
 		    }
 	    </script>
 	    <style>
@@ -2406,7 +2725,7 @@
 	    
 	    <!-- 문서정보 -->
 	    <c:if test="${approvalFlag eq 'G' }">
-		    <div id="Docinfo" style="border: 0px solid #dbdbda; width: 100%; height: 597px; display: none;">		
+		    <div id="Docinfo" style="border: 0px solid #dbdbda; width: 100%; height: 597px; display: none; overflow: auto;">		
 		        <h2 class="h2_dot" style="margin-left: 5px;"><spring:message code='ezApprovalG.t1204'/></h2>
 		        <table class="content" style="margin-left: 3px;">
 		            <tr>
@@ -2438,8 +2757,8 @@
 		                    </select>
 		                </td>
 		            </tr>
-		            <tr>
-		                <th><spring:message code='ezApprovalG.kes06'/></th>
+		            <tr class="openGov">
+		                <th><spring:message code='ezApprovalG.kes06'/> &nbsp;&nbsp;&nbsp;</th>
 		                <td>
 		                    <div style="padding-left: 3px; padding-top: 5px; padding-bottom: 5px;">
 		                        <spring:message code='ezApprovalG.t10029'/><br />
@@ -2448,24 +2767,61 @@
 		                        <input type="radio" name="rdoSecType" value="1" checked onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t47'/></span>&nbsp;
 		                        <input type="radio" name="rdoSecType" value="2" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t150'/></span>&nbsp;
 		                        <input type="radio" name="rdoSecType" value="3" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t46'/></span>&nbsp;
+		                        <span class="openGov">
+		                        	<input type="checkbox" name="openListFlag" id="openListFlag" value="checkbox" onClick="openListFlag_onClick(this)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 목록공개</span>
+		                        </span>
 		                    </div>
 		                </td>
-		
 		            </tr>
-		            <tr>
+        		    <tr id="basis" class="openGov">
+						<th>목록비공개사유</th>
+						<td>
+							<input type="text" id="txt_Basis" name="txt_Basis" style="width: 50%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="35" />
+							* 35자 이내로 입력해주세요
+						</td>
+		            </tr>
+		            <tr class="openGov">
+		                <th>원문공개열람제한일</th>
+		                <td>
+		                	<input type="checkbox" name="openGovLimitDate" id="openGovLimitDate" value="checkbox" onclick="openGovLimitDate_onClick()">
+		                    <input readonly="readonly" id='idDatepickerForOpenGov' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
+		                </td>
+		            </tr>
+		            <tr class="openGov">
+		                <th>첨부정보</th>
+		                <td>
+		                <div style="overflow: auto; width: 100%; height: 115px;">
+			               <table width="100%" class="popuplist" style="margin-top: 2px;">
+			               <thead>
+					    	<tr>
+						    	<th id="lvAPRLINE_TH_0" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:30px">공개여부</th>
+						    	<th id="lvAPRLINE_TH_1" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:30px">순번</th>
+						    	<th id="lvAPRLINE_TH_2" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:350px">파일이름</th>
+						    	<th id="lvAPRLINE_TH_3" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:70px">파일크기</th>
+						    	<th id="lvAPRLINE_TH_4" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:60px">공개/비공개</th>
+						  	</tr>
+						  	</thead>
+						  	<tbody  id="attachList">
+						  	</tbody>
+							</table> 
+						</div>
+		                </td>
+		            </tr>
+		            <tr class="openGov">
 		                <th><spring:message code='ezApprovalG.t989'/></th>
 		                <td>
 		                    <div style="padding-top: 5px; padding-left: 3px;">
-		                        <input type="checkbox" name="selSecLevel1" id="selSecLevel1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 1<spring:message code='ezApprovalG.t991'/>&nbsp;</span>
-		                        <input type="checkbox" name="selSecLevel2" id="selSecLevel2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 2<spring:message code='ezApprovalG.t991'/></span>
-		                        <input type="checkbox" name="selSecLevel3" id="selSecLevel3" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 3<spring:message code='ezApprovalG.t991'/></span>
-		                        <input type="checkbox" name="selSecLevel4" id="selSecLevel4" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 4<spring:message code='ezApprovalG.t991'/></span><br>
+		                        <input type="checkbox" name="selSecLevel1" id="selSecLevel1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 1<spring:message code='ezApprovalG.t991'/></span>
+		                        <input type="checkbox" name="selSecLevel2" id="selSecLevel2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 2<spring:message code='ezApprovalG.t991'/></span>
+		                        <input type="checkbox" name="selSecLevel3" id="selSecLevel3" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 3<spring:message code='ezApprovalG.t991'/></span>
+		                        <input type="checkbox" name="selSecLevel4" id="selSecLevel4" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 4<spring:message code='ezApprovalG.t991'/></span>
+		                        <input type="checkbox" name="selSecLevel5" id="selSecLevel5" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 5<spring:message code='ezApprovalG.t991'/></span>
+		                        <input type="checkbox" name="selSecLevel6" id="selSecLevel6" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 6<spring:message code='ezApprovalG.t991'/></span>
+		                        <input type="checkbox" name="selSecLevel7" id="selSecLevel7" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 7<spring:message code='ezApprovalG.t991'/></span>
+		                        <input type="checkbox" name="selSecLevel8" id="selSecLevel8" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 8<spring:message code='ezApprovalG.t991'/></span>
 		                    </div>
-		                    <div style="padding-top: 5px; padding-bottom: 5px; padding-left: 3px;">
-		                        <input type="checkbox" name="selSecLevel5" id="selSecLevel5" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 5<spring:message code='ezApprovalG.t991'/>&nbsp;</span>
-		                        <input type="checkbox" name="selSecLevel6" id="selSecLevel6" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 6<spring:message code='ezApprovalG.t991'/></span>
-		                        <input type="checkbox" name="selSecLevel7" id="selSecLevel7" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 7<spring:message code='ezApprovalG.t991'/></span>
-		                        <input type="checkbox" name="selSecLevel8" id="selSecLevel8" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 8<spring:message code='ezApprovalG.t991'/></span>
+		                    <div>
+		                         <textarea id="txt_Reason" name="txt_Reason" style="height: 40px; width: 100%; box-sizing: border-box; -moz-box-sizing: border-box;"></textarea>
 		                    </div>
 		                </td>
 		            </tr>
@@ -2659,8 +3015,8 @@
 			                                <table class="content" style="margin-bottom: 5px; width: 100%; ">
 			                                    <tr>
 			                                        <td style="text-align: center;">
-			                                            <a class="imgbtn imgbck2"><span id="Span3" onclick="return btn_AprDeptTempletDelCC_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
-			                                            <a class="imgbtn imgbck2"><span id="Span4" onclick="return btn_AprDeptTempletSaveCC_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
+			                                            <a class="imgbtn imgbck2"><span id="Span3" onclick="return btn_AprDeptTempletDelCC_onclick()"><spring:message code='ezApprovalG.hsbFv01'/></span></a>
+			                                            <a class="imgbtn imgbck2"><span id="Span4" onclick="return btn_AprDeptTempletSaveCC_onclick('MODIFY')"><spring:message code='ezApprovalG.hsbFv02'/></span></a>
 			                                            <a class="imgbtn imgbck2"><span onclick="return btn_AprDeptTempletAddCC_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 			                                        </td>
 			                                    </tr>
@@ -2744,15 +3100,15 @@
 								<tr>
 	        						<th><spring:message code='ezApprovalG.t831'/></th><!-- 등록일자 -->
 									<td>
-								        <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regY}" name="txtRegY" id="txtRegY" maxlength = "4" size="4">
+								        <input type="text" class="text" style="height:24px;padding:0px;margin:0px;" value="${regY}" name="txtRegY" id="txtRegY" maxlength = "4" size="4">
 							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
-							            <input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" value="${regM}" name="txtRegM"  id="txtRegM" maxlength = "2" size="2">
+							            <input type="text" class="text" style="Width:25px;height:24px;padding:0px;margin:0px;" value="${regM}" name="txtRegM"  id="txtRegM" maxlength = "2" size="2">
 							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
-							            <input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" value="${regD}" name="txtRegD"  id="txtRegD" maxlength = "2" size="2">
+							            <input type="text" class="text" style="Width:25px;height:24px;padding:0px;margin:0px;" value="${regD}" name="txtRegD"  id="txtRegD" maxlength = "2" size="2">
 							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span>
-							            <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regH}" name="txtRegH"  id="txtRegH" maxlength = "2" size="2">
+							            <input type="text" class="text" style="height:24px;padding:0px;margin:0px;" value="${regH}" name="txtRegH"  id="txtRegH" maxlength = "2" size="2">
 							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t977'/></span>
-							            <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regMi}"  name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2">
+							            <input type="text" class="text" style="height:24px;padding:0px;margin:0px;" value="${regMi}"  name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2">
 							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t1068'/></span>
 							        </td>
 								</tr>
@@ -2790,17 +3146,17 @@
 								<tr id="trOriginSN" style="display: none;">
 								    <th>문서번호</th><!-- 문서번호 -->
 									<td>
-							        	<input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="20">
+							        	<input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="48">
 								    </td>
 								</tr>
 								<tr>
             						<th>문서시행일자</th><!-- 시행일자 -->
   	    							<td>
-										<input type="text" class="text" style="Width:40px;height:16px;padding:0px;margin:0px;" name="txtExeY" id="txtExeY" maxlength = "4">
+										<input type="text" class="text" style="Width:40px;height:24px;padding:0px;margin:0px;" name="txtExeY" id="txtExeY" maxlength = "4">
 										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
-										<input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" name="txtExeM"  id="txtExeM" maxlength = "2">
+										<input type="text" class="text" style="Width:25px;height:24px;padding:0px;margin:0px;" name="txtExeM"  id="txtExeM" maxlength = "2">
 										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
-										<input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" name="txtExeD"  id="txtExeD" maxlength = "2">
+										<input type="text" class="text" style="Width:25px;height:24px;padding:0px;margin:0px;" name="txtExeD"  id="txtExeD" maxlength = "2">
 										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span>
             						</td>
 	        					</tr>

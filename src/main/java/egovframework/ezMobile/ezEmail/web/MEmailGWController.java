@@ -107,6 +107,7 @@ import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import net.htmlparser.jericho.Renderer;
@@ -538,10 +539,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         	String searchValue = search;
         	
         	if (searchField.isEmpty()) {
-				searchField = "SUBJECT&FROM";
+        		// 검색어가 없을 때는 검색 필드를 설정하지 않는다.
+        		if (!searchValue.isEmpty()) {
+        			searchField = "SUBJECT&FROM";
+        		}
 				
 				if (senderReceiverFlag) {
-					searchField = "SUBJECT&TO";
+					// 검색어가 없을 때는 검색 필드를 설정하지 않는다.
+					if (!searchValue.isEmpty()) {
+						searchField = "SUBJECT&TO";
+					}
 				}
 			}
 			
@@ -554,6 +561,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			Map<String, Object> extraMap = new HashMap<String, Object>();
+			
+			if (ed == null) {
+				ed = new Date();
+			}
 			
 			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, sd, ed, searchSubFolder, 
 					isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, extraMap, info.getTenantId());
@@ -1211,8 +1222,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 								orgMessageSubject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
 							}
 						}	
+						
+						sb.append("<hr tabindex=\"-1\">");
 						if (textOption.equalsIgnoreCase("HTML")) {
-							sb.append("<hr tabindex=\"-1\">");
 				            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
 							sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
 				            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
@@ -4080,6 +4092,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String organXML = "";
         String dlXML = "";
         String addressXML = "";
+        String sharedMailboxXML = "";
 		
         JSONObject data = new JSONObject();
         JSONObject result = new JSONObject();
@@ -4094,6 +4107,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String pOrganListType = "all";
 			String pDLSearchList = "";
 			String pAddressFilter = "";
+			String pSharedMailboxSearchList = "";
 	
 			if (jsonObject.get("pOrganSearchList") != null) {
 				pOrganSearchList = (String) jsonObject.get("pOrganSearchList");
@@ -4118,22 +4132,50 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			if (jsonObject.get("pAddressFilter") != null) {
 				pAddressFilter = (String) jsonObject.get("pAddressFilter");
 			}
+			
+			if (jsonObject.get("pSharedMailboxSearchList") != null) {
+				pSharedMailboxSearchList = (String) jsonObject.get("pSharedMailboxSearchList");
+			}
 						
-			if (!pOrganSearchList.isEmpty()) {
-				organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, info);
+			String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", info.getTenantId());
+			
+	        // useShowAllCompanies가 YES이면 Company ID를 ""로 세트하여 그룹사 전체 조직도를 대상으로 검색하도록 한다.
+	        String orgCompanyId = info.getCompanyId();
+	        
+	        if (useShowAllCompanies.equals("YES")) {
+	        	info.setCompanyId("");
+	        }
+			
+			if (!pOrganSearchList.isEmpty()) {								
+				organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, info);				
 			}
 			
 			if (!pDLSearchList.isEmpty()) {
 				dlXML = getOrganDLSearch(pDLSearchList, info);
 			}
+
+	        if (useShowAllCompanies.equals("YES")) {
+	        	// Company ID를 본래값으로 복원한다.
+	        	info.setCompanyId(orgCompanyId);
+	        }				
 			
 			if (!pAddressFilter.isEmpty()) {
 				addressXML = getAddressSearchInfo(pAddressFilter, info);
 			}
+			
+			if (!pSharedMailboxSearchList.isEmpty()) {
+				sharedMailboxXML = getSharedMailboxSearch(pSharedMailboxSearchList, info);
+			}
+			
+			// 20190619 조진호 - 메일 주소 검색 대상 순서 변경 추가
+			String mailAddressSearchOrder =  ezCommonService.getUserConfigInfo(info.getTenantId(), userId, "mailAddressSearchOrder");
+						
 	        
 	        data.put("organXML", organXML);
 	        data.put("dlXML", dlXML);
 	        data.put("addressXML", addressXML);
+	        data.put("sharedMailboxXML", sharedMailboxXML);
+	        data.put("mailAddressSearchOrder", mailAddressSearchOrder);
 	        
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -4242,6 +4284,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String sMobile = "";
 			String sMemo = "";
 			String folderId = "";
+			String sFurigana = "";
 			
 			if (jsonObject.get("folderType") != null) {
 				folderType = (String)jsonObject.get("folderType");
@@ -4283,6 +4326,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				sMemo = (String)jsonObject.get("sMemo");
 			}
 			
+			if (jsonObject.get("sFurigana") != null) {
+				sFurigana = (String)jsonObject.get("sFurigana");
+			}
+			
 			if (!folderType.isEmpty()) {				
 				if (folderType.equals("C")) {
 					ownerId = info.getCompanyId();
@@ -4294,7 +4341,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				ezAddressService.insertAddress(info.getTenantId(), ownerId, folderId, info.getUserId(),
 						info.getUserName(), info.getUserName2(), sName, sEmail, sCompany, sDept,
-						sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo, "P");
+						sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo, "P", sFurigana);
 				
 		        result.put("status", "ok");
 				result.put("code", 0);			
@@ -4403,6 +4450,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String sMobile = "";
 			String sMemo = "";
 			String folderId = "";
+			String sFurigana = "";
 			
 			if (jsonObject.get("folderType") != null) {
 				folderType = (String)jsonObject.get("folderType");
@@ -4444,6 +4492,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				sMemo = (String)jsonObject.get("sMemo");
 			}
 			
+			if (jsonObject.get("sFurigana") != null) {
+				sFurigana = (String)jsonObject.get("sFurigana");
+			}
+			
 			if (!folderType.isEmpty()) {				
 				if (folderType.equals("C")) {
 					ownerId = info.getCompanyId();
@@ -4454,7 +4506,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 				
 				ezAddressService.updateAddress(info.getTenantId(), addressId, info.getUserId(), info.getUserName(), info.getUserName2(), 
-						sName, sEmail, sCompany, sDept, sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo);
+						sName, sEmail, sCompany, sDept, sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo, sFurigana);
 				
 		        result.put("status", "ok");
 				result.put("code", 0);			
@@ -5983,4 +6035,53 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	    return returnObj;
     }
 	
+	/**
+	 * 공유사서함 정보 호출 함수
+	 */
+	private String getSharedMailboxSearch(String pSearchList, MCommonVO userInfo) {
+        String returnData = "";
+        
+        try {
+        	String searchValue = pSearchList.split("::")[1];
+        	
+			List<MailSharedMailboxVO> sharedMailboxList = ezEmailService.getSharedMailboxSearchList(userInfo.getCompanyId(), userInfo.getTenantId(), searchValue);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (MailSharedMailboxVO vo : sharedMailboxList) {
+				sb.append("<ROW><CELL>");
+				
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getShareName()));
+				sb.append("</VALUE>");
+				
+				sb.append("<DATA1>group</DATA1>");
+				
+				sb.append("<DATA2>");
+				sb.append(commonUtil.cleanValue(vo.getShareId()));
+				sb.append("</DATA2>");
+				
+				sb.append("<DATA3>");
+				sb.append(commonUtil.cleanValue(vo.getShareMail()));
+				sb.append("</DATA3>");
+				
+				sb.append("<DATA4>");
+				sb.append(commonUtil.cleanValue(vo.getCompanyName()));
+				sb.append("</DATA4>");
+				
+				sb.append("</CELL></ROW>");
+			}
+			
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "EXCEPTION";
+			e.printStackTrace();
+		}
+        
+        return returnData;
+    }
 }

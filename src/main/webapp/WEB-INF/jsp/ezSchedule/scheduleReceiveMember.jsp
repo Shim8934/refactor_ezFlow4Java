@@ -144,7 +144,7 @@
 			            	<c:if test="${item.status == '0'}"><spring:message code='ezSchedule.t166'/></c:if>
 			            	<c:if test="${item.status != '0'}"><spring:message code='ezSchedule.t169'/></c:if>
 			            </td>
-			            <td style="word-break:break-all; width:150px"><c:out value="${item.groupName}"/></td>
+			            <td style="word-break:break-all; text-align:center;"><c:out value="${item.groupName}"/></td>
 			            <%-- <td style="word-break:break-all; padding-top:3px; padding-bottom:3px;">${item.description}</td> --%>
 			            <td style="white-space:nowrap; text-align:center">${fn:substring(item.responseDate,0,16)}</td>
 			        </tr>

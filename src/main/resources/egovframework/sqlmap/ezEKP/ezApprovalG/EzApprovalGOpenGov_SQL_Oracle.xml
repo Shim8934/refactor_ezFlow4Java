@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezApprovalGOpenGov">
+
+	<select id="EzApprovalGOpenGov.getOpenGovDocOpenFlag" parameterClass="Map" resultClass="String">
+		SELECT
+			openflag
+		FROM
+			TBL_OPENGOVDOCINFO
+		WHERE
+			docid = #docId#
+	</select>
+
+	<select id="EzApprovalGOpenGov.getOpenGovDocHref" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		SELECT
+			href
+		FROM
+			TBL_OPENGOVDOCINFO
+		INNER JOIN
+			TBL_ENDAPRDOCINFO
+		ON
+			TBL_OPENGOVDOCINFO.docid = TBL_ENDAPRDOCINFO.docid
+		WHERE
+			TBL_OPENGOVDOCINFO.docid = #docId#
+		AND
+			openflag <> '3';
+	    ]]>
+	</select>
+
+	<select id="EzApprovalGOpenGov.getOpenGovAttachHref" parameterClass="Map" resultClass="String">
+		SELECT
+			attachfilehref
+		FROM
+			TBL_OPENGOVFILEINFO
+		INNER JOIN
+			TBL_ENDATTACHINFO
+		ON
+			TBL_OPENGOVFILEINFO.docid = TBL_ENDATTACHINFO.docid
+		AND
+			TBL_OPENGOVFILEINFO.sn = TBL_ENDATTACHINFO.attachfilesn
+		WHERE
+			TBL_OPENGOVFILEINFO.docid = #docId#
+		AND
+			TBL_OPENGOVFILEINFO.sn = #sn#
+		AND
+			fileopenflag = 'Y'
+	</select>
+</sqlMap>

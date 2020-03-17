@@ -8,7 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />	    
 	    <style type="text/css">
-			.warningbox{margin:240px auto 0px auto; padding:40px 20px 0px 20px; font-family:Malgun Gothic; width:625px; height:184px; border:1px solid #d6d6d6; box-sizing:border-box;}
+			.warningbox{margin:240px auto 0px auto; padding:40px 20px 0px 20px; font-family:Meiryo UI; width:625px; height:184px; border:1px solid #d6d6d6; box-sizing:border-box;}
 			.warningbox .warningimg{margin:0px; padding:3px 0px 0px 40px; float:left;}
 			.warningbox .warningDL{margin:0px; padding:0px 0px 0px 30px; overflow:hidden;}
 			.warningbox .warningDL dt{margin:0px; padding:0px 0px 5px 0px; font-size:24px; font-weight:bold; color:#3d8fea; letter-spacing:-1px;}
@@ -69,7 +69,7 @@
 		<c:if test="${hasSubBoard == '1'}">		
 			<table  class="content">
 				<tr>
-			    	<th><spring:message code="ezBoard.t114"/></th>
+			    	<th><spring:message code="ezBoard.kje01"/></th>
 			    	<td class="point"><c:out value='${boardName}'/></td>
 			  	</tr>
 			</table><br/>
@@ -86,13 +86,11 @@
 		<c:if test="${hasSubBoard != '1'}">			
 			<table class="content">
 				<tr>
-			    	<th><spring:message code="ezBoard.t114"/></th>
+			    	<th><spring:message code="ezBoard.kje01"/></th>
 			    	<td class="point"><c:out value='${boardName}'/></td>
 			  	</tr>
 			</table><br/>			
 			<div class="box" style="padding:10px" >
-				<spring:message code="ezBoard.t116"/><b>'<c:out value="${boardName}"/>'</b>
-				<spring:message code="ezBoard.t117"/><br/>
 			  	<spring:message code="ezBoard.t118"/>
 			</div>			
 			<div class="btnpositionJsp">

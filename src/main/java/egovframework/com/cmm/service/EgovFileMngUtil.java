@@ -449,7 +449,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		}
 		
 		//byte[] b = new byte[BUFF_SIZE]; //buffer size 2K.
-		int fSize = (int)file.length();
+		long fSize = file.length();
 		if (fSize > 0) {
 		    BufferedInputStream in = null;
 	
@@ -466,7 +466,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 				response.setContentType(mimetype);
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + nfcFilename + "\"");				
 //				response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(orgFileName, "UTF-8").replaceAll("\\+","\\ ") + ";");
-				response.setContentLength(fSize);
+				response.setHeader("Content-Length", Long.toString(fSize));
 //				response.setHeader("Content-Transfer-Encoding","binary");
 				//response.setHeader("Pragma","no-cache");
 				//response.setHeader("Expires","0");
@@ -563,7 +563,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		    throw new FileNotFoundException(downFileName);
 		}
 		
-		int fSize = (int) file.length();
+		long fSize = file.length();
 		
 		if (fSize > 0) {
 		    byte[] encryptedBytes = Files.readAllBytes(file.toPath());
@@ -577,7 +577,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	    	    response.setBufferSize(BUFF_SIZE);	    	    
 				response.setContentType(mimetype);
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + nfcFilename + "\"");				
-				response.setContentLength(fSize);
+				response.setHeader("Content-Length", Long.toString(fSize));
 				FileCopyUtils.copy(in, response.getOutputStream());
 		    } catch (Exception ex) {
 		    	ex.printStackTrace();
@@ -613,10 +613,10 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
         BufferedInputStream bis = null;
         OutputStream os = null;
         String contentType = null;
-        int fileSize = 0;
+        long fileSize = 0;
         
         try {
-	        fileSize = (int) file.length();
+	        fileSize = file.length();
 	        bis = new BufferedInputStream(new FileInputStream(file));
 	        contentType = URLConnection.guessContentTypeFromStream(bis);
 	        
@@ -625,7 +625,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	        }
 	        
 	        response.setContentType(contentType);
-	        response.setContentLength(fileSize);
+	        response.setHeader("Content-Length", Long.toString(fileSize));
 	        
 	        LOGGER.debug("contentType=" + contentType + ",fileSize=" + fileSize);
 	        

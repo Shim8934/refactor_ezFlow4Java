@@ -91,7 +91,13 @@
 	                }
 	                show_repetition_info2();
 	            } else {
-	                document.getElementById("AllDayDisplay").innerHTML = sDT.substring(0, sDT.lastIndexOf(":")) + " ~ " + eDT.substring(0, eDT.lastIndexOf(":"));
+	                //document.getElementById("AllDayDisplay").innerHTML = sDT.substring(0, sDT.lastIndexOf(":")) + " ~ " + eDT.substring(0, eDT.lastIndexOf(":"));
+	                if(allDayFlag == "1") {
+	            		document.getElementById("AllDayDisplay").innerHTML = sDT.substring(0, 10) + " (" + strLang126 + ") ~ " + eDT.substring(0, 10) + " (" + strLang126 + ")";
+	            	}
+	                else {
+	                	document.getElementById("AllDayDisplay").innerHTML = sDT.substring(0, sDT.lastIndexOf(":")) + " ~ " + eDT.substring(0, eDT.lastIndexOf(":"));
+	                }
 	            }
 	            
 	            var iframeStyle = "<style>";
@@ -246,8 +252,6 @@
 		            var reStartMinute = reStartDate.split(" ")[1].split(":")[1];
 		            var reEndMinute = reEndDate.split(" ")[1].split(":")[1];
 	
-		            if (Number(reStartHour) == 0)
-	                    reStartHour = 12;
 		            /* if (Number(reStartHour) < 12) {
 		                repeatinfo += "" + strLang246 + " ";
 	
@@ -263,8 +267,6 @@
 	
 		            repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";
 	
-		            if (Number(reEndHour) == 0)
-	                    reEndHour = 12;
 		            /* if (Number(reEndHour) < 12) {
 		                repeatinfo += "" + strLang246 + " ";
 	

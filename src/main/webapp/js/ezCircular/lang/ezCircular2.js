@@ -1,6 +1,6 @@
 ﻿var strLang1 = "Failed to delete";
 var strLang2 = "List of opinions";
-var strLang3 = "right opinion";
+var strLang3 = "save";
 var strLang4 = "private";
 var strLang5 = "Please enter a comment.";
 var strLang6 = "comment was deleted.";
@@ -28,3 +28,4 @@ var strLang27 = "Leave a comment";
 var strLang28 = "These circulars are not.";
 var strLang29 = "/blank_us.htm";
 var strLang30 = "no circulation.";
+var strLang50 = "No results were found for your search.";

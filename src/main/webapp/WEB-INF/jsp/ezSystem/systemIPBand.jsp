@@ -25,12 +25,6 @@
 		}
 		
 		window.onload = function () {
-			if (useIPAccess === "NO") {
-				document.getElementById("ipRadio0").checked = true;
-			} else {
-				document.getElementById("ipRadio1").checked = true;
-			}
-			
 			if (rollInfo.indexOf("c=1") == -1) {
 				permission = false;
 				var btnList = $("body [id^=btn]");
@@ -41,35 +35,8 @@
 			}
 			
 			getIPList_http();
+			//windowResize();
 	    }
-		
-		// 사용여부 저장 버튼 클릭
-		function saveBtn() {
-			var allowResult = false;
-			if (!document.getElementById("ipRadio0").checked) {
-				allowResult = true;
-			}
-			
-			$.ajax({
-				type : "POST",
-				url : "/ezSystem/setUseIPAccess.do?allowResult=" + allowResult,
-				cache : false,
-				error : function(data) {
-					console.log(data);
-					alert("<spring:message code='ezCommunity.t283'/>");
-				},
-				complete : function(data) {
-					alert("<spring:message code='ezCommunity.t282'/>");
-					
-					if (useIPAccess == "NO") {
-						useIPAccess = "YES";
-					} else {
-						useIPAccess = "NO";
-					}
-					
-				}
-			});
-		}
 		
 		// 설정된 IP 대역 리스트 가져오기
 		function getIPList_http() {
@@ -84,6 +51,7 @@
 					allIPList = data.responseJSON
 					document.getElementById("HeaderAllCheckBox").checked = false;
 					makeIPBands(allIPList);
+					windowResize();
 			    }
 			});
 		}
@@ -173,14 +141,6 @@
 			}
 		}
 		
-		function cancleBtn() {
-			if (useIPAccess === "NO") {
-				document.getElementById("ipRadio0").checked = true;
-			} else {
-				document.getElementById("ipRadio1").checked = true;
-			}
-		}
-	
 		// IP 대역 등록 및 수정
 		function ipBandEidtPopUp(type) {
 			var url = "/ezSystem/systemIPBandEditPopup.do";
@@ -319,42 +279,48 @@
 		}
 		
 		function windowResize() {
-        	var height = parent.document.documentElement.clientHeight - 345;
+			var mainContentDiv = document.getElementById("contentlist");
+			var mainContentTable = mainContentDiv.getElementsByTagName("table")[0];
+			var mainContentDivTableH = mainContentTable.offsetHeight;
+			var mainContentDivMaxH = mainContentDiv.getAttribute("data-maxH");
+			
+			if (mainContentDivTableH > mainContentDivMaxH) {
+				mainContentDiv.style.height = mainContentDivMaxH + "px";
+			}
+			
+			var iframeH = parent.document.getElementById("ipManager_ifrm").offsetHeight;
+			var bodyH = document.body.offsetHeight;
+			var iframeMH = parent.document.getElementById("ipManager_ifrm").style.maxHeight.split("px")[0];
+			
+			if (iframeH <= bodyH) {
+				if (iframeMH < bodyH) {
+					parent.document.getElementById("ipManager_ifrm").style.height = iframeMH + "px";
+				} else {
+					parent.document.getElementById("ipManager_ifrm").style.height = bodyH + "px";
+				}
+			} else {
+				parent.document.getElementById("ipManager_ifrm").style.height = bodyH + "px";
+			}
+			
+			/* var height = parent.document.documentElement.clientHeight - 345;
         	var width = parent.document.documentElement.clientWidth - 30;
         	/* if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
         		height = height - 10;
-        	} */
+        	} *
         	document.getElementById("contentHeader").style.width = width + "px";
         	document.getElementById("contentlist").style.width = width + "px";
         	document.getElementById("contentlist").style.height = height + "px";
-        	document.getElementById("contentlist").style.overflowY = "auto";
+        	document.getElementById("contentlist").style.overflowY = "auto"; */
         }
 		
-		$(function(){
+		/* $(function(){
     		windowResize();
 	    });
-		
+		 */
 	</script>
 </head>
-<body class="mainbody" style="overflow:hidden;" >
-	<br><span class="txt">▒ <spring:message code='ezSystem.jje6'/></span><br><br>
-	
-	<table class="content" style="width:600px;">
-		<tr>
-			<th rowspan="2" style="width: 60px;"><spring:message code='ezSystem.jje4'/></th>
-			<td>&nbsp;<label id="radioFalse"><input name="ipRadio" type="radio" id="ipRadio0"><span style="vertical-align:middle;">&nbsp;<spring:message code='ezEmail.t99000009'/></span></label></td>
-	    </tr>
-	    <tr>
-			<td>&nbsp;<label id="radioTrue"><input name="ipRadio" type="radio" id="ipRadio1"><span style="vertical-align:middle;">&nbsp;<spring:message code='ezBoard.t162'/></span></label></td>
-		</tr>
-	</table>
-	
-	<div style="width:600px;">
-		<div class="btnpositionJsp">
-	    	<a id="btn1" class="imgbtn" onClick="saveBtn()"><span><spring:message code='main.sp09'/></span></a>
-	    	<a id="btn2" class="imgbtn" onClick="cancleBtn()"><span><spring:message code='main.t135'/></span></a>
-	    </div>
-	</div> 
+<body class="mainbody" style="overflow:hidden; margin:0;" >
+	<br>
 	<div id="mainmenu">
 	    <ul class="on">
 	        <li class="important"><span id="btn3" onclick="ipBandEidtPopUp('add')"><spring:message code='ezBoard.t602'/></span></li>
@@ -375,7 +341,7 @@
 			</thead>
 		</table>
 	</div>
-	<div id="contentlist">
+	<div id="contentlist" style="overflow:auto;" data-maxH="350">
 		<table id="tblIP" class="mainlist" style="width:100%;">	
 			<tbody id="ipBody">
 				
@@ -383,7 +349,6 @@
 			
 		</table>
 	</div>
-	
-	
+	<br>
 </body>
 </html>

@@ -387,7 +387,11 @@ function tableListControl_Week()
                     var holidayName = "";
                     var holidayName2 = "";
                     
-                    for (var k = 0; k < memorial.length; k++) {      
+                    for (var k = 0; k < memorial.length; k++) {    
+                    	// 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && memorial[k].solarLunar == 2) {
+                        	continue;
+                        }
                     	if(k == memorial.length-1) {
                         	holidayName += memorial[k].name;
                         }
@@ -400,6 +404,10 @@ function tableListControl_Week()
                     }
                     
                     for (var k = 0; k < yearmemorial.length; k++) {
+                    	// 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && yearmemorial[k].solarLunar == 2) {
+                        	continue;
+                        }
                     	if(k == yearmemorial.length-1) {
                         	holidayName2 += yearmemorial[k].name;
                         }
@@ -494,7 +502,12 @@ function tableListControl_Week()
                     var holidayName = "";
                     var holidayName2 = "";
                     
-                    for (var k = 0; k < memorial.length; k++) {      
+                    for (var k = 0; k < memorial.length; k++) {  
+                    	// 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && memorial[k].solarLunar == 2) {
+                        	continue;
+                        }
+                        
                     	if(k == memorial.length-1) {
                         	holidayName += memorial[k].name;
                         }
@@ -507,6 +520,11 @@ function tableListControl_Week()
                     }
                     
                     for (var k = 0; k < yearmemorial.length; k++) {
+                    	// 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && yearmemorial[k].solarLunar == 2) {
+                        	continue;
+                        }
+                        
                     	if(k == yearmemorial.length-1) {
                         	holidayName2 += yearmemorial[k].name;
                         }
@@ -572,7 +590,7 @@ function tableListControl_Week()
             _mtd.setAttribute("class", "weektd_01");
             _mtd.setAttribute("DATA1", title_name[k].split("/")[0]);
             _mtd.setAttribute("DATA2", title_name[k].split("/")[1]);
-            _mtd.setAttribute("title", _mtd.getAttribute("DATA2"));
+            _mtd.setAttribute("title", _mtd.getAttribute("DATA2").replace(/&#40;/gi, "\(").replace(/&#41;/gi, "\)"));
             _mtd.align = "left";
             _mtd.style.height = "60px";
             //_mtd.onselectstart = "return false";
@@ -741,7 +759,14 @@ function tableListControl_Week()
                 _span.setAttribute("owner_nm", getNodeText(xmldom.getElementsByTagName("owner_nm")[j]));
                 _span.setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[j]));
                 _span.setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
-
+                
+                var _span2 = document.createElement("SPAN");
+                if(getNodeText(xmldom.getElementsByTagName("importance")[j]) == "3") {
+                	_span2.setAttribute("class", "icon_h");
+                } else if(getNodeText(xmldom.getElementsByTagName("importance")[j]) == "1") {
+                	_span2.setAttribute("class", "icon_l");
+                }
+                
                 //_span.addEventListener("mouseover", function (event) { onmouse_over(this, event) });
                 _span.onmouseover = function (event) { onmouse_over(this, event); };
                 _span.onmouseout = new Function("onmouse_out(this);");
@@ -749,6 +774,7 @@ function tableListControl_Week()
                 pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();             
                 _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "','" + pResourceName + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
                 setNodeText(_span,getNodeText(xmldom.getElementsByTagName("subject")[j]));
+                _td.appendChild(_span2);
                 _td.appendChild(_span);
                 _tr.appendChild(_td);
                 _table.appendChild(_tr);
@@ -783,15 +809,21 @@ function tableListControl_Week()
                 }
                 else if (weekdatename[0] <= s_weekDateSet && weekdatename[6] < e_weekDateSet) {
                     var startCnt = getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]);
-                    for (var i = startCnt; i < 8; i++) {
-                        if (i == 7 || i == 0) {
-                        	if (DefaultView == 1) { // 월요일 시작
-                        		makeTable(xmldom, j, 0);
-                        	}
-                        	break;
-                        } else {
-                        	makeTable(xmldom, j, i);
-                        }
+                    if (DefaultView == 0) { //일요일 시작
+                    	for (var i = startCnt; i < 7; i++) {
+                    		makeTable(xmldom, j, i);
+                    	}
+                    } else {
+	                    for (var i = startCnt; i < 8; i++) {
+	                        if (i == 7 || i == 0) {
+	                        	if (DefaultView == 1) { // 월요일 시작
+	                        		makeTable(xmldom, j, 0);
+	                        	}
+	                        	break;
+	                        } else {
+	                        	makeTable(xmldom, j, i);
+	                        }
+	                    }
                     }
                 }
                 else {
@@ -875,6 +907,13 @@ function makeTable(xmldom, pNum, dayType) {
     _span.setAttribute("owner_nm", getNodeText(xmldom.getElementsByTagName("owner_nm")[pNum]));
     _span.setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[pNum]));
     _span.setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[pNum]));
+    
+    var _span2 = document.createElement("SPAN");
+    if(getNodeText(xmldom.getElementsByTagName("importance")[pNum]) == "3") {
+    	_span2.setAttribute("class", "icon_h");
+    } else if(getNodeText(xmldom.getElementsByTagName("importance")[pNum]) == "1") {
+    	_span2.setAttribute("class", "icon_l");
+    }
 
     _span.onmouseover = function (event) { onmouse_over(this, event); };
     _span.onmouseout = new Function("onmouse_out(this);");
@@ -883,6 +922,7 @@ function makeTable(xmldom, pNum, dayType) {
     // 2018-03-12 서주연 - 2일 이상 자원예약시 자원메인 주보기에서 자원이름이 깨지는 현상 수정
     _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0] + "','" + pResourceName + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]) + "');");
     setNodeText(_span,getNodeText(xmldom.getElementsByTagName("subject")[pNum]));
+    _td.appendChild(_span2);
     _td.appendChild(_span);
     _tr.appendChild(_td);
     _table.appendChild(_tr);
@@ -1019,16 +1059,24 @@ function tableListControl_today() {
             var yearmemorial = yearmemorialDayCheck(current_day, LunarDate);                   
 
             var isholiday = false;
-            for (var k = 0; k < memorial.length; k++) {                    	
-                if (memorial[k].holiday) {
-                    isholiday = true;                    
-                }
-            }
-            for (var k = 0; k < yearmemorial.length; k++) {
-                if (yearmemorial[k].holiday) {
-                    isholiday = true;                    
-                }
-            }
+	            for (var k = 0; k < memorial.length; k++) {      
+	            	// 윤달일 때 기념일 안나타나도록 수정
+	                if(LunarDate.leapMonth == 1 && memorial[k].solarLunar == 2) {
+	                	continue;
+	                }
+	                if (memorial[k].holiday) {
+	                    isholiday = true;                    
+	                }
+	            }
+	            for (var k = 0; k < yearmemorial.length; k++) {
+	            	// 윤달일 때 기념일 안나타나도록 수정
+	                if(LunarDate.leapMonth == 1 && yearmemorial[k].solarLunar == 2) {
+	                	continue;
+	                }
+	                if (yearmemorial[k].holiday) {
+	                    isholiday = true;                    
+	                }
+	            }
             if (current_day.getDay() == "0" || isholiday)
             	document.getElementById("divViewHeader").style.color = "#ee1c25";
             	//document.getElementById("divViewHeader").style.color = "";

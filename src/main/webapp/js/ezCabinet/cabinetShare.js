@@ -122,7 +122,7 @@ var CabinetShareItem = function() {
 			success : function(data) {
 				var result = data.memberList;
 				cabinetNavi.init(data.currentPage, data.memberCount, data.totalPages);
-				document.getElementById("memberCount").innerHTML = " - [" + "<span class='cabColor'>" + data.memberCount + "명" + "</span>" + "]";
+				document.getElementById("memberCount").innerHTML = " - [" + "<span class='cabColor'>" + data.memberCount + CabinetMessages.strPeople + "</span>" + "]";
 				userTable.setDataSource(result);
 				userTable.renderTable();
 			},

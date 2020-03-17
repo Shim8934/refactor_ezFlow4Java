@@ -29,6 +29,8 @@
 			var getBirthDay = "${birthDay}";
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
 			var locale = "${locale}";
+			var primaryLang = "${primaryLang}";
+			
 			$(function () {
 				var toYear = new Date().getFullYear();
 				var sYear = parseInt(toYear-70);
@@ -200,7 +202,11 @@
 				}
 				
 			    function checkKey() {
-			        return false;
+					if(event.keyCode == 8) {
+						event.target.value = "";
+					} else {
+						return false;
+					}
 			    }
 			    
 			    function ButtonDeleteClick() {
@@ -306,6 +312,18 @@
 			    		birthType = "N";
 			    	}
 			    	
+			    	<c:if test="${useMailAliasSettingOnLogin}">
+			    	var aliasSaveSuccess = false;
+			    	
+			    	emailCheckContext.submit(function() {
+			    		aliasSaveSuccess = true;
+					});
+					
+					if (!aliasSaveSuccess) {
+						return;
+					}
+			    	</c:if>
+			    	
 			    	var cn = "${userInfo.id}";
 			    	
 					$.ajax({
@@ -324,7 +342,9 @@
 			    			birth : document.getElementById("txtBirth").value,
 			    			birthType : birthType,
 			    			info : document.getElementById("txtInfo").value,
-			    			displayName : "${labelDisplayName }"
+			    			displayName : "${labelDisplayName }",
+			    			extensionPhone : document.getElementById("txtExtensionPhone").value,
+			    			officeMobile : document.getElementById("txtOfficeMobile").value
 			    		},
 			    		success : function(result) {   			
 			    			 if (result == "OK") {
@@ -332,7 +352,12 @@
 			    			} 
 						},
 			    		error : function() {
+			    			<c:if test="${useMailAliasSettingOnLogin}">
+			    			alert("<spring:message code='ezPersonal.t192.aliassuccess'/>");
+			    			</c:if>
+			    			<c:if test="${not useMailAliasSettingOnLogin}">
 			    			alert("<spring:message code='ezPersonal.t192'/>");
+			    			</c:if>
 			    		}
 			    	});
 			     }
@@ -346,7 +371,7 @@
     		<span class="txt">▒&nbsp;<spring:message code='ezPersonal.t174'/></span>
     		<table class="popuplist" width="50%" style="margin-top:5px;">
         		<tr> 
-            		<td width="130" rowspan="6" align="center">
+            		<td width="130" rowspan='<c:out value="${primaryLang eq '3' ? 7 : 6}" />' align="center">
                 		<div> 
 	  	                	<span id="LiteralPhoto">
         		          		${literalPhoto}
@@ -364,6 +389,12 @@
                 		${labelDepartment }
             		</td> 
         		</tr>
+        		<c:if test="${primaryLang eq '3'}">
+				<tr>
+					<th><spring:message code='main.ksa01' /></th>
+			  		<td>${LiteralFurigana }</td>
+				</tr>
+				</c:if>
         		<tr> 
             		<th><spring:message code='ezPersonal.t9'/></th> 
             		<td>
@@ -384,9 +415,24 @@
         		</tr> 
         		<tr> 
             		<th><spring:message code='ezPersonal.t176'/></th> 
-            		<td>
-            			${labelMail }
+					<c:if test="${useMailAliasSettingOnLogin}">
+            		<td style="padding: 5px 0px 5px 5px; vertical-align: top;">
+						<input id="email-input" type="text" value="${labelMail}" maxlength="20" spellcheck="false" style="ime-mode: disabled;"/>
+						<span style="padding-left: 5px;">@${domainName}</span>
+						<div class="btnpositionLayer" style="display: inline-block; margin: 0px; padding: 0px; padding-left: 5px; background: none; border: none; vertical-align: middle;">
+							<a class="imgbtn" id="email-check"><span><spring:message code='email.alias.button' /></span></a>
+						</div>
+						<div id="checkmsg" style="height: 0px; opacity: 0; transition: 0.2s all;">
+							<br>
+						</div>
+						<span><spring:message code='email.alias.login.warn' /></span>
+					</td>
+					</c:if>
+					<c:if test="${not useMailAliasSettingOnLogin}">
+					<td>
+            			${labelMail}
             		</td> 
+            		</c:if>
         		</tr> 
     		</table> 
     		<table class="content" width="50%" style="margin-top:10px;"> 
@@ -402,6 +448,12 @@
             		<th><spring:message code='ezPersonal.t179'/></th> 
             		<td> <input type="text" id="txtFax" size="22" value="${txtFax}" maxlength="20" style="width:100%"> </td> 
         		</tr> 
+				<tr style=<c:out value="${primaryLang eq '3' ? 'display:table-row' : 'display:none' }"/>>
+				  	<th><spring:message code='main.ksa02' /></td>
+				  	<td style="width:50%"><input type="text" id="txtExtensionPhone" size="22" value="${LiteralExtensionPhone }" maxlength="50" style="width:100%"></td>
+				  	<th><spring:message code='main.ksa03' /></td>
+				  	<td><input type="text" id="txtOfficeMobile" size="22" value="${LiteralOfficeMobile }" maxlength="50" style="width:100%"></td>
+				</tr>
         		<tr> 
             		<th rowspan="2"><spring:message code='ezPersonal.t180'/></th> 
             		<td colspan="3" class="onlyUseKo">
@@ -483,5 +535,12 @@
 	<br/>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 		<input id="publicExponent" value="${publicExponent}" type="hidden"/>
+		<script type="text/javascript" src="${util.addVer('email.alias.lang', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email-check.js')}"></script>
+		<script>
+			emailCheckContext.setOnCheckEventListener(function() {
+				document.getElementById("checkmsg").style.height = "15px";
+			});
+		</script>
 	</body>
 </html>

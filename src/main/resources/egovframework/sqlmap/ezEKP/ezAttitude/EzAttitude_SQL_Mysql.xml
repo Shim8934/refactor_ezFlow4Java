@@ -338,7 +338,9 @@
 				INNER JOIN 
 					tbl_attitude_type B 
 				ON 
-					(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
+				]]>
+					(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID AND ISDEL = 0)
+				<![CDATA[
 				INNER JOIN 
 					tbl_usermaster C
 				ON
@@ -2521,5 +2523,57 @@
 						(date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) >= #endDate#)
 					)
 		]]>
+	</select>
+	
+	<select id="ezAttitudeDAO.getAnuualListSchedule" parameterClass="Map"  resultClass="AttitudeVO" remapResults="true">
+			<![CDATA[
+				SELECT 
+					A.ATTITUDE_ID AS ATTITUDEID,
+					IF(
+						date_add(A.START_DATE, INTERVAL #v_OFFSETMIN# minute) < #v_PSTARTDATE#, 
+						CONCAT(substr(#v_PSTARTDATE#,1,11), substr(date_add(A.START_DATE, INTERVAL #v_OFFSETMIN# minute),12)), 
+						date_format(date_add(A.START_DATE, INTERVAL #v_OFFSETMIN# minute), '%Y-%m-%d %H:%i:%S')
+					  ) AS STARTDATE,
+					IF(
+						date_add(A.END_DATE, INTERVAL #v_OFFSETMIN# minute) > #v_PENDDATE#, 
+						CONCAT(substr(#v_PENDDATE#,1,11), substr(date_add(A.END_DATE, INTERVAL #v_OFFSETMIN# minute), 12)), 
+						date_format(date_add(A.END_DATE, INTERVAL #v_OFFSETMIN# minute), '%Y-%m-%d %H:%i:%S')
+					  ) AS ENDDATE,
+					A.TYPE_ID AS TYPEID,
+					B.TYPE_NAME$lang$ AS TYPENAME,
+					B.IMG_PATH AS IMGPATH,
+					C.DISPLAYNAME$lang$ AS WRITERNAME,
+					C.DESCRIPTION$lang$ AS WRITERDEPTNAME
+				FROM   
+					tbl_attitude A 
+				INNER JOIN 
+					tbl_attitude_type B 
+				ON 
+					(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
+				INNER JOIN 
+					tbl_usermaster C
+				ON
+					(C.CN = A.WRITER_ID AND A.COMPANY_ID = C.PHYSICALDELIVERYOFFICENAME AND A.TENANT_ID = C.TENANT_ID)
+				WHERE
+                    A.MODAPPL <> '5'
+				]]>
+				AND
+					A.TYPE_ID NOT IN ('A01', 'A02', 'A03')
+				AND
+					A.TENANT_ID = #v_TENANTID#
+				AND
+					c.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+				AND
+					A.DEPT_ID = #v_DEPTID#
+				<![CDATA[
+				AND  
+					(
+						(START_DATE >= #v_PSTARTDATE# and START_DATE <= #v_PENDDATE#) 
+						or
+						(END_DATE >= #v_PSTARTDATE# and END_DATE < #v_PENDDATE#) 
+						or
+						(START_DATE < #v_PSTARTDATE# and END_DATE >= #v_PENDDATE#)
+					)
+				]]>
 	</select>
 </sqlMap>

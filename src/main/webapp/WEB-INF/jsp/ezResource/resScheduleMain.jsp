@@ -201,9 +201,7 @@
 	    	if (xmlhttp == null || xmlhttp.readyState != 4)
 	            return;
 	    	if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
-		       if (getLang == 3) {
-		    	   schedule_get_holiday();
-		       } else {
+		       if (getLang == 1) {
 			       if (xmlhttp.responseText == "0" || xmlhttp.responseText == "1") {
 			            LunarUse = true;
 			       }
@@ -211,6 +209,8 @@
 			        	LunarUse = false;
 			       }
 			       schedule_get_holiday();
+		       } else {
+		    	   schedule_get_holiday();
 		       }
 	    	}
 	    }
@@ -358,8 +358,10 @@
 
 	                selsd = GetAttribute(srcEl,"dispTime");
 	                
-	                if (selsd != null) { 
-	                	seled = selsd.replace(":00:", ":30:");
+	            	// 2020-01-28 김민성 - 일보기/주보기에서 단위 시간 체크 추가
+	                if (selsd != null && selsd != "") { 
+			            var seledSplit = selsd.split(" ")[1].split(":");
+			            seled = selsd.replace(selsd.split(" ")[1], seledSplit[0] + ":" + leadingZeros(seledSplit[1]*1+30, 2) + ":" + seledSplit[2]);
 	                }
 	            }
 	        } else {
@@ -370,13 +372,8 @@
 	        if (selsd == "" && seled == "") {
 	        	var date = new Date();
 	        	var year = date.getFullYear();	//2018
-	        	var month = date.getMonth()+1;	//0~11
-	        	var day = date.getDate(); 		//1~31
-	        	
-	        	if (month < 10)
-	        		month = "0" + month;
-	        	if (day < 10)
-	        		day = "0" + day;
+	        	var month = leadingZeros(date.getMonth()+1,2);	//0~11
+	        	var day = leadingZeros(date.getDate(),2); 		//1~31
 	        	
 	        	selsd = year + "-" + month + "-" + day;
 	        	seled = year + "-" + month + "-" + day;

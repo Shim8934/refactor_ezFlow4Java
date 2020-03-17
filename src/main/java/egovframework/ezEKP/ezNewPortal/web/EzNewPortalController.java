@@ -94,7 +94,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	/**
 	 * 포탈 호출 함수
 	 */
-	@RequestMapping(value = "/ezNewPortal/newPortalMain.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/ezNewPortal/newPortalMain.do", method={RequestMethod.GET, RequestMethod.POST})
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalMain Start");
 		//초기화면 설정 확인
@@ -205,6 +205,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			if (data.get("roleInfo").toString().equalsIgnoreCase("admin")) {
 				model.addAttribute("utilAdminUrl", data.get("utilAdminUrl"));
 			}
+			//2019-09-20 메신저 설치 부분 추가
+			model.addAttribute("useUtilTalk", data.get("useUtilTalk"));
+			if (data.get("useUtilTalk").toString().equalsIgnoreCase("YES")) {
+				model.addAttribute("talkFilePath", data.get("talkFilePath"));
+			}
+			//2019-10-04 통합검색 추가
+			model.addAttribute("useTotalSearch", data.get("useTotalSearch"));
 		}
 		
 		logger.debug("portalTopMenu End");
@@ -403,6 +410,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
+			boolean useEzWorkspace = "YES".equals(data.get("useEzWorkspace"));
 			model.addAttribute("portletOrder", data.get("portletOrder"));
 			model.addAttribute("usedTheme", data.get("usedTheme"));
 			model.addAttribute("usedFrame", data.get("usedFrame"));
@@ -415,15 +423,22 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("nowMonth", nowMonth);
 			model.addAttribute("useAttitude", data.get("useAttitude"));
 			model.addAttribute("useQuestion", data.get("useQuestion"));
+			model.addAttribute("useSurvey", data.get("useSurvey"));
 			model.addAttribute("useCircular", data.get("useCircular"));
 			model.addAttribute("useMail", data.get("useMail"));
 			model.addAttribute("useApproval", data.get("useApproval"));
 			model.addAttribute("useSchedule", data.get("useSchedule"));
-			model.addAttribute("useEzWorkspace", data.get("useEzWorkspace"));
+			model.addAttribute("useEzWorkspace", useEzWorkspace);
 			model.addAttribute("lastLogin", data.get("lastLogin"));
 			model.addAttribute("userEmail", data.get("userEmail"));
 			model.addAttribute("userId", userId);
+			model.addAttribute("usePortalAutoRefreshInterval", data.get("usePortalAutoRefreshInterval"));
 			
+			if (useEzWorkspace) {
+				model.addAttribute("workspaceHostUrl", data.get("workspaceHostUrl"));
+				model.addAttribute("workspaceContextRootUrl", data.get("workspaceContextRootUrl"));
+			}
+
 			String usedTheme = data.get("usedTheme").toString();
 			returnUrl += "Theme" + usedTheme;
 			logger.debug("returnUrl : " + returnUrl);
@@ -570,7 +585,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
-			unreadCounts.put("pollCount", data.get("pollCount"));
+//			unreadCounts.put("pollCount", data.get("pollCount"));
+			unreadCounts.put("surveyCnt", data.get("surveyCnt"));
 			unreadCounts.put("circularCount", data.get("circularCount"));
 			unreadCounts.put("scheduleCount", data.get("scheduleCount"));
 			unreadCounts.put("approvalCount", data.get("approvalCount"));
@@ -611,8 +627,18 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 				}
 			}
 			
+			String userLang = userInfo.getLang();
+			String imgFolder = "kr";
+			
+			if (userLang.equals("2")) {
+				imgFolder = "kr"; //나중에 en으로 바꾸기
+			} else if (userLang.equals("3")) {
+				imgFolder = "jp";
+			}
+			
 			model.addAttribute("usedTheme", usedTheme);
 			model.addAttribute("themeList", themeList);
+			model.addAttribute("imgFolder", imgFolder);
 		}
 		
 		logger.debug("userThemeSetting End");
@@ -741,6 +767,62 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		}
 		logger.debug("downloadServer="+result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI()))));
 		return result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI())));
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/getPortalInfo.do", method=RequestMethod.GET)
+	@ResponseBody
+	public JSONObject getPortalInfo(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("getPortalInfo Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String url = "/rest/ezPortal/settingInfo/users/" + userId;
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
+		String status = resultBody.get("status").toString();
+		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		Calendar cal = Calendar.getInstance();
+		String nowMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
+		
+		JSONObject result = new JSONObject();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			result = data;
+			model.addAttribute("portletOrder", data.get("portletOrder"));
+			model.addAttribute("usedTheme", data.get("usedTheme"));
+			model.addAttribute("usedFrame", data.get("usedFrame"));
+			model.addAttribute("sliderList", data.get("sliderList"));
+			model.addAttribute("userPhoto", data.get("userPhoto"));
+			model.addAttribute("userName", data.get("userName"));
+			model.addAttribute("userTitle", data.get("userTitle"));
+			model.addAttribute("deptName", data.get("deptName"));
+			model.addAttribute("serverTime", serverTime);
+			model.addAttribute("nowMonth", nowMonth);
+			model.addAttribute("useAttitude", data.get("useAttitude"));
+			model.addAttribute("useQuestion", data.get("useQuestion"));
+			model.addAttribute("useCircular", data.get("useCircular"));
+			model.addAttribute("useMail", data.get("useMail"));
+			model.addAttribute("useApproval", data.get("useApproval"));
+			model.addAttribute("useSchedule", data.get("useSchedule"));
+			model.addAttribute("useEzWorkspace", data.get("useEzWorkspace"));
+			model.addAttribute("lastLogin", data.get("lastLogin"));
+			model.addAttribute("userEmail", data.get("userEmail"));
+			model.addAttribute("userId", userId);
+			model.addAttribute("usePortalAutoRefreshInterval", data.get("usePortalAutoRefreshInterval"));
+			
+		}
+		
+		//김보미 추가 - calenderMini는 ie와 크롬일 때랑 파일이 틀려서 구분값 필요함.
+		boolean checkBrowser;
+		if (req.getHeader("User-Agent").indexOf("Trident") > 0 || req.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+			checkBrowser = true;
+		} else {
+			checkBrowser = false;
+		}
+		
+		result.put("checkBrowser", checkBrowser);
+		
+		logger.debug("getPortalInfo End");
+		return result;
 	}
 	
 	/**

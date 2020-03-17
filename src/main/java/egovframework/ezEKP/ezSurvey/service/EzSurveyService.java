@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzSurveyService {
@@ -56,4 +57,6 @@ public interface EzSurveyService {
 	List<SurveyVO> getTodaySurveyList(int offset);
 	List<SurveyParticipantVO> getSurveyParticipantListForMail(long surveyId, String companyId, int tenantId);
 	void updateMailSentFlag(long surveyId, int mailSentFlag, String companyId, int tenantId) throws Exception;
+	JSONObject checkRespondent(Long surveyId, LoginVO userInfo);
+	int getSurveyIngCnt(MCommonVO userInfo);
 }

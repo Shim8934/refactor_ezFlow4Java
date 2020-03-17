@@ -236,21 +236,23 @@ reformUseProc.updateAllChildControlIdsAndReturnFirstControlInGridRow = function(
 						// a date picker isn't installed when the value of the class is 'hasDatepicker'.
 						child.removeAttribute("class");
 						
+						var dateFormatAttValue = child.getAttribute("data-reform_date_format");
 						$(child).datepicker({
 							changeMonth: true,
 							changeYear: true,
 							autoSize: true,
-							dateFormat: "yy-mm-dd"
+							dateFormat: dateFormatAttValue ? dateFormatAttValue : "yy-mm-dd"
 						});
 					} else {
 						attValue = child.getAttribute("data-reform_time_picker_flag");
 						if (attValue == "1") {
 							child.removeAttribute("class");
 							
+							var timeFormatAttValue = child.getAttribute("data-reform_time_format");
 							var timeGapAttValue = child.getAttribute("data-reform_time_gap");
 							var timeGap = parseInt(timeGapAttValue);
 							$(child).timepicker({
-								'timeFormat': 'H:i',
+								'timeFormat': timeFormatAttValue ? timeFormatAttValue : 'H:i',
 								'step': timeGap
 							});
 						}
@@ -293,21 +295,23 @@ reformUseProc.updateAllChildControlIdsAndReturnFirstControlInGridRow = function(
 									// a date picker isn't installed when the value of the class is 'hasDatepicker'.
 									subchild.removeAttribute("class");
 									
+									var dateFormatAttValue = subchild.getAttribute("data-reform_date_format");
 									$(subchild).datepicker({
 										changeMonth: true,
 										changeYear: true,
 										autoSize: true,
-										dateFormat: "yy-mm-dd"
+										dateFormat: dateFormatAttValue ? dateFormatAttValue : "yy-mm-dd"
 									});
 								} else {
 									attValue = subchild.getAttribute("data-reform_time_picker_flag");
 									if (attValue == "1") {
 										subchild.removeAttribute("class");
 										
+										var timeFormatAttValue = subchild.getAttribute("data-reform_time_format");
 										var timeGapAttValue = subchild.getAttribute("data-reform_time_gap");
 										var timeGap = parseInt(timeGapAttValue);
 										$(subchild).timepicker({
-											'timeFormat': 'H:i',
+											'timeFormat': timeFormatAttValue ? timeFormatAttValue : 'H:i',
 											'step': timeGap
 										});
 									}
@@ -558,7 +562,15 @@ reformUseProc.doDataLoad = function(controls) {
 				}
 			}
 		} else if (controlType == "text" || controlType == "textarea") {
-			controlElement.setAttribute("onchange", "reformUseProc.defaultChangeHandler(this);");
+			var eventName = "";
+			
+			if (controlElement.hasAttribute("data-reform_date_picker_flag") || controlElement.hasAttribute("data-reform_time_picker_flag")) {
+				eventName = "onchange";
+			} else {
+				eventName = "oninput";
+			}
+			
+			controlElement.setAttribute(eventName, "reformUseProc.defaultChangeHandler(this);");
 			
 			// remove the current data
 			controlElement.value = "";
@@ -836,9 +848,11 @@ reformUseProc.onLoadHandler = function() {
 	
 	var stageName = reformUseProc.getCurrentStage();
 	var isRedraft = false;
+	var isReuse = false;
 	
 	if (window.parent && parent.parent) {
 		isRedraft = parent.parent.pDraftFlag === "REDRAFT";
+		isReuse = parent.parent.isUsed === "reuse";
 	}
 	
 	// hide hidden controls
@@ -920,7 +934,18 @@ reformUseProc.onLoadHandler = function() {
 						}
 					}
 				} else if (typeof (controlElement.type) !== "undefined" && controlElement.type != "button") {
-					controlElement.setAttribute("onchange", "reformUseProc.defaultChangeHandler(this);");
+					var eventName;
+					if (controlElement.type == "text" || controlElement.type === "textarea") {
+						if (controlElement.hasAttribute("data-reform_date_picker_flag") || controlElement.hasAttribute("data-reform_time_picker_flag")) {
+							eventName = "onchange";
+						} else {
+							eventName = "oninput";
+						}
+					} else {
+						eventName = "onchange";
+					}
+					
+					controlElement.setAttribute(eventName, "reformUseProc.defaultChangeHandler(this);");
 				}
 			}
 		}
@@ -987,18 +1012,19 @@ reformUseProc.onLoadHandler = function() {
 						beforeShowDay: disableSomeDay
 					});									
 				} else {
+					var dateFormatAttValue = controlElement.getAttribute("data-reform_date_format");
 					$(controlElement).datepicker({
 						changeMonth: true,
 						changeYear: true,
 						autoSize: true,
-						dateFormat: "yy-mm-dd"
+						dateFormat: dateFormatAttValue ? dateFormatAttValue : "yy-mm-dd"
 							/*
 							 * showOn: "both", buttonImage: "/images/imgicon/calendar-month.gif", buttonImageOnly: true
 							 */
 					});					
 				}
 				
-				if (stageName == "draft" && (!isRedraft || $(controlElement).val() === "")) {
+				if (stageName == "draft" && (!(isRedraft || isReuse) || $(controlElement).val() === "")) {
 					$(controlElement).datepicker('setDate', new Date());
 				}
 			}
@@ -1036,22 +1062,35 @@ reformUseProc.onLoadHandler = function() {
 			if (controlElement != null) {
 				controlElement.removeAttribute("class");
 				
+				var timeFormatAttValue = controlElement.getAttribute("data-reform_time_format");
 				var timeGapAttValue = controlElement.getAttribute("data-reform_time_gap");
 				var timeGap = parseInt(timeGapAttValue);
 				$(controlElement).timepicker({
-					'timeFormat': 'H:i',
+					'timeFormat': timeFormatAttValue ? timeFormatAttValue : 'H:i',
 					'step': timeGap
 				});
 				
-				if (stageName == "draft" && (!isRedraft || $(controlElement).val() === "")) {
-					$(controlElement).timepicker('setTime', new Date());
+				if (stageName == "draft" && (!(isRedraft || isReuse) || $(controlElement).val() === "")) {
+					//2020-03-12 김정언 : 근태관리 연동 양식 일때
+					if (document.getElementById('attitude_annual_conn') || parent.document.getElementById('attitude_annual_conn')){
+						var currentTime = new Date().getHours();
+				    	  if(i == 0){
+				    		  $(controlElement).timepicker('setTime', new Date(0,0,0,currentTime,0,0));    		  
+				    	  }else{
+				    		  var plusTime = currentTime + 2;
+				    		  $(controlElement).timepicker('setTime', new Date(0,0,0,plusTime,0,0));
+				    	  }						
+					}else{
+						$(controlElement).timepicker('setTime', new Date());
+					}
+					
 				}
 			}
 		}
 	}
 	
 	// if it is in the approve stage, just leave the data intact at the load time.
-	if (stageName != "draft") {
+	if (stageName != "draft" && !reformUseProc.isEditMode()) {
 		reformUseProc.resizeFrame();
 		return;
 	}
@@ -1303,7 +1342,6 @@ function reform_onClickHandler(event) {
 			return false;
 		}
 	} else if (controlElement.type == "button") {
-		reformUseProc.defaultChangeHandler(controlElement);
 		
 		var clickHandler = controlElement.getAttribute("data-reform_on_click");
 		if (clickHandler != null && clickHandler != "") {
@@ -1312,6 +1350,9 @@ function reform_onClickHandler(event) {
 				handler(controlElement);
 			} catch (e) {}
 		}
+		
+		// 리사이즈 관련 버그로 인해 defaultChangeHandler의 호출 순서를 뒤로 변경 2019-09-05 임민석
+		reformUseProc.defaultChangeHandler(controlElement);
 	} else if (controlElement.type == "text") {
 		controlElement.focus();
 		

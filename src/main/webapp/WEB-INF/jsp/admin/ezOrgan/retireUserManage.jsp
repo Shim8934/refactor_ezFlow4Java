@@ -250,8 +250,8 @@
 			        	success : function(result) {			        	    
 			        	    if (result == "OK") {
 			        			alert(strLang9);
-			        	    } else if (result == "DIFF_COMPANY") {
-			        	    	alert(strLangLHM01);
+			        	    // } else if (result == "DIFF_COMPANY") {
+			        	    //	alert(strLangLHM01);
 			        	    } else {
 			        	        alert(strLang10);
 			        	    }

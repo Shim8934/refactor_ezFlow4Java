@@ -89,9 +89,13 @@ public interface EzResourceService {
 	
 	public void moveResourceToOtherResourceGroup(String originResourceGroupId, String selectedResourceGroupId, int tenantId, String companyID) throws Exception;
 	
-	public String isResourceGroupManager(String selectedResourceGroupId, String userId, int tenantId, String companyID) throws Exception;
+	public String isResourceGroupManager(String selectedResourceGroupId, String userId, int tenantId, String companyID, String deptID) throws Exception;
 	
 	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID, String deptID) throws Exception;
 
-	public List<String> getAttachList(String resID, String companyID, int tenantId) throws Exception;
+	public List<ResBrdVO> getResourcePortlet(String loginCookie, String date) throws Exception;
+
+	public String saveResourcePortlet(String loginCookie, String resources) throws Exception;
+	
+	public List<String> getAttachList(String resID, String companyID, int tenantId) throws Exception;	
 }

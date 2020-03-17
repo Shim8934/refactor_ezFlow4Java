@@ -56,6 +56,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
@@ -89,6 +90,9 @@ public class EzPMSController {
 
 	@Autowired
 	private EzOrganService ezOrganService;
+	
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
 
 	// 유은정 작성
 	/**
@@ -1001,7 +1005,7 @@ public class EzPMSController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPMS/pmsSelectAuth.do")
-	public String selectAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String selectAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezPMS selectAuth started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1011,6 +1015,7 @@ public class EzPMSController {
 		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezPMS/depts", param, request, "get", null);
 		String status = result.get("status").toString();
 		String type = request.getParameter("type");
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
 		if (status.equals("ok")) {
 			JSONArray deptList = (JSONArray) result.get("data");
@@ -1037,6 +1042,7 @@ public class EzPMSController {
 			model.addAttribute("userId", userInfo.getId());
 			model.addAttribute("userName", userInfo.getDisplayName1());
 			model.addAttribute("userDept", userInfo.getDeptName1());
+			model.addAttribute("primaryLang", primaryLang);
 		}
 
 		String rtnStr = "";

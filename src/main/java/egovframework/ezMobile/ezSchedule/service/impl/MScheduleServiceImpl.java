@@ -306,7 +306,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		map.put("v_DATETYPE", jsonParam.get("dateType").toString());
 		map.put("v_STARTDATE", utcStartDate);
 		map.put("v_ENDDATE", utcEndDate);
-		map.put("v_REPETITION", "");
+		map.put("v_REPETITION", jsonParam.get("repetition").toString());
 		map.put("v_SCHEDULETYPE", jsonParam.get("scheduleType").toString());
 		map.put("v_TITLE", jsonParam.get("title").toString());
 		map.put("v_LOCATION", jsonParam.get("location").toString());
@@ -407,7 +407,8 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		
 		String pidList = "'" + info.getUserId() + "'," + "'" + info.getDeptId() + "'," + "'" + info.getCompanyId() + "'";
 		String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
-		
+		//2020-02-24 김정언
+		String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", info.getTenantId());
 		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(info.getUserId(), info.getTenantId(), info.getCompanyId());
 		
 		for (int i = 0; i < gList.size(); i++) {
@@ -422,7 +423,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			}	
 		}
 
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList,"\'\'", searchColumn, utcStartTime, utcEndTime, startDate, endDate, searchData, offSetMin, searchTitle, info.getTenantId(),info.getCompanyId(), info.getDeptId());
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList,"\'\'", searchColumn, utcStartTime, utcEndTime, startDate, endDate, searchData, offSetMin, searchTitle, info.getTenantId(), info.getCompanyId(), info.getUserId(), info.getDeptId(), useAnnualScheduleYN);
 		
 		Collections.sort(sList, new EzScheduleCompareUtilPublic());
 		

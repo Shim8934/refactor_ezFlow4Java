@@ -36,6 +36,7 @@
 	      	var operatorMailAddress = "${operatorMailAddress}";
 	      	var receiveText = "<spring:message code='ezEmail.t516' />";
 	      	var pRefreshinterval = "${refreshInterval}";
+	      	var spamOutLoginURI = "${spamOutLoginURI}";
 	      	var pSaveInterval = 0;
 		    var nextMailListRefreshTime = 0;
 		    var refreshIntervalTimerId = 0;
@@ -45,6 +46,11 @@
 	      	var sendPermission = "";
 	      	var managePermission = "";
 	      	var treeviewStr = "PostTreeView";
+	      	var cryptResult = '<c:out value="${cryptResult}"/>';
+			var spamSniperUrl = '<c:out value="${spamSniperUrl}"/>';
+			var useSpamSniper = '<c:out value="${useSpamSniper}"/>';
+			var shareCryptResult = "";
+			var configFlag = "false";
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -465,11 +471,14 @@
 	                    } else {
 	                        window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "&nbsp;&nbsp;" + unreadcount);
 	                    }
-	                    
-	                    var pageSrc = parent.frames["right"].document.location.toString();
-	                    if (pageSrc.indexOf("mailList.do") != -1) {
-                        	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) { }
-	                    }
+						if (typeof parent.frames["right"] != "undefined") {
+							if (parent.frames["right"] != null){
+								var pageSrc = parent.frames["right"].document.location.toString();
+								if (pageSrc.indexOf("mailList.do") != -1) {
+		                        	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) { }
+			                    }
+		                    }
+	                  	}
 	                }
 	                
 	                setTotalUnreadCount(shareId, parseInt(totalUnreadCount));
@@ -558,7 +567,7 @@
 	            return get_unreadcount_2010();
 	        }
 	        function check_pop3() {
-	            var OpenWin = window.open("/ezEmail/mailGetPop3.do", "mail_getpop3_cross", GetOpenWindowfeature(460, 360));
+	            var OpenWin = window.open("/ezEmail/mailGetPop3.do", "mail_getpop3_cross", GetOpenWindowfeature(460, 375));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        var mail_foldermanage_Cross_dialogArguments = new Array();
@@ -674,12 +683,19 @@
 	            try {
 	                var url;
 	                
-	                url = "http://gwspam.bizmeka.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
+	                url = "https://gwspam.bizmeka.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
 	                window.open(url, "right");
 	            } catch (e) {	                
 	            }	            
 	        }
 	        
+			function oepnSpamOutBox() {
+				try {
+					window.open(spamOutLoginURI, "right");
+				} catch (e) {
+				}
+			}
+
 	        function Open_ReservationManage() {
 	            var OpenWin = window.open("/ezEmail/mailReservation.do", "mail_reservation_cross", GetOpenWindowfeature(501, 350));
 	            try { OpenWin.focus(); } catch (e) { }
@@ -836,10 +852,12 @@
 		    	document.getElementById("folderPanel").style.display = "none";
 		        document.getElementById("folderMenuDiv").style.display = "none";
 		    	
-		        if (parent.frames["right"].document.getElementById("mailPanel")) {
-			        if (parent.frames["right"].document.getElementById("mailPanel").style.display == "") {
-			        	parent.frames["right"].document.getElementById("mailPanel").style.display = "none";
-			        }
+		        if (typeof parent.frames["right"] != "undefined") {
+		        	if (document.getElementById("mailPanel") != null){
+				        if (parent.frames["right"].document.getElementById("mailPanel").style.display == "") {
+				        	parent.frames["right"].document.getElementById("mailPanel").style.display = "none";
+				        }
+		        	}
 		        }
 		    }
 		    
@@ -1276,6 +1294,51 @@
 	        		$("#" + ulId).attr("class", "lnbUL");
 	        	}
 	        }
+			
+			function shareMailAddress(){
+				if(useSpamSniper == ''){
+					return;
+				}
+				if (shareId == "") {
+					return;
+				}
+				
+            	$.ajax ({
+    				type:"GET",
+    				async: true,
+    				url : "/ezEmail/shareBoxSpam.do",
+    				data : { 
+    					 "shareId"   		: shareId
+    					},
+    				dataType: "JSON",
+    				success : function (data) {
+    					shareCryptResult = data.cryptResult;
+    					spamMailBox();
+    				},
+    				error : function(error) {
+    					console.log(error);
+    				}
+    			});
+			}
+			
+			function spamMailBox(){
+				var cryptValue = "";
+				
+				if(shareId == ""){
+					cryptValue = cryptResult;
+				} else {
+					cryptValue = shareCryptResult;
+				}
+				
+				if (cryptValue == '' || spamSniperUrl == '' ){
+					alert("<spring:message code='ezEmail.lhm14' />");
+					return;
+				}
+				
+                var url = spamSniperUrl + "?email=" + cryptValue + "&init=mail";
+                window.open(url, "right");
+			}
+			
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1328,10 +1391,17 @@
 		            <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
 		            	<li onclick="operatorSendMail()"><span class="sub_iconLNB left_admin_mail"></span><span class="list_text"><spring:message code="ezEmail.0hun01" /></span></li>
 		            </c:if>	
+		            <c:if test="${useSpamSniper ne null && useSpamSniper != '' && useSpamSniper != 'NO'}">
+		            	<li onclick="spamMailBox()"><span class="sub_iconLNB tree_junk"></span><span class="list_text">스팸편지함</span></li>
+		            </c:if>
+		            <c:if test="${useSpamOut}">
+		            	<li onclick="oepnSpamOutBox()"><span class="sub_iconLNB tree_junk"></span><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
+		            </c:if>
 		        </ul>
 		        <c:if test="${useSharedMailbox == 'YES'}">
 			        <c:forEach items="${shareInfoList}" var="shareInfo">
-			        	<h2 class="off" id="h2_${shareInfo.shareId}" onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}', '${shareInfo.managePermission}');">
+			        	<h2 class="off" id="h2_${shareInfo.shareId}" title="${shareInfo.shareName}" 
+			        		 onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}', '${shareInfo.managePermission}');">
 			        		<span class="sub_iconLNB tree_arrow_up"></span>
 			        		<span class="h2Title" id="h2Title_${shareInfo.shareId}" style="display:inline-block"><c:out value="${shareInfo.shareName}" /></span>&nbsp;&nbsp;
 			        		<span id="totalUnreadCount_${shareInfo.shareId}" style="color:#0470e4; position:absolute;">
@@ -1344,6 +1414,9 @@
 			        		<c:if test="${shareInfo.managePermission eq 'Y'}">
 			        			<li onclick="mail_Config('${shareInfo.shareId}')"><span class="sub_iconLNB tree_setting_gray"></span><span class="list_text"><spring:message code="ezEmail.t99000044" /></span></li>
 			        		</c:if>
+			        		<c:if test="${useSpamSniper ne null && useSpamSniper != '' && useSpamSniper != 'NO'}">
+				            	<li onclick="shareMailAddress()"><span class="sub_iconLNB tree_junk"></span><span class="list_text">스팸편지함</span></li>
+				            </c:if>		
 			        	</ul>
 			        	<script>
 			        		setTotalUnreadCount("${shareInfo.shareId}", parseInt("${shareInfo.totalUnreadCount}"));

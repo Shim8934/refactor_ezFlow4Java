@@ -58,13 +58,16 @@
 				}
 			};
 		   
-			window.onload = function() {				
+			window.onload = function() {
 				preProcessing();				
 				makePageSelPage();
 				getConnect();
 				paginationProcess();
 				creatorResultAlert();
-			}		
+				
+				/* 2020-02-05 홍승비 - 현재 진입한 투표 리스트 종류에 맞는 좌측메뉴가 하이라이트되도록 수정 */
+				selectPollMenuNode("<c:out value='${pollType}'/>");
+			}
 			
 			function getConnect() {
 			    var socket = new SockJS('/hello');
@@ -460,6 +463,17 @@
 				}
 		    }
 		    
+		    /* 2020-02-05 홍승비 - pollType에 따라서 좌측메뉴의 하이라이트를 변경하는 함수 */
+		    function selectPollMenuNode(pollType) {
+				var leftFrame = window.parent.document.getElementsByName("left")[0].contentWindow.document;
+				var selectedPollMenu = $(leftFrame).find(".node_selected[pollid='" + pollType +"']");
+				
+				if (selectedPollMenu.length == 0) { // 현재 투표 리스트 타입과 선택된 좌측메뉴가 다른 경우에만 진행
+	        		$(leftFrame).find(".node_selected").attr("class","node_normal");
+	        		$(leftFrame).find(".node_normal[pollid='" + pollType +"']").attr("class","node_selected");
+				}
+		    }
+		    
 		</script>
 	</head>
 	<body class="mainbody" style="min-width: 750px;">
@@ -469,7 +483,7 @@
 				<spring:message code="ezPoll.psb256"/>
 			</c:when>
 			<c:when test="${pollType eq '1' }">
-				<spring:message code="ezPoll.t237"/> <spring:message code="ezPoll.t103" />
+				<spring:message code="ezPoll.hdp18"/>
 			</c:when>
 			<c:when test="${pollType eq '4' }">
 				<spring:message code="ezPoll.psb257"/>

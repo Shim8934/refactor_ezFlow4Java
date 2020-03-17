@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-4.7.0/css/font-awesome.min.css')}" type="text/css"/>
 		<style>
 			#div_AprLine .mainlist tr th {
 				border-top:0px;
@@ -691,7 +692,11 @@
 				    pChackYN = "SEARCH";
 				    
 				    for (var i = 0; i < 20; i++) {
-				        SearchCond[i] = condition[i];
+				    	if (condition[i] == null) {
+				    		condition[i] = "";
+				    	}
+				    	
+				        SearchCond[i] = replaceCond(condition[i]);
 				    }
 				
 				    pageNum = 1;
@@ -791,10 +796,13 @@
 			        }
 			
 			        if (selectSearch.item(0).selected) {
-			            SearchCond[1] = document.getElementById("txt_keyword").value;
+			            SearchCond[1] = replaceCond(document.getElementById("txt_keyword").value);
 			        } else if (selectSearch.item(1).selected) {
-			            SearchCond[2] = document.getElementById("txt_keyword").value;
-			        }
+			            SearchCond[2] = replaceCond(document.getElementById("txt_keyword").value);
+			        } else if (selectSearch.item(2).selected) {
+			        	SearchCond[17] = replaceCond(document.getElementById("txt_keyword").value);
+			        } //2019.12.30 김정언 - 기안부서 검색 추가
+			        
 			    } else {
 			        alert(strLang1106);
 			        return;
@@ -802,6 +810,11 @@
 			    
 			    pageNum = 1;
 			    GetDocList();
+			}
+			
+			//2018-10-01 김보미 - 년도가 string값이 아니라 발생하는 버그 수정
+			function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
+				return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 			}
 			
 			var Tab1_SelectID = "";
@@ -873,6 +886,7 @@
 	        	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezApprovalG.t445'/></option>
+		    		<option value="rad_Department"><spring:message code='ezApproval.t437'/></option>
 		    	</select>
 			  	<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          	<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search()"></a>

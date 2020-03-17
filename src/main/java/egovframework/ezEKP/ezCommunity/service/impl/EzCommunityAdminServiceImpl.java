@@ -45,20 +45,22 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityAdminServiceImpl.class);
 
+	/* 2020-01-06 홍승비 - 폐쇄사유 검색옵션 추가 */
 	@Override
-	public int aspCloseComGet2(String keyword, String sRadio, String lang, String companyID, int tenantID) throws Exception {
+	public int aspCloseComGet2(String searchValue, String searchType, String searchType2, String lang, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCloseComGet2 started.");
-		logger.debug("v_S_RADIOL" + sRadio);
+		logger.debug("v_S_RADIO=" + searchType + ", v_SEARCHTYPE2=" + searchType2);
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_KEYWORD",  keyword);
-		map.put("v_S_RADIO",  sRadio);
+		map.put("v_KEYWORD",  searchValue);
+		map.put("v_S_RADIO",  searchType);
+		map.put("v_SEARCHTYPE2",  searchType2);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		int result = 0;
 		
-		if (!keyword.equals("") || !sRadio.equals("")) {
+		if (!searchValue.equals("") || !searchType.equals("")) {
 			result = ezCommunityAdminDAO.aspCloseComGet2Select1(map);
 		} else {
 			result = ezCommunityAdminDAO.aspCloseComGet2Select2(map);
@@ -71,13 +73,14 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
 	@Override
-	public List<CommunityCComCloseVO> aspCloseComGet1(String keyword, String sRadio, String lang, int pageNum, String offSetMin, String companyID, int tenantID) throws Exception {
+	public List<CommunityCComCloseVO> aspCloseComGet1(String searchValue, String searchType, String searchType2, String lang, int pageNum, String offSetMin, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCloseGet1 started.");
-		logger.debug("keyword=" + keyword + ", sRadio=" + sRadio);
+		logger.debug("keyword=" + searchValue + ", sRadio=" + searchType + ", searchType2=" + searchType2);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_KEYWORD", keyword);
-		map.put("v_S_RADIO", sRadio);
+		map.put("v_KEYWORD", searchValue);
+		map.put("v_S_RADIO", searchType);
+		map.put("v_SEARCHTYPE2",  searchType2);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_STARTROW", 10 * (pageNum - 1));
 		map.put("v_OFFSETMIN", offSetMin);
@@ -86,7 +89,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		List<CommunityCComCloseVO> list = null;
 		
-		if (!keyword.equals("") || !sRadio.equals("")) {
+		if (!searchValue.equals("") || !searchType.equals("")) {
 			list = ezCommunityAdminDAO.aspCloseComGet1Select1(map);
 		} else {
 			list = ezCommunityAdminDAO.aspCloseComGet1Select2(map);
@@ -193,21 +196,23 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		logger.debug("commCloseAll ended.");
 	}
 
+	/* 2020-01-06 홍승비 - 커뮤니티소개 검색옵션 추가 */
 	/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(총 n개 카운트) */
 	@Override
-	public int aspAdmitComGet2(String keyword, String sRadio, String lang, String companyID, int tenantID) throws Exception {
+	public int aspAdmitComGet2(String searchValue, String searchType, String searchType2, String lang, String companyID, int tenantID) throws Exception {
 		logger.debug("aspAdmitComGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_KEYWORD", keyword);
-		map.put("v_S_RADIO", sRadio);
+		map.put("v_KEYWORD", searchValue);
+		map.put("v_S_RADIO", searchType);
+		map.put("v_SEARCHTYPE2", searchType2);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		int result = 0;
 		
-		if (!keyword.equals("") || !sRadio.equals("")) { // 검색어 존재
+		if (!searchValue.equals("") || !searchType.equals("")) { // 검색어 또는 검색용 카테고리 존재
 			result = ezCommunityAdminDAO.aspAdmitComGet2Select1(map);
 		} else { // 검색어 없음
 			result = ezCommunityAdminDAO.aspAdmitComGet2Select2(map);
@@ -218,14 +223,16 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		return result;
 	}
 
+	/* 2020-01-06 홍승비 - 커뮤니티소개 검색옵션 추가 */
 	/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) */
 	@Override
-	public List<CommunityClubVO> aspAdmitComGet1(String keyword, String sRadio, String lang, int pageNum, String offSetMin, String companyID, int tenantID) throws Exception {
+	public List<CommunityClubVO> aspAdmitComGet1(String searchValue, String searchType, String searchType2, String lang, int pageNum, String offSetMin, String companyID, int tenantID) throws Exception {
 		logger.debug("aspAdmitComGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_KEYWORD", keyword);
-		map.put("v_S_RADIO", sRadio);
+		map.put("v_KEYWORD", searchValue);
+		map.put("v_S_RADIO", searchType);
+		map.put("v_SEARCHTYPE2", searchType2);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_STARTROW", 10 * (pageNum - 1));
 		map.put("v_OFFSETMIN", offSetMin);
@@ -234,9 +241,9 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		List<CommunityClubVO> list = null;
 		
-		if (!keyword.equals("") || !sRadio.equals("")) {
+		if (!searchValue.equals("") || !searchType.equals("")) { // 검색어 또는 검색용 카테고리 존재
 			list = ezCommunityAdminDAO.aspAdmitComGet1Select1(map);
-		} else {
+		} else { // 검색어 없음
 			list = ezCommunityAdminDAO.aspAdmitComGet1Select2(map);
 		}
 		
@@ -350,15 +357,17 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		logger.debug("aspCommCloseAllUpdate ended.");
 	}
 
+	/* 2020-01-03 홍승비 - 커뮤니티 검색 시 커뮤니티소개 검색옵션 다시 추가 */
 	/* 관리자 > 커뮤니티검색화면 표출(총 n개 keywordCount) 시 companyID 조건 추가 */
 	@Override
-	public int aspSearchKeyGet2(String lang, String select, String query, String companyID, int tenantID) throws Exception {
+	public int aspSearchKeyGet2(String lang, String searchType, String searchType2, String searchValue, String companyID, int tenantID) throws Exception {
 		logger.debug("aspSearchKeyGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", lang);
-		map.put("v_STRSELECT", select);
-		map.put("v_STRQUERY", query);
+		map.put("v_STRSELECT", searchType);
+		map.put("v_STRSELECT2", searchType2);
+		map.put("v_STRQUERY", searchValue);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -369,16 +378,18 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		return result;
 	}
 
+	/* 2020-01-03 홍승비 - 커뮤니티 검색 시 커뮤니티소개 검색옵션 다시 추가 */
 	/* 관리자 > 커뮤니티검색화면 표출(하단 리스트) 시 companyID 조건 추가, deptID 가져오기 */
 	@Override
-	public List<CommunityClubVO> aspSearchKeyGet1(String primary, int pageNum, String select, String query, String offSetMin, String companyID, int tenantID) throws Exception {
+	public List<CommunityClubVO> aspSearchKeyGet1(String primary, int pageNum, String searchType, String searchType2, String searchValue, String offSetMin, String companyID, int tenantID) throws Exception {
 		logger.debug("aspSearchKeyGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("primary", primary);
 		map.put("v_STARTROW", 10 * (pageNum - 1));
-		map.put("v_STRSELECT", select);
-		map.put("v_STRQUERY", query);
+		map.put("v_STRSELECT", searchType);
+		map.put("v_STRSELECT2", searchType2);
+		map.put("v_STRQUERY", searchValue);
 		map.put("v_OFFSETMIN", offSetMin);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
@@ -561,8 +572,9 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 				if (cBoard.getRe_Level() > 0) {
 					 int wid = 10 * cBoard.getRe_Level();
 					 
+					 /* 2020-01-20 홍승비 - 아이콘 정렬 수정 */
                      strHTML.append("<img src=\"/images/dum.gif\" width=\"" + wid + "\" height=\"1\" border=\"0\">"); 
-                     strHTML.append("<img src=\"/images/i_rep.gif\" alt border=\"0\" VALIGN=\"TOP\">"); 
+                     strHTML.append("<img src=\"/images/i_rep.gif\" alt border=\"0\" style=\"vertical-align:middle;\">&nbsp;"); 
 				}
 			}
 			
@@ -570,7 +582,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 
 			if (cBoard.getWriteDay().compareTo(nowDate) >= 0) {
-				strHTML.append("<img src=\"/images/i_new.gif\" alt border=\"0\">&nbsp;");
+				strHTML.append("<img src=\"/images/i_new.gif\" alt border=\"0\" style=\"vertical-align:middle;\">&nbsp;");
 			}
 			
 			strHTML.append(commonUtil.cleanValue(cBoard.getTitle().trim())+"</nobr></td>");
@@ -619,14 +631,16 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		return strHTML.toString();
 	}
 	
+	/* 2020-01-06 홍승비 - 폐쇄한 커뮤니티 검색 시 폐쇄사유 추가 */
 	//2018-02-06 김혜정 - 폐쇄된 커뮤니티 갯수
 	@Override
-	public int getClosedCommuListCount(String lang, Locale locale, String searchValue, String companyId, int tenantId) throws Exception {
+	public int getClosedCommuListCount(String lang, Locale locale, String searchType2, String searchValue, String companyId, int tenantId) throws Exception {
 		logger.debug("getClosedCommuListCount started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_PCLOSESTATE", "1");
+		map.put("v_SEARCHTYPE2", searchType2);
 		map.put("v_STRQUERY", searchValue);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -638,14 +652,16 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		return result;
 	}
 
+	/* 2020-01-06 홍승비 - 폐쇄한 커뮤니티 검색 시 폐쇄사유 추가 */
 	//2018-02-06 김혜정 - 폐쇄된 커뮤니티 리스트
 	@Override
-	public List<CommunityCComCloseVO> getClosedCommuList(String primary, Locale locale, int pageNum, String searchValue, String offSetMin, String companyId, int tenantId) throws Exception {
+	public List<CommunityCComCloseVO> getClosedCommuList(String primary, Locale locale, int pageNum, String searchType2, String searchValue, String offSetMin, String companyId, int tenantId) throws Exception {
 		logger.debug("getClosedCommuList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("primary", primary);
 		map.put("v_PCLOSESTATE", "1");
+		map.put("v_SEARCHTYPE2", searchType2);
 		map.put("v_STRQUERY", searchValue);
 		map.put("v_STARTROW", 10 * (pageNum - 1));
 		map.put("v_OFFSETMIN", offSetMin);

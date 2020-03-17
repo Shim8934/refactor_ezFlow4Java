@@ -146,7 +146,7 @@
 			}
 		</script>
 	</head>
-	<body class="popup">
+	<body class="popup" style="margin:5px 10px 9px;">
 		<form method="post">
 		  <div id="normalScreen">
 		    <div id="menu" style="margin-bottom:19px; margin-top:7px;">

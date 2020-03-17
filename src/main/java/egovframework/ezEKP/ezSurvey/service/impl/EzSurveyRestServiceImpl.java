@@ -442,4 +442,14 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		return resultBody;
 	}
 
+	@Override
+	public JSONObject checkRespondent(HttpServletRequest request, String userId, int itemId) throws Exception {
+		String url                = "/rest/ezsurvey/check/respondent/";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("itemId", itemId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+
 }

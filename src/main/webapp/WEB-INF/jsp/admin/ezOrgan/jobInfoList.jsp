@@ -47,6 +47,7 @@
 		
 		var pCompanyID = "${userInfo.companyID}";
 		var pCompanyNM = "${userInfo.companyName}";
+		var isPrimary = "<c:out value='${userInfo.primary}'/>"; // 다국어 처리용 primary값
 		
 		document.onselectstart = function () {
             if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -145,7 +146,22 @@
 			var oArrRows = jobList.GetSelectedRows();
 			if (oArrRows != 0) {
 				var pJobID = oArrRows[0].getAttribute("DATA1");
-				var pJobNM = oArrRows[0].childNodes[1].textContent;
+				var pJobNM = "";
+				
+				/* 2020-01-22 홍승비 - 직위관리 및 직책관리 우측의 표기이름에 다국어 적용 */
+				if (Tab1_SelectID == "001") { // 직위
+					if (isPrimary == "1") { // 기본 언어
+						pJobNM = oArrRows[0].childNodes[1].textContent;
+					} else {
+						pJobNM = oArrRows[0].childNodes[2].textContent;
+					}
+				} else { // 직책
+					if (isPrimary == "1") { // 기본 언어
+						pJobNM = oArrRows[0].childNodes[0].textContent;
+					} else {
+						pJobNM = oArrRows[0].childNodes[1].textContent;
+					}
+				}
 				
 				$.ajax({
 	            	type : "POST",
@@ -680,7 +696,7 @@
 							<span class="preview_title" id="preview_title"></span>
 							<span class="preview_count" id="preview_count"></span>
 							<span id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px; margin-top: -9px;">
-								<select id="searchType" style="height: 26px; width: 50px;"><option value="displayname"><spring:message code='main.t76' /></option></select>
+								<select id="searchType" style="height: 26px; width: 55px;"><option value="displayname"><spring:message code='main.t76' /></option></select>
 								<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px;">
 								<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.gif" style="width: 26px; height: 26px; margin-top:2px;" border="0" onClick="search()"></a>
 							</span>
@@ -701,7 +717,7 @@
 		<div id="preview_nodata" class="preview_nodata">
 			<dl class="nodata_sIcon">
 				<dt><img src="/images/kr/main/noData_sIcon.png"></dt>
-				<dd id="nodata_title" style="font-family: malgun gothic"></dd>
+				<dd id="nodata_title"></dd>
 			</dl>
 		</div>
 	</div>
@@ -778,11 +794,11 @@
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
-			<WIDTH></WIDTH>
+			<WIDTH>50</WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
-			<WIDTH></WIDTH>
+			<WIDTH>50</WIDTH>
 			</HEADER>
     	</HEADERS>
   	</LISTVIEWDATA>

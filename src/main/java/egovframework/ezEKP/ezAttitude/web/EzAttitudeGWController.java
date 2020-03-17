@@ -373,7 +373,6 @@ public class EzAttitudeGWController {
 		try {
 	         String userId = request.getParameter("userId");
 	         String serverName = request.getHeader("x-user-host");
-	         String lang = request.getParameter("lang");
 	         MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 	         
 	         LOGGER.debug("userId : " + userId);
@@ -382,7 +381,7 @@ public class EzAttitudeGWController {
 	         if (companyId == null || companyId.equals("")) {
 	            companyId = info.getCompanyId();
 	         }
-	         List<DeptViewVO> deptList = ezAttitudeService.getDeptViewList(userId, companyId, info.getTenantId(), lang);
+	         List<DeptViewVO> deptList = ezAttitudeService.getDeptViewList(userId, companyId, info.getTenantId(), info.getPrimary());
 	         
 	         result.put("status", "ok");
 	         result.put("code", 0);
@@ -2932,11 +2931,13 @@ public class EzAttitudeGWController {
 			String attitudeTypeList = request.getParameter("attitudeTypeList");
 			String startDateList = request.getParameter("startDateList");
 			String endDateList = request.getParameter("endDateList");
+			String startTimeList = request.getParameter("startTimeList");
+			String endTimeList = request.getParameter("endTimeList");
 			String docId = request.getParameter("docId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			status = ezAttitudeService.approvalGConn(userId, info.getDeptId(), content, mobile, attitudeTypeList, startDateList, endDateList, docId, info.getOffSet(), info.getCompanyId(), info.getTenantId());
+			status = ezAttitudeService.approvalGConn(userId, info.getDeptId(), content, mobile, attitudeTypeList, startDateList, endDateList, startTimeList, endTimeList, docId, info.getOffSet(), info.getCompanyId(), info.getTenantId());
 			
 			if (status == 1) {
 				result.put("status", "ok");

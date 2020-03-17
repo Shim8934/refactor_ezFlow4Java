@@ -502,4 +502,8 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(Map<String, Object> map) {
 		return (List<PortalTopOtherCompanyAddJobVO>) list("EzPortalDAO.getAllCompanyList", map);
 	}
+	
+	public String chkBoardReadAuthor(Map<String, Object> param) {
+		return (String) select("EzPortalDAO.chkBoardReadAuthor", param);
+	}
 }

@@ -959,7 +959,7 @@
 				<th nowrap><spring:message code="ezEmail.t642" /></th>
 				<td style="width:100%, padding:8px;">
 					<div style="margin: 5px 5px 0px 5px;padding: 3px;">
-					    <select id="select2" style="height: 25px;margin-right: 5px;width: 86px;">
+					    <select id="select2" style="height: 25px;margin-right: 5px;">
 					    	<option value="ALL"><spring:message code="ezEmail.t643" /></option>      
 						    <c:forEach var="folderName" items="${topLevelFolderNames}" varStatus="status">
 						    <option value="${folderName}">
@@ -1027,7 +1027,7 @@
 		     	<th><spring:message code="ezEmail.t653" /></th>	
 			    <td style="height: 40px;">
 			    	<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code="ezEmail.t654" /></label>
-			    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;">
+			    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;" readonly> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;" readonly>
 			    </td>
 			</tr>
 		</tbody></table>

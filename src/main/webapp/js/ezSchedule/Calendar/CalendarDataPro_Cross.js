@@ -4,29 +4,54 @@ var xmlhttp;
 var delFlag = false;
 
 function CalViewSource(chk_str) {
-    $.ajax({
-		type : "POST",
-		dataType : "text",
-		async : (!delFlag ? true : false),
-		url : "/ezSchedule/scheduleGetList.do",
-		data : {
-			STARTDATE : sStartDate,
-			ENDDATE : sEndDate,
-			GROUPID : groupid,
-			IDLIST : chk_str
-		},
-		success: function(text){
-			if (typeCal == 0) {
-				getCalMonthViewSource_after(text);
-			} else if (typeCal == 1) {
-				getCalWeekViewSource_after(text);
-			} else if (typeCal == 2) {
-				getCalDayViewSource_after(text);
-			}
-			delFlag = false;
-		}
-    }); 
+	xmlhttp = createXMLHttpRequest();
+	var xmlpara;
+    
+    xmlpara ="STARTDATE="+sStartDate+"&ENDDATE="+sEndDate+"&APP="+chk_str+"&GROUPID="+groupid+"&IDLIST=T";
+    
+    
+    if (!delFlag) {
+    	xmlhttp.open("POST", "/ezSchedule/scheduleGetList.do", true);
+    } else {
+    	xmlhttp.open("POST", "/ezResource/scheduleGetList.do", false);
+    }
+    
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    
+    if (typeCal == 0) {
+        if (!delFlag) {
+            xmlhttp.onreadystatechange = getCalMonthViewSource_after;
+            xmlhttp.send(xmlpara);
+        }
+        else {
+            xmlhttp.send(xmlpara);
+            getCalMonthViewSource_after();
+        }
+    }
+    else if (typeCal == 1) {
+        if (!delFlag) {
+            xmlhttp.onreadystatechange = getCalWeekViewSource_after;
+            xmlhttp.send(xmlpara);
+        }
+        else {
+        	xmlhttp.send(xmlpara);
+            getCalWeekViewSource_after();
+        }
+
+    }
+    else if (typeCal == 2) {
+        if (!delFlag) {
+            xmlhttp.onreadystatechange = getCalDayViewSource_after;
+            xmlhttp.send(xmlpara);
+        }
+        else {
+            xmlhttp.send(xmlpara);
+            getCalDayViewSource_after();
+        }
+    }
+    delFlag = false;
 }
+
 //2018-06-19 구해안 이동할때 css 적용하는 함수 제작
 function chk_scheduleCSS() {
 	if(typeCal == 0){		
@@ -101,11 +126,13 @@ function dateDiff(_date1, _date2) {
 
 var OrgDataSDT;
 var OrgDataEDT;
-function getCalMonthViewSource_after(text) {
+function getCalMonthViewSource_after() {
     var tempData = new Array();
-
+    if (xmlhttp == null || xmlhttp.readyState != 4) return;
+    
     try {        
-        var listNode = loadXMLString(text);
+    	if (xmlhttp.responseText == "") return;
+    	var listNode = loadXMLString(xmlhttp.responseText);
         var nlength = SelectNodes(listNode, "DATA/ROW").length;
         var k = 0;
         for (var i = 0; i < nlength; i++) {
@@ -149,16 +176,23 @@ function getCalMonthViewSource_after(text) {
 
 
 
-function getCalWeekViewSource_after(text) {
+function getCalWeekViewSource_after() {
     var tempData = new Array();
-
+    if (xmlhttp == null || xmlhttp.readyState != 4) return;
+    
     try {        
-        var listNode = loadXMLString(text);
+    	if (xmlhttp.responseText == "") return;
+    	var listNode = loadXMLString(xmlhttp.responseText);
         var nlength = SelectNodes(listNode, "DATA/ROW").length;
         var k = 0;
         for (var i = 0; i < nlength; i++) {
-            var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
+        	var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
 
+        	// 2020-02-24 김정언 - 근태 현황은 [월보기]에서만 지원한다.
+        	if (SelectSingleNodeValue(objNodes, "DATETYPE") == "4") {
+        		continue;
+        	}
+        	
             var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
             var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");
             var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
@@ -266,16 +300,23 @@ function getCalWeekViewSource_after(text) {
 }
 
 
-function getCalDayViewSource_after(text) {
+function getCalDayViewSource_after() {
     var tempData = new Array();
-
+    if (xmlhttp == null || xmlhttp.readyState != 4) return;
+    
     try {        
-        var listNode = loadXMLString(text);
+    	if (xmlhttp.responseText == "") return;
+    	var listNode = loadXMLString(xmlhttp.responseText);
         var nlength = SelectNodes(listNode, "DATA/ROW").length;
         var k = 0;
         for (var i = 0; i < nlength; i++) {
             var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
 
+            // 2020-02-24 김정언 - 근태 현황은 [월보기]에서만 지원한다.
+            if (SelectSingleNodeValue(objNodes, "DATETYPE") == "4") {
+            	continue;
+            }
+            
             var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
             var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");
             var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
@@ -418,6 +459,8 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     pTempData.ParentID = SelectSingleNodeValue(objNodes, "PARENTID");
     pTempData.OwnerID = SelectSingleNodeValue(objNodes, "OWNERID");
     pTempData.CreatorID = SelectSingleNodeValue(objNodes, "CREATORID");
+    pTempData.CreatorName = SelectSingleNodeValue(objNodes, "CREATORNAME");
+    pTempData.ContentPath = SelectSingleNodeValue(objNodes, "CONTENTPATH");
     pTempData.ModifierID = SelectSingleNodeValue(objNodes, "MODIFIERID");
     pTempData.ScheduleType = SelectSingleNodeValue(objNodes, "SCHEDULETYPE");
     pTempData.Importance = SelectSingleNodeValue(objNodes, "IMPORTANCE");
@@ -668,7 +711,7 @@ function CalDataSize(oAppointment, order, tempData) {
 
 
 function CalMonthDataBind(oAppointment) {
-
+	
     var objElm = document.getElementById("TD_" + oAppointment.trID + "_Value");
     if (objElm) {    	
 
@@ -696,14 +739,34 @@ function CalMonthDataBind(oAppointment) {
             oTd.className = "department";
             oSpan.className = "department";
         }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+        		oTd.className = "calendar_data_public_department";
+                oSpan.className = "public_department";
+                break;
+        	}
+        }
 
         oTd.appendChild(oSpan);
 
         var pTime = "";
         var pSubject;
-        if (oAppointment.DateType != 2) {
-            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
-            pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
+        var pImg = document.createElement('img');
+        
+        // 2020-02-24 김정언
+        if (oAppointment.DateType == 4) {
+        	pImg.src = '/images/ezAttitude/' + oAppointment.ContentPath + '.png';
+        	pImg.className = "attiImg";
+        	pImg.style["vertical-align"] = "sub";
+        	pImg.style["margin-right"] = "3px";
+        	oTd.appendChild(pImg);
+            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay;
+            pSubject = oAppointment.Subject + " : " + oAppointment.CreatorName;
+        }
+        else if (oAppointment.DateType != 2) {
+        	pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay;
+        	pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
         }
         else {
             pTime = strLang39;
@@ -726,6 +789,8 @@ function CalMonthDataBind(oAppointment) {
         oTd.setAttribute("ParentID", oAppointment.ParentID);
         oTd.setAttribute("OwnerID", oAppointment.OwnerID);
         oTd.setAttribute("CreatorID", oAppointment.CreatorID);
+        oTd.setAttribute("CreatorName", oAppointment.CreatorName);
+        oTd.setAttribute("ContentPath", oAppointment.ContentPath);
         oTd.setAttribute("ModifierID", oAppointment.ModifierID);
         oTd.setAttribute("ScheduleType", oAppointment.ScheduleType);
         oTd.setAttribute("Importance", oAppointment.Importance);
@@ -752,14 +817,22 @@ function CalMonthDataBind(oAppointment) {
         oTd.setAttribute("ptime", pTime);
         
         
-        oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
-        oTd.setAttribute("onmouseout", "hideTooltip(this)");
-        var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+        // 2020-02-24 김정언 - 근태 현황일 경우에는 근태 상세보기로 이동 (DateType 4 : 근태 현황)
+        if(oAppointment.DateType == 4) {
+        	var divID = "\"" + oAppointment.ScheduleID + ":" + oAppointment.ParentID + "\"";
+        	oTd.setAttribute("ondblclick", "ReadAttitude(" + divID + ")");
+        }
+        else {
+        	var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+        	oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");        	
+        	oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
+        	oTd.setAttribute("onmouseout", "hideTooltip(this)");
+        }
 
-        var oText = document.createTextNode(pSubject);        
+        var oText = document.createTextNode(pSubject);
         //oTd.innerHTML += pSubject;
-        oTd.appendChild(oText);
+       	oTd.appendChild(oText); 
+
         
         oTr.appendChild(oTd);
         objElm.appendChild(oTr);
@@ -783,7 +856,7 @@ function CalMonthDataBind(oAppointment) {
 
 
 function CalWeekDataBind(oAppointment, order) {
-
+	
     var objDivS = document.getElementById("TD_" + oAppointment.trID + "_Value");
     var objDivE = document.getElementById("TD_" + oAppointment.endDiv + "_Value");
     if (objDivS && objDivE) {
@@ -822,6 +895,13 @@ function CalWeekDataBind(oAppointment, order) {
         else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
+        }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
         }
 
         oTd.appendChild(oSpan);
@@ -957,6 +1037,13 @@ function CalWeekAllDataBind(oAppointment, order) {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
         }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
+        }
 
         oDiv.appendChild(oSpan);
 
@@ -1071,6 +1158,13 @@ function CalDayDataBind(oAppointment, order) {
         else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
+        }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
         }
 
         oTd.appendChild(oSpan);
@@ -1206,6 +1300,13 @@ function CalDayAllDataBind(oAppointment, order) {
         else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
+        }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
         }
 
         oDiv.appendChild(oSpan);

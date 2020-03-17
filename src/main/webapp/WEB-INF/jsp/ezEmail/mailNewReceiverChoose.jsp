@@ -184,7 +184,16 @@
 	                var objNode;
 	                createNodeInsert(xmlpara, objNode, "DATA");
 	                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
+	                
+	                <c:choose>
+	                <c:when test="${useShowAllCompanies eq 'YES'}">
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
+	                </c:when>
+	                <c:otherwise>
 	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	                </c:otherwise>
+	                </c:choose>
+	                
 	                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
 	                xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	                xmlHTTP.send(xmlpara);
@@ -216,10 +225,10 @@
 	            
 	            if (type == "config") {
 	                if (CrossYN())
-	                    document.getElementById("h1Title").textContent = strLang314 + " <spring:message code='ezEmail.t832' />";
+	                    document.getElementById("h1Title").textContent = strLang314 + "<spring:message code='ezEmail.t832' />";
 	                else
-	                    document.getElementById("h1Title").innerText = strLang314 + " <spring:message code='ezEmail.t832' />";
-	                document.title = strLang314 + " <spring:message code='ezEmail.t832' />";
+	                    document.getElementById("h1Title").innerText = strLang314 + "<spring:message code='ezEmail.t832' />";
+	                document.title = strLang314 + "<spring:message code='ezEmail.t832' />";
 	                document.getElementById("ToTitleStr").innerHTML = strLang314;
 	                document.getElementById("inputTabButton").style.display = "";
 	                document.getElementById("ListMsgTo").setAttribute("rowspan", "3");
@@ -597,7 +606,8 @@
 		        
 		        try {
 		            var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("POST", "/ezEmail/mailGetDistribution.do", false);
+		            // useShowAllCompanies config가 YES일 경우 그룹사 전체 조직도를 대상으로 검색하기 위해 company 패러메터를 빈 값으로 추가함.
+		            xmlHTTP.open("POST", "/ezEmail/mailGetDistribution.do?company=", false);
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
@@ -614,15 +624,18 @@
 			            pListViewDL.DataSource(loadXMLString(xmlHTTP.responseText));
 			            pListViewDL.RowDataBind();
 			
-			            for (var i = 0; i < pListViewDL.GetRowCount() ; i++) {
-			                pListViewDL.GetDataRows()[i].draggable = true;
+			            var dataRows = pListViewDL.GetDataRows();
+			            var dataRowCount = pListViewDL.GetRowCount();
+			            
+			            for (var i = 0; i < dataRowCount; i++) {
+			                dataRows[i].draggable = true;
 			                if (CrossYN())
-			                    pListViewDL.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
+			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 			                else
-			                    pListViewDL.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
+			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
 			
 			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-			                    pListViewDL.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+			                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
 			                }
 			            }
 		            }
@@ -671,15 +684,18 @@
 			            pListViewSharedMailbox.DataSource(loadXMLString(xmlHTTP.responseText));
 			            pListViewSharedMailbox.RowDataBind();
 			
-			            for (var i = 0; i < pListViewSharedMailbox.GetRowCount() ; i++) {
-			            	pListViewSharedMailbox.GetDataRows()[i].draggable = true;
+			            var dataRows = pListViewSharedMailbox.GetDataRows();
+			            var dataRowCount = pListViewSharedMailbox.GetRowCount();
+			            
+			            for (var i = 0; i < dataRowCount; i++) {
+			                dataRows[i].draggable = true;
 			                if (CrossYN())
-			                	pListViewSharedMailbox.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
+			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 			                else
-			                	pListViewSharedMailbox.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
+			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
 			
 			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-			                	pListViewSharedMailbox.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+			                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
 			                }
 			            }
 		            }
@@ -1575,7 +1591,13 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : "displayname::" + keyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group"},
+		        	data : {search : "displayname::" + keyword.value, 
+		        	    cell : "extensionAttribute3;displayName;extensionAttribute9", 
+		        	    prop : "", 		        	    
+		        	    <c:if test="${useShowAllCompanies eq 'YES'}">
+		        	    company : "", 
+		        	    </c:if>		        	    
+		        	    type : "group"},
 		        	success : function(result){	
 		        		xmlDom = loadXMLString(result);
 		                adCount = xmlDom.getElementsByTagName("ROW").length;
@@ -1594,10 +1616,20 @@
 	                bSearch = true;
 	                g_xmlHTTP = createXMLHttpRequest();
 	
-	                if (CrossYN())
-	                    var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
-	                else
-	                    var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                var strQuery;
+	                
+	                if (CrossYN()) {
+		                <c:choose>
+		                <c:when test="${useShowAllCompanies eq 'YES'}">
+		                strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top/organ</TOPID><PROP>mail</PROP></DATA>";
+		                </c:when>
+		                <c:otherwise>
+		                strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		                </c:otherwise>
+		                </c:choose>	                    	                    
+	                } else {
+	                    strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                }
 	
 	                g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	                g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -1618,7 +1650,16 @@
 		        if (rgParams["deptid"] != "") {
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		            
+	                <c:choose>
+	                <c:when test="${useShowAllCompanies eq 'YES'}">
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top/organ</TOPID><PROP>mail</PROP></DATA>";
+	                </c:when>
+	                <c:otherwise>
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                </c:otherwise>
+	                </c:choose>
+		            
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -2194,7 +2235,10 @@
 		        			search : document.getElementById("search_type").value + "::" + keyword.value, 
 		        			cell : "company;description;displayName;title;telephoneNumber;"+ document.getElementById("search_type").value, 
 		        			prop : "mail;displayName;description;title;company;telephonenumber;extensionAttribute2;department", 
-		        			page : CurPage, 
+		        			page : CurPage, 		        			
+			                <c:if test="${useShowAllCompanies eq 'YES'}">
+		        			company : "",
+			                </c:if>		        			
 		        			type : "user"},
 		        	success : function(result){	
 		        		pListXML_Info = loadXMLString(result);
@@ -2239,7 +2283,13 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : true,
-		        	data : {search : "displayname::" + document.getElementById("cnkeyword").value, cell : "displayName;description;title;telephoneNumber", prop : "mail", type : "user"},
+		        	data : {search : "displayname::" + document.getElementById("cnkeyword").value, 
+		        	    cell : "displayName;description;title;telephoneNumber", 
+		        	    prop : "mail", 		        	    
+		        	    <c:if test="${useShowAllCompanies eq 'YES'}">
+		        	    company : "", 
+		        	    </c:if>		        	    
+		        	    type : "user"},
 		        	success : function(result){	
 		        		pListXML_Info = loadXMLString(result);
 		        		if (pListXML_Info.getElementsByTagName("ROW").length == 0) {
@@ -3941,6 +3991,10 @@
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezEmail.t29' /></option>
 	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezEmail.t99000047' /></option>
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezEmail.t99000048' /></option>
+	                                                        <c:if test="${primaryLang eq '3' }">
+	                                                        <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+	                                                        <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+	                                                        </c:if>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezEmail.t99000049' /></option>
 	                                                    </select>
 	                                                    <input id="keyword" value="" onkeypress="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px; height:21px">

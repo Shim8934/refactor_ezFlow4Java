@@ -41,4 +41,5 @@ public interface EzSurveyRestService {
 	public JSONObject changeSurveyState(HttpServletRequest request, String userId, String itemId) throws Exception;
 	public JSONObject saveResponse(HttpServletRequest request,JSONObject responseItem) throws Exception;
 	public JSONObject getSurveyStatistic(HttpServletRequest request, String userId, String itemId) throws Exception;
+	public JSONObject checkRespondent(HttpServletRequest request, String userId, int surveyId) throws Exception;
 }

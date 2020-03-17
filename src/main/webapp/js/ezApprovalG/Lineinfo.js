@@ -18,6 +18,9 @@ function list2_onSel_DBclick() {
     var pSelRow = pAPRLINE.GetSelectedRows();
     if (RtnVal) {
     	if (approvalFlag == "S") {
+    		var lineArea = CheckLineArea_BeforeAdd();
+    		if (!lineArea) {return;}
+    		
     		SAPRLINEATTENDADDFunction(selnode, "PERSON");
             initJunGyul();
     	} else {
@@ -1876,33 +1879,36 @@ function AprLineDeptAdd(AprLineAddIndex,AprLineRow,pSelectedRow ,selnode)
 	pparsingXML = pparsingXML + "<DATA12>" + strAprState1 + "</DATA12>";
 	
     var checkDept = false;
-    if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[0], "CODE") == "011") {
-
-        var pUserList = new ListView();
-        pUserList.LoadFromID("pUserList");
-        var totalRow = pUserList.GetDataRows();
-
-        for (var j = 1; j <= totalRow.length; j++) 
-        {
-            if (GetAttribute(totalRow[1], "DATA1") == "user" && GetAttribute(totalRow[1], "DATA2") == selnode.GetNodeData("EXTENSIONATTRIBUTE9") && checkDept == false) {
-                pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(GetAttribute(totalRow[1], "DATA7")) + "</DATA13>";
-                pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(GetAttribute(totalRow[1], "DATA8")) + "</DATA14>";
-                pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(GetAttribute(totalRow[1], "DATA9")) + "</DATA15>";
-                pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(GetAttribute(totalRow[1], "DATA10")) + "</DATA16>";
-                pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(GetAttribute(totalRow[1], "DATA11")) + "</DATA17>";
-                pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(GetAttribute(totalRow[1], "DATA12")) + "</DATA18>";
-                pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(totalRow[1], "DATA4")) + "</VALUE>";
-                pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(totalRow[1], "DATA5")) + "</VALUE>";
-                pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(totalRow[1], "DATA6")) + "</VALUE>";
-                pparsingXML = pparsingXML + "</CELL><CELL>";
-                checkDept = true;
-                break;
-            }
-        }
-    }
+    //로직이 이상해서 주석처리. totalRow는 조직도 부서원리스트의 row 인데 두번째 사람하고 만 비교함. 이미 추가된 결재선에서 최종결재자 직전의 사람이 부서장인지 비교하기 위한 로직이면 더 말이 되는듯.
+    //아래 로직대로 돌아가면 부서추가를 할 때, 조직도의 두번째 사람이 부서장이면 개인으로 추가되고 버그가 발생함.
+    //2019-06-18 홍대표
+//    if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[0], "CODE") == "011") {
+//
+//        var pUserList = new ListView();
+//        pUserList.LoadFromID("pUserList");
+//        var totalRow = pUserList.GetDataRows();
+//
+//        for (var j = 1; j <= totalRow.length; j++) 
+//        {
+//            if (GetAttribute(totalRow[1], "DATA1") == "user" && GetAttribute(totalRow[1], "DATA2") == selnode.GetNodeData("EXTENSIONATTRIBUTE9") && checkDept == false) {
+//                pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(GetAttribute(totalRow[1], "DATA7")) + "</DATA13>";
+//                pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(GetAttribute(totalRow[1], "DATA8")) + "</DATA14>";
+//                pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(GetAttribute(totalRow[1], "DATA9")) + "</DATA15>";
+//                pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(GetAttribute(totalRow[1], "DATA10")) + "</DATA16>";
+//                pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(GetAttribute(totalRow[1], "DATA11")) + "</DATA17>";
+//                pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(GetAttribute(totalRow[1], "DATA12")) + "</DATA18>";
+//                pparsingXML = pparsingXML + "</CELL><CELL>";
+//                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(totalRow[1], "DATA4")) + "</VALUE>";
+//                pparsingXML = pparsingXML + "</CELL><CELL>";
+//                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(totalRow[1], "DATA5")) + "</VALUE>";
+//                pparsingXML = pparsingXML + "</CELL><CELL>";
+//                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(totalRow[1], "DATA6")) + "</VALUE>";
+//                pparsingXML = pparsingXML + "</CELL><CELL>";
+//                checkDept = true;
+//                break;
+//            }
+//        }
+//    }
 
     if (checkDept == false) {
         pparsingXML = pparsingXML + "<DATA13>-</DATA13>";
@@ -2047,7 +2053,7 @@ function APRLINEATTENDERDELFunction()
 	                if (pReDraftAprLineFlag) {
 	                    var TmpAprLineState = GetAttribute(pSelectedRow[0], "DATA12");
 	                    var tempcellvalue = getNodeText(pSelectedRow[0].cells[0]);
-	                    if ((TmpAprLineState == "002" || TmpAprLineState == "005") && GetAttribute(pSelectedRow[0], "DATA4") == pUserID || tempcellvalue == "1") {
+	                    if ((TmpAprLineState == "002" || TmpAprLineState == "005") || tempcellvalue == "1") {
 	                        var pAlertContent = strLangS249;
 	                        OpenAlertUI(pAlertContent);
 	                        return;
@@ -2647,7 +2653,7 @@ function ApplyJunGyulFunction(pCurSelIndex, pTmpAprLineTypeCode, pTmpAprLineType
 			return flag;
 		}
 
-		else if(parseInt(pAprLineRow[i].cells[0].innerText) > parseInt(pCurSelIndex) && GetAttribute(pAprLineRow[i],"DATA11") == strAprType8 || GetAttribute(pAprLineRow[i],"DATA11") == strAprType9)
+		else if(parseInt(pAprLineRow[i].cells[0].innerText) > parseInt(pCurSelIndex) && (GetAttribute(pAprLineRow[i],"DATA11") == strAprType8 || GetAttribute(pAprLineRow[i],"DATA11") == strAprType9))
 		{
 			flag = "check";
 			var pAlertContent = strLangS506 + "<br>"+ strLang287;
@@ -2914,6 +2920,65 @@ function CheckLineArea()
 		return false;
 	}
     return true;
+}
+
+function CheckLineArea_BeforeAdd()
+{
+	var pAlertContent = "";
+	var pAPRLINE = new ListView();    
+	pAPRLINE.LoadFromID("lvAPRLINE");
+	
+	var AprLineRow = pAPRLINE.GetDataRows();
+	var SelRow = pAPRLINE.GetSelectedRows();
+	var NodeListLen = AprLineRow.length;
+	
+	var pCurAprilban = 0;
+	var pCurAprPersonLen = 0;
+	var pCurAprDeptLen = 0;
+	var pCurAprChamLen = 0;
+	var pCurAprHainLen = 0;
+	var pCurAprGongramLen = 0;
+	var pAlertContent = "";
+	
+	if(pAprLineArea == 0)
+	{
+		var pChkFlag = chkJunkyul(AprLineRow)
+		if(pChkFlag == "false"){
+			pAlertContent = pAlertContent + strLangS286 + "<br>"
+		}else if(pChkFlag == "another"){
+			pAlertContent = pAlertContent + strLangS287 + "<br>"
+		}else if(pChkFlag == "junkyul"){
+			pAlertContent = pAlertContent + strLangS288 + "<br>"
+		}
+		
+		var pAprTypeFlag = "001";
+		pCurAprilban = getAprLineGyulJeLen(AprLineRow , NodeListLen , pAprTypeFlag);
+		
+		var pAprTypeFlag = "004";
+		pCurAprilban = pCurAprilban + getAprLineGyulJeLen(AprLineRow , NodeListLen , pAprTypeFlag);
+		
+		var pAprTypeFlag = "003";
+		pCurAprilban = pCurAprilban + getAprLineGyulJeLen(AprLineRow , NodeListLen , pAprTypeFlag);
+		
+		var pAprTypeFlag = "040";
+		pCurAprilban = pCurAprilban + getAprLineGyulJeLen(AprLineRow , NodeListLen , pAprTypeFlag);
+		
+		var pAprTypeFlag = "020";
+		pCurAprilban = pCurAprilban + getAprLineGyulJeLen(AprLineRow , NodeListLen , pAprTypeFlag);
+		
+		if(pCurAprilban >= pSignCount)  
+		{ 
+			pAlertContent = pAlertContent + strLangS276 + pSignCount + strLangS277 + "<br>";
+		}
+	}
+	
+	if (pAlertContent != "")
+	{
+		var pAlertContent =  pAlertContent + "" + strLangS304;
+		OpenAlertUI(pAlertContent);
+		return false;
+	}
+	return true;
 }
 //############################################################################################################################################# 결재 라인 체크 이벤트
 function CheckLineUser() {
@@ -3294,16 +3359,16 @@ function chkLastKyuljea(AprLineRow) {
 	
 	for(i=0;i < AprLineRow.length - 1; i++) {
 		aprtype = GetAttribute(AprLineRow[i],"DATA11");
-		
+
 		if (addLastKyulJeYN == "1") {
-			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType8 || aprtype == strAprType15 || aprtype == strLangS264) break;
 			if (aprtype == strAprType9 || aprtype == strAprType12 || aprtype == strAprType11) {
 				rtnVal = false;
 				break;
 			}
 
 		} else if (addLastKyulJeYN == "2") {
-			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType8 || aprtype == strAprType15 || aprtype == strLangS264) break;
 			if (aprtype == strAprType9 || (GetAttribute(AprLineRow[0],"DATA11") != strAprType11 && GetAttribute(AprLineRow[0],"DATA11") != strAprType8 && aprtype == strAprType12)) {
 				rtnVal = false;
 				break;

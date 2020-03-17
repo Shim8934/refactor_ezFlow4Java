@@ -190,7 +190,7 @@ input[type=text]::-ms-clear{ display:none;}
 #seenUser_{ color:#304d7f; float:left; margin-top:8px; display:block;}
 .voteUnseenTbl th{height:40px; background:#efefef; color:#000; border:1px solid #ddd;}
 
-#ballotSystemBody{min-width: 800px}
+#ballotSystemBody{min-width: 850px}
 
 .imgPopup{width: auto; height: auto; position: relative; float: left; max-width: 400px; max-height: 400px;}
 .imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 50px;}

@@ -746,11 +746,34 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		/* 2019-11-08 홍승비 - 상위게시판을 자신의 하위게시판 아래로 이동하지 못하도록 수정 */
+		boolean canMove = true;
+		BoardPropertyVO newParentBoardProperty = ezBoardService.getBoardProperty(newParentBoardID, userInfo.getTenantId());
+		if (newParentBoardProperty != null && newParentBoardProperty.getBoardTreePath() != null && newParentBoardProperty.getBoardTreePath().indexOf(orgBoardID) > -1) {
+			canMove = false; // 이동할 목표 게시판의 boardtreepath에 이동할 대상이 되는 게시판ID가 포함된다면, 상위게시판을 자신의 하위로 이동시키는 것임
+		}
+		
 		if (isAllGroupBoardORG.equals(isAllGroupBoardNEW)) {
-			ezBoardAdminService.moveBoard(orgBoardID, newParentBoardID,	newBoardGroupID, userInfo.getTenantId());
+			if (canMove == true) {
+				ezBoardAdminService.moveBoard(orgBoardID, newParentBoardID,	newBoardGroupID, userInfo.getTenantId());
+				
+				/* 2019-11-08 홍승비 - 게시판 이동 시 BOARDTREEPATH 업데이트되지 않는 오류 수정 */
+				List<BoardPropertyVO> allSubBoardProperty = ezBoardService.getAllSubBoardProperty(orgBoardID, userInfo.getTenantId());
+				
+				int subBoardSize = allSubBoardProperty.size();
+				for (int i = 0; i < subBoardSize; i++) {
+					String subBoardID = allSubBoardProperty.get(i).getBoardID();
+					String subNewBoardTreePath= ezBoardService.getNewBoardTreePath(subBoardID, userInfo.getTenantId());
+					ezBoardAdminService.updateBoardTreePath(subBoardID, subNewBoardTreePath, userInfo.getTenantId());
+					/* 2020-01-16 홍승비 - 하위게시판을 가지는 상위게시판을 이동하는 경우, 하위게시판들의 BoardGroupID가 갱신되지 않는 오류 수정 */
+					ezBoardAdminService.updateBoardGroupID(subBoardID, newBoardGroupID, userInfo.getTenantId());
+				}
+			} else {
+				response.sendError(600);
+			}
 		}
 		else {
-			response.sendError(500);
+			response.sendError(601); // 그룹사게시판과 일반게시판 간의 이동 예외처리 수정
 		}
 
 		logger.debug("moveBoard ended");
@@ -854,7 +877,19 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 게시판그룹이름변경 메뉴 확장컬럼 설정화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardExtensionAttribute.do", method = RequestMethod.GET)
-	public String boardExtensionAttribute() throws Exception {
+	public String boardExtensionAttribute(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("boardExtensionAttribute started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		/* 2020-02-14 홍승비 - 항목명 다국어 처리를 위한 파라미터 추가 */
+		String lang_primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String lang_secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
+		model.addAttribute("lang_primary", lang_primary);
+		model.addAttribute("lang_secondary", lang_secondary);
+		
+		logger.debug("boardExtensionAttribute ended");
 		return "admin/ezBoard/boardExtensionAttribute";
 	}
 

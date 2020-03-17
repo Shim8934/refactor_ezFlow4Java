@@ -206,7 +206,10 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 //	}
 
 	@Override
-	public List<FileLogVO> getListFileLogs(String realColmn, String order, String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String actionType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
+	public List<FileLogVO> getListFileLogs(String realColmn, String order, String companyId, String searchChk, 
+			String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, 
+			String actionType, int startPoint, int pageSize, String primary, String offset, int tenantId, String sortType, String sortColumn) throws Exception {
+		logger.debug("getListFileLogs start");
 		logger.debug("Action Type: " + actionType);
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("realColmn",  realColmn);
@@ -225,6 +228,10 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		map.put("offset",     commonUtil.getMinuteUTC(offset));
 		map.put("primary",    primary);
 		map.put("tenantId",   tenantId);
+		map.put("sortType",   sortType);
+		map.put("sortColumn", sortColumn);
+		map.put("orderByData", sortColumn + " " + sortType);
+		logger.debug("getListFileLogs end");
 		return ezWebFolderAdminDAO.getListFileLogs(map);
 	}
 
@@ -780,7 +787,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 
 	private void copyFile(String folderId, String newId, String timeUTC, String realPath, LoginVO userInfo) throws Exception {
-		List<FileVO> fileList = ezWebFolderService.getAllFilesInFolder("", "", folderId, "", "0", "", "", "", "", "", "1", 0, 0, userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId());
+		List<FileVO> fileList = ezWebFolderService.getAllFilesInFolder("", "", folderId, "", "0", "", "", "", "", "", "1", 0, 0, 
+				userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId(), "", "");
 		
 		if (fileList != null && fileList.size() > 0) {
 			for (FileVO file : fileList) {
@@ -910,6 +918,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 
 	@Override
 	public String createExcelFileLogs(String realPath, String dirPath, List<FileLogVO> listFileLogs, String primary, Locale locale) throws Exception {
+		logger.debug("createExcelFileLogs start");
 		Date date                  = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String fileName            = egovMessageSource.getMessage("ezWebFolder.t128", locale) + "_" + formatter.format(date) + ".xlsx";
@@ -967,7 +976,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		rowhead1.createCell(0).setCellValue(egovMessageSource.getMessage("ezWebFolder.t188", locale));
 		rowhead1.createCell(1).setCellValue(egovMessageSource.getMessage("ezWebFolder.t156", locale));
 		rowhead1.createCell(2).setCellValue(egovMessageSource.getMessage("ezWebFolder.t157", locale));
-		rowhead1.createCell(3).setCellValue(egovMessageSource.getMessage("ezWebFolder.t154", locale));
+		rowhead1.createCell(3).setCellValue(egovMessageSource.getMessage("ezWebFolder.t339", locale));
 		rowhead1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t158", locale));
 		rowhead1.createCell(5).setCellValue(egovMessageSource.getMessage("ezWebFolder.t159", locale));
 		
@@ -984,7 +993,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			Row newRow1 = sheet1.createRow(i);
 			
 			newRow1.createCell(0).setCellValue(fileLog.getFileExt());
-			drawPictureInExcel(workbook, sheet1, realPath + fileLog.getFileType(), 0, i);
+			// 속도 개선을 위해 주석
+			//drawPictureInExcel(workbook, sheet1, realPath + fileLog.getFileType(), 0, i);
 			newRow1.createCell(1).setCellValue(fileLog.getFileName());
 			newRow1.createCell(2).setCellValue(formatFileSize(fileLog.getFileSize()));
 			newRow1.createCell(3).setCellValue(primary.equals("1") ? fileLog.getCreateName1() : fileLog.getCreateName2());
@@ -1003,7 +1013,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			
 			newRow1.createCell(5).setCellValue(fileLog.getCreateDate().substring(0, 19));
 			
-			newRow1.getCell(0).setCellStyle(centerStyle3);
+			newRow1.getCell(0).setCellStyle(centerStyle);
 			newRow1.getCell(1).setCellStyle(centerStyle2);
 			newRow1.getCell(2).setCellStyle(centerStyle);
 			newRow1.getCell(3).setCellStyle(centerStyle2);
@@ -1033,7 +1043,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			fileOut.close();
 			workbook.close();
 		}
-		
+		logger.debug("createExcelFileLogs end");
 		return fileName;
 	}
 	

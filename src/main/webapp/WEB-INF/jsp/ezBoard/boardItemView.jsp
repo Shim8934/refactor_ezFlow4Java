@@ -51,6 +51,8 @@
 		    var g_progresswin;
 		    var OneLineReplyFlag = "${boardPropertyVO.oneLineReply}";
 		    var commentCount = "${commentCount}";
+		    var nowCommentCount = ""; // 댓글 옵션처리를 위해 전역변수로 변경
+		    var userInfoID = "${userInfo.id}"; // 댓글 삭제가능여부 판단을 위해 자신의 userID 사용
 			var gubun = "${guBun}";
 			var refreshFlag = "N";
 		    var pUse_Editor = "${useEditor}";
@@ -60,6 +62,7 @@
 		    var AtttributeCount = "${boardAttrCount}"; 
 		    var rsa = new RSAKey();
 		    var addheight = 0;
+		    var scrollValue = 0;
 
 		    // 수정 수아 재은	    
 		    var nowZoom = 100;
@@ -166,22 +169,27 @@
 		            if("${boardAttrCount}" > 0){
 						addheight = AtttributeCount * 30;
 		            }
-		
-// 		            if (OneLineReplyFlag == "1") {
-// 		                getOneLineReply();
-						if (gubun != "2") {
-			                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
-			                    self.resizeTo(760, (800 + addheight));
-			                } else {
-			                    self.resizeTo(785, (830 + addheight));
-			                }
-						} else {
-							if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
-			                    self.resizeTo(760, (775 + addheight));
-							} else  {
-			                    self.resizeTo(785, (805 + addheight));
-			                }
-						}
+		            
+		            /* 2019-11-05 홍승비 - 본문 하단에 댓글영역 표출 */
+ 		            if (OneLineReplyFlag == "2") {
+ 		            	document.getElementById("bodyPopup").style.overflowX = "hidden";
+ 		            	document.getElementById("bodyPopup").style.overflowY = "auto";
+ 		            	getBoardComment();
+ 		            }
+		            
+					if (gubun != "2") {
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+		                    self.resizeTo(760, (800 + addheight));
+		                } else {
+		                    self.resizeTo(785, (830 + addheight));
+		                }
+					} else {
+						if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+		                    self.resizeTo(760, (775 + addheight));
+						} else  {
+		                    self.resizeTo(785, (805 + addheight));
+		                }
+					}
 // 		            }
 // 		            else {
 // 		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
@@ -256,6 +264,11 @@
 				//console.log(document.getElementById("pad1").children);
 				//document.getElementById("smaller").onclick = smaller();
 				 */
+				 
+		 /* 2019-11-07 홍승비 - 댓글삭제 레이어팝업 스크롤 위치 관련 */
+	        $(window).scroll(function () {
+				scrollValue = $(document).scrollTop();
+	        });
 		
 		    window.onresize = function () {
 				resizeMessageFrame();
@@ -271,48 +284,46 @@
 		    
 		    /* 2018-12-26 홍승비 - 저해상도 대응을 위해 리사이즈 함수 분리 */
 		    function resizeMessageFrame() {
-		    	 if (gubun != "3") { 
-//	 			        if (OneLineReplyFlag == "1") {
-//	 				        if (pAttributeYN == "Y") {
-//	 				            var contentHeight;
-//	 				            if (gubun == "2")
-//	 				                contentHeight = document.documentElement.clientHeight - 290 - addheight;
-//	 				            else
-//	 				                contentHeight = document.documentElement.clientHeight - 320 - addheight;
-//	 				            document.getElementById("message").style.height = contentHeight + "PX";
-//	 				            document.getElementById("pad1").style.height = contentHeight + "PX";
-//	 				        } else {
-//	 				            var contentHeight;
-//	 				            if (gubun == "2")
-//	 				                contentHeight = document.documentElement.clientHeight - 290;
-//	 				            else
-//	 				                contentHeight = document.documentElement.clientHeight - 320;
-//	 				            document.getElementById("message").style.height = contentHeight + "PX";
-//	 				            document.getElementById("pad1").style.height = contentHeight + "PX";
-//	 				        }
-//	 				    } else {
-							/* 2019-05-08 홍승비 - 익명게시판에 확장컬럼 존재 시 세로 리사이즈 오류 수정 */
-					        if (pAttributeYN == "Y") {
-					            var contentHeight;
-					            if (gubun == "2") {
-					                contentHeight = document.documentElement.clientHeight - 239 - addheight;
-					            } else {
-					                contentHeight = document.documentElement.clientHeight - 268 - addheight;
-					            }
-					            document.getElementById("message").style.height = contentHeight + "PX";
-					            document.getElementById("pad1").style.height = contentHeight + "PX";
-					        } else {
-					            var contentHeight;
-					            if (gubun == "2") {
-					                contentHeight = document.documentElement.clientHeight - 243;
-					            } else {
-					                contentHeight = document.documentElement.clientHeight - 268;
-					            }
-					            document.getElementById("message").style.height = contentHeight + "PX";
-					            document.getElementById("pad1").style.height = contentHeight + "PX";
-					        }
-//	 			        }
-			        }	    	
+				/* 2019-11-05 홍승비 - 하단댓글 사용 시 메세지 프레임 높이 조정 추가 */
+				/* 2019-05-08 홍승비 - 익명게시판에 확장컬럼 존재 시 세로 리사이즈 오류 수정 */
+				var replyOffsetH = 0;
+				if (OneLineReplyFlag == "2") {
+					if (pAttributeYN == "Y") {
+						if (gubun == "2") {
+							replyOffsetH = -8; // 확장칼럼 존재 익명게시판
+						} else {
+							replyOffsetH = 16; // 확장칼럼 존재 일반, QNA게시판
+						}
+					} else {
+						if (gubun == "2") {
+							replyOffsetH = -14; // 확장칼럼 없는 익명게시판
+						} else {
+							replyOffsetH = 12; // 확장칼럼 없는 일반, QNA게시판
+						}
+					}
+				} else { // 댓글을 사용하지 않거나 레이어 팝업인 경우
+					replyOffsetH = -18;
+				}
+				
+		        if (pAttributeYN == "Y") {
+		            var contentHeight;
+		            if (gubun == "2") {
+		                contentHeight = document.documentElement.clientHeight - 239 - addheight + replyOffsetH;
+		            } else {
+		                contentHeight = document.documentElement.clientHeight - 268 - addheight + replyOffsetH
+		            }
+		            document.getElementById("message").style.height = contentHeight + "PX";
+		            document.getElementById("pad1").style.height = contentHeight + "PX";
+		        } else {
+		            var contentHeight;
+		            if (gubun == "2") {
+		                contentHeight = document.documentElement.clientHeight - 243 + replyOffsetH;
+		            } else {
+		                contentHeight = document.documentElement.clientHeight - 268 + replyOffsetH;
+		            }
+		            document.getElementById("message").style.height = contentHeight + "PX";
+		            document.getElementById("pad1").style.height = contentHeight + "PX";
+		        }
 		    }
 		
 		    function AddLinkTarget() {
@@ -325,10 +336,12 @@
 		        }
 		        catch (e) { }
 		    }
+		    
 		    function ImageUrl(pUrl, cnt) {
 		        var link = "/myoffice/Common/ImgFileRead.asp?PUrl=" + pUrl + "&Cnt=" + cnt;
 		        return link;
 		    }
+		    
 		    function CheckIfHasReplies() {
 		        var xmlhttp = createXMLHttpRequest();
 		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + encodeURIComponent(pItemID) + ",;", false);
@@ -340,6 +353,7 @@
 		        xmlhttp = null;
 		        return true;
 		    }
+		    
 		    var checkpassword_dialogArguments = new Array();
 		    function btn_Delete_Onclick() {
 		        if (CheckIfHasReplies()) {
@@ -355,12 +369,12 @@
 		            if (gubun == "2") {
 		                if (CrossYN()) {
 		                    checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
-		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(340, 200));
+		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(470, 200));
 		                    try { OpenWin.focus(); } catch (e) { }
 		                } else {
-		                    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-		                    feature = feature + GetShowModalPosition(330, 200);
-		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+		                    var feature = "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no";
+		                    feature = feature + GetShowModalPosition(470, 200);
+		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "", "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no");
 		                    
 			                if (ret == "NO") {
 			                    alert("<spring:message code='ezBoard.t267' />");
@@ -382,7 +396,10 @@
 		                    if (xmlhttp.responseText == "NO") {
 		                        alert("<spring:message code='ezBoard.t265' />");
 		                        return;
-		                    }
+		                    } else if (xmlhttp.responseText == "ERROR") {
+				                alert("<spring:message code='ezBoard.t1020'/>");
+				                return;
+				            }
 		
 		                    xmlhttp = null;
 		                    try {
@@ -413,7 +430,10 @@
 		                if (xmlhttp.responseText == "NO") {
 		                    alert("<spring:message code='ezBoard.t265' />");
 		                    return;
-		                }
+		                } else if (xmlhttp.responseText == "ERROR") {
+			                alert("<spring:message code='ezBoard.t1020'/>");
+			                return;
+			            }
 		
 		                xmlhttp = null;
 		                try {
@@ -482,7 +502,10 @@
 		        if (xmlhttp.responseText == "NO") {
 		            alert("<spring:message code='ezBoard.t265' />");
 		            return;
-		        }
+		        } else if (xmlhttp.responseText == "ERROR") {
+	                alert("<spring:message code='ezBoard.t1020'/>");
+	                return;
+	            }
 		
 		        xmlhttp = null;
 		        try {
@@ -507,8 +530,15 @@
 		            alert("<spring:message code='ezBoard.t303' />");
 		            return;
 		        }
+		        
 	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=reply";
-		        window.resizeTo(785, 780);
+	            
+	            /* 2019-11-22 홍승비 - 익명게시물에 답변 작성하는 경우, 게시암호만큼 높이 조정 */
+	            if (gubun == 2) {
+	            	window.resizeTo(785, 820);
+	            } else {
+		        	window.resizeTo(785, 780);
+	            }
 		    }
 		    function btn_Modify_Onclick() {
 		        if (Write_FG != "true" && gubun != "2") {
@@ -535,13 +565,13 @@
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments = new Array();
 		                checkpassword_dialogArguments[1] = btn_Modify_Onclick_Complete;
-		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(435, 200));
+		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(470, 200));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
 		            else {
-		                var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-		                feature = feature + GetShowModalPosition(330, 200);
-		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+		                var feature = "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no";
+		                feature = feature + GetShowModalPosition(470, 200);
+		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "", "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no");
 		                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
 		                if (ret == "NO") {
 		                    alert("<spring:message code='ezBoard.t267' />");
@@ -697,7 +727,7 @@
 		            filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
 		            /* 2018-04-27 홍승비 - 화면에 표시되는 파일명 특문처리 수정 */
 		            filenameOrg = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
-		            filenameView = ReplaceText(ReplaceText(ReplaceText(filenameOrg, ">", "&gt;"), "<", "&lt;"), "&", "&amp;");
+		            filenameView = MakeXMLString(filenameOrg);
 		            filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 		            
 		            var strTarget = "target=''";
@@ -731,7 +761,8 @@
 		            var protocol = window.location.protocol;
 		            var serverName = window.location.hostname;
 		            
-		            strAttach += "<input type='checkbox' name='fileSelect' value='" + filenameView + "' >";
+		            /* 2020-01-30 홍승비 - 모두저장 기능을 위해 속성 추가 */
+		            strAttach += "<input type='checkbox' name='fileSelect' value='" + filenameView + "' filePath='" + MakeXMLString(filepath) + "'>";
 		            strAttach += "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg) + "'\">";
 		            strAttach += filenameView + "&nbsp;(" + filesize + ")</a><br>";
 		        }
@@ -743,11 +774,14 @@
 		        for (var i = 0; i < checks.length; i++)
 		            checks.item(i).checked = true;
 		    }
+		    
+		    /* 2020-01-30 홍승비 - 체크한 파일이 1개 이상인 경우, zip 파일로 다운받도록 수정 */
 		    function attach_Download() {
 		        var checks = document.getElementById('lstAttachLink');
-		        downloadAll(checks);
+		        //downloadAll(checks);
+		        AttachAllDownload(checks);
 		    }
-		
+		    
 		    var suffix = 0;
 		    function downloadAll(checks) {
 		        if (checks.getElementsByTagName("input").item(suffix)) {
@@ -763,7 +797,46 @@
 		        else
 		            suffix = 0;
 		    }
-		
+		    
+		    /* 2020-01-30 홍승비 - 체크한 파일이 1개 이상인 경우, zip 파일로 다운받는 함수 */
+	        function AttachAllDownload(checks) {
+	            var checkedFiles = $("#lstAttachLink").find("input:checkbox[name='fileSelect']:checked");
+	            var checkedFilesLength = checkedFiles.length;
+	            var filePath = ""; // 전체파일경로
+	            var filePathTemp = "";
+				var fileNames = ""; // 파일이름
+				var fileNamesUID = ""; // 파일이름(UID 포함)
+				
+				if (checkedFilesLength == 1) { // 하나만 저장
+					downloadAll(checks);
+				}
+				else if (checkedFilesLength > 1) { // 여러개는 zip으로 저장
+					filePath = GetAttribute(checkedFiles.get(0), "filepath");
+					filePath = filePath.substr(0, filePath.lastIndexOf("/") + 1);
+					
+					for (var i = 0; i < checkedFilesLength; i++) {
+						filePathTemp = GetAttribute(checkedFiles.get(i), "filepath"); // 각 파일의 풀경로
+						fileNames += MakeXMLString(checkedFiles.get(i).value) + ":"; // 각 파일의 이름을 :로 이어붙인 것
+						fileNamesUID += MakeXMLString(filePathTemp.substr(filePathTemp.lastIndexOf("/"), filePathTemp.length)) + ":"; // 각 파일의 이름+UID를 :로 이어붙인 것
+					}
+					
+					var $frm = $("<form></form>");
+			    	$frm.attr('action', "/ezBoard/downloadAttachAll.do");
+			    	$frm.attr('method', 'post');
+			    	$frm.appendTo('body');
+			
+			    	param1 = $('<input type="hidden" value="' + filePath + '" name="filePath" />');
+			    	param2 = $("<input type='hidden' value='" + fileNames + "' name='fileNames' />");
+			    	param3 = $("<input type='hidden' value='" + fileNamesUID + "' name='fileNamesUID' />");
+			    	
+			    	$frm.append(param1).append(param2).append(param3);
+			    	$frm.submit();
+				}
+				else { // 체크된 파일 없음
+					return;
+				}
+	        }
+		    
 		    /* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
 		    function MemberInfo_onclick(pUserID, pDeptID) {
 		        var feature = "height=490px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
@@ -911,8 +984,8 @@
 // 		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 // 		            if (gubun == "2") {
 // 		                if (CrossYN()) {
-// 		                	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-// 		                    feature = feature + GetShowModalPosition(330, 200);
+// 		                	var feature = "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no";
+// 		                    feature = feature + GetShowModalPosition(470, 200);
 // 		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "", feature);
 		                    
 // 		                    if (ret == "NO") {
@@ -934,7 +1007,7 @@
 // 		                } else {		                	
 // 		                    checkpassword_dialogArguments = new Array();
 // 		                    checkpassword_dialogArguments[1] = delete_onelinereply_Complete;
-// 		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+// 		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "CheckPassWord", GetOpenWindowfeature(470, 200));
 // 		                    try { OpenWin.focus(); } catch (e) { }
 // 		                }
 		                
@@ -1003,10 +1076,13 @@
 		        var re = new RegExp(findStr, "gi");
 		        return (orgStr.replace(re, replaceStr));
 		    }
+		    /* 2020-01-30 홍승비 - 특수문자 파싱 추가 */
 		    function MakeXMLString(p_str) {
 		        p_str = ReplaceText(p_str, "&", "&amp;");
 		        p_str = ReplaceText(p_str, "<", "&lt;");
 		        p_str = ReplaceText(p_str, ">", "&gt;");
+		        p_str = ReplaceText(p_str, "'", "&apos;");
+		        p_str = ReplaceText(p_str, "\"", "&quot;");
 		        return p_str;
 		    }
 		    function OpenItem(strItemID) {
@@ -1176,10 +1252,12 @@
 		    }
 		    
 		    /* 2019-04-12 홍승비 - 게시물 갱신 조건 체크 */
-		    function checkRefreshFlag () {
-		    	var nowCommentCount = document.getElementById("commentCount").innerText;
+		    function checkRefreshFlag() {
+		    	if (OneLineReplyFlag == "1") { // 레이어팝업의 경우 텍스트로 표출된 현재 댓글갯수를 가져옴
+		    		nowCommentCount = document.getElementById("commentCount").innerText;
+		    		nowCommentCount = nowCommentCount.substring(nowCommentCount.indexOf("[") + 1, nowCommentCount.indexOf("]"));
+		    	}
 		    	var opnenerHref = window.opener.location.href;
-		    	nowCommentCount = nowCommentCount.substring(nowCommentCount.indexOf("[") + 1, nowCommentCount.indexOf("]"));
 		    	
 		    	// 댓글의 수가 달라졌고, 부모창의 주소가 게시판인 경우(새게시물 제외)에만 플래그값 변경
 		    	if ((commentCount != nowCommentCount) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
@@ -1191,30 +1269,16 @@
 		    
 		</script>
 	</head>
-	<body class="popup" style="overflow:hidden; height:100%;">
+	<body id="bodyPopup" class="popup" style="overflow:hidden; height:100%;">
 		<table class="layout" style="height:100%">
 		  <tr>
 		    <td style="vertical-align: top; height: 10px;">
 		      <div id="menu">
 		        <ul>
 		        	<c:choose>
-		        		<c:when test="${boardID == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
-		        			<c:if test="${guBun != '3'}">
-								<!--		강민수92	   -->
-		        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
-		        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81'/>[${commentCount}]</span></li>
-		        				</c:if>
-								<!--		강민수92 end -->		        			
-			        			<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
-<%-- 			        			<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
-		        			</c:if>
-		        		</c:when>
 		        		<c:when test="${pReservedItem == 'true'}">
 		        			<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
 		                    <li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
-		        			<c:if test="${guBun != '3'}">
-<%-- 			        			<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
-		        			</c:if>
 		        		</c:when>
 		        		<c:when test="${apprFlag == 'N'}">
 		        			<li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005' /></span></li>
@@ -1234,66 +1298,50 @@
 		        		<c:otherwise>
 		        			<c:choose>
 			        			<c:when test="${guBun == '2'}">
-			        				<c:choose>
-				        				<c:when test="${guBun != '3'}">
-							        		<!--		강민수92	   -->
-					        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
-					        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
-					        				</c:if>
-											<!--		강민수92 end -->				        				
-				        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
-				        				</c:when>
-			        				</c:choose>
+					        		<!--		강민수92	   -->
+			        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
+			        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
+			        				</c:if>
+									<!--		강민수92 end -->				        				
+		        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 			        				<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+			        				<%-- 2020-02-11 홍승비 - 익명게시판 게시물도 관리자인 경우 이동, 복사 가능하도록 수정(boardGroupAdmin_FG이 OK라면 boardAdmin_FG값도 true) --%>
+		                        	<c:if test="${boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}"> 
+				                        <li ID='btn_Copy'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
+							            <li ID='btn_Move'><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
+                        			</c:if>
 			        				<li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
-			                        <c:if test="${guBun != '3'}">
-			                        	<li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
-			                        	<li ID='btn_Move' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
-<%-- 			        				<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
-			                        </c:if>
+			                        <li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
+			                        <li ID='btn_Mail' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
 			        			</c:when>
 			        			<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
-			        				<c:if test="${guBun != '3'}">
-			        					<!--		강민수92	   -->
-				        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
-				        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
-				        				</c:if>
-										<!--		강민수92 end -->			        				
-			        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
+		        					<!--		강민수92	   -->
+			        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
+			        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
 			        				</c:if>
+									<!--		강민수92 end -->			        				
+		        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 			        				<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-			                        <c:if test="${guBun != '3'}">
-			                        	<c:if test="${guBun != '2'}">
-					                        <li ID='btn_Move'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
-								            <%--게시물이동추가--%>
-								            <li><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
-			                        	</c:if>
-<%-- 			                      	<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
-			                    	</c:if>
-			                    	<c:if test="${guBun != '2'}">
-			                        	<li ID='btn_Move'><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
+			                        <c:if test="${guBun != '2'}">
+										<li ID='btn_Copy'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
+										<%--게시물이동추가--%>
+										<li ID='btn_Move'><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
+			                        	<li ID='btn_Reader'><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
 			                    	</c:if>
 			                    	<li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
-			                    	<c:if test="${guBun != '3'}">
-			                        	<li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
-			                        	<li ID='btn_Move' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
-			                        </c:if>
+		                        	<li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
+		                        	<li ID='btn_Mail' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
 			        			</c:when>
 			        			<c:otherwise>
-			        				<c:if test="${guBun != '3'}">
-					        			<!--		강민수92	   -->
-				        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
-				        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
-				        				</c:if>
-										<!--		강민수92 end -->			        				
-				                        <li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
-				                        <c:if test="${guBun != '2'}">
-<%-- 				                        <li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
-				                        </c:if>
-				                        <li ID='btn_Read' ><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
-				                        <li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
-				                        <li ID='btn_Move' style="display:none;"><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
-				                    </c:if>
+				        			<!--		강민수92	   -->
+			        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
+			        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
+			        				</c:if>
+									<!--		강민수92 end -->			        				
+			                        <li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
+			                        <li ID='btn_Read' ><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
+			                        <li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
+			                        <li ID='btn_Mail' style="display:none;"><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
 			        			</c:otherwise>
 		        			</c:choose>
 		        		</c:otherwise>
@@ -1322,42 +1370,40 @@
 		    </td>
 		    </tr>
 		    <tr>
-		    <c:choose>
-				<c:when test="${guBun != '3'}">
-					<td style="vertical-align: top; height: 10px;">
-					<table class="content2" style="width:100%;">
-						<!-- 게시자  -->
-						<tr>
-							<th style="width:10%;"><spring:message code='ezBoard.t223' /></th>
-							<c:choose>
-								<c:when test="${guBun != '2'}">
-									<td id="WriteUserNM" style="width:40%; white-space:nowrap">
-										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")'>
-											<c:out value="${boardItem.writerName}"/>
-										</div>
-									</td>
-								</c:when>
-								<c:otherwise>
-									<td id="WriteUserNM" style="width:40%; white-space:nowrap">
-										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">
-											<c:out value="${boardItem.writerName}"/>
-										</div>
-									</td>
-								</c:otherwise>
-							</c:choose>
-						<!-- 게시자 end -->
+				<td style="vertical-align: top; height: 10px;">
+				<table class="content2" style="width:100%;">
+					<!-- 게시자  -->
+					<tr>
+						<th style="width:10%;"><spring:message code='ezBoard.t223' /></th>
 						<c:choose>
 							<c:when test="${guBun != '2'}">
-								<!-- 부서 -->
-									<th style="width:10%;"><spring:message code='ezBoard.t322' /></th>
-									<c:choose>
-										<c:when test="${guBun != '2'}">
-											<td id="User_DeptNM" style="width:40%; white-space:nowrap"><span>${boardItem.writerDeptName}</span></td>
-										</c:when>
-										<c:otherwise>
-											<td id="User_DeptNM" style="width:40%; white-space:nowrap"><span>&nbsp;</span> </td>
-										</c:otherwise>
-									</c:choose>
+								<td id="WriteUserNM" style="width:40%; white-space:nowrap">
+									<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")'>
+										<c:out value="${boardItem.writerName}"/>
+									</div>
+								</td>
+							</c:when>
+							<c:otherwise>
+								<td id="WriteUserNM" style="width:40%; white-space:nowrap">
+									<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">
+										<c:out value="${boardItem.writerName}"/>
+									</div>
+								</td>
+							</c:otherwise>
+						</c:choose>
+					<!-- 게시자 end -->
+					<c:choose>
+						<c:when test="${guBun != '2'}">
+							<!-- 부서 -->
+								<th style="width:10%;"><spring:message code='ezBoard.t322' /></th>
+								<c:choose>
+									<c:when test="${guBun != '2'}">
+										<td id="User_DeptNM" style="width:40%; white-space:nowrap"><span>${boardItem.writerDeptName}</span></td>
+									</c:when>
+									<c:otherwise>
+										<td id="User_DeptNM" style="width:40%; white-space:nowrap"><span>&nbsp;</span> </td>
+									</c:otherwise>
+								</c:choose>
 						</tr>
 								<!-- 부서 end -->
 								<!-- 직위 -->
@@ -1388,7 +1434,7 @@
 								<tr>
 									<th><spring:message code='ezBoard.t224' /></th>
 									<td id="PostDate" style = "white-space:nowrap; padding-right:5px">
-										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">${boardItem.writeDate}</div>
+										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">${boardItem.writeDate.substring(0, 16)}</div>
 									</td>
 									<!-- 게시일 end -->
 									<!-- 게시 종료일 -->
@@ -1482,167 +1528,77 @@
 			        <!-- 제목 end -->
 			      </table>
 			    </td>
-			    </c:when>
-			    <c:otherwise>
-				    <td style="vertical-align: top; height: 80px;">
-				        <table style="width:100%" class="content">
-				        <tr>
-				          <th><spring:message code='ezBoard.t223' /></th>
-				          <td id="WriteUserNM" style="white-space:nowrap; width:100%;"><div style="OVERFLOW-Y:auto;WIDTH:100%;cursor:pointer;HEIGHT:16px; vertical-align:middle;" onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")'><c:out value="${boardItem.writerName}"/></div>
-				          <th><spring:message code='ezBoard.t289' /></th>
-				          <td id="User_DeptNM" style="padding-right:10px; white-space:nowrap; width:100px;">${boardItem.writerDeptName}</td>
-				          <th><spring:message code='ezBoard.t290' /></th>
-				          <td id="User_JobTitle" style="padding-right:10px; white-space:nowrap; width:100px;">${boardItem.extensionAttribute3}</td>
-				        </tr>
-				        <tr>
-				          <th><spring:message code='ezBoard.t291' /></th>
-				          <td style="width:100%;" id="cTitle" colSpan="5"><div id="title" style="OVERFLOW-Y: auto; PADDING-LEFT: 5px; WIDTH: 100%; HEIGHT: 16px; vertical-align:middle;"><c:out value="${boardItem.title}"/></div></td>
-				        </tr>
-				      </table>
-				    </td>
-			    </c:otherwise>
-		  </c:choose>
 		  </tr>
 		  <tr>
-		  <c:choose>
-			  <c:when test="${guBun != '3'}">
-			    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
-			        <iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; height:495px; overflow:auto; border:1px solid #ddd"></iframe>
-			    </td>
-			  </c:when>
-			  <c:otherwise>
-			    <td class="pad1">
-	<%-- 		      <div class="viewbox"><img src='<%=g_ImageUrl%>' border=0 width='<%=g_Width%>' height ='<%=g_Height%>' name=zb_target_resize style='cursor:pointer'  onclick=window.open(this.src,"_blank","","false") > --%>
-			        <div id="ItemOverflow">
-			           <iframe id="message" name="message"  style="padding: 0;width:100%; overflow:auto;"></iframe>
-			        </div>
-	<!-- 		      </div> -->
-			    </td>
-			  </c:otherwise>
-		  </c:choose>
+		    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
+		        <iframe id="message" class="viewbox" name="message" style="padding:0; width:calc(100% - 2px); height:495px; overflow:auto; border:1px solid #ddd"></iframe>
+		        <%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
+		        <c:if test="${boardPropertyVO.oneLineReply == '2'}">
+		        	<div style='height:auto;'>
+						<table class="mainlist" style="width:100%" >
+							<c:choose>
+								<c:when test="${guBun == 2}">
+									<tr>
+										<th colspan="2" style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-right:1px solid #e2e2e2;
+												 border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
+											<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
+										</th>
+								</c:when>
+								<c:otherwise>
+									<tr>
+										<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+											<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
+										</th>
+								</c:otherwise>	
+							</c:choose>
+							<c:choose>
+								<c:when test="${guBun == 2}">
+									</tr>
+								</c:when>
+								<c:otherwise>
+										<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
+											<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+										</th>
+									</tr>
+								</c:otherwise>
+							</c:choose>
+							</tr>
+							<c:if test="${guBun == 2}">
+								<tr>
+									<th colspan="2" style="width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #f8f8fa; border-right:1px solid #e2e2e2; text-align:right;
+											border-bottom:1px solid #e2e2e2; padding-top:0px; padding-bottom:4px; vertical-align: middle">
+										<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
+										<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>
+										<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+									</th>
+								</tr>
+							</c:if>
+						</table>
+						<table id="commentList" style="width:100%;margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+					</div>
+		        </c:if>
+		        <%-- 본문하단 댓글영역 끝 --%>
+		    </td>
 		  </tr>
-		  <c:choose>
-			  <c:when test="${boardPropertyVO.oneLineReply == '1'}">
-<!-- 				  <tr> -->
-<%-- 				  <c:choose> --%>
-<%-- 				      <c:when test="${guBun != '2'}"> --%>
-<!-- 					    <td style="vertical-align: top;"> -->
-<!-- 					        <table class="content"> -->
-<!-- 					        <tr> -->
-<!-- 					          <td style="height:50px;" colspan="3"><div id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 51px; background-color:white; text-align:left"></div></td> -->
-<!-- 					        </tr> -->
-<!-- 					        <tr> -->
-<%-- 					          <th><spring:message code='ezBoard.t324' /></th> --%>
-<!-- 					          <td class="pos1"><input id="onelinereply" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td> -->
-<%-- 					          <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a></td> --%>
-<!-- 					        </tr> -->
-<!-- 					      </table> -->
-<!-- 					    </td> -->
-<%-- 				  	</c:when> --%>
-<%-- 				    <c:otherwise><!-- 2011.04.13 익명게시판의 경우 한줄답변 등록시 password 추가  --> --%>
-<!-- 				        <td style="vertical-align: top; height:10%;"> -->
-<!-- 				            <table class="content"> -->
-<!-- 				            <tr> -->
-<!-- 				              <td style="height:50px" colspan="5"> -->
-<!-- 				                  <div id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 51px; background-color:white; text-align:left"></div> -->
-<!-- 				              </td> -->
-<!-- 				            </tr> -->
-<!-- 				            <tr> -->
-<%-- 				              <th><spring:message code='ezBoard.t324' /></th> --%>
-<!-- 				              <td class="pos1"><input id="onelinereply" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td> -->
-<%-- 				              <th><spring:message code='ezBoard.t438' /></th> --%>
-<!-- 				              <td> -->
-<!-- 				              	<INPUT type="password" id="txtPassWord_fake" name="pwd" style="WIDTH:80px; display: none;" autocomplete="new-password"> -->
-<!-- 				              	<INPUT type="password" id="txtPassWord" name="pwd" style="WIDTH:80px" maxlength="15" autocomplete="new-password"> -->
-<!-- 				              </td> -->
-<%-- 				              <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a></td> --%>
-<!-- 				            </tr> -->
-<!-- 				          </table> -->
-<!-- 				        </td> -->
-<%-- 				    </c:otherwise> --%>
-<%-- 			    </c:choose> --%>
-<!-- 			  </tr> -->
-			  <tr>
-			  <c:choose>
-				  <c:when test="${guBun != '3'}">
-				    <td class="pad1" style="vertical-align: top;">
-				        <table class="file">
-				        <tr>
-				          <th><spring:message code='ezBoard.t10025' /></th>
-				            <td>
-				            	<div style="text-align:left; OVERFLOW: auto; HEIGHT: 50px; background-color:white" id="lstAttachLink" ></div>
-				            </td>
-				        <td class="pos2">
-				        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-				        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
-				        </td>
-				        <td id="ItemLevel" style="display:none"></td>
-				        </tr>
-				      </table>
-				    </td>
-				  </c:when>
-				  <c:otherwise>
-				    <td class="pad1" style="vertical-align: top; DISPLAY:none;">
-				        <table class="file">
-				        <tr>
-				          <th><spring:message code='ezBoard.t10025' /></th>
-				          <td class="pos2">
-				          	  <div style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left" id="lstAttachLink"></div>
-				          </td>
-				          <td class="pos2">
-				              <a class="imgbtn imgbck"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-				              <a class="imgbtn imgbck"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
-				          </td>
-				          <td id="Td1"></td>
-				        </tr>
-				      </table>
-				    </td>
-				  </c:otherwise>
-			  </c:choose>
-			  </tr>
-			  </c:when>
-			  <c:otherwise>
-			  	<c:choose>
-				  	<c:when test="${guBun != '3'}">
-				 	<tr>
-					    <td class="pad1" style="vertical-align: top; ">
-					        <table class="file">
-					        <tr>
-					          <th><spring:message code='ezBoard.t10025' /></th>
-			                     <td >
-					            <div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;background-color:white; text-align:left"></div>
-					          </td>
-					          <td class="pos2">
-					             <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-					             <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
-					          </td>
-					          <td id="Td2" style="display:none"></td>
-					        </tr>
-					      </table>
-					    </td>
-					</tr>
-					</c:when>
-					<c:otherwise>
-					  <tr style="DISPLAY:none">
-					    <td class="pad1" style="vertical-align: top;">
-					        <table class="file">
-					        <tr>
-					          <th><spring:message code='ezBoard.t10025' /></th>
-		                      <td class="pos2">
-					            <div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left"></div></td>
-	  				          <td class="pos2">'
-					          <a class="imgbtn imgbck"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-					          <a class="imgbtn imgbck"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
-					          </td>
-					          <td id="Td3"></td>
-					        </tr>
-					      </table>
-					    </td> 
-					  </tr>
-					</c:otherwise>
-				</c:choose>
-			  </c:otherwise>
-		  </c:choose>
+		<%-- 2020-02-13 홍승비 - 사용하지 않는 한줄댓글 코드 제거(본문하단 댓글으로 대체), 첨부파일 영역 확장 --%>
+		  <tr>
+		    <td class="pad1" style="vertical-align: top;">
+		        <table class="file">
+		        <tr>
+		          <th><spring:message code='ezBoard.t10025' /></th>
+		            <td>
+		            	<div style="text-align:left; OVERFLOW: auto; HEIGHT: 76px; background-color:white" id="lstAttachLink" ></div>
+		            </td>
+		        <td class="pos2">
+		        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+		        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
+		        </td>
+		        <td id="ItemLevel" style="display:none"></td>
+		        </tr>
+		      </table>
+		    </td>
+		  </tr>
+
 		  <c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
 			  <tr>
 			    <td style="vertical-align: top;">
@@ -1681,6 +1637,11 @@
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	        <iframe src="" style="border:none;" id="iFrameLayer"></iframe>
+	    </div>
+	    <%-- 2019-11-07 홍승비 - 익명게시물 댓글삭제 시 비밀번호 확인을 위한 레이어팝업 추가 --%>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel2">&nbsp;</div>
+	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel2">
+	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer2"></iframe>
 	    </div>
 	</body>
 </html>

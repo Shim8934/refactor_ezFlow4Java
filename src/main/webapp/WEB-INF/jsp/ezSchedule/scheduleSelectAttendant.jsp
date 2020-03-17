@@ -49,6 +49,7 @@
 	        var strSearch = "<c:out value='${pSearchString}' />";
 	        var RetValue;
 	        var ReturnFunction;	        
+	        var lang = "<c:out value='${lang}' />";
 	        
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -190,7 +191,12 @@
 	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptName1 + "]]></DATA4>";
 	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName2 + "]]></DATA5>";
 	                pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
-	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName1 + "]]></VALUE></CELL></ROW>";
+	                if(lang == "1") {
+	                	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName1 + "]]></VALUE></CELL></ROW>";
+	                }
+	                else {
+	                	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName2 + "]]></VALUE></CELL></ROW>";
+	                }
 	
 	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                var Resultxml = loadXMLString(pparsingXML2);
@@ -594,7 +600,7 @@
 	            if (listContentArry != "") {
 	                for (var i = 0; i < listContentArry.length; i++) {
 	                    var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
-	                    var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
+	                    var strName = document.getElementById(listContentArry[i]).getAttribute("_data10");
 	                    var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 	                    var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
 	                    var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
@@ -624,7 +630,12 @@
 	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+	                        if(lang == "1") {
+	                        	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+	                        }
+	                        else {
+	                        	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName2 + "]]></VALUE></CELL></ROW>";
+	                        }
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
 	
@@ -665,7 +676,7 @@
 	                }
 	                if (p_ListOrderObject != "") {
 	                    var strId = p_ListOrderObject.getAttribute("_data2");
-	                    var strName = p_ListOrderObject.getAttribute("_data4");
+	                    var strName = p_ListOrderObject.getAttribute("_data10");
 	                    var strDeptNM = p_ListOrderObject.getAttribute("_data5");
 	                    var strEmail = p_ListOrderObject.getAttribute("_data3");
 	                    var strName2 = p_ListOrderObject.getAttribute("_data11");
@@ -694,8 +705,13 @@
 	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
-	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+	                        if(lang == "1") {
+	                       		 pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+	                        }
+	                        else {
+	                       		 pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName2 + "]]></VALUE></CELL></ROW>";
+	                        }
+							pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
 	
 	                        var listview = new ListView();
@@ -1431,6 +1447,10 @@
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezSchedule.t1051' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezSchedule.t20' /></option>
 	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezSchedule.t21' /></option>
+															<c:if test="${primaryLang eq '3' }">
+		                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+		                                                    </c:if>
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezSchedule.t22' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezSchedule.t23' /></option>
 	                                                    </select>

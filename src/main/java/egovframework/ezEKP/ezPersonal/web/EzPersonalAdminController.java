@@ -346,7 +346,19 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("getQuickLinkList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		List<PersonalQuickLinkVO> list = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang());
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String lang = userInfo.getLang();
+		logger.debug("[getQuickLinkList] primaryLang : " + primaryLang + ", lang : " + lang);
+		
+		String userLang = "1";
+		
+		if (primaryLang.equals(lang)) {
+			userLang = "1";
+		} else {
+			userLang = lang;
+		}
+		
+		List<PersonalQuickLinkVO> list = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang(), userLang);
 		
 		JSONObject json = new JSONObject();
 		json.put("list", list);
@@ -371,9 +383,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			mode = request.getParameter("mode");
 		}
 		
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		JSONObject json = new JSONObject();
 		json.put("strUserLang", commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()));
-		json.put("primary", userInfo.getPrimary());
+		json.put("primary", primaryLang);
 		json.put("mode", mode);
 		json.put("lang", userInfo.getLang());
 		
@@ -422,7 +435,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickLink 권한등록화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/selectTarget.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezPersonal/selectTargetQuickLink.do", method = RequestMethod.GET)
 	public String selectTarget(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("selectTarget started");
 
@@ -440,7 +453,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("topID", topID);
 
 		logger.debug("selectTarget ended");
-		return "admin/ezPersonal/personalSelectTarget";
+		return "admin/ezPersonal/personalSelectTargetQuickLink";
 	}
 	
 	/**

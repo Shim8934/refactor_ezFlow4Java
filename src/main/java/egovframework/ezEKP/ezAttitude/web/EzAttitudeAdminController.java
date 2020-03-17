@@ -1527,8 +1527,7 @@ public class EzAttitudeAdminController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
-				.queryParam("userId", userInfo.getId())
-				.queryParam("lang", userInfo.getPrimary());
+				.queryParam("userId", userInfo.getId());
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -1598,8 +1597,7 @@ public class EzAttitudeAdminController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
-				.queryParam("userId", userId)
-				.queryParam("lang", userInfo.getPrimary());
+				.queryParam("userId", userId);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -2581,6 +2579,7 @@ public class EzAttitudeAdminController {
 		String userId = request.getParameter("userId");
 		String changeReason = request.getParameter("changeReason");
 		String annualCnt = request.getParameter("annualCnt");
+		String flagCheck = request.getParameter("flagCheck");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
@@ -2596,7 +2595,8 @@ public class EzAttitudeAdminController {
 				.queryParam("changeUserId", userInfo.getId())
 				.queryParam("changeReason", changeReason)
 				.queryParam("companyId", companyId)
-				.queryParam("annualCnt", annualCnt);
+				.queryParam("annualCnt", annualCnt)
+				.queryParam("flagCheck", flagCheck);
 		
 		
 		RestTemplate rest = new RestTemplate();

@@ -28,6 +28,10 @@
 	            var ret = false;
 	            var obj = event.srcElement;
 	            try {
+					if (obj.nodeName == "TEXTAREA") {
+						return true;
+					}
+
 	                if (obj.nodeName == "#text")
 	                    obj = obj.parentElement;
 	
@@ -65,6 +69,10 @@
 	                parent.DocumentComplete();
 	                document.execCommand("AutoUrlDetect", false, false);
 	                document.querySelector("div").addEventListener("paste", function(e) {
+						if (e.target.tagName === "TEXTAREA") {
+							return;
+						}
+
 	                    e.preventDefault();
 	                    var text = '';
 	                    if (e.clipboardData) {
@@ -258,6 +266,11 @@
 	                        TDRows.item(i).appendChild(Div_);
 	                    }
 	                }
+	                
+                    var textAreaElements = obj.getElementsByTagName("textarea");
+                    for (i = 0; i < textAreaElements.length; i++) {
+                    	textAreaElements.item(i).oninput = onInputTextarea;
+                    }
 	            } catch (e) { }
 	        }
 	        function Set_EditorContentURL(url) {
@@ -338,6 +351,7 @@
 	                    }
 	                    
 	                    if (parent.pDraftFlag != "REDRAFT") {
+	                    	BodyTagsEnabled(document.getElementById('div_Content'));
   							var Body_innerHTML = "";
 	                        if (document.getElementById("body") != null) {
 	                            if (document.getElementById("body").getAttribute("class") == "FIELD") {
@@ -361,6 +375,10 @@
 									CheckRows.item(i).onchange = RadioOnClick;
 								}
 	                        }
+		                    var textAreaElements = document.getElementById('div_Content').getElementsByTagName("textarea");
+		                    for (i = 0; i < textAreaElements.length; i++) {
+		                    	textAreaElements.item(i).oninput = onInputTextarea;
+		                    }
 	                        if (document.getElementById("body") != null) {
 	                        	// class가 FIELD를 포함한 두 개 이상일 때도 조건문에 포함되어야 함 2019-05-14 임민석
 	                        	if (document.getElementById("body").getAttribute("class").indexOf("FIELD") != -1) {
@@ -487,17 +505,28 @@
 	            }
 	        }
 	
-	        function GetDocTitle() {
-	            try {
-	                if (document.getElementById("frame_doctitle") == null) {
-	                    return document.getElementById("doctitle").textContent;
-	                }
-	                else {
-	                    return document.getElementById("frame_doctitle").textContent;
-	                }
-	            } catch (e)
-	            { return ""; }
-	        }
+           function GetDocTitle() {
+               try {
+               var docTitleElem;
+                   if (document.getElementById("frame_doctitle") == null) {
+                       docTitleElem = document.getElementById("doctitle");
+                   }
+                   else {
+                       docTitleElem = document.getElementById("frame_doctitle");
+               }
+
+               var encDocTitle = encodeURIComponent(docTitleElem.textContent);
+			   // 문서 발송시 오류때문에 제목에 줄바꿈문자 제거, 탭문자 공백문자처리
+               encDocTitle = encDocTitle.replace(new RegExp('%0A|%0D', 'gi'), '').replace(new RegExp('%09', 'gi'), '%20');
+
+               var decDocTitle = decodeURIComponent(encDocTitle);
+               docTitleElem.innerText = decDocTitle;
+
+               return decDocTitle;
+               
+               } catch (e)
+               { return ""; }
+           }
 	        
 	        function getMustFieldsInsert(lang) {
 	        	try {
@@ -529,7 +558,6 @@
 	            } catch (e)
 	            { return ""; }
 	        }
-	
 	        function GetFieldsList() {
 	            try {
 	                var FieldsList = new Array();
@@ -645,6 +673,16 @@
 	                }
 				}
 				
+				var inputElements = Div.querySelectorAll("input, select, textarea");
+				var element;
+
+				for (var i = 0; i < inputElements.length; i++) {
+					element = inputElements[i];
+
+					if (!element.disabled) {
+						element.disabled = true;
+					}
+				}
 				// var i, len, len2;
 	            // var InputRows = Div.getElementsByTagName("INPUT");
 	            // for (i = 0, len = InputRows.length; i < len; i++) {

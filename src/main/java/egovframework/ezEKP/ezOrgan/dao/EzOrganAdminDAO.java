@@ -35,6 +35,8 @@ import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
+import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -1409,6 +1411,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public void insertCompanyInfo_I30(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I30", map);
     }
+
+	public void insertCompanyInfo_I31(Map<String, Object> map) {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I31", map);
+	}
+
+	public void insertCompanyInfo_I32(Map<String, Object> map) {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I32", map);
+	}
     
     public void insertCompanyInfo_IJHS1(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_IJHS1", map);
@@ -2257,4 +2267,33 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public List<OrganGroupVO> getGroupListBoard(Map<String, Object> map) throws Exception {
         return (List<OrganGroupVO>) list("EzOrganAdminDAO.getGroupListBoard", map);
     }
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganLoginStopUserVO> getLoginStopUserList(Map<String, Object> map) throws Exception {
+		return (List<OrganLoginStopUserVO>) list("EzOrganAdminDAO.getLoginStopUserList", map);
+	}
+	
+    public int getLoginStopUserListCount(Map<String, Object> map) throws Exception {
+    	return (int) select("EzOrganAdminDAO.getLoginStopUserListCount", map);        
+    }
+    
+    public void insertStopUser(Map<String, Object> map) throws Exception {
+    	insert ("EzOrganAdminDAO.insertStopUser", map);
+    }
+    
+    public void deleteStopUser(Map<String, Object> map) throws Exception {
+    	delete ("EzOrganAdminDAO.deleteStopUser", map);
+    }
+    
+    public int checkStopUser(Map<String, Object> map) throws Exception {
+    	return (int) select ("EzOrganAdminDAO.checkStopUser", map);
+    }
+
+    public void setDeptPrimaryMail (Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.setDeptMail", map);
+	}
+	
+	public void deleteCompanyConfig(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompanyConfig", map);
+	}
 }

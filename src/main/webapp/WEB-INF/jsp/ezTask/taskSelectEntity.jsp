@@ -1305,6 +1305,10 @@
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezTask.t1001' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezTask.t202' /></option>
 	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezTask.t1005' /></option>
+	                                                        <c:if test="${primaryLang eq '3' }">
+		                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+		                                                    </c:if>
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezTask.t1002' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezTask.t1003' /></option>
 	                                                    </select>

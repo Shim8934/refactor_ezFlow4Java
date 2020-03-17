@@ -77,7 +77,7 @@
 						</div>
 					</td>
 				</tr>
-				<tr>
+				<tr class="${survey.paritipateFlag == 0 ? 'rspdtList' : 'rspdtList on'}" id='rspdtList'>
 					<th class="left-Th"><spring:message code="ezSurvey.t55"/></th> <%-- respondent setting --%>
 					<td class="right-Td" colspan="3">
 						<div id="userWrapDiv" class="${survey.paritipateFlag == 0 ? 'user-mainDiv' : 'user-mainDiv on'}">

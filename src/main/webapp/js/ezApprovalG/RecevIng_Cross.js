@@ -434,12 +434,16 @@ function document_oncontextmenu() {
     }
 }
 
-function chk_Passwd() {
+var ezchkpasswd_cross_dialogArguments = new Array();
+function chk_Passwd()
+{
     var parameter = pUserID;
-    var url = "../ezchkPasswd_Cross.aspx";
-    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
-    var ret = window.showModalDialog(url, parameter, feature);
-    return ret;
+    var url = "/ezApprovalG/ezchkPasswd.do";
+
+    ezchkpasswd_cross_dialogArguments[0] = parameter;
+    ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
+
+    DivPopUpShow(350, 225, url);
 }
 
 

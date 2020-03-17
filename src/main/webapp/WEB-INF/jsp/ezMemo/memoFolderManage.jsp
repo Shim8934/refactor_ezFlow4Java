@@ -61,12 +61,12 @@
 						folderList.forEach(function(list, index){
 							html+="<div class='memoNode' id='folder" + list.folder_id + "'>";
 							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
-							html+="<img src='/images/ezMemo/memoFolder.png' style='width:18px;height:18px;'>";
+							html+="<span class='sub_iconLNB tree_memo_default'></span>";
 							
 							if (list.orders === 0) {
-								html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;cursor:pointer; padding-left:2px; vertical-align: top;' class='node' data1='" + memoMessages.strLangMemo22 + "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + memoMessages.strLangMemo22 + "</span></div>";
+								html+="<span class='node_normal' data1='" + memoMessages.strLangMemo22 + "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + memoMessages.strLangMemo22 + "</span></div>";
 							} else {
-								html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;cursor:pointer; padding-left:2px; vertical-align: top;' class='node' data1='" + list.folder_name + "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + list.folder_name + "</span></div>";
+								html+="<span class='node_normal' data1='" + list.folder_name + "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + list.folder_name + "</span></div>";
 							}
 							
 						});
@@ -78,7 +78,7 @@
 		    }
 		    
 		    function memoFolderClickE() {
-		  		$(".node").click(function(){
+		  		$(".node_normal").click(function(){
 					if(selId!==""){
 						$("#"+selId).css("font-weight", "normal");
 					}

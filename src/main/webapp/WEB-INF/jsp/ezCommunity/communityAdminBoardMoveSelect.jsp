@@ -24,7 +24,7 @@
 				vertical-align:text-bottom;
 			}
 			.node_div img {
-				margin-bottom: 2px;
+				margin-bottom: 3px;
 			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>

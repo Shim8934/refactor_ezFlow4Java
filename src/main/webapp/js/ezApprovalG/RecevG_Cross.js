@@ -1957,14 +1957,15 @@ function SetPropertyValue() {
 
 
 var ezchkpasswd_cross_dialogArguments = new Array();
-function chk_Passwd() {
+function chk_Passwd()
+{
     var parameter = pUserID;
-    var url = "/myoffice/ezApprovalG/ezchkPasswd_Cross.aspx";
+    var url = "/ezApprovalG/ezchkPasswd.do";
 
     ezchkpasswd_cross_dialogArguments[0] = parameter;
     ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    DivPopUpShow(330, 200, url);
+    DivPopUpShow(350, 225, url);
 }
 
 function btnSetTaskCode_onclick() {
@@ -2260,12 +2261,12 @@ function SetBtnStateTrue() {
 function SaveDraftDocInfo() {
     var rtnVal;
     
-    // 수정(2008.06.12) : 결재문서 파일 저장 시 임시파일 생성 후 파일크기를 체크하여 원본 파일로 복사하도록 루틴 수정
     rtnVal = SaveFile();
-    if (rtnVal != "TRUE")
-    {
+
+    if (rtnVal != "TRUE") {
         return rtnVal;
     }
+
     SignSave();
 
     rtnVal = SaveDraftDocInfo_susin();

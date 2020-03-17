@@ -424,6 +424,8 @@ public class EzAddressController{
 			useZipCodeSearch = "YES";
 		}
 		
+		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
+		
 		model.addAttribute("addressId", addressId);
 		model.addAttribute("folderId", folderId);
 		model.addAttribute("folderType", folderType);
@@ -440,6 +442,7 @@ public class EzAddressController{
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("deptAdmin", deptAdmin);
 		model.addAttribute("compAdmin", compAdmin);
+		model.addAttribute("useAnyoneEdit", useAnyoneEdit);
 		
 		logger.debug("addressWrite ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId
@@ -535,6 +538,7 @@ public class EzAddressController{
 			String sType = xmldom.getElementsByTagName("STYPE").item(0).getTextContent();
 			String sUserNM = xmldom.getElementsByTagName("USERNM").item(0).getTextContent();
 			String sUserNM2 = xmldom.getElementsByTagName("USERNM2").item(0).getTextContent();
+			String sFurigana = xmldom.getElementsByTagName("FURIGANA").item(0).getTextContent();
 			
 			// ownerId가 없으면 디비에서 구하기.
 			if (ownerId.trim().equals("")) {
@@ -573,7 +577,7 @@ public class EzAddressController{
 				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), 
 						sName, sEmail, sCompany, sDept, sTitle, 
 						sCompanyPhone, sFax, sMobile, sHomePage, 
-						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sType);
+						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sType, sFurigana);
 			} else { //주소록 수정
 				AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), addressId);
 				
@@ -593,7 +597,7 @@ public class EzAddressController{
 				ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
 						sName, sEmail, sCompany, sDept, sTitle, 
 						sCompanyPhone, sFax, sMobile, sHomePage, 
-						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo);
+						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sFurigana);
 			}
 		} catch (Exception e) {
 			returnVaule = "ERROR";
@@ -629,6 +633,7 @@ public class EzAddressController{
 		String pAddressId = request.getParameter("addressid") == null ? "" : request.getParameter("addressid");
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		boolean gyumJikChk = true;
 		if (userInfo.getGyumJik() != null) {
@@ -675,11 +680,12 @@ public class EzAddressController{
 		model.addAttribute("pFolderType", pFolderType);
 		model.addAttribute("getsMemo", replaceMemo);
 		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
+		model.addAttribute("primaryLang", primaryLang);
 		
 		logger.debug("addressRead ended.");
 		logger.debug("useEditor=" + useEditor + ",noneActiveX=" + noneActiveX + ",userInfo=" + userInfo
 				 + ",addressInfo=" + addressInfo + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin + ",pAddressId=" + pAddressId
-				 + ",pFolderId=" + pFolderId + ",pFolderType=" + pFolderType);
+				 + ",pFolderId=" + pFolderId + ",pFolderType=" + pFolderType + ",primaryLang=" + primaryLang);
 		
 		return "ezAddress/addressRead";
 	}
@@ -704,6 +710,7 @@ public class EzAddressController{
 		String userNM2 = userInfo.getDisplayName2();
 		String useOcs = config.getProperty("config.USE_OCS");
 		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", userInfo.getTenantId());
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		if (mailMaxReceiverCount.equals("")) {
 			mailMaxReceiverCount = "200";
@@ -743,6 +750,10 @@ public class EzAddressController{
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
+		model.addAttribute("primaryLang", primaryLang);
+		
+		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
+		model.addAttribute("useShowAllCompanies", useShowAllCompanies);
 		
 		logger.debug("addressWriteGroup ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",ownerId=" + ownerId + ",folderType=" + folderType
@@ -811,7 +822,7 @@ public class EzAddressController{
 				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
 						sGroupName, sEmail, "", "", "", 
 						"", "", "", "", 
-						"", "", "", "", sMemo, sType);
+						"", "", "", "", sMemo, sType, "");
 			} else { //주소록 수정
 				AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), addressId);
 				
@@ -831,7 +842,7 @@ public class EzAddressController{
 				ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), 
 						sGroupName, sEmail, "", "", "", 
 						"", "", "", "", 
-						"", "", "", "", sMemo);
+						"", "", "", "", sMemo, "");
 			}
 			
 		} catch (Exception e) {
@@ -1392,7 +1403,7 @@ public class EzAddressController{
 	/**
 	 * 최상위 주소록 정보 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/getRootAddressXML.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/getRootAddressXML.do", method = RequestMethod.GET, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getRootAddressXML(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception {		
 		logger.debug("getRootAddressXML started.");
@@ -2344,12 +2355,12 @@ public class EzAddressController{
         			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
         					sName, csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
         					csvBody[5], csvBody[6], csvBody[7], csvBody[9], 
-        					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "G");
+        					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "G", "");
         		} else {
         			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName(), userInfo.getDisplayName2(),
         					sName, csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
         					csvBody[5], csvBody[6], csvBody[7], csvBody[9], 
-        					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "P");
+        					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "P", "");
         		}
         	} catch (Exception e) {
         		result = "ERROR";

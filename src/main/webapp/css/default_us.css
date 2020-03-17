@@ -10,7 +10,7 @@ input, label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, 
 	ime-mode:active;
 }
 
-p, strong, h3 {
+p, strong, h3, div {
 	font-family: 'arial', 'arial', 'arial';
 }
 
@@ -1181,7 +1181,7 @@ form{display:inline;margin:0}
 
 .icon_01{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -286px -52px;}
 .icon_02{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -260px -52px;}
-
+.icon_03{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -312px -52px;}
 
 
 
@@ -1488,7 +1488,7 @@ form{display:inline;margin:0}
 	vertical-align:middle; 
 	width:230px;
 	overflow:hidden;
-	word-break:break-all;
+	word-break:break-word;
 	height:90px;
 	line-height:17px;
 	padding-top:31px;
@@ -2631,7 +2631,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .mainmenuTab .mainmenuTabUL li span { display: inline-block; height:31px; line-height:29px; padding: 0px 21px; margin: 0px 1px 0px 1px; text-align: center; font-size: 14px; font-weight: bold; color: #777; cursor: pointer; background: #e4e7ea; border:1px solid #e4e7ea; box-sizing:border-box; }
 .mainmenuTab .mainmenuTabUL li:hover span { position: relative; background: #3d8fea; color: #fff; border:1px solid #3d8fea; box-sizing:border-box; }
 .mainmenuTab .mainmenuTabUL li.on span { position: relative; background: #3d8fea; color: #fff; border:1px solid #3d8fea; box-sizing:border-box;}
-
+.calendar_layout {position: absolute;left: 90%;top:15px;width: 269px;margin-left: -134px;}
 /* admin */
 
 /* admin menu */
@@ -2655,7 +2655,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .bottomBtn .btnA:hover{border:1px solid #0470e4; color:#0470e4; background:#f1f8ff;}
 
 /* admin thema */
-.admin_thema{ margin:20px 0px 0px 0px; padding:0px; width:797px; height:398px; font-family:arial;}
+.admin_thema{ margin:20px 0px 0px 0px; padding:0px; width:1020px; height:398px; font-family:arial;}
 .admin_thema .menuIconTH{ margin:0px; padding:0px; width:161px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:center;}
 .admin_thema .menuIconTD{ margin:0px; padding:0px 5px 0px 5px; border:1px solid #dfdfdf; color:#393939; letter-spacing:-1px;}
 .admin_thema .menuIconTD_img{margin:0px; padding:20px 5px 20px 5px; border:1px solid #dfdfdf; color:#393939; text-align:center;}
@@ -3535,3 +3535,52 @@ input[type=range]::-ms-tooltip {display: none;}
 .calendar_layer .text .td_list td.individual .resource_no {background-image: url('/images/ezResource/state_approvalPending.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
 .calendar_layer .text .td_list td.individual .resource_refuse {background-image: url('/images/ezResource/state_approvalrefuse.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
 .calendar_layer .text .td_list td.individual .resource_noreturn {background-image: url('/images/ezResource/state_noreturn.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+
+/* 관리자 공유사서함 */
+.shared_boxesTable{width:100%; border:0px none; border-collapse:separate; border-spacing:0;}
+.shared_boxesTable tr th{height:38px; background-color:#f1f3f5; border-top:0px none; border-right:0px none; border-left:0px none; border-bottom:1px solid #e2e3e6; text-align:left; font-size:13px; color:#000; box-sizing:border-box;}
+.shared_boxesTable tr td{height:34px; background-color:#ffffff; border-top:0px none; border-right:0px none; border-left:0px none; border-bottom:1px solid #e2e3e6; font-size:12px; color:#333; box-sizing:border-box;}
+.shared_boxesTable tr td .layoutUL{list-style:none; margin:0px; padding:0px 5px 0px 10px;}
+.shared_boxesTable tr td .layoutUL .layoutLeft{float:left;}
+.shared_boxesTable tr td .layoutUL .layoutRight{float:right;}
+.shared_boxesTable tr td .layoutUL .layoutNone{float:none; overflow:hidden;}
+.shared_boxesTable tr td .layoutUL span.shared_boxesText{display:block; height:18px; line-height:16px; color:#333; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
+.shared_boxesTable tr td .layoutUL span.shared_boxesText_1{display:inline-block; height:18px; line-height:16px; padding:0px 5px; margin:0px 5px; border:1px solid #3d8fea; background:#ffffff; border-radius:3px; white-space:nowrap; color:#3d8fea; box-sizing:border-box;}
+.shared_boxesTable tr td .layoutUL span.shared_boxesText_2{display:inline-block; height:18px; line-height:16px; padding:0px 5px; margin:0px 5px; border:1px solid #999; background:#ffffff; border-radius:3px; white-space:nowrap; color:#999; box-sizing:border-box;}
+
+/* 관리자 공용배포그룹 */
+.shared_boxesTable.public_distribution{table-layout:fixed;}
+.shared_boxesTable.public_distribution tr td > span.shared_boxesText{display:block; height:18px; line-height:16px; color:#333; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; padding-left:10px;}
+
+/* 그래프용량 */
+.graph_used{margin:0px auto;text-align: center;}
+.graph_used dl{margin:0px; padding:7px 0px; color:#333; font-size:12px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.graph_used dl dt{display:inline-block; margin:0px 3px; padding:0px;}
+.graph_used dl dt img{vertical-align:middle; margin:0px;}
+.graph_used dl dt span{display:inline-block; margin:0px 2px;}
+.graph_used dl dt span.color{color:#0470e4; font-weight:bold;}
+.graph_used dl dd{display:inline-block; margin:0px; padding:0px;}
+.graph_used dl dd.graph{width:120px; height:10px; margin:-4px 10px 0px 10px; vertical-align:middle; background:#e0e0e0; text-align:left}
+.graph_used dl dd.graph .bar{display:inline-block;  height:10px; background:#82b9f6; vertical-align:top }
+.graph_used dl dd.graph_text{color:#555; margin:0px; padding:0px;}
+.graph_used dl dd.graph_text span{display:inline-block; font-weight:bold;}
+/* mailbox_graph */
+.folderdepth_2, .folderdepth_3, .folderdepth_4, .folderdepth_5, .folderdepth_6, .folderdepth_7, .folderdepth_8, .folderdepth_9, .folderdepth_10 {width: 15px;height: 15px;display: inline-block;vertical-align: middle; margin-left: -5px; background:url(../images/folder_depth.gif);margin-right :3px; }
+.folderdepth_3 {margin-left: 10px;}
+.folderdepth_4 { margin-left: 20px; }
+.folderdepth_5 { margin-left: 30px; }
+.folderdepth_6 { margin-left: 40px; }
+.folderdepth_7 { margin-left: 50px; }
+.folderdepth_8 { margin-left: 60px; }
+.folderdepth_9 { margin-left: 70px; }
+.folderdepth_10 { margin-left: 80px; }
+/* font bold */
+.txt_bold { font-weight:bold;}
+
+/* 메일 리스트 완료/완료 취소 */
+.icon_mail_Confirm{ background:url(../images/ImgIcon/view-document-confirm.gif) no-repeat; background-size:16px 15px; width:16px; height:16px; display:inline-block; margin: 7px 4px 0px 4px; cursor:pointer;}
+.icon_mail_Cancle{ background:url(../images/ImgIcon/view-document-cancel.gif) no-repeat; background-size:16px 15px; width:16px; height:16px; display:inline-block; margin: 7px 4px 0px 4px; cursor:pointer;}
+tr.mail_confirm > td{position:relative; }
+tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute; top:51%; left:0; border-bottom:1px solid #48494B; width:100%;}
+
+#ContextMenuDiv > .popuplist{ width:170px; }

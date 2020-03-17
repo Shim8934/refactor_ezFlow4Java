@@ -1763,6 +1763,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularDeptConfig started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("circularDeptConfig ended");
 		
@@ -1813,11 +1814,14 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularSelectAttendant started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		logger.debug("circularSelectAttendant ended");
 		
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID()); //baonk added
+		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("userInfo", userInfo);
 		
 		return "/ezCircular/circularSelectAttendant";
 	}
@@ -1866,6 +1870,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		model.addAttribute("userName", userName);
 		model.addAttribute("userName2", userName2);
 		model.addAttribute("listSize", list.size());
+		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("circularDeptModify ended");
 	

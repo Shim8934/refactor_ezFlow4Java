@@ -120,7 +120,8 @@ public class EzOrganController {
 		String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();        
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
                 
-        String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, userInfo.getPrimary(), userInfo.getTenantId());
+        boolean displayTrashDept = doc.getElementsByTagName("DISPLAY_TRASH_DEPT").getLength() > 0;
+        String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, userInfo.getPrimary(), userInfo.getTenantId(), displayTrashDept);
 		
         logger.debug("getDeptSubTreeInfo ended");
         
@@ -292,10 +293,10 @@ public class EzOrganController {
 		
 		if (page == null) {
 			if (companyId.equals("")) {
-				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID);
+				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID, adminOrgan);
 			}
 			else {
-				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, companyId, tenantID, noAddJob);
+				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, companyId, tenantID, noAddJob, adminOrgan);
 			}
 		} else {
 			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID, companyId, adminOrgan);

@@ -263,6 +263,25 @@
 		        	]]>
         		</isEqual>
         	</isEqual>
+        	
+        	<isEqual property="chkValue" compareValue="creatorname">
+        		<isEqual property="primary" compareValue="1">
+		        	<![CDATA[
+	        			CREATORNAME LIKE '%' || #filter# || '%'
+		        	]]>
+        		</isEqual>
+	        	<isEqual property="primary" compareValue="2">
+		        	<![CDATA[
+	        			CREATORNAME2 LIKE '%' || #filter# || '%'
+		        	]]>
+        		</isEqual>
+        	</isEqual>
+        	
+        	<isEqual property="chkValue" compareValue="memo">
+	        	<![CDATA[
+        			MEMO LIKE '%' || #filter# || '%'
+	        	]]>
+        	</isEqual>
         </isNotEqual>
         
        	<isEqual property="searchClass" compareValue="1" prepend="AND">
@@ -381,6 +400,16 @@
 		        	]]>
         		</isEqual>
         	</isEqual>
+        	<isEqual property="chkValue" compareValue="memo">
+	        	<![CDATA[
+        			memo LIKE '%' || #filter# || '%'
+	        	]]>
+        	</isEqual>
+        	<isEqual property="chkValue" compareValue="creatorname">
+	        	<![CDATA[
+        			creatorname LIKE '%' || #filter# || '%'
+	        	]]>
+        	</isEqual>
         </isNotEqual>
 	</select>
 	
@@ -439,6 +468,16 @@
 	        			PERSONNAME2 LIKE '%' || #filter# || '%'
 		        	]]>
         		</isEqual>
+        	</isEqual>
+        	<isEqual property="chkValue" compareValue="memo">
+	        	<![CDATA[
+        			memo LIKE '%' || #filter# || '%'
+	        	]]>
+        	</isEqual>
+        	<isEqual property="chkValue" compareValue="creatorname">
+	        	<![CDATA[
+        			creatorname LIKE '%' || #filter# || '%'
+	        	]]>
         	</isEqual>
         </isNotEqual>
 	</select>
@@ -504,6 +543,16 @@
 		        	]]>
         		</isEqual>
         	</isEqual>
+        	<isEqual property="chkValue" compareValue="memo">
+	        	<![CDATA[
+        			memo LIKE '%' || #filter# || '%'
+	        	]]>
+        	</isEqual>
+        	<isEqual property="chkValue" compareValue="creatorname">
+	        	<![CDATA[
+        			creatorname LIKE '%' || #filter# || '%'
+	        	]]>
+        	</isEqual>
         </isNotEqual>
 	</select>
 	
@@ -548,6 +597,16 @@
 	        			PERSONNAME2 LIKE '%' || #filter# || '%'
 		        	]]>
         		</isEqual>
+        	</isEqual>
+        	<isEqual property="chkValue" compareValue="memo">
+	        	<![CDATA[
+        			MEMO LIKE '%' || #filter# || '%'
+	        	]]>
+        	</isEqual>
+        	<isEqual property="chkValue" compareValue="creatorname">
+	        	<![CDATA[
+        			CREATORNAME LIKE '%' || #filter# || '%'
+	        	]]>
         	</isEqual>
         </isNotEqual>
 	</select>

@@ -390,7 +390,7 @@
 		    	var previousCheckId = $(checkId[0]).closest("tr").prev().children().eq(0).find('input').attr("value");
 		    	var resPluspreviousCheckId = 'res' + previousCheckId;
 		    	
-		    	if ($(checkId[0]).closest("tr").prev().children().eq(0).find('input').attr("value") == undefined) {
+		    	if ($(checkId[0]).closest("tr").prev().children().eq(0).find('input').attr("value") == undefined && pcurpage == "1") {
 		    		return;
 		    	}
 		    	
@@ -399,18 +399,19 @@
 		    		async : false,
 		    		data : {
 		    			selectedResourceId : $(checkId[0]).attr("value"),
-		    			targetResourceId : $(checkId[0]).closest("tr").prev().children().eq(0).find('input').attr("value"),
+		    			targetResourceId : "up",
 		    			upperResourceId : pBrdid
 		    		},
 		    		url : "/ezResource/changeResourceOrder.do",
 		    		success: function(text){
-		    			var $tr = $(checkId[0]).closest("tr"); // 클릭한 버튼이 속한 tr 요소
+		    			window.RefreshPageDoc();
+		    			/* var $tr = $(checkId[0]).closest("tr"); // 클릭한 버튼이 속한 tr 요소
 		    			$tr.prev().before($tr); // 현재 tr 의 이전 tr 앞에 선택한 tr 넣기
 		    			
 		    			var $label = $(parent.frames["left"].document.querySelectorAll("[id='res"+$(checkId[0]).attr("value")+"']"));
 		    			if ($label) {
 			    			$label.prev().before($label);
-		    			}
+		    			} */
 		    		},
 		    		error: function(err){
 		    		}
@@ -432,7 +433,7 @@
 		    	var nextCheckId = $(checkId[0]).closest("tr").prev().children().eq(0).find('input').attr("value");
 		    	var resPlusnextCheckId = 'res' + nextCheckId;
 		    	
-		    	if ($(checkId[0]).closest("tr").next().children().eq(0).find('input').attr("value") == undefined) {
+		    	if ($(checkId[0]).closest("tr").next().children().eq(0).find('input').attr("value") == undefined && pcurpage == ptotalPage) {
 		    		return;
 		    	}
 		    	
@@ -441,18 +442,19 @@
 		    		async : false,
 		    		data : {
 		    			selectedResourceId : $(checkId[0]).attr("value"),
-		    			targetResourceId : $(checkId[0]).closest("tr").next().children().eq(0).find('input').attr("value"),
+		    			targetResourceId : "down",
 		    			upperResourceId : pBrdid
 		    		},
 		    		url : "/ezResource/changeResourceOrder.do",
 		    		success: function(text){
-		    			var $tr = $(checkId[0]).closest("tr"); // 클릭한 버튼이 속한 tr 요소
+		    			window.RefreshPageDoc();
+		    			/* var $tr = $(checkId[0]).closest("tr"); // 클릭한 버튼이 속한 tr 요소
 		    			$tr.next().after($tr); // 현재 tr 의 이전 tr 앞에 선택한 tr 넣기
 		    			
 		    			var $label = $(parent.frames["left"].document.querySelectorAll("[id='res"+$(checkId[0]).attr("value")+"']"));
 		    			if ($label) {
 			    			$label.next().after($label);
-		    			}
+		    			} */
 		    		},
 		    		error: function(err){
 		    		}

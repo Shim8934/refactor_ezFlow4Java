@@ -462,12 +462,25 @@
 		
 		function afterSaveSuccessfully(data) {
 			var code = data.code;
+			
 			switch(code) {
 				case 0 : alert(SurveyMessages.strSave2)    ;
 						 resposeObj.responses = [];
-						 if (window.opener && window.opener.SurveyItem)				{window.opener.SurveyItem.reload();}
-						 if (window.opener && window.opener.openSurveyPopup)	{window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
-						 if (parent && parent.SurveyItem)						{parent.SurveyItem.reload();}
+						 
+						 if (window.opener.getPotletSurveyList != undefined) {
+							 window.opener.getPotletSurveyList();
+							 // 일단 현 상황에 맞춰 주석처리
+							 // 나중에 필요하면 주석 풀면 됌
+							 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
+							 window.close();
+						 }
+						 
+						 if (window.opener.SurveyItem != null) {
+							 if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
+							 if (window.opener && window.opener.openSurveyPopup)	{window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
+							 if (parent && parent.SurveyItem)               {parent.SurveyItem.reload();}
+						 } 
+						 
 						 window.close();
 						 break;
 				case 1 : alert(SurveyMessages.strParamErr)  ; resposeObj.responses = []; break;
@@ -757,6 +770,15 @@
 		function afterDeleteSuccessfully() {
 			alert(SurveyMessages.strDel);
 			if (window.opener && window.opener.openSurveyPopup)    {window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
+			
+			if (window.opener.getPotletSurveyList != undefined) {
+				 window.opener.getPotletSurveyList();
+				 // 일단 현 상황에 맞춰 주석처리
+				 // 나중에 필요하면 주석 풀면 됌
+				 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
+				 window.close();
+			 }
+			
 			if (window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
 			window.close();
 		}

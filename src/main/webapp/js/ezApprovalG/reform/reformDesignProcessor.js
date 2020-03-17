@@ -2078,12 +2078,12 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop2_name");
 		element.innerHTML = message["attr.value"];
 		element = document.getElementById("prop2_value");
-		element.innerHTML = '<input id="prop_value" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_value" type="text" oninput="propValueChanged(this)" />';
 	} else if (controlType == "select-one") {
 		element = document.getElementById("prop1_name");
 		element.innerHTML = message["attr.id"];
 		element = document.getElementById("prop1_value");
-		element.innerHTML = '<input id="prop_id" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_id" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop2_name");
 		element.innerHTML = message["attr.style"];
@@ -2098,7 +2098,7 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop4_name");
 		element.innerHTML = message["attr.size"];
 		element = document.getElementById("prop4_value");
-		element.innerHTML = '<input id="prop_size" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_size" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop5_name");
 		element.innerHTML = message["attr.databind.source"];
@@ -2110,12 +2110,12 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop6_name");
 		element.innerHTML = message["attr.databind.value"];
 		element = document.getElementById("prop6_value");
-		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop7_name");
 		element.innerHTML = message["attr.databind.display"];
 		element = document.getElementById("prop7_value");
-		element.innerHTML = '<input id="prop_data_bind_display_column" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_data_bind_display_column" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop8_name");
 		element.innerHTML = message["attr.databind.param"];
@@ -2125,12 +2125,12 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop9_name");
 		element.innerHTML = message["attr.header"];
 		element = document.getElementById("prop9_value");
-		element.innerHTML = '<input id="prop_header" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_header" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop10_name");
 		element.innerHTML = message["attr.tabindex"];
 		element = document.getElementById("prop10_value");
-		element.innerHTML = '<input id="prop_tabindex" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_tabindex" type="text" oninput="propValueChanged(this)" />';
 		
 		var dataBindControlList = webEditorDocument.getElementById("__reform_data_bind_list");
 		if (dataBindControlList != null) {
@@ -2144,12 +2144,12 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("event1_name");
 		element.innerHTML = "onPreProcess";
 		element = document.getElementById("event1_value");
-		element.innerHTML = '<input id="event_on_pre_change" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="event_on_pre_change" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("event2_name");
 		element.innerHTML = "onPostProcess";
 		element = document.getElementById("event2_value");
-		element.innerHTML = '<input id="event_on_post_change" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="event_on_post_change" type="text" oninput="propValueChanged(this)" />';
 	} else if (controlType == "text") {
 		var attValue = controlElement.getAttribute("data-reform_date_picker_flag");
 		var attValue2 = controlElement.getAttribute("data-reform_time_picker_flag");
@@ -2158,7 +2158,7 @@ function loadControlProperties(controlElement) {
 			element = document.getElementById("prop1_name");
 			element.innerHTML = message["attr.id"];
 			element = document.getElementById("prop1_value");
-			element.innerHTML = '<input id="prop_id" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="prop_id" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop2_name");
 			element.innerHTML = message["attr.style"];
@@ -2166,29 +2166,34 @@ function loadControlProperties(controlElement) {
 			element.innerHTML = '<input id="prop_style" type="text" readonly="readonly" onclick="showStyleDialog()" />';
 			
 			element = document.getElementById("prop3_name");
-			element.innerHTML = message["attr.tabindex"];
+			element.innerHTML = message["attr.format"];
 			element = document.getElementById("prop3_value");
-			element.innerHTML = '<input id="prop_tabindex" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="prop_date_format" type="text" oninput="propValueChanged(this)" />';
+			
+			element = document.getElementById("prop4_name");
+			element.innerHTML = message["attr.tabindex"];
+			element = document.getElementById("prop4_value");
+			element.innerHTML = '<input id="prop_tabindex" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("event1_name");
 			element.innerHTML = "onPreProcess";
 			element = document.getElementById("event1_value");
-			element.innerHTML = '<input id="event_on_pre_change" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="event_on_pre_change" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("event2_name");
 			element.innerHTML = "onPostProcess";
 			element = document.getElementById("event2_value");
-			element.innerHTML = '<input id="event_on_post_change" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="event_on_post_change" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("event3_name");
 			element.innerHTML = "onKeyUp";
 			element = document.getElementById("event3_value");
-			element.innerHTML = '<input id="event_on_key_up" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="event_on_key_up" type="text" oninput="propValueChanged(this)" />';
 		} else if (attValue2 == "1") {
 			element = document.getElementById("prop1_name");
 			element.innerHTML = message["attr.id"];
 			element = document.getElementById("prop1_value");
-			element.innerHTML = '<input id="prop_id" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="prop_id" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop2_name");
 			element.innerHTML = message["attr.style"];
@@ -2198,37 +2203,42 @@ function loadControlProperties(controlElement) {
 			element = document.getElementById("prop3_name");
 			element.innerHTML = message["attr.timegap"];
 			element = document.getElementById("prop3_value");
-			element.innerHTML = '<input id="prop_time_gap" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="prop_time_gap" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop4_name");
-			element.innerHTML = message["attr.tabindex"];
+			element.innerHTML = message["attr.format"];
 			element = document.getElementById("prop4_value");
-			element.innerHTML = '<input id="prop_tabindex" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="prop_time_format" type="text" oninput="propValueChanged(this)" />';
+			
+			element = document.getElementById("prop5_name");
+			element.innerHTML = message["attr.tabindex"];
+			element = document.getElementById("prop5_value");
+			element.innerHTML = '<input id="prop_tabindex" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("event1_name");
 			element.innerHTML = "onPreProcess";
 			element = document.getElementById("event1_value");
-			element.innerHTML = '<input id="event_on_pre_change" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="event_on_pre_change" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("event2_name");
 			element.innerHTML = "onPostProcess";
 			element = document.getElementById("event2_value");
-			element.innerHTML = '<input id="event_on_post_change" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="event_on_post_change" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("event3_name");
 			element.innerHTML = "onKeyUp";
 			element = document.getElementById("event3_value");
-			element.innerHTML = '<input id="event_on_key_up" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="event_on_key_up" type="text" oninput="propValueChanged(this)" />';
 		} else if (attValue3 == "1") {
 			element = document.getElementById("prop1_name");
 			element.innerHTML = message["attr.id"];
 			element = document.getElementById("prop1_value");
-			element.innerHTML = '<input id="prop_id" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="prop_id" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop2_name");
 			element.innerHTML = message["attr.value"];
 			element = document.getElementById("prop2_value");
-			element.innerHTML = '<input id="prop_value" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="prop_value" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop3_name");
 			element.innerHTML = message["attr.databind.source"];
@@ -2240,7 +2250,7 @@ function loadControlProperties(controlElement) {
 			element = document.getElementById("prop4_name");
 			element.innerHTML = message["attr.databind.value"];
 			element = document.getElementById("prop4_value");
-			element.innerHTML = '<input id="prop_data_bind_value_column" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="prop_data_bind_value_column" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop5_name");
 			element.innerHTML = message["attr.databind.param"];
@@ -2259,17 +2269,17 @@ function loadControlProperties(controlElement) {
 			element = document.getElementById("event1_name");
 			element.innerHTML = "onPreProcess";
 			element = document.getElementById("event1_value");
-			element.innerHTML = '<input id="event_on_pre_change" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="event_on_pre_change" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("event2_name");
 			element.innerHTML = "onPostProcess";
 			element = document.getElementById("event2_value");
-			element.innerHTML = '<input id="event_on_post_change" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="event_on_post_change" type="text" oninput="propValueChanged(this)" />';
 		} else {
 			element = document.getElementById("prop1_name");
 			element.innerHTML = message["attr.id"];
 			element = document.getElementById("prop1_value");
-			element.innerHTML = '<input id="prop_id" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="prop_id" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop2_name");
 			element.innerHTML = message["attr.style"];
@@ -2279,7 +2289,7 @@ function loadControlProperties(controlElement) {
 			element = document.getElementById("prop3_name");
 			element.innerHTML = message["attr.value"];
 			element = document.getElementById("prop3_value");
-			element.innerHTML = '<input id="prop_value" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="prop_value" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop4_name");
 			element.innerHTML = message["attr.readonly"];
@@ -2296,7 +2306,7 @@ function loadControlProperties(controlElement) {
 			element = document.getElementById("prop6_name");
 			element.innerHTML = message["attr.databind.value"];
 			element = document.getElementById("prop6_value");
-			element.innerHTML = '<input id="prop_data_bind_value_column" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="prop_data_bind_value_column" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop7_name");
 			element.innerHTML = message["attr.databind.param"];
@@ -2306,7 +2316,7 @@ function loadControlProperties(controlElement) {
 			element = document.getElementById("prop8_name");
 			element.innerHTML = message["attr.tabindex"];
 			element = document.getElementById("prop8_value");
-			element.innerHTML = '<input id="prop_tabindex" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="prop_tabindex" type="text" oninput="propValueChanged(this)" />';
 			
 			var dataBindControlList = webEditorDocument.getElementById("__reform_data_bind_list");
 			if (dataBindControlList != null) {
@@ -2320,23 +2330,23 @@ function loadControlProperties(controlElement) {
 			element = document.getElementById("event1_name");
 			element.innerHTML = "onPreProcess";
 			element = document.getElementById("event1_value");
-			element.innerHTML = '<input id="event_on_pre_change" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="event_on_pre_change" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("event2_name");
 			element.innerHTML = "onPostProcess";
 			element = document.getElementById("event2_value");
-			element.innerHTML = '<input id="event_on_post_change" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="event_on_post_change" type="text" oninput="propValueChanged(this)" />';
 			
 			element = document.getElementById("event3_name");
 			element.innerHTML = "onKeyUp";
 			element = document.getElementById("event3_value");
-			element.innerHTML = '<input id="event_on_key_up" type="text" onkeyup="propValueChanged(this)" />';
+			element.innerHTML = '<input id="event_on_key_up" type="text" oninput="propValueChanged(this)" />';
 		}
 	} else if (controlType == "checkbox") {
 		element = document.getElementById("prop1_name");
 		element.innerHTML = message["attr.id"];
 		element = document.getElementById("prop1_value");
-		element.innerHTML = '<input id="prop_id" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_id" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop2_name");
 		element.innerHTML = message["attr.style"];
@@ -2346,7 +2356,7 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop3_name");
 		element.innerHTML = message["attr.value"];
 		element = document.getElementById("prop3_value");
-		element.innerHTML = '<input id="prop_value" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_value" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop4_name");
 		element.innerHTML = message["attr.readonly"];
@@ -2368,7 +2378,7 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop7_name");
 		element.innerHTML = message["attr.databind.value"];
 		element = document.getElementById("prop7_value");
-		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop8_name");
 		element.innerHTML = message["attr.databind.param"];
@@ -2378,7 +2388,7 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop9_name");
 		element.innerHTML = message["attr.tabindex"];
 		element = document.getElementById("prop9_value");
-		element.innerHTML = '<input id="prop_tabindex" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_tabindex" type="text" oninput="propValueChanged(this)" />';
 		
 		var dataBindControlList = webEditorDocument.getElementById("__reform_data_bind_list");
 		if (dataBindControlList != null) {
@@ -2392,17 +2402,17 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("event1_name");
 		element.innerHTML = "onPreProcess";
 		element = document.getElementById("event1_value");
-		element.innerHTML = '<input id="event_on_pre_change" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="event_on_pre_change" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("event2_name");
 		element.innerHTML = "onPostProcess";
 		element = document.getElementById("event2_value");
-		element.innerHTML = '<input id="event_on_post_change" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="event_on_post_change" type="text" oninput="propValueChanged(this)" />';
 	} else if (controlType == "radio") {
 		element = document.getElementById("prop1_name");
 		element.innerHTML = message["attr.id"];
 		element = document.getElementById("prop1_value");
-		element.innerHTML = '<input id="prop_id" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_id" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop2_name");
 		element.innerHTML = message["attr.style"];
@@ -2412,7 +2422,7 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop3_name");
 		element.innerHTML = message["attr.value"];
 		element = document.getElementById("prop3_value");
-		element.innerHTML = '<input id="prop_value" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_value" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop4_name");
 		element.innerHTML = message["attr.readonly"];
@@ -2434,7 +2444,7 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop7_name");
 		element.innerHTML = message["attr.databind.value"];
 		element = document.getElementById("prop7_value");
-		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop8_name");
 		element.innerHTML = message["attr.databind.param"];
@@ -2444,7 +2454,7 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop9_name");
 		element.innerHTML = message["attr.tabindex"];
 		element = document.getElementById("prop9_value");
-		element.innerHTML = '<input id="prop_tabindex" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_tabindex" type="text" oninput="propValueChanged(this)" />';
 		
 		var dataBindControlList = webEditorDocument.getElementById("__reform_data_bind_list");
 		if (dataBindControlList != null) {
@@ -2458,17 +2468,17 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("event1_name");
 		element.innerHTML = "onPreProcess";
 		element = document.getElementById("event1_value");
-		element.innerHTML = '<input id="event_on_pre_change" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="event_on_pre_change" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("event2_name");
 		element.innerHTML = "onPostProcess";
 		element = document.getElementById("event2_value");
-		element.innerHTML = '<input id="event_on_post_change" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="event_on_post_change" type="text" oninput="propValueChanged(this)" />';
 	} else if (controlType == "button") {
 		element = document.getElementById("prop1_name");
 		element.innerHTML = message["attr.id"];
 		element = document.getElementById("prop1_value");
-		element.innerHTML = '<input id="prop_id" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_id" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop2_name");
 		element.innerHTML = message["attr.style"];
@@ -2478,22 +2488,22 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop3_name");
 		element.innerHTML = message["attr.value"];
 		element = document.getElementById("prop3_value");
-		element.innerHTML = '<input id="prop_value" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_value" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop4_name");
 		element.innerHTML = message["attr.tabindex"];
 		element = document.getElementById("prop4_value");
-		element.innerHTML = '<input id="prop_tabindex" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_tabindex" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("event1_name");
 		element.innerHTML = "onClick";
 		element = document.getElementById("event1_value");
-		element.innerHTML = '<input id="event_on_click" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="event_on_click" type="text" oninput="propValueChanged(this)" />';
 	} else if (controlType == "label") {
 		element = document.getElementById("prop1_name");
 		element.innerHTML = message["attr.id"];
 		element = document.getElementById("prop1_value");
-		element.innerHTML = '<input id="prop_id" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_id" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop2_name");
 		element.innerHTML = message["attr.style"];
@@ -2503,12 +2513,12 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop3_name");
 		element.innerHTML = message["attr.value"];
 		element = document.getElementById("prop3_value");
-		element.innerHTML = '<input id="prop_value" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_value" type="text" oninput="propValueChanged(this)" />';
 	} else if (controlType == "grid") {
 		element = document.getElementById("prop1_name");
 		element.innerHTML = message["attr.id"];
 		element = document.getElementById("prop1_value");
-		element.innerHTML = '<input id="prop_id" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_id" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop2_name");
 		element.innerHTML = message["attr.style"];
@@ -2528,7 +2538,7 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop5_name");
 		element.innerHTML = message["attr.columncount"];
 		element = document.getElementById("prop5_value");
-		element.innerHTML = '<input id="prop_column_count" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_column_count" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop6_name");
 		element.innerHTML = message["attr.databind.source"];
@@ -2540,7 +2550,7 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop7_name");
 		element.innerHTML = message["attr.databind.value"];
 		element = document.getElementById("prop7_value");
-		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop8_name");
 		element.innerHTML = message["attr.databind.display"];
@@ -2564,22 +2574,22 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("event1_name");
 		element.innerHTML = "onPreProcess";
 		element = document.getElementById("event1_value");
-		element.innerHTML = '<input id="event_on_pre_change" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="event_on_pre_change" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("event2_name");
 		element.innerHTML = "onPostProcess";
 		element = document.getElementById("event2_value");
-		element.innerHTML = '<input id="event_on_post_change" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="event_on_post_change" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("event3_name");
 		element.innerHTML = "onDataLoaded";
 		element = document.getElementById("event3_value");
-		element.innerHTML = '<input id="event_on_data_loaded" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="event_on_data_loaded" type="text" oninput="propValueChanged(this)" />';
 	} else if (controlType == "textarea") {
 		element = document.getElementById("prop1_name");
 		element.innerHTML = message["attr.id"];
 		element = document.getElementById("prop1_value");
-		element.innerHTML = '<input id="prop_id" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_id" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop2_name");
 		element.innerHTML = message["attr.style"];
@@ -2589,7 +2599,7 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop3_name");
 		element.innerHTML = message["attr.value"];
 		element = document.getElementById("prop3_value");
-		element.innerHTML = '<input id="prop_value" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_value" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop4_name");
 		element.innerHTML = message["attr.readonly"];
@@ -2606,7 +2616,7 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop6_name");
 		element.innerHTML = message["attr.databind.value"];
 		element = document.getElementById("prop6_value");
-		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop7_name");
 		element.innerHTML = message["attr.databind.param"];
@@ -2616,7 +2626,7 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("prop8_name");
 		element.innerHTML = message["attr.tabindex"];
 		element = document.getElementById("prop8_value");
-		element.innerHTML = '<input id="prop_tabindex" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="prop_tabindex" type="text" oninput="propValueChanged(this)" />';
 		
 		var dataBindControlList = webEditorDocument.getElementById("__reform_data_bind_list");
 		if (dataBindControlList != null) {
@@ -2630,17 +2640,17 @@ function loadControlProperties(controlElement) {
 		element = document.getElementById("event1_name");
 		element.innerHTML = "onPreProcess";
 		element = document.getElementById("event1_value");
-		element.innerHTML = '<input id="event_on_pre_change" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="event_on_pre_change" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("event2_name");
 		element.innerHTML = "onPostProcess";
 		element = document.getElementById("event2_value");
-		element.innerHTML = '<input id="event_on_post_change" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="event_on_post_change" type="text" oninput="propValueChanged(this)" />';
 		
 		element = document.getElementById("event3_name");
 		element.innerHTML = "onKeyUp";
 		element = document.getElementById("event3_value");
-		element.innerHTML = '<input id="event_on_key_up" type="text" onkeyup="propValueChanged(this)" />';
+		element.innerHTML = '<input id="event_on_key_up" type="text" oninput="propValueChanged(this)" />';
 	}
 }
 
@@ -2819,6 +2829,11 @@ function showControlProperties(controlElement) {
 			attValue = removeOutlineStyle(attValue);
 			valueElement.value = attValue;
 			
+			valueElement = document.getElementById("prop_date_format");
+			attValue = controlElement.getAttribute("data-reform_date_format");
+			attValue = attValue != null ? attValue : "";
+			valueElement.value = attValue;
+			
 			valueElement = document.getElementById("prop_tabindex");
 			attValue = controlElement.getAttribute("tabindex");
 			attValue = attValue != null ? attValue : "";
@@ -2851,6 +2866,11 @@ function showControlProperties(controlElement) {
 			attValue = controlElement.getAttribute("style");
 			attValue = attValue != null ? attValue : "";
 			attValue = removeOutlineStyle(attValue);
+			valueElement.value = attValue;
+			
+			valueElement = document.getElementById("prop_time_format");
+			attValue = controlElement.getAttribute("data-reform_time_format");
+			attValue = attValue != null ? attValue : "";
 			valueElement.value = attValue;
 			
 			valueElement = document.getElementById("prop_time_gap");
@@ -3417,16 +3437,17 @@ function propValueChanged(propControlElement) {
 			currentControlElement.setAttribute("id", newControlID);
 		}
 	} else if (propControlID == "prop_value") {
+		var propValue = propControlElement.value.trim();
 		if (currentControlType == "text" || currentControlType == "checkbox" || currentControlType == "radio" || currentControlType == "button" || currentControlType == "textarea") {
-			propControlElement.value = propControlElement.value.trim();
-			currentControlElement.setAttribute("value", propControlElement.value);
-			currentControlElement.value = propControlElement.value;
+			// propControlElement.value = propControlElement.value.trim();
+			currentControlElement.setAttribute("value", propValue);
+			currentControlElement.value = propValue;
 		} else if (currentControlType == "label") {
-			propControlElement.value = propControlElement.value.trim();
-			currentControlElement.innerText = propControlElement.value;
+			// propControlElement.value = propControlElement.value.trim();
+			currentControlElement.innerText = propValue;
 		} else if (tagName == "TH" || tagName == "TD") {
-			propControlElement.value = propControlElement.value.trim();
-			currentControlElement.innerText = propControlElement.value;
+			// propControlElement.value = propControlElement.value.trim();
+			currentControlElement.innerText = propValue;
 		}
 	} else if (propControlID == "prop_read_only") {
 		if (propControlElement.checked) {
@@ -3590,6 +3611,20 @@ function propValueChanged(propControlElement) {
 			currentControlElement.setAttribute("tabindex", propControlElement.value);
 		} else {
 			currentControlElement.removeAttribute("tabindex");
+		}
+	} else if (propControlID == "prop_date_format") {
+		var propValue = propControlElement.value.trim();
+		if (propValue != "") {
+			currentControlElement.setAttribute("data-reform_date_format", propValue);
+		} else {
+			currentControlElement.removeAttribute("data-reform_date_format");
+		}
+	} else if (propControlID == "prop_time_format") {
+		var propValue = propControlElement.value.trim();
+		if (propValue != "") {
+			currentControlElement.setAttribute("data-reform_time_format", propValue);
+		} else {
+			currentControlElement.removeAttribute("data-reform_time_format");
 		}
 	} else if (propControlID == "event_on_pre_change") {
 		propControlElement.value = propControlElement.value.trim();

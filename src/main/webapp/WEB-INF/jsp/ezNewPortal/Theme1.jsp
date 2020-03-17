@@ -166,7 +166,7 @@
 						</c:choose>
 					</div>
 					<c:choose>
-						<c:when test="${useEzWorkspace eq 'YES' }">
+						<c:when test="${useEzWorkspace}">
 							<div class="countingIcon02" style="width:258px;">
 						</c:when>
 						<c:otherwise>
@@ -174,6 +174,7 @@
 						</c:otherwise>
 					</c:choose>
 					<c:choose>
+						<%-- 
 						<c:when test="${useQuestion eq 'NO'}"> <!-- 전자설문 권한이 없을 때 disable 아이콘 나타남 -->
 							<dl id="Poll" class="icon_disabled">
 								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
@@ -185,6 +186,20 @@
                     			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
                     			<dd class="iconText"><spring:message code='ezNewPortal.gu4' /></dd>                        
                     			<dd id="pollCount" class="iconCount_none">0</dd>
+                			</dl>
+						</c:otherwise>
+						 --%>
+						<c:when test="${useSurvey eq 'NO'}"> <!-- 전자설문 권한이 없을 때 disable 아이콘 나타남 -->
+							<dl id="Survey" class="icon_disabled">
+								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+								<dd class="iconText"></dd>
+							</dl>
+						</c:when>
+						<c:otherwise>
+            				<dl id="Survey">
+                    			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
+                    			<dd class="iconText"><spring:message code='ezNewPortal.gu4' /></dd>                        
+                    			<dd id="surveyCount" class="iconCount_none">0</dd>
                 			</dl>
 						</c:otherwise>
 					</c:choose>
@@ -203,7 +218,7 @@
                 			</dl>
 						</c:otherwise>
 					</c:choose>
-					<c:if test="${useEzWorkspace eq 'YES' }">
+					<c:if test="${useEzWorkspace}">
                 		<dl id="ezWorkspace"> 
                     		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon04.png"></dt>
                     		<dd class="iconText"><spring:message code='ezNewPortal.pjg01' /></dd>
@@ -228,7 +243,7 @@
             			</dl>
             		</div>
 				</article>
-				<article class="bestEmployee">
+				<article id="bestEmployee" class="bestEmployee">
 					<p class="emPic" id="emPic"><img src="/images/ezNewPortal/bestEmployee_pic_none.png"></p>
 					<dl class="emDL">
             			<dt class="emTit"><spring:message code='ezNewPortal.t019' /></dt>
@@ -479,68 +494,71 @@
  	
 	$(function() {
 		$("#featured").orbit();
-		
-		var portletCount = portletOrder.length;
-		var portletHTML = "";
-		
-		for (var i = 0; i < portletCount; i++) {
-			portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
-		}
-		
-		//$(".portlet_area").html(portletHTML);
-		document.getElementsByClassName("portlet_area")[0].innerHTML = portletHTML;
- 		frameSetting(frameId);
-		
- 		//포틀릿별로 정보 및 포틀릿 jsp불러오기
-		for (var i = 0; i < portletCount; i++) {
-			var portletId = portletOrder[i].portletId;
-			var portletUrl = portletOrder[i].portletUrl;
-			var portletName = portletOrder[i].portletName;
+		if (portletOrder != null && portletOrder.length != 0) {
+			var portletCount = portletOrder.length;
+			var portletHTML = "";
 			
-			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
-		  		(function (portletId, portletUrl, portletName) {
-					$.ajax({
-						type : "GET",
-						dataType : "html",
-						data : {"uniq_param" : (new Date()).getTime(), "portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
-						url : portletUrl,
-						tryCount : 0,
-						retryLimit : 3,
-						success : function(result) {
-							$("#" + portletId + "Portlet").append(result);
-							
-							if (portletId == 6) {
-								document.getElementById(portletId + "Portlet").style.background = "none";
-							}
-							
-							eventSetting(portletId, usedTheme);
-							
-							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-								sortableEvent();
-							}
-						},
-						error : function() {
-							this.url = "/ezNewPortal/errorPortlet.do";
-							this.tryCount++;
-							
-							if (this.tryCount <= this.retryLimit) {
-								//try again
-								$.ajax(this);
+			for (var i = 0; i < portletCount; i++) {
+				portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
+			}
+			
+			//$(".portlet_area").html(portletHTML);
+			document.getElementsByClassName("portlet_area")[0].innerHTML = portletHTML;
+	 		frameSetting(frameId);
+			
+	 		//포틀릿별로 정보 및 포틀릿 jsp불러오기
+			for (var i = 0; i < portletCount; i++) {
+				var portletId = portletOrder[i].portletId;
+				var portletUrl = portletOrder[i].portletUrl;
+				var portletName = portletOrder[i].portletName;
+				var portletCode = portletOrder[i].portletCode;
+				
+				/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
+			  		(function (portletId, portletUrl, portletName, portletCode) {
+						$.ajax({
+							type : "GET",
+							dataType : "html",
+							data : {"uniq_param" : (new Date()).getTime(), "portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
+							url : portletUrl,
+							tryCount : 0,
+							retryLimit : 3,
+							success : function(result) {
+								$("#" + portletId + "Portlet").append(result);
+								
+								if (portletId == 6) {
+									document.getElementById(portletId + "Portlet").style.background = "none";
+								}
+								
+								eventSetting(portletId, usedTheme, portletCode, false);
+								
+								if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+									sortableEvent();
+								}
+							},
+							error : function() {
+								this.url = "/ezNewPortal/errorPortlet.do";
+								this.tryCount++;
+								
+								if (this.tryCount <= this.retryLimit) {
+									//try again
+									$.ajax(this);
+									return;
+								}
+								
+								if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+									sortableEvent();
+								}
+								
 								return;
 							}
-							
-							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-								sortableEvent();
-							}
-							
-							return;
-						}
-					});
-				}(portletId, portletUrl, portletName));
-			/* } */
-		}
+						});
+					}(portletId, portletUrl, portletName, portletCode));
+				/* } */
+			}
+		} 
 
 		var useQuestion = "<c:out value='${useQuestion}'/>";
+		var useSurvey = "<c:out value='${useSurvey}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";
 		var useMail = "<c:out value='${useMail}'/>";
 		var useApproval = "<c:out value='${useApproval}'/>";
@@ -554,9 +572,13 @@
 		if (useSchedule !== "NO") {
 			document.getElementById("Schedule").addEventListener('click', function(){quickMenuOpen('Schedule');}, false);
 		}
-		
+		/* 
 		if (useQuestion !== "NO") {
 			document.getElementById("Poll").addEventListener('click', function(){quickMenuOpen('Poll');}, false);
+		}
+		 */
+		if (useSurvey !== "NO") {
+			document.getElementById("Survey").addEventListener('click', function(){quickMenuOpen('Survey');}, false);
 		}
 		
 		if (useCircular !== "NO") {
@@ -568,7 +590,8 @@
 		}
 		
 		//ajax로 count 불러오기
-		getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule);
+		//getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule);
+		getUnreadCounts(useSurvey, useCircular, useMail, useApproval, useSchedule);
 		
 		//근태관리 연동
 		var useAttitude = "<c:out value='${useAttitude}'/>";
@@ -630,7 +653,53 @@
 		/* $(".portlet_area").disableSelection(); */
 
 		leftResize();
+		
+		settingPortalInterval();
 	});
+	
+	var settingPortalInterval = function () {
+		var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
+		
+		if (refreshInterval != null && refreshInterval != "0") {
+			window.setInterval(function() {
+				var request = new XMLHttpRequest();
+				request.open('GET', '/ezNewPortal/getPortalInfo.do' , false);
+				request.setRequestHeader('Content-Type', 'application/json');
+
+				request.onload = function() {
+					if (request.status >= 200 && request.status < 400) {
+						if (request.responseText == null) {
+							return;
+						}
+						
+						var result = JSON.parse(request.responseText);
+						var refreshTheme = result.usedTheme;
+						var refreshFrame = result.usedFrame;
+						
+						if (refreshTheme == usedTheme && frameId == refreshFrame) {
+							parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+							/* portletOrder = result.portletOrder;
+							var useQuestion = result.useQuestion;
+							var useCircular = result.useCircular;
+							var useMail = result.useMail;
+							var useApproval = result.useApproval;
+							var useSchedule = result.useSchedule;
+							var useAttitude = result.useAttitude;
+							refreshPortlet(useQuestion, useCircular, useMail, useApproval, useSchedule, useAttitude); */
+						} else {
+							parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+						}
+					}
+				};
+
+				request.onerror = function() {
+				  // There was a connection error of some sort
+				};
+				
+				request.send();
+			}, Number(refreshInterval) * 60000);
+		}
+	}
 	
 	var tryCount = 0;
 	
@@ -804,20 +873,21 @@
 			}
 		}
 	}
-	</script>
+</script>
 <!-- 협업 시작-->
-<c:if test="${useEzWorkspace eq 'YES' }">
-    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js"></script>
-    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/Groupwareapi.js"></script>
+<c:if test="${useEzWorkspace}">
+    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/Groupwareapi.js"></script>
     <script type="text/javascript">
 	    var g_UserID = "${userId}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
-	    var WorkspaceUrl = "http://space.kaoni.com"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+	    var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+	    var workspaceContextRootUrl = "${workspaceContextRootUrl}";
 	    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
 	    var feedListCount = 10;
 	    var g_bRayful = false;
 	    var g_bVisible = true; // 문서탭 선택 시 원문에 포함된 첨부파일 포함 여부 (false: 포함)	    
-	        
-    	ezWorkspaceData();
+	    	    
+    	ezWorkspaceData(workspaceContextRootUrl);
     </script>		
 </c:if>	
 <!-- 협업 끝 -->	

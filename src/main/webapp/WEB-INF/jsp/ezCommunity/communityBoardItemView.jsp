@@ -62,10 +62,6 @@
 	    	var treeCtrl = "<c:out value='${treeCtrl}' />";
 	    	
 	    	window.onload = function () {
-	    		$("#message").contents().find("body").css("word-wrap", "break-word");
-	    		$("#message").contents().find("body").css("font-family", "malgun gothic, arial, verdana");
-				$("#message").contents().find("body").css("font-size", "13px");
-	    		
 	    	    try {
 	    	    	var html = "";
 					$.ajax({
@@ -85,6 +81,11 @@
 					doc.open();
 					doc.write(html);
 					doc.close();
+					
+					/* 2020-01-15 홍승비 - 게시물 본문의 스타일 적용 시점 변경 */
+		    		$("#message").contents().find("body").css("word-wrap", "break-word");
+		    		//$("#message").contents().find("body").css("font-family", "Gulim, arial, verdana");
+					$("#message").contents().find("body").css("font-size", "13px");
 					
 // 					if (gubun == "2") {
 // 						$("#messagePad").css("height","460px");
@@ -1030,7 +1031,7 @@
 	                        <!-- 게시일 -->
 	                        <th style="width:10%"><spring:message code='ezCommunity.t209'/></th>
 	                        <td id="PostDate" style="padding-right: 15px; white-space: nowrap; width:40%">
-	                        	<div id="Div3" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><c:out value='${item.writeDate}' /></div>
+	                        	<div id="Div3" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><c:out value='${item.writeDate.substring(0, 16)}' /></div>
 	                        </td>
 	                        <!-- 게시일 end -->
 	                        <!-- 게시종료일 -->
@@ -1045,7 +1046,7 @@
 	                        	
 	                        	<c:otherwise>
 	                        		<td id="Td8" style="padding-right: 15px; white-space: nowrap; width: 40%;">
-	                            		<div id="Div5" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><c:out value='${item.endDate}' /></div>
+	                            		<div id="Div5" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><c:out value='${item.endDate.split(" ")[0]}' /></div>
 	                        		</td>
 	                        	</c:otherwise>
 	                        </c:choose>
