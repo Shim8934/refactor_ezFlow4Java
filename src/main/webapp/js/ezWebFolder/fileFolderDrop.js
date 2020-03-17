@@ -16,19 +16,40 @@ function onDrop(evt) {
 	if (evt != undefined) {
 		evt.stopPropagation();
 		evt.preventDefault();
+		
+		if (evt.dataTransfer.items == undefined || evt.dataTransfer.items == null) {
+			
+			if (evt.dataTransfer.files.length == 0) {
+				alert(messages.strLangDragNDrop);
+				return;
+			}
+			
+		} else {
+			var length = evt.dataTransfer.items.length;
+			
+		    for (var i = 0; i < length; i++) {
+		    	var entry = evt.dataTransfer.items[i].webkitGetAsEntry();
+		    	
+		    	if (entry.isFile) {
+		    		var filelist = (evt == undefined) ? document.getElementById("file").files : evt.dataTransfer.files;
+		    		
+		    		if (filelist.length == 0) {
+		    			return;
+		    		}
+		    		
+		    		for (var i = 0; i < filelist.length; i++) {
+		    			file[i] = filelist[i];
+		    		}
+		    		
+		    		fileupload();
+		    	} else if (entry.isDirectory) {
+		    		alert(messages.strLangDragNDrop);
+		      		return;
+		    	}
+		  	}
+		}
 	}
 	
-	var filelist = (evt == undefined) ? document.getElementById("file").files : evt.dataTransfer.files;
-	
-	if (filelist.length == 0) {
-		return;
-	}
-	
-	for (var i = 0; i < filelist.length; i++) {
-		file[i] = filelist[i];
-	}
-	
-	fileupload();
 }
 
 function fileupload() {	
