@@ -5293,17 +5293,17 @@
 				</isEqual>
 				<isNotEqual property="v_ORDERBYVALUE" compareValue="attachfilesn">
 					ORDER BY 
-							TRIM($v_ORDERBY$) , ATTACHFILESN DESC
+							TRIM($v_ORDERBY$) , ATTACHFILESN ASC
 				</isNotEqual>
 			</isGreaterEqual>
 			<isLessThan property="v_ORDERBYLENGTH" compareValue="12">
 			 		ORDER BY 
-			 				TRIM($v_ORDERBY$) , ATTACHFILESN DESC 
+			 				TRIM($v_ORDERBY$) , ATTACHFILESN ASC
 			</isLessThan>
 		</isGreaterThan>
 		<isLessEqual property="v_ORDERBYLENGTH" compareValue="0" >
 					ORDER BY 
-							ATTACHFILESN DESC
+							ATTACHFILESN ASC
 		</isLessEqual>
 	</select>
 	
