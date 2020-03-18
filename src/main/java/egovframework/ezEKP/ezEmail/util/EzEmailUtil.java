@@ -1693,7 +1693,8 @@ public class EzEmailUtil {
 			// multipart/related가 중첩되어 있는 경우
 			// 이전 multipart/related 파트에서 이미 text/html 파트가 발견된 경우가 있어
 			// 이를 확인함.
-			boolean htmlPartFound = (boolean)extraMap.get("htmlPartFound");
+			boolean htmlPartFound = (boolean) (extraMap.get("htmlPartFound") == null ? false : extraMap.get("htmlPartFound"));
+			
 			
 			// text/html 파트 혹은 multipart/alternative 파트가 발견되지 않았을 경우엔 
 			// text/plain 파트를 찾는다.
