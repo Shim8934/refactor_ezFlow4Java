@@ -102,6 +102,7 @@
 					var name = paramArray[i].name;
 					var value = paramArray[i].value;
 					var isNumber = value.match(/^\d+$/);
+					var alertMsg;
 					
 					if (!isNumber) {
 						var errFlag = true;
@@ -148,6 +149,11 @@
 							return false;
 						}
 					}
+					
+					if(document.getElementById("MailBigSizeAttachLimitCount").value > 20) {
+						alert("<spring:message code='ezEmail.hdp01'/>: <spring:message code='ezEmail.hdp06'/>");
+						return false;
+					}
 				}
 				return true;
 			}
@@ -163,7 +169,7 @@
 	            <tr><th><spring:message code="ezSystem.x0001"/></th><td><input id="BigSizeMailAttachDelDay" maxlength="3" type="text" value="<c:out value='${configMap.BigSizeMailAttachDelDay}'/>"> (<spring:message code="ezSystem.x0010"/>)</td></tr>          
 	            <tr><th><spring:message code="ezSystem.x0002"/></th><td><input id="totBigSizeMailAttachLimit" maxlength="4" type="text" value="<c:out value='${configMap.totBigSizeMailAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>, <spring:message code="ezSystem.x0019"/>)</td></tr>
 	            <tr><th><spring:message code="ezSystem.x0003"/></th><td><input id="MailAttachLimit" maxlength="3" type="text" value="<c:out value='${configMap.MailAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>)</td></tr>                              
-	            <tr><th><spring:message code="ezEmail.hdp01"/></th><td><input id="MailBigSizeAttachLimitCount" maxlength="3" type="text" value="<c:out value='${configMap.MailBigSizeAttachLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td></tr>
+	            <tr><th><spring:message code="ezEmail.hdp01"/></th><td><input id="MailBigSizeAttachLimitCount" maxlength="2" type="text" value="<c:out value='${configMap.MailBigSizeAttachLimitCount}'/>"> (<spring:message code="ezEmail.hdp07"/>)</td></tr>
 	            <tr><th><spring:message code="ezEmail.hdp02"/></th><td><input id="MailBigSizeAttachDownloadLimitCount" maxlength="5" type="text" value="<c:out value='${configMap.MailBigSizeAttachDownloadLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td></tr>
 	            <tr <c:if test="${isDotNetAdmin == true}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0005"/></th><td><input id="ExpirePassPeriod" maxlength="3" type="text" value="<c:out value='${configMap.ExpirePassPeriod}'/>"> (<spring:message code="ezSystem.x0010"/>, <spring:message code="ezSystem.x0014"/>)</td></tr>
 	            <tr <c:if test="${isDotNetAdmin == true}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0038"/></th><td><input id="MaxAllowedCountOfLoginFail" maxlength="4" type="text" value="<c:out value='${configMap.MaxAllowedCountOfLoginFail}'/>"> (<spring:message code="ezSystem.x0014"/>)</td></tr>            
