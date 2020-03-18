@@ -180,7 +180,11 @@
 	                	    title_name[i] = pChildBrd.split(",")[i];
 	                	}
 
-	                	setweek_onload("WEEK");
+	            	    if (Mod != null && Mod != ""){
+	                		setweek_onload(Mod);
+	    		        } else {
+		                	setweek_onload("WEEK");
+	    		        }
 	            	} else {
 	            		/* 2018-04-26 홍승비 - 자원 관리자의 자원등록, 자원관리 표시 수정 */
 	                	if(CheckAdmin()) {
@@ -228,6 +232,9 @@
 
 	    	function setweek_onload(type) {
 		        var date = new Date();
+		        if (weekStartDate != null && weekStartDate != ""){
+		        	date = new Date(weekStartDate);
+		        }
 		        if (pBrdCount != 0) {
 		            if (type == "WEEK") {
 	    	            document.getElementById("TR_Line2").style.display = "";
