@@ -8,6 +8,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
 		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<style>
 			#lstAttachLink {
@@ -272,6 +274,9 @@
 					$("#btnBigFileUpload").css("display","none");
 		        }
 		        
+		      	//첨부파일 드래그 기능 추가. 2020-03-17 홍대표.
+		        setAttachSortable();
+		        
 		    }
 		    
 		    var AttatchReturnValue;
@@ -380,6 +385,7 @@
 		                    TRRows.item(i).childNodes.item(1).setAttribute("_href", url);
 		                    TRRows.item(i).setAttribute("_uid", g_url);
 		                    TRRows.item(i).setAttribute("_big", big);
+		                    TRRows.item(i).setAttribute("draggable", true);
 		                    TRRows.item(i).setAttribute("_itemid", itemid);
 		                    TRRows.item(i).childNodes.item(1).setAttribute("style", "cursor:pointer");
 		                    
@@ -665,6 +671,69 @@
 		        return true;
 		    }
 		    
+			function setAttachSortable() {
+				$("#lstAttachLink").multipleSortable({
+	              items : "tr[value]",
+	              opacity: 0.3,
+	              start : function(event, elem) { 
+	            	  $("#lstAttachLink tr").removeClass("multiple-sortable-selected");
+	                  $("#lstAttachLink tr").removeClass("ui-sortable-helper");
+	              },
+	              click : function(event) {
+	                  $("#lstAttachLink tr").removeClass("multiple-sortable-selected");
+	                  $("#lstAttachLink tr").removeClass("ui-sortable-helper");
+	              },
+	              stop : function(event, elem) {
+	              }
+	           });
+			}
+			
+			function moveAttachFileOrder(fileList) {
+				var fileIdxArr = [].map.call(fileList, function(fileNode){
+					return fileNode.getAttribute("_fileindex");
+				});
+				
+				saveAttachFileOrder(fileIdxArr);
+			}
+			
+			function saveAttachFileOrder(fileIdxArr){
+				 var itemid = window.parent.g_url;
+				 $.ajax({
+					type : 'post',
+					url : "/ezEmail/saveAttachFileOrder.do",
+					dataType : "json",
+					async : false,
+					data : {
+						fileIdxArr : fileIdxArr,
+						itemid : itemid
+					},
+					success : function (result){
+// 						console.log("saveAttachFileOrder : " + result);
+						window.parent.g_url = result;
+						resetFileIdx();
+					}
+				 });
+			}
+			
+			function resetFileIdx() {
+				var fileList = document.querySelectorAll("#filelist tr[_fileindex]");
+				for (var i = 0; i < fileList.length; i++) {
+					fileList[i].setAttribute("_fileindex", i);
+				}
+			}
+		    
+			function arrayEqualCheck(arr1, arr2) {
+				if(arr1.length != arr2.length) {
+					return false;
+				}
+				
+				for (var i = 0; i < arr1.length; i++) {
+					if(arr1[i] != arr2[i]) {
+						return false;
+					}
+				}
+				return true;
+			}
 		</script>
 	</head>  
     <body ondragover ="defaultenter(event)" ondragenter ="defaultenter(event)" style="overflow:hidden">   
@@ -678,7 +747,7 @@
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
              </div>
         </div>
-        <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
+        <div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
         <input id="file" type="file" onchange="filechange(event);return false;" multiple="multiple" style="width:1px;height:1px;display:none;" />
         <input type="hidden" value="업로드" onclick ="fileupload()" />
