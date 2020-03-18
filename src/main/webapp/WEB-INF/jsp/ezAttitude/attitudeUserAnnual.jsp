@@ -739,7 +739,7 @@
 			            <dd class="timeIconDD"><spring:message code='ezAttitude.t256' /> <span class="timeCountR" id="FA13">0</span></dd>
 			        </dl>
 			        <dl class="timeIcconDL">
-			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm02.png"></dt>
 			            <dd class="timeIconDD"><spring:message code='ezAttitude.kje04' /> <span class="timeCountR" id="FA21">0</span></dd>
 			        </dl>
 			     </dl>
