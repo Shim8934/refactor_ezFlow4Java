@@ -536,7 +536,7 @@
 			<ul>
 				<li class="important"><span onClick="add_dl()"><spring:message code='ezOrgan.zNo005' /></span></li>
 				<li><span onClick="mod_dl()"><spring:message code='ezOrgan.zNo006' /></span></li>
-				<li><span onClick="add_dl2()">권한등록창(예시)</span></li>
+				<!-- <li><span onClick="add_dl2()">권한등록창(예시)</span></li> --> 
 				<li><span class="icon16 icon16_delete" onClick="del_dl()"></span></li>
 			</ul>
 		</div>
