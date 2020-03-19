@@ -429,26 +429,16 @@
 				AND
 					extensionAttribute2 = '1'
 		]]>
-		
 		<isEqual property="apprFlag" compareValue="Y">
 			<![CDATA[
 				AND
 					A.apprflag = 'Y'
-				ORDER BY
-					A.parentwritedate,
-					A.writedate DESC
 			]]>
 		</isEqual>
-		
-		<isEqual property="apprFlag" compareValue="N">
-			<![CDATA[
-				ORDER BY
-					A.notino ASC,
-					A.parentwritedate,
-					A.writedate DESC
-			]]>
-		</isEqual>
-		
+			ORDER BY
+				A.NotiNo ASC,
+				A.parentwritedate ASC,
+				A.writedate DESC
 		<![CDATA[
 			LIMIT
 				#limit#, #rowCount#

@@ -2362,7 +2362,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Override
 	public void brdUpdateItem(BoardListVO boardListVO, String mode) throws Exception {
 		logger.debug("brdUpdateItem started");
-
+		
 		ezBoardDAO.brdUpdateItem(boardListVO);
 		
 		if (boardListVO.getReadFlag().equals("Y")) {
@@ -3906,11 +3906,21 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardListVO.setContentLocation(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
 		}
 		
+		/* 2020-03-19 홍승비 - 예약게시물 수정 시 WRITEDATE, STARTDATE 업데이트 추가 */
 		if (doc.getElementsByTagName("STARTDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("STARTDATE").item(0).getTextContent().equals("")) {
 			boardListVO.setStartDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
 			boardListVO.setWriteDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			boardListVO.setIsReserved("true");
 		} else {
 			boardListVO.setStartDate(commonUtil.getTodayUTCTime(""));
+			boardListVO.setIsReserved("false");
+		}
+		
+		// 기존의 예약게시물 > 수정 > 예약게시를 아예 취소한 경우
+		if (doc.getElementsByTagName("RSVCANCEL").item(0) != null && doc.getElementsByTagName("RSVCANCEL").item(0).getTextContent().equals("true")) {
+			boardListVO.setStartDate(commonUtil.getTodayUTCTime(""));
+			boardListVO.setWriteDate(commonUtil.getTodayUTCTime(""));
+			boardListVO.setIsReserved("true"); // STARTDATE를 업데이트 하기 위한 처리
 		}
 		
 		boardListVO.setEndDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("ENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));

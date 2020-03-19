@@ -49,6 +49,7 @@ var messages = {
 	successMoveFile: "ファイル（フォルダ）が移動されました。",
 	successCopyFile: " ファイル（フォルダ）がコピーされました。",
 	outOfStorageSpaceForOneTime: " アップロード容量が基本容量を超えています。",
-	outOfStorageSpace: "アップロード容量上限を超えています。"
+	outOfStorageSpace: "アップロード容量上限を超えています。",
+	strLangDragNDrop:"フォルダはアップロードすることができません。"
 
 }

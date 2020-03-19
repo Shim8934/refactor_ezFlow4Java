@@ -340,14 +340,15 @@ function AppendFileAttachInfo(ret)
 	        var ServerFile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[2]);
 	        var is_newfile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]);
 //	        var IncodFileNM = escape(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[1]));
-	        realFileNM = ReplaceText(realFileNM, "'", "&apos;")
-
+	        realFileNM = ReplaceText(realFileNM, "'", "&apos;");
+	        
+	        /* 2020-03-17 홍승비 - 커뮤니티 게시물 첨부파일(특수문자 존재 시) 수정, 삭제 불가능 오류 수정 */
 	        if (is_newfile != "DEL") {
-	            strAttach += "<input type='checkbox' name='fileSelect' newfile='" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]) + "' value='" + ServerFile + "' style='vertical-align:middle;'>";
+	            strAttach += "<input type='checkbox' name='fileSelect' newfile='" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]) + "' value=\"" + MakeXMLString(ServerFile) + "\" style='vertical-align:middle;'>";
 	            strAttach += getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]).replace(/%2b/gi, "+").replace(/%3b/gi, ";") + "&nbsp;</a>&nbsp;<br>"
 	        }
 	    }
-	    document.getElementById("lstAttachLink").innerHTML = strAttach;	   
+	    document.getElementById("lstAttachLink").innerHTML = strAttach;
 		
 	}
 	catch(e){alert("AppendFileAttachInfo :: " + e.description);}
