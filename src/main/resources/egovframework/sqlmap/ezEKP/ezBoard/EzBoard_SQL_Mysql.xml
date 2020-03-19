@@ -1457,7 +1457,7 @@
              </isNotEmpty>
      		ORDER BY
      			A.NotiNo ASC,
-     			A.ParentWriteDate DESC,
+     			A.ParentWriteDate,
      			A.WriteDate DESC
        		LIMIT
        			#limit#, #rowCount#
