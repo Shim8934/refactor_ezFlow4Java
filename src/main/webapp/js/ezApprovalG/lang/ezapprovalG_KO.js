@@ -1,4 +1,4 @@
-﻿﻿// ApprovUI\ApprovUI.js
+﻿// ApprovUI\ApprovUI.js
 var strLang2 = "합의";
 var strLang3 = "협조";
 var strLang4 = "반송";
