@@ -176,7 +176,7 @@ public class EzNewPortalGWController {
 			
 			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
 			LOGGER.debug("primaryLang=" + primaryLang);
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + ", portletLang : " + portletLang + ", deptPath : " + deptPath);
 			
 			// 사용자 설정 테마/프레임 가져오기
 			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath, portletLang);
@@ -4883,7 +4883,6 @@ public class EzNewPortalGWController {
 			String lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
 			
 			Map<String, Object> themeAuth = ezNewPortalService.getThemeAuth(companyId, tenantId, themeId, lang);
-
 			JSONObject data = new JSONObject();
 			
 			data.put("themeAuthsY", themeAuth.get("themeAuthsY"));

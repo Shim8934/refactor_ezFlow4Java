@@ -62,11 +62,13 @@
 				var portletAuthsYList = "";
 				
 				portletAuthsY.forEach(function(item, index) {
-					if (item.userType) {
+					if (item.userType == 1) {
 						portletAuthsYList += ", " + item.userName;
 						portletAuthsYList += "(" + item.userDeptName + ")";
-					} else {
+					} else if (item.userType == 0) {
 						portletAuthsYList += ", " + item.userDeptName;
+					} else {
+						portletAuthsYList += ", " + item.userName;
 					}
 				});
 				
@@ -81,11 +83,13 @@
 				var portletAuthsNList = "";
 				
 				portletAuthsN.forEach(function(item, index) {
-					if (item.userType) {
+					if (item.userType == 1) {
 						portletAuthsNList += ", " + item.userName;
 						portletAuthsNList += "(" + item.userDeptName + ")";
-					} else {
+					} else if (item.userType == 0) {
 						portletAuthsNList += ", " + item.userDeptName;
+					} else {
+						portletAuthsNList += ", " + item.userName;
 					}
 				});
 				

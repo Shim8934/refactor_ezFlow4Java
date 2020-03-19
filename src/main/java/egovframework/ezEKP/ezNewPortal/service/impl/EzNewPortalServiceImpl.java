@@ -1481,10 +1481,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("lang", lang);
 
 		map.put("accessType", "1");
-		List<ThemeAuthVO> themeAuthsY = ezNewPortalDAO.getThemeAuth(map);
+		List<Map<String, Object>> themeAuthsY = ezNewPortalDAO.getThemeAuth(map);
 		
 		map.put("accessType", "0");		
-		List<ThemeAuthVO> themeAuthsN = ezNewPortalDAO.getThemeAuth(map);
+		List<Map<String, Object>> themeAuthsN = ezNewPortalDAO.getThemeAuth(map);
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("themeAuthsY", themeAuthsY);
@@ -1522,7 +1522,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				}
 				
 				map.put("userId", commonUtil.stripScriptTags(map.get("userId").toString()));
-				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName").toString()));
+				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName") != null? map.get("userDeptName").toString() : ""));
 				
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
@@ -1629,10 +1629,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("lang", lang);
 
 		map.put("accessType", 1);
-		List<PortletAuthVO> portletAuthsY = ezNewPortalDAO.getPortletAuth(map);
+		List<Map<String, Object>> portletAuthsY = ezNewPortalDAO.getPortletAuth(map);
 		
 		map.put("accessType", 0);		
-		List<PortletAuthVO> portletAuthsN = ezNewPortalDAO.getPortletAuth(map);
+		List<Map<String, Object>> portletAuthsN = ezNewPortalDAO.getPortletAuth(map);
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("portletAuthsY", portletAuthsY);
@@ -1669,7 +1669,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				}
 				
 				map.put("userId", commonUtil.stripScriptTags(map.get("userId").toString()));
-				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName").toString()));
+				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName") != null ? map.get("userDeptName").toString() : ""));
 				
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
