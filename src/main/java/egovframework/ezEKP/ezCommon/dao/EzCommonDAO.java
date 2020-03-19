@@ -240,6 +240,24 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.selectMultiLoginUser", map);
 	}
 	
+	public boolean getPermissionGroupAccessYN(Map<String, Object> map) throws Exception {
+		int permit = (int) select("EzCommonDAO.getPermissionGroupAccessYN", map);
+		
+		if (permit > 0) {
+			return true;
+		} else {
+			if (map.get("applySubDeptYN").toString().equals("true")) {
+				permit = (int) select("EzCommonDAO.getPermissionGroupAccessSubDeptY", map);
+				
+				if (permit > 0) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	public void createTblUserMultiLogin() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblUserMultiLogin");
@@ -686,6 +704,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addMemoExtensionColumns");
 		}
 	}
+	
+	public void addSurveyAlamColums() {
+		try {
+			select("EzCommonDAO.checkSurveyAlamColums");
+		} catch (Exception e) {
+			logger.debug("tbl_survey addSurveyAlamColums doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addSurveyAlamColums");
+		}
+	}
 		
 	public void addMsgInMailSearch() {
 		try {
@@ -1000,6 +1028,41 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			
 			update("EzCommonDAO.snMenuAuth");
 		}
+	}
+	
+	public void addBoardManageTypeColumn() {
+		try {
+			select("EzCommonDAO.checkBoardManageTypeColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_board_boardmanage type doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addBoardManageTypeColumn");
+		}
+	}
+
+	public void createPersonalPopupUser() {
+		try {
+			select("EzCommonDAO.checkTblPsPopupUser");
+		} catch (Exception e) {
+			logger.debug("tbl_ps_popup_user doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblPsPopupUser");
+		}
+	}
+	
+	public void addSurveyMailSentFlagColumn() {
+		try {
+			select("EzCommonDAO.checkSurveyMailSentFlagColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_survey mail_sent_flag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addSurveyMailSentFlagColumn");
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LoginVO> getPermissionGroupMembers(Map<String, Object> map) throws Exception {
+		return (List<LoginVO>) list("EzCommonDAO.getPermissionGroupMembers", map);
 	}
 
 	public void addSnThemeAuth() {

@@ -135,6 +135,8 @@ public class BoardPropertyVO {
 	private String companyID;
 	/** 2018-10-15 홍승비 - 그룹사게시판 체크용 isAllGroupBoard 추가*/
 	private String isAllGroupBoard;
+	/** 2019-09-19 홍승비 - 게시판 권한의 타입 부여 (PERSON, JIKWI, JIKCHEK, DEPT, GROUP)*/
+	private String type;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -522,6 +524,13 @@ public class BoardPropertyVO {
 	}
 	public void setIsAllGroupBoard(String isAllGroupBoard) {
 		this.isAllGroupBoard = isAllGroupBoard;
+	}
+	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }

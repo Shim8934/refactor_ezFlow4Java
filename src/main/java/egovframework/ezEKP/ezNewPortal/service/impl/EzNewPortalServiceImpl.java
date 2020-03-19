@@ -51,7 +51,10 @@ import egovframework.ezEKP.ezNewPortal.vo.ThemeAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -71,6 +74,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Autowired
 	private EzApprovalGService ezApprovalGService;
+	
+	@Resource(name  ="EzOrganAdminDAO")
+	private EzOrganAdminDAO ezOrganAdminDAO;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -175,21 +181,45 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		Collections.reverse(deptIds);
 		
 		//유저권한체크
+		map.put("userType", "USER");
 		List<MenuInfoVO> result = ezNewPortalDAO.getMenuForUser(map);
-		List<MenuInfoVO> deptResult = null;
 		
 		//전체체크필요없어서 id만
 		List<Integer> menuIds = new ArrayList<Integer>();
 		
 		for (MenuInfoVO vo : result) {
-				menuIds.add(vo.getMenuId());
+			menuIds.add(vo.getMenuId());
 		}
 		
 		result.removeIf(vo -> !vo.isAccessYN());
 		
+		// 직위 직책 체크
+		map.put("userType", "PERMISSION");
+		List<MenuInfoVO> permissionResult = ezNewPortalDAO.getMenuForUser(map);
+		
+		for (MenuInfoVO permissionMenu : permissionResult) {
+			int menuId = permissionMenu.getMenuId();
+			
+			if (menuIds.indexOf(menuId) == -1) {
+				menuIds.add(menuId);
+				
+				if (permissionMenu.isAccessYN()) {
+					result.add(permissionMenu);
+				}
+			}
+		}
+		
 		//부서 및 상위부서권한체크(유저 나 하위부서에서 권한체크걸린건 추가안함
+		List<MenuInfoVO> deptResult = null;
+		map.put("userType", "DEPT");
 		for(String pathId : deptIds) {
 			map.put("deptId", pathId);
+			
+			if (pathId.equals(deptId)) {
+				map.put("isUserDept", true);
+			} else {
+				map.put("isUserDept", false);
+			}
 			
 			deptResult = ezNewPortalDAO.getMenuForUser(map);
 			
@@ -419,7 +449,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		//유저권한체크
 		LOGGER.debug("getPortletForUser deptId = " + userId);
+		
+		map.put("userType", "USER");
 		map.put("isDept", "user");
+		
 		List<PortletInfoVO> result = ezNewPortalDAO.getPortletForUser(map);
 		List<PortletAuthVO> authResult = ezNewPortalDAO.getPortletAuthUserList(map);
 		
@@ -448,11 +481,47 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		result.removeIf(vo -> !vo.isAccessYN());
 		authResult.removeIf(vo -> !vo.isAccessYN());
 		
+		//직위 직책 체크 
+		map.put("userType", "PERMISSION");
+		List<PortletInfoVO> permissionResult = ezNewPortalDAO.getPortletForUser(map);
+		List<PortletAuthVO> portletAuthPermissionResult = ezNewPortalDAO.getPortletAuthUserList(map);
+		
+		for (PortletInfoVO permissionPortlet : permissionResult) {
+			int portletId = permissionPortlet.getPortletId();
+			
+			if (portletIds.indexOf(portletId) == -1) {
+				portletIds.add(portletId);
+				
+				if (permissionPortlet.isAccessYN()) {
+					result.add(permissionPortlet);
+				}
+			}
+		}
+		
+		for (PortletAuthVO permissionPortlet : portletAuthPermissionResult) {
+			int portletAuthId = permissionPortlet.getPortletId();
+			
+			if (portletAuthIds.indexOf(portletAuthId) == -1) {
+				portletAuthIds.add(permissionPortlet.getPortletId());
+				
+				if (permissionPortlet.isAccessYN()) {
+					accessYIds.add(permissionPortlet.getPortletId());
+				}
+			}
+		}
+		
 		//부서 및 상위부서권한체크(유저 나 하위부서에서 권한체크걸린건 추가안함
+		map.put("userType", "DEPT");
 		for(String pathId : deptIds) {
 			map.put("isDept", "dept");
 			map.put("deptId", pathId);
+			
 			LOGGER.debug("getPortletForUser deptId = " + pathId);
+			if (pathId.equals(deptId)) {
+				map.put("isUserDept", true);
+			} else {
+				map.put("isUserDept", false);
+			}
 			
 			deptResult = ezNewPortalDAO.getPortletForUser(map);
 			deptAuthResult = ezNewPortalDAO.getPortletAuthUserList(map);
@@ -953,6 +1022,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("lang", lang);
 		
 		//유저권한체크
+		map.put("userType", "USER");
 		List<ThemeInfoVO> result = ezNewPortalDAO.getUserThemeList(map);
 		List<ThemeInfoVO> deptResult = null;
 		
@@ -964,15 +1034,31 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		}
 		
 		result.removeIf(vo -> !vo.isAccessYN());
-		System.out.println("themeList for user : " + result);
+		
+		
+		// 직위 직책 체크
+		map.put("userType", "PERMISSION");
+		List<ThemeInfoVO> permissionResult = ezNewPortalDAO.getUserThemeList(map);
+		
+		for (ThemeInfoVO permissionTheme : permissionResult) {
+			int themeId = permissionTheme.getThemeId();
+			
+			if (themeIds.indexOf(themeId) == -1) {
+				themeIds.add(themeId);
+				
+				if (permissionTheme.isAccessYN()) {
+					result.add(permissionTheme);
+				}
+			}
+		}
+
+		map.put("userType", "DEPT");
 		map.put("isDept", "dept");
 		//부서 및 상위부서권한체크(유저 나 하위부서에서 권한체크걸린건 추가안함
 		for(String pathId : deptIds) {
 			map.put("userId", pathId);
 			
 			deptResult = ezNewPortalDAO.getUserThemeList(map);
-			System.out.println("pathId : " + pathId);
-			System.out.println("themeList for dept : " + deptResult);
 			
 			//권한잇는것들 && 기존 권한체크안된것들 추가
 			for (ThemeInfoVO depTheme : deptResult) {
@@ -1395,10 +1481,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("lang", lang);
 
 		map.put("accessType", "1");
-		List<ThemeAuthVO> themeAuthsY = ezNewPortalDAO.getThemeAuth(map);
+		List<Map<String, Object>> themeAuthsY = ezNewPortalDAO.getThemeAuth(map);
 		
 		map.put("accessType", "0");		
-		List<ThemeAuthVO> themeAuthsN = ezNewPortalDAO.getThemeAuth(map);
+		List<Map<String, Object>> themeAuthsN = ezNewPortalDAO.getThemeAuth(map);
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("themeAuthsY", themeAuthsY);
@@ -1436,7 +1522,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				}
 				
 				map.put("userId", commonUtil.stripScriptTags(map.get("userId").toString()));
-				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName").toString()));
+				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName") != null? map.get("userDeptName").toString() : ""));
 				
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
@@ -1543,10 +1629,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("lang", lang);
 
 		map.put("accessType", 1);
-		List<PortletAuthVO> portletAuthsY = ezNewPortalDAO.getPortletAuth(map);
+		List<Map<String, Object>> portletAuthsY = ezNewPortalDAO.getPortletAuth(map);
 		
 		map.put("accessType", 0);		
-		List<PortletAuthVO> portletAuthsN = ezNewPortalDAO.getPortletAuth(map);
+		List<Map<String, Object>> portletAuthsN = ezNewPortalDAO.getPortletAuth(map);
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("portletAuthsY", portletAuthsY);
@@ -1583,7 +1669,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				}
 				
 				map.put("userId", commonUtil.stripScriptTags(map.get("userId").toString()));
-				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName").toString()));
+				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName") != null ? map.get("userDeptName").toString() : ""));
 				
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
@@ -2017,7 +2103,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				}
 				
 				map.put("userId", commonUtil.stripScriptTags(map.get("userId").toString()));
-				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName").toString()));
+				map.put("userDeptName", commonUtil.stripScriptTags(""));
 				map.put("sn", index);
 				
 				map.put("companyId", companyId);
@@ -2747,6 +2833,34 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		int doingListCount = ezNewPortalDAO.getApprovalDoingListCount(map);
 		
 		return doingListCount;
+	}
+	
+	@Override
+	public List<OrganJobVO> getTitleList(String type, int tenantId, String companyId) throws Exception {
+		LOGGER.debug("getTitleList started.");
+		LOGGER.debug("[params] type = " + type + ", tenantId = " + tenantId + ", companyId = " + companyId);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyId);
+		
+		List<OrganJobVO> titleList = ezOrganAdminDAO.getTitleList_group(map);
+		LOGGER.debug("getTitleList ended.");
+		return titleList;
+	}
+	
+	@Override
+	public List<OrganGroupVO> getGroupList(int tenantId, String companyId) throws Exception {
+		LOGGER.debug("getGroupList started.");
+		LOGGER.debug("[params] tenantId = " + tenantId + ", companyId = " + companyId);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANT_ID", tenantId);
+		map.put("v_COMPANY_ID", companyId);
+		
+		List<OrganGroupVO> groupList = ezOrganAdminDAO.getGroupList(map);
+		
+		LOGGER.debug("getGroupList ended.");
+		return groupList;
 	}
 	
 	@Override

@@ -3,7 +3,11 @@ package egovframework.ezEKP.ezOrgan.service;
 import java.util.List;
 import java.util.Map;
 
+
+
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -115,6 +119,28 @@ public interface EzOrganAdminService {
 	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception;
 
 	public String getCompanyName(String displayName, int tenantID) throws Exception;
+	
+	public String insertPermissionGroup(String groupID, String groupName, String createID, String companyID, int tenantID, List<String> groupMemberList) throws Exception;
+	
+	public String updatePermissionGroup(String groupID, String groupName, String updateID, String companyID, int tenantID, List<String> groupMemberList) throws Exception;
+	
+	public void deletePermissionGroup(String groupList, String companyID, int tenantID) throws Exception;
+	
+	public int getPermissionGroupListCount(int tenantID, String searchKeycode, String searchKeyword, String companyID) throws Exception;
+	
+	public List<OrganGroupVO> getPermissionGroupList(int pPage, int pPageRow, int tenantID, String offset, String searchField, String searchValue, String searchCompanyID) throws Exception;
+	
+	public List<OrganGroupVO> getPermissionGroupInfo(String groupID, int tenantID, String companyID) throws Exception;
+	
+	public List<OrganGroupVO> getGroupList(int tenantID, String companyID) throws Exception;
+
+	public List<OrganGroupVO> getGroupListBoard(int tenantID, String companyID, String isAllGroupBoard) throws Exception;
+	
+	public String getTitleList_group(String type, String companyID, int tenantID, String lang) throws Exception;
+	
+	public OrganJobVO getTitleInfo_group(String type, String jobID, String companyID, int tenantID) throws Exception;
+
+	public String getTitleListBoard(String type, String companyID, int tenantID, String lang) throws Exception;
 	
 	public List<OrganLoginStopUserVO> getLoginStopUserList(int tenantID, int startPage, int maxItemPerPage, String keycode, String keyword, String stopFlag, String offset, String companyId) throws Exception;
 		

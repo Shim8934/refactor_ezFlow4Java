@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopupUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
@@ -64,7 +65,7 @@ public interface EzPersonalAdminService {
 
 	void saveQuickLink(LoginVO userInfo, Document doc) throws Exception;
 
-	void insertPopup(PersonalPopupVO vo, int tenantID, String offset) throws Exception;
+	int insertPopup(PersonalPopupVO vo, int tenantID, String offset) throws Exception;
 
 	void updatePopup(PersonalPopupVO vo, int tenantID, String offset) throws Exception;	
 
@@ -97,4 +98,8 @@ public interface EzPersonalAdminService {
 	String updatePoll(Document doc, int tenantID) throws Exception;
 
 	String checkJoinPoll(String userId, int tenantID, String itemSeq) throws Exception;
+	
+	void updatePopupUser(List<PersonalPopupUserVO> userList, int tenantId, String companyId, int itemSeq) throws Exception;
+	
+	List<PersonalPopupUserVO> getPopupUserList (int itemSeq, int tenantId, String companyId, String lang) throws Exception;
 }

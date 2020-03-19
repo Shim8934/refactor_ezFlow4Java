@@ -473,51 +473,52 @@
 		    
 		    function btnfiledel(type) {
 		        var filecnt = document.getElementById("filelist").childNodes.length;
-		    	var deleteFileList = document.querySelectorAll("#filelist input[name='fileSelect']:checked");
+		        
+		    	for (var i = 1; i < filecnt; i++) {
+		    		var filelistTable = document.getElementById("filelist");
+	                var elementTR = document.getElementById("filelist").childNodes[i];
+		    		var elementTRIsChecked = elementTR.childNodes[0].childNodes[0].checked;
+		    		var elementTrIsBig = GetAttribute(elementTR, "_big");
 		    	
-		    	if (type == "big") {
-		    		deleteFileList = document.querySelectorAll("#filelist tr[_big='Y']");	
+					if ((type=="big" && elementTrIsBig=="Y") || (type!="big" && elementTRIsChecked)) {
+			    		var pAttachDelSN;
+		                var pAttachDelFileName;
+		                var is_newfile;
+		                var pNewNodeName = "";
+		                var Rtnval;
+		                var length = $('#filelist tr').length;
+		                
+		                window.parent.DelAttachFileAtList(elementTR);
+		                
+		                var delfilesize = GetAttribute(elementTR, "_filesize");
+		               
+		                if (delfilesize == "") {
+		                    delfilesize = 0;
+		                }
+	 
+		                if (elementTrIsBig == "Y") {
+		                    bigfilesize -= delfilesize;
+		                    bigfile.splice(i - 1, 1);
+		                } else {
+		                    filesize -= delfilesize;
+		                    file.splice(i - 1, 1);
+		                    
+		                    for (var j = 0; j < length; j++) {
+			                	
+		                    	if (i <= j && $('#filelist tr:eq(' + j + ')').is('[_fileindex]'))  {
+				                	$('#filelist tr:eq(' + j + ')').attr("_fileindex",$('#filelist tr:eq(' + j + ')').attr("_fileindex") - 1);
+			                	}
+			                } 
+		                    
+		                 	// 2018-04-25 김유진 - 첨부 파일에 클릭하면 다운로드 하는 기능 수정
+			                updateItemUid();
+		                }                
+		                
+		                document.getElementById("filelist").removeChild(elementTR);
+		                i--;
+		                filecnt--;
+					}
 		    	}
-		    	
-		    	$.each(deleteFileList, function(i, e) {
-		    		var pAttachDelSN;
-	                var pAttachDelFileName;
-	                var is_newfile;
-	                var pNewNodeName = "";
-	                var Rtnval;
-	                var length = $('#filelist tr').length;
-	                var elementTR = type == "big" ? e : e.parentElement.parentElement;
-	                
-	                window.parent.DelAttachFileAtList(elementTR);
-	                
-	                var delfilesize = GetAttribute(elementTR, "_filesize");
-	               
-	                if (delfilesize == "") {
-	                    delfilesize = 0;
-	                }
- 
-	                if (GetAttribute(elementTR, "_big") == "Y") {
-	                    bigfilesize -= delfilesize;
-	                    bigfile.splice(i - 1, 1);
-	                } else {
-	                    filesize -= delfilesize;
-	                    file.splice(i - 1, 1);
-	                    
-	                    for (var j = 0; j < length; j++) {
-		                	
-	                    	if (i <= j && $('#filelist tr:eq(' + j + ')').is('[_fileindex]'))  {
-			                	$('#filelist tr:eq(' + j + ')').attr("_fileindex",$('#filelist tr:eq(' + j + ')').attr("_fileindex") - 1);
-		                	}
-		                } 
-	                    
-	                 	// 2018-04-25 김유진 - 첨부 파일에 클릭하면 다운로드 하는 기능 수정
-		                updateItemUid();
-	                }                
-	                
-	                document.getElementById("filelist").removeChild(elementTR);
-	                i--;
-	                filecnt--;
-		    	});
 		    }
 			
 		    function checkall() {

@@ -143,6 +143,8 @@ public interface EzCommonService {
 
 	public void addMemoExtensionColumns() throws Exception;
 
+	public void addSurveyAlamColums() throws Exception;
+	
 	public void addAddJobMasterProxy() throws Exception;
 
 	public void createAttitudeAnnual() throws Exception;
@@ -165,6 +167,16 @@ public interface EzCommonService {
 	
 	public void addSnMenuAuth() throws Exception;
 
+	public void addBoardManageTypeColumn() throws Exception;
+
+	public void createPersonalPopupUser() throws Exception;
+
+	public boolean getPermissionGroupAccessYN (String groupId, String companyId, int tenantId, String userId, String deptId, boolean applySubDeptYN) throws Exception;
+	
+	public void addSurveyMailSentFlagColumn() throws Exception;
+	
+	public List<LoginVO> getPermissionGroupMembers (String groupId, String companyId, int tenantId, boolean applySubDeptYN) throws Exception;
+	
 	public void addSnThemeAndPortletAuth() throws Exception;
 
 	public void alterChamjoView() throws Exception;

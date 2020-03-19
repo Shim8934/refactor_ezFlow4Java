@@ -14,7 +14,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/lang/ezSurvey_ko.js')}"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<style type="text/css">
 			#editBtn {float: right;}
@@ -57,6 +58,9 @@
 				
 			return str;
 		}
+		
+		// 전자설문 팝업 인덱스
+		var surveyPopupIndex;
 		
 		// 메인메뉴 조합하는 함수
 		var setMainMenuList = function (reData) {
@@ -268,7 +272,7 @@
 			    if (id == 'util_logout') {
 			        subMenuClickEvent('off');
 			        self.top.location.href = url;
-			    } if (id != 'util_employee_search' && id != 'util_admin') {
+			    } else if (id != 'util_employee_search' && id != 'util_admin') {
 					subMenuClickEvent('off', url);
 				} else {
 					subMenuClickEvent('off');
@@ -675,6 +679,53 @@
 			}
 		}
 		
+		var getSurveyPopupList = function() {
+			var returnObj = {};
+			
+			$.ajax({
+				type: "GET",
+				url: "/ezSurvey/getSurveyPopupItems.do",
+				data: {
+					mode: 'popup'
+				},
+				dataType: "JSON",
+				async: false,
+				cache: false,
+				success : function(data) {
+					
+					if (data.surveyPopupList === undefined) {
+						returnObj.surveyPopupList = [];	
+					} else {
+						returnObj.surveyPopupList = data.surveyPopupList;
+					}
+					
+					returnObj.userId = data.userId;
+				},
+				error : function(error) {
+					console.log(error);
+					returnList = null;
+				}
+			});
+			return returnObj;
+		}
+		
+		var setLayer = function () {
+			document.getElementById("menu_toggle").style.display = "none";
+			var topMenuFull = document.getElementById('topMenuFull');
+			var topFrame = parent.document.getElementById('topFrame');
+			var bodyTag = document.getElementsByTagName('Body')[0];
+			
+			var screenHeight = screen.height;
+			topFrame.style.position = 'relative';
+			topFrame.style.minHeight = screenHeight+"px";
+			bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+			
+			var popupArea = parent.document.getElementById("popupArea");
+			popupArea.style.height = (screenHeight) + "px";
+			popupArea.style.width = "100%";
+			showProgress("notice");
+		}
+		
 		var getNotiPopup = function () {
 			var notiList = JSON.parse('${popupNotiList}');
 			var position0Count = 0;
@@ -709,23 +760,23 @@
 					}
 					
 					openNotiPopup(notiInfo.itemSeq, notiInfo.width, notiInfo.height, notiInfo.position, index);
-					
+					setLayer();
+				} 
+				var surveyPopupObj = getSurveyPopupList();
+				if (surveyPopupObj.surveyPopupList.length > 0 && surveyPopupObj.surveyPopupList != null) {
+					index = ++position0Count;
+					surveyPopupIndex = index; 
+					openSurveyPopup(surveyPopupObj, 600, 600, 0, index);
 				}
 				
-				document.getElementById("menu_toggle").style.display = "none";
-				var topMenuFull = document.getElementById('topMenuFull');
-				var topFrame = parent.document.getElementById('topFrame');
-				var bodyTag = document.getElementsByTagName('Body')[0];
+			} else {
+				var surveyPopupObj = getSurveyPopupList();
+				if (surveyPopupObj.surveyPopupList.length > 0 && surveyPopupObj.surveyPopupList != null) {
+					index = ++position0Count;
+					surveyPopupIndex = index;
+					openSurveyPopup(surveyPopupObj, 600, 600, 0, index);
+				}
 				
-				var screenHeight = screen.height;
-				topFrame.style.position = 'relative';
-				topFrame.style.minHeight = screenHeight+"px";
-				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
-				
-				var popupArea = parent.document.getElementById("popupArea");
-				popupArea.style.height = (screenHeight) + "px";
-				popupArea.style.width = "100%";
-				showProgress("notice");
 			}
 			
 		}
@@ -917,17 +968,290 @@
 			this.style.zIndex = popupZIndex;
 		}
 		
+		//위치 지정하여 팝업 열기 --- 전자설문 팝업 공지사항
+		var openSurveyPopup = function (surveyPopupObj, wWidth, wHeight, wPosition, index) {
+			var surveyList;
+			var userId;
+			
+		    var survPopoup = parent.document.getElementById('surv_popup');
+		    if (survPopoup != null) {
+ 				var notipopup = parent.document.getElementById('noticePopupLayer');
+ 				notipopup.removeChild(survPopoup);
+ 			}
+		    // 로그인 직후 설문 팝업 생성하는 경우
+			if (surveyPopupObj !== "") {
+				surveyList = surveyPopupObj.surveyPopupList;
+				userId = surveyPopupObj.userId;
+				
+			// 유저가 설문 팝업에서 설문에 응한 경우
+			} else {
+				var surveyPopupObj = getSurveyPopupList();
+				surveyList = surveyPopupObj.surveyPopupList;
+				userId = surveyPopupObj.userId;
+			}
+			
+		    var wVertical, wHorizontal;
+		    
+		    if(wPosition == 0) {
+		        wVertical = Math.floor(window.outerHeight/2) - (wHeight/2) - 56 + (index * 10);
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
+		    } else if(wPosition == 1) {
+		        wVertical = 100 + (index*10); 
+		        wHorizontal = 100 + (index*10);
+		    } else if(wPosition == 2) {
+		        wVertical = window.outerHeight - wHeight - 100 + (index * 10); 
+		        wHorizontal = 100 + (index * 10);
+		    } else if(wPosition == 3) {
+		        wVertical = 100 + (index * 10); 
+		        wHorizontal = window.outerWidth - wWidth - 100 + (index * 10);
+		    } else if(wPosition == 4) {
+		        wVertical = window.outerHeight - wHeight - 100 + (index * 10); 
+		        wHorizontal = window.outerWidth - wWidth - 100 + (index * 10);
+		    } else if(wPosition == 5) {
+		        wVertical = 100 + (index*10); 
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
+		    } else if(wPosition == 6) {
+		        wVertical = window.outerHeight - wHeight - 100 - (index * 10); 
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
+		    } else {
+		        wVertical = 0 + (index*10); 
+		        wHorizontal = 0 + (index*10);
+		    }
+
+		    if(wVertical < 0)
+		        wVertical = 0;
+
+		    if(wHorizontal < 0)
+		        wHorizontal = 0;
+
+		    if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
+		        wHeight = eval(wHeight) - 60;
+		    
+    		var wLeft = wHorizontal;
+    		
+    		var wTop = wVertical;
+    		
+    		var popupDiv = document.createElement("div");
+    		popupDiv.id = "surv_popup";
+    		popupDiv.className = "popup_notice popup_type0";
+    		surveyPopupDom = popupDiv;
+    		
+    		var formElement = document.createElement("form");
+    		formElement.style.height = "100%";
+    		
+    		var layoutDiv = document.createElement("div");
+    		layoutDiv.className = "popup_noticeLayout";
+    		
+    		var titleDl = document.createElement("dl");
+    		titleDl.className = "popup_noticeTitle";
+    		
+    		var titleDt = document.createElement("dt");
+    		titleDt.className = "title_type0";
+    		
+    		var titleDd = document.createElement("dd");
+    		titleDd.className = "name_type0";
+    		titleDd.textContent = "전자설문";
+    		
+    		titleDl.appendChild(titleDt);
+    		titleDl.appendChild(titleDd);
+    		
+    		var contentDiv = document.createElement("div");
+    		contentDiv.className = "popup_noticeList";
+    		
+    		/* 테이블만들기 */
+    		
+    		var oTable = document.createElement("TABLE");
+    		oTable.className = "popuplist";
+    		oTable.setAttribute("width" , "100%");
+            var oTBody = document.createElement("TBODY");
+            var oTr = document.createElement("TR");
+            
+            var oTh1 = document.createElement("TH");
+            oTh1.setAttribute("style", "white-space:nowrap")
+            oTh1.setAttribute("width", "350px")
+            oTh1.innerHTML = '제목'
+            oTr.appendChild(oTh1);
+            
+            var oTh2 = document.createElement("TH");
+            oTh2.setAttribute("style", "white-space:nowrap")
+            oTh2.setAttribute("width", "60px")
+            oTh2.innerHTML = '작성자'
+            oTr.appendChild(oTh2);
+            
+            var oTh3 = document.createElement("TH");
+            oTh3.setAttribute("style", "white-space:nowrap")
+            oTh3.setAttribute("width", "90px")
+            oTh3.innerHTML = '종료일'
+            oTr.appendChild(oTh3);
+            
+            oTBody.appendChild(oTr);
+            
+            if (surveyList.length > 0) {
+	            for (var i = 0; i < surveyList.length; i++) {
+	            	var surveyInfo =  surveyList[i];
+	            	
+	            	if (surveyInfo.popupFlag === 1) {
+		            	var oTr = document.createElement("TR");
+		            	oTr.style.cursor = "pointer";
+		            	oTr.setAttribute('surveyId', surveyInfo.surveyId); 
+		            	oTr.addEventListener('click', function(event) { getDetailSurvey(event, this); }, false);
+		            	
+			            var oTd1 = document.createElement("TD");
+			            oTd1.style.overflow = 'hidden';
+			            oTd1.style.textOverflow = 'ellipsis';
+			            oTd1.style.whiteSpace = 'nowrap';
+			            oTd1.style.maxWidth  = '350px';
+				        oTd1.innerHTML = surveyInfo.title;
+			            oTr.appendChild(oTd1);
+			            
+			            var oTd2 = document.createElement("TD");
+			            oTd2.style.overflow = 'hidden';
+			            oTd2.style.textOverflow = 'ellipsis';
+			            oTd2.style.whiteSpace = 'nowrap';
+			            oTd2.style.maxWidth  = '60px';
+				        oTd2.innerHTML = surveyInfo.creatorName;
+			            oTr.appendChild(oTd2);
+			            
+			            var oTd3 = document.createElement("TD");
+			            oTd3.style.overflow = 'hidden';
+			            oTd3.style.textOverflow = 'ellipsis';
+			            oTd3.style.whiteSpace = 'nowrap';
+			            oTd3.style.maxWidth  = '90px';
+				        oTd3.innerHTML = surveyInfo.endDate.substr(0, 10);
+			            oTr.appendChild(oTd3);
+			            
+			            oTBody.appendChild(oTr);
+	            	}
+	            }
+            } else {
+            	var oTr = document.createElement("TR");
+            	
+            	var oTd1 = document.createElement("TD");
+	            oTd1.style.overflow = 'hidden';
+	            oTd1.style.textOverflow = 'ellipsis';
+	            oTd1.style.whiteSpace = 'nowrap';
+	            oTd1.style.maxWidth  = '500px';
+	            oTd1.style.textAlign = 'center';
+		        oTd1.innerHTML = SurveyMessages.strNoData;
+		        oTd1.colSpan = 3;
+	            oTr.appendChild(oTd1);
+	            
+	            oTBody.appendChild(oTr);
+            }
+            oTable.appendChild(oTBody);
+            contentDiv.appendChild(oTable);
+            
+    		var btnDiv = document.createElement("div");
+    		btnDiv.className = "notice_btn";
+    		
+    		var btnPElem = document.createElement("p");
+    		btnPElem.className = "btn_checkbox";
+    		
+    		var checkInput = document.createElement("input");
+    		checkInput.type = "checkbox";
+    		checkInput.setAttribute("name", "checkbox");
+    		checkInput.className = "inp_noticeCheck";
+    		checkInput.id = "surv_inp_noticeCheck";
+    		
+    		var labelElem = document.createElement("label");
+    		labelElem.className = "name_type0";
+    		labelElem.setAttribute("for", "inp_noticeCheck");
+    		labelElem.textContent = "<spring:message code = 'ezPersonal.t267' />";
+    		
+    		var closePElem = document.createElement("p");
+    		closePElem.className = "notice_btnClose close_type0";
+    		closePElem.id = "surv_closeBtn";
+    		
+    		btnPElem.appendChild(checkInput);
+    		btnPElem.appendChild(labelElem);
+    		btnDiv.appendChild(btnPElem);
+    		
+    		layoutDiv.appendChild(titleDl);
+    		layoutDiv.appendChild(contentDiv);
+    		layoutDiv.appendChild(btnDiv);
+    		formElement.appendChild(layoutDiv);
+    		popupDiv.appendChild(closePElem);
+    		popupDiv.appendChild(formElement);
+    		 
+    		parent.document.getElementById("popupArea").querySelector("#noticePopupLayer").appendChild(popupDiv);
+    		
+    		parent.document.getElementById("surv_popup").style.height = wHeight - 40 + "px";
+    		parent.document.getElementById("surv_popup").style.width = wWidth - 40 + "px";
+    		parent.document.getElementById("surv_popup").style.left = wLeft + "px";
+    		parent.document.getElementById("surv_popup").style.top = wTop + "px";
+    		parent.document.getElementById("surv_popup").style.zIndex = index + 1;
+    		parent.document.getElementById("surv_popup").addEventListener("click", changeZIndex);
+    		parent.document.getElementById("surv_inp_noticeCheck").addEventListener("change", function() {
+    			notice_close("surv_popup", userId, "checkbox");
+    		});
+    		
+    		parent.document.getElementById("surv_closeBtn").addEventListener("click", function() {
+    			notice_close("surv_popup", userId, "btn");
+    		});
+    		
+    		var popupContent = parent.document.getElementById("surv_popup").getElementsByClassName("popup_noticeList")[0];
+    		popupContent.style.height = parent.document.getElementById("surv_popup").clientHeight - 175 + "px"; 
+    		
+    		parent.$("#surv_popup").draggable({
+				containment : parent.$("#popupArea"),
+				cancel : parent.$(".popup_noticeList"),
+				scroll: false 
+			});
+    		setLayer();
+    		
+		}
+		
+		var getDetailSurvey = function (event, thisEl) {
+			event.stopPropagation();
+			
+			var surveyId = thisEl.getAttribute('surveyId');
+			var heigth   = window.screen.availHeight;
+			var width    = window.screen.availWidth;
+			var left     = 0;
+			var top      = 0;
+			var pleftpos = parseInt(width) - 780;
+			var heigth   = parseInt(heigth) - 750;
+			var left     = pleftpos / 2;
+			var top      = heigth / 2;
+			
+			var itemPopup;
+			itemPopup = window.open("/ezSurvey/surveyDetail.do?itemId=" + surveyId, "fileDetail", "height = " + 750 + "px, width = " + 780 + "px, left=" + left + ", top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes");
+		}
+		
 		var notice_close = function (popupId, userId, position) {
-			var isChecked = parent.document.getElementById("inp_noticeCheck" + popupId).checked;
+			var isChecked;			// 팝업 공지
+			var isScheChecked;		// 일정 팝업
+			var isSurvChecked;		// 설문 팝업
+			
+			if (parent.document.getElementById("inp_noticeCheck" + popupId)) {						// 팝업 공지
+				isChecked = parent.document.getElementById("inp_noticeCheck" + popupId).checked;
+			} else if (popupId === "" && parent.document.getElementById("sche_inp_noticeCheck")) {					// 일정 팝업
+				isScheChecked = parent.document.getElementById("sche_inp_noticeCheck").checked;
+			} else if (popupId === "surv_popup" && parent.document.getElementById("surv_inp_noticeCheck")) {					// 설문 팝업
+				isSurvChecked = parent.document.getElementById("surv_inp_noticeCheck").checked;
+			}
 			
 			if (isChecked) {
 				setCookie("POPUP_" + popupId + "_" + userId, "1", 1); 
+			} else if (isScheChecked) {
+				setCookie("SCHE_POPUP_" + userId, "1", 1); 
+			} else if (isSurvChecked) {
+				setCookie("SURV_POPUP_" + userId, "1", 1); 
 			}
 			
 			var popupList = parent.document.getElementsByClassName("popup_notice");
 			
 			var popup = parent.document.getElementById("popup" + popupId);
-			popup.parentNode.removeChild(popup);
+			var sche_popup = parent.document.getElementById("sche_popup");
+			var surv_popup = parent.document.getElementById("surv_popup");
+			
+			if (popup) {
+				popup.parentNode.removeChild(popup);
+			} else if (popupId === "" && sche_popup) {
+				sche_popup.parentNode.removeChild(sche_popup);
+			} else if (popupId === "surv_popup" && surv_popup) {
+				surv_popup.parentNode.removeChild(surv_popup);
+			}
 			
 			if (popupList.length < 1) {
 				hideProgress("notice");
@@ -951,8 +1275,8 @@
 		
 		function setCookie(name, value, expiredays) {
 			var todayDate = new Date();
-			todayDate.setDate( todayDate.getDate() + expiredays );
-			document.cookie = name + "=" + encodeURIComponent( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
+			var expireDate = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate(), 23, 59, 59);
+			document.cookie = name + "=" + encodeURIComponent( value ) + "; path=/; expires=" + expireDate.toGMTString() + ";";
 		}
 		
 		var officeBugPatch = function() {

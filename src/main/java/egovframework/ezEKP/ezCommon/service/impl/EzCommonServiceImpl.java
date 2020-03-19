@@ -1617,6 +1617,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addMemoExtensionColumns() throws Exception {
 		ezCommonDAO.addMemoExtensionColumns();
 	}
+	
+	@Override
+	public void addSurveyAlamColums() throws Exception {
+		ezCommonDAO.addSurveyAlamColums();
+	}
 
 	@Override
 	public void addFormVersion() throws Exception {
@@ -1773,6 +1778,52 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void addSnMenuAuth() throws Exception {
 		ezCommonDAO.addSnMenuAuth();
+	}
+	
+	@Override
+	public void addBoardManageTypeColumn() throws Exception {
+		ezCommonDAO.addBoardManageTypeColumn();
+	}
+
+	@Override
+	public void createPersonalPopupUser() throws Exception {
+		ezCommonDAO.createPersonalPopupUser();
+	}
+
+	@Override
+	public boolean getPermissionGroupAccessYN(String groupId, String companyId, int tenantId, String userId,
+			String deptId, boolean applySubDeptYN) throws Exception {
+		logger.debug("getPermissionGroupAccessYN started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("deptId", deptId);
+		map.put("applySubDeptYN", applySubDeptYN);
+		
+		boolean accessYN = ezCommonDAO.getPermissionGroupAccessYN(map);
+		
+		logger.debug("getPermissionGroupAccessYN ended.");
+		return accessYN;
+	}
+
+	@Override
+	public void addSurveyMailSentFlagColumn() throws Exception {
+		ezCommonDAO.addSurveyMailSentFlagColumn();
+	}
+	
+	@Override
+	public List<LoginVO> getPermissionGroupMembers(String groupId, String companyId, int tenantId, boolean applySubDeptYN) throws Exception {
+		logger.debug("getPermissionGroupMembers started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("applySubDeptYN", applySubDeptYN);
+		
+		logger.debug("getPermissionGroupMembers ended.");
+		return ezCommonDAO.getPermissionGroupMembers(map);
 	}
 
 	@Override

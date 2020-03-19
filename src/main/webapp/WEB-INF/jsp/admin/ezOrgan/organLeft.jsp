@@ -71,6 +71,9 @@
 					case 32:
 						url = "/admin/ezOrgan/loginStop.do";
 						break;
+					case 33:
+						url = "/admin/ezOrgan/groupList.do";
+						break;
 				}
 				window.open(url,"right");
 			}
@@ -117,6 +120,9 @@
 						<span class="list_text" onClick="goPage(32)" style="display:inline-block;width:100%;">사용자정지</span>
 					</h2>
 				</c:if>
+				<h2>
+					<span class="list_text" onClick="goPage(33)" style="display:inline-block;width:100%;"><spring:message code='ezOrgan.zNo004' /></span>
+				</h2>
 	  		</div>			
 		</div>
 		<!-- <script type="text/javascript">
