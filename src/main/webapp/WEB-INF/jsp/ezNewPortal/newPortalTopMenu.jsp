@@ -268,7 +268,7 @@
 			    if (id == 'util_logout') {
 			        subMenuClickEvent('off');
 			        self.top.location.href = url;
-			    } if (id != 'util_employee_search' && id != 'util_admin') {
+			    } else if (id != 'util_employee_search' && id != 'util_admin') {
 					subMenuClickEvent('off', url);
 				} else {
 					subMenuClickEvent('off');
