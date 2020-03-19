@@ -564,7 +564,7 @@
 		            alert("<spring:message code='ezBoard.t454' />");
 		            return;
 		        }
-		        if (pStartDate == "" && pReservedItem == "TRUE") {
+		        if (pStartDate == "" && pReservedItem == "true") {
 		            strParentWriteDate = "";
 		        }
 		        newID = "{" +NewGuid+ "}";
@@ -620,7 +620,14 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", "");
 		        }
-
+		        
+		        /* 2020-03-19 홍승비 - 예약게시물 수정 > 예약게시 취소한 경우 플래그 추가 */
+				var isReservedCancel = "";
+				if (pReservedItem == "true" && document.getElementById("chk_reservation").checked == false) {
+					isReservedCancel = "true";
+				}
+				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "RSVCANCEL", isReservedCancel);
+		        
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "IMPORTANCE", importance);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TITLE", document.getElementById("txtTitle").value);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "STARTDATE", pStartDate);
@@ -753,7 +760,7 @@
 		        else
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", "");
 
-		        if (pMode != "new" && pMode != "new1" && pMode != "reply" && pMode != "temp" && pMode != "boardContent" && pMode != "boardContent" && pReservedItem == false) {
+		        if (pMode != "new" && pMode != "new1" && pMode != "reply" && pMode != "temp" && pMode != "boardContent" && pMode != "boardContent" && pReservedItem == "false") {
 		            if ((document.getElementById("readCount") != undefined) && (document.getElementById("readCount").checked == true)){
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "Y");
 		            } else{

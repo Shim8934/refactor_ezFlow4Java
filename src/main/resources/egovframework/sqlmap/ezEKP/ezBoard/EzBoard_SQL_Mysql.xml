@@ -4594,12 +4594,17 @@
 <!--     			ItemID = #itemID# -->
 <!-- 	</update> -->
 	
+	<!-- 2020-03-19 홍승비 - 예약게시물 수정 시 WRITEDATE, STARTDATE 업데이트 추가 -->
 	<update id="EzBoardDAO.brdUpdateItem" parameterClass="BoardListVO">
 			UPDATE TBL_Board_Item
 		    SET 
 		    	UpdateDate = #writeDate#,
 		    	Importance = #importance#,
 	          	Title = #title#,
+			<isEqual property="isReserved" compareValue="true">
+				WRITEDATE = #writeDate#,
+	          	STARTDATE = #startDate#,
+			</isEqual>
 	          	EndDate = #endDate#,
 	          	Abstract = #ABSTRACT#,
 	          	Attachments = #hasAttach#,
