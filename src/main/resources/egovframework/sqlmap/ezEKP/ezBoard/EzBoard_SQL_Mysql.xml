@@ -1457,7 +1457,7 @@
              </isNotEmpty>
      		ORDER BY
      			A.NotiNo ASC,
-     			A.ParentWriteDate,
+     			A.ParentWriteDate ASC,
      			A.WriteDate DESC
        		LIMIT
        			#limit#, #rowCount#
@@ -2075,10 +2075,17 @@
             	extensionAttribute1 = '0'
             AND 
             	extensionAttribute2 = '1'
+			AND (
+				(A.APPRFLAG <> 'C'  
+					AND 
+				A.APPRFLAG <> 'N')
+					OR 
+				A.APPRFLAG IS NULL
+			)
            	ORDER BY 
            		NOTINO DESC,
-                A.ParentWriteDate ASC,
-                A.WriteDate ASC
+                A.ParentWriteDate DESC,
+                A.WriteDate DESC
 		]]>
 	</select>
 	
