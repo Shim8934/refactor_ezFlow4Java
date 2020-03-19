@@ -154,6 +154,7 @@ function attitude_annual_conn(formType, status) {
       })
       attitudeTypeList = attitudeTypeList.slice(0,-1);
       
+//2020-03-12 김정언
       if(attitudeTypeList === "A21"){
     	  $("input[id^=time]").each(function() {
     		  var number = Number($(this).attr("id").split("time")[1]);
@@ -688,7 +689,10 @@ for (var i = 0; i < 2; i++) {
       controlElement.removeAttribute("class");
       
       $(controlElement).timepicker({
-             timeFormat: "H:i"
+             timeFormat: "H:i",
+             step : 60,
+             minTime : '8:00am',
+             maxTime : '8:00pm'
       });
 
       if ($(controlElement).val() === "") {
@@ -1262,10 +1266,10 @@ function halfOff(attitudeType , halfOffViewer, halfOffReformId) {
 		$("#" + halfOffViewer3[0] + ", #" + halfOffViewer3[1]).attr("viewer-disable","false");
 		$("#" + halfOffReformId).attr("viewer-format","{0}{2} ~ {1}{3}");
 		$("#" + halfOffReformId).attr("viewer",halfOffViewer2[0] + "," + halfOffViewer2[1] + "," + halfOffViewer3[0] + "," + halfOffViewer3[1]);
-		
+
 		var sTime = "";
 		var eTime = "";
-		
+
 		//시작시간 선택
 		$("#" + halfOffViewer3[0]).change(function(e){
 			sTime = $(e.target).timepicker('getTime');
@@ -1293,4 +1297,14 @@ function halfOff(attitudeType , halfOffViewer, halfOffReformId) {
 function hideTime(){
 	$("#reform-title").attr("viewer-format","{0} ~ {1}");
 	$("#reform-title").attr("viewer","date1,date2");
+
+	var currentTime = new Date().getHours();
+	$("#time1, #time2").timepicker('setTime', new Date(0,0,0,currentTime,0,0));
+
+	$("#time1, #time2").timepicker({
+		timeFormat: "H:i",
+		step : 60,
+		minTime : '8:00am',
+		maxTime : '8:00pm'
+	});
 }
