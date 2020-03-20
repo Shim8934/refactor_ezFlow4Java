@@ -134,6 +134,9 @@
 			   	 	} else if (searchCheck == 'RECEIVE') {
 			   	 		keyCode.children[3].setAttribute("selected", "selected");	
 			   	 		prekeywordDetail1.value = keywordFromList;
+			   	 	} else if (searchCheck == 'FILE') {
+			   	 		keyCode.children[4].setAttribute("selected", "selected");	
+			   	 		prekeywordDetail1.value = keywordFromList;
 			   	 	} else if (searchCheck == 'ALL') {
 			   	 		$("#moreSearch").css("display") == "none"
 		        		var all = document.getElementById("select2");
@@ -999,6 +1002,7 @@
 								<option value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
 								<option value="FROM"><spring:message code="ezEmail.t161" /></option> 
 								<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+								<option value="FILE"><spring:message code="ezEmail.pyy12" /></option> 
 							</select>
 							<input name="prekeyword" id="prekeywordDetail1" style="vertical-align: top;height: 25px;" onkeyup="return search_keypress(event)">
 						</div>
@@ -1008,6 +1012,7 @@
 								<option selected value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
 								<option value="FROM"><spring:message code="ezEmail.t161" /></option> 
 								<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+								<option value="FILE"><spring:message code="ezEmail.pyy12" /></option> 
 	 						</select>
 	 						<input name="prekeyword" id="prekeywordDetail2" style="vertical-align: top;height:25px" onkeyup="return search_keypress(event)">
 	 					</div>
@@ -1017,6 +1022,7 @@
 								<option value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
 								<option selected value="FROM"><spring:message code="ezEmail.t161" /></option> 
 								<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+								<option value="FILE"><spring:message code="ezEmail.pyy12" /></option>  
 						    </select>
 						    <input name="prekeyword" id="prekeywordDetail3" style="vertical-align: top;height:25px" onkeyup="return search_keypress(event)">
 						</div>
