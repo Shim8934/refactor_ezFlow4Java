@@ -141,6 +141,7 @@
 					</c:choose>
 				  <td>&nbsp;<spring:message code='ezPersonal.t408'/></td>
 				</tr> 
+				<c:if test="${useSaveSentMail}">
 				<tr>
 					<c:choose>
 						<c:when test="${saveMailFlag == 'Y'}">
@@ -152,6 +153,7 @@
 					</c:choose>
 				  <td>&nbsp;<spring:message code='ezPersonal.t409'/></td>
 				</tr> 
+				</c:if>
 			</table>					
 			<div class="btnpositionJsp" style="width:506px;">
 			    <a class="imgbtn" onClick="Save()"><span><spring:message code='ezPersonal.t34'/></span></a>

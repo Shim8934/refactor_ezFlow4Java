@@ -514,6 +514,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("callBack", callBack);
 		model.addAttribute("saveMailFlag", saveMailFlag);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useSaveSentMail", "YES".equalsIgnoreCase(config.getProperty("config.SentMailStoredInSentbox", "YES")));
 
 		logger.debug("setApprovNoticeMail ended");
 		return "ezPersonal/persSetApprovNoticeMail";

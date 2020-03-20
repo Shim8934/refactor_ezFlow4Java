@@ -4975,7 +4975,7 @@ public class EzEmailUtil {
 
 				logger.debug("Mail send success.");
 
-				if (isSentSave) {
+				if (isSentSave && "YES".equalsIgnoreCase(config.getProperty("config.SentMailStoredInSentbox", "YES"))) {
 					// 유저 로케일이 없을시 시스템 로케일로 설정
 					if (locale == null) {
 						locale = Locale.getDefault();
