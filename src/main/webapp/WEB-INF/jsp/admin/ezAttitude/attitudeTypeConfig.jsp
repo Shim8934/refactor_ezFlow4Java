@@ -208,7 +208,7 @@
 	    </h1>
 		<div id="mainmenu">
 	      	<ul>
-	      		<li class="important"><span onclick="add_type()"><spring:message code='ezAttitude.t176' /></span></li>
+	      		<%-- <li class="important"><span onclick="add_type()"><spring:message code='ezAttitude.t176' /></span></li> --%>
 	      		<li><span onclick="mod_type()"><spring:message code='ezAttitude.t177' /></span></li>
 	      		<li><span class="icon16 icon16_delete" onclick="del_type()"></span></li>
 	      	</ul>
