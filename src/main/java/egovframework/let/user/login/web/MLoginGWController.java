@@ -991,6 +991,84 @@ public class MLoginGWController {
     	return result;
     }
     
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezUser/login/users/{userId}/valid", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject valid(@PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
+		LOGGER.debug("valid started.");
+		JSONObject result = new JSONObject();
+
+		String serverName = request.getHeader("x-user-host");
+		int tenantId = loginService.getTenantId(serverName);
+		// 모바일 사용 설정 확인
+		String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", tenantId);
+
+		check: if (useMobileManagemant.equals("YES")) {
+			String notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId, "notUseMobileLogin");
+			String adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId, "adminOrderNotUsedMobileLogin");
+
+			notUseAllMobileLogin = notUseAllMobileLogin.equals("") ? "0" : notUseAllMobileLogin;
+			adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
+
+			if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
+				LOGGER.debug("cannot use mobile login. userId={}", userId);
+
+				result.put("status", "error");
+				result.put("code", "6");
+				result.put("data", "cannot use mobile login.");
+
+				return result;
+			}
+
+			String deviceId = request.getParameter("deviceID") == null ? "" : request.getParameter("deviceID");
+
+			if (deviceId.trim().isEmpty()) {
+				break check;
+			}
+
+			String inputParams = "userId=" + userId + "&deviceId=" + deviceId;
+			LOGGER.debug("userId=" + userId + ",deviceId=" + deviceId);
+
+			String requestURL = "/ezTalkGate/getUserMobileDeviceUsedInfo";
+			String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+			LOGGER.debug("getResult=" + getResult);
+
+			JSONParser parser = new JSONParser();
+			JSONObject resultObj = (JSONObject) parser.parse(getResult);
+
+			if (Integer.valueOf(String.valueOf(resultObj.get("data"))) > 0) {
+				LOGGER.debug("this device cannot use. userId=" + userId);
+
+				result.put("status", "error");
+				result.put("code", "6");
+				result.put("data", "this device cannot use.");
+
+				return result;
+			}
+			// 0이지만 그전 사용자의 config 확인
+			String oldUserId = String.valueOf(resultObj.get("oldUserId"));
+			notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, oldUserId, "notUseMobileLogin");
+			adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, oldUserId, "adminOrderNotUsedMobileLogin");
+
+			notUseAllMobileLogin = notUseAllMobileLogin.equals("") ? "0" : notUseAllMobileLogin;
+			adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
+
+			if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
+				LOGGER.debug("cannot use mobile login. oldUserId=" + oldUserId);
+
+				result.put("status", "error");
+				result.put("code", "6");
+				result.put("data", "cannot use mobile login.");
+
+				return result;
+			}
+		}
+
+		result.put("status", "ok");
+		result.put("code", "0");
+		LOGGER.debug("valid ended.");
+		return result;
+	}
+
     private int checkState(int tenantID, String userId, int numberOfLoginFailPermit) throws Exception {        
         if (numberOfLoginFailPermit <= 0) {        	
         	//Users will never be blocked
