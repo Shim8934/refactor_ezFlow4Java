@@ -438,7 +438,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			for (int j = 0; j < options.size(); j++, maxOptionId++) {
 				JSONObject optionObj = (JSONObject)options.get(j);
 				JSONObject optionAtt = (JSONObject)optionObj.get("attach");
-				String optionContent = commonUtil.stripScriptTags(optionObj.get("content").toString());
+				String optionContent = "";
+				if(optionObj.get("content") != null) {
+					optionContent = commonUtil.stripScriptTags(optionObj.get("content").toString());
+				}
 				int optionLevel      = optionObj.get("level")     != null ? ((Long)optionObj.get("level")).intValue()     : 0;
 				int otherFlag        = optionObj.get("otherFlag") != null ? ((Long)optionObj.get("otherFlag")).intValue() : 0;
 				int logicNum         = optionObj.get("logic")     != null ? ((Long)optionObj.get("logic")).intValue()     : -1;
