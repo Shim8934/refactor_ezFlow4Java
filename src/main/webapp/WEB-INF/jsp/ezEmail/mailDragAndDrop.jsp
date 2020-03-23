@@ -705,6 +705,7 @@
 					async : false,
 					data : {
 						fileIdxArr : fileIdxArr,
+						shareId : shareId,
 						itemid : itemid
 					},
 					success : function (result){
