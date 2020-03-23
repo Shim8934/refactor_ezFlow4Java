@@ -21,4 +21,8 @@ public interface MOrganService {
 	public List<MOrganListVO> getLowDeptInfo(String deptID, String lang, int tenantId) throws Exception;
 
 	public List<MOrganListVO> getHighDeptInfo(String deptID, String deptType, String organType, String lang, String companyID, int tenantId) throws Exception;
+
+	public MOrganListVO getOneDeptInfo(String deptID, String lang, int tenantId) throws Exception;
+
+	public MPersonListVO getUserAddjobInfo(String userID, String deptID, String lang, int tenantId) throws Exception;
 }

@@ -813,5 +813,54 @@
 			]]>
     	</isNotEqual>
     </select>
+    <select id="MOrganDAO.getOneDeptInfo" parameterClass="Map" resultClass="MOrganListVO">
+    	<![CDATA[
+    		SELECT
+				CN as DEPTID,
+				CASE
+					WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+  					THEN DISPLAYNAME
+  					ELSE DISPLAYNAME$lang$
+  				END DEPTNAME
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				CN = #deptID#
+    	]]>
+    </select>
+    
+    <select id="MOrganDAO.getUserAddjobInfo" parameterClass="Map" resultClass="MPersonListVO">
+		<![CDATA[
+			SELECT
+				A.CN,
+                CASE $lang$
+                WHEN '1'
+                THEN TITLE
+                ELSE TITLE2
+                END TITLE,
+                CASE $lang$
+                WHEN '1'
+                THEN DISPLAYNAME
+                ELSE DISPLAYNAME2
+                END Description,
+                CASE $lang$
+                WHEN '1'
+                THEN EXTENSIONATTRIBUTE3
+                ELSE COMPNM2
+                END COMPANY 
+        	FROM
+        		TBL_ADDJOBMASTER A
+        	JOIN
+        		TBL_DEPTMASTER B   ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
+        	WHERE
+        		A.CN = #userID#
+        	AND
+        		A.DEPTID = #deptID#
+        	AND
+        		A.TENANT_ID = #tenantID#	
+		]]>
+	</select>
 </sqlMap>
 
