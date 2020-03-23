@@ -49,11 +49,7 @@ public class SMTPAccess {
 	    props.put("mail.smtp.connectiontimeout", TIMEOUT);
 	    props.put("mail.smtp.writetimeout", TIMEOUT);
 	    
-	    Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-	    	protected PasswordAuthentication getPasswordAuthentication() {
-	    		return new PasswordAuthentication(userName, password);
-	    	}
-	    });
+	    Session session = Session.getInstance(props);
 	    return session;
 	}
 	
