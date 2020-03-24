@@ -131,3 +131,21 @@ td[kk_none_border_visualize_bottom],
 td[kk_none_border_visualize_bottom] {
     border-bottom : 1px dashed #e7e7e7 !important;
 }
+
+o, O {
+    display: inline-block;
+    border: 1px solid #2d2d2e;
+    border-radius: 10px;
+    padding:  3px;
+}
+
+r, R {
+    display: inline-block;
+    border: 1px solid #2d2d2e;
+    padding:  3px;
+}
+
+d, D {
+    vertical-align: sub;
+    vertical-align: super;
+}
