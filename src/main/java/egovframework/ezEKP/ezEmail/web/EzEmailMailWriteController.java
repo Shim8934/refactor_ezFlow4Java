@@ -6757,7 +6757,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
 			
-			if (shareId != null) {
+			if (shareId != null && !shareId.equals("")) {
 				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("saveAttachFileOrder ended.");
