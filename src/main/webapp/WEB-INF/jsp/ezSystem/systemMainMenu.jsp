@@ -37,8 +37,8 @@
 						{ name : "BigSizeMailAttachDelDay", value : document.getElementById("BigSizeMailAttachDelDay").value.trim() },
 						{ name : "totBigSizeMailAttachLimit", value : document.getElementById("totBigSizeMailAttachLimit").value.trim() },
 						{ name : "MailAttachLimit", value : document.getElementById("MailAttachLimit").value.trim() },				
-						{ name : "ExpirePassPeriod", value : document.getElementById("ExpirePassPeriod").value.trim() },
-						{ name : "MaxAllowedCountOfLoginFail", value : document.getElementById("MaxAllowedCountOfLoginFail").value.trim() },				
+						/* { name : "ExpirePassPeriod", value : document.getElementById("ExpirePassPeriod").value.trim() },
+						{ name : "MaxAllowedCountOfLoginFail", value : document.getElementById("MaxAllowedCountOfLoginFail").value.trim() }, */				
 						{ name : "INDIVIDUALMAILUSER", value : document.getElementById("INDIVIDUALMAILUSER").value.trim() },
 						{ name : "IS_READ_DELETE", value : document.getElementById("IS_READ_DELETE").value.trim() },
 						{ name : "PrimaryLang", value : document.getElementById("PrimaryLang").value.trim() },
@@ -113,12 +113,12 @@
 							case "MailAttachLimit" :
 								alertMsg = "<spring:message code='ezSystem.x0003'/>: <spring:message code='ezEmail.t99000066'/>";
 								break;		
-							case "ExpirePassPeriod" :
+							/* case "ExpirePassPeriod" :
 								alertMsg = "<spring:message code='ezSystem.x0005'/>: <spring:message code='ezEmail.t99000066'/>";
 								break;
 							case "MaxAllowedCountOfLoginFail" :
 								alertMsg = "<spring:message code='ezSystem.x0038'/>: <spring:message code='ezEmail.t99000066'/>";
-								break;
+								break; */
 							case "INDIVIDUALMAILUSER" :
 								alertMsg = "<spring:message code='ezSystem.x0006'/>: <spring:message code='ezEmail.t99000066'/>";
 								break;
@@ -155,8 +155,8 @@
 	            <tr><th><spring:message code="ezSystem.x0001"/></th><td><input id="BigSizeMailAttachDelDay" maxlength="3" type="text" value="<c:out value='${configMap.BigSizeMailAttachDelDay}'/>"> (<spring:message code="ezSystem.x0010"/>)</td></tr>          
 	            <tr><th><spring:message code="ezSystem.x0002"/></th><td><input id="totBigSizeMailAttachLimit" maxlength="4" type="text" value="<c:out value='${configMap.totBigSizeMailAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>, <spring:message code="ezSystem.x0019"/>)</td></tr>
 	            <tr><th><spring:message code="ezSystem.x0003"/></th><td><input id="MailAttachLimit" maxlength="3" type="text" value="<c:out value='${configMap.MailAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>)</td></tr>                              
-	            <tr <c:if test="${isDotNetAdmin == true}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0005"/></th><td><input id="ExpirePassPeriod" maxlength="3" type="text" value="<c:out value='${configMap.ExpirePassPeriod}'/>"> (<spring:message code="ezSystem.x0010"/>, <spring:message code="ezSystem.x0014"/>)</td></tr>
-	            <tr <c:if test="${isDotNetAdmin == true}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0038"/></th><td><input id="MaxAllowedCountOfLoginFail" maxlength="4" type="text" value="<c:out value='${configMap.MaxAllowedCountOfLoginFail}'/>"> (<spring:message code="ezSystem.x0014"/>)</td></tr>            
+	           <%--  <tr <c:if test="${isDotNetAdmin == true}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0005"/></th><td><input id="ExpirePassPeriod" maxlength="3" type="text" value="<c:out value='${configMap.ExpirePassPeriod}'/>"> (<spring:message code="ezSystem.x0010"/>, <spring:message code="ezSystem.x0014"/>)</td></tr>
+	            <tr <c:if test="${isDotNetAdmin == true}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0038"/></th><td><input id="MaxAllowedCountOfLoginFail" maxlength="4" type="text" value="<c:out value='${configMap.MaxAllowedCountOfLoginFail}'/>"> (<spring:message code="ezSystem.x0014"/>)</td></tr>             --%>
 	            <tr><th><spring:message code="ezSystem.x0006"/></th><td><input id="INDIVIDUALMAILUSER" maxlength="3" type="text" value="<c:out value='${configMap.INDIVIDUALMAILUSER}'/>"> (<spring:message code="ezSystem.x0015"/>)</td></tr>
 	            <tr><th><spring:message code="ezSystem.x0007"/></th><td><select id="IS_READ_DELETE"><option <c:if test="${configMap.IS_READ_DELETE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezSystem.hsb01"/></option><option <c:if test="${configMap.IS_READ_DELETE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezSystem.hsb02"/></option></select></td></tr>
 	            <tr><th><spring:message code="ezSystem.x0008"/></th><td><select id="PrimaryLang" style="display:none;"><option <c:if test="${configMap.PrimaryLang == '1'}">selected="selected"</c:if> value="1"><spring:message code="ezPersonal.s81"/></option><option <c:if test="${configMap.PrimaryLang == '3'}">selected="selected"</c:if> value="3"><spring:message code="ezPersonal.s84"/></option></select>	
