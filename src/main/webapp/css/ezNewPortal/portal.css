@@ -1262,3 +1262,39 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:547px; z-index
 
 /* 20190626 class mainbg 옮김 */
 .mainbg {min-width : 1260px;}
+
+
+/* 20200320 default_kr.css에 있는 코드 옮김 */
+p, strong, h3, div {
+	font-family: 'malgun gothic', 'arial', 'verdana';
+}
+
+.layerpopup iframe {
+	border-radius: 4px;	
+}
+
+.quickMenuBtn span, .quickMenuBtn span div {
+	font-size:12px;
+	font-family: 'malgun gothic', 'arial', 'verdana';
+	text-decoration: none;
+}
+
+input, label, textarea, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .txt, .imgbtn{
+	font-family: 'malgun gothic', 'arial', 'verdana';
+	font-size:12px;
+	color: #393939;
+	text-decoration: none;
+	ime-mode:active;
+}
+input {
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;	
+	border:1px solid #dedede;
+}
+
+#memoFolderList {min-height:20px;margin:0;}
+
+ul, li { margin-top:0; margin-bottom:0px; }
+.ui-resizable-e, .ui-resizable-s {border: 1px solid #ddd; background-repeat: no-repeat;}
+.ui-resizable-e {background-image: url('/images/prevview_hbar_dotted.gif'); width: 5px !important; background-position: center;}
+.ui-resizable-s {background-image: url('/images/prevview_bar_dotted.gif'); height: 5px !important; background-position: center -2px;}
