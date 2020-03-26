@@ -41,7 +41,7 @@ public class SMTPAccess {
 			return session;
 		}
 		Properties props = new Properties();
-	    props.put("mail.smtp.auth", "true");
+		// props.put("mail.smtp.auth", "true");
 	    props.put("mail.smtp.starttls.enable", "false");
 	    props.put("mail.smtp.host", host);
 	    props.put("mail.smtp.port", port);
@@ -49,11 +49,7 @@ public class SMTPAccess {
 	    props.put("mail.smtp.connectiontimeout", TIMEOUT);
 	    props.put("mail.smtp.writetimeout", TIMEOUT);
 	    
-	    Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-	    	protected PasswordAuthentication getPasswordAuthentication() {
-	    		return new PasswordAuthentication(userName, password);
-	    	}
-	    });
+	    Session session = Session.getInstance(props);
 	    return session;
 	}
 	

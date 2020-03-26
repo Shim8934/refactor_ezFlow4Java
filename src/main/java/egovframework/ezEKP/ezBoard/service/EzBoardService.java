@@ -327,4 +327,15 @@ public interface EzBoardService {
 	/* 2019-11-08 홍승비 - 주어진 게시판ID에 대하여, 새로운 BOARDTREEPATH를 생성해 리턴하는 메서드 */
 	public String getNewBoardTreePath(String subBoardID, int tenantId) throws Exception;
 	
+	/* 2019-09-18 홍승비 - 사용자의 직위와 직책 ID를 전부 문자열로 이어붙여 리턴하는 메서드 (사내겸직 포함) */
+	public String getUserJJID(String userID, String companyID, int tenantID) throws Exception;
+	
+	/* 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 권한정보를 리스트로 리턴하는 메서드 */
+	public List<BoardPropertyVO> getACLListNew(String pBoardID, String accessID, int tenantID, int isDept, int isEqualDept) throws Exception;
+	
+	/* 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 그룹의 관리자 권한을 리스트로 리턴하는 메서드 */
+	public List<String> checkIfBoardGroupAdminNew(String pRootBoardID, String accessID, int tenantID, int isDept, int isEqualDept, boolean isBoardGroup) throws Exception;
+
+	/* 2019-09-24 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 읽기권한을 리스트로 리턴하는 메서드 */
+	public List<String> getCheckItemIDNew(String itemID, String boardType, String userDeptPath, int tenantID, int isDept, int isEqualDept) throws Exception;
 }

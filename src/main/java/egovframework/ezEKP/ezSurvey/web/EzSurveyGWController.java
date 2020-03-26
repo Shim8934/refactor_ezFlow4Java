@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
@@ -465,6 +469,8 @@ public class EzSurveyGWController {
 			int anonymousFlag       = infor.get("anonymous")  != null ? ((Long)infor.get("anonymous")).intValue()  : -1;
 			int multipleFlag        = infor.get("multiple")   != null ? ((Long)infor.get("multiple")).intValue()   : -1;
 			int publicDays          = infor.get("publicDays") != null ? ((Long)infor.get("publicDays")).intValue() : -1;
+			int mailFlag            = infor.get("mail")       != null ? ((Long)infor.get("mail")).intValue()       : 0;
+			int popupFlag           = infor.get("popup")      != null ? ((Long)infor.get("popup")).intValue()      : 0;
 			int useStatus           = infor.get("status")     != null ? ((Long)infor.get("status")).intValue()     : 1;
 			JSONArray attchList     = infor.get("attach")     != null ? (JSONArray)infor.get("attach")             : null;
 			JSONArray users         = infor.get("users")      != null ? (JSONArray)infor.get("users")              : null;
@@ -480,7 +486,7 @@ public class EzSurveyGWController {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = surveyService.saveSurveyItem(realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo);
+			result           = surveyService.saveSurveyItem(realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -522,6 +528,34 @@ public class EzSurveyGWController {
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			result = surveyService.getItemsBySearching(pageMode, currentPage, listCntSize, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption, order, column, userInfo, userMode);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unused")
+	@RequestMapping(value="/rest/ezsurvey/survey-popupItem/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getPopupItems(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName    = request.getHeader("host-name")      != null ? request.getHeader("host-name")    : "";
+		String mode          = request.getParameter("mode")        != null ? request.getParameter("mode")      : "";
+		String userId        = request.getParameter("userId")      != null ? request.getParameter("userId")    : "";
+		JSONObject result    = new JSONObject();
+		
+		if (userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			result = surveyService.getPopupItems(mode, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

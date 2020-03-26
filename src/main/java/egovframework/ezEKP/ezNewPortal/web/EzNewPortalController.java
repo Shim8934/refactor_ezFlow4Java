@@ -159,7 +159,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			JSONObject data = (JSONObject) resultBody.get("data");
 			
 			logger.debug("TopMenu : " + data.toJSONString());
-			
 			JSONArray popupNotiList = (JSONArray) data.get("popupNotiList");
 			int popupNotiListCount = popupNotiList.size();
 			JSONArray popupNotiListAfter = new JSONArray();
@@ -185,6 +184,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 					if (cookieValue != null && !cookieValue.equals("")) {
 						popupNotiListAfter.remove(popupNoti);
 					}
+					
+					cookieValue = "";
 				}
 			}
 			
