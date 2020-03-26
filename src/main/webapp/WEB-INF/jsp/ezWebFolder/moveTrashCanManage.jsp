@@ -96,7 +96,8 @@
                 return;
             }
            	
-            if ( parent =='#' && checkedfileList.length > 0) {
+            // 회사폴더일 경우에만 최상위폴더에 파일을 이동할 수 없도록 수정. 2020-03-24 홍대표.
+            if ( folderType == 'C' && parent =='#' && checkedfileList.length > 0) {
 	            alert("<spring:message code='ezWebFolder.t293'/>");
 	            return;
             }

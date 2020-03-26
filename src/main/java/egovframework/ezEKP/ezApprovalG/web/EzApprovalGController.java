@@ -8528,6 +8528,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("docNumZeroCnt", docNumZeroCnt);
 		model.addAttribute("signImageType", signImageType);
+		model.addAttribute("useOpenGov", config.getProperty("config.useOpenGov"));
 		
 		logger.debug("recev ended");
 

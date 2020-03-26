@@ -25,6 +25,8 @@ public class MOrganListVO {
 	private String imageName;
 	/** 유저 메일*/
 	private String mail;
+	/** 유저 타입*/
+	private String type;
 	
 	public String getIsLast() {
 		return isLast;
@@ -97,5 +99,11 @@ public class MOrganListVO {
 	}
 	public void setMail(String mail) {
 		this.mail = mail;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 }
