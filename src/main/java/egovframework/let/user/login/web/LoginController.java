@@ -363,7 +363,9 @@ public class LoginController {
 		int numberOfLoginFailPermit = 0;
 		
 		// 로그인 실패 최대 허용 횟수를 구한다.
-		String maxAllowedCountOfLoginFail = ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId);
+		String maxAllowedCountOfLoginFail = ezCommonService.getCompanyConfig(tenantId, companyId, "MaxAllowedCountOfLoginFail");
+		logger.debug("companyId=" + companyId + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail);
+		// String maxAllowedCountOfLoginFail = ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId);
 				
 		if (!maxAllowedCountOfLoginFail.equals("")) {
 			try {
@@ -435,7 +437,9 @@ public class LoginController {
     	        		diff = 0;
     	        		model.addAttribute("isFirstLogin", "Y");
     	        	} else {
-    		        	String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
+    	        		String expirePassPeriod = ezCommonService.getCompanyConfig(tenantId, companyId, "ExpirePassPeriod");
+    	        		logger.debug("companyId=" + companyId + ", ExpirePassPeriod=" + expirePassPeriod);
+    		        	// String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
     		        	
     		        	if (!expirePassPeriod.trim().equals("0")) {
     		        		int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());

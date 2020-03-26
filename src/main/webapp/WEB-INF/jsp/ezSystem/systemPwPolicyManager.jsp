@@ -392,7 +392,7 @@
             	var obj = new Object();
                 if (SELECTObj.value == "limit") {
                 	obj.settingCnt = matcheElements[i].getAttribute("_PatternCnt");
-                	obj.settingNumber = matcheElements[i].querySelector("input[type=text]").value;
+                	obj.settingNumber = matcheElements[i].querySelector("input[type=int]").value;
 
                 	patternSettingTmp.push(obj);
                 }
@@ -463,7 +463,7 @@
 	                    if (SELECTObj !== null) {
 	                        totalCount++;
 	                        if (SELECTObj.value == "limit") {
-	                            if (matcheElements[i].querySelector("input[type=text]").value == "") {
+	                            if (matcheElements[i].querySelector("input[type=int]").value == "") {
 	                	            alert("<spring:message code='ezSystem.ksaPwPolicy32' />");
 	                                return false;
 	                            }
@@ -486,7 +486,7 @@
 	}
       
 	function AddCheck_onChange(thisObj) {
-	    var TextBoxObj = thisObj.parentElement.querySelector("input[type=text]");
+	    var TextBoxObj = thisObj.parentElement.querySelector("input[type=int]");
 	    if (TextBoxObj !== null) {
 	        if (thisObj.value == "limit") {
 	            TextBoxObj.disabled = false;
