@@ -106,7 +106,8 @@ function ListView() {
     this.AddDataRow = AddDataRow;
     this.SetAlignLeft = SetAlignLeft;
     this.SetUrgentFlag = SetUrgentFlag;     //긴급결재  DATA14
-    this.SetSecurityFlag = SetSecurityFlag; //보안결재  DATA10 날짜비교
+    this.SetSecurityFlag = SetSecurityFlag; //보안결재  [DATA14, DATA10] 날짜비교 
+    this.SetSecurityIdx = SetSecurityIdx; //보안결재관련, 보안결재 날짜가 DATA14에 있는 경우도 있고 DATA10에 있는 경우도 있어서 기본값은 DATA10을 조회하게 하되 필요에따라 조회할 DATA 인덱스를 정할수있음
     this.SetAlignArr = SetAlignArr;
     this.GetTableWidth = GetTableWidth;
     this.SetTableWidth = SetTableWidth;
@@ -135,7 +136,7 @@ function ListView() {
     var _debugMode = false;
     var _useOcs = false;
     var _IE = true;
-    var _title = "";
+    var _title = null;
 
     var _headeronclick = null;
     var _headerondblclick = "";
@@ -151,6 +152,7 @@ function ListView() {
     var _AlignLeft = null;
     var _UrgentFlag = false;
     var _SecurityFlag = false;
+    var _securityIdx = 9;
     var _Align = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
     var _ListType = 0;
     var _SetHeightFree = false;
@@ -199,6 +201,9 @@ function ListView() {
    
     function SetSecurityFlag(flag) {
         _SecurityFlag = flag;
+    }
+    function SetSecurityIdx(idx) {
+        _securityIdx = idx;
     }
 
     // 리스트헤더 정렬 배열
@@ -476,7 +481,7 @@ function ListView() {
                 var strClass = "h5_center";  // 현재는 header에 class가 없으므로 고정함. //SelectSingleNodeValue(oHeaders[i], "CLASSNAME");	
                 
                 var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
-                if(strColName == "DocTitle")
+                if(strColName == "DocTitle" || strColName === _title)
                     _titleIdx = i;
                 
                 //2019-04-09 천성준 - (#15424) 공람정보 팝업에서 결재일시 잘려나오는것 때문에 width +20px해주는거 같은데 지금은 UI가 바뀌어서 필요없음 
@@ -785,16 +790,16 @@ function ListView() {
                         objTd.style.textOverflow = "ellipsis";
                         objTd.style.whiteSpace = "nowrap";
 
-                        if (CrossYN()) {
-                            if (_SecurityFlag && oDatas[13].textContent.trim() != "" && oDatas[13].textContent >= strToday) {   //DATA10값
-                                objTd.style.color = m_SecurityColor;
-                            }
-                        }
-                        else {
-                            if (_SecurityFlag && oDatas[13].text.trim() != "" && oDatas[13].text >= strToday) {   //DATA10값
-                                objTd.style.color = m_SecurityColor;
-                            }
-                        }
+                        // if (CrossYN()) {
+                        //     if (_SecurityFlag && oDatas[13].textContent.trim() != "" && oDatas[13].textContent >= strToday) {   //DATA10값
+                        //         objTd.style.color = m_SecurityColor;
+                        //     }
+                        // }
+                        // else {
+                        //     if (_SecurityFlag && oDatas[13].text.trim() != "" && oDatas[13].text >= strToday) {   //DATA10값
+                        //         objTd.style.color = m_SecurityColor;
+                        //     }
+                        // }
                     }
                     else {  //상단 리스트일경우
                             objTd.title = strValue;
@@ -816,16 +821,15 @@ function ListView() {
                             else {
                                 objTd.width = "80%";
                             }
-
                         }
-                        if(oDatas[9]!=null){
+                        if(oDatas[_securityIdx]){
                         	if (CrossYN()) {
-                        		if (_SecurityFlag && oDatas[9].textContent != "" && oDatas[9].textContent >= strToday) {   //DATA10값
+                        		if (_SecurityFlag && oDatas[_securityIdx].textContent != "" && !isNaN(Date.parse(oDatas[_securityIdx].textContent)) && oDatas[_securityIdx].textContent >= strToday) {   //DATA10 혹은 DATA14의 값
                         			objTd.style.color = m_SecurityColor;
                         		}
                         	}
                         	else {
-                        		if (_SecurityFlag && oDatas[9].text != "" && oDatas[9].text >= strToday) {   //DATA10값
+                        		if (_SecurityFlag && oDatas[_securityIdx].text != "" && oDatas[_securityIdx].text >= strToday) {   //DATA10값
                         			objTd.style.color = m_SecurityColor;
                         		}
                         	}
