@@ -266,6 +266,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", user.getTenantId());
 		
+		String packageType = commonUtil.getPackageType(user.getTenantId());
+		
+		model.addAttribute("packageType", packageType.toLowerCase());
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("useLetter", useLetter);
 		model.addAttribute("useLoginStop", useLoginStop);
