@@ -9427,6 +9427,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("checkAprState started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		if ("NO".equalsIgnoreCase(ezCommonService.getTenantConfig("useShareApproval", userInfo.getTenantId()))) return "TRUE";
 		String docID = request.getParameter("docID");
 		String userID = request.getParameter("userID");
 		String orgCompanyID = request.getParameter("orgCompanyID");
