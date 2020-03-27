@@ -42,9 +42,10 @@
         } else {
         	document.getElementById('TreeView').innerHTML = "";
         	var treeView = new TreeView();
+        	var requestData = displayTrashDeptStr ? "RequestDataContainsTrashDept" : "RequestData";
         	treeView.SetID("FromTreeView");
         	treeView.SetUseAgency(true);
-        	treeView.SetRequestData("RequestData");
+        	treeView.SetRequestData(requestData);
         	treeView.SetNodeClick("TreeViewNodeClick");
         	treeView.DataSource(xmlDom);
         	treeView.DataBind("TreeView");
@@ -54,13 +55,21 @@
     }
 }
 
-function RequestData(pNodeID, pTreeID) {
-    var TreeIdx = pNodeID;
-    var treeNode = new TreeNode();
-    treeNode.LoadFromID(TreeIdx);
-    var deptID = treeNode.GetNodeData("CN");
+function RequestDataContainsTrashDept(pNodeID, pTreeID) {
+	RequestData(pNodeID, pTreeID, true);
+}
 
-    GetDeptSubTreeInfo(deptID, TreeIdx);
+function RequestData(pNodeID, pTreeID) {
+	RequestData(pNodeID, pTreeID, true);
+}
+
+function RequestData(pNodeID, pTreeID, displayTrashDept) {
+	var TreeIdx = pNodeID;
+	var treeNode = new TreeNode();
+	treeNode.LoadFromID(TreeIdx);
+	var deptID = treeNode.GetNodeData("CN");
+	
+	GetDeptSubTreeInfo(deptID, TreeIdx, true);
 }
 
 function RequestDataCC(pNodeID, pTreeID) {
@@ -72,11 +81,16 @@ function RequestDataCC(pNodeID, pTreeID) {
 	GetDeptSubTreeInfoCC(deptID, TreeIdx);
 }
 
-function GetDeptSubTreeInfo(deptID, TreeIdx) {
+function GetDeptSubTreeInfo(deptID, TreeIdx, displayTrashDept) {
     var xmlHTTP = createXMLHttpRequest();
     var xmlRtn = createXmlDom();
-        
-    var strQuery = "<DATA><DEPTID>" + deptID + "</DEPTID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName;displayName2</PROP></DATA>";
+
+	var displayTrashDeptStr = "";
+	if (displayTrashDept) {
+		displayTrashDeptStr = "<DISPLAY_TRASH_DEPT>true</DISPLAY_TRASH_DEPT>";
+	}
+    
+    var strQuery = "<DATA><DEPTID>" + deptID + "</DEPTID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName;displayName2</PROP>" + displayTrashDeptStr + "</DATA>";
     
     xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
     xmlHTTP.send(strQuery);
