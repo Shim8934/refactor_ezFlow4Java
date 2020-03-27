@@ -829,7 +829,14 @@ public class EzNewPortalGWController {
 			if (useCommunity.equals("NO")) {
 				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
-
+			
+			// 20200326 조진호 - 패키지 타입이 메일인 경우 메일,주소록을 제외한 모든 메뉴 제거
+			String packageType = commonUtil.getPackageType(info.getTenantId());
+			
+			if (packageType.equals(CommonUtil.PT_MAIL)) {
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && !vo.getMenuCode().equals("mail") && !vo.getMenuCode().equals("address")));
+			}
+			
 			data.put("menuList", menuList);
 			/**
 			 * 3) 유틸메뉴 - 관리자 권한의 유무 - DB에서 가져오지 말고 그냥 다 출력

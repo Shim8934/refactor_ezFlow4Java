@@ -50,3 +50,120 @@ article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,addre
 
 footer{font-size:14px; color:#c3c3c3; display: none; }
 footer p{margin:18px 0px 0px 0px; padding:0px; text-align:center;}
+
+/* 20200319 default_kr.css에 있는 코드 옮김 */
+p, strong, h3, div {
+	font-family: 'malgun gothic', 'arial', 'verdana';
+}
+
+input {
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;	
+	border:1px solid #dedede;
+	font-size:12px;
+	color: #393939;
+	text-decoration: none;
+	ime-mode:active;
+}
+input[type=checkbox] {
+	border:0 !important;
+}
+input[type=text] {
+	height:24px;
+}
+
+
+label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .txt, .imgbtn{
+	font-family: 'malgun gothic', 'arial', 'verdana';
+	font-size:12px;
+	color: #393939;
+	text-decoration: none;
+	ime-mode:active;
+}
+
+span {
+	font-size:12px;
+	font-family: 'malgun gothic', 'arial', 'verdana';
+	text-decoration: none;}
+	
+#close {
+	position: absolute;
+    right: 10px;
+    top: 8px;
+    height: 35px; 
+    z-index:1000;
+}
+#close ul {margin: 0; padding: 0;}
+#close ul li span {
+	display:inline-block;
+	width:25px;
+	height:28px;
+	background-image: url('../images/close_xBtn.png');
+	background-repeat: no-repeat;
+	background-position: 4px 6px;
+}
+#close ul li {
+	display: block;
+	float:left;
+	margin:0 3px 0 0px;
+	height:28px;
+	padding:0px 0px 0px 0px;
+	vertical-align:top;
+	cursor:pointer;
+	vertical-align:middle
+}
+
+a{	
+	font-family: 'malgun gothic', 'arial', 'verdana';
+	color: #393939;
+	text-decoration: none;
+	ime-mode:active;
+	cursor:pointer;
+}
+
+.btnpositionLayer {
+	text-align: center;
+	margin: -9px;
+	margin-top:20px;
+	padding:7px;
+	border-top: 1px solid #eee;	
+	background-color: #fcfcfc;
+}
+.btnpositionLayer a.imgbtn {
+    box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1);
+    border: 1px solid #c3c3c3;
+    height: 24px;
+}
+.btnpositionLayer a.imgbtn span {
+    height: 24px;
+    line-height: 24px;
+    font-weight: bold;
+    font-size: 12px;
+    color: #000;
+}
+
+.imgbtn{ 
+	white-space:nowrap;
+	display:inline-block;
+	/* background:url('/images/kr/cm/btn_middle_left.gif') top left; */
+	background-repeat:no-repeat;
+	cursor: pointer;
+	height:20px;
+	padding-left:12px;
+	vertical-align:top;
+	cursor:pointer;
+	margin-bottom:2px;
+	border:1px solid #ccc;
+	background-color: white;	
+}
+.imgbtn span{
+	display:inline-block;
+	/* background:url('/images/kr/cm/btn_middle_right.gif') top right; */
+	background-repeat:no-repeat;
+	height:20px;
+	padding-right:12px;	
+	font:12px malgun gothic;
+	letter-spacing:-1;
+	vertical-align:top;
+	line-height:18px;
+}

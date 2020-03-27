@@ -40,6 +40,7 @@ import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -194,7 +195,23 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		
 			if (packageType.equals(CommonUtil.PT_MAIL) || packageType.equals(CommonUtil.PT_BASIC)) {
 				logoMainUrl = "/ezEmail/mailMain.do";
+				
+				// 20200326 조진호 - 패키지 타입이 메일인 경우 사용자의 최종 로그인 시간과 ip를 탑메뉴 상단에 표기
+				String lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
+				String loginIP = "";
+				if (lastLogin != null) {
+					lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+					lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
+					loginIP = ezOrganService.getLoginIP(userInfo.getId(), userInfo.getTenantId());
+				} else {
+					lastLogin = "";
+					loginIP = "";
+				}
+				model.addAttribute("lastLogin", lastLogin);
+				model.addAttribute("loginIP", loginIP);
 			}
+			
+			model.addAttribute("packageType", packageType.toLowerCase());
 			
 			model.addAttribute("logoMainUrl", logoMainUrl);
 			model.addAttribute("logoUrl", data.get("logoUrl"));
