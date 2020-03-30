@@ -1125,5 +1125,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addBeforeDocUrl() throws Exception {
 		ezCommonDAO.addBeforeDocUrl();
 	}
+	
+	@Override
+	public void addAprAttachViewOrder() throws Exception {
+		ezCommonDAO.addAprAttachViewOrder();
+	}
+	
+	@Override
+	public void addAprEndAttachViewOrder() throws Exception {
+		ezCommonDAO.addAprEndAttachViewOrder();
+	}
+	
+	@Override
+	public void addAprTmpAttachViewOrder() throws Exception {
+		ezCommonDAO.addAprTmpAttachViewOrder();
+	}
 
 }

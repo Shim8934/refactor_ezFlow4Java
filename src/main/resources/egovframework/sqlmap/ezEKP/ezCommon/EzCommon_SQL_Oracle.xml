@@ -791,4 +791,55 @@
 			BEFOREDOCURL VARCHAR2(255 CHAR)
 	</statement>
 	
+	<select id="EzCommonDAO.checkAprAttachViewOrder">
+		<![CDATA[
+			SELECT 
+				VIEWORDER
+			FROM 
+				TBL_APRATTACHINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateAprAttachViewOrder">
+		ALTER TABLE 
+			TBL_APRATTACHINFO
+		ADD 
+			VIEWORDER  NUMBER(10,0)
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprEndAttachViewOrder">
+		<![CDATA[
+			SELECT 
+				VIEWORDER
+			FROM 
+				TBL_ENDATTACHINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateAprEndAttachViewOrder">
+		ALTER TABLE 
+			TBL_ENDATTACHINFO
+		ADD 
+			VIEWORDER  NUMBER(10,0)
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprTmpAttachViewOrder">
+		<![CDATA[
+			SELECT 
+				VIEWORDER
+			FROM 
+				TBL_TMPATTACHINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateAprTmpAttachViewOrder">
+		ALTER TABLE 
+			TBL_TMPATTACHINFO
+		ADD 
+			VIEWORDER  NUMBER(10,0)
+	</statement>
+	
 </sqlMap>

@@ -1,4 +1,4 @@
-﻿﻿﻿/**
+﻿/**
  * 첨부파일 리스트 추출
  * */
 function InitAttach(pDocID) {
@@ -98,13 +98,21 @@ function DelAttachFileAtList(pAttachCurSel) {
     var pAttachList = new ListView();
     pAttachList.LoadFromID("attachList");
 
+    /* 2020-03-19 홍승비 - 전자결재 첨부파일 레이어 팝업에서 첨부파일 다중선택 및 다중삭제 가능하도록 수정 */
     var pSelectedRow = pAttachList.GetSelectedRows();
-    var totalRows = GetAttribute(pSelectedRow[0], "id");
-
-    pAttachList.DeleteRow(totalRows);
-    if (pAttachFlag > 0)
-        pAttachFlag = pAttachFlag - 1;
+    var pSelectedRowLength = pSelectedRow.length;
+    var totalRows = "";
+    
+    for (var i = 0; i < pSelectedRowLength; i++) {
+    	totalRows = GetAttribute(pSelectedRow[i], "id");
+    	
+	    pAttachList.DeleteRow(totalRows);
+	    if (pAttachFlag > 0) {
+	        pAttachFlag = pAttachFlag - 1;
+	    }
+    }
 }
+
 function SaveAttachListInfo(Attachxml) {
     var ReturnVal;
     xmlhttp.open("Post", "/ezApprovalG/aprAttachSave.do?orgCompanyID="+orgCompanyID, false);
