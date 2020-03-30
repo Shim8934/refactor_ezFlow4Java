@@ -692,13 +692,13 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			switch(column) {
 				case "at" : sqlQuery = "attach_flag "                                              + order; break;
 				case "cd" : sqlQuery = "create_date "                                              + order; break;
-				case "tt" : sqlQuery = "title "                                                    + order; break;
+				case "tt" : sqlQuery = "CAST(SUBSTR(title, 1, 100) AS varchar(100)) "              + order; break;
 				case "ed" : sqlQuery = "end_date "                                                 + order; break;
 				case "ut" : sqlQuery = "participate_flag "                                         + order; break;
 				case "ct" : sqlQuery = primary.equals("1") ? "user_name1 " + order : "user_name2 " + order; break;
 				case "pl" : sqlQuery = "result_public_flag "                                       + order; break;
 				case "an" : sqlQuery = "anonymous_flag "                                           + order; break;
-				default   : sqlQuery = "title "                                                    + order; break;
+				default   : sqlQuery = "CAST(SUBSTR(title, 1, 100) AS varchar(100)) "              + order; break;
 			}
 		}
 		
