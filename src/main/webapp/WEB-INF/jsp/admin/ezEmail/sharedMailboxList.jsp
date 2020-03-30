@@ -285,7 +285,7 @@
 		        
 		        inputpassword_dialogArguments[0] = strLangSharedMailbox02;
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
-		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));	
+		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?type=shared", "InputPassword", GetOpenWindowfeature(467, 185));	
 		        try { OpenWin.focus(); } catch (e) { }
 			}
 			

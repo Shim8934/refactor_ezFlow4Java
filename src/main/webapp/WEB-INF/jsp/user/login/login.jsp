@@ -197,11 +197,18 @@
 			        return;
 			    }
 				
-				if (!CheckPassword(document.getElementById('txtNewPassword').value)) {
-					alert("<spring:message code='main.jjh04'/>");
-					document.all['txtNewPassword'].focus();
-					return;
-				};				
+				var companyID = "${companyId}";
+				var checkPw = loginCheckPassword(document.getElementById('txtNewPassword').value, companyID);
+		        if (checkPw != "OK"){
+		        	if (checkPw == "ERROR") {
+		        		alert("<spring:message code='ezSystem.ksaPwPolicy34'/>");
+		        	} else {
+		        		alert("<spring:message code='ezSystem.ksaPwPolicy35'/>");
+		        	}
+		        	
+		        	document.getElementById('txtNewPassword').focus();
+		        	return;
+		        }				
 				
 				if (document.getElementById('txtOldPassword').value == document.getElementById('txtNewPassword').value) {
 		            alert("<spring:message code='ezPersonal.t194'/>");
@@ -313,7 +320,8 @@
 					<li><span class="formText"><spring:message code='ezPersonal.t949'/></span><span class="formInput"><input type="password" id="txtOldPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
 					<li><span class="formText"><spring:message code='main.jjh05'/></span><span class="formInput"><input type="password" id="txtNewPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
 					<li><span class="formText"><spring:message code='main.jjh06'/></span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
-					<li style="padding-bottom:10px;padding-top:3px" class="grayText">▒ <spring:message code='main.jjh04'/></li>
+					<%-- <li style="padding-bottom:10px;padding-top:3px" class="grayText">▒ <spring:message code='main.jjh04'/></li> --%>
+					<li style="padding-bottom:10px;padding-top:3px" class="grayText">${pwPolicyExplain}</li>
 				</ul>
 			</div>
 			<div class="btnpositionLayer" style="background-color: white;border:0px">

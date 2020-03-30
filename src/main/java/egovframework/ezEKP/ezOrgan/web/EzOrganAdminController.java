@@ -1133,7 +1133,25 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 조직도관리 암호관리 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/inputPassword.do", method = RequestMethod.GET)
-	public String inputPassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String inputPassword(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		int tenantId = userInfo.getTenantId();
+		
+		String companyId = request.getParameter("companyId");
+		String type = request.getParameter("type");
+		type = type == null ? "" : type;
+		logger.debug("companyId="+ companyId + ", type=" + type);
+		
+		String pwPolicyExplain = "";
+		
+		if (type.equals("shared")) {
+			pwPolicyExplain = "▒ " + egovMessageSource.getMessage("main.jjh04", locale);
+		} else {
+			pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
+		}
+		
+		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
 		return "admin/ezOrgan/inputPassword";
 	}
 	

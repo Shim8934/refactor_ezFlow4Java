@@ -143,8 +143,8 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Map<String, String>> getPwPolicyPattern(Map<String, Object> paramMap) throws Exception {
-		return (List<Map<String, String>>) list("EzSystemAdminDAO.getPwPolicyPattern", paramMap);
+	public List<Map<String, Object>> getPwPolicyPattern(Map<String, Object> paramMap) throws Exception {
+		return (List<Map<String, Object>>) list("EzSystemAdminDAO.getPwPolicyPattern", paramMap);
 	}
 
 	public int insertPwPolicy(PasswordPolicyVO pwPolicyVo) throws Exception {

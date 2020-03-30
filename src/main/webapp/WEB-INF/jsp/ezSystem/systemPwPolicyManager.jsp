@@ -38,7 +38,7 @@
 		                        <option value="notuse" checked><spring:message code='ezSystem.ksaPwPolicy07' /></option>
 		                        <option value="use"><spring:message code='ezSystem.ksaPwPolicy06' /></option>
 		                    </select>
-		                    <input type="int" id="MaxPeriodNumber" style="width: 50px; " maxlength="3" onkeydown="KeyEventControl(event, '')" onkeyup="KeyEventControl(event, '')">
+		                    <input type="int" id="MaxPeriodNumber" style="width: 50px; " maxlength="3">
 		                    	<spring:message code='ezSystem.ksaPwPolicy24' />
 		                </td>
 		            </tr>
@@ -49,7 +49,7 @@
 		                        <option value="notuse" checked><spring:message code='ezSystem.ksaPwPolicy07' /></option>
 		                        <option value="use"><spring:message code='ezSystem.ksaPwPolicy06' /></option>
 		                    </select>
-		                    <input type="int" id="MaxLoginFailCount" style="width: 50px;" maxlength="4" onkeydown="KeyEventControl(event, '')" onkeyup="KeyEventControl(event, '')">
+		                    <input type="int" id="MaxLoginFailCount" style="width: 50px;" maxlength="4">
 		                    	<spring:message code='ezSystem.ksaPwPolicy25' />
 		                </td>
 		            </tr>
@@ -101,7 +101,7 @@
 	                    <input type="checkbox" id="chkSpecial" name="chkPattern" onchange="Pattern_onchange()">
 	                </td>
 	            </tr>
-	            <tr style="border-top-style:double">
+	            <tr>
 	                <th><spring:message code='ezSystem.ksaPwPolicy15' /></th>
 	                <td id="tdPattern"></td>
 	            </tr>
@@ -114,7 +114,7 @@
 		                        <option value="limit"><spring:message code='ezSystem.ksaPwPolicy06' /></option>
 		                        <option value="notuse"><spring:message code='ezSystem.ksaPwPolicy21' /></option>
 		                    </select>
-		                    &nbsp;<input type="int" style="width:30px;ime-mode: disabled;" onkeydown="KeyEventControl(event, '')" onkeyup="KeyEventControl(event, '')" maxlength="2" /> 
+		                    &nbsp;<input type="int" style="width:30px;ime-mode: disabled;" maxlength="2" /> 
 		                    <spring:message code='ezSystem.ksaPwPolicy26' />
 		                </td>
 		            </tr>
@@ -174,33 +174,33 @@
 		
         
         var pwPolicyMap = data.pwPolicyMap;
-        if (pwPolicyMap != null) {
+        if (pwPolicyMap != null || typeof pwPolicyMap == "undefined") {
         	var pwPolicy = pwPolicyMap.pwPolicy;
             var pwPolicyPattern = pwPolicyMap.pwPolicyPattern;
             
-            var pEngCharType = pwPolicy.eng_char_type; // 영문 대/소문자 패턴 구분 사용여부 및 대 소문자 구분
+            var pEngCharType = pwPolicy.ENG_CHAR_TYPE; // 영문 대/소문자 패턴 구분 사용여부 및 대 소문자 구분
             if (emptyCheck(pEngCharType)) {
             	var usePatternPolicy = pEngCharType == "N" ? "notuse" : "use"; 
             	document.getElementById("UseEngType").value = usePatternPolicy;
             	
             	var engCapitalLetter = pwPolicy.USE_ENG_CAPITAL_LETTER;
-            	engCapitalLetter = (engCapitalLetter == "N" || pEngCharType == "N") ? false : true;
-            	var engSmallLetter = pwPolicy.use_eng_small_letter;
-            	engSmallLetter = (engCapticalLetter == "N" || pEngCharType == "N") ? false : true;
+            	engCapitalLetter = (engCapitalLetter == "N" || pEngCharType == "N") ? true : false ;
+            	var engSmallLetter = pwPolicy.USE_ENG_SMALL_LETTER;
+            	engSmallLetter = (engSmallLetter == "N" || pEngCharType == "N") ? true : false ;
             	
             	document.getElementById("chkEngCapitalLetter").checked = engCapitalLetter;
                 document.getElementById("chkEngSmallLetter").checked = engSmallLetter;
             }
            
-            var pUseNumber = pwPolicy.use_number; // 숫사 사용여부
+            var pUseNumber = pwPolicy.USE_NUMBER; // 숫사 사용여부
             if (emptyCheck(pUseNumber)) {
-            	var useNumber = pUseNumber == "N" ? false : true; 
+            	var useNumber = pUseNumber == "N" ? true : false; 
                 document.getElementById("chkNumber").checked = useNumber;
             }
             
-            var pUseSpecialChar = pwPolicy.use_special_char; // 특수문자
+            var pUseSpecialChar = pwPolicy.USE_SPECIAL_CHAR; // 특수문자
             if (emptyCheck(pUseSpecialChar)) {
-            	var useSpecialChar = pUseSpecialChar == "N" ? false : true; 
+            	var useSpecialChar = pUseSpecialChar == "N" ? true : false; 
                 document.getElementById("chkSpecial").checked = useSpecialChar;
             }
             
@@ -229,6 +229,17 @@
                     }
             	}
             }
+        } else {
+        	document.getElementById("chkEngCapitalLetter").checked = false;
+        	document.getElementById("chkEngSmallLetter").checked = false;
+        	document.getElementById("chkNumber").checked = false;
+        	document.getElementById("chkSpecial").checked = false;
+        	
+        	var matcheElements = document.querySelectorAll("td[_PatternCnt]");
+            matcheElements.forEach(function(e, i) {
+	   			var querySelectElement = e.querySelector("SELECT");
+	   			querySelectElement.value = "notuse";
+        	});
         }
         
         initContent();
@@ -242,15 +253,21 @@
 
          Pattern_onchange();
 
-         var matcheElements = document.querySelectorAll("td[colspan='2']");
-         if (matcheElements.length > 0) {
-             for (var i = 0; i < matcheElements.length; i++) {
+         var matcheElements = document.querySelectorAll("td[_PatternCnt]");
+         matcheElements.forEach(function(e, i) {
+			var querySelectElement = e.querySelector("SELECT");
+			if (querySelectElement != null) {
+			    AddCheck_onChange(querySelectElement);
+			}
+     	});
+         /* if (matcheElements.length > 0) {
+             for (var i=0; i < matcheElements.length; i++) {
                  var querySelectElement = matcheElements[i].querySelector("SELECT");
                  if (querySelectElement != null) {
                      AddCheck_onChange(querySelectElement);
                  }
              }
-         }
+         } */
      }	
 
 	function UseMaxPeriod_onChange(thisObj) {
@@ -281,17 +298,19 @@
     }
 
     function UseEngType_onChange(thisObj) {
-    	var checkedChk = thisObj.value == "use" ? "" : false;
 		var disabledChk = thisObj.value == "use" ? false : true;
 		var disabledColor = thisObj.value == "use" ? "" : "#EBEBE4";
 
         document.getElementById("chkEngCapitalLetter").disabled = disabledChk;
-        document.getElementById("chkEngCapitalLetter").checked = checkedChk;
         document.getElementById("chkEngCapitalLetter").style.backgroundColor = disabledColor;
         document.getElementById("chkEngSmallLetter").disabled = disabledChk;
-        document.getElementById("chkEngSmallLetter").checked = checkedChk;
         document.getElementById("chkEngSmallLetter").style.backgroundColor = disabledColor;
 
+        if (thisObj.value != "use") {
+            document.getElementById("chkEngCapitalLetter").checked = false;
+            document.getElementById("chkEngSmallLetter").checked = false;
+        }
+        
         Pattern_onchange();
     }
 	
@@ -412,6 +431,7 @@
 			url:"/admin/ezSystem/updatePasswordPolicy.do",
 			success:function() {
 				alert("<spring:message code='main.sp10'/>");
+				GetPWDPolicy();
 			}, error : function() {
 				alert("<spring:message code='main.sp12'/>");
 			}
@@ -463,7 +483,8 @@
 	                    if (SELECTObj !== null) {
 	                        totalCount++;
 	                        if (SELECTObj.value == "limit") {
-	                            if (matcheElements[i].querySelector("input[type=int]").value == "") {
+	                        	var limitVal = matcheElements[i].querySelector("input[type=int]").value;
+	                            if (limitVal == "" || Number(limitVal) <= 0) {
 	                	            alert("<spring:message code='ezSystem.ksaPwPolicy32' />");
 	                                return false;
 	                            }

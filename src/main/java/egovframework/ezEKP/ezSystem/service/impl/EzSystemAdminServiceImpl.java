@@ -824,7 +824,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		Map<String, Object> returnMap = null;
 		
 		Map<String, String> pwPolicy = ezSystemAdminDAO.getPwPolicy(paramMap); // 암호 정책
-		List<Map<String, String>> pwPolicyPattern = ezSystemAdminDAO.getPwPolicyPattern(paramMap); // 암호 정책 패턴
+		List<Map<String, Object>> pwPolicyPattern = ezSystemAdminDAO.getPwPolicyPattern(paramMap); // 암호 정책 패턴
 		
 		if (pwPolicy != null && pwPolicyPattern != null) {
 			returnMap = new HashMap<String, Object>();
@@ -889,6 +889,11 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			String paramName = list.get(i).get("name");
 			String paramValue = list.get(i).get("value");
 			logger.debug("paramName:" + paramName + ", paramValue:" + paramValue);
+			
+			if (paramName.equals("ExpirePassPeriod") || paramName.equals("MaxAllowedCountOfLoginFail")) {
+				int changeInt = Integer.parseInt(paramValue);
+				paramValue = Integer.toString(changeInt);
+			}
 			
 			sysParamVO.setName(paramName);
 			sysParamVO.setValue(paramValue);

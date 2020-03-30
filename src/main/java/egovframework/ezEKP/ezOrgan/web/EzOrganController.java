@@ -20,6 +20,7 @@ import org.w3c.dom.Element;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -51,6 +52,9 @@ public class EzOrganController {
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name = "loginService")
+    private LoginService loginService;
 	
 	/**
 	 * 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
@@ -515,4 +519,27 @@ public class EzOrganController {
 		logger.debug("getListType ended.");
 		return listType;
 	}
+	
+	/*
+	 * 암호 정책 확인
+	 */
+ 	@RequestMapping(value = "/ezOrgan/checkPasswordPolicy.do", method = RequestMethod.POST)
+ 	@ResponseBody
+ 	public String checkPasswordPolicy(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+ 		logger.debug("checkPasswordPolicy started.");
+ 		
+ 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+ 		int tenantId = userInfo.getTenantId();
+
+ 		String chkPwPolicy = "";
+ 		
+ 		String pwStr = request.getParameter("pw");
+ 		String chkCompanyId = request.getParameter("chkCompanyId");
+ 		
+ 		Boolean test = commonUtil.checkPwPolicy(pwStr, chkCompanyId, tenantId);
+ 		chkPwPolicy = test ? "OK" : chkPwPolicy;
+ 		
+ 		logger.debug("checkPasswordPolicy ended. chkPwPolicy=" + chkPwPolicy);
+ 		return chkPwPolicy;
+ 	}
 }

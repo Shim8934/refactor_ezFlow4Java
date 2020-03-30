@@ -435,7 +435,11 @@ public class LoginController {
     	        	
     	        	if (resultVO.getLoginCnt() == 0) {
     	        		diff = 0;
+    	        		
+    	        		String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
     	        		model.addAttribute("isFirstLogin", "Y");
+    	        		model.addAttribute("companyId", companyId);
+    	        		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
     	        	} else {
     	        		String expirePassPeriod = ezCommonService.getCompanyConfig(tenantId, companyId, "ExpirePassPeriod");
     	        		logger.debug("companyId=" + companyId + ", ExpirePassPeriod=" + expirePassPeriod);
@@ -498,11 +502,15 @@ public class LoginController {
     	        	//패스워드 다음에 변경 기능 추가. 2019-09-17 홍대표
     	        	String passwordUpdateNextTime = request.getParameter("nextTime") != null ? request.getParameter("nextTime") : "";
     				if (diff <= 0 && !passwordUpdateNextTime.equals("YES")) {				
+    					String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
+    					
     					model.addAttribute("isExpireDate", "Y");
     					model.addAttribute("userId", _uid);
     					model.addAttribute("encryptID", loginVO.getEncryptID());
     					model.addAttribute("encryptPass", loginVO.getEncryptPass());
     					model.addAttribute("loginId", loginId);
+    					model.addAttribute("companyId", companyId);
+    	        		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
     					
     		        	return "forward:/user/login/login.do";
     				} else {			
@@ -1034,6 +1042,29 @@ public class LoginController {
 
 		return "/user/login/email";
 	}
+	
+	/*
+	 * 암호 정책 확인 (로그인 페이지)
+	 */
+ 	@RequestMapping(value = "/user/login/checkPasswordPolicy.do", method = RequestMethod.POST)
+ 	@ResponseBody
+ 	public String checkPasswordPolicy(HttpServletRequest request, Model model) throws Exception{
+ 		logger.debug("checkPasswordPolicy started.");
+ 		
+ 		String serverName = request.getServerName();        
+        int tenantId = loginService.getTenantId(serverName);
+
+ 		String chkPwPolicy = "";
+ 		
+ 		String pwStr = request.getParameter("pw");
+ 		String chkCompanyId = request.getParameter("chkCompanyId");
+ 		
+ 		Boolean test = commonUtil.checkPwPolicy(pwStr, chkCompanyId, tenantId);
+ 		chkPwPolicy = test ? "OK" : chkPwPolicy;
+ 		
+ 		logger.debug("checkPasswordPolicy ended. chkPwPolicy=" + chkPwPolicy);
+ 		return chkPwPolicy;
+ 	}
 
     private int checkState(int tenantID, String userId, int numberOfLoginFailPermit) throws Exception {        
         if (numberOfLoginFailPermit <= 0) {        	
