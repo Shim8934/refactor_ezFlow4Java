@@ -878,7 +878,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	
 	// companyConfig 저장
 	@Override
-	public void updateCompanyConfigParam(int tenantID, List<Map<String, String>> list, Locale locale, String companyID) throws Exception {
+	public void updateCompanyConfigParam(int tenantID, List<Map<String, String>> list, String companyID) throws Exception {
 		logger.debug("updateCompanyConfig started. tenantID=" + tenantID + ", companyId=" + companyID);
 		
 		SysParamVO sysParamVO = new SysParamVO();

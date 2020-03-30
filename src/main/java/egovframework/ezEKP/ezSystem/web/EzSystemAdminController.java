@@ -1608,7 +1608,7 @@ public class EzSystemAdminController {
 
 		PasswordPolicyVO pwPolicyVo = new PasswordPolicyVO();
 		pwPolicyVo.setCompanyId(companyId);
-		ezSystemAdminService.updateCompanyConfigParam(tenantID, configList, userInfo.getLocale(), companyId);
+		ezSystemAdminService.updateCompanyConfigParam(tenantID, configList, companyId);
 		ezSystemAdminService.updatePwPolicy(tenantID, companyId, patternTypeMap, patternSetting);
 		
 		return "";

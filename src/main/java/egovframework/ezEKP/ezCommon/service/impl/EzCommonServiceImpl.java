@@ -56,6 +56,9 @@ import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
@@ -81,7 +84,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
-		
+
+	@Resource(name = "EzSystemAdminService")
+	private EzSystemAdminService ezSystemAdminService;
+
+	@Resource(name = "EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
+	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonServiceImpl.class);
 	
 	@Override
@@ -1864,4 +1873,30 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.addBeforeDocUrl();
 	}
 	
+	@SuppressWarnings("serial")
+	@Override
+	public void setCompanyConfigs()  throws Exception {
+		logger.debug("setCompanyConfigs started.");
+		List<Map<String, String>> list = new ArrayList<Map<String,String>>();
+		list.add(new HashMap<String, String>(){{ put("name","ExpirePassPeriod"); put("value","0"); }});
+		list.add(new HashMap<String, String>(){{ put("name","MaxAllowedCountOfLoginFail"); put("value","0"); }});
+		list.add(new HashMap<String, String>(){{ put("name","UsePasswordPatternPolicy"); put("value","NO"); }});
+		     
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			int tenantId = tenantVo.getTenantId();
+			logger.debug("tenantId=" + tenantId);
+
+			List<OrganDeptVO> companyList = ezOrganAdminService.getCompanyList("1", tenantId);
+			logger.debug("companyList size=" + companyList.size());
+			for (OrganDeptVO companyVo : companyList) {
+				String companyId = companyVo.getCn();
+				
+				ezSystemAdminService.updateCompanyConfigParam(tenantId, list, companyId);
+			}
+		}
+		
+		logger.debug("setCompanyConfigs ended.");
+	}
 }

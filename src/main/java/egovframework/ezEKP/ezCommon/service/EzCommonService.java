@@ -186,5 +186,7 @@ public interface EzCommonService {
 	public void addIsBeforeDoc() throws Exception;
 
 	public void addBeforeDocUrl() throws Exception;
+
+	public void setCompanyConfigs() throws Exception;
 }
 
