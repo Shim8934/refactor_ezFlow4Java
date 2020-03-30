@@ -292,7 +292,44 @@
 					{
 						var pInformationContent = "<spring:message code='ezApprovalG.t279'/>";
 					    var Ans = OpenInformationUI(pInformationContent, btn_AttachDel_onclick_Complete);
-					    /* 2020-03-19 홍승비 - 미사용 코드 제거 (btn_AttachDel_onclick_Complete는 리턴값이 없으므로, 분기가 항상 무시됨)*/
+					    
+					    /* 2020-03-30 홍승비 - 한글기안 시 첨부파일 호환 코드 추가 (Ans가 바로 조건으로 사용됨) */
+					    if (Ans) {
+					        var listview = new ListView();
+					        listview.LoadFromID("attachList");
+					        var pAttachCurSel = listview.GetSelectedRows();
+					        var pAttachRow = listview.GetSelectedRows();
+					        
+							/* 2020-03-19 홍승비 - 첨부파일 다중삭제 동작 구현 */
+					        var Rtnval = ""
+					        var pSelectedRowLength = pAttachRow.length; 
+					        for (var i = 0; i < pSelectedRowLength; i++) {
+						        Rtnval = DeleteFileAtServer(pAttachCurSel[i]);
+						        // 의미없는 미구현 함수 DelfileSize(delfileSize) 동작 제거
+						        
+						        if (Rtnval != "TRUE") {
+						        	break;
+						        } else {
+						            if (totalSize > 0) { // 첨부파일의 크기 계산하는 부분 루프 내부로 이동
+						            	totalSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
+						            }
+						        }
+					        }
+					        
+					        if (Rtnval == "TRUE") {
+					            DelAttachFileAtList(pAttachCurSel);
+					            
+					            /* 2018-10-11 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
+					            var totalRows = listview.GetDataRows();
+							    if(totalRows.length == 0) {
+							    	setDeleteRow("attachList");
+							    }
+					        }
+					        else {
+					            var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
+					            OpenAlertUI(pAlertContent);
+					        }
+					    }
 					}
 				}
 				else
