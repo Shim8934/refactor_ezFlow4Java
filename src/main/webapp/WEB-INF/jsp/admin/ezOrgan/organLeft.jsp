@@ -117,7 +117,7 @@
 				</h2>
 				<c:if test="${useLoginStop == 'YES'}">
 					<h2>
-						<span class="list_text" onClick="goPage(32)" style="display:inline-block;width:100%;">사용자정지</span>
+						<span class="list_text" onClick="goPage(32)" style="display:inline-block;width:100%;"><spring:message code='ezOrgan.hdp17' /></span>
 					</h2>
 				</c:if>
 				<c:if test="${packageType != 'mail'}">
