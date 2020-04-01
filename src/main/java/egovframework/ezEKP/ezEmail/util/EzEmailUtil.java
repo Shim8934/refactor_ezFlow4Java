@@ -5009,15 +5009,15 @@ public class EzEmailUtil {
 		}
 	}
 
-    public String spamSniperEnc(String emailAddress, String spamSniperAuthKey, String spamSniperAuthIv) throws Exception {
-    	logger.debug("spamSniperEnc start");
-    	String cryptResult = null;
+	public String spamSniperEnc(String emailAddress, String spamSniperAuthKey, String spamSniperAuthIv, long spamSniperUnixTime) throws Exception {
+		logger.debug("spamSniperEnc start");
+		String cryptResult = null;
 		String authKey = spamSniperAuthKey;
 		String authIv = spamSniperAuthIv;
 		String algorithm = "AES";
 		String mode = "CBC";
-		
-		if(!(emailAddress.equals("") || authKey.equals("") || authIv.equals(""))) {
+
+		if (!(emailAddress.equals("") || authKey.equals("") || authIv.equals(""))) {
 			byte[] secretKey = authKey.getBytes();
 
 			String transform = String.format("%s/%s/%s", algorithm, mode, "PKCS5Padding");
@@ -5027,18 +5027,23 @@ public class EzEmailUtil {
 			byte[] iv = authIv.getBytes();
 			int len = 16;
 
-			SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey , 0, len, algorithm);
+			SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey, 0, len, algorithm);
 			cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(iv, 0, len));
+			String encryptTarget = emailAddress;
 
-			byte[] encrypted = cipher.doFinal(emailAddress.getBytes());
+			if (spamSniperUnixTime > 0) {
+				encryptTarget += ".." + (System.currentTimeMillis() / 1000L + spamSniperUnixTime);
+			}
+
+			byte[] encrypted = cipher.doFinal(encryptTarget.getBytes());
 			cryptResult = new String(Hex.encode(encrypted));
 		}
-    	
-		logger.debug("emailAddress=" + emailAddress + ",spamSniperAuthKey=" + spamSniperAuthKey 
-				+ ",spamSniperAuthIv=" + spamSniperAuthIv);
+
+		logger.debug("emailAddress={},spamSniperAuthKey={},spamSniperAuthIv={},spamSniperUnixTime={}",
+				emailAddress, spamSniperAuthKey, spamSniperAuthIv, spamSniperUnixTime);
 		logger.debug("spamSniperEnc end");
-    	return cryptResult;
-    }
+		return cryptResult;
+	}
     
     // 메일 완료/완료취소 flag
     public boolean hasMailConfirmFlag(Message message) throws MessagingException {
