@@ -27930,6 +27930,8 @@
 							)
 				AND
 					APRTYPE = '015'
+				ORDER BY 
+					APRMEMBERSN DESC
 			]]>
 		</isEqual>
 		<isNotEqual property="mode" compareValue="TMP">
@@ -27955,6 +27957,8 @@
 				DOCID = #docID#
 			AND
 				APRTYPE = '015'
+			ORDER BY 
+				APRMEMBERSN DESC
 		]]>
 		</isNotEqual>
 	</select>
