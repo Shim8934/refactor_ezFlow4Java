@@ -16,6 +16,18 @@
 				height: 117px;
 				border: 1px solid #d2d2d2;
 			}
+			
+			.attachInnerNotice_p_on {
+				text-align: center;
+			}
+			
+			.attachInnerNotice_p_off {
+				display: none;
+			}
+			
+			.attachInnerNotice_span {
+				line-height: 55px;
+			}
 		</style>
 		<script type="text/javascript">
 		    var lstAttachLink = document.getElementById("lstAttachLink");
@@ -190,6 +202,8 @@
 		        }
 		        
 		        isbigyn = "N";
+		        
+		        showAttachInnerNotice();
 		    }
 		    
 		    function checkMailStatusAndFileUpload() {
@@ -268,6 +282,8 @@
 		        
 		        oTable.appendChild(objTr);
 		        document.getElementById("lstAttachLink").appendChild(oTable);
+		        //파일 첨부 안내문구 추가. 2020-04-01 홍대표.
+		        document.getElementById("lstAttachLink").appendChild(getAttachInnerNoticeObject());
 		        parent.DragObjectComplet();
 		        
 		        if (window.parent.totBigSizeAttachMBSize == 0) {
@@ -403,6 +419,7 @@
 		        		}
 		            }
 		        }
+		        
 		    }
 		 	
 		    /* 2018-04-25 김유진 - 첨부 파일삭제시 file 업로드 임시보관함 uid 업데이트 메서드 */
@@ -515,6 +532,8 @@
 		                filecnt--;
 		            }
 		        }
+		        
+		        showAttachInnerNotice();
 		    }
 			
 		    function checkall() {
@@ -734,6 +753,29 @@
 					}
 				}
 				return true;
+			}
+			
+			function getAttachInnerNoticeObject() {
+				var pElem = document.createElement("p");
+				pElem.id = "attachInnerNotice";
+				pElem.className = "attachInnerNotice_p_on";
+				
+				var spanElem = document.createElement("span");
+				spanElem.innerText = strLangHDP04;
+				spanElem.className = "attachInnerNotice_span";
+				
+				pElem.appendChild(spanElem);
+				
+				return pElem; 
+			}
+			
+			function showAttachInnerNotice() {
+		        var fileCnt = document.querySelectorAll("#filelist tr[value]").length;
+				if (file.length > 0 || bigfile.length > 0 || fileCnt > 0) {
+		        	 document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
+		        } else {
+		        	 document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_on";
+		        }
 			}
 		</script>
 	</head>  
