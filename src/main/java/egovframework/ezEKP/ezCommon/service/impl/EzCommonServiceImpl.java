@@ -1892,8 +1892,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			logger.debug("companyList size=" + companyList.size());
 			for (OrganDeptVO companyVo : companyList) {
 				String companyId = companyVo.getCn();
-				
-				ezSystemAdminService.updateCompanyConfigParam(tenantId, list, companyId);
+				for (Map<String, String> config : list) {
+					String propertyName = config.get("name");
+					String propertyValue = config.get("value");
+					
+					insertCompanyConfig(tenantId, companyId, propertyName, propertyValue);
+				}
 			}
 		}
 		

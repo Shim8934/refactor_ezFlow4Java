@@ -174,7 +174,7 @@
 		
         
         var pwPolicyMap = data.pwPolicyMap;
-        if (pwPolicyMap != null || typeof pwPolicyMap == "undefined") {
+        if (pwPolicyMap != null && typeof pwPolicyMap != "undefined") {
         	var pwPolicy = pwPolicyMap.pwPolicy;
             var pwPolicyPattern = pwPolicyMap.pwPolicyPattern;
             
