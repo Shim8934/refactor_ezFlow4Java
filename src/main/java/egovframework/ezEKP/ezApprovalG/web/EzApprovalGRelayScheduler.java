@@ -655,7 +655,7 @@ public class EzApprovalGRelayScheduler {
 						continue;
 					}
 					
-					strReceiveID = objXML.getElementsByTagName("receive-id").item(0).getTextContent();
+					strReceiveID = objXML.getElementsByTagName("receive-id").item(0).getTextContent().split(";")[0];
 					strSendOrgCode = objXML.getElementsByTagName("send-orgcode").item(0).getTextContent();
 					strSendID = objXML.getElementsByTagName("send-id").item(0).getTextContent();
 					
@@ -683,7 +683,8 @@ public class EzApprovalGRelayScheduler {
 					fos.close();
 					buf = null;
 					
-					sendTempFile.renameTo(new File(receiveTempDir.getAbsolutePath() + commonUtil.separator  + strFileName));
+					String newFileName = strReceiveID + strSendID + strFileName.substring(strFileName.length() - 20, strFileName.length() - 4) + ".xml";
+					sendTempFile.renameTo(new File(receiveTempDir.getAbsolutePath() + commonUtil.separator  + newFileName));
 				}
 			}
 		}
