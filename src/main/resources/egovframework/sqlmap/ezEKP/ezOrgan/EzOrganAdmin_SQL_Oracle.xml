@@ -6091,7 +6091,7 @@
  			*
  		FROM
  			(SELECT
- 				ROW_NUMBER() OVER (order by CN) as RNUM,
+ 				ROW_NUMBER() OVER (order by displayName) as RNUM,
  				CN,
  				displayName,
  				department,
