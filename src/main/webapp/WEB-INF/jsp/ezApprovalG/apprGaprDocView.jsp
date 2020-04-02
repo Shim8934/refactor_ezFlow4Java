@@ -465,7 +465,7 @@
 		    }
 		    
 		    function btncallback_onclick() {
-	            var pMsg = "<spring:message code='ezApprovalG.ryobi.csj14'/>";
+	            var pMsg = "<spring:message code='ezApprovalG.t68'/>";
 	            var Ans = OpenInformationUI(pMsg, doCancel);
 	        }
 		    
