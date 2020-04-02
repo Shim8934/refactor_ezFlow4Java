@@ -16051,6 +16051,7 @@
 	<insert id="EzApprovalG.aprMakeTmp2Ing4" parameterClass="Map">
 		INSERT INTO 
 			TBL_APRATTACHINFO
+		( DOCID, ATTACHFILESN, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERJOBTITLE, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, PAGENUM, DISPLAYNAME, BODYATTACH, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID )
      	( SELECT 
      		  #v_PDOCID# ,
               ATTACHFILESN ,
@@ -22879,7 +22880,27 @@
    <insert id="EzApprovalG.insertTmpAttachInfo" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_TMPATTACHINFO
-	    ( SELECT 
+		(
+			OWNERID,
+    		SN,
+    		ATTACHFILESN , 
+    		ATTACHFILENAME , 
+    		ATTACHFILEHREF , 
+    		ATTACHFILESIZE , 
+    		ATTACHUSERID , 
+    		ATTACHUSERNAME , 
+    		ATTACHUSERJOBTITLE , 
+    		ATTACHUSERDEPTID , 
+    		ATTACHUSERDEPTNAME , 
+    		PAGENUM , 
+    		DISPLAYNAME , 
+    		BODYATTACH , 
+    		AttachUserName2 ,  
+    		AttachUserJobTitle2 , 
+    		AttachUserDeptName2, 
+    		TENANT_ID ,
+    		COMPANYID)
+	    (SELECT 
 	    		#v_USERID#, 
 	    		#v_SN#, 
 	    		ATTACHFILESN , 
