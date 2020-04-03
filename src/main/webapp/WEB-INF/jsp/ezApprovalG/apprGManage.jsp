@@ -1128,6 +1128,7 @@
 		                alert(pAlertContent);
 		            }
 		            getDocList();
+		            attitude_annual_conn(pDocID);
 		
 		            try {
 		                parent.frames["left"].getAprCount();
