@@ -3188,9 +3188,9 @@ DROP TABLE IF EXISTS `tbl_attitude_annual`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_attitude_annual` (
   `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
-  `MONTHLY_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '월차 수',
-  `ANNUAL_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '연차 수',
-  `ADDITIONAL_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '추가 연차 수',
+  `MONTHLY_HOLIDAY_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '월차 수',
+  `ANNUAL_HOLIDAY_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '연차 수',
+  `ADDITIONAL_HOLIDAY_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '추가 연차 수',
   `JOIN_DATE` datetime DEFAULT NULL COMMENT '입사일',
   `COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
   `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
@@ -3262,8 +3262,8 @@ DROP TABLE IF EXISTS `tbl_attitude_annual_history`;
 CREATE TABLE `tbl_attitude_annual_history` (
   `ANNUAL_HISTORY_ID` int(20) NOT NULL AUTO_INCREMENT COMMENT '연차수정기록ID',
   `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
-  `ORIGIN_ANNUAL_CNT` decimal(4,1) NOT NULL COMMENT '기존연차수',
-  `CHANGE_ANNUAL_CNT` decimal(4,1) NOT NULL COMMENT '수정연차수',
+  `ORIGIN_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '기존연차수',
+  `CHANGE_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '수정연차수',
   `CHANGE_REASON` varchar(2000) DEFAULT NULL COMMENT '수정사유',
   `CHANGE_DATE` datetime NOT NULL COMMENT '수정일자',
   `CHANGE_USER_ID` varchar(80) NOT NULL COMMENT '수정자ID',

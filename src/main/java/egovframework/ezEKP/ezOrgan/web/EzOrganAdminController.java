@@ -9,7 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLEncoder;
+import java.net.URLDecoder;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,12 +26,14 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.TimeZone;
 import java.util.UUID;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -51,6 +53,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
@@ -4253,7 +4256,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("list", resultList);
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("cn", cn);
-		model.addAttribute("textName", textName);
+		model.addAttribute("textName",URLDecoder.decode(textName, "UTF-8"));
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("dept", auth.getDeptID());

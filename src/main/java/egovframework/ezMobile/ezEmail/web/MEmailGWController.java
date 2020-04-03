@@ -2168,7 +2168,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			long draftUID = 0;
 			long sentFolderMessageUID = 0;
 			boolean mailSendCompleted = false;
-			
+			boolean invalidAddressesError = false; // 잘못된 메일주소가 존재할 경우 true
 //			LOGGER.debug(jsonObject.toJSONString());
 			
 			String importance = "3";
@@ -2895,7 +2895,21 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			        draftFolder.close(true);
 			        
 			        pResult = "<RESULT>OK</RESULT>";
-			        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";	        
+			        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";	
+			        
+			        // useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
+					String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", info.getTenantId());
+					
+					if (autoSaveAddress.equals("YES")) {
+						try {
+							ezEmailUtil.outerMailInsertAddress(addressCheck,userId,info.getTenantId(),
+									userEmail,info.getUserName(),info.getUserName2());
+						} catch (Exception e) {
+							LOGGER.debug("AutoEmailUtil insert fail.");
+							e.printStackTrace();
+						}
+					}
+			        
 				} catch (Exception e) {
 					e.printStackTrace();
 					
@@ -2925,6 +2939,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							pResult += m.group(1) + "|";
 						}
 						
+						invalidAddressesError = true;
 						pResult = pResult.substring(0, pResult.length() - 1);
 						result.put("status", "error");
 		    			result.put("code", 1);			
@@ -2947,7 +2962,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						}
 					}
 					
-					return result;
+					// return result;
 				} finally {
 					if (ia != null) {
 						ia.close();
@@ -2975,15 +2990,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
                     
                     LOGGER.debug("sentFolderMessageUID message deleted successfully.");
                     
-                    result.put("status", "ok");
+                    /*result.put("status", "ok");
         			result.put("code", 0);			
-        			result.put("data", "");        			
+        			result.put("data", ""); */       			
                 } catch (Exception e) {
                 	e.printStackTrace();
                 	
-        			result.put("status", "error");
+        			/*result.put("status", "error");
         			result.put("code", 1);			
-        			result.put("data", "");
+        			result.put("data", "");*/
         			
                     LOGGER.error("Failed to delete sentFolderMessageUID message. sentFolderMessageUID=" + sentFolderMessageUID);
                 } finally {
@@ -3004,22 +3019,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				    		    
 			LOGGER.debug("mailInterSend ended. pResult=" + pResult);
 			
-			// useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
-			String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", info.getTenantId());
-			
-			if (autoSaveAddress.equals("YES")) {
-				try {
-					ezEmailUtil.outerMailInsertAddress(addressCheck,userId,info.getTenantId(),
-							userEmail,info.getUserName(),info.getUserName2());
-				} catch (Exception e) {
-					LOGGER.debug("AutoEmailUtil insert fail.");
-					e.printStackTrace();
-				}
+			if (!invalidAddressesError){
+				result.put("status", "ok");
+				result.put("code", 0);			
+				result.put("data", "");		
 			}
-			
-			result.put("status", "ok");
-			result.put("code", 0);			
-			result.put("data", "");		
 		} catch (Exception e) {
 			e.printStackTrace();
 			

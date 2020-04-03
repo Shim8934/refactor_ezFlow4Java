@@ -302,13 +302,13 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
         		return true;
 	        }
         } else {
-        	var rtnVal = setDocNumFormat();
-        	
-        	if (!rtnVal) {
-        		return true;
-        	}
-        	
-        	fractionsymbol = field.textContent;
+            var rtnVal = setDocNumFormat();
+
+            if (!rtnVal) {
+                return true;
+            }
+
+            fractionsymbol = field.textContent;
         }
         
     } catch (e) {

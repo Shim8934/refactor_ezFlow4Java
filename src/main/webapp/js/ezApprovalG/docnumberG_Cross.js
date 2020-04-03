@@ -341,6 +341,9 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
         	if (!field) {return true;}
         	
         	fractionsymbol = field.textContent;
+			if (pDraftFlag == "HABYUI") {
+				fractionsymbol = arr_userinfo[5] + "-";
+			}
         	
         	var result = getCabinetSN(pDeptID);
         	var dataNodes = GetChildNodes(loadXMLString(result));

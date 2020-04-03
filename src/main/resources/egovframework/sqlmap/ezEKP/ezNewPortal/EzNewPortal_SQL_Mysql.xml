@@ -1853,12 +1853,12 @@ LIMIT
            	LEFT JOIN (
            		SELECT
            			MAX(access_yn) AS access_yn,
-           			menu_id,
+           			portlet_id,
            			tenant_id,
            			company_id,
            			user_type
            		FROM
-           			TBL_PORTAL_MENU_AUTH
+           			TBL_PORTAL_PORTLET_AUTH
            		WHERE
            			(
            				(user_id = #userId# AND user_type = 1 AND tenant_id = #tenantId# AND company_id = #companyId#)
@@ -1869,7 +1869,7 @@ LIMIT
            						FROM
            							tbl_permissiongroupinfo F
            						JOIN
-           							tbl_portal_menu_auth G
+           							TBL_PORTAL_PORTLET_AUTH G
            						ON
            							G.user_id = F.group_id
            						AND
@@ -1890,7 +1890,7 @@ LIMIT
            				)
            			)
            		GROUP BY
-           			menu_id
+           			portlet_id
            		) AUTH
             ]]>
         </isEqual>
@@ -1998,36 +1998,70 @@ LIMIT
            		) AUTH
             ]]>
         </isEqual>
-		<![CDATA[
-			ON
-				COMP.tenant_id = AUTH.tenant_id
-			AND
-				COMP.company_id = AUTH.company_id
-			AND
-				A.menu_id = AUTH.menu_id
-			LEFT JOIN
-				TBL_PORTAL_PORTLET_USER AS USER
-			ON
-				COMP.tenant_id = USER.tenant_id
-			AND
-				COMP.company_id = USER.company_id
-			AND
-				COMP.portlet_id = USER.portlet_id
-			AND
-				USER.user_id = #userId#
-			AND
-				USER.theme_id = #themeId#
-			WHERE
-				NAME.tenant_id = #tenantId#
-			AND
-				NAME.company_id = #companyId#
-			AND
-				NAME.portlet_lang = #portletLang#
-			AND
-				(COMP.portlet_used = 1 && THEME.portlet_used = 1)
-			AND
-				(AUTH.access_yn IS NOT NULL)
-		]]>
+        <isEqual property="userType" compareValue="USER">
+			<![CDATA[
+				ON
+					COMP.tenant_id = AUTH.tenant_id
+				AND
+					COMP.company_id = AUTH.company_id
+				AND
+					A.portlet_id = AUTH.portlet_id
+				LEFT JOIN
+					TBL_PORTAL_PORTLET_USER AS USER
+				ON
+					COMP.tenant_id = USER.tenant_id
+				AND
+					COMP.company_id = USER.company_id
+				AND
+					COMP.portlet_id = USER.portlet_id
+				AND
+					USER.user_id = #userId#
+				AND
+					USER.theme_id = #themeId#
+				WHERE
+					NAME.tenant_id = #tenantId#
+				AND
+					NAME.company_id = #companyId#
+				AND
+					NAME.portlet_lang = #portletLang#
+				AND
+					(COMP.portlet_used = 1 && THEME.portlet_used = 1)
+				AND
+					(AUTH.access_yn IS NOT NULL)
+			]]>
+		</isEqual>
+		<isNotEqual property="userType" compareValue="USER">
+			<![CDATA[
+				ON
+					COMP.tenant_id = AUTH.tenant_id
+				AND
+					COMP.company_id = AUTH.company_id
+				AND
+					A.menu_id = AUTH.menu_id
+				LEFT JOIN
+					TBL_PORTAL_PORTLET_USER AS USER
+				ON
+					COMP.tenant_id = USER.tenant_id
+				AND
+					COMP.company_id = USER.company_id
+				AND
+					COMP.portlet_id = USER.portlet_id
+				AND
+					USER.user_id = #userId#
+				AND
+					USER.theme_id = #themeId#
+				WHERE
+					NAME.tenant_id = #tenantId#
+				AND
+					NAME.company_id = #companyId#
+				AND
+					NAME.portlet_lang = #portletLang#
+				AND
+					(COMP.portlet_used = 1 && THEME.portlet_used = 1)
+				AND
+					(AUTH.access_yn IS NOT NULL)
+			]]>
+		</isNotEqual>
 		<isNotEqual property="config" compareValue="true" prepend="AND">
 			<![CDATA[
 				(USER.portlet_used = 1 OR USER.portlet_used IS NULL OR THEME.is_fixed = 1)
@@ -2692,7 +2726,7 @@ ORDER BY
 							FROM
 								tbl_permissiongroupinfo F
 							JOIN
-								tbl_portal_menu_auth G
+								tbl_portal_portlet_auth G
 							ON
 								G.user_id = F.group_id
 							AND
