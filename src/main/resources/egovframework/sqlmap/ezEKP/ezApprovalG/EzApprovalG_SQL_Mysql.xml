@@ -31656,4 +31656,25 @@
 		AND
 			COMPANYID = #companyID#
 	</update>
+	
+    <update id="EzApprovalG.updateReceivedDept" parameterClass="Map">
+        UPDATE
+            TBL_APRRECEIPTPROCESSINFO
+        SET
+            PROCESSORID = #v_PROCESSORID#,
+            PROCESSORNAME = #v_PROCESSORNAME#,
+            PROCESSORNAME2 = #v_PROCESSORNAME2#,
+            PROCESSORJOBTITLE = #v_PROCESSORJOBTITLE#,
+            PROCESSORJOBTITLE2 = #v_PROCESSORJOBTITLE2#,
+            RECEIVEDDEPTID = #v_RECEIVEDDEPTID#,
+            RECEIVEDDEPTNAME = #v_RECEIVEDDEPTNAME#,
+            RECEIVEDDEPTNAME2 = #v_RECEIVEDDEPTNAME2#
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = #v_DOCID#
+    </update>
+	
 </sqlMap>

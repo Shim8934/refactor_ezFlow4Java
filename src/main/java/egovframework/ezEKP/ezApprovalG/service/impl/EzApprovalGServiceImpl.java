@@ -25940,6 +25940,483 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String startXmlConvert(String content, String defaultFontFamily, String defaultFontSize, LoginVO userInfo) throws Exception {
+		logger.debug("startXmlConvert started");
+		
+		String strErrorMsg = "";
+		try {
+ 			content = beforeXmlConverter(content);
+
+ 		    // 전체 태그 처리시 순서에 따라 꼬이는 부분이 존재하기 때문에 선처리가 필요한 태그들에 대해 먼저 처리한다.
+ 		    // SPAN태그는 제거한다.(font-weight:bold > <B>, font-style:italic > <i>, text-decoration:underline > <u>)
+			org.jsoup.nodes.Document doc = Jsoup.parse(content);
+			
+			// class 제거 왜 클래스있는태그 사이즈를 이상하게 가져오지
+			int tagsWithClasses = doc.getElementsByAttribute("class").size();
+			for (int i = 0; i < tagsWithClasses; i++) {
+				doc.getElementsByAttribute("class").get(0).removeAttr("class");
+			}
+			
+			String fontFamily = "";
+			String fontSize = "";
+			String strStyle = "";
+			String style = "";
+			
+			logger.debug("span tag parsing started");
+			
+			StringBuilder htmlStyle = new StringBuilder();
+			for (int i=0; i < doc.getElementsByTag("span").size(); i++) {
+				String strInnerHtml = doc.getElementsByTag("span").get(i).html();
+				
+				if (doc.getElementsByTag("span").get(i).hasAttr("style")) {
+						
+					String spanStyle = doc.getElementsByTag("span").get(i).attr("style").toString();
+					if(!spanStyle.endsWith(";")){
+						spanStyle += ";";
+					}
+					
+					if (spanStyle.indexOf("font-weight") > -1 && findStyleValue("font-weight", spanStyle).equals("bold")) {
+						strInnerHtml = "<b>" + strInnerHtml + "</b>";
+					}
+					
+					if (spanStyle.indexOf("font-style") > -1 && findStyleValue("font-style", spanStyle).equals("italic")) {
+						strInnerHtml = "<i>" + strInnerHtml + "</i>";
+					}
+					
+					if (spanStyle.indexOf("text-decoration") > -1 && findStyleValue("text-decoration", spanStyle).equals("underline")) {
+						strInnerHtml = "<u>" + strInnerHtml + "</u>";
+					}
+					
+					if (spanStyle.indexOf("font-family") > -1) {
+						fontFamily = spanStyle.substring(spanStyle.indexOf("font-family"), spanStyle.indexOf(";",spanStyle.indexOf("font-family"))+1);
+					}
+					
+					if (spanStyle.indexOf("font-size") > -1) {
+						fontSize = spanStyle.substring(spanStyle.indexOf("font-size"), spanStyle.indexOf(";",spanStyle.indexOf("font-size"))+1);
+					}
+				}
+			     // body 바로 밑에 span이 존재할 경우 P태그로 감싸준다.
+                if (doc.getElementsByTag("span").get(i).parent().tagName().toLowerCase().equals("body")) {
+                    if (fontFamily != "") {
+                        strStyle = "font-family:" + fontFamily;
+                    }
+
+                    if (fontSize != "") {
+                        if (strStyle != "") {
+                            strStyle += ";";
+                        }
+
+                        strStyle = "font-size:" + fontSize;
+                    }
+
+                    if (strStyle != "") {
+                        strInnerHtml = "<p style=\"" + strStyle + "\">" + strInnerHtml + "</p>";
+                    } else {
+                        strInnerHtml = "<p>" + strInnerHtml + "</p>";
+                    }
+                } else if (doc.getElementsByTag("span").get(i).parent().tagName().toLowerCase().equals("p")) {
+                	String spanStyle = doc.getElementsByTag("span").get(i).attr("style").toString();
+                	if(!spanStyle.endsWith(";")){
+                		spanStyle += ";";
+                	}
+                	String parentStyle = doc.getElementsByTag("span").get(i).parent().attr("style").toString();
+                	
+                	
+
+                    // 상위태그가 P태그일 경우 P태그의 innerText와 span의 innerText가 동일할 경우 span의 Style을 P태그의 style로 입력한다.
+                	if (doc.getElementsByTag("span").get(i).parent().text() != null && !doc.getElementsByTag("span").get(i).parent().text().equals("") 
+                    		&& doc.getElementsByTag("span").get(i).text() != null && !doc.getElementsByTag("span").get(i).text().equals("")) {
+                    	//여기가 동작을 안하네
+//                        if (doc.getElementsByTag("span").get(i).parent().text().trim().equals(doc.getElementsByTag("span").get(i).text().trim())) {
+                        if (doc.getElementsByTag("span").get(i).parent().nodeName().equals("p")) {
+                        	if (spanStyle.indexOf("font-family") > -1) {
+                        		if (parentStyle.indexOf("font-family") > -1) {
+                        			parentStyle = replaceStyleValue(parentStyle, fontFamily, "font-family");
+                        		} else {
+                        			htmlStyle.append(spanStyle.substring(spanStyle.indexOf("font-family"), spanStyle.indexOf(";", spanStyle.indexOf("font-family")) + 1));
+                        		}
+        					}
+
+                            if (spanStyle.indexOf("font-size") > -1) {
+                        		if (parentStyle.indexOf("font-size") > -1) {
+                        			parentStyle = replaceStyleValue(parentStyle, fontSize, "font-size");
+                                } else {
+                        			htmlStyle.append(spanStyle.substring(spanStyle.indexOf("font-size"), spanStyle.indexOf(";", spanStyle.indexOf("font-size")) + 1));
+                        		}
+                            }
+
+                            if (spanStyle.indexOf("line-height") > -1) {
+                            	if (parentStyle.indexOf("line-height") > -1) {
+                            		String lineHeight = spanStyle.substring(spanStyle.indexOf("line-height"), spanStyle.indexOf(";", spanStyle.indexOf("line-height"))+1);
+                            		parentStyle = replaceStyleValue(parentStyle, lineHeight, "line-height");
+                                } else {
+                                	htmlStyle.append(spanStyle.substring(spanStyle.indexOf("font-size"), spanStyle.indexOf(";", spanStyle.indexOf("font-size")) + 1));
+                                }
+                            }
+                            
+                            htmlStyle.append(parentStyle);
+                            
+                            if(!htmlStyle.toString().equals("")) {
+                            	doc.getElementsByTag("span").get(i).parentNode().attr("style", htmlStyle.toString());
+                            }
+    						htmlStyle.setLength(0);
+                        }
+                    }
+                }
+                doc.getElementsByTag("span").get(i).html(strInnerHtml);
+			}
+			
+		    //span 태그 제거
+			doc.getElementsByTag("span").unwrap();
+		    
+			logger.debug("span tag parsing ended");
+			
+			logger.debug("br tag parsing started");
+			boolean hasBRTag = true;
+			int rptCnt = 1000;
+			
+			do {
+ 				if(doc.getElementsByTag("br").size() > 0) {
+					Element brElement = doc.getElementsByTag("br").get(0);
+					Element brParentEl = brElement.parent();
+					
+					if (brParentEl.html() != null) {
+						if (brParentEl.tagName().toLowerCase().equals("p")) {
+							if (brParentEl.html().toUpperCase().indexOf("<BR>") > -1 ) {
+								
+								String stringSeparators ="<br>";
+								String[] result = brParentEl.html().split(stringSeparators);
+								
+								   boolean bAllEmpty = true;
+		                             String InnerHTML = "";
+		                             for (int i = 0; i < result.length; i++) {
+		                                 if (result[i] != null && !result[i].equals("")) {
+		                                     bAllEmpty = false;
+		                                 }
+		                             }
+
+		                             int lastItem = result.length;
+		                             int itemCnt = 0;
+		                             for (int j = 0; j < result.length; j++) {
+		                                 if (!bAllEmpty) {
+		                                     if (result[j] == null || result[j].equals("")) {
+		                                         if (itemCnt != (lastItem - 1)) {
+		                                        	 brParentEl.html("&nbsp;");
+		                                        	 brParentEl.before(brParentEl.outerHtml());
+		                                         } else {
+		                                             // p태그 내부에 BR태그가 존재하고 그 뒤에 아무런 문구가 없다면 줄바꿈 시키지 않는다.
+		                                         }
+		                                     } else {
+		                             			org.jsoup.nodes.Document doc2 = Jsoup.parse(brParentEl.outerHtml());
+		                             			doc2.getElementsByTag("body").get(0).children().html(result[j]);
+		                                    	 brParentEl.before(doc2.getElementsByTag("body").get(0).children().outerHtml());
+		                                     }
+		                                 } else {
+		                                     bAllEmpty = false;
+		                                 }
+
+		                                 itemCnt++;
+		                             }
+		                             
+		                             if(brParentEl.parent().tagName().toLowerCase().equals("td")) {
+		                            	 brParentEl.html("&nbsp;");
+		                             } else {
+		                            	 brParentEl.remove();
+		                             }
+								} else {
+									// br 태그에 스타일이 들어가는 오류 수정. 2020-01-31 홍대표.
+									String fixedBrEl = brParentEl.html().replaceAll("<br[\\s\\w]+.+?>", "<br>");
+									brParentEl.html(fixedBrEl);
+								}
+							} else {
+								// 상위태그가 P태그가 아니라면 P태그를 붙여서 줄바꿈한다.
+                                if (brParentEl.html().toUpperCase().indexOf("<BR>") > -1)
+                                {
+                                	String stringSeparators ="<br>";
+    								String[] result = brParentEl.html().split(stringSeparators);
+
+                                    // br이 포함되었으나 아무 문구가 없는 경우 (ex. <p><br><p>) 화면상에는 한줄 줄바꿈이기 때문에 
+                                    // br태그 앞뒤로 모두 비어있을 경우 한칸은 줄바꿈에서 제외한다.
+    								 boolean bAllEmpty = true;
+		                             String InnerHTML = "";
+		                             for (int i = 0; i < result.length; i++) {
+		                                 if (result[i] != null && !result[i].equals("")) {
+		                                     bAllEmpty = false;
+		                                 }
+		                             }
+                                
+		                             brParentEl.html("");
+                                    for (int m = 0; m < result.length; m++) {
+                                        if (!bAllEmpty) {
+                                            if (result[m] == null && result[m].equals("")) {
+                                            	brParentEl.append("<p>&nbsp;</p>");
+                                            } else {
+                                            	brParentEl.append("<p>" + result[m] + "</p>");
+                                            }
+                                        } else {
+                                            bAllEmpty = false;
+                                        }
+                                    }
+                                }
+							}
+						}
+				} else {
+					hasBRTag = false;
+				}
+ 				rptCnt--;
+			} while(hasBRTag && rptCnt > 0);
+			
+			if (rptCnt == 0) {
+				return "<DATA><RESULT>FALSE</RESULT><CONTENT><![CDATA[" + messageSource.getMessage("ezApprovalG.t217", userInfo.getLocale()) + "]]></CONTENT></DATA>";
+			}
+			
+			logger.debug("br tag parsing ended");
+			
+			logger.debug("style tag parsing started");
+			
+			Elements strongElem = doc.getElementsByTag("strong");
+			for (int k = 0; k < strongElem.size(); k++) {
+				Element el = doc.createElement("B");
+				el.html(strongElem.get(k).html());
+				strongElem.get(k).replaceWith(el);
+			}
+			
+			Elements emElem = doc.getElementsByTag("em");
+			for (int k = 0; k < emElem.size(); k++) {
+				Element el = doc.createElement("i");
+				el.html(emElem.get(k).html());
+				emElem.get(k).replaceWith(el);
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("li").size(); k++) {
+				String outerHtmlContent = doc.getElementsByTag("li").get(k).outerHtml();
+				
+				if (!outerHtmlContent.substring(outerHtmlContent.length() - 2, outerHtmlContent.length()).equals("/>") && !outerHtmlContent.toUpperCase().substring(outerHtmlContent.lastIndexOf("<")).equals("</LI>")) {
+					doc.getElementsByTag("li").get(k).html(doc.getElementsByTag("li").get(k).outerHtml() + "</LI>");
+				}
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("menu").size(); k++) {
+				Element el = doc.createElement("ul");
+				el.text(doc.getElementsByTag("menu").get(k).html());
+				doc.getElementsByTag("menu").get(k).replaceWith(el);
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("h1").size(); k++) {
+				doc.getElementsByTag("h1").get(k).replaceWith(MakeHTagHTML(doc.getElementsByTag("h1").get(k), "h1"));
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("h2").size(); k++) {
+				doc.getElementsByTag("h2").get(k).replaceWith(MakeHTagHTML(doc.getElementsByTag("h2").get(k), "h2"));
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("h3").size(); k++) {
+				doc.getElementsByTag("h3").get(k).replaceWith(MakeHTagHTML(doc.getElementsByTag("h3").get(k), "h3"));
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("h4").size(); k++) {
+				doc.getElementsByTag("h4").get(k).replaceWith(MakeHTagHTML(doc.getElementsByTag("h4").get(k), "h4"));
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("h5").size(); k++) {
+				doc.getElementsByTag("h5").get(k).replaceWith(MakeHTagHTML(doc.getElementsByTag("h5").get(k), "h5"));
+			}
+			
+			for (int k = 0; k < doc.getElementsByTag("h6").size(); k++) {
+				doc.getElementsByTag("h6").get(k).replaceWith(MakeHTagHTML(doc.getElementsByTag("h6").get(k), "h6"));
+			}
+			
+			logger.debug("style tag parsing ended");
+			
+			logger.debug("table tag parsing started");
+			
+			for (int k = 0; k < doc.getElementsByTag("table").size(); k++) {
+				Element tableElement = doc.getElementsByTag("table").get(k);
+				String tableStyle = tableElement.attr("style");
+				if (!tableElement.hasAttr("border")) {
+					tableElement.attr("border","1");
+				}
+				
+				if (!tableElement.hasAttr("cellspacing")) {
+					tableElement.attr("cellspacing","0");
+				}
+				
+				if (!tableElement.hasAttr("cellpadding")) {
+					tableElement.attr("cellpadding","0");
+				}
+				
+//				if (tableStyle.indexOf("border-collapse") > 0) {
+//					System.out.println(tableStyle.substring(tableStyle.indexOf("border-collapse"), tableStyle.indexOf(";", tableStyle.indexOf("border-collapse")) + 1));
+//					tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("border-collapse"), tableStyle.indexOf(";", tableStyle.indexOf("border-collapse")) + 1), "");
+//				}
+				
+				if (!tableElement.hasAttr("width")) {
+					if (tableStyle.contains("width")) {
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))).split(":")[1] );
+						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))), "");
+						tableElement.attr("style", tableStyle);
+					} 
+				} else {
+					if (tableStyle.indexOf("width") > -1) {
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))).split(":")[1] );
+						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))), "");
+						tableElement.attr("style", tableStyle);
+					} else {
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))).split(":")[1]);
+					}
+					tableElement.removeAttr("width");
+				}
+				
+				if (!tableElement.hasAttr("height")) {
+					if (tableStyle.indexOf("height") > -1) {
+						tableElement.attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height"))).split(":")[1]);
+						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height"))), "");
+						tableElement.attr("style", tableStyle);
+					} 
+				} else {
+					if (tableStyle.indexOf("height") > -1) {
+						tableElement.attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height"))).split(":")[1]);
+						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height"))), "");
+						tableElement.attr("style", tableStyle);
+					} else {
+						tableElement.attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height"))).split(":")[1]);
+					}
+					tableElement.removeAttr("height");
+				}
+				
+				if (tableElement.hasAttr("style")) {
+					tableElement.removeAttr("style");
+				}
+				
+				if (tableElement.hasAttr("align")) {
+					switch (tableElement.attr("align").toString()) {
+					case "left":
+                    case "center":
+                    case "right":
+                    case "adjust":
+                        break;
+					default:
+						tableElement.attr("align", "adjust");
+						break;
+					}
+				}
+			}
+			
+			logger.debug("table tag parsing ended");
+			
+			logger.debug("td tag parsing started");
+			
+			for (int k = 0; k < doc.getElementsByTag("td").size(); k++) {
+				Element tdElement = doc.getElementsByTag("td").get(k);
+				String tdStyle = tdElement.attr("style");
+				if (tdElement.hasAttr("align")) {
+					switch (tdElement.attr("align").toLowerCase()) {
+					case "left":
+                    case "center":
+                    case "right":
+                    case "adjust":
+                        break;
+					default:
+						tdElement.attr("align", "adjust");
+						break;
+					}
+				}
+				
+				if (tdElement.hasAttr("text-align")) {
+					switch (tdElement.attr("text-align").toLowerCase()) {
+					case "left":
+                    case "center":
+                    case "right":
+                    case "justify":
+                    case "char":
+                    	tdElement.attr("align", tdElement.attr("text-align"));
+                    	break;
+					default:
+						tdElement.attr("align", "justify");
+						break;
+					}
+				}
+				
+				if (tdElement.hasAttr("valign")) {
+					switch (tdElement.attr("valign").toLowerCase()) {
+					case "top":
+                    case "middle":
+                    case "bottom":
+                    case "baseline":
+                        break;
+					default:
+						tdElement.attr("valign", "baseline");
+						break;
+					}
+				}
+				
+				if (!tdElement.hasAttr("width")) {
+					if (tdStyle.indexOf("width") > 0) {
+						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width")))));
+						tdStyle.replace(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width"))), "");
+						tdElement.attr("style", tdStyle);
+					} 
+				} else {
+					if (tdStyle.indexOf("width") > 0) {
+						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width")))));
+						tdStyle.replace(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width"))), "");
+						tdElement.attr("style", tdStyle);
+					} else {
+						tdElement.attr("width_kaoni", SizeConvertToMM(tdElement.attr("width").trim()));
+					}
+					tdElement.removeAttr("width");
+				}
+				
+				if (!tdElement.hasAttr("height")) {
+					if (tdStyle.indexOf("height") > 0) {
+						tdElement.attr("height_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height")))));
+						tdStyle.replace(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height"))), "");
+						tdElement.attr("style", tdStyle);
+					} 
+				} else {
+					if (tdStyle.indexOf("height") > 0) {
+						tdElement.attr("height_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height")))));
+						tdStyle.replace(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height"))), "");
+						tdElement.attr("style", tdStyle);
+					} else {
+						tdElement.attr("height_kaoni", SizeConvertToMM(tdElement.attr("height").trim()));
+					}
+					tdElement.removeAttr("height");
+				}
+				
+				if (tdElement.hasAttr("style")) {
+					tdElement.removeAttr("style");
+				}
+				
+			}
+
+			logger.debug("td tag parsing ended");
+			
+			String strRtnHtml = doc.getElementsByTag("body").get(0).outerHtml();
+			strRtnHtml = strRtnHtml.substring(0, strRtnHtml.lastIndexOf(">") + 1);
+			//왜 &nbsp;를 두개 해놓은거지?
+			//strRtnHtml = strRtnHtml.replace("&nbsp;", "&nbsp;&nbsp;");
+			
+			String strRtnContent = "<DATA>" +
+		                "<RESULT>OK</RESULT>" +
+		                "<CONTENT><![CDATA[" + strRtnHtml + "]]></CONTENT>" +
+		                "</DATA>";
+			//strong 태그를 b태그로 변경
+			
+			logger.debug("startXmlConvert ended");
+			return strRtnContent;
+		} catch (Exception e) {
+/*			System.out.println(e.getMessage());
+			System.out.println(e.getStackTrace());*/
+			e.printStackTrace();
+			strErrorMsg = "Content 전처리 진행중 오류가 발생했습니다.";
+			return ReturnErrorContent(strErrorMsg);
+		}
+	}
+	
+	@Override
+	public String startXmlConvertHwp(String content, String defaultFontFamily, String defaultFontSize, LoginVO userInfo) throws Exception {
+		logger.debug("startXmlConvertHWP started");
+		
 		String strErrorMsg = "";
 		try {
 // 			content = beforeXmlConverter("<CONTENT>" + "<body style='font-family:굴림; font-Size:10px; font-style:oblique; font-weight:bolder; text-align:left; text-indent:50px; text-decoration: line-through;'><br/>ffff<br/>aaaa<div style='font-family:굴림; font-Size:10px; font-style:oblique; font-weight:bolder; text-align:left; text-indent:50px; text-decoration: line-through;'>dd</div><p><span style='font-weight:bold; font-style:italic; font-Size:10000px;'>dddd</span></p></body>" + "</CONTENT>");
@@ -25962,6 +26439,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String fontSize = "";
 			String strStyle = "";
 			String style = "";
+			
+			logger.debug("span tag parsing started");
 			
 			StringBuilder htmlStyle = new StringBuilder();
 			for (int i=0; i < doc.getElementsByTag("span").size(); i++) {
@@ -26061,7 +26540,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 		    //span 태그 제거
 			doc.getElementsByTag("span").unwrap();
-		       
+			
+			logger.debug("span tag parsing ended");
+		    
+			logger.debug("br tag parsing started");
+			
 			boolean hasBRTag = true;
 			 
 			do {
@@ -26144,6 +26627,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			} while(hasBRTag);
 			
+			logger.debug("br tag parsing ended");
+			
+			logger.debug("style tag parsing started");
 			
 			for (int k = 0; k < doc.getElementsByTag("strong").size(); k++) {
 				Element el = doc.createElement("B");
@@ -26194,6 +26680,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (int k = 0; k < doc.getElementsByTag("h6").size(); k++) {
 				doc.getElementsByTag("h6").get(k).replaceWith(MakeHTagHTML(doc.getElementsByTag("h6").get(k), "h6"));
 			}
+			
+			logger.debug("style tag parsing ended");
+			
+			logger.debug("table tag parsing started");
 			
 			for (int k = 0; k < doc.getElementsByTag("table").size(); k++) {
 				Element tableElement = doc.getElementsByTag("table").get(k);
@@ -26266,6 +26756,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 				}
 			}
+			
+			logger.debug("table tag parsing ended");
+			
+			logger.debug("td tag parsing started");
 			
 			for (int k = 0; k < doc.getElementsByTag("td").size(); k++) {
 				Element tdElement = doc.getElementsByTag("td").get(k);
@@ -26346,6 +26840,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 			}
+			
+			logger.debug("td tag parsing ended");
 
 			String strRtnHtml = doc.getElementsByTag("body").get(0).outerHtml();
 			strRtnHtml = strRtnHtml.substring(0, strRtnHtml.lastIndexOf(">") + 1);
@@ -26357,6 +26853,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		                "<CONTENT><![CDATA[" + strRtnHtml + "]]></CONTENT>" +
 		                "</DATA>";
 			//strong 태그를 b태그로 변경
+			
+			logger.debug("startXmlConvert ended");
 			return strRtnContent;
 		} catch (Exception e) {
 /*			System.out.println(e.getMessage());
@@ -26365,6 +26863,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strErrorMsg = "Content 전처리 진행중 오류가 발생했습니다.";
 			return ReturnErrorContent(strErrorMsg);
 		}
+	}
+	
+	private String findStyleValue(String targetStyle, String styleStr) {
+		Pattern p = Pattern.compile(targetStyle + ".*?:\\s*?(\\w+);");
+		Matcher m = p.matcher(styleStr);
+		String value = "";
+		
+		if(m.find()) {
+			value = m.group(1);
+		}
+		return value;
+	}
+	
+	private String replaceStyleValue(String fromStyleStr, String toStyleStr, String targetStyle) {
+		return fromStyleStr.replaceAll(targetStyle + ".*?:\\s*?\\w+;", toStyleStr).replaceAll(" ", "");
 	}
 
 	private String SizeConvertToMM(String pSize) {
@@ -26468,6 +26981,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         // 위와 같은 경우 DIV제거를 위해 속성을 맞춰준다.
         // 상위/하위 Element 의 innerText가 동일하다면 Style을 맞춰준다.
         // 리턴시 div태그를 p태그로 변경하여 리턴한다.
+		
+		logger.debug("beforeXmlConverter started");
 		
 		org.jsoup.nodes.Document doc = Jsoup.parse(content);
 
@@ -26660,6 +27175,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		 // 리턴시 div태그를 p태그로 변경하여 리턴한다.
         strRtnHTML = strRtnHTML.replace("<div", "<p").replace("<DIV", "<p").replace("</div", "</p").replace("</DIV", "</p");
+        
+        logger.debug("beforeXmlConverter ended");
         
 		return strRtnHTML;
 	}
@@ -29964,5 +30481,32 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     	
     	logger.debug("getBansongDeptID ended. RESULT >> " + result);
     	return result;
+    }
+    
+    @Override
+    public String updateReceivedDept(String docID, String processorID, String processorName, String processorJobTitle, String receivedDeptID, String receivedDeptName,
+                    String processorName2, String processorJobTitle2, String receivedDeptName2, String companyID, int tenantId) throws Exception {
+
+        logger.debug("updateReceivedDept ended");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("companyID", companyID);
+        map.put("v_DOCID", docID);
+        map.put("v_PROCESSORID", processorID);
+        map.put("v_PROCESSORNAME", processorName);
+        map.put("v_PROCESSORNAME2", processorName2);
+        map.put("v_PROCESSORJOBTITLE", processorJobTitle);
+        map.put("v_PROCESSORJOBTITLE2", processorJobTitle2);
+        map.put("v_RECEIVEDDEPTID", receivedDeptID);
+        map.put("v_RECEIVEDDEPTNAME", receivedDeptName);
+        map.put("v_RECEIVEDDEPTNAME2", receivedDeptName2);
+        map.put("v_TENANTID", tenantId);
+        map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+
+        ezApprovalGDAO.updateReceivedDept(map);
+
+        logger.debug("updateReceivedDept ended");
+        
+        return "<RESULT>TRUE</RESULT>";
     }
 }

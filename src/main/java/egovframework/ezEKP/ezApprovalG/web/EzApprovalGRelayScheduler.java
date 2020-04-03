@@ -86,6 +86,10 @@ public class EzApprovalGRelayScheduler {
 
     	 List<OrganUserVO> list = ezApprovalGService.getTenantID();
 		 int tenantID = list.get(0).getTenantId();
+		 
+		 if(!(config.getProperty("config.RelaySchedulerTenant") == null || config.getProperty("config.RelaySchedulerTenant").equals(""))) {
+			 tenantID = Integer.parseInt(config.getProperty("config.RelaySchedulerTenant"));
+		 }
     	 
          strRelayFolderPath = config.getProperty("relay_root").trim() + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files" + config.getProperty("upload_relay.ROOT").trim();
          strAprDocPath = config.getProperty("relay_root").trim() + commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID).trim(); 

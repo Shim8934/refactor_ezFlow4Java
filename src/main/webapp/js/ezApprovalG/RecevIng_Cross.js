@@ -177,19 +177,26 @@ function getGyulJeDate() {
 
 function setSusinUpdataDocID() {
     try {
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "pOrgDocID", pOrgDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-
-        xmlhttp.open("POST", "../DraftUI/aspx/setSusinUpdateDocID.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
+    	var result = "";
+    	
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/setSusinUpdateDocID.do",
+    		data : {
+    			orgDocID : pOrgDocID,
+    			docID    : pDocID,
+    			deptID   : arr_userinfo[4]
+    		},
+    		success: function(xml){
+    			result = loadXMLString(xml);
+    		}        			
+    	});
+        
+        var dataNodes = GetChildNodes(result);
+        
+        return getNodeText(dataNodes[0]);
 
     } catch (e) {
         alert("setSusinUpdataDocID : " + e.description);

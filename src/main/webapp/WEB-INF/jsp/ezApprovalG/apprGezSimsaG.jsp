@@ -1400,7 +1400,7 @@
 	                }
 	            }
 
-	            var rtnVal = Content.innerHTML.replace(/width_kaoni/g, "width").replace(/height_kaoni/g, "height").replace(/<p><\/p>/g, "</p>");
+	            var rtnVal = Content.innerHTML.replace(/width_kaoni/g, "width").replace(/height_kaoni/g, "height");
 	            rtnVal = rtnVal.replace(/\r/g, "").replace(/\n/g, "").replace(/&nbsp; /g, "&nbsp;&nbsp;");
 
 	            // COL TAG의 닫는 태그가 없는 경우가 있어 강제 변환처리.

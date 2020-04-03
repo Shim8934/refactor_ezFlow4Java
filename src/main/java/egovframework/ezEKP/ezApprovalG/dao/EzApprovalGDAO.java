@@ -3419,4 +3419,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGOpenGovCsvVO> getOpenGovCSV() throws Exception {
 		return (List< ApprGOpenGovCsvVO>) list("EzApprovalG.getOpenGovCSV");
 	}
+	
+    public void updateReceivedDept(Map<String, Object> map) throws Exception {
+        update("EzApprovalG.updateReceivedDept", map);
+}
+
 }
