@@ -16,8 +16,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import javax.annotation.Resource;
@@ -34,6 +37,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -210,209 +214,210 @@ public class EzApprovalGRelayScheduler {
          
          if (receiveDir.exists()) {
         	 for (File receiveTempFile : receiveDir.listFiles()) {
-        		 strFileName = receiveTempFile.getName();
-        		 strFilePath = receiveTempFile.getParent() + commonUtil.separator + strFileName;
-        		 strFileType =  strFileName.substring(strFileName.indexOf("."), strFileName.length()).toUpperCase();
-        		 
-        		 if (strFileType.equals(".XML")) {
-        			 logger.debug("receiveFile Started");
-        			 logger.debug("receiveFileName : " + strFileName + " receiveFilePath : " + strFilePath + " receiveFileType : " + strFileType);
-        			 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        		 try {
+        			 strFileName = receiveTempFile.getName();
+        			 strFilePath = receiveTempFile.getParent() + commonUtil.separator + strFileName;
+        			 strFileType =  strFileName.substring(strFileName.indexOf("."), strFileName.length()).toUpperCase();
         			 
-        			 strFileDate = sdf.format(receiveTempFile.lastModified()).toString();
-        			 strReceiveID = strFileName.substring(7,14);
-        			 
-        			 if (!TryXMLLoad(strFilePath)) {
-        				 String[] xmlParsingErrInfo = new String[2];
-        				 xmlParsingErrInfo[0] = strFileName;
-        				 xmlParsingErrInfo[1] = TryXMLLoadWithReturnMessage(strFilePath);
-        				 xmlparsingerrList.add(xmlParsingErrInfo);
-        				 AdminMail.add(xmlparsingerrList);
+        			 if (strFileType.equals(".XML")) {
+        				 logger.debug("receiveFile Started");
+        				 logger.debug("receiveFileName : " + strFileName + " receiveFilePath : " + strFilePath + " receiveFileType : " + strFileType);
+        				 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         				 
-        				 File receiveTemp = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receivetemperr"));
+        				 strFileDate = sdf.format(receiveTempFile.lastModified()).toString();
+        				 strReceiveID = strFileName.substring(7,14);
         				 
-        				 if (!receiveTemp.exists()){
-        					 receiveTemp.mkdirs();
-        				 }
-        				 
-        				 File fileMove = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receivetemperr" + commonUtil.separator + strFileName));
-        				 FileUtils.moveFile(receiveDir, fileMove);
-        				 
-        				 logger.debug("비정상적인 XML파일, 수신처리 할 수 없습니다.", "");
-        				 logger.debug("파일을 receivetemperr 폴더로 이동 하였습니다.", "");
-        				 logger.debug("=============================================>수신종료.", "");
-        				 
-        				 continue;
-        			 }
-        			 
-        			 Document objXML = commonUtil.xmlLod(strFilePath);
-        			 
-        			 strSendOrgCode = objXML.getElementsByTagName("send-orgcode").item(0).getTextContent();
-        			 logger.debug("#송신기관코드=" + strSendOrgCode);
-        			 strSendID = objXML.getElementsByTagName("send-id").item(0).getTextContent();
-        			 logger.debug("#송신부서코드=" + strSendID);
-        			 
-        			 //수신기관코드가 회사ID랑 다를 경우 회사ID로 맞추어 준다.(보정처리)
-        			 boolean RecvIDCheck = false;
-        			 List <OrganDeptVO> extensionAttr4ID = ezOrganService.getExtensionAttr4ID(strReceiveID);
-        			 int listSize = extensionAttr4ID.size();
-        			 
-        			 if (listSize > 0) {
-        				 for (int m = 0; m < listSize; m++) {
-        					 strCompanyID = extensionAttr4ID.get(m).getExtensionAttribute2();
-        				 }
-        			 } else {
-        				 strCompanyID = config.getProperty("config.companyNum");
-        			 }
-        			 
-        			 logger.debug("strCompanyID = " + strCompanyID);
-        			 
-        			 if (listSize > 0) {
-        				 for (int m = 0; m < listSize; m++) {
-        					 if (strReceiveID.trim().equals(extensionAttr4ID.get(m).getExtensionAttribute4())) {
-        						 strReceiveID = extensionAttr4ID.get(m).getCn();
-        						 RecvIDCheck = true;
-        						 break;
+        				 if (!TryXMLLoad(strFilePath)) {
+        					 String[] xmlParsingErrInfo = new String[2];
+        					 xmlParsingErrInfo[0] = strFileName;
+        					 xmlParsingErrInfo[1] = TryXMLLoadWithReturnMessage(strFilePath);
+        					 xmlparsingerrList.add(xmlParsingErrInfo);
+        					 AdminMail.add(xmlparsingerrList);
+        					 
+        					 File receiveTemp = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receivetemperr"));
+        					 
+        					 if (!receiveTemp.exists()){
+        						 receiveTemp.mkdirs();
         					 }
+        					 
+        					 File fileMove = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receivetemperr" + commonUtil.separator + strFileName));
+        					 FileUtils.moveFile(receiveDir, fileMove);
+        					 
+        					 logger.debug("비정상적인 XML파일, 수신처리 할 수 없습니다.", "");
+        					 logger.debug("파일을 receivetemperr 폴더로 이동 하였습니다.", "");
+        					 logger.debug("=============================================>수신종료.", "");
+        					 
+        					 continue;
         				 }
-        			 } else {
-        				 if (!strCompanyID.trim().equals("")) {
-        					 if (!strReceiveID.trim().equals(strCompanyID.trim())){
-        						 strReceiveID = strCompanyID.trim();
+        				 
+        				 Document objXML = commonUtil.xmlLod(strFilePath);
+        				 
+        				 strSendOrgCode = objXML.getElementsByTagName("send-orgcode").item(0).getTextContent();
+        				 logger.debug("#송신기관코드=" + strSendOrgCode);
+        				 strSendID = objXML.getElementsByTagName("send-id").item(0).getTextContent();
+        				 logger.debug("#송신부서코드=" + strSendID);
+        				 
+        				 //수신기관코드가 회사ID랑 다를 경우 회사ID로 맞추어 준다.(보정처리)
+        				 boolean RecvIDCheck = false;
+        				 List <OrganDeptVO> extensionAttr4ID = ezOrganService.getExtensionAttr4ID(strReceiveID);
+        				 int listSize = extensionAttr4ID.size();
+        				 
+        				 if (listSize > 0) {
+        					 for (int m = 0; m < listSize; m++) {
+        						 strCompanyID = extensionAttr4ID.get(m).getExtensionAttribute2();
         					 }
-        					 RecvIDCheck = true;
-        				 }
-        			 }
-        			 
-        			 if (RecvIDCheck) {
-        				 objXML.getElementsByTagName("receive-id").item(0).setTextContent(strReceiveID);
-        				 logger.debug("#수신부서코드=" + strReceiveID);
-        				 
-        				 if (!objXML.getElementsByTagName("title").item(0).getTextContent().equals("")) {
-        					 strTitle = new String(Base64.decodeBase64(objXML.getElementsByTagName("title").item(0).getTextContent().getBytes("UTF-8")), "euc-kr");
-
-        					 if (strTitle.length() > 125) {
-        						 strTitle = strTitle.substring(1, 125);
-        					 }
-        				 }   
-        				 logger.debug("#문서제목=" + strTitle);
-        				 strXDocID = objXML.getElementsByTagName("doc-id").item(0).getTextContent();
-        				 logger.debug("#문서고유번호=" + strXDocID);
-        				 strDocType = objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("type").getTextContent();
-        				 logger.debug("#문서종류=" + strDocType);
-        				 strWriterName = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr");
-        				 
-        				 if (strWriterName == null || strWriterName.equals("")) {
-        					 strWriterName = "미확인";
-        				 }
-        				 
-        				 logger.debug("#문서작성자이름=" + strWriterName);
-        				 strWriterDept = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr");
-        				 
-        				 if (strWriterDept == null || strWriterDept.equals("")) {
-        					 strWriterDept = "미확인";
-        				 }
-        				 
-        				 logger.debug("#문서작성자부서=" + strWriterDept);
-        				 strSendName = new String(Base64.decodeBase64(objXML.getElementsByTagName("send-name").item(0).getTextContent()), "euc-kr");
-        				 logger.debug("#송신기관명=" + strSendName);
-        				 strXGW = new String(Base64.decodeBase64(objXML.getElementsByTagName("send-gw").item(0).getTextContent()), "euc-kr");
-        				 logger.debug("#송신그룹웨어명=" + strXGW);
-        				 strXDTDVersion = objXML.getElementsByTagName("dtd-version").item(0).getTextContent().toString();
-        				 logger.debug("#DTD버전=" + strXDTDVersion);
-        				 strXSLVersion = objXML.getElementsByTagName("xsl-version").item(0).getTextContent();
-        				 logger.debug("#XSL버전=" + strXSLVersion);
-        				 
-        				 if (objXML.getElementsByTagName("date").item(0).getTextContent().length() > 0) {
-        					 strRecDate = objXML.getElementsByTagName("date").item(0).getTextContent();
         				 } else {
-        					 strRecDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
+        					 strCompanyID = config.getProperty("config.companyNum");
         				 }
         				 
-        				 if (!ValidateDateTimeString(strRecDate)) {
-        					 strRecDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
-        				 }
+        				 logger.debug("strCompanyID = " + strCompanyID);
         				 
-        				 logger.debug("#날짜=" + strRecDate);
-        				 
-        				 switch (strDocType.trim()) {
-        				 case "send":
-        				 case "resend":
-        					 bRet = ezApprovalGService.insertRelayDB("", strXDocID, strRecDate, strSendName, strReceiveID, strTitle, "", strSendID, strReceiveID, strXGW, strDocType, strXDTDVersion, strXSLVersion, "", "", "", strFileDate, strCompanyID, tenantID);
-        					 logger.debug("#중계문서정보생성=" + bRet, "");
-        					 
-        					 bGPKI = false;
-        					 
-        					 if (objXML.getElementsByTagName("content").getLength() == 1) {
-        						 strCont_Role = objXML.getElementsByTagName("content").item(0).getAttributes().getNamedItem("content-role").getTextContent();
-        						 if (strCont_Role.equals("gpki")) {
-        							 bGPKI = true;
+        				 if (listSize > 0) {
+        					 for (int m = 0; m < listSize; m++) {
+        						 if (strReceiveID.trim().equals(extensionAttr4ID.get(m).getExtensionAttribute4())) {
+        							 strReceiveID = extensionAttr4ID.get(m).getCn();
+        							 RecvIDCheck = true;
+        							 break;
         						 }
         					 }
+        				 } else {
+        					 if (!strCompanyID.trim().equals("")) {
+        						 if (!strReceiveID.trim().equals(strCompanyID.trim())){
+        							 strReceiveID = strCompanyID.trim();
+        						 }
+        						 RecvIDCheck = true;
+        					 }
+        				 }
+        				 
+        				 if (RecvIDCheck) {
+        					 objXML.getElementsByTagName("receive-id").item(0).setTextContent(strReceiveID);
+        					 logger.debug("#수신부서코드=" + strReceiveID);
         					 
-        					 if (bGPKI) {
-        						 // 암호화된 경우 해당 XML 파일을 특정 폴더로 저장한다.
-        						 strCont = objXML.getElementsByTagName("content").item(0).getTextContent();                                        
-        						 File gpkFile = new File(commonUtil.detectPathTraversal(strAprDocPath + strCompanyID + commonUtil.separator + "exDocMSG" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml"));
+        					 if (!objXML.getElementsByTagName("title").item(0).getTextContent().equals("")) {
+        						 strTitle = new String(Base64.decodeBase64(objXML.getElementsByTagName("title").item(0).getTextContent().getBytes("UTF-8")), "euc-kr");
         						 
-        						 if (gpkFile.exists()) {
-        							 gpkFile.delete();
+        						 if (strTitle.length() > 125) {
+        							 strTitle = strTitle.substring(1, 125);
         						 }
-        						 
-        						 FileOutputStream fop = new FileOutputStream(gpkFile);
-        						 // get the content in bytes
-        						 fop.write(commonUtil.convertDocumentToString(objXML).getBytes("UTF-8"));
-        						 fop.flush();
-        						 fop.close();
-        						 
-        						 ezApprovalGService.fieldUpdate("emlURL", strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml", strXDocID, strReceiveID, strCompanyID, tenantID);
-        						 ezApprovalGService.fieldUpdate("isPKI", "Y", strXDocID, strReceiveID, strCompanyID, tenantID);
+        					 }   
+        					 logger.debug("#문서제목=" + strTitle);
+        					 strXDocID = objXML.getElementsByTagName("doc-id").item(0).getTextContent();
+        					 logger.debug("#문서고유번호=" + strXDocID);
+        					 strDocType = objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("type").getTextContent();
+        					 logger.debug("#문서종류=" + strDocType);
+        					 strWriterName = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr");
+        					 
+        					 if (strWriterName == null || strWriterName.equals("")) {
+        						 strWriterName = "미확인";
+        					 }
+        					 
+        					 logger.debug("#문서작성자이름=" + strWriterName);
+        					 strWriterDept = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr");
+        					 
+        					 if (strWriterDept == null || strWriterDept.equals("")) {
+        						 strWriterDept = "미확인";
+        					 }
+        					 
+        					 logger.debug("#문서작성자부서=" + strWriterDept);
+        					 strSendName = new String(Base64.decodeBase64(objXML.getElementsByTagName("send-name").item(0).getTextContent()), "euc-kr");
+        					 logger.debug("#송신기관명=" + strSendName);
+        					 strXGW = new String(Base64.decodeBase64(objXML.getElementsByTagName("send-gw").item(0).getTextContent()), "euc-kr");
+        					 logger.debug("#송신그룹웨어명=" + strXGW);
+        					 strXDTDVersion = objXML.getElementsByTagName("dtd-version").item(0).getTextContent().toString();
+        					 logger.debug("#DTD버전=" + strXDTDVersion);
+        					 strXSLVersion = objXML.getElementsByTagName("xsl-version").item(0).getTextContent();
+        					 logger.debug("#XSL버전=" + strXSLVersion);
+        					 
+        					 if (objXML.getElementsByTagName("date").item(0).getTextContent().length() > 0) {
+        						 strRecDate = objXML.getElementsByTagName("date").item(0).getTextContent();
         					 } else {
-        						 File recFile = new File(commonUtil.detectPathTraversal(strAprDocPath + strCompanyID + commonUtil.separator +"exDocMSG" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml"));
+        						 strRecDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
+        					 }
+        					 
+        					 if (!ValidateDateTimeString(strRecDate)) {
+        						 strRecDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", true);
+        					 }
+        					 
+        					 logger.debug("#날짜=" + strRecDate);
+        					 
+        					 switch (strDocType.trim()) {
+        					 case "send":
+        					 case "resend":
+        						 bRet = ezApprovalGService.insertRelayDB("", strXDocID, strRecDate, strSendName, strReceiveID, strTitle, "", strSendID, strReceiveID, strXGW, strDocType, strXDTDVersion, strXSLVersion, "", "", "", strFileDate, strCompanyID, tenantID);
+        						 logger.debug("#중계문서정보생성=" + bRet, "");
         						 
-        						 File recDir = new File(commonUtil.detectPathTraversal(strAprDocPath + strCompanyID + commonUtil.separator +"exDocMSG"));
+        						 bGPKI = false;
         						 
-        						 if (!recDir.exists()) {
-        							 recDir.mkdirs();
+        						 if (objXML.getElementsByTagName("content").getLength() == 1) {
+        							 strCont_Role = objXML.getElementsByTagName("content").item(0).getAttributes().getNamedItem("content-role").getTextContent();
+        							 if (strCont_Role.equals("gpki")) {
+        								 bGPKI = true;
+        							 }
         						 }
         						 
-        						 if (recFile.exists()) {
-        							 recFile.delete();
-        						 }
-        						 
-        						 FileOutputStream fop = new FileOutputStream(recFile);
-        						 // get the content in bytes
-        						 fop.write(commonUtil.convertDocumentToString(objXML).getBytes("UTF-8"));
-        						 fop.flush();
-        						 fop.close();
-        						 
-        						 logger.debug("#pack파일생성= OK");
-        						 
-        						 ezApprovalGService.fieldUpdate("emlURL", strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml", strXDocID, strReceiveID, strCompanyID, tenantID);
-        						 ezApprovalGService.fieldUpdate("isPKI", "N", strXDocID, strReceiveID, strCompanyID, tenantID);
-        						 
-        						 for (int count = 0; count < objXML.getElementsByTagName("content").getLength(); count++) {
-        							 strCont_Role = objXML.getElementsByTagName("content").item(count).getAttributes().getNamedItem("content-role").getTextContent();
-        							 strCont = objXML.getElementsByTagName("content").item(count).getTextContent();
-        							 strCont_Name = new String(Base64.decodeBase64(objXML.getElementsByTagName("content").item(count).getAttributes().getNamedItem("filename").getTextContent()), "euc-kr");
-        							 strCont = strCont.replace("\r", "").replace("\n", "").replace("\t", "");
+        						 if (bGPKI) {
+        							 // 암호화된 경우 해당 XML 파일을 특정 폴더로 저장한다.
+        							 strCont = objXML.getElementsByTagName("content").item(0).getTextContent();                                        
+        							 File gpkFile = new File(commonUtil.detectPathTraversal(strAprDocPath + strCompanyID + commonUtil.separator + "exDocMSG" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml"));
         							 
-        							 switch (strCont_Role) {
-        							 case "pubdoc":
-        								 boolean WritePubDoc = WriteXMLFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocXML" , strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml");
+        							 if (gpkFile.exists()) {
+        								 gpkFile.delete();
+        							 }
+        							 
+        							 FileOutputStream fop = new FileOutputStream(gpkFile);
+        							 // get the content in bytes
+        							 fop.write(commonUtil.convertDocumentToString(objXML).getBytes("UTF-8"));
+        							 fop.flush();
+        							 fop.close();
+        							 
+        							 ezApprovalGService.fieldUpdate("emlURL", strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml", strXDocID, strReceiveID, strCompanyID, tenantID);
+        							 ezApprovalGService.fieldUpdate("isPKI", "Y", strXDocID, strReceiveID, strCompanyID, tenantID);
+        						 } else {
+        							 File recFile = new File(commonUtil.detectPathTraversal(strAprDocPath + strCompanyID + commonUtil.separator +"exDocMSG" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml"));
+        							 
+        							 File recDir = new File(commonUtil.detectPathTraversal(strAprDocPath + strCompanyID + commonUtil.separator +"exDocMSG"));
+        							 
+        							 if (!recDir.exists()) {
+        								 recDir.mkdirs();
+        							 }
+        							 
+        							 if (recFile.exists()) {
+        								 recFile.delete();
+        							 }
+        							 
+        							 FileOutputStream fop = new FileOutputStream(recFile);
+        							 // get the content in bytes
+        							 fop.write(commonUtil.convertDocumentToString(objXML).getBytes("UTF-8"));
+        							 fop.flush();
+        							 fop.close();
+        							 
+        							 logger.debug("#pack파일생성= OK");
+        							 
+        							 ezApprovalGService.fieldUpdate("emlURL", strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml", strXDocID, strReceiveID, strCompanyID, tenantID);
+        							 ezApprovalGService.fieldUpdate("isPKI", "N", strXDocID, strReceiveID, strCompanyID, tenantID);
+        							 
+        							 for (int count = 0; count < objXML.getElementsByTagName("content").getLength(); count++) {
+        								 strCont_Role = objXML.getElementsByTagName("content").item(count).getAttributes().getNamedItem("content-role").getTextContent();
+        								 strCont = objXML.getElementsByTagName("content").item(count).getTextContent();
+        								 strCont_Name = new String(Base64.decodeBase64(objXML.getElementsByTagName("content").item(count).getAttributes().getNamedItem("filename").getTextContent()), "euc-kr");
+        								 strCont = strCont.replace("\r", "").replace("\n", "").replace("\t", "");
         								 
-        								 logger.debug("#pubdoc생성=" + WritePubDoc);
-        								 pubdocUpdate(strAprDocPath + strCompanyID + commonUtil.separator + "ExDocXML" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml");
-        								 ezApprovalGService.fieldUpdate("xmlURL", strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml", strXDocID, strReceiveID, strCompanyID, tenantID);
-        								 break;
-        							 case "attach":
-        								 boolean WriteAttache = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
-        								 logger.debug("#attach생성=" + WriteAttache);
-        								 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "N", strCompanyID, tenantID);
-        								 break;
-        							 case "attach_body":
-        								 // 이 것 때문에 attach_body에서 오류남 
-        								/* //콘텐트의 내용을 base64로 디코딩
+        								 switch (strCont_Role) {
+        								 case "pubdoc":
+        									 boolean WritePubDoc = WriteXMLFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocXML" , strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml");
+        									 
+        									 logger.debug("#pubdoc생성=" + WritePubDoc);
+        									 pubdocUpdate(strAprDocPath + strCompanyID + commonUtil.separator + "ExDocXML" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml");
+        									 ezApprovalGService.fieldUpdate("xmlURL", strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml", strXDocID, strReceiveID, strCompanyID, tenantID);
+        									 break;
+        								 case "attach":
+        									 boolean WriteAttache = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        									 logger.debug("#attach생성=" + WriteAttache);
+        									 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "N", strCompanyID, tenantID);
+        									 break;
+        								 case "attach_body":
+        									 // 이 것 때문에 attach_body에서 오류남 
+        									 /* //콘텐트의 내용을 base64로 디코딩
         								 String tempString = new String(Base64.decodeBase64(objXML.getElementsByTagName("content").item(0).getTextContent()), "euc-kr" );
         								 //디코딩된 내용에 nbsp가 있으면 string 에서 xml로 변환되지 않음
         								 tempString = tempString.replaceAll("&nbsp;", "");
@@ -421,129 +426,142 @@ public class EzApprovalGRelayScheduler {
         								 
         								 //4번째부터의 내용을 xml로 변환
         								 Document tempXml = commonUtil.convertStringToDocument(tempStrLine[3]);*/
-        								 
+        									 
 //        								 if ("true".equals(tempXml.getElementsByTagName("body").item(0).getAttributes().getNamedItem("separate").getTextContent())) {
         									 boolean WriteBodyAttach = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
         									 logger.debug("#attach_body생성=" + WriteBodyAttach);
         									 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "Y", strCompanyID, tenantID);
 //        								 }
-        								 break;
-        							 case "attach_xml":
-        								 boolean WriteXMLFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "exch" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
-        								 logger.debug("#attach_xml생성=" + WriteXMLFile, "");
-        								 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "XML", strCompanyID, tenantID);
-        								 break;
-        							 case "attach_xsl":
-        								 boolean WriteXSLFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "exch" , strCont_Name);
-        								 logger.debug("#attach_xsl생성=" + WriteXSLFile, "");
-        								 ezApprovalGService.addAttachInfo(strCont_Name, strCont_Name, strXDocID, Integer.toString(count), "XSL", strCompanyID, tenantID);
-        								 break;
-        							 case "seal":
-        								 boolean WriteSealFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocSign" , strCont_Name);
-        								 logger.debug("#seal생성=" + WriteSealFile, "");
-        								 ezApprovalGService.fieldUpdate("sealURL", strCont_Name, strXDocID, strReceiveID, strCompanyID, tenantID);
-        								 break;
-        							 case "sign":
-        								 boolean WriteSignFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
-        								 logger.debug("#sign생성=" + WriteSignFile, "");
-        								 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
-        								 break;
-        							 case "logo":
-        								 boolean WritetLogoFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
-        								 logger.debug("#logo생성=" + WritetLogoFile, "");
-        								 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
-        								 break;
-        							 case "symbol":
-        								 boolean WriteSymbolFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
-        								 logger.debug("#symbol생성=" + WriteSymbolFile, "");
-        								 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
-        								 break;
+        									 break;
+        								 case "attach_xml":
+        									 boolean WriteXMLFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "exch" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        									 logger.debug("#attach_xml생성=" + WriteXMLFile, "");
+        									 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "XML", strCompanyID, tenantID);
+        									 break;
+        								 case "attach_xsl":
+        									 boolean WriteXSLFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "exch" , strCont_Name);
+        									 logger.debug("#attach_xsl생성=" + WriteXSLFile, "");
+        									 ezApprovalGService.addAttachInfo(strCont_Name, strCont_Name, strXDocID, Integer.toString(count), "XSL", strCompanyID, tenantID);
+        									 break;
+        								 case "seal":
+        									 boolean WriteSealFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocSign" , strCont_Name);
+        									 logger.debug("#seal생성=" + WriteSealFile, "");
+        									 ezApprovalGService.fieldUpdate("sealURL", strCont_Name, strXDocID, strReceiveID, strCompanyID, tenantID);
+        									 break;
+        								 case "sign":
+        									 boolean WriteSignFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        									 logger.debug("#sign생성=" + WriteSignFile, "");
+        									 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
+        									 break;
+        								 case "logo":
+        									 boolean WritetLogoFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        									 logger.debug("#logo생성=" + WritetLogoFile, "");
+        									 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
+        									 break;
+        								 case "symbol":
+        									 boolean WriteSymbolFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        									 logger.debug("#symbol생성=" + WriteSymbolFile, "");
+        									 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
+        									 break;
+        								 }
         							 }
         						 }
-        					 }
-        					 
-        					 //혹시 몰라 주석 일단
+        						 
+        						 //혹시 몰라 주석 일단
 //                                      System.Xml.XmlDocument extXml = new System.Xml.XmlDocument();
 //                                      extXml.LoadXml(strReXml);
 //                                      string strFormPath = extXml.InnerText;
 //                                      extXml = null;
-        					 
-        					 //결재진행문서 정보에 수신문서 정보를 입력해 준다.
-        					 boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(strWriterName, strWriterDept, config.getProperty("relay_root"), strXDocID, strReceiveID, strCompanyID, tenantID);
-        					 logger.debug("#수신문서정보입력=" + inputReceiveInfo);
-        					 
-        					 //수신된 유통문서에 대해 수신(Receive) ACK 발송
-        					 boolean SendReceiveACK = ezApprovalGService.sendAck(strXDocID, strReceiveID, strSendID, strTitle, "receive", "", "", "", strCompanyID, tenantID);
-        					 logger.debug("#수신ACK발송=" + SendReceiveACK);
-        					 
-        					 break;
-        					 // 발송 실패에 따른 메시지 Update
-        				 case "fail":
-        					 String Message = new String(Base64.decodeBase64(objXML.getElementsByTagName("content").item(0).getTextContent()), "euc-kr");
-        					 boolean UpdateSendDoc_Fail = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, tenantID);
-//        					 boolean InsMessage = ezApprovalGService.insFailMessage(strXDocID, strSendID, strSendName, Message, strCompanyID, tenantID);
-        					 logger.debug("#발송실패오류=" + Message, "");
-        					 logger.debug("#발송문서실패=" + UpdateSendDoc_Fail, "");
-        					 break;
-        					 // 도달 - 수신기관의 중계모듈이 전송용 통합파일을 임시수신함(receivetemp)에 저장한 후 생성
-        				 case "arrive":
-        					 boolean UpdateSendDoc_Arrive = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, tenantID);
-        					 logger.debug("#발송문서도달=" + UpdateSendDoc_Arrive);
-        					 break;
-        					 // 수신 - 수신기관의 전자문서시스템이 중계모듈의 임시수신함(receivetemp)에 수신된 문서를 가져가는 작업 완료 후 생성
-        				 case "receive":
-        					 boolean UpdateSendDoc_Receive = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, tenantID);
-        					 logger.debug("#발송문서수신=" + UpdateSendDoc_Receive);
-        					 break;
-        					 // 접수 - 수신기관에서 문서를 정상적으로 최초 확인
-        				 case "accept":
-        					 String strAcceptName = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr") + "(" + new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr") + ")";
-        					 boolean UpdateSendDoc_Accept = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, strAcceptName, strCompanyID, tenantID);
-        					 logger.debug("#발송문서접수=" + UpdateSendDoc_Accept);
-        					 
-        					 break;
-        					 // 발송 문서에 대한 수신 기관 접수 부서 및 접수자 Update
-        				 case "return":                           
-        				 case "req-resend":
-        					 boolean UpdateSendDoc_ReqResend = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, tenantID);
-        					 logger.debug("#발송문서정보갱신=" + UpdateSendDoc_ReqResend);
-        					 
-        					 //수신기관에서 재발송 요청시 의견 추가
-        					 if (objXML.getElementsByTagName("content").item(0) != null && objXML.getElementsByTagName("content").item(0).getAttributes().getNamedItem("content-role") != null) {
-        						 strCont_Role = objXML.getElementsByTagName("content").item(0).getAttributes().getNamedItem("content-role").getTextContent();
-        					 }
-        					 
-        					 if (strCont_Role != null && strCont_Role.equals("return")) {
-        						 strCont = objXML.getElementsByTagName("content").item(0).getTextContent();
-        						 strCont_Name = "return.txt";
-        						 strCont = strCont.replace("\r", "").replace("\n", "").replace("\t", "");
         						 
-        						 //인코딩 안풀고 그냥 저장
-        						 boolean writeReqResendOpinion = writeReqResendOpinion(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExOpinion", strXDocID + strSendID + strCont_Name);
-        						 logger.debug("#재발송요청 의견 생성=" + writeReqResendOpinion);
+        						 //결재진행문서 정보에 수신문서 정보를 입력해 준다.
+        						 boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(strWriterName, strWriterDept, config.getProperty("relay_root"), strXDocID, strReceiveID, strCompanyID, tenantID);
+        						 logger.debug("#수신문서정보입력=" + inputReceiveInfo);
+        						 
+        						 //수신된 유통문서에 대해 수신(Receive) ACK 발송
+        						 boolean SendReceiveACK = ezApprovalGService.sendAck(strXDocID, strReceiveID, strSendID, strTitle, "receive", "", "", "", strCompanyID, tenantID);
+        						 logger.debug("#수신ACK발송=" + SendReceiveACK);
+        						 
+        						 break;
+        						 // 발송 실패에 따른 메시지 Update
+        					 case "fail":
+        						 String Message = new String(Base64.decodeBase64(objXML.getElementsByTagName("content").item(0).getTextContent()), "euc-kr");
+        						 boolean UpdateSendDoc_Fail = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, tenantID);
+//        					 boolean InsMessage = ezApprovalGService.insFailMessage(strXDocID, strSendID, strSendName, Message, strCompanyID, tenantID);
+        						 logger.debug("#발송실패오류=" + Message, "");
+        						 logger.debug("#발송문서실패=" + UpdateSendDoc_Fail, "");
+        						 break;
+        						 // 도달 - 수신기관의 중계모듈이 전송용 통합파일을 임시수신함(receivetemp)에 저장한 후 생성
+        					 case "arrive":
+        						 boolean UpdateSendDoc_Arrive = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, tenantID);
+        						 logger.debug("#발송문서도달=" + UpdateSendDoc_Arrive);
+        						 break;
+        						 // 수신 - 수신기관의 전자문서시스템이 중계모듈의 임시수신함(receivetemp)에 수신된 문서를 가져가는 작업 완료 후 생성
+        					 case "receive":
+        						 boolean UpdateSendDoc_Receive = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, tenantID);
+        						 logger.debug("#발송문서수신=" + UpdateSendDoc_Receive);
+        						 break;
+        						 // 접수 - 수신기관에서 문서를 정상적으로 최초 확인
+        					 case "accept":
+        						 String strAcceptName = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr") + "(" + new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr") + ")";
+        						 boolean UpdateSendDoc_Accept = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, strAcceptName, strCompanyID, tenantID);
+        						 logger.debug("#발송문서접수=" + UpdateSendDoc_Accept);
+        						 
+        						 break;
+        						 // 발송 문서에 대한 수신 기관 접수 부서 및 접수자 Update
+        					 case "return":                           
+        					 case "req-resend":
+        						 boolean UpdateSendDoc_ReqResend = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, tenantID);
+        						 logger.debug("#발송문서정보갱신=" + UpdateSendDoc_ReqResend);
+        						 
+        						 NodeList contentNodeList = objXML.getElementsByTagName("content");
+        						 Node contentNode = null;
+        						 
+        						 if(contentNodeList != null && contentNodeList.getLength() > 0) {
+        							 contentNode = contentNodeList.item(0);
+        						 }
+        						 //수신기관에서 재발송 요청시 의견 추가
+        						 if (contentNode != null && contentNode.getAttributes().getNamedItem("content-role") != null) {
+        							 strCont_Role = contentNode.getAttributes().getNamedItem("content-role").getTextContent();
+        						 }
+        						 
+        						 if (strCont_Role != null && strCont_Role.equals("return")) {
+        							 strCont = contentNode.getTextContent();
+        							 strCont_Name = "return.txt";
+        							 strCont = strCont.replace("\r", "").replace("\n", "").replace("\t", "");
+        							 
+        							 //인코딩 안풀고 그냥 저장
+        							 boolean writeReqResendOpinion = writeReqResendOpinion(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExOpinion", strXDocID + strSendID + strCont_Name);
+        							 logger.debug("#재발송요청 의견 생성=" + writeReqResendOpinion);
+        						 }
+        						 
+        						 break;
         					 }
         					 
-        					 break;
-        				 }
-        				 
-        				 File di2 = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receiveComp"));
-        				 
-        				 if (di2.exists()) {
-        					 File FI2 = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receiveComp" + commonUtil.separator + strFileName));
-        					 if (FI2.exists()) {
-        						 receiveTempFile.delete();
+        					 File di2 = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receiveComp"));
+        					 
+        					 if (di2.exists()) {
+        						 File FI2 = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receiveComp" + commonUtil.separator + strFileName));
+        						 if (FI2.exists()) {
+        							 receiveTempFile.delete();
+        						 } else {
+        							 File fileMove = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receiveComp" + commonUtil.separator + strFileName));
+        							 receiveTempFile.renameTo(fileMove);
+        						 }
         					 } else {
-        						 File fileMove = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receiveComp" + commonUtil.separator + strFileName));
-        						 receiveTempFile.renameTo(fileMove);
+        						 receiveTempFile.delete();
         					 }
+        					 logger.debug("=============================================>수신종료.", "");
         				 } else {
-        					 receiveTempFile.delete();
+        					 logger.debug("#수신부서코드=" + strReceiveID, "해당 수신기관코드가 존재하지 않습니다.");
         				 }
-        				 logger.debug("=============================================>수신종료.", "");
-        			 } else {
-        				 logger.debug("#수신부서코드=" + strReceiveID, "해당 수신기관코드가 존재하지 않습니다.");
         			 }
-        		 }
+					
+				} catch (Exception e) {
+					logger.debug("#대외문서 접수 중 에러. 파일명 = " + receiveTempFile.getName());
+					backupErrorXml(strRelayFolderPath, receiveTempFile);
+					e.printStackTrace();
+					continue;
+				}
         	 }
          }
 
@@ -1119,5 +1137,21 @@ public class EzApprovalGRelayScheduler {
         	Ex.printStackTrace();
             return null;
         }
+    }
+    
+    //XML은 문제 없지만, 그룹웨어 DB에 데이터 넣을 때 에러가 발생하는 파일은 백업해둔다.
+    private void backupErrorXml(String relayPath, File errorfile) {
+    	String backupPath = relayPath + commonUtil.separator  + "data" + commonUtil.separator + "receiveerr" + commonUtil.separator + "temp";
+    	String strBackupFile = backupPath + commonUtil.separator + errorfile.getName(); 
+    	File backupDir = new File(backupPath);
+    	if(!backupDir.isDirectory()) {
+    		backupDir.mkdir();
+    	}
+    	
+    	try {
+    		FileUtils.moveFile(errorfile, new File(strBackupFile));
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
     }
 }
