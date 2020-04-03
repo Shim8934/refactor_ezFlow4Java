@@ -10638,15 +10638,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_USERID", userID.trim());
 		map.put("v_ISUSED", "");
 		
-		if (isUsed.equals("reuse")) {
-			map.put("v_ISUSED", isUsed);
-			map.put("v_DOCID", beforeDocID.trim());
-		}
-		
 		String oldDocID = "";
 		if(strXML.getElementsByTagName("saveFlag").getLength() > 0) {
 			oldDocID = strXML.getElementsByTagName("oldDocID").item(0).getTextContent();
 			map.put("v_DOCID", oldDocID);
+		}
+		
+		if (isUsed.equals("reuse")) {
+			map.put("v_ISUSED", isUsed);
+			map.put("v_DOCID", beforeDocID.trim());
 		}
 		
 		logger.debug("doProcess param : v_DOCID =" + docID.trim() + " v_TENANTID =" + userInfo.getTenantId() + " v_USERID =" + userID.trim());

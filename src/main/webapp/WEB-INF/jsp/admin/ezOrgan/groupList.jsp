@@ -222,7 +222,7 @@
 			mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 			mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
 			var OpenWin = window.open("/admin/ezOrgan/addGroup.do?companyId="
-					+ companyId + "&cn=" + groupID + "&name=" + groupName, "",
+					+ companyId + "&cn=" + groupID + "&name=" + encodeURI(encodeURIComponent(groupName)), "",
 					GetOpenWindowfeature(970, 670));
 			try {
 				OpenWin.focus();
@@ -307,18 +307,18 @@
 										html += "        <input type='checkbox' onclick='selectCheckBox()' name='chk' id='chk' value='"
 												+ i.groupID + "' name='" + i.groupName + "'/>";
 										html += "    </td>";
-										html += "<td style='cursor:pointer; width: 15%;'>"
+										html += "<td style='cursor:pointer; width: 20%;'>"
 												+ i.groupName + "</td>";
-										html += "<td style='width: 15%;'>"
+										html += "<td style='width: 20%;'>"
 												+ (i.createID != null ? i.createID
 														: " ") + "</td>";
-										html += "<td style='width: 15%;'>"
+										html += "<td style='width: 20%;'>"
 												+ (i.createDate != null ? i.createDate
 														: " ") + "</td>";
-										html += "<td style='width: 15%;'>"
+										html += "<td style='width: 20%;'>"
 												+ (i.updateID != null ? i.updateID
 														: " ") + "</td>";
-										html += "<td style='width: 15%;'>"
+										html += "<td style='width: 20%;'>"
 												+ (i.updateDate != null ? i.updateDate
 														: " ") + "</td>";
 										html += "</tr>";
@@ -575,11 +575,11 @@
 							<tr id="mainListHeaderTr">
 								<th style="width: 30px;"><input type='checkbox'
 									name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
-								<th style="width: 15%;"><spring:message code="main.t76" /></th>
-								<th style="width: 15%;"><spring:message code="ezOrgan.zNo008" /></th>
-								<th style="width: 15%;"><spring:message code="ezOrgan.zNo009" /></th>
-								<th style="width: 15%;"><spring:message code="ezAttitude.t62" /></th>
-								<th style="width: 15%;"><spring:message code="ezAttitude.t63" /></th>
+								<th style="width: 20%;"><spring:message code="main.t76" /></th>
+								<th style="width: 20%;"><spring:message code="ezOrgan.zNo008" /></th>
+								<th style="width: 20%;"><spring:message code="ezOrgan.zNo009" /></th>
+								<th style="width: 20%;"><spring:message code="ezAttitude.t62" /></th>
+								<th style="width: 20%;"><spring:message code="ezAttitude.t63" /></th>
 							</tr>
 						</thead>
 					</table>
