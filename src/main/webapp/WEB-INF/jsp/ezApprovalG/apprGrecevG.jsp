@@ -107,6 +107,7 @@
 			var ext = "hwp";
 			var approvalFlag = "${approvalFlag}";
 			var orgCompanyID = "";
+			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 			
 		    function process_AfterOpen() {
 		        try {
@@ -898,8 +899,10 @@
 		                return;
 		            }
 		
-		            if (g_DraftFlag == "REDRAFT")
+		            /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+		            if (g_DraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
 		                delOpinionInfo();
+		            }
 		
 		            pDocTitle = field.textContent;
 		            pDocTitle = trim(pDocTitle);

@@ -128,6 +128,7 @@
 		    var useReceiveDocNo = "${useReceiveDocNo}";
 			var wAprMemberSN = "1";
 			var docNumZeroCnt = "${docNumZeroCnt}";
+			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -498,9 +499,11 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
-		
-		        if (g_DraftFlag == "REDRAFT")
+		        
+		        /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+		        if (g_DraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
 		            delOpinionInfo();
+		        }
 		
 		        pDocTitle = trim(message.GetDocTitle());
 		        if (pDocTitle == "") {

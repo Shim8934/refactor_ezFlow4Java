@@ -280,6 +280,13 @@ function deleteOpinionInfo_complete(ret) {
 		OpinionList.DeleteRow(selIdx);
 		document.getElementById("txt_OpinionContent").value = "";
 		
+		/* 2020-04-02 홍승비 - 신규작성한 반송, 보류, 회송의견 삭제 시 버튼표출 플래그값 수정 */
+		if (GetAttribute(pSelectedRow[0], "ISNEWBBHOPINION") != null && GetAttribute(pSelectedRow[0], "ISNEWBBHOPINION") == "true") {
+	        if (typeof(isNewBBHOpinionFlag) != "undefined" && isNewBBHOpinionFlag != null) {
+	        	isNewBBHOpinionFlag = false;
+	        }
+		}
+		
 		ModifiedFlag = true;
 		showFirstOpinionRow();
 		displayButtons();
@@ -503,6 +510,10 @@ function getAprOpinionXML(pOpContent) {
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA10", ppUserTitle2);
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA11", ppUserDeptName);
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA12", ppUserDeptName);
+        /* 2020-04-02 홍승비 - 신규 작성된 반송, 보류, 회송의견 판별용 데이터 추가 */
+        if (typeof(isNewBBHOpinionFlag) != "undefined" && isNewBBHOpinionFlag != null) {
+        	createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "ISNEWBBHOPINION", isNewBBHOpinionFlag);
+        }
 
         CELL = createNodeAndAppandNode(objXML, ROW, CELL, "CELL");
         createNodeAndAppandNodeText(objXML, CELL, CELLVALUE, "VALUE", ppUserDisplayName);
