@@ -6,7 +6,15 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t264'/></title>
 		<style> 
-			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }	    	
+			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
+			<%-- 2020-03-25 홍승비 - 첨부파일 버튼영역 마우스 드래그, 셀렉트 방지 추가 --%>
+			.btnposition.btnpositionNew {
+				-ms-user-select: none; 
+				-moz-user-select: -moz-none;
+				-khtml-user-select: none;
+				-webkit-user-select: none;
+				user-select: none;
+			}
 		</style>
 		<meta http-equiv="Content-Type" content="text/html; charset=uft-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
@@ -176,11 +184,12 @@
 			
 				    setNodeText(GetChildNodes(GetChildNodes(SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW")[i])[2])[0], strSize);
 				}
-	
+				
+				/* 2020-03-19 홍승비 - 첨부파일 리스트뷰에서 다중선택이 가능하도록 수정 */
 			    var listview = new ListView();
 			    listview.SetID("attachList");
 			    listview.SetSelectFlag(false);
-			    listview.SetMulSelectable(false);
+			    listview.SetMulSelectable(true);
 			    listview.SetRowOnDblClick("ATTACH_onDblclick");
 			    listview.DataSource(Resultxml);
 			    listview.DataBind("ATTACH");
@@ -284,27 +293,44 @@
 					{
 						var pInformationContent = "<spring:message code='ezApprovalG.t279'/>";
 					    var Ans = OpenInformationUI(pInformationContent, btn_AttachDel_onclick_Complete);
-			
-						if(Ans) {
-							var pAttachRow = listview.GetSelectedRows();
-							var delfileSize = GetChildNodes(pAttachRow[0])[2].innerHTML;
-							var Rtnval = DeleteFileAtServer(pAttachCurSel[0]);
-
-							if(Rtnval == "TRUE")
-							{
-								DelAttachFileAtList(pAttachCurSel);
-								DelfileSize(delfileSize);
-								
-								if (totalSize > 0) {
-					            	totalSize -= parseInt(GetAttribute(pAttachRow[0], "DATA8"));
-					            }			
-							}
-							else
-							{
-								var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
-								OpenAlertUI(pAlertContent);
-							}
-						}
+					    
+					    /* 2020-03-30 홍승비 - 한글기안 시 첨부파일 호환 코드 추가 (Ans가 바로 조건으로 사용됨) */
+					    if (Ans) {
+					        var listview = new ListView();
+					        listview.LoadFromID("attachList");
+					        var pAttachCurSel = listview.GetSelectedRows();
+					        var pAttachRow = listview.GetSelectedRows();
+					        
+							/* 2020-03-19 홍승비 - 첨부파일 다중삭제 동작 구현 */
+					        var Rtnval = ""
+					        var pSelectedRowLength = pAttachRow.length; 
+					        for (var i = 0; i < pSelectedRowLength; i++) {
+						        Rtnval = DeleteFileAtServer(pAttachCurSel[i]);
+						        // 의미없는 미구현 함수 DelfileSize(delfileSize) 동작 제거
+						        
+						        if (Rtnval != "TRUE") {
+						        	break;
+						        } else {
+						            if (totalSize > 0) { // 첨부파일의 크기 계산하는 부분 루프 내부로 이동
+						            	totalSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
+						            }
+						        }
+					        }
+					        
+					        if (Rtnval == "TRUE") {
+					            DelAttachFileAtList(pAttachCurSel);
+					            
+					            /* 2018-10-11 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
+					            var totalRows = listview.GetDataRows();
+							    if(totalRows.length == 0) {
+							    	setDeleteRow("attachList");
+							    }
+					        }
+					        else {
+					            var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
+					            OpenAlertUI(pAlertContent);
+					        }
+					    }
 					}
 				}
 				else
@@ -321,16 +347,25 @@
 			        listview.LoadFromID("attachList");
 			        var pAttachCurSel = listview.GetSelectedRows();
 			        var pAttachRow = listview.GetSelectedRows();
-			        var delfileSize = GetChildNodes(pAttachRow[0])[2].innerHTML;
-			        var Rtnval = DeleteFileAtServer(pAttachCurSel[0]);
-
+			        
+					/* 2020-03-19 홍승비 - 첨부파일 다중삭제 동작 구현 */
+			        var Rtnval = ""
+			        var pSelectedRowLength = pAttachRow.length; 
+			        for (var i = 0; i < pSelectedRowLength; i++) {
+				        Rtnval = DeleteFileAtServer(pAttachCurSel[i]);
+				        // 의미없는 미구현 함수 DelfileSize(delfileSize) 동작 제거
+				        
+				        if (Rtnval != "TRUE") {
+				        	break;
+				        } else {
+				            if (totalSize > 0) { // 첨부파일의 크기 계산하는 부분 루프 내부로 이동
+				            	totalSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
+				            }
+				        }
+			        }
+			        
 			        if (Rtnval == "TRUE") {
 			            DelAttachFileAtList(pAttachCurSel);
-			            DelfileSize(delfileSize);
-			            
-			            if (totalSize > 0) {
-			            	totalSize -= parseInt(GetAttribute(pAttachRow[0], "DATA8"));
-			            }
 			            
 			            /* 2018-10-11 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
 			            var totalRows = listview.GetDataRows();
@@ -343,9 +378,6 @@
 			            OpenAlertUI(pAlertContent);
 			        }
 			    }
-			}
-			
-			function DelfileSize(delfileSize){
 			}
 			
 			// 첨부파일리스트중에서 선택된 첨부파일을 내용을 보는 함수
@@ -392,7 +424,7 @@
 					    window.returnValue = "Clear";
 					    window.close();
 					}
-				} else 	{
+				} else {
 					CheckHistory(0);
 					var Attachxml = APRAttachXMLParsing(ATTACH,pDocID);
 					SaveAttachListInfo(Attachxml);
@@ -791,7 +823,65 @@
 		    	});
 		       	// 같은 파일 업로드 할 수 있게 수정 2018-04-19 강민수92
 		        document.form.file1.value = "";
-		    }		    
+		    }
+		    
+		    /* 2020-03-23 홍승비 - 첨부파일 위로 이동 함수 */
+		    function btn_AttachMoveUp_onclick() {
+				var listview = new ListView();
+		        listview.LoadFromID("attachList");
+		        var cnt = listview.GetRowCount();
+		        var pSelectedRows = listview.GetSelectedRows();
+		        var pSelectedRowsLength = pSelectedRows.length;
+		        
+		        for (var i = 0; i < pSelectedRowsLength; i++) {
+			        if (listview.GetSelectedIndexes().split(",")[i] == "0") { // 최상단 로우 포함
+			            return;
+			        } else {
+                        var item1 = pSelectedRows[i];
+                        var item2 = pSelectedRows[i].previousSibling;
+                        var parent = item1.parentNode;
+                        var itemtmp = item1.cloneNode(1);
+                        item2 = parent.replaceChild(itemtmp, item2);
+                        parent.replaceChild(item2, item1);
+                        parent.replaceChild(item1, itemtmp);
+			        }
+		        }
+		        
+		        // 순서조정이 끝난 뒤, 일괄적으로 ID를 갱신(다중선택 시 오류 발생 방지)
+		        var afterRows = listview.GetDataRows();
+		        for (var j = 0; j < cnt; j++) {
+		        	SetAttribute(afterRows[j], "ID", ("attachList_TR_" + j));
+		        }
+		    }
+		    
+		    /* 2020-03-23 홍승비 - 첨부파일 아래로 이동 함수 */
+		    function btn_AttachMoveDown_onclick() {
+				var listview = new ListView();
+		        listview.LoadFromID("attachList");
+		        var cnt = listview.GetRowCount();
+		        var pSelectedRows = listview.GetSelectedRows();
+		        var pSelectedRowsLength = pSelectedRows.length;
+		        
+		        for (var i = pSelectedRowsLength; i > 0; i--) {
+			        if (listview.GetSelectedIndexes().split(",")[i - 1] == (cnt - 1)) { // 최하단 로우 포함
+			            return;
+			        } else {
+	                    var item1 = pSelectedRows[i - 1];
+	                    var item2 = pSelectedRows[i - 1].nextSibling;
+	                    var parent = item1.parentNode;
+	                    var itemtmp = item1.cloneNode(1);
+	                    item2 = parent.replaceChild(itemtmp, item2);
+	                    parent.replaceChild(item2, item1);
+	                    parent.replaceChild(item1, itemtmp);
+			        }
+		        }
+		        
+		        var afterRows = listview.GetDataRows();
+		        for (var j = 0; j < cnt; j++) {
+		        	SetAttribute(afterRows[j], "ID", ("attachList_TR_" + j));
+		        }
+		    }
+		    
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}
@@ -824,6 +914,9 @@
 		        <input id="file1" name="file1" type="file" onchange="onDrop()" multiple="multiple" style="margin-left:100px; display: none;">
 		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd" style="cursor:pointer"><spring:message code='ezApprovalG.t268'/></span></label></a>
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
+				<%-- 2020-03-19 홍승비 - 첨부파일 위/아래 이동버튼 추가 --%>
+		        <a class="imgbtn"><span id="btn_AttachMoveUp" onClick="return btn_AttachMoveUp_onclick()"><img src="/images/ImgIcon/prev.gif" alt="" style="vertical-align:middle;"></span></a>
+		        <a class="imgbtn"><span id="btn_AttachMoveDown" onClick="return btn_AttachMoveDown_onclick()"><img src="/images/ImgIcon/next.gif" alt="" style="vertical-align:middle;"></span></a>
 		        <a class="imgbtn"><span id="btn_AttachSaveSure" onClick="return btn_AttachSaveSure_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 		    </div>
 		    

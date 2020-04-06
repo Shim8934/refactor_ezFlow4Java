@@ -3106,7 +3106,8 @@
       				DOCID, 
       				ATTACHFILENAME AS REALATTACHNAME,
       				TENANT_ID, 
-      				COMPANYID
+      				COMPANYID,
+      				IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
       			FROM 
       				TBL_APRATTACHINFO  
       			WHERE
@@ -3114,7 +3115,7 @@
       			AND
             		TENANT_ID = #v_TENANTID# 
             	AND
-            		COMPANYID = #companyID#	
+            		COMPANYID = #companyID#
             		
       		UNION ALL 
       		
@@ -3130,7 +3131,8 @@
       				DOCID , 
       				ATTACHDOCNAME AS REALATTACHNAME,
       				TENANT_ID,
-      				COMPANYID
+      				COMPANYID,
+					ATTACHSN AS VIEWSN
       			FROM 
       				TBL_APRDOCATTACHINFO
       			WHERE 
@@ -3158,7 +3160,8 @@
          				DOCID, 
          				ATTACHFILENAME AS REALATTACHNAME,
          				TENANT_ID ,
-      					COMPANYID
+      					COMPANYID,
+      					IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
          			FROM 
          				TBL_ENDATTACHINFO  
          			WHERE 
@@ -3180,7 +3183,8 @@
          			DOCID, 
          			ATTACHDOCNAME AS REALATTACHNAME,
          			TENANT_ID,
-      				COMPANYID
+      				COMPANYID,
+      				ATTACHSN AS VIEWSN
          		FROM 
          			TBL_ENDAPRDOCATTACHINFO ) A 
          		WHERE 
@@ -3206,7 +3210,8 @@
             	CONCAT(OWNERID ,'@' ,SN ) AS DOCID, 
             	ATTACHFILENAME AS REALATTACHNAME,
             	TENANT_ID,
-      			COMPANYID
+      			COMPANYID,
+      			IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
             FROM 
             	TBL_TMPATTACHINFO  
             WHERE 
@@ -3227,7 +3232,8 @@
             	CONCAT(OWNERID ,'@' ,SN ) AS DOCID, 
             	ATTACHDOCNAME AS REALATTACHNAME,
             	TENANT_ID,
-      			COMPANYID
+      			COMPANYID,
+      			ATTACHSN AS VIEWSN
             FROM 
             	TBL_TMPAPRDOCATTACHINFO ) A 
             WHERE 
@@ -3255,7 +3261,8 @@
             		DOCID , 
             		ATTACHFILENAME AS REALATTACHNAME,
             		TENANT_ID,
-      				COMPANYID
+      				COMPANYID,
+      				IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
             	FROM 
             		TBL_APRATTACHINFO  
             	WHERE 
@@ -3277,7 +3284,8 @@
             		DOCID ,
             		ATTACHDOCNAME AS REALATTACHNAME,
             		TENANT_ID,
-      				COMPANYID
+      				COMPANYID,
+      				ATTACHSN AS VIEWSN
             	FROM 
             		TBL_APRDOCATTACHINFO ) A 
             	WHERE 
@@ -3296,15 +3304,15 @@
 					ORDER BY TRIM($v_ORDERBY$) 
 				</isEqual>
 				<isNotEqual property="v_ORDERBYVALUE" compareValue="attachtype">
-					ORDER BY TRIM($v_ORDERBY$), ATTACHTYPE DESC  
+					ORDER BY TRIM($v_ORDERBY$), ATTACHTYPE DESC, VIEWSN ASC
 				</isNotEqual>
 			</isGreaterEqual>
 			<isLessThan property="v_ORDERBYLENGTH" compareValue="10">
-				ORDER BY TRIM($v_ORDERBY$), ATTACHTYPE DESC
+				ORDER BY TRIM($v_ORDERBY$), ATTACHTYPE DESC, VIEWSN ASC
 			</isLessThan>
 		</isGreaterThan>
 		<isLessEqual property="v_ORDERBYLENGTH" compareValue="0">
-				 ORDER BY ATTACHTYPE DESC
+				 ORDER BY ATTACHTYPE DESC, VIEWSN ASC
 		</isLessEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.checkPermission" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
@@ -5784,17 +5792,17 @@
 				</isEqual>
 				<isNotEqual property="v_ORDERBYVALUE" compareValue="attachfilesn">
 					ORDER BY 
-							TRIM($v_ORDERBY$) , ATTACHFILESN ASC
+							TRIM($v_ORDERBY$) , IFNULL(VIEWORDER, ATTACHFILESN) ASC
 				</isNotEqual>
 			</isGreaterEqual>
 			<isLessThan property="v_ORDERBYLENGTH" compareValue="12">
 			 		ORDER BY 
-			 				TRIM($v_ORDERBY$) , ATTACHFILESN ASC
+			 				TRIM($v_ORDERBY$) , IFNULL(VIEWORDER, ATTACHFILESN) ASC
 			</isLessThan>
 		</isGreaterThan>
 		<isLessEqual property="v_ORDERBYLENGTH" compareValue="0" >
 					ORDER BY 
-							ATTACHFILESN ASC
+							IFNULL(VIEWORDER, ATTACHFILESN) ASC
 		</isLessEqual>
 	</select>
 	
@@ -7954,7 +7962,9 @@
 			SELECT 
 					'DOC' TYPE  ,
 	                DocTitle FILENAME  ,
-	                Href FILEPATH   
+	                Href FILEPATH   ,
+	                1 AS TYPESN,
+	                1 AS VIEWSN
 	         FROM 
 	         		TBL_APRDOCINFO 
 	         WHERE  
@@ -7968,7 +7978,9 @@
 	         
 	         SELECT 'ATT' TYPE  ,
 	                AttachFileName FILENAME  ,
-	                AttachFileHref FILEPATH  
+	                AttachFileHref FILEPATH  ,
+					2 AS TYPESN,
+	                IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
 	         FROM 
 	         		TBL_APRATTACHINFO 
 	         WHERE  
@@ -7983,7 +7995,9 @@
 	         SELECT 
 	         		'ATTDOC' TYPE  ,
 	                AttachDocName FILENAME  ,
-	                AttachDocURL FILEPATH  
+	                AttachDocURL FILEPATH  ,
+	                3 AS TYPESN,
+	                ATTACHSN AS VIEWSN
 	         FROM 
 	         		TBL_APRDOCATTACHINFO 
 	         WHERE 
@@ -7998,7 +8012,9 @@
 				SELECT 
 						'DOC' TYPE  ,
 		                DocTitle FILENAME  ,
-		                Href FILEPATH   
+		                Href FILEPATH   ,
+						1 AS TYPESN,
+		                1 AS VIEWSN
 		        FROM 
 		        		TBL_ENDAPRDOCINFO
 		        WHERE  
@@ -8013,7 +8029,9 @@
 		        SELECT 
 		        		'ATT' TYPE  ,
 		                AttachFileName FILENAME  ,
-		                AttachFileHref FILEPATH  
+		                AttachFileHref FILEPATH  ,
+						2 AS TYPESN,
+	               	 	IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
 		        FROM 
 		        		TBL_ENDATTACHINFO 
 		        WHERE  
@@ -8028,7 +8046,9 @@
 		        SELECT 
 		        		'ATTDOC' TYPE  ,
 		                AttachDocName FILENAME  ,
-		                AttachDocURL FILEPATH  
+		                AttachDocURL FILEPATH  ,
+						3 AS TYPESN,
+	                	ATTACHSN AS VIEWSN
 		        FROM 
 		        		TBL_ENDAPRDOCATTACHINFO 
 		        WHERE  
@@ -8049,7 +8069,9 @@
 							'DOC' TYPE,
 							DOCTITLE FILENAME,
 							HREF FILEPATH,
-							CONCAT(OWNERID, '@', SN) AS DOCID
+							CONCAT(OWNERID, '@', SN) AS DOCID,
+							1 AS TYPESN,
+		                	1 AS VIEWSN
 						FROM
 							TBL_TMPAPRDOCINFO
 						WHERE
@@ -8063,7 +8085,9 @@
 							'ATT' TYPE,
 							DISPLAYNAME FILENAME,
 							ATTACHFILEHREF FILEPATH,
-							CONCAT(OWNERID, '@', SN) AS DOCID
+							CONCAT(OWNERID, '@', SN) AS DOCID,
+							2 AS TYPESN,
+	               	 		IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
 						FROM
 							TBL_TMPATTACHINFO
 						WHERE
@@ -8077,7 +8101,9 @@
 							'ATTDOC' TYPE,
 							ATTACHDOCNAME FILENAME,
 							ATTACHDOCURL FILEPATH,
-							CONCAT(OWNERID, '@', SN) AS DOCID
+							CONCAT(OWNERID, '@', SN) AS DOCID,
+							3 AS TYPESN,
+	                		ATTACHSN AS VIEWSN
 						FROM
 							TBL_TMPAPRDOCATTACHINFO
 						WHERE
@@ -8089,6 +8115,8 @@
 					A.DOCID = #v_PDOCID#
 			</isNotEqual>
 		</isNotEqual>
+			ORDER BY
+				TYPESN ASC, VIEWSN ASC
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getReceiveDocList" parameterClass="Map" resultClass="ApprGReceiveDocVO"> -->
@@ -17013,10 +17041,11 @@
 	<insert id="EzApprovalG.aprMakeTmp2Ing4" parameterClass="Map">
 		INSERT INTO 
 			TBL_APRATTACHINFO
-		( DOCID, ATTACHFILESN, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERJOBTITLE, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, PAGENUM, DISPLAYNAME, BODYATTACH, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID )
+		( DOCID, ATTACHFILESN, VIEWORDER, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERJOBTITLE, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, PAGENUM, DISPLAYNAME, BODYATTACH, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID )
      	( SELECT 
      		  #v_PDOCID# ,
               ATTACHFILESN ,
+              VIEWORDER ,
               ATTACHFILENAME ,
               ATTACHFILEHREF ,
               ATTACHFILESIZE ,
@@ -19250,10 +19279,11 @@
 	<insert id="EzApprovalG.insertTbAprAttachInfo" parameterClass="Map">
 	 	INSERT INTO 
 	 		TBL_APRATTACHINFO
-        ( DOCID, ATTACHFILESN, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERNAME2, ATTACHUSERJOBTITLE, ATTACHUSERJOBTITLE2, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, ATTACHUSERDEPTNAME2, PAGENUM, DISPLAYNAME, BODYATTACH, TENANT_ID, COMPANYID )
+        ( DOCID, ATTACHFILESN, VIEWORDER, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERNAME2, ATTACHUSERJOBTITLE, ATTACHUSERJOBTITLE2, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, ATTACHUSERDEPTNAME2, PAGENUM, DISPLAYNAME, BODYATTACH, TENANT_ID, COMPANYID )
         ( SELECT 
         		 #v_DOCID# ,
                  ATTACHFILESN ,
+                 VIEWORDER ,
                  ATTACHFILENAME ,
                  ATTACHFILEHREF ,
                  ATTACHFILESIZE ,
@@ -22752,9 +22782,9 @@
    <insert id="EzApprovalG.insertAprAttachInfo" parameterClass="map">
    		INSERT INTO 
    			   TBL_APRATTACHINFO 
-   			(DocID,       AttachFileSN,    AttachFileName,       AttachFileHref,    AttachFileSize,     AttachUserID,     AttachUserName,    AttachUserName2,        AttachUserJobTitle,     AttachUserJobTitle2,    AttachUserDeptID,    AttachUserDeptName,       AttachUserDeptName2,   PageNum,     DisplayName,    BodyAttach,     TENANT_ID,  COMPANYID) 
+   			(DocID,       AttachFileSN,  ViewOrder,  AttachFileName,       AttachFileHref,    AttachFileSize,     AttachUserID,     AttachUserName,    AttachUserName2,        AttachUserJobTitle,     AttachUserJobTitle2,    AttachUserDeptID,    AttachUserDeptName,       AttachUserDeptName2,   PageNum,     DisplayName,    BodyAttach,     TENANT_ID,  COMPANYID) 
    		VALUES 
-   			(#v_DOCID#, #v_ATTACHFILESN#, #v_ATTACHFILENAME#, #v_ATTACHFILEHREF#, #v_ATTACHFILESIZE#, #v_ATTACHUSERID#, #v_ATTACHUSERNAME#, #v_ATTACHUSERNAME2#, #v_ATTACHUSERJOBTITLE#, #v_ATTACHUSERJOBTITLE2#, #v_ATTACHUSERDEPTID#, #v_ATTACHUSERDEPTNAME#, #v_ATTACHUSERDEPTNAME2#, #v_PAGENUM#, #v_DISPLAYNAME#, #v_BODYATTACH#, #v_TENANTID#, #companyID#)
+   			(#v_DOCID#, #v_ATTACHFILESN#, #v_VIEWORDER#, #v_ATTACHFILENAME#, #v_ATTACHFILEHREF#, #v_ATTACHFILESIZE#, #v_ATTACHUSERID#, #v_ATTACHUSERNAME#, #v_ATTACHUSERNAME2#, #v_ATTACHUSERJOBTITLE#, #v_ATTACHUSERJOBTITLE2#, #v_ATTACHUSERDEPTID#, #v_ATTACHUSERDEPTNAME#, #v_ATTACHUSERDEPTNAME2#, #v_PAGENUM#, #v_DISPLAYNAME#, #v_BODYATTACH#, #v_TENANTID#, #companyID#)
    </insert>
    
    <update id="EzApprovalG.updateAprDocInfo" parameterClass="map">
@@ -23348,9 +23378,9 @@
    <insert id="EzApprovalG.insertCamjoAprAttachInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_APRATTACHINFO 
-   		(      DocID,  AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   		(      DocID,  AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
    		(SELECT 
-   			#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+   			#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
    		 FROM 
             TBL_APRATTACHINFO 
          WHERE 
@@ -23485,9 +23515,9 @@
    <insert id="EzApprovalG.insertDeptAssistAprAttachInfo" parameterClass="Map">
         INSERT INTO 
         	TBL_APRATTACHINFO 
-        (    DocID,     AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+        (    DocID,     AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
         (SELECT 
-        	#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID,  AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+        	#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID,  AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
          FROM 
          	TBL_APRATTACHINFO A 
          WHERE 
@@ -23774,11 +23804,11 @@
    </insert>
    
 	<insert id="EzApprovalG.insertTmpAttachInfo" parameterClass="Map">
-		INSERT INTO TBL_TMPATTACHINFO
-			(
+		INSERT INTO TBL_TMPATTACHINFO (
 			OWNERID,
 			SN,
 			ATTACHFILESN ,
+			VIEWORDER , 
 			ATTACHFILENAME ,
 			ATTACHFILEHREF ,
 			ATTACHFILESIZE ,
@@ -23799,10 +23829,11 @@
 				FILEOPENFLAG
 			</isEqual>
 			)
-		SELECT
+		SELECT (
 			#v_USERID#,
 			#v_SN#,
 			A.ATTACHFILESN ,
+			A.VIEWORDER , 
 			A.ATTACHFILENAME ,
 			A.ATTACHFILEHREF ,
 			A.ATTACHFILESIZE ,
@@ -23841,7 +23872,7 @@
 		AND
 			A.TENANT_ID = #v_TENANTID#
 		AND
-			A.COMPANYID = #companyID#
+			A.COMPANYID = #companyID#)
    </insert>
    
    <insert id="EzApprovalG.insertTmpExpAprLine" parameterClass="Map"> 
@@ -24142,9 +24173,9 @@
    <insert id="EzApprovalG.insertRejectEndAttachInfo" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_ENDATTACHINFO
-	     ( 	  	 DocID,      AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
+	     ( 	  	 DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
 	     ( SELECT 
-	     		#v_NEWDOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+	     		#v_NEWDOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
 	       FROM 
 	       		TBL_APRATTACHINFO A 
 	       WHERE  
@@ -24378,9 +24409,9 @@
    <insert id="EzApprovalG.insertReSendAprAttachInfo" parameterClass="Map">
    		 INSERT INTO 
    		 		TBL_APRATTACHINFO 
-   		 (		DocID,      AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID ) 
+   		 (		DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID ) 
    		 (SELECT 
-   		 		#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+   		 		#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
    		 FROM 
    		 		TBL_ENDATTACHINFO A  
    		 WHERE 
@@ -24730,9 +24761,9 @@
    <insert id="EzApprovalG.insertHesongAprAttachInfo" parameterClass="Map">
 		INSERT INTO
 				TBL_APRATTACHINFO 
-		(     DocID,   AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+		(     DocID,   AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
 		(SELECT 
-			#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach,TENANT_ID, COMPANYID 
+			#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach,TENANT_ID, COMPANYID 
 		 FROM 
             TBL_APRATTACHINFO A  
          WHERE 
@@ -25022,9 +25053,9 @@
    <insert id="EzApprovalG.insertGongRamAprAttachInfo" parameterClass="Map">
    			INSERT INTO 
    				TBL_APRATTACHINFO 
-   			(     DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle,  AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   			(     DocID, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle,  AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
    			(SELECT 
-            	#v_GONGRAMDOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName,AttachUserDeptName2,  AttachUserJobTitle,  AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+            	#v_GONGRAMDOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName,AttachUserDeptName2,  AttachUserJobTitle,  AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
             FROM 
             	TBL_ENDATTACHINFO A 
             WHERE 
@@ -25087,9 +25118,9 @@
 	<insert id="EzApprovalG.insertRegEndAttachInfo" parameterClass="Map">
 		INSERT INTO 
 			TBL_ENDATTACHINFO 
-		(		DocID,     AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize, AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID) 
+		(		DocID,     AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize, AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID) 
         ( SELECT 
-        		#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize ,AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID
+        		#v_DOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize ,AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID
           FROM 
           		TBL_APRATTACHINFO A 
           WHERE 
@@ -25181,9 +25212,9 @@
 			<isEqual property="v_FLAG" compareValue="APR">
 				INSERT INTO 
 					TBL_APRATTACHINFO 
-				(    DocID,    AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+				(    DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
 				(SELECT 
-					#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+					#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
 				 FROM 
 		            TBL_APRATTACHINFO 
 		         WHERE 
@@ -25196,9 +25227,9 @@
 		    <isNotEqual property="v_FLAG" compareValue="APR">
 				INSERT INTO 
 					TBL_APRATTACHINFO 
-				(    DocID,    AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+				(    DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
 				(SELECT 
-					#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+					#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
 				 FROM 
 		            TBL_ENDATTACHINFO 
 		         WHERE 
@@ -25542,9 +25573,9 @@
    	<insert id="EzApprovalG.insertDoSendAprAttachInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_APRATTACHINFO 
-   		(DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   		(DocID, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
    		(SELECT 
-   			#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+   			#v_DOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
    		 FROM 
    			TBL_ENDATTACHINFO A
    		 WHERE 
@@ -25929,9 +25960,9 @@
    	<insert id="EzApprovalG.insertApprovEndAttachInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_ENDATTACHINFO 
-   		(   DocID,     AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
+   		(   DocID,     AttachFileSN, ViewOrder, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
 		(SELECT 
-			#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID  
+			#v_DOCID#, AttachFileSN, ViewOrder, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID  
 		 FROM 
 		 	TBL_APRATTACHINFO A  
 		 WHERE  
@@ -26073,9 +26104,9 @@
    	<insert id="EzApprovalG.insertDocSendAprAttachInfo" parameterClass="Map">
    		INSERT INTO
    				TBL_APRATTACHINFO 
-   		(     DocID,    AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   		(     DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
    		(SELECT 
-   			#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID
+   			#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID
    		 FROM 
              TBL_APRATTACHINFO A 
          WHERE 
@@ -26397,9 +26428,9 @@
    	<insert id="EzApprovalG.insertGongRamSaveAprAttachInfo" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_APRATTACHINFO 
-   		(DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   		(DocID, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
    		(SELECT 
-            #v_gongRamDocID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+            #v_gongRamDocID#, VIEWORDER, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
          FROM 
          	TBL_APRATTACHINFO A 
          WHERE 
@@ -27522,9 +27553,9 @@
    <insert id="EzApprovalG.insertRejectEndAttachInfoS" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_ENDATTACHINFO
-	     ( 	  	 DocID,      AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
+	     ( 	  	 DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
 	     ( SELECT 
-	     		#v_NEWDOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+	     		#v_NEWDOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
 	       FROM 
 	       		TBL_APRATTACHINFO A 
 	       WHERE  
@@ -27538,9 +27569,9 @@
    <insert id="EzApprovalG.insertReuseAttachFileInfo" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_APRATTACHINFO
-	     ( 	  	 DocID,      AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
+	     ( 	  	 DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
 	     ( SELECT 
-	     		#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+	     		#v_DOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
 	       FROM 
 	       		TBL_ENDATTACHINFO A 
 	       WHERE  
@@ -28634,9 +28665,9 @@
 	    <insert id="EzApprovalG.insertRelayAttchInfo" parameterClass="Map">
 	  		INSERT INTO 
 	  			TBL_APRATTACHINFO 
-	  		(DOCID,  ATTACHFILESN, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME,  ATTACHUSERNAME2, ATTACHUSERJOBTITLE, ATTACHUSERJOBTITLE2,	ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, ATTACHUSERDEPTNAME2, PAGENUM,  DISPLAYNAME,     BODYATTACH,      COMPANYID, TENANT_ID)
+	  		(DOCID,  ATTACHFILESN, VIEWORDER, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME,  ATTACHUSERNAME2, ATTACHUSERJOBTITLE, ATTACHUSERJOBTITLE2,	ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, ATTACHUSERDEPTNAME2, PAGENUM,  DISPLAYNAME,     BODYATTACH,      COMPANYID, TENANT_ID)
 			VALUES 
-			(#NEWID#, #ATTACHSN#,   #ATTACHNAME#,   #ATTACHURL#,        '0',            '',            '',              '',              '',                 '',                 '',                '',                '',               '0',    #ATTACHDISPNAME#, #ATTACHTYPE#, #companyID#, #v_TENANTID#)
+			(#NEWID#, #ATTACHSN#, #VIEWORDER#,  #ATTACHNAME#,   #ATTACHURL#,        '0',            '',            '',              '',              '',                 '',                 '',                '',                '',               '0',    #ATTACHDISPNAME#, #ATTACHTYPE#, #companyID#, #v_TENANTID#)
 	  </insert>
 	  
 	  <insert  id="EzApprovalG.insertRelayAprReceiptProessInfo" parameterClass="Map">
