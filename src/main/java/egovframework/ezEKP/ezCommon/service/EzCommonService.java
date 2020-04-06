@@ -188,5 +188,9 @@ public interface EzCommonService {
 	public void addBeforeDocUrl() throws Exception;
 
 	public void setCompanyConfigs() throws Exception;
+	
+	public void createPwPolicyTable() throws Exception;
+	
+	public void createPwPolicyPatternTable() throws Exception;
 }
 

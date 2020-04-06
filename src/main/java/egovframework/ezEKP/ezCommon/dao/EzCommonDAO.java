@@ -1173,4 +1173,24 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.updateAddBeforeDocUrl");
 		}
 	}
+
+	public void createPwPolicyTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkPwPolicy");
+		} catch (Exception e) {
+			logger.debug("tbl_password_policy doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createPwPolicy");
+		}
+	}
+
+	public void createPwPolicyPatternTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkPwPolicyPattern");
+		} catch (Exception e) {
+			logger.debug("tbl_password_policy_Pattern doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createPwPolicyPattern");
+		}
+	}
 }

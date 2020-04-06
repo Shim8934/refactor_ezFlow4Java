@@ -2231,4 +2231,46 @@
 			BEFOREDOCURL VARCHAR2(255 CHAR)
 	</statement>
 	
+	<select id="EzCommonDAO.checkPwPolicy" resultClass="String">
+		<![CDATA[
+			SELECT 
+				TENANT_ID
+			FROM 
+				TBL_PASSWORD_POLICY
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createPwPolicy"> 
+		CREATE TABLE "tbl_password_policy" (
+		  "TENANT_ID" NUMBER NOT NULL,
+		  "COMPANY_ID" NVARCHAR2(100) NOT NULL,
+		  "ENG_CHAR_TYPE" NVARCHAR2(10) DEFAULT 'N',
+		  "USE_ENG_CAPITAL_LETTER" NVARCHAR2(10) DEFAULT 'N',
+		  "USE_ENG_SMALL_LETTER" NVARCHAR2(10) DEFAULT 'N',
+		  "USE_NUMBER" NVARCHAR2(10) DEFAULT 'N',
+		  "USE_SPECIAL_CHAR" NVARCHAR2(10) DEFAULT 'N',
+		  CONSTRAINT "PK2_TBL_PASSWORD_POLICY" PRIMARY KEY ("TENANT_ID","COMPANY_ID")
+		) 
+	</statement>
+	
+	<select id="EzCommonDAO.checkPwPolicyPattern" resultClass="String">
+		<![CDATA[
+			SELECT 
+				TENANT_ID
+			FROM 
+				TBL_PASSWORD_POLICY_PATTERN
+		    rownum = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createPwPolicyPattern"> 
+		CREATE TABLE "tbl_password_policy_pattern" (
+		  "TENANT_ID" NUMBER NOT NULL,
+		  "COMPANY_ID" NVARCHAR2(100) NOT NULL,
+		  "USE_PATTERN_COUNT" NUMBER(11) NOT NULL,
+		  "NUMBER_OF_CHAR" NUMBER(11) NOT NULL,
+		  CONSTRAINT "PK2_TBL_PASSWORD_POLICY_PATTERN" PRIMARY KEY ("TENANT_ID","COMPANY_ID","USE_PATTERN_COUNT")
+		) 
+	</statement>
+	
 </sqlMap>

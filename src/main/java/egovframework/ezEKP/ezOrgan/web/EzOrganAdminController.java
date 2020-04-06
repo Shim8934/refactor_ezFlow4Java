@@ -193,6 +193,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addIsBeforeDoc(); // 2020-02-24 홍승비 - 전자결재문서 편집전후여부 플래그 컬럼 추가
 	    	ezCommonService.addBeforeDocUrl(); // 2020-02-27 홍승비 - 전자결재문서 편집전후 문서경로 URL컬럼 추가
 	    	ezCommonService.setCompanyConfigs(); // 2020-03-30 김수아 - companyConfig 추가
+	    	ezCommonService.createPwPolicyTable(); // 2020-04-06 김수아 - tbl_password_policy table
+	    	ezCommonService.createPwPolicyPatternTable(); // 2020-04-06 김수아 - tbl_password_policy_Pattern table
     	} catch (Exception e) {
     		e.printStackTrace();
     	}

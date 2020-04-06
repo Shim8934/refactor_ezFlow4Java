@@ -1892,15 +1892,34 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			logger.debug("companyList size=" + companyList.size());
 			for (OrganDeptVO companyVo : companyList) {
 				String companyId = companyVo.getCn();
+				logger.debug("companyId=" + companyId);
 				for (Map<String, String> config : list) {
-					String propertyName = config.get("name");
-					String propertyValue = config.get("value");
-					
-					insertCompanyConfig(tenantId, companyId, propertyName, propertyValue);
+					try {
+						String propertyName = config.get("name");
+						String propertyValue = config.get("value");
+						
+						insertCompanyConfig(tenantId, companyId, propertyName, propertyValue);
+					} catch(Exception e) {
+						logger.debug("Config already.");
+					}
 				}
 			}
 		}
 		
 		logger.debug("setCompanyConfigs ended.");
+	}
+	
+	@Override
+	public void createPwPolicyTable()  throws Exception {
+		logger.debug("createPwPolicyTable started.");
+		ezCommonDAO.createPwPolicyTable();
+		logger.debug("createPwPolicyTable ended.");
+	}
+
+	@Override
+	public void createPwPolicyPatternTable()  throws Exception {
+		logger.debug("createPwPolicyPatternTable started.");
+		ezCommonDAO.createPwPolicyPatternTable();
+		logger.debug("createPwPolicyPatternTable ended.");
 	}
 }
