@@ -740,4 +740,46 @@
 			BEFOREDOCURL varchar(1020) DEFAULT NULL 
 	</statement>
 	
+	<select id="EzCommonDAO.checkAprAttachViewOrder">
+		SELECT 
+			VIEWORDER
+		FROM 
+			TBL_APRATTACHINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAprAttachViewOrder">
+		ALTER TABLE 
+			TBL_APRATTACHINFO
+		ADD COLUMN 
+			VIEWORDER  bigint(10) DEFAULT NULL 
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprEndAttachViewOrder">
+		SELECT 
+			VIEWORDER
+		FROM 
+			TBL_ENDATTACHINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAprEndAttachViewOrder">
+		ALTER TABLE 
+			TBL_ENDATTACHINFO
+		ADD COLUMN 
+			VIEWORDER  bigint(10) DEFAULT NULL 
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprTmpAttachViewOrder">
+		SELECT 
+			VIEWORDER
+		FROM 
+			TBL_TMPATTACHINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAprTmpAttachViewOrder">
+		ALTER TABLE 
+			TBL_TMPATTACHINFO
+		ADD COLUMN 
+			VIEWORDER  bigint(10) DEFAULT NULL 
+	</statement>
+	
 </sqlMap>
