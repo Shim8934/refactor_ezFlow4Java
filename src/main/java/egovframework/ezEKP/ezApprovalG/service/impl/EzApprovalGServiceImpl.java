@@ -8924,8 +8924,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (int k = 0; k < xmlDom.getElementsByTagName("ROW").getLength(); k++) {
 				size = xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(8).getTextContent().replace("bytes", "").trim();
 				
+				/* 2020-03-25 홍승비 - 첨부파일 저장 시점부터 순서값 VIEWORDER 삽입 */
 				map.put("v_DOCID", docID);
 				map.put("v_ATTACHFILESN", xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(2).getTextContent());
+				map.put("v_VIEWORDER", (xmlDom.getElementsByTagName("ROW").getLength() - k));
 				map.put("v_ATTACHFILENAME", xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(10).getTextContent());
 				map.put("v_ATTACHFILEHREF", xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(1).getTextContent());
 				map.put("v_ATTACHFILESIZE", size);
@@ -20287,7 +20289,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_LANGFILE", strLangFile);
 		map.put("v_LANGDOCUMENT", strLangDocument);
 		map.put("v_ORDERBY", orderOption1);
-		map.put("v_ORDERBYLENGHT", orderOption1.length());
+		map.put("v_ORDERBYLENGTH", orderOption1.length());
 		
 		if (orderOption1.length() > 0) {
 			map.put("v_ORDERBYVALUE", orderOption1.substring(0, 10).toLowerCase());
@@ -27722,6 +27724,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 						map.put("NEWID", strNewID);
 			    		map.put("ATTACHSN", domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent());
+			    		map.put("VIEWORDER", (i + 1));
 			    		map.put("ATTACHNAME", strAttachName);
 			    		map.put("ATTACHURL", strAttachURL);
 			    		map.put("ATTACHDISPNAME", strAttachDisplayName);
@@ -28410,7 +28413,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", userInfo.getTenantId());
 				
 		String contID = ezApprovalGDAO.getWhoKyulYN(map);
-
+		
 		return contID;
 	}
 	

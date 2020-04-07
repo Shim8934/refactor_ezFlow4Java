@@ -2537,7 +2537,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 /*.confirmation {line-height:normal !important;} style 제거 */
 .node_div .tree_arrow_up{background-position:0px -156px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px; cursor:pointer;}
 .admin_left_title { position:relative; height:52px; background:#3d8fea; font-family:arial, "arial"; line-height:52px; font-size:20px; font-weight:bold; color:#fff; padding: 0px 0px 0px 20px;} /* 타이틀 텍스트 공통영역 */
-.companySelect {margin-left:10px; height:31px; float:right; border:1px solid #bbb;}
+.companySelect {margin-left:10px; height:31px; /* float:right; */ border:1px solid #bbb;}
 
 /* icon16 */
 .icon16{ background:url(../images/ImgIcon/icon16.png) no-repeat !important; background-color: transparent !important; vertical-align: top !important; overflow: hidden; } /* icon16 통합아이콘 */
@@ -3580,7 +3580,9 @@ input[type=range]::-ms-tooltip {display: none;}
 /* 메일 리스트 완료/완료 취소 */
 .icon_mail_Confirm{ background:url(../images/ImgIcon/view-document-confirm.gif) no-repeat; background-size:16px 15px; width:16px; height:16px; display:inline-block; margin: 7px 4px 0px 4px; cursor:pointer;}
 .icon_mail_Cancle{ background:url(../images/ImgIcon/view-document-cancel.gif) no-repeat; background-size:16px 15px; width:16px; height:16px; display:inline-block; margin: 7px 4px 0px 4px; cursor:pointer;}
-tr.mail_confirm > td{position:relative; }
+tr.mail_confirm > td:nth-child(7) { text-decoration: line-through; } 
+/*tr.mail_confirm > td{position:relative; }
 tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute; top:51%; left:0; border-bottom:1px solid #48494B; width:100%;}
+*/
 
 #ContextMenuDiv > .popuplist{ width:170px; }

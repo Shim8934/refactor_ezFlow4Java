@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Community <spring:message code = 'ezCommunity.t565' /></title>
+		<title><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t565' /></title>
 	</head>
 	
 	<frameset rows="0,*" frameborder="0" border="0">
