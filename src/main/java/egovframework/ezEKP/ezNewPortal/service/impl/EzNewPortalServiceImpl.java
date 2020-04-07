@@ -925,7 +925,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		});
 		
-		if (startRow > birthCount) {
+		if (startRow >= birthCount) {
 			startRow = 0;
 		}
 		
