@@ -1054,12 +1054,12 @@
 	          <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>
 	          <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
 	          <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
+	          <c:if test="${useMailConfirm == 'YES'}">
+	          <li onClick="mailConfirm_flag_btn()"><span><spring:message code="ezEmail.ksa13" /></span></li>
+			  </c:if>
 	          <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="icon16 icon16_star"></span></li>
 	          <li id="trashBtn"><span class="icon16 icon16_delete" onClick="deleteWork(false)"></span></li>
 	          <li onClick="MailListRefresh()"><span class="icon16 icon16_refresh"></span></li>
-	          <c:if test="${useMailConfirm == 'YES'}">
-	          <li onClick="mailConfirm_flag_btn()"><span class="icon_mail_Confirm"></span><span>/</span></span><span class="icon_mail_Cancle"></span></li>
-			  </c:if>			 
 			 <!--  <li id="right">
 	          	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	           	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
@@ -1300,7 +1300,7 @@
 		    </tr>
 		    <c:if test="${useMailConfirm == 'YES'}">
 		    <tr id="mailConfirm">
-		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailConfirm_flag_btn();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/view-document-confirm.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.ksa11" /></span></td>
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailConfirm_flag_btn();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/view-document-confirm.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.ksa13" /></span></td>
 		    </tr>
 		    </c:if>
 		    <tr id="searchName">
