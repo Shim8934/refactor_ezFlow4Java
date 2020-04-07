@@ -296,7 +296,7 @@
                   },
                   click : function(event) {
                 	  
-                	  var selectList = $("#" + event.currentTarget.id + " tr[selected=true]");
+                	  var selectList = $("#" + event.currentTarget.offsetParent.id + " tr[selected=true]");
                       
                       $(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
                       $(".receiver_borderbox tr").removeClass("ui-sortable-helper");
