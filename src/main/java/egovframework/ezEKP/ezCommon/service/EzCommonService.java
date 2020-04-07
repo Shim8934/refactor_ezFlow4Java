@@ -198,5 +198,12 @@ public interface EzCommonService {
 	public void addIsBeforeDoc() throws Exception;
 
 	public void addBeforeDocUrl() throws Exception;
+	
+	public void addAprAttachViewOrder() throws Exception;
+	
+	public void addAprEndAttachViewOrder() throws Exception;
+	
+	public void addAprTmpAttachViewOrder() throws Exception;
+	
 }
 

@@ -956,10 +956,11 @@ function ListView() {
         //첨부파일일때 쪽수 컬럼 안보이기 위함 2018-04-26 강민수92
         var objTrArr = objTr.id.split("_");
         
+        /* 2020-03-23 홍승비 - 리스트뷰에 새로운 로우 추가 시, tr_select 함수에 this.id가 아닌 고정된 ID값을 보내던 부분 수정  */
         if (_rowonclick != null)
-            objTr.onclick = new Function("tr_select(\"" + objTr.id + "\", \"" + _thisID + "\", " + _rowonclick + ");");
+            objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
         else
-            objTr.onclick = new Function("tr_select(\"" + objTr.id + "\", \"" + _thisID + "\");");
+            objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\");");
 
         var oCells = GetElementsByTagName(addXml, "CELL");
 
@@ -1397,7 +1398,7 @@ function ListView() {
 
 //ROW 선택 함수
 function tr_select(pRowID, pTableID, callbackFunc) {
-
+	
     var oList = document.getElementById(pTableID);
     if (!oList)
         return;
@@ -1426,7 +1427,7 @@ function tr_select(pRowID, pTableID, callbackFunc) {
 
     //현재 클릭한 Row를 Select 한다.
     strAttribute = GetAttribute(oSourceTr, "selected");
-
+    
     if (strAttribute == "true") {
         oSourceTr.setAttribute("selected", "false");
         oSourceTr.style.backgroundColor = m_strColorDefault;

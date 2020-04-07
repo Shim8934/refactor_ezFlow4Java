@@ -1093,6 +1093,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         	map.put("strSQLCom", strSQLCom);  
         	map.put("strSQLAddjobCom", strSQLAddjobCom);
         	map.put("adminOrgan", adminOrgan);
+        	map.put("v_LANGDATA", pLangCode);
 
         	logger.debug("strSQL=" + strSQL);
         	logger.debug("strSQLCom=" + strSQLCom);

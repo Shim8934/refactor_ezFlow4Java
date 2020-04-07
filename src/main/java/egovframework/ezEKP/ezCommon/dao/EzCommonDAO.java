@@ -1236,4 +1236,34 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.updateAddBeforeDocUrl");
 		}
 	}
+
+	public void addAprAttachViewOrder() {
+		try {
+			select("EzCommonDAO.checkAprAttachViewOrder");
+		} catch (Exception e) {
+			logger.debug("tbl_aprattachinfo VIEWORDER column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAprAttachViewOrder");
+		}
+	}
+	
+	public void addAprEndAttachViewOrder() {
+		try {
+			select("EzCommonDAO.checkAprEndAttachViewOrder");
+		} catch (Exception e) {
+			logger.debug("tbl_endattachinfo VIEWORDER column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAprEndAttachViewOrder");
+		}
+	}
+	
+	public void addAprTmpAttachViewOrder() {
+		try {
+			select("EzCommonDAO.checkAprTmpAttachViewOrder");
+		} catch (Exception e) {
+			logger.debug("tbl_tmpattachinfo VIEWORDER column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAprTmpAttachViewOrder");
+		}
+	}
 }

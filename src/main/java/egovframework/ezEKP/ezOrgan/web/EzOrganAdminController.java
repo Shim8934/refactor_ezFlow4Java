@@ -204,6 +204,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addBoardManageTypeColumn(); //2019-09-19 홍승비 - 게시판 권한그룹 적용을 위한 TYPE 칼럼 추가
 	    	ezCommonService.createPersonalPopupUser();
 	    	ezCommonService.addSurveyMailSentFlagColumn(); // 2019-10-10 홍대표 - 설문 알림 메일 발송 상태 컬럼 추가
+	    	ezCommonService.addAprAttachViewOrder(); // 2020-03-23 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (진행문서)
+	    	ezCommonService.addAprEndAttachViewOrder(); // 2020-03-25 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (완료문서)
+	    	ezCommonService.addAprTmpAttachViewOrder(); // 2020-03-26 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (임시문서)
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
