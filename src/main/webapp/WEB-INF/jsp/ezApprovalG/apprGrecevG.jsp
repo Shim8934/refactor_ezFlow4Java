@@ -114,6 +114,8 @@
 			var docNumZeroCnt = "<c:out value = '${docNumZeroCnt}'/>";
 		    var nonElecRec = "<c:out value = '${isNonElecRec}'/>";
 		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
+		    
+			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 			
 		    function process_AfterOpen() {
 		        try {
@@ -981,10 +983,12 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
-		
-		        if (g_DraftFlag == "REDRAFT")
-		            delOpinionInfo();
-		
+		        
+				/* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+	            if (g_DraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
+	                delOpinionInfo();
+	            }
+				
 		        pDocTitle = trim(message.GetDocTitle());
 		        if (pDocTitle == "") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1695'/>";
