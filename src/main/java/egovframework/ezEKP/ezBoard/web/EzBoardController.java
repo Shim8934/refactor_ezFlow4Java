@@ -8918,7 +8918,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			pFileLimit = "2";
 		}
 		
-		int fileLimit = Integer.parseInt(pFileLimit) * 1024 * 1024;
+		long fileLimit = Long.parseLong(pFileLimit) * 1024 * 1024;
 		
 		fileSize = multiFile.getSize();
 		if (fileSize > fileLimit) {
