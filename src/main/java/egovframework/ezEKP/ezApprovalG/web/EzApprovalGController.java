@@ -1008,6 +1008,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
+		/* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+		String useRedraftOpinionKeep = ezCommonService.getTenantConfig("useRedraftOpinionKeep", userInfo.getTenantId());
+		
 		model.addAttribute("beforeDocID", beforeDocID);
 		model.addAttribute("isUsed", isUsed);
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -1037,6 +1040,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
 		model.addAttribute("apprReuseConfig", apprReuseConfig);
 		model.addAttribute("nonElecRec", nonElecRec);
+		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
 		
 		logger.debug("draftui ended.");
 
@@ -3684,7 +3688,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				File formFile = new File(realPath + formVO.getFormFileLocation());
 				File targetFile = new File(saveFileName);
 
-				logger.debug("formId = " + formId + ", formText.length = " + formText + ", formFile.length = " + formFile.length() + ", targetFile.length = " + targetFile.length());
+				logger.debug("formId = " + formId + ", formText.length = " + formText.length() + ", formFile.length = " + formFile.length() + ", targetFile.length = " + targetFile.length());
 
 				if (targetFile.exists()) {
 					//update
@@ -4897,6 +4901,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
+		/* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+		String useRedraftOpinionKeep = ezCommonService.getTenantConfig("useRedraftOpinionKeep", userInfo.getTenantId());
 		
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("docID", docID);
@@ -4918,7 +4924,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isNonElecRec", isNonElecRec);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
-
+		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
+		
 		logger.debug("recevGSusin ended.");
 		
 		return "ezApprovalG/apprGrecevGSusin";
@@ -5174,6 +5181,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 //			}
 //		}
 		
+		/* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+		String useRedraftOpinionKeep = ezCommonService.getTenantConfig("useRedraftOpinionKeep", userInfo.getTenantId());
+		
 		model.addAttribute("docID", docID);
 		model.addAttribute("dirYear", dirYear);
 		model.addAttribute("orgDocID", orgDocID);
@@ -5189,6 +5199,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("approvalROOT", approvalRoot);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
+		
 		logger.debug("recevG ended.");
 		
 		return "ezApprovalG/apprGrecevG";

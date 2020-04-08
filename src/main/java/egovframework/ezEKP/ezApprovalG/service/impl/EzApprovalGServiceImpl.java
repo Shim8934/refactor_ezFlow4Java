@@ -8582,7 +8582,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_USERDEPTID", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(7).getTextContent());
 				map.put("v_USERDEPTNAME", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(14).getTextContent());
 				map.put("v_USERDEPTNAME2", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(15).getTextContent());
-				map.put("v_OPINIONSN", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(8).getTextContent());
+				/* 2020-04-02 홍승비 - 의견순번 저장 시 중복에러 방지 처리 */
+				//map.put("v_OPINIONSN", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(8).getTextContent());
+				map.put("v_OPINIONSN", (docXML.getElementsByTagName("ROW").getLength() - k));
 				map.put("companyID", companyID);
 				map.put("v_TENANTID", tenantID);
 

@@ -161,6 +161,7 @@
 			var nonElecRecInfoXml = "";
 			var nonSepAttachLVXml = "";
 			var wAprMemberSN = "1";
+			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 			
 		    window.onload = function ()
 		    {
@@ -689,8 +690,11 @@
 				        }
 			            
 			            setDrafterAddress();
-			            if (pDraftFlag == "REDRAFT")
+			            
+			            /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+			            if (pDraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
 			                delOpinionInfo();
+			            }
 
 			            if (nonElecRec != "Y" && (LastSignSN == 1 || DraftLastFlag)) {
 							var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
