@@ -1958,6 +1958,8 @@ public class CommonUtil {
 			
             // 5. 패턴 사용 수, 글자수 확인
             if (pwPolicyPattern != null && pwPolicyPattern.size() > 0) {
+            	Boolean patternChk = true;
+            	
             	for (Map<String, Object> pwPattern : pwPolicyPattern) {
             		int patternCnt = (int) pwPattern.get("USE_PATTERN_COUNT");
             		int numberOfChar = (int) pwPattern.get("NUMBER_OF_CHAR");
@@ -1965,14 +1967,15 @@ public class CommonUtil {
 
             		if (patternCnt == iPatternCnt) {
             			 if (numberOfChar == 0) { // 사용불가
-                             bResult = false;
+            				 patternChk = false;
                          } else if (numberOfChar > pwStr.length()){
-                             bResult = false;
+                        	 patternChk = false;
                          } else {
-                             bResult = true;
+                        	 patternChk = true;
                          }
             		}
             	} // for end.
+            	bResult = patternChk;
             } else {
         		logger.debug("!!!! ");
             	bResult = true;
