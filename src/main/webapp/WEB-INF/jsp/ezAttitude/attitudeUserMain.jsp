@@ -2289,7 +2289,7 @@
 			    <!-- 2020-03-12  김정언 : 반반차 -->
 			    <c:if test="${A21typeInfo.isuse eq '1' }">
 			        <dl class="timeIcconDL">
-			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm02.png"></dt>
 			            <dd class="timeIconDD"><spring:message code="ezAttitude.kje04"/><span class="timeCountR" id="FA21">0</span></dd>
 			        </dl>
 			    </c:if>

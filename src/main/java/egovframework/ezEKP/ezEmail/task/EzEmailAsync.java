@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezEmail.task;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -10,6 +13,7 @@ import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.search.SearchTerm;
 
 import org.json.simple.JSONArray;
@@ -26,7 +30,11 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Component
 public class EzEmailAsync {
@@ -34,7 +42,10 @@ public class EzEmailAsync {
 
 	@Resource(name = "egovMessageSource")
 	private EgovMessageSource egovMessageSource;
-
+	
+	@Autowired
+	private CommonUtil commonUtil;
+	
 	@Autowired
 	private EzEmailService ezEmailService;
 
@@ -167,6 +178,75 @@ public class EzEmailAsync {
 				if (ia != null) {
 					ia.close();
 				}
+			}
+		}
+	}
+	
+	@Async
+	public void sendMail(List<SurveyParticipantVO> userList, SurveyVO survey, String offset) {
+		String creatorId = survey.getCreatorId();
+		String title = survey.getTitle();
+		long surveyId = survey.getSurveyId();
+		
+		String subject = "[전자설문 게시알림] " + title;
+		
+		String endDateUTC     = survey.getEndDate();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date timeUTC;
+		String endDateString = null ;
+		String realTimeZone = "";
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			timeUTC = formatter.parse(endDateUTC);
+			endDateString = new SimpleDateFormat("yyyy-MM-dd").format(timeUTC);
+			String timeZone = ezCommonService.selectUserGetTimeZone(survey.getCreatorId(), survey.getTenantId());
+			System.out.println("timezone" + timeZone);
+			String[] timeZoneArr = timeZone.split("\\|");
+			realTimeZone = " ( GMT | " + timeZoneArr[1] + " )";
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		for(int i = 0; i < userList.size(); i++) {
+			try {
+				SurveyParticipantVO userinfo = userList.get(i);
+				String userAccount = userinfo.getEmail();
+				
+				String userId = userAccount.split("@")[0];
+				String domainName = ezCommonService.getTenantConfig("DomainName", userinfo.getTenantId());
+				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
+				String lang = ezCommonService.selectUserGetLang(userId, tenantId);
+				Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
+				String creatorName = locale.toString().equals("ko") ? survey.getCreatorName1() : survey.getCreatorName2();
+				logger.debug("userAccount : " + userAccount + ", locale=" + locale);
+
+				if (i==0) {
+					sb.append("<span>새로운 설문이 추가되었습니다.</span><br><br>");
+					sb.append("<span>- 제목       : </span>");
+					sb.append("<span id='survey_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('../ezSurvey/surveyDetail.do?itemId=" + surveyId + "', '', 'width=835, height=900, scrollbars=yes, resizable=yes')\">");
+					sb.append(title + "</span><br>");
+					sb.append("<span>- 작성자    : " + creatorName + "</span><br>");
+					sb.append("<span>- 설문종료일 : " + endDateString + "</span>" + realTimeZone + "<br>");
+				}
+				
+				String content = commonUtil.createNotiMailContent(sb.toString(), tenantId, locale);
+				
+				InternetAddress from;
+				from = new InternetAddress(creatorId + "@" + domainName);
+				from.setPersonal(creatorName);
+				
+				String user = userId + "@" + domainName;
+				InternetAddress toMember = new InternetAddress();
+				String toMemberName = locale.toString().equals("ko") ? userinfo.getUserName1() : userinfo.getUserName2();
+				toMember.setAddress(user);
+				toMember.setPersonal(toMemberName);
+				
+				ezEmailService.sendMail(user, jspw, locale, from, new InternetAddress[]{ toMember }, null, null, subject, content.toString(), false, EmailImportance.NORMAL);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

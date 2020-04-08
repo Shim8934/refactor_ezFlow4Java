@@ -756,7 +756,7 @@
 			AND 
 			  	A.TENANT_ID = #v_TENANTID#
 			AND
-            	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
+            	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
             		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
           		AND
 					(A.APPRFLAG = 'Y' 
@@ -1189,14 +1189,14 @@
 	      				  ON 
 		      			  	A.TENANT_ID = P.TENANT_ID
 		      			  AND
-     			  			(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
+     			  			(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
      			  				OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 		      			  AND
 	      			 	 	A.BOARDID = P.BOARDID
 		      			  AND 
 		      			  	A.TENANT_ID = #v_TENANTID#
 						  AND
-		     			  	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
+		     			  	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
 		     			  		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 		      			  AND
 		      			  	(A.APPRFLAG = 'Y' 
@@ -1578,7 +1578,7 @@
 	              </isNotEmpty>
         			ORDER BY 
         				A.NotiNo ASC, 
-        				A.ParentWriteDate DESC, 
+        				A.ParentWriteDate ASC, 
         				A.WriteDate DESC
 	              ) T1 
 	          WHERE 
@@ -2274,10 +2274,17 @@
             	extensionAttribute1 = '0'
             AND 
             	extensionAttribute2 = '1'
+			AND (
+				(A.APPRFLAG <> 'C'  
+					AND 
+				A.APPRFLAG <> 'N')
+					OR 
+				A.APPRFLAG IS NULL
+			)
            	ORDER BY 
            		NOTINO DESC,
-                A.ParentWriteDate ASC,
-                A.WriteDate ASC
+                A.ParentWriteDate DESC,
+                A.WriteDate DESC
 		]]>
 	</select>
 	
@@ -4865,12 +4872,17 @@
 <!--     			ItemID = #itemID# -->
 <!-- 	</update> -->
 
+	<!-- 2020-03-19 홍승비 - 예약게시물 수정 시 WRITEDATE, STARTDATE 업데이트 추가 -->
 	<update id="EzBoardDAO.brdUpdateItem" parameterClass="BoardListVO">
 			UPDATE TBL_Board_Item
 		    SET 
 		    	UpdateDate = #writeDate#,
 		    	Importance = #importance#,
 	          	Title = #title#,
+			<isEqual property="isReserved" compareValue="true">
+				WRITEDATE = #writeDate#,
+	          	STARTDATE = #startDate#,
+			</isEqual>
 	          	EndDate = #endDate#,
 	          	Abstract = #ABSTRACT#,
 	          	Attachments = #hasAttach#,
@@ -5494,7 +5506,8 @@
 					AND
 						A.TENANT_ID = #v_TENANTID#
 					AND
-   						(A.WRITERCOMPANYID = #v_pCompanyID# OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(I.COMPANYID ) = '' OR I.COMPANYID IS NULL)
+   						(A.WRITERCOMPANYID = #v_pCompanyID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+   						 OR TRIM(I.COMPANYID ) = '' OR I.COMPANYID IS NULL)
 		]]>
 		<isEqual property="v_MODE" compareValue="1">
 			<![CDATA[ 

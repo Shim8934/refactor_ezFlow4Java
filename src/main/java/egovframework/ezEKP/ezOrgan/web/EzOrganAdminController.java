@@ -9,7 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLEncoder;
+import java.net.URLDecoder;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,13 +23,17 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.UUID;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -49,9 +53,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
@@ -63,6 +69,8 @@ import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -194,6 +202,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addBeforeDocUrl(); // 2020-02-27 홍승비 - 전자결재문서 편집전후 문서경로 URL컬럼 추가
 	    	ezCommonService.addBoardLikeFlag(); // 2019-04-05 홍승비 - 게시판 좋아요 기능 관련 테이블 생성 및 칼럼 추가
 	    	ezCommonService.createBoardLike();
+	    	ezCommonService.addSurveyAlamColums(); // 2019-10-07 이석화 - 설문 알림 컬럼 추가
+	    	ezCommonService.addBoardManageTypeColumn(); //2019-09-19 홍승비 - 게시판 권한그룹 적용을 위한 TYPE 칼럼 추가
+	    	ezCommonService.createPersonalPopupUser();
+	    	ezCommonService.addSurveyMailSentFlagColumn(); // 2019-10-10 홍대표 - 설문 알림 메일 발송 상태 컬럼 추가
+	    	ezCommonService.addAprAttachViewOrder(); // 2020-03-23 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (진행문서)
+	    	ezCommonService.addAprEndAttachViewOrder(); // 2020-03-25 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (완료문서)
+	    	ezCommonService.addAprTmpAttachViewOrder(); // 2020-03-26 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (임시문서)
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
@@ -259,6 +274,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", user.getTenantId());
 		
+		String packageType = commonUtil.getPackageType(user.getTenantId());
+		
+		model.addAttribute("packageType", packageType.toLowerCase());
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("useLetter", useLetter);
 		model.addAttribute("useLoginStop", useLoginStop);
@@ -4134,6 +4152,39 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    return resultMap;
 	}
 	
+	@RequestMapping(value = "/admin/ezOrgan/groupList.do", method = RequestMethod.GET)
+	public String groupList(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("groupList started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(
+				auth.getPrimary(), auth.getTenantId());
+
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (auth.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(auth.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", auth.getCompanyID());
+		model.addAttribute("useOcs", config.getProperty("config.USE_OCS"));
+		
+		logger.debug("groupList ended.");
+
+		return "admin/ezOrgan/groupList";
+	}
+
 	/**
 	 * 조직도관리 사용자정지 메뉴 화면 호출 함수
 	 */
@@ -4166,7 +4217,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				resultList.add(vo);
 			}
 		}
-		
+
 		model.addAttribute("companylist", resultList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("rollCheck", rollCheck);
@@ -4174,6 +4225,449 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    		logger.debug("loginStop ended");
    		
 		return "admin/ezOrgan/loginStop";
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/addGroup.do", method = RequestMethod.GET)
+	public String addGroup(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("addGroup started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String deptID = auth.getDeptID();
+		String cn = request.getParameter("cn") == null ? "" : request
+				.getParameter("cn");
+		String textName = request.getParameter("name") == null ? "" : request
+				.getParameter("name");
+		String useOcs = config.getProperty("config.USE_OCS");
+		String companyId = request.getParameter("companyId");
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(auth.getPrimary(), auth.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (auth.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(auth.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("list", resultList);
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("cn", cn);
+		model.addAttribute("textName",URLDecoder.decode(textName, "UTF-8"));
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("dept", auth.getDeptID());
+		
+		logger.debug("addGroup ended.");
+
+		return "admin/ezOrgan/addGroup";
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/addGroup2.do", method = RequestMethod.GET)
+	public String addGroup2(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("addGroup2 started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String deptID = auth.getDeptID();
+		String cn = request.getParameter("cn") == null ? "" : request
+				.getParameter("cn");
+		String textName = request.getParameter("name") == null ? "" : request
+				.getParameter("name");
+		String useOcs = config.getProperty("config.USE_OCS");
+		String companyId = request.getParameter("companyId");
+
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("cn", cn);
+		model.addAttribute("textName", textName);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("dept", auth.getDeptID());
+		
+		logger.debug("addGroup2 ended.");
+
+		return "admin/ezOrgan/addGroup2";
+	}
+	
+	public String getPermissionGroupID(){
+		// 권한그룹의 id를 숫자와 문자를 랜덤상수를 이용하여 생성
+		Random rnd = new Random();
+		StringBuffer sb = new StringBuffer();
+
+		for (int i = 0; i < 15; i++) {
+			if (rnd.nextBoolean()) {
+				sb.append((char) ((int) (rnd.nextInt(26)) + 97));
+			} else {
+				sb.append((rnd.nextInt(10)));
+			}
+		}
+		return sb.toString();
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/setPermissionGroup.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String setPermissionGroup(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, @RequestBody String bodyData) throws Exception {
+		logger.debug("setPermissionGroup started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		
+		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
+		String groupName = doc.getElementsByTagName("NAME").item(0).getTextContent();
+		String groupID = doc.getElementsByTagName("ID").item(0).getTextContent();
+		
+		NodeList memberIdList = doc.getElementsByTagName("MEMBERID");
+		
+		String result = "ERROR";
+		
+		try {
+			int tenantId = auth.getTenantId();
+			List<String> memberList = new ArrayList<String>();
+			
+			// 추가
+			if (groupID == null || groupID == "") {
+			
+				int userCheck = 1;
+				
+				while (userCheck > 0) {
+					groupID = getPermissionGroupID();
+					userCheck = ezOrganAdminService.userCheck(groupID, tenantId);
+				}
+				
+				for (int i = 0; i < memberIdList.getLength(); i++) {
+					memberList.add(memberIdList.item(i).getTextContent());
+				}
+				
+				result = ezOrganAdminService.insertPermissionGroup(groupID, groupName, auth.getId(), companyId, tenantId, memberList);
+			} else {
+				for (int i = 0; i < memberIdList.getLength(); i++) {
+					memberList.add(memberIdList.item(i).getTextContent());
+				}
+				
+				result = ezOrganAdminService.updatePermissionGroup(groupID, groupName, auth.getId(), companyId, tenantId, memberList);
+			}
+			
+			/* 2019-12-06 홍승비 - 권한그룹 추가, 수정 시 게시판의 트리캐시 삭제 동작 추가 */
+			ezBoardAdminService.trunkBoard(tenantId);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("setPermissionGroup ended.");
+
+		return result;
+	}
+	@RequestMapping(value = "/admin/ezOrgan/getPermissionGroupList.do", method = RequestMethod.POST)	
+	public String getPermissionGroupList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getPermissionGroupList started");
+	    
+		LoginVO user = commonUtil.userInfo(loginCookie);
+        int tenantID = user.getTenantId(); 
+        String strLang = user.getPrimary();
+        String offset = user.getOffset();
+        
+        logger.debug("tenantID=" + tenantID + ",strLang=" + strLang + ",offset=" + offset);
+		
+		int pPageRow = 20;
+   		int pPage = (request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1);
+   		String searchKeycode = (request.getParameter("searchKeycode") != null ? request.getParameter("searchKeycode") : "");
+   		String searchKeyword = (request.getParameter("searchKeyword") != null ? request.getParameter("searchKeyword") : "");
+   		String searchCompanyID = (request.getParameter("searchCompanyID") != null ? request.getParameter("searchCompanyID") : "");
+   		
+   		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
+   		
+   		logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);
+   		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
+   		
+   		int totalCount = ezOrganAdminService.getPermissionGroupListCount(tenantID, searchKeycode, searchKeyword, searchCompanyID);
+   		int totalPage = 1;
+
+		if (totalCount > 0) {
+			if (totalCount > pPageRow) {
+				totalPage = totalCount / pPageRow;
+				
+				if (totalCount % pPageRow != 0) {
+				    totalPage++;
+				}
+			}
+		}
+		
+		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
+		
+		List<OrganGroupVO> list = ezOrganAdminService.getPermissionGroupList(pPage, pPageRow, tenantID, offset, searchKeycode, searchKeyword, searchCompanyID);
+		
+   		model.addAttribute("lang", strLang);
+   		model.addAttribute("list", list);
+   		model.addAttribute("pPage", pPage);
+   		model.addAttribute("totalPage", totalPage);
+   		model.addAttribute("totalCount", totalCount);
+		
+   		logger.debug("getPermissionGroupList ended");
+   		
+		return "json";
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/getPermissionGroupInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getPermissionGroupInfo(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, @RequestBody String bodyData) throws Exception {
+		logger.debug("getPermissionGroupInfo started.");
+
+		String returnData = "";
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId(); 
+		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String groupID = doc.getElementsByTagName("GROUPID").item(0).getTextContent();
+		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
+
+		try {
+			List<OrganGroupVO> list = ezOrganAdminService.getPermissionGroupInfo(groupID, tenantID, companyID);
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("<DATA>");
+			sb.append("<GROUPNAME>" + list.get(0).getGroupName() + "</GROUPNAME>");
+			for (OrganGroupVO vo : list) {
+				String pClass = (String) vo.getMemberType();
+				String pCn = (String) vo.getMemberID();
+
+				if (pClass.equalsIgnoreCase("DEPT")) {
+					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
+					if (dept != null) {
+						sb.append("<ROW>");
+						sb.append("<CLASS>" + pClass + "</CLASS>");
+						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+						sb.append("<DISPLAYNAME>"
+								+ commonUtil.cleanValue(dept.getDisplayName())
+								+ "</DISPLAYNAME>");
+						sb.append("<MAIL>"
+								+ commonUtil.cleanValue(dept.getMail())
+								+ "</MAIL>");
+						sb.append("<COMPANY>"
+								+ commonUtil.cleanValue(dept.getExtensionAttribute2())
+								+ "</COMPANY>");
+						sb.append("<DEPT>"
+								+ egovMessageSource.getMessage("ezOrgan.t68",
+										locale) + "</DEPT>");
+						sb.append("<TITLE>"
+								+ egovMessageSource.getMessage("ezOrgan.t68",
+										locale) + "</TITLE>");
+						sb.append("<SUBDEPTYN>"
+								+ vo.getSubDeptYN() + "</SUBDEPTYN>");
+						sb.append("</ROW>");
+					} else {
+						
+					}
+
+				} else if (pClass.equalsIgnoreCase("USER")) {
+					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
+					if (user != null) {
+						sb.append("<ROW>");
+						sb.append("<CLASS>" + pClass + "</CLASS>");
+						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+						sb.append("<DISPLAYNAME>"
+								+ commonUtil.cleanValue(user.getDisplayName())
+								+ "</DISPLAYNAME>");
+						sb.append("<MAIL>"
+								+ commonUtil.cleanValue(user.getMail())
+								+ "</MAIL>");
+						sb.append("<COMPANY>"
+								+ commonUtil.cleanValue(user.getPhysicalDeliveryOfficeName())
+								+ "</COMPANY>");
+						sb.append("<DEPT>"
+								+ commonUtil.cleanValue(user.getDescription())
+								+ "</DEPT>");
+						sb.append("<TITLE>"
+								+ commonUtil.cleanValue(user.getTitle())
+								+ "</TITLE>");
+						sb.append("</ROW>");
+					} else {
+						
+					}
+				} else if (pClass.equalsIgnoreCase("JIKWI")) {
+					OrganJobVO jikwiVO =  ezOrganAdminService.getTitleInfo_group("001", pCn, (String) vo.getMemberCompanyID(), tenantID);
+					OrganDeptVO dept = ezOrganService.getDeptInfo(jikwiVO.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
+					
+					if (jikwiVO != null) {
+						sb.append("<ROW>");
+						sb.append("<CLASS>" + pClass + "</CLASS>");
+						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+						sb.append("<DISPLAYNAME>"
+								+ commonUtil.cleanValue(jikwiVO.getDisplayName())
+								+ "</DISPLAYNAME>");
+						sb.append("<COMPANY>"
+								+ commonUtil.cleanValue(jikwiVO.getCompanyID())
+								+ "</COMPANY>");
+						sb.append("<COMPANYNAME>"
+								+ commonUtil.cleanValue(dept.getDisplayName())
+								+ "</COMPANYNAME>");
+						sb.append("</ROW>");
+					}
+				} else if (pClass.equalsIgnoreCase("JIKCHEK")) {
+					OrganJobVO jikwiVO =  ezOrganAdminService.getTitleInfo_group("002", pCn, vo.getMemberCompanyID(), tenantID);
+					OrganDeptVO dept = ezOrganService.getDeptInfo(jikwiVO.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
+					
+					if (jikwiVO != null) {
+						sb.append("<ROW>");
+						sb.append("<CLASS>" + pClass + "</CLASS>");
+						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+						sb.append("<DISPLAYNAME>"
+								+ commonUtil.cleanValue(jikwiVO.getDisplayName())
+								+ "</DISPLAYNAME>");
+						sb.append("<COMPANY>"
+								+ commonUtil.cleanValue(jikwiVO.getCompanyID())
+								+ "</COMPANY>");
+						sb.append("<COMPANYNAME>"
+								+ commonUtil.cleanValue(dept.getDisplayName())
+								+ "</COMPANYNAME>");
+						sb.append("</ROW>");
+					}
+				}
+			}
+
+			sb.append("</DATA>");
+			returnData = sb.toString();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("getPermissionGroupInfo ended.");
+
+		return returnData;
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/deletePermissionGroupList.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String deletePermissionGroupList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	    logger.debug("deletePermissionGroupList started.");
+	    
+        LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+        String result = "ERROR";
+        
+        try {
+        	int tenantID = userInfo.getTenantId();        
+            String groupList = request.getParameter("groupList");
+            String companyID = request.getParameter("companyID");
+            
+            logger.debug("tenantID=" + tenantID + ",cnList=" + groupList);
+            ezOrganAdminService.deletePermissionGroup(groupList, companyID, tenantID);
+            result = "OK";
+            
+            /* 2019-12-06 홍승비 - 권한그룹 삭제 시 게시판의 트리캐시 삭제 동작 추가 */
+			ezBoardAdminService.trunkBoard(tenantID);
+            
+        } catch (Exception e) {
+			e.printStackTrace();
+			result = "ERROR";
+		}
+		
+		logger.debug("deletePermissionGroupList ended.");
+
+		return result;
+	}
+	
+	
+	@RequestMapping(value="/admin/ezOrgan/getGroupList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getGroupList(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		logger.debug("getGroupList started.");
+		
+		String returnData = "";
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+			List<OrganGroupVO> list = ezOrganAdminService.getGroupList(userInfo.getTenantId(), userInfo.getCompanyID());
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (OrganGroupVO vo : list) {
+				sb.append("<ROW><CELL>");
+				
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getGroupName()));
+				sb.append("</VALUE>");
+				
+				sb.append("<DATA1>");
+				sb.append(commonUtil.cleanValue(vo.getGroupID()));
+				sb.append("</DATA1>");
+				
+				sb.append("</CELL></ROW>");
+			}
+			
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("getGroupList ended.");
+		
+		return returnData;
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/getJikwiList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getJikwiList(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		logger.debug("getJikwiList started.");
+		
+		String companyID = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+		String type = request.getParameter("type");
+		logger.debug("companyID = " + companyID + ", type = " + type);
+		String result = "";
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+			result = ezOrganAdminService.getTitleList_group(type, companyID, userInfo.getTenantId(), userInfo.getLang());
+			
+		} catch (Exception e) {
+			result = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("getJikwiList ended.");
+		
+		return result;
 	}
 	
 	@RequestMapping(value="/admin/ezOrgan/normalUserList.do", method=RequestMethod.GET)
@@ -4315,6 +4809,86 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/* 2019-09-19 홍승비 - 게시판 권한설정용 > 그룹권한리스트 호출 시 하위부서 허용/불가 여부도 함께 가져옴 */
+	@RequestMapping(value="/admin/ezOrgan/getGroupListBoard.do", produces = "text/xml; charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getGroupListBoard(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("getGroupListBoard started.");
+		
+		String returnData = "";
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String isAllGroupBoard = request.getParameter("isAllGroupBoard");
+			if (isAllGroupBoard == null) {
+				isAllGroupBoard = "";
+			}
+			
+			// 셀렉트박스로 선택한 회사가 존재한다면, 그 값을 쿼리에 전달한다.
+			String pCompanyID = userInfo.getCompanyID();
+			String selectedCompanyID = request.getParameter("selectedCompanyID");
+			if (selectedCompanyID != null && !selectedCompanyID.trim().equals("")) {
+				pCompanyID = selectedCompanyID;
+			}
+
+			List<OrganGroupVO> list = ezOrganAdminService.getGroupListBoard(userInfo.getTenantId(), pCompanyID, isAllGroupBoard);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (OrganGroupVO vo : list) {
+				sb.append("<ROW><CELL>");
+				
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getGroupName()));
+				sb.append("</VALUE>");
+				
+				sb.append("<DATA1>");
+				sb.append(commonUtil.cleanValue(vo.getGroupID()));
+				sb.append("</DATA1>");
+				
+				sb.append("</CELL></ROW>");
+			}
+			
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("getGroupListBoard ended.");
+		return returnData;
+	}
+	
+	/* 2019-09-25 홍승비 - 게시판 권한설정용 > 직위,직책 리스트 호출 시 다국어 이름도 함께 가져옴 */
+	@RequestMapping(value="/admin/ezOrgan/getJikwiListBoard.do", produces = "text/xml; charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getJikwiListBoard(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("getJikwiListBoard started.");
+		
+		String companyID = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+		String type = request.getParameter("type");
+		logger.debug("companyID = " + companyID + ", type = " + type);
+		
+		String result = "";
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+			result = ezOrganAdminService.getTitleListBoard(type, companyID, userInfo.getTenantId(), userInfo.getLang());
+			
+		} catch (Exception e) {
+			result = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("getJikwiListBoard ended.");
+		return result;
+	}
+	
 	@RequestMapping(value = "/admin/ezOrgan/deleteStopUser.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
 	@ResponseBody
 	public String deleteLoginStopUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req) throws Exception{
@@ -4328,8 +4902,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		String[] cnArr = req.getParameterValues("cn[]");
-		String companyId = req.getParameter("companyId");
-		
+		String companyId = req.getParameter("companyId");		
 		String result = "";
 		
 		try {
@@ -4342,6 +4915,77 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("deleteStopUser ended.");
 		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/permissionGroupUserListView.do", method = RequestMethod.GET)
+	public String permissionGroupUserListView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
+		logger.debug("permissionGroupUserListView started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String groupID = request.getParameter("groupID");
+		String companyID = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+		
+		logger.debug("groupID = " + groupID);
+		logger.debug("companyID = " + companyID);
+		
+		int tenantID = userInfo.getTenantId();
+		List<OrganGroupVO> groupUserList = ezOrganAdminService.getPermissionGroupInfo(groupID, tenantID, companyID);
+		
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		
+		for (OrganGroupVO vo : groupUserList) {
+			String pClass = (String) vo.getMemberType();
+			String pCn = (String) vo.getMemberID();
+			
+			Map<String, String> map = new HashMap<String, String>();
+			
+			if (pClass.equalsIgnoreCase("DEPT")) {
+				OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
+				if (dept != null) {
+					map.put("type", egovMessageSource.getMessage("main.t75", locale));
+					map.put("company", dept.getExtensionAttribute3());
+					map.put("dept", dept.getDisplayName());
+					map.put("name", "-");
+				}
+
+			} else if (pClass.equalsIgnoreCase("USER")) {
+				OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
+				if (user != null) {
+					map.put("type", egovMessageSource.getMessage("ezSchedule.t999", locale));
+					map.put("company", user.getCompany());
+					map.put("dept", user.getDescription());
+					map.put("name", user.getDisplayName() + "(" + pCn + ")");
+				}
+				
+			} else if (pClass.equalsIgnoreCase("JIKWI")) {
+				OrganJobVO jikwiVO =  ezOrganAdminService.getTitleInfo_group("001", pCn, (String) vo.getMemberCompanyID(), tenantID);
+				OrganDeptVO dept = ezOrganService.getDeptInfo(jikwiVO.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
+				
+				if (jikwiVO != null) {
+					map.put("type", egovMessageSource.getMessage("ezEmail.t28", locale));
+					map.put("company", dept.getExtensionAttribute3());
+					map.put("dept", "-");
+					map.put("name", jikwiVO.getDisplayName());
+				}
+			} else if (pClass.equalsIgnoreCase("JIKCHEK")) {
+				OrganJobVO jikwiVO =  ezOrganAdminService.getTitleInfo_group("002", pCn, vo.getMemberCompanyID(), tenantID);
+				OrganDeptVO dept = ezOrganService.getDeptInfo(jikwiVO.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
+				
+				if (jikwiVO != null) {
+					map.put("type", egovMessageSource.getMessage("ezEmail.t281", locale));
+					map.put("company", dept.getExtensionAttribute3());
+					map.put("dept", "-");
+					map.put("name", jikwiVO.getDisplayName());
+				}
+			}
+			list.add(map);
+		}
+		
+		model.addAttribute("list", list);
+		
+		logger.debug("permissionGroupUserListView ended.");
+		
+		return "admin/ezOrgan/permissionGroupUserListView";
 	}
 	
 	/*

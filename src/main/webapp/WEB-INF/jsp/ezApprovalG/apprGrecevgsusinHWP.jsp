@@ -124,6 +124,8 @@
 		    var docNumZeroCnt = "<c:out value = '${docNumZeroCnt}'/>";
 			//원문정보공개
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
+			
+			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -602,9 +604,11 @@
 			            OpenAlertUI(pAlertContent);
 			            return;
 			        }
-			
-			        if (g_DraftFlag == "REDRAFT")
+			        
+			        /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+			        if (g_DraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
 			            delOpinionInfo();
+			        }
 			
 			        if (HwpCtrl.CheckFieldExist("doctitle"))
 			            pDocTitle = trim(HwpCtrl.GetFieldText("doctitle"));

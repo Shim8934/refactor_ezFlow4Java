@@ -535,7 +535,7 @@
 		    function mov_dept_CompleteWithTimeout(rtnValue) {
 		    	 setTimeout(function() {
 		    		 mov_dept_Complete(rtnValue);
-	                }, 10);
+	                }, 100);
 		    }
 		    
 		    function GetDeptFullPath(DeptID, topid){
@@ -1502,7 +1502,7 @@
 			function move_user_CompleteWithTimeout(rtnValue) {
 				setTimeout(function() {
 					move_user_Complete(rtnValue);
-				}, 10);
+				}, 100);
 			}
 
 			// 사원이동 수행

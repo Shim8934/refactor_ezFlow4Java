@@ -6,7 +6,7 @@ public class MenuAuthVO {
 	private String userId; // 권한 관련 사용자 아이디
 	private String userName; // 사용자 이름
 	private String userDeptName; // 사용자 부서 이름
-	private boolean userType; // 사용자 or 부서 분리 -- 사용자(true), 부서(false)
+	private int userType; // 사용자 or 부서 분리 -- 사용자(1), 부서(0), 직위(2), 직책(3), 권한그룹(4)
 	private boolean accessYN; // 접근 가능(true), 접근 불가(false)
 
 	public int getMenuId() {
@@ -40,12 +40,12 @@ public class MenuAuthVO {
 	public void setUserDeptName(String userDeptName) {
 		this.userDeptName = userDeptName;
 	}
-
-	public boolean isUserType() {
+	
+	public int getUserType() {
 		return userType;
 	}
 
-	public void setUserType(boolean userType) {
+	public void setUserType(int userType) {
 		this.userType = userType;
 	}
 

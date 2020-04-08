@@ -154,6 +154,7 @@ function attitude_annual_conn(formType, status) {
       })
       attitudeTypeList = attitudeTypeList.slice(0,-1);
       
+//2020-03-12 김정언
       if(attitudeTypeList === "A21"){
     	  $("input[id^=time]").each(function() {
     		  var number = Number($(this).attr("id").split("time")[1]);
@@ -583,7 +584,7 @@ function plusBtnClick(trId) {
    + "                     <input data-reform_date_picker_flag='1' data-reform_flag='1' data-reform_on_click='dateControlClick(&quot;date" + dateLength + "&quot;)' id='date" + dateLength + "' onclick='return reform_onClickHandler(event);' onkeyup='reform_onKeyUpHandler(event);' readonly='readonly' style='width: 145px; height: 100%; box-sizing: border-box; border: none; text-align: right; font-family: 굴림; font-size: 18px; color: transparent; background-color: transparent;' type='text' value='' viewer-args-build='{0} 년 {1} 월 {2} 일' viewer-args-regexp='/(&#92;d{4})-(&#92;d{1,2})-(&#92;d{1,2})/'>"
    + "                     <input data-reform_time_picker_flag='1' data-reform_flag='1' data-reform_on_click='timeControlClick(&quot;time" + timeLength + "&quot;)' id='time" + timeLength + "' onclick='return reform_onClickHandler(event);' onkeyup='reform_onKeyUpHandler(event);' style='display:none; width: 40px; height: 100%; box-sizing: border-box; border: none; text-align: center; font-family: 굴림; font-size: 16px; color: transparent; background-color: transparent;' type='text' value='' viewer-args-build=' {0} 시' viewer-args-regexp='/(&#92;d{2}):(&#92;d{2})/'>"
    + "                     <input data-reform_date_picker_flag='1' data-reform_flag='1' data-reform_on_click='dateControlClick(&quot;date" + (dateLength + 1) + "&quot;)' id='date" + (dateLength + 1) + "' onclick='return reform_onClickHandler(event);' onkeyup='reform_onKeyUpHandler(event);' readonly='readonly' style='width: 100px; height: 100%; box-sizing: border-box; border: none; text-align: center; font-family: 굴림; font-size: 18px; margin-left: 15px; color: transparent; background-color: transparent;' type='text' value='' viewer-args-build='{0} 년 {1} 월 {2} 일' viewer-args-regexp='/(&#92;d{4})-(&#92;d{1,2})-(&#92;d{1,2})/'>"
-  + "                     <input data-reform_time_picker_flag='1' data-reform_flag='1' data-reform_on_click='timeControlClick(&quot;time" + (timeLength + 1) + "&quot;)' id='time" + (timeLength + 1) + "' onclick='return reform_onClickHandler(event);' onkeyup='reform_onKeyUpHandler(event);' style='display:none; width: 40px; height: 100%; box-sizing: border-box; border: none; text-align: center; font-family: 굴림; font-size: 16px; color: transparent; background-color: transparent;' type='text' value='' viewer-args-build=' {0} 시' viewer-args-regexp='/(&#92;d{2}):(&#92;d{2})/'>"
+  + "                      <input data-reform_time_picker_flag='1' data-reform_flag='1' data-reform_on_click='timeControlClick(&quot;time" + (timeLength + 1) + "&quot;)' id='time" + (timeLength + 1) + "' onclick='return reform_onClickHandler(event);' onkeyup='reform_onKeyUpHandler(event);' style='display:none; width: 40px; height: 100%; box-sizing: border-box; border: none; text-align: center; font-family: 굴림; font-size: 16px; color: transparent; background-color: transparent;' type='text' value='' viewer-args-build=' {0} 시' viewer-args-regexp='/(&#92;d{2}):(&#92;d{2})/'>"
    + "                     <span id='date-additional" + annualDataLength + "' selectId='" + controlID1 + "' style='visibility: hidden;'> </span>"
    + "                  </p>"
    + "               </td>"
@@ -682,25 +683,29 @@ for (var i = 0; i < 2; i++) {
 
 //timepicker
 for (var i = 0; i < 2; i++) {
-   var controlId = "time" + (timeLength + i);
-   var controlElement = document.getElementById(controlId);
-   if (controlElement != null) {
-      controlElement.removeAttribute("class");
-      
-      $(controlElement).timepicker({
-             timeFormat: "H:i"
-      });
+	var controlId = "time" + (timeLength + i);
+	var controlElement = document.getElementById(controlId);
+	if (controlElement != null) {
+		controlElement.removeAttribute("class");
 
-      if ($(controlElement).val() === "") {
-    	  var currentTime = new Date().getHours();
-    	  if(i == 0){
-    		  $(controlElement).timepicker('setTime', new Date(0,0,0,currentTime,0,0));    		  
-    	  }else{
-    		  var plusTime = currentTime + 2;
-    		  $(controlElement).timepicker('setTime', new Date(0,0,0,plusTime,0,0));
-    	  }
-      }  
-   }
+		$(controlElement).timepicker({
+			timeFormat: "H:i",
+			step : 60,
+			minTime : '8:00am',
+			maxTime : '8:00pm'
+		});
+
+		if ($(controlElement).val() === "") {
+			var currentTime = new Date().getHours();
+			var plusTime = currentTime + 2;
+
+			if(i == 0) {
+				$(controlElement).timepicker('setTime', new Date(0,0,0,currentTime,0,0));
+			} else {
+				$(controlElement).timepicker('setTime', new Date(0,0,0,plusTime,0,0));
+			}	  
+		}  
+	}
 }
 
 setInputViewer(document.getElementById("reform-title"+annualDataLength));
@@ -1268,18 +1273,24 @@ function halfOff(attitudeType , halfOffViewer, halfOffReformId) {
 		$("#" + halfOffReformId).attr("viewer-format","{0}{2} ~ {1}{3}");
 		$("#" + halfOffReformId).attr("viewer",halfOffViewer2[0] + "," + halfOffViewer2[1] + "," + halfOffViewer3[0] + "," + halfOffViewer3[1]);
 
+		var sTime = "";
+		var eTime = "";
+		var plusTime = "";
+
 		//시작시간 선택
 		$("#" + halfOffViewer3[0]).change(function(e){
-			var sTime = $(e.target).timepicker('getTime');
-			var plusTime = new Date(sTime).getHours() + 2;
+			sTime = $(e.target).timepicker('getTime').getHours();
+			plusTime = sTime + 2;
 			$("#" + halfOffViewer3[1]).timepicker('setTime', new Date(0,0,0,plusTime,0,0));
 		});
 
 		//종료시간 선택
 		$("#" + halfOffViewer3[1]).change(function(e){
-			var eTime = $(e.target).timepicker('getTime');
-			var minusTime = new Date(eTime).getHours() - 2;
-			$("#" + halfOffViewer3[0]).timepicker('setTime', new Date(0,0,0,minusTime,0,0));
+			eTime = $(e.target).timepicker('getTime').getHours();
+			if(eTime <= sTime){
+				$("#" + halfOffViewer3[1]).timepicker('setTime', new Date(0,0,0,plusTime,0,0));
+				parent.parent.OpenAlertUI("시작 시간을 종료 시간 보다 빠르게 지정해 주십시오.");
+			}
 		});
 
 	} else {
@@ -1294,4 +1305,16 @@ function halfOff(attitudeType , halfOffViewer, halfOffReformId) {
 function hideTime(){
 	$("#reform-title").attr("viewer-format","{0} ~ {1}");
 	$("#reform-title").attr("viewer","date1,date2");
+
+	var currentTime = new Date().getHours();
+	var plusTime = currentTime + 2;
+	$("#time1").timepicker('setTime', new Date(0,0,0,currentTime,0,0));
+	$("#time2").timepicker('setTime', new Date(0,0,0,plusTime,0,0));
+
+	$("#time1, #time2").timepicker({
+		timeFormat: "H:i",
+		step : 60,
+		minTime : '8:00am',
+		maxTime : '8:00pm'
+	});
 }

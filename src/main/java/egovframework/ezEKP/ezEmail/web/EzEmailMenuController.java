@@ -283,10 +283,18 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String spamSniperUrl = ezCommonService.getTenantConfig("spamSniperUrl", loginInfo.getTenantId());
 		String spamSniperAuthKey = ezCommonService.getTenantConfig("spamSniperAuthKey", loginInfo.getTenantId());
 		String spamSniperAuthIv = ezCommonService.getTenantConfig("spamSniperAuthIv", loginInfo.getTenantId());
-		
+		String spamSniperUnixTimeStr = ezCommonService.getTenantConfig("spamSniperUnixTime", loginInfo.getTenantId());
+		long spamSniperUnixTime;
+
+		try {
+			spamSniperUnixTime = Long.parseLong(spamSniperUnixTimeStr);
+		} catch (NumberFormatException ex) {
+			spamSniperUnixTime = 0;
+		}
+
 		String cryptResult = "";
-		if(useSpamSniper.equals("YES")){
-			cryptResult =  ezEmailUtil.spamSniperEnc(loginInfo.getEmail(), spamSniperAuthKey, spamSniperAuthIv);
+		if (useSpamSniper.equals("YES")) {
+			cryptResult = ezEmailUtil.spamSniperEnc(loginInfo.getEmail(), spamSniperAuthKey, spamSniperAuthIv, spamSniperUnixTime);
 			model.addAttribute("cryptResult", cryptResult);
 		}
 		
@@ -2008,8 +2016,16 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String mailAddress = ezOrganService.getPropertyValue(shareId, "mail", loginInfo.getTenantId());
 		String spamSniperAuthKey = ezCommonService.getTenantConfig("spamSniperAuthKey", loginInfo.getTenantId());
 		String spamSniperAuthIv = ezCommonService.getTenantConfig("spamSniperAuthIv", loginInfo.getTenantId());
-		
-		String cryptResult = ezEmailUtil.spamSniperEnc(mailAddress, spamSniperAuthKey, spamSniperAuthIv);
+		String spamSniperUnixTimeStr = ezCommonService.getTenantConfig("spamSniperUnixTime", loginInfo.getTenantId());
+		long spamSniperUnixTime;
+
+		try {
+			spamSniperUnixTime = Long.parseLong(spamSniperUnixTimeStr);
+		} catch (NumberFormatException ex) {
+			spamSniperUnixTime = 0;
+		}
+
+		String cryptResult = ezEmailUtil.spamSniperEnc(mailAddress, spamSniperAuthKey, spamSniperAuthIv, spamSniperUnixTime);
 		
 		logger.debug("shareId=" + shareId + ",mailAddress=" + mailAddress + ",cryptResult" + cryptResult);
 		

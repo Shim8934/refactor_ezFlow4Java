@@ -32,6 +32,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
@@ -2217,6 +2218,55 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public List<OrganUserVO> getDeptAddJobUserList(Map<String, Object> map) throws Exception {
 		return (List<OrganUserVO>) list("EzOrganAdminDAO.getDeptAddJobUserList", map);
 	}
+	
+	public void setPermissionGroupList(Map<String, Object> map) throws Exception {
+		insert("EzOrganAdminDAO.setPermissionGroupList", map);
+	}
+	
+	public void updatePermissionGroupList(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updatePermissionGroupList", map);
+	}
+	
+	public void setPermissionGroupInfo(Map<String, Object> map) throws Exception {
+		insert("EzOrganAdminDAO.setPermissionGroupInfo", map);
+	}
+	
+	public void deletePermissionGroupList(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deletePermissionGroupList", map);
+    }
+	
+	public void deletePermissionGroupInfo(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deletePermissionGroupInfo", map);
+    }
+	
+	public int getPermissionGroupListCount(Map<String, Object> map) throws Exception {
+        return (int)select("EzOrganAdminDAO.getPermissionGroupListCount", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganGroupVO> getPermissionGroupList(Map<String, Object> map) throws Exception {
+        return (List<OrganGroupVO>) list("EzOrganAdminDAO.getPermissionGroupList", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganGroupVO> getPermissionGroupInfo(Map<String, Object> map) throws Exception {
+        return (List<OrganGroupVO>) list("EzOrganAdminDAO.getPermissionGroupInfo", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganGroupVO> getGroupList(Map<String, Object> map) throws Exception {
+        return (List<OrganGroupVO>) list("EzOrganAdminDAO.getGroupList", map);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganJobVO> getTitleList_group(Map<String, Object> map) throws Exception {
+		return (List<OrganJobVO>) list("EzOrganAdminDAO.selectTitleList_group", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganGroupVO> getGroupListBoard(Map<String, Object> map) throws Exception {
+        return (List<OrganGroupVO>) list("EzOrganAdminDAO.getGroupListBoard", map);
+    }
 	
 	@SuppressWarnings("unchecked")
 	public List<OrganLoginStopUserVO> getLoginStopUserList(Map<String, Object> map) throws Exception {

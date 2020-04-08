@@ -64,6 +64,8 @@ import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
@@ -132,11 +134,11 @@ public class EzNewPortalGWController {
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGSerivce;
 	
+	@Autowired
+	private EzSurveyService ezSurveyService;
+
 	@Resource(name = "EzWebFolderService_y")
 	private EzWebFolderService_y ezWebFolderService_y; 
-	
-	@Autowired
-	private EzSurveyService ezSurveyService; 
 
 	@Autowired
 	private Properties config;
@@ -174,7 +176,7 @@ public class EzNewPortalGWController {
 			
 			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
 			LOGGER.debug("primaryLang=" + primaryLang);
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + ", portletLang : " + portletLang + ", deptPath : " + deptPath);
 			
 			// 사용자 설정 테마/프레임 가져오기
 			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath, portletLang);
@@ -705,6 +707,7 @@ public class EzNewPortalGWController {
 			String langType = info.getLang();
 			String logoType = "P";
 			JSONObject data = new JSONObject();
+			
 			/**
 			 * 1) 로고
 			 */
@@ -826,7 +829,14 @@ public class EzNewPortalGWController {
 			if (useCommunity.equals("NO")) {
 				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
-
+			
+			// 20200326 조진호 - 패키지 타입이 메일인 경우 메일,주소록을 제외한 모든 메뉴 제거
+			String packageType = commonUtil.getPackageType(info.getTenantId());
+			
+			if (packageType.equals(CommonUtil.PT_MAIL)) {
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && !vo.getMenuCode().equals("mail") && !vo.getMenuCode().equals("address")));
+			}
+			
 			data.put("menuList", menuList);
 			/**
 			 * 3) 유틸메뉴 - 관리자 권한의 유무 - DB에서 가져오지 말고 그냥 다 출력
@@ -859,7 +869,7 @@ public class EzNewPortalGWController {
 			/**
 			 * 4) 팝업 공지
 			 */
-			List<PersonalGetPopUpListUserVO> popupNotiList = ezPersonalService.getPopUpListUser(companyId, tenantId, offset);
+			List<PersonalGetPopUpListUserVO> popupNotiList = ezPersonalService.getPopUpListUserWithAuth(companyId, tenantId, offset, userId, deptId);
 			data.put("popupNotiList", popupNotiList);
 			
 			data.put("logoUrl", logoUrl);
@@ -4795,6 +4805,39 @@ public class EzNewPortalGWController {
 	}
 	
 	/**
+	 * 포탈개인화 G/W [GET] 직위직책 리스트 불러오기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/authorities/titles/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getTitleList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getTitleList started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String type = request.getParameter("type");
+			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			
+			List<OrganJobVO> titleList = ezNewPortalService.getTitleList(type, tenantId, companyId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", titleList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezNewPortal G/W getTitleList ended.");
+		return result;
+	}
+
+	/**
 	 * 포탈개인화 G/W [GET] 포틀릿 - 웹폴더 포틀릿 조회
 	 */
 	@SuppressWarnings("unchecked")
@@ -4847,7 +4890,6 @@ public class EzNewPortalGWController {
 			String lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
 			
 			Map<String, Object> themeAuth = ezNewPortalService.getThemeAuth(companyId, tenantId, themeId, lang);
-
 			JSONObject data = new JSONObject();
 			
 			data.put("themeAuthsY", themeAuth.get("themeAuthsY"));
@@ -4893,7 +4935,39 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
+		
 		LOGGER.debug("ezNewPortal G/W updateThemeAuth ended.");
+		return result;
+	}
+	
+	/**
+	 * 포탈개인화 G/W [GET] 권한그룹 리스트 불러오기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/authorities/groups/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getGroupList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getGroupList started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			
+			List<OrganGroupVO> groupList = ezNewPortalService.getGroupList(tenantId, companyId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", groupList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getGroupList ended.");
 		return result;
 	}
 	

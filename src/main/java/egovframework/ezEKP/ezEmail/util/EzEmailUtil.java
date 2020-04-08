@@ -1693,7 +1693,8 @@ public class EzEmailUtil {
 			// multipart/related가 중첩되어 있는 경우
 			// 이전 multipart/related 파트에서 이미 text/html 파트가 발견된 경우가 있어
 			// 이를 확인함.
-			boolean htmlPartFound = (boolean)extraMap.get("htmlPartFound");
+			boolean htmlPartFound = (boolean) (extraMap.get("htmlPartFound") == null ? false : extraMap.get("htmlPartFound"));
+			
 			
 			// text/html 파트 혹은 multipart/alternative 파트가 발견되지 않았을 경우엔 
 			// text/plain 파트를 찾는다.
@@ -4974,7 +4975,7 @@ public class EzEmailUtil {
 
 				logger.debug("Mail send success.");
 
-				if (isSentSave) {
+				if (isSentSave && "YES".equalsIgnoreCase(config.getProperty("config.SentMailStoredInSentbox", "YES"))) {
 					// 유저 로케일이 없을시 시스템 로케일로 설정
 					if (locale == null) {
 						locale = Locale.getDefault();
@@ -5008,15 +5009,15 @@ public class EzEmailUtil {
 		}
 	}
 
-    public String spamSniperEnc(String emailAddress, String spamSniperAuthKey, String spamSniperAuthIv) throws Exception {
-    	logger.debug("spamSniperEnc start");
-    	String cryptResult = null;
+	public String spamSniperEnc(String emailAddress, String spamSniperAuthKey, String spamSniperAuthIv, long spamSniperUnixTime) throws Exception {
+		logger.debug("spamSniperEnc start");
+		String cryptResult = null;
 		String authKey = spamSniperAuthKey;
 		String authIv = spamSniperAuthIv;
 		String algorithm = "AES";
 		String mode = "CBC";
-		
-		if(!(emailAddress.equals("") || authKey.equals("") || authIv.equals(""))) {
+
+		if (!(emailAddress.equals("") || authKey.equals("") || authIv.equals(""))) {
 			byte[] secretKey = authKey.getBytes();
 
 			String transform = String.format("%s/%s/%s", algorithm, mode, "PKCS5Padding");
@@ -5026,18 +5027,23 @@ public class EzEmailUtil {
 			byte[] iv = authIv.getBytes();
 			int len = 16;
 
-			SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey , 0, len, algorithm);
+			SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey, 0, len, algorithm);
 			cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(iv, 0, len));
+			String encryptTarget = emailAddress;
 
-			byte[] encrypted = cipher.doFinal(emailAddress.getBytes());
+			if (spamSniperUnixTime > 0) {
+				encryptTarget += ".." + (System.currentTimeMillis() / 1000L + spamSniperUnixTime);
+			}
+
+			byte[] encrypted = cipher.doFinal(encryptTarget.getBytes());
 			cryptResult = new String(Hex.encode(encrypted));
 		}
-    	
-		logger.debug("emailAddress=" + emailAddress + ",spamSniperAuthKey=" + spamSniperAuthKey 
-				+ ",spamSniperAuthIv=" + spamSniperAuthIv);
+
+		logger.debug("emailAddress={},spamSniperAuthKey={},spamSniperAuthIv={},spamSniperUnixTime={}",
+				emailAddress, spamSniperAuthKey, spamSniperAuthIv, spamSniperUnixTime);
 		logger.debug("spamSniperEnc end");
-    	return cryptResult;
-    }
+		return cryptResult;
+	}
     
     // 메일 완료/완료취소 flag
     public boolean hasMailConfirmFlag(Message message) throws MessagingException {

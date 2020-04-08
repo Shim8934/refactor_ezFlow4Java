@@ -32,6 +32,7 @@ import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -327,6 +328,11 @@ public class EzSurveyController extends EgovFileMngUtil {
 			model.addAttribute("listType", listType);
 		}
 		
+		model.addAttribute("cn",user.getId());
+		model.addAttribute("companyId",user.getCompanyID());
+		model.addAttribute("dept",user.getDeptID());
+		model.addAttribute("lang",user.getLang());
+		
 		logger.debug("jspGetSelectUesrPage ended");
 		return "ezSurvey/user/selectUser";
 	}
@@ -499,6 +505,43 @@ public class EzSurveyController extends EgovFileMngUtil {
 		resultObj = surveyRestService.getSurveyItems(request, user.getId(), pageMode, title, creatorName, startDate, endDate, column, order, srchMode, srchOption, listCntSize, currentPage, userMode);
 		
 		logger.debug("jsonGetSurveyItems end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezSurvey/getSurveyPopupItems.do", method=RequestMethod.GET)
+	@ResponseBody
+	public String jsonGetSurveyPopupItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonGetSurveyPopupItems start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String mode          = request.getParameter("mode")        != null ? request.getParameter("mode")        : "";
+		String startDate     = request.getParameter("startDate")   != null ? request.getParameter("startDate")   : "";
+		String endDate       = request.getParameter("endDate")     != null ? request.getParameter("endDate")     : "";
+		JSONObject userObj = surveyRestService.getUserInformation(request, user.getId());
+		
+		JSONObject resultObj = new JSONObject();
+		
+		resultObj = surveyRestService.getSurveyPopupItems(request, user.getId(), mode, startDate, endDate);
+		
+		String cookieValue = "";
+		
+		Cookie[] cookies = request.getCookies();
+		
+		if (cookies != null) {
+			for (int i = 0; i < cookies.length; i++) {
+				Cookie cookie = cookies[i];
+				String cookieName = cookie.getName();
+				
+				if (cookieName.equals("SURV_POPUP" + "_" + user.getId())) {
+					cookieValue = cookies[i].getValue();
+				}
+			}
+			
+			if (cookieValue != null && !cookieValue.equals("")) {
+				resultObj.remove("surveyPopupList");
+			}
+		}
+		
+		logger.debug("jsonGetSurveyPopupItems end");
 		return resultObj.toString();
 	}
 	
