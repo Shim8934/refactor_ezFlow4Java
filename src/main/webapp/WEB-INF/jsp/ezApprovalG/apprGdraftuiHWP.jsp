@@ -264,6 +264,10 @@
 	                    window.focus();
 	                    HwpCtrl.focus();
 	
+					    if (GetDocumentElement(HwpCtrl, "CONNROOT", true) != "") {
+									document.getElementById('btnSaveServer').style.display = 'none';
+	                        }
+	
 	                    if (pFormHref == "") {
 	                        hideProgress();
 	                        getExtInfo();
