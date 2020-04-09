@@ -946,6 +946,15 @@ reformUseProc.onLoadHandler = function() {
 					}
 					
 					controlElement.setAttribute(eventName, "reformUseProc.defaultChangeHandler(this);");
+					
+					if (controlElement.type == "textarea") {
+						controlElement.addEventListener("blur", function(e) {
+							var target = e.target;
+							if (target.hasAttribute("value")) {
+								target.innerHTML = target.getAttribute("value");
+							}
+						});
+					}
 				}
 			}
 		}
