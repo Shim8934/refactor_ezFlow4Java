@@ -265,9 +265,21 @@
 	                    window.focus();
 	                    HwpCtrl.focus();
 	
-					    if (GetDocumentElement(HwpCtrl, "CONNROOT", true) != "") {
-									document.getElementById('btnSaveServer').style.display = 'none';
-	                        }
+
+						var targetText = GetDocumentElement(HwpCtrl, "CONNROOT", true);
+
+						if (targetText != null && targetText.length > 0 ) {
+
+							  var xmlData = loadXMLString(targetText);
+    	
+    						  var connNodes = GetChildNodes(xmlData.documentElement);
+
+							  if(connNodes.length > 0) {
+								  document.getElementById('btnSaveServer').style.display = 'none';		
+							  }
+
+							
+						} 
 	
 	                    if (pFormHref == "") {
 	                        hideProgress();
