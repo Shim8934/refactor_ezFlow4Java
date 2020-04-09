@@ -1718,7 +1718,7 @@
 			<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
 	        <c:if test="${oneLineReplyFlag == '2'}">
 	        	<div style='height:auto;'>
-					<table class="mainlist" style="width:100%; min-width:745px; margin-top:1px;" >
+					<table class="mainlist" style="width:100%; min-width:745px; margin-top:8px;" >
 						<tr>
 							<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
 								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
@@ -1728,7 +1728,7 @@
 							</th>
 						</tr>
 					</table>
-					<table id="commentList" style="width:100%; min-width:745px; margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+					<table id="commentList" style="width:100%; min-width:745px; margin-top:2px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 				</div>
 	        </c:if>
 	        <%-- 본문하단 댓글영역 끝 --%>

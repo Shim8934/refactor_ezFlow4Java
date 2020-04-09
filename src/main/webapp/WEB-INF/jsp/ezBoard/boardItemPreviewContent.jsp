@@ -452,7 +452,7 @@
 						</tr>
 					</c:if>
 				</table>
-				<table id="commentList" style="width:100%;margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+				<table id="commentList" style="width:100%;margin-top:2px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 			</div>
         </c:if>
         <%-- 본문하단 댓글영역 끝 --%>

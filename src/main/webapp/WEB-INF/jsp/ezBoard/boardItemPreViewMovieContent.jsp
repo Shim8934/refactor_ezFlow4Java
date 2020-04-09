@@ -93,6 +93,15 @@
 				/* 2019-04-08 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩과 height 조절 */
 	            if (likeFlag != null && likeFlag == "Y") {
 					$("#outerTable").css("min-height", "550px");
+					
+					/* 2020-04-09 홍승비 - 하단댓글과 좋아요 동시 사용 시 스타일 수정 */
+					if (OneLineReplyFlag == "2") {
+						$("#likeDiv").css("margin-top", "28px");
+					}
+	            } else { // 좋아요 미사용 + 하단댓글 사용
+					if (OneLineReplyFlag == "2") {
+						$("#onelineDiv").css("margin-top", "40px");
+					}
 	            }
 	        });
 		    
@@ -378,10 +387,30 @@
 				                    </tr>
 				            	</table>
 				            </td>
+				            
+							<%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>
+							<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+								<td style="text-align:center; display:block;">
+									<div id="likeDiv" style="text-align:center; margin-top:40px;" colspan="3">
+									  	<span class="likeButton" style="cursor:pointer; margin-left:-7px;" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
+										  	<c:choose>
+										  		<c:when test="${isLikeChecked == 'Y'}">
+										  			<img id="likeButtonImg" src="/images/like_on.png"/>
+										  		</c:when>
+										  		<c:otherwise>
+										  			<img id="likeButtonImg" src="/images/like_off.png"/>
+										  		</c:otherwise>
+										  	</c:choose>
+									  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${likeCount > 0}"> (<c:out value="${likeCount}"/>)</c:if></span>
+									  	</span>
+									</div>
+								</td>
+							</c:if>		
+				            
 				            <%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
 				            <td>
 						        <c:if test="${boardInfo.oneLineReply == '2' && mode != 'temp'}">
-						        	<div style='height:auto; margin-top:55px; padding-bottom: 15px;'>
+						        	<div id="onelineDiv" style='height:auto; margin-top:25px;'>
 										<table class="mainlist" style="width:100%; min-width:732px; margin-top:1px;" >
 											<tr>
 												<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
@@ -392,7 +421,7 @@
 												</th>
 											</tr>
 										</table>
-										<table id="commentList" style="width:100%; min-width:732px; margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+										<table id="commentList" style="width:100%; min-width:732px; margin-top:2px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 									</div>
 						        </c:if>
 				            </td>
@@ -402,21 +431,5 @@
 			    </td>
 			  </tr>
 		</table>
-		<%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>
-		<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
-			<div style="text-align:center; margin-top:-45px; margin-bottom:40px;" colspan="3">
-			  	<span class="likeButton" style="cursor:pointer; margin-left:-7px;" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
-				  	<c:choose>
-				  		<c:when test="${isLikeChecked == 'Y'}">
-				  			<img id="likeButtonImg" src="/images/like_on.png"/>
-				  		</c:when>
-				  		<c:otherwise>
-				  			<img id="likeButtonImg" src="/images/like_off.png"/>
-				  		</c:otherwise>
-				  	</c:choose>
-			  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${likeCount > 0}"> (<c:out value="${likeCount}"/>)</c:if></span>
-			  	</span>
-			</div>
-		</c:if>			
 	</body>
 </html>

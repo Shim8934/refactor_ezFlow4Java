@@ -194,6 +194,14 @@
  		            	getBoardComment();
  		            }
 		            
+		            /* 2020-04-09 홍승비 - 좋아요 버튼 사용+하단댓글 미사용 시, 좋아요+첨부파일 영역 패딩 상하 조절 */
+		            if (likeFlag != null && likeFlag == "Y") {
+						if (OneLineReplyFlag != "2") {
+							document.getElementById("likeDiv").style.padding = "5px 0px 0px 0px";
+							document.getElementById("attachTD").style.padding = "0px";
+						}
+		            }
+		            
 					if (gubun != "2") {
 		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
 		                    self.resizeTo(760, (800 + addheight));
@@ -255,13 +263,7 @@
 		                Span.innerText = strWriterName;
 		                Div.appendChild(Span);
 		                document.getElementById("WriteUserNM").innerHTML = Div.outerHTML;
-		            }
-		            
-		            /* 2019-04-05 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩 상하 조절 */
-		            if (likeFlag != null && likeFlag == "Y") {
-		            	document.getElementsByClassName("pad1")[1].style.padding = "0px";
-						document.getElementById("pad1").style.padding = "10px 0px 0px 0px";
-		            }
+		            } 
 		            
 		            if (g_progresswin) g_progresswin.close();
 		        }
@@ -1613,7 +1615,25 @@
 		  <tr>
 		    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
 		        <iframe id="message" class="viewbox" name="message" style="padding:0; width:calc(100% - 2px); height:495px; overflow:auto; border:1px solid #ddd"></iframe>
-		        <%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
+				
+				<%-- 2019-04-05 홍승비 - 본문 하단, 첨부파일/한줄댓글 상단에 좋아요 버튼 추가 --%>
+				<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+					<div id="likeDiv" style="text-align:center; padding:5px 0px 7px 0px;">	
+					  	<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
+						  	<c:choose>
+						  		<c:when test="${isLikeChecked == 'Y'}">
+						  			<img id="likeButtonImg" src="/images/like_on.png"/>
+						  		</c:when>
+						  		<c:otherwise>
+						  			<img id="likeButtonImg" src="/images/like_off.png"/>
+						  		</c:otherwise>
+						  	</c:choose>
+						  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
+					  	</span>
+					</div>
+				</c:if>
+				
+				<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
 		        <c:if test="${boardPropertyVO.oneLineReply == '2'}">
 		        	<div style='height:auto;'>
 						<table class="mainlist" style="width:100%" >
@@ -1655,35 +1675,16 @@
 								</tr>
 							</c:if>
 						</table>
-						<table id="commentList" style="width:100%;margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+						<table id="commentList" style="width:100%;margin-top:2px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 					</div>
 		        </c:if>
 		        <%-- 본문하단 댓글영역 끝 --%>
 		    </td>
 		  </tr>
-		  
-		<%-- 2019-04-05 홍승비 - 본문 하단, 첨부파일/한줄댓글 상단에 좋아요 버튼 추가 --%>
-		<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
-			<tr>
-				<td style="text-align:center;">
-				  	<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
-					  	<c:choose>
-					  		<c:when test="${isLikeChecked == 'Y'}">
-					  			<img id="likeButtonImg" src="/images/like_on.png"/>
-					  		</c:when>
-					  		<c:otherwise>
-					  			<img id="likeButtonImg" src="/images/like_off.png"/>
-					  		</c:otherwise>
-					  	</c:choose>
-					  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
-				  	</span>
-				</td>
-			</tr>
-		</c:if>
-		  
+			
 		<%-- 2020-02-13 홍승비 - 사용하지 않는 한줄댓글 코드 제거(본문하단 댓글으로 대체), 첨부파일 영역 확장 --%>
 		  <tr>
-		    <td class="pad1" style="vertical-align: top;">
+		    <td class="pad1" id="attachTD" style="vertical-align: top;">
 		        <table class="file">
 		        <tr>
 		          <th><spring:message code='ezBoard.t10025' /></th>
