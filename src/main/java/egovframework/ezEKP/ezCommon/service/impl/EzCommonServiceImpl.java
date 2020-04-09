@@ -1266,6 +1266,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void createBoardLike() throws Exception{
+		ezCommonDAO.createBoardLike();
+	}
+	
+	@Override
+	public void addBoardLikeFlag() throws Exception{
+		ezCommonDAO.addBoardLikeFlag();
+	}
+	
 	public void addMsgInMailSearch() throws Exception {
 		ezCommonDAO.addMsgInMailSearch();
 	}

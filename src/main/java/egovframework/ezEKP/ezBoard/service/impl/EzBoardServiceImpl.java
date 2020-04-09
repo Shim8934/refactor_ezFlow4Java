@@ -248,9 +248,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	/* 2018-10-29 홍승비 - 그룹사게시판의 게시물리스트 헤더에 반드시 회사ID 포함하도록 수정 (익명게시판 제외) */
 	@Override
-	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception {
+	public List<BoardListHeaderVO> getListHeader(LoginVO userInfo, BoardVO ezBoardVO) throws Exception {
 		logger.debug("getListHeader started");
 
+		List<BoardListHeaderVO> listHeaderListVO;
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_LISTCODE", ezBoardVO.getBoardType());
@@ -269,9 +270,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 			}
 		}
+		
+		listHeaderListVO = ezBoardDAO.getListHeader(map);
+		
+		/* 2019-04-04 홍승비 - 좋아요 사용 게시판의 경우 임의로 헤더 조정 */
+		if (ezBoardVO.getLikeFlag() != null && ezBoardVO.getLikeFlag().equals("Y")) {
+			BoardListHeaderVO likeAddListHeaderVO = new BoardListHeaderVO();
+			likeAddListHeaderVO.setColName("LIKECOUNT");
+			likeAddListHeaderVO.setName(egovMessageSource.getMessage("ezBoard.hsb10", userInfo.getLocale()));
+			likeAddListHeaderVO.setWidth("50");
+			listHeaderListVO.add(likeAddListHeaderVO);
+		}
 
 		logger.debug("getListHeader ended");
-		return ezBoardDAO.getListHeader(map);
+		return listHeaderListVO;
 	}
 
 	@Override
@@ -730,9 +742,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	/* 2018-10-29 홍승비 - 그룹사게시판의 게시물리스트 헤더에 반드시 회사ID 포함하도록 수정 (익명게시판 제외) */
 	@Override
-	public List<BoardListHeaderVO> getListHeaderBoardID(BoardVO ezBoardVO) throws Exception {
+	public List<BoardListHeaderVO> getListHeaderBoardID(LoginVO userInfo, BoardVO ezBoardVO) throws Exception {
 		logger.debug("getListHeaderBoardID started");
-
+		
+		List<BoardListHeaderVO> listHeaderListVO;
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PBOARDID", ezBoardVO.getBoardId());
@@ -757,11 +770,22 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		if (tempString != null && !tempString.equals("")) {
 			logger.debug("getListHeaderBoardID ended");
-			return ezBoardDAO.getListHeaderBoardID(map);
+			listHeaderListVO = ezBoardDAO.getListHeaderBoardID(map);
 		} else {
 			logger.debug("getListHeaderBoardID ended");
-			return ezBoardDAO.getListHeader(map); 
+			listHeaderListVO = ezBoardDAO.getListHeader(map);
 		}
+		
+		/* 2019-04-04 홍승비 - 좋아요 사용 게시판의 경우 임의로 헤더 조정 */
+		if (ezBoardVO.getLikeFlag() != null && ezBoardVO.getLikeFlag().equals("Y")) {
+			BoardListHeaderVO likeAddListHeaderVO = new BoardListHeaderVO();
+			likeAddListHeaderVO.setColName("LIKECOUNT");
+			likeAddListHeaderVO.setName(egovMessageSource.getMessage("ezBoard.hsb10", userInfo.getLocale()));
+			likeAddListHeaderVO.setWidth("50");
+			listHeaderListVO.add(likeAddListHeaderVO);
+		}
+		
+		return listHeaderListVO;
 	}
 
 	@Override
@@ -2004,6 +2028,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			sb.append("<ExtensionAttribute9>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute9()) + "</ExtensionAttribute9>");
 			sb.append("<ExtensionAttribute10>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
 			sb.append("<BoardID>" + commonUtil.cleanValue(itemInfo.getBoardID()) + "</BoardID>");
+			sb.append("<LikeCount>" + itemInfo.getLikeCount() + "</LikeCount>");
 			
 			/* 2018-12-03 홍승비 - 게시물 정보에 사원이미지 추가 */
 			if (itemInfo.getUserImageFile() != null && !itemInfo.getUserImageFile().equals("")) {
@@ -2536,7 +2561,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		String strMultiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
-		List<BoardListHeaderVO> list = getListHeader(ezBoardVO);
+		List<BoardListHeaderVO> list = getListHeader(userInfo, ezBoardVO);
 		
 		int i = 0;
 		int hLength = list.size();
@@ -4471,6 +4496,75 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		ezBoardDAO.modUpdateDate(map);
 		
 		logger.debug("modUpdateDate ended.");
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 삽입 */
+	@Override
+	public void likeInsert(String userID, String itemID, int tenantID) throws Exception {
+		logger.debug("likeInsert started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("v_userID", userID);
+		map.put("v_itemID", itemID);
+		map.put("v_tenantID", tenantID);
+		map.put("v_likeDate", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+		
+		ezBoardDAO.likeInsert(map);	
+		logger.debug("likeInsert ended.");
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 삭제 */
+	@Override
+	public void likeDelete(String userID, String itemID, int tenantID) throws Exception {
+		logger.debug("likeDelete started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("v_userID", userID);
+		map.put("v_itemID", itemID);
+		map.put("v_tenantID", tenantID);
+		
+		ezBoardDAO.likeDelete(map);	
+		logger.debug("likeDelete ended.");
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 여부 체크 */
+	@Override
+	public String likeCheck(String userID, String itemID, int tenantID) throws Exception {
+		logger.debug("likeCheck started.");
+		
+		String isLikeChecked = "";
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("v_userID", userID);
+		map.put("v_itemID", itemID);
+		map.put("v_tenantID", tenantID);
+		
+		isLikeChecked = ezBoardDAO.likeCheck(map);
+		
+		if (isLikeChecked != null && !isLikeChecked.equals("")) {
+			isLikeChecked = "Y";
+		} else {
+			isLikeChecked = "N";
+		}
+		
+		logger.debug("likeCheck ended.");
+		return isLikeChecked;
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 갯수 가져오기 */
+	@Override
+	public int getLikeCount(String itemID, int tenantID) throws Exception{
+		logger.debug("getLikeCount started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("v_itemID", itemID);
+		map.put("v_tenantID", tenantID);
+			
+		logger.debug("getLikeCount ended.");
+		return ezBoardDAO.getlikeCount(map);
 	}
 	
 	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴 */

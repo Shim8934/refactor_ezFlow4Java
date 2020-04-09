@@ -40,7 +40,7 @@ var SurveyMessages = {
 	strResult    : "検索結果",
 	strEmployee  : "先に社員を選択してください。",
 	strUpFolder  : "フォルダはアップロードできません。",
-	strSave      : "保存されました。",
+	strSave      : "保存しました。",
 	//strSave1     : "등록되었습니다.",
 	strSave2     : "回答が保存されました。",
 	strSaveDraft : "下書きが保存されました。",

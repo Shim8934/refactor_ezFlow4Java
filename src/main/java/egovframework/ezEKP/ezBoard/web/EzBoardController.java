@@ -1185,6 +1185,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setUrl(strProp.getUrl());
 			boardInfo.setApprMail_FG(strProp.getApprMailFlag());
 			boardInfo.setAttributeYN(strProp.getAttributeYN());
+			boardInfo.setLikeFlag(strProp.getLikeFlag());
 			boardInfo.setOneLineReply(strProp.getOneLineReply()); // 댓글옵션정보 추가
 			
 			/* 2018-10-17 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
@@ -1280,6 +1281,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	boardVO.setType(type);
     	boardVO.setLang(userInfo.getLang());
     	boardVO.setTenantID(userInfo.getTenantId());
+    	boardVO.setLikeFlag(boardInfo.getLikeFlag());
     	
     	if (boardType.equals("4") || boardType.equals("7")) { // 썸네일, 동영상
     		resultXML = getThumbList(boardVO, userInfo, type);
@@ -1312,12 +1314,12 @@ public class EzBoardController extends EgovFileMngUtil{
     	String orderOption2 = "";
     	String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
     	
-    	List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
+    	List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(userInfo, boardVO);
     	
     	int i = 0;
     	int hlength = headerList.size();
-    	int writeDateSN = 0;    
-    	int titleSN = 0;        
+    	int writeDateSN = 0;
+    	int titleSN = 0;
     	
     	for (i = 0; i < hlength; i++) {
     		if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
@@ -1580,7 +1582,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	String orderOption2 = "";
     	String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
     	
-    	List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
+    	List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(userInfo, boardVO);
     	
     	int i = 0;
     	int hlength = headerList.size();
@@ -1865,7 +1867,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
 		String primaryData = commonUtil.getPrimaryData(boardVO.getLang(), userInfo.getTenantId());
 		
-		List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(boardVO);
+		List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(userInfo, boardVO);
 		
 		int i = 0;
 		int hlength = headerList.size();
@@ -2124,7 +2126,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String orderOption1 = "";
 		String strMultiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
-		List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
+		List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(userInfo, boardVO);
 		
 		int i = 0;
 		int hlength = headerList.size();
@@ -2395,7 +2397,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardVO.setLang(userInfo.getLang());
 		boardVO.setTenantID(userInfo.getTenantId());
 		
-		List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
+		List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(userInfo, boardVO);
 		
 		// 헤더 정보를 세팅한다.
 		int i = 0;
@@ -2557,7 +2559,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardVO.setLang(userInfo.getLang());
 		boardVO.setTenantID(userInfo.getTenantId());
 		
-		List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
+		List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(userInfo, boardVO);
 		
 		int i = 0;
 		int hlength = headerList.size();
@@ -2728,7 +2730,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardVO.setLang(userInfo.getLang());
 		boardVO.setTenantID(userInfo.getTenantId());
 		
-		List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(boardVO);
+		List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(userInfo, boardVO);
 		
 		// 헤더 정보를 세팅한다.
 		int i = 0;
@@ -2885,7 +2887,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardListVO boardListVO = new BoardListVO();
 		
-		List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
+		List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(userInfo, boardVO);
 		
 		int i = 0;
 		int hlength = headerList.size();
@@ -3036,7 +3038,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
 		String primaryData = commonUtil.getPrimaryData(boardVO.getLang(), userInfo.getTenantId());
 		
-		List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(boardVO);
+		List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(userInfo, boardVO);
 		
 		// 헤더 정보를 세팅한다.
 		int i = 0;
@@ -3759,6 +3761,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardItem.setWriterName(commonUtil.htmlUnescape(boardItem.getWriterName()));
 		}
 		
+		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
+		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardItem", boardItem);
@@ -3780,6 +3785,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("guBun", guBun);
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
+		model.addAttribute("isLikeChecked", isLikeChecked);
 		model.addAttribute("useCabinet", use_cabinet);
 
 		logger.debug("getBoardItemView ended");
@@ -5750,6 +5756,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			model.addAttribute("commentCount", commentCount);
 		}
 		
+		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
+		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
 		//2018.08.08 캐비넷 추가
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
 		if (use_cabinet.equals("YES")) {
@@ -5770,8 +5778,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("oneLineReplyFlag", boardProperty.getOneLineReply());
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
+		model.addAttribute("isLikeChecked", isLikeChecked);
 		model.addAttribute("useCabinet", use_cabinet);
-		
 		logger.debug("boardItemViewPhoto ended");
 		return "ezBoard/boardItemViewPhoto";
 	}
@@ -6053,7 +6061,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			pFileLimit = "2";
 		}
 		
-		int fileLimit = Integer.parseInt(pFileLimit) * 1024 * 1024;
+		long fileLimit = Long.parseLong(pFileLimit) * 1024 * 1024;
 		
 		for (int i = 0; i < multiFile.size(); i++) {
 			fileSize = multiFile.get(i).getSize();
@@ -7008,6 +7016,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String OneLineReplyFlag = request.getParameter("OneLineReplyFlag");
 		String itemID = request.getParameter("itemID");
 		String boardID = request.getParameter("boardID");
+		String likeCount = request.getParameter("likeCount");
 		
 		if (OneLineReplyFlag == null) {
 			OneLineReplyFlag = "";
@@ -7015,12 +7024,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
+		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
+		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
+		
 		model.addAttribute("OneLineReplyFlag", OneLineReplyFlag);
 		model.addAttribute("gubun", boardInfo.getGuBun());
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("userInfoID", userInfo.getId());
 		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("likeCount", likeCount);
+		model.addAttribute("isLikeChecked", isLikeChecked);
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		
@@ -7838,6 +7852,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String mode = request.getParameter("mode");
+		String likeCount = request.getParameter("likeCount");
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
@@ -7855,12 +7870,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		ezBoardService.setAsRead(userInfo, boardID, itemID);
 
+		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
+		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
+		
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("mode", mode);
 		model.addAttribute("showAdjacent", showAdjacent);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("likeCount", likeCount);
+		model.addAttribute("isLikeChecked", isLikeChecked);
 				
 		logger.debug("boardItemPreViewPhotoContent ended");
 		
@@ -8120,7 +8140,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardVO.setLang(userInfo.getLang());
 		boardVO.setTenantID(userInfo.getTenantId());
 		
-		List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(boardVO);
+		List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(userInfo, boardVO);
 		
 		StringBuffer resultXML = new StringBuffer();
 
@@ -8145,7 +8165,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	        	resultXML.append("</HEADER>");
         	}
         }
-
+        
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
         resultXML.append("</ROWS>");
@@ -8292,7 +8312,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardVO.setLang(userInfo.getLang());
 		boardVO.setTenantID(userInfo.getTenantId());
 		
-		List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(boardVO);
+		List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(userInfo, boardVO);
 		
 		// 헤더 정보를 세팅한다.
 		int i = 0;
@@ -8495,7 +8515,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardVO.setLang(userInfo.getLang());
 		boardVO.setTenantID(userInfo.getTenantId());
 		
-		List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
+		List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(userInfo, boardVO);
 		
 		// 헤더 정보를 세팅한다.
 		int i = 0;
@@ -8918,7 +8938,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			pFileLimit = "2";
 		}
 		
-		int fileLimit = Integer.parseInt(pFileLimit) * 1024 * 1024;
+		long fileLimit = Long.parseLong(pFileLimit) * 1024 * 1024;
 		
 		fileSize = multiFile.getSize();
 		if (fileSize > fileLimit) {
@@ -9131,6 +9151,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			model.addAttribute("commentCount", commentCount);
 		}
 		
+		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
+		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
+		
 		/* 2018-06-20 홍승비 - 포토/썸네일 승인게시판 게시물 apprFlag 수정 */
 		model.addAttribute("boardAdjacent", boardAdjacent);
 		model.addAttribute("itemID", itemID);
@@ -9145,6 +9168,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("oneLineReplyFlag", boardProperty.getOneLineReply());
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
+		model.addAttribute("isLikeChecked", isLikeChecked);
 
 		logger.debug("boardItemViewMovie ended");
 		return "ezBoard/boardItemViewMovie";
@@ -9242,6 +9266,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String mode = request.getParameter("mode");
+		String likeCount = request.getParameter("likeCount");
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
@@ -9251,12 +9276,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		ezBoardService.setAsRead(userInfo, boardID, itemID);
 		
+		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
+		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
+		
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("mode", mode);
 		model.addAttribute("showAdjacent", showAdjacent);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("likeCount", likeCount);
+		model.addAttribute("isLikeChecked", isLikeChecked);
 				
 		logger.debug("boardItemPreViewMovieContent ended");
 		
@@ -9277,7 +9307,46 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		logger.debug("modUpdateDate ended.");
 	}
+	
+	/** 2019-04-05 홍승비 - 게시물의 좋아요 삽입 및 삭제 */
+	@RequestMapping(value = "/ezBoard/clickLikeMod.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String clickLikeInsert(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("clickLikeMod started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String itemID = request.getParameter("itemID");
+		String mod = request.getParameter("mod");
+		String isLikeChecked = "";
+		
+		if (mod.equalsIgnoreCase("INSERT")) {
+			ezBoardService.likeInsert(userInfo.getId(), itemID, userInfo.getTenantId());
+			isLikeChecked = "Y";
+		} else {
+			ezBoardService.likeDelete(userInfo.getId(), itemID, userInfo.getTenantId());
+			isLikeChecked = "N";
+		}
+		
+		logger.debug("clickLikeMod ended.");
+		return isLikeChecked;
+	}
 
+	/** 2019-04-05 홍승비 - 게시물의 좋아요 갯수 가져오기 */
+	@RequestMapping(value = "/ezBoard/getLikeCount.do", method = RequestMethod.GET)
+	@ResponseBody
+	public int getLikeCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getLikeCount started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String itemID = request.getParameter("itemID");
+		int likeCount = 0;
+		
+		likeCount = ezBoardService.getLikeCount(itemID, userInfo.getTenantId());
+		
+		logger.debug("getLikeCount ended.");
+		return likeCount;
+	}
+	
 	/** 2019-04-19 홍승비 - 게시판의 게시물 갯수만을 리턴하는 함수 */
 	@RequestMapping(value = "/ezBoard/getItemCount.do", method = RequestMethod.GET)
 	@ResponseBody
