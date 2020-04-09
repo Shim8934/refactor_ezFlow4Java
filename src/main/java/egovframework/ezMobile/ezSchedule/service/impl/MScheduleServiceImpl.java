@@ -27,8 +27,11 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtilPublic;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.dao.MScheduleDAO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
@@ -404,6 +407,9 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		//2020-02-24 김정언
 		String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", info.getTenantId());
 		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(info.getUserId(), info.getTenantId(), info.getCompanyId());
+		List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(info.getUserId(), info.getLang(), info.getTenantId() ,info.getCompanyId());
+		List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(info.getUserId(), info.getLang(), info.getTenantId() ,info.getCompanyId());
+		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(info.getUserId(), info.getLang(), info.getTenantId() ,info.getCompanyId());
 		
 		for (int i = 0; i < gList.size(); i++) {
 			if (i == 0) {
@@ -411,6 +417,42 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			}
 			ScheduleGroupListVO data = gList.get(i);
 			pidList += "'" + data.getGroupId() + "'";
+			
+			if (i != gList.size()-1) {
+				pidList += ",";
+			}	
+		}
+		
+		for (int i = 0; i < tList.size(); i++) {
+			if (i == 0) {
+				pidList += ",";
+			}
+			ScheduleSecretaryVO data = tList.get(i);
+			pidList += "'" + data.getSecId() + "'";
+			
+			if (i != gList.size()-1) {
+				pidList += ",";
+			}	
+		}
+		
+		for (int i = 0; i < dList.size(); i++) {
+			if (i == 0) {
+				pidList += ",";
+			}
+			ScheduleDeptVO data = dList.get(i);
+			pidList += "'" + data.getDeptId() + "'";
+			
+			if (i != gList.size()-1) {
+				pidList += ",";
+			}	
+		}
+		
+		for (int i = 0; i < cList.size(); i++) {
+			if (i == 0) {
+				pidList += ",";
+			}
+			ScheduleCumulerVO data = cList.get(i);
+			pidList += "'" + data.getDeptId() + "'";
 			
 			if (i != gList.size()-1) {
 				pidList += ",";
