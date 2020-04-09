@@ -715,6 +715,26 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		update("EzBoardDAO.modUpdateDate", map);
 	}
 	
+	/* 2019-04-05 홍승비 - 좋아요 삽입 */
+	public void likeInsert(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.likeInsert", map);
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 삭제 */
+	public void likeDelete(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.likeDelete", map);
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 여부 체크 */
+	public String likeCheck(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.likeCheck", map);
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 갯수 가져오기 */
+	public int getlikeCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getlikeCount", map);
+	}
+	
 	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴하는 쿼리 */
 	@SuppressWarnings("unchecked")
 	public List<String> getPDOAddJobDeptID(Map<String, Object> map) throws Exception {

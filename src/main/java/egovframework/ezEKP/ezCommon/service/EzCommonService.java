@@ -130,6 +130,10 @@ public interface EzCommonService {
 	public void addTblPortalThemeUserIsDefault() throws Exception;
 
 	public void updateListOptionData() throws Exception;
+	
+	public void createBoardLike() throws Exception;
+	
+	public void addBoardLikeFlag() throws Exception;
 
 	public void addQuickLinkLinkOrder() throws Exception;
 	

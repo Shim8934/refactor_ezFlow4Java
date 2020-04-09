@@ -423,6 +423,7 @@ function event_ItemPreviewRead_photo() {
             var ContentLocation = SelectSingleNodeValueNew(xmldom, "NODES/NODE/ContentLocation");
             var GuBun = SelectSingleNodeValueNew(xmldom, "NODES/NODE/GUBUN");
             var UserIMG =  SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/UserIMG");
+            var LikeCount = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/LikeCount");
 
             if (pPreviewShow_HOW.trim() == "W") {
                 PreviewRayerChange_photo("H");
@@ -479,12 +480,12 @@ function event_ItemPreviewRead_photo() {
             	 if (location.href.toLowerCase().indexOf('temp') > -1)
  	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewMovieContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")) + "&mode=" + pMode + "&location=TEMP";
  	            else
- 	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewMovieContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")) + "&mode=" + pMode + "&location=GENERAL";
+ 	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewMovieContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")) + "&mode=" + pMode + "&likeCount=" + LikeCount + "&location=GENERAL";
             } else {
 	            if (location.href.toLowerCase().indexOf('temp') > -1)
 	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")) + "&mode=" + pMode + "&location=TEMP";
 	            else
-	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")) + "&mode=" + pMode + "&location=GENERAL";
+	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")) + "&mode=" + pMode + "&likeCount=" + LikeCount + "&location=GENERAL";
             }
         }
     }
@@ -514,19 +515,20 @@ function event_ItemPreviewRead() {
             Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
             ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
             UserIMG =  SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/UserIMG");
+            BoardID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/BoardID");
+            LikeCount = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/LikeCount");
             /* 2019-11-06 홍승비 - 게시물 미리보기 시 댓글옵션 표출용 변수 추가 */
             OneLineReplyFlag = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ONELINEREPLY");
-            BoardID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/BoardID");
            
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
                 document.getElementById("Preview_HeaderH").style.display = "none";
-                document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + ItemID + "&boardID=" + BoardID + "&OneLineReplyFlag=" + OneLineReplyFlag;
+                document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag;
             }
             else if (pPreviewShow_HOW.trim() == "H") {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "";
-                document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + ItemID + "&boardID=" + BoardID + "&OneLineReplyFlag=" + OneLineReplyFlag;
+                document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag;
             }
             else {
                 document.getElementById("Preview_HeaderW").style.display = "none";

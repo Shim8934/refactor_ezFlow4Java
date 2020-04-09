@@ -636,6 +636,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	public void createBoardLike() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardLike");
+		} catch (Exception e) {
+			logger.debug("tbl_board_like doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createBoardLike");
+		}
+	}
+	
+	public void addBoardLikeFlag() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardInfoLikeFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info likeFlag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addBoardLikeFlag");
+		}
+	}
 
 	public void addQuickLinkLinkOrder() {
 		try {
@@ -656,7 +676,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addComCloseCompanyId");
 		}
 	}
-
+	
 	public void addWebfolderTotalLimit() {
 		try {
 			select("EzCommonDAO.checkWebfolderTotalLimit");

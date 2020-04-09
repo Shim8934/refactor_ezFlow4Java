@@ -82,7 +82,8 @@
         <result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="33"/>
         <result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="34"/>
         <result property="userImageFile" 		column="USERIMAGEFILE" 		columnIndex="35"/>
-        <result property="oneLineReply" 		column="ONELINEREPLY" 		columnIndex="36"/>
+        <result property="likeCount" 		column="LIKECOUNT" 		columnIndex="36"/>
+        <result property="oneLineReply" 		column="ONELINEREPLY" 		columnIndex="37"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -1227,7 +1228,15 @@
                   WHERE
                       B.TENANT_ID = #v_TENANTID#
                   AND 
-                      B.BOARDID = A.BOARDID ) as GUBUN
+                      B.BOARDID = A.BOARDID ) as GUBUN,
+				(SELECT 
+                	IFNULL(COUNT(*), 0)  
+    			FROM 
+    				TBL_Board_Like
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) as LIKECOUNT
 			  FROM 
 			  	TBL_BOARD_ITEM A 
 			  LEFT OUTER JOIN 
@@ -1327,7 +1336,15 @@
   				A.EXTENSIONATTRIBUTE7,
   				A.EXTENSIONATTRIBUTE8,
   				A.EXTENSIONATTRIBUTE9,
-  				A.EXTENSIONATTRIBUTE10 
+  				A.EXTENSIONATTRIBUTE10,
+  				(SELECT 
+                	IFNULL(COUNT(*), 0)  
+    			FROM 
+    				TBL_Board_Like
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) as LIKECOUNT
  				FROM 
  					TBL_BOARD_ITEM A 
  				LEFT OUTER JOIN 
@@ -1439,7 +1456,15 @@
                   WHERE
                       B.TENANT_ID = #v_TENANTID#
                   AND 
-                      B.BOARDID = A.BOARDID ) as GUBUN
+                      B.BOARDID = A.BOARDID ) as GUBUN,
+				(SELECT 
+                	IFNULL(COUNT(*), 0)  
+    			FROM 
+    				TBL_Board_Like
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) as LIKECOUNT
               FROM 
               	TBL_Board_Item A
               WHERE  
@@ -1894,7 +1919,15 @@
    				A.DOCNO,
    				A.MAINCONTENT,
    				B.FILEPATH,
-   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG
+   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+   				(SELECT 
+                	IFNULL(COUNT(*), 0)  
+    			FROM 
+    				TBL_Board_Like
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) as LIKECOUNT
 			  FROM 
 			  	TBL_BOARD_ITEM A 
 			  INNER JOIN 
@@ -1983,7 +2016,15 @@
    				A.DOCNO,
    				A.MAINCONTENT,
    				B.FILEPATH,
-   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG
+   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+				(SELECT 
+					IFNULL(COUNT(*), 0)  
+	   			FROM 
+	   				TBL_Board_Like
+				WHERE  
+					TENANT_ID = A.TENANT_ID
+				AND
+					ITEMID = A.ItemID) as LIKECOUNT
    			  FROM 
    			  	TBL_BOARD_ITEM A 
    			  INNER JOIN 
@@ -2133,7 +2174,15 @@
        				A.EXTENSIONATTRIBUTE9, 
        				A.EXTENSIONATTRIBUTE10, 
   			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
-  			    	I.GUBUN
+  			    	I.GUBUN,
+  			    	(SELECT 
+	                	IFNULL(COUNT(*), 0)  
+	    			FROM 
+	    				TBL_Board_Like
+	   				WHERE  
+	   					TENANT_ID = A.TENANT_ID
+	   				AND
+	   					ITEMID = A.ItemID) as LIKECOUNT
 				  FROM 
 				  	TBL_BOARD_ITEM A 
 				  LEFT OUTER JOIN 
@@ -2522,6 +2571,14 @@
 	            A.BOARDID ,
 	            A.DOCNO,
 				(SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE,
+				(SELECT 
+                	IFNULL(COUNT(*), 0)  
+    			FROM 
+    				TBL_Board_Like
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) as LIKECOUNT,
 	            B.ONELINEREPLY
 	        FROM 
 	        	TBL_Board_Item A
@@ -5369,6 +5426,57 @@
 	   			ItemID = #itemID#
 		]]>
 	</update>
+	
+	<select id="EzBoardDAO.getlikeCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				IFNULL(COUNT(*), 0)
+			FROM
+				TBL_Board_Like
+			WHERE
+	       		TENANT_ID = #v_tenantID#
+	       	AND
+	       		ITEMID = #v_itemID#
+       	]]>
+	</select>
+	
+	<select id="EzBoardDAO.likeCheck" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				USERID
+			FROM
+				TBL_Board_Like
+			WHERE
+	       		TENANT_ID = #v_tenantID#
+	       	AND  
+	       		USERID = #v_userID#
+	       	AND
+	       		ITEMID = #v_itemID#
+       	]]>
+	</select>
+	
+	<delete id="EzBoardDAO.likeDelete" parameterClass="Map">
+  		<![CDATA[
+  			DELETE FROM TBL_Board_Like
+  			WHERE
+  				TENANT_ID = #v_tenantID#
+  			AND
+  				USERID = #v_userID#
+  			AND
+  				ITEMID = #v_itemID#
+		]]>
+  </delete>
+  
+	<insert id="EzBoardDAO.likeInsert" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_Like ( 
+				ITEMID, USERID, LIKEDATE, TENANT_ID
+			)
+        	VALUES ( 
+        		#v_itemID#, #v_userID#, #v_likeDate#, #v_tenantID#
+        	)
+		]]>
+	</insert>
 	
 	<select id="EzBoardDAO.getPDOAddJobDeptID" parameterClass="Map" resultClass="String">
 		<![CDATA[
