@@ -282,6 +282,11 @@
 	                document.getElementById("dept_select").style.display = "none";
 	            }
 	            else {
+	                document.getElementById("h1Title").style.marginBottom = "0px";
+	                document.getElementById("mailReceiverInfoTxt").style.display = "block";
+	                
+	                window.resizeTo(window.outerWidth, window.outerHeight+18);
+	                
 	                SelectReceiverWindow(eval('<c:out value="${defaultWin}"/>' + "Title"), eval("ListViewMsg" + '<c:out value="${defaultWin}"/>'));
 	            }
 	            
@@ -3936,6 +3941,9 @@
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
+        <div id="mailReceiverInfoTxt" style="margin-bottom: 7px; display:none; ">
+			<span>※ <spring:message code='ezEmail.ksa15' /></span>
+		</div>
 	    <table style="width:100%;">
 	        <tr>
 	            <td style="vertical-align: top;">
