@@ -1004,7 +1004,7 @@
 						AND
 							TENANT_ID = #v_TENANTID#
 						ORDER BY
-							TO_CHAR(HOLIDAYDATE,'YYYY'), ISSOLAR, SUBSTR(HOLIDAYREPEAT, 6)
+							TO_CHAR(HOLIDAYDATE,'yyyy-mm-dd'), ISSOLAR, SUBSTR(HOLIDAYREPEAT, 6)
 					]]>
             	</isEqual>
             	<isNotEqual property="v_COMPANYID" compareValue="STATUTORY">
@@ -1028,7 +1028,7 @@
 						AND
 							TENANT_ID = #v_TENANTID#
 						ORDER BY
-							TO_CHAR(HOLIDAYDATE,'YYYY'), ISSOLAR, SUBSTR(HOLIDAYREPEAT, 6)
+							TO_CHAR(HOLIDAYDATE,'yyyy-mm-dd'), ISSOLAR, SUBSTR(HOLIDAYREPEAT, 6)
 					]]>
             	</isNotEqual>
 			</isNotEqual>                       	
@@ -1058,7 +1058,7 @@
 			AND
 				(TO_CHAR(HOLIDAYDATE,'YYYY') = #holidayYear# OR ISREPEAT = 1 OR HOLIDAYREPEAT LIKE #holidayYear# || '%')
 			ORDER BY
-				TO_CHAR(HOLIDAYDATE,'YYYY'), ISSOLAR, SUBSTR(HOLIDAYREPEAT, 6)
+				TO_CHAR(HOLIDAYDATE,'yyyy-mm-dd'), ISSOLAR, SUBSTR(HOLIDAYREPEAT, 6)
 		]]>
 	</select>
 	
