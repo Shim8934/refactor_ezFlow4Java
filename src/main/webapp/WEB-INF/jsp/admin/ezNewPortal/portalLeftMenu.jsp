@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -27,18 +27,28 @@
 				<!-- themes -->
 				<h2 class="on"><span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezPortal.jjh01' /></span></h2>
 				<ul class="lnbUL">
+				<c:if test="${packageType != 'mail'}">  
 					<li><span class = "list_text leftMenu_btn" id = "themes"><spring:message code='ezNewPortal.t054' /></span></li>
 					<li><span class = "list_text leftMenu_btn" id = "menus"><spring:message code='ezNewPortal.t055' /></span></li>
 					<li><span class = "list_text leftMenu_btn" id = "portlets"><spring:message code='ezNewPortal.t056' /></span></li>
 					<li><span class = "list_text leftMenu_btn" id = "logos"><spring:message code='ezNewPortal.t057' /></span></li>
+				</c:if>
+				<c:if test="${packageType == 'mail'}">  
+					<li><span class = "list_text leftMenu_btn" id = "logos"><spring:message code='ezNewPortal.t057' /></span></li>
+				</c:if>
 				</ul>
 				<h2 class="on"><span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezPortal.jjh02' /></span></h2>
 				<ul class="lnbUL">
+				<c:if test="${packageType != 'mail'}">  
 					<li><span  class = "list_text" onClick="goPage(8)"><spring:message code='ezPersonal.khj1' /></span></li>
 					<li><span  class = "list_text" onClick="goPage(3)"><spring:message code = 'ezPersonal.hyh1' /></span></li>
 					<li><span  class = "list_text" onClick="goPage(4)"><spring:message code = 'main.t67' /></span></li>
 					<li><span  class = "list_text" onClick="goPage(7)"><spring:message code = 'main.t68' /></span></li>
 					<li><span  class = "list_text" onClick="goPage(9)"><spring:message code = 'main.t10000' /></span></li>
+				</c:if>
+				<c:if test="${packageType == 'mail'}"> 
+					<li><span  class = "list_text" onClick="goPage(4)"><spring:message code = 'main.t67' /></span></li>
+				</c:if>
 				</ul>
 			</div>
 		</div>

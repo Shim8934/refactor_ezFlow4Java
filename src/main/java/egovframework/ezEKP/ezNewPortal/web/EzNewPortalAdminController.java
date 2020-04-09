@@ -61,14 +61,20 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 * @author 이효진
 	 */
 	
+	
 	/**
 	 * 관리자 포탈 메인화면 조회
 	 */
+	@SuppressWarnings("unused")
 	@RequestMapping(value = "/admin/ezNewPortal/portalMain.do", method=RequestMethod.GET)
-	public String portalMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String portalMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("portalMain started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+        
+        model.addAttribute("packageType", packageType);
 		
 		if (userInfo == null) {
 			LOGGER.debug("portalMain accessDenied.");
@@ -84,11 +90,16 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 Left 화면조회
 	 */
+	@SuppressWarnings("unused")
 	@RequestMapping(value = "/admin/ezNewPortal/portalLeftMenu.do", method=RequestMethod.GET)
-	public String portalTopMenu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String portalTopMenu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("portalLeftMenu started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+        
+        model.addAttribute("packageType", packageType);
 		
 		if (userInfo == null) {
 			LOGGER.debug("portalLeftMenu accessDenied.");
