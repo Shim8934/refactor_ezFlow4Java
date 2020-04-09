@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezEmail.service.impl;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
@@ -3817,4 +3818,23 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return vo;
 	}
 	
+	@Override
+	public void sendMail(String userEmail, String password, Locale userLocale, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved, EmailImportance importance, String fileName, String contentType, InputStream inputStream) throws Exception {
+		logger.debug("sendMail started.");
+		logger.debug("from=" + from + ",subject=" + subject + ",isSaved=" + isSaved);
+
+		ezEmailUtil.createMail(userEmail, password)
+			.from(from)
+			.to(toArr)
+			.cc(ccArr)
+			.bcc(bccArr)
+			.subject(subject)
+			.content(content)
+			.importance(importance)
+			.saveSentMailbox(isSaved)
+			.attach(fileName, contentType, inputStream)
+		.send();
+		
+        logger.debug("sendMail ended.");
+	}
 }
