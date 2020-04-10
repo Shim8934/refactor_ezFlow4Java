@@ -341,7 +341,7 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
         	if (!field) {return true;}
         	
         	fractionsymbol = field.textContent;
-			if (pDraftFlag == "HABYUI") {
+			if (pDraftFlag == "HABYUI" || pDraftFlag == "HAPYUI") {
 				fractionsymbol = arr_userinfo[5] + "-";
 			}
         	
