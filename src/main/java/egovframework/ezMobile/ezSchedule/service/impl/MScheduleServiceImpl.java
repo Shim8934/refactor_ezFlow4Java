@@ -430,7 +430,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			ScheduleSecretaryVO data = tList.get(i);
 			pidList += "'" + data.getSecId() + "'";
 			
-			if (i != gList.size()-1) {
+			if (i != tList.size()-1) {
 				pidList += ",";
 			}	
 		}
@@ -442,7 +442,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			ScheduleDeptVO data = dList.get(i);
 			pidList += "'" + data.getDeptId() + "'";
 			
-			if (i != gList.size()-1) {
+			if (i != dList.size()-1) {
 				pidList += ",";
 			}	
 		}
@@ -454,7 +454,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			ScheduleCumulerVO data = cList.get(i);
 			pidList += "'" + data.getDeptId() + "'";
 			
-			if (i != gList.size()-1) {
+			if (i != cList.size()-1) {
 				pidList += ",";
 			}	
 		}
