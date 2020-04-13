@@ -7029,4 +7029,17 @@
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_UPDATETHUMNAILPROFILE" parameterClass="Map">
        {CALL talk_SP_CONN_UPDATETHUMNAILPROFILE(#TENANT_ID#)}
      </procedure>
+
+	<select id="EzOrganAdminDAO.getNotUseMobileUserList" parameterClass="Integer" resultClass="String">
+		select
+			distinct user_id
+		from
+			tbl_user_config
+		where
+			property_name in ('notUseMobileLogin', 'adminOrderNotUsedMobileLogin')
+		and
+			property_value = '1'
+		and
+			tenant_id = #tenantId#
+	</select>
 </sqlMap>
