@@ -95,4 +95,8 @@ public interface MBoardService {
 	
 	/* 2019-06-11 홍승비 - 해당 ID가 부서(회사)ID인지 확인하는 기능 서비스로 분리 */
 	public int isDeptChk(String id, int tenantID) throws Exception;
+	
+	/* 2020-04-13 홍승비 - QNA게시판 게시물 카운트 추가 */
+	int getQNABoardItemListCount(String boardID, MBoardInfoVO mBoardInfoVO, String userID, String guBun, int tenantID, String pSearchText) throws Exception;
+
 }

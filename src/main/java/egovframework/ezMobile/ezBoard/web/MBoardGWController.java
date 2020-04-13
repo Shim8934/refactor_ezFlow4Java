@@ -181,7 +181,13 @@ public class MBoardGWController {
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
 			List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, info, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getUserId(),add,pSearchText, parentWriteDate, upperitemidtree);
-			int listCount = mBoardService.getBoardItemListCount(boardId, userID, boardInfo.getGuBun(),info.getTenantId(),pSearchText);
+			
+			int listCount = 0;
+			if (boardInfo.getGuBun() != null && boardInfo.getGuBun().equals("5")) { // qna 게시판
+				listCount = mBoardService.getQNABoardItemListCount(boardId, boardInfo, userID, boardInfo.getGuBun(), info.getTenantId(), pSearchText);
+			} else {
+				listCount = mBoardService.getBoardItemListCount(boardId, userID, boardInfo.getGuBun(), info.getTenantId(), pSearchText);
+			}
 			
 			for (int i=0; i<list.size(); i++) {
 				int listSize = list.size();
