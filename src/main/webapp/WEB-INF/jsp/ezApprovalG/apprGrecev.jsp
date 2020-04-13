@@ -120,8 +120,109 @@
 			var useReceiveDocNo = "${useReceiveDocNo}";
 			var nonElecRec = "${nonElecRec}";
 			
+			var isReDraft = 'N';
+			
 			window.onload = function () {
+				if(DraftFlag == 'REDRAFT') {
+					isReDraft = 'Y';
+				}
 			};
+			 		    
+		    function getDocRecevState() {
+		        try {
+					var result = "FALSE";
+		        	
+		        	$.ajax({
+		        		type : "POST",
+		        		dataType : "text",
+		        		async : false,
+		        		url : "/ezApprovalG/getDocState.do",
+		        		data : {
+		        			docID : pDocID,
+		        			deptID: arr_userinfo[4]
+		        		},
+		        		success: function(text){
+		        			result = text;
+		        		}
+		        	});
+		        	
+		            return result;
+		        } 
+		        catch (e) {
+		            alert("getDocRecevState :: " + e.description);
+		        }
+		    }
+		    
+			function btnReturn_onclick() {
+		    	/* if (isReDraft == "Y" && checkAprState()) {
+		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+	    			window.close();
+	    			return;
+		    	} */
+		    	
+		        var RecevState = getDocRecevState();
+		        
+		        if (RecevState != "011" && RecevState != "012" && RecevState != "014" && RecevState != "013") {
+		            if (RecevState == "015") {
+		                var pAlertContent = strLang912;
+		                OpenAlertUI(pAlertContent);
+		            }
+		            return false;
+		        }
+		        
+		        var pDocSN = "";
+		        var fields = message.GetFieldsList();
+		        var field = message.GetListItem(fields, "receiptnumber");
+		        if (field) {
+		            var fieldValue = trim(field.textContent);
+		            if (fieldValue != "" && fieldValue.replace("@", "") == fieldValue) {
+		                var tmpDocSN = fieldValue.substr(fieldValue.lastIndexOf("-") + 1);
+		                if (!isNaN(tmpDocSN))
+		                    pDocSN = tmpDocSN;
+		            }
+		        }
+		        var parameter = new Array();
+		        parameter[0] = pDocID;
+		        parameter[1] = "HeSong";
+		        parameter[2] = KuyjeType;
+		        parameter[3] = "";
+		
+		        if (pDocSN != "")
+		            parameter[4] = "Y";
+		        else
+		            parameter[4] = "N";
+		        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+		        parameter[99] = ext;
+		        
+		        temppDocSN = pDocSN;
+		        apropinion_cross_dialogArguments[0] = parameter;
+		        apropinion_cross_dialogArguments[1] = btnReturn_onclick_Complete;
+		
+		        DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
+		    }
+			
+		    function btnReturn_onclick_Complete(ret) {
+		        DivPopUpHidden();
+		        
+		        /* if (isReDraft == "Y" && checkAprState()) {
+		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+	    			window.close();
+	    			return;
+		    	} */
+		        
+		        var hesongok = true;
+		        if (ret != "cancel") {
+		            setButtonReceiveTrue();
+		
+		            if (temppDocSN != "")
+		                hesongok = setCabinetHeSong(temppDocSN);
+		
+		            if (hesongok) {
+		            	 SendMailToDrafter_Hesong();
+		                hesongok = setHeSongDocInfo();
+		            }
+		        }
+		    }
 			
 			//양식HTML내용
 			function process_AfterOpen() {
@@ -197,7 +298,7 @@
 			            else {
 			                SetBtnStateTrue();
 			                pDraftFlag = "DRAFT";
-			
+			                
 			                if (pFormHref != "PC") {
 			                    var len;
 			                    len = pFormHref.lastIndexOf("/");
@@ -1021,6 +1122,7 @@
 		          <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo('9')" ><spring:message code="ezApprovalG.t1742"/></span></li>
 		          <span style ="display:none" ><li id="btnSetAprLine"> <span onclick="return btnSetAprLine_onclick()" ><spring:message code='ezApprovalG.t153'/></span></li></span>
 		          <li id="btnSendDraft"> <span onclick="return btnSendDraft_onclick()" ><spring:message code='ezApprovalG.t156'/></span></li>
+		          <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
 		          <span style ="display:none" ><li id="btnDocInfo" style="display:none;"> <span onclick="return btnDocInfo_onclick()"  ><spring:message code='ezApprovalG.t54'/></span></li></span>
 		          <li id="btnOpinion"> <span onclick="return btnOpinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
 		          <li id="btnServerSave" style="display:none;"> <span onclick="return btnServerSave_onclick()" ><spring:message code='ezApprovalG.t59'/></span></li>
