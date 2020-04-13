@@ -151,4 +151,6 @@ public interface EzOrganAdminService {
 	public String deleteStopUser(String[] cnArr, String companyID, int tenantID) throws Exception;
 	
 	public int checkStopUser(String userID, int tenantID) throws Exception;
+
+	List<String> getNotUseMobileUserList(int tenantId) throws Exception;
 }

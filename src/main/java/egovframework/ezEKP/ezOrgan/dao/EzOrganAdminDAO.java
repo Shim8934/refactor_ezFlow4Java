@@ -2296,4 +2296,9 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void deleteCompanyConfig(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteCompanyConfig", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getNotUseMobileUserList(int tenantId) {
+		return (List<String>) list("EzOrganAdminDAO.getNotUseMobileUserList", tenantId);
+	}
 }

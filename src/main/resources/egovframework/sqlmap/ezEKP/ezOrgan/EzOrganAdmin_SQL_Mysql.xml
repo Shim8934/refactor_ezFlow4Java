@@ -5415,4 +5415,16 @@
         ]]>  
 	</select>
 
+	<select id="EzOrganAdminDAO.getNotUseMobileUserList" parameterClass="Integer" resultClass="String">
+		select
+			distinct user_id
+		from
+			tbl_user_config
+		where
+			property_name in ('notUseMobileLogin', 'adminOrderNotUsedMobileLogin')
+		and
+			property_value = '1'
+		and
+			tenant_id = #tenantId#
+	</select>
 </sqlMap>

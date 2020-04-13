@@ -2304,5 +2304,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         	ezOrganAdminDao.deleteCompanyConfig(map1);    		
     	}
      }
-	
+
+	@Override
+	public List<String> getNotUseMobileUserList(int tenantId) throws Exception {
+		logger.debug("getNotUseMobileUserList started.");
+
+		List<String> result = ezOrganAdminDao.getNotUseMobileUserList(tenantId);
+
+		logger.debug("getNotUseMobileUserList ended.");
+		return result;
+	}
 }
