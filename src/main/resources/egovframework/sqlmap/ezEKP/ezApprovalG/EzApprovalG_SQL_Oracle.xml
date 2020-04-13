@@ -9433,8 +9433,10 @@
 		FROM 
 			(
 				SELECT 
-					* 
-				FROM (
+					row_number() over(ORDER BY NULL) as rnum,  <!-- 임시 -->
+
+					A.* FROM 
+					(
 						SELECT 
 							* 
 						FROM (
@@ -9548,34 +9550,35 @@
 									</isEmpty>
 									 <![CDATA[
 									  ) WHERE 
-									  		ROWNUM <= #v_PAGESIZE#) A
+									  		ROWNUM <= #v_PAGESIZE#) A ) X 
+									  WHERE X.rnum >= #v_PAGESIZE3#+1
 									  ]]>
 						<isNotEmpty property="v_ORDEROPTION2">
 						<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
 						<isEqual property="v_ORDEROPTION2VALUE" compareValue="enddate">
 						<![CDATA[
 							ORDER BY 
-								$v_ORDEROPTION2$) WHERE ROWNUM <= #v_PAGESIZE2#
+								$v_ORDEROPTION2$
 						]]>
 						</isEqual>
 						<isNotEqual  property="v_ORDEROPTION2VALUE" compareValue="enddate">
 						<![CDATA[
 							ORDER BY 
-								$v_ORDEROPTION2$, ENDDATE ) WHERE ROWNUM <= #v_PAGESIZE2#
+								$v_ORDEROPTION2$, ENDDATE
 						]]>
 						</isNotEqual>
 						</isGreaterEqual>
 						<isLessThan  property="v_ORDEROPTION2LENGTH" compareValue="7">
 						<![CDATA[	
 							ORDER BY 
-								$v_ORDEROPTION2$, ENDDATE)	WHERE ROWNUM <= #v_PAGESIZE2#
+								$v_ORDEROPTION2$, ENDDATE
 						]]>
 						</isLessThan>
 						</isNotEmpty>
 						<isEmpty property="v_ORDEROPTION2">
 						<![CDATA[	
 							ORDER BY 
-								ENDDATE ) WHERE ROWNUM <= #v_PAGESIZE2#
+								ENDDATE 
 						]]>
 						</isEmpty>
 		   			
