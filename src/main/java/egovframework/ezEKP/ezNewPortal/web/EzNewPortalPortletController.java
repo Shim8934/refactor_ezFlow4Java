@@ -166,15 +166,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/receivedMailPortletList.do", method=RequestMethod.GET)
 	public String portalReceivedMailPortletList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalReceivedMailPortlet Start");
-		userInfo = commonUtil.userInfo(loginCookie);
-		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String password = userIdAndPassword.get(1);	
+		userInfo = commonUtil.userInfo(loginCookie);	
 		String url = "/rest/ezPortal/portlets/receivedMail";
-		
-		
+				
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("password", password);
 		param.put("portletId", req.getParameter("portletId"));
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);

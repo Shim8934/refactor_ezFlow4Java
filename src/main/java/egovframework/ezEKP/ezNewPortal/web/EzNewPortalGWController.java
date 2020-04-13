@@ -3184,7 +3184,7 @@ public class EzNewPortalGWController {
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 
-		String password = request.getParameter("password");
+		String password = jspw;
 		String userId = request.getParameter("userId");
 
 		try {
