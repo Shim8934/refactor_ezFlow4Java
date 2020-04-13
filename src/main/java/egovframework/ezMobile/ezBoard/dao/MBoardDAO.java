@@ -229,4 +229,15 @@ public class MBoardDAO extends EgovAbstractDAO {
 	public List<MBoardInfoVO> getACLListNew(Map<String, Object> map) throws Exception {
 		return (List<MBoardInfoVO>) list("MBoardDAO.getACLListNew", map);
 	}
+
+	/* 2020-04-13 홍승비 - QNA게시판 게시물 카운트 추가 */
+	public int getQNABoardItemListCount(Map<String, Object> map) throws Exception {
+		return (int) select("MBoardDAO.getQNABoardItemListCount", map);
+	}
+	
+	/* 2020-04-13 홍승비- QNA게시판 게시물 리스트 추가  */
+	@SuppressWarnings("unchecked")
+	public List<MBoardItemVO> getQNABoardItemList(Map<String, Object> map) throws Exception {
+		return (List<MBoardItemVO>) list("MBoardDAO.getQNABoardItemList", map);
+	}
 }

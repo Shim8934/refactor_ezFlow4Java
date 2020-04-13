@@ -100,6 +100,7 @@ public class MBoardServiceImpl implements MBoardService {
 		return list;
 	}
 	
+	/* 2020-04-13 홍승비 - QNA게시판 대응하도록 수정 */
 	@Override
 	public List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception {
 		logger.debug("getBoardItemList started.");
@@ -115,9 +116,16 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		//임시로 10으로 지정
 		int listSize = 50;
-        
-		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
-		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
+		int boardCount = 0;
+		List<MBoardItemVO> mBoardItemList;
+		
+		if (gubun != null && gubun.equals("5")) { // qna게시판
+			boardCount = getQNABoardItemListCount(boardID, mBoardInfoVO, userID, gubun, tenantID, pSearchText);
+			mBoardItemList = getQNABoardItemList(boardID, mBoardInfoVO, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
+		} else {
+			boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
+			mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
+		}
 		
 		//게시물 writeDate와 현재시간을 비교해서 게시한지 하루 이전의 게시물은 newItemFlag Y로 set
 		String nowDate = commonUtil.getTodayUTCTime("");
@@ -1757,4 +1765,63 @@ public class MBoardServiceImpl implements MBoardService {
 		logger.debug("getACL ended");
 		return mBoardDAO.getACLListNew(map);
 	}
+	
+	/* 2020-04-13 홍승비 - QNA게시판 게시물 카운트 추가 */
+	@Override
+	public int getQNABoardItemListCount(String boardID, MBoardInfoVO mBoardInfoVO, String userID, String gubun, int tenantID, String pSearchText) throws Exception {
+		logger.debug("getQNABoardItemListCount started.");
+		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("userID", userID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
+		map.put("tenantID", tenantID);
+		map.put("v_PADMINTYPE", mBoardInfoVO.getBoardAdmin_FG());
+		
+		String apprFlag = mBoardDAO.getBoardApprFlag(map);
+		
+		if (apprFlag != null && apprFlag.equals("Y")) {
+			map.put("apprFlag", apprFlag);
+		}
+		
+		int result = mBoardDAO.getQNABoardItemListCount(map);
+		
+		logger.debug("getQNABoardItemListCount ended. result = " + result);
+		
+		return result;
+	}
+	
+	/* 2020-04-13 홍승비- QNA게시판 게시물 리스트 추가  */
+	private List<MBoardItemVO> getQNABoardItemList(String boardID, MBoardInfoVO mBoardInfoVO, String userID, String gubun, int listSize, int boardItemListCount, String lastDate, int tenantID, String offset, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception {
+		logger.debug("getQNABoardItemList started.");
+		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || QNAboardItemListCount = " + boardItemListCount + " || tenantID = " + tenantID + " || lastDate = " + lastDate);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("userID", userID);
+		map.put("listSize", listSize);
+		map.put("lastDate", lastDate);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("tenantID", tenantID);
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
+		map.put("parentWriteDate", parentWriteDate);
+		map.put("upperitemidtree", upperitemidtree);
+		map.put("v_PADMINTYPE", mBoardInfoVO.getBoardAdmin_FG());
+		
+		String apprFlag = mBoardDAO.getBoardApprFlag(map);
+		
+		if (apprFlag != null && apprFlag.equals("Y")) {
+			map.put("apprFlag", apprFlag);
+		}
+		
+		List<MBoardItemVO> list = mBoardDAO.getQNABoardItemList(map);
+		
+		logger.debug("getQNABoardItemList ended.");
+		
+		return list;
+	}
+	
 }
