@@ -187,7 +187,7 @@ public class EzNewPortalGWController {
 			//1. tenant config가 NO인 경우 사용자 포틀릿 순서에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useSurvey(전자설문 리뉴얼), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
 			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
-			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티)
+			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티), useExternalMailServer(메일)
 			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
 			String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
 			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
@@ -201,9 +201,11 @@ public class EzNewPortalGWController {
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId);
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 			LOGGER.debug("[config] useQuestion : " + useQuestion + ", useSurvey : " + useSurvey + ", useMemo : " + useMemo + ", useCabinet : " + useCabinet
 						+ ", useVote : " + useVote + ", useJournal : " + useJournal + ", useCircular : " + useCircular + ", useAttitue : " + useAttitude
-						+ ", useWebfolder : " + useWebfolder + ", useEzPMS : " + useEzPMS + ", useCommunity : " + useCommunity + ", useEzWorkspace : " + useEzWorkspace);
+						+ ", useWebfolder : " + useWebfolder + ", useEzPMS : " + useEzPMS + ", useCommunity : " + useCommunity + ", useEzWorkspace : " + useEzWorkspace
+						+ ", useMail : " + useExternalMailServer);
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
 			}
@@ -250,6 +252,10 @@ public class EzNewPortalGWController {
 			
 			if (useEzPMS == null || useEzPMS.equals("")) {
 				useEzPMS = "NO";
+			}
+			
+			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+				useExternalMailServer = "NO";
 			}
 			
 			if (useQuestion.equals("NO")) {
@@ -310,6 +316,11 @@ public class EzNewPortalGWController {
 			// 협업 사용여부에 따라 제거 
 			if (useEzWorkspace.equals("NO")) {
 				portletOrder.removeIf(vo -> vo.getPortletUrl().contains("ezWorkspace"));
+			}
+			
+			if (useExternalMailServer.equalsIgnoreCase("YES")) {
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
 			}
 
 			JSONObject data = new JSONObject();
@@ -432,6 +443,12 @@ public class EzNewPortalGWController {
 				useAttitude = "YES";
 			} else {
 				useAttitude = "NO";
+			}
+			
+			if (useExternalMailServer.equalsIgnoreCase("YES")) {
+				useMail = "NO";
+			} else {
+				useMail = "YES";
 			}
 			
 			LOGGER.debug("useAttitude : " + useAttitude + ", useQuestion : " + useQuestion + ", useSurvey : " + useSurvey + ", useCircular : " + useCircular);
@@ -742,6 +759,9 @@ public class EzNewPortalGWController {
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			
+			// 2020-04-09 김민성 - 메일 메뉴 컨피그 추가
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
+			
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
 			}
@@ -786,6 +806,10 @@ public class EzNewPortalGWController {
 				useEzPMS = "NO";
 			}
 			
+			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+				useExternalMailServer = "NO";
+			}
+			
 			if (useQuestion.equals("NO")) {
 				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
@@ -828,6 +852,11 @@ public class EzNewPortalGWController {
 			
 			if (useCommunity.equals("NO")) {
 				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
+			}
+			
+			if (useExternalMailServer.equalsIgnoreCase("YES")) {
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
 			}
 			
 			// 20200326 조진호 - 패키지 타입이 메일인 경우 메일,주소록을 제외한 모든 메뉴 제거
@@ -1739,10 +1768,16 @@ public class EzNewPortalGWController {
 				}
 			}
 			
-			LOGGER.debug("useMemo : " + useMemo);
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
+			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+				useExternalMailServer = "NO";
+			}
+			
+			LOGGER.debug("useMemo : " + useMemo + ", useExternalMailServer : " + useExternalMailServer);
 			
 			data.put("useMemo", useMemo);
 			data.put("startPage", startPage);
+			data.put("useExternalMailServer", useExternalMailServer);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2034,7 +2069,7 @@ public class EzNewPortalGWController {
 			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
-			
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
@@ -2084,6 +2119,10 @@ public class EzNewPortalGWController {
 				useEzPMS = "NO";
 			}
 			
+			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+				useExternalMailServer = "NO";
+			}
+			
 			if (useQuestion.equals("NO")) {
 				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
@@ -2130,6 +2169,11 @@ public class EzNewPortalGWController {
 			
 			if (useCommunity.equals("NO")) {
 				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
+			}
+			
+			if (useExternalMailServer.equalsIgnoreCase("YES")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
 			}
 			
 			result.put("status", "ok");
@@ -2447,6 +2491,7 @@ public class EzNewPortalGWController {
 			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 			
 			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
@@ -2495,6 +2540,10 @@ public class EzNewPortalGWController {
 				useEzPMS = "NO";
 			}
 			
+			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+				useExternalMailServer = "NO";
+			}
+			
 			if (useQuestion.equals("NO")) {
 				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
@@ -2537,6 +2586,11 @@ public class EzNewPortalGWController {
 			
 			if (useCommunity.equals("NO")) {
 				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
+			}
+			
+			if (useExternalMailServer.equalsIgnoreCase("YES")) {
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
 			}
 			
 
@@ -4104,6 +4158,9 @@ public class EzNewPortalGWController {
 			useSurvey = ezCommonService.getTenantConfig("useSurvey", info.getTenantId());
 			useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", info.getTenantId());
 			
+			// 2020-04-09 김민성 - 메일 config 추가
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
+			
 			// 2. 메뉴에 권한이 있는지 ================ 수정하기 start
 //			if (useQuestion == null || useQuestion.equals("")) {
 //				useQuestion = "NO";
@@ -4170,6 +4227,12 @@ public class EzNewPortalGWController {
 				useCircular = "YES";
 			} else {
 				useCircular = "NO";
+			}
+			
+			if(useExternalMailServer.equalsIgnoreCase("YES")) {
+				useMail = "NO";
+			} else {
+				useMail = "YES";
 			}
 			
 			String offset = info.getOffSet();

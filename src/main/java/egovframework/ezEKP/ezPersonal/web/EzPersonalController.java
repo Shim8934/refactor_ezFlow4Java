@@ -982,6 +982,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 		String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 		String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 		
 		if (useAttitude == null || useAttitude.equals("")) {
 			useAttitude = "NO";
@@ -1027,6 +1028,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 			useEzPMS = "NO";
 		}
 		
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
 		if (useQuestion.equals("NO")) {
 			menuList.removeIf(vo -> (vo.getMenuId() == 14));
 		}
@@ -1069,6 +1074,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		if (useCommunity.equals("NO")) {
 			menuList.removeIf(vo -> (vo.getMenuId() == 5));
+		}
+		
+		if (useExternalMailServer.equalsIgnoreCase("YES")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 1));
 		}
 		/*
 		 * moduleList에 추가해준 모듈의 이름으로 확인 

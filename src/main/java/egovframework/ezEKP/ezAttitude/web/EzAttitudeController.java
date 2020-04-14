@@ -315,10 +315,16 @@ public class EzAttitudeController {
 		}
 		//2018-05-14 이효진 다음달일땐 searchEndDate "" 으로 가져가서 미입력조회없이 tr에 정보없다고 script로
 		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
 		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("searchDeptId", searchDeptId);
 		model.addAttribute("searchStartDate", searchStartDate);
 		model.addAttribute("searchEndDate", searchEndDate);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
 		LOGGER.debug("popupAbsentedList ended.");
 		

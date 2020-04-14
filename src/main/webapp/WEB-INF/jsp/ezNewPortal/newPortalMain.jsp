@@ -63,6 +63,7 @@
 	    	var layerFlag;
 	    	var memoFlag = "<c:out value='${useMemo}' />";
 	    	var useMemoContextMenu = false;
+	    	var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
 	    	
 	    	var beforeMemoId;
 	    	var beforeMemo;

@@ -3654,6 +3654,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (use_cabinet.equals("YES")) {
 			use_cabinet = cabinetAdminService.checkModuleActive("board", userInfo);
 		}
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
 		
 		location = request.getParameter("location");
 		
@@ -3787,6 +3791,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("isLikeChecked", isLikeChecked);
 		model.addAttribute("useCabinet", use_cabinet);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
@@ -5436,7 +5441,13 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 게시판재전송 호출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/boardRetransOption.do", method = RequestMethod.GET)
-	public String boardRetransOption() {
+	public String boardRetransOption(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		
 		return "ezBoard/boardRetransOption";
 	}
 	
