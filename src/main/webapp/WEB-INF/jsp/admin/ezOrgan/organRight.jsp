@@ -1967,16 +1967,18 @@
 					<li id="usermenu8"><span onClick="mov_dept()"><spring:message code='ezOrgan.t82' /></span></li>
 					<li id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></li>
 				</c:if>
+				<c:if test="${useExternalMailServer == 'NO' }">
 				<li id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
 				<li id="usermenu6"><span onClick="deptMail_manage()"><spring:message code='ezEmail.multiDomain.ksa22' /></span></li>
 				<li id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></li>
+				</c:if>
 				<c:if test="${useSyncServer == 'YES'}">			
 					<li id="usermenu24"><span onClick="syncOrganAccounts()"><spring:message code='ezOrgan.lhm5' /></span></li>
 				</c:if>
 				<c:if test="${useBizmekaTalk == 'YES'}">
 					<li id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></li>
 				</c:if>
-				<c:if test="${useDisablePopImap == 'YES'}">
+				<c:if test="${useDisablePopImap == 'YES' && useExternalMailServer == 'NO'}">
 					<li id="usermenu22"><span onClick="mod_pop3Imap()">POP3/IMAP</span></li>
 				</c:if>
 				<c:if test="${useMobileManagemant == 'YES' }">

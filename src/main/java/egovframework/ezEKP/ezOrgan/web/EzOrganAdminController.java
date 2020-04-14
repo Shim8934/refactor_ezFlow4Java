@@ -307,6 +307,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String useDisablePop3Imap = ezCommonService.getTenantConfig("UseDisablePopImap", user.getTenantId());
 		String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", user.getTenantId());
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", user.getTenantId());
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", user.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
 		
 		String topid = "";
 		String deptTreeTopId = "";
@@ -336,6 +340,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useMobileManagemant", useMobileManagemant);
 		model.addAttribute("useSyncServer", useSyncServer);
 		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
@@ -2104,6 +2109,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", user.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", tenantID);
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -2120,6 +2130,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("use_editor", use_editor);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
 		logger.debug("addJobList ended.");
 		
@@ -2489,6 +2500,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			use_attitude = "YES";
 		}
 		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", user.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
@@ -2513,6 +2529,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("use_attitude", use_attitude);
         model.addAttribute("useWebfolder", useWebfolder);
         model.addAttribute("packageType", packageType);
+        model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
 		logger.debug("permissionsList ended.");
 		
