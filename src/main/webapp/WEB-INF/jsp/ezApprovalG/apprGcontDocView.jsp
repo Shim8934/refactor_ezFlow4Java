@@ -834,7 +834,9 @@
 		          	<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 				  </c:if>
 				  <li id="btnPrint"><span class="icon16 popup_icon16_print" id="span_btnPrint" onClick="return btnPrint_onclick()"></span></li>
+				  <c:if test="${useExternalMailServer == 'NO'}">
 		          <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" id="span_btnMail" onClick="return btnMail_onclick()"></span></li>
+		          </c:if>
 		          <c:if test="${useCabinet == 'YES'}">
 						<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 		          </c:if>

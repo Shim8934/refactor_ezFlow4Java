@@ -175,6 +175,8 @@
 			//2020-01-23 김은석 추가
 			var useAnnualSusinYN = "<c:out value ='${useAnnualSusinYN}'/>";
 			
+			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
+			
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -189,6 +191,9 @@
 					document.getElementById("btnAddSepAttach").style.display = "none";
 		        }
 		    	
+		    	if(useExternalMailServer == "NO") {
+		    		$("#btnMail").css("display","");
+		    	}
 		    };
 		    
 		    function getNextDocList()
@@ -2189,7 +2194,7 @@
 		                  <li id="btnConn" style="display:none"><span onClick="return btnConn_onclick()"><spring:message code='ezApprovalG.t63'/></span></li>
 		                  <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 						  <li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
-		                  <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()"></span></li>
+		                  <li id="btnMail" style="display:none"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()"></span></li>
 		                  <c:if test="${useCabinet == 'YES'}">
 								<li id="btnAddRelatedCabinet"><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 						  </c:if>

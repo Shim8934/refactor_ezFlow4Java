@@ -1103,6 +1103,8 @@ function chkBtnConfirm(para) {
 
         if (document.getElementById("btnMail").style.display == "")
             bbtnMail = "1";
+        else 
+        	bbtnMail = "";
 
         if (document.getElementById("btnSetTaskCode").style.display == "")
             bbtnSetTaskCode = "1";
