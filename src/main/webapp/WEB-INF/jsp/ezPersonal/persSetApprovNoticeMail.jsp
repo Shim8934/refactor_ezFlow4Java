@@ -13,6 +13,7 @@
 		
 		    var pUserID = "${userInfo.id}";
 		    var gSentBox = "Y";
+		    var useSaveSentMail = "<c:out value='${useSaveSentMail}'/>";
 		
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -23,6 +24,10 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        
+		        if(useSaveSentMail == "true") {
+			    	$("#btnMail").css("display","");
+			    }
 		    };
 			function Save() {
 			    var Mode = "";
@@ -52,6 +57,9 @@
 			        pSentBox = "Y";
 			    else
 			        pSentBox = "N";
+			    
+			    if(useSaveSentMail == "false")
+			    	pSentBox = "N";
 			    
 			    var Result = "";
 			    
@@ -141,8 +149,7 @@
 					</c:choose>
 				  <td>&nbsp;<spring:message code='ezPersonal.t408'/></td>
 				</tr> 
-				<c:if test="${useSaveSentMail}">
-				<tr>
+				<tr id="btnMail" style="display:none;">
 					<c:choose>
 						<c:when test="${saveMailFlag == 'Y'}">
 							<th style="white-space:nowrap"><input type="checkbox" id="sentboxsave" checked="checked"/></th>
@@ -153,7 +160,6 @@
 					</c:choose>
 				  <td>&nbsp;<spring:message code='ezPersonal.t409'/></td>
 				</tr> 
-				</c:if>
 			</table>					
 			<div class="btnpositionJsp" style="width:506px;">
 			    <a class="imgbtn" onClick="Save()"><span><spring:message code='ezPersonal.t34'/></span></a>
