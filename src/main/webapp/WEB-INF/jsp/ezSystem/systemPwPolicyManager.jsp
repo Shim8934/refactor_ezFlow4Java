@@ -204,30 +204,38 @@
                 document.getElementById("chkSpecial").checked = useSpecialChar;
             }
             
-            for (var i = 0; i < pwPolicyPattern.length; i++) {
-            	var nowPattern = pwPolicyPattern[i];
-            	if (nowPattern.USE_PATTERN_COUNT != "") {
-            		var QueryElement = document.querySelector("TD[_PatternCnt='" + nowPattern.USE_PATTERN_COUNT + "']");
-            		var QuerySelectElement = QueryElement.querySelector("SELECT");
-                    var QueryInputElement = QueryElement.querySelector("INPUT");
-                    
-                    if (QueryElement != null) {
-                    	var numberChar = nowPattern.NUMBER_OF_CHAR;
-                        if (numberChar == "0") {
-                            if (QuerySelectElement != null) {
-                                QuerySelectElement.value = "notuse";
-                            }
-                        }
-                        else {
-                            if (QuerySelectElement != null) {
-                                QuerySelectElement.value = "limit";
-                                if (QueryInputElement != null) {
-                                    QueryInputElement.value = numberChar;
-                                }
-                            }
-                        }
-                    }
-            	}
+            if (pwPolicyPattern.length > 0) {
+	            for (var i = 0; i < pwPolicyPattern.length; i++) {
+	            	var nowPattern = pwPolicyPattern[i];
+	            	if (nowPattern.USE_PATTERN_COUNT != "") {
+	            		var QueryElement = document.querySelector("TD[_PatternCnt='" + nowPattern.USE_PATTERN_COUNT + "']");
+	            		var QuerySelectElement = QueryElement.querySelector("SELECT");
+	                    var QueryInputElement = QueryElement.querySelector("INPUT");
+	                    
+	                    if (QueryElement != null) {
+	                    	var numberChar = nowPattern.NUMBER_OF_CHAR;
+	                        if (numberChar == "0") {
+	                            if (QuerySelectElement != null) {
+	                                QuerySelectElement.value = "notuse";
+	                            }
+	                        }
+	                        else {
+	                            if (QuerySelectElement != null) {
+	                                QuerySelectElement.value = "limit";
+	                                if (QueryInputElement != null) {
+	                                    QueryInputElement.value = numberChar;
+	                                }
+	                            }
+	                        }
+	                    }
+	            	}
+	            }
+            } else {
+            	var matcheElements = document.querySelectorAll("td[_PatternCnt]");
+                matcheElements.forEach(function(e, i) {
+    	   			var querySelectElement = e.querySelector("SELECT");
+    	   			querySelectElement.value = "unlimit";
+            	});
             }
         } else {
         	document.getElementById("chkEngCapitalLetter").checked = false;
