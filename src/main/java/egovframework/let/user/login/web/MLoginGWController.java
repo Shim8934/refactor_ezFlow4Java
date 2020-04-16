@@ -742,16 +742,6 @@ public class MLoginGWController {
 	        		}
 	        	}
 				                	
-				if (resultVO.getLoginCnt() == 0) {
-					LOGGER.debug("isFirstLogin");
-					
-					result.put("status", "error");
-					result.put("code", "4");			
-					result.put("data", "isFirstLogin");
-					
-					return result;
-				}
-
 		    	String mIp = request.getHeader("ip");
 		    	String mAgent = request.getHeader("agent");
 		    	String mBrowser = request.getHeader("browser");

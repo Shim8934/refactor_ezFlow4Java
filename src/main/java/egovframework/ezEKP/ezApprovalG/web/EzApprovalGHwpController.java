@@ -279,6 +279,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         	model.addAttribute("nonElecRec", nonElecRec);
         }
         
+        String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+        
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("approvalPWD", approvalPWD);
         model.addAttribute("useEditor", useEditor);
@@ -313,6 +318,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		}
 
 		model.addAttribute("useOpenGov", useOpenGov);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 
 		LOGGER.debug("approvuiHWP ended");
 		
@@ -415,6 +421,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			}
 		}
 		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("docID", docID);
 		model.addAttribute("docHref", docHref);
@@ -429,6 +440,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
 		LOGGER.debug("ezviewAprHWP ended");
 		
@@ -706,6 +718,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			sendType = ezApprovalGService.getDocSendType(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		}
 		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
 		model.addAttribute("docID", docID);
 		model.addAttribute("docHref", docHref);
 		model.addAttribute("listSusin", listSusin);
@@ -720,6 +737,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("sendType", sendType);
 		model.addAttribute("pass", pass);
 		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
 		LOGGER.debug("ezViewEnd_HWP ended");
 		
@@ -800,6 +818,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		/* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
 		String useRedraftOpinionKeep = ezCommonService.getTenantConfig("useRedraftOpinionKeep", userInfo.getTenantId());
 		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optIsSplit", optIsSplit);
 		model.addAttribute("optSplitKind", optSplitKind);
@@ -819,6 +842,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
 		LOGGER.debug("ezRecevGSusinHWP ended");
 		

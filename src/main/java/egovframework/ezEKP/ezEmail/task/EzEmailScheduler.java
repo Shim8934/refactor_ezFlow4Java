@@ -127,6 +127,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	public void mailboxQuotaListUpdate() throws Exception {
 		logger.debug("mailboxQuotaListUpdate scheduler started.");
 		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("mailboxQuotaListUpdate scheduler ended.");
+			return;
+		}
+		
 		if (!preScheduler("mailboxQuotaListUpdate")) {
 			logger.debug("mailboxQuotaListUpdate scheduler ended.");
 			return;
@@ -177,6 +183,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Scheduled(cron = "${config.cron.deleteAllUserOldMail}")
 	public void deleteAllUserMail() throws Exception {
 		logger.debug("deleteAllUserOldMail scheduler started.");
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("deleteAllUserOldMail scheduler ended.");
+			return;
+		}
 		
 		if (!preScheduler("deleteAllUserOldMail")) {
 			logger.debug("deleteAllUserOldMail scheduler ended.");
@@ -317,6 +329,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	public void autoDelete() throws Exception{
 		logger.debug("autoDelete scheduler started.");
 		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("autoDelete scheduler ended.");
+			return;
+		}
+		
 		//choose scheduler running server
 		if (!preScheduler("autoDelete")) {
 			logger.debug("autoDelete scheduler ended.");
@@ -385,6 +403,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Scheduled(cron = "${config.cron.reservedMailSend}")
 	public void reservedMailSend() throws Exception{
 		logger.debug("reservedMailSend scheduler started.");
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("reservedMailSend scheduler ended.");
+			return;
+		}
 		
 		//choose scheduler running server
 		if (!preScheduler("reservedMailSend")) {
@@ -892,6 +916,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     public void processMailStatLogs() throws Exception {
         logger.debug("processMailStatLogs scheduler started.");
         
+        String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("processMailStatLogs scheduler ended.");
+			return;
+		}
+		
         //choose scheduler running server
         if (!preScheduler("processMailStatLogs")) {
             logger.debug("processMailStatLogs scheduler ended.");
@@ -1079,6 +1109,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Scheduled(cron = "${config.cron.broadcastQuotaWarning}")
 	public void broadcastQuotaWarning() throws Exception {
 		logger.debug("broadcastQuotaWarning started.");
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("broadcastQuotaWarning scheduler ended.");
+			return;
+		}
 		
 		//choose scheduler running server
 		if (!preScheduler("broadcastQuotaWarning")) {

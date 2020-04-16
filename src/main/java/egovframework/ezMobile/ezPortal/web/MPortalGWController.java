@@ -113,6 +113,11 @@ public class MPortalGWController extends EgovFileMngUtil {
 			
 			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
 			String listCnt = request.getParameter("listCnt");
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", info.getTenantId());
+			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+				useExternalMailServer = "NO";
+			}
+			dataObject.put("useExternalMailServer", useExternalMailServer);
 			
 			if (type != null && !type.equals("T")) {
 				//받은결재함 리스트
@@ -140,11 +145,15 @@ public class MPortalGWController extends EgovFileMngUtil {
 					locale = new Locale("ja");
 				}
 				
+				if(useExternalMailServer.equalsIgnoreCase("NO")) {
 				JSONArray mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
 				
 				//안읽은메일 리스트 카운트
 				int mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
 				
+				dataObject.put("mailList", mailList);
+				dataObject.put("mailCnt", mailCnt+"");
+				}
 				/* 2018-07-03 홍승비 - 조건에 companyID 추가 필요 */
 				//새게시물 리스트
 				List<MBoardNewListVO> boardList = mBoardService.getBoardMainList(userId, listCnt, info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getOffSet());
@@ -165,9 +174,6 @@ public class MPortalGWController extends EgovFileMngUtil {
 				
 				dataObject.put("scheduleList", scheduleList);
 				dataObject.put("scheduleCnt", scheduleCnt+"");
-				
-				dataObject.put("mailList", mailList);
-				dataObject.put("mailCnt", mailCnt+"");
 				
 				dataObject.put("boardList", boardList);
 				dataObject.put("boardCnt", boardCnt+"");
@@ -209,6 +215,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				LOGGER.debug("## 전자결재/게시판 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				startTime = System.currentTimeMillis();
 				//메일 조인
+				if(useExternalMailServer.equalsIgnoreCase("NO")) {
 				List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, jspw, sessionDate, Integer.parseInt(listCnt));
 				
 				for (Map<String, String> maps : mailList) {
@@ -223,6 +230,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				}
 				
 				LOGGER.debug("## 메일 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
+				}
 				startTime = System.currentTimeMillis();
 				//자원관리 조인
 				Map<String, Object> resMap = mResourceService.getScheduleList("", info.getCompanyId(), nowDate.substring(0, 10), nowDate.substring(0, 10), info.getDeptId(), info.getTenantId(), info.getOffSet(), listCnt, "", "", "", "", primary);
@@ -419,7 +427,11 @@ public class MPortalGWController extends EgovFileMngUtil {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String langStr = request.getParameter("langStr");
 			String listCnt = request.getParameter("listCnt");			
-								
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", info.getTenantId());
+			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+				useExternalMailServer = "NO";
+			}					
+			
 			//받은결재함 리스트 카운트
 			int apprCnt = mApprovalGService.getDoApproveListCount(info, "DO", "");
 			
@@ -434,7 +446,10 @@ public class MPortalGWController extends EgovFileMngUtil {
 			Locale locale = new Locale(ld);			
 
 			//안읽은메일 리스트 카운트
+			if(useExternalMailServer.equalsIgnoreCase("NO")) {
 			int mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+			dataObject.put("mailCnt", mailCnt+"");
+			}
 			
 			/* 2018-07-03 홍승비 - 조건에 companyID 추가 */
 			//새게시물 리스트 카운트
@@ -449,8 +464,6 @@ public class MPortalGWController extends EgovFileMngUtil {
 			dataObject.put("apprCnt", apprCnt+"");
 			
 			dataObject.put("scheduleCnt", scheduleCnt+"");
-			
-			dataObject.put("mailCnt", mailCnt+"");
 			
 			dataObject.put("boardCnt", boardCnt+"");
 			

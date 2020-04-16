@@ -63,6 +63,13 @@ public class EzStatisticsLeftMenuController {
 		if (use_attitude == null || use_attitude.equals("")) {
 			model.addAttribute("use_attitude", "YES");
 		}
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 	    
 		return "ezStatistics/statisticsLeftMenu";
 	}

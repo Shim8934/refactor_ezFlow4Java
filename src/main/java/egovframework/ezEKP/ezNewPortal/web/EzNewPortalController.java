@@ -107,11 +107,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String status = resultBody.get("status").toString();
 		String returnUrl = "";
 		String useMemo = "";
+		String useExternalMailServer = "";
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			JSONObject startPage = (JSONObject) data.get("startPage");
 			useMemo = data.get("useMemo").toString();
+			useExternalMailServer = data.get("useExternalMailServer").toString();
 			
 			if (startPage != null) {
 				String startUrl = startPage.get("menuUrl").toString();
@@ -133,6 +135,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			returnUrl = "/ezEmail/mailMain.do";
 		}
 		
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("useMemo", useMemo);
 		model.addAttribute("mainUrl", returnUrl);
 		model.addAttribute("userDeptId", userInfo.getDeptID());

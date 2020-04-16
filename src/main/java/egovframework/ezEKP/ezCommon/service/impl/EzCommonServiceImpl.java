@@ -1611,4 +1611,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.addAprTmpAttachViewOrder();
 	}
 
+	@Override
+	public void insertUseExternalMailServerConfig() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useExternalMailServer");
+		map.put("propertyValue", "NO");
+		map.put("description", "메일 모듈 사용 여부. YES: 외부메일 사용 NO: 내부메일 사용(default: NO)");
+		map.put("configName", "메일 모듈 사용 여부");
+		map.put("configType", "메일");
+		map.put("regdate", "2020-04-16 00:00:00");
+
+		ezCommonDAO.insertUseExternalMailServerConfig(map);
+	}
 }

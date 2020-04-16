@@ -54,6 +54,18 @@ public class EzMainAdminController {
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
 		
+		// 2020-04-10 김민성 - 메일 컨피그 추가
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
+		if (useExternalMailServer.equalsIgnoreCase("YES")) {
+			model.addAttribute("use_mail", "NO");
+		} else {
+			model.addAttribute("use_mail", "YES");
+		}
+		
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("use_ezDMS", use_ezDMS);
 		model.addAttribute("use_portal", use_portal);
@@ -66,6 +78,7 @@ public class EzMainAdminController {
 		/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가  */
 		model.addAttribute("use_community", use_community);
 		model.addAttribute("use_webfolder", useWebfolder);
+		
 		
 		if (firstScreenMail == null || firstScreenMail.equals("")) {
 			model.addAttribute("firstScreen_Mail", "NO");

@@ -186,8 +186,9 @@
 			      			<%-- 패키지 타입이 mail일때에도 포탈 메뉴가 선별적으로 필요해서 처리 --%>
 	                    	<li><span id="menu10" onClick="menu_change(0, event)"><spring:message code="main.t22" /></span></li>
 			      			<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t8" /></span></li>
+			      			<c:if test="${use_mail == 'YES' }">
 			      			<li><span id="menu31" onClick="menu_change(170, event)"><spring:message code="main.t78" /></span></li>
-			      			
+			      			</c:if>
 			      			<c:if test="${packageType != 'mail'}">      
 				      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="ezSchedule.t1010" /></span></li>
 				      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="ezBoard.t0006" /></span></li>
