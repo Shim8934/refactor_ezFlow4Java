@@ -517,13 +517,25 @@
 		            var configEndDate = Number(ReplaceText("${endDateTime}", "-", ""));
 		            var currEndDate = Number(ReplaceText(pEndDate.substring(0, 10), "-", ""));
 		            var currReserveDate = Number(ReplaceText(pStartDate.substring(0, 10), "-", ""));
-
+					var alertMsg = "";
+					
+		            /* 2020-04-16 홍승비 - 예약게시일, 게시만료일 설정 메세지 변경 (일본어인 경우) */
 		            if (configEndDate < currEndDate) {
-		                alert("<spring:message code='ezBoard.t382' />" + "${endDateTime}" + "<spring:message code='ezBoard.t383' />");
+		            	if ("${userInfo.lang}" == "3") { // 일본어
+		            		alertMsg = "<spring:message code='ezBoard.t191' />";
+		            	} else {
+		            		alertMsg = "<spring:message code='ezBoard.t382' />" + "${endDateTime}" + "<spring:message code='ezBoard.t383' />";
+		            	}
+		                alert(alertMsg);
 		                return;
 		            }
 		            if (currEndDate < currReserveDate) {
-		                alert("<spring:message code='ezBoard.t384' />" + pEndDate.substring(0, 10) + " <spring:message code='ezBoard.t383' />");
+		            	if ("${userInfo.lang}" == "3") { // 일본어
+		            		alertMsg = "<spring:message code='ezBoard.t191' />";
+		            	} else {
+		            		alertMsg = "<spring:message code='ezBoard.t384' />" + pEndDate.substring(0, 10) + " <spring:message code='ezBoard.t383' />";
+		            	}
+		            	alert(alertMsg);
 		                return;
 		            }
 		        }
