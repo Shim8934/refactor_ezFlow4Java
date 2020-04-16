@@ -1286,4 +1286,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.updateAprTmpAttachViewOrder");
 		}
 	}
+	
+	public void insertUseExternalMailServerConfig(Map<String, Object> map) throws Exception{
+		String propertyValue = (String) select("EzCommonDAO.checkMailTenantConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("useExternalMailServer tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertSurveyTenantConfig",map);
+		}
+	}
 }

@@ -209,5 +209,7 @@ public interface EzCommonService {
 	
 	public void addAprTmpAttachViewOrder() throws Exception;
 	
+	public void insertUseExternalMailServerConfig() throws Exception;
+	
 }
 
