@@ -23829,7 +23829,7 @@
 				FILEOPENFLAG
 			</isEqual>
 			)
-		SELECT (
+		(SELECT
 			#v_USERID#,
 			#v_SN#,
 			A.ATTACHFILESN ,
