@@ -17,6 +17,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -54,10 +57,8 @@ import kr.dogfoot.hwplib.object.docinfo.BinData;
 import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataCompress;
 import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataState;
 import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataType;
-import kr.dogfoot.hwplib.object.docinfo.borderfill.fillinfo.ImageFill;
 import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
 import kr.dogfoot.hwplib.reader.HWPReader;
-import kr.dogfoot.hwplib.tool.objectfinder.forField.ForParagraphList;
 import kr.dogfoot.hwplib.writer.HWPWriter;
 
 import org.apache.commons.codec.binary.Base64;
@@ -25190,11 +25191,60 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String pOrgDocID = "";
 		String pOrgCompanyID = "";
-		
+		 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("v_DOCID", docID);
+		map2.put("companyID", companyID);
+		map2.put("v_TENANTID", tenantID);
+		map2.put("v_FLAG", 1);
+		
+		List<ApprGAprLineVO> aprLineInfo = ezApprovalGDAO.getAprLineInfo(map2);
+		
+		int aprLineCnt = aprLineInfo.size();
+		long waitCnt = aprLineInfo.stream().filter(elem -> "001".equals(elem.getAprState())).count();
+		
+		// 결재선 지정없이 접수자가 바로 회송을 눌렀거나, 결재선을 지정하고 접수자가 회송을 누를 경우, 결재선에 접수자만 반송 상태로 추가해서 회송한다. 2020-04-16 임민석
+		if(aprLineCnt == 0 || aprLineCnt - 1 <= waitCnt) {
+			ezApprovalGDAO.deleteApprLineInfo(map);
+			
+			LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC"));
+			String nowStr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(now);
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("v_DOCID", docID);
+			param.put("v_APRMEMSN", 1);
+			param.put("v_APRTYPE", "001");
+			param.put("v_APRSTATE", "004");
+			param.put("v_APRMEMID", userInfo.getId());
+			param.put("v_APRMEMDEPTYN", "N");
+			param.put("v_APRMEMNM", userInfo.getDisplayName());
+			param.put("v_APRMEMNM2", userInfo.getDisplayName2());
+			param.put("v_APRMEMJOBTITLE", userInfo.getTitle());
+			param.put("v_APRMEMJOBTITLE2", userInfo.getTitle2());
+			param.put("v_APRMEMBERDEPTID", userInfo.getDeptID());
+			param.put("v_APRMEMBERDEPTNAME", userInfo.getDeptName());
+			param.put("v_APRMEMBERDEPTNAME2", userInfo.getDeptName2());
+			param.put("v_APRMEMBERLDAPPATH", userInfo.getCompanyID());
+			param.put("v_RECEIVEDDATE", "'" + nowStr + "'");
+			param.put("v_PROCESSDATE", "'" + nowStr + "'");
+			param.put("v_REASONDONOTAPPROV", "");
+			param.put("v_ISPROPOSERYN", "N");
+			param.put("v_ISBRIEFUSERYN", "N");
+			param.put("v_TENANTID", tenantID);
+			param.put("companyID", companyID);
+			
+			ezApprovalGDAO.insertApprLine(param);
+			
+			param.put("v_ORGUSERID", userInfo.getId());
+			
+			ezApprovalGDAO.deleteExApprLine(param);
+			ezApprovalGDAO.insertExApprLine(param);
+		}
 		
 		List <ApprGAprDocInfoVO> hesongList = ezApprovalGDAO.doSusinHesongAprDocInfo(map);
 		
