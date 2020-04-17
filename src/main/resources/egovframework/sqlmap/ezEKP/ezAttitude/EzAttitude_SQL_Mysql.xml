@@ -479,7 +479,12 @@
 			IP,
 			DATE_TYPE,
 			TYPE_ID,
-			MODAPPL
+			MODAPPL,
+			ATTEND_TYPE
+			<isNotEmpty property="latitude">
+			,LATITUDE,
+			LONGITUDE
+			</isNotEmpty>
 		)
 		VALUES
 		(
@@ -496,7 +501,12 @@
 			IFNULL(#ipAddress#, ''),
 			#dateType#,
 			#typeId#,
-			#modappl#
+			#modappl#,
+			#attendType#
+			<isNotEmpty property="latitude">
+			,#latitude#,
+			#longitude#
+			</isNotEmpty>
 		)
 		<selectKey resultClass="int" keyProperty="attitudeId">
 		    SELECT LAST_INSERT_ID()
