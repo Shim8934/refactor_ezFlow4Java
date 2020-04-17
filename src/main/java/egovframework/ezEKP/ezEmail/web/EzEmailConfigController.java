@@ -2316,31 +2316,36 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					String policyStr = policy.equals("all") ? "ezEmail.userDL21" : policy.equals("member") ? "ezEmail.userDL22" : "ezEmail.userDL23";
 					policyStr = egovMessageSource.getMessage(policyStr, locale);
 					
+					String dlId = commonUtil.cleanValue(dlVo.getId());
+					String dlName = commonUtil.cleanValue(dlVo.getName());
+					String dlExplaination = commonUtil.cleanValue(dlVo.getExplaination());
+					String dlMail = commonUtil.cleanValue(dlVo.getMail());
+					
 					// commonUtil.cleanValue()
 					if (showDLListType.equals("setting")) { // 메일 환경설정
 						sb.append("<ROW>");
 						sb.append("<CELL>");
-							sb.append("<VALUE>" + dlVo.getId() + "</VALUE>");
-							sb.append("<DATA1>" + dlVo.getId() + "</DATA1>");
-							sb.append("<DATA2>" + dlVo.getName() + "</DATA2>");
+							sb.append("<VALUE>" + dlId + "</VALUE>");
+							sb.append("<DATA1>" + dlId + "</DATA1>");
+							sb.append("<DATA2>" + dlName + "</DATA2>");
 							sb.append("<DATA3>" + policy + "</DATA3>");
-							sb.append("<DATA4>" + dlVo.getExplaination() + "</DATA4>");
+							sb.append("<DATA4>" + dlExplaination + "</DATA4>");
 							sb.append("<DATA5>" + dlVo.getEndDate() + "</DATA5>");
 							sb.append("<DATA6>" + ownerChk + "</DATA6>");
 						sb.append("</CELL>");
-						sb.append("<CELL><VALUE>" + dlVo.getName() + "</VALUE></CELL>");
+						sb.append("<CELL><VALUE>" + dlName + "</VALUE></CELL>");
 						sb.append("<CELL><VALUE>" + policyStr + "</VALUE></CELL>");
-						sb.append("<CELL><VALUE>" + dlVo.getExplaination() + "</VALUE></CELL>");
+						sb.append("<CELL><VALUE>" + dlExplaination + "</VALUE></CELL>");
 						sb.append("<CELL><VALUE>" + dlVo.getEndDate() + "</VALUE></CELL>");
 						sb.append("</ROW>");
 					} else { // 수신자 설정 공용배포그룹
 						sb.append("<ROW>");
 						sb.append("<CELL>");
-							sb.append("<VALUE>" + dlVo.getName() + "</VALUE>");
-							sb.append("<DATA1>" + dlVo.getId() + "</DATA1>");
-							sb.append("<DATA2>" + dlVo.getMail() + "</DATA2>");
+							sb.append("<VALUE>" + dlName + "</VALUE>");
+							sb.append("<DATA1>" + dlId + "</DATA1>");
+							sb.append("<DATA2>" + dlMail + "</DATA2>");
 							sb.append("<DATA3>" + dlVo.getDisclosurePolicy() + "</DATA3>");
-							sb.append("<DATA4>" + dlVo.getExplaination() + "</DATA4>");
+							sb.append("<DATA4>" + dlExplaination + "</DATA4>");
 							sb.append("<DATA5>" + dlVo.getEndDate() + "</DATA5>");
 							sb.append("<DATA6>" + ownerChk + "</DATA6>");
 						sb.append("</CELL>");
@@ -2608,14 +2613,14 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				
 				sb.append("<ROW>");
 				sb.append("<CELL>");
-					sb.append("<VALUE>" + dlName + "</VALUE>");
-					sb.append("<DATA1>" + dlCn + "</DATA1>");
-					sb.append("<DATA2>" + dlMail + "</DATA2>");
-					sb.append("<DATA3>" + dlPClass + "</DATA3>");
+					sb.append("<VALUE>" + commonUtil.cleanValue(dlName) + "</VALUE>");
+					sb.append("<DATA1>" + commonUtil.cleanValue(dlCn) + "</DATA1>");
+					sb.append("<DATA2>" + commonUtil.cleanValue(dlMail) + "</DATA2>");
+					sb.append("<DATA3>" + commonUtil.cleanValue(dlPClass) + "</DATA3>");
 				sb.append("</CELL>");
-				sb.append("<CELL><VALUE>" + dlMail + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + dlDeptName + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + regDate + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(dlMail) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(dlDeptName) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(regDate) + "</VALUE></CELL>");
 				sb.append("</ROW>");
 			}
 		}
@@ -2665,31 +2670,36 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					String policyStr = policy.equals("all") ? "ezEmail.userDL21" : policy.equals("member") ? "ezEmail.userDL22" : "ezEmail.userDL23";
 					policyStr = egovMessageSource.getMessage(policyStr, locale);
 					
+					String dlId = commonUtil.cleanValue(dlVo.getId());
+					String dlName = commonUtil.cleanValue(dlVo.getName());
+					String dlExplaination = commonUtil.cleanValue(dlVo.getExplaination());
+					String dlMail = commonUtil.cleanValue(dlVo.getMail());
+					
 					// commonUtil.cleanValue()
 					if (showDLListType.equals("setting")) { // 메일 환경설정
 						sb.append("<ROW>");
 						sb.append("<CELL>");
-							sb.append("<VALUE>" + dlVo.getId() + "</VALUE>");
-							sb.append("<DATA1>" + dlVo.getId() + "</DATA1>");
-							sb.append("<DATA2>" + dlVo.getName() + "</DATA2>");
+							sb.append("<VALUE>" + dlId + "</VALUE>");
+							sb.append("<DATA1>" + dlId + "</DATA1>");
+							sb.append("<DATA2>" + dlName + "</DATA2>");
 							sb.append("<DATA3>" + policy + "</DATA3>");
-							sb.append("<DATA4>" + dlVo.getExplaination() + "</DATA4>");
+							sb.append("<DATA4>" + dlExplaination + "</DATA4>");
 							sb.append("<DATA5>" + dlVo.getEndDate() + "</DATA5>");
 							sb.append("<DATA6>" + ownerChk + "</DATA6>");
 						sb.append("</CELL>");
-						sb.append("<CELL><VALUE>" + dlVo.getName() + "</VALUE></CELL>");
+						sb.append("<CELL><VALUE>" + dlName + "</VALUE></CELL>");
 						sb.append("<CELL><VALUE>" + policyStr + "</VALUE></CELL>");
-						sb.append("<CELL><VALUE>" + dlVo.getExplaination() + "</VALUE></CELL>");
+						sb.append("<CELL><VALUE>" + dlExplaination + "</VALUE></CELL>");
 						sb.append("<CELL><VALUE>" + dlVo.getEndDate() + "</VALUE></CELL>");
 						sb.append("</ROW>");
 					} else { // 수신자 설정 공용배포그룹
 						sb.append("<ROW>");
 						sb.append("<CELL>");
-							sb.append("<VALUE>" + dlVo.getName() + "</VALUE>");
-							sb.append("<DATA1>" + dlVo.getId() + "</DATA1>");
-							sb.append("<DATA2>" + dlVo.getMail() + "</DATA2>");
+							sb.append("<VALUE>" + dlName + "</VALUE>");
+							sb.append("<DATA1>" + dlId + "</DATA1>");
+							sb.append("<DATA2>" + dlMail + "</DATA2>");
 							sb.append("<DATA3>" + dlVo.getDisclosurePolicy() + "</DATA3>");
-							sb.append("<DATA4>" + dlVo.getExplaination() + "</DATA4>");
+							sb.append("<DATA4>" + dlExplaination + "</DATA4>");
 							sb.append("<DATA5>" + dlVo.getEndDate() + "</DATA5>");
 							sb.append("<DATA6>" + ownerChk + "</DATA6>");
 						sb.append("</CELL>");
