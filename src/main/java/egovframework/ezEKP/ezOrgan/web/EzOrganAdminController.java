@@ -3061,7 +3061,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					deptVo.setTenantId(tenantID);
 					deptVo.setNowDate(nowDate);
 					
-					ezOrganAdminService.updateDBData_dept(deptVo);
+					if (deptVo.getCn().equals(deptVo.getExtensionAttribute2())) {
+						ezOrganAdminService.updateDBData_company(deptVo.getCn(), deptVo.getDisplayName(), deptVo.getDisplayName2(), deptVo.getMail(), deptVo.getTenantId());
+					} else {
+						ezOrganAdminService.updateDBData_dept(deptVo);
+					}
 				}
 			}
 			

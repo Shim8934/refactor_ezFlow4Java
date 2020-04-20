@@ -817,9 +817,6 @@
 		        if (nodeIdx.length == 0) {
 		        	alert("<spring:message code='ezEmail.multiDomain.ksa23' />");
 					return;
-		        } else if (treeNode.GetNodeData("EXTENSIONATTRIBUTE2") == treeNode.GetNodeData("CN")) {
-		        	alert(strLangKSM01);
-		        	return;
 		        }
 				
 		        var selectId = treeNode.GetNodeData("CN");
