@@ -61,6 +61,9 @@
 		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
 		<result  property="writerName"			column="WRITER_NAME"			columnIndex="18"/>
 		<result  property="writerDeptName"		column="WRITER_DEPT_NAME"		columnIndex="19"/>
+		<result  property="attendType"		column="ATTEND_TYPE"		columnIndex="20"/>
+		<result property="latitude" 				column="LATITUDE" 			columnIndex="21" nullValue="0"/>
+		<result property="longitude" 				column="LONGITUDE" 			columnIndex="22" nullValue="0"/>
 	</resultMap>
 	
 	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
@@ -332,7 +335,10 @@
 					B.TYPE_NAME$lang$ AS TYPE_NAME,
 					B.IMG_PATH,
 					C.DISPLAYNAME$lang$ AS WRITER_NAME,
-					C.DESCRIPTION$lang$ AS WRITER_DEPT_NAME
+					C.DESCRIPTION$lang$ AS WRITER_DEPT_NAME,
+					A.ATTEND_TYPE,
+					A.LATITUDE,
+					A.LONGITUDE
 				FROM   
 					tbl_attitude A 
 				INNER JOIN 
@@ -417,7 +423,10 @@
 						E.TYPE_NAME$lang$ AS TYPE_NAME,
 						E.IMG_PATH,
 						F.DISPLAYNAME$lang$ AS WRITER_NAME,
-						F.DESCRIPTION$lang$ AS WRITER_DEPT_NAME
+						F.DESCRIPTION$lang$ AS WRITER_DEPT_NAME,
+						D.ATTEND_TYPE,
+						D.LATITUDE,
+						D.LONGITUDE
 					FROM   
 						tbl_attitude D 
 					INNER JOIN 

@@ -49,6 +49,12 @@ public class AttitudeVO {
 	private String annualApprStatus;
 	/** 결재상태2*/
 	private String docApprStatus;
+	/** 출근 타입*/
+	private String attendType;
+	/** 위도*/
+	private double latitude;
+	/** 경도*/
+	private double longitude;
 	
 	public String getWriterName() {
 		return writerName;
@@ -196,4 +202,23 @@ public class AttitudeVO {
 	public void setDocApprStatus(String docApprStatus) {
 		this.docApprStatus = docApprStatus;
 	}
+	public String getAttendType() {
+		return attendType;
+	}
+	public void setAttendType(String attendType) {
+		this.attendType = attendType;
+	}
+	public double getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+	public double getLongitude() {
+		return longitude;
+	}
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+	
 }
