@@ -354,16 +354,36 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 조직도관리 회사추가 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/companyInfo.do", method = RequestMethod.GET)
-	public String companyInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+	public String companyInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 	    logger.debug("companyInfo started.");
 	    
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
-		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		int tenantID = userInfo.getTenantId();
+		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), tenantID);
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), tenantID);
+		
+		String selectCN = request.getParameter("selectCN");
+        selectCN = selectCN == null ? "" : selectCN;
+        String pageType = request.getParameter("pageType");
+        pageType = pageType == null ? "add" : pageType;
+        logger.debug("selectCN=" + selectCN+ ", pageType=" + pageType);
+        
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", tenantID); // primary domain
+		String innerDomain = ezEmailService.getMultiDomainList(tenantID); // 전체 도메인 리스트
+		String[] domainList = innerDomain.split(";");
+        // user primary domain
+        String companyMailDomain = ezCommonService.getCompanyConfig(tenantID, selectCN, "DomainName");
+        companyMailDomain = companyMailDomain.equals("") ? tenantDomain : companyMailDomain;
+        logger.debug("tenantDomain=" + tenantDomain+ ", companyMailDomain=" + companyMailDomain);
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
+		model.addAttribute("tenantDomain", tenantDomain);
+		model.addAttribute("domainList", domainList);
+		model.addAttribute("companyMailDomain", companyMailDomain);
+		model.addAttribute("pageType", pageType);
 		
 		logger.debug("companyInfo ended.");
 		
@@ -391,10 +411,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		operatorId = operatorId != null ? operatorId : "";
 		String manualFlag = request.getParameter("manualFlag");
 		manualFlag = manualFlag != null ? manualFlag : "N";
+		String selectDomain = request.getParameter("selectDomain");
+		selectDomain = selectDomain != null ? selectDomain : "";
 		
 		logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",displayName=" + displayName
 				+ ",displayName2=" + displayName2 + ",mailId=" + mailId + ",extensionAttribute15=" + extensionAttribute15 
-				+ ",skipInitData=" + skipInitData + ",operatorId=" + operatorId + ",manualFlag=" + manualFlag);
+				+ ",skipInitData=" + skipInitData + ",operatorId=" + operatorId + ",manualFlag=" + manualFlag + ", selectDomain=" + selectDomain);
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -489,12 +511,17 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						
 						// insertDBData_company 실패했을 경우 JMocha에서 회사 다시 삭제.
 						try {
+							mailAddr = getEmailAddressBasedOnCompanyDomainName(mailAddr, cn, parentCn, userInfo, selectDomain);
+							
 							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2,
 									mailAddr, parentCn, ldapPath, extensionAttribute15, skipInitData, manualFlag, tenantID, userInfo);
 							
 							if (!operatorId.equals("")) {
 								ezCommonService.insertCompanyConfig(tenantID, cn, operatorMailIdPropertyName, operatorId);
 							} 
+							
+							int reasonCode = ezEmailService.saveCompanyMultiDomain(tenantID, cn, selectDomain, selectDomain);
+							logger.debug("reasonCode=" + reasonCode);
 							
 							result = "OK";
 						} catch (Exception e) {
