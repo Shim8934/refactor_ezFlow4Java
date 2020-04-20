@@ -10470,7 +10470,7 @@
 	<!-- 결재진행문서, 공람문서는 제외한다. AprType <> ''015'' -->
 		<![CDATA[
 	   		SELECT 
-				COUNT (DISTINCT DOCID,COMPANYID) AS COUNT
+				COUNT(DISTINCT DOCID,COMPANYID) AS COUNT
 	   		FROM 
 	   			VAPRWILLDOCLIST 
 	   		WHERE 
