@@ -186,7 +186,7 @@
 		                <dt class="mtitText" id="dMTime"></dt>
 		                <dd class="memoIcon memoX" id='closeMemo'></dd>
 		            </dl>
-			        <textarea id="dMContents"></textarea>
+			        <textarea id="dMContents" style="padding:5px;"></textarea>
 			        <div class="bigBottom_left" id='bottomLeft'></div>
 			        <div class="bigBottom_right" id='bottomRight'></div>
 		        </div>
