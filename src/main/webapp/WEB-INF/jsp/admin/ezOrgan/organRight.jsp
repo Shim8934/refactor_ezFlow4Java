@@ -774,7 +774,28 @@
 					}
 				}
 			}
-
+		    
+		    function getUserCompanyID(userID) {
+		    	var rtnVal = "";
+		    	
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezOrgan/getUserCompanyID.do",
+					data : {
+						cn : userID
+					},
+					async : false,
+					success : function(result) {
+						rtnVal = result;
+					},
+					error : function(){
+					}
+				});
+		    	
+		    	return rtnVal;
+		    }
+		    
 		    function mail_manage(){
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
@@ -795,13 +816,13 @@
 			    } else if (listview.GetSelectedRows().length > 1) {
 					alert("<spring:message code='ezOrgan.t51' />");
 					return;
-				} else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+				} else if (listview.GetSelectedRows()[0].getAttribute("DATA4") == 'addJob'){
 		    		alert("<spring:message code='ezOrgan.psb02' />");
 					return;
 			    }
 
 		        var selectId = GetAttribute(listview.GetSelectedRows()[0],"DATA2");
-		        var selectCompanyId = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+		        var selectCompanyId = getUserCompanyID(selectId); 
 		        var url = "/admin/ezOrgan/configEmail.do?id=" + selectId + "&type=user" + "&companyId=" + selectCompanyId;
 			    window.open(url, "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
 			}
