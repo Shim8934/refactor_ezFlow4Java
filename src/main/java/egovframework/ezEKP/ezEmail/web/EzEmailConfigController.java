@@ -2430,7 +2430,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					OrganUserVO userVo = ezOrganService.getUserInfo(objId, lang, tenantId);
 					String objName = commonUtil.cleanValue(userVo.getDisplayName());
 					String objMail = commonUtil.cleanValue(userVo.getMail());
-					String objDept = commonUtil.cleanValue(userVo.getDepartment());
+					
+					OrganDeptVO deptVo = ezOrganService.getDeptInfo(userVo.getDepartment(), lang, tenantId);
+					String objDept = commonUtil.cleanValue(deptVo.getDisplayName());
+					logger.debug("objName=" + objName + ", objMail=" + objMail + ", objDept=" + objDept);
 					
 					sb.append("<ROW>");
 					sb.append("<CELL>");
