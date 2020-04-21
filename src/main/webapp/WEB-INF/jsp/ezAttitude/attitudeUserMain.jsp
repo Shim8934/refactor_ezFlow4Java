@@ -2266,11 +2266,6 @@
 			Number.prototype.zf = function(len){return this.toString().zf(len);};
 			/* 날짜 포맷 end */
 
-			function geolocation(x, y) {
-				//var url = "/ezAttitude/attitudeGeolocation.do?userId=" + userId + "&attitudeId=" + attitudeId;
-				//window.open(url, "", GetOpenWindowfeature(700, 700));
-				var ret = window.open("https://map.kakao.com/link/map/"+x+","+y, "", GetOpenWindowfeature(1000, 700));
-			}
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0" onselectstart="return false">
@@ -2626,4 +2621,19 @@
 			</div>
 		</div>
 	</body>
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2d49fd8e19455fef43b5ce77efe2cf80&libraries=services"></script>
+	<script>
+		function geolocation(x, y) {
+			var geocoder = new kakao.maps.services.Geocoder();
+
+			var coord = new kakao.maps.LatLng(x, y);
+			var callback = function(result, status) {
+			    if (status === kakao.maps.services.Status.OK) {
+					var ret = window.open("https://map.kakao.com/link/map/" + result[0].address.address_name +"," +x+","+y, "", GetOpenWindowfeature(1000, 700));
+			    }
+			};
+
+			geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+		}
+	</script>
 </html>
