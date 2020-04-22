@@ -2590,9 +2590,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					if (dept != null) { // 부서
 						dlCn = dept.getCn();
 						dlMail = dept.getMail();
+						dlMail = dlMail.equals("") ? dlCn + "@" + pCnDomain : dlMail ;
 						dlDeptName = "";
 					} else { // 공용배포그룹
-						dlMail = cn;
+						MailDistributionVO dlVo = ezEmailService.getDistributionInfo(dlCn, tenantId);
+						dlMail = dlVo.getMail();
 						dlPClass = "distribution";
 					}
 				} else if (pClass.equals("user")) {
