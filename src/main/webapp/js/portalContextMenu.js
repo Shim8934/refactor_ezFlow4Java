@@ -299,15 +299,44 @@ var setQuickMenuBtnImg = function () {
 	var menuBtnSpans = document.getElementById('quickMenuBtn').childNodes;
 	
 	[].filter.call(menuBtnSpans, function(btnSpan) {
-		if(btnSpan.className.indexOf('quickMenuTop') > -1) {
-			setImageElement(btnSpan, menuBtnImg[0], 'mail');
-		} else if(btnSpan.className.indexOf('quickMenuMiddle') > -1) {
-			setImageElement(btnSpan, menuBtnImg[1], 'appr');
-			setImageElement(btnSpan, menuBtnImg[2], 'schedule');
-		} else if(btnSpan.className.indexOf('quickMenuBottom') > -1) {
-			setImageElement(btnSpan, menuBtnImg[3], 'organ');
-			if (contextMenuObject.memoFlag === 'YES') {
+		// 메모 사용 & 메일 사용
+		if (contextMenuObject.memoFlag === 'YES' && useExternalMailServer == 'NO') {
+			if(btnSpan.className.indexOf('quickMenuTop') > -1) {
+				setImageElement(btnSpan, menuBtnImg[0], 'mail');
+			} else if(btnSpan.className.indexOf('quickMenuMiddle') > -1) {
+				setImageElement(btnSpan, menuBtnImg[1], 'appr');
+				setImageElement(btnSpan, menuBtnImg[2], 'schedule');
+			} else if(btnSpan.className.indexOf('quickMenuBottom') > -1) {
+				setImageElement(btnSpan, menuBtnImg[3], 'organ');
 				setImageElement(btnSpan, '/images/contextmenu/memo.png', 'memo'); // 메모
+			}
+		}	// 메모 사용 & 메일 미사용 
+		else if (contextMenuObject.memoFlag === 'YES' && useExternalMailServer == 'YES') {
+			if(btnSpan.className.indexOf('quickMenuTop') > -1) {
+				setImageElement(btnSpan, menuBtnImg[1], 'appr');
+			} else if(btnSpan.className.indexOf('quickMenuMiddle') > -1) {
+				setImageElement(btnSpan, menuBtnImg[2], 'schedule');
+				setImageElement(btnSpan, menuBtnImg[3], 'organ');
+			} else if(btnSpan.className.indexOf('quickMenuBottom') > -1) {
+				setImageElement(btnSpan, '/images/contextmenu/memo.png', 'memo'); // 메모
+			}
+		}	// 메모 미사용 & 메일 사용 
+		else if (contextMenuObject.memoFlag === 'NO' && useExternalMailServer == 'NO') {
+			if(btnSpan.className.indexOf('quickMenuTop') > -1) {
+				setImageElement(btnSpan, menuBtnImg[0], 'mail');
+			} else if(btnSpan.className.indexOf('quickMenuMiddle') > -1) {
+				setImageElement(btnSpan, menuBtnImg[1], 'appr');
+				setImageElement(btnSpan, menuBtnImg[2], 'schedule');
+			} else if(btnSpan.className.indexOf('quickMenuBottom') > -1) {
+				setImageElement(btnSpan, menuBtnImg[3], 'organ');
+			}
+		}	// 메모 미사용 & 메일 미사용 
+		else {
+			if(btnSpan.className.indexOf('quickMenuTop') > -1) {
+				setImageElement(btnSpan, menuBtnImg[1], 'appr');
+			} else if(btnSpan.className.indexOf('quickMenuBottom') > -1) {
+				setImageElement(btnSpan, menuBtnImg[2], 'schedule');
+				setImageElement(btnSpan, menuBtnImg[3], 'organ');
 			}
 		}
 	});
@@ -323,10 +352,12 @@ var setQuickMenuBtn = function () {
 	var btnClassNames;
 	
 	handleMemoFlag();
-	if (contextMenuObject.memoFlag === 'YES') {
+	if(useExternalMailServer == 'YES' && contextMenuObject.memoFlag === 'NO') {
 		btnClassNames = ['quickMenuTop_memo', 'quickMenuMiddle_memo', 'quickMenuBottom_memo'];
+	} else if (useExternalMailServer == 'YES' || contextMenuObject.memoFlag === 'NO') {
+		btnClassNames = ['quickMenuTop', 'quickMenuMiddle', 'quickMenuBottom'];
 	} else {
-		btnClassNames = ['quickMenuTop', 'quickMenuMiddle', 'quickMenuBottom'];	
+		btnClassNames = ['quickMenuTop_memo', 'quickMenuMiddle_memo', 'quickMenuBottom_memo'];	
 	}
 	
 	btnClassNames.map(function(btnClassName) {

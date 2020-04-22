@@ -124,6 +124,10 @@
 		    var docNumZeroCnt = "<c:out value = '${docNumZeroCnt}'/>";
 			//원문정보공개
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
+			
+			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
+			
+			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -342,6 +346,10 @@
 			        
 			        HwpCtrl.SetFieldFocus("doctitle");
 			        HwpCtrl.ezSetScrollPosInfo(0);
+			        
+			        if(useExternalMailServer == "NO") {
+				    	$("#btnMail").css("display","");
+				    }
 			    }
 			    catch (e) {
 			        alert("<spring:message code='ezApprovalG.t1373'/>" + e.description);
@@ -602,9 +610,11 @@
 			            OpenAlertUI(pAlertContent);
 			            return;
 			        }
-			
-			        if (g_DraftFlag == "REDRAFT")
+			        
+			        /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+			        if (g_DraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
 			            delOpinionInfo();
+			        }
 			
 			        if (HwpCtrl.CheckFieldExist("doctitle"))
 			            pDocTitle = trim(HwpCtrl.GetFieldText("doctitle"));
@@ -1747,7 +1757,7 @@
 	                        <li id="btnReqReSend" style="display: none"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
 	                        <li id="btnEdit"><span onclick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
-	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
+	                        <li id="btnMail" style="display:none"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
 	                        <li id="btnHelper" style="display: none"><span onclick="return btnHelper_onclick()" style="display: none;"><spring:message code='ezApprovalG.t157'/></span></li>
 	                        <li id="btnRefresh" style="display: none"><span onclick="return RefreshRecvDoc()"><spring:message code='ezApprovalG.t00013'/></span></li>
 	                    </ul>

@@ -1048,7 +1048,7 @@
 		                var pMsg = "<spring:message code='ezApprovalG.t67'/>";
 		                var Ans = OpenInformationUI(pMsg, btncallback_onclick_Complete, "open");
 		            } else {
-		                var pMsg = "<spring:message code='ezApprovalG.ryobi.csj14'/>";
+		                var pMsg = "<spring:message code='ezApprovalG.t68'/>";
 		                var Ans = OpenInformationUI(pMsg, btncallback_onclick_Complete, "open");
 		            }
 		            
@@ -1128,6 +1128,7 @@
 		                alert(pAlertContent);
 		            }
 		            getDocList();
+		            attitude_annual_conn(pDocID);
 		
 		            try {
 		                parent.frames["left"].getAprCount();

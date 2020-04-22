@@ -562,6 +562,15 @@ function SGetDraftAprLineInfo(ret) {
                 break;
         }
 
+        for (i = 1; i < 20; i++) {
+            fieldname = "sign" + i
+            field = message.GetListItem(fields, fieldname);
+            if (field)
+                setNodeText(field , " ");
+            else
+                break;
+        }
+
         var idx = 1;
         var hidx = 1;
         var Flag = "";

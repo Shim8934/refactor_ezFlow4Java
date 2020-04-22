@@ -193,7 +193,7 @@ public class ExcelCellRef {
     	int commaIdx = checkStr.lastIndexOf(".");
     	if(commaIdx != -1) {
     		String decimal = checkStr.substring(commaIdx+1);
-    		if(!(decimal.equals("5") || decimal.equals("0"))) {
+    		if(!(decimal.equals("0") || decimal.equals("5") || decimal.equals("25") || decimal.equals("75"))) {
     			return false;
     		}
     	}

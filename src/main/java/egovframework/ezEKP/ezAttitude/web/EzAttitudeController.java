@@ -315,10 +315,16 @@ public class EzAttitudeController {
 		}
 		//2018-05-14 이효진 다음달일땐 searchEndDate "" 으로 가져가서 미입력조회없이 tr에 정보없다고 script로
 		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
 		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("searchDeptId", searchDeptId);
 		model.addAttribute("searchStartDate", searchStartDate);
 		model.addAttribute("searchEndDate", searchEndDate);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
 		LOGGER.debug("popupAbsentedList ended.");
 		
@@ -490,7 +496,7 @@ public class EzAttitudeController {
 		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		boolean attitudeAdminCheck = false;
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			attitudeAdminCheck = true;
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -1520,7 +1526,7 @@ public class EzAttitudeController {
 			resultj.put("list", list);
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			//권한부서 리스트
 			//c , k , wa -> 회사의 모든부서
@@ -1926,7 +1932,7 @@ public class EzAttitudeController {
 			}
 		}
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -2130,7 +2136,7 @@ public class EzAttitudeController {
 		String url = "";
 		
 		//전체관리자(c), 회사관리자(k), 근태관리자(wa) 면 모든부서..
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -2315,7 +2321,7 @@ public class EzAttitudeController {
 				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption + "||searchDeptId =" + searchDeptId);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			isAdmin = "Y";
 		}
 		
@@ -2435,7 +2441,7 @@ public class EzAttitudeController {
 		//해당 근태에 대한 부서
 		deptId = (String) attitudeVO.get("deptId") == null ? "null" : (String) attitudeVO.get("deptId");
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -2836,7 +2842,7 @@ public class EzAttitudeController {
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -4141,7 +4147,7 @@ public class EzAttitudeController {
 			resultj.put("list", list);
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			//권한부서 리스트
 			//c , k , wa -> 회사의 모든부서
@@ -4285,7 +4291,7 @@ public class EzAttitudeController {
 			}
 		}
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {

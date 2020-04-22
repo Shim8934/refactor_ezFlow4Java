@@ -199,4 +199,25 @@ public class EzPersonalDAO extends EgovAbstractDAO {
 	public void deleteShareApproval(Map<String, Object> map) throws Exception {
 		delete("EzPersonalDAO.deleteShareApproval", map);
 	}
+
+	public boolean getPopupPermitYN(Map<String, Object> map) throws Exception {
+		int permit = (int) select("EzPersonalDAO.getpopupPermitYN", map);
+		
+		if (permit > 0) {
+			return true;
+		} else {
+			permit = (int) select("EzPersonalDAO.getpopupPermitSubDeptYN", map);
+			
+			if (permit > 0) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getPopupUserGroupList(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzPersonalDAO.getPopupUserGroupList", map);
+	}
 }

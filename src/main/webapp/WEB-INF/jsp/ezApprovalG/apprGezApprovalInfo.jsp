@@ -219,13 +219,24 @@
 	        	} else {
 	        		$("#idDatepicker").attr('disabled',true);
 	        	}
-	        	
-	        	if (document.getElementById("openGovLimitDate").checked){
-	        		$("#idDatepickerForOpenGov").attr('disabled',false);
-	        	} else {
-	        		$("#idDatepickerForOpenGov").attr('disabled',true);
-	        	}
-	        	
+
+                if (useOpenGov == "YES") {
+                    if (document.getElementById("openGovLimitDate").checked){
+                        $("#idDatepickerForOpenGov").attr('disabled',false);
+                    } else {
+                        $("#idDatepickerForOpenGov").attr('disabled',true);
+                    }
+
+                    $("#idDatepickerForOpenGov").datepicker({
+                        changeMonth: true,
+                        changeYear: true,
+                        autoSize: true,
+                        showOn: "both",
+                        buttonImage: "/images/ImgIcon/calendar-month.png",
+                        buttonImageOnly: true
+                    });
+                }
+
 	        	$("#idDatepicker").datepicker({
 		            changeMonth: true,
 		            changeYear: true,
@@ -234,16 +245,7 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
-	        	
-	        	$("#idDatepickerForOpenGov").datepicker({
-		            changeMonth: true,
-		            changeYear: true,
-		            autoSize: true,
-		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.png",
-		            buttonImageOnly: true
-		        });
-				
+
 	        	initdatepicker();
 	        });
 	        

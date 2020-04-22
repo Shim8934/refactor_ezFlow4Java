@@ -2196,16 +2196,14 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String shareId = request.getParameter("shareId") == null ? "" : request.getParameter("shareId");
-		String email = userInfo.getEmail();
-		
+		String email = userInfo.getId() + "@" + userInfo.getEmail().split("@")[1];
 		logger.debug("userId:'" + userInfo.getId() + "',shareId:'" + shareId + "'");
 		
 		if(shareId == null || !shareId.equals("")) {
-			
-			MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
-			email = shareInfo.getShareMail();
+			email = shareId + "@" + userInfo.getEmail().split("@")[1];
 		}
-	
+		logger.debug("email:" + email);
+		
 		JSONArray returnJsonArr = new JSONArray();
 		returnJsonArr = ezEmailService.getFolderQuota(email, locale);
 		

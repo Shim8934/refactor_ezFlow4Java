@@ -2332,12 +2332,18 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	public String getContentXml(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("getContentXml started");
 		userInfo = commonUtil.userInfo(loginCookie);
+		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
 		
         String fontFamily = request.getParameter("fontFamily");
 		String fontSize = request.getParameter("fontSize"); 
 		String content = request.getParameter("content");
 
-		String result = ezApprovalGService.startXmlConvert(content, fontFamily, fontSize, userInfo);
+		String result = "";
+		if("YES".equals(useHWP)) {
+			result = ezApprovalGService.startXmlConvertHwp(content, fontFamily, fontSize, userInfo);
+		} else {
+			result = ezApprovalGService.startXmlConvert(content, fontFamily, fontSize, userInfo);
+		}
 		logger.debug("getContentXml ended");
 		return result;
 	}

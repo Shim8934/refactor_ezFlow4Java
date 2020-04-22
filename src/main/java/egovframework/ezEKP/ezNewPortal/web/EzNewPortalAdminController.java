@@ -61,14 +61,20 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 * @author 이효진
 	 */
 	
+	
 	/**
 	 * 관리자 포탈 메인화면 조회
 	 */
+	@SuppressWarnings("unused")
 	@RequestMapping(value = "/admin/ezNewPortal/portalMain.do", method=RequestMethod.GET)
-	public String portalMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String portalMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("portalMain started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+        
+        model.addAttribute("packageType", packageType);
 		
 		if (userInfo == null) {
 			LOGGER.debug("portalMain accessDenied.");
@@ -84,11 +90,16 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 Left 화면조회
 	 */
+	@SuppressWarnings("unused")
 	@RequestMapping(value = "/admin/ezNewPortal/portalLeftMenu.do", method=RequestMethod.GET)
-	public String portalTopMenu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String portalTopMenu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("portalLeftMenu started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+        
+        model.addAttribute("packageType", packageType);
 		
 		if (userInfo == null) {
 			LOGGER.debug("portalLeftMenu accessDenied.");
@@ -1591,5 +1602,61 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 		
 		LOGGER.debug("updateSlideOrder ended.");
+	}
+	
+	/**
+	 * 권한 불러올때, 직위직책 리스트, 권한그룹 리스트 불러오기 함수 추가
+	 */
+	
+	//직위, 직책 리스트 불러오기
+	@RequestMapping(value = "/admin/ezNewPortal/getTitleList.do", method=RequestMethod.POST)
+	@ResponseBody
+	public JSONArray getTitleList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap,
+			HttpServletRequest req, Model model) throws Exception {
+		LOGGER.debug("getTitleList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyId = paramMap.get("companyId").toString();
+		
+		String url = "/rest/admin/ezPortal/menus/authorities/titles/companies/" + companyId;
+		
+		paramMap.put("userId", userInfo.getId());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, req, "get", null);
+		String result = resultBody.get("status").toString();
+		JSONArray json = new JSONArray();
+		
+		if (result.equals("ok")) {
+			json = (JSONArray) resultBody.get("data");
+		}
+		LOGGER.debug("json : " + json);
+		LOGGER.debug("getTitleList Ended");
+		return json;
+	}
+	
+	//권한그룹 리스트 불러오기
+	@RequestMapping(value = "/admin/ezNewPortal/getGroupList.do", method=RequestMethod.POST)
+	@ResponseBody
+	public JSONArray getGroupList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap,
+			HttpServletRequest req, Model model) throws Exception {
+		LOGGER.debug("getGroupList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyId = paramMap.get("companyId").toString();
+		
+		String url = "/rest/admin/ezPortal/menus/authorities/groups/companies/" + companyId;
+		
+		paramMap.put("userId", userInfo.getId());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, req, "get", null);
+		String result = resultBody.get("status").toString();
+		JSONArray json = new JSONArray();
+		
+		if (result.equals("ok")) {
+			json = (JSONArray) resultBody.get("data");
+		}
+		LOGGER.debug("json : " + json);
+		LOGGER.debug("getGroupList Ended");
+		return json;
 	}
 }

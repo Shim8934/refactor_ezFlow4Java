@@ -207,6 +207,10 @@ public class EzSystemAdminController {
 		String useAllUserOldMailDelete = ezCommonService.getTenantConfig("useAllUserOldMailDelete", userInfo.getTenantId());
 		String useAllUserOldMailDeletePeriod = ezCommonService.getTenantConfig("useAllUserOldMailDeletePeriod", userInfo.getTenantId());
 		String usePortalAutoRefreshInterval = ezCommonService.getTenantConfig("usePortalAutoRefreshInterval", userInfo.getTenantId());
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
 		
 		model.addAttribute("configMap", configMap);
 		model.addAttribute("licensedUserCount", licensedUserCount);
@@ -217,6 +221,7 @@ public class EzSystemAdminController {
 		model.addAttribute("useAllUserOldMailDelete", useAllUserOldMailDelete);
 		model.addAttribute("useAllUserOldMailDeletePeriod", useAllUserOldMailDeletePeriod);
 		model.addAttribute("usePortalAutoRefreshInterval", usePortalAutoRefreshInterval);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
 		logger.debug("systemMainMenu ended");
 		

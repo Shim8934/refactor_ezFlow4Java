@@ -402,13 +402,19 @@
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWMAILIMAGE", previewMailImage);
 	            createNodeAndInsertText(xmlpara, objNode, "TEXTOPTION", "${mailGeneral.textOption}");
 	            
-	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", false);
+	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", true);
+	            xmlhttp.onreadystatechange = function() {
+		        	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		        	}
+	            }
 	            xmlhttp.send(xmlpara);		  
 		    }
 		    
 		    var Save_unloadSave = false;
 		    
 		    function Window_onunload() {
+		        console.log("Window_onunload started. Save_unloadSave=" + Save_unloadSave);
+		        
 		        if (window_onunload_Event && !Save_unloadSave) {		        	
 		            mailGeneralSave();
 		            
@@ -1008,6 +1014,56 @@
 					document.getElementById("file").value = null;
 				}
 			}
+			
+			// 20200407 조진호 - 한국고용정보원에서 개발된 해킹의심메일 신고 기능 표준 적용
+			var xmlhttp_HackinMail;
+			function moveHackingMail() {
+				
+				if (listContentArry.length < 1) {
+					alert("<spring:message code='ezEmail.zno001' />");
+					return;
+				}
+				
+				var szItemID = "";
+		        for (var i = 0; i < listContentArry.length; i++) {
+		            szItemID += document.getElementById(listContentArry[i]).getAttribute("_href") + ",";
+		        }
+				
+				var xmlpara = createXmlDom();
+			    var objNode;
+			    xmlhttp_HackinMail = createXMLHttpRequest();
+			    createNodeInsert(xmlpara, objNode, "DATA");
+			    createNodeAndInsertText(xmlpara, objNode, "CMD", "MOVE");
+			    createNodeAndInsertText(xmlpara, objNode, "UNIQUEID", szItemID);
+			    
+			    var requestUrl = "/ezEmail/hackingMailMoveAndSend.do";
+
+			    xmlhttp_HackinMail.open("POST", requestUrl, true);
+			    xmlhttp_HackinMail.onreadystatechange = moveHackingMail_complete;
+			    xmlhttp_HackinMail.send(xmlpara);
+			}
+			
+			function moveHackingMail_complete() {
+			    if (xmlhttp_HackinMail != null && xmlhttp_HackinMail.readyState == 4) {
+			        if (xmlhttp_HackinMail.status >= 200 && xmlhttp_HackinMail.status < 300) {
+			        	pRtnMessage = xmlhttp_HackinMail.responseText;
+			        	
+			        	if (pRtnMessage.indexOf("NO COPY processing failed.") > -1) {
+			        		alert(strLang241);
+			        	} else if ("OK") {
+				        	MailListRefresh();
+				            prevShow_Clear();
+				            alert("<spring:message code='ezEmail.zno003' />");
+			        	} else {
+			        		alert(strLang5);
+			        	}
+			        }
+			        else {
+			            alert(strLang5);
+			        }
+			    }
+			}
+			
 		</script>	
 	</head>
 	<body style="overflow:hidden;margin-bottom:0px;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
@@ -1048,12 +1104,16 @@
 	          <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>
 	          <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
 	          <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
+	          <c:if test="${useMailConfirm == 'YES'}">
+	          <li onClick="mailConfirm_flag_btn()"><span><spring:message code="ezEmail.ksa13" /></span></li>
+			  </c:if>
 	          <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="icon16 icon16_star"></span></li>
 	          <li id="trashBtn"><span class="icon16 icon16_delete" onClick="deleteWork(false)"></span></li>
 	          <li onClick="MailListRefresh()"><span class="icon16 icon16_refresh"></span></li>
-	          <c:if test="${useMailConfirm == 'YES'}">
-	          <li onClick="mailConfirm_flag_btn()"><span class="icon_mail_Confirm"></span><span>/</span></span><span class="icon_mail_Cancle"></span></li>
-			  </c:if>			 
+	          <c:if test="${useHackingMailReport == 'YES'}">
+			  <li id="hackingMail" title="<spring:message code="ezEmail.zno002" />"><span class="icon16 icon16_spam" onClick="moveHackingMail()"></span></li>		
+			  </c:if>
+	          
 			 <!--  <li id="right">
 	          	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	           	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
@@ -1294,7 +1354,7 @@
 		    </tr>
 		    <c:if test="${useMailConfirm == 'YES'}">
 		    <tr id="mailConfirm">
-		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailConfirm_flag_btn();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/view-document-confirm.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.ksa11" /></span></td>
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailConfirm_flag_btn();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/view-document-confirm.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.ksa13" /></span></td>
 		    </tr>
 		    </c:if>
 		    <tr id="searchName">

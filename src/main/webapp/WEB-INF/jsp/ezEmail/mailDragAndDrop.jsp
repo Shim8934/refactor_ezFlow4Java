@@ -87,6 +87,8 @@
 		        var tempbigfilesize = 0;
 		        var filecnt = file.length;
 		        var bigFileCheck = false;
+		        var bodyTypeVal = window.parent.document.getElementById("bodyType").value; // 0:html, 1:plainText
+		        var bodyTypeIsPlain = bodyTypeVal != 1 ? false : true;
 		        
 		        if (status == 1) {
 		        	isbigyn = "Y";
@@ -96,6 +98,10 @@
 		        for (var i = 0; i < filelist.length; i++) {
 		            
 		        	if (filelist[i].size / 1024 / 1024 > window.parent.BigSizeAttachMBSize || isbigyn == "Y") {
+		        		filelist[i].isBig = "Y";
+
+						if (bodyTypeIsPlain){ 	continue; }
+						
 		                bigFileCheck = true;
 		                bigfile[filecnt + i] = filelist[i];
 		                tempbigfilesize += filelist[i].size;
@@ -464,29 +470,33 @@
 		        }
 		        
 		    }
-		
-		    function btnfiledel() {
+		    
+		    function btnfiledel(type) {
 		        var filecnt = document.getElementById("filelist").childNodes.length;
 		        
-		        for (var i = 1; i < filecnt; i++) {
-		            
-		        	if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
-		            	var pAttachDelSN;
+		    	for (var i = 1; i < filecnt; i++) {
+		    		var filelistTable = document.getElementById("filelist");
+	                var elementTR = document.getElementById("filelist").childNodes[i];
+		    		var elementTRIsChecked = elementTR.childNodes[0].childNodes[0].checked;
+		    		var elementTrIsBig = GetAttribute(elementTR, "_big");
+		    	
+					if ((type=="big" && elementTrIsBig=="Y") || (type!="big" && elementTRIsChecked)) {
+			    		var pAttachDelSN;
 		                var pAttachDelFileName;
 		                var is_newfile;
 		                var pNewNodeName = "";
 		                var Rtnval;
 		                var length = $('#filelist tr').length;
 		                
-		                window.parent.DelAttachFileAtList(document.getElementById("filelist").childNodes[i]);
+		                window.parent.DelAttachFileAtList(elementTR);
 		                
-		                var delfilesize = GetAttribute(document.getElementById("filelist").childNodes[i], "_filesize");
+		                var delfilesize = GetAttribute(elementTR, "_filesize");
 		               
 		                if (delfilesize == "") {
 		                    delfilesize = 0;
 		                }
-
-		                if (GetAttribute(document.getElementById("filelist").childNodes[i], "_big") == "Y") {
+	 
+		                if (elementTrIsBig == "Y") {
 		                    bigfilesize -= delfilesize;
 		                    bigfile.splice(i - 1, 1);
 		                } else {
@@ -498,17 +508,17 @@
 		                    	if (i <= j && $('#filelist tr:eq(' + j + ')').is('[_fileindex]'))  {
 				                	$('#filelist tr:eq(' + j + ')').attr("_fileindex",$('#filelist tr:eq(' + j + ')').attr("_fileindex") - 1);
 			                	}
-			                }
+			                } 
 		                    
 		                 	// 2018-04-25 김유진 - 첨부 파일에 클릭하면 다운로드 하는 기능 수정
 			                updateItemUid();
 		                }                
 		                
-		                document.getElementById("filelist").removeChild(document.getElementById("filelist").childNodes[i]);
+		                document.getElementById("filelist").removeChild(elementTR);
 		                i--;
 		                filecnt--;
-		            }
-		        }
+					}
+		    	}
 		    }
 			
 		    function checkall() {
@@ -528,22 +538,37 @@
 		    	isfileup = true;
 		    	
 		        var fd = new FormData();
+		        var fdSize = 0;
+		        var plainText_BigAttChk = false;
+		        var bodyTypeIsPlain = window.parent.document.getElementById("bodyType").value != "1" ? false : true;
 		
 		        for (var i = 0; i < filelist.length; i++) {
 					var fnl = filelist[i].name.length;
+					var fbig = filelist[i].isBig;
 		        	
 		        	if (fnl > attachFileNameMaxLength) {
 		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
 		        		isfileup = false;
 		        		return;
+		        	} else if (bodyTypeIsPlain && fbig == "Y") {
+		        		plainText_BigAttChk = true;
+		        		continue;
 		        	} else {
+		        		fdSize++;
 		        		fd.append("fileToUpload", filelist[i]);
 		        	}		            
+		        }
+		        
+		        if (plainText_BigAttChk) {
+		        	var msgTmp = "<spring:message code='ezEmail.ksa12' />"
+		        	msgTmp = msgTmp.replace("%s", window.parent.BigSizeAttachMBSize);
+		        	alert(msgTmp);
 		        }
 		
 		        var newid = window.parent.g_newid;
 		        fd.append("maxsize", window.parent.FtotSizeAttachSize);
-		        fd.append("cnt", filelist.length);
+		        //fd.append("cnt", filelist.length);
+		        fd.append("cnt", fdSize);
 		        fd.append("newid", newid);
 		        fd.append("bigmaxsize", window.parent.FtotBigSizeAttachSize);
 		        fd.append("changesize", window.parent.FBigSizeAttachSize);

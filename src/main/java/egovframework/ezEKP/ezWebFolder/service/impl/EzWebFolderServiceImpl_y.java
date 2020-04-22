@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -19,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_m;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_y;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
@@ -30,7 +30,6 @@ import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.com.cmm.service.EgovFileMngUtil;
 
 @Service("EzWebFolderService_y")
 public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFolderService_y{
@@ -794,7 +793,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 			if (folderType.equals("C")) {
 				if (folderPath.equals("|" + folderVO.getFolderId() + "|")) {
-					if (folderVO.getOwnerId().equals(comId)) {
+					if (idList.contains(folderVO.getOwnerId())) {
 						status = "ok";
 					}
 				} else {

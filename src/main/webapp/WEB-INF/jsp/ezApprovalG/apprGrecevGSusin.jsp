@@ -131,6 +131,8 @@
 			//원문정보공개
 			var useOpenGov = "<c:out value = '${useOpenGov}'/>";
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
+			
+			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -501,9 +503,11 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
-		
-		        if (g_DraftFlag == "REDRAFT")
+		        
+		        /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+		        if (g_DraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
 		            delOpinionInfo();
+		        }
 		
 		        pDocTitle = trim(message.GetDocTitle());
 		        if (pDocTitle == "") {
@@ -1741,7 +1745,9 @@
 					<li id="btnReturn"><span  onClick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
 					<li id="btnEdit"><span  onClick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
 					<li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
+					<c:if test="${useExternalMailServer == 'NO'}">
 					<li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()"></span></li>
+					</c:if>
 				</ul>
 			</div>
 			<div id="close">

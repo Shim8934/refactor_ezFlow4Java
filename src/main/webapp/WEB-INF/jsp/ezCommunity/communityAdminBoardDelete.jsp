@@ -26,7 +26,7 @@
 				
 				if(ret) {
 				    var xmlhttp = createXMLHttpRequest();
-					xmlhttp.open("POST", "/ezCommunity/deleteBoard.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + SelectedBoardName + "&code=" + code, false);
+					xmlhttp.open("POST", "/ezCommunity/deleteBoard.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(SelectedBoardName) + "&code=" + code, false);
 					xmlhttp.send();
 				
 					if(xmlhttp.responseText.indexOf("OK") > -1) {

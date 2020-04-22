@@ -186,7 +186,7 @@
 		<div id="close">
 			<ul>
 				<li>
-					<c:if test="${searchEndDate != ''}">
+					<c:if test="${searchEndDate != '' and useExternalMailServer eq 'NO' }">
 						<img style="margin-right: 5px; cursor: pointer;" src="/images/poll/sendMail01.png" onclick="btnSendMail_onclick()">
 					</c:if>
 					<span onclick="return btnClose_onclick()"></span>

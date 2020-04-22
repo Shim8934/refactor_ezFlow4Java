@@ -1826,6 +1826,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			 } else {
 				 writerFakeName = cBoardVO.getUserName();
 			 }
+			 
+			 cBoardVO.setWriteDay(commonUtil.getDateStringInUTC(cBoardVO.getWriteDay(), userInfo.getOffset(), false));
+			 
 		} else { // 쓰기(mode :  "write")
 			if (userInfo.getLang().equals("2")) {
 				grsUserName = userInfo.getDisplayName2();

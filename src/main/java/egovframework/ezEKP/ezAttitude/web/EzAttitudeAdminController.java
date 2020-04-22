@@ -1117,6 +1117,11 @@ public class EzAttitudeAdminController {
 		String searchStartDate = sdf.format(cal.getTime());
 		String searchEndDate = localDate;
 		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/companies";
 		
@@ -1151,6 +1156,7 @@ public class EzAttitudeAdminController {
 			model.addAttribute("adminCompany", adminCompany);
 			model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
 			model.addAttribute("searchEndDate", searchEndDate.substring(0, 10));
+			model.addAttribute("useExternalMailServer", useExternalMailServer);
 		}
 		
 		LOGGER.debug("/admin/ezAttitude/attitudeAbsented.do");

@@ -62,6 +62,13 @@
 				var returnValue = new Array();
 				returnValue[0] = pOpinionMod;
 				returnValue[1] = opinionContent;
+					
+				/* 2020-04-02 홍승비 - 신규의견 저장 시 부모 의견창에 신규의견작성 플래그 전달 (수정 시 무시) */
+				var pNewOpinionFlag = false;
+				if (pOpinionMod == "ADD") {
+					pNewOpinionFlag = true;
+				}
+				returnValue[2] = pNewOpinionFlag;
 				
 				if (ReturnFunction != null) {
 					ReturnFunction(returnValue);

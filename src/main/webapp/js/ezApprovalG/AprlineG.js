@@ -1143,17 +1143,20 @@ function CheckSignCellValueLast() {
         return false;
     }
 
-    if (pCurSign >= 3) {
-        var pInformationContent = "" + strLang365 + " " + strLang366 + "";
-        var rtnval = confirm(pInformationContent);
-        CheckSignCellValueLast_Complete(rtnval);
-        return rtnval;
-    }
-    else {
-        CheckSignCellValueLast_Complete(true);
-        return true;
-    }
-
+    //검토자 수 체크로직 주석처리.(닷넷 동일) 문서유통 접수 시 사인카운트 오류 관련. 2019-12-03 홍대표.
+//    if (pCurSign >= 3) {
+//        var pInformationContent = "" + strLang365 + " " + strLang366 + "";
+//        var rtnval = confirm(pInformationContent);
+//        CheckSignCellValueLast_Complete(rtnval);
+//        return rtnval;
+//    }
+//    else {
+//        CheckSignCellValueLast_Complete(true);
+//        return true;
+//    }
+    
+    CheckSignCellValueLast_Complete(true);
+    return true;
 }
 
 function CheckSignCellValueLast_Complete(Ans) {

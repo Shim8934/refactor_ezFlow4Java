@@ -240,6 +240,24 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.selectMultiLoginUser", map);
 	}
 	
+	public boolean getPermissionGroupAccessYN(Map<String, Object> map) throws Exception {
+		int permit = (int) select("EzCommonDAO.getPermissionGroupAccessYN", map);
+		
+		if (permit > 0) {
+			return true;
+		} else {
+			if (map.get("applySubDeptYN").toString().equals("true")) {
+				permit = (int) select("EzCommonDAO.getPermissionGroupAccessSubDeptY", map);
+				
+				if (permit > 0) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	public void createTblUserMultiLogin() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblUserMultiLogin");
@@ -618,6 +636,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	public void createBoardLike() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardLike");
+		} catch (Exception e) {
+			logger.debug("tbl_board_like doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createBoardLike");
+		}
+	}
+	
+	public void addBoardLikeFlag() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardInfoLikeFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info likeFlag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addBoardLikeFlag");
+		}
+	}
 
 	public void addQuickLinkLinkOrder() {
 		try {
@@ -638,7 +676,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addComCloseCompanyId");
 		}
 	}
-
+	
 	public void addWebfolderTotalLimit() {
 		try {
 			select("EzCommonDAO.checkWebfolderTotalLimit");
@@ -684,6 +722,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_memo_config addMemoextensionColumns doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.addMemoExtensionColumns");
+		}
+	}
+	
+	public void addSurveyAlamColums() {
+		try {
+			select("EzCommonDAO.checkSurveyAlamColums");
+		} catch (Exception e) {
+			logger.debug("tbl_survey addSurveyAlamColums doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addSurveyAlamColums");
 		}
 	}
 		
@@ -1001,6 +1049,41 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.snMenuAuth");
 		}
 	}
+	
+	public void addBoardManageTypeColumn() {
+		try {
+			select("EzCommonDAO.checkBoardManageTypeColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_board_boardmanage type doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addBoardManageTypeColumn");
+		}
+	}
+
+	public void createPersonalPopupUser() {
+		try {
+			select("EzCommonDAO.checkTblPsPopupUser");
+		} catch (Exception e) {
+			logger.debug("tbl_ps_popup_user doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblPsPopupUser");
+		}
+	}
+	
+	public void addSurveyMailSentFlagColumn() {
+		try {
+			select("EzCommonDAO.checkSurveyMailSentFlagColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_survey mail_sent_flag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addSurveyMailSentFlagColumn");
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LoginVO> getPermissionGroupMembers(Map<String, Object> map) throws Exception {
+		return (List<LoginVO>) list("EzCommonDAO.getPermissionGroupMembers", map);
+	}
 
 	public void addSnThemeAuth() {
 		try {
@@ -1171,6 +1254,45 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_historydocinfo BEFOREDOCURL column doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.updateAddBeforeDocUrl");
+		}
+	}
+
+	public void addAprAttachViewOrder() {
+		try {
+			select("EzCommonDAO.checkAprAttachViewOrder");
+		} catch (Exception e) {
+			logger.debug("tbl_aprattachinfo VIEWORDER column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAprAttachViewOrder");
+		}
+	}
+	
+	public void addAprEndAttachViewOrder() {
+		try {
+			select("EzCommonDAO.checkAprEndAttachViewOrder");
+		} catch (Exception e) {
+			logger.debug("tbl_endattachinfo VIEWORDER column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAprEndAttachViewOrder");
+		}
+	}
+	
+	public void addAprTmpAttachViewOrder() {
+		try {
+			select("EzCommonDAO.checkAprTmpAttachViewOrder");
+		} catch (Exception e) {
+			logger.debug("tbl_tmpattachinfo VIEWORDER column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAprTmpAttachViewOrder");
+		}
+	}
+	
+	public void insertUseExternalMailServerConfig(Map<String, Object> map) throws Exception{
+		String propertyValue = (String) select("EzCommonDAO.checkMailTenantConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("useExternalMailServer tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertSurveyTenantConfig",map);
 		}
 	}
 }

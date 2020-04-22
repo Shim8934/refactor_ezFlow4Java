@@ -409,7 +409,9 @@
 						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('search');"><spring:message code='ezAttitude.t121' /></span></a>
 						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
+						<c:if test="${useExternalMailServer eq 'NO' }">
 						<a class="imgbtn"><span onclick="sendMail();"><spring:message code='ezAttitude.t136' /></span></a>
+						</c:if>
 					</td>
 				</tr>
 			</tbody>

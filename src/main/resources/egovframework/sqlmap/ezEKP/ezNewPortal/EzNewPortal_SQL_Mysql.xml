@@ -782,34 +782,165 @@ AND
                 NAME.company_id = COMP.company_id
             AND
                 A.menu_id = COMP.menu_id
-            LEFT JOIN
-                TBL_PORTAL_MENU_AUTH AS AUTH
-            ON
-                COMP.tenant_id = AUTH.tenant_id
-            AND
-                COMP.company_id = AUTH.company_id
-            AND
-                A.menu_id = AUTH.menu_id
        ]]>
         
-        <isEmpty property="deptId">
+        <isEqual property="userType" compareValue="USER">
             <![CDATA[
-                AND
-                    AUTH.user_type = 1
-                AND
-                    AUTH.user_id = #userId#
+           	LEFT JOIN (
+           		SELECT
+           			MAX(access_yn) AS access_yn,
+           			menu_id,
+           			tenant_id,
+           			company_id,
+           			user_type
+           		FROM
+           			TBL_PORTAL_MENU_AUTH
+           		WHERE
+           			(
+           				(user_id = #userId# AND user_type = 1 AND tenant_id = #tenantId# AND company_id = #companyId#)
+           			OR 
+           				(user_id IN (
+           						SELECT
+           							group_id
+           						FROM
+           							tbl_permissiongroupinfo F
+           						JOIN
+           							tbl_portal_menu_auth G
+           						ON
+           							G.user_id = F.group_id
+           						AND
+           							G.company_id = F.company_id
+           						AND
+           							G.tenant_id = F.tenant_id
+           						AND
+           							F.member_id = #userId#
+           						AND
+           							F.member_type = 'USER'
+           						AND
+           							F.tenant_id = #tenantId#
+           						AND
+           							F.company_id = #companyId#
+           						)
+           				AND
+           					user_type = 4
+           				)
+           			)
+           		GROUP BY
+           			menu_id
+           		) AUTH
             ]]>
-        </isEmpty>
-        
-        <isNotEmpty property="deptId">
+        </isEqual>
+        <isEqual property="userType" compareValue="PERMISSION">
             <![CDATA[
-                AND
-                    AUTH.user_type = 0
-                AND
-                    AUTH.user_id = #deptId#
+           	LEFT JOIN (
+           		SELECT
+           			MAX(access_yn) AS access_yn,
+           			menu_id,
+           			tenant_id,
+           			company_id,
+           			user_type
+           		FROM
+           			TBL_PORTAL_MENU_AUTH
+           		WHERE
+           			(
+           				(user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 2 AND tenant_id = #tenantId# AND company_id = #companyId#)
+           			OR
+           				(user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 3 AND tenant_id = #tenantId# AND company_id = #companyId#)
+           			OR 
+           				(user_id IN (
+           						SELECT
+           							group_id
+           						FROM
+           							tbl_permissiongroupinfo F
+           						JOIN
+           							tbl_portal_menu_auth G
+           						ON
+           							G.user_id = F.group_id
+           						AND
+           							G.company_id = F.company_id
+           						AND
+           							G.tenant_id = F.tenant_id
+           						AND
+           							(
+           							 (F.member_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND member_type = 'JIKWI')
+           							OR
+           							 (F.member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND member_type = 'JIKCHEK')
+           							)
+           						AND
+           							F.tenant_id = #tenantId#
+           						AND
+           							F.company_id = #companyId#
+           						)
+           				AND
+           					user_type = 4
+           				)
+           			)
+           		GROUP BY
+           			menu_id
+           		) AUTH
             ]]>
-        </isNotEmpty>
+        </isEqual>
+        <isEqual property="userType" compareValue="DEPT">
             <![CDATA[
+           	LEFT JOIN (
+           		SELECT
+           			MAX(access_yn) AS access_yn,
+           			menu_id,
+           			tenant_id,
+           			company_id,
+           			user_type
+           		FROM
+           			TBL_PORTAL_MENU_AUTH
+           		WHERE
+           			(
+           				(user_id = #deptId# AND user_type = 0 AND tenant_id = #tenantId# AND company_id = #companyId#)
+           			OR 
+           				(user_id IN (
+           						SELECT
+           							group_id
+           						FROM
+           							tbl_permissiongroupinfo F
+           						JOIN
+           							tbl_portal_menu_auth G
+           						ON
+           							G.user_id = F.group_id
+           						AND
+           							G.company_id = F.company_id
+           						AND
+           							G.tenant_id = F.tenant_id
+           						AND
+           							F.member_id = #deptId#
+           						AND
+           							F.member_type = 'DEPT'
+           	]]>
+         	<isEqual property="isUserDept" compareValue="false">
+         	<![CDATA[
+         						AND
+         							F.sub_dept_yn = 'Y'
+         	]]>
+         	</isEqual>
+         	<![CDATA[
+           						AND
+           							F.tenant_id = #tenantId#
+           						AND
+           							F.company_id = #companyId#
+           						)
+           				AND
+           					user_type = 4
+           				)
+           			)
+           		GROUP BY
+           			menu_id
+           		) AUTH
+            ]]>
+        </isEqual>
+            <![CDATA[
+			ON
+				COMP.tenant_id = AUTH.tenant_id
+			AND
+				COMP.company_id = AUTH.company_id
+			AND
+				A.menu_id = AUTH.menu_id
             WHERE
                 NAME.tenant_id = #tenantId#
             AND
@@ -819,7 +950,7 @@ AND
             AND
                 COMP.menu_used = 1        
             AND
-            (AUTH.access_yn IS NOT NULL)    
+            	(AUTH.access_yn IS NOT NULL)    
             ORDER BY
                 menuOrder
             ]]>
@@ -1006,39 +1137,174 @@ AND
 		D.company_id = #companyId#
 	AND
 		D.tenant_id = #tenantId#
-	LEFT JOIN
-		TBL_PORTAL_THEME_AUTH E
-	ON
-		B.company_id = E.company_id
-	AND
-		B.tenant_id = E.tenant_id
-	AND
-		E.theme_id = B.theme_id
 	]]>
-	<isEqual property="isDept" compareValue="user">
+	<isEqual property="userType" compareValue="USER">
 	<![CDATA[
-		AND
-			E.user_type = 1
-		AND
-			E.user_id = #userId#
+	LEFT JOIN (
+		SELECT
+			MAX(access_yn) AS access_yn,
+			theme_id,
+			tenant_id,
+			company_id, 
+			user_type
+		FROM
+			TBL_PORTAL_THEME_AUTH
+		WHERE 
+			(
+				(user_id = #userId# AND user_type = 1 AND tenant_id = #tenantId# AND company_id = #companyId#)
+			OR 
+				(user_id IN (
+						SELECT
+							group_id
+						FROM
+							tbl_permissiongroupinfo F
+						JOIN
+							tbl_portal_menu_auth G
+						ON
+							G.user_id = F.group_id
+						AND
+							G.company_id = F.company_id
+						AND
+							G.tenant_id = F.tenant_id
+						AND
+							F.member_id = #userId#
+						AND
+							F.member_type = 'USER'
+						AND
+							F.tenant_id = #tenantId#
+						AND
+							F.company_id = #companyId#
+						)
+				AND
+					user_type = 4
+				)
+			)
+		GROUP BY
+			theme_id
+		) AUTH
 	]]>
 	</isEqual>
-
-	<isNotEqual property="isDept" compareValue="user">
+	<isEqual property="userType" compareValue="PERMISSION">
 	<![CDATA[
-		AND
-			E.user_type = 0
-		AND
-			E.user_id = #userId#
+	LEFT JOIN (
+		SELECT
+			MAX(access_yn) AS access_yn,
+			theme_id,
+			tenant_id,
+			company_id, 
+			user_type
+		FROM
+			TBL_PORTAL_THEME_AUTH
+		WHERE 
+			(
+				(user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 2 AND tenant_id = #tenantId# AND company_id = #companyId#)
+			OR
+				(user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 3 AND tenant_id = #tenantId# AND company_id = #companyId#)
+			OR 
+				(user_id IN (
+						SELECT
+							group_id
+						FROM
+							tbl_permissiongroupinfo F
+						JOIN
+							tbl_portal_menu_auth G
+						ON
+							G.user_id = F.group_id
+						AND
+							G.company_id = F.company_id
+						AND
+							G.tenant_id = F.tenant_id
+						AND
+							(
+							 (F.member_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND member_type = 'JIKWI')
+							OR
+							 (F.member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND member_type = 'JIKCHEK')
+							)
+						AND
+							F.tenant_id = #tenantId#
+						AND
+							F.company_id = #companyId#
+						)
+				AND
+					user_type = 4
+				)
+			)
+		GROUP BY
+			theme_id
+		) AUTH
 	]]>
-	</isNotEqual>
+	</isEqual>
+	<isEqual property="userType" compareValue="DEPT">
 	<![CDATA[
+	LEFT JOIN (
+		SELECT
+			MAX(access_yn) AS access_yn,
+			theme_id,
+			tenant_id,
+			company_id, 
+			user_type
+		FROM
+			TBL_PORTAL_THEME_AUTH
+		WHERE 
+			(
+				(user_id = #userId# AND user_type = 0 AND tenant_id = #tenantId# AND company_id = #companyId#)
+			OR 
+				(user_id IN (
+						SELECT
+							group_id
+						FROM
+							tbl_permissiongroupinfo F
+						JOIN
+							tbl_portal_menu_auth G
+						ON
+							G.user_id = F.group_id
+						AND
+							G.company_id = F.company_id
+						AND
+							G.tenant_id = F.tenant_id
+						AND
+							F.member_id = #userId#
+						AND
+							F.member_type = 'DEPT'
+				]]>
+			<isEqual property="isUserDept" compareValue="false">
+			<![CDATA[
+						AND
+							F.sub_dept_yn = 'Y'
+			]]>
+			</isEqual>
+			<![CDATA[
+						AND
+							F.tenant_id = #tenantId#
+						AND
+							F.company_id = #companyId#
+						)
+				AND
+					user_type = 4
+				)
+			)
+		GROUP BY
+			theme_id
+		) AUTH
+	]]>
+	</isEqual>
+	<![CDATA[
+	ON
+		B.company_id = AUTH.company_id
+	AND
+		B.tenant_id = AUTH.tenant_id
+	AND
+		A.theme_id = AUTH.theme_id
 	WHERE
+		B.tenant_id = #tenantId#
+	AND
+		B.company_id = #companyId#
+	AND
 		B.theme_used = 1
 	AND
 		C.frame_default = 1
 	AND
-		E.access_yn is not null
+		AUTH.access_yn is not null
 	]]>
 </select>
 
@@ -1581,56 +1847,221 @@ LIMIT
 				A.portlet_id = COMP.portlet_id
 			AND
 				A.menu_id = COMP.menu_id
-			LEFT JOIN
-				TBL_PORTAL_MENU_AUTH AS AUTH
-			ON
-				COMP.tenant_id = AUTH.tenant_id
-			AND
-				COMP.company_id = AUTH.company_id
-			AND
-				A.menu_id = AUTH.menu_id
 		]]>
-		
-		<isEmpty property="deptId" prepend="AND">
+        <isEqual property="userType" compareValue="USER">
+            <![CDATA[
+           	LEFT JOIN (
+           		SELECT
+           			MAX(access_yn) AS access_yn,
+           			portlet_id,
+           			tenant_id,
+           			company_id,
+           			user_type
+           		FROM
+           			TBL_PORTAL_PORTLET_AUTH
+           		WHERE
+           			(
+           				(user_id = #userId# AND user_type = 1 AND tenant_id = #tenantId# AND company_id = #companyId#)
+           			OR 
+           				(user_id IN (
+           						SELECT
+           							group_id
+           						FROM
+           							tbl_permissiongroupinfo F
+           						JOIN
+           							TBL_PORTAL_PORTLET_AUTH G
+           						ON
+           							G.user_id = F.group_id
+           						AND
+           							G.company_id = F.company_id
+           						AND
+           							G.tenant_id = F.tenant_id
+           						AND
+           							F.member_id = #userId#
+           						AND
+           							F.member_type = 'USER'
+           						AND
+           							F.tenant_id = #tenantId#
+           						AND
+           							F.company_id = #companyId#
+           						)
+           				AND
+           					user_type = 4
+           				)
+           			)
+           		GROUP BY
+           			portlet_id
+           		) AUTH
+            ]]>
+        </isEqual>
+        <isEqual property="userType" compareValue="PERMISSION">
+            <![CDATA[
+           	LEFT JOIN (
+           		SELECT
+           			MAX(access_yn) AS access_yn,
+           			menu_id,
+           			tenant_id,
+           			company_id,
+           			user_type
+           		FROM
+           			TBL_PORTAL_MENU_AUTH
+           		WHERE
+           			(
+           				(user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 2 AND tenant_id = #tenantId# AND company_id = #companyId#)
+           			OR
+           				(user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 3 AND tenant_id = #tenantId# AND company_id = #companyId#)
+           			OR 
+           				(user_id IN (
+           						SELECT
+           							group_id
+           						FROM
+           							tbl_permissiongroupinfo F
+           						JOIN
+           							tbl_portal_menu_auth G
+           						ON
+           							G.user_id = F.group_id
+           						AND
+           							G.company_id = F.company_id
+           						AND
+           							G.tenant_id = F.tenant_id
+           						AND
+           							(
+           							 (F.member_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND member_type = 'JIKWI')
+           							OR
+           							 (F.member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND member_type = 'JIKCHEK')
+           							)
+           						AND
+           							F.tenant_id = #tenantId#
+           						AND
+           							F.company_id = #companyId#
+           						)
+           				AND
+           					user_type = 4
+           				)
+           			)
+           		GROUP BY
+           			menu_id
+           		) AUTH
+            ]]>
+        </isEqual>
+        <isEqual property="userType" compareValue="DEPT">
+            <![CDATA[
+           	LEFT JOIN (
+           		SELECT
+           			MAX(access_yn) AS access_yn,
+           			menu_id,
+           			tenant_id,
+           			company_id,
+           			user_type
+           		FROM
+           			TBL_PORTAL_MENU_AUTH
+           		WHERE
+           			(
+           				(user_id = #deptId# AND user_type = 0 AND tenant_id = #tenantId# AND company_id = #companyId#)
+           			OR 
+           				(user_id IN (
+           						SELECT
+           							group_id
+           						FROM
+           							tbl_permissiongroupinfo F
+           						JOIN
+           							tbl_portal_menu_auth G
+           						ON
+           							G.user_id = F.group_id
+           						AND
+           							G.company_id = F.company_id
+           						AND
+           							G.tenant_id = F.tenant_id
+           						AND
+           							F.member_id = #deptId#
+           						AND
+           							F.member_type = 'DEPT'
+           	]]>
+         	<isEqual property="isUserDept" compareValue="false">
+         	<![CDATA[
+         						AND
+         							F.sub_dept_yn = 'Y'
+         	]]>
+         	</isEqual>
+         	<![CDATA[
+           						AND
+           							F.tenant_id = #tenantId#
+           						AND
+           							F.company_id = #companyId#
+           						)
+           				AND
+           					user_type = 4
+           				)
+           			)
+           		GROUP BY
+           			menu_id
+           		) AUTH
+            ]]>
+        </isEqual>
+        <isEqual property="userType" compareValue="USER">
 			<![CDATA[
-					AUTH.user_type = 1
+				ON
+					COMP.tenant_id = AUTH.tenant_id
 				AND
-					AUTH.user_id = #userId#
+					COMP.company_id = AUTH.company_id
+				AND
+					A.portlet_id = AUTH.portlet_id
+				LEFT JOIN
+					TBL_PORTAL_PORTLET_USER AS USER
+				ON
+					COMP.tenant_id = USER.tenant_id
+				AND
+					COMP.company_id = USER.company_id
+				AND
+					COMP.portlet_id = USER.portlet_id
+				AND
+					USER.user_id = #userId#
+				AND
+					USER.theme_id = #themeId#
+				WHERE
+					NAME.tenant_id = #tenantId#
+				AND
+					NAME.company_id = #companyId#
+				AND
+					NAME.portlet_lang = #portletLang#
+				AND
+					(COMP.portlet_used = 1 && THEME.portlet_used = 1)
+				AND
+					(AUTH.access_yn IS NOT NULL)
 			]]>
-		</isEmpty>
-		
-		<isNotEmpty property="deptId" prepend="AND">
+		</isEqual>
+		<isNotEqual property="userType" compareValue="USER">
 			<![CDATA[
-					AUTH.user_type = 0
+				ON
+					COMP.tenant_id = AUTH.tenant_id
 				AND
-					AUTH.user_id = #deptId#
+					COMP.company_id = AUTH.company_id
+				AND
+					A.menu_id = AUTH.menu_id
+				LEFT JOIN
+					TBL_PORTAL_PORTLET_USER AS USER
+				ON
+					COMP.tenant_id = USER.tenant_id
+				AND
+					COMP.company_id = USER.company_id
+				AND
+					COMP.portlet_id = USER.portlet_id
+				AND
+					USER.user_id = #userId#
+				AND
+					USER.theme_id = #themeId#
+				WHERE
+					NAME.tenant_id = #tenantId#
+				AND
+					NAME.company_id = #companyId#
+				AND
+					NAME.portlet_lang = #portletLang#
+				AND
+					(COMP.portlet_used = 1 && THEME.portlet_used = 1)
+				AND
+					(AUTH.access_yn IS NOT NULL)
 			]]>
-		</isNotEmpty>
-		
-		<![CDATA[
-			LEFT JOIN
-				TBL_PORTAL_PORTLET_USER AS USER
-			ON
-				COMP.tenant_id = USER.tenant_id
-			AND
-				COMP.company_id = USER.company_id
-			AND
-				COMP.portlet_id = USER.portlet_id
-			AND
-				USER.user_id = #userId#
-			AND
-				USER.theme_id = #themeId#
-			WHERE
-				NAME.tenant_id = #tenantId#
-			AND
-				NAME.company_id = #companyId#
-			AND
-				NAME.portlet_lang = #portletLang#
-			AND
-				(COMP.portlet_used = 1 && THEME.portlet_used = 1)
-			AND
-				(AUTH.access_yn IS NOT NULL)
-		]]>
+		</isNotEqual>
 		<isNotEqual property="config" compareValue="true" prepend="AND">
 			<![CDATA[
 				(USER.portlet_used = 1 OR USER.portlet_used IS NULL OR THEME.is_fixed = 1)
@@ -2262,7 +2693,7 @@ ORDER BY
 	<![CDATA[
 		SELECT
 			A.portlet_id AS portletId,
-			E.access_yn AS accessYN
+			AUTH.access_yn AS accessYN
 		FROM
 			TBL_PORTAL_PORTLET A
 		JOIN
@@ -2273,35 +2704,172 @@ ORDER BY
 			B.company_id = #companyId#
 		AND
 			B.tenant_id = #tenantId#
-		LEFT JOIN
-			TBL_PORTAL_PORTLET_AUTH E
-		ON
-			B.company_id = E.company_id
-		AND
-			B.tenant_id = E.tenant_id
-		AND
-			E.portlet_id = B.portlet_id
 	]]>
-	<isEqual property="isDept" compareValue="user">
+	<isEqual property="userType" compareValue="USER">
 	<![CDATA[
-		AND
-			E.user_type = 1
-		AND
-			E.user_id = #userId#
+		LEFT JOIN (
+			SELECT
+				MAX(access_yn) AS access_yn,
+				portlet_id,
+				tenant_id,
+				company_id,
+				user_type
+			FROM
+				TBL_PORTAL_PORTLET_AUTH
+			WHERE
+				(
+					(user_id = #userId# AND user_type = 1 AND tenant_id = #tenantId# AND company_id = #companyId#)
+				OR 
+					(user_id IN (
+							SELECT
+								group_id
+							FROM
+								tbl_permissiongroupinfo F
+							JOIN
+								tbl_portal_portlet_auth G
+							ON
+								G.user_id = F.group_id
+							AND
+								G.company_id = F.company_id
+							AND
+								G.tenant_id = F.tenant_id
+							AND
+								F.member_id = #userId#
+							AND
+								F.member_type = 'USER'
+							AND
+								F.tenant_id = #tenantId#
+							AND
+								F.company_id = #companyId#
+							)
+					AND
+						user_type = 4
+					)
+				)
+			GROUP BY
+				portlet_id
+			) AUTH
 	]]>
 	</isEqual>
-
-	<isNotEqual property="isDept" compareValue="user">
+	<isEqual property="userType" compareValue="PERMISSION">
 	<![CDATA[
-		AND
-			E.user_type = 0
-		AND
-			E.user_id = #deptId#
+		LEFT JOIN (
+			SELECT
+				MAX(access_yn) AS access_yn,
+				portlet_id,
+				tenant_id,
+				company_id,
+				user_type
+			FROM
+				TBL_PORTAL_PORTLET_AUTH
+			WHERE
+				(
+					(user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 2 AND tenant_id = #tenantId# AND company_id = #companyId#)
+				OR
+					(user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 3 AND tenant_id = #tenantId# AND company_id = #companyId#)
+				OR 
+					(user_id IN (
+							SELECT
+								group_id
+							FROM
+								tbl_permissiongroupinfo F
+							JOIN
+								tbl_portal_menu_auth G
+							ON
+								G.user_id = F.group_id
+							AND
+								G.company_id = F.company_id
+							AND
+								G.tenant_id = F.tenant_id
+							AND
+								(
+								 (F.member_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND member_type = 'JIKWI')
+								OR
+								 (F.member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND member_type = 'JIKCHEK')
+								)
+							AND
+								F.tenant_id = #tenantId#
+							AND
+								F.company_id = #companyId#
+							)
+					AND
+						user_type = 4
+					)
+				)
+			GROUP BY
+				portlet_id
+			) AUTH
 	]]>
-	</isNotEqual>
+	</isEqual>
+	<isEqual property="userType" compareValue="DEPT">
 	<![CDATA[
+		LEFT JOIN (
+			SELECT
+				MAX(access_yn) AS access_yn,
+				portlet_id,
+				tenant_id,
+				company_id,
+				user_type
+			FROM
+				TBL_PORTAL_PORTLET_AUTH
+			WHERE
+				(
+					(user_id = #deptId# AND user_type = 0 AND tenant_id = #tenantId# AND company_id = #companyId#)
+				OR 
+					(user_id IN (
+							SELECT
+								group_id
+							FROM
+								tbl_permissiongroupinfo F
+							JOIN
+								tbl_portal_menu_auth G
+							ON
+								G.user_id = F.group_id
+							AND
+								G.company_id = F.company_id
+							AND
+								G.tenant_id = F.tenant_id
+							AND
+								F.member_id = #deptId#
+							AND
+								F.member_type = 'DEPT'
+		]]>
+	<isEqual property="isUserDept" compareValue="false">
+	<![CDATA[
+					AND
+						F.sub_dept_yn = 'Y'
+	]]>
+	</isEqual>
+	<![CDATA[
+							AND
+								F.tenant_id = #tenantId#
+							AND
+								F.company_id = #companyId#
+							)
+					AND
+						user_type = 4
+					)
+				)
+			GROUP BY
+				portlet_id
+			) AUTH
+	]]>
+	</isEqual>
+	<![CDATA[
+		ON
+			B.tenant_id = AUTH.tenant_id
+		AND
+			B.company_id = AUTH.company_id
+		AND
+			B.portlet_id = AUTH.portlet_id
 		WHERE
-			E.access_yn is not null
+			B.tenant_id = #tenantId#
+		AND
+			B.company_id = #companyId#
+		AND
+			B.portlet_used = 1
+		AND
+			AUTH.access_yn is not null
 	]]>
 </select>
 

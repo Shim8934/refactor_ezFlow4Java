@@ -96,7 +96,7 @@ function displaySubFolder(divTree, divElmt, list, folderType) {
 	spanFolderName.onclick = function() {getSelected(this, folderType);};
 	
 	/* 2018-08-23 홍승비 - 웹폴더 폴더명 ellipsis 작업 */
-	var spanW = 167 - (18 * list["folderLevel"]);
+	var spanW = 157 - (15 * list["folderLevel"]);
 	spanFolderName.style.display = "inline-block";
 	spanFolderName.style.textOverflow = "ellipsis";
 	spanFolderName.style.overflowX = "hidden";

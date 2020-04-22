@@ -361,7 +361,7 @@ function InsertToRecListView_lv(Resultxml) {
         }
 
 
-        var xmlDoc
+        var xmlDoc;
         if (CrossYN()) {
             var xmlLIST = createXmlDom();
             var nodeToImport = xmlLIST.importNode(ListViewData, true);
@@ -374,6 +374,8 @@ function InsertToRecListView_lv(Resultxml) {
             xmlDoc.appendChild(ListViewData);
         }
 
+        xmlDoc = insertSortInfoToHeader(g_HeaderInfoXml, xmlDoc);
+
         if (document.getElementById("lvtDoclist").innerHTML != "") document.getElementById("lvtDoclist").innerHTML = "";
         var DocList = new ListView();                           
         DocList.SetID("DocList");                               
@@ -384,8 +386,10 @@ function InsertToRecListView_lv(Resultxml) {
         DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");      
         DocList.SetOrderbyCol("COLNAME");
         DocList.SetTitleIdx(0);                                  
+        DocList.SetTitle("RecTitle");
         DocList.SetSecurityFlag(true);
-        DocList.DataSource(ListViewData);                             
+        DocList.SetSecurityIdx(13);
+        DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");                          
         DocList = null;
 
