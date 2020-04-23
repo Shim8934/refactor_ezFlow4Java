@@ -264,10 +264,10 @@
 			    if (CrossYN()){
 			        companyinfo_dialogArguments[0] = args;
 			        companyinfo_dialogArguments[1] = add_company_Complete;
-			        var OpenWin = window.open("/admin/ezOrgan/companyInfo.do", "CompanyInfo", GetOpenWindowfeature(328, 260));
+			        var OpenWin = window.open("/admin/ezOrgan/companyInfo.do", "CompanyInfo", GetOpenWindowfeature(448, 260));
 			        try { OpenWin.focus(); } catch (e) { }
 			    }else{
-			        var rtnValue = window.showModalDialog("/admin/ezOrgan/companyInfo.do", treeNode.GetNodeData("CN"), "dialogHeight:230px; dialogWidth:328px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(328, 260));
+			        var rtnValue = window.showModalDialog("/admin/ezOrgan/companyInfo.do", treeNode.GetNodeData("CN"), "dialogHeight:230px; dialogWidth:448px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(448, 260));
 
 			        if (typeof (rtnValue) != "undefined"){
 			            getDeptFullTree(rtnValue);
@@ -304,15 +304,17 @@
 				args[0] = treeNode.GetNodeData("CN");
 				args[1] = treeNode.GetNodeData("VALUE");
 				
+				var companyInfoURL = "/admin/ezOrgan/companyInfo.do?selectCN=" + args[0] + "&pageType=modify"; 
+				
 				if (CrossYN()) {
 				    companyinfo_dialogArguments[0] = args;
 				    companyinfo_dialogArguments[1] = info_company_Complete;
 				    
-                    var OpenWin = window.open("/admin/ezOrgan/companyInfo.do", "CompanyInfo", GetOpenWindowfeature(328, 260));
+                    var OpenWin = window.open(companyInfoURL, "CompanyInfo", GetOpenWindowfeature(328, 295));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				} else {
-                    var rtnValue = window.showModalDialog("/admin/ezOrgan/companyInfo.do", args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 260));
+                    var rtnValue = window.showModalDialog(companyInfoURL, args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 295));
 
 				    if (typeof (rtnValue) != "undefined") {
 				        alert("<spring:message code='ezOrgan.x0005' />");
@@ -774,7 +776,28 @@
 					}
 				}
 			}
-
+		    
+		    function getUserCompanyID(userID) {
+		    	var rtnVal = "";
+		    	
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezOrgan/getUserCompanyID.do",
+					data : {
+						cn : userID
+					},
+					async : false,
+					success : function(result) {
+						rtnVal = result;
+					},
+					error : function(){
+					}
+				});
+		    	
+		    	return rtnVal;
+		    }
+		    
 		    function mail_manage(){
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
@@ -795,13 +818,13 @@
 			    } else if (listview.GetSelectedRows().length > 1) {
 					alert("<spring:message code='ezOrgan.t51' />");
 					return;
-				} else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+				} else if (listview.GetSelectedRows()[0].getAttribute("DATA4") == 'addJob'){
 		    		alert("<spring:message code='ezOrgan.psb02' />");
 					return;
 			    }
 
 		        var selectId = GetAttribute(listview.GetSelectedRows()[0],"DATA2");
-		        var selectCompanyId = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+		        var selectCompanyId = getUserCompanyID(selectId); 
 		        var url = "/admin/ezOrgan/configEmail.do?id=" + selectId + "&type=user" + "&companyId=" + selectCompanyId;
 			    window.open(url, "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
 			}
@@ -817,9 +840,6 @@
 		        if (nodeIdx.length == 0) {
 		        	alert("<spring:message code='ezEmail.multiDomain.ksa23' />");
 					return;
-		        } else if (treeNode.GetNodeData("EXTENSIONATTRIBUTE2") == treeNode.GetNodeData("CN")) {
-		        	alert(strLangKSM01);
-		        	return;
 		        }
 				
 		        var selectId = treeNode.GetNodeData("CN");
