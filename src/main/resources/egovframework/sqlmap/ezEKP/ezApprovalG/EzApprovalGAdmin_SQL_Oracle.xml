@@ -1687,6 +1687,8 @@
 				tenant_id = #tenantID#
 			AND
 				companyid = #companyID#
+			AND
+				formid != '9999999999';
 		]]>
 	</select>
 
