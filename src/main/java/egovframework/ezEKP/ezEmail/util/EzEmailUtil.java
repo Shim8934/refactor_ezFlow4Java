@@ -5083,13 +5083,27 @@ public class EzEmailUtil {
     		int mailAddrRight = mailAddrName.lastIndexOf(">");
     		
     		if (mailAddrLeft < mailAddrRight) {
-    			String MailAddrNameTemp = mailAddrName.substring(0, mailAddrLeft);
-    			String MailAddrTemp = mailAddrName.substring(mailAddrLeft);
+    			String MailAddrNameTemp = mailAddrName;
+    			String MailAddrTemp = mailAddrName;
     			
-    			MailAddrTemp = MailAddrTemp.replaceAll("<", "").replaceAll(">", "").replaceAll(";", "");
-    			
-    			MailAddrNameTemp = MailAddrNameTemp.trim().replaceAll(",", " ").replaceAll(":", " ").replaceAll(";", " ");
-    			MailAddrNameTemp = "\"" + MailAddrNameTemp + "\"";
+    			if(mailAddrLeft == -1 && mailAddrRight == -1){
+    				MailAddrNameTemp = mailAddrName.substring(0, mailAddrLeft);
+    				MailAddrTemp = mailAddrName.substring(mailAddrLeft);
+    				
+    				MailAddrTemp = MailAddrTemp.replaceAll("<", "").replaceAll(">", "").replaceAll(";", "");
+
+    				MailAddrNameTemp = MailAddrNameTemp.trim().replaceAll(",", " ").replaceAll(":", " ").replaceAll(";", " ");
+    				MailAddrNameTemp = "\"" + MailAddrNameTemp + "\"";
+    			} else {
+    				// 메일 주소에 @도메인이 포함되어있지 않은 경우에 message.getFrom을 하게 되면 :>:;; 가 추가되는 경우가 생김.
+    				// @까지만 붙게 되면 :; 가 붙게 되는 현상이 생기기때문에 하위 코드에서 제거해주어야함.
+    				// 이에 다음과 같이 모두 제거하는 코드를 추가 
+    				
+    				MailAddrTemp = MailAddrTemp.replaceAll("<", "").replaceAll(">", "").replaceAll(";", "").replaceAll(":", "").trim();
+    				
+    				MailAddrNameTemp = MailAddrNameTemp.trim().replaceAll(",", " ").replaceAll(":", " ").replaceAll(";", " ").replaceAll("<", " ").replaceAll(">", " ");
+    				MailAddrNameTemp = "\"" + MailAddrNameTemp + "\"";
+    			}
 
     			reMailAddrName = MailAddrNameTemp;
     			reMailAddr = MailAddrTemp;
