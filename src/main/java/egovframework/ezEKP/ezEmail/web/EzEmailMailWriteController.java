@@ -6729,4 +6729,129 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		return addCopyrightStr;
 	}
 	
+	/**
+	 * 일반 첨부파일 순서 저장 함수
+	 */
+	@RequestMapping(value="/ezEmail/saveAttachFileOrder.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveAttachFileOrder( @CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
+		logger.debug("saveAttachFileOrder started.");
+		
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userInfo.get(1);
+		
+		String returnValue = "";
+		
+		long uid = 0;
+		String strUid = request.getParameter("itemid");
+		String[] fileIdxArr = request.getParameterValues("fileIdxArr[]");
+		
+		uid = strUid != null ? Long.parseLong(strUid) : uid;
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null && !shareId.equals("")) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("saveAttachFileOrder ended.");
+					
+					return "";
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
+		}
+		
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
+		
+		if (uid != 0) {
+			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+					userEmail, password);
+			
+			IMAPAccess ia = null;
+			try {
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
+				
+				Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
+				folder.open(Folder.READ_WRITE);
+				Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
+				
+				if (oldMessage != null) {
+					MimeMessage newMessage = sa.createMimeMessage();
+					Multipart multipart = new MimeMultipart();
+					
+					Multipart mp = (Multipart)oldMessage.getContent();
+					int count = mp.getCount();
+					BodyPart p = null;
+					int nonAttachCount = 0;
+					
+					// 첨부파일 파트 이전에 존재하는 파트들의 갯수를 구한다.
+					// 이 로직이 제대로 동작하려면 첨부파일들이 모두 메시지의 뒷부분에 연속으로 위치하여야 한다.
+					for (int i = 0; i < count; i++) {
+						p = mp.getBodyPart(i);
+						
+						if (p.getDisposition() == null) {
+							nonAttachCount++;
+						} else {
+							break;
+						}
+					}
+					
+					BodyPart[] oldAttachPartArr = new BodyPart[count - nonAttachCount];
+					for (int i = 0; i < count; i++) {
+						p = mp.getBodyPart(i);
+						
+						if (i < nonAttachCount) {
+							multipart.addBodyPart(p);
+						} else if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+							oldAttachPartArr[i - nonAttachCount] = p;
+						}
+					}
+					
+					for (int i = 0; i < fileIdxArr.length; i++) {
+						multipart.addBodyPart(oldAttachPartArr[Integer.parseInt(fileIdxArr[i])]);
+					}
+					
+					@SuppressWarnings("unchecked")
+					Enumeration<Header> e = oldMessage.getAllHeaders();
+					while(e.hasMoreElements()){
+						Header header = e.nextElement();
+						newMessage.setHeader(header.getName(), header.getValue());
+					}
+					
+					if (multipart.getCount() != 0) {
+						newMessage.setContent(multipart);
+						newMessage.setFlag(Flags.Flag.SEEN, true);
+						AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
+						returnValue += uids[0].uid;
+					}
+					
+					oldMessage.setFlag(Flags.Flag.DELETED, true);
+					
+				} else {
+					logger.debug("oldMessage is null. uid = " + uid);
+				}
+				folder.close(true);
+				
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
+			}
+		}
+		
+		logger.debug("saveAttachFileOrder ended. returnValue=" + returnValue);
+		
+		return returnValue;
+	}
 }
