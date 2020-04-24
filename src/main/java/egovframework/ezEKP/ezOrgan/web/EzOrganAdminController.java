@@ -1899,6 +1899,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	* 조직도관리 사원정보 사진이미지 임시 업로드 실행 함수(Ie9)
 	*/
+	@SuppressWarnings("unused")
 	@RequestMapping(value = "/admin/ezOrgan/signImageUploadIe9.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String signImangeUploadIe9(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
@@ -4144,6 +4145,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		return companyName;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezOrgan/saveUserImagebyTemp.do", method = RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject saveUserImagebyTemp(@CookieValue("loginCookie") String loginCookie, OrganUserVO vo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
@@ -4719,12 +4721,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		String companyId = userInfo.getCompanyID();
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
+		String companyId = userInfo.getCompanyID();
 		model.addAttribute("companyId", companyId);
 		
 		logger.debug("normalUserList ended");
@@ -4738,12 +4740,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		String companyId = userInfo.getCompanyID();
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
+		String companyId = userInfo.getCompanyID();
 		model.addAttribute("companyId", companyId);
 		
 		logger.debug("stopUserList ended");

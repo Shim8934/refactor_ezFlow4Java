@@ -38,7 +38,6 @@ import com.opencsv.CSVWriter;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
-import egovframework.ezEKP.ezAddress.vo.AddressOldZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
@@ -269,7 +268,7 @@ public class EzAddressController{
 			Document xmldom = commonUtil.convertRequestToDocument(request);
 			String pFolderID = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String pOwnerID = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
-			String pFolderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
+			// String pFolderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
 			String pFolderName = ""; //TODO: folderName setting 안해도 되나?
 			
 			String pOrderOption = "";
@@ -520,7 +519,7 @@ public class EzAddressController{
 			String folderType = xmldom.getElementsByTagName("TYPE").item(0).getTextContent();
 			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
 			String addressId = xmldom.getElementsByTagName("ADDRESSID").item(0).getTextContent();
-			String photoPath = xmldom.getElementsByTagName("PHOTOPATH").item(0).getTextContent();
+			// String photoPath = xmldom.getElementsByTagName("PHOTOPATH").item(0).getTextContent();
 			String sName = xmldom.getElementsByTagName("SNAME").item(0).getTextContent();
 			String sCompany = xmldom.getElementsByTagName("SCOMPANY").item(0).getTextContent();
 			String sDept = xmldom.getElementsByTagName("SDEPT").item(0).getTextContent();
@@ -536,8 +535,8 @@ public class EzAddressController{
 			String sHomeAddr = xmldom.getElementsByTagName("SHOMEADDR").item(0).getTextContent();
 			String sMemo = xmldom.getElementsByTagName("SMEMO").item(0).getTextContent();
 			String sType = xmldom.getElementsByTagName("STYPE").item(0).getTextContent();
-			String sUserNM = xmldom.getElementsByTagName("USERNM").item(0).getTextContent();
-			String sUserNM2 = xmldom.getElementsByTagName("USERNM2").item(0).getTextContent();
+			// String sUserNM = xmldom.getElementsByTagName("USERNM").item(0).getTextContent();
+			// String sUserNM2 = xmldom.getElementsByTagName("USERNM2").item(0).getTextContent();
 			String sFurigana = xmldom.getElementsByTagName("FURIGANA").item(0).getTextContent();
 			
 			// ownerId가 없으면 디비에서 구하기.
@@ -1147,8 +1146,8 @@ public class EzAddressController{
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
 			Document xmldom = commonUtil.convertStringToDocument(bodyData);
-			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
-			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
+			// String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
+			// String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
 			String addressId = xmldom.getElementsByTagName("ADDRESSID").item(0).getTextContent();
 			String folderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
 			
@@ -1845,9 +1844,9 @@ public class EzAddressController{
 			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
-			String field = xmldom.getElementsByTagName("FIELD").item(0).getTextContent();
+			// String field = xmldom.getElementsByTagName("FIELD").item(0).getTextContent();
 			int pageSize = Integer.parseInt(xmldom.getElementsByTagName("PAGESIZE").item(0).getTextContent());
-			String filter = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
+			// String filter = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
 			int currentPage = Integer.parseInt(xmldom.getElementsByTagName("PAGE").item(0).getTextContent());
 			String searchGubun = xmldom.getElementsByTagName("SEARCHGUBUN").item(0).getTextContent();
 			String folderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();

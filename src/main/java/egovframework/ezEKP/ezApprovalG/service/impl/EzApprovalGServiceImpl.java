@@ -1515,7 +1515,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String listString = "";
 		StringBuffer resultXML = new StringBuffer();
 		String orderOption1 = "";
-		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", tenantID);
+		// String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", tenantID);
 		
 		if (mode.equals("APR")) {
 			//결재할문서
@@ -4052,7 +4052,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getListXML(String groupID, String lang, String companyID, int tenantID, Locale locale, String approvalFlag) throws Exception {
 		logger.debug("getListXML started");
 
-		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", tenantID);
+		// String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", tenantID);
 		StringBuffer resultXML = new StringBuffer();
 		String listString = "";
 		if (approvalFlag.equals("G")) {
@@ -4237,7 +4237,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String addToAprDept(String userID, String formID, String aprDeptSN, String companyID, String lang, int tenantID, String offset, Locale locale, String approvalFlag) throws Exception {
 		logger.debug("addToAprDept started");
 		
-		String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", tenantID);
+		// String useReceiveInfoName = ezCommonService.getTenantConfig("useReceiveInfoName", tenantID);
 
 		StringBuffer resultXML = new StringBuffer();
 		String listString = "";
@@ -4283,8 +4283,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		sb.append("</DATA>");
 		
-		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		// Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		// int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
 		String fieldName = "";
 		String fieldValue = "";
@@ -4420,7 +4420,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} else {
 					// xpath 생성
 					XPath  xpath = XPathFactory.newInstance().newXPath();
-					NodeList nodes = (NodeList)xpath.evaluate("//ROWS/ROW", doc, XPathConstants.NODESET);
+					// NodeList nodes = (NodeList)xpath.evaluate("//ROWS/ROW", doc, XPathConstants.NODESET);
 					
 					map.put("v_AprDeptMemberSN", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(0).getTextContent());
 					map.put("v_AprMemberDeptID", xpath.evaluate("//ROWS/ROW["+(i+1)+"]/DATA[@name='ReceiptPointID']", doc, XPathConstants.STRING));
@@ -5538,7 +5538,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String delayCabEndY(String deptCode, String flag, String cabClassList, String companyID, int tenantID) throws Exception {
 		logger.debug("delayCabEndY started");
 
-		String rtnVal = "";
+		// String rtnVal = "";
 		String tempStr = "";
 		String[] tempAry = cabClassList.split(",");
 		
@@ -6235,6 +6235,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	 * @throws Exception
 	 * 한글파일에 사인기입하기
 	 */
+	@SuppressWarnings("unused")
 	private void insertingImageHWP(HWPFile hwpFile, String fieldName, String filePath) throws Exception {
 		logger.debug("insertingImageHWP started");
 		
@@ -7036,7 +7037,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (queryType.equals("service")) {
 					Object connBean = context.getBean("EzConnUtil");
-					Class refClass = connBean.getClass();
+					Class<?> refClass = connBean.getClass();
 					
 					Field fieldDocID = refClass.getDeclaredField("docID");
 					fieldDocID.setAccessible(true);
@@ -7082,8 +7083,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String docNumZeroCnt = getDocNumZeroCnt(companyID, userInfo.getTenantId());
 		String content = "";
 		String pTitle = "";
-		String jikwe = "";
-		String jikwe2 = "";
+		// String jikwe = "";
+		// String jikwe2 = "";
 		String displayName = "";
 		String displayName2 = "";
 		String department = "";
@@ -7092,9 +7093,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String convertedMHT = "";
 		String docState = "";
 		String proxySign = "";
-		String empNo = "";
+		// String empNo = "";
 		String retNum = "";
-		String imageM = "";
+		// String imageM = "";
 		String orgName = "";
 		String orgName2 = ""; 
 		String orgDeptID = "";
@@ -7118,9 +7119,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String fileForder1 = "";
 		String strDeptID = "";
 		
-		boolean hukyulDoc = false;
+		// boolean hukyulDoc = false;
 		String currentAprType = "";
-		String currentNum = "";
+		// String currentNum = "";
 		int lastAprLineSN = 0;
 		int totalLineSN = 0;
 		
@@ -7181,8 +7182,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		signImage = xmlDoc.getElementsByTagName("EXTENSIONATTRIBUTE3").item(0).getTextContent();
 		pTitle = xmlDoc.getElementsByTagName("TITLE1").item(0).getTextContent();
-		jikwe = pTitle;
-		jikwe2 = xmlDoc.getElementsByTagName("TITLE2").item(0).getTextContent();
+		// jikwe = pTitle;
+		// jikwe2 = xmlDoc.getElementsByTagName("TITLE2").item(0).getTextContent();
 		displayName = xmlDoc.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
 		displayName2 = xmlDoc.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
 		department = xmlDoc.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
@@ -7213,7 +7214,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		int signCnt = Integer.parseInt(signNum);
-		int tempLength = signTextArray.length;
+		// int tempLength = signTextArray.length;
 		int pCnt = getDocAprCnt(docID, companyID, userInfo.getTenantId());
 		int refResult = getDocInfoRef(docID, orgUID, aprState, companyID, approvalFlag, userInfo.getTenantId());
 		int habResult = getDocInfoHab(docID, orgUID, aprState, companyID, approvalFlag, userInfo.getTenantId());
@@ -7253,7 +7254,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			for (int k = docListNode.getLength() -1; k >= 0; k--) {
-				currentNum = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(0).getTextContent();
+				// currentNum = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(0).getTextContent();
 				currentAprType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
 				
 				switch (currentAprType) {
@@ -7407,7 +7408,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (aprType.equals("016")) { // 대결
 					int tmps = signCnt - refResult;
 					String tempSign = signAdd + "sign" + tmps;
-					String tempSem = signAdd + "seumyungdate" + tmps;
+					// String tempSem = signAdd + "seumyungdate" + tmps;
 					
 					doc.getElementById(tempSign).html(messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + "<BR/><P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 					
@@ -7970,8 +7971,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		boolean rtnVal = true;
 		boolean findFlag;
 		
+		@SuppressWarnings("unused")
 		String connString = "";
 		String connFlag = "";
+		@SuppressWarnings("unused")
 		String queryString = "";
 		String queryType = "";
 		String processIdx, processTime;
@@ -8034,7 +8037,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			keyNodes = connNode.getChildNodes().item(2).getChildNodes();
 			
+			@SuppressWarnings("unused")
 			String keyValue = "";
+			@SuppressWarnings("unused")
 			String[] arrKeys = null;
 			
 			switch (queryType) {
@@ -13636,6 +13641,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String href = ezApprovalGDAO.getDocInfoHref(map);
 		
 		String docState = StaDSHesong;
+		@SuppressWarnings("unused")
 		String mustFlag = "N";
 		if (pFlag.equals("0") || pFlag.equals("2") || pFlag.equals("3")) {
 			docState = staDSBansong;
@@ -13746,12 +13752,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("doApprove started");
 		logger.debug("docID : " + docID);
 		
-		StringBuilder strSQL = new StringBuilder();
 		String subSQL = "";
 		boolean rtnVal = false;
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
+		// String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
 		String ingFlag = "APR";
 		int chamJoCnt = 0;
@@ -14564,7 +14569,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 map.put("nowDateTime", nowDateTime);
 
                 if (config.getProperty("config.useOpenGov").equalsIgnoreCase("YES")) {
-                    String isLimitDate = ezApprovalGDAO.getOpenGovLimitDate(map);
+                    // String isLimitDate = ezApprovalGDAO.getOpenGovLimitDate(map);
 
                     /*if (isLimitDate != null && isLimitDate.equals("N")) {
                         map.put("nowDate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMdd"), "235|+09:00", false));
@@ -15943,8 +15948,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String regYear = getAccountingYear(processDate, companyID, langType, tenantID);
 		String title = objParam.getElementsByTagName("TITLE").item(0).getTextContent();
 		String numOfPage = objParam.getElementsByTagName("NUMOFPAGE").item(0).getTextContent();
-		String aprMemberTitle = objParam.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent();
-		String aprMemberTitle2 = objParam.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent();
+		// String aprMemberTitle = objParam.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent();
+		// String aprMemberTitle2 = objParam.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent();
 		String aprMemberName = objParam.getElementsByTagName("APRMEMBERNAME").item(0).getTextContent();
 		String aprMemberName2 = objParam.getElementsByTagName("APRMEMBERNAME2").item(0).getTextContent();
 		String drafterName = objParam.getElementsByTagName("DRAFTERNAME").item(0).getTextContent();
@@ -22055,8 +22060,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String ExeDate = xmlDom.getElementsByTagName("EXECUTEDATE").item(0).getTextContent().trim();
 				String ReceiptMember = xmlDom.getElementsByTagName("RECEIPTMEMBER").item(0).getTextContent().trim();
 				String ReceiptMember2 = xmlDom.getElementsByTagName("RECEIPTMEMBER2").item(0).getTextContent().trim();
-				String SendingMember = xmlDom.getElementsByTagName("SENDINGMEMBER").item(0).getTextContent().trim();
-				String SendingMember2 = xmlDom.getElementsByTagName("SENDINGMEMBER2").item(0).getTextContent().trim();
+				// String SendingMember = xmlDom.getElementsByTagName("SENDINGMEMBER").item(0).getTextContent().trim();
+				// String SendingMember2 = xmlDom.getElementsByTagName("SENDINGMEMBER2").item(0).getTextContent().trim();
 				String ElecFlag = xmlDom.getElementsByTagName("ELECTRONICFLAG").item(0).getTextContent().trim();
 				String ChangeReason = xmlDom.getElementsByTagName("CHANGEREASON").item(0).getTextContent().trim();
 				
@@ -22100,7 +22105,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
  			return "<RESULT>TRUE</RESULT>";
 		}
 		else{
-			String RecType = xmlDom.getElementsByTagName("RECORDTYPE").item(0).getTextContent().trim();
+			// String RecType = xmlDom.getElementsByTagName("RECORDTYPE").item(0).getTextContent().trim();
 			String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
 			String SepAttNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
 			String UserID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
@@ -22113,7 +22118,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String ChangeReason = xmlDom.getElementsByTagName("CHANGEREASON").item(0).getTextContent().trim();
 			String SCFlag = xmlDom.getElementsByTagName("SCFLAG").item(0).getTextContent().trim();
 			
-			NodeList nodeSC = xmlDom.getElementsByTagName("SCINFO");
+			// NodeList nodeSC = xmlDom.getElementsByTagName("SCINFO");
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("companyID", companyID);
 			map.put("v_RECORDID", RecID);
@@ -23214,10 +23219,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String usreName2 = xmlDom.getElementsByTagName("USERNAME2").item(0).getTextContent();
 		String keepPeriod = xmlDom.getElementsByTagName("KEEPPERIOD").item(0).getTextContent().trim();
 		String displayEndDate = xmlDom.getElementsByTagName("DISPLAYENDDATE").item(0).getTextContent().trim();
-		String displayReason = xmlDom.getElementsByTagName("DISPLAYREASON").item(0).getTextContent();
+		// String displayReason = xmlDom.getElementsByTagName("DISPLAYREASON").item(0).getTextContent();
 		String changeReason = xmlDom.getElementsByTagName("CHANGEREASON").item(0).getTextContent();
 		
-		NodeList nodeSC = xmlDom.getElementsByTagName("SCINFO");
+		// NodeList nodeSC = xmlDom.getElementsByTagName("SCINFO");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CabinetClassNo",cabClassNo);
@@ -23411,7 +23416,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getTaskCharger(Document xmlDom, String lang, int tenantID) throws Exception {
 		StringBuilder strSQL = new StringBuilder();
 		String cabClassNo = xmlDom.getElementsByTagName("CABCLASSNO").item(0).getTextContent();
-		String deptCode = xmlDom.getElementsByTagName("DEPTCODE").item(0).getTextContent();
+		// String deptCode = xmlDom.getElementsByTagName("DEPTCODE").item(0).getTextContent();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		
 		 //2010.07.30 Header로 변경
@@ -23525,7 +23530,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
 		String orgDocID = xmlDom.getElementsByTagName("ORGDOCID").item(0).getTextContent();
 		String docTitle = xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent();
-		String html = xmlDom.getElementsByTagName("HTML").item(0).getTextContent();
+		// String html = xmlDom.getElementsByTagName("HTML").item(0).getTextContent();
 		String href = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
 		String userID = xmlDom.getElementsByTagName("SIMSAUSERID").item(0).getTextContent();
 		String userName = xmlDom.getElementsByTagName("SIMSAUSERNAME").item(0).getTextContent();
@@ -25186,10 +25191,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String OrderOption1 = "";
 		String OrderOption2 = "";
 		String OrderOptionValue = "";
-		boolean PublicFlag = false;	// 공개/비공개 사용 여부
-		boolean SecurityFlag = false;	// 보안등급 사용 여부
-		boolean SecurityLineFlag = false;	// 보안등급결재선.  true 이면, 보안등급보다 결재선 소속여부가 우선함.
-		String UserSecurityCode = "";
+		// boolean PublicFlag = false;	// 공개/비공개 사용 여부
+		// boolean SecurityFlag = false;	// 보안등급 사용 여부
+		// boolean SecurityLineFlag = false;	// 보안등급결재선.  true 이면, 보안등급보다 결재선 소속여부가 우선함.
+		// String UserSecurityCode = "";
 		
 		boolean docAttachFlag = false; //2019-03-28 천성준 - 문서첨부 리스트 검색인지 체크 Flag. true:기안>문서첨부>검색, false:다른리스트들 검색(추후 문서첨부 리스트 재개발되면 지울예정)
 		
@@ -25590,7 +25595,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String docID = doc.getElementsByTagName("ASSIGN").item(0).getChildNodes().item(0).getTextContent().trim();
 		String pDeptID = doc.getElementsByTagName("ASSIGN").item(0).getChildNodes().item(1).getTextContent().trim();
-		String pUserID = doc.getElementsByTagName("ASSIGN").item(0).getChildNodes().item(2).getTextContent().trim();
+		// String pUserID = doc.getElementsByTagName("ASSIGN").item(0).getChildNodes().item(2).getTextContent().trim();
 		String pReceiveSN = doc.getElementsByTagName("ASSIGN").item(0).getChildNodes().item(3).getTextContent().trim();
 		
 		String pOrgDocID = "";
@@ -25963,7 +25968,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String fontFamily = "";
 			String fontSize = "";
 			String strStyle = "";
-			String style = "";
+			// String style = "";
 			
 			logger.debug("span tag parsing started");
 			
@@ -26091,7 +26096,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								String[] result = brParentEl.html().split(stringSeparators);
 								
 								   boolean bAllEmpty = true;
-		                             String InnerHTML = "";
+		                             // String InnerHTML = "";
 		                             for (int i = 0; i < result.length; i++) {
 		                                 if (result[i] != null && !result[i].equals("")) {
 		                                     bAllEmpty = false;
@@ -26141,7 +26146,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                                     // br이 포함되었으나 아무 문구가 없는 경우 (ex. <p><br><p>) 화면상에는 한줄 줄바꿈이기 때문에 
                                     // br태그 앞뒤로 모두 비어있을 경우 한칸은 줄바꿈에서 제외한다.
     								 boolean bAllEmpty = true;
-		                             String InnerHTML = "";
+		                             // String InnerHTML = "";
 		                             for (int i = 0; i < result.length; i++) {
 		                                 if (result[i] != null && !result[i].equals("")) {
 		                                     bAllEmpty = false;
@@ -26442,7 +26447,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String fontFamily = "";
 			String fontSize = "";
 			String strStyle = "";
-			String style = "";
+			// String style = "";
 			
 			logger.debug("span tag parsing started");
 			
@@ -26553,7 +26558,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			 
 			do {
  				if(doc.getElementsByTag("br").size() > 0) {
-					Element strInnerHtml2 = doc.getElementsByTag("br").get(0);
+					// Element strInnerHtml2 = doc.getElementsByTag("br").get(0);
 					
 					if (doc.getElementsByTag("br").get(0).parent().html() != null) {
 						if (doc.getElementsByTag("br").get(0).parent().tagName().toLowerCase().equals("p")) {
@@ -26563,7 +26568,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								String[] result = doc.getElementsByTag("br").get(0).parent().html().split(stringSeparators);
 								
 								   boolean bAllEmpty = true;
-		                             String InnerHTML = "";
+		                             // String InnerHTML = "";
 		                             for (int i = 0; i < result.length; i++) {
 		                                 if (result[i] != null && !result[i].equals("")) {
 		                                     bAllEmpty = false;
@@ -26604,7 +26609,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                                     // br이 포함되었으나 아무 문구가 없는 경우 (ex. <p><br><p>) 화면상에는 한줄 줄바꿈이기 때문에 
                                     // br태그 앞뒤로 모두 비어있을 경우 한칸은 줄바꿈에서 제외한다.
     								 boolean bAllEmpty = true;
-		                             String InnerHTML = "";
+		                             // String InnerHTML = "";
 		                             for (int i = 0; i < result.length; i++) {
 		                                 if (result[i] != null && !result[i].equals("")) {
 		                                     bAllEmpty = false;
@@ -27043,6 +27048,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String parentText = doc.body().getElementsByTag("div").get(i).text();
 			for (int j=0; j< parentNode.childNodeSize(); j++) {
 				if (parentNode.childNode(j).nodeName().equals("#text")) {
+					@SuppressWarnings("unused")
 					int m =0;
 					if (i == 0) {
 						m = i;
@@ -27309,7 +27315,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		builder.setErrorHandler(new SimpleErrorHandler());    
 		// the "parse" method also validates XML, will throw an exception if misformatted
 		try {
-    		Document document = builder.parse(new InputSource(mapPath));
+    		builder.parse(new InputSource(mapPath));
 			result = "OK";
 		} catch (Exception e){
 			e.printStackTrace();
@@ -27390,12 +27396,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     	    while (offset < bytes.length && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
                     	        offset += numRead;
                     	    }
+                    	    
+                    	    is.close();
 
                     	    if (offset < bytes.length) {
                     	        throw new IOException("Could not completely read file "+file.getName());
                     	    }
-
-                    	    is.close();
 						}
                     	    
                     		byte[] encoded = Base64.encodeBase64(bytes);

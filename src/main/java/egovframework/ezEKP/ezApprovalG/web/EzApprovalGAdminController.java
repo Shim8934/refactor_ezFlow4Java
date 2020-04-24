@@ -810,7 +810,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String htmlData = request.getParameter("htmlData");
 		String realPath = commonUtil.getRealPath(request);
 		
-		String result = ezApprovalGAdminService.editApprovalDoc(docID, companyID, formMHT, formHTML, realPath, userInfo, filePath, htmlData);
+		ezApprovalGAdminService.editApprovalDoc(docID, companyID, formMHT, formHTML, realPath, userInfo, filePath, htmlData);
 		
 		logger.debug("editApprDoc ended.");
 		return "";
@@ -3467,8 +3467,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		boolean publicFlag = false;
 		boolean securityFlag = false;
 		String userSecurityCode = "";
-		String startDate = "";
-		String endDate = "";
+		// String startDate = "";
+		// String endDate = "";
 		List<ApprGDocListVO> list = null;
 		
 		if (pageNum == null || pageNum.equals("")) {
@@ -3699,7 +3699,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String DocDelDeptNameArr[] = request.getParameter("DeptNameList").split(";");
 		String deleteDay = request.getParameter("deleteDay");
 		String companyID = request.getParameter("companyID");
-		String result = ezApprovalGAdminService.deleteDocListjson(DocDelIDArr, DocDelNoArr, DocDelTitleArr, DocDelWriterNameArr, DocDelDeptNameArr, deleteDay, userInfo.getId(), userInfo.getOffset(), companyID, userInfo.getTenantId());
+		ezApprovalGAdminService.deleteDocListjson(DocDelIDArr, DocDelNoArr, DocDelTitleArr, DocDelWriterNameArr, DocDelDeptNameArr, deleteDay, userInfo.getId(), userInfo.getOffset(), companyID, userInfo.getTenantId());
 		
 		logger.debug("delDocListjson ended");
 		
@@ -3858,7 +3858,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String buJaeId = request.getParameter("buJaeId");
-		String proxyuserid = request.getParameter("proxyuserid");
+		// String proxyuserid = request.getParameter("proxyuserid");
 		String buJaeInfo = request.getParameter("buJae");
 		String buJaeInfo2 = "";
 		String proxyInfo = request.getParameter("proxy");
@@ -3908,7 +3908,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("selectPerson started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		// String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
@@ -3934,7 +3934,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("selectPerson started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		// String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
@@ -4232,7 +4232,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String draftFromMonth = request.getParameter("draftFromMonth");
 		String draftFromDay = request.getParameter("draftFromDay");
 
-        String draftFrom = "";
+        @SuppressWarnings("unused")
+		String draftFrom = "";
 
         if (draftFromYear != null && !draftFromYear.equals("")) {
             draftFrom = draftFromYear + "-" + draftFromMonth + "-" + draftFromDay;
@@ -4241,7 +4242,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String draftToMonth = request.getParameter("draftToMonth");
         String draftToDay = request.getParameter("draftToDay");
 
-        String draftTo = "";
+        @SuppressWarnings("unused")
+		String draftTo = "";
 
         if (draftToYear != null && !draftToYear.equals("")) {
             draftTo = draftToYear + "-" + draftToMonth + "-" + draftToDay;
@@ -4251,7 +4253,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String apprFromMonth = request.getParameter("apprFromMonth");
         String apprFromDay = request.getParameter("apprFromDay");
 
-        String aprFrom = "";
+        @SuppressWarnings("unused")
+		String aprFrom = "";
 
         if (apprFromYear != null && !apprFromYear.equals("")) {
             aprFrom = apprFromYear + "-" + apprFromMonth + "-" + apprFromDay;
@@ -4260,7 +4263,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String apprToYear = request.getParameter("apprToYear");
         String apprToMonth = request.getParameter("apprToMonth");
         String apprToDay = request.getParameter("apprToDay");
-        String aprTo = "";
+        @SuppressWarnings("unused")
+		String aprTo = "";
 
         if (apprToYear != null && !apprToYear.equals("")) {
             aprTo = apprToYear + "-" + apprToMonth + "-" + apprToDay;
