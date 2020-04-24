@@ -28,6 +28,8 @@ function Receptinfo_ini() {
         	initReceptListView();
         	document.getElementById("3tab1").onclick();
         }
+
+        treeViewScrollTo("tvTreeView2");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
     }
 }
 //#############################################################################################################################################수신처 내부 버튼 클릭 이벤트
@@ -1401,6 +1403,8 @@ function event_getDeptFullTree() {
             treeView.SetNodeDblClick("TreeViewNodeDbClick");
             treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
             treeView.DataBind("TreeView2");
+
+            treeViewScrollTo("tvTreeView2");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
         }
         else {
             alert(strLang249 + g_xmlHTTP.statusText);

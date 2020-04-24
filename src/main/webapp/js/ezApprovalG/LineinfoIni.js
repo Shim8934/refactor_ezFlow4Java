@@ -19,8 +19,9 @@ function Lineinfo_ini() {
     		Lineinfoini = true;
     		TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
     		InitListView();
-    		ChangeLineTab("Organ");
-    	}
+            ChangeLineTab("Organ");
+        }
+        treeViewScrollTo("FromTreeView");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
     }
 }
 
@@ -35,6 +36,8 @@ function circulation_ini() {
     displayUserListCC(DeptID);
     InitListViewCC();
     ChangeLineTabCC("Organ");
+
+    treeViewScrollTo("FromTreeViewCC");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
 }
 //#############################################################################################################################################결재선 내부 탭 이벤트
 var internalTab = false;

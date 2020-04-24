@@ -18,8 +18,8 @@
         xmlHTTP.send(strQuery);
         
         var xmlDom = createXmlDom();
-        xmlDom = loadXMLString(xmlHTTP.responseText);
-
+		xmlDom = loadXMLString(xmlHTTP.responseText);
+		
         if (mode == "circulation") {
         	document.getElementById('TreeViewCC').innerHTML = "";
             var treeView = new TreeView();
@@ -28,7 +28,7 @@
             treeView.SetNodeClick("TreeViewNodeClickCC");
             treeView.SetNodeDblClick("TreeViewNodeDbClickCC");
             treeView.DataSource(xmlDom);
-            treeView.DataBind("TreeViewCC");
+			treeView.DataBind("TreeViewCC");
         } else if (mode == "aprG") {
         	document.getElementById('TreeView').innerHTML = "";
         	var treeView = new TreeView();
@@ -38,7 +38,7 @@
         	treeView.SetRequestData("RequestDataG");
         	treeView.SetNodeClick("TreeViewNodeClick");
         	treeView.DataSource(xmlDom);
-        	treeView.DataBind("TreeView");
+			treeView.DataBind("TreeView");
         } else {
         	document.getElementById('TreeView').innerHTML = "";
         	var treeView = new TreeView();
@@ -48,7 +48,7 @@
         	treeView.SetRequestData(requestData);
         	treeView.SetNodeClick("TreeViewNodeClick");
         	treeView.DataSource(xmlDom);
-        	treeView.DataBind("TreeView");
+			treeView.DataBind("TreeView");
         }
     } catch (ErrMsg) {
         alert(" TreeViewinitialize : " + ErrMsg.description);
