@@ -323,6 +323,7 @@
                 	  
                 	  // thead에 들어가는 현상 수정 
                 	  var elemParent = elem.item[0].parentNode;
+                	  var elemTalbeId = elemParent.parentElement.id;
                 	  
                 	  if (elemParent.tagName == 'THEAD'){
                 		  
@@ -337,6 +338,8 @@
                     	  
                     	  var childArry = $("#" + elemParent.id + " tr[id!=" + thName + "]");
                 		  
+                    	  document.getElementById(elemTalbeId).className = "receiver_list";
+                    	  
                 		  for (var i = 0;i < childArry.length; i++) {
                 			  elemParent.nextSibling.appendChild(childArry[i]); // tbody에 추가
                 		  }
