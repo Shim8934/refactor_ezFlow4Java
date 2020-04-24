@@ -221,7 +221,7 @@ li {float:left;}
 .admin_quicklink .linkAdd .listBottom{ margin:0px; padding:35px 0px 0px 0px; box-sizing:border-box; text-align:center;}
 .admin_quicklink .linkAdd .listBottom .quickLink_info{ font-size:13px; color:#666;}
 
-.admin_quickList{ margin:0px; padding:0px; width:926px; height:auto; font-family:Malgun Gothic;}
+.admin_quickList{ margin:0px; padding:0px; width:926px; height:auto; font-family: Meiryo UI;}
 .quickTable01{ margin:0px 0px 0px 0px; padding:0px; float:left; width:334px; height:171px; border:1px solid #dfdfdf; border-collapse:collapse; clear:none !important }
 .quickTable02{ margin:0px 0px 0px 10px; padding:0px; float:left; height:171px; width:275px; border:1px solid #dfdfdf; border-collapse:collapse; clear:none !important }
 .quickLinkTH{ margin:0px; padding:0px 0px 0px 10px; width:93px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:left;}

@@ -237,7 +237,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("itemList", itemList);
 			model.addAttribute("userCont", userCont);
 		}
-		
+
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("apprGLeftVOList", apprGLeftVOList);
 		model.addAttribute("listType", commonUtil.stripScriptTags(listType));

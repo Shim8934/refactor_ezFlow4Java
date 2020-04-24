@@ -1304,6 +1304,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		vo.setTenantId(userInfo.getTenantId());
 		
+		// displayname2가 null로 넘어오는데, 이럴 경우 displayname2은 displayname으로 대체되는 문제가 생겨서 추가
+		vo.setDisplayName2(userInfo.getDisplayName2());
+		
 		logger.debug("<<<1. : " + vo.getCn());
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
