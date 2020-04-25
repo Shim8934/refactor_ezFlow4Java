@@ -1781,8 +1781,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							ezOrganAdminService.insertDBData_user(vo, oriPass);
 							
 							String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+							String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantID);
 							
-							if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {							
+							if (useStandardFolderId != null && useStandardFolderId.equals("YES") && !useExternalMailServer.equalsIgnoreCase("YES")) {							
 								createDefaultFolders(loginCookie, mailAddr, locale);
 							}
 							
