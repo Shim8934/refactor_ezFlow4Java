@@ -39,6 +39,16 @@ public class ClientUtil {
 	public static String getClientIP(HttpServletRequest request) {
 	     String ip = request.getHeader("X-FORWARDED-FOR");      
 
+	     if (ip != null) {
+	    	 int commaIdx = ip.indexOf(",");
+	    	 
+	    	 if (commaIdx != -1) {
+	    		 // GKE Ingress를 통해 접속할 때 X-FORWARDED-FOR=222.106.242.2, 34.102.208.170과
+	    		 // 같은 형태로 값이 들어 있어 추가함
+	    		 ip = ip.substring(0, commaIdx).trim();
+	    	 }
+	     }
+	     
 	     if(ip == null || ip.length() == 0) {
 	         ip = request.getHeader("Proxy-Client-IP");
 	     }
