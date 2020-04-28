@@ -315,6 +315,8 @@ var strLangSharedMailbox03 = "パスワードを変更しました。";
 var strLangReceiverCount01 = "受信者は";
 var strLangReceiverCount02 = "人まで設定可能です。";
 
+var strLangHDP04 = "Drag＆Dropでファイルを追加および追加したファイルの並び順を変更できます。";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

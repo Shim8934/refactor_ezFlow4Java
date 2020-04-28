@@ -2471,6 +2471,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag, String reformMht, String reformHtml, String reformFunction) throws Exception {
 		logger.debug("saveFormInfo started.");
+		@SuppressWarnings("unused")
 		String strBeforeMHT = "";
 		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(formInfo);
@@ -2509,6 +2510,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			recevGroupXML = formRecevGroup;
 		}
 		
+		// 안 쓰고 있음 혹시 모르니 유지
+		@SuppressWarnings("unused")
 		boolean isUpdate = false;
 		String saveFileFolder = "";
 		String saveFileName = "";
@@ -2929,6 +2932,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("filePath : " + filePath);
 		String saveFileFolder = realPath + filePath;
 		String saveFileName = saveFileFolder + commonUtil.separator + docID + ".mht";
+		@SuppressWarnings("unused")
 		String strBeforeMHT = "";
 		
 		logger.debug("saveFileFolder : " + saveFileFolder);
@@ -2972,6 +2976,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String saveFormInfoHWP(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception {
 		logger.debug("saveFormInfoHWP started.");
+		@SuppressWarnings("unused")
 		String strBeforeMHT = "";
 		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(formInfo);

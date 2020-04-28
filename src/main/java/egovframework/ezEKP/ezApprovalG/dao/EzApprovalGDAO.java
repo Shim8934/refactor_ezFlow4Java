@@ -3358,7 +3358,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (String) select("EzApprovalG.getOpenGovFlag", map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public ApprGOpenGovInfoVO getOpenGovInfo(Map<String, Object> map) throws Exception {
 		return (ApprGOpenGovInfoVO) select("EzApprovalG.getOpenGovInfo", map);
 	}

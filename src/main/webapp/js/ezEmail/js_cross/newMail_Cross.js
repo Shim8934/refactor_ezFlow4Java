@@ -849,6 +849,9 @@ function Save_onClick(savemode) {
         return;
     }
     
+    //Save_onClick을 탈 때(발송, 저장, 미리보기) 할 때, 첨부파일 순서를 저장하도록 수정. 2020-03-19 홍대표.
+    callMoveAttachFileOrder();
+    
     checkMailStatusAndSave(savemode);
 }
 
@@ -2654,6 +2657,8 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         var pAttachXml = loadXMLString(xmlhttp.responseText);
         var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
 
+        //대용량 첨부 파일 순서를 첨부영역과 동일한 순서가 되도록 수정. 2020-03-18 홍대표.
+        nodes = setBigFileAttachOrder(nodes);
 
         for (var i = 0 ; i < nodes.length ; i++) {
             if (getNodeText(GetChildNodes(nodes[i])[5]) == "Y") {
@@ -4309,5 +4314,28 @@ function preMailRead(Href) {
     
     if (ReadMailOpenNewWin != null) {
     	window.ReadMailOpenNewWin.focus();
+    }
+}
+
+function setBigFileAttachOrder(nodes) {
+	var tempBigAttachArr = dadiframe.document.querySelectorAll("#lstAttachLink tr[_big='Y']");
+	var tempNodes = [];
+	
+	for (var i = 0; i < nodes.length; i++) {
+		var pUploadSN = getNodeText(GetChildNodes(nodes[i])[0]);
+		for (var j = 0; j < tempBigAttachArr.length; j++) {
+			if (pUploadSN == tempBigAttachArr[j].getAttribute("value")) {
+				tempNodes[j] = nodes[i];
+			}
+		}
+	}
+	
+	return tempNodes;
+}
+
+function callMoveAttachFileOrder() {
+    var tmpFileList = dadiframe.document.querySelectorAll("#filelist tr[_fileindex]");
+    if(tmpFileList.length > 0) {
+    	dadiframe.moveAttachFileOrder(tmpFileList);
     }
 }

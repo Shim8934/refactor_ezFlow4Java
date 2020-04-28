@@ -44,7 +44,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -1702,7 +1701,7 @@ public class CommonUtil {
 	}
 	
 	public Map<String, Object> transBean2Map(Object obj) {
-	    Map<String, Object> map = new HashMap();
+	    Map<String, Object> map = new HashMap<>();
 	    
 	    if (obj == null) {
 	        return map;
@@ -1899,7 +1898,6 @@ public class CommonUtil {
 							}
 						}
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				} else if(menuCode.equals("mail") || menuCode.equals("address")) {		// 메일, 주소록
