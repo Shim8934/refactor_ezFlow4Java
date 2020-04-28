@@ -12,10 +12,6 @@
 		<script type="text/javascript" src="${util.addVer('ezTalkGate.e1', 'msg')}"></script>
 		<script>
 		
-		window.onload = function() {
-			document.getElementById('noticeMoreBtn').addEventListener("click", moreView);	
-		}
-		
 		var Count = 5; //공지사항 게시게수 
 		var SelectBoardID = "${noticeBoardID}";
 		var gubun = "0";
@@ -45,10 +41,8 @@
 		 * 공지사항 더보기
 		 */
 		function moreView() {
-			console.log("boardId=" + SelectBoardID);
 			var openUrl = "/ezTalkGate/noticeBoardDetailList.do?boardType=" + gubun 
 						+ "&ezTalkId=" + encodeURIComponent(ezTalkId) + "&ezTalkPw=" + encodeURIComponent(ezTalkPw); 
-			console.log("openUrl=" + openUrl);
 			window.open(openUrl, "_blank", "width=1152, height=790, resizable=yes, toolbar=yes");
 		}
 			
@@ -61,7 +55,7 @@
 		      <table width="100%" border="0" cellspacing="0" cellpadding="0">
 		        <tr>
 		          <td style="text-align: right; padding-right: 10px;">
-		          	<img src="/images/kr/main/btn_more02.gif" style="cursor: pointer;vertical-align:text-bottom;" alt='<spring:message code="main.t1008"/>' id="noticeMoreBtn"/>
+		          	<img src="/images/kr/main/btn_more02.gif" style="cursor: pointer;vertical-align:text-bottom;" alt='<spring:message code="main.t1008"/>' id="noticeMoreBtn" onclick="moreView()"/>
 		          </td>
 		        </tr>
 		      </table>
