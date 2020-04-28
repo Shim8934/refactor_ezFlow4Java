@@ -884,3 +884,112 @@ function aprLineAddDeptUser(mode, xmlData) {
 	}
 
 }
+
+//2020-04-28 : 공람부서 검색
+var g_xmlHTTP;
+var searchorganglist_dialogArguments = new Array();
+var checkname2_cross_dialogArguments = new Array();
+function btnAprLineSearchDept_onClick() {
+	try{
+        var tmpDeptName = textUser.value;
+        if (tmpDeptName.length == 0) {
+            var pAlertContent = strLang240;
+            document.getElementById("textUser").focus();
+            OpenAlertUI(pAlertContent);
+            return;
+        }
+
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezOrgan/getSearchList.do",
+			data : {
+				search : "EXACT_EXTENSIONATTRIBUTE2::" + companyID + ";;displayname::" + tmpDeptName,
+				cell   : "extensionAttribute3;displayname;extensionAttribute9;",
+				prop   : "",
+				type   : "group"
+			},
+			success: function(xml){
+				document.getElementById("textUser").focus();
+                xmlDOM = loadXMLString(xml);
+                adCount = xmlDOM.getElementsByTagName("ROW").length;
+			},
+	    	error : function(error){
+	    		document.getElementById("textUser").focus();
+                alert(strLang241 + error.responseText);
+	    	}
+		});
+		
+        if (adCount == 0) {
+            var pAlertContent = strLang242;
+            OpenAlertUI(pAlertContent);
+            return;
+        }
+        else if (adCount == 1) {
+            g_xmlHTTP = createXMLHttpRequest();
+
+            var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) +
+					"</DEPTID><TOPID>" + companyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+            g_xmlHTTP.onreadystatechange = event_getAprLineDeptFullTree;
+            g_xmlHTTP.send(strQuery);
+        }
+        else {
+            var rgParams = new Array();
+            rgParams["addrBook"] = xmlDOM;
+            rgParams["deptid"] = "";
+            if (CrossYN()) {
+                checkname2_cross_dialogArguments[0] = rgParams;
+                checkname2_cross_dialogArguments[1] = btnAprLineSearchDept_onClick_Complete2;
+
+                DivPopUpShow(609, 372, "/ezPersonal/checkName2.do");
+            }
+            else {
+                window.showModalDialog("/ezPersonal/checkName2.do", rgParams, "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken");
+
+                if (rgParams["deptid"] != "") {
+                    g_xmlHTTP = createXMLHttpRequest();
+                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + companyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+                    g_xmlHTTP.onreadystatechange = event_getAprLineDeptFullTree;
+                    g_xmlHTTP.send(strQuery);
+                }
+            }
+        }
+
+	}catch(e){}
+}
+
+function btnAprLineSearchDept_onClick_Complete2(rgParams) {
+    DivPopUpHidden();
+    if (rgParams["deptid"] != "") {
+        g_xmlHTTP = createXMLHttpRequest();
+        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + companyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+        g_xmlHTTP.onreadystatechange = event_getAprLineDeptFullTree;
+        g_xmlHTTP.send(strQuery);
+    }
+}
+
+function event_getAprLineDeptFullTree() {
+    if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
+        if (g_xmlHTTP.statusText == "OK") {
+            debugger;
+        	document.getElementById('TreeView').innerHTML = "";
+        	var treeView = new TreeView();
+        	treeView.SetID("FromTreeView");
+        	treeView.SetUseAgency(true);
+        	treeView.SetRequestData("RequestData");
+        	treeView.SetNodeClick("TreeViewNodeClick");
+        	treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
+			treeView.DataBind("TreeView");
+
+            treeViewScrollTo("FromTreeView");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
+        }
+        else {
+            alert(strLang249 + g_xmlHTTP.statusText);
+            g_xmlHTTP = null;
+        }
+    }
+}

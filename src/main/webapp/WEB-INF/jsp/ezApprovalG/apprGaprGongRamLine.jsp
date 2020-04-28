@@ -1177,7 +1177,8 @@
 	                	<table style="width:100%;table-layout: fixed">
 	                    	<tr>
 	                            <td style="text-align: left; height: 30px;">
-	                            	<input id="textUser" style="height:22px" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;<a class="imgbtn imgbck" style="vertical-align: middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+									<input id="textUser" style="height:22px" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;<a class="imgbtn imgbck" style="vertical-align: middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+									<a class="imgbtn imgbck"><span onclick="return btnAprLineSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
 	                            	<a class="imgbtn imgbck" style="vertical-align: middle;"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
 	                            </td>
 	                        </tr>
