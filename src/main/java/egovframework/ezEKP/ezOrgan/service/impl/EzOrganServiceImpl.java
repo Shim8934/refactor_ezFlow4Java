@@ -362,7 +362,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 		logger.debug("deptID=" + deptID + ",lang=" + lang + ",tenantID=" + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, Object> map1 = new HashMap<String, Object>();
 		
 		map.put("v_CLASS", pClass);
 		map.put("v_CN", deptID);
@@ -1719,7 +1718,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return sb.toString();
 	}
 
-	//TODO eMail 값으로 ID 를 찾는 함수
 	@Override
 	public String getCNByEmail(String email, int tenantID) throws Exception {
 			String result = ezOrganDAO.getCNByEmail(email, tenantID);

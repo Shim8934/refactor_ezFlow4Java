@@ -13,7 +13,6 @@ import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -1963,7 +1962,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 		//헤더 폰트 굵게
 		HSSFFont headerFont = workbook.createFont();
-		headerFont.setBoldweight((short) headerFont.BOLDWEIGHT_BOLD);
+		headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		
 		HSSFCellStyle headerStyle= workbook.createCellStyle();
 		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);

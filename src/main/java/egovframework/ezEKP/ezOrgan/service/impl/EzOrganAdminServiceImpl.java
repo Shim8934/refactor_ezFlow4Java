@@ -1,9 +1,7 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
 import java.lang.reflect.Field;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,8 +13,6 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +29,8 @@ import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.dao.EzResourceAdminDAO;
 import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -72,9 +68,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     
     @Autowired
     private ADConnection conn;
-    
-    @Autowired
-    private Properties config;
     
    	@Autowired
 	private Properties globals;
