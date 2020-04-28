@@ -573,13 +573,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             mhtBuilder.append("Content-Location: file:///C:/BACKGROUNDIMAGE" + (k + 1) + extension + commonUtil.CRLF);
             mhtBuilder.append(commonUtil.CRLF);
 
-            if (v.startsWith("http")) {
+            /* if (v.startsWith("http")) {
                 String backImageSrc = v.substring(v.indexOf("/fileroot/"));
 
                 File file = new File(realPath + v);
             } else {
                 File file = new File(realPath + commonUtil.separator + v);
-            }
+            } */
 
             int len = 0;
             byte[] buf = new byte[1024];
@@ -1552,6 +1552,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createRsFavoriteTable();
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	public void insertTblTenantConfig(String configName) throws Exception {
 		logger.debug("insertTest started");

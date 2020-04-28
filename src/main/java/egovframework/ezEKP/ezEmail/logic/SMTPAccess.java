@@ -1,22 +1,15 @@
 package egovframework.ezEKP.ezEmail.logic;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class SMTPAccess {
-	
-	private static final Logger logger = LoggerFactory.getLogger(IMAPAccess.class);
 	
 	private String host;
 	private String port;

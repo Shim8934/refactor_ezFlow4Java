@@ -789,6 +789,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		return result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI())));
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/getPortalInfo.do", method=RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getPortalInfo(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {

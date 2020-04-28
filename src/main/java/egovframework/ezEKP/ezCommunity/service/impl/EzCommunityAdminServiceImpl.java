@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -33,9 +32,6 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties globals;
 	
 	@Autowired
 	private EzEmailService ezEmailService;
@@ -595,17 +591,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			
 			strHTML.append("<td class=\"t1\" width=\"90px\" >" + cBoard.getWriteDay().substring(0, 10) + "</td>");
 			 
-			/*String localPdsPath = "";*/
 			if (iColSpan == 6) {
-				//TODO 2016-04-26 이효진 사용하는 곳이 아직 없어서 주석처리
-				/*String file = cBoard.getCharFileName();
-				
-				if (bName.equals("c_clubpds")) {
-					localPdsPath = config.getProperty("upload_community.PDS");	
-				} else {
-					localPdsPath = config.getProperty("upload_community.PDS1");
-				}*/
-			
 				strHTML.append("<td class=\"t1\" >");
 				
 				if (cBoard.getCharFileName().equals("")) {

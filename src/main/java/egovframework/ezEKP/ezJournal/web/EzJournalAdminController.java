@@ -3,9 +3,10 @@ package egovframework.ezEKP.ezJournal.web;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.google.gson.Gson;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -44,9 +47,6 @@ public class EzJournalAdminController {
 	@Autowired
 	private CommonUtil commonUtil;
 
-	@Autowired
-	private Properties config;
-	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
@@ -644,7 +644,6 @@ public class EzJournalAdminController {
 			} else{
 				keyword = egovMessageSource.getMessage("ezJournal.t170", userInfo.getLocale());
 			}
-			int userCount = 0;
 			
 			model.addAttribute("keyword",keyword);
 			model.addAttribute("key", key);

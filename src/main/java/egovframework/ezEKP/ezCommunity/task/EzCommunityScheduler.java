@@ -12,13 +12,9 @@ import org.springframework.stereotype.Component;
 
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
-import egovframework.let.utl.fcc.service.CommonUtil;
 	
 @Component
 public class EzCommunityScheduler {
-	@Autowired
-	private CommonUtil commonUtil;
-	
 	@Autowired
 	private Properties config;
 	

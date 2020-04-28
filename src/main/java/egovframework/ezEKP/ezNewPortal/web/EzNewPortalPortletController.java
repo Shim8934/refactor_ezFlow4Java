@@ -1,11 +1,7 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -14,7 +10,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hsqldb.types.Type;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,13 +25,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
@@ -46,7 +38,6 @@ import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -94,9 +85,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	
 	@Resource(name = "EzPollService")
 	private EzPollService ezPollService;
-	
-	@Autowired
-	private EzEmailUtil ezEmailUtil;
 	
 	/**
 	 * 포틀릿 - 공지사항
@@ -706,8 +694,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalCurrencyPortlet Start");
 		
 		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		RestTemplate restTemplate = new RestTemplate();
 		String json = restTemplate.getForObject("http://fx.kebhana.com/FER1101M.web", String.class);

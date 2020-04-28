@@ -64,7 +64,6 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
-import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
@@ -1954,6 +1953,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						List<String> messageIdList = ezEmailService.getMailPOP3List(loginInfo.getTenantId(), loginInfo.getId(), host, id);
 						
 						final Set<String> messageIds = new HashSet<String>(messageIdList);
+						@SuppressWarnings("serial")
 						SearchTerm searchTerm= new SearchTerm() {
 							@Override
 							public boolean match(Message message) {

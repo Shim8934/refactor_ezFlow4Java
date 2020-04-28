@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -6587,7 +6586,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String itemID = request.getParameter("itemID");
 		String boardID = request.getParameter("boardID");
-		String boardIDEncode = URLEncoder.encode(boardID);
+		String boardIDEncode = URLEncoder.encode(boardID, "UTF-8");
 		String g_ImageUrl = "";
 		StringBuilder listImages = new StringBuilder();
 		StringBuilder imageID = new StringBuilder();
@@ -6603,7 +6602,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-			listImages.append("/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardIDEncode + "&fileName=" + URLEncoder.encode(g_ImageUrl.split("/")[7]) + "|");
+			listImages.append("/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardIDEncode + "&fileName=" + URLEncoder.encode(g_ImageUrl.split("/")[7], "UTF-8") + "|");
 			imageID.append(photoViewList.get(k).getImageID() + ";");
 			imageContent.append(photoViewList.get(k).getFileContent() + ";");
 			mainFg.append(photoViewList.get(k).getFlag().trim() + ";");
@@ -6657,7 +6656,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + URLEncoder.encode(boardID) + "&fileName=" + URLEncoder.encode(g_ImageUrl.split("/")[7], "UTF-8") + "|";
+			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + URLEncoder.encode(boardID, "UTF-8") + "&fileName=" + URLEncoder.encode(g_ImageUrl.split("/")[7], "UTF-8") + "|";
 			imageID += photoViewList.get(k).getImageID() + ";";
 			imageContent += photoViewList.get(k).getFileContent() + ";";
 			
@@ -8683,7 +8682,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String guid = UUID.randomUUID().toString();
 		String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
 		String fullFilePath = realPath + filePath;
-		int bufferSize = 4096;
+		// int bufferSize = 4096;
 
 		logger.debug("fullFilePath : " + fullFilePath);
 		logger.debug("fileNames : " + fileNames);
