@@ -26,7 +26,7 @@ article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,addre
 
 .logo{width:288px; height:38px; margin:70px auto 56px; text-align:center;}
 .id { width: 306px; height: 55px; margin: 0px auto 15px auto; padding: 0px 0px 0px 0px; background: url(/images/kr/login/input_bg_id.png) #96a4aa 14px center no-repeat; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
-.pw { width: 306px; height: 55px; margin: 0px auto 15px auto; padding: 0px 0px 0px 0px; background: url(/images/kr/login/input_bg_pw.png) #96a4aa 14px center no-repeat; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
+.pw { width: 306px; height: 55px; margin: 0px auto 25px auto; padding: 0px 0px 0px 0px; background: url(/images/kr/login/input_bg_pw.png) #96a4aa 14px center no-repeat; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
 .btn_login  { margin:0px; padding:0px; }
 .login_form .btn_login { display: block; width: 306px; height: 65px; line-height: 65px; margin: 0px auto 0px auto; padding: 0px 0px 0px 0px; background: #1543a9; text-align: center; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; box-sizing: border-box; cursor: pointer; font-size: 24px; color: #fff; }
 .login_form .btn_login:hover { background: #0e2e74; }
@@ -38,13 +38,18 @@ article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,addre
 .input_text.focus,
 .input_text.focusnot { background: #96a4aa !important; }
 
-.saveid { margin: 0px 18px 20px 34px; padding: 0px; }
+.saveid {float:left; margin: 20px 18px 0px 18px; padding: 0px; }
 .saveid input[type="checkbox"] {display:none;}
 .saveid input[type="checkbox"] + label {display:inline-block; color:#595757; font-size:16px; cursor:pointer; vertical-align:top;}
-.saveid input[type="checkbox"] + label span {display:inline-block;width:27px;height:28px;margin:-5px 10px 0 0;vertical-align:middle;background:url(/images/kr/login/bg_check.png) left top no-repeat;cursor:pointer;}
-.saveid input[type="checkbox"]:checked + label span {background:url(/images/kr/login/bg_check.png) -34px top no-repeat;}
+.saveid input[type="checkbox"] + label span {display:inline-block;width:27px;height:28px;margin:-5px 10px 0 0;vertical-align:middle;background:url(../images/kr/login/bg_check.png) left top no-repeat;cursor:pointer;}
+.saveid input[type="checkbox"]:checked + label span {background:url(../images/kr/login/bg_check.png) -34px top no-repeat;}
 
-.address {padding-top:55px; color: #aaaaaa; font-size: 12px; text-align:center;}
+.btnBox{clear:both; overflow:hidden;}
+
+.btn_password_reset{float:right; margin:20px 18px 0px 0px; cursor:pointer;}
+.btn_password_reset > span{display:inline-block; height:24px; line-height:22px; padding-left:28px; font-size:15px; color:#595757; background:url(../images/kr/login/icon_password_reset.png) left top no-repeat;}
+
+.address {clear:both; padding-top:55px; color: #aaaaaa; font-size: 12px; text-align:center; overflow:hidden;}
 
 .login_formBg { position: absolute; left: 50%; top: 50%; width: 900px; height: 815px; margin: -274px 0px 0px -250px; background: url(/images/kr/login/bg_loginform.png) no-repeat left top; overflow: hidden; z-index: 1; }
 
@@ -167,3 +172,11 @@ a{
 	vertical-align:top;
 	line-height:18px;
 }
+.mainlist{table-layout:fixed; border:0 none !important;font-family:malgun gothic, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.mainlist tr{height:34px}
+.mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:5px 4px; border-top:1px solid #e2e3e6;border-bottom:1px solid #e2e3e6; background-color: #f1f3f5; height:21px}
+.mainlist tr th.title{width:100%; text-align:left;}
+.mainlist tr td{padding:4px 4px 4px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #eaeaea; border-spacing:0; word-break:break-all;}
+.mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
+.mainlist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
+
