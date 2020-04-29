@@ -20,6 +20,7 @@
 		var _ipAddress = "${ipAddress}";
 		var _access = "${access}";
 		var _explanation = "${explanation}";
+		var _pageType = "<c:out value = '${pageType}' />";
 	
 		window.onload = function () {
 			if (_type === 'modify') {
@@ -102,14 +103,17 @@
 				return;
 			}
 			
-			formData = "ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + explanation;
+			formData = "ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + encodeURIComponent(explanation);
 			
-			if (_type == "modify") {
+			if (_pageType == "adminIpAccess" && _type == "add") {
+				formUrl = "/ezSystem/insertAdminIPBand.do";
+			} else if (_pageType == "adminIpAccess" && _type == "modify") {
+				formUrl = "/ezSystem/updateAdminIPBand.do";
+				formData += "&ipNo=" + _ipNo;
+			} else if (_type == "modify") {
 				formUrl = "/ezSystem/updateIPBand.do";
-				formData = "ipNo=" + _ipNo + "&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + encodeURIComponent(explanation);
+				formData += "&ipNo=" + _ipNo;
 			}
-			
-			console.log(formData);
 			
 			$.ajax({
 				type : "POST",

@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.annotation.Resource;
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -1552,8 +1551,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createRsFavoriteTable();
 	}
 
+	@SuppressWarnings("serial")
 	@Override
-	public void insertTblTenantConfig(String configName) throws Exception {
+	public void insertTblTenantConfig() throws Exception {
 		logger.debug("insertTest started");
 		Map<String, Map<String, Object>> test = new HashMap<String,  Map<String, Object>>();
 		test.put("mailConfirm", new HashMap<String, Object>(){{
@@ -1566,9 +1566,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("config_type","메일");
 			put("property","useMailConfirm"); // property_name
 		}});
+		test.put("adminIpAccess", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useAdminIPAccess"); // property_name
+			put("property_value","NO");
+			put("config_name","관리자 IP 제한");
+			put("regdate","2020-04-27 00:00:00");
+			put("description","관리자 페이지 IP 제한(default: NO)");
+			put("config_type","시스템");
+			put("property","useAdminIPAccess"); // property_name
+		}});
 		
-		
-		ezCommonDAO.insertTblTenantConfig(test.get(configName));
+		for (String key : test.keySet()) {
+			ezCommonDAO.insertTblTenantConfig(test.get(key));
+		}
 	}
 	
 	public void addThemeAndPorteltAuthInit() throws Exception {
@@ -1623,5 +1634,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("regdate", "2020-04-16 00:00:00");
 
 		ezCommonDAO.insertUseExternalMailServerConfig(map);
+	}
+	
+	@Override
+	public void createAdminAccessIpTable() throws Exception {
+		ezCommonDAO.createAdminAccessIpTable();
 	}
 }

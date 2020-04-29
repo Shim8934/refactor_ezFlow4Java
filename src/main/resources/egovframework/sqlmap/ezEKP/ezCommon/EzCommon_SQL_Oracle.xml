@@ -2321,4 +2321,26 @@
 			VIEWORDER  NUMBER(10,0)
 	</statement>
 	
+	<select id="EzCommonDAO.checkTblAdminAccessIpTable" resultClass="String">
+		<![CDATA[
+			SELECT 
+				TENANT_ID
+			FROM 
+				TBL_ADMIN_ACCESS_IP
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAdminAccessIpTable"> 
+		CREATE TABLE "tbl_admin_access_ip" (
+			"IPNO" NUMBER(*,0) NOT NULL ENABLE, 
+		  	"TENANT_ID" NUMBER(5,0),
+		  	"IPADDRESS" NVARCHAR2(100) NOT NULL,
+		  	"ACCESS" NVARCHAR2(10) DEFAULT 'NO',
+		  	"EXPLANATION" NVARCHAR2(200) DEFAULT NULL,
+		  	CONSTRAINT "PK2_TBL_ADMIN_ACCESS_IP" PRIMARY KEY ("IPNO")
+		)
+	</statement>
+	
 </sqlMap>

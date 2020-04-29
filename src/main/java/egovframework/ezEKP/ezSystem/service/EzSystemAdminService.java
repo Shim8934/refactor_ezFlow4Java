@@ -44,4 +44,10 @@ public interface EzSystemAdminService {
 	public void updateNewPortalMenuByPackageType(String newPackageType, int tenantID, String companyID) throws Exception;
 	public String getAccessCountryList(int tenantId) throws Exception;
 	public void setAccessCountry(int tenantId, String countryCode) throws Exception;
+	public void updateSystemAdminIPAllow(String allowResult, int tenantID) throws Exception;
+	public List<IPBandVO> getAdminAccessIPBand(int tenantID) throws Exception;
+	public void insertAdminIPBand(int tenantID, String ipAddress, String access, String explanation) throws Exception;
+	public IPBandVO getSystemAdminIPBand(String ipNo) throws Exception;
+	public void updateAdminIPBand(String ipNo, String ipAddress, String access, String explanation) throws Exception;
+	public void deleteAdminIPBand(String ipNo) throws Exception;
 }

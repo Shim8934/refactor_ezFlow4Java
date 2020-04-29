@@ -195,7 +195,7 @@ public interface EzCommonService {
 
 	public void createRsFavoriteTable();
 	
-	public void insertTblTenantConfig(String configName) throws Exception;
+	public void insertTblTenantConfig() throws Exception;
 
 	public void addThemeAndPorteltAuthInit() throws Exception;
 	
@@ -210,6 +210,8 @@ public interface EzCommonService {
 	public void addAprTmpAttachViewOrder() throws Exception;
 	
 	public void insertUseExternalMailServerConfig() throws Exception;
+	
+	public void createAdminAccessIpTable() throws Exception;
 	
 }
 

@@ -504,4 +504,60 @@
 		]]>
 	</update>
 	
+	<select id="EzSystemAdminDAO.getAdminAccessIPBand" parameterClass="Integer" resultClass="IPBandVO">
+		<![CDATA[
+			SELECT
+				IPADDRESS,
+				ACCESS,
+				EXPLANATION
+			FROM 
+				TBL_ADMIN_ACCESS_IP
+			WHERE 
+				TENANT_ID=#tenantID#
+		]]>
+	</select>
+	
+	<insert id="EzSystemAdminDAO.insertAdminIPBand" parameterClass="Map">
+		<selectKey resultClass="int" keyProperty="id">
+			SELECT TBL_ADMIN_ACCESS_IP_SEQ2.NEXTVAL FROM SYS.DUAL
+		</selectKey>
+		<![CDATA[
+			INSERT INTO 
+				TBL_ADMIN_ACCESS_IP (IPNO, TENANT_ID, IPADDRESS, "ACCESS", EXPLANATION) 
+			VALUES (#id#, #tenantID#, #ipAddress#, #access#, #explanation#)
+		]]>
+	</insert>
+	
+	<update id="EzSystemAdminDAO.updateAdminIPBand" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_ADMIN_ACCESS_IP
+			SET 
+				IPADDRESS=#ipAddress#,
+				"ACCESS"=#access#,
+				EXPLANATION=#explanation#
+			WHERE 
+				IPNO=#ipNo#
+		]]>
+	</update>
+	
+	<select id="EzSystemAdminDAO.getSystemAdminIPBand" parameterClass="String" resultClass="IPBandVO">
+		<![CDATA[
+			SELECT 
+				IPADDRESS,
+				ACCESS,
+				EXPLANATION
+			FROM 
+				TBL_ADMIN_ACCESS_IP
+			WHERE 
+				IPNO=#ipNo#
+		]]>
+	</select>
+	<delete id="EzSystemAdminDAO.deleteAdminIPBand" parameterClass="java.util.List">
+		<![CDATA[
+			DELETE FROM
+				TBL_ADMIN_ACCESS_IP
+            ]]> <iterate prepend="WHERE IPNO IN" open="(" close=")" conjunction=",">#ipNoList[]#</iterate>
+       
+	</delete>
 </sqlMap>

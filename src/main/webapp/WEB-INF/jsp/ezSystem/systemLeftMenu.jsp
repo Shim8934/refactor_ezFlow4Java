@@ -66,6 +66,9 @@
 	    	case "MULTILOGIN":
 	    		parent.frames[1].location.href = "/admin/ezSystem/multiLoginManager.do";
 	    		break;
+	    	case "ADMINIPMANAGER":
+	    		parent.frames[1].location.href = "/admin/ezSystem/systemAdminIPManager.do";
+	    		break;
 	    }
     }
 
@@ -110,6 +113,7 @@
 	            <c:if test="${useIPAccessMenu == 'YES'}">
 	            	<h2><span id="IPMANAGER" style="display:inline-block;width:100%;" onClick="menu_change('IPMANAGER')" ><spring:message code='ezSystem.ksa02'/></span></h2>
 	            </c:if>
+	            <h2><span id="ADMINIPMANAGER" style="display:inline-block;width:100%;" onClick="menu_change('ADMINIPMANAGER')" ><spring:message code='ezSystem.ksa08'/></span></h2>
 	            <h2><span id="MULTILOGIN" style="display:inline-block;width:100%;" onClick="menu_change('MULTILOGIN')" ><spring:message code="ezSystem.kbh08" /></span></h2>
 	            <c:if test="${cChk == '1' }">
 	            <h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span></h2>

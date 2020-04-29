@@ -1295,4 +1295,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertSurveyTenantConfig",map);
 		}
 	}
+	
+	public void createAdminAccessIpTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAdminAccessIpTable");
+		} catch (Exception e) {
+			logger.debug("tbl_admin_access_ip table doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAdminAccessIpTable");
+		}
+	}
 }
