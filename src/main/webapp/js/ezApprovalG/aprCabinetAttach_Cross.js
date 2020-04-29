@@ -332,7 +332,6 @@ function onreadystatechange_RecList_lv() {
                     OpenAlertUI(strLang555);
                     return null;
             }
-            debugger;
             makePageSelPageCA(); //2020-04-28 : 문서첨부 페이지네이션 
 
             hideProgress();

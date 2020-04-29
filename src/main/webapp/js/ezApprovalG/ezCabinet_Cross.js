@@ -864,9 +864,11 @@ function InsertToRecListView(Resultxml) {
         DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");                          
         DocList = null;
-        
+
         if (typeof diffPaging != 'undefined' && diffPaging == "attachDoc") {
-        	orgmakePageSelPage(NodeListLen);
+            //orgmakePageSelPage(NodeListLen);
+            totalPage = parseInt(NodeListLen / PageSize);
+            makePageSelPageCA(NodeListLen);
         } else {
         	makePageSelPage(NodeListLen);
         }
