@@ -43,7 +43,8 @@ public class EzApprovalGOpenGovGWController {
     private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGOpenGovGWController.class);
 
     //원문공개 요청
-    @RequestMapping(value = "/openGov/{docId}/file/{fileId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/openGov/{docId}/file/{fileId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     public JSONObject getOpenGovDocInfo(@PathVariable String docId, @PathVariable String fileId, HttpServletRequest request, Locale locale) {
         LOGGER.debug("G/W OPENGOV [POST /openGov/" + docId + "/file/" + fileId + "] started.");
 
@@ -168,7 +169,8 @@ public class EzApprovalGOpenGovGWController {
     }
 
     // 원문공개 처리완료
-    @RequestMapping(value = "/openGovComplete/{docId}/file/{fileId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    @SuppressWarnings("unchecked")
+	@RequestMapping(value = "/openGovComplete/{docId}/file/{fileId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     public JSONObject openGovComplete(@PathVariable String docId, @PathVariable String fileId, HttpServletRequest request, Locale locale) {
         LOGGER.debug("G/W OPENGOV [POST /openGovComplete/" + docId + "/file/" + fileId + "] started.");
 

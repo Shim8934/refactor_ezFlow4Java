@@ -141,7 +141,15 @@ public class LoginVO implements Serializable {
     private String sabun;
     /** 마지막 비밀번호 변경 날짜*/
     private Date password_updatedt;    
-
+    /** 휴대전화번호 */
+    private String mobile;
+    
+	public String getMobile() {
+		return mobile;
+	}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
 	public String getId() {
 		return id;
 	}

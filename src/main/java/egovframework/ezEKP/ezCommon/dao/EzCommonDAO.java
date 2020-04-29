@@ -519,8 +519,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	}
 
 	public void insertPortalThemePortletInitdata() {
-		// TODO Auto-generated method stub
-
 		//insert init data
 		List<OrganDeptVO> initList = ezNewPortalDAO.getInitCompanyList();
 		
@@ -1026,6 +1024,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<CountryVO> getCountryInfo(Map<String, Object> map) throws Exception {
 		return (List<CountryVO>) list("EzCommonDAO.getCountryInfo",map);
 	}

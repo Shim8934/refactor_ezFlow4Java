@@ -11,7 +11,6 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -55,9 +54,8 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
-import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -92,10 +90,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
-	
-	//TODO getLocalTime, 추후 commonUtil 로 이동시 삭제
-	@Autowired
-	private EzResourceService ezResourceService;
 	
 	@Autowired
 	private EzPersonalAdminService ezPersonalAdminService;
@@ -919,7 +913,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 팝업공지 공지사항 등록,수정 실행 함수
 	 */
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezPersonal/savePopup.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String savePopup(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject jObj) throws Exception {
@@ -1032,9 +1025,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/employeeOfMonth.do", method = RequestMethod.GET)
 	public String employeeOfMonth(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("employeeOfMonth started");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		logger.debug("employeeOfMonth ended");
 		return "admin/ezPersonal/personalEmployeeOfMonth";
 	}
@@ -1457,6 +1447,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/** 
 	 * 빠른설문 config 조회 함수  
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezPersonal/getLightPollConfig.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject getLightPollConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -1488,6 +1479,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/** 
 	 *빠른설문 itemseq 조회 함수  
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezPersonal/getPollItem.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject getPollItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam String itemseq) throws Exception {
@@ -1520,6 +1512,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/** 
 	 * 팝업공지 config 조회 함수  
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezPersonal/getPopupConfig.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject getPopupConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -1613,6 +1606,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/** 
 	 * 현재 진행중인 설문조사 get
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezPersonal/getOnUsePoll.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject getOnUsePoll(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {

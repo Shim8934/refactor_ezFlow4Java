@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalAdminDAO;
@@ -48,9 +47,6 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	@Autowired
 	private CommonUtil commonUtil;
 
-	@Autowired
-	private EgovMessageSource egovMessageSource;
-	
 	@Resource(name="EzPersonalAdminDAO")
 	private EzPersonalAdminDAO ezPersonalAdminDAO;
 	

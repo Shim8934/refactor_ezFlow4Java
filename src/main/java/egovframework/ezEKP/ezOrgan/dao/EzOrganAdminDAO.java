@@ -34,12 +34,12 @@ import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
-import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
+@SuppressWarnings("unused")
 @Repository("EzOrganAdminDAO")
 public class EzOrganAdminDAO extends EgovAbstractDAO {
 
@@ -130,7 +130,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         return (List<OrganUserVO>) list("EzOrganAdminDAO.userCnList", tenantID);
     }
     
-    public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception {
+    @SuppressWarnings("unchecked")
+	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception {
     	return (List<OrganUserVO>) list("EzOrganAdminDAO.allUserList", tenantID);
     }
     

@@ -3828,7 +3828,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String docID = jsonObj.get("docID") == null ? null : jsonObj.get("docID").toString();
-		String formId = jsonObj.get("formId") == null ? "" : jsonObj.get("formId").toString();
+		// String formId = jsonObj.get("formId") == null ? "" : jsonObj.get("formId").toString();
 		String formText = jsonObj.get("html") == null ? "" : jsonObj.get("html").toString();
 		String orgCompanyID = jsonObj.get("orgCompanyID") == null? null : jsonObj.get("orgCompanyID").toString();
 		
@@ -7160,7 +7160,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		//헤더 폰트 굵게
 		HSSFFont headerFont = workbook.createFont();
-		headerFont.setBoldweight((short) headerFont.BOLDWEIGHT_BOLD);
+		headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		
 		HSSFCellStyle headerStyle= workbook.createCellStyle();
 		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
@@ -7883,7 +7883,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		logger.debug("<<<xmlDom : " + commonUtil.convertDocumentToString(xmlDom));
 		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
-		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+		// String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		String langType = xmlDom.getElementsByTagName("LANGTYPE").item(0).getTextContent().trim();
 		String formID = xmlDom.getElementsByTagName("FORMID").item(0).getTextContent().trim();
 		String mode = xmlDom.getElementsByTagName("MODE").item(0).getTextContent().trim();

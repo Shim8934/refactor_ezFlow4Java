@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezEmail.task;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -8,13 +7,11 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
-import javax.mail.search.SearchTerm;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

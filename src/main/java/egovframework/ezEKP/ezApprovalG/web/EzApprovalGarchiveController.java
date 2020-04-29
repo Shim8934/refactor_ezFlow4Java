@@ -13,7 +13,6 @@ import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -1963,7 +1962,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 		//헤더 폰트 굵게
 		HSSFFont headerFont = workbook.createFont();
-		headerFont.setBoldweight((short) headerFont.BOLDWEIGHT_BOLD);
+		headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		
 		HSSFCellStyle headerStyle= workbook.createCellStyle();
 		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
@@ -2250,6 +2249,51 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		logger.debug("searchOrganGListData ended");
 		return strXML;
 	}
+	
+	/**
+	 * 2020-04-23 : 외부 수신처 검색 후 조직도 이동 시 검색정보
+	 * 
+	 * @throws Exception
+	 */	
+	@RequestMapping(value = "/ezApprovalG/searchOrganGListDataTreeView.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String searchOrganGListDataTreeView(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception {
+		logger.debug("searchOrganGListDataTreeView started");
+
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+        String parentoucode = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String selcode = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+        String strXML = "<DATA><ROWS>";
+        int intScope = 3;
+		
+		strXML += "<ROW><PARENTCODE>" + parentoucode + "</PARENTCODE><SELCODE>"  + selcode + "</SELCODE></ROW>";
+
+		int searchCnt = 0;
+		boolean read = true;
+		while(read && searchCnt < 10){
+			if(!parentoucode.equals("0000000")){
+
+				String strFilter = "(&(oucode=" + parentoucode + ")(objectclass=ucorg2))";
+				String tmpXML = ezOrganService.searchOuterOrgan(strFilter, intScope);
+
+				Document parentDom = commonUtil.convertStringToDocument(tmpXML);
+
+				parentoucode = parentDom.getElementsByTagName("DATA5").item(0).getTextContent();
+				selcode = parentDom.getElementsByTagName("DATA1").item(0).getTextContent();
+
+				strXML += "<ROW><PARENTCODE>" + parentoucode + "</PARENTCODE><SELCODE>"  + selcode + "</SELCODE></ROW>";
+
+				searchCnt = searchCnt + 1;
+			}else{
+				read = false;
+			}
+		}
+
+		strXML += "</ROWS></DATA>";
+
+		logger.debug("searchOrganGListDataTreeView ended");
+		return strXML;
+	}	
 
 	/**
 	 * 외부 수신처 이름 수정 팝업창 호출

@@ -1,13 +1,10 @@
 package egovframework.ezEKP.ezOrgan.service;
 
 import java.util.List;
-import java.util.Map;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
-import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzOrganService {
 	

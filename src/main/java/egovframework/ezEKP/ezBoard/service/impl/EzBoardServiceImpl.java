@@ -75,9 +75,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	private CommonUtil commonUtil;
 
 	@Autowired
-	private Properties config;
-
-	@Autowired
 	private Properties globals;
 	
 	@Resource(name = "EzBoardAdminService")

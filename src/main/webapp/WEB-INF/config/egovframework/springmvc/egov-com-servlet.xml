@@ -53,6 +53,9 @@
             <mvc:exclude-mapping path="/user/login/actionLogoutWithRedirectUri.do"/>            
             <mvc:exclude-mapping path="/user/login/login.do"/>
             <mvc:exclude-mapping path="/user/login/changeExPassword.do"/>
+            <mvc:exclude-mapping path="/user/login/sendFindPwd.do"/>  
+            <mvc:exclude-mapping path="/user/login/checkCertification.do"/>  
+            <mvc:exclude-mapping path="/user/login/changePasswordByCertification.do"/>  
             <mvc:exclude-mapping path="/ezApprovalG/excelExportOut.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadAttachCommon.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadInlineDotNet.do"/>

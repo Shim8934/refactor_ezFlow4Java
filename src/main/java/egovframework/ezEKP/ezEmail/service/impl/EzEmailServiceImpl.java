@@ -39,7 +39,6 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import com.google.gson.JsonArray;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -1256,6 +1255,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return returnValue;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, String> getAliasAddressMap(List<String> addressList, int tenantId) throws Exception {
 		logger.debug("getAliasAddressMap started. tenantId=" + tenantId);
@@ -1295,7 +1295,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 				
 				if (reasonCode == 0) {
 					if ((JSONObject)responseObj.get("result") != null) {
-						resultMap = (JSONObject)responseObj.get("result");
+						resultMap = (JSONObject) responseObj.get("result");
 					}
 				}
 			}
@@ -2852,6 +2852,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return shareMailBoxPermissonInfo;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONArray getFolderQuota(String email, Locale locale) throws Exception {
 		logger.debug("getFolderQuota started.");
@@ -2873,12 +2874,12 @@ public class EzEmailServiceImpl implements EzEmailService {
 			
 			String mailboxName = (String) list.get(i).get("mailboxName");
 			list.get(i).put("mailboxChangeName", ezEmailUtil.getDisplayNameFromFolderId(mailboxName, locale));
-			String mailboxId = (String) list.get(i).get("mailboxId");
+			// String mailboxId = (String) list.get(i).get("mailboxId");
 			double size = Double.parseDouble(list.get(i).get("mailboxQuota").toString());
 			String mailboxQuota = ezEmailUtil.getSizeWithUnit(size);
 			list.get(i).replace("mailboxQuota", mailboxQuota);
-			String notReadCount = (String) list.get(i).get("notReadCount");
-			String mailCount = (String) list.get(i).get("mailCount");
+			// String notReadCount = (String) list.get(i).get("notReadCount");
+			// String mailCount = (String) list.get(i).get("mailCount");
 		}
 			
 		logger.debug("getFolderQuota ended.");

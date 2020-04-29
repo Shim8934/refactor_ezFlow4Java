@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -118,12 +117,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties globals;
-	
-	@Autowired
-	private Properties config;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityServiceImpl.class);
 	
@@ -3541,17 +3534,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			strHTML.append("<td class=\"t1\" width=\"90px\" >" + cBoard.getWriteDay().substring(0, 10) + "</td>");
 			 
-			/*String localPdsPath = "";*/
 			if (iColSpan == 6) {
-				//TODO 2016-04-26 이효진 사용하는 곳이 아직 없어서 주석처리
-				/*String file = cBoard.getCharFileName();
-				
-				if (bName.equals("c_clubpds")) {
-					localPdsPath = config.getProperty("upload_community.PDS");	
-				} else {
-					localPdsPath = config.getProperty("upload_community.PDS1");
-				}*/
-			
 				strHTML.append("<td class=\"t1\" >");
 				
 				if (cBoard.getCharFileName().equals("")) {
@@ -4309,9 +4292,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		Map<String, Object> map = new HashMap<String, Object>();
 		StringBuilder sb = new StringBuilder();
 		String cateA = "0";
-		String cateB = "0";
-		String cateC = "0";
-		int caca = 0;
 		
 		if (!c_Cate_A.equals("0")) {
 			map = new HashMap<String, Object>();
@@ -4343,7 +4323,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		if (!cateA.equals("0")) {
 			sb.append(egovMessageSource.getMessage("ezCommunity."+cateA, userInfo.getLocale()));
-			caca = 1;
 		}
 		
 		/*if (!cateB.equals("0")) {

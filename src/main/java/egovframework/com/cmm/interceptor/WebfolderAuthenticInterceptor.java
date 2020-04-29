@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,6 @@ public class WebfolderAuthenticInterceptor extends WebContentInterceptor {
     private EgovFileScrty egovFileScrty;
     
     @Autowired
-    private CommonUtil commonUtil;
-    
-    @Autowired
 	private Properties config;
     
     @Autowired
@@ -44,7 +40,7 @@ public class WebfolderAuthenticInterceptor extends WebContentInterceptor {
 	/**
 	 * config.mobileClientServerURL과 request의 ip 비교 체크
 	 */
-	@SuppressWarnings("finally")
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {
 		String ip = ClientUtil.getClientIP(request);

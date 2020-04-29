@@ -258,7 +258,7 @@
                 <li><span onclick="return bt_Cancle_onclick()"></span></li>
             </ul>
         </div>
-	    <table style="margin-top: -10px; width: 455px;">
+	    <table style="margin-top: -10px; width: 455px;display:none"><!--2020-04-28 : 페이지네이션 공통변경-->
 	        <tr>
 	            <td style="height: 25px; vertical-align: bottom;"><span class="point" id="listcount">&nbsp;</span></td>
 	            <td>
@@ -277,13 +277,14 @@
 	            <td style="vertical-align: top;">
 	                <div class="listview">
 	                    <div id="lvtDoclist" style="border: 0; width: 680px; height: 360px; overflow-x: auto; overflow-y:hidden;"></div>
-	                </div>
+					</div>
+					<div id="tblPageRayer"></div>
 	            </td>
 	            <td style="width: 25px; text-align: center;">
 	                <img id="arrow_right" onclick="return btnIns_onclick()" src="/images/arr01.gif" style="cursor: pointer"><img id="arrow_left" onclick="return btndel_onclick()" src="/images/arr02.gif" style="cursor: pointer"></td>
 	            <td>
-	                <div class="listview">
-	                    <div id="lvTDoc" style="border: 0; width: 320px; height: 360px; overflow: auto; "></div>
+	                <div class="listview" style="margin-bottom:45px">
+	                    <div id="lvTDoc" style="border: 0; width: 320px; height: 360px; overflow: auto"></div>
 	                </div>
 	            </td>
 	        </tr>
