@@ -198,7 +198,7 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
 	        name = "receiptnumber";
 	        var field = message.GetListItem(fields, name);
 	        
-	        if (LastSignSN == 1 || useReceiveDocNo != 'NO') {
+	        if (LastSignSN == 1 || useReceiveDocNo != 'NO' || pDraftFlag == "HAPYUI") {
 	        	//전결,편철 or config값에 따라 접수시 채번
 	        	$.ajax({
 	        		type : "POST",
@@ -302,13 +302,13 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
         		return true;
 	        }
         } else {
-        	var rtnVal = setDocNumFormat();
-        	
-        	if (!rtnVal) {
-        		return true;
-        	}
-        	
-        	fractionsymbol = field.textContent;
+            var rtnVal = setDocNumFormat();
+
+            if (!rtnVal) {
+                return true;
+            }
+
+            fractionsymbol = field.textContent;
         }
         
     } catch (e) {
@@ -377,16 +377,20 @@ function SaveFile() {
     	EmbedContentIntoXML(mhtBody);
     	mhtBody = ConvertHTMLtoMHT(mhtBody);
     	
+    	var data = {
+			docID : pDocID,
+            // formId : pFormID,
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
+    	}
+    	
         $.ajax({
     		type : "POST",
     		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/saveFile.do",
-    		data : {
-    			docID : pDocID,
-    			html  : mhtBody,
-    			orgCompanyID : orgCompanyID
-    		},
+    		contentType : "application/json",
+    		data : JSON.stringify(data),
     		success: function(text){
     			result = text;
     		}        			

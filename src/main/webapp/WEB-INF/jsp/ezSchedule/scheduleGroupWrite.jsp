@@ -42,6 +42,7 @@
 		    var pListType = "TXT";
 		    var pListXML_Info = null;
 		    var CurPage = "1";
+		    var lang = "<c:out value='${userInfo.primary}'/>";
 	        		  	
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -767,8 +768,14 @@
 		        for (var i = 0; i < totalLen; i++) {		        	
 		        	var data = new Object();
                     data.memberID = GetAttribute(totalRows[i], "DATA1");
-                    data.memberName1 = GetAttribute(totalRows[i], "DATA2");
-                    data.memberName2 = GetAttribute(totalRows[i], "DATA3");                    
+                    if(lang == "1") {
+                    	data.memberName1 = GetAttribute(totalRows[i], "DATA2");
+                    	data.memberName2 = GetAttribute(totalRows[i], "DATA3");
+                    }
+                    else {
+                    	data.memberName1 = GetAttribute(totalRows[i], "DATA3");
+                    	data.memberName2 = GetAttribute(totalRows[i], "DATA2");
+                    }                     
                     
                     memberList.push(data);		            
 		        }
@@ -923,7 +930,7 @@
 		                var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
 		                var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 		                var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-		                var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
+		                var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data12");
 		                var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 		                var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 		                var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
@@ -961,7 +968,10 @@
 
 		                    Resultxml = loadXMLString(pparsingXML2); */
 
-	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+		                    if(lang == "1")
+		                    	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+		                    else
+		                    	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName2 + "]]></VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
 		                    

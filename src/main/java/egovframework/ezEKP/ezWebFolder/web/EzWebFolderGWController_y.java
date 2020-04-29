@@ -738,6 +738,8 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String searchEndDate = request.getParameter("searchEndDate") 		!= null ? request.getParameter("searchEndDate") 	: "" ;
 		String searchPageCount = request.getParameter("searchPageCount") 	!= null ? request.getParameter("searchPageCount") 	: "" ;
 		String isExplorer = request.getParameter("isExplorer") 				!= null ? request.getParameter("isExplorer") 		: "" ;
+		String sortType 		= request.getParameter("sortType") 			!= null ? request.getParameter("sortType") 			: "" ;
+		String sortColumn 		= request.getParameter("sortColumn") 		!= null ? request.getParameter("sortColumn") 		: "" ;
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
 		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
@@ -834,7 +836,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			
 			fileList = service.getFileList2(folderId, userId, deptId, tenantId , comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
-					searchPageCount, pStart, pEnd, offset, primary);
+					searchPageCount, pStart, pEnd, offset, primary, sortType, sortColumn);
 			
 			LOGGER.debug("fileListSize : " + fileList.size()+ " || searchStartDate : " +searchStartDate+" || searchEndDate : "+searchEndDate );
 			
@@ -1164,7 +1166,13 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	    	
 	    	String userId = requestObject.get("userid") != null ? (String)requestObject.get("userid") : "";
 	    	String pw = requestObject.get("pw") != null ? (String)requestObject.get("pw") : "";
+	    	// String userIde = requestObject.get("useride") != null ? (String)requestObject.get("useride") : "";
+	    	// String pwe = requestObject.get("pwe") != null ? (String)requestObject.get("pwe") : "";
 	    	int tenantId = 0;
+	    	
+	    	// postMan으로 원하는 encrypt를 원할시 테스트하기 위함.  
+	    	// LOGGER.debug(webfolderUtil.encryptAES(userIde));
+	    	// LOGGER.debug(webfolderUtil.encryptAES(pwe));
 	    	
 	    	userId = webfolderUtil.decryptAES(userId);
 			pw = webfolderUtil.decryptAES(pw);
@@ -1196,9 +1204,17 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			if (resultToken == null) {
 				throw new Exception("resultToken is null");
 			} else {
-				result.put("status", "ok");
-				result.put("code", 0);
-				result.put("ltoken", createdToken);
+				// 웹폴더로 로그인을 시도할 시 토큰값을 return 해주면서 권한이 있는 개인, 부서, 회사 폴더를 생성하도록한다. 
+				// 단, 폴더 생성시는 웹으로 접근한적이 한번도 없을때, 폴더가 존재 하지 않을때 사용하기 위함.
+				if(checkRootFolder(userId, request).get("status").equals("ok")){
+					result.put("status", "ok");
+					result.put("code", 0);
+					result.put("ltoken", createdToken);
+				} else {
+					// 개인, 부서, 회사 폴더가 존재하지 않으면 
+					result.put("status", "error");
+					result.put("code", 3);
+				}
 			}
 		} catch (Exception e) {
 			result.put("status", "error");
@@ -1238,8 +1254,13 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			LoginVO userInfoAdmin = commonUtil.getUserForGw(adminId, serverName);
 			
 			String folderIdTypeU = service.folderIdByUserIdAndFolderType(userId, userInfo.getTenantId());
-			folderIDList[0] = folderIdTypeU;
-			
+			if (folderIdTypeU == null){
+	            LOGGER.debug("The user folder does not exist.");
+	            result.put("status", "ok");
+	            result.put("code", 3);
+	            return result;
+	         }
+	         folderIDList[0] = folderIdTypeU;
 			
 			if (!isWebfolderAdmin(userInfoAdmin)) {
 				result.put("status", "error");

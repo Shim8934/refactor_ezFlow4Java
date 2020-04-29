@@ -147,7 +147,10 @@ public class EzCabinetController {
 			model.addAttribute("config", userConfig);
 		}
 		
+		/* 2020-01-29 홍승비 - 다국어 대응을 위한 lang 추가 */
 		model.addAttribute("cabinetId", cabinetId);
+		model.addAttribute("lang", user.getLang());
+		
 		logger.debug("jspGetMyCabinet ended");
 		return "ezCabinet/main/cabinetItem";
 	}

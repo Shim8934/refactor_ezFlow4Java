@@ -429,6 +429,9 @@
 			    url : '/ezAttitude/getAttModAppList.do',
 			    data : obj,
 			    dataType : "json",
+			    beforeSend : function() {
+   					ShowAttProgress();
+				},
 			    error: function(xhr, status, error){
 			    	ajaxRunning = false;
 			    },
@@ -478,6 +481,9 @@
 			    url : '/ezAttitude/getAttModAppList.do',
 			    data : obj,
 			    dataType : "json",
+			    beforeSend : function() {
+   					ShowAttProgress();
+				},
 			    error: function(xhr, status, error){
 			    	ajaxRunning = false;
 			    },
@@ -661,6 +667,15 @@
 	    function HiddenAttProgress() {
 	        document.getElementById("attPanel").style.display = "none";
 	        document.getElementById("AttProgress").style.display = "none";
+	    }
+	    
+	    function ShowAttProgress() {
+	    	var CurrenWidth = window.innerWidth;
+        	
+		    document.getElementById("attPanel").style.display = "";
+		    document.getElementById("AttProgress").style.top = "330px";
+		    document.getElementById("AttProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+		    document.getElementById("AttProgress").style.display = "";
 	    }
 	    
 	    function goToPageByNum(Value){
@@ -1143,7 +1158,7 @@
 					<td style="width: 12%;"><input type="text" id="writer_search" style="width: 90%;" onkeyup="search_keypress(event);"></td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t148'/></td>
 					<td style="width: 11%;"><input type="text" id="writerDept_search" style="width: 90%;" onkeyup="search_keypress(event);"></td>
-					<td style="width: 3%;"><spring:message code='ezAttitude.t13'/></td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.kje01'/></td>
 					<td style="width: 11%;">
 						<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t124'/></label>
 						<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.t209'/></label>
@@ -1162,8 +1177,8 @@
 						<a class="imgbtn" id="cancelBtn" onclick="att_search()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t121'/></span></a>
 						<a class="imgbtn" id="cancelBtn" onclick="att_search('refresh')" style="margin-top:3px;"><span><spring:message code='ezAttitude.t122'/></span></a>
 						<a class="imgbtn" id="cancelBtn" onclick="get_excelAtt_list()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t145'/></span></a>
-						<a class="imgbtn" id="cancelBtn" onclick="modApprove()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t210'/></span></a>
-						<a class="imgbtn" id="cancelBtn" onclick="modReturn()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t211'/></span></a>
+						<a class="imgbtn" id="cancelBtn" onclick="modApprove()" style="margin-top:3px;"><span><spring:message code='ezAttitude.kje02'/></span></a>
+						<a class="imgbtn" id="cancelBtn" onclick="modReturn()" style="margin-top:3px;"><span><spring:message code='ezAttitude.kje03'/></span></a>
 					</td>
 				</tr>
 			</tbody>
@@ -1181,7 +1196,7 @@
 					<th style="cursor:pointer" colname="WRITER_DEPT_NAME"><spring:message code='ezAttitude.t148'/></th>
 					<th width="125px" style="cursor:pointer" colname="ORIGIN_TIME"><spring:message code='ezAttitude.t206'/></th>
 					<th width="125px" style="cursor:pointer" colname="NO"><spring:message code='ezAttitude.t207'/></th>
-					<th width="80px" style="cursor:pointer" colname="APPR_STATUS" ><spring:message code='ezAttitude.t208'/></th>
+					<th width="80px" style="cursor:pointer" colname="APPR_STATUS" ><spring:message code='ezAttitude.kje01'/></th>
 					<th width="100px" style="cursor:pointer" colname="APPR_USER_NAME"><spring:message code='ezAttitude.t104'/></th>
 					<th width="130px" style="cursor:pointer" colname="APPL_DATE"><spring:message code='ezAttitude.t108'/></th>
 					<th width="100px" style="cursor:pointer" colname="NO"><spring:message code='ezAttitude.t97'/></th>

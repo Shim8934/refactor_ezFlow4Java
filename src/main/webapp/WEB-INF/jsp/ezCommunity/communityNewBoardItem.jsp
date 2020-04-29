@@ -4,7 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<html>
+<html ondragover="bodydragover(event)">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
@@ -288,11 +288,14 @@
 	            str += "<LISTVIEWDATA><HEADERS><HEADER><NAME><spring:message code='ezCommunity.t1135' /></NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME><spring:message code='ezCommunity.t1136'/></NAME><WIDTH>50</WIDTH></HEADER></HEADERS><ROWS>";
 			
 	            for(i=0;i<xmldomNodes.length;i++) {
+		            filepath = SelectSingleNodeValue(xmldomNodes[i], "FilePath");
+		            filename = MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName"));
+		            
 	                str += "<ROW><CELL>";	
 	                /* 2018-04-30 홍승비 - 커뮤니티 게시판 첨부파일명 특문처리 수정 */
-	                str += "<VALUE><![CDATA[" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "]]></VALUE>";
-	                str += "<DATA1><![CDATA[" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "]]></DATA1>";
-	                str += "<DATA2>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FilePath")) + "</DATA2>";
+	                str += "<VALUE><![CDATA[" + filename + "]]></VALUE>";
+	                str += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
+	                str += "<DATA2>" + MakeXMLString(filepath) + "</DATA2>";
 	                str += "<DATA3></DATA3>";
 	                str += "<DATA4></DATA4>";
 	                str += "<DATA5>Y</DATA5>";
@@ -665,8 +668,6 @@
 		    function AutoAddtoExpireDate() {
 		        var temp = ExpireDays;
 		        if (temp == "-1") temp = "30";
-							
-		        idDatepicker.vtLocalEndDate = AddDate(idDatepicker.vtLocalDate, temp);			
 		    }
 						
 		    function LoadFromPC() {
@@ -787,7 +788,7 @@
 						
             function InitializeSettings() {
             	
-                document.getElementById('tdBoardName').innerHTML = "${boardInfo.boardName}";
+                document.getElementById('tdBoardName').innerHTML = userInfo.primary == "1"? "${boardInfo.boardName}" : "${boardInfo.boardName2}";
                 
                 if (ExpireDays == "-1" && strEndDate.substring(0,4) == "9999" || ExpireDays == "-1" && pMode == "new") {
                     document.getElementById('ChkPermanence').checked = true;
@@ -795,7 +796,6 @@
                 } else {
                     document.getElementById('ChkPermanence').checked = false;
                     document.getElementById('Makedate').style.display = "";
-                    idDatepicker.vtLocalEndDate(AddDate(idDatepicker.vtLocalDate(), parseInt(ExpireDays)));
                 }
             }
 
@@ -904,6 +904,12 @@
                 
                 AttachFileInfo(strXML);
             }
+
+	        function bodydragover(evt) {
+		        evt.dataTransfer.dropEffect = "none";
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		    }
 		</script>
 
 		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">

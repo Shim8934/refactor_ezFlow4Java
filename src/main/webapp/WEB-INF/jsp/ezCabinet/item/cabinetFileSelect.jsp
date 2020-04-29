@@ -17,7 +17,7 @@
 		<div class="cabRlSearch">
 			<div>
 				<input id="ssInput" type="text" placeholder="<spring:message code='ezCabinet.t88'/>">
-				<a id="searchBttn" class="cabBttn2"><span><spring:message code='ezCabinet.t49'/></span></a>
+				<a id="searchBttn" class="imgbtn imgbck" style="margin-top: 1px !important;"><span><spring:message code='ezCabinet.t49'/></span></a>
 			</div>
 		</div>
 		<div class="cabRlMain">

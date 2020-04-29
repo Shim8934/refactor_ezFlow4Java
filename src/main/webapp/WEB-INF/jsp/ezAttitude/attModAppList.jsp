@@ -38,6 +38,9 @@
 			background-color: #fcfcfc;
 		}
 		#searchTable td {padding: 8px 5px;}
+		.mainlist tr:hover{
+				background: rgb(244,245,245);
+		}
 		</style>
 		<script type="text/javascript">
 		var pCompanyId = ""; //현재 선택된 회사의 아이디
@@ -995,7 +998,7 @@
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:57%;" colname="START_DATE"><spring:message code='ezAttitude.t107'/></th>
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:8%;" colname="ORIGIN_TIME"><spring:message code='ezAttitude.t206'/></th>
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:8%;" colname="NO"><spring:message code='ezAttitude.t207'/></th>
-				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:6%;" colname="APPR_STATUS" ><spring:message code='ezAttitude.t208'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:6%;" colname="APPR_STATUS" ><spring:message code='ezAttitude.kje01'/></th>
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:9%;" colname="APPR_USER_NAME"><spring:message code='ezAttitude.t104'/></th>
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:12%;" colname="APPL_DATE"><spring:message code='ezAttitude.t108'/></th>
 				<th width="100px" style="cursor:pointer;" colname="NO"><spring:message code='ezAttitude.t97'/></th>

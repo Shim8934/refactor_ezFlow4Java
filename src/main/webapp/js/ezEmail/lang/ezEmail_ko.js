@@ -227,7 +227,7 @@ var strLang309 = "한글 입력은 할 수 없습니다.";
 var strLang310 = "입력된 형식이 잘못되었습니다.\n예) @kaoni.com와 같은 형식으로 입력해주세요.";
 var strLang312 = "검색 기간을 확인하세요.";
 var strLang313 = "취소하시겠습니까?";
-var strLang314 = "간편주소록";
+var strLang314 = "간편주소록 ";
 var strLang315 = "발신인";
 var strLang316 = "수신인";
 var strLang317 = "파일명";
@@ -314,6 +314,8 @@ var strLangSharedMailbox03 = "암호를 변경하였습니다.";
 
 var strLangReceiverCount01 = "수신인은 최대 ";
 var strLangReceiverCount02 = "명까지 가능합니다.";
+
+var strLangHDP04 = "드래그 앤 드롭으로 파일 추가 및 추가한 파일의 순서를 변경할 수 있습니다.";
 
 function GetLocalTime(Offset , pDateTime)
 {

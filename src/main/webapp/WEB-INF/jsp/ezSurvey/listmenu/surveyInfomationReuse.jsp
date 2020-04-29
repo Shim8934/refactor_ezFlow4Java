@@ -45,6 +45,22 @@
 					</td>
 				</tr>
 				<tr>
+					<th class="left-Th"><spring:message code="ezSurvey.t112"/></th> <%-- mail setting --%>
+					<td class="right-Td">
+						<div>
+							<span class="inf-spanTxt"><input type="radio" name="mailSpan" value="1" ${survey.mailFlag == 1 ? 'checked' : ''}><spring:message code="ezSurvey.t114"/></span>
+							<span class="inf-spanTxt"><input type="radio" name="mailSpan" value="0" ${survey.mailFlag == 0 ? 'checked' : ''}><spring:message code="ezSurvey.t115"/></span>
+						</div>
+					</td>
+					<th class="left-Th"><spring:message code="ezSurvey.t113"/></th> <%-- popup setting --%>
+					<td class="right-Td">
+						<div>
+							<span class="inf-spanTxt"><input type="radio" name="popupSpan" value="1" ${survey.popupFlag == 1 ? 'checked' : ''}><spring:message code="ezSurvey.t114"/></span>
+							<span class="inf-spanTxt"><input type="radio" name="popupSpan" value="0" ${survey.popupFlag == 0 ? 'checked' : ''}><spring:message code="ezSurvey.t115"/></span>
+						</div>
+					</td>
+				</tr>
+				<tr>
 					<th class="left-Th"><spring:message code="ezSurvey.t30"/></th> <%-- respondent setting --%>
 					<td class="right-Td">
 						<div class="survey-flexdiv">
@@ -61,7 +77,7 @@
 						</div>
 					</td>
 				</tr>
-				<tr>
+				<tr class="${survey.paritipateFlag == 0 ? 'rspdtList' : 'rspdtList on'}" id='rspdtList'>
 					<th class="left-Th"><spring:message code="ezSurvey.t55"/></th> <%-- respondent setting --%>
 					<td class="right-Td" colspan="3">
 						<div id="userWrapDiv" class="${survey.paritipateFlag == 0 ? 'user-mainDiv' : 'user-mainDiv on'}">

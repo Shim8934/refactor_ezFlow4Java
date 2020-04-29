@@ -44,7 +44,7 @@
 						</c:if>
 						</dl>
 						<c:choose>
-							<c:when test="${not empty photoBoardList || photoBoardList != ''}">
+							<c:when test="${not empty photoBoardList && photoBoardList != ''}">
 								<ul class="photoList" id="photoul">
 									<c:forEach items="${photoBoardList }" var="photo">
 										<li><img src="${photo.filePath }" data1="${photo.boardID }"
@@ -58,7 +58,7 @@
 										<dt>
 											<img src="/images/kr/main/noData_sIcon.png">
 										</dt>
-										<dd>"<spring:message code='ezNewPortal.t018' />"</dd>
+										<dd><spring:message code='ezNewPortal.t018' /></dd>
 									</dl>
 								</ul>
 							</c:otherwise>
@@ -77,7 +77,7 @@
 								<dt>
 									<img src="/images/kr/main/noData_sIcon.png">
 								</dt>
-								<dd>"<spring:message code='ezNewPortal.t039' />"</dd>
+								<dd><spring:message code='ezNewPortal.t039' /></dd>
 							</dl>
 						</ul>
 						</c:when>
@@ -92,7 +92,7 @@
 									<dt>
 										<img src="/images/kr/main/noData_sIcon.png">
 									</dt>
-									<dd>"<spring:message code='ezNewPortal.t129'/>"</dd>
+									<dd><spring:message code='ezNewPortal.t129'/></dd>
 								</dl>
 							</ul>
 						</c:otherwise>

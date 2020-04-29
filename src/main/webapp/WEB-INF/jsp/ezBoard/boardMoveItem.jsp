@@ -45,7 +45,15 @@
 		            return;
 		        }
 
-		    	if (oldguBun > 0) {
+		        if (BoardIDList.indexOf(selectedBoard) != -1) {
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t139' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t139'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.t139'/>");
+		            return;
+		        }
+
+		    	 /* 2019-07-16 홍승비 - 게시물 이동 시 경고 메세지 발생 분기 수정 */
+//		    	if (oldguBun > 0) {
 			    	if (oldguBun != newguBun) {
 			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
@@ -58,33 +66,27 @@
 // 			        	alert("<spring:message code='ezBoard.hsb01'/>");
 			            return;
 			        }
-		    	} else {
+/* 		    	} else {
 		    		if (newguBun != "0") {
 		    			var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
 // 			        	alert("<spring:message code='ezBoard.hsb01'/>");
 			            return;
 			        }
-		    	}
+		    	} */
 
-		    	if (CheckIfAnonyBoard(selectedBoard) == "1") {
+		    	/* 2020-02-11 홍승비 - 익명게시판의 경우, 관리자 권한이 있다면 이동 및 복사가 가능하도록 주석처리 */
+/* 		    	if (CheckIfAnonyBoard(selectedBoard) == "1") {
 		    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 // 		            alert("<spring:message code='ezBoard.hsb01'/>");
 		            return;
-		        }
+		        } */
 
-		        if (CheckIfAnonyBoard(selectedBoard) == "2") {
+		        if (CheckIfAnonyBoard(selectedBoard).indexOf("2") > -1) {
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t999070' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t999070'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 // 		            alert("<spring:message code='ezBoard.t999070'/>");
-		            return;
-		        }
-
-		        if (BoardIDList.indexOf(selectedBoard) != -1) {
-		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t139' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t139'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
-					DivPopUpShow(330, 205, pUrl);
-// 		            alert("<spring:message code='ezBoard.t139'/>");
 		            return;
 		        }
 
@@ -101,24 +103,35 @@
 		        window.close();
 		    }
 		    function CheckIfCanWrite(pBoardID) {
-		        xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID) + "&accessID=" + "${userInfo.id}", false);
+		        xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp.send();
 		        var ret = xmlhttp.responseText;
-		        if (ret.indexOf("<WRITE>true</WRITE>") != -1) return true;
-		        return false;
+		        if (ret.indexOf("<WRITE>true</WRITE>") != -1 || ret.indexOf("<BOARDGROUPADMIN>OK</BOARDGROUPADMIN>") != -1) {
+		        	return true;
+		        } else {
+		        	return false;
+		        }
 		    }
+		    
 		    var rtnVal = "";
 		    function MoveItem(pDestBoardID) {
 		        var destItemIDList = "";
 		        xmlhttp.open("POST", "/ezBoard/moveItem.do?orgItemIDList=" + encodeURIComponent(ItemIDList) + "&orgBoardID=" + encodeURIComponent(BoardIDList) + "&destItemIDList=" + encodeURIComponent(destItemIDList) + "&destBoardID=" + encodeURIComponent(pDestBoardID), false);
 		        xmlhttp.send();
-		        if (xmlhttp.responseText.indexOf("OK") > -1) {
+		        
+		        var returnItemIDStr = xmlhttp.responseText;
+		        if (returnItemIDStr != null && returnItemIDStr.indexOf("OK") > -1) {
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t126' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t126'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 					board_alertArguments[1] = window.close;
 // 		            alert("<spring:message code='ezBoard.t126'/>");
-		            rtnVal = "OK";
+		            rtnVal = pDestBoardID;
 // 		            window.close();
+		            
+			        /* 2019-07-02 홍승비 - 승인게시판에 게시물 복사, 이동 시에도 승인메일 보내도록 수정 */
+			        sendApprMail(pDestBoardID, returnItemIDStr);
+			        /* 2019-12-17 홍승비 - 게시물 이동 시에도 게시알림 메일을 보내도록 수정 */
+			        sendNotiMail(pDestBoardID, returnItemIDStr);
 		        } 
 		        //else if (window.parent.strListInfo == "" || typeof (window.parent.strListInfo) == "undefined") {
 		        	//var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t497' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t497'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
@@ -139,18 +152,24 @@
 		        else
 		            window.returnValue = rtnVal;
 		    };
+		    
 		    function CheckIfAnonyBoard(pBoardID) {
 		        var xmlhttp2 = createXMLHttpRequest();
 		        xmlhttp2.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp2.send();
+		        
 		        var retval = "0";
-		        if (xmlhttp2.responseText.indexOf("anonyboard") > -1)
+		        if (xmlhttp2.responseText.indexOf("anonyboard") > -1) { // 익명게시판
 		            retval = "1";
-		        else if (xmlhttp2.responseText.indexOf("attributeextension") > -1)
-		            retval = "2";
+		        }
+		        if (xmlhttp2.responseText.indexOf("attributeextension") > -1) { // 확장칼럼
+		            retval += ";2";
+		        }
+		        
 		        xmlhttp2 = null;
 		        return retval;
 		    }
+		    
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = opener.moveboarditem_cross_dialogArguments[1];
@@ -280,6 +299,46 @@
 		            }
 		        }
 		    }
+		    
+		    /* 2019-12-17 홍승비 - 승인메일 발송 동작 함수로 분리 */
+		    function sendApprMail(pDestBoardID, returnItemIDStr) {
+		        $.ajax({
+					type : "GET",
+					dataType : "text",
+					async : true,
+					url : "/ezBoard/getBoardApprProperty.do",
+					data : {
+						boardID : pDestBoardID
+					},
+					success: function(result){
+						var xmlhttp;
+						var itemIDs = returnItemIDStr.split(";");
+						
+					 	if (result == "Y") {
+							for (var i = 0; i < itemIDs.length - 1 ;i++) {
+			                    xmlhttp = createXMLHttpRequest();
+			                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
+			                    xmlhttp.send();
+			                    xmlhttp = null;
+							}
+						}
+					}
+				});
+		    }
+		    
+		    /* 2019-12-17 홍승비 - 게시물 이동 시에도 게시알림 메일을 보내도록 수정 */
+	        function sendNotiMail(pDestBoardID, returnItemIDStr) {
+				var xmlhttp;
+				var itemIDs = returnItemIDStr.split(";");
+				
+				for (var i = 0; i < itemIDs.length - 1 ;i++) {
+					xmlhttp = createXMLHttpRequest();
+	                xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
+	                xmlhttp.send();
+	                xmlhttp = null;
+				}
+		    }
+		    
 		</script>
 	</head>
 	<body class="popup"> 

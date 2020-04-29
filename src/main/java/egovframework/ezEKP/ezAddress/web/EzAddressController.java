@@ -38,7 +38,6 @@ import com.opencsv.CSVWriter;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
-import egovframework.ezEKP.ezAddress.vo.AddressOldZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
@@ -85,7 +84,7 @@ public class EzAddressController{
 	/**
 	 * 도로명 주소 팝업창 호출 함수 (Open API)
 	 */
-	@RequestMapping(value = "/ezAddress/addressZipCodePopUpOpen.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/ezAddress/addressZipCodePopUpOpen.do")
 	public String addressZipCodePopupOpen(Model model) throws Exception {
 		logger.debug("addressZipCodePopupOpen started.");
 		
@@ -269,7 +268,7 @@ public class EzAddressController{
 			Document xmldom = commonUtil.convertRequestToDocument(request);
 			String pFolderID = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String pOwnerID = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
-			String pFolderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
+			// String pFolderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
 			String pFolderName = ""; //TODO: folderName setting 안해도 되나?
 			
 			String pOrderOption = "";
@@ -424,6 +423,8 @@ public class EzAddressController{
 			useZipCodeSearch = "YES";
 		}
 		
+		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
+		
 		model.addAttribute("addressId", addressId);
 		model.addAttribute("folderId", folderId);
 		model.addAttribute("folderType", folderType);
@@ -440,6 +441,7 @@ public class EzAddressController{
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("deptAdmin", deptAdmin);
 		model.addAttribute("compAdmin", compAdmin);
+		model.addAttribute("useAnyoneEdit", useAnyoneEdit);
 		
 		logger.debug("addressWrite ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId
@@ -517,7 +519,7 @@ public class EzAddressController{
 			String folderType = xmldom.getElementsByTagName("TYPE").item(0).getTextContent();
 			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
 			String addressId = xmldom.getElementsByTagName("ADDRESSID").item(0).getTextContent();
-			String photoPath = xmldom.getElementsByTagName("PHOTOPATH").item(0).getTextContent();
+			// String photoPath = xmldom.getElementsByTagName("PHOTOPATH").item(0).getTextContent();
 			String sName = xmldom.getElementsByTagName("SNAME").item(0).getTextContent();
 			String sCompany = xmldom.getElementsByTagName("SCOMPANY").item(0).getTextContent();
 			String sDept = xmldom.getElementsByTagName("SDEPT").item(0).getTextContent();
@@ -533,8 +535,9 @@ public class EzAddressController{
 			String sHomeAddr = xmldom.getElementsByTagName("SHOMEADDR").item(0).getTextContent();
 			String sMemo = xmldom.getElementsByTagName("SMEMO").item(0).getTextContent();
 			String sType = xmldom.getElementsByTagName("STYPE").item(0).getTextContent();
-			String sUserNM = xmldom.getElementsByTagName("USERNM").item(0).getTextContent();
-			String sUserNM2 = xmldom.getElementsByTagName("USERNM2").item(0).getTextContent();
+			// String sUserNM = xmldom.getElementsByTagName("USERNM").item(0).getTextContent();
+			// String sUserNM2 = xmldom.getElementsByTagName("USERNM2").item(0).getTextContent();
+			String sFurigana = xmldom.getElementsByTagName("FURIGANA").item(0).getTextContent();
 			
 			// ownerId가 없으면 디비에서 구하기.
 			if (ownerId.trim().equals("")) {
@@ -573,7 +576,7 @@ public class EzAddressController{
 				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), 
 						sName, sEmail, sCompany, sDept, sTitle, 
 						sCompanyPhone, sFax, sMobile, sHomePage, 
-						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sType);
+						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sType, sFurigana);
 			} else { //주소록 수정
 				AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), addressId);
 				
@@ -593,7 +596,7 @@ public class EzAddressController{
 				ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
 						sName, sEmail, sCompany, sDept, sTitle, 
 						sCompanyPhone, sFax, sMobile, sHomePage, 
-						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo);
+						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sFurigana);
 			}
 		} catch (Exception e) {
 			returnVaule = "ERROR";
@@ -629,6 +632,7 @@ public class EzAddressController{
 		String pAddressId = request.getParameter("addressid") == null ? "" : request.getParameter("addressid");
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		boolean gyumJikChk = true;
 		if (userInfo.getGyumJik() != null) {
@@ -675,11 +679,12 @@ public class EzAddressController{
 		model.addAttribute("pFolderType", pFolderType);
 		model.addAttribute("getsMemo", replaceMemo);
 		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
+		model.addAttribute("primaryLang", primaryLang);
 		
 		logger.debug("addressRead ended.");
 		logger.debug("useEditor=" + useEditor + ",noneActiveX=" + noneActiveX + ",userInfo=" + userInfo
 				 + ",addressInfo=" + addressInfo + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin + ",pAddressId=" + pAddressId
-				 + ",pFolderId=" + pFolderId + ",pFolderType=" + pFolderType);
+				 + ",pFolderId=" + pFolderId + ",pFolderType=" + pFolderType + ",primaryLang=" + primaryLang);
 		
 		return "ezAddress/addressRead";
 	}
@@ -704,6 +709,7 @@ public class EzAddressController{
 		String userNM2 = userInfo.getDisplayName2();
 		String useOcs = config.getProperty("config.USE_OCS");
 		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", userInfo.getTenantId());
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		if (mailMaxReceiverCount.equals("")) {
 			mailMaxReceiverCount = "200";
@@ -743,6 +749,10 @@ public class EzAddressController{
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
+		model.addAttribute("primaryLang", primaryLang);
+		
+		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
+		model.addAttribute("useShowAllCompanies", useShowAllCompanies);
 		
 		logger.debug("addressWriteGroup ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",ownerId=" + ownerId + ",folderType=" + folderType
@@ -811,7 +821,7 @@ public class EzAddressController{
 				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
 						sGroupName, sEmail, "", "", "", 
 						"", "", "", "", 
-						"", "", "", "", sMemo, sType);
+						"", "", "", "", sMemo, sType, "");
 			} else { //주소록 수정
 				AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), addressId);
 				
@@ -831,7 +841,7 @@ public class EzAddressController{
 				ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), 
 						sGroupName, sEmail, "", "", "", 
 						"", "", "", "", 
-						"", "", "", "", sMemo);
+						"", "", "", "", sMemo, "");
 			}
 			
 		} catch (Exception e) {
@@ -1136,8 +1146,8 @@ public class EzAddressController{
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
 			Document xmldom = commonUtil.convertStringToDocument(bodyData);
-			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
-			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
+			// String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
+			// String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
 			String addressId = xmldom.getElementsByTagName("ADDRESSID").item(0).getTextContent();
 			String folderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
 			
@@ -1392,7 +1402,7 @@ public class EzAddressController{
 	/**
 	 * 최상위 주소록 정보 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/getRootAddressXML.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/getRootAddressXML.do", method = RequestMethod.GET, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getRootAddressXML(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception {		
 		logger.debug("getRootAddressXML started.");
@@ -1834,9 +1844,9 @@ public class EzAddressController{
 			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
-			String field = xmldom.getElementsByTagName("FIELD").item(0).getTextContent();
+			// String field = xmldom.getElementsByTagName("FIELD").item(0).getTextContent();
 			int pageSize = Integer.parseInt(xmldom.getElementsByTagName("PAGESIZE").item(0).getTextContent());
-			String filter = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
+			// String filter = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
 			int currentPage = Integer.parseInt(xmldom.getElementsByTagName("PAGE").item(0).getTextContent());
 			String searchGubun = xmldom.getElementsByTagName("SEARCHGUBUN").item(0).getTextContent();
 			String folderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
@@ -2344,12 +2354,12 @@ public class EzAddressController{
         			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
         					sName, csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
         					csvBody[5], csvBody[6], csvBody[7], csvBody[9], 
-        					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "G");
+        					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "G", "");
         		} else {
         			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName(), userInfo.getDisplayName2(),
         					sName, csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
         					csvBody[5], csvBody[6], csvBody[7], csvBody[9], 
-        					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "P");
+        					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "P", "");
         		}
         	} catch (Exception e) {
         		result = "ERROR";

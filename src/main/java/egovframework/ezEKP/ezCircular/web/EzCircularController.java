@@ -5,24 +5,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -50,7 +47,6 @@ import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
-import egovframework.ezEKP.ezCircular.vo.CircularConfirmVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO;
@@ -84,9 +80,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties config;
 	
 	@Autowired
 	private EzCircularService ezCircularService;
@@ -176,7 +169,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람문서함관리 및 회람판에서 이동 호출 함수
 	 */
-	@RequestMapping(value = "/ezCircular/getCircularFolderList.do", produces="text/xml; charset=utf-8", method = RequestMethod.GET)
+	@RequestMapping(value = "/ezCircular/getCircularFolderList.do", produces="text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getCircularFolderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getCircularFolderList started");
@@ -1146,7 +1139,12 @@ public class EzCircularController extends EgovFileMngUtil {
 				strAttach.append("<DATA5><![CDATA[OK]]></DATA5>");
 
 				if (mode.equals("reuse")) {
-					ezCircularService.copyFileList(pDirPath, attach.getFilePath().split("/")[2], circularID);
+					String fileName = attach.getFilePath().split("/")[2];
+					String originFile = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + fileName; // 복사할 파일의 경로
+					String copyFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + fileName;
+					
+					Files.copy(new File(originFile).toPath(), new File(copyFilePath).toPath());
+					//ezCircularService.copyFileList(pDirPath, attach.getFilePath().split("/")[2], circularID);
 				}
 			}
 
@@ -1757,6 +1755,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularDeptConfig started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("circularDeptConfig ended");
 		
@@ -1807,11 +1806,14 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularSelectAttendant started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		logger.debug("circularSelectAttendant ended");
 		
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID()); //baonk added
+		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("userInfo", userInfo);
 		
 		return "/ezCircular/circularSelectAttendant";
 	}
@@ -1860,6 +1862,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		model.addAttribute("userName", userName);
 		model.addAttribute("userName2", userName2);
 		model.addAttribute("listSize", list.size());
+		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("circularDeptModify ended");
 	

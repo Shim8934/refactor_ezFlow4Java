@@ -1494,7 +1494,11 @@ function setRecevInfo(ret) {
     	if (SummaryOuterReceiverList != "") {
             setNodeText(field , SummaryOuterReceiverList);
         }else{
-        	setNodeText(field , precipents);
+        	var precipentsList = precipents.split(",");
+        	
+        	if (precipentsList.length > 1) {
+                setNodeText(field , precipents);
+        	}
         }
     }
 }
@@ -2439,6 +2443,20 @@ function SetAutoPropertyValue() {
                     	/*field.textContent = FullDate;*/
                         field.textContent = CurrentDate;
                     	break;
+                    	
+                    /**
+                     * 부서이동 혹은 부서이름 변경 전 임시보관한 문서의 부서이름이 바뀌지 않는현상 수정
+                     * 부서이름 뿐만아니라 직위 및 기안자 이름도 수정되도록 수정 
+                     * */
+                    case "draftername":      
+                        field.textContent = arr_userinfo[2];
+                        break;
+                    case "position":
+                        field.textContent = arr_userinfo[3];
+                        break;
+                    case "department":
+                    	field.textContent = arr_userinfo[5];
+                    	break;
                 }
             }
             if (pDraftFlag == "SUSIN" || pDocState == "011") {
@@ -2705,7 +2723,7 @@ function openAaprDocAttachUI() {
             aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
             
             if(approvalFlag == "G") {
-            	DivPopUpShow(1050, 500, url);
+            	DivPopUpShow(1050, 520, url);
             } else {
             	DivPopUpShow(1050, 560, url);
             }
@@ -2740,16 +2758,22 @@ function openAaprDocAttachUI_Complete(ret) {
  * */
 function SaveDraftDocInfo() {
     var rtnVal;
-    SaveFile();
+    rtnVal = SaveFile();
+
+    if (rtnVal.toUpperCase() != "TRUE") {
+        return rtnVal;
+    }
+
     SignSave();
     rtnVal = SaveDraftDocInfo_ilban("002");
     if (rtnVal.toUpperCase() == "FALSE") {
     	 return rtnVal;
     }
-//    rtnVal = SaveFile();
+
     if (rtnVal.toUpperCase() != "TRUE") {
         SaveOrgFile();
     }
+
     return rtnVal;
 }
 
@@ -3356,6 +3380,14 @@ function getDocInfo() {
         cabinetID = SelectSingleNodeValueNew(result, "DATA/CABINETID");
         TaskCode = SelectSingleNodeValueNew(result, "DATA/TASKCODE");
         tempSecurityDate = SelectSingleNodeValueNew(result, "DATA/SECURITYAPPROVAL");
+
+        if (useOpenGov == "YES") {
+            basis = SelectSingleNodeValueNew(result, "DATA/BASIS");
+            reason = SelectSingleNodeValueNew(result, "DATA/REASON");
+            listOpenFlag = SelectSingleNodeValueNew(result, "DATA/LISTOPENFLAG");
+            fileOpenFlagList = SelectSingleNodeValueNew(result, "DATA/FILEOPENFLAGLIST");
+            limitDate = SelectSingleNodeValueNew(result, "DATA/LIMITDATE");
+        }
     }
 }
 
@@ -3550,8 +3582,8 @@ function setDocNumFormat(pPrefix) {
 
     var field = message.GetListItem(fields, "receiptnumber");
     if (field) {
-        field.setAttribute("Format", field.textContent);
-        message.DocumentBodySetAttribute("receiptnumber", field.textContent);
+        field.setAttribute("Format", field.textContent.trim());
+        message.DocumentBodySetAttribute("receiptnumber", field.textContent.trim());
         field.textContent = "";
         if (new RegExp(/Firefox/).test(navigator.userAgent))
             field.innerHTML = "<br type='_moz'>";
@@ -3743,17 +3775,21 @@ function SaveFile() {
 	mhtBody = message.Get_EditorBodyHTML();
 	EmbedContentIntoXML(mhtBody);
 	mhtBody = ConvertHTMLtoMHT(mhtBody);
+	
+	var data = {
+		docID : pDocID,
+        formId : pFormID,
+		html  : mhtBody,
+		orgCompanyID : orgCompanyID
+	}
     
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFile.do",
-		data : {
-			docID : pDocID,
-			html  : mhtBody,
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -3787,17 +3823,21 @@ function SaveOrgFile() {
 	var mhtBody = "";
 	mhtBody = "<HTML>" + GetCKEditerHeader() + pOrgHtml + "</HTML>";
 	mhtBody = ConvertHTMLtoMHT(mhtBody);
+	
+	var data = {
+		docID : pDocID,
+        formId : pFormID,
+		html  : mhtBody,
+		orgCompanyID : orgCompanyID
+	}
     
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFile.do",
-		data : {
-			docID : pDocID,
-			html  : mhtBody,
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -4067,6 +4107,19 @@ function SaveTMPFile(AutoSave) {
     mhtBody = message.Get_EditorBodyHTML();
     mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
     mhtBody = ConvertHTMLtoMHT(mhtBody);
+	
+    var docID = "";
+    if(Saveflag) {
+    	docID = newpDocID;
+    }
+    else {
+    	docID = pDocID
+    }
+	var data = {
+		docID : docID,
+        formId : pFormID,
+		html  : mhtBody
+	}
 
     var result = "";
     
@@ -4075,10 +4128,8 @@ function SaveTMPFile(AutoSave) {
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveTmpFile.do",
-		data : {
-			docID : pDocID,
-			html  : mhtBody
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -4100,7 +4151,10 @@ function SaveTMPDocInfo(AutoSave) {
         var objNode;
         createNodeInsert(xmlpara, objNode, "PARAMETER");
 
-        createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+        if(Saveflag) 
+        	createNodeAndInsertText(xmlpara, objNode, "DOCID", newpDocID);
+        else
+        	createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
         createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
             createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
@@ -4200,6 +4254,11 @@ function SaveTMPDocInfo(AutoSave) {
         if (isUsed == "reuse") {
             createNodeAndInsertText(xmlpara, objNode, "beforeDocID", beforeDocID);
             createNodeAndInsertText(xmlpara, objNode, "isUsed", isUsed);
+        }
+        
+        if(Saveflag) {
+        	createNodeAndInsertText(xmlpara, objNode, "saveFlag", Saveflag);
+        	createNodeAndInsertText(xmlpara, objNode, "oldDocID", pDocID);
         }
 
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);

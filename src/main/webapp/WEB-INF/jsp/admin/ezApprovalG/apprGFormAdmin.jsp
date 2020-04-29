@@ -154,7 +154,7 @@
 		            return;
 		        }
 				
-		        var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContIns&companyID=" + encodeURI(companyID) + "&parentID=" + para[6] + "&contID=" + para[1];
+		        var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContIns&companyID=" + encodeURI(companyID) + "&parentID=" + encodeURIComponent(para[6]) + "&contID=" + encodeURIComponent(para[1]);
 		        formContMain_dialogArguments[0] = para;
 		        formContMain_dialogArguments[1] = btnInsFcont_onclick_complete;
 		        
@@ -204,7 +204,7 @@
 		            para[9] = g_multiDataNum;
 	
 		            
-		            var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContMod&companyID=" + encodeURI(companyID) + "&parentID=" + para[4];
+		            var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContMod&companyID=" + encodeURI(companyID) + "&parentID=" + encodeURIComponent(para[4]);
 		            formContMain_dialogArguments[0] = para;
 			        formContMain_dialogArguments[1] = UpdateFCont_complete;
 			        
@@ -469,7 +469,8 @@
 		            if ((GetAttribute(tr, "DATA4") != null ? GetAttribute(tr, "DATA4").toLowerCase().indexOf(".hwp") : -1) > 0) {
 		               $("#btnFormListView").hide();
 		            } else {
-		            	$("#btnFormListView").show();
+		            	//2019.12.30 김정언 - 미리보기 없애기
+		            	$("#btnFormListView").hide();
 		            }
 		        }
 		    }
@@ -705,10 +706,7 @@
 			<tr>
 		    	<th style="border:0px"><spring:message code = 'ezApprovalG.t1540' /></th>
 		    	<td style="border:0px;background-color: #f8f8fa;">
-		    		<select name="select" style="WIDTH:200px;" onchange="return select_onchange()" id="FromList">
-		        		<option value="000" selected><spring:message code = 'ezApprovalG.t1541' /></option>
-		        		${docType}
-		      		</select>
+		    		<select name="select" style="WIDTH:200px;" onchange="return select_onchange()" id="FromList">${docType}</select>
 		      	</td>
 				<td style="white-space: nowrap;border:0px;background-color: #f8f8fa;">
 					<select id="searchoption" style="height:22px; margin-top: 3px;">

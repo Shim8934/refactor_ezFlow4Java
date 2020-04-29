@@ -262,6 +262,13 @@
 		    		}
 		    	});
 		    }
+	    	
+	    	function KeEventControl(obj) {
+	            if ((window.event.keyCode >= 48 && window.event.keyCode <= 57) || (window.event.keyCode >= 96 && window.event.keyCode <= 105)) {
+	                return false;
+	            }
+	            else obj.value = obj.value.replace(/[\a-zㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+	        }
 		</script>
 	</head>
 	<body class="popup">
@@ -277,7 +284,7 @@
     			<tr>
       				<th><spring:message code="ezResource.t276"/></th>
       				<td>
-       					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" />
+       					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
      					<label for="btnT1"></label>
      					<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" onclick="allDayTime()" />
      					<spring:message code="ezResource.t277"/>
@@ -286,7 +293,7 @@
     			<tr>
       				<th><spring:message code="ezResource.t278"/></th>
       				<td>
-          				<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" />
+          				<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
         				<label for="btnT2"></label>
       				</td>
     			</tr>
@@ -442,9 +449,9 @@
 		        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" onchange="timeChecker('sDate')"/>
 		    	</td>
 		  	</tr>
-		  	<tr>
+		  	<%-- <tr>
 		    	<td><input type="radio" name="optRangeEnd" value="radiobutton" value="-1" checked><spring:message code='ezResource.t314' /></td>
-		  	</tr>
+		  	</tr> --%>
 		  	<tr>
 		    	<td>
 		    		<input type="radio" id="Instances" name="optRangeEnd"  value="radiobutton" value="1"/><spring:message code='ezResource.t315' />
@@ -453,7 +460,7 @@
 		  	</tr>
 		  	<tr>
 		    	<td>
-		    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0"/><spring:message code='ezResource.t317' />
+		    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0" checked/><spring:message code='ezResource.t317' />
 		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly" onchange="timeChecker('eDate')"/>
 		    	</td>
 		  	</tr>

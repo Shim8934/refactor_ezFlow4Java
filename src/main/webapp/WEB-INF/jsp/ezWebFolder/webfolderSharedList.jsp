@@ -23,6 +23,7 @@
 		<!-- module -->
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/capacity.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/buttons.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/search.js')}"></script>
@@ -48,7 +49,11 @@
 				C: "<spring:message code='ezWebFolder.t11'/>",
 				D: "<spring:message code='ezWebFolder.t12'/>",
 				U: "<spring:message code='ezWebFolder.t13'/>"
-			}
+			};
+			var _selectedCell = null;
+			var _cellInfo     = {};
+			var sortColumn    = null;
+			var sortType      = null;
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
@@ -84,6 +89,14 @@
 					getFileList();
 				});
 				
+				capacity.setFolderIdProvider(function() {
+					return folderId;
+				});
+				
+				capacity.setOnLoadEventListener(function(data) {
+					$("#capacity-folder-type").text(progressSubject[data.type]);
+				})
+				
 				getFileList();
 				window.onresize();
 				
@@ -95,6 +108,13 @@
 						optionHidden();
 					}
 				};
+				
+				var listHeader = document.getElementsByClassName("headListClick");
+				for(var i = 0 ; i <listHeader.length; i++) {
+					listHeader[i].addEventListener("click", function(event) {
+						sortByHeader(this);
+					});
+				}
 				
 				document.addEventListener("mouseup", listOptionHidden, true);
 				parent.frames["left"].document.addEventListener("mouseup", listOptionHidden, true);
@@ -194,7 +214,9 @@
 						"searchFileType" : searchContext.getFileType(),
 						"searchStartDate" : searchRequirement.startDate,
 						"searchEndDate" : searchRequirement.endDate,
-						"subSearchFlag" : isSubSearching
+						"subSearchFlag" : isSubSearching,
+						"sortColumn" : sortColumn,
+						"sortType" : sortType
 					},
 					dataType: "JSON",
 					async: true,
@@ -258,7 +280,9 @@
 						"searchCreateName" : searchRequirement.creatorName,
 						"searchFileType" : searchContext.getFileType(),
 						"searchStartDate" : searchRequirement.startDate,
-						"searchEndDate" : searchRequirement.endDate
+						"searchEndDate" : searchRequirement.endDate,
+						"sortColumn" : sortColumn,
+						"sortType" : sortType
 					},
 					dataType: "JSON",
 					async: true,
@@ -309,13 +333,47 @@
 						renderList2(result.fileList);
 						setNamePath(result.folderPath, result.originalPath);
 						setMailBoxInfo(result.fldCnt, result.fileCnt);
-						loadCapacity();
+						capacity.load();
 					},
 					error : function(error) {
 						hideProgress();
 // 						alert("<spring:message code='ezWebFolder.t134'/>");
 					}
 				});
+			}
+
+			function sortByHeader(cell) {
+				var column = cell.getAttribute("headers");
+				
+				if (!column) {return;}
+				
+				if (_selectedCell != null) {
+					var orderOption = cell.getAttribute("orderoption") == "DESC" ? "ASC" : "DESC";
+					cell.setAttribute("orderoption", orderOption);
+					
+					if (cell.cellIndex != _selectedCell) {
+						var lastSelectedCell = document.getElementById("BoardList_THEAD").rows[0].cells[_selectedCell];
+						lastSelectedCell.removeChild(lastSelectedCell.lastElementChild);
+						var spanElmt = document.createElement("span");
+						cell.appendChild(spanElmt);
+					}
+					
+					var spanImg       = cell.lastElementChild;
+					spanImg.className = orderOption == "DESC" ? "spanDown" : "spanUp";
+				}
+				else {
+					cell.setAttribute("orderoption", "DESC");
+					var spanElmt       = document.createElement("span");
+					spanElmt.className = "spanDown";
+					cell.appendChild(spanElmt);
+				}
+				
+				_selectedCell = cell.cellIndex;
+				
+				var order     = cell.getAttribute("orderoption");
+				this.sortType = order;
+				this.sortColumn = column;
+				getFileList();
 			}
 			
 			function setButtons() {
@@ -610,6 +668,7 @@
 					shareDateColumn.textContent = resultJson["shareDate"].substring(0, 10);
 					absolutePathColumn.textContent = resultJson["folderPath"];
 					absolutePathColumn.setAttribute("title", resultJson["folderPath"]);
+					sharerColumn.setAttribute("title", resultJson["sharerName"]);
 					
 					if (resultJson["shareStatus"] == "Y") {
 						var spanElmt = document.createElement("span");
@@ -888,23 +947,24 @@
 						extension: $('#searchExt').val()
 					};
 		        	
-					if (requirement.extension == "" && requirement.name == "" && requirement.creatorName == "" && requirement.startDate == "") {
+					if (requirement.extension == "" && requirement.name == "" && requirement.creatorName == "" 
+							&& requirement.startDate == "" && requirement.endDate == "") {
 						alert(messages.strLang20);
 						return;
 					}
 		
 					if (requirement.startDate != "" && requirement.endDate == "") {
-						alert(messages.strLang18);
+						alert(messages.strLang21);
 						return;
 					}
 		           
 					if (requirement.startDate == "" && requirement.endDate != "") {
-						alert(messages.strLang18);
+						alert(messages.strLang21);
 						return;
 					}
 		
 					if (new Date(requirement.startDate) > new Date(requirement.endDate)) {
-						alert(messages.strLang19);
+						alert(messages.strLang21);
 						return;
 					}
 	           		
@@ -946,24 +1006,6 @@
 		    	$.modal.close();
 		    }
 			
-			function optionView(obj){
-		   		 if (obj.getAttribute("mode") == "off") {
-		   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-		   	        document.getElementById("layer_Viewpopup").style.top = "130px";
-		   	        document.getElementById("layer_Viewpopup").style.display = "";
-		   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
-		   	        obj.setAttribute("mode", "on");
-		   	    } else {
-		   	        optionHidden();
-		   	    }
-		   	}
-	   	   
-		 	function optionHidden() {
-		 	    document.getElementById("layer_Viewpopup").style.display = "none";
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
-		 	}
-			
 			function refreshView() {
 				getFileList();
 			}
@@ -1002,51 +1044,6 @@
 				blockLeft.style.display = "none";
 			}
 			
-			function loadCapacity() {
-				$.ajax({
-					type: "POST",
-					async: true,
-					url: "/ezWebFolder/getCapacity.do",
-					data: {
-						folderId: folderId
-					},
-					success: function(data) {
-						var capacity = data.capacity;
-						var usedRate = Math.min(capacity.usedRate, 100);
-						var progressColor = null;
-						var progressElement = document.getElementById("capacity-bar");
-						
-						$("#capacity-folder-type").text(progressSubject[capacity.type]);
-						
-						if (progressElement.style.width === usedRate + "%") {
-							return;
-						}
-						
-						switch (true) {
-						case usedRate >= 80:
-							progressColor = "#ff4040";
-							break;
-						case usedRate >= 70:
-							progressColor = "#ffb600";
-							break;
-						default:
-							progressColor = "#82b9f6";
-						}
-						
-						$("#capacity-wrapper").css("display", "inline");
-						$("#capacity-bar").css("backgroundColor", progressColor);
-						$("#capacity-bar").stop().animate({width: usedRate + "%"},
-							{
-								step: function(x) {
-									$("#capacity-percent").text(Math.round(x) + "%");
-								},
-								duration: 500
-							}
-						);
-					}
-				});
-			}
-			
 			function disableCapacity() {
 				$("#capacity-wrapper").css("display", "none");
 				$("#capacity-folder-type").text("");
@@ -1057,12 +1054,12 @@
 		<h1>
 			<spring:message code='ezWebFolder.t266'/>
 			<span id="mailBoxInfo"></span>
-			<div id="capacity-wrapper" style="display: none;">
-				<span id="capacity-folder-type" style="display: inline-block; margin-left: 15px;"></span>
-				<div class="progressbar" style="float: inherit; width: 150px; display: inline-block; vertical-align: middle; margin-left: 15px; border-radius: 15px;">
-					<div id="capacity-bar" class="proggress" style="background-color: #82b9f6; height: 15px; border-radius: 15px; width: 0px;"></div>
+			<div id="capacity-wrapper">
+				<span id="capacity-folder-type"></span>
+				<div class="progressbar">
+					<div id="capacity-bar" class="proggress"></div>
 				</div>
-				<span id="capacity-percent" style="width: 15px; display: inline-block; text-align: right; border-radius: 15px;"></span>
+				<span id="capacity-percent"></span>
 			</div>
 		</h1>
 		<div id="pageArea">
@@ -1076,7 +1073,7 @@
 					<li class="important" id="uploadBtn" style="display:none;" onclick="buttons.fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
 					<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
 					<li id="fileRenameBtn" style="display:none;"><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t508' /></span></a></li>
-					<li id="fileMoveCopyBtn" style="display:none;"><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
+					<li id="fileMoveCopyBtn" style="display:none;"><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t251'/></span></a></li>
 					<li id="fileCopyBtn"><a onclick="buttons.fileCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t316'/></span></a></li>
 					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t254'/></span></a></li>
@@ -1155,18 +1152,18 @@
 					<table class="mainlist" style="width:100%"  id="tblFileList1">
 						<thead id ="BoardList_THEAD">
 							<tr>
-								<th class="wfFilecheck" style="text-align: center;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="checkAll"></th>
-								<th class="wfFileFavorite" style=" text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
-								<th class="wfFileType" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
-								<th class="wfFileName" ><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
-								<th class="wfFileSize" style=" text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
-								<th class="wfFileShareMember2" id="wfFileShareMember2"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-								<th class="wfFileSharedDate" id="updateDateHeader2"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
-								<th class="wfFileShareDate" id="updateDateHeader" style="display:none;"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
-								<th class="wfFileShareMember" id="sharerHeader" style=""><spring:message code='ezWebFolder.t319'/></th><!-- 공유자 -->
-								<th class="wfFileShareDate2" id="shareDateHeader" style=""><spring:message code='ezWebFolder.t321'/></th><!-- 공유받은날짜 -->
-								<th class="wfFilePath" ><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-								<th class="wfFileShare" style="margin:0px 0px 0px !important; text-align: center;"><spring:message code='ezWebFolder.t254'/></th><!-- 공유 -->
+								<th class="wfFilecheck 			headListClick" style="text-align: center;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="checkAll"></th>
+								<th class="wfFileFavorite 		headListClick" headers="FAVORITE_STATUS" style=" text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
+								<th class="wfFileType 			headListClick" headers="TYPE_ICON" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
+								<th class="wfFileName 			headListClick" headers="FILE_NAME" ><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
+								<th class="wfFileSize 			headListClick" headers="FILE_SIZE" style=" text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
+								<th class="wfFileShareMember2 	headListClick" headers="CREATE_NAME" id="wfFileShareMember2"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
+								<th class="wfFileSharedDate 	headListClick" headers="CREATE_DATE" id="updateDateHeader2"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+								<th class="wfFileShareDate 		headListClick" headers="UPDATE_DATE" id="updateDateHeader" style="display:none;"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
+								<th class="wfFileShareMember 	headListClick" headers="SHARER_NAME" id="sharerHeader" style=""><spring:message code='ezWebFolder.t319'/></th><!-- 공유자 -->
+								<th class="wfFileShareDate2 	headListClick" headers="SHARE_DATE" id="shareDateHeader" style=""><spring:message code='ezWebFolder.t321'/></th><!-- 공유받은날짜 -->
+								<th class="wfFilePath			" headers="FOLDER_PATH" ><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
+								<th class="wfFileShare	 		headListClick" headers="SHARE_STATUS" style="margin:0px 0px 0px !important; text-align: center;"><spring:message code='ezWebFolder.t254'/></th><!-- 공유 -->
 							</tr>
 						</thead>
 					</table>

@@ -16,6 +16,8 @@
 		    var ChangedAdd = false;
 		    var ChangedHeader = false;
 		    var RetValue;
+		    var lang_primary = "<c:out value='${lang_primary}'/>";
+		    var lang_secondary = "<c:out value='${lang_secondary}'/>";
 	    
 			$(document).ready(function(){
 				try {
@@ -64,7 +66,7 @@
 
 		                var headerData = createXmlDom();
 		                headerData = loadXMLString(ExtensionList.innerHTML.toUpperCase());
-
+		                
 		                if (result != "") {
 		                    var xmlRtn = loadXMLString(result).getElementsByTagName("ROWS")[0];
 		                    /* 2018.02.12 김기하 */
@@ -209,14 +211,17 @@
 		        document.getElementById("Gubun").innerHTML = "";
 		    }
 
+		    /* 2020-02-14  홍승비 - 게시판 확장칼럼 다국어 대응 수정 (경고 메세지에서 특정 다국어 용어 제거) */
 		    function CheckValidation() {
 		        if (document.getElementById("txtNameKor").value == "") {
-		            alert("<spring:message code='ezBoard.t999044'/>");
+		            //alert("<spring:message code='ezBoard.t999044'/>");
+		            alert("<spring:message code='ezBoard.hsbEx02'/>");
 		            document.getElementById("txtNameKor").focus();
 		            return false;
 		        }
 		        if (document.getElementById("txtNameEng").value == "") {
-		            alert("<spring:message code='ezBoard.t999045'/>");
+		            //alert("<spring:message code='ezBoard.t999045'/>");
+		            alert("<spring:message code='ezBoard.hsbEx02'/>");
 		            document.getElementById("txtNameEng").focus();
 		            return false;
 		        }
@@ -754,11 +759,11 @@
 			<LISTVIEWDATA>
 				<HEADERS>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.t999031'/></NAME>
+						<NAME><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_primary}"/>)</NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.t999032'/></NAME>
+						<NAME><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_secondary}"/>)</NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 					<HEADER>
@@ -780,11 +785,11 @@
 			<LISTVIEWDATA>
 				<HEADERS>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.t999031'/></NAME>
+						<NAME><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_primary}"/>)</NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.t999032'/></NAME>
+						<NAME><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_secondary}"/>)</NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 					<HEADER>
@@ -805,9 +810,11 @@
 				<span style="font-weight:bold"><spring:message code='ezBoard.t999030'/></span>
 				<table class="content" style="width:100%;margin-top:5px">
 					<tr>
-						<th style="width:15%"><spring:message code='ezBoard.t999031'/></th>
+<%-- 						<th style="width:15%"><spring:message code='ezBoard.t999031'/></th> --%>
+						<th style="width:15%"><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_primary}"/>)</th>
 				        <td style="width:25%"><input id="txtNameKor" style="width:97%" maxlength="20"/></td>
-				        <th style="width:15%"><spring:message code='ezBoard.t999032'/></th>
+<%-- 				        <th style="width:15%"><spring:message code='ezBoard.t999032'/></th> --%>
+				        <th style="width:15%"><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_secondary}"/>)</th>
 				        <td style="width:25%"><input id="txtNameEng"  style="width:97%" maxlength="20"/></td>
 						<th style="width:10%"><spring:message code='ezBoard.t999033'/></th>
 				        <td style="width:10%"><input id="chkRequired" type="checkbox" /></td>
@@ -861,7 +868,7 @@
 					        <td style="width:45%">
 					        <table class="content" style="width:100%"> 
 						        <tr>
-							        <th style="width:25%"><spring:message code='ezBoard.t999031'/></th>
+							        <th style="width:25%"><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_primary}"/>)</th>
 					                <td style="width:25%" id="HeadName"></td>
 							        <th style="width:25%"><spring:message code='ezBoard.t5002'/></th>
 					                <td style="width:25%"><input id="HeadWidth" style="width:99%" /></td>

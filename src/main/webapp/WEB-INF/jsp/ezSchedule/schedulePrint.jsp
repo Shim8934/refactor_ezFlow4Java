@@ -84,7 +84,7 @@
 		  			<col width="6%" /><col width="9%" /><col width="9%" /><col width="22%" /><col width="18%" /><col width="18%" /><col width="18%" />
 		  		</colgroup>
 		    	<tr>
-		      		<th><spring:message code='ezSchedule.t269' /></th>
+		      		<th <c:if test='${lang eq 2 }'>style='padding-left:5px;'</c:if>><spring:message code='ezSchedule.t269' /></th>
 		      		<th><spring:message code='ezSchedule.t270' /></th>
 		      		<th><spring:message code='ezSchedule.t271' /></th>
 		      		<th><spring:message code='ezSchedule.t272' /></th>
@@ -120,11 +120,11 @@
  			         	<c:out value="${item.location} "/>
 			         </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">
-			         	<c:if test="${item.dateType == '2'}">${fn:substring(item.startDate,0,10)}(<spring:message code='ezSchedule.t280' /></c:if>
+			         	<c:if test="${item.dateType == '2'}">${fn:substring(item.startDate,0,10)} (<spring:message code='ezSchedule.t280' /></c:if>
 			         	<c:if test="${item.dateType != '2'}">${fn:substring(item.startDate,0,16)}</c:if>
 			         </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">
-			         	<c:if test="${item.dateType == '2'}">${fn:substring(item.endDate,0,10)}(<spring:message code='ezSchedule.t280' /></c:if>
+			         	<c:if test="${item.dateType == '2'}">${fn:substring(item.endDate,0,10)} (<spring:message code='ezSchedule.t280' /></c:if>
 			         	<c:if test="${item.dateType != '2'}">${fn:substring(item.endDate,0,16)}</c:if>
 			         </td>
 			    </tr>

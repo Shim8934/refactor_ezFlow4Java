@@ -53,6 +53,9 @@
             <mvc:exclude-mapping path="/user/login/actionLogoutWithRedirectUri.do"/>            
             <mvc:exclude-mapping path="/user/login/login.do"/>
             <mvc:exclude-mapping path="/user/login/changeExPassword.do"/>
+            <mvc:exclude-mapping path="/user/login/sendFindPwd.do"/>  
+            <mvc:exclude-mapping path="/user/login/checkCertification.do"/>  
+            <mvc:exclude-mapping path="/user/login/changePasswordByCertification.do"/>  
             <mvc:exclude-mapping path="/ezApprovalG/excelExportOut.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadAttachCommon.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadInlineDotNet.do"/>
@@ -85,7 +88,15 @@
             <mvc:mapping path="/rest/ezwebfolderadmin/**"/>
             <mvc:exclude-mapping path="/rest/ezwebfolder/login"/>
 		    <bean class="egovframework.com.cmm.interceptor.WebfolderAuthenticInterceptor" />
-        </mvc:interceptor>    
+        </mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/" />
+			<mvc:mapping path="/ezNewPortal/**" />
+			<mvc:mapping path="/user/login/email.do" />
+			<!-- <mvc:exclude-mapping path="/rest/ezwebfolder/**" /> -->
+			<bean class="egovframework.com.cmm.interceptor.UserEmailInterceptor" />
+		</mvc:interceptor>
 	</mvc:interceptors>
 
     <!-- Annotation 을 사용하지 않는 경우에 대한 MVC 처리 설정 -->

@@ -70,7 +70,7 @@
 		        
 		        listview.SetID("lvtDocForm");
 		        listview.SetMulSelectable(false);
-		        listview.SetTableWidth = 420 - 14;
+		        listview.SetTableWidth = 570 - 14;
 		        listview.DataSource(xmlTree);
 		        listview.DataBind("lvtForm");
 		    }
@@ -216,7 +216,7 @@
 	            </td>
 	            <td style="padding-left: 5px">
 	                <div class="listview">
-	                    <div id="lvtForm" style="border: 0; HEIGHT: 215px; WIDTH: 508px; overflow-x: auto; overflow-y: auto;"></div>
+	                    <div id="lvtForm" style="border: 0; HEIGHT: 215px; WIDTH: 565px; overflow-x: auto; overflow-y: auto;"></div>
 	                </div>
 	            </td>
 	        </tr>

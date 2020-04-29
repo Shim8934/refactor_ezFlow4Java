@@ -56,14 +56,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class EzPMSController {
@@ -76,9 +75,6 @@ public class EzPMSController {
 	private CommonUtil commonUtil;
 
 	@Autowired
-	private EgovFileScrty egovFileScrty;
-
-	@Autowired
 	private Properties config;
 
 	@Resource(name = "egovMessageSource")
@@ -87,8 +83,8 @@ public class EzPMSController {
 	@Resource(name = "EzEmailService")
 	private EzEmailService ezEmailService;
 
-	@Autowired
-	private EzOrganService ezOrganService;
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
 
 	// 유은정 작성
 	/**
@@ -1001,7 +997,7 @@ public class EzPMSController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPMS/pmsSelectAuth.do")
-	public String selectAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String selectAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezPMS selectAuth started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1011,6 +1007,7 @@ public class EzPMSController {
 		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezPMS/depts", param, request, "get", null);
 		String status = result.get("status").toString();
 		String type = request.getParameter("type");
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
 		if (status.equals("ok")) {
 			JSONArray deptList = (JSONArray) result.get("data");
@@ -1037,6 +1034,7 @@ public class EzPMSController {
 			model.addAttribute("userId", userInfo.getId());
 			model.addAttribute("userName", userInfo.getDisplayName1());
 			model.addAttribute("userDept", userInfo.getDeptName1());
+			model.addAttribute("primaryLang", primaryLang);
 		}
 
 		String rtnStr = "";
@@ -2828,7 +2826,6 @@ public class EzPMSController {
 
 			commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

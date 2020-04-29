@@ -162,8 +162,8 @@ var strLang303 = "-";
 var strLang304 = ".";
 var strLang305 = "";
 var strLang306 = "all day long";
-var strLang307 = "Allowed";
-var strLang308 = "Not allowed";
+var strLang307 = "Permitted";
+var strLang308 = "Not permitted";
 var strLang310 = ".";
 var strLang311 = "";
 var strLang400 = " persons";
@@ -201,6 +201,24 @@ var strLang582 = " occurrences "
 var strLang583 = "End time is earlier than the time today.";
 var strLang584 = "It was approved.";
 var strLang585 = "Approval has been canceled.";
+var strLang586 = "Jan";
+var strLang587 = "Feb";
+var strLang588 = "Mar"
+var strLang589 = "Apr";
+var strLang590 = "May";
+var strLang591 = "Jun";
+var strLang592 = "Jul";
+var strLang593 = "Aug";
+var strLang594 = "Sep";
+var strLang595 = "Oct";
+var strLang596 = "Nov";
+var strLang597 = "Dec";
+var strLang598 = "today";
+var strLang599 = "p.month";
+var strLang600 = "n.month";
+var strLang601 = "close";
+var strLang602 = "en";
+var strLang603 = "Up to five resource lists can be registered.";
 var strLangLHM01 = "default_us";
 var strLangLHM02 = "Print Preview";
 var strLangLHM03 = "Print";
@@ -214,3 +232,25 @@ var strLangkmsr01 = "User is already added.";
 
 //2019-04-08 김민성
 var strLangkmsr02 = "The resource manager must have user or administrator permissions.";
+
+//2019-05-14
+var strLangkmsr03 = "Would you like to refuse approval?"
+var strLang321 = "Pending";
+var strLang322 = "Refuse";
+var strLang323 = "Approve";
+var strLang324 = "Rent";
+var strLang325 = "Return";
+var strLang326 = "Non-Return";
+var strLang327 = "End";
+var strLang331 = "Would you like to request a return?";
+var strLang332 = "Are you sure you want to approve the return request?";
+var strLang333 = "Would you like to return it?";
+var strLang334 = "Your return request has been completed.";
+var strLang335 = "Returned.";
+var strLang336 = "If the resource is set to disabled, it can not be scheduled.";
+
+//2019-05-28
+var strLang337 = "Approval has been denied."
+
+//2020-01-03
+var strLangkmsr04 = "윤 ";

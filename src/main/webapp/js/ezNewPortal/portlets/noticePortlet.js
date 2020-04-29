@@ -14,6 +14,10 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 		var option = 'toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top='+top+',left='+left;
 		
 		if(this.getAttribute('data3') === "3" || this.getAttribute('data3') === "4") {
+			top = (height - 720) / 2;
+			left = (width - 790) / 2;
+			 
+			option = 'toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top='+top+',left='+left;
 			window.open('/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID='+ encodeURIComponent(this.getAttribute('data1'))+'&boardID='+ encodeURIComponent(this.getAttribute('data2')), "", option, "");
 		} else if (this.getAttribute('data3') == "7") {
 			 top = (height - 679) / 2;
@@ -63,7 +67,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 			str += "<dt>";
 			str += "<img src='/images/kr/main/noData_sIcon.png'>";
 			str += "</dt>";
-			str += "<dd>&#34;" + messages.strLang1 + "&#34;</dd>";
+			str += "<dd>" + messages.strLang1 + "</dd>";
 			str += "</dl>";
 		}
 	} else {
@@ -73,7 +77,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 			str += "<dt>";
 			str += "<img src='/images/kr/main/noData_sIcon.png'>";
 			str += "</dt>";
-			str += "<dd>&#34;" + messages.strLang17 + "&#34;</dd>";
+			str += "<dd>" + messages.strLang17 + "</dd>";
 			str += "</dl>";
 		} else {
 			str += "<ul class='portlet_list'>";
@@ -81,7 +85,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 			str += "<dt>";
 			str += "<img src='/images/kr/main/noData_sIcon.png'>";
 			str += "</dt>";
-			str += "<dd>&#34;" + messages.strLang14 + "&#34;</dd>";
+			str += "<dd>" + messages.strLang14 + "</dd>";
 			str += "</dl>";
 		} 
 	}

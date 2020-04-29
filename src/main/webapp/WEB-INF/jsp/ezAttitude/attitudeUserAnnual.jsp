@@ -97,6 +97,10 @@
 			    text-overflow: ellipsis;
 			    white-space: nowrap;
 			}
+			.mainlist tr:hover{
+				background : rgb(244,245,245);
+				cursor : pointer;
+			}
 		</style>	
 	    <script type="text/javascript">
 	    	var date = new Date()
@@ -112,7 +116,7 @@
 	    	var joinDate = "<c:out value="${joinDate}" />";
 	    	var userDeptId;
 	    	var userDeptName;
-	    	var yearLength = 10;
+	    	var yearLength = Number(year) - Number(joinDate.split("-")[0]) + 1;
 	    	var orderCell = ""; //정렬 명
 	    	var orderOption = ""; //정렬 형식(ASC, DESC)
    			var src = "";
@@ -122,6 +126,7 @@
 	    	$(document).ready(function() {
     			if(joinDate == null || joinDate == "" || joinDate == "0") {
            			joinDate = "0000-01-01";
+           			yearLength = 20;
            		}
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '.mainlist th', function(){
@@ -147,14 +152,26 @@
 	    		});
 	    		
 	    		makeoptionyear();
+	    		//2020.01.06 김정언 - 개인연차현황 selectBox option 최근 날짜로 선택 되도록 변경
+	    		$("#searchYear option:eq(0)").prop("selected", true);
+	    		getUserAnnualList();
+	    		
+	    		var height = parseInt(document.documentElement.clientHeight - 235);
+	        	$("#contentlist").css("height", height +"px");
    			});
 	    	
-    		$(document).on('click', '.mainlist .attitudeView', function(){
-    			var attitudeId = $(this).closest("tr").attr("id");
-    			var typeId = $(this).closest("tr").attr("typeId");
-    			attitudeItemView(attitudeId , typeId);
-    		})
+	    	$(window).on("resize", function() {        	
+	        	//테이블 리스트 resize조정.
+	        	var height = parseInt(document.documentElement.clientHeight - 235);
+	        	$("#contentlist").css("height", height +"px");
+	        });
 	    	
+    		$(document).on('click', '.mainlist > tr', function(){
+    			$(".mainlist > tr").attr("style","background-color:;");
+    			$(this).attr("style","background-color:rgb(241,245,255);");
+    			
+    		})
+    		
     		function caldate(date, day){
  
  				var caledmonth, caledday, caledYear;
@@ -182,12 +199,16 @@
 	            var startDate = "";
 	            var endDate = "";
 	    		
+				if ($("#searchYear").val() == null || $("#searchYear").val() == "") {
+					selyear = joinDate.split("-")[0];
+	    		}
+
 	    		if ($("#searchYear").val() != null && $("#searchYear").val() != "") {
 	    			selyear = Number($("#searchYear").val());
-	    			tempyear = (selyear + 4 > year) ? year : selyear + 4;
+	    			tempyear = year;
 	    		}
-                
-	    		if (tempyear <= year || selyear == year) {
+		        
+                if (tempyear <= year || selyear == year) {
 		    		//초기화
 		    		$("#searchYear").html("");
 		    		
@@ -218,11 +239,10 @@
 	                	
 	                	tempyear--;
 	                }
-	                
 	                $("#searchYear").html(optionHtml);
 	                $("#searchYear").val(selyear);
 	    		}
-	    		
+
 	    		//리스트
 	    		getUserAnnualList();
 	    		//통계
@@ -369,6 +389,8 @@
 	    		var annualCnt = 0;//연차 수
 	    		var morningCnt = 0;//오전반차 수
 	    		var afternoonCnt = 0;//오후반차 수
+	    		//2020-03-12 김정언
+	    		var halfOffCnt = 0; //반반차 수
 	    		var i = 1; //NO
 	    		
 	    		$("#contentlist .mainlist tr").remove();
@@ -379,22 +401,26 @@
 		    			if(vo.endDate != null) {
 			    			holidayCnt = getHolidayCnt(vo.startDate.substr(0,10), vo.endDate.substr(0,10));
 		    			}
-		    			var useAnnualCnt = (Number(vo.annualCnt) - holidayCnt);
+		    			var useAnnualCnt = (Number(vo.annualCnt) - (vo.annualApprStatus == -1 ? 0 : holidayCnt));
 		    			var content = $.trim($("<p></p>").html(vo.content).text());
-		    			html = "<tr id='" + vo.attitudeId + "' typeId='" + vo.typeId + "'>";
+		    			html = "<tr id='" + vo.attitudeId + "' typeId='" + vo.typeId + "' ondblclick=attitudeItemView('" + vo.attitudeId + "','" + vo.typeId + "') style='background-color:;'>";
 			    		html += "<td style='width:60px'>" + i + "</td>";
 			    		html += "<td style='width:25%'>";
-			    		html += "<a class='link attitudeView'>";
+		 	    		html += "<a class='link attitudeView'>";
 		    			if (vo.typeId === "A11") { //연차
 			    			html += vo.startDate.substr(0,10) + " ~ " + vo.endDate.substr(0,10);
 			    			annualCnt += useAnnualCnt;
 		    			} else if (vo.typeId === "A12") { //오전반차
 			    			html += vo.startDate.substr(0,10);
 			    			morningCnt += useAnnualCnt;
-		    			} else { //오후반차
+		    			} else if (vo.typeId === "A13"){ //오후반차
 		    				html += vo.startDate.substr(0,10);
 		    				afternoonCnt += useAnnualCnt;
+		    			} else if (vo.typeId === "A21") { //반반차
+		    				html += vo.startDate.substr(0,10) + " ~ " + vo.endDate.substr(0,10);
+		    				halfOffCnt += useAnnualCnt;
 		    			}
+		    			
 		    			html += "</a>";
 		    			html += "</td>";
 		    			html += "<td style='width:15%'>" + vo.typeName + "</td>";
@@ -422,9 +448,11 @@
 			    			//html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"openDraftUI('DRAFT', '" + vo.attitudeId + "')\"><span>취소신청</span></a>" +"</td>";
 		    			} else if(vo.modAppl == "4") {
 		    				html += "<td style='width:12%'><spring:message code='ezAttitude.t211' /></td>";
-		    			} else if(vo.modAppl == "3") {
+		    			} 
+						else if(vo.modAppl == "3") {
 		    				html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"attitudeCancelAnnual('" + vo.attitudeId + "','" + vo.typeId + "')\"><span><spring:message code='ezAttitude.t272' /></span></a>" +"</td>";
-		    			} else {
+		    			} 
+						else {
 		    				html += "<td style='width:12%'><spring:message code='ezAttitude.t209' /></td>";
 		    			}
 		    			html += "</tr>";
@@ -447,6 +475,7 @@
 	    		$("#FA11").text(annualCnt);
 	    		$("#FA12").text(morningCnt);
 	    		$("#FA13").text(afternoonCnt);
+	    		$("#FA21").text(halfOffCnt);
 	    	}
 	    	
 	    	/**
@@ -569,7 +598,7 @@
 				var pAttitudeId = attitudeId; 
 				var pTypeId = typeId;
 				if (CrossYN()) {
-					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(672, 640));
+					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "attitudeItemView", GetOpenWindowfeature(672, 640));
 					
 					try { OpenWin.focus(); } catch (e) { }
 				} else {
@@ -709,6 +738,10 @@
 			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
 			            <dd class="timeIconDD"><spring:message code='ezAttitude.t256' /> <span class="timeCountR" id="FA13">0</span></dd>
 			        </dl>
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm02.png"></dt>
+			            <dd class="timeIconDD"><spring:message code='ezAttitude.kje04' /> <span class="timeCountR" id="FA21">0</span></dd>
+			        </dl>
 			     </dl>
 		    </div>
 		    <div id="mainmenu">
@@ -727,7 +760,7 @@
 			            <table class="mainlist" style="width: 100%;">
 			                <tr>
 			                    <th style="width: 60px;"><span>NO.</span></th>
-			                    <th style="width: 25%; padding-left:15px; cursor: pointer;" colname="startDate"><span><spring:message code='ezAttitude.t107' /></span></th>
+			                    <th style="width: 25%; padding-left:15px; cursor: pointer;" colname="startDate"><span><spring:message code='ezAttitude.t276' /></span></th>
 			                    <th style="width: 15%; cursor: pointer;" colname="typeName"><span><spring:message code='ezAttitude.t35' /></span></th>
 			                    <th style="width: 12%; cursor: pointer;" colname="annualCnt"><span><spring:message code='ezAttitude.t238' /></span></th>
 			                    <th style="width: 20%;"><span><spring:message code='ezAttitude.t230' /></span></th>

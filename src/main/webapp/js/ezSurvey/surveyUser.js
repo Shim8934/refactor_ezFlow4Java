@@ -29,8 +29,8 @@
 		
 		//Cabinet navigation
 		var naviMessages = {
-			next     : SurveyMessages.strNext,
-			previous : SurveyMessages.strPrev,
+//			next     : SurveyMessages.strNext,
+//			previous : SurveyMessages.strPrev,
 			item     : SurveyMessages.strItem,
 			total    : SurveyMessages.strTotal
 		};
@@ -139,7 +139,7 @@
 			success : function(data) {
 				var result = data.memberList;
 				surveyNavi.init(data.currentPage, data.memberCount, data.totalPages);
-				document.getElementById("memberCount").innerHTML = " - [" + "<span class='cabColor'>" + data.memberCount + "명" + "</span>" + "]";
+				document.getElementById("memberCount").innerHTML = " - [" + "<span class='cabColor'>" + data.memberCount + SurveyMessages.strUser3 + "</span>" + "]";
 				userTable.setDataSource(result);
 				userTable.renderTable();
 			},

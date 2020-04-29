@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -118,12 +117,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties globals;
-	
-	@Autowired
-	private Properties config;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityServiceImpl.class);
 	
@@ -412,7 +405,43 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			thumb = code + "_thumbnail.png";
 		}
 		
-		commMakeOkInsert2(clubNo, clubName, clubName2, cCateA, cCateB, cCateC, clubType, clubConfirmType, intro, isIn, logo, thumb, bBoardName[Integer.parseInt(userInfo.getPrimary())].trim(), bBoardName[2].trim(), comatt, code, bNotiName[1].trim(), bNotiName[2].trim(), pNewID, boardNo, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getCompanyName1(), userInfo.getDeptName1(), pNewSubID, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, userInfo.getCompanyID(), tenantID);
+		/* 2019-12-23 홍승비 - 커뮤니티 생성 시, 시스템의 멀티언어(메인, 서브)에 따라 기본생성 게시판명 다국어 처리 */
+		String langPrimary = ezCommonService.getTenantConfig("LangPrimary2", userInfo.getTenantId());
+		String langSecondary = ezCommonService.getTenantConfig("LangSecondary2", userInfo.getTenantId());
+		String boardGroupName1 = "";
+		String boardGroupName2 = "";
+		String boardNotiName1 = "";
+		String boardNotiName2 = "";
+		
+		if (langPrimary.equalsIgnoreCase("Korean")) {
+			boardGroupName1 = bBoardName[1];
+			boardNotiName1 = bNotiName[1];
+		} else if (langPrimary.equalsIgnoreCase("English")) {
+			boardGroupName1 = bBoardName[2];
+			boardNotiName1 = bNotiName[2];
+		} else if (langPrimary.equalsIgnoreCase("Japanese")) {
+			boardGroupName1 = bBoardName[3];
+			boardNotiName1 = bNotiName[3];
+		} else { // 현재 중국어는 대응되지 않으나 임시로 else문 설정
+			boardGroupName1 = bBoardName[4];
+			boardNotiName1 = bNotiName[4];
+		}
+		
+		if (langSecondary.equalsIgnoreCase("Korean")) {
+			boardGroupName2 = bBoardName[1];
+			boardNotiName2 = bNotiName[1];
+		} else if (langSecondary.equalsIgnoreCase("English")) {
+			boardGroupName2 = bBoardName[2];
+			boardNotiName2 = bNotiName[2];
+		} else if (langSecondary.equalsIgnoreCase("Japanese")) {
+			boardGroupName2 = bBoardName[3];
+			boardNotiName2 = bNotiName[3];
+		} else { // 현재 중국어는 대응되지 않으나 임시로 else문 설정
+			boardGroupName2 = bBoardName[4];
+			boardNotiName2 = bNotiName[4];
+		}
+		
+		commMakeOkInsert2(clubNo, clubName, clubName2, cCateA, cCateB, cCateC, clubType, clubConfirmType, intro, isIn, logo, thumb, boardGroupName1.trim(), boardGroupName2.trim(), comatt, code, boardNotiName1.trim(), boardNotiName2.trim(), pNewID, boardNo, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getCompanyName1(), userInfo.getDeptName1(), pNewSubID, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, userInfo.getCompanyID(), tenantID);
 		/* 커뮤니티 테이블 삽입 후 tbl_logo_size에도 사이즈 넣어주기 */
 		commMakeOkSet1(logoFileSize, thumbFileSize, code, tenantID);
 		
@@ -1657,11 +1686,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("pollResOk ended.");
 		
+		/* 2020-04-17 홍승비 - JBoss IE 대응을 위해 pollState 파라미터에 encodeURIComponent 추가 */
 		/* 2018-10-01 홍승비 - 설문조사 응답 후 리스트로 이동하지 않고 해당 설문조사를 유지하도록 수정 */
 		if (notResponse == 0) {
 			response.getWriter().write("<script language='javascript'>\n");
 			//response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
-			response.getWriter().write("document.location.href = '/ezCommunity/pollRes.do?code=" + commonUtil.stripScriptTags(code) + "&pollManagerID=" + commonUtil.stripScriptTags(pollManagerID) + "&pollState=" + commonUtil.stripScriptTags(pollState) + "';\n");		
+			response.getWriter().write("document.location.href = '/ezCommunity/pollRes.do?code=" + commonUtil.stripScriptTags(code) + "&pollManagerID=" + commonUtil.stripScriptTags(pollManagerID)
+					+ "&pollState=encodeURIComponent(" + commonUtil.stripScriptTags(pollState) + ")';\n");		
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
 		} else {
@@ -2757,7 +2788,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		CommunityBoardPropertyVO vo = ezCommunityDAO.getBoardProperty(map);
 		
-		logger.debug("getBoardProperty started.");
+		logger.debug("getBoardProperty ended.");
 		
 		return vo;
 	}	
@@ -3503,17 +3534,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			strHTML.append("<td class=\"t1\" width=\"90px\" >" + cBoard.getWriteDay().substring(0, 10) + "</td>");
 			 
-			/*String localPdsPath = "";*/
 			if (iColSpan == 6) {
-				//TODO 2016-04-26 이효진 사용하는 곳이 아직 없어서 주석처리
-				/*String file = cBoard.getCharFileName();
-				
-				if (bName.equals("c_clubpds")) {
-					localPdsPath = config.getProperty("upload_community.PDS");	
-				} else {
-					localPdsPath = config.getProperty("upload_community.PDS1");
-				}*/
-			
 				strHTML.append("<td class=\"t1\" >");
 				
 				if (cBoard.getCharFileName().equals("")) {
@@ -4271,9 +4292,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		Map<String, Object> map = new HashMap<String, Object>();
 		StringBuilder sb = new StringBuilder();
 		String cateA = "0";
-		String cateB = "0";
-		String cateC = "0";
-		int caca = 0;
 		
 		if (!c_Cate_A.equals("0")) {
 			map = new HashMap<String, Object>();
@@ -4305,7 +4323,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		if (!cateA.equals("0")) {
 			sb.append(egovMessageSource.getMessage("ezCommunity."+cateA, userInfo.getLocale()));
-			caca = 1;
 		}
 		
 		/*if (!cateB.equals("0")) {

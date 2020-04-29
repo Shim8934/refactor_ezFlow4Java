@@ -10,7 +10,7 @@
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />		
 		<link href="${util.addVer('/css/login.css')}" rel="stylesheet" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">
+<%-- 		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css"> --%>
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
 		<style>
 			.blocker {
@@ -42,6 +42,19 @@
 			
 			/* 2018-11-06 포탈개인화 로고 설정 - 유은정 */
 			.logo img {width:137px; height:38px;}
+			
+			#findPwd {
+				color: #393939;
+			}
+			
+			#findPwd:hover {
+				color:#0470e4;
+			}
+			
+			.redText {
+				color:#ff0000;
+			}
+			
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -74,6 +87,18 @@
 					frm.action="<c:url value='/user/login/actionLogin.do'/>";        
 					frm.submit();
 			    }
+			}
+			
+			function passwordUpdateNextTime() {
+		    	var frm = document.loginForm;
+		    	var rsa = new RSAKey();
+				rsa.setPublic(frm.publicModulus.value, frm.publicExponent.value);
+				
+				frm.encryptID.value = "<c:out value='${encryptID}' />";
+				frm.encryptPass.value = "<c:out value='${encryptPass}' />";
+				frm.nextTime.value = "YES";
+				frm.action="<c:url value='/user/login/actionLogin.do'/>";        
+				frm.submit();
 			}
 			
 			function setCookie (name, value, expires) {
@@ -148,6 +173,9 @@
 			    } else if (message === "multiLoginNoti") {
 					$("#imgMnt3").html("<img src='/images/warning2.png'>");
 			        $("#exDiv4").modal();
+			    } else if (message === "stopUser") {
+					$("#imgMnt4").html("<img src='/images/warning2.png'>");
+			        $("#exDiv5").modal();
 			    } else if (message != "") {
 // 			        alert(message);
 					$("#layerTitle").text(message);
@@ -208,7 +236,7 @@
 		    		dataType : "html",				    		
 		    		async : false,
 		    		data : {
-		    			USERID : rsa.encrypt(document.getElementById("chooseId").innerHTML),
+		    			USERID : rsa.encrypt(document.getElementById("chooseId").getAttribute("data-userId")),
 		    			OLDPASSWORD : rsa.encrypt(document.getElementById('txtOldPassword').value),
 		    			NEWPASSWORD : rsa.encrypt(document.getElementById('txtNewPassword').value),
 		    			NEWPASSWORDCONFIRM : rsa.encrypt(document.getElementById('txtNewPasswordConfirm').value)
@@ -229,6 +257,117 @@
 		    		}
 		        });	        
 		    }
+			
+			function openFindPwd(){
+				sabun = "";
+				certificationNum = "";
+				$("#certificationNum").val("");
+				$("#certificationPwd").val("");
+				$("#sabun").val("");
+				$("#exDiv6").modal();
+			}
+			
+			function sendFindPwd(){
+				var frm = document.loginForm;
+		        var rsa = new RSAKey();
+				rsa.setPublic(frm.publicModulus.value, frm.publicExponent.value);
+				
+				sabun = $("#sabun").val();
+				
+				if(!sabun || sabun == ""){
+					alert("사번을 입력하십시오.");
+					return;
+				}
+				
+				$.ajax({
+		    		type : "POST",
+		    		data : {
+		    			sabun : rsa.encrypt(sabun)
+		    		},
+		    		url : "/user/login/sendFindPwd.do",
+		    		success: function(text){
+		    			alert(text);
+		    		},
+		    		error: function(err){
+		    			alert("인증번호 발송 도중 오류가 발생하였습니다.");
+		    		}
+		        });	 
+			}
+			
+			function checkCertification(){
+				var frm = document.loginForm;
+		        var rsa = new RSAKey();
+				rsa.setPublic(frm.publicModulus.value, frm.publicExponent.value);
+				
+				certificationNum = $("#certificationNum").val();
+				
+				if(!sabun || sabun == ""){
+					alert("인증번호를 발급받으십시오.");
+					return;
+				}
+				if(!certificationNum || certificationNum == ""){
+					alert("인증번호를 입력하십시오.");
+					return;
+				}
+				
+				$.ajax({
+		    		type : "POST",
+		    		async : false,
+		    		data :
+		    			{
+		    				certificationNum : rsa.encrypt(certificationNum),
+		    				sabun : rsa.encrypt(sabun)
+		    			}
+		    		,
+		    		url : "/user/login/checkCertification.do",
+		    		success: function(text){
+		    			alert(text);
+		    		},
+		    		error: function(err){
+		    			alert("인증번호 확인  도중 오류가 발생하였습니다.");
+		    		}
+		        });	 
+			}
+			
+			function changePasswordByCertification(){
+				var frm = document.loginForm;
+		        var rsa = new RSAKey();
+		        rsa.setPublic(frm.publicModulus.value, frm.publicExponent.value);
+		        
+		        if(!sabun || sabun == ""){
+					alert("인증번호를 발급받으십시오.");
+					return;
+				}
+				if(!certificationNum || certificationNum == ""){
+					alert("인증번호를 입력하십시오.");
+					return;
+				}
+		        
+				$.ajax({
+		    		type : "POST",
+		    		async : false,
+		    		data :
+		    			{
+		    				certificationNum : rsa.encrypt(certificationNum),
+		    				sabun : rsa.encrypt(sabun),
+		    				certificationPwd : rsa.encrypt(document.getElementById('certificationPwd').value),
+		    				certificationPwdRe : rsa.encrypt(document.getElementById('certificationPwdRe').value)
+		    			}
+		    		,
+		    		url : "/user/login/changePasswordByCertification.do",
+		    		success: function(text){
+		    			var resultArr = text.split("|")
+		    			if(resultArr[0] == "success"){
+		    				$.modal.close();
+		    			}
+		    			alert(resultArr[1]);
+		    		},
+		    		error: function(err){
+		    			alert("비밀번호 변경 도중 오류가 발생했습니다..");
+		    		}
+		        });	 
+			}
+			
 		</script>
 	</head>	
 	<body class="login_body" onload="fnInit()">
@@ -240,6 +379,7 @@
 	                	<input type="hidden" name="publicExponent" value="${publicExponent}"/>
 	                	<input type="hidden" name="encryptID" />
 	                	<input type="hidden" name="encryptPass"/>
+	                	<input type="hidden" name="nextTime"/>
 	                	
 	                    <fieldset>
 	                    	<p class="logo"><img src="<c:out value='${logoUrl }'/>"></p>   
@@ -249,17 +389,23 @@
 	                        <p class="pw">
 	                        	<input id="upw" name="password" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />
 	                        </p>	                        
-	                        <p class="saveid">
-	                        	<input type="checkbox" value="" id="checkId" name="checkId" />
-	                        	<label for="checkId"><span></span>ID Save</label>
-	                        </p>
 	                        <p class="btn_login">
-	                        	<input name="LoginButton" type="submit" id="LoginButton" value="Login" border="0" tabindex="3" class="btn_login" style="display: none;">
 	                        	<label for="LoginButton" class="btn_login" onclick="javascript:actionLogin()" style="cursor:pointer">
 	                        		<span id="LoginBtnSpan" style="font-size:24px;">LOGIN</span>
 	                        	</label>
 	                        </p>
-	                        <p class="address">COPYRIGHT (C) KAONI. All RIGHT RESERVED.</p>
+	                        <div class="btnBox">
+		                        <p class="saveid">
+		                        	<input type="checkbox" value="" id="checkId" name="checkId" />
+		                        	<label for="checkId"><span></span>ID Save</label>
+		                        </p>
+		                        <c:if test="${usePasswordReset == 'YES'}">
+		                        <p class="btn_password_reset" onclick="openFindPwd();" id="findPwd">
+	                                <span><spring:message code="login.zno025" /></span>
+	                            </p>
+	                            </c:if>
+                        	</div>
+	                        <p class="address">ⓒ 2000-2020. KAONi Co., Ltd. All rights reserved.</p>
 	                    </fieldset>
 	                    <input type="hidden" name="message" value="${message}" />		                    
 				    </form>
@@ -291,7 +437,10 @@
 					<span><spring:message code='main.jjh03'/></span>
 				</p>
 				<ul class="passwordForm">
-					<li style="padding-top:10px"><span class="formText"><spring:message code='main.jjh09'/></span><span class="formID" id="chooseId">${userId}</span></li>
+					<li style="padding-top:10px;">
+						<span class="formText"><spring:message code='main.jjh09'/></span>
+						<span class="formID" id="chooseId" data-userId="${userId}">${loginId}</span>
+					</li>
 					<li><span class="formText"><spring:message code='ezPersonal.t949'/></span><span class="formInput"><input type="password" id="txtOldPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
 					<li><span class="formText"><spring:message code='main.jjh05'/></span><span class="formInput"><input type="password" id="txtNewPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
 					<li><span class="formText"><spring:message code='main.jjh06'/></span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
@@ -300,6 +449,9 @@
 			</div>
 			<div class="btnpositionLayer" style="background-color: white;border:0px">
 			    <a class="imgbtn" onClick="javascript:PassWordChange()" ><span><spring:message code='ezSchedule.t4' /></span></a>
+			    <c:if test="${isFirstLogin != 'Y'}">
+		    		<a class="imgbtn" onClick="passwordUpdateNextTime()" ><span><spring:message code='main.hdp01'/></span></a>
+			    </c:if>
 			</div>			
 			<%-- <div style="float:left">
 				<c:if test="${isFirstLogin == 'Y'}"><img src="/images/hello.png" width="52" height="52"/></c:if>
@@ -395,6 +547,78 @@
 		        </dl>
 		    </div>
 		</div>
-
+		
+		<!-- 2019-08-12 홍대표 정지된 사용자를 알리는 레이어 팝업 -->
+		<div id="exDiv5" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span></span></a></li>
+	            </ul>
+	        </div>
+			<div class="warning_wrap" style="padding-left:20px">
+				<p style="border:0px" id="imgMnt4"></p>
+		        <dl>
+					<dt id="layerTitle1" class="layerTitle"><spring:message code="ezOrgan.hdp14" /></dt>
+		            <dd><spring:message code="ezOrgan.hdp15" /></dd>
+		            <dd><spring:message code="ezOrgan.hdp16" /></dd>
+		        </dl>
+		    </div>
+		</div>
+		
+		<div id="exDiv6" style="display:none;margin-bottom:100px;padding:15px;max-width:none;width:700px;">
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span></span></a></li>
+	            </ul>
+	        </div>			
+			<div class="password_reset" style="width:660px;">
+				<p class="passwordTitle" style="border-bottom:0px">
+					비밀번호 초기화
+				</p>
+				<ul class="passwordForm">
+					<li style="margin-bottom:0px;" class="redText">▒ <spring:message code="login.zno006" /></li>
+					<li class="redText">▒ <spring:message code="login.zno007" /></li>
+					<table class="mainlist" style="width: 100%; ">
+					<tbody>
+						<tr>
+							<th style="text-align: center;width: 35%;">1. <spring:message code="login.zno008" /></th>
+							<td>
+								<input type="text" id="sabun" style="width: 160px;" value="">
+								<span style="color: #8e8e8e;"><spring:message code="login.zno009" /></span><br/>
+								<a class="imgbtn" onclick="sendFindPwd();" style="margin-top:8px; background-color: #f1f3f5">
+									<span><spring:message code="login.zno010" /></span>
+								</a>
+								<span style="color: #8e8e8e; top:10px; letter-spacing: -1px;">▒ <spring:message code="login.zno011" /></span>
+							</td>
+						</tr>
+						<tr>
+							<th style="text-align: center;width: 35%;">2. <spring:message code="login.zno012" /></th>
+							<td>
+								<input type="text" id="certificationNum" style="width: 160px;" value="">
+								<span style="color: #8e8e8e;"><spring:message code="login.zno013" /></span><br/>
+								<a class="imgbtn" onclick="checkCertification();" style="margin-top:8px; background-color: #f1f3f5">
+									<span><spring:message code="login.zno012" /></span>
+								</a>
+								<span style="color: #8e8e8e; top:10px; letter-spacing: -1px;">▒ <spring:message code="login.zno014" /></span>
+							</td>
+						</tr>
+						<tr>
+							<th style="text-align: center;width: 35%;">3. <spring:message code="login.zno015" /></th>
+							<td>
+								<input type="password" id="certificationPwd" style="margin-bottom:8px; width: 160px;" value="">
+								<span style="color: #8e8e8e;"><spring:message code="ezPersonal.t950" /></span><br/>
+								<input type="password" id="certificationPwdRe" style="width: 160px;" value="">
+								<span style="color: #8e8e8e;"><spring:message code="ezPersonal.t951" /></span><br/>
+								<a class="imgbtn" onclick="changePasswordByCertification()" style="margin-top:8px; background-color: #f1f3f5">
+									<span><spring:message code="ezCircular.t25"/></span>
+								</a>
+								<span style="color: #8e8e8e; top:10px; letter-spacing: -2.1px;">▒  비밀번호는 영문/숫자/특문 조합으로 8자리 이상 입력해야 합니다.</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</ul>
+			</div>
+		</div>
 	</body>
 </html>

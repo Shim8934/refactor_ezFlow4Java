@@ -7,6 +7,38 @@
 	<typeAlias  alias="ApprovPWDVO" 				type="egovframework.ezEKP.ezCommon.vo.ApprovPWDVO"/>
 	<typeAlias  alias="TenantServerNameVO" 			type="egovframework.let.user.login.vo.TenantServerNameVO"/>
 	<typeAlias  alias="TenantVO" 					type="egovframework.let.user.login.vo.TenantVO"/>
+    <typeAlias  alias="loginVO"                 	type="egovframework.let.user.login.vo.LoginVO"/>
+	<typeAlias  alias="CompanyInfoVO" 				type="egovframework.ezEKP.ezCommon.vo.CompanyInfoVO"/>
+	<typeAlias  alias="CountryVO" 					type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
+	
+	<!-- 로그인 처리를 위한 resultMap -->
+    <resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
+        <result property="id"                   column="cn"                         columnIndex="1"/>
+        <result property="password"             column="password"                   columnIndex="2"/>
+        <result property="displayName1"         column="displayname"                columnIndex="3"/>
+        <result property="displayName2"         column="displayname2"               columnIndex="4"      nullValue=""/>
+        <result property="deptID"               column="department"                 columnIndex="5"/>
+        <result property="deptName1"            column="description"                columnIndex="6"/>
+        <result property="deptName2"            column="description2"               columnIndex="7"      nullValue=""/>
+        <result property="title1"               column="title"                      columnIndex="8"/>
+        <result property="title2"               column="title2"                     columnIndex="9"      nullValue=""/>
+        <result property="companyID"            column="companyid"                  columnIndex="10"/>
+        <result property="companyName1"         column="company"                    columnIndex="11"/>
+        <result property="companyName2"         column="company2"                   columnIndex="12"     nullValue=""/>      
+        <result property="updateDT"             column="updatedt"                   columnIndex="13"/>
+        <result property="rollInfo"             column="rollinfo"                   columnIndex="14"/>
+        <result property="phone"                column="telephonenumber"            columnIndex="15"/>
+        <result property="email"                column="mail"                       columnIndex="16"/>
+        <result property="jikChek"              column="jikchek"                    columnIndex="17"/>
+        <result property="tenantId"             column="tenant_id"                  columnIndex="18"/>
+        <result property="deptPathCode"         column="deptPathCode"               columnIndex="19"/>
+        <result property="primary"              column="primaryLang"                columnIndex="20"/>
+        <result property="loginCnt"             column="loginCnt"                	columnIndex="21"/>
+        <result property="gyumJik"              column="gyumJik"                	columnIndex="22"/>
+        <result property="userFileUrl"          column="userFileUrl"                columnIndex="23"/>
+        <result property="sabun"              	column="sabun"                		columnIndex="24"/>
+        <result property="password_updatedt"    column="password_updatedt"          columnIndex="25"/>
+    </resultMap>    
 	
 	<select id="EzCommonDAO.getApprovPWD" parameterClass="userInfo" resultClass="ApprovPWDVO">
 		<![CDATA[
@@ -443,9 +475,19 @@
 		]]>
 	</select>
 	
-	<statement id="EzCommonDAO.addDeptMasterManualFlag"> 
+	<select id="EzCommonDAO.checkAddJobMasterManualFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				MANUAL_FLAG
+			FROM 
+				TBL_ADDJOBMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterManualFlag"> 
 		ALTER TABLE 
-			TBL_DEPTMASTER
+			TBL_ADDJOBMASTER
 		ADD 
 			MANUAL_FLAG VARCHAR(4) DEFAULT NULL
 	</statement>
@@ -613,14 +655,11 @@
 	
 	<select id="EzCommonDAO.checkHolidayFlag" resultClass="String">
 		<![CDATA[
-			SELECT 
-					1 
+			SELECT
+				HOLIDAYFLAG
 			FROM 
-					INFORMATION_SCHEMA.COLUMNS
-			WHERE 
-					TABLE_NAME = 'TBL_HOLIDAYLIST'
-			AND 
-					COLUMN_NAME = 'HOLIDAYFLAG'
+				TBL_HOLIDAYLIST
+			LIMIT 1
 		]]>
 	</select>
 			
@@ -643,14 +682,11 @@
 	
 	<select id="EzCommonDAO.checkHolidayRepeat" resultClass="String">
 		<![CDATA[
-			SELECT 
-					1 
+			SELECT
+				HOLIDAYREPEAT
 			FROM 
-					INFORMATION_SCHEMA.COLUMNS
-			WHERE 
-					TABLE_NAME = 'TBL_HOLIDAYLIST'
-			AND 
-					COLUMN_NAME = 'HOLIDAYREPEAT'
+				TBL_HOLIDAYLIST
+			LIMIT 1
 		]]>
 	</select>
 	
@@ -776,6 +812,38 @@
 		ADD 
 			is_default int(11) DEFAULT 0
 	</statement>
+	
+	<select id="EzCommonDAO.checkJmochaMailCopyright">
+		SELECT 
+			TENANT_ID
+		FROM 
+			JMOCHA_MAIL_COPYRIGHT
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createJmochaMailCopyright"> 
+		CREATE TABLE `jmocha_mail_copyright` (
+		  `TENANT_ID` INT NOT NULL,
+		  `COPYRIGHT_TEXT` varchar(1000) DEFAULT NULL,
+          PRIMARY KEY (`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+
+	<select id="EzCommonDAO.checkJamesMailDeletedId">
+		SELECT 
+			MAILBOX_ID
+		FROM 
+			JAMES_MAIL_DELETED_ID
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createJamesMailDeletedId"> 
+		CREATE TABLE `james_mail_deleted_id` (
+		  `MAILBOX_ID` bigint(20) NOT NULL,
+		  `MAIL_UID` bigint(20) NOT NULL,
+		  PRIMARY KEY (`MAILBOX_ID`,`MAIL_UID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
 
 	<select id="EzCommonDAO.checkListOptionData1" resultClass="int" remapResults="true">
 		SELECT 
@@ -825,6 +893,43 @@
 		AND 
 			COLNAME = 'FunctionTypeName'
 	</update>
+	
+	<select id="EzCommonDAO.checkTblBoardLike" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ITEMID
+			FROM 
+				TBL_BOARD_LIKE
+			LIMIT 1
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkTblBoardInfoLikeFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				LIKEFLAG
+			FROM 
+				TBL_BOARD_BOARDINFO
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createBoardLike"> 
+		CREATE TABLE `tbl_board_like` (
+		  `ITEMID` varchar(80) NOT NULL,
+		  `USERID` varchar(80) NOT NULL,
+		  `LIKEDATE` varchar(40) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  PRIMARY KEY (`ITEMID`,`USERID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+	
+	<statement id="EzCommonDAO.addBoardLikeFlag"> 
+		ALTER TABLE 
+			TBL_BOARD_BOARDINFO
+		ADD 
+			LIKEFLAG VARCHAR(2) DEFAULT NULL
+	</statement>
 	
 	<select id="EzCommonDAO.checkQuickLinkLinkOrder">
 		<![CDATA[
@@ -923,6 +1028,23 @@
 			b_memo_height SMALLINT(6) DEFAULT '0',
 			b_memo_status TINYINT(4) DEFAULT '0',
 			memo_id BIGINT(10) DEFAULT '0'
+			)
+	</statement>
+
+	<select id="EzCommonDAO.checkSurveyAlamColums">
+		SELECT
+			MAIL_FLAG
+		FROM
+			TBL_SURVEY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addSurveyAlamColums">
+		ALTER TABLE
+			TBL_SURVEY
+		ADD (
+			mail_flag TINYINT(4) DEFAULT '0',
+			popup_flag TINYINT(4) DEFAULT '0'
 			)
 	</statement>
 
@@ -1120,4 +1242,1211 @@
 		  PRIMARY KEY (`ATTITUDE_ID`,`COMPANY_ID`,`TENANT_ID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 	</statement>
+	
+	<select id="EzCommonDAO.checkResourcePortlet">
+		SELECT 
+			BRD_ID
+		FROM 
+			TBL_RS_PERSPORTLET
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblResourcePortlet">
+		CREATE TABLE `TBL_RS_PERSPORTLET` (
+		  `CN` VARCHAR(80) NOT NULL COMMENT 'id',
+		  `BRD_ID` DECIMAL(22,0) NOT NULL COMMENT '자원관리 id',
+		  `BRD_COMPANY` VARCHAR(40) NOT NULL COMMENT 'company id',
+		  `TENANT_ID` MEDIUMINT(5) NOT NULL DEFAULT 0 COMMENT '테넌트 id',
+		  PRIMARY KEY (`TENANT_ID`,`CN`,`BRD_COMPANY`,`BRD_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+
+	<select id="EzCommonDAO.checkThemeContent2">
+		SELECT
+			THEME_CONTENT2
+		FROM
+			TBL_PORTAL_THEME
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addThemeContent2">
+		ALTER TABLE
+			TBL_PORTAL_THEME
+		ADD (
+			THEME_CONTENT2 VARCHAR(400) DEFAULT 'theme content',
+			THEME_NAME2 VARCHAR(100) DEFAULT 'theme2'
+			)
+	</statement>
+	
+	<select id="EzCommonDAO.checkThemeContent3">
+		SELECT
+			THEME_CONTENT3
+		FROM
+			TBL_PORTAL_THEME
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addThemeContent3">
+		ALTER TABLE
+			TBL_PORTAL_THEME
+		ADD (
+			THEME_CONTENT3 VARCHAR(400) DEFAULT 'theme content',
+			THEME_NAME3 VARCHAR(100) DEFAULT 'theme3'
+			)
+	</statement>
+	
+	<update id="EzCommonDAO.insertThemeContent2">
+		UPDATE
+			TBL_PORTAL_THEME
+		SET
+			THEME_CONTENT2 = CASE 
+								WHEN theme_id = 1 THEN 'A theme with a fixed area on the left or right.'
+								WHEN theme_id = 2 THEN 'A theme with a fixed area on the top.'
+								WHEN theme_id = 3 THEN 'A theme that consists of only portlets without fixed areas.'
+							END ,
+			THEME_NAME2 = CASE 
+								WHEN theme_id = 1 THEN 'Theme1'
+								WHEN theme_id = 2 THEN 'Theme2'
+								WHEN theme_id = 3 THEN 'Theme3'
+							END
+				
+	</update>
+	
+	<update id="EzCommonDAO.insertThemeContent3">
+		UPDATE
+			TBL_PORTAL_THEME
+		SET
+			THEME_CONTENT3 = CASE 
+								WHEN theme_id = 1 THEN '固定領域を画面の右または左に配置できるテーマです。'
+								WHEN theme_id = 2 THEN '固定領域が画面の上部に表示されるテーマです。'
+								WHEN theme_id = 3 THEN '固定領域がなく、すべてのポートレットを自由に配置できるテーマです。'
+							END ,
+			THEME_NAME3 = CASE 
+								WHEN theme_id = 1 THEN 'Theme1'
+								WHEN theme_id = 2 THEN 'Theme2'
+								WHEN theme_id = 3 THEN 'Theme3'
+							END
+	</update>
+	
+	<select id="EzCommonDAO.checkSurveyTenantConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'useSurvey'
+		AND
+			tenant_id = 0
+	</select>
+	
+	<insert id="EzCommonDAO.insertSurveyTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+	</insert>
+	
+	<select id="EzCommonDAO.getAllCompanyIds" resultClass="CompanyInfoVO">
+		SELECT
+			DISTINCT(PHYSICALDELIVERYOFFICENAME) as companyId
+			, TENANT_ID as tenantId
+		FROM
+			TBL_USERMASTER
+		ORDER BY 
+			PHYSICALDELIVERYOFFICENAME
+	</select>
+	<select id="EzCommonDAO.checkPortlet" resultClass="String">
+		SELECT
+			PORTLET_URL
+		FROM
+			TBL_PORTAL_PORTLET
+		WHERE
+			PORTLET_ID = #portletId#
+	</select>
+	
+	<insert id="EzCommonDAO.insertPortlet">
+		INSERT INTO TBL_PORTAL_PORTLET 
+			(PORTLET_ID, MENU_ID, PORTLET_URL, PORTLET_TYPE, DEFAULT_ORDER)
+		VALUES 
+			(#portletId#, #menuId#, #portletUrl#, #portletType#, #defaultOrder#)
+	</insert>
+	
+	<select id="EzCommonDAO.checkPortletForComapny" resultClass="String">
+		SELECT 
+			COMPANY_ID 
+		FROM
+			TBL_PORTAL_PORTLET_COMP
+		WHERE
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			PORTLET_ID = #portletId#
+	</select>
+	
+	<insert id="EzCommonDAO.insertPortletComp">
+		INSERT INTO TBL_PORTAL_PORTLET_COMP 
+			(COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) 
+		VALUES 
+			(#companyId#, #tenantId#, #portletId#, #menuId#, #portletUsed#, #portletOrder#, #boardId#)
+	</insert>
+	
+	<insert id="EzCommonDAO.insertRsPortletName">
+		INSERT INTO TBL_PORTAL_PORTLET_NAME
+			(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		VALUES
+			(#portletId#, #menuId#, 1, #tenantId#, #companyId#, '자원관리'),
+			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Resource'),
+			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, '設備管理')
+	</insert>
+	
+	<insert id="EzCommonDAO.insertWfPortletName">
+		INSERT INTO TBL_PORTAL_PORTLET_NAME
+			(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		VALUES
+			(#portletId#, #menuId#, 1, #tenantId#, #companyId#, '개인폴더'),
+			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Personal Folder'),
+			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, 'Webフォルダ')
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSvPortletName">
+		INSERT INTO TBL_PORTAL_PORTLET_NAME
+			(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		VALUES
+			(#portletId#, #menuId#, 1, #tenantId#, #companyId#, '전자설문'),
+			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Survey'),
+			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, '電子アンケート')
+	</insert>
+	
+	<insert id="EzCommonDAO.insertPortalThemePortlet">
+		INSERT INTO TBL_PORTAL_THEME_PORTLET
+			(THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
+		VALUES
+			(1, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0),
+			(2, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0),
+			(3, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0)
+	</insert>
+	
+	<insert id="EzCommonDAO.insertPortalPortletAuth">
+		INSERT INTO TBL_PORTAL_PORTLET_AUTH
+			(PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE)
+		VALUES
+			(#portletId#, #companyId#, #tenantId#, #companyId#, 1, 0)
+	</insert>
+	
+	<select id="EzCommonDAO.checkTblThemeAuth">
+		SELECT 
+			THEME_ID
+		FROM 
+			TBL_PORTAL_THEME_AUTH
+		WHERE
+			THEME_ID = 1
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblThemeAuth">
+		CREATE TABLE `tbl_portal_theme_auth` (
+		  `theme_id` int(11) NOT NULL COMMENT '테마 아이디',
+		  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
+		  `tenant_id` mediumint(9) NOT NULL DEFAULT 0 COMMENT '테넌트 아이디',
+		  `user_id` varchar(100) NOT NULL DEFAULT '' COMMENT '사용자/부서 아이디',
+		  `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
+		  `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
+		  PRIMARY KEY (`theme_id`,`company_id`,`tenant_id`,`user_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblPortletAuth">
+		SELECT 
+			PORTLET_ID
+		FROM 
+			TBL_PORTAL_PORTLET_AUTH
+		WHERE
+			PORTLET_ID = 1
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblPortletAuth">
+		CREATE TABLE `tbl_portal_portlet_auth` (
+		  `portlet_id` int(11) NOT NULL COMMENT '포틀릿 아이디',
+		  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
+		  `tenant_id` mediumint(9) NOT NULL DEFAULT 0 COMMENT '테넌트 아이디',
+		  `user_id` varchar(100) NOT NULL DEFAULT '' COMMENT '사용자/부서 아이디',
+		  `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
+		  `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
+		  PRIMARY KEY (`portlet_id`,`company_id`,`tenant_id`,`user_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+	
+	<select id="EzCommonDAO.checkMenuCode">
+		SELECT
+			menucode
+		FROM
+			TBL_PORTAL_MENU
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addMenuCode">
+		ALTER TABLE
+			TBL_PORTAL_MENU
+		ADD 
+			menucode VARCHAR(100) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkPortletCode">
+		SELECT
+			portletcode
+		FROM
+			TBL_PORTAL_PORTLET
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addPortletCode">
+		ALTER TABLE
+			TBL_PORTAL_PORTLET
+		ADD 
+			portletcode VARCHAR(100) DEFAULT NULL
+	</statement>
+	
+	<update id="EzCommonDAO.updateMenuCode">
+	<![CDATA[
+		UPDATE 
+			TBL_PORTAL_MENU
+		SET
+			menucode = 
+			CASE
+				WHEN menu_url like '%ezNewPortal%' 
+					AND menu_type = 'G' 
+				THEN 
+					'portal'
+				WHEN menu_url like '%mailMain.do' 
+					AND menu_type = 'G' 
+				THEN 
+					'mail'
+				WHEN menu_url like '%ezSchedule%' 
+					AND menu_type = 'G' 
+				THEN 
+					'schedule'
+				WHEN menu_url like '%ezApprovalG%' 
+					AND menu_type = 'G' 
+				THEN 
+					'approval'
+				WHEN menu_url like '%ezBoard%' 
+					AND menu_type = 'G' 
+				THEN 
+					'board'
+				WHEN menu_url like '%ezCommunity%' 
+					AND menu_type = 'G' 
+				THEN 
+					'community'
+				WHEN menu_url like '%ezResource%' 
+					AND menu_type = 'G' 
+				THEN 
+					'resource'
+				WHEN menu_url like '%ezCircular%' 
+					AND menu_type = 'G' 
+				THEN 
+					'circular'
+				WHEN menu_url like '%ezJournal%' 
+					AND menu_type = 'G' 
+				THEN 
+					'journal'
+				WHEN menu_url like '%ezAttitude%' 
+					AND menu_type = 'G' 
+				THEN 
+					'attitude'
+				WHEN menu_url like '%ezWebFolder%' 
+					AND menu_type = 'G' 
+				THEN 
+					'webfolder'
+				WHEN menu_url like '%ezCabinet%' 
+					AND menu_type = 'G' 
+				THEN 
+					'cabinet'
+				WHEN menu_url like '%ezPMS%' 
+					AND menu_type = 'G' 
+				THEN 
+					'pms'
+				WHEN menu_url like '%mailMain.do?funCode=2%' 
+					AND menu_type = 'G' 
+				THEN 
+					'address'
+				WHEN menu_url like '%ezQuestion%' 
+					AND menu_type = 'G' 
+				THEN 
+					'question'
+				WHEN menu_url like '%ezPoll%' 
+					AND menu_type = 'G' 
+				THEN 
+					'vote'
+				WHEN menu_url like '%ezLadder%' 
+					AND menu_type = 'G' 
+				THEN 
+					'ladder'
+				WHEN menu_url like '%ezTask%' 
+					AND menu_type = 'G' 
+				THEN 
+					'task'
+				WHEN menu_url like '%ezMemo%' 
+					AND menu_type = 'G' 
+				THEN 
+					'memo'
+				WHEN menu_url like '%ezSurvey%' 
+					AND menu_type = 'G' 
+				THEN 
+					'survey'
+			END
+	]]>
+	</update>
+	
+	<update id="EzCommonDAO.updatePortletCode">
+	<![CDATA[
+		UPDATE 
+			TBL_PORTAL_PORTLET
+		SET
+			portletcode = 
+			CASE
+				WHEN portlet_url like '%receivedMailPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'receivedmail'
+				WHEN portlet_url like '%noticePortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'notice'
+				WHEN portlet_url like '%votePortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'vote'
+				WHEN portlet_url like '%pollPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'poll'
+				WHEN portlet_url like '%schedulePortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'schedule'
+				WHEN portlet_url like '%approvalListPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'approvallist'
+				WHEN portlet_url like '%favoriteFormsPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'favoriteforms'
+				WHEN portlet_url like '%photoBoardPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'photoboard'
+				WHEN portlet_url like '%favoriteBoardPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'favoriteboard'
+				WHEN portlet_url like '%communityPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'community'
+				WHEN portlet_url like '%helpPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'help'
+				WHEN portlet_url like '%weatherPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'weather'
+				WHEN portlet_url like '%birthdayPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'birthday'
+				WHEN portlet_url like '%slideImagePortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'slideimage'
+				WHEN portlet_url like '%userInfoPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'userinfo'
+				WHEN portlet_url like '%movieBoardPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'movieboard'
+				WHEN portlet_url like '%countPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'count'
+				WHEN portlet_url like '%resourcePortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'resource'
+				WHEN portlet_url like '%surveyPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'survey'
+				WHEN portlet_url like '%webFolderPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'webfolder'
+			END
+	]]>
+	</update>
+	
+	<select id ="EzCommonDAO.getCountryInfo" resultClass="CountryVO" parameterClass="Map">
+		<![CDATA[
+			SELECT 
+				START_IP startIP,
+				END_IP endIP,
+				START_IP_NUMBER startIPNumber,
+				END_IP_NUMBER endIPNumber,
+				COUNTRY_CODE countryCode,
+				COUNTRY_NAME countryName
+			FROM
+				JMOCHA_MAIL_COUNTRYIP 
+			WHERE 
+				START_IP_NUMBER <= #changeIp#
+			AND 
+				END_IP_NUMBER >= #changeIp#
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.checkTblAccessCountry">
+		SELECT 
+			TENANT_ID
+		FROM 
+			TBL_ACCESS_COUNTRY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAccessCountry">
+		CREATE TABLE `TBL_ACCESS_COUNTRY` (
+		  `TENANT_ID` int(11) NOT NULL,
+		  `COUNTRY_CODE` varchar(800) NOT NULL,
+		  PRIMARY KEY (`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+
+	<select id="EzCommonDAO.checkSnMenuAuth">
+		SELECT
+			sn
+		FROM
+			TBL_PORTAL_MENU_AUTH
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.snMenuAuth">
+		ALTER TABLE
+			TBL_PORTAL_MENU_AUTH
+		ADD 
+			sn INT DEFAULT 0
+	</statement>
+	
+	<select id="EzCommonDAO.checkBoardManageTypeColumn">
+		SELECT
+			TYPE
+		FROM
+			TBL_BOARD_BOARDMANAGE
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addBoardManageTypeColumn">
+		ALTER TABLE
+			TBL_BOARD_BOARDMANAGE
+		ADD 
+			TYPE VARCHAR(10) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblPsPopupUser">
+		SELECT 
+			USER_ID
+		FROM 
+			TBL_PS_POPUP_USER
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblPsPopupUser">
+		CREATE TABLE `tbl_ps_popup_user` (
+		  `itemseq` bigint(20) NOT NULL,
+		  `user_id` varchar(100) NOT NULL,
+		  `user_type` varchar(10) NOT NULL,
+		  `tenant_id` int(11) NOT NULL,
+		  `companyid` varchar(100) NOT NULL,
+		  `subdept_permitted` int(11) DEFAULT NULL,
+		  `sn` int(11) DEFAULT 0,
+		  PRIMARY KEY (`itemseq`,`user_id`,`user_type`,`tenant_id`,`companyid`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='팝업 공지 대상자 관련 테이블'
+	</statement>
+	
+	
+    <select id="EzCommonDAO.getPermissionGroupAccessYN" parameterClass="Map" resultClass="Integer">
+     	<![CDATA[
+			SELECT
+				COUNT(member_id)
+			FROM
+				tbl_permissiongroupinfo
+			WHERE
+				group_id = #groupId#
+			AND
+				company_id = #companyId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				(
+					(member_type = 'USER' AND member_id = #userId#)
+				  OR
+					(member_type = 'DEPT' AND sub_dept_yn = 'N' AND (member_id = #deptId# or member_id IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)))
+				  OR 
+					(member_type = 'JIKWI' AND member_id IN 
+						(
+							SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+							UNION DISTINCT
+							SELECT jobid FROM tbl_addjobmaster WHERE cn = #userId# AND tenant_id = #tenantId#
+						)
+					)
+				  OR
+					(member_type = 'JIKCHEK' AND member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
+			]]>
+			<isNotEqual property="applySubDeptYN" compareValue="true">
+			<![CDATA[
+				OR
+				  (member_type = 'DEPT' AND sub_dept_yn = 'Y' AND (member_id = #deptId# or member_id IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#))
+			]]>
+			</isNotEqual>
+			<![CDATA[
+				)
+     	]]>
+     </select>
+     
+     <select id="EzCommonDAO.getPermissionGroupAccessSubDeptY" parameterClass="Map" resultClass="int">
+     	<![CDATA[
+			SELECT
+				COUNT(CN)
+			FROM
+				tbl_deptmaster
+			WHERE
+				dept_cd_path REGEXP(
+						SELECT GROUP_CONCAT(dept_cd_path SEPARATOR '|')
+                              FROM tbl_deptmaster
+                              WHERE cn IN (
+										SELECT member_id
+                                              FROM tbl_permissiongroupinfo
+                                              WHERE 
+											group_id = #groupId#
+										AND
+											member_type = 'DEPT'
+										AND
+											sub_dept_yn = 'Y'
+									)
+				)
+			AND
+				(
+					cn = #deptId#
+				OR
+					cn IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)
+				)
+     	]]>
+     </select>
+     
+   	<select id="EzCommonDAO.checkSurveyMailSentFlagColumn">
+		SELECT
+			MAIL_SENT_FLAG
+		FROM
+			TBL_SURVEY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addSurveyMailSentFlagColumn">
+		ALTER TABLE
+			TBL_SURVEY
+		ADD 
+			MAIL_SENT_FLAG TINYINT(4) DEFAULT '0'
+	</statement>
+	
+     <select id="EzCommonDAO.getPermissionGroupMembers" parameterClass="Map" resultMap="login">
+     	<![CDATA[
+            SELECT  
+                a.cn, 
+				a.password,                
+				a.displayname, 
+				a.displayname2, 
+				a.department,               
+				a.description, 
+				a.description2, 
+				a.title, 
+				a.title2, 
+				a.physicaldeliveryofficename as companyid, 
+				a.company, 
+				a.company2, 
+				a.updatedt, 
+				a.extensionattribute1 as rollinfo, 
+				a.telephonenumber, 
+				a.mail, 
+				a.extensionattribute10 as jikchek, 
+				a.tenant_id, 
+				(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode, 
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang, 
+				a.loginCnt, 
+				a.extensionattribute4 as gyumJik, 
+				a.extensionattribute2 as userFileUrl, 
+				a.extensionattribute14 as sabun,
+				a.password_updatedt
+            FROM  
+                tbl_usermaster a
+            JOIN
+            	tbl_permissiongroupinfo b
+            ON
+           		a.tenant_id = b.tenant_id
+           	AND
+           		a.tenant_id = #tenantId#
+           	AND
+           		a.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
+           	AND
+        ]]>
+            	(
+					(b.member_type = 'JIKCHEK' AND a.extensionattribute8 = b.member_id)
+				OR
+					(b.member_type = 'JIKWI' AND a.extensionattribute7 = b.member_id)
+				OR
+					(b.member_type = 'ORGAN' AND a.physicaldeliveryofficename = b.member_id)
+				OR
+					(b.member_type = 'USER' AND a.cn = b.member_id)
+				OR
+					(b.member_type = 'DEPT' AND a.department = b.member_id)
+		        <isEqual property="applySubDeptYN" compareValue="true">
+				<![CDATA[
+				  OR
+					(a.department IN (
+								SELECT
+									CN
+								FROM
+									tbl_deptmaster
+								WHERE
+									dept_cd_path REGEXP(
+											SELECT GROUP_CONCAT(dept_cd_path SEPARATOR '|')
+			                                FROM tbl_deptmaster
+			                                WHERE cn IN (
+															SELECT member_id
+			                                                FROM tbl_permissiongroupinfo
+			                                                WHERE 
+																group_id = #groupId#
+															AND
+																member_type = 'DEPT'
+															AND
+																sub_dept_yn = 'Y'
+														)
+									)
+								)
+						)
+				
+				]]>
+				</isEqual>	
+				)
+            WHERE  
+                b.group_id = #groupId#
+            AND
+            	a.tenant_id = #tenantId#
+     </select>
+     
+	<select id="EzCommonDAO.checkSnThemeAuth">
+		SELECT
+			sn
+		FROM
+			TBL_PORTAL_THEME_AUTH
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.snThemeAuth">
+		ALTER TABLE
+			TBL_PORTAL_THEME_AUTH
+		ADD 
+			sn INT DEFAULT 0
+	</statement>
+	
+	<select id="EzCommonDAO.checkSnPortletAuth">
+		SELECT
+			sn
+		FROM
+			TBL_PORTAL_PORTLET_AUTH
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.snPortletAuth">
+		ALTER TABLE
+			TBL_PORTAL_PORTLET_AUTH
+		ADD 
+			sn INT DEFAULT 0
+	</statement>
+	
+	<select id="EzCommonDAO.checkAlterChamjoView" resultClass="int">
+		SELECT
+			(SELECT COUNT(*) FROM TBL_APRLINEINFO WHERE APRTYPE = '007' AND APRSTATE = '002') +
+			(SELECT COUNT(*) FROM TBL_ENDAPRLINEINFO WHERE APRTYPE = '007' AND APRSTATE = '002') AS CNT
+		FROM
+			DUAL
+	</select>
+	
+	<statement id="EzCommonDAO.alterAprDoingView">
+		<![CDATA[
+		ALTER VIEW 
+			vaprdoingdoclist 
+		AS
+			SELECT
+		        tbl_aprdocinfo.DOCID AS DOCID,
+		        tbl_aprdocinfo.FORMID AS FORMID,
+		        tbl_aprdocinfo.ORGDOCID AS ORGDOCID,
+		        tbl_aprdocinfo.DOCTYPE AS DOCTYPE,
+		        CASE
+		            WHEN
+		                (tbl_aprlineinfo.APRSTATE = '002'
+		                    AND tbl_aprlineinfo.APRTYPE = '007')
+		            THEN
+		                '017'
+		            ELSE tbl_aprdocinfo.DOCSTATE
+		        END AS DOCSTATE,
+		        CASE
+		            WHEN
+		                (tbl_aprlineinfo.APRSTATE = '000'
+		                    AND tbl_aprdocinfo.FUNCTIONTYPE <> '004')
+		            THEN
+		                '002'
+		            ELSE tbl_aprdocinfo.FUNCTIONTYPE
+		        END AS FUNCTIONTYPE,
+		        tbl_aprdocinfo.HREF AS HREF,
+		        tbl_aprdocinfo.DOCTITLE AS DOCTITLE,
+		        tbl_aprdocinfo.DOCNO AS DOCNO,
+		        tbl_aprdocinfo.HASATTACHYN AS HASATTACHYN,
+		        tbl_aprdocinfo.HASOPINIONYN AS HASOPINIONYN,
+		        tbl_aprdocinfo.STARTDATE AS STARTDATE,
+		        tbl_aprdocinfo.ENDDATE AS ENDDATE,
+		        tbl_aprdocinfo.WRITERID AS WRITERID,
+		        tbl_aprdocinfo.WRITERNAME AS WRITERNAME,
+		        tbl_aprdocinfo.WRITERJOBTITLE AS WRITERJOBTITLE,
+		        tbl_aprdocinfo.WRITERDEPTID AS WRITERDEPTID,
+		        tbl_aprdocinfo.WRITERDEPTNAME AS WRITERDEPTNAME,
+		        tbl_aprdocinfo.ISPUBLIC AS ISPUBLIC,
+		        tbl_aprdocinfo.WRITERNAME2 AS WRITERNAME2,
+		        tbl_aprdocinfo.WRITERJOBTITLE2 AS WRITERJOBTITLE2,
+		        tbl_aprdocinfo.WRITERDEPTNAME2 AS WRITERDEPTNAME2,
+		        tbl_aprdocinfo.TENANT_ID AS TENANT_ID,
+		        tbl_aprdocinfo.COMPANYID AS COMPANYID,
+		        tbl_aprlineinfo.APRMEMBERSN AS APRMEMBERSN,
+		        tbl_aprlineinfo.APRTYPE AS APRTYPE,
+		        tbl_aprlineinfo.APRSTATE AS APRSTATE,
+		        tbl_aprlineinfo.APRMEMBERID AS APRMEMBERID,
+		        tbl_aprlineinfo.APRMEMBERNAME AS APRMEMBERNAME,
+		        tbl_aprlineinfo.APRMEMBERNAME2 AS APRMEMBERNAME2,
+		        tbl_aprlineinfo.APRMEMBERJOBTITLE AS APRMEMBERJOBTITLE,
+		        tbl_aprlineinfo.APRMEMBERJOBTITLE2 AS APRMEMBERJOBTITLE2,
+		        tbl_aprlineinfo.APRMEMBERDEPTID AS APRMEMBERDEPTID,
+		        tbl_aprlineinfo.APRMEMBERDEPTNAME AS APRMEMBERDEPTNAME,
+		        tbl_aprlineinfo.APRMEMBERDEPTNAME2 AS APRMEMBERDEPTNAME2,
+		        tbl_aprlineinfo.RECEIVEDDATE AS RECEIVEDDATE,
+		        tbl_expaprdocinfo.FORMNAME AS FORMNAME,
+		        tbl_expaprdocinfo.FORMNAME2 AS FORMNAME2,
+		        tbl_expaprdocinfo.URGENTAPPROVAL AS URGENTAPPROVAL,
+		        tbl_deptmaster.EXTENSIONATTRIBUTE3 AS companyName,
+		        tbl_deptmaster.COMPNM2 AS companyName2
+		    FROM
+		        (((tbl_aprdocinfo
+		        JOIN tbl_aprlineinfo 
+		        ON (tbl_aprdocinfo.DOCID = tbl_aprlineinfo.DOCID
+		            AND tbl_aprdocinfo.TENANT_ID = tbl_aprlineinfo.TENANT_ID
+		            AND tbl_aprdocinfo.COMPANYID = tbl_aprlineinfo.COMPANYID))
+		        JOIN tbl_expaprdocinfo 
+		        ON (tbl_aprdocinfo.DOCID = tbl_expaprdocinfo.DOCID
+		            AND tbl_aprdocinfo.TENANT_ID = tbl_expaprdocinfo.TENANT_ID
+		            AND tbl_aprdocinfo.COMPANYID = tbl_expaprdocinfo.COMPANYID))
+		        JOIN tbl_deptmaster 
+		        ON (tbl_aprdocinfo.COMPANYID = tbl_deptmaster.CN
+		            AND tbl_aprdocinfo.TENANT_ID = tbl_deptmaster.TENANT_ID))
+		    WHERE
+		        (tbl_aprlineinfo.APRSTATE = '002'
+		            OR tbl_aprlineinfo.APRSTATE = '005')
+		    AND
+		    	NOT (TBL_APRDOCINFO.functiontype = '004' AND TBL_APRLINEINFO.aprtype = '007')
+		            AND tbl_aprdocinfo.STARTDATE IS NOT NULL
+		]]>
+	</statement>
+	<statement id="EzCommonDAO.alterChamjoView">
+	<![CDATA[
+		ALTER VIEW 
+			vendchamjodocinfo 
+		AS
+		    SELECT 
+		        tbl_endaprdocinfo.DOCID AS DOCID,
+		        tbl_endaprdocinfo.FORMID AS FORMID,
+		        tbl_endaprdocinfo.ORGDOCID AS ORGDOCID,
+		        tbl_endaprdocinfo.DOCTYPE AS DOCTYPE,
+		        '017' AS DOCSTATE,
+		        '002' AS FUNCTIONTYPE,
+		        tbl_endaprdocinfo.HREF AS HREF,
+		        tbl_endaprdocinfo.DOCTITLE AS DOCTITLE,
+		        tbl_endaprdocinfo.DOCNO AS DOCNO,
+		        tbl_endaprdocinfo.HASATTACHYN AS HASATTACHYN,
+		        tbl_endaprdocinfo.HASOPINIONYN AS HASOPINIONYN,
+		        tbl_endaprdocinfo.STARTDATE AS STARTDATE,
+		        tbl_endaprdocinfo.ENDDATE AS ENDDATE,
+		        tbl_endaprdocinfo.WRITERID AS WRITERID,
+		        tbl_endaprdocinfo.WRITERNAME AS WRITERNAME,
+		        tbl_endaprdocinfo.WRITERJOBTITLE AS WRITERJOBTITLE,
+		        tbl_endaprdocinfo.WRITERDEPTID AS WRITERDEPTID,
+		        tbl_endaprdocinfo.WRITERDEPTNAME AS WRITERDEPTNAME,
+		        tbl_endaprdocinfo.ISPUBLIC AS ISPUBLIC,
+		        tbl_endaprdocinfo.WRITERNAME2 AS WRITERNAME2,
+		        tbl_endaprdocinfo.WRITERJOBTITLE2 AS WRITERJOBTITLE2,
+		        tbl_endaprdocinfo.WRITERDEPTNAME2 AS WRITERDEPTNAME2,
+		        tbl_endaprdocinfo.TENANT_ID AS TENANT_ID,
+		        tbl_endaprdocinfo.COMPANYID AS COMPANYID,
+		        tbl_endaprlineinfo.APRMEMBERSN AS APRMEMBERSN,
+		        tbl_endaprlineinfo.APRTYPE AS APRTYPE,
+		        tbl_endaprlineinfo.APRSTATE AS APRSTATE,
+		        tbl_endaprlineinfo.APRMEMBERID AS APRMEMBERID,
+		        tbl_endaprlineinfo.APRMEMBERNAME AS APRMEMBERNAME,
+		        tbl_endaprlineinfo.APRMEMBERNAME2 AS APRMEMBERNAME2,
+		        tbl_endaprlineinfo.APRMEMBERJOBTITLE AS APRMEMBERJOBTITLE,
+		        tbl_endaprlineinfo.APRMEMBERJOBTITLE2 AS APRMEMBERJOBTITLE2,
+		        tbl_endaprlineinfo.APRMEMBERDEPTID AS APRMEMBERDEPTID,
+		        tbl_endaprlineinfo.APRMEMBERDEPTNAME AS APRMEMBERDEPTNAME,
+		        tbl_endaprlineinfo.APRMEMBERDEPTNAME2 AS APRMEMBERDEPTNAME2,
+		        tbl_endaprlineinfo.RECEIVEDDATE AS RECEIVEDDATE,
+		        tbl_expendaprdocinfo.FORMNAME AS FORMNAME,
+		        tbl_expendaprdocinfo.FORMNAME2 AS FORMNAME2,
+		        tbl_expendaprdocinfo.URGENTAPPROVAL AS URGENTAPPROVAL,
+		        tbl_deptmaster.EXTENSIONATTRIBUTE3 AS companyName,
+		        tbl_deptmaster.COMPNM2 AS companyName2
+		    FROM
+		        (((tbl_endaprdocinfo
+		        JOIN tbl_endaprlineinfo 
+		        ON (tbl_endaprdocinfo.DOCID = tbl_endaprlineinfo.DOCID
+		            AND tbl_endaprdocinfo.TENANT_ID = tbl_endaprlineinfo.TENANT_ID
+		            AND tbl_endaprdocinfo.COMPANYID = tbl_endaprlineinfo.COMPANYID))
+		        JOIN tbl_expendaprdocinfo 
+		        ON (tbl_endaprdocinfo.DOCID = tbl_expendaprdocinfo.DOCID
+		            AND tbl_endaprdocinfo.TENANT_ID = tbl_expendaprdocinfo.TENANT_ID
+		            AND tbl_endaprdocinfo.COMPANYID = tbl_expendaprdocinfo.COMPANYID))
+		        JOIN tbl_deptmaster 
+		        ON (tbl_endaprdocinfo.COMPANYID = tbl_deptmaster.CN
+		            AND tbl_endaprdocinfo.TENANT_ID = tbl_deptmaster.TENANT_ID))
+		    WHERE
+		        tbl_endaprlineinfo.APRTYPE = '007'
+		            AND tbl_endaprlineinfo.APRSTATE = '002'
+		    AND
+		    	TBL_ENDAPRDOCINFO.docstate <> '031'
+           ]]>
+	</statement>
+	
+	<select id="EzCommonDAO.checkAddressFurigana">
+		<![CDATA[
+			SELECT
+				IFNULL(s_furigana,0)
+			FROM 
+				jmocha_address_info
+			LIMIT 1
+		]]>
+	</select>
+	<update id="EzCommonDAO.addAddressFurigana">
+		<![CDATA[
+			ALTER TABLE jmocha_address_info
+			ADD COLUMN s_furigana VARCHAR(120) NULL DEFAULT NULL AFTER s_type
+		]]>
+	</update>
+
+	<select id="EzCommonDAO.checkTblOpenGovDocInfo" resultClass="String">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_OPENGOVDOCINFO
+			LIMIT 1
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkTblOpenGovfileInfo" resultClass="String">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_OPENGOVFILEINFO
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblOpenGovDocInfo"> 
+		CREATE TABLE `tbl_opengovdocinfo` (
+		  `docid` varchar(80) NOT NULL,
+		  `openflag` char(9) DEFAULT NULL,
+		  `basis` varchar(200) CHARACTER SET utf8 DEFAULT NULL,
+		  `reason` varchar(1000) CHARACTER SET utf8 DEFAULT NULL,
+		  `openlimitdate` datetime DEFAULT NULL,
+		  `createdate` datetime DEFAULT NULL,
+		  `updatedate` datetime DEFAULT NULL,
+		  `tenant_id` mediumint(5) NOT NULL,
+		  `companyid` varchar(20) NOT NULL,
+		  `listopenflag` char(2) DEFAULT NULL,
+		  PRIMARY KEY (`docid`,`tenant_id`,`companyid`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+	
+	<statement id="EzCommonDAO.createTblOpenGovFileInfo"> 
+		CREATE TABLE `tbl_opengovfileinfo` (
+		  `DOCID` varchar(80) NOT NULL,
+		  `SN` bigint(10) NOT NULL,
+		  `FILEOPENFLAG` char(1) DEFAULT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  PRIMARY KEY (`DOCID`,`SN`,`COMPANYID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='원문정보공개 첨부파일 테이블';
+	</statement>
+	
+	<select id="EzCommonDAO.checkOpenGovFlag">
+		SELECT
+			opengovflag
+		FROM
+			TBL_FORMINFO
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addOpenGovFlag">
+		ALTER TABLE
+			TBL_FORMINFO
+		ADD (
+			OPENGOVFLAG VARCHAR(4) DEFAULT 'N'
+			)
+	</statement>
+
+	<select id="EzCommonDAO.checkDeptId" parameterClass="Map" resultClass="int">
+	<![CDATA[
+		SELECT 
+			COUNT(DEPTID) 
+		FROM 
+			(SELECT 
+				DEPTID 
+			FROM 
+				TBL_ADDJOBMASTER A
+			INNER JOIN 
+				TBL_DEPTMASTER TD 
+			ON 
+				(A.DEPTID = TD.CN AND A.TENANT_ID  = TD.TENANT_ID)
+			WHERE 
+				TD.EXTENSIONATTRIBUTE2 <> (SELECT 
+												PHYSICALDELIVERYOFFICENAME 
+											FROM 
+												TBL_USERMASTER 
+											WHERE 
+												CN = #userID# 
+											AND 
+												TENANT_ID = #tenantID#) 
+			AND
+				A.CN = #userID#
+			AND 
+				A.TENANT_ID = #tenantID#
+			UNION
+			SELECT 
+				DEPARTMENT AS DEPTID 
+			FROM 
+				TBL_USERMASTER 
+			WHERE 
+				CN = #userID#
+			AND 
+				TENANT_ID = #tenantID#) D
+		WHERE 
+			D.DEPTID = #deptID#
+	]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkThemeAuthInit" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			company_id
+		FROM
+			TBL_PORTAL_THEME_AUTH
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+		LIMIT 1
+	]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkPortletAuthInit" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			company_id
+		FROM
+			TBL_PORTAL_PORTLET_AUTH
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+		LIMIT 1
+	]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkMailTenantConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'useExternalMailServer'
+		AND
+			tenant_id = 0
+	</select>
+	
+	<insert id="EzCommonDAO.insertThemeAuthInit" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_THEME_AUTH
+			(theme_id, company_id, tenant_id, user_id, access_YN, user_type, sn) 
+		VALUES
+			(1, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+			(2, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+			(3, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertPortletAuthInit" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_PORTLET_AUTH
+			(portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn) 
+		VALUES 
+    		(1, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(2, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(4, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(5, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(6, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(7, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(8, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(9, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(10, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(11, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(12, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(14, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(26, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(34, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(36, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(47, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(49, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+	]]>
+	</insert>
+	
+	<select id="EzCommonDAO.checkSurveyMenu" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			menu_id
+		FROM
+			tbl_portal_menu
+		WHERE
+			menucode = 'survey'
+		AND
+			menu_type = 'G'
+		LIMIT 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertSurveyMenu" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU 
+			(menu_url, menu_type, icon_url, default_order, menucode)
+		VALUES
+			('/ezSurvey/surveyMain.do', 'G', 'icon_topmenu icon_nav_survey', 19, 'survey')
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSurveyMenuComp" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_COMP 
+			(company_id, tenant_id, menu_id, menu_used, company_lang, company_order)
+		VALUES
+			(#companyId#, #tenantId#, #menuId#, 1, 1, 19)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSurveyMenuAuth" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_AUTH
+			(menu_id, company_id, tenant_id, user_id, access_YN, user_type, sn)
+		VALUES
+			(#menuId#, #companyId#, #tenantId#, #companyId#, 1, 0, 19)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSurveyMenuName" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_NAME 
+			(menu_id, menu_lang, company_id, tenant_id, menu_name)
+		VALUES
+	    	(#menuId#, 1, #companyID#, #tenantID#, '전자설문'),
+	    	(#menuId#, 2, #companyID#, #tenantID#, 'Survey'),
+	    	(#menuId#, 3, #companyID#, #tenantID#, '電子アンケート')
+	]]>
+	</insert>
+	
+	<select id="EzCommonDAO.checkAddIsBeforeDoc">
+		SELECT 
+			ISBEFOREDOC 
+		FROM 
+			TBL_HISTORYDOCINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAddIsBeforeDoc">
+		ALTER TABLE 
+			TBL_HISTORYDOCINFO
+		ADD COLUMN 
+			ISBEFOREDOC VARCHAR(4) DEFAULT NULL 
+	</statement>
+	
+	<select id="EzCommonDAO.checkAddBeforeDocUrl">
+		SELECT 
+			BEFOREDOCURL 
+		FROM 
+			TBL_HISTORYDOCINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAddBeforeDocUrl">
+		ALTER TABLE 
+			TBL_HISTORYDOCINFO
+		ADD COLUMN 
+			BEFOREDOCURL varchar(1020) DEFAULT NULL 
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprAttachViewOrder">
+		SELECT 
+			VIEWORDER
+		FROM 
+			TBL_APRATTACHINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAprAttachViewOrder">
+		ALTER TABLE 
+			TBL_APRATTACHINFO
+		ADD COLUMN 
+			VIEWORDER  bigint(10) DEFAULT NULL 
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprEndAttachViewOrder">
+		SELECT 
+			VIEWORDER
+		FROM 
+			TBL_ENDATTACHINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAprEndAttachViewOrder">
+		ALTER TABLE 
+			TBL_ENDATTACHINFO
+		ADD COLUMN 
+			VIEWORDER  bigint(10) DEFAULT NULL 
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprTmpAttachViewOrder">
+		SELECT 
+			VIEWORDER
+		FROM 
+			TBL_TMPATTACHINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAprTmpAttachViewOrder">
+		ALTER TABLE 
+			TBL_TMPATTACHINFO
+		ADD COLUMN 
+			VIEWORDER  bigint(10) DEFAULT NULL 
+	</statement>
+	
 </sqlMap>

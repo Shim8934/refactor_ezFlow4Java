@@ -35,7 +35,7 @@
 			
 			.frameInfo {margin : 15px;}
 			.frameInfo p {font-size : 15px; font-weight : bold;}
-			.frameList {clear : none !important; width:100%; margin-bottom:20px;}
+			.frameList {clear : none !important; width:64%; margin-bottom:20px;}
 			.frameList tr {height:40px;}
 			.frameList tr:first-child {height : 78px;}
 			.frameList td {text-align : center; border:1px solid #e1e1e1;}
@@ -62,6 +62,12 @@
 	        .admin_menuDL .admin_menuX {float:right;margin-right:20px;}
 	        .admin_menuX span {margin-right:10px;}
 	        .admin_menuX span img {margin-right:5px; vertical-align:text-bottom;}
+	        /*2019.06.18 테마별권한 디자인 추가 */
+	        .admin_thema .frameList {float:left;border-right:none;}
+	        .admin_thema .authList {clear:none; margin:20px 0px 0px; height:189px; width:359px;} 
+	        .admin_thema .authList th {width:90px; border-left:none;} 
+	        .admin_thema .menuIconTD {padding:0px;}
+	        .admin_thema .menuIconTD div {height:82px; overflow:auto; padding:5px;}
 		</style>
 	</head>
 	
@@ -87,6 +93,7 @@
 	<script type="text/javascript">
 		var defaultTheme = "";
 		var isBtnClicked = false;
+		var themeAuths = [];
 		
 		$(function() {
 			getCompanies();
@@ -173,12 +180,22 @@
 				if (request.status >= 200 && request.status < 400) {
 					var result = JSON.parse(request.responseText);
 					var themes = result.list;
+					var userLang = result.userLang;
 					var themesHTML = "";
 					
 					themes.forEach(function (item, index) {
 						themesHTML += "<li>";
 						themesHTML += "<div class='theme' id='theme" + item.themeId + "' onclick='selectTheme(this)'>";
-						themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/Theme" + item.themeId + ".JPG' class='themeThumbnails' alt='img02'/>";
+						
+						var themeImgFolder = "kr";
+						
+						if (userLang == "2") {
+							themeImgFolder = "kr"; //나중에 en으로 바꿔야함! (현재 영문용 이미지가 없음)
+						} else if (userLang == "3") {
+							themeImgFolder = "jp";
+						}
+						
+						themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/themeImg/" + themeImgFolder + "/Theme" + item.themeId + ".png' class='themeThumbnails' alt='img02'/>";
 						themesHTML += "</div><div>";
 						themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
 						themesHTML += "<span class='themePortlet' id='themePortlet" + item.themeId + "'><img src='/images/admin/frameSetting3.png'></span>";
@@ -261,6 +278,11 @@
 					var result = JSON.parse(request.responseText);
 					var theme = result.themeInfo;
 					var frameList = result.frameInfos;
+					var themeAuthsY = result.themeAuths.themeAuthsY;
+					var themeAuthsN = result.themeAuths.themeAuthsN;
+					
+					themeAuths = themeAuthsY;
+					themeAuths = themeAuths.concat(themeAuthsN);
 					
 					var themesHTML = "<div id='themeDetails" + theme.themeId + "' class='themeDetails'>";
 					themesHTML += "<div class='admin_thema'><dl class='admin_menuDL'><dt class='admin_menuTit'>" + theme.themeName + "</dt><dd class='admin_menuX'></dd></dl>";
@@ -285,7 +307,47 @@
 					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t112' /></th><td colspan='4' class='menuIconTD'><input type='text' class='admin_input themeContent' readOnly></td></tr>";						
 					themesHTML += "</table>";
 					themesHTML += "<table class='themaTable frameList' border='0' cellpadding='0' cellspacing='0' width='100%' style='margin:20px 0px 0px 0px;'></table>";
-					themesHTML += "<div class='bottomBtn'><a class='btnA updateThemeBtn'><spring:message code='ezNewPortal.t002'/></a><a class='btnA previewBtn' ><spring:message code='ezNewPortal.t113' /></a></div>";
+					themesHTML += "<table class='themaTable iconTable02 authList' border='0' cellpadding='0' cellspacing='0'>";
+					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div>";
+					
+					if (themeAuthsY != null && themeAuthsY.length != 0) {
+						var themeAuthsYList = "";
+						
+						themeAuthsY.forEach(function(item, index) {
+							if (item.userType == 1) {
+								themeAuthsYList += ", " + item.userName;
+								themeAuthsYList += "(" + item.userDeptName + ")";
+							} else if (item.userType == 0) {
+								themeAuthsYList += ", " + item.userDeptName;
+							} else {
+								themeAuthsYList += ", " + item.userName;
+							}
+						});
+						
+						themesHTML += themeAuthsYList.substring(1) + "</div></td></tr>";
+					}
+					
+					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'><div>";
+					
+					if (themeAuthsN != null && themeAuthsN.length != 0) {
+						var themeAuthsNList = "";
+						
+						themeAuthsN.forEach(function(item, index) {
+							if (item.userType == 1) {
+								themeAuthsNList += ", " + item.userName;
+								themeAuthsNList += "(" + item.userDeptName + ")";
+							} else if (item.userType == 0) {
+								themeAuthsNList += ", " + item.userDeptName;
+							} else {
+								themeAuthsNList += ", " + item.userName;
+							}
+						});
+						
+						themesHTML += themeAuthsNList.substring(1) + "</div></td></tr>";
+					}
+					
+					themesHTML += "</table>";
+					themesHTML += "<div class='bottomBtn'><a class='btnA updateThemeBtn'><spring:message code='ezNewPortal.t002'/></a><a class='btnA previewBtn' ><spring:message code='ezNewPortal.t113' /></a><a class='btnA themeAuthBtn' ><spring:message code='ezNewPortal.t086' /></a></div>";
 					themesHTML += "</div></div></div>";
 					
 
@@ -327,6 +389,7 @@
 
 					$("#themeDetails" + theme.themeId).find(".updateThemeBtn").on("click", {"themeId" : theme.themeId}, updateTheme);
 					$("#themeDetails" + theme.themeId).find(".previewBtn").on("click", {"themeId" : theme.themeId}, openThemePreview);
+					$("#themeDetails" + theme.themeId).find(".themeAuthBtn").on("click", {"themeId" : theme.themeId}, openThemeAuth);
 					
 					$(".close").on("click", function(){
 						$(".themeDetails").slideUp();
@@ -444,29 +507,80 @@
 				var companiesObj = document.getElementById("ListCompany");
 				var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 				
-				var request = new XMLHttpRequest();
-				request.open('PATCH', '/admin/ezNewPortal/updateThemeInfo.do', true);
-				request.setRequestHeader('Content-Type', 'application/json');
-				
-				request.onload = function() {
-					getThemes();
-				}
-				
-				request.onerror = function() {
-					  // There was a connection error of some sort
-				};
-					
-				var data = JSON.stringify({
-					companyId : companyValue,
-					themeInfo : themeInfo,
-					frameInfos : frameInfos,
-					themeId : themeId
-				});
-				
-				request.send(data);
+				checkAuth(themeId, companyValue, themeInfo, frameInfos);
 			}
 		}
 		
+   		function checkAuth(themeId, companyValue, themeInfo, frameInfos) {
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+
+			if (typeof themeAuths == "string") {
+				themeAuths = JSON.parse(themeAuths);
+			}
+			
+			if (themeAuths.length == 0) {
+				alert("<spring:message code='ezNewPortal.yej11' />");
+				return;
+			}
+			
+   			var request = new XMLHttpRequest();
+   			request.open('PATCH','/admin/ezNewPortal/checkThemeAuths.do');
+			request.setRequestHeader('Content-Type', 'application/json');
+   			
+			request.onload = function() {
+				if (request.status >= 200 && request.status < 400) {
+					console.log(request.responseText);
+					var result = JSON.parse(request.responseText).authResult;
+					if (result) {
+						checkAuthAfter(themeId, companyValue, themeInfo, frameInfos);
+					} else if (!result) {
+						alert("<spring:message code='ezNewPortal.yej13' />");
+						return;
+					}
+				}
+			}
+			
+			request.onerror = function(e) {
+			}
+			
+			var data = JSON.stringify({
+				companyId : companyValue,
+				themeAuths : themeAuths,
+				themeId : themeId
+			});
+			
+			request.send(data);
+   		}
+   		
+   		var checkAuthAfter = function(themeId, companyValue, themeInfo, frameInfos) {
+			if (typeof themeAuths == "string") {
+				themeAuths = JSON.parse(themeAuths);
+			}
+			
+			var request = new XMLHttpRequest();
+			request.open('PATCH', '/admin/ezNewPortal/updateThemeInfo.do', true);
+			request.setRequestHeader('Content-Type', 'application/json');
+			
+			request.onload = function() {
+				getThemes();
+			}
+			
+			request.onerror = function() {
+				  // There was a connection error of some sort
+			};
+				
+			var data = JSON.stringify({
+				companyId : companyValue,
+				themeInfo : themeInfo,
+				frameInfos : frameInfos,
+				themeId : themeId,
+				themeAuths : themeAuths
+			});
+			
+			request.send(data);
+   		}
+   		
 		//미리보기
 		var openThemePreview = function(event) {
 			var themeId = event.data.themeId;
@@ -763,6 +877,16 @@
 					}
 				}
 			}
+		}
+		
+		var openThemeAuth = function(event) {
+			
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+			
+			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.themeId + "&companyId=" + companyValue + "&mode=theme";
+			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
+		    	try { OpenWin.focus(); } catch (e) { }
 		}
 	</script>
 </html>

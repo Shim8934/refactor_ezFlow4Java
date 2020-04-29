@@ -42,6 +42,9 @@
 	<typeAlias  alias="egovMap"                         type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
 	<typeAlias  alias="PortalTopOtherCompanyAddJobVO" 	type="egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO"/>
 	<typeAlias  alias="ApprGProxyVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO"/>
+	<typeAlias  alias="ApprGOpenGovAttachVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO"/>
+	<typeAlias  alias="ApprGDocListForOpenGovVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO"/>
+	<typeAlias  alias="ApprGOpenGovInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO"/>
 	
 	<resultMap class="PortalTopOtherCompanyAddJobVO" 	id="PortalTopOtherCompanyAddJobMap">
 		<result property="companyID"					column="companyID"						/>
@@ -158,15 +161,41 @@
 											<isEqual property="v_LISTTYPE" compareValue="1">
 											  AND docid in (
 												SELECT 
-													docid 
+													docid
 												FROM
-													tbl_aprlineinfo
+													TBL_APRLINEINFO
 												WHERE
 													APRMEMBERID = #v_USERID#
-												AND TENANT_ID = #v_TENANTID# 
-												AND COMPANYID = #companyID#
-								                AND APRMEMBERDEPTID = #deptID#
-												)	
+												AND
+													(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+												AND
+													tenant_id = #v_TENANTID#
+												AND
+													companyid IN (
+                                                        SELECT
+                                                            extensionattribute2
+                                                        FROM
+                                                            TBL_DEPTMASTER
+                                                        INNER JOIN
+                                                            TBL_ADDJOBMASTER
+                                                        ON
+                                                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                                                        AND
+                                                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                                                        WHERE
+                                                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                                                        AND
+                                                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                                                        UNION ALL
+                                                        SELECT
+                                                            physicaldeliveryofficename
+                                                        FROM
+                                                            TBL_USERMASTER
+                                                        WHERE
+                                                            cn = #v_USERID#
+                                                        AND
+                                                            tenant_id = #v_TENANTID#)
+												)
 											</isEqual>
 					      				  <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 							      		  AND 
@@ -221,20 +250,51 @@
 													)
 					      					]]>
 										<isEqual property="v_LISTTYPE" compareValue="1">
-										  AND docid in (
-											SELECT 
-												docid 
-											FROM
-												tbl_aprlineinfo
-											WHERE
-												APRMEMBERID = #v_USERID#
-											AND TENANT_ID = #v_TENANTID# 
-											AND COMPANYID = #companyID#
-							                AND APRMEMBERDEPTID = #deptID#
-											)	
+											<![CDATA[
+										  	AND docid in
+										  		(SELECT
+													docid
+												FROM
+													TBL_ENDAPRLINEINFO
+												WHERE
+													aprmemberid = #v_USERID#
+												AND	
+													APRTYPE = '007'
+												AND 
+													APRSTATE = '002'
+												AND
+													tenant_id = #v_TENANTID#
+												AND
+													companyid IN(
+                                                        SELECT
+                                                            extensionattribute2
+                                                        FROM
+                                                            TBL_DEPTMASTER
+                                                        INNER JOIN
+                                                            TBL_ADDJOBMASTER
+                                                        ON
+                                                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                                                        AND
+                                                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                                                        WHERE
+                                                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                                                        AND
+                                                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                                                        UNION ALL
+                                                        SELECT
+                                                            physicaldeliveryofficename
+                                                        FROM
+                                                            TBL_USERMASTER
+                                                        WHERE
+                                                            cn = #v_USERID#
+                                                        AND
+                                                            tenant_id = #v_TENANTID#
+													)
+                                                )
+											]]>
 										</isEqual>
 					      				<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
-							      		  AND 
+							      		  AND
 							      		 	$v_SPSUBQUERY$
 				      					</isGreaterThan>
 				      					<!-- 부재자설정한 유저의 결재할문서 리스트 -->
@@ -283,12 +343,41 @@
 											SELECT 
 												docid 
 											FROM
-												tbl_aprlineinfo
+												TBL_APRLINEINFO
 											WHERE
-												APRMEMBERID = #proxyList[].id#
-											AND TENANT_ID = #v_TENANTID# 
-											AND COMPANYID = #companyID#
-							                AND APRMEMBERDEPTID = #proxyList[].dept#
+												aprmemberid = #proxyList[].id#
+											AND
+												aprmemberdeptid = #proxyList[].dept#
+											AND
+												(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+											AND
+												tenant_id = #v_TENANTID#
+											AND
+												COMPANYID IN (
+                                                    SELECT
+                                                        EXTENSIONATTRIBUTE2
+                                                    FROM
+                                                        TBL_DEPTMASTER
+                                                    INNER JOIN
+                                                        TBL_ADDJOBMASTER
+                                                    ON
+                                                        (TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+                                                        AND
+                                                        TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+                                                    WHERE
+                                                        TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
+                                                    AND
+                                                        TBL_ADDJOBMASTER.CN = #v_USERID#
+                                                    UNION ALL
+                                                    SELECT
+                                                        PHYSICALDELIVERYOFFICENAME
+                                                    FROM
+                                                        TBL_USERMASTER
+                                                    WHERE
+                                                        CN = #v_USERID#
+                                                    AND
+                                                        TENANT_ID = #v_TENANTID#
+                                                    )
 											)	
 										UNION ALL
 										
@@ -328,18 +417,50 @@
 													AND
 														TENANT_ID = #v_TENANTID# 
 													)
-													  AND docid in (
-														SELECT 
-															docid 
-														FROM
-															tbl_aprlineinfo
-														WHERE
-															APRMEMBERID = #proxyList[].id#
-														AND TENANT_ID = #v_TENANTID# 
-														AND COMPANYID = #companyID#
-										                AND APRMEMBERDEPTID = #proxyList[].dept#
-														)	
-										]]>
+
+										AND docid in (
+											SELECT
+												docid
+											FROM
+												TBL_ENDAPRLINEINFO
+											WHERE
+												aprmemberid = #proxyList[].id#
+											AND
+												aprmemberdeptid = #proxyList[].dept#
+											AND	
+												APRTYPE = '007'
+											AND 
+												APRSTATE = '002'
+											AND
+												tenant_id = #v_TENANTID#
+											AND
+												COMPANYID IN (
+                                                    SELECT
+                                                        EXTENSIONATTRIBUTE2
+                                                    FROM
+                                                        TBL_DEPTMASTER
+                                                    INNER JOIN
+                                                        TBL_ADDJOBMASTER
+                                                    ON
+                                                        (TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+                                                        AND
+                                                        TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+                                                    WHERE
+                                                        TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
+                                                    AND
+                                                        TBL_ADDJOBMASTER.CN = #v_USERID#
+                                                    UNION ALL
+                                                    SELECT
+                                                        PHYSICALDELIVERYOFFICENAME
+                                                    FROM
+                                                        TBL_USERMASTER
+                                                    WHERE
+                                                        CN = #v_USERID#
+                                                    AND
+                                                        TENANT_ID = #v_TENANTID#
+                                                    )
+											)
+											]]>
 										<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 							      		  AND 
 							      		 	$v_SPSUBQUERY$
@@ -402,7 +523,7 @@
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="2">
-			
+
 				<![CDATA[
 				SELECT 
 					* 
@@ -599,12 +720,37 @@
 												SELECT 
 													docid 
 												FROM
-													tbl_aprlineinfo
+													TBL_APRLINEINFO
 												WHERE
-													APRMEMBERID = #v_USERID#
-												AND TENANT_ID = #v_TENANTID# 
-												AND COMPANYID = #companyID#
-								                AND APRMEMBERDEPTID = #deptID#
+													aprmemberid = #v_USERID#
+												AND
+													tenant_id = #v_TENANTID#
+												AND
+                                                    companyid IN(
+                                                        SELECT
+                                                            extensionattribute2
+                                                        FROM
+                                                            TBL_DEPTMASTER
+                                                        INNER JOIN
+                                                            TBL_ADDJOBMASTER
+                                                        ON
+                                                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                                                        AND
+                                                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                                                        WHERE
+                                                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                                                        AND
+                                                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                                                        UNION ALL
+                                                        SELECT
+                                                            physicaldeliveryofficename
+                                                        FROM
+                                                            TBL_USERMASTER
+                                                        WHERE
+                                                            cn = #v_USERID#
+                                                        AND
+                                                            tenant_id = #v_TENANTID#
+                                                    )
 												)	
 											</isEqual>
            
@@ -1438,13 +1584,42 @@
 				SELECT 
 					docid 
 				FROM
-					tbl_aprlineinfo
+					TBL_APRLINEINFO
 				WHERE
-					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
-				)	
+					aprmemberid = #proxyList[].id#
+				AND
+				    aprmemberdeptid = #proxyList[].dept#
+				AND
+					(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+				AND
+					tenant_id = #v_TENANTID#
+				AND
+				 	COMPANYID IN (
+						SELECT
+							EXTENSIONATTRIBUTE2
+						FROM
+							TBL_DEPTMASTER
+						INNER JOIN
+							TBL_ADDJOBMASTER
+						ON
+							(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+							AND
+							TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+						WHERE
+							TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
+						AND
+							TBL_ADDJOBMASTER.CN = #v_PUSERID#
+						UNION ALL
+						SELECT
+							PHYSICALDELIVERYOFFICENAME
+						FROM
+							TBL_USERMASTER
+						WHERE
+							CN = #v_PUSERID#
+						AND
+							TENANT_ID = #v_TENANTID#
+						)
+				)
 			UNION ALL
 			
 			SELECT 
@@ -1523,13 +1698,44 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
-							)	
+								aprmemberid = #proxyList[].id#
+							AND
+							    aprmemberdeptid = #proxyList[].dept#
+							AND	
+								aprtype = '007'
+							AND 
+								aprstate = '002'
+							AND
+								tenant_id = #v_TENANTID#
+							AND
+								companyid IN(
+                                    SELECT
+                                        extensionattribute2
+                                    FROM
+                                        TBL_DEPTMASTER
+                                    INNER JOIN
+                                        TBL_ADDJOBMASTER
+                                    ON
+                                        (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                                    AND
+                                        TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                                    WHERE
+                                        TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                                    AND
+                                        TBL_ADDJOBMASTER.cn = #v_USERID#
+                                    UNION ALL
+                                    SELECT
+                                        physicaldeliveryofficename
+                                    FROM
+                                        TBL_USERMASTER
+                                    WHERE
+                                        cn = #v_USERID#
+                                    AND
+                                        tenant_id = #v_TENANTID#
+                                )
+							)
 			]]>
 			</iterate>
 			</isNotEmpty>
@@ -2900,7 +3106,8 @@
       				DOCID, 
       				ATTACHFILENAME AS REALATTACHNAME,
       				TENANT_ID, 
-      				COMPANYID
+      				COMPANYID,
+      				IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
       			FROM 
       				TBL_APRATTACHINFO  
       			WHERE
@@ -2908,7 +3115,7 @@
       			AND
             		TENANT_ID = #v_TENANTID# 
             	AND
-            		COMPANYID = #companyID#	
+            		COMPANYID = #companyID#
             		
       		UNION ALL 
       		
@@ -2924,7 +3131,8 @@
       				DOCID , 
       				ATTACHDOCNAME AS REALATTACHNAME,
       				TENANT_ID,
-      				COMPANYID
+      				COMPANYID,
+					ATTACHSN AS VIEWSN
       			FROM 
       				TBL_APRDOCATTACHINFO
       			WHERE 
@@ -2952,7 +3160,8 @@
          				DOCID, 
          				ATTACHFILENAME AS REALATTACHNAME,
          				TENANT_ID ,
-      					COMPANYID
+      					COMPANYID,
+      					IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
          			FROM 
          				TBL_ENDATTACHINFO  
          			WHERE 
@@ -2974,7 +3183,8 @@
          			DOCID, 
          			ATTACHDOCNAME AS REALATTACHNAME,
          			TENANT_ID,
-      				COMPANYID
+      				COMPANYID,
+      				ATTACHSN AS VIEWSN
          		FROM 
          			TBL_ENDAPRDOCATTACHINFO ) A 
          		WHERE 
@@ -3000,7 +3210,8 @@
             	CONCAT(OWNERID ,'@' ,SN ) AS DOCID, 
             	ATTACHFILENAME AS REALATTACHNAME,
             	TENANT_ID,
-      			COMPANYID
+      			COMPANYID,
+      			IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
             FROM 
             	TBL_TMPATTACHINFO  
             WHERE 
@@ -3021,7 +3232,8 @@
             	CONCAT(OWNERID ,'@' ,SN ) AS DOCID, 
             	ATTACHDOCNAME AS REALATTACHNAME,
             	TENANT_ID,
-      			COMPANYID
+      			COMPANYID,
+      			ATTACHSN AS VIEWSN
             FROM 
             	TBL_TMPAPRDOCATTACHINFO ) A 
             WHERE 
@@ -3049,7 +3261,8 @@
             		DOCID , 
             		ATTACHFILENAME AS REALATTACHNAME,
             		TENANT_ID,
-      				COMPANYID
+      				COMPANYID,
+      				IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
             	FROM 
             		TBL_APRATTACHINFO  
             	WHERE 
@@ -3071,7 +3284,8 @@
             		DOCID ,
             		ATTACHDOCNAME AS REALATTACHNAME,
             		TENANT_ID,
-      				COMPANYID
+      				COMPANYID,
+      				ATTACHSN AS VIEWSN
             	FROM 
             		TBL_APRDOCATTACHINFO ) A 
             	WHERE 
@@ -3090,15 +3304,15 @@
 					ORDER BY TRIM($v_ORDERBY$) 
 				</isEqual>
 				<isNotEqual property="v_ORDERBYVALUE" compareValue="attachtype">
-					ORDER BY TRIM($v_ORDERBY$), ATTACHTYPE DESC  
+					ORDER BY TRIM($v_ORDERBY$), ATTACHTYPE DESC, VIEWSN ASC
 				</isNotEqual>
 			</isGreaterEqual>
 			<isLessThan property="v_ORDERBYLENGTH" compareValue="10">
-				ORDER BY TRIM($v_ORDERBY$), ATTACHTYPE DESC
+				ORDER BY TRIM($v_ORDERBY$), ATTACHTYPE DESC, VIEWSN ASC
 			</isLessThan>
 		</isGreaterThan>
 		<isLessEqual property="v_ORDERBYLENGTH" compareValue="0">
-				 ORDER BY ATTACHTYPE DESC
+				 ORDER BY ATTACHTYPE DESC, VIEWSN ASC
 		</isLessEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.checkPermission" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
@@ -3904,17 +4118,70 @@
 			AND
 				TENANT_ID = #v_TENANTID#
 			AND
-				COMPANYID = #companyID#
-			  AND docid in (
+				companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
+			AND docid in (
 				SELECT 
 					docid 
 				FROM
-					tbl_aprlineinfo
+					TBL_APRLINEINFO
 				WHERE
-					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
+					aprmemberid = #proxyList[].id#
+				AND
+                 	aprmemberdeptid = #proxyList[].dept
+				AND
+					(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+                AND
+					tenant_id = #v_TENANTID#
+                AND
+                    companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
 				)	
 			UNION ALL
 			
@@ -3929,18 +4196,74 @@
 			AND
 				TENANT_ID = #v_TENANTID#
 			AND
-				COMPANYID = #companyID#
-						  AND docid in (
-							SELECT 
-								docid 
-							FROM
-								tbl_aprlineinfo
-							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
-							)	
+				companyid IN(
+                    SELECT
+                        extensionattribute2
+                    FROM
+                        TBL_DEPTMASTER
+                    INNER JOIN
+                        TBL_ADDJOBMASTER
+                    ON
+                        (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                    AND
+                        TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                    WHERE
+                        TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                    AND
+                        TBL_ADDJOBMASTER.cn = #v_USERID#
+                    UNION ALL
+                    SELECT
+                        physicaldeliveryofficename
+                    FROM
+                        TBL_USERMASTER
+                    WHERE
+                        cn = #v_USERID#
+                    AND
+                        tenant_id = #v_TENANTID#
+                )
+            AND docid in (
+                SELECT
+                    docid
+                FROM
+                    TBL_ENDAPRLINEINFO
+                WHERE
+                    aprmemberid = #proxyList[].id#
+                AND
+                    aprmemberdeptid = #proxyList[].dept#
+                AND
+                    aprstate = '002'
+                AND
+                    aprtype = '007'
+                AND
+                    tenant_id = #v_TENANTID#
+                AND
+                   companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
+
+                )
 			]]>
 			</iterate>
 			</isNotEmpty>
@@ -4556,7 +4879,7 @@
 		AND
 		  COMPANYID = #companyID#
 		ORDER BY 
-		  APRMEMBERSN DESC 
+		  APRMEMBERSN 
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormInfoDetail" parameterClass="Map" resultClass="ApprGFormVO"> -->
@@ -4573,6 +4896,22 @@
         	FORMID = #v_FORMID#
         AND
          	COMPANYID = #companyID#
+	</select>
+
+	<select id="EzApprovalG.getFormPath" parameterClass="Map" resultClass="ApprGFormVO">
+		<![CDATA[
+			SELECT
+				formId,
+				formFileLocation
+			FROM
+				TBL_FORMINFO
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				companyId = #companyId#
+			AND
+				formId = #formId#
+		]]>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormRecvAprDB" parameterClass="Map" resultClass="ApprGReceiptVO"> -->
@@ -5018,9 +5357,7 @@
 		    TBL_CABINET.TRANSDELAYFLAG,
 		    TBL_CABINET.TITLE,
 		    TBL_CABINET.TITLE2,
-		   	<!--  단위업무가 아닌 기록물철 자체의 보존연한을 가져오게 수정 2019-03-22 임민석 -->
-		    TBL_CABINET.KEEPINGPERIOD,
-		    <!-- VTASKCLASS.KEEPINGPERIOD, -->
+		    IFNULL(TBL_CABINET.KEEPINGPERIOD, VTASKCLASS.KEEPINGPERIOD) KEEPINGPERIOD,
 		    VTASKCLASS.DISPLAYRECFLAG,
 		    VTASKCLASS.DISPLAYRECTRASTIME,
 		    VTASKCLASS.SC1,
@@ -5455,17 +5792,17 @@
 				</isEqual>
 				<isNotEqual property="v_ORDERBYVALUE" compareValue="attachfilesn">
 					ORDER BY 
-							TRIM($v_ORDERBY$) , ATTACHFILESN DESC
+							TRIM($v_ORDERBY$) , IFNULL(VIEWORDER, ATTACHFILESN) ASC
 				</isNotEqual>
 			</isGreaterEqual>
 			<isLessThan property="v_ORDERBYLENGTH" compareValue="12">
 			 		ORDER BY 
-			 				TRIM($v_ORDERBY$) , ATTACHFILESN DESC 
+			 				TRIM($v_ORDERBY$) , IFNULL(VIEWORDER, ATTACHFILESN) ASC
 			</isLessThan>
 		</isGreaterThan>
 		<isLessEqual property="v_ORDERBYLENGTH" compareValue="0" >
 					ORDER BY 
-							ATTACHFILESN DESC
+							IFNULL(VIEWORDER, ATTACHFILESN) ASC
 		</isLessEqual>
 	</select>
 	
@@ -6481,27 +6818,30 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getHistoryForDoc" parameterClass="Map" resultClass="ApprGHistoryDocVO">
 		SELECT 
-				DOCID, 
-				CHANGESN, 
+				DOCID,
+				ROW_NUMBER() OVER (ORDER BY CHANGEDATE ASC) AS CHANGESN, 
 				URL, 
 				CHANGEUSERID, 
 				CHANGEUSERJOBTITLE, 
 				CHANGEUSERJOBTITLE2,
-   				CHANGEUSERNAME, 
-   				CHANGEUSERNAME2, 
-   				CHANGEUSERDEPTID, 
-   				CHANGEUSERDEPTNAME, 
-   				CHANGEUSERDEPTNAME2, 
-   				CHANGEDATE, 
-   				CHKFLAG
+				CHANGEUSERNAME, 
+				CHANGEUSERNAME2, 
+				CHANGEUSERDEPTID, 
+				CHANGEUSERDEPTNAME, 
+				CHANGEUSERDEPTNAME2, 
+				CHANGEDATE, 
+				CHKFLAG,
+				IFNULL(BEFOREDOCURL, '') AS BEFOREDOCURL
    		FROM 
-   				TBL_HISTORYDOCINFO 
+				TBL_HISTORYDOCINFO 
    		WHERE 
    				DOCID = #v_DOCID#
    		AND
    				TENANT_ID = #v_TENANTID#
    		AND
    				COMPANYID = #companyID#
+		AND
+   				(ISBEFOREDOC = 'N' OR ISBEFOREDOC IS NULL OR TRIM(ISBEFOREDOC) = '')
    		<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
    			<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="10">
    				<isEqual property="v_ORDEROPTIONVALUE" compareValue="changedate">
@@ -6518,10 +6858,10 @@
    			 			$v_ORDEROPTION$, CHANGEDATE DESC
    			</isLessThan>
    		</isGreaterThan>
-   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="0">
+   		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
    			  ORDER BY 
    			 			CHANGEDATE DESC
-   		</isLessThan>
+   		</isLessEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getHistoryForLine" parameterClass="Map" resultClass="ApprGHistoryLineVO"> -->
 <!-- 		{CALL EZSP_GETHISTORYFORLINE(#v_DOCID#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -6736,7 +7076,9 @@
 		    	APRMEMBERID = #v_USERID#
 		      <isEqual property="v_CHAMSTATE" compareValue="017">
 	      	AND 
-	      	 	APRSTATE = '000'
+	      	 	(APRSTATE = '000' OR APRSTATE = '002')
+	      	AND
+	      		APRTYPE = '007'
 		      </isEqual> 
 		      <isNotEqual property="v_CHAMSTATE" compareValue="017">
 		    AND 
@@ -7128,6 +7470,8 @@
 	       	LIMIT 1
 	       	 	 ]]> 
 	</select>
+	
+	<!-- 합의문 또는 감사문 회송시 합의부서 문서의 마지막 의견을 원문서에 만들어주는 로직에서 사용 -->
 <!-- 	<procedure id="EzApprovalG.setLastOpinionToOrgDoc" parameterClass="Map" resultClass="ApprGOpinionVO"> -->
 <!-- 		{CALL EZSP_SETLASTOPINIONTOORGDOC(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -7137,17 +7481,7 @@
 			TBL_APROPINIONINFO.* 
 		FROM 
 			TBL_APROPINIONINFO 
-        JOIN 
-        	TBL_APRLINEINFO    
-        ON 
-        	TBL_APROPINIONINFO.DocID = TBL_APRLINEINFO.DocID
-        AND 
-        	TBL_APROPINIONINFO.UserID = TBL_APRLINEINFO.AprMemberID
-        AND
-        	TBL_APROPINIONINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID
-        AND
-        	TBL_APROPINIONINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID
-		WHERE  
+        WHERE  
 			TBL_APROPINIONINFO.DocID = #v_DOCID#
 		AND
 			TBL_APROPINIONINFO.TENANT_ID = #v_TENANTID#
@@ -7368,6 +7702,25 @@
                 ORDER BY 
                       APRMEMBERSN 
          </isEqual>
+		<isEqual property="v_FLAG" compareValue="4">
+			SELECT
+				APRMEMBERSN ,
+				APRTYPE ,
+				APRMEMBERID ,
+				APRMEMBERDEPTID ,
+				ISPROPOSERYN ,
+				ISBRIEFUSERYN 
+			FROM 
+				TBL_ENDAPRLINEINFO
+			WHERE
+				DOCID = #v_DOCID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			ORDER BY 
+				APRMEMBERSN
+         </isEqual>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getApproveDocInfo" parameterClass="Map" resultClass="ApprGDocListVO"> -->
@@ -7417,6 +7770,10 @@
           AND
           		DOCSTATE = #v_CHAMSTATE#
           </isNotEmpty>
+          <isEmpty property="v_CHAMSTATE">
+          AND
+          		DOCSTATE != '017'
+          </isEmpty>
           </isNotNull>
          
 	        LIMIT 1
@@ -7605,7 +7962,9 @@
 			SELECT 
 					'DOC' TYPE  ,
 	                DocTitle FILENAME  ,
-	                Href FILEPATH   
+	                Href FILEPATH   ,
+	                1 AS TYPESN,
+	                1 AS VIEWSN
 	         FROM 
 	         		TBL_APRDOCINFO 
 	         WHERE  
@@ -7619,7 +7978,9 @@
 	         
 	         SELECT 'ATT' TYPE  ,
 	                AttachFileName FILENAME  ,
-	                AttachFileHref FILEPATH  
+	                AttachFileHref FILEPATH  ,
+					2 AS TYPESN,
+	                IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
 	         FROM 
 	         		TBL_APRATTACHINFO 
 	         WHERE  
@@ -7634,7 +7995,9 @@
 	         SELECT 
 	         		'ATTDOC' TYPE  ,
 	                AttachDocName FILENAME  ,
-	                AttachDocURL FILEPATH  
+	                AttachDocURL FILEPATH  ,
+	                3 AS TYPESN,
+	                ATTACHSN AS VIEWSN
 	         FROM 
 	         		TBL_APRDOCATTACHINFO 
 	         WHERE 
@@ -7649,7 +8012,9 @@
 				SELECT 
 						'DOC' TYPE  ,
 		                DocTitle FILENAME  ,
-		                Href FILEPATH   
+		                Href FILEPATH   ,
+						1 AS TYPESN,
+		                1 AS VIEWSN
 		        FROM 
 		        		TBL_ENDAPRDOCINFO
 		        WHERE  
@@ -7664,7 +8029,9 @@
 		        SELECT 
 		        		'ATT' TYPE  ,
 		                AttachFileName FILENAME  ,
-		                AttachFileHref FILEPATH  
+		                AttachFileHref FILEPATH  ,
+						2 AS TYPESN,
+	               	 	IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
 		        FROM 
 		        		TBL_ENDATTACHINFO 
 		        WHERE  
@@ -7679,7 +8046,9 @@
 		        SELECT 
 		        		'ATTDOC' TYPE  ,
 		                AttachDocName FILENAME  ,
-		                AttachDocURL FILEPATH  
+		                AttachDocURL FILEPATH  ,
+						3 AS TYPESN,
+	                	ATTACHSN AS VIEWSN
 		        FROM 
 		        		TBL_ENDAPRDOCATTACHINFO 
 		        WHERE  
@@ -7700,7 +8069,9 @@
 							'DOC' TYPE,
 							DOCTITLE FILENAME,
 							HREF FILEPATH,
-							CONCAT(OWNERID, '@', SN) AS DOCID
+							CONCAT(OWNERID, '@', SN) AS DOCID,
+							1 AS TYPESN,
+		                	1 AS VIEWSN
 						FROM
 							TBL_TMPAPRDOCINFO
 						WHERE
@@ -7714,7 +8085,9 @@
 							'ATT' TYPE,
 							DISPLAYNAME FILENAME,
 							ATTACHFILEHREF FILEPATH,
-							CONCAT(OWNERID, '@', SN) AS DOCID
+							CONCAT(OWNERID, '@', SN) AS DOCID,
+							2 AS TYPESN,
+	               	 		IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
 						FROM
 							TBL_TMPATTACHINFO
 						WHERE
@@ -7728,7 +8101,9 @@
 							'ATTDOC' TYPE,
 							ATTACHDOCNAME FILENAME,
 							ATTACHDOCURL FILEPATH,
-							CONCAT(OWNERID, '@', SN) AS DOCID
+							CONCAT(OWNERID, '@', SN) AS DOCID,
+							3 AS TYPESN,
+	                		ATTACHSN AS VIEWSN
 						FROM
 							TBL_TMPAPRDOCATTACHINFO
 						WHERE
@@ -7740,6 +8115,8 @@
 					A.DOCID = #v_PDOCID#
 			</isNotEqual>
 		</isNotEqual>
+			ORDER BY
+				TYPESN ASC, VIEWSN ASC
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getReceiveDocList" parameterClass="Map" resultClass="ApprGReceiveDocVO"> -->
@@ -8032,6 +8409,19 @@
 					             TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 					        AND
 					             TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#) RECEIVEDDEPTID  ,
+						  (
+	                        SELECT 
+	                        	 TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTNAME 
+					        FROM 
+					        	 TBL_APRRECEIPTPROCESSINFO 
+					     	WHERE  
+					     		 TBL_APRRECEIPTPROCESSINFO.DOCID = #v_DOCID#
+					        AND 
+					        	 TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
+					        AND
+					             TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+					        AND
+					             TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#) RECEIVEDDEPTNAME  ,
 	                      (
 	                       SELECT 
 	                      	  *  
@@ -9626,25 +10016,25 @@
 		   		TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 		   	AND
 		   		TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
-		   	AND 
-		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID
-		   
 		   	]]>
-		   	<isEqual property="v_MODELENGTH" compareValue="2">
-		   	NOT
-		   	</isEqual>
-		   	 LIKE 
-		   	 	'ADDRESS%' 
+<!-- 		   	AND  -->
+<!-- 		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID -->
+		   
+<!-- 		   	<isEqual property="v_MODELENGTH" compareValue="2"> -->
+<!-- 		   	NOT -->
+<!-- 		   	</isEqual> -->
+<!-- 		   	 LIKE  -->
+<!-- 		   	 	'ADDRESS%'  -->
 		   	 AND 
 		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 		   	<isEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
 		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
 		   	</isEqual>
-		   	<isNotEqual property="v_MODELENGTH" compareValue="2">
-		   	 AND 
-		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
-		   	</isNotEqual> 
+<!-- 		   	<isNotEqual property="v_MODELENGTH" compareValue="2"> -->
+<!-- 		   	 AND  -->
+<!-- 		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#) -->
+<!-- 		   	</isNotEqual>  -->
 		   	<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
 			AND
 				$v_SPSUBQUERY$
@@ -10420,12 +10810,39 @@
 					SELECT 
 						docid 
 					FROM
-						tbl_aprlineinfo
+						TBL_APRLINEINFO
 					WHERE
-						APRMEMBERID = #v_USERID#
-					AND TENANT_ID = #v_TENANTID# 
-					AND COMPANYID = #companyID#
-	                AND APRMEMBERDEPTID = #v_DEPTID#
+						aprmemberid = #v_USERID#
+					AND
+						(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+					AND
+					 	tenant_id = #v_TENANTID#
+					AND
+					 	companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
 					)	
 			   		UNION ALL
 			   			
@@ -10473,12 +10890,41 @@
 						SELECT 
 							docid 
 						FROM
-							tbl_aprlineinfo
+							TBL_ENDAPRLINEINFO
 						WHERE
-							APRMEMBERID = #v_USERID#
-						AND TENANT_ID = #v_TENANTID# 
-						AND COMPANYID = #companyID#
-		                AND APRMEMBERDEPTID = #v_DEPTID#
+							aprmemberid = #v_USERID#
+						AND 
+							aprtype = '007' 
+						AND 
+							aprstate = '002'
+						AND
+							tenant_id = #v_TENANTID#
+						AND
+						 	companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
 						)	
    			]]>
 			<!-- 부재자설정한 유저의 결재할문서 리스트 -->
@@ -10526,12 +10972,41 @@
 				SELECT 
 					docid 
 				FROM
-					tbl_aprlineinfo
+					TBL_APRLINEINFO
 				WHERE
-					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
+					aprmemberid = #proxyList[].id#
+				AND
+					aprmemberdeptid = #proxyList[].dept#
+				AND
+					(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+				AND
+				 	tenant_id = #v_TENANTID#
+				AND
+					companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
 				)	
 			UNION ALL
 			
@@ -10575,12 +11050,43 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND
+								aprstate = '002'
+							AND
+								aprtype = '007'
+							AND
+			                 	aprmemberdeptid = #proxyList[].dept#
+			                AND
+							 	tenant_id = #v_TENANTID#
+							AND
+							 	companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
 							)	
 			]]>
 			</iterate>
@@ -10590,7 +11096,7 @@
 	<!-- 결재진행문서, 공람문서는 제외한다. AprType <> ''015'' -->
 		<![CDATA[
 	   		SELECT 
-				COUNT (DISTINCT DOCID,COMPANYID) AS COUNT
+				COUNT(DISTINCT DOCID,COMPANYID) AS COUNT
 	   		FROM 
 	   			VAPRWILLDOCLIST 
 	   		WHERE 
@@ -10641,12 +11147,37 @@
 				SELECT 
 					docid 
 				FROM
-					tbl_aprlineinfo
+					TBL_APRLINEINFO
 				WHERE
-					APRMEMBERID = #v_USERID#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-	               AND APRMEMBERDEPTID = #v_DEPTID#
+					aprmemberid = #v_USERID#
+				AND
+				 	tenant_id = #v_TENANTID#
+				AND
+				 	companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
 			)
    		]]>
 	<!--기안한 문서-->
@@ -12037,6 +12568,8 @@
 	    AND 
 	    	APRMEMBERID = #v_APRMEMBERID#
 	    AND
+        	(APRSTATE = #v_STAASJINHANG# OR APRSTATE = #v_STAASBORYU#)
+	    AND
 	    	TENANT_ID = #v_TENANTID#
 	    AND
             COMPANYID = #companyID#
@@ -12117,7 +12650,7 @@
                   		AND
                   			TENANT_ID = #v_TENANTID#
                   		AND
-          					COMPANYID = #companyID#)  END
+          					COMPANYID = #companyID#)  END AS APRSTATE
      		  FROM (
    		  		 SELECT 
    		  		 	COUNT(DOCID)  DOCID
@@ -12260,17 +12793,46 @@
 						)
 			]]>
 			<isEqual property="v_LISTTYPE" compareValue="1">
-			  AND docid in (
-				SELECT 
-					docid 
-				FROM
-					tbl_aprlineinfo
-				WHERE
-					APRMEMBERID = #v_USERID#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #deptID#
-				)	
+				<![CDATA[
+					AND docid in
+						(SELECT
+						docid
+					FROM
+						TBL_APRLINEINFO
+					WHERE
+						APRMEMBERID = #v_USERID#
+					AND
+						(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+					AND
+						tenant_id = #v_TENANTID#
+					AND
+						companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
+					)
+				]]>
 			</isEqual>
 			<![CDATA[
 			UNION ALL
@@ -12321,17 +12883,47 @@
 						)
 			]]>
 						<isEqual property="v_LISTTYPE" compareValue="1">
-						  AND docid in (
-							SELECT 
-								docid 
-							FROM
-								tbl_aprlineinfo
-							WHERE
-								APRMEMBERID = #v_USERID#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #deptID#
-							)	
+							<![CDATA[
+								AND docid in
+									(SELECT
+										docid
+									FROM
+										TBL_ENDAPRLINEINFO
+									WHERE
+										aprmemberid = #v_USERID#
+									AND
+										APRTYPE = '007'
+									AND
+										APRSTATE = '002'
+									AND
+										tenant_id = #v_TENANTID#
+									AND
+										companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    ))
+							]]>
 						</isEqual>
 			<!-- 부재자설정한 유저의 결재할문서 리스트 -->
 			<isEqual property="v_LISTTYPE" compareValue="1"> 
@@ -12375,17 +12967,45 @@
 						AND
 							TENANT_ID = #v_TENANTID# 
 						)
-			  AND docid in (
-				SELECT 
-					docid 
-				FROM
-					tbl_aprlineinfo
-				WHERE
-					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
-				)	
+						AND docid in
+							(SELECT
+								docid
+							FROM
+								TBL_APRLINEINFO
+							WHERE
+								aprmemberid = #proxyList[].id#
+							AND
+							 	aprmemberdeptid = #proxyList[].dept#
+							AND
+								(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+							AND
+								tenant_id = #v_TENANTID#
+							AND
+								companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    ))
 			UNION ALL
 			
 			SELECT 
@@ -12428,13 +13048,43 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
-							)	
+								aprmemberid = #proxyList[].id#
+							AND
+								aprmemberdeptid = #proxyList[].dept#
+							AND
+								APRTYPE = '007'
+							AND
+								APRSTATE = '002'
+							AND
+								tenant_id = #v_TENANTID#
+							AND
+								companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    ))
 			]]>
 			</iterate>
 			</isNotEmpty>
@@ -12537,17 +13187,41 @@
 						AND
 							TENANT_ID = #v_TENANTID# 
 						)
-			AND docid in (
-							SELECT 
-								docid 
-							FROM
-								tbl_aprlineinfo
-							WHERE
-								APRMEMBERID = #v_USERID#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #deptID#
-							)	
+			AND docid in
+				(SELECT
+					docid
+				FROM
+					TBL_APRLINEINFO
+				WHERE
+					aprmemberid = #v_USERID#
+				AND
+					tenant_id = #v_TENANTID#
+				AND
+					companyid IN(
+						SELECT
+							extensionattribute2
+						FROM
+							TBL_DEPTMASTER
+						INNER JOIN
+							TBL_ADDJOBMASTER
+						ON
+							(TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+						AND
+							TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+						WHERE
+							TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+						AND
+							TBL_ADDJOBMASTER.cn = #v_USERID#
+						UNION ALL
+						SELECT
+							physicaldeliveryofficename
+						FROM
+							TBL_USERMASTER
+						WHERE
+							cn = #v_USERID#
+						AND
+							tenant_id = #v_TENANTID#
+					))
 		
 		</isEqual>
 		<!-- 공람할 문서 --><!-- 2018-04-30 천성준 (#12468) 대리 결재자여도 회람(공람)문서는 제외 -->
@@ -14207,10 +14881,16 @@
 <!-- 	<procedure id="EzApprovalG.getSearchDocListCount" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZSP_GETSEARCHDOCLISTCOUNT(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_DOCNUMBER#, #v_DOCTITLE#, #v_DRAFTER#, #v_DEPTNAME#, #v_FORMID#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, #v_PROCESSDATE1#, #v_PROCESSDATE2#, #iv_APRFLAG#, #v_DOCSTATE#, #v_LANGTYPE#, #v_APPROVUSER#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id ="EzApprovalG.getSearchDocListCount" parameterClass="Map" resultClass="int">
+	<select id ="EzApprovalG.getSearchDocListCount" parameterClass="Map" resultClass="int" remapResults="true">
 	<![CDATA[
 		SELECT 
-			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID)
+			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID
+   	]]>
+			<isNotEqual property="approvalFlag" compareValue="G">
+			,IFNULL(E.PROCESSYN,'S')
+			</isNotEqual>
+	<![CDATA[
+			)
    		FROM 
    			TBL_ENDAPRDOCINFO 
    		LEFT OUTER JOIN 
@@ -14925,12 +15605,41 @@
 				SELECT 
 					docid 
 				FROM
-					tbl_aprlineinfo
+					TBL_APRLINEINFO
 				WHERE
-					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
+					aprmemberid = #proxyList[].id#
+				AND
+				    aprmemberdept = #proxyList[].dept#
+				AND
+					(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+				AND
+					tenant_id = #v_TENANTID#
+				AND
+					companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_PUSERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_PUSERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
 				)	
 			UNION ALL
 			
@@ -14974,12 +15683,43 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND
+							    aprmemberdeptid = #proxyList[].dept#
+							AND
+								aprstate = '002'
+							AND
+								aprtype = '007'
+							AND
+								tenant_id = #v_TENANTID#
+							AND
+								companyid IN(
+                                    SELECT
+                                        extensionattribute2
+                                    FROM
+                                        TBL_DEPTMASTER
+                                    INNER JOIN
+                                        TBL_ADDJOBMASTER
+                                    ON
+                                        (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                                    AND
+                                        TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                                    WHERE
+                                        TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                                    AND
+                                        TBL_ADDJOBMASTER.cn = #v_USERID#
+                                    UNION ALL
+                                    SELECT
+                                        physicaldeliveryofficename
+                                    FROM
+                                        TBL_USERMASTER
+                                    WHERE
+                                        cn = #v_PUSERID#
+                                    AND
+                                        tenant_id = #v_TENANTID#
+                                )
 							)	
 			]]>
 			</iterate>
@@ -15530,13 +16270,42 @@
 				SELECT 
 					docid 
 				FROM
-					tbl_aprlineinfo
+					TBL_APRLINEINFO
 				WHERE
-					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
-				)	
+					aprmemberid = #proxyList[].id#
+				AND
+				    aprmemberdeptid = #proxyList[].dept#
+				AND
+				    (aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+				AND
+				    tenant_id = #v_TENANTID#
+				AND
+				    companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
+				)
 			UNION ALL
 			
 			SELECT 
@@ -15579,12 +16348,43 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND
+							    aprmemberdeptid = #proxyList[].dept#
+							AND
+                                aprstate = '002'
+                            AND
+                                aprtype = '007'
+							AND
+								tenant_id = #v_TENANTID#
+							AND
+								companyid IN(
+                                    SELECT
+                                        extensionattribute2
+                                    FROM
+                                        TBL_DEPTMASTER
+                                    INNER JOIN
+                                        TBL_ADDJOBMASTER
+                                    ON
+                                        (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                                    AND
+                                        TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                                    WHERE
+                                        TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                                    AND
+                                        TBL_ADDJOBMASTER.cn = #v_USERID#
+                                    UNION ALL
+                                    SELECT
+                                        physicaldeliveryofficename
+                                    FROM
+                                        TBL_USERMASTER
+                                    WHERE
+                                        cn = #v_USERID#
+                                    AND
+                                        tenant_id = #v_TENANTID#
+                                )
 							)	
 			]]>
 			</iterate>
@@ -16241,9 +17041,11 @@
 	<insert id="EzApprovalG.aprMakeTmp2Ing4" parameterClass="Map">
 		INSERT INTO 
 			TBL_APRATTACHINFO
+		( DOCID, ATTACHFILESN, VIEWORDER, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERJOBTITLE, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, PAGENUM, DISPLAYNAME, BODYATTACH, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID )
      	( SELECT 
      		  #v_PDOCID# ,
               ATTACHFILESN ,
+              VIEWORDER ,
               ATTACHFILENAME ,
               ATTACHFILEHREF ,
               ATTACHFILESIZE ,
@@ -16391,7 +17193,7 @@
               ORGDOCID ,
               DOCTYPE ,
               DOCSTATE ,
-              FUNCTIONTYPE ,
+              '000' ,
               HREF ,
               DOCTITLE ,
               DOCNO ,
@@ -16567,7 +17369,72 @@
 			AND
 				DOCID = #v_TMPDOCID#
 	</insert>
-	
+
+	<insert id="EzApprovalG.aprMakeTmp2Ing13" parameterClass="Map">
+		INSERT INTO 
+			TBL_OPENGOVFILEINFO
+     	( SELECT 
+     		  #v_PDOCID# ,
+              ATTACHFILESN AS SN,
+              FILEOPENFLAG,
+	          COMPANYID,
+	          TENANT_ID
+       	  FROM 
+       	   	  TBL_OPENGOVFILEINFO
+          WHERE 
+          	  TENANT_ID = #v_TENANTID#
+          AND
+          	  COMPANYID = #companyID#
+          AND 
+          	  DOCID = #v_TMPDOCID# )
+	</insert>
+
+	<insert id="EzApprovalG.aprMakeTmp2Ing14" parameterClass="Map">
+		INSERT INTO
+	 		TBL_OPENGOVDOCINFO
+	 		(DOCID, OPENFLAG, BASIS, REASON, LISTOPENFLAG, CREATEDATE, OPENLIMITDATE, TENANT_ID, COMPANYID)
+	 	(SELECT
+	 		#v_PDOCID#,
+	 		openflag,
+	 		basis,
+	 		reason,
+	 		listopenflag,
+	 		now(),
+	 		openlimitdate,
+	 		tenant_id,
+	 		companyid
+	 	FROM
+	 		TBL_OPENGOVDOCINFO
+	 	WHERE
+	 		tenant_id = #v_TENANTID#
+		AND
+			companyid = #companyID#
+		AND
+			docid = #v_TMPDOCID#)
+	</insert>
+
+    <delete id="EzApprovalGDAO.aprDeleteDocInfo13" parameterClass="Map">
+        DELETE FROM
+            TBL_OPENGOVFILEINFO
+        WHERE
+            tenant_id = #v_TENANTID#
+		AND
+			companyid = #companyID#
+		AND
+			docid = #v_DocID#
+    </delete>
+
+    <delete id="EzApprovalGDAO.aprDeleteDocInfo14" parameterClass="Map">
+        DELETE FROM
+            TBL_OPENGOVDOCINFO
+        WHERE
+            tenant_id = #v_TENANTID#
+		AND
+			companyid = #companyID#
+		AND
+			docid = #v_DocID#
+    </delete>
+
 	<select id="EzApprovalG.checkTmpDocHasGongRam" parameterClass="Map" resultClass="int" remapResults="true">
 		SELECT
 			COUNT(*)
@@ -18412,10 +19279,11 @@
 	<insert id="EzApprovalG.insertTbAprAttachInfo" parameterClass="Map">
 	 	INSERT INTO 
 	 		TBL_APRATTACHINFO
-        ( DOCID, ATTACHFILESN, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERNAME2, ATTACHUSERJOBTITLE, ATTACHUSERJOBTITLE2, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, ATTACHUSERDEPTNAME2, PAGENUM, DISPLAYNAME, BODYATTACH, TENANT_ID, COMPANYID )
+        ( DOCID, ATTACHFILESN, VIEWORDER, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERNAME2, ATTACHUSERJOBTITLE, ATTACHUSERJOBTITLE2, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, ATTACHUSERDEPTNAME2, PAGENUM, DISPLAYNAME, BODYATTACH, TENANT_ID, COMPANYID )
         ( SELECT 
         		 #v_DOCID# ,
                  ATTACHFILESN ,
+                 VIEWORDER ,
                  ATTACHFILENAME ,
                  ATTACHFILEHREF ,
                  ATTACHFILESIZE ,
@@ -18757,6 +19625,32 @@
 																																																																					    	COMPANYID = #companyID#), #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, ' ' , TENANT_ID, COMPANYID
           FROM 
         			TBL_APRLINEINFO 
+          WHERE  
+          			DOCID = #v_DOCID#
+          AND
+          			TENANT_ID = #v_TENANTID#
+          AND
+          			COMPANYID = #companyID#)
+	</insert>
+	
+	<insert id="EzApprovalG.updateHistoryForLine2" parameterClass="Map">
+		 INSERT INTO 
+		 			TBL_HISTORYLINEINFO
+        			( DOCID,   APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, MODIFYDATE, MODIFYSN, MODIFYUSERID, MODIFYUSERNAME, MODIFYUSERNAME2, MODIFYUSERJOBTITLE, MODIFYUSERJOBTITLE2, MODIFYUSERDEPTID, MODIFYUSERDEPTNAME, MODIFYUSERDEPTNAME2, CHKFLAG , TENANT_ID, COMPANYID)
+        ( SELECT 
+        			#v_DOCID#, APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, #v_SYSDATE#, (
+        																																																																				SELECT 
+        																																																																					IFNULL(MAX(MODIFYSN),0) + 1 
+																																																																					    FROM 
+																																																																					    	TBL_HISTORYLINEINFO 
+																																																																					    WHERE  
+																																																																					    	DOCID = #v_DOCID#
+																																																																					    AND
+																																																																					    	TENANT_ID = #v_TENANTID#
+																																																																					    AND
+																																																																					    	COMPANYID = #companyID#), #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, ' ' , TENANT_ID, COMPANYID
+          FROM 
+        			TBL_ENDAPRLINEINFO 
           WHERE  
           			DOCID = #v_DOCID#
           AND
@@ -21888,9 +22782,9 @@
    <insert id="EzApprovalG.insertAprAttachInfo" parameterClass="map">
    		INSERT INTO 
    			   TBL_APRATTACHINFO 
-   			(DocID,       AttachFileSN,    AttachFileName,       AttachFileHref,    AttachFileSize,     AttachUserID,     AttachUserName,    AttachUserName2,        AttachUserJobTitle,     AttachUserJobTitle2,    AttachUserDeptID,    AttachUserDeptName,       AttachUserDeptName2,   PageNum,     DisplayName,    BodyAttach,     TENANT_ID,  COMPANYID) 
+   			(DocID,       AttachFileSN,  ViewOrder,  AttachFileName,       AttachFileHref,    AttachFileSize,     AttachUserID,     AttachUserName,    AttachUserName2,        AttachUserJobTitle,     AttachUserJobTitle2,    AttachUserDeptID,    AttachUserDeptName,       AttachUserDeptName2,   PageNum,     DisplayName,    BodyAttach,     TENANT_ID,  COMPANYID) 
    		VALUES 
-   			(#v_DOCID#, #v_ATTACHFILESN#, #v_ATTACHFILENAME#, #v_ATTACHFILEHREF#, #v_ATTACHFILESIZE#, #v_ATTACHUSERID#, #v_ATTACHUSERNAME#, #v_ATTACHUSERNAME2#, #v_ATTACHUSERJOBTITLE#, #v_ATTACHUSERJOBTITLE2#, #v_ATTACHUSERDEPTID#, #v_ATTACHUSERDEPTNAME#, #v_ATTACHUSERDEPTNAME2#, #v_PAGENUM#, #v_DISPLAYNAME#, #v_BODYATTACH#, #v_TENANTID#, #companyID#)
+   			(#v_DOCID#, #v_ATTACHFILESN#, #v_VIEWORDER#, #v_ATTACHFILENAME#, #v_ATTACHFILEHREF#, #v_ATTACHFILESIZE#, #v_ATTACHUSERID#, #v_ATTACHUSERNAME#, #v_ATTACHUSERNAME2#, #v_ATTACHUSERJOBTITLE#, #v_ATTACHUSERJOBTITLE2#, #v_ATTACHUSERDEPTID#, #v_ATTACHUSERDEPTNAME#, #v_ATTACHUSERDEPTNAME2#, #v_PAGENUM#, #v_DISPLAYNAME#, #v_BODYATTACH#, #v_TENANTID#, #companyID#)
    </insert>
    
    <update id="EzApprovalG.updateAprDocInfo" parameterClass="map">
@@ -22406,6 +23300,8 @@
    		AND
    			APRTYPE = #v_APRTYPE#
    		AND
+   			APRSTATE != '003'
+   		AND
    			APRMEMBERID != #v_APRMEMBERID#
    		AND
    			TENANT_ID = #v_TENANTID#
@@ -22482,9 +23378,9 @@
    <insert id="EzApprovalG.insertCamjoAprAttachInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_APRATTACHINFO 
-   		(      DocID,  AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   		(      DocID,  AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
    		(SELECT 
-   			#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+   			#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
    		 FROM 
             TBL_APRATTACHINFO 
          WHERE 
@@ -22619,9 +23515,9 @@
    <insert id="EzApprovalG.insertDeptAssistAprAttachInfo" parameterClass="Map">
         INSERT INTO 
         	TBL_APRATTACHINFO 
-        (    DocID,     AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+        (    DocID,     AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
         (SELECT 
-        	#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID,  AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+        	#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID,  AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
          FROM 
          	TBL_APRATTACHINFO A 
          WHERE 
@@ -22907,37 +23803,76 @@
 		   		COMPANYID = #companyID#)
    </insert>
    
-   <insert id="EzApprovalG.insertTmpAttachInfo" parameterClass="Map"> 
-   		INSERT INTO 
-   			TBL_TMPATTACHINFO
-	    ( SELECT 
-	    		#v_USERID#, 
-	    		#v_SN#, 
-	    		ATTACHFILESN , 
-	    		ATTACHFILENAME , 
-	    		ATTACHFILEHREF , 
-	    		ATTACHFILESIZE , 
-	    		ATTACHUSERID , 
-	    		ATTACHUSERNAME , 
-	    		ATTACHUSERJOBTITLE , 
-	    		ATTACHUSERDEPTID , 
-	    		ATTACHUSERDEPTNAME , 
-	    		PAGENUM , 
-	    		DISPLAYNAME , 
-	    		BODYATTACH , 
-	    		AttachUserName2 ,  
-	    		AttachUserJobTitle2 , 
-	    		AttachUserDeptName2, 
-	    		TENANT_ID ,
-	    		COMPANYID  
-	      FROM 
-	      		TBL_APRATTACHINFO A 
-	      WHERE  
-	      		DOCID = #v_DOCID# 
-		  AND 	
-		   		TENANT_ID = #v_TENANTID#
-		  AND
-		  		COMPANYID = #companyID#)
+	<insert id="EzApprovalG.insertTmpAttachInfo" parameterClass="Map">
+		INSERT INTO TBL_TMPATTACHINFO (
+			OWNERID,
+			SN,
+			ATTACHFILESN ,
+			VIEWORDER , 
+			ATTACHFILENAME ,
+			ATTACHFILEHREF ,
+			ATTACHFILESIZE ,
+			ATTACHUSERID ,
+			ATTACHUSERNAME ,
+			ATTACHUSERJOBTITLE ,
+			ATTACHUSERDEPTID ,
+			ATTACHUSERDEPTNAME ,
+			PAGENUM ,
+			DISPLAYNAME ,
+			BODYATTACH ,
+			AttachUserName2 ,
+			AttachUserJobTitle2 ,
+			AttachUserDeptName2,
+			TENANT_ID ,
+			COMPANYID
+			<isEqual prepend=", " property="useOpenGov" compareValue="YES">
+				FILEOPENFLAG
+			</isEqual>
+			)
+		(SELECT
+			#v_USERID#,
+			#v_SN#,
+			A.ATTACHFILESN ,
+			A.VIEWORDER , 
+			A.ATTACHFILENAME ,
+			A.ATTACHFILEHREF ,
+			A.ATTACHFILESIZE ,
+			A.ATTACHUSERID ,
+			A.ATTACHUSERNAME ,
+			A.ATTACHUSERJOBTITLE ,
+			A.ATTACHUSERDEPTID ,
+			A.ATTACHUSERDEPTNAME ,
+			A.PAGENUM ,
+			A.DISPLAYNAME ,
+			A.BODYATTACH ,
+			A.AttachUserName2 ,
+			A.AttachUserJobTitle2 ,
+			A.AttachUserDeptName2,
+			A.TENANT_ID ,
+			A.COMPANYID
+			<isEqual prepend=", " property="useOpenGov" compareValue="YES">
+				FILEOPENFLAG
+			</isEqual>
+		FROM
+			TBL_APRATTACHINFO A
+		<isEqual property="useOpenGov" compareValue="YES">
+			INNER JOIN
+				TBL_OPENGOVFILEINFO B
+			ON
+				A.docid = B.docid
+			AND
+				A.attachfilesn = B.sn
+			AND
+				A.tenant_id = B.tenant_id
+			AND
+				A.companyid = B.companyid
+		</isEqual>
+		WHERE
+			A.DOCID = #v_DOCID#
+		AND
+			A.TENANT_ID = #v_TENANTID#
+		AND
+			A.COMPANYID = #companyID#)
    </insert>
    
    <insert id="EzApprovalG.insertTmpExpAprLine" parameterClass="Map"> 
@@ -23093,7 +24028,7 @@
     	WHERE  
     		OWNERID = #v_USERID#
     	AND
-    		TENANT_ID = #v_TNANTID#
+    		TENANT_ID = #v_TENANTID#
     	AND
     		COMPANYID = #companyID#
    </select>
@@ -23238,9 +24173,9 @@
    <insert id="EzApprovalG.insertRejectEndAttachInfo" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_ENDATTACHINFO
-	     ( 	  	 DocID,      AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
+	     ( 	  	 DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
 	     ( SELECT 
-	     		#v_NEWDOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+	     		#v_NEWDOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
 	       FROM 
 	       		TBL_APRATTACHINFO A 
 	       WHERE  
@@ -23474,9 +24409,9 @@
    <insert id="EzApprovalG.insertReSendAprAttachInfo" parameterClass="Map">
    		 INSERT INTO 
    		 		TBL_APRATTACHINFO 
-   		 (		DocID,      AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID ) 
+   		 (		DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID ) 
    		 (SELECT 
-   		 		#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+   		 		#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
    		 FROM 
    		 		TBL_ENDATTACHINFO A  
    		 WHERE 
@@ -23826,9 +24761,9 @@
    <insert id="EzApprovalG.insertHesongAprAttachInfo" parameterClass="Map">
 		INSERT INTO
 				TBL_APRATTACHINFO 
-		(     DocID,   AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+		(     DocID,   AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
 		(SELECT 
-			#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach,TENANT_ID, COMPANYID 
+			#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach,TENANT_ID, COMPANYID 
 		 FROM 
             TBL_APRATTACHINFO A  
          WHERE 
@@ -24118,9 +25053,9 @@
    <insert id="EzApprovalG.insertGongRamAprAttachInfo" parameterClass="Map">
    			INSERT INTO 
    				TBL_APRATTACHINFO 
-   			(     DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle,  AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   			(     DocID, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle,  AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
    			(SELECT 
-            	#v_GONGRAMDOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName,AttachUserDeptName2,  AttachUserJobTitle,  AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+            	#v_GONGRAMDOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName,AttachUserDeptName2,  AttachUserJobTitle,  AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
             FROM 
             	TBL_ENDATTACHINFO A 
             WHERE 
@@ -24183,9 +25118,9 @@
 	<insert id="EzApprovalG.insertRegEndAttachInfo" parameterClass="Map">
 		INSERT INTO 
 			TBL_ENDATTACHINFO 
-		(		DocID,     AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize, AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID) 
+		(		DocID,     AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize, AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID) 
         ( SELECT 
-        		#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize ,AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID
+        		#v_DOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize ,AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID
           FROM 
           		TBL_APRATTACHINFO A 
           WHERE 
@@ -24213,7 +25148,7 @@
 				TBL_APRDOCINFO 
 			(     DocID,  FormID, OrgDocID, DocType, DocState, FunctionType,     Href,   DocTitle, DocNo, HasAttachYN, HasOpinionYN, EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
 			(SELECT 
-				#v_NEWID#, FormID, OrgDocID, DocType, '011',  #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
+				#v_NEWID#, FormID, OrgDocID, DocType, '011',  #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, 'N', NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
 			  FROM 
 			  	TBL_APRDOCINFO 
 			  WHERE 
@@ -24277,9 +25212,9 @@
 			<isEqual property="v_FLAG" compareValue="APR">
 				INSERT INTO 
 					TBL_APRATTACHINFO 
-				(    DocID,    AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+				(    DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
 				(SELECT 
-					#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+					#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
 				 FROM 
 		            TBL_APRATTACHINFO 
 		         WHERE 
@@ -24292,9 +25227,9 @@
 		    <isNotEqual property="v_FLAG" compareValue="APR">
 				INSERT INTO 
 					TBL_APRATTACHINFO 
-				(    DocID,    AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+				(    DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
 				(SELECT 
-					#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+					#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
 				 FROM 
 		            TBL_ENDATTACHINFO 
 		         WHERE 
@@ -24638,9 +25573,9 @@
    	<insert id="EzApprovalG.insertDoSendAprAttachInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_APRATTACHINFO 
-   		(DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   		(DocID, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
    		(SELECT 
-   			#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+   			#v_DOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
    		 FROM 
    			TBL_ENDATTACHINFO A
    		 WHERE 
@@ -25025,9 +25960,9 @@
    	<insert id="EzApprovalG.insertApprovEndAttachInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_ENDATTACHINFO 
-   		(   DocID,     AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
+   		(   DocID,     AttachFileSN, ViewOrder, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
 		(SELECT 
-			#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID  
+			#v_DOCID#, AttachFileSN, ViewOrder, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID  
 		 FROM 
 		 	TBL_APRATTACHINFO A  
 		 WHERE  
@@ -25169,9 +26104,9 @@
    	<insert id="EzApprovalG.insertDocSendAprAttachInfo" parameterClass="Map">
    		INSERT INTO
    				TBL_APRATTACHINFO 
-   		(     DocID,    AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   		(     DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
    		(SELECT 
-   			#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID
+   			#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID
    		 FROM 
              TBL_APRATTACHINFO A 
          WHERE 
@@ -25197,6 +26132,50 @@
 		  AND
 		  	 COMPANYID = #companyID#)
    	</insert>
+
+	<insert id="EzApprovalG.insertDocSendAprOpenGovDocInfo" parameterClass="Map">
+		INSERT INTO
+	 		TBL_OPENGOVDOCINFO
+	 		(DOCID, OPENFLAG, BASIS, REASON, LISTOPENFLAG, CREATEDATE, OPENLIMITDATE, TENANT_ID, COMPANYID)
+	 	(SELECT
+	 		#v_NEWID#,
+	 		openflag,
+	 		basis,
+	 		reason,
+	 		listopenflag,
+	 		now(),
+	 		openlimitdate,
+	 		tenant_id,
+	 		companyid
+	 	FROM
+	 		TBL_OPENGOVDOCINFO
+	 	WHERE
+	 		tenant_id = #v_TENANTID#
+		AND
+			companyid = #companyID#
+		AND
+			docid = #v_DOCID#)
+	</insert>
+
+	<insert id="EzApprovalG.insertDocSendAprOpenGovFileInfo" parameterClass="Map">
+		INSERT INTO
+			TBL_OPENGOVFILEINFO
+     	( SELECT
+     		  #v_NEWID# ,
+              SN,
+              FILEOPENFLAG,
+	          COMPANYID,
+	          TENANT_ID
+       	  FROM
+       	   	  TBL_OPENGOVFILEINFO
+          WHERE
+          	  TENANT_ID = #v_TENANTID#
+          AND
+          	  COMPANYID = #companyID#
+	      AND
+	      	  docid = #v_DOCID#
+          	)
+	</insert>
    	
    	<insert id="EzApprovalG.insertDocSendAprReceiptProcessInfo" parameterClass="Map">
    	     INSERT INTO 
@@ -25304,26 +26283,28 @@
 			TBL_CABINETCLASS.COMPANYID= #companyID#
    	</update>
    	
-   	<update id="EzApprovalG.updateBanSongAprLineInfo" parameterClass="Map"> 
-   		UPDATE 
-   			TBL_APRLINEINFO 
-   		SET 
-   			AprState = #v_AprState#, 
-   			ProcessDate = #v_SYSDATE#
-		WHERE 
-			DocID = #v_DOCID# 
-		AND                
-			AprMemberID = #v_APRMEMBERID# 
-		AND 
-			(AprState = #v_AprState2# OR AprState = #v_AprState3# ) 
-		AND 
-			TENANT_ID= #v_TENANTID#
-		AND
-         	COMPANYID = #companyID#
+   	<update id="EzApprovalG.updateBanSongAprLineInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_APRLINEINFO
+			SET
+				AprState = #v_AprState#,
+				ProcessDate = #v_SYSDATE#
+			WHERE
+				DocID = #v_DOCID#
+			AND
+				AprMemberID = #v_APRMEMBERID#
+			AND
+				((AprState = #v_AprState2# OR AprState = #v_AprState3#) AND AprType <> '007')
+			AND
+				TENANT_ID= #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+        ]]>
    	</update>
    	
    	<update id="EzApprovalG.updateBanSongChamJoAprLineInfo" parameterClass="Map"> 
-   		UPDATE 
+   		<!-- UPDATE 
    			TBL_APRLINEINFO 
    		SET 
    			AprState = #v_AprState#, 
@@ -25335,7 +26316,21 @@
 		AND 
 			TENANT_ID= #v_TENANTID#
 		AND
-         	COMPANYID = #companyID#
+         	COMPANYID = #companyID# -->
+		UPDATE
+			TBL_APRLINEINFO
+		SET
+			APRSTATE = '000'
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			APRTYPE = '007'
+		AND
+			APRSTATE = '002'
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
    	</update>
    	
    	<update id="EzApprovalG.updateBanSongAprDocInfo" parameterClass="Map"> 
@@ -25433,9 +26428,9 @@
    	<insert id="EzApprovalG.insertGongRamSaveAprAttachInfo" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_APRATTACHINFO 
-   		(DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   		(DocID, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
    		(SELECT 
-            #v_gongRamDocID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+            #v_gongRamDocID#, VIEWORDER, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
          FROM 
          	TBL_APRATTACHINFO A 
          WHERE 
@@ -25567,9 +26562,9 @@
    	<insert id="EzApprovalG.insertHistoryDocInfo" parameterClass="Map" > 
    	 	INSERT INTO 
    	 		TBL_HISTORYDOCINFO
-        ( DOCID, CHANGESN, URL, CHANGEUSERID, CHANGEUSERNAME, CHANGEUSERNAME2, CHANGEUSERJOBTITLE, CHANGEUSERJOBTITLE2, CHANGEUSERDEPTID, CHANGEUSERDEPTNAME, CHANGEUSERDEPTNAME2, CHANGEDATE, CHKFLAG, TENANT_ID, COMPANYID )
+        ( DOCID, CHANGESN, URL, CHANGEUSERID, CHANGEUSERNAME, CHANGEUSERNAME2, CHANGEUSERJOBTITLE, CHANGEUSERJOBTITLE2, CHANGEUSERDEPTID, CHANGEUSERDEPTNAME, CHANGEUSERDEPTNAME2, CHANGEDATE, CHKFLAG, ISBEFOREDOC, BEFOREDOCURL, TENANT_ID, COMPANYID )
         VALUES 
-        ( #v_DOCID#, #v_SN#, #v_URL#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_USERDEPTID#, #v_USERDEPTNAME#, #v_USERDEPTNAME2#, #v_SYSDATE#, ' ', #v_TENANTID#, #companyID#)
+        ( #v_DOCID#, #v_SN#, #v_URL#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_USERDEPTID#, #v_USERDEPTNAME#, #v_USERDEPTNAME2#, #v_SYSDATE#, ' ', #v_ISBEFOREDOC#, #v_BEFOREDOCURL#, #v_TENANTID#, #companyID#)
    	</insert>
    	
    	<select id="EzApprovalG.getKeepType" parameterClass="Map" resultClass="ApprGLeftVO">
@@ -26507,15 +27502,15 @@
 	</select>
 	
    	<select id="EzApprovalG.doBanSongAprTypeS" parameterClass="Map" resultClass="ApprGDocListVO">
-   		SELECT 
-   			APRTYPE 
-        FROM 
-        	TBL_APRLINEINFO 
-       	WHERE  
+   		SELECT
+   			APRTYPE
+        FROM
+        	TBL_APRLINEINFO
+       	WHERE
        		DOCID = #v_DOCID#
-        AND 
+        AND
         	APRMEMBERID = #v_APRMEMBERID#
-        AND 
+        AND
         	( APRSTATE = #v_STAASJINHANG# OR APRSTATE = #v_STAASBORYU# )
         AND
         	TENANT_ID = #v_TENANTID#
@@ -26558,9 +27553,9 @@
    <insert id="EzApprovalG.insertRejectEndAttachInfoS" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_ENDATTACHINFO
-	     ( 	  	 DocID,      AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
+	     ( 	  	 DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
 	     ( SELECT 
-	     		#v_NEWDOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+	     		#v_NEWDOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
 	       FROM 
 	       		TBL_APRATTACHINFO A 
 	       WHERE  
@@ -26574,9 +27569,9 @@
    <insert id="EzApprovalG.insertReuseAttachFileInfo" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_APRATTACHINFO
-	     ( 	  	 DocID,      AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
+	     ( 	  	 DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
 	     ( SELECT 
-	     		#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+	     		#v_DOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
 	       FROM 
 	       		TBL_ENDATTACHINFO A 
 	       WHERE  
@@ -27670,9 +28665,9 @@
 	    <insert id="EzApprovalG.insertRelayAttchInfo" parameterClass="Map">
 	  		INSERT INTO 
 	  			TBL_APRATTACHINFO 
-	  		(DOCID,  ATTACHFILESN, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME,  ATTACHUSERNAME2, ATTACHUSERJOBTITLE, ATTACHUSERJOBTITLE2,	ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, ATTACHUSERDEPTNAME2, PAGENUM,  DISPLAYNAME,     BODYATTACH,      COMPANYID, TENANT_ID)
+	  		(DOCID,  ATTACHFILESN, VIEWORDER, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME,  ATTACHUSERNAME2, ATTACHUSERJOBTITLE, ATTACHUSERJOBTITLE2,	ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, ATTACHUSERDEPTNAME2, PAGENUM,  DISPLAYNAME,     BODYATTACH,      COMPANYID, TENANT_ID)
 			VALUES 
-			(#NEWID#, #ATTACHSN#,   #ATTACHNAME#,   #ATTACHURL#,        '0',            '',            '',              '',              '',                 '',                 '',                '',                '',               '0',    #ATTACHDISPNAME#, #ATTACHTYPE#, #companyID#, #v_TENANTID#)
+			(#NEWID#, #ATTACHSN#, #VIEWORDER#,  #ATTACHNAME#,   #ATTACHURL#,        '0',            '',            '',              '',              '',                 '',                 '',                '',                '',               '0',    #ATTACHDISPNAME#, #ATTACHTYPE#, #companyID#, #v_TENANTID#)
 	  </insert>
 	  
 	  <insert  id="EzApprovalG.insertRelayAprReceiptProessInfo" parameterClass="Map">
@@ -27921,7 +28916,7 @@
 	  				PUBLICITYCODE = #v_PUBLICITYCODE#
 	  		</isEqual>
 	  		
-	  		<isNotEqual property="v-MODE" compareValue="E">
+	  		<isNotEqual property="v_MODE" compareValue="E">
 	  			UPDATE 
 	  				TBL_EXPAPRDOCINFO 
 	  			SET 
@@ -28511,10 +29506,39 @@
 					tbl_aprlineinfo
 				WHERE
 					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
-				)	
+				AND
+				    APRMEMBERDEPTID = #proxyList[].dept#
+				AND
+				    (aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+				AND
+				    TENANT_ID = #v_TENANTID#
+				AND
+				    companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_PUSERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_PUSERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
+				)
 			UNION ALL
 			
 			SELECT 
@@ -28557,13 +29581,44 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
-							)	
+								aprmemberid = #proxyList[].id#
+                            AND
+                                aprmemberdeptid = #proxyList[].dept#
+                            AND
+                            	aprtype = '007' 
+							AND 
+								aprstate = '002' 
+							AND
+							    tenant_id = #v_TENANTID#
+							AND
+							    COMPANYID IN (
+                                    SELECT
+                                        EXTENSIONATTRIBUTE2
+                                    FROM
+                                        TBL_DEPTMASTER
+                                    INNER JOIN
+                                        TBL_ADDJOBMASTER
+                                    ON
+                                        (TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+                                        AND
+                                        TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+                                    WHERE
+                                        TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
+                                    AND
+                                        TBL_ADDJOBMASTER.CN = #v_PUSERID#
+                                    UNION ALL
+                                    SELECT
+                                        PHYSICALDELIVERYOFFICENAME
+                                    FROM
+                                        TBL_USERMASTER
+                                    WHERE
+                                        CN = #v_PUSERID#
+                                    AND
+                                        TENANT_ID = #v_TENANTID#
+                                    )
+							)
 			]]>
 			</iterate>
 			</isNotEmpty>
@@ -28642,6 +29697,22 @@
 			AND TENANT_ID = #tenantId#
 	</select>
 	
+	<select id="EzApprovalG.getReformFlagOfTempDoc" parameterClass="Map" resultClass="String">
+		SELECT
+			FORM.REFORMFLAG
+		FROM
+			TBL_TMPAPRDOCINFO TMP
+		RIGHT JOIN
+			TBL_FORMINFO FORM
+		ON
+			FORM.FORMID = TMP.FORMID
+			AND FORM.TENANT_ID = TMP.TENANT_ID
+			AND FORM.COMPANYID = TMP.COMPANYID
+		WHERE
+			TMP.HREF = #formUrl#
+		LIMIT 1
+	</select>
+	
 	<select id="EzApprovalG.getFormIdOfTempDocument" parameterClass="Map" resultClass="String">
 		SELECT
 			FORMID
@@ -28672,7 +29743,30 @@
 			AND FORMINFO.TENANT_ID = DOCINFO.TENANT_ID
 		WHERE
 			DOCINFO.DOCID = #docId#
-			AND DOCINFO.COMPANYID = #companyId#
+			AND DOCINFO.COMPANYID IN (
+					SELECT
+						EXTENSIONATTRIBUTE2
+					FROM
+						TBL_DEPTMASTER
+					INNER JOIN
+						TBL_ADDJOBMASTER
+					ON
+						(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+						AND
+						TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+					WHERE
+						TBL_ADDJOBMASTER.TENANT_ID = #tenantId#
+					AND
+						TBL_ADDJOBMASTER.CN = #userId#
+					UNION ALL
+					SELECT
+						PHYSICALDELIVERYOFFICENAME
+					FROM
+						TBL_USERMASTER
+					WHERE
+						CN = #userId#
+					AND
+						TENANT_ID = #tenantId#)
 			AND DOCINFO.TENANT_ID = #tenantId#
 	</select>
 	
@@ -29176,7 +30270,9 @@
 							AND
 								APRMEMBERSN = #v_APRMEMBERSN#
 							AND
-								APRSTATE IN ('000')
+								APRTYPE = '007'
+							AND
+								APRSTATE = '002'
 							AND
 								COMPANYID = #v_COMPANYID#
 							AND
@@ -29323,7 +30419,7 @@
     </select>
     <select id="EzApprovalG.getEndAprOpinionCnt" parameterClass="Map" resultClass="int">
     	SELECT
-    		COUNT(*)
+    		IFNULL(MAX(OPINIONSN), 0) OPINIONSN
     	FROM
     		TBL_ENDAPROPINIONINFO
     	WHERE
@@ -29431,4 +30527,1185 @@
 		  AND
 		  		proxy like '$id$:%'
 	  </select> 
+
+	<select id="EzApprovalG.checkDocIdIsDuplicated" parameterClass="Map" resultClass="int" remapResults="true">
+		SELECT
+			COUNT(A.DOCID)
+		FROM
+			(
+				SELECT
+					DOCID
+				FROM
+					TBL_APRDOCINFO
+				WHERE
+					DOCID = #v_DOCID#
+				AND
+					TENANT_ID = #v_TENANTID#
+				AND
+					COMPANYID = #companyID#
+					
+			UNION ALL
+			
+				SELECT
+					DOCID
+				FROM
+					TBL_ENDAPRDOCINFO
+				WHERE
+					DOCID = #v_DOCID#
+				AND
+					TENANT_ID = #v_TENANTID#
+				AND
+					COMPANYID = #companyID#
+			) AS A
+	</select>
+
+    <select id="EzApprovalG.checkProxyAprLine" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_USERMASTER
+		WHERE
+			EXTENSIONATTRIBUTE5 LIKE CONCAT(#v_USERID#, ':%')
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			CN IN (
+					SELECT
+						DISTINCT APRMEMBERID
+					FROM
+						TBL_APRLINEINFO
+					WHERE
+						DOCID = #v_DOCID#
+					AND
+						APRSTATE = '002'
+					AND
+						TENANT_ID = #v_TENANTID#
+					AND
+						COMPANYID = #companyID#
+				)
+	</select>
+
+    <insert id="EzApprovalG.insertOpenGovAttachInfo" parameterClass="Map">
+	 	INSERT INTO                 
+	 		TBL_OPENGOVFILEINFO
+	 		(DOCID, SN, FILEOPENFLAG, TENANT_ID, COMPANYID) 
+	 	VALUES 
+	 		(#v_DOCID#, #v_ATTACHFILESN#, 'Y', #v_TENANTID#, #companyID#)
+	</insert>
+
+    <delete id="EzApprovalG.deleteOpenGovAttachInfo" parameterClass="Map">
+	  	DELETE FROM 
+	  		TBL_OPENGOVFILEINFO
+    	WHERE  
+    		DOCID = #v_DOCID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    	AND
+    		COMPANYID = #companyID#
+	</delete>
+
+	<select id="EzApprovalG.getAttachListForOpenGov" parameterClass="Map" resultClass="ApprGOpenGovAttachVO" remapResults="true">
+		SELECT
+			*
+		FROM
+			<isNotEqual property="endFlag" compareValue="Y">
+				TBL_APRATTACHINFO A
+			</isNotEqual>
+			<isEqual property="endFlag" compareValue="Y">
+				TBL_ENDATTACHINFO A
+			</isEqual>
+		INNER JOIN
+			TBL_OPENGOVFILEINFO B
+		ON
+			A.docid = B.docid
+		AND
+			A.tenant_id = B.tenant_id
+		AND
+			A.attachfilesn = B.sn
+		AND
+			A.companyid = B.companyid
+		WHERE
+			A.docid = #docID#
+		AND
+			A.tenant_id = #tenantID#
+		AND
+			A.companyid = #companyID#
+	</select>
+
+	  	<insert id="EzApprovalG.insertOpenGovDocInfo" parameterClass="Map">
+	 	INSERT INTO                 
+	 		TBL_OPENGOVDOCINFO
+	 		(DOCID, OPENFLAG,BASIS, REASON, LISTOPENFLAG, CREATEDATE, OPENLIMITDATE, TENANT_ID, COMPANYID) 
+	 	VALUES 
+	 		(#docID#, #openFlag#, #basis#, #reason#, #openGovListFlag#, now(), #limitDate#, #tenantID#, #companyID#)
+		</insert>
+		<delete id="EzApprovalG.deleteOpenGovDocInfo" parameterClass="Map">
+		DELETE FROM
+			TBL_OPENGOVDOCINFO
+		WHERE
+			DOCID = #docID# 
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		</delete>
+		<update id="EzApprovalG.updateFileOpenFlag" parameterClass="Map">
+		UPDATE
+			TBL_OPENGOVFILEINFO
+		SET
+			FILEOPENFLAG = #fileOpenFlag#
+		WHERE
+			DOCID = #docID#
+		AND
+			SN = #sn#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		</update>
+		<select id="EzApprovalG.getOpenGovFlag" parameterClass="Map">
+		SELECT
+			OPENGOVFLAG
+		FROM
+			TBL_FORMINFO
+		WHERE
+			FORMID = #formId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			COMPANYID = #companyID#
+		</select>
+		
+		<select id="EzApprovalG.getOpenGovInfo" parameterClass="Map" resultClass="ApprGOpenGovInfoVO">
+		SELECT
+			BASIS, REASON, LISTOPENFLAG
+		FROM
+			TBL_OPENGOVDOCINFO
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			COMPANYID = #companyID#
+		</select>
+		<select id="EzApprovalG.getFileOpenFlagList" parameterClass="Map" resultClass="String">
+		SELECT
+			FILEOPENFLAG
+		FROM
+			TBL_OPENGOVFILEINFO
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			COMPANYID = #companyID#
+		ORDER BY
+			SN ASC
+		</select>
+		
+	
+	<delete id="EzApprovalG.deleteGongRamLineInfo" parameterClass="Map">
+		DELETE FROM
+			TBL_GONGRAMLINEINFO
+		WHERE
+			DOCID = #v_docID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</delete>
+	
+	<insert id="EzApprovalG.insertGongRamLineInfo" parameterClass="Map">
+		INSERT INTO
+			TBL_GONGRAMLINEINFO
+		(DocID,     AprMemberSN,     AprType,     AprState,     AprMemberID,     AprMemberIsDeptYN,     AprMemberName,     AprMemberName2,     AprMemberJobTitle,     AprMemberJobTitle2,     AprMemberDeptID,     AprMemberDeptName,     AprMemberDeptName2,     AprMemberLDAPPath,     ReceivedDate,     ProcessDate,     ReasonDoNotApprov,     isProposerYN,     isBriefUserYN,     TENANT_ID,    COMPANYID)
+		VALUES
+		(#v_docID#, #v_AprMemberSN#, #v_AprType#, #v_AprState#, #v_AprMemberID#, #v_AprMemberIsDeptYN#, #v_AprMemberName#, #v_AprMemberName2#, #v_AprMemberJobTitle#, #v_AprMemberJobTitle2#, #v_AprMemberDeptID#, #v_AprMemberDeptName#, #v_AprMemberDeptName2#, #v_AprMemberLDAPPath#, $v_ReceivedDate$, $v_ProcessDate$, #v_ReasonDoNotApprov#, #v_isProposerYN#, #v_isBriefUserYN#, #v_TENANTID#, #companyID#)
+	</insert>
+	
+	<select id="EzApprovalG.getGongRamId"  parameterClass="Map" resultClass="String">
+		SELECT
+			DOCID
+		FROM
+			TBL_APRDOCINFO
+		WHERE
+			DOCSTATE = '015'
+		AND
+			TENANT_ID = #v_tenantID#
+		AND
+			COMPANYID = #v_companyID#
+		AND
+			ORGDOCID = #v_docID#
+	</select>
+	
+	<select id="EzApprovalG.checkGongRamLineCount" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_GONGRAMLINEINFO
+		WHERE
+			DOCID = #v_docID#
+		AND
+			TENANT_ID = #v_tenantID#
+		AND
+			COMPANYID = #v_companyID#
+	</select>
+	
+	<insert id="EzApprovalG.insertGongRamSendAprLineInfo" parameterClass="Map">
+		INSERT INTO
+			TBL_APRLINEINFO
+		(DocID, AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID)
+		(SELECT
+			#v_gongRamDocID#,
+			AprMemberSN,
+			AprType,
+			'002',
+			AprMemberID,
+			AprMemberIsDeptYN,
+			AprMemberName,
+			AprMemberName2,
+			AprMemberJobTitle,
+			AprMemberJobTitle2,
+			AprMemberDeptID,
+			AprMemberDeptName,
+			AprMemberDeptName2,
+			AprMemberLDAPPath,
+			#v_SYSDATE#,
+			ProcessDate,
+			ReasonDoNotApprov,
+			isProposerYN,
+			isBriefUserYN,
+			TENANT_ID,
+			COMPANYID
+		FROM
+			TBL_GONGRAMLINEINFO
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#)
+	</insert>
+	
+	<insert id="EzApprovalG.insertGongRamSendExpAprLine" parameterClass="Map">
+		INSERT INTO
+			TBL_EXPAPRLINE
+		(DocID, AprMemberSN, OrgUserID, ProxyUserID, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, TENANT_ID, COMPANYID)
+		(SELECT
+			#v_gongRamDocID#,
+			AprMemberSN,
+			AprMemberID,
+			'' ,
+			'' ,
+			'' ,
+			'' ,
+			'' ,
+			'' ,
+			'' ,
+			'' ,
+			TENANT_ID,
+			COMPANYID
+		FROM
+			TBL_GONGRAMLINEINFO
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#)
+	</insert>
+	
+	<delete id="EzApprovalG.deleteGongRamSendAprLineInfo" parameterClass="Map">
+		DELETE FROM
+			TBL_GONGRAMLINEINFO
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</delete>
+	
+	<select id="EzApprovalG.getGongRamLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+		<isEqual property="mode" compareValue="APR">
+			SELECT
+				DOCID,
+				APRMEMBERSN,
+				APRTYPE,
+				APRSTATE,
+				APRMEMBERID,
+				APRMEMBERISDEPTYN,
+				APRMEMBERNAME,
+				APRMEMBERNAME2,
+				APRMEMBERJOBTITLE,
+				APRMEMBERJOBTITLE2,
+				APRMEMBERDEPTID,
+				APRMEMBERDEPTNAME,
+				APRMEMBERDEPTNAME2,
+				APRMEMBERLDAPPATH,
+				RECEIVEDDATE,
+				PROCESSDATE,
+				ISPROPOSERYN,
+				ISBRIEFUSERYN,
+				REASONDONOTAPPROV
+			FROM
+				TBL_GONGRAMLINEINFO
+			WHERE
+				DOCID = #docID#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+		</isEqual>
+		<isNotEqual property="mode" compareValue="APR">
+			SELECT
+				TBL_APRLINEINFO.DOCID,
+				TBL_APRLINEINFO.APRMEMBERSN,
+				TBL_APRLINEINFO.APRTYPE,
+				TBL_APRLINEINFO.APRSTATE,
+				TBL_APRLINEINFO.APRMEMBERID,
+				TBL_APRLINEINFO.APRMEMBERISDEPTYN,
+				TBL_APRLINEINFO.APRMEMBERNAME,
+				TBL_APRLINEINFO.APRMEMBERNAME2,
+				TBL_APRLINEINFO.APRMEMBERJOBTITLE,
+				TBL_APRLINEINFO.APRMEMBERJOBTITLE2,
+				TBL_APRLINEINFO.APRMEMBERDEPTID,
+				TBL_APRLINEINFO.APRMEMBERDEPTNAME,
+				TBL_APRLINEINFO.APRMEMBERDEPTNAME2,
+				TBL_APRLINEINFO.APRMEMBERLDAPPATH,
+				TBL_APRLINEINFO.RECEIVEDDATE,
+				TBL_APRLINEINFO.PROCESSDATE,
+				TBL_APRLINEINFO.ISPROPOSERYN,
+				TBL_APRLINEINFO.ISBRIEFUSERYN,
+				TBL_APRLINEINFO.REASONDONOTAPPROV,
+				TBL_EXPAPRLINE.ORGUSERID,
+				TBL_EXPAPRLINE.PROXYUSERID,
+				TBL_EXPAPRLINE.PROXYUSERNAME,
+				TBL_EXPAPRLINE.PROXYUSERNAME2,
+				TBL_EXPAPRLINE.PROXYUSERJOBTITLE,
+				TBL_EXPAPRLINE.PROXYUSERJOBTITLE2,
+				TBL_EXPAPRLINE.PROXYUSERDEPTID,
+				TBL_EXPAPRLINE.PROXYUSERDEPTNAME,
+				TBL_EXPAPRLINE.PROXYUSERDEPTNAME2
+			FROM
+				TBL_APRLINEINFO
+			INNER JOIN
+				TBL_EXPAPRLINE
+			ON
+				TBL_APRLINEINFO.DOCID = TBL_EXPAPRLINE.DOCID
+			AND
+				TBL_APRLINEINFO.APRMEMBERSN = TBL_EXPAPRLINE.APRMEMBERSN
+			AND
+				TBL_APRLINEINFO.TENANT_ID = TBL_EXPAPRLINE.TENANT_ID
+			AND
+				TBL_APRLINEINFO.COMPANYID = TBL_EXPAPRLINE.COMPANYID
+			WHERE
+				TBL_APRLINEINFO.DOCID = #docID#
+			AND
+				TBL_APRLINEINFO.TENANT_ID = #tenantID#
+			AND
+				TBL_APRLINEINFO.COMPANYID = #companyID#
+		</isNotEqual>
+	</select>
+	<select id="EzApprovalG.getSearchDocListForOpenGov" parameterClass="Map" resultClass="ApprGDocListForOpenGovVO" remapResults="true">
+		SELECT 
+			* 
+		FROM(
+				SELECT 
+					A.* 
+			  FROM (
+							SELECT 
+								DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
+										 TBL_ENDAPRDOCINFO.DOCTYPE,
+					   				     TBL_ENDAPRDOCINFO.DOCSTATE, 
+					   				     TBL_ENDAPRDOCINFO.FUNCTIONTYPE, 
+					   				     TBL_ENDAPRDOCINFO.HREF,
+					   					 TBL_ENDAPRDOCINFO.DOCTITLE, 
+					   					 TBL_ENDAPRDOCINFO.DOCNO, 
+					   					 TBL_ENDAPRDOCINFO.HASATTACHYN,
+					   					 TBL_ENDAPRDOCINFO.HASOPINIONYN, 
+					   					 TBL_ENDAPRDOCINFO.STARTDATE, 
+					   					 TBL_ENDAPRDOCINFO.ENDDATE,
+								   		 TBL_ENDAPRDOCINFO.WRITERID, 
+								   		 TBL_ENDAPRDOCINFO.WRITERNAME, 
+								   		 IFNULL(TBL_ENDAPRDOCINFO.WRITERNAME2, TBL_ENDAPRDOCINFO.WRITERNAME) AS WRITERNAME2, 
+								   		 TBL_ENDAPRDOCINFO.WRITERJOBTITLE, 
+								   		 IFNULL(TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, TBL_ENDAPRDOCINFO.WRITERJOBTITLE) AS WRITERJOBTITLE2,
+								   		 TBL_ENDAPRDOCINFO.WRITERDEPTID, 
+								   		 TBL_ENDAPRDOCINFO.WRITERDEPTNAME, 
+								   		 IFNULL(TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, TBL_ENDAPRDOCINFO.WRITERDEPTNAME) AS WRITERDEPTNAME2, 
+								   		 TBL_ENDAPRDOCINFO.FORMID, 
+								   		 TBL_ENDAPRDOCINFO.CONTAINERID, 
+								   		 TBL_EXPENDAPRDOCINFO.FORMNAME, 
+								   		 IFNULL(TBL_EXPENDAPRDOCINFO.FORMNAME2, TBL_EXPENDAPRDOCINFO.FORMNAME) AS FORMNAME2, 
+								   		 TBL_EXPENDAPRDOCINFO.STATUS,
+								   		 TBL_ENDAPRDOCINFO.ORGDOCID, 
+								   		 TBL_ENDAPRDOCINFO.ISPUBLIC, 
+								   		 TBL_EXPENDAPRDOCINFO.EDMSYN,
+								   		 IFNULL(TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,'') AS SECURITYAPPROVAL,
+								   		 TBL_ENDAPRDOCINFO.COMPANYID,
+								   		 TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 companyName,
+										 TBL_DEPTMASTER.COMPNM2 companyName2,
+										 TBL_OPENGOVDOCINFO.OPENFLAG,
+										 TBL_OPENGOVDOCINFO.LISTOPENFLAG,
+										 TBL_OPENGOVDOCINFO.OPENLIMITDATE,
+										 TBL_OPENGOVDOCINFO.UPDATEDATE,
+										 TBL_OPENGOVDOCINFO.CREATEDATE
+
+							   	FROM 
+							   			 TBL_ENDAPRDOCINFO 
+							   	LEFT OUTER JOIN 
+							   			 TBL_ENDAPRLINEINFO 
+							   	ON 
+							   			 TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+							   	AND 
+							   			 TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+							   	AND 
+							   			 TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+							   	INNER JOIN 
+							   			 TBL_EXPENDAPRDOCINFO 
+							   	ON 
+							   			 TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+							   	AND
+							   			 TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+					   			AND
+							   			 TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+							   	INNER JOIN
+							   			TBL_DEPTMASTER
+							   	ON
+							   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_DEPTMASTER.CN
+							   	AND
+							   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+							   	<isNotEmpty property="v_CONTID">
+									AND
+							   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+								</isNotEmpty>
+								<isEmpty property="v_CONTID">
+						   		AND
+									TBL_ENDAPRDOCINFO.COMPANYID IN (
+											SELECT 
+												EXTENSIONATTRIBUTE2 
+											FROM 
+												TBL_DEPTMASTER 
+											INNER JOIN 
+												TBL_ADDJOBMASTER 
+											ON
+												(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+												AND 
+												TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+											WHERE 
+												TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+											AND 
+												TBL_ADDJOBMASTER.CN = #v_USERID#
+											UNION ALL
+											SELECT 
+												PHYSICALDELIVERYOFFICENAME
+											FROM
+												TBL_USERMASTER
+											WHERE
+												CN = #v_USERID#
+											AND
+												TENANT_ID = #v_TENANTID# 
+											)
+								</isEmpty>
+								INNER JOIN
+							   			TBL_OPENGOVDOCINFO
+							   	ON
+							   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_OPENGOVDOCINFO.COMPANYID
+							   	AND
+							   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_OPENGOVDOCINFO.TENANT_ID
+							   	AND
+							   			TBL_ENDAPRDOCINFO.DOCID = TBL_OPENGOVDOCINFO.DOCID
+								INNER JOIN
+							   			TBL_FORMINFO
+							   	ON
+							   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_FORMINFO.COMPANYID
+							   	AND
+							   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_FORMINFO.TENANT_ID
+							   	AND
+							   			TBL_ENDAPRDOCINFO.FORMID = TBL_FORMINFO.FORMID
+							   	AND
+							   			TBL_FORMINFO.OPENGOVFLAG = 'Y'
+							   	WHERE 
+							   			 TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+							    AND
+							    		 TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+							   	<isNotEmpty property="v_CONTID">
+									AND
+							   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+								</isNotEmpty>
+								<isEmpty property="v_CONTID">
+						   		AND
+									TBL_ENDAPRDOCINFO.COMPANYID IN (
+											SELECT 
+												EXTENSIONATTRIBUTE2 
+											FROM 
+												TBL_DEPTMASTER 
+											INNER JOIN 
+												TBL_ADDJOBMASTER 
+											ON
+												(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+												AND 
+												TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+											WHERE 
+												TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+											AND 
+												TBL_ADDJOBMASTER.CN = #v_USERID#
+											UNION ALL
+											SELECT 
+												PHYSICALDELIVERYOFFICENAME
+											FROM
+												TBL_USERMASTER
+											WHERE
+												CN = #v_USERID#
+											AND
+												TENANT_ID = #v_TENANTID# 
+											)
+								</isEmpty>
+							   	<isNotEmpty property="v_DOCNUMBER">
+							   	 	AND 
+							   	 		 DOCNO LIKE '%$v_DOCNUMBER$%'
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_DOCTITLE">
+							   	 	AND 
+							   	 		 DOCTITLE LIKE '%$v_DOCTITLE$%'
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_DRAFTER">
+							   	 	 AND 
+							   	 	 	 WRITERNAME$v_MULTIDATALANG$ LIKE '%$v_DRAFTER$%'
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_DEPTNAME">
+							   	 	AND 
+							   	 		 WRITERDEPTNAME$v_MULTIDATALANG$ LIKE '%$v_DEPTNAME$%'
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_FORMID">
+							   	 	 AND 
+							   	 	      FORMID = $v_FORMID$
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_STARTDATE1">
+							   	 	 AND 
+							   	 	 	   STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_STARTDATE2">
+							   	<![CDATA[
+							   	 	 AND 
+							   	 		   STARTDATE <= STR_TO_DATE(#v_STARTDATE2#,'%Y-%m-%d %H:%i:%s')
+							   	 ]]>
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_ENDDATE1">
+							   	 	 AND 
+							   	 	       ENDDATE >= STR_TO_DATE(#v_ENDDATE1#,'%Y-%m-%d %H:%i:%s')
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_ENDDATE2">
+							   	<![CDATA[
+							   	 	 AND 
+							   	 	 		ENDDATE <= STR_TO_DATE(#v_ENDDATE2#,'%Y-%m-%d %H:%i:%s')
+							   	 ]]>
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_PROCESSDATE1">
+							   	 	 AND 
+							   	 	 	   STARTDATE >= STR_TO_DATE(SUBSTR(#v_STARTDATE1#,1,10),'%Y-%m-%d %H:%i:%s')
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_PROCESSDATE2">
+							   	 	 AND 
+							   	 	 	   STARTDATE >= STR_TO_DATE(SUBSTR(#v_STARTDATE1#,1,10),'%Y-%m-%d %H:%i:%s')
+							   	</isNotEmpty>
+							   	<isEmpty property="v_CONTID" >
+							   	 	 AND 
+							   	 	 	   TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#
+							   	</isEmpty>
+							   	<isEqual property="v_CONTID" compareValue="ADMIN">
+							   		 AND 
+							   		 		CONTAINERID IS NOT NULL
+							   		 AND
+							   			containerid NOT IN (
+					                            SELECT
+					                                containerid
+					                            FROM
+					                                TBL_CONTAINER
+					                            WHERE
+					                                tenant_id = #v_TENANTID#
+					                            AND
+					                                companyid = #companyID#
+					                            AND
+					                                containertypeid = '999' ) 
+							   	</isEqual>
+							   	<isNotEmpty property="v_CONTID" >
+							   	<isNotEqual property="v_CONTID" compareValue="ADMIN">
+							   		 AND 
+							   		 		CONTAINERID IN ($v_CONTID$)
+							   	</isNotEqual>
+							   	</isNotEmpty>
+							   	<isEqual property="iv_APRFLAG" compareValue="INMYAPPRSEARCH">
+							   	 	 AND 
+							   				TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#
+							   	</isEqual>				   	
+							   	<isEqual property="approvalFlag" compareValue="G">
+							   	<isNotEqual property="v_USERSECCODE" compareValue="0">
+							   	<![CDATA[
+							   		 AND 
+							   		 		#v_USERSECCODE# <= TBL_EXPENDAPRDOCINFO.SECURITYCODE
+							   	]]>
+							   	</isNotEqual>
+							   	</isEqual>
+							   	<isEqual property="v_PUBFLAG" compareValue="Y">
+							   	<isNotEmpty property="v_CONTID">
+							   	<isNotEqual property="v_APRFLAG" compareValue="INMYAPPRSEARCH">
+							   	<isNotEqual property="v_CONTID" compareValue="ADMIN">
+							   	<![CDATA[
+							   	AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)
+					      		OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
+					      		]]>
+							   	</isNotEqual>
+							   	</isNotEqual>
+							   	</isNotEmpty>
+							   	</isEqual>
+							   	
+							   	<isNotEmpty property="v_SUBQUERY" >
+							   	AND 
+							   		$v_SUBQUERY$
+							   	</isNotEmpty>
+							   	
+							   	<isNotEmpty property="v_DOCSTATE" >
+							   	AND 
+							   		DOCSTATE = #v_DOCSTATE#
+							   	</isNotEmpty>
+							   	
+							   	<isNotEmpty property="v_APPROVUSER" >
+								AND 
+									TBL_ENDAPRLINEINFO.APRMEMBERNAME = #v_APPROVUSER# 
+							    GROUP BY 
+							      	TBL_ENDAPRDOCINFO.DOCID, 
+							      	TBL_ENDAPRDOCINFO.DOCTYPE,
+							      	TBL_ENDAPRDOCINFO.DOCSTATE, 
+							      	TBL_ENDAPRDOCINFO.FUNCTIONTYPE, 
+							      	TBL_ENDAPRDOCINFO.HASATTACHYN,
+							      	TBL_ENDAPRDOCINFO.HASOPINIONYN,
+							      	TBL_ENDAPRDOCINFO.HREF,
+							      	TBL_ENDAPRDOCINFO.DOCTITLE, 
+							      	TBL_ENDAPRDOCINFO.DOCNO, 
+							      	TBL_ENDAPRDOCINFO.HASATTACHYN,
+							      	TBL_ENDAPRDOCINFO.HASOPINIONYN, 
+							      	TBL_ENDAPRDOCINFO.STARTDATE, 
+							      	TBL_ENDAPRDOCINFO.ENDDATE,
+							      	TBL_ENDAPRDOCINFO.WRITERID, 
+							      	TBL_ENDAPRDOCINFO.WRITERNAME, 
+							      	TBL_ENDAPRDOCINFO.WRITERNAME2, 
+							      	TBL_ENDAPRDOCINFO.WRITERNAME, 
+							      	TBL_ENDAPRDOCINFO.WRITERJOBTITLE, 
+							      	TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, 
+							      	TBL_ENDAPRDOCINFO.WRITERJOBTITLE,
+							      	TBL_ENDAPRDOCINFO.WRITERDEPTID, 
+							      	TBL_ENDAPRDOCINFO.WRITERDEPTNAME, 
+							      	TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, 
+							      	TBL_ENDAPRDOCINFO.WRITERDEPTNAME,
+							      	TBL_ENDAPRDOCINFO.FORMID, 
+							      	TBL_ENDAPRDOCINFO.CONTAINERID, 
+							      	TBL_EXPENDAPRDOCINFO.FORMNAME, 
+							      	TBL_EXPENDAPRDOCINFO.FORMNAME2, 
+							      	TBL_EXPENDAPRDOCINFO.FORMNAME,
+							      	TBL_EXPENDAPRDOCINFO.STATUS,
+							      	TBL_ENDAPRDOCINFO.ORGDOCID, 
+							      	TBL_ENDAPRDOCINFO.ISPUBLIC, 
+							      	TBL_EXPENDAPRDOCINFO.EDMSYN,
+							      	TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_PROCESSYN">
+			                    <isEqual property="v_PROCESSYN" compareValue="Y">
+						   		<![CDATA[
+						   		AND 
+						   		(	PROCESSYN <> 'H'
+						   		AND 
+						   			PROCESSYN <> 'I'	
+						   		AND
+						   			PROCESSYN <> 'N'
+						   		OR
+						   			PROCESSYN IS NULL)
+						   		]]>
+						   		</isEqual>
+					   		   	<isNotEqual property="v_PROCESSYN" compareValue="Y">
+						   		AND
+						   			PROCESSYN = #v_PROCESSYN#
+						   		</isNotEqual>
+						   		</isNotEmpty>
+							   	<isNotEmpty property="v_ORDEROPTION">
+							   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
+							   			<isEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
+							   				ORDER BY 
+							   						$v_ORDEROPTION$ , DOCNO DESC
+							   			</isEqual>
+							   			<isNotEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
+							   	 			ORDER BY
+							   	 			 		$v_ORDEROPTION$, ENDDATE DESC
+							   			</isNotEqual>
+							   		</isGreaterEqual>
+							   		<isLessThan  property="v_ORDEROPTIONLENGTH" compareValue="7">
+							   			ORDER BY 
+							   					$v_ORDEROPTION$ , ENDDATE DESC
+							   		</isLessThan>
+							   	</isNotEmpty>
+							   	<isEmpty property="v_ORDEROPTION">
+							   		ORDER BY 
+							   				ENDDATE DESC  , DOCNO DESC
+							   	</isEmpty>
+								<isNotEqual property="alFlag" compareValue="1">
+							   	LIMIT #v_PAGESIZE#
+								</isNotEqual>
+							   	 ) A 
+							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
+							   	 	) B
+<!-- 				<isEqual property="approvalFlag" compareValue="Y"> -->
+<!-- 				INNER JOIN TBL_CODELIST B   -->
+<!-- 				ON A.DOCTYPE = B.CODE2 -->
+<!-- 				WHER B.CODE = 'A02'  -->
+<!-- 				</isEqual> -->
+				<isNotEmpty property="v_ORDEROPTION2">
+				<isGreaterEqual property="v_ORDEROPTIONLENGTH2" compareValue="7">
+				<isEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
+					 ORDER BY 
+					 		$v_ORDEROPTION2$  , DOCNO
+				</isEqual>
+				<isNotEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
+					 ORDER BY 
+					 		$v_ORDEROPTION2$, ENDDATE
+				</isNotEqual>
+				</isGreaterEqual>
+				<isLessThan property="v_ORDEROPTIONLENGTH2" compareValue="7">
+					ORDER BY 
+							$v_ORDEROPTION2$ , ENDDATE
+				</isLessThan>
+				</isNotEmpty>
+				<isEmpty property="v_ORDEROPTION2">
+				 ORDER BY 
+				 		ENDDATE  , DOCNO
+				</isEmpty>
+	</select>
+	<select id ="EzApprovalG.getSearchDocListCountForOpenGov" parameterClass="Map" resultClass="int">
+	<![CDATA[
+		SELECT 
+			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID)
+   		FROM 
+   			TBL_ENDAPRDOCINFO 
+   		LEFT OUTER JOIN 
+   			TBL_ENDAPRLINEINFO 
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+   		AND 
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+   		AND	
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+   		INNER JOIN 
+   			TBL_EXPENDAPRDOCINFO 
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+   		INNER JOIN
+	   			TBL_OPENGOVDOCINFO
+	   	ON
+	   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_OPENGOVDOCINFO.COMPANYID
+	   	AND
+	   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_OPENGOVDOCINFO.TENANT_ID
+	   	AND
+	   			TBL_ENDAPRDOCINFO.DOCID = TBL_OPENGOVDOCINFO.DOCID
+		INNER JOIN
+	   			TBL_FORMINFO
+	   	ON
+	   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_FORMINFO.COMPANYID
+	   	AND
+	   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_FORMINFO.TENANT_ID
+	   	AND
+	   			TBL_ENDAPRDOCINFO.FORMID = TBL_FORMINFO.FORMID
+	   	AND
+	   			TBL_FORMINFO.OPENGOVFLAG = 'Y'
+   			]]>
+   		WHERE 
+   			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+   		AND 
+   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+   		<isNotEmpty property="v_CONTID">
+			AND
+	   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+		</isNotEmpty>
+		<isEmpty property="v_CONTID">
+   		AND
+			TBL_ENDAPRDOCINFO.COMPANYID IN (
+					SELECT 
+						EXTENSIONATTRIBUTE2 
+					FROM 
+						TBL_DEPTMASTER 
+					INNER JOIN 
+						TBL_ADDJOBMASTER 
+					ON
+						(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+						AND 
+						TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+					WHERE 
+						TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+					AND 
+						TBL_ADDJOBMASTER.CN = #v_USERID#
+					UNION ALL
+					SELECT 
+						PHYSICALDELIVERYOFFICENAME
+					FROM
+						TBL_USERMASTER
+					WHERE
+						CN = #v_USERID#
+					AND
+						TENANT_ID = #v_TENANTID# 
+					)
+		</isEmpty>
+   		<isNotEmpty property="v_DOCNUMBER"> 
+   		 AND 
+   		 	DOCNO LIKE '%$v_DOCNUMBER$%'
+   		</isNotEmpty>
+   		<isNotEmpty property="v_DOCTITLE"> 
+   		 AND 
+   		 	DOCTITLE LIKE '%$v_DOCTITLE$%'
+   		</isNotEmpty>
+   		<isNotEmpty property="v_DRAFTER"> 
+   		AND 
+   			WRITERNAME$v_MULTIDATALANG$ LIKE '%$v_DRAFTER$%' 
+   		</isNotEmpty>
+   		<isNotEmpty property="v_DEPTNAME"> 
+   		 AND 
+   		 	WRITERDEPTNAME$v_MULTIDATALANG$ LIKE '%$v_DEPTNAME$%'
+   		</isNotEmpty>
+   		<isNotEmpty property="v_FORMID"> 
+   		 AND 
+   		 	FORMID = #v_FORMID#
+   		</isNotEmpty>
+   		<isNotEmpty property="v_STARTDATE1"> 
+   		<![CDATA[
+ 				AND   
+			STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')   
+    		]]>  
+   		</isNotEmpty>
+   		<isNotEmpty property="v_STARTDATE2"> 
+   		<![CDATA[
+    		 AND  
+     		 	STARTDATE <= STR_TO_DATE(#v_STARTDATE2# , '%Y-%m-%d %H:%i:%s')
+ 		 ]]>  
+		</isNotEmpty> 
+   		<isNotEmpty property="v_ENDDATE1"> 
+   		<![CDATA[
+  		 AND   
+    		  	ENDDATE >= STR_TO_DATE(#v_ENDDATE1#, '%Y-%m-%d %H:%i:%s')
+    		 ]]> 
+   		</isNotEmpty>
+   		<isNotEmpty property="v_ENDDATE2">  
+  		<![CDATA[
+     		AND  
+   			ENDDATE <= STR_TO_DATE(#v_ENDDATE2#, '%Y-%m-%d %H:%i:%s')   
+     		 ]]>  
+  		</isNotEmpty>
+   		<isNotEmpty property="v_PROCESSDATE1"> 
+   		<![CDATA[ 
+			AND  
+   				TBL_ENDAPRLINEINFO.PROCESSDATE >= STR_TO_DATE(SUBSTR(#v_PROCESSDATE1#,1,10), '%Y-%m-%d %H:%i:%s')   
+    		AND  
+    			TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID# 
+     		 ]]>  
+   		</isNotEmpty>
+   		<isNotEmpty property="v_PROCESSDATE2"> 
+   		<![CDATA[
+     		AND   
+    			TBL_ENDAPRLINEINFO.PROCESSDATE <= STR_TO_DATE(SUBSTR(#v_PROCESSDATE2#,1,10), '%Y-%m-%d %H:%i:%s')    
+     		AND   
+   				TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#  
+   		 ]]>  
+   		</isNotEmpty>
+   		
+   		<isEmpty property="v_CONTID"> 
+   		<![CDATA[
+     	AND   
+      		TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#    
+    		 ]]>  
+   		</isEmpty>
+   		
+   		<isEqual property="v_CONTID" compareValue="ADMIN">
+   		<![CDATA[
+      	 AND 
+      	 	CONTAINERID IS NOT NULL
+      	 AND
+   			containerid NOT IN (
+                          SELECT
+                              containerid
+                          FROM
+                              TBL_CONTAINER
+                          WHERE
+                              tenant_id = #v_TENANTID#
+                          AND
+                              companyid = #companyID#
+                          AND
+                              containertypeid = '999' ) 
+   		 ]]>  
+   		 </isEqual>
+   		  
+   		 <isNotEqual property="v_CONTID" compareValue="ADMIN">
+   		 <isNotEmpty property="v_CONTID">
+   			<![CDATA[
+      		 AND 
+      		 	CONTAINERID IN ($v_CONTID$)
+   		 	]]>  
+   		 </isNotEmpty>
+   		 </isNotEqual>
+   		
+                                                                		
+   	<isEqual property="approvalFlag" compareValue="G">
+							   	<isNotEqual property="v_USERSECCODE" compareValue="0">
+							   	<![CDATA[
+							   		 AND 
+							   		 		#v_USERSECCODE# <= TBL_EXPENDAPRDOCINFO.SECURITYCODE
+							   	]]>
+							   	</isNotEqual>
+	</isEqual>
+   		
+   		<isEqual property="v_PUBFLAG" compareValue="Y">
+   		<isNotEmpty property="v_CONTID" > 
+   		<isNotEqual property="v_APRFLAG" compareValue="INMYAPPRSEARCH">
+   		<isNotEqual property="v_CONTID" compareValue="ADMIN">
+   		<![CDATA[
+    		 AND   
+     		 ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)  
+       		OR   
+       		(TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))  
+       	]]>  
+      	</isNotEqual>
+      	</isNotEqual>
+   		</isNotEmpty>
+   		</isEqual>
+   		
+   		<isNotEmpty property="v_PROCESSYN">
+   		<isEqual property="v_PROCESSYN" compareValue="Y">
+   		<![CDATA[
+   		AND 
+   		(	PROCESSYN <> 'H'
+   		AND 
+   			PROCESSYN <> 'I'	
+   		AND
+   			PROCESSYN <> 'N'
+   		OR
+   			PROCESSYN IS NULL)
+   		]]>
+   		</isEqual>
+   		<isNotEqual property="v_PROCESSYN" compareValue="Y">
+   		AND
+   			PROCESSYN = #v_PROCESSYN#
+   		</isNotEqual>
+   		</isNotEmpty>
+   		<isNotEmpty property="v_SUBQUERY"> 
+   		AND 
+   			$v_SUBQUERY$
+   		</isNotEmpty>
+   		<isNotEmpty property="v_DOCSTATE"> 
+   		AND 
+   			DOCSTATE = #v_DOCSTATE#
+   		</isNotEmpty>
+    	<isNotEmpty property="v_APPROVUSER"> 
+   		AND 
+   			TBL_ENDAPRLINEINFO.APRMEMBERNAME = #v_APPROVUSER#
+   		</isNotEmpty>
+	</select>
+	<select id="EzApprovalG.getOpenGovInfoForUpdate" parameterClass="Map" resultClass="ApprGOpenGovInfoVO">
+		SELECT
+			DOCTITLE, WRITERNAME, WRITERDEPTNAME, DOCNO, PUBLICITYCODE, LISTOPENFLAG, REASON, BASIS, OPENLIMITDATE
+		FROM
+			TBL_ENDAPRDOCINFO a
+		INNER JOIN
+			TBL_RECORD b
+		ON
+			a.DOCID = b.DOCID
+		AND
+			a.TENANT_ID = b.TENANT_ID
+		AND
+			a.COMPANYID = b.COMPANYID
+		INNER JOIN
+			TBL_OPENGOVDOCINFO c
+		ON
+			a.DOCID = c.DOCID
+		AND
+			a.TENANT_ID = c.TENANT_ID
+		AND
+			a.COMPANYID = c.COMPANYID
+		WHERE
+			a.DOCID = #docID#
+		AND
+			a.TENANT_ID = #tenantID#
+		AND
+			a.COMPANYID = #companyID#
+	</select>
+	<update id="EzApprovalG.updateOpenGovDocInfo_EXPENDAPRDOCINFO" parameterClass="Map">
+		UPDATE
+			TBL_EXPENDAPRDOCINFO
+		SET
+			PUBLICITYCODE = #publicityCode#
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</update>
+	<update id="EzApprovalG.updateOpenGovDocInfo_RECORD" parameterClass="Map">
+		UPDATE
+			TBL_RECORD
+		SET
+			PUBLICITYCODE = #publicityCode#
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</update>
+	<update id="EzApprovalG.updateOpenGovDocInfo_OPENGOVDOCINFO" parameterClass="Map">
+		UPDATE
+			TBL_OPENGOVDOCINFO
+		SET
+			OPENFLAG = #openFlag#,
+			BASIS = #basis#,
+			REASON = #reason#,
+			OPENLIMITDATE = #limitDate#,
+			SENDFLAG = 'N',
+			UPDATEDATE = now()
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</update>
+	<update id="EzApprovalG.updateOpenGovDocInfoComp_createDate" parameterClass="Map">
+		UPDATE
+			TBL_OPENGOVDOCINFO
+		SET
+			createdate = STR_TO_DATE(#nowDateTime#, '%Y-%m-%d %H:%i:%s'),
+			sendflag = 'N'
+			<isNotEmpty property="nowDate">
+			<!--                   당일로 넣어주기 주석처리 -->
+			<!--                   ,openlimitdate = STR_TO_DATE(#nowDate#, '%Y%m%d') -->
+			</isNotEmpty>
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</update>
+	<update id="EzApprovalG.updateOpenGovDocInfo_OPENGOVFILEINFO" parameterClass="Map">
+		UPDATE
+			TBL_OPENGOVFILEINFO
+		SET
+		<isEqual property="fileOpenFlag" compareValue="1">
+			FILEOPENFLAG = 'Y'
+		</isEqual>
+		<isEqual property="fileOpenFlag" compareValue="3">
+			FILEOPENFLAG = 'N'
+		</isEqual>
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</update>
+
+	<select id="EzApprovalG.isSN" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(SN)
+		FROM
+			TBL_OPENGOVMODIFYHISTORY
+		WHERE
+			TENANTID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			DOCID = #docID#
+	</select>
+
+	<select id="EzApprovalG.getSN" parameterClass="Map" resultClass="int">
+		SELECT
+			MAX(SN)
+		FROM
+			TBL_OPENGOVMODIFYHISTORY
+		WHERE
+			TENANTID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			DOCID = #docID#
+	</select>
+
+	<insert id="EzApprovalG.insertModifyOpenGovHistory" parameterClass="Map">
+		INSERT INTO TBL_OPENGOVMODIFYHISTORY
+			(DOCID,
+			MODIFIERNAME,
+			SN,
+			MODIFIERDEPTNAME,
+			MODIFYDATE,
+			MODIFYREASON,
+			TENANTID,
+			COMPANYID,
+			MODIFIERID,
+			MODIFIERDEPTID)
+		VALUES
+			(#docID#,
+			#modifierName#,
+			#sn#,
+			#modifierDeptName#,
+			#modifyDate#,
+			#modifyReason#,
+			#tenantID#,
+			#companyID#,
+			#modifierId#,
+			#modifierDeptId#)
+	</insert>
+	<select id="EzApprovalG.getOpenGovLimitDate" parameterClass="Map" resultClass="String">
+		SELECT
+			IFNULL(OPENLIMITDATE, 'N') AS openlitdate
+		FROM
+			TBL_OPENGOVDOCINFO
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			DOCID = #v_DOCID#
+	</select>
+	<update id="EzApprovalG.updateOpenGovDocFileSize" parameterClass="Map">
+		UPDATE
+			TBL_OPENGOVDOCINFO
+		SET
+			DOCSIZE = #docSize#
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</update>
+	
+    <update id="EzApprovalG.updateReceivedDept" parameterClass="Map">
+        UPDATE
+            TBL_APRRECEIPTPROCESSINFO
+        SET
+            PROCESSORID = #v_PROCESSORID#,
+            PROCESSORNAME = #v_PROCESSORNAME#,
+            PROCESSORNAME2 = #v_PROCESSORNAME2#,
+            PROCESSORJOBTITLE = #v_PROCESSORJOBTITLE#,
+            PROCESSORJOBTITLE2 = #v_PROCESSORJOBTITLE2#,
+            RECEIVEDDEPTID = #v_RECEIVEDDEPTID#,
+            RECEIVEDDEPTNAME = #v_RECEIVEDDEPTNAME#,
+            RECEIVEDDEPTNAME2 = #v_RECEIVEDDEPTNAME2#
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = #v_DOCID#
+    </update>
+	
 </sqlMap>

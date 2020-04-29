@@ -86,7 +86,13 @@
 			}
 			
 			function save() {
-				var notValid = ["uploadLimit", "companyLimit", "departmentLimit", "userLimit"].some(function(name) {
+				var selectedCompany = document.getElementById("companyList").value;
+				var inputList = ["uploadLimit", "departmentLimit", "userLimit"];
+				
+				if (selectedCompany === "*") {
+					inputList.put("companyLimit");
+				}
+				var notValid = inputList.some(function(name) {
 					var element = document.getElementById(name);
 					
 					if (isValid(element.value)) {
@@ -103,16 +109,21 @@
 					return;
 				}
 
+				var param = {
+					"departmentLimit" : document.getElementById("departmentLimit").value,
+					"userLimit" : document.getElementById("userLimit").value,
+					"uploadLimit" : document.getElementById("uploadLimit").value,
+					"companyId" : document.getElementById("companyList").value
+				}
+				
+				if (selectedCompany === "*") {
+					param.companyLimit = document.getElementById("companyLimit").value;
+				}
+				
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/saveConfig.do",
-					data: {
-						"companyLimit" : document.getElementById("companyLimit").value,
-						"departmentLimit" : document.getElementById("departmentLimit").value,
-						"userLimit" : document.getElementById("userLimit").value,
-						"uploadLimit" : document.getElementById("uploadLimit").value,
-						"companyId" : document.getElementById("companyList").value
-					},
+					data: param,
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
@@ -150,7 +161,7 @@
 			}
 			
 			function isValid(value) {
-				if (!isNaN(value) && parseFloat(value) > 0) {
+				if (!isNaN(value) && parseFloat(value) >= 0) {
 					return true;
 				}
 				else {

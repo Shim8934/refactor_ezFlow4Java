@@ -177,19 +177,26 @@ function getGyulJeDate() {
 
 function setSusinUpdataDocID() {
     try {
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "pOrgDocID", pOrgDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-
-        xmlhttp.open("POST", "../DraftUI/aspx/setSusinUpdateDocID.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
+    	var result = "";
+    	
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/setSusinUpdateDocID.do",
+    		data : {
+    			orgDocID : pOrgDocID,
+    			docID    : pDocID,
+    			deptID   : arr_userinfo[4]
+    		},
+    		success: function(xml){
+    			result = loadXMLString(xml);
+    		}        			
+    	});
+        
+        var dataNodes = GetChildNodes(result);
+        
+        return getNodeText(dataNodes[0]);
 
     } catch (e) {
         alert("setSusinUpdataDocID : " + e.description);
@@ -434,12 +441,16 @@ function document_oncontextmenu() {
     }
 }
 
-function chk_Passwd() {
+var ezchkpasswd_cross_dialogArguments = new Array();
+function chk_Passwd()
+{
     var parameter = pUserID;
-    var url = "../ezchkPasswd_Cross.aspx";
-    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
-    var ret = window.showModalDialog(url, parameter, feature);
-    return ret;
+    var url = "/ezApprovalG/ezchkPasswd.do";
+
+    ezchkpasswd_cross_dialogArguments[0] = parameter;
+    ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
+
+    DivPopUpShow(350, 225, url);
 }
 
 

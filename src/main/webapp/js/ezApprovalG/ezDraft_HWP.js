@@ -1277,7 +1277,7 @@ function openAaprDocAttachUI()
   try{
 	var parameter = pDocID;
 	var url = "/ezApprovalG/aprCabinetAttach.do?draftFlag=" + pDraftFlag;
-	var feature	= "status:no;dialogWidth:1050px;dialogHeight:500px;edge:sunken;scroll:no;help:no"; 
+	var feature	= "status:no;dialogWidth:1050px;dialogHeight:520px;edge:sunken;scroll:no;help:no"; 
 	var ret = window.showModalDialog(url,parameter,feature);
 
 	if(ret != "cancel")
@@ -1292,8 +1292,11 @@ function openAaprDocAttachUI()
 
 function SaveDraftDocInfo() {
 	var rtnVal;
-	if (SaveFile() != "TRUE")
-		return "FALSE";
+
+	rtnVal = SaveFile();
+	if (rtnVal.toUpperCase() != "TRUE") {
+        return "rtnVal";
+    }
 		
     SignSave();
 	rtnVal = SaveDraftDocInfo_ilban("002");
@@ -1574,16 +1577,20 @@ function setDocNumFormat(pPrefix)
 //구현해야하는부분
 function SaveFile() {
 	var result = "";
+
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : HwpCtrl.GetCloneData("", "HWP")
+	}
 	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			html  : HwpCtrl.GetCloneData("", "HWP")
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1594,16 +1601,20 @@ function SaveFile() {
 
 function SaveOrgFile() {
 	var result = "";
+
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : pOrgHtml
+	}
 	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			html  : pOrgHtml
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1701,16 +1712,28 @@ function putSignXML(SignXML)
 
 function SaveTMPFile() {
     var result = "";
+
+    var docID = "";
+    if(Saveflag) {
+    	docID = newpDocID;
+    }
+    else {
+    	docID = pDocID
+    }
+    
+	var data = {
+		docID : docID,
+		formId : pFormID,
+		html  : HwpCtrl.GetCloneData("", "HWP")
+	}
     
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveTmpFileHWP.do",
-		data : {
-			docID : pDocID,
-			html  : HwpCtrl.GetCloneData("", "HWP")
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1719,7 +1742,7 @@ function SaveTMPFile() {
     return result;
 }
 
-function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
+function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
     try {
         var objRoot;
         var objNode;
@@ -1729,7 +1752,10 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         var objNode;
         createNodeInsert(xmlpara, objNode, "PARAMETER");
 
-        createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+        if(Saveflag) 
+        	createNodeAndInsertText(xmlpara, objNode, "DOCID", newpDocID);
+        else
+        	createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
         createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
             createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
@@ -1817,6 +1843,11 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME2", arr_userinfo[16]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
+        
+        if(Saveflag) {
+        	createNodeAndInsertText(xmlpara, objNode, "saveFlag", Saveflag);
+        	createNodeAndInsertText(xmlpara, objNode, "oldDocID", pDocID);
+        }
         //수상하지만 일단 지움
 //        if (Saveflag)
 //            xmlhttp.open("POST", "/ezApprovalG/doDraftTmpHWP.do", false);

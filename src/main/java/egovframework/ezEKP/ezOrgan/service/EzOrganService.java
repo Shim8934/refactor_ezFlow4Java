@@ -1,13 +1,10 @@
 package egovframework.ezEKP.ezOrgan.service;
 
 import java.util.List;
-import java.util.Map;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
-import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzOrganService {
 	
@@ -27,9 +24,11 @@ public interface EzOrganService {
 	
 	public String getDeptMemberListPagination(String deptid, String celllist, String proplist, String listtype, String lang, String page, int tenantID) throws Exception;
 	
-	public String getSearchList(String searchlist, String celllist,	String proplist, String listtype, int i, String lang, int tenantID) throws Exception;
+	public String getSearchList(String searchlist, String celllist,	String proplist, String listtype, int i, String lang, int tenantID, String adminOrgan) throws Exception;
 
 	public String getDeptSubTreeInfo(String deptID, String propList, String primary, int tenantID) throws Exception;
+
+	public String getDeptSubTreeInfo(String deptID, String propList, String primary, int tenantID, boolean displayTrashDept) throws Exception;
 	
 	public String convertAddandConvert(String pClass, String pProvValue) throws Exception;
 	
@@ -79,7 +78,7 @@ public interface EzOrganService {
 	
 	public String getChildrenDeptID(String parentID, String companyID, int tenantID) throws Exception;
 
-	public String getSearchList(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String companyId, int tenantID, String noAddJob) throws Exception;
+	public String getSearchList(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String companyId, int tenantID, String noAddJob, String adminOrgan) throws Exception;
 
 	public boolean checkRetired(String userID, String companyID, int tenantID) throws Exception;
 	

@@ -20,6 +20,9 @@
 	    	#mCSB_1_container {
 				margin-right: 0px;
 			}
+			.mCustomScrollBox{ /* contains plugin's markup */
+				height: 93%;
+			}
 	    </style>
 		<script type="text/javascript" >
 		    var companyFolderId = "";
@@ -215,7 +218,7 @@
 		    	var data = this.treeData;
 		    	for ( var i = 0; i < data.length ; i++  ) {
 		    		var dataId = data[i]["id"] + "_anchor";
-		    		var folderName = data[i]["folderName1"];
+		    		var folderName = data[i]["text"];
 		    		var childE = document.getElementById(dataId);
 		    		if (childE != null){
 						childE.setAttribute("title", folderName);
@@ -417,9 +420,10 @@
                    	<li><span class="sub_iconLNB tree_board_star"></span><span class="list_text" onclick="moveFavorPage();"><spring:message code='ezWebFolder.t216'/></span></li>
                    	<li><span class="sub_iconLNB tree_delete"></span><span class="list_text" onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span></li>
                    	<li><span class="sub_iconLNB tree_manage" style="float:left"></span><span class="list_text" onClick="folder_Manage()"><spring:message code='ezWebFolder.t268'/></span></li>
-                   	<c:if test="${isWfAdmin == '1'}">
-						<li><span class="sub_iconLNB tree_appr_department"></span><span class="list_text" onclick="wfAdministrator();"><spring:message code="ezWebFolder.t25" /></span></li><!-- 웹폴더 관리자 -->
-					</c:if>
+<!--                    	웹폴더 관리자 사용자화면에서 제거  -->
+<%--                    	<c:if test="${isWfAdmin == '1'}"> --%> 
+<%-- 						<li><span class="sub_iconLNB tree_appr_department"></span><span class="list_text" onclick="wfAdministrator();"><spring:message code="ezWebFolder.t25" /></span></li><!-- 웹폴더 관리자 --> --%>
+<%-- 					</c:if> --%>
 				</ul>
 			</div>	
 	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="folderPanel" onclick="HiddenFolderMenu();" >&nbsp;</div>

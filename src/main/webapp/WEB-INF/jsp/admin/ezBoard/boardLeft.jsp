@@ -46,9 +46,9 @@
 	        var curMenuIndex = 1;
 	        var TopBoardID_01;
 	        var TreeCtrl_onNodeClick_01;
-    
 	        var RedirectBoardGroupID = "<c:out value='${redirectBoardGroupID}'/>";
 	        var RedirectBoardID = "<c:out value='${redirectBoardID}'/>";	   
+	        var useLeftCnt = "${useLeftCnt}";
 	        
 	        window.onload = function () {
 	            if (RedirectBoardID != "") {
@@ -285,14 +285,7 @@
 	                SelectedBoardID = treeNode.GetNodeData("DATA1");
 	                SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");	                
 	                var chkPhotoBrd = treeNode.GetNodeData("DATA5");
-		            var orgBoardTitle = treeNode.GetNodeData("DATA2"); // personalizedPortal용 변수 설정
-		            var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
-				    var orgItemCount = orgBoardName.substring(orgBoardTitle.length + 1, orgBoardName.length);
-				    
-				    if (orgBoardTitle == orgBoardName) {
-				    	orgItemCount = 0;
-				    }
-				    
+	                
 	                if (RedirectBoardID != "") {
 	                    if (RedirectBoardGroupID != "") {	                    	
 	                        window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&tabID=1tab2";
@@ -302,29 +295,7 @@
 	                }
 	                
 	                /* 2019-04-19 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신 */
-			    	$.ajax({
-						type : "GET",
-						dataType : "text",
-						async : false,
-						url : "/ezBoard/getItemCount.do",
-						data : {
-							boardID : SelectedBoardID
-						},
-						success: function(resultCount) {
-							if (orgItemCount != resultCount) {
-								var newNodeName = "";
-								if (resultCount > 0) {
-									newNodeName = orgBoardTitle + " " + resultCount;
-								} else {
-									newNodeName = orgBoardTitle;
-								}
-								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
-							}
-						},
-						error: function() {
-							return;
-						}
-					});
+	                refreshItemCnt(pNodeID);
 	            }
 	            catch (e) {
 	                alert(e.description);
@@ -428,6 +399,45 @@
 		    	document.getElementById(divID).click();
 		    }
 	        
+		    /* 2019-07-08 홍승비 - 게시물 등록, 삭제, 복사, 이동시 좌측메뉴의 선택된 하위게시판 게시물 개수 갱신 함수 추가 */
+		    function refreshItemCnt(pNodeID) {
+		       	if (useLeftCnt == "YES") {
+			    	var SelectedBoardID = document.getElementById(pNodeID).getAttribute("data1");
+		            var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
+		            var orgBoardTitle = document.getElementById(pNodeID).getAttribute("data2");// personalizedPortal용 변수 설정
+				    var orgItemCount = orgBoardName.substring(orgBoardTitle.length + 1, orgBoardName.length);
+				    
+				    if (orgBoardTitle == orgBoardName) {
+				    	orgItemCount = 0;
+				    }
+			    	
+			    	 /* 2019-04-19 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신 */
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/getItemCount.do",
+						data : {
+							boardID : SelectedBoardID
+						},
+						success: function(resultCount) {
+							if (orgItemCount != resultCount) {
+								var newNodeName = "";
+								if (resultCount > 0) {
+									newNodeName = orgBoardTitle + " " + resultCount;
+								} else {
+									newNodeName = orgBoardTitle;
+								}
+								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
+							}
+						},
+						error: function() {
+							return;
+						}
+					});
+		       	}
+		    }
+		    
 	    </script>
 	</head>
 	<body class="newLeft">

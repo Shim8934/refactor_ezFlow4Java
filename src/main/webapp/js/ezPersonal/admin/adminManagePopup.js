@@ -1,6 +1,7 @@
 ﻿// 회사 변경 method
 function company_change() {
 	makelist();
+	showPreview(2, 0);
 }
 
 //managePopup 호출 method
@@ -367,12 +368,12 @@ var add_popup = function() {
 
 	if (browserIE) {
 		if(pNoneActiveX == "YES") {
-			window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=660,width=720,top=" + pTop + ",left=" + pLeft, "");
+			window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=690,width=720,top=" + pTop + ",left=" + pLeft, "");
 		} else {
-			window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=660,width=720,top=" + pTop + ",left=" + pLeft, "");
+			window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=690,width=720,top=" + pTop + ",left=" + pLeft, "");
 		}
 	} else {
-		window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=660,width=720,top=" + pTop + ",left=" + pLeft, "");
+		window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=690,width=720,top=" + pTop + ",left=" + pLeft, "");
 	}
 }
 
@@ -404,9 +405,9 @@ var mod_popup = function() {
 	var compid = document.getElementById("ListCompany").value;
 
 	if (CrossYN()) {
-		window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popupList + "&flag=mod", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=660,width=720,top=" + pTop + ",left=" + pLeft, "");
+		window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popupList + "&flag=mod", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=690,width=720,top=" + pTop + ",left=" + pLeft, "");
 	} else {
-		window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popupList + "&flag=mod", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=660,width=720,top=" + pTop + ",left=" + pLeft, "");
+		window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popupList + "&flag=mod", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=690,width=720,top=" + pTop + ",left=" + pLeft, "");
 	} 
 	popupList = "";
 }
@@ -598,17 +599,23 @@ function showPreview(isPreview, itemseq) {
 	var doc = window.document;
 
 	if(itemseq == 0) {
+		doc.getElementById("ifrmPreViewH").style.display = "none";// 미리보기 화면에서 팝업이 커지면서(width=96%, height=96%) 없어지는 현상때문에 작성.
 		doc.getElementById('Preview_HeaderH').style.visibility ="hidden";
-		//doc.getElementById("ifrmPreViewH").style.display = "none";
+		doc.getElementById("ifrmPreViewH").style.width = "96%";
 		doc.getElementById("ifrmPreViewH").style.height = "96%";
-		doc.getElementById("ifrmPreViewH").src = "/blank_kr.htm";
+//		doc.getElementById("ifrmPreViewH").src = "/blank_kr.htm"; //일본어일때 폰트 문제로 주석
 		
+		setTimeout(function(){
+			doc.getElementById("ifrmPreViewH").style.display = "";
+		}, 200);
 		setTimeout(function(){
 			ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = strLanghyh9
 		}, 500);
 	} else {
 		if(isPreview == 2) {
 			// 세로 모드
+			doc.getElementById("ifrmPreViewH").style.width = "0px";
+			doc.getElementById("ifrmPreViewH").style.height = "0px";
 			var itemSeqTitle = $("#"+itemseq)[0].parentNode.parentNode.children[2].innerHTML;
 			var itemSeqSDate = $("#"+itemseq)[0].parentNode.parentNode.children[3].innerHTML;
 			doc.getElementById('Preview_HeaderH').style.visibility ="";

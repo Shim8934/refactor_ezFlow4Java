@@ -142,6 +142,12 @@ public class BoardListVO {
 	private String content;
 	/** 작성자 사진 파일  **/
 	private String userImageFile;
+	/** 2019-04-04 홍승비 - 게시판 좋아요 기능 카운트 추가 */
+	private int likeCount;
+	/** 2019-11-06 홍승비 - 미리보기 시 댓글옵션 변수 추가 */
+	private String oneLineReply;
+	/** 2019-12-02 홍승비 - 임시저장 기능과 예약게시 기능의 동시 사용을 위한 예약게시물 여부 변수 추가 */
+	private String isReserved;
 
 	public int getrNum() {
 		return rNum;
@@ -563,5 +569,22 @@ public class BoardListVO {
 	public void setUserImageFile(String userImageFile) {
 		this.userImageFile = userImageFile;
 	}
-	
+	public int getLikeCount() {
+		return likeCount;
+	}
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
+	public String getOneLineReply() {
+		return oneLineReply;
+	}
+	public void setOneLineReply(String oneLineReply) {
+		this.oneLineReply = oneLineReply;
+	}
+	public String getIsReserved() {
+		return isReserved;
+	}
+	public void setIsReserved(String isReserved) {
+		this.isReserved = isReserved;
+	}
 }

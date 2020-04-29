@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezSchedule.t6000' /></title>
+		<title><spring:message code='ezJournal.t224' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />
@@ -23,17 +23,18 @@
 		    }
 		    function Change_Click() {
 		    	var formData = $("form.journalForm").serialize();
-		    	
+		    	var companyId = $("select[name='companyId']").val();
+		    	formData += "&companyId="+companyId;
 		        $.ajax({
 		    		type : "POST",
 		    		url : "/admin/ezJournal/updatreFormType.do",
 		    		data :formData,
 		    		success: function(result) {
 		    			if(result.status=='ok'){
-			    			alert("<spring:message code='ezSchedule.t4012' />");
+			    			alert("<spring:message code='ezJournal.t137' />");
 			    			window.location.reload(true);
 		    			} else {
-		    				alert("<spring:message code='ezBoard.t80' />");
+		    				alert("<spring:message code='ezJournal.t225' />");
 		    			}
 		    		}
 		        });

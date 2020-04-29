@@ -10,11 +10,11 @@
 </head>
 <body>
 	<article class="vote box_shadow">
-		<div class="layDiv voteLay">
+		<div id="voteDiv" class="layDiv voteLay">
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">
 					<c:out value="${portletName }" />
-					(<c:out value='${voteCount }' />)
+					(<span id="voteCount"><c:out value='${voteCount }' /></span>)
 				</dt>
 				<dd class="portletPlus" id="votePlus">
 					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
@@ -22,11 +22,11 @@
 			</dl>
 			<c:choose>
 				<c:when test="${voteCount ne 0 }">
-					<div class="vote_contents">
+					<div id="voteList" class="vote_contents">
 					<p class="voteTitle">
 						"<c:out value="${title }" />"
 					</p>
-					<p class="voteBtn votePortlet" id="V<c:out value='${qstId }'/>">참여</p>
+					<p class="voteBtn votePortlet" id="V<c:out value='${qstId }'/>"><spring:message code="main.t2001"/></p>
 					<ul class="voteList">
 						<c:forEach items="${pollAnswer }" var="poll" varStatus="status">
 							<c:if test="${status.index lt 4 }">
@@ -61,13 +61,13 @@
 					</div>
 				</c:when>
 				<c:otherwise>
-					<ul class="portlet_list">
+					<ul id="noDataUL" class="portlet_list">
 						<dl class="nodata">
 							<dt>
 								<img src="/images/kr/main/noData_sIcon.png">
 							</dt>
 							<dd>
-								"<spring:message code='main.t00026' />"
+								<spring:message code='ezNewPortal.t018' />
 							</dd>
 						</dl>
 					</ul>

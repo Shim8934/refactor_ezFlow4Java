@@ -249,6 +249,8 @@ var SurveyCreate     = function() {
 		var anonymousFlag  = parseInt(document.querySelector('input[name="anonymousSpan"]:checked').value);
 		var multipleFlag   = parseInt(document.querySelector('input[name="multipleSpan"]:checked').value);
 		var userFlag       = parseInt(document.querySelector('input[name="targetSpan"]:checked').value);
+		var mailFlag       = parseInt(document.querySelector('input[name="mailSpan"]:checked').value);
+		var popupFlag       = parseInt(document.querySelector('input[name="popupSpan"]:checked').value);
 		var liFileList     = surveyAttWrap.querySelector("ul[class='ulFiles']").children;
 		var attachList     = [];
 		
@@ -265,6 +267,8 @@ var SurveyCreate     = function() {
 		surveyObj["infor"]["startDate"] = startDate;
 		surveyObj["infor"]["endDate"]   = endDate;
 		surveyObj["infor"]["userflag"]  = userFlag;
+		surveyObj["infor"]["mail"]  = mailFlag;
+		surveyObj["infor"]["popup"]  = popupFlag;
 		
 		if (liFileList.length > 0) {
 			for (var i = 0, len = liFileList.length; i < len; i++) {
@@ -465,18 +469,26 @@ var SurveyCreate     = function() {
 		var surveyTtl  = document.getElementById("info-input-ttl");
 		var surveyPp   = document.getElementById("info-input-pp").contentWindow;
 		var ppContent  = surveyPp.GetEditorContent();
+		
 		var sDate      = document.getElementById("startDate").value;
 		var eDate      = document.getElementById("endDate").value;
 		var publicFlag = parseInt(document.querySelector('input[name="publicSpan"]:checked').value);
 		var userFlag   = parseInt(document.querySelector('input[name="targetSpan"]:checked').value);
+		
+		var mailFlag   = parseInt(document.querySelector('input[name="mailSpan"]:checked').value);
+		var popupFlag   = parseInt(document.querySelector('input[name="popupSpan"]:checked').value);
+		
 		var userList   = surveyObj["infor"]["users"];
-		ppContent      = replaceAll(ppContent, '<p style="font-family:맑은 고딕;font-size:12px;"><br></p>', '');
+//		ppContent      = replaceAll(ppContent, '<p style="font-family:맑은 고딕;font-size:12px;"><br></p>', '');
+		ppContent      = replaceAll(ppContent, '<p style="font-size:13px;font-family:맑은 고딕"><br></p>', '');
 		var ttlValue   = replaceAll(surveyTtl.value, " ", "");
+		var today = getToday();
 		
 		if (!ttlValue)     {returnObj["error"] = SurveyMessages.strTitle  ; surveyTtl.value = ""; surveyTtl.focus(); return returnObj;}
 		if (!ppContent)    {returnObj["error"] = SurveyMessages.strPurpose; surveyPp.focus() ; return returnObj;}
 		if (!sDate)        {returnObj["error"] = SurveyMessages.strSvDate3; return returnObj;}
 		if (!eDate)        {returnObj["error"] = SurveyMessages.strSvDate2; return returnObj;}
+		if (sDate < today) {returnObj["error"] = SurveyMessages.strSvDate4; return returnObj;}
 		if (sDate > eDate) {returnObj["error"] = SurveyMessages.strSvDate1; return returnObj;}
 		
 		if (publicFlag == 1) {
@@ -498,6 +510,19 @@ var SurveyCreate     = function() {
 		
 		if (lastStep == 1) {saveSurveyInformation();}
 		return returnObj;
+	}
+	
+	function getToday() {
+		var today     = new Date();
+		var yyyy      = today.getFullYear();
+		var MM        = today.getMonth() + 1;
+		var dd        = today.getDate();
+		
+		if (dd < 10) {dd = '0' + dd;}
+		if (MM < 10) {MM = '0' + MM;}
+		
+		today = yyyy + "-" + MM + "-" + dd;
+		return today;
 	}
 	
 	function checkStep2() {
@@ -856,6 +881,24 @@ var SurveyCreate     = function() {
 		bnk.on('mouseout' , 'node', function(e){$('#logicMap').css('cursor', 'default');});
 		bnk.on('mouseover', 'edge', function(e){$('#logicMap').css('cursor', 'pointer');});
 		bnk.on('mouseout' , 'edge', function(e){$('#logicMap').css('cursor', 'default');});
+		// cytoscape 범위 블락 초기화
+		bnk.on('mouseup', function(event) {
+			
+			var len      = bnk.elements().size()*50;
+			var curPan   = bnk.pan();
+			var initFlag = false;
+			
+			if(len*(-1) > curPan.x) initFlag = true;
+			if(len*(-1) > curPan.y) initFlag = true;
+			if(len < curPan.x) initFlag = true;
+			if(len < curPan.y) initFlag = true;
+			
+			if(initFlag) {
+				bnk.resize();
+				bnk.fit();
+				bnk.center();
+			}
+		});
 		
 		bnk.elements('node').qtip({
 			content: {
@@ -2154,7 +2197,7 @@ var SurveyCreate     = function() {
 		
 		var sliderUp = $("<input type='input' class='slider-up' value='" + highest + "'/>");
 		
-		var lwUpDiv = $("<div><span class='slider-lwExp'>최소값</span><span class='slider-upExp'>최대값</span></div>")
+		var lwUpDiv = $("<div><span class='slider-lwExp'>" + SurveyMessages.strSlider8 + "</span><span class='slider-upExp'>" + SurveyMessages.strSlider9 + "</span></div>")
 		
 		slidWrap.append(sliderUp);
 		divWrap.append(slidWrap);
@@ -3483,7 +3526,7 @@ var SurveyCreate     = function() {
 		
 		var htmlOption = "";
 		if (mode == "skip") {
-			htmlOption += "<option value=''>" + SurveyMessages.strQs + " "+ SurveyMessages.strChoice + "</option>"; 
+			htmlOption += "<option value=''>" + SurveyMessages.strSkipQs + "</option>"; 
 			
 		} else {
 			htmlOption += "<option value=''>" + SurveyMessages.strNoLogic + "</option>"; 
@@ -3672,6 +3715,8 @@ var SurveyCreate     = function() {
 		document.getElementById("cf-endDate").textContent    = qstInf["endDate"];
 		document.getElementById("cf-anoynymous").textContent = qstInf["anonymous"] == 0 ? SurveyMessages.strAnoynym1  : SurveyMessages.strAnoynym2;
 		document.getElementById("cf-multiple").textContent   = qstInf["multiple"]  == 0 ? SurveyMessages.strMultiple1 : SurveyMessages.strMultiple2;
+		document.getElementById("cf-mail").textContent   = qstInf["mail"]  == 0 ? SurveyMessages.strNotSend : SurveyMessages.strSend;
+		document.getElementById("cf-popup").textContent   = qstInf["popup"]  == 0 ? SurveyMessages.strNotSend : SurveyMessages.strSend;
 		
 		var surveyUserElmt = document.getElementById("cf-userdiv");
 		

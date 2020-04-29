@@ -158,14 +158,15 @@
 	    </script>
 	</head>
 	<body class="mainbody" style="height: 95%;">
-	    <h1><spring:message code='main.t374'/><span></span></h1>
-	    <span style="display:none"><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
-		    <select id="ListCompany" onchange="selectCompanyID()" style="height:29px">
+		<h1>
+	    	<spring:message code='main.t374'/>
+	    	<span class="title_bar"><img src="/images/name_bar.gif"></span>
+	    	<select id="ListCompany" class="companySelect" onchange="selectCompanyID()" style="height:29px">
 	        	<c:forEach var="item" items="${list}">
 	        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
             	</c:forEach>
-		    </select><br>
-	    </span>
+		    </select>
+	    </h1>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
 	        	<p><span id="tagsub1"><spring:message code='ezEmail.letter20'/></span></p>

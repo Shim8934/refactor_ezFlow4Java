@@ -139,6 +139,17 @@
 	        var useReceiveDocNo = "<c:out value ='${useReceiveDocNo}'/>";
 	        var orgCompanyID = "<c:out value='${orgCompanyID}' />";
 	        var docNumZeroCnt = "<c:out value ='${docNumZeroCnt}'/>";
+
+	        //원문공개정보
+            var useOpenGov = "<c:out value ='${useOpenGov}'/>";
+			var basis = "<c:out value ='${basis}' />";
+            var reason = "<c:out value ='${reason}' />";
+            var listOpenFlag = "<c:out value ='${listOpenFlag}' />";
+            var fileOpenFlagList = "<c:out value ='${fileOpenFlagList}' />";
+	        
+	        var curDocNum = "";
+	        
+	        var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
 	        
 		    function getNextDocList() {
 		        NextDocID = "";
@@ -331,11 +342,14 @@
 		
 		                if (pDocHref != "") {
 		                    showProgress("<spring:message code='ezApprovalG.t368'/>");
-		                    
 				        var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref) + "&tempTime=" + aprDocTimeStamp;
 				        var isTrue = HwpCtrl.LoadFile(URL, false);
 
 				        FieldsAvailable(isTrue);
+				        
+				        if(useExternalMailServer == "NO") {
+				    		$("#btnMail").css("display","");
+				    	}
 				    }
 		            HwpCtrl.ChangeMode(3);
 		
@@ -640,7 +654,7 @@
 			                }
 			            }
 			
-			            if (pDraftFlag != "SUSIN") {
+			            if (pDraftFlag != "SUSIN" && pDraftFlag != "HABYUI") {
 			                if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 			                    if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 			                        var rtnval;
@@ -1229,7 +1243,14 @@
 				        parameter[50] = g_szSCListXml;
 				        parameter[51] = sepAttachCheckYN; // 분첨
 			        }
-			        
+
+			        if (useOpenGov == "YES") {
+                        parameter[52] = basis;
+                        parameter[53] = reason;
+                        parameter[54] = listOpenFlag;
+                        parameter[55] = fileOpenFlagList;
+					}
+
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
 			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType + "&ext=" + "hwp";
@@ -1317,7 +1338,31 @@
 					            	setNonElecRecInfo(nonElecRecInfoXml);
 				            	}
 				            }
-			                
+
+				            if (useOpenGov == "YES") {
+                                $.ajax({
+                                    type : "POST",
+                                    dataType : "text",
+                                    async : false,
+                                    url : "/ezApprovalG/openGovInfoSave.do",
+                                    data : {
+                                        openGovListFlag : ret[27],
+                                        fileOpenFlagList : ret[28],
+                                        basis : ret[29],
+                                        reason : ret[30],
+                                        publicity : ret[11],
+                                        docID : pDocID,
+                                        limitDate : ret[31]
+                                    }
+                                });
+
+                                listOpenFlag = ret[27];
+                                fileOpenFlagList = ret[28];
+                                basis = ret[29];
+                                reason = ret[30];
+                                limitDate = ret[31];
+							}
+
 			                SummaryFlag = true;
 			                savexmlhttp = null;
 			                HwpCtrl.ChangeMode(3);
@@ -1397,7 +1442,7 @@
 	                        <li id="btnSave"><span onclick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
-	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
+	                        <li id="btnMail" style="display:none"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
 	                        <li id="btnHelper" style="display: none"><span onclick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t157'/></span></li>
 	                        <li id="tbtnTotalSave" style="display: none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	                    </ul>

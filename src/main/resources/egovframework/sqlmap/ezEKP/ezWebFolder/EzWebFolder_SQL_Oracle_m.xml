@@ -112,6 +112,12 @@
 		<result property="folderName2"  column="FOLDERNAME2"  />
 		<result property="folderLevel"  column="FOLDERLEVEL"  />
 	</resultMap>
+
+	<resultMap id="subFolderRealAll" class="HashMap">
+		<result property="folderId"     	column="FOLDER_ID" 		 columnIndex="1" 	/>
+		<result property="folderStatus"     column="USE_STATUS" 	 columnIndex="2" 	/>
+		<result property="folderPath"       column="FOLDER_PATH"	 columnIndex="3" 	/>
+	</resultMap>
 	
 	<sql id="searchTerm">
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
@@ -407,7 +413,7 @@
 						<include refid="searchTerm"/>
 		<![CDATA[
 						AND DF.TENANT_ID = #tenantId#
-					    ORDER BY DF.FOLDERFILE_TYPE, S.SHARE_DATE DESC ) X
+					    ORDER BY DF.FOLDERFILE_TYPE $orderByData$ ) X
 				    WHERE RK = 1 ) XX
 				WHERE ROWNUM <= #startPoint# + #pageSize# ) XXX
 			WHERE XXX.RNUM >= #startPoint# + 1
@@ -535,7 +541,7 @@
 						<include refid="searchTerm"/>
 			<![CDATA[
 						AND DF.TENANT_ID = #tenantId#
-						ORDER BY DF.FOLDERFILE_TYPE, S.SHARE_DATE DESC ) X
+						ORDER BY DF.FOLDERFILE_TYPE $orderByData$) X
 					WHERE RK = 1 ) XX
 				WHERE ROWNUM <= #startPoint# + #pageSize# ) XXX
 			WHERE XXX.RNUM >= #startPoint# + 1
@@ -1167,7 +1173,7 @@
 						AND FV.USER_ID = #userId#
 						WHERE DF.USE_STATUS = 'Y'
 						AND DF.TENANT_ID = #tenantId#
-						ORDER BY DF.FOLDERFILE_TYPE, S.SHARE_DATE DESC ) X
+						ORDER BY DF.FOLDERFILE_TYPE $orderByData$ ) X
 					WHERE RK = 1 ) XX
 				WHERE ROWNUM <= #startPoint# + #pageSize# ) XXX
 			WHERE XXX.RNUM >= #startPoint# + 1
@@ -1396,10 +1402,14 @@
 			]]>
 		
 			<include refid="searchTrashCanFile"/>
+				<![CDATA[
 				) A
-				
+				ORDER BY
+				]]>
+				<isNotEqual property="orderByData" compareValue="">
+					$orderByData$,
+				</isNotEqual>
 				<isNotEqual property="realColmn" compareValue="">
-					ORDER BY
 						<isEqual property="realColmn" compareValue="TRASHCAN_SIZE">
 							TO_NUMBER($realColmn$) $order$,
 						</isEqual>
@@ -1410,7 +1420,7 @@
 				</isNotEqual>
 				<isEqual property="realColmn" compareValue="">
 					<![CDATA[
-						ORDER BY SLEVEL, UPDATE_DATE DESC, TRASHCAN_EXT DESC
+						SLEVEL, UPDATE_DATE DESC, TRASHCAN_EXT DESC
 					]]>
 				</isEqual>
 				
@@ -1487,9 +1497,6 @@
 			AND
 				FOLDER_ID = #folderId#
 		]]>
-		<isNotEqual property="flag" compareValue="delete" prepend="AND">
-			USE_STATUS = 'T'
-		</isNotEqual>
 	</delete>
 	
 	<select id="EzWebFolderDAO_m.selectAllFilesInFolder" parameterClass="Map" resultClass="String">
@@ -1590,6 +1597,7 @@
 							ELSE RESULT.TARGET_NAME_2
 						END AS TARGET_NAME,
 						RESULT.TARGET_TYPE,
+						RESULT.TEMP_TARGET_TYPE,
 						FILETYPE.TYPE_NAME,
 					    FILETYPE.TYPE_ICON AS TARGET_ICON_URL,
 						RESULT.TARGET_PATH,
@@ -1632,7 +1640,8 @@
 							FILES.CREATE_NAME2,
 							FILES.CREATE_DATE,
 					        FILES.TENANT_ID,
-							FILES.USE_STATUS
+							FILES.USE_STATUS,
+							1 AS TEMP_TARGET_TYPE
 						FROM
 							TBL_WEBFOLDER_FILE FILES
 							INNER JOIN
@@ -1657,7 +1666,8 @@
 							FOLDER.CREATE_NAME2,
 							FOLDER.CREATE_DATE,
 					        FOLDER.TENANT_ID,
-							FOLDER.USE_STATUS
+							FOLDER.USE_STATUS,
+							0 AS TEMP_TARGET_TYPE
 						FROM
 							TBL_WEBFOLDER_FOLDER FOLDER
 							INNER JOIN
@@ -1705,7 +1715,7 @@
 		<include refid="searchFavorite"/>
 		<![CDATA[
 				    ORDER BY
-				        TARGET_TYPE ASC, CREATE_DATE DESC
+				        RESULT.TEMP_TARGET_TYPE $orderByData$
 			    ) ORDER_RESULT
 			    WHERE ROWNUM <= (#startIndex# + #listCount#)
 			)
@@ -2004,5 +2014,20 @@
 			      ) FP
 			   ON F2.FOLDER_PATH LIKE CONCAT(FP.FOLDER_PATH ,'%'))
 	   ]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.selectSubFolders" parameterClass="Map" resultMap="subFolderRealAll">
+		<![CDATA[
+			SELECT 
+				FOLDER_ID 	, 
+				USE_STATUS  , 
+				FOLDER_PATH
+			FROM 
+				TBL_WEBFOLDER_FOLDER 
+			WHERE 
+				FOLDER_UPPER = #folderId#
+			AND 
+				TENANT_ID = #tenantId#
+	    ]]>
 	</select>
 </sqlMap>

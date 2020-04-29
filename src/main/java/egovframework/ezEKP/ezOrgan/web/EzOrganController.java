@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -46,9 +45,6 @@ public class EzOrganController {
 	@Autowired
 	private EzOrganService ezOrganService;	
 
-	@Autowired
-	private EgovMessageSource messageSource;
-	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
 	
@@ -120,7 +116,8 @@ public class EzOrganController {
 		String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();        
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
                 
-        String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, userInfo.getPrimary(), userInfo.getTenantId());
+        boolean displayTrashDept = doc.getElementsByTagName("DISPLAY_TRASH_DEPT").getLength() > 0;
+        String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, userInfo.getPrimary(), userInfo.getTenantId(), displayTrashDept);
 		
         logger.debug("getDeptSubTreeInfo ended");
         
@@ -162,7 +159,7 @@ public class EzOrganController {
 		String isPrimary = userInfo.getPrimary();
 		String page = request.getParameter("page");
 		String noAddJob = request.getParameter("noAddJob");
-		String companyId = request.getParameter("companyId") == null ? "" : request.getParameter("companyId");
+		// String companyId = request.getParameter("companyId") == null ? "" : request.getParameter("companyId");
 		String infoXML = "";
 
 		logger.debug("page=" + page);
@@ -177,7 +174,7 @@ public class EzOrganController {
 		
 		if (celllist.toUpperCase().indexOf("EXTENSIONATTRIBUTE5") > -1) {
             String[] arryCell = celllist.toUpperCase().split(";");
-            String tooltip = "";
+            // String tooltip = "";
             int idx = 0;
             
             for (int j = 0; j < arryCell.length; j++) {
@@ -187,7 +184,7 @@ public class EzOrganController {
             }
             
             for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
-                Element Nodetip = doc.createElement("TOOLTIP");
+                // Element Nodetip = doc.createElement("TOOLTIP");
 
                 if (!doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().equals("")) {
                 	//2018-07-12 이효진 미사용 소스 주석처리
@@ -292,10 +289,10 @@ public class EzOrganController {
 		
 		if (page == null) {
 			if (companyId.equals("")) {
-				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID);
+				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID, adminOrgan);
 			}
 			else {
-				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, companyId, tenantID, noAddJob);
+				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, companyId, tenantID, noAddJob, adminOrgan);
 			}
 		} else {
 			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID, companyId, adminOrgan);

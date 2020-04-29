@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
+import egovframework.let.user.login.vo.FindPwdInfoVO;
 import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
@@ -149,4 +151,31 @@ public class LoginDAO extends EgovAbstractDAO {
 	public int updateDeviceInfo (Map<String, Object> map) throws Exception {
 		return update("loginDAO.updateDeviceInfo", map);
 	}
+	
+	public CountryVO getLoginIPCountry(Map<String, Object> paramMap) throws Exception {
+		return (CountryVO) select("loginDAO.getLoginIPCountry", paramMap);
+	}
+	
+	public LoginVO selectUserForChangePwd(LoginVO vo) throws Exception {
+		logger.debug("calling loginDAO.selectUserForChangePwd");
+		
+		return (LoginVO)select("loginDAO.selectUserForChangePwd", vo);
+	}
+	
+	public FindPwdInfoVO getFindPwdInfo(Map<String, Object> paramMap) throws Exception {
+		return (FindPwdInfoVO) select("loginDAO.getFindPwdInfo", paramMap);
+	}
+	
+	public int updateTblFindPwd (Map<String, Object> map) throws Exception {
+		return update("loginDAO.updateTblFindPwd", map);
+	}
+	
+	public int insertTblFindPwd (Map<String, Object> map) throws Exception {
+		return update("loginDAO.insertTblFindPwd", map);
+	}
+	
+	public int updateLogincnt (LoginVO vo) throws Exception {
+		return update("loginDAO.updateLogincnt", vo);
+	}
+
 }

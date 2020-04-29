@@ -77,6 +77,8 @@ public class EzWebFolderGWController_m {
 		String searchExt = orElse(request.getParameter("searchExt"), "");
 		String searchFileName = orElse(request.getParameter("searchFileName"), "");
 		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
+		String sortColumn = orElse(request.getParameter("sortColumn"), "");
+		String sortType = orElse(request.getParameter("sortType"), "");
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
@@ -128,7 +130,8 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = ezWebFolderService_m.getSharingList(subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+			List<ShareVO> list = ezWebFolderService_m.getSharingList(subSearchFlag, userId, userInfo.getPrimary(), offset, 
+					startPoint, pageSizeInt, searchInfo, tenantId, sortColumn, sortType );
 			Map<String, Long> countInfo = ezWebFolderService_m.getSharingCount(subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			
 			data.put("list", list);
@@ -283,6 +286,8 @@ public class EzWebFolderGWController_m {
 		String searchExt = orElse(request.getParameter("searchExt"), "");
 		String searchFileName = orElse(request.getParameter("searchFileName"), "");
 		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
+		String sortColumn = orElse(request.getParameter("sortColumn"), "");
+		String sortType = orElse(request.getParameter("sortType"), "");
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
@@ -335,7 +340,8 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = ezWebFolderService_m.getSharedList(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+			List<ShareVO> list = ezWebFolderService_m.getSharedList(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), 
+					userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId, sortColumn, sortType);
 			Map<String, Long> countInfo = ezWebFolderService_m.getSharedCount(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			
 			data.put("list", list);
@@ -553,6 +559,9 @@ public class EzWebFolderGWController_m {
 		String serverName = orElse(request.getHeader("x-user-host"), "");
 		String pageNum 		= orElse(request.getParameter("pageNum"), "1");
 		String pageSize 	= orElse(request.getParameter("pageSize"), "0");
+		String sortType 	= orElse(request.getParameter("sortType"), "");
+		String sortColumn 	= orElse(request.getParameter("sortColumn"), "");
+
 		logger.debug("serverName : " + serverName + " || userId : " + userId + " || pageNum : " + pageNum + " || pageSize : " + pageSize);
 		
 		JSONObject result = new JSONObject();
@@ -589,7 +598,8 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = ezWebFolderService_m.getHiddenSharedList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, tenantId);
+			List<ShareVO> list = ezWebFolderService_m.getHiddenSharedList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), 
+					userInfo.getPrimary(), offset, startPoint, pageSizeInt, tenantId, sortType, sortColumn);
 			Map<String, Long> countInfo = ezWebFolderService_m.getHiddenSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, tenantId);
 			
 			data.put("list", list);
@@ -777,6 +787,8 @@ public class EzWebFolderGWController_m {
 		String searchExt = orElse(request.getParameter("searchExt"), "");
 		String searchFileName = orElse(request.getParameter("searchFileName"), "");
 		String searchCreatorName = orElse(request.getParameter("searchCreatorName"), "");
+		String sortType = orElse(request.getParameter("sortType"), "");
+		String sortColumn = orElse(request.getParameter("sortColumn"), "");
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
@@ -829,7 +841,8 @@ public class EzWebFolderGWController_m {
 				startIndex = (int) (totalCount - 1) / listCount * listCount;
 			}
 			
-			List<FavoriteVO> favoriteFiles = ezWebFolderService_m.getFavorites(userId, primary, offset, tenantId, searchInfo, startIndex, listCount);
+			List<FavoriteVO> favoriteFiles = ezWebFolderService_m.getFavorites(userId, primary, offset, tenantId, searchInfo, 
+					startIndex, listCount, sortType, sortColumn);
 			
 			JSONObject data = new JSONObject();
 			
@@ -1015,6 +1028,8 @@ public class EzWebFolderGWController_m {
 		String column           = orElse(request.getParameter("column"), "");
 		String order            = orElse(request.getParameter("order"), "");
 		String mode 		    = orElse(request.getParameter("mode"), "");
+		String sortType 		= orElse(request.getParameter("sortType"), "");
+		String sortColumn 		= orElse(request.getParameter("sortColumn"), "");
 		String realColumn        = "";
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
@@ -1068,7 +1083,8 @@ public class EzWebFolderGWController_m {
 			
 			List<TrashCanVO> trashCanList = null;
 			JSONObject resultList = ezWebFolderService_m.getTrashCanList(realColumn, order.toUpperCase(), userId, offset, tenantId, currPage, listCount,
-										searchExt, searchFileName, searchCreateName, searchFileType, enrollStartDate, enrollEndDate, delStartDate, delEndDate, mode);
+										searchExt, searchFileName, searchCreateName, searchFileType, enrollStartDate, enrollEndDate, delStartDate, 
+										delEndDate, mode, sortType, sortColumn);
 			int fileCnt = 0;
 			int folderCnt = 0;
 			int totalCount = 0;

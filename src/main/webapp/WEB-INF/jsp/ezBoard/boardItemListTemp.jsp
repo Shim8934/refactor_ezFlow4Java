@@ -108,6 +108,9 @@
 		            document.getElementById("divList").style.height = height + "px";
 		            window_onunload_Event = true;
 		            getBoardList();
+		            
+			        /* 2020-02-03 홍승비 - 아무것도 선택하지 않은 상태의 하단 미리보기 영역 마진 수정 */
+			      	ifrmPreViewW.document.getElementById("ifrmPreViewW_div").style.marginTop = "-2px";
 		        };
 		        
 		        /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
@@ -151,10 +154,13 @@
 			    	});
 			    });
 		        
+			    /* 2019-08-06 홍승비 - 게시물 삭제 등 리프레시 동작 시 미리보기 영역 틀어짐 수정 */
 		        var Save_unloadSave = false;
 		        function Window_onunload() {
 		            if (window_onunload_Event && !Save_unloadSave) {
-		                var divStyle, ifrmStyle, listCount;
+		              /*   var divStyle, ifrmStyle, listCount; */
+						var divStyle;
+						var listCount = 0;
 		
 		                if (document.getElementById("listcount") != null){
 			            	listCount = document.getElementById("listcount").value;
@@ -163,14 +169,16 @@
 			            }
 		                
 		                if (pPreviewShow_HOW == "W") {
-		                    divStyle = parseInt(document.getElementById("divList").style.height);
+		                    /* divStyle = parseInt(document.getElementById("divList").style.height);
 		                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
-		                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
+		                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle)); */
+		                	divStyle = Math.round(pMailListDiv);
 		                }
 		                else if (pPreviewShow_HOW == "H") {
-		                    divStyle = parseInt(document.getElementById("divList").scrollWidth);
+		                 /*    divStyle = parseInt(document.getElementById("divList").scrollWidth);
 		                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewH").scrollWidth);
-		                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
+		                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle)); */
+		                	divStyle = Math.round(pMailListDiv_H);
 		                }
 		                else {
 		                    divStyle = 0;
@@ -365,6 +373,8 @@
 		                DocList.DataBind("lvBoardList");
 		                DocList = null;
 		
+		                /* 2019-08-06 홍승비 - 게시물 리스트 호출 후  strListInfo 초기화 */
+		                strListInfo = "";
 		                var tempno = 0;
 		                for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
 		                    if (CrossYN()) {
@@ -602,6 +612,9 @@
 		
 		            if (xmlhttp.responseText == "NO") {
 		                alert("<spring:message code='ezBoard.t265'/>");
+		                return;
+		            } else if (xmlhttp.responseText == "ERROR") {
+		                alert("<spring:message code='ezBoard.t1020'/>");
 		                return;
 		            }
 		
@@ -947,6 +960,16 @@
 	                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 		        }
 		    }
+		    
+			/* 2020-02-03 홍승비 - 하단 미리보기 사용 시 아무 게시물도 선택되지 않은 상태라면 최소 높이 설정 */
+		    function checkPreViewWSrc() {
+	    	  if (document.getElementById("ifrmPreViewW").src.indexOf("/blank") > -1) {
+	            	document.getElementById("ifrmPreViewW").style.minHeight = "130px";
+	            } else { // 게시물 선택 시 최소 높이 해제
+	            	document.getElementById("ifrmPreViewW").style.minHeight = "";
+	            }
+		    }
+			
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
@@ -962,7 +985,7 @@
 	    </h1>
 	    <div id="mainmenu">
 	        <ul>
-	            <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
+	            <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.hsbJP02'/></span></li>
 	            <li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup(this)"></span></li>
 	            <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
 	            <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
@@ -1069,7 +1092,7 @@
 						</dl>
 	                </div>
 					<iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
-					<iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
+					<iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" onLoad="checkPreViewWSrc();" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
             </div>
         </div>
     </div>

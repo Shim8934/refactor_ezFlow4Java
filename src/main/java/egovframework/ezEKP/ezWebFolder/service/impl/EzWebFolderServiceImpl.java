@@ -303,7 +303,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("timeUTC",    timeUTC);
 		
 		//saveLog
-		List<FileVO> listFiles = getAllFilesInFolder("", "", folder.getFolderId(), "", "0", "", "", "", "", "", "1", 0, 0, userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId());
+		List<FileVO> listFiles = getAllFilesInFolder("", "", folder.getFolderId(), "", "0", "", "", "", "", "", "1", 0, 0, 
+				userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId(), "", "");
 		
 		for (FileVO file : listFiles) {
 			saveLog("R", userInfo.getCompanyID(), userInfo.getOffset(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), file.getFileName(), file.getFileSize(), file.getFileExt(), file.getFileTypeName(), userInfo.getTenantId());
@@ -358,7 +359,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public List<FileVO> getAllFilesInFolder(String realColmn, String order, String folderId, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
+	public List<FileVO> getAllFilesInFolder(String realColmn, String order, String folderId, String originalPath, String searchChk, 
+			String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, 
+			String primary, String offset, int tenantId, String sortType, String sortColumn) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("realColmn",    realColmn);
 		map.put("order",        order);
@@ -375,12 +378,17 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("pageSize",     pageSize);
 		map.put("offset",       commonUtil.getMinuteUTC(offset));
 		map.put("primary",      primary);
-		map.put("tenantId",     tenantId);
+		map.put("tenantId",     tenantId);		
+		map.put("sortType",     sortType);
+		map.put("sortColumn",   sortColumn);
+		map.put("orderByData",	sortColumn + " " + sortType);
 		return ezWebFolderDAO.getAllFilesInFolder(map);
 	}
 
 	@Override
-	public List<FileVO> getAllFiles(String realColmn, String order, String folderPath, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName,	String userName, String fileType, int startPoint, int pageSize,	String primary, String offset, int tenantId) throws Exception {
+	public List<FileVO> getAllFiles(String realColmn, String order, String folderPath, String originalPath, String searchChk, 
+			String startDate, String endDate, String fileExt, String fileName,	String userName, String fileType, int startPoint, 
+			int pageSize,	String primary, String offset, int tenantId, String sortType, String sortColumn) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("realColmn",    realColmn);
 		map.put("order",        order);
@@ -398,6 +406,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("offset",       commonUtil.getMinuteUTC(offset));
 		map.put("primary",      primary);
 		map.put("tenantId",     tenantId);
+		map.put("sortType",     sortType);
+		map.put("sortColumn",   sortColumn);
+		map.put("orderByData",	sortColumn + " " + sortType);
 		return ezWebFolderDAO.getAllFiles(map);
 	}
 
@@ -1000,7 +1011,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		HashSet<String> inernameList    = new HashSet<>();
 		FolderVO folder                 = getFolderByFolderId(folderId, offset, tenantId);
 		List<FolderVO> listSubFolder    = getAllSubFolders(folderId, offset, tenantId);
-		List<FileVO> filesInFolder      = getAllFilesInFolder("", "", folderId, "", "0", "", "", "", "", "", "1", 0, 0, primary, offset, tenantId);
+		List<FileVO> filesInFolder      = getAllFilesInFolder("", "", folderId, "", "0", "", "", "", "", "", "1", 0, 0, primary, 
+				offset, tenantId, "", "");
 		String folderName               = primary.equals("1") ? folder.getFolderName1() : folder.getFolderName2();
 		
 		if (!folderNameList.contains(folderName)) {

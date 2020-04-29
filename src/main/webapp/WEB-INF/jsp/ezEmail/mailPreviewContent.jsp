@@ -414,7 +414,6 @@
 			    		"width" : "100%",
 			        	"padding" : "0px 0px 0px 10px",
 			    		"margin" : "0px",
-			    		"font-family" : "malgun gothic",
 			    		"font-size" : "12px",
 			    		"color" : "#333"
 			    	});
@@ -422,11 +421,37 @@
 	     		
 		    	parent.mailPrevIframeSize();
 	     	}
+	     	
+	        function AttachFile_Preview(mailPath, mailUid, fileIndex, fileName) {
+				
+	     		//window.open('http://jmocha.kaoni.com:8080/uFOCS3.0/viewer/document/docviewer.do?filepath=http://10.0.120.213:8080' + encodeURIComponent(downloadURL) + '&filename=' + fileName + '&fileext=txt&viewerselect=image');
+	    		  $.ajax({
+	    			  type : 'get',
+	    			  url : '/ezEmail/attachFilePreview.do',
+	    			  data : {
+	    				  "fileName" : fileName,
+	    				  "folderId" : mailPath,
+	    				  "mailId" : mailUid,
+	    				  "fileIndex" : fileIndex
+	    			  },
+	    			  error: function(xhr, status, error){
+	    			  },
+	    			  success : function(result){ // sat , kukudocs
+
+	    					  var link = document.createElement("a");
+
+	    					  link.setAttribute("href",result);
+	    					  link.setAttribute("target","_blink");
+	    					  link.click();
+
+	    			  }
+	    		  });
+	     	}
 	    </script> 
 	</head>
 
 	<body onload="javascript:window_onload()" onclick="frameClick();">
-		<div class="attachedfile" id="ifrmPreViewRayer" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;">
+		<div class="attachedfile" id="ifrmPreViewRayer" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;font-family:<spring:message code='main.t246' />">
 			<ul class="attachedfile_title">
 				<li class="titleText"><span class="titleT"><spring:message code='ezEmail.t99000003' /><span>${pAttachListHtmlSub}</span></span><span class="attach_btn_up" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span></li>
 	    		<li class="titleSave"><span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span></li>

@@ -401,6 +401,12 @@ function MakeFormInfoXML_Detail() {
     } else {
     	createNodeAndInsertText(xmlpara, objNode, "ConnFlag", "N");
     }
+    
+    if (document.getElementById('setOpenGovFlag').checked) {
+    	createNodeAndInsertText(xmlpara, objNode, "openGovFlag", "Y"); // 원문공개 체크 
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "openGovFlag", "N");
+    }
 
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", getNodeText(document.getElementById("keepperiod").options[document.getElementById("keepperiod").selectedIndex]));
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIODCODE", document.getElementById("keepperiod").value);

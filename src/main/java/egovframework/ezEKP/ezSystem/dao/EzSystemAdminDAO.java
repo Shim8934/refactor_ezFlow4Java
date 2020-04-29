@@ -28,11 +28,19 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public List<ConnectionInfoVO> getLoginHist(Map<String, Object> map) throws Exception {
 		return (List<ConnectionInfoVO>) list("EzSystemAdminDAO.getLoginHist", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ConnectionInfoVO> getLoginHistNotAdmin(Map<String, Object> map) throws Exception {
+		return (List<ConnectionInfoVO>) list("EzSystemAdminDAO.getLoginHistNotAdmin", map);
+	}
 	
 	public int getLoginHistCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzSystemAdminDAO.getLoginHistCount", map); 
 	}
 
+	public int getLoginHistCountNotAdmin(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getLoginHistCountNotAdmin", map); 
+	}
 	
 	public void deleteLoginHist(Map<String, Object> map) throws Exception {
         delete("EzSystemAdminDAO.deleteLoginHist", map);
@@ -116,4 +124,16 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		update("EzSystemAdminDAO.updateMenuChange", paramMap);
 	}
 	
+	public String getAccessCountryList(Map<String, Object> paramMap) throws Exception {
+		return (String) select("EzSystemAdminDAO.getAccessCountryList", paramMap);
+	}
+		
+	public void setAccessCountry(Map<String, Object> paramMap) throws Exception {
+		insert("EzSystemAdminDAO.setAccessCountry", paramMap);
+	}
+	
+	public int updateAccessCountry(Map<String, Object> paramMap) throws Exception {
+		return update("EzSystemAdminDAO.updateAccessCountry", paramMap);
+	}
+
 }

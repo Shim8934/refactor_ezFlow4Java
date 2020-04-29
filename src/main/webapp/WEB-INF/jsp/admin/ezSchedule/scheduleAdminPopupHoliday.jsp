@@ -302,13 +302,13 @@
 		            <td style="width: 240px; padding: 0">
 		            	<table style="width:100%">
 		                	<tr class="primary">
-		                        <th><spring:message code='ezSchedule.t4013' /></th>
+		                        <th>${primary }</th>
 		                        <td>
 		                            <input id="holidayname" type="text" style="width: 98%" maxlength="20" value="<c:out value='${name}' />" />
 		                        </td>
 		                    </tr>
 		                    <tr class="secondary">
-		                        <th><spring:message code='ezSchedule.t4014' /></th>
+		                        <th>${secondary }</th>
 		                        <td>
 		                            <input id="holidayname2" type="text" style="width: 98%" maxlength="40" value="<c:out value='${name2}' />" />
 		                        </td>

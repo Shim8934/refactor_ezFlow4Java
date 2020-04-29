@@ -329,6 +329,7 @@
 	        WHERE USE_STATUS = 'Y'
 	        AND FOLDER_TYPE = 'D'
 	        AND TENANT_ID = #tenantId#
+	        AND COMPANY_ID = #compId#
 	        AND OWNER_ID IN
 		]]>
 			<iterate property="idList" open="(" close=")" conjunction=",">
@@ -366,6 +367,12 @@
 				ON FF.FOLDER_ID = FU.FOLDER_ID
 				AND FF.TENANT_ID = FU.TENANT_ID
 				AND FF.FOLDER_TYPE = 'C'
+				AND FF.COMPANY_ID IN
+		]]>
+			<iterate property="idList" open="(" close=")" conjunction=",">
+				#idList[]#
+			</iterate>
+		<![CDATA[
 				AND FU.USER_ID IN 
 		]]>
 			<iterate property="idList" open="(" close=")" conjunction=",">
@@ -391,7 +398,13 @@
 			    FOLDER_LEVEL AS FOLDERLEVEL,
 			    FOLDER_PATH  AS FOLDERPATH   
 	        FROM TBL_WEBFOLDER_FOLDER
-	        WHERE OWNER_ID = #compId#
+	        WHERE
+	        COMPANY_ID IN
+		]]>
+			<iterate property="idList" open="(" close=")" conjunction=",">
+				#idList[]#
+			</iterate>
+		<![CDATA[
 	        AND FOLDER_TYPE = 'C'
 	        AND FOLDER_UPPER = 'root'
 	        AND USE_STATUS = 'Y'
@@ -437,7 +450,12 @@
 	                and 
 	                	folder.folder_upper = #folderId#
 	                and 
-	                	folder.company_id = #comId#
+	                	folder.company_id IN
+		]]>
+			<iterate property="idList" open="(" close=")" conjunction=",">
+				#idList[].id#
+			</iterate>
+		<![CDATA[
 	            ) t
 	            where 1=1
    		]]>	
@@ -495,8 +513,11 @@
 	                and 
 	                	folder.folder_upper = #folderId#
 	                and 
-	                	folder.company_id = #comId#
-             ]]>	
+	                	folder.company_id IN
+			]]>
+			<iterate property="idList" open="(" close=")" conjunction=",">
+				#idList[].id#
+			</iterate>
 	         <isEqual property="parentId" compareValue="root" > 
 	      	 	<isEqual property="folderType" compareValue="C" >
                 	AND 
@@ -523,7 +544,7 @@
 		</isNotEqual>
 			
 		<![CDATA[
-			ORDER BY FOLDER_SORT, UPDATE_DATE DESC
+			ORDER BY FOLDER_SORT $orderByData$
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -694,7 +715,12 @@
 		                and 
 		                	folder.USE_STATUS = 'Y'
 		                and 
-		                	folder.company_id = #comId#
+		                	folder.company_id IN
+				]]>
+						<iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+				<![CDATA[
 		                and 
 		                	folder_path <> #folderPath#		
 				]]>
@@ -724,8 +750,7 @@
 			]]>
 			<include refid="searchAll"/>
 			<![CDATA[
-				
-			ORDER BY FOLDER_SORT, UPDATE_DATE DESC
+			ORDER BY FOLDER_SORT $orderByData$
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -803,7 +828,7 @@
 						folder.tenant_id = #tenantId#	 
 					and folder.FOLDER_TYPE = #folderType#
 	                and folder.USE_STATUS = 'Y'
-	                and folder.company_id = #comId#
+	                and folder.company_id 
 	                and type.tenant_id = #tenantId#
 	                and folder_path <> #folderPath#	
 			]]>
@@ -865,7 +890,12 @@
 						folder.tenant_id = #tenantId#	 
 					and folder.FOLDER_TYPE = #folderType#
 	                and folder.USE_STATUS = 'Y'
-	                and folder.company_id = #comId#
+	                and folder.company_id IN
+	        ]]>
+	                <iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+			<![CDATA[
 	                and type.tenant_id = #tenantId#
 	                and folder_path <> #folderPath#	
 			]]>

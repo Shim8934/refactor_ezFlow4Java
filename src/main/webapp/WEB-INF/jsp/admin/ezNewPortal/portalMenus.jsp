@@ -3,12 +3,15 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <!DOCTYPE html>
-<html>
+<html style="height: 97%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezNewPortal.t055' /></title>
-		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
+		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/default.css')}" />
+	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/component.css')}" />
+	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}" />
 		<style type="text/css">
 			body {background-color : white;}
 			.ui-sortable{ margin:0px; padding:0px;}
@@ -45,8 +48,12 @@
 			dt img {width:21px;height:21px;margin-top:20px;}
 			.menuIcon img {width:21px;height:21px;}
 			.deleteMenu {display:inline-block;margin-left:50px;vertical-align:top;margin-top:-3px;}
-			.accessOK div, .accessNO div {margin-left:15px;display:inline-block;}
+			.accessOK div, .accessNO div {display:inline-block;}
 			.menuChoice {background: #edf7ff; border: 1px solid #2196f3; color: #0470e3;}
+	        .admin_menu .menuIconTD {padding:0px;}
+	        .admin_menu .menuIconTD div {height:100%; overflow:auto; padding:5px;}
+			li.menu dl dd span {white-space:normal; line-height:1.2; word-wrap:break-word;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
+			.bottomBtn .btnA:hover{text-decoration:none;}
 		</style>
 	</head>
 	
@@ -55,7 +62,9 @@
 			<spring:message code='ezNewPortal.t055' />
 			<span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany"></select>
+			<span><spring:message code='ezNewPortal.garm07' /></span>
 		</h1>
+		
 		
 		<%-- <div id="mainmenu">
 			<ul style="margin-top: 15px;">
@@ -149,13 +158,32 @@
 					var result = JSON.parse(request.responseText);
 					var menuList = result.list;
 					var menusHTML = "";
+					var agent = navigator.userAgent.toLowerCase();
+					var isIE = false
+					
+					if ( (navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || (agent.indexOf("msie") != -1)) {
+						// ie일 경우
+						isIE = true;
+					}
 					
 					menuList.forEach(function (item, index) {
 						menusHTML += "<li class='menu' id='menu" + item.menuId + "'>";
 						menusHTML += "<dl>";
 						menusHTML += "<dt><span class='" + item.iconUrl + "'>";
 						menusHTML += "</span></dt>";
-						menusHTML += "<dd><span style='font-size: 15px; display: inline-block; text-overflow: ellipsis; overflow: hidden; width: 95px; white-space: nowrap;'>" + ConvertCharToEntityReference(item.menuName) + "</span></dd>" ;
+						
+						if (isIE) {
+							var menuNameWithoutSpace = ConvertCharToEntityReference(item.menuName).replace(/ /gi, "");
+							if (menuNameWithoutSpace.length > 18) {
+								var menuName = ConvertCharToEntityReference(item.menuName).substr(0, 19) + '...';
+								menusHTML += "<dd><span style='font-size: 15px; text-overflow: ellipsis; overflow: hidden; width: 95px;'>" + ConvertCharToEntityReference(menuName) + "</span></dd>" ;
+							} else {
+								menusHTML += "<dd><span style='font-size: 15px; text-overflow: ellipsis; overflow: hidden; width: 95px;'>" + ConvertCharToEntityReference(item.menuName) + "</span></dd>" ;
+							}
+						} else {
+							menusHTML += "<dd><span style='font-size: 15px; text-overflow: ellipsis; overflow: hidden; width: 95px;'>" + ConvertCharToEntityReference(item.menuName) + "</span></dd>" ;
+						}
+						
 						menusHTML += "</li>";
 					});
 					
@@ -180,6 +208,7 @@
 						//handle : ".menuSortable",
 						items: "li.menu",
 						scroll: false,
+					    helper: 'clone',
 						start : function(event, ui) {
 							//$(".menuDetails").css("display", "none");
 							$(".menuDetails").remove();
@@ -190,7 +219,7 @@
 						}
 					});
 					
-					$("#menuList").disableSelection();
+					//$("#menuList").disableSelection();
 					$("#menuList").on("sortstart", function( event, ui ) { ui.placeholder.css("width","100px"); });
 					//메뉴추가버튼
 					$("#menuAdd").on("click", openMenuAdd);
@@ -281,38 +310,42 @@
 					
 					menusHTML += "</table>";
 					menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none;'>";
-					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'>";
+					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div>";
 					
 					if (menuAuthsY != null && menuAuthsY.length != 0) {
 						var menuAuthsYList = "";
 						
 						menuAuthsY.forEach(function(item, index) {
-							if (item.userType) {
+							if (item.userType == 1) {
 								menuAuthsYList += ", " + item.userName;
 								menuAuthsYList += "(" + item.userDeptName + ")";
-							} else {
+							} else if (item.userType == 0) {
 								menuAuthsYList += ", " + item.userDeptName;
+							} else {
+								menuAuthsYList += ", " + item.userName;
 							}
 						});
 						
-						menusHTML += menuAuthsYList.substring(1) + "</td></tr>";
+						menusHTML += menuAuthsYList.substring(1) + "</div></td></tr>";
 					}
 					
-					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'>";
+					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'><div>";
 					
 					if (menuAuthsN != null && menuAuthsN.length != 0) {
 						var menuAuthsNList = "";
 						
 						menuAuthsN.forEach(function(item, index) {
-							if (item.userType) {
+							if (item.userType == 1) {
 								menuAuthsNList += ", " + item.userName;
 								menuAuthsNList += "(" + item.userDeptName + ")";
-							} else {
+							} else if (item.userType == 0) {
 								menuAuthsNList += ", " + item.userDeptName;
+							} else {
+								menuAuthsNList += ", " + item.userName;
 							}
 						});
 						
-						menusHTML += menuAuthsNList.substring(1) + "</td></tr>";
+						menusHTML += menuAuthsNList.substring(1) + "</div></td></tr>";
 					}
 					
 					menusHTML += "</table>";
@@ -390,6 +423,7 @@
 		var closeMenuDetail = function(event) {
 			//그냥 모든 메뉴디테일을 닫아버린다
 			$(".menuDetails").slideUp();
+			$(".menuDetails").remove();
 		}
 		
 		$('html').click(function(e) {
@@ -496,6 +530,8 @@
 		}
 		
 		var openMenuAdd = function() {
+			$(".menuChoice").removeClass("menuChoice");
+			
 			menuAuths = [];
 			
 			var menusHTML = "<li class='menuDetails' id='menuLiNew'>";
@@ -524,21 +560,48 @@
 					menusHTML += "</tr>";	
 				}
 			} else {
+				var mainTitle = "<spring:message code='ezNewPortal.t078' />";
+				var subTitle1 = "<spring:message code='ezNewPortal.t079' />";
+				var subTitle2 = "<spring:message code='ezNewPortal.t080' />";
+				
+				var mainTitleId = "menu1";
+				var subTitle1Id = "menu2";
+				var subTitle2Id = "menu3";
+				
+				if (primary == "2") {
+					mainTitle = "<spring:message code='ezNewPortal.t079' />";
+					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
+					subTitle2 = "<spring:message code='ezNewPortal.t080' />";
+					
+					mainTitleId = "menu2";
+					subTitle1Id = "menu1";
+					subTitle2Id = "menu3";
+				} else if (primary == "3") {
+					mainTitle = "<spring:message code='ezNewPortal.t080' />";
+					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
+					subTitle2 = "<spring:message code='ezNewPortal.t079' />";
+					
+					mainTitleId = "menu3";
+					subTitle1Id = "menu1";
+					subTitle2Id = "menu2";
+				}
+					
+				
 				menusHTML += "<tr><th rowspan='3' class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
-				menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t078' />)</td>";
-				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
+				menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + mainTitle + ")</td>";
+				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + mainTitleId + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
-				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t079' />)</td>";
-				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu2' type='text' maxlength='50'></td>";
+				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle1 + ")</td>";
+				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle1Id + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
-				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t080' />)</td>";
-				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu3' type='text' maxlength='50'></td>";
+				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle2 + ")</td>";
+				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle2Id + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
 			}
 			menusHTML += "</table>";
 			menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
-			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'></td></tr>";
-			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'></td></tr></table>";
+			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div></div></td></tr>";
+			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'><div></div></td></tr></table>";
 			menusHTML += "<div class='bottomBtn'><a class='btnA addMenuBtn'><spring:message code='ezNewPortal.t002' /></a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t086' /></a>";
 			menusHTML += "</div></div></div></li>"
 			
@@ -737,7 +800,7 @@
 		var openMenuAuth = function(event) {
 			var mode = event.data.mode;
 
-			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId;
+			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId + "&mode=menu";
 			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
 		    	try { OpenWin.focus(); } catch (e) { }
 		}

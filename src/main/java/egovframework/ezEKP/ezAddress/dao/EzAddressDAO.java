@@ -5,11 +5,9 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezAddress.vo.AddressVO;
-import egovframework.ezEKP.ezAddress.vo.AddressOldZipCodeVO;
-import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
-import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
 import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
+import egovframework.ezEKP.ezAddress.vo.AddressVO;
+import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzAddressDAO")

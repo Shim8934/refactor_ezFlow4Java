@@ -217,11 +217,13 @@ public class EzLadderController {
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID());
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("domainName", domainName);
+		model.addAttribute("primaryLang", primaryLang);
 		
 		logger.debug("setLadderAttendantPopUp ended.");
 		
@@ -426,18 +428,20 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
+		Object obj = BMUserVO.getUserIds();
+		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenant_id", userInfo.getTenantId())
 				.queryParam("bmName", BMVO.getBmName())
 				.queryParam("writerId", userInfo.getId())
-				.queryParam("userIds", BMUserVO.getUserIds())
-				.queryParam("userNames", BMUserVO.getUserNames())
-				.queryParam("userName2s", BMUserVO.getUserName2s())
+				.queryParam("userIds", obj)
+				.queryParam("userNames", (Object[]) BMUserVO.getUserNames())
+				.queryParam("userName2s", (Object[]) BMUserVO.getUserName2s())
 				.queryParam("lang", userInfo.getLang())
 				.queryParam("offset", userInfo.getOffset())
 				.queryParam("companyID", userInfo.getCompanyID())
-				.queryParam("descriptions", BMUserVO.getDescriptions())
-				.queryParam("descriptions2", BMUserVO.getDescriptions2());
+				.queryParam("descriptions", (Object[]) BMUserVO.getDescriptions())
+				.queryParam("descriptions2", (Object[]) BMUserVO.getDescriptions2());
 		
 		ResponseEntity<String> result = null;
 		
@@ -601,8 +605,8 @@ public class EzLadderController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenant_id", userInfo.getTenantId())
-				.queryParam("ladderIds", ladOrderVO.getLadderIds())
-				.queryParam("changeLadderIds", ladOrderVO.getChangeLadderIds())
+				.queryParam("ladderIds", (Object[]) ladOrderVO.getLadderIds())
+				.queryParam("changeLadderIds", (Object[]) ladOrderVO.getChangeLadderIds())
 				.queryParam("mode", mode)
 				.queryParam("currPage", currPage)
 				.queryParam("searchSelect", searchSelect)
@@ -709,6 +713,7 @@ public class EzLadderController {
 	 * @throws Exception
 	 *
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezLadder/deleteLadder.do", method=RequestMethod.GET)
 	public String deleteLadderList(@RequestParam(value="allData") List<String> allData, @CookieValue("loginCookie") String loginCookie, String ladderId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("deleteLadder started.");
@@ -761,6 +766,7 @@ public class EzLadderController {
 	 * @throws Exception
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezLadder/serUserOrder.do", method=RequestMethod.POST)
 	public String setUserOrder(@CookieValue("loginCookie") String loginCookie, String ladderId, String firstUser, String firstUserOrder, String secondUser, 
 			String secondUserOrder, String firstItem, String secondItem, HttpServletRequest request, Model model) throws Exception{
@@ -797,6 +803,7 @@ public class EzLadderController {
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
 		String status = jsonResult.get("status").toString();
+		@SuppressWarnings("unused")
 		JSONArray lines = new JSONArray();
 		if (status.equals("ok")) {
 			
@@ -822,6 +829,7 @@ public class EzLadderController {
 	 * 사다리 게임 시작
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezLadder/setLadderStart.do", method = RequestMethod.POST)
 	public String setLadderStart(@CookieValue("loginCookie") String loginCookie,  String[] allData, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("setLadderStart started.");

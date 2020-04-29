@@ -89,7 +89,7 @@
 	        var strSearch = "";
 	        var ua = navigator.userAgent;
 	        var tabSel = "";
-	        var deptList = JSON.parse('${deptList}');
+// 	        var deptList = '${deptList}';
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -168,15 +168,25 @@
 	                document.getElementById('TreeView').innerHTML = "";
 	                var wholeHtml = '<div id="FromTreeView" nodeclick="TreeViewNodeClick" nodedblclick="" requestdata="RequestData" selectnodeid="' + deptid + '">';
 	                wholeHtml += '<div id="left">';
-	                for (var i = 0; i < deptList.length ; i ++) {
-						if (deptList[i].authType == 'M') {
-							var html = '<h2 onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" class="node_div off" id="' + deptList[i].deptId + '" nodename="' + deptList[i].deptName + '" manageflag="M" value="' + deptList[i].deptName + '" cn="'+ deptList[i].deptId +'" isleaf="TRUE" ' + 
+	                //2019-09-24 김보미 - 부서명에 특수문자(")가 있을경우에 deptList값이 잘려 부서리스트가 출력되지 않는 버그 수정
+// 	                for (var i = 0; i < deptList.length ; i ++) {
+// 						if (deptList[i].authType == 'M') {
+// 							var html = '<h2 onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" class="node_div off" id="' + deptList[i].deptId + '" nodename="' + deptList[i].deptName + '" manageflag="M" value="' + deptList[i].deptName + '" cn="'+ deptList[i].deptId +'" isleaf="TRUE" ' + 
+// 							'style="padding-left:0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">';
+// 							html += '<span id="spn_' + deptList[i].deptId + '" class="node_normal" onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" style="cursor: pointer; display: inline-block;">' + deptList[i].deptName + '</span>';
+// 							html += '<div id="' + deptList[i].deptId + '_sub" style="display: none;"></div></li>';
+// 							wholeHtml += html;
+// 						}
+// 					}
+					<c:forEach var="dept" items="${deptList}">
+						<c:if test="${dept.authType == 'M'}">
+							wholeHtml += '<h2 onclick="node_select(&quot;' + "<c:out value='${dept.deptId}' />" + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" class="node_div off" id="' + "<c:out value='${dept.deptId}' />" + '" nodename="' + "<c:out value='${dept.deptName}'/>" + '" manageflag="M" value="' + "<c:out value='${dept.deptName}'/>" + '" cn="'+ "<c:out value='${dept.deptId}' />" +'" isleaf="TRUE" ' + 
 							'style="padding-left:0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">';
-							html += '<span id="spn_' + deptList[i].deptId + '" class="node_normal" onclick="node_select(&quot;' + deptList[i].deptId + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" style="cursor: pointer; display: inline-block;">' + deptList[i].deptName + '</span>';
-							html += '<div id="' + deptList[i].deptId + '_sub" style="display: none;"></div></li>';
-							wholeHtml += html;
-						}
-					}
+							wholeHtml += '<span id="spn_' + "<c:out value='${dept.deptId}' />" + '" class="node_normal" onclick="node_select(&quot;' + "<c:out value='${dept.deptId}' />" + '&quot;, &quot;&quot;, &quot;FromTreeView&quot;, TreeViewNodeClick);" style="cursor: pointer; display: inline-block;">' + "<c:out value='${dept.deptName}'/>" + '</span>';
+							wholeHtml += '<div id="' + "<c:out value='${dept.deptId}' />" + '_sub" style="display: none;"></div></li>';
+							
+						</c:if>
+					</c:forEach>
 	                wholeHtml += '</div></div>';
 	                document.getElementById('TreeView').innerHTML += wholeHtml; 
 
@@ -1105,6 +1115,10 @@
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezEmail.t99000046' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezEmail.t29' /></option>
 	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezEmail.t99000047' /></option>
+	                                                        <c:if test="${primaryLang eq '3' }">
+		                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+		                                                    </c:if>
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezEmail.t99000048' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezEmail.t99000049' /></option>
 	                                                    </select>

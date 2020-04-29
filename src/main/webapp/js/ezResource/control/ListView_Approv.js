@@ -648,17 +648,23 @@ function ListView() {
                 var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
                 var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
                 var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
+                var schApproveFlag;
 
                 var oText;
 
                 if (j == 1) {
+                	schApproveFlag = strValue;
                     oText = document.createElement("span");
                     if (strValue == 1) {
                         oText.className = "sub_iconLNB tree_resource_ok";
                         oText.style.marginTop = "0px";
                     }
-                    else {
+                    else if (strValue == 0) {
                     	oText.className = "sub_iconLNB tree_resource_no";
+                    	oText.style.marginTop = "0px";
+                    }
+                    else {
+                    	oText.className = "sub_iconLNB tree_resource_refuse";
                     	oText.style.marginTop = "0px";
                     }
                 }
@@ -673,6 +679,29 @@ function ListView() {
                         oText.src = "";
                         oText.style.display = "none";
                     }
+                }
+                else if (j == 8) {
+                	var returnStatus;
+                	if(schApproveFlag == 1) {
+	                	if(returnFlag == 1) {
+		                	if(strValue == 0) {
+		                		returnStatus = strLang325;
+		                	}
+		                	else {
+		                		returnStatus = strLang326;
+		                	}
+	                	}
+	                	else {
+	                		returnStatus = strLang323;
+	                	}
+                	}
+                	else if(schApproveFlag == 0) {
+                		returnStatus = strLang321;
+                	}
+                	else {
+                		returnStatus = strLang322;
+                	}
+                	oText = document.createTextNode(returnStatus);
                 }
                 else
                     oText = document.createTextNode(strValue);

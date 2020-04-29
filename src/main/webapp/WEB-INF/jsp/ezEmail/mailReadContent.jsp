@@ -23,6 +23,7 @@
 			    var deletePermission = "${deletePermission}";
 			    var sendPermission = "${sendPermission}";
 			    var mouseTop;
+			    var mailWritePreview = window.parent.mailWritePreview; // 메일작성 > 미리보기
 			    
 			    if (objLink != null) {
 					
@@ -65,6 +66,30 @@
 							}
 						});
 		        	}, 10);
+					
+					if (mailWritePreview == "true") {
+						if ($("#PreviewAttachList").children().length > 0) { // 일반첨부
+							$("#ifrmPreViewRayer > .title > .title_btn").remove();
+							$("#PreviewAttachList .icon_rbtn").remove();
+							$("#PreviewAttachList span").removeAttr("onClick");
+							$("#PreviewAttachList span").removeAttr("onmouseover");
+							$("#PreviewAttachList span").css("cursor","default");
+						}
+						if ($("#_BigAttachListHtml").length > 0) { // 대용량첨부
+							$("#_BigAttachListHtml a").removeAttr("href");
+							$("#_BigAttachListHtml a img").css("cursor","default");
+						}
+						if ($(".previewmail_addImage").length > 0) { // 이미지 미리보기
+							$(".previewmail_addImage").remove();
+						}
+						
+						// 임시보관함 미리보기용 메일 삭제
+						window.parent.mailWritePreviewDel();
+					}
+					
+					if ($(".previewmail_addImage").length > 0) {
+						$(".previewmail_addImage").css("opacity","1");
+					}
 				}
 				
 				function sizeBtnAppend() {
@@ -387,7 +412,6 @@
 			     			"width" : "100%",
 			     		    "padding" : "0px 0px 0px 10px",
 			     			"margin" : "0px",
-			     			"font-family" : "malgun gothic",
 			     			"font-size" : "12px",
 			     			"color" : "#333"
 				    	});
@@ -396,6 +420,33 @@
 		     		
 			    	parent.mailPrevSentDateChk();
 		        }
+		     	
+		     	function AttachFile_Preview(mailPath, mailUid, fileIndex, fileName) {
+						
+		     		//window.open('http://jmocha.kaoni.com:8080/uFOCS3.0/viewer/document/docviewer.do?filepath=http://10.0.120.213:8080' + encodeURIComponent(downloadURL) + '&filename=' + fileName + '&fileext=txt&viewerselect=image');
+		    		  $.ajax({
+		    			  type : 'get',
+		    			  url : '/ezEmail/attachFilePreview.do',
+		    			  data : {
+		    				  "fileName" : fileName,
+		    				  "folderId" : mailPath,
+		    				  "mailId" : mailUid,
+		    				  "fileIndex" : fileIndex
+		    			  },
+		    			  error: function(xhr, status, error){
+		    			  },
+		    			  success : function(result){ // sat , kukudocs
+
+		    					  /* var link = document.createElement("a");
+
+		    					  link.setAttribute("onClick",result);
+		    					  link.setAttribute("target","_blink");
+		    					  link.click();  */
+		    					  window.open(result);
+		    			  }
+		    		  });
+		     	}
+		     	
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">
@@ -417,7 +468,7 @@
 		<div class='margin' id="normalScreen" style="margin-top:5px; word-wrap:break-word;">${htmlBody}<!--  --></div>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
 	  	<c:if test="${previewMailImage == 'Y' && previewImageListHtml != ''}">
-		  	<div class="previewmail_addImage" style="margin-bottom:10px;font-family:<spring:message code='main.t246' />">
+		  	<div class="previewmail_addImage" style="margin-bottom:10px;font-family:<spring:message code='main.t246' />; opacity:0;">
 				<p class="title"><spring:message code='ezEmail.0hun05' /></p>
 				<div class="previewIamgelist" id="PreviewAttachList">${previewImageListHtml}</p>
 			</div>

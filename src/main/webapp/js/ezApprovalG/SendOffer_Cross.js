@@ -69,7 +69,7 @@ function OpenSendOfferUI() {
         ezselectone_cross_dialogArguments[0] = parameter;
         ezselectone_cross_dialogArguments[1] = SendOffer_Complete;
 
-        var OpenWin = window.open("/ezApprovalG/ezSelectOne.do", "ezSelectOne_Cross", GetOpenWindowfeature(605, 505));
+        var OpenWin = window.open("/ezApprovalG/ezSelectOne.do", "ezSelectOne_Cross", GetOpenWindowfeature(605, 515));
         try { OpenWin.focus(); } catch (e) { }
     //}
 }
@@ -286,7 +286,7 @@ function SendOfferCheck(pDocID, pUserID)
 		}
 		else if (rtnVal == "NORECEIPT")
 		{
-			var pInformationContent = " " + strLang201 + "<br> " + strLang202;
+			var pInformationContent = " " + strLang201 + "<br>" + strLang202;
 			var ret = OpenInformationUI(pInformationContent, SendOfferCheck_OpenUI);
 			if (ret && ext == 'hwp') {
 			    SendOfferCheck_OpenUI(ret);

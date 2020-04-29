@@ -40,6 +40,10 @@ function getTabList() {
     		        guBun = result[i].guBun;
     		        BoardName = result[i].boardName;
     		        
+    		        if (boardId == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
+    		        	BoardName = messages.strLang23;
+    		        }
+    		        
     	            if (i == 0) {
     	                listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "'" + classon + " data2='" + guBun + "'><span> " + BoardName + " </span></dt>";
     	                boardType = guBun;
@@ -56,7 +60,7 @@ function getTabList() {
     			var listHTML = "";
     			listHTML += "<dl class='nodata'>";
     	    	listHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
-    	    	listHTML += '<dd>"' + strLang1_NewBoardSTD + '"</dd>';
+    	    	listHTML += '<dd>' + strLang1_NewBoardSTD + '</dd>';
     	    	listHTML += "</dl>";
     	    	
     	    	document.getElementById("BoardList").innerHTML = listHTML;
@@ -120,7 +124,7 @@ function getBoardList_NewBoardSTD() {
         	var listHTML = "";
 			listHTML += "<dl class='nodata'>";
         	listHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
-        	listHTML += '<dd>"' + strLang1_NewBoardSTD + '"</dd>';
+        	listHTML += '<dd>' + strLang1_NewBoardSTD + '</dd>';
         	listHTML += "</dl>";
         	
         	document.getElementById("BoardList").innerHTML = listHTML;
@@ -146,9 +150,9 @@ function openDoc_section4_Type(pItemID, pType, oBoardID) {
 		var height = 785;
 	}
 		pTop = (pheight - 789) / 2;
-		pLeft = (pwidth - 764) / 2;
+		pLeft = (pwidth - 790) / 2;
 
-       window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+       window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=790,top=" + pTop + ",left=" + pLeft, "");
    } else if (pType == "7") {
 	   var height = 679;
 	   pTop = (pheight - 679) / 2;

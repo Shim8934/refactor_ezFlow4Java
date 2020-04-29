@@ -196,6 +196,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (int)select("EzResourceDAO.addRessch_S2", map);
 	}
 	
+	public String addRessch_S3(Map<String , Object> map) {
+		return (String)select("EzResourceDAO.addRessch_S3", map);
+	}
+	
 	public String getDeptID(Map<String , Object> map) {
 		return (String)select("EzResourceDAO.getDeptID", map);
 	}
@@ -238,6 +242,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public void updateSchedule(Map<String, Object> map) {
 		update("EzResourceDAO.updateSchedule", map);
+	}
+	
+	public void updateSchedule2(Map<String, Object> map) {
+		update("EzResourceDAO.updateSchedule2", map);
 	}
 	
 	public void updateScheduleDateTime(Map<String, Object> map) {
@@ -316,6 +324,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (String) select("EzResourceDAO.getResourceOrder", map);
 	}
 	
+	public String getTargetResourceOrder(Map<String, Object> map) throws Exception {
+		return (String) select("EzResourceDAO.getTargetResourceOrder", map);
+	}
+	
 	public void changeResourceOrder(Map<String, Object> map) throws Exception {
 		update("EzResourceDAO.ChangeResourceOrder", map);
 	}
@@ -343,10 +355,21 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	public String userResPermissionCheck(Map<String, Object> map) throws Exception {
 		return (String) select("EzResourceDAO.userResPermissionCheck", map);
 	}
+
+	public List<ResBrdVO> getResourcePortlet(Map<String, Object> map) throws Exception {
+		return (List<ResBrdVO>) list("EzResourceDAO.getResourcePortlet", map);
+	}
 	
+	public void cleanResourcePortlet(Map<String, Object> map) throws Exception {
+		delete("EzResourceDAO.cleanResourcePortlet", map);
+	}
+
+	public void insertResourcePortlet(Map<String, Object> map) throws Exception {
+		insert("EzResourceDAO.insertResourcePortlet", map);
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<ResGetClsAclListVO> getDeptAcl(Map<String, Object> map) {
 		return (List<ResGetClsAclListVO>) list("EzResourceDAO.getDeptAcl", map);
 	}
 }
-

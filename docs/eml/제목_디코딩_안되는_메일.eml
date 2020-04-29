@@ -1,0 +1,82 @@
+Return-Path: <kyuyo-meisai@ryobi.co.jp>
+Delivered-To: 320081706@ezekp.com
+Received: from 10.50.3.4 (EHLO mxg.ryobi.co.jp) ([10.50.3.4])
+          by ezEkp1 (JMOCHA ESMTP Server) with ESMTP ID -450810571
+          for <takako@ryobi-sol.co.jp>;
+          Fri, 25 Oct 2019 07:20:51 +0900 (JST)
+X-matriXgate-loop-detect: 7cc600b514df1c6442e7e23262944f51e39d2c8e
+Received: from a-gate.ryobi.co.jp ([210.163.224.76]) by mxg.ryobi.co.jp with ESMTP;
+	Fri, 25 Oct 2019 07:20:49 +0900 (JST)
+Received: from wsg2.ryobi.co.jp (wsg2.ryobi.co.jp [210.163.224.6]) (envelope sender: <kyuyo-meisai@ryobi.co.jp>)
+	(not using TLS) by a-gate.ryobi.co.jp (Active!gate) with ESMTP id ZHUT18344A;
+	Fri, 25 Oct 2019 07:20:19 +0900
+Received: from wsg2.ryobi.co.jp (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3D225C0068
+	for <takako@ryobi-sol.co.jp>; Fri, 25 Oct 2019 07:20:41 +0900 (JST)
+Received: from wsg2.ryobi.co.jp (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 308C5C0051
+	for <takako@ryobi-sol.co.jp>; Fri, 25 Oct 2019 07:20:41 +0900 (JST)
+Received: from a-vault.rsoa.ryobi.co.jp (unknown [210.163.224.75])
+	by wsg2.ryobi.co.jp (Postfix) with ESMTP
+	for <takako@ryobi-sol.co.jp>; Fri, 25 Oct 2019 07:20:41 +0900 (JST)
+Received: from po.rsoa.ryobi.co.jp (unknown [172.31.5.183])
+	by a-vault.rsoa.ryobi.co.jp (Postfix) with ESMTP id 26298286821
+	for <takako@ryobi-sol.co.jp>; Fri, 25 Oct 2019 07:20:41 +0900 (JST)
+Received: from ZEEMSV ([172.31.5.186]) by po.rsoa.ryobi.co.jp
+          (Post.Office MTA v4.3 release 20141202
+           ID# 3002-035U1200L1200S0V43J) with ESMTP id jp
+          for <takako@ryobi-sol.co.jp>; Fri, 25 Oct 2019 07:20:41 +0900
+Subject: =?UTF-8?Q?=E7=B5=A6=E4=B8=8E=E6=98=8E=E7=B4=B0=E6=9B=B8 (2019=E5=B9=B4
+ 10=E6=9C=88) [=E7=A4=BE=E5=93=A1=E7=95=AA=E5=8F=B7:81706]?=
+MIME-Version: 1.0
+From: kyuyo-meisai@ryobi.co.jp
+To: takako@ryobi-sol.co.jp
+Date: 25 Oct 2019 07:20:41 +0900
+Content-Type: multipart/mixed; boundary=--boundary_1333_b5b7ad61-a628-4333-a501-39f215cc5bff
+Message-Id: <20191024222041.308C5C0051@wsg2.ryobi.co.jp>
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSVA-9.1.0.1830-8.2.0.1013-25000.003
+X-TM-AS-Result: No--11.801-5.0-31-10
+X-imss-scan-details: No--11.801-5.0-31-10
+X-TMASE-Version: IMSVA-9.1.0.1830-8.2.1013-25000.003
+X-TMASE-Result: 10--11.801200-10.000000
+X-TMASE-MatchedRID: ohF79TnzPeZgrG2x3/QItMo3MPo0IsVY4cOWVEg/YbGn6qDzTAbsesFL
+	xPT6T56MJWiPEG8zNY8zjo8cHqi6eQ41ETbZpMhH8+p+3+oh5t8WVvwM7aO0LPLYekKQ8j1eiQy
+	4MG/9StnBa6VG2+9jFGWCfbzydb0g2kDu68P0Y/vwF3FsYHA+co1GCA7clBXqOCuA0i+o81xsry
+	3KYKLclaH0ggT1XNiaO6tfjlrUK3r4XGCabqlxSJclr1/PUdcDmKSxRIQAOPZUWKQLbHwYD9CM4
+	ACHcbWr4Aexx0vlF+XDUOkKFXu466Fb2VKcGhgvOffIU/vf8V5LBy7J/JBAYTtCEb1oXplhbfnm
+	Bbepr79+3BndfXUhXQ==
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-12:0,22:0,33:0,34:0-0
+X-matriXgate-msec-AV: Encrypted
+X-matriXgate-UniqId: Through
+X-matriXgate-msecIpRepId: i=d2a3e04c;s=100
+X-matriXgate-Action: Approve
+X-matriXgate: Encrypted
+X-matriXgate-SenderAuth-Results: Through
+Authentication-Results: mxg.ryobi.co.jp;
+	spf=pass smtp.mailfrom=kyuyo-meisai@ryobi.co.jp;
+	sender-id=pass header.From=kyuyo-meisai@ryobi.co.jp;
+	dkim=none;
+	dkim-adsp=none header.From=kyuyo-meisai@ryobi.co.jp;
+X-matriXgate-Auth: UnknownUser
+X-matriXgate-archive-id: ff7.1043.7f13f2f47e80.5db223c3.2da78
+
+
+----boundary_1333_b5b7ad61-a628-4333-a501-39f215cc5bff
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09DQogICAgIOa3u+S7mOODleOCoeOCpOODq+aal+WPt3pp
+cOWMluOBruOBiuefpeOCieOBmw0KDQog5pys44Oh44O844Or44Gu5re75LuY44OV44Kh44Kk
+44Or44Gv44OR44K544Ov44O844OJ5LuY44GNemlw44OV44Kh44Kk44Or44Gr44Gm5pqX5Y+3
+5YyW44GV44KM44Gm44GK44KK44G+44GZ44CCDQog44OR44K544Ov44O844OJ44Gv5Yil44Oh
+44O844Or44Gr44Gm44GU5qGI5YaF44GE44Gf44GX44G+44GZ44Gu44Gn44CB44GX44Gw44KJ
+44GP44GK5b6F44Gh5LiL44GV44GE44CCDQoNCi0tLS0tLS0tLS0NCiAgICAgTm90aWZpY2F0
+aW9uIG9mIEF0dGFjaG1lbnQgRmlsZSBFbmNyeXB0aW9uDQoNCiBUaGUgYXR0YWNobWVudCBm
+aWxlIG9mIHRoaXMgZS1tYWlsIHdhcyBjb252ZXJ0ZWQgaW50byB0aGUgcGFzc3dvcmRlZCB6
+aXAgZmlsZS4NCiBQbGVhc2Ugd2FpdCBmb3IgYSB3aGlsZSwgYXMgdGhlIHBhc3N3b3JkIGlz
+IHNlbnQgYnkgYW5vdGhlciBlLW1haWwuDQoNCj09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KDQrl
+sI/lt50g6LK05a2QIOauvyAo56S+5ZOh55Wq5Y+3OiA4MTcwNikNCjIwMTnlubQgMTDmnIgg
+44Gu57Wm5LiO5piO57Sw5pu444KS44GK6YCB44KK44GE44Gf44GX44G+44GZ44CCDQo=

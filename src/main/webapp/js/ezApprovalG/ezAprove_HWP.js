@@ -263,24 +263,29 @@ function AprrovMappingSign(ret)
 	  			else
 	  			{
 	  			    var content ="";
-					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-					{
-						HwpCtrl.SetFieldText(signID, strLang8 + arr_userinfo[2]);	
-	  			        content = strLang8 + arr_userinfo[2];						
-					}
-					else
-					{
-						HwpCtrl.SetFieldText(signID, arr_userinfo[2]);	
+					if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+						HwpCtrl.SetFieldText(signID, strLang8 + arr_userinfo[2]);
+	  			        content = strLang8 + arr_userinfo[2];
+					} else {
+						HwpCtrl.SetFieldText(signID, arr_userinfo[2]);
 						content = arr_userinfo[2];
-					}			
-					HwpCtrl.AppendFieldText(signID, strLang7 + OpinionText, true);	
+					}
+					
+					if (!HwpCtrl.CheckFieldExist(seumyungdateID)) {
+						HwpCtrl.AppendFieldText(signID, OpinionText, true);
+						content = content + OpinionText;
+					}
+					
+					HwpCtrl.AppendFieldText(signID, strLang7 + "\15", true);
+					content = content + strLang7;
+					
 	  				signInfo[signCnt] = signID;
 			        SignName[signCnt] = signID;
 			        SignType[signCnt] = "TEXT";
-			        SignContent[signCnt] = content + strLang7 + OpinionText;
+			        SignContent[signCnt] = content;
 	  				signCnt = signCnt + 1
-	  				SingFlag = false; 
-	  			}		
+	  				SingFlag = false;
+	  			}
 	  		
 	  			DekyulFlag = true;
 	  			pAprMemberSignSN = pAprMemberSignSN + 1;
@@ -375,13 +380,13 @@ function AprrovMappingSign(ret)
 
 					if(pAprLineType == strAprType4)
 					{
-						HwpCtrl.AppendFieldText(signID, strLang6, true);
+						HwpCtrl.AppendFieldText(signID, strLang6 + "\15", true);
 						contents = contents + strLang6;
 	  				}
 
 					if(pAprLineType == strAprType16)  
 					{
-						HwpCtrl.AppendFieldText(signID, strLang7, true);
+						HwpCtrl.AppendFieldText(signID, strLang7 + "\15", true);
 						contents = contents + strLang7;
 	  				}
 
@@ -544,11 +549,13 @@ function openFileAttachUI()
 	return ret;
 }
 
-function SaveApproveInfo(pApproveFlag)
-{
-	if (SaveFile() != "TRUE")
-		return "FALSE";
-	
+function SaveApproveInfo(pApproveFlag) {
+	var rtnVal = SaveFile();
+
+	if (rtnVal.toUpperCase() != "TRUE") {
+        return rtnVal;
+	}
+
 	SignSave();
 	
 	var xmlpara = createXmlDom();
@@ -695,7 +702,13 @@ function SaveApproveInfo(pApproveFlag)
             
             for (i = 0; i < rows.length; i++) {
                 sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "CABINETID"));
+                
+                if (SelectSingleNodeValue(rows[i], "SEPCABINETID") != "") {
+                	Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "SEPCABINETID"));
+                } else {
+                	Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "CABINETID"));
+                }
+                
                 Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i], "SEPTITLE"));
                 Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i], "SEPNUMOFPAGE"));
                 Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i], "SEPREGTYPE"));
@@ -703,25 +716,6 @@ function SaveApproveInfo(pApproveFlag)
                 Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i], "SEPRECORDTYPE"));
             }
             
-            createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
-            
-		} else if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW").length > 0) {
-			var sepAtt, Data, i;
-			var rtnXml = createXmlDom();
-	        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
-			var sepLVXml = createXmlDom();
-            	sepLVXml = loadXMLString(nonElecRecInfoXml);
-            var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW");
-            
-            for (i = 0; i < rows.length; i++) {
-                sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i],"SEPCABINETID"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i], "SEPTITLE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i], "SEPNUMOFPAGE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i], "SEPREGTYPE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i], "SEPSUMMARY"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i], "SEPRECORDTYPE"));
-            }
             createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
 		}
 		
@@ -778,16 +772,20 @@ function SaveApproveInfo(pApproveFlag)
 function SaveFile() {
 	var result = "";
 	
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : HwpCtrl.GetCloneData("", "HWP"),
+		orgCompanyID : orgCompanyID
+	}
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			html  : HwpCtrl.GetCloneData("", "HWP"),
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -799,15 +797,19 @@ function SaveFile() {
 function SaveOrgFile() {
 	var result = "";
 	
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : OrgHtml
+	}
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			html  : OrgHtml
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1304,8 +1306,9 @@ function getLastOpinon()
 		}
 	});
 	
+	var content = "";
 	if (loadXMLString(result).documentElement.childNodes.length > 0 )
-	    var content = getNodeText(loadXMLString(result).documentElement.childNodes(0));		
+	    content = getNodeText(loadXMLString(result).documentElement.childNodes[0]);		
 
 	if (HwpCtrl.CheckFieldExist("memo"))
 		HwpCtrl.SetFieldText("memo", content);
@@ -1316,7 +1319,7 @@ function openAaprDocAttachUI()
 	try{
 		var parameter = pDocID;
 		var url = "/ezApprovalG/aprCabinetAttach.do";
-		var feature	= "status:no;dialogWidth:1050px;dialogHeight:500px;edge:sunken;scroll:no;help:no"; 
+		var feature	= "status:no;dialogWidth:1050px;dialogHeight:520px;edge:sunken;scroll:no;help:no"; 
 		var ret = window.showModalDialog(url,parameter,feature);
 
 		if (ret != "cancel") {
@@ -1504,6 +1507,7 @@ function setRecevInfo(ret) {
     }
 }
 
+/* 2020-02-27 홍승비 - mht 문서 수정이력 비교용 파라미터 추가 (데이터 삽입 시 오류 방지) */
 function UpdateDocHistory(pHtml) {
 	var xmlhttp2 = createXMLHttpRequest();
 	var xmlpara = createXmlDom();
@@ -1512,6 +1516,7 @@ function UpdateDocHistory(pHtml) {
 	createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
 	createNodeAndInsertText(xmlpara, objNode, "pHtml", pHtml);
 	createNodeAndInsertText(xmlpara, objNode, "mode", "hwp");
+    createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", "");
 
     xmlhttp2.open("POST", "/ezApprovalG/uploadDocHistory.do", false);
 	xmlhttp2.send(xmlpara);
@@ -1533,6 +1538,8 @@ function UpdateDocHistory(pHtml) {
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
         createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
+        createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", "");
+        createNodeAndInsertText(xmlpara, objNode, "BEFOREDOCURL", "");
         
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);

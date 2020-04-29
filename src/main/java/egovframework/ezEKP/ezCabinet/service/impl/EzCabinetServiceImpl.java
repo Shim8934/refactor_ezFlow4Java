@@ -325,8 +325,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		String companyId       = userInfo.getCompanyID();
 		String userId          = userInfo.getId();
 		String primary         = userInfo.getPrimary();
-		String cabinetStr1     = egovMessageSource.getMessage("ezCabinet.t02", new Locale(config.getProperty("config.cabinetPrimary")));
-		String cabinetStr2     = egovMessageSource.getMessage("ezCabinet.t02", new Locale(config.getProperty("config.cabinetSecondary")));
+		String cabinetStr1     = egovMessageSource.getMessage("ezCabinet.t169", new Locale(config.getProperty("config.cabinetPrimary")));
+		String cabinetStr2     = egovMessageSource.getMessage("ezCabinet.t169", new Locale(config.getProperty("config.cabinetSecondary")));
 		Map<String,Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
@@ -341,7 +341,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			CabinetVO cabinet  = generateCabinetVO(cabinetStr1, cabinetStr2, 0, 0, -1, userInfo);
 			insertCabinet(cabinet);
 			
-			String cabinetName = primary.equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2();
+			String cabinetName = cabinet.getCabinetName1();
 			result             = new CabinetSimpleVO(cabinet.getCabinetId(), cabinetName, cabinet.getCabinetName1(), cabinet.getCabinetName2(), 0, cabinet.getCabinetLevel(), cabinet.getCabinetStep(), null);
 		}
 		
@@ -1032,7 +1032,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		Collections.sort(list, (CabinetVO cabinet1, CabinetVO cabinet2) -> Integer.compare(cabinet1.getOrderFromType(), cabinet2.getOrderFromType()));
 		
 		for (CabinetVO cabinet : list) {
-			String cabinetName            = primary.equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2();
+			String cabinetName            = cabinet.getCabinetName1();
 			CabinetSimpleVO simpleCabinet = new CabinetSimpleVO(cabinet.getCabinetId(), cabinetName, cabinet.getCabinetName1(), cabinet.getCabinetName2(), 0, 0, 0, null);
 			result.add(simpleCabinet);
 		}

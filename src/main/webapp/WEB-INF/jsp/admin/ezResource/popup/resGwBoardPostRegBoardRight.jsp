@@ -582,8 +582,9 @@
 
 	        } else {
 	            if (p_ListOrderObject == "") {
-	                alert("<spring:message code='ezResource.t169' />");
-	                        return;
+	            	dept_select();
+	                /* alert("<spring:message code='ezResource.t169' />");
+	                        return; */
 	                    }
 	                    if (p_ListOrderObject != "") {
 	                        var strId = p_ListOrderObject.getAttribute("_data2");
@@ -1002,6 +1003,11 @@
 	        	    keyword.focus();
 	            	return;
 	        	}
+		        
+		        if(document.getElementById("search_type").value == "description") {
+		        	deptsearch_click();
+		        	return;
+		        }
 	       
 	        	$.ajax({
 	        		type : "POST",
@@ -1024,6 +1030,113 @@
 	        			}
 	        		}
 	        	});
+	    	}
+		    
+		    var rgParams = new Array();
+	    	var checkname2_cross_dialogArguments = new Array();
+		    function deptsearch_click() {
+	    		if (document.getElementById('keyword').value.trim() == "") {
+		            alert("<spring:message code='ezPersonal.t61'/>");
+	    	        deptkeyword.focus();
+	        	    return;
+	        	}
+	    		
+	    		var xmlDOM = createXmlDom();
+	        	 $.ajax({
+					url : '/ezOrgan/getSearchList.do',
+					method : 'POST',
+					dataType : "text",
+					async : false,
+					data : {search : "displayname::" + document.all("keyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "", type : 'group'}, 
+  					success : function(result) {
+  						xmlDOM = loadXMLString(result);
+  						var row = SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW");
+	                	adCount = row.length;
+						},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert("<spring:message code='ezResource.t2'/>" + textStatus);
+						xmlDOM = null;
+					}
+				}); 
+
+		        if (adCount == 0) {
+	    	        alert("<spring:message code='ezPersonal.t63'/>");
+	        	    return;
+	        	} else if (adCount == 1) {
+	            	bSearch = true;
+	            	g_xmlHTTP = createXMLHttpRequest();
+
+	            	if(CrossYN())
+		                var strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+	            	else
+	                	var strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+
+	            	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+	            	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+	            	g_xmlHTTP.send(strQuery);
+	        	} else {
+		            rgParams["addrBook"] = xmlDOM;
+		            rgParams["deptid"] = "";
+	            	var feature = "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken";
+	            	feature = feature + GetShowModalPosition(600, 320);
+	            	
+	            	if (CrossYN()) {
+		                checkname2_cross_dialogArguments[0] = rgParams;
+	                	checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
+	                	var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_cross", GetOpenWindowfeature(600, 320));
+	             	    OpenWin.focus();
+	            	} else {
+	                	window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, feature);
+
+	                	if (rgParams["deptid"] != "") {
+		                    bSearch = true;
+	                    	g_xmlHTTP = createXMLHttpRequest();
+	                    	var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                    	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+	                    	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+	                    	g_xmlHTTP.send(strQuery);
+	                	}
+	            	}
+	        	}
+	    	}
+	    	
+	    	function deptsearch_click_Complete() {
+		        if (rgParams["deptid"] != "") {
+		            bSearch = true;
+	    	        g_xmlHTTP = createXMLHttpRequest();
+	            	var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	            	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+	            	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+	            	g_xmlHTTP.send(strQuery);
+	        	}
+	    	}
+	    	
+	    	function event_getDeptFullTree() {
+		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
+	            	if (g_xmlHTTP.statusText == "OK") {
+	            		var treeXML = loadXMLFile("/xml/organtree_config.xml");
+	                	document.getElementById('TreeView').innerHTML = "";
+
+	                	var treeView = new TreeView();
+	                	treeView.SetConfig(treeXML);
+	                	treeView.SetID("FromTreeView");
+	                	treeView.SetUseAgency(true);
+	                	treeView.SetRequestData("TreeViewRequestData");
+	                	treeView.SetNodeClick("TreeViewNodeClick");
+	                	treeView.SetNodeDblClick("TreeViewNodeDbClick");
+	                	treeView.DataSource(g_xmlHTTP.responseXML);
+	                	treeView.DataBind("TreeView");
+	                	
+	                	var treeView = new TreeView();
+	    		        treeView.LoadFromID("FromTreeView");
+	    	    	    var nodeIdx = treeView.GetSelectNode();
+	    	        	var treeNode = new TreeNode();
+	    	        	treeNode.LoadFromID(nodeIdx.NodeID);
+	            	} else {
+	                	alert(g_xmlHTTP.statusText)
+		                g_xmlHTTP = null;
+	            	}
+	        	}
 	    	}
 		    
 		    //2018-07-23 이효진 미사용

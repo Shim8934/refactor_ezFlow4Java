@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezEmail.web;
 
 import java.net.URLDecoder;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezEmail.service.EzEmailAdminLetterService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -41,9 +42,6 @@ public class EzEmailLetterController {
 
 	@Autowired
 	private EzEmailAdminLetterService ezEmailAdminLetterService;
-
-	@Autowired
-	private EzOrganAdminService ezOrganAdminService;
 
 	/**
 	 * 편지지 버튼 클릭시 호출
@@ -78,7 +76,7 @@ public class EzEmailLetterController {
 	 */
 	@RequestMapping(value = "/ezEmail/searchLetter.do", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONArray searchLetter(@CookieValue("loginCookie") String loginCookie, String search) throws Exception {
+	public JSONArray searchLetter(@CookieValue("loginCookie") String loginCookie, String search, HttpServletRequest request) throws Exception {
 		search = URLDecoder.decode(search, "UTF-8");
 
 		logger.debug("searchLetter started.");
@@ -86,8 +84,9 @@ public class EzEmailLetterController {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userLang = userInfo.getPrimary();
-		String companyId = userInfo.getCompanyID();
+		String companyId = request.getParameter("companyId") != null ? request.getParameter("companyId") : userInfo.getCompanyID();
 		String tenantId = Integer.toString(userInfo.getTenantId());
+		logger.debug("userLang=" + userLang + ", companyId=" + companyId + ", tenantId=" + tenantId);
 
 		JSONArray returnJsonArr = new JSONArray();
 

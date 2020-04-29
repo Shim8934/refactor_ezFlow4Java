@@ -47,6 +47,7 @@
 			var joinFlag = "<c:out value='${joinFlag }'/>";
 			var pastDate = "<c:out value = '${pastDate}' />";
 			var xmlhttp;
+			var lang = "<c:out value='${lang}'/>";
 			
 			var strLang1 = "<spring:message code='ezCommunity.t78' />";
 		    var strLang2 = "<spring:message code='ezCommunity.t1082' />"; 
@@ -287,7 +288,14 @@
 	            document.getElementById("mastericon").onclick = function () { openInfo(SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERID")); };
 	            document.getElementById("mastername").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERNAME");
 	            document.getElementById("master").innerHTML += "(" + SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/DEPTNAME") + ")";
-	            document.getElementById("regdate").innerHTML =  strLang1 + ": " + SelectSingleNodeValueNew(xmldom, "DATA/C_REGDATE").substring(0, 10);
+	            
+	            /* 2019-07-11 홍승비 - 일본어 환경에서 메세지 표출 일부 수정(생성일) */
+	            if (lang == "3") {
+	            	document.getElementById("regdate").innerHTML =  strLang1 + "：" + SelectSingleNodeValueNew(xmldom, "DATA/C_REGDATE").substring(0, 10);
+	            } else {
+	            	document.getElementById("regdate").innerHTML =  strLang1 + ": " + SelectSingleNodeValueNew(xmldom, "DATA/C_REGDATE").substring(0, 10);
+	            }
+	            
 	            document.getElementById("membercnt").innerHTML =  SelectSingleNodeValueNew(xmldom, "DATA/C_MEMBERCNT");
 	            //2018-07-11 김보미 - 공백 조정
 	            countSpanPadding(document.getElementById("membercnt"), SelectSingleNodeValueNew(xmldom, "DATA/C_MEMBERCNT"));
@@ -321,15 +329,20 @@
 	                break;
 	        	}
 	            
+	            /* 2019-07-11 홍승비 - 일본어 환경에서 메세지 표출 일부 수정(공개설정, 승인여부) */
+	            var langBR = "";
+	            if (lang == "3") {
+	            	langBR = "<br>";
+	            }
 	        	switch (SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBGUBUN").trim()) {
 		            case "1":
 		                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t701' />";
 		                break;
 		            case "2":
-		                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t702' />" + sConfirmType;
+		                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t702' />" + langBR + sConfirmType;
 		                break;
 		            case "3":
-		                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t703' />" + sConfirmType;
+		                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t703' />" + langBR + sConfirmType;
 		                break;
 	        	}
 	        	
@@ -477,6 +490,7 @@
 		    		document.getElementById(tempboard.getAttribute("TreeCtrl") + "obj").style.display = "none";
 		    	}
 		    	
+		    	/* 2019-10-24 홍승비 - 커뮤니티 팝업홈 중 좌측메뉴가 게시판이 아닌 경우, 동일 메뉴 클릭 시 하이라이트 유지 */
 		        if (userLevel == "0" || userLevel == "9") {
 		            switch (btn.id) {
 		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&userLevel=" + userLevel, "right";
@@ -484,7 +498,7 @@
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
 		                    
-		                    if (tempmenuid != "") {
+		                    if (tempmenuid != "" && tempmenuid != "btn_QsPoll") {
 		                        document.getElementById(tempmenuid).className = "off";
 		                    }
 		                    
@@ -504,7 +518,7 @@
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
 		                    
-		                    if (tempmenuid != "") {
+		                    if (tempmenuid != "" && tempmenuid != "btn_home") {
 		                        document.getElementById(tempmenuid).className = "off";
 		                    }
 		                    
@@ -520,7 +534,7 @@
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
 		                    
-		                    if (tempmenuid != "") {
+		                    if (tempmenuid != "" && tempmenuid != "btn_guest") {
 		                        document.getElementById(tempmenuid).className = "off";
 		                    }
 		                    
@@ -582,7 +596,7 @@
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
 		                    
-		                    if (tempmenuid != "") {
+		                    if (tempmenuid != "" && tempmenuid != "btn_QsPoll") {
 		                        document.getElementById(tempmenuid).className = "off";
 		                    }
 		                    
@@ -598,7 +612,7 @@
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
 		                    
-		                    if (tempmenuid != "") {
+		                    if (tempmenuid != "" && tempmenuid != "btn_MemberInfo") {
 		                        document.getElementById(tempmenuid).className = "off";
 		                    }
 		                    
@@ -628,7 +642,7 @@
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
 		                    
-		                    if (tempmenuid != "") {
+		                    if (tempmenuid != "" && tempmenuid != "btn_home") {
 		                        document.getElementById(tempmenuid).className = "off";
 		                    }
 		                    
@@ -644,7 +658,7 @@
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
 		                    
-		                    if (tempmenuid != "") {
+		                    if (tempmenuid != "" && tempmenuid != "btn_guest") {
 		                        document.getElementById(tempmenuid).className = "off";
 		                    }
 		                    
@@ -898,8 +912,8 @@
 	                    	</c:otherwise>
 	                    </c:choose>
                     
-		                    <p><strong id="mastername"></strong></p>
-		                    <p id="master"></p>
+		                    <p style="height:18px;"><strong id="mastername" style="width:93px; display:inline-block; text-overflow:ellipsis; white-space: nowrap; overflow:hidden;"></strong></p>
+		                    <p id="master" style="width:93px; display:inline-block; text-overflow:ellipsis; white-space: nowrap; overflow:hidden;"></p>
 		                </div>
 		                
 		                <c:if test="${checkSysop }">

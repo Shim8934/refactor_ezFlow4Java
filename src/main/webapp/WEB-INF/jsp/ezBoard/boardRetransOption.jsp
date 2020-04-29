@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -70,6 +71,7 @@
 	                <spring:message code='ezBoard.t10102'/>
 	            </td>
 	        </tr>
+	        <c:if test="${useExternalMailServer == 'NO'}">   
 	        <tr style="cursor:pointer;" onmouseover="tr_mouseover(this);" onmouseout="tr_mouseout(this);">
 	            <td onclick="event_onclick('mailContent')" style="padding-left:10px;">
 	                <img src="/images/icon/mcontent.png" style="margin-bottom:-3px;"/>
@@ -82,6 +84,7 @@
 	                <spring:message code='ezBoard.t10104'/>
 	            </td>
 	        </tr>
+	        </c:if>
 	    </table>
 	</body>
 </html>

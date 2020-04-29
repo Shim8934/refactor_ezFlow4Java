@@ -170,7 +170,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			pollEndDate = request.getParameter("pollEndDate");
 			pollEndDate = commonUtil.makeDate(pollEndDate.substring(0,4), pollEndDate.substring(5,7), pollEndDate.substring(8,10), false);
 		}
-		if(request.getParameter("currPage") != null){
+		if(request.getParameter("currPage") != null && !request.getParameter("currPage").equals("")){
 			currPage = request.getParameter("currPage");
 		}
 		
@@ -1097,13 +1097,30 @@ public class EzQuestionController extends EgovFileMngUtil {
 			pQstTitle = commonUtil.cleanValue(doc.getElementsByTagName("QUESTIONCONTENT").item(0).getTextContent());
 			
 			//첨부
-			if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
+			if(doc.getElementsByTagName("ATTACH").getLength() > 0) {	// 첨부파일 개수 획득
 				if(doc.getElementsByTagName("ATTACH").item(0).getChildNodes() != null) {
-					pQstAnsInfo = commonUtil.cleanValue(doc.getElementsByTagName("ATTACH").item(0).getTextContent());
+					// pQstAnsInfo = commonUtil.cleanValue(doc.getElementsByTagName("ATTACH").item(0).getTextContent());
 					
 					XPath xpath = XPathFactory.newInstance().newXPath();
+					NodeList nodes = (NodeList)xpath.evaluate("//ROW/ATTACH", doc, XPathConstants.NODESET);
+					if(nodes.getLength() > 0) {
+						//<ATTACH><ROW><TYPE>첨부타입</TYPE><ATTACHTITLE>첨부명</ATTACHTITLE><HREF>파일경로</HREF></ROW></ATTACH>
+						pQstAnsInfo += "<ATTACH>";
+						for (int j = 0; j < nodes.item(0).getChildNodes().getLength(); j++){
+							pQstAnsInfo += "<ROW><TYPE>" + nodes.item(0).getChildNodes().item(j).getChildNodes().item(0).getTextContent() + "</TYPE>" 
+									+ "<ATTACHTITLE>" + nodes.item(0).getChildNodes().item(j).getChildNodes().item(1).getTextContent() + "</ATTACHTITLE>" 
+									+ "<HREF>" + nodes.item(0).getChildNodes().item(j).getChildNodes().item(2).getTextContent() + "</HREF>" + "</ROW>";
+							
+							if (j != 0) {
+								pQstAttach += ";";
+							}
+							pQstAttach += nodes.item(0).getChildNodes().item(j).getChildNodes().item(1).getTextContent();
+						}
+						pQstAnsInfo += "</ATTACH>";
+					}
 					
-					NodeList nodes = (NodeList)xpath.evaluate("//ROW/ATTACH/ROW", doc, XPathConstants.NODESET);
+					/*
+					NodeList nodes = (NodeList)xpath.evaluate("//ROW/ATTACH/ROW", doc, XPathConstants.NODESET);	// ROW의 ATTACH의 ROW 아래 노드를 가져
 					logger.debug("nodesLength="+nodes.getLength());
 					
 					int pAttachCnt = nodes.getLength();
@@ -1114,6 +1131,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 						}
 						pQstAttach += commonUtil.cleanValue(doc.getElementsByTagName("ATTACHTITLE").item(i).getTextContent());
 					}
+					*/
 				}
 			}
 			pAnswerType = doc.getElementsByTagName("ANSWERTYPE").item(0).getTextContent();

@@ -1,25 +1,31 @@
 package egovframework.ezEKP.ezEmail.dao;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
+import egovframework.ezEKP.ezEmail.vo.MailDeletedIdVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzEmailDAO")
 public class EzEmailDAO extends EgovAbstractDAO {
 
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
+	
 	@SuppressWarnings("unchecked")
 	public List<MailGeneralVO> getMailGeneral(Map<String, Object> map) throws Exception {
 		return (List<MailGeneralVO>)list("EzEmailDAO.getMailGeneral", map);
@@ -59,8 +65,65 @@ public class EzEmailDAO extends EgovAbstractDAO {
 		return (List<MailBlobVO>)list("EzEmailDAO.getOrphanedMailBlobList");
 	}
 	
-	public void deleteOrphanedMailBlob(MailBlobVO mailBlobVO) throws Exception {
+	public long deleteOrphanedMailBlob(MailBlobVO mailBlobVO) throws Exception {
 		delete("EzEmailDAO.deleteOrphanedMailBlob", mailBlobVO);
+		
+		long sleepTime = 500;
+		
+		if (mailBlobVO.getMailBoxId() != null && mailBlobVO.getMailUid() != null) {
+			long mailboxId = mailBlobVO.getMailBoxId();
+			long mailUid = mailBlobVO.getMailUid();
+			String headerPath = ezEmailUtil.getMailHeaderPath(mailboxId, mailUid);
+			String bodyPath = ezEmailUtil.getMailBodyPath(mailboxId, mailUid);
+			File headerFile = new File(headerPath);
+			File bodyFile = new File(bodyPath);
+			
+			if (headerFile.exists()) {
+				headerFile.delete();
+				
+				sleepTime = 0;
+			}
+			
+			if (bodyFile.exists()) {
+				bodyFile.delete();
+				
+				sleepTime = 0;
+			}		
+		} else {
+			logger.debug("deleteOrphanedMailBlob mailboxId=" + mailBlobVO.getMailBoxId() + ",mailUid=" + mailBlobVO.getMailUid());
+			
+			sleepTime = 0;
+		}
+		
+		return sleepTime;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MailDeletedIdVO> getMailDeletedIdList() throws Exception {
+		return (List<MailDeletedIdVO>)list("EzEmailDAO.getMailDeletedIdList");
+	}
+	
+	public void deleteMailBlobWithDeletedId(MailDeletedIdVO mailDeletedIdVO) throws Exception {
+		delete("EzEmailDAO.deleteMailBlobWithDeletedId", mailDeletedIdVO);
+		
+		long mailboxId = mailDeletedIdVO.getMailBoxId();
+		long mailUid = mailDeletedIdVO.getMailUid();
+		String headerPath = ezEmailUtil.getMailHeaderPath(mailboxId, mailUid);
+		String bodyPath = ezEmailUtil.getMailBodyPath(mailboxId, mailUid);
+		File headerFile = new File(headerPath);
+		File bodyFile = new File(bodyPath);
+		
+		if (headerFile.exists()) {
+			headerFile.delete();
+		}
+		
+		if (bodyFile.exists()) {
+			bodyFile.delete();
+		}				
+	}
+
+	public void deleteMailDeletedId(MailDeletedIdVO mailDeletedIdVO) throws Exception {
+		delete("EzEmailDAO.deleteMailDeletedId", mailDeletedIdVO);
 	}
 	
 	@SuppressWarnings("unchecked")

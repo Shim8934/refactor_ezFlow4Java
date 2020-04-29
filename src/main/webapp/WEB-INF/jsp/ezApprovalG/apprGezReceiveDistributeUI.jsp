@@ -875,17 +875,17 @@
 	            ListViewLen = lvTest.GetDataRows();
 	
 	            if (ListViewLen.length == 0) {
-	                alert("<spring:message code='ezApprovalG.pjj31'/>");
+	                OpenAlertUI("<spring:message code='ezApprovalG.pjj31'/>");
 	                return;
 	            }
 	            if (ListViewLen.length == 1) {
 	                if (GetAttribute(ListViewLen[0], "id") == "listAPRLINE1_TR_noItems") {
 	                	if(tempmode == 'MODIFY'){
-		                    alert("<spring:message code='ezApprovalG.pjj31'/>");
+		                    OpenAlertUI("<spring:message code='ezApprovalG.pjj31'/>");
 		                    return;
 	                	}
 	                	if(tempmode == 'NEW'){
-		                    alert("<spring:message code='ezApprovalG.psb31'/>");
+		                    OpenAlertUI("<spring:message code='ezApprovalG.psb31'/>");
 		                    return;
 	                	}
 	                }
@@ -1437,8 +1437,8 @@
 	                                <table class="content" style="margin-bottom: 3px; width: 100%;">
 	                                    <tr>
 	                                        <td style="text-align: center; padding-top:3px;">
-	                                            <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
-	                                            <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
+	                                            <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.hsbFv01'/></span></a>
+	                                            <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.hsbFv02'/></span></a>
 	                                            <a class="imgbtn imgbck"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 	                                        </td>
 	                                    </tr>

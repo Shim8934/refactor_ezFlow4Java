@@ -36,7 +36,7 @@ public interface EzResourceService {
 	
 	public int getBrdCnt(int brdID, String companyID, int tenantID) throws Exception;
 
-	public String getScheduleXML(String xmlStr, String resID, String companyID, String groupID, String gubun, String type, String writerName, String writerDept, int tenantID, String offset) throws Exception;
+	public String getScheduleXML(String xmlStr, String resID, String companyID, String groupID, String gubun, String type, String title, String writerName, String writerDept, int tenantID, String offset) throws Exception;
 
 	public String getAdminFlag(String companyID, String brdID, String id, int tenantID, String deptID) throws Exception;
 
@@ -77,6 +77,8 @@ public interface EzResourceService {
 	
 	public void updateSchedule(int num, String ownerID, String companyID, String approve, int tenantID) throws Exception;
 	
+	public void updateSchedule2(int num, String ownerID, String companyID, String returnFlag, int tenantID) throws Exception;
+	
 	public void delFormID(String delCode, int tenantID) throws Exception;
 	
 	public String getDeptID(String writerID, String deptNm, int tenantID, String companyID) throws Exception;
@@ -87,9 +89,13 @@ public interface EzResourceService {
 	
 	public void moveResourceToOtherResourceGroup(String originResourceGroupId, String selectedResourceGroupId, int tenantId, String companyID) throws Exception;
 	
-	public String isResourceGroupManager(String selectedResourceGroupId, String userId, int tenantId, String companyID) throws Exception;
+	public String isResourceGroupManager(String selectedResourceGroupId, String userId, int tenantId, String companyID, String deptID) throws Exception;
 	
 	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID, String deptID) throws Exception;
 
-	public List<String> getAttachList(String resID, String companyID, int tenantId) throws Exception;
+	public List<ResBrdVO> getResourcePortlet(String loginCookie, String date) throws Exception;
+
+	public String saveResourcePortlet(String loginCookie, String resources) throws Exception;
+	
+	public List<String> getAttachList(String resID, String companyID, int tenantId) throws Exception;	
 }

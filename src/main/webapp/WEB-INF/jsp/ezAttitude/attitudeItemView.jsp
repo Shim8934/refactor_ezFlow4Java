@@ -63,7 +63,7 @@
 				if (modAppl != "0") {
 					tempHtml += "<tr>";
 					tempHtml += "<th><spring:message code='ezAttitude.t272' /></th>";
-					if(modAppl == "1") {
+					if(modAppl == "1" || modAppl == "2") {
 						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t209' /></td>";
 					} else if(modAppl == "3") {
 						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t210' /></td>";
@@ -81,6 +81,8 @@
 					$("#attiInfoView").append(tempHtml);
 					//$("#attiInfoView tr").eq(3).css("display", "none");
 					$("#attiInfoView tr").eq(4).css("display", "none");
+				} else {					
+					$("#bizsub").html(" " + bizSub);
 				}
 				
 				//유형명
@@ -90,7 +92,6 @@
 				$("#writerName").text(" " + writerName);
 				$("#region").html(" " + region);
 				$("#mobile").html(" " + mobile);
-				//$("#bizsub").html(" " + bizsub);
 				
 				var doc = document.getElementById('message').contentWindow.document;
 				doc.open();
@@ -118,7 +119,9 @@
 						showTime = startDate.substring(0, 16) + " ~ " + endDate.substring(11, 16);
 						break;
 					case "4":
-						showTime = startDate.substring(0, 10) + " ~ " + endDate.substring(0, 10);
+						//2020-03-13 김정언 : 반반차
+						if(typeId === 'A21') showTime = startDate.substring(0, 16) + " ~ " + endDate.substring(0, 16);
+						else showTime = startDate.substring(0, 10) + " ~ " + endDate.substring(0, 10);
 						break;
 					case "5":
 						showTime = startDate.substring(0, 16) + " ~ " + endDate.substring(0, 16);
@@ -228,6 +231,8 @@
 				            try {
 				            	window.opener.getUserAnnualList();
 								window.opener.parent.frames["left"].getAttitudeList();
+								//신청갯수
+						    	window.opener.parent.frames["left"].leftAnnualCount();
 				            } catch (e) { 
 				            }
 				            window.close();
@@ -275,12 +280,12 @@
 	            <div class="btnpositionNew" id="menuTable">
 	            	<c:if test="${userId == attitudeInfo.writerId}">
 	            		<c:choose>
-	            			<c:when test="${attitudeInfo.typeId == 'A11' || attitudeInfo.typeId == 'A12' || attitudeInfo.typeId == 'A13'}">
+	            			<c:when test="${attitudeInfo.typeId == 'A11' || attitudeInfo.typeId == 'A12' || attitudeInfo.typeId == 'A13' || attitudeInfo.typeId == 'A21'}">
 	            				<c:if test="${attitudeInfo.annualApprStatus == '1'}">
 		            				<c:if test="${attitudeInfo.modAppl == '0'}">
 		            					<a class="imgbtn"><span onclick="attitudeCancelAnnual()"><spring:message code='ezAttitude.t272' /></span></a>
 		            				</c:if>
-		            				<c:if test="${attitudeInfo.modAppl == '1'}">
+		            				<c:if test="${attitudeInfo.modAppl == '1' || attitudeInfo.modAppl == '2'}">
 	                       				<a class="imgbtn"><span onclick="deleteCancelAnnual()"><spring:message code='ezAttitude.t279' /></span></a>
 	                       			</c:if>
 		            				<c:if test="${attitudeInfo.modAppl == '4'}">

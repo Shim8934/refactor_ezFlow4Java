@@ -17,10 +17,13 @@
 		<script id="clientEventHandlersJS" type="text/javascript">
 		var OrderCell = ""; //ListView에서 사용하는 정렬 함수(필요없지만 없으면 ListView에서 에러발생)
 		var ModifiedFlag = false; //작성,수정,삭제 동작을 했는지 유/무
+		var isNewBBHOpinionFlag = false; // 신규 반송/보류/회송의견(002/003/004) 존재여부 플래그
 		
 		var pMode; //APR, END
 		var pOpinionType; //001,002,003,004
 		var pDocID, pDisplay, pDraftFlag, pDocState, pOrgCompanyID, pExt;
+		
+		var pTempRowID = "";
 		
 		var pUserID = "<c:out value='${userInfo.id}'/>";
 		var pUserTitle = "<c:out value='${userInfo.title1}'/>";
@@ -69,6 +72,7 @@
 			pOpinionType = getOpinionType(pDisplay); //001,002,003,004
 			
 			initOpinionInfo();
+			autoOpinionPopUp(); // 자동으로 의견 작성창 오픈
 		};
 		
 		//파라미터 유효성 검사 및 초기값 세팅
@@ -118,11 +122,18 @@
             	ModButton.display = "none";
             	DelButton.display = "none";
             }
+            /* 2020-04-02 홍승비 - 동일한 사용자가 모든 의견을 중복하여 작성 가능하도록 수정 */
             //[작성]버튼
-            if (checkMyOpinionExist(pOpinionType)) {
+/*             if (checkMyOpinionExist(pOpinionType)) {
         		AddButton.display = "none";
         	} else {
         		AddButton.display = "";
+        	} */
+        	// 일반의견 작성 또는 신규 작성한 반송, 보류, 회송의견이 존재하지 않는 경우에만 작성버튼 활성화
+        	if (isNewBBHOpinionFlag == false) {
+            	AddButton.display = "";
+        	} else {
+        		AddButton.display = "none";
         	}
 		}
 		
@@ -139,6 +150,7 @@
 	            for (var i = 0; i < pTotalRen; i++) {
 	            	if (GetAttribute(pTotalRows[i], "DATA2") == pUserID) {
 	            		if (GetAttribute(pTotalRows[i], "DATA6") == pType) {
+	            			pTempRowID = pTotalRows[i].id; // 의견 작성창 자동팝업에 쓰임
 		            		rtnVal = true;
 		            		break;
 	            		}
@@ -241,10 +253,10 @@
 		//[확인] 버튼 클릭
 		function btn_OpinionOK_onclick() {
 			if (ModifiedFlag) {
-				if (pOpinionType == "001") {
+				if (pOpinionType == "001") { // 일반의견
 					saveOpinionInfo();
-				} else {
-					if (checkMyOpinionExist(pOpinionType)) {
+				} else { // 일반의견이 아니라면, 내가 신규작성한 반송, 보류, 회송의견이 리스트 상에 존재하는 경우에만 의견을 저장한다.
+					if (checkMyOpinionExist(pOpinionType) && isNewBBHOpinionFlag == true) {
 						saveOpinionInfo();
 					} else {
 						btn_OpinionCancel_onclick();
@@ -260,6 +272,10 @@
 			var result = "";
 			
 			if (ret != "cancel") {
+				if (ret[2] == true && (pOpinionType == "002" || pOpinionType == "003" || pOpinionType == "004")) { // 반송, 보류, 회송의견 신규작성 플래그값 변경
+					isNewBBHOpinionFlag = true;
+				} // 한 번이라도 신규작성되었다면, 해당 신규작성의견이 삭제되기 전까지 신규작성 플래그 true값을 유지함
+				
 				if (ret[0] == "ADD") {
 					result = addOpinionContent(ret[1]);
 				} else if (ret[0] == "MOD") {
@@ -272,6 +288,21 @@
 				OpenAlertUI(strLang490);
 			} else if (result == "FALSE") {
 				OpenAlertUI(strLang417);
+			}
+		}
+		
+		//의견 작성창 자동으로 팝업되도록
+		function autoOpinionPopUp() {
+			if (pDisplay != "" && pDisplay.toUpperCase() != "SHOW") { // 일반적인 의견이 아닌 경우 해당 함수 작동
+				var OpinionList = new ListView();
+				OpinionList.LoadFromID("OpinionList");
+				
+				if (pTempRowID != "") {
+					OpinionList.SetSelectedID(pTempRowID);
+					btn_OpinionMod_onclick(); //자신이 작성한 같은 타입의 의견이 있으면 [수정]창
+				} else {
+					btn_OpinionAdd_onclick(); //자신이 작성한 같은 타입의 의견이 없으면 [작성]창
+				}
 			}
 		}
 	

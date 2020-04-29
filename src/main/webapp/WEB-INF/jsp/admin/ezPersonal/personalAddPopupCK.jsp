@@ -20,7 +20,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<!-- <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/datepicker.htc.js')}"></script> -->
 		<!-- <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/composeappt.js')}"></script> -->
-		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/popup.css')}">
+		<link rel="stylesheet" href="${util.addVer('ezNewPortal.e2', 'msg')}">
 		
 		<script type="text/javascript">
 			var compid = "<c:out value = '${companyID}' />";
@@ -31,6 +31,9 @@
 			var MHTLoadComplete="";
 			var initdate = "<c:out value = '${initDate}' />";
 			var skinValue = "<c:out value = '${personalPopupVO.skinValue}' />";
+			
+			/* 팝업공지 대상자 지정 */
+	        var authList = [];
 	        
 	        window.onload = window_onload;
 	        function window_onload() {
@@ -61,8 +64,11 @@
 					document.getElementById("selectPos").selectedIndex = 1;
 				else if (wPosition == 6)
 					document.getElementById("selectPos").selectedIndex = 2;
+				
+				setUserList();
+				eventSetting();
 			}
-
+	        
 			/* window.onresize = function () {
 				document.getElementById("addPopEditor").style.height = document.documentElement.clientHeight - 293 + "PX";
 			} */
@@ -91,8 +97,10 @@
 				var SDate;
 				var EDate;
 				if (startdate != "") {
-					SDate = new Date(startdate);
-					EDate = new Date(enddate);
+					var startArr = startdate.split("-"); 
+					SDate = new Date(startArr[0] + "/" + startArr[1] + "/" + startArr[2]);
+					var endArr = enddate.split("-"); 
+					EDate = new Date(endArr[0] + "/" + endArr[1] + "/" + endArr[2]);
 				} else {
 					SDate = new Date();
 					EDate = new Date();
@@ -339,23 +347,37 @@
 					alert("<spring:message code = 'ezPersonal.hyh15' />");
 					return;
 				}
-
+				
+				if (authList == null || authList.length < 1) {
+					alert("<spring:message code= 'ezPersonal.yej02'/>");
+					return;
+				}
+				
+				if (typeof authList == "string") {
+					authList = JSON.parse(authList);
+				}
+				
+				var data = JSON.stringify({
+					companyID : compid,
+					itemSeq : itemseq,
+					title : Title.value,
+					title2 : Title2.value,
+					startDate : tmpStartDateTime,
+					endDate : tmpEndDateTime,
+					width : wWidth.value,
+					height : wHeight.value,
+					position : document.getElementById("selectPos").value,
+					content : message.GetEditorContent(),
+					skinValue : skinValue,
+					authList : authList
+				});
+				
 				$.ajax({
 					type : "POST",
 					url : "/admin/ezPersonal/savePopup.do",
 					async : false,
-					data : {companyID : compid,
-							itemSeq : itemseq,
-							title : Title.value,
-							title2 : Title2.value,
-							startDate : tmpStartDateTime,
-							endDate : tmpEndDateTime,
-							width : wWidth.value,
-							height : wHeight.value,
-							position : document.getElementById("selectPos").value,
-							content : message.GetEditorContent(),
-							skinValue : skinValue
-							},
+					data : data,
+					contentType : "application/json",
 					dataType : "text",
 					success : function (result) {
 						if (result != "OK") {
@@ -416,6 +438,67 @@
 			function Editor_Complete() {
 				message.SetEditorContent("${personalPopupVO.content}");
 			}
+			
+	        var eventSetting = function() {
+	        	var setAuth = document.getElementById("setAuth");
+	        	setAuth.addEventListener("click", openPopupAuth);
+	        }
+			
+	        var openPopupAuth = function() {
+	    		var companyId = window.opener.$("#ListCompany option:selected").val();
+	    		var feature = "dialogHeight:670px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
+	    		feature = feature + GetShowModalPosition(970, 670);
+	    		
+	    		if (CrossYN()) {
+	    			var OpenWin = window.open("/admin/ezPersonal/personalPopupUser.do?companyId="
+	    					+ companyId, "", GetOpenWindowfeature(970, 670));
+	    			try {
+	    				OpenWin.focus();
+	    			} catch (e) {
+	    			}
+	    		} else {
+	    			var rtnValue = window.showModalDialog("/admin/ezPersonal/personalPopupUser.do",
+	    					companyId, feature);
+	    		}
+	        }
+	        
+	        var setUserList = function() {
+	        	var url = "/admin/ezPersonal/personalPopupGetUserList?itemSeq=" + itemseq + "&companyId=" + compid;
+	        	var request = new XMLHttpRequest(); 
+	        	request.open('GET', url, true);
+				request.setRequestHeader('content-type', 'application/json');
+
+	        	request.onload = function() {
+	        	  if (this.status >= 200 && this.status < 400) {
+	        	    // Success!
+	        	    var result = JSON.parse(request.responseText);
+	        	    var status = result.status;
+	        	    
+	        	    if (status == "ok") {
+	        	    	var userList = result.userList;
+	        	    	var userListLength = userList.length;
+	        	    	authList = userList;
+	        	    	var userListText = "";
+	        	    	
+	        	    	for (var i = 0; i < userListLength; i++) {
+	        	    		userListText += ", " + userList[i].userName;
+	        	    	}
+	        	    	
+	        	    	document.getElementById("authList_div").textContent = userListText.substring(1);
+	        	    }
+	        	    
+	        	  } else {
+	        	    // We reached our target server, but it returned an error
+
+	        	  }
+	        	};
+
+	        	request.onerror = function() {
+	        	  // There was a connection error of some sort
+	        	};
+
+	        	request.send();
+	        }
 		</script>
 		<style type="text/css">
 			.popup_setting {display : inline-block; margin-top:3px; margin-right:3px;}
@@ -426,6 +509,8 @@
 			.bg02 {background : url(/images/admin/popup_bg02.png) #ffb4b4 top right no-repeat;}
 			.bg03 {background : url(/images/admin/popup_bg03.png) #ffd161 top right no-repeat;}
 			.bg04 {background : url(/images/admin/popup_bg04.png) #CCC top right no-repeat;}
+			#authList_td {height : 35px;}
+			#authList_div {height:100%; overflow:auto;}
 		</style>
 	</head>
 	<body class = "popup">
@@ -484,6 +569,14 @@
 					<IMG align="absmiddle" border="0" height="16" id="img_EndTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative" width="16">
 				</td>
 			</tr> 
+			<tr> 
+				<th>
+					<a class="imgbtn" style="user-select: auto;">
+						<span id="setAuth" style="width: 37px; text-align: center; user-select: auto;"><spring:message code="ezPersonal.yej03"/></span>
+					</a>
+				</th>
+				<td id="authList_td"><div id="authList_div">&nbsp;</div></td> 
+			</tr>
 			<tr>
 				<th><spring:message code = 'ezPersonal.hyh16' /></th>
 				<td id="skinView" style="padding:3px; height:40px">

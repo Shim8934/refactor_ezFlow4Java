@@ -24,7 +24,6 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -479,7 +478,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
     			}
     		}
 			
-			Enumeration headers = message.getAllHeaders();
+			@SuppressWarnings("unchecked")
+			Enumeration<Header> headers = message.getAllHeaders();
             while (headers.hasMoreElements()) {
               Header h = (Header) headers.nextElement();
               logger.debug("@@"+h.getName() + ": " + h.getValue());
@@ -598,6 +598,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			mailMaxReceiverCount = "200";
 		}
 		
+		boolean useAdditionalInfo = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailWriteRecipientAdditional", loginInfo.getTenantId()));
+		
 		model.addAttribute("to", to);
 		model.addAttribute("cc", cc);
 		model.addAttribute("bcc", bcc);
@@ -661,6 +663,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("draftsFolderName", draftsFolderName);
 		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
+		model.addAttribute("useAdditionalInfo", useAdditionalInfo);
 		
         logger.debug("mailEdit ended.");
         

@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezNewPortal.web;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,6 +46,7 @@ import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
@@ -62,6 +64,8 @@ import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
@@ -75,6 +79,9 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -126,6 +133,12 @@ public class EzNewPortalGWController {
 
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGSerivce;
+	
+	@Autowired
+	private EzSurveyService ezSurveyService;
+
+	@Resource(name = "EzWebFolderService_y")
+	private EzWebFolderService_y ezWebFolderService_y; 
 
 	@Autowired
 	private Properties config;
@@ -135,6 +148,9 @@ public class EzNewPortalGWController {
 
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+
+	@Autowired
+	private EzEmailService ezEmailService;
 
 	@Resource(name = "egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -156,22 +172,24 @@ public class EzNewPortalGWController {
 			String deptId = info.getDeptId();
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
+			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			
 			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
 			LOGGER.debug("primaryLang=" + primaryLang);
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + ", portletLang : " + portletLang + ", deptPath : " + deptPath);
 			
 			// 사용자 설정 테마/프레임 가져오기
-			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId);
+			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath, portletLang);
 			LOGGER.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame());
 			
 			List<PortletInfoVO> portletOrder = ezNewPortalService.getUserPortletList(userThemeSetting.getUsedTheme(), portletLang, userId, tenantId, companyId, deptId, false);
 			
 			//1. tenant config가 NO인 경우 사용자 포틀릿 순서에서도 나오면 안됨
-			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
+			//컨피그 : useQuestion(전자설문), useSurvey(전자설문 리뉴얼), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
 			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
-			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티)
+			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티), useExternalMailServer(메일)
 			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+			String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
 			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
 			String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
 			String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
@@ -183,7 +201,11 @@ public class EzNewPortalGWController {
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId);
-			
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
+			LOGGER.debug("[config] useQuestion : " + useQuestion + ", useSurvey : " + useSurvey + ", useMemo : " + useMemo + ", useCabinet : " + useCabinet
+						+ ", useVote : " + useVote + ", useJournal : " + useJournal + ", useCircular : " + useCircular + ", useAttitue : " + useAttitude
+						+ ", useWebfolder : " + useWebfolder + ", useEzPMS : " + useEzPMS + ", useCommunity : " + useCommunity + ", useEzWorkspace : " + useEzWorkspace
+						+ ", useMail : " + useExternalMailServer);
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
 			}
@@ -216,6 +238,10 @@ public class EzNewPortalGWController {
 				useQuestion = "NO";
 			}
 			
+			if (useSurvey == null || useSurvey.equals("")) {
+				useSurvey = "YES";
+			}
+			
 			if (useWebfolder == null || useWebfolder.equals("")) {
 				useWebfolder = "NO";
 			}
@@ -228,60 +254,73 @@ public class EzNewPortalGWController {
 				useEzPMS = "NO";
 			}
 			
+			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+				useExternalMailServer = "NO";
+			}
+			
 			if (useQuestion.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 14));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
+			}
+			
+			if (useSurvey.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("survey")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 18));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 16));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 11));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 15));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 8));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 7));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 9));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 10));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 12));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 5));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
 			
 			//인터넷 사용이 NO 인 경우에는 weather portlet사용 불가능
 			String useInternet = config.getProperty("config.useInternet");
-			
+			LOGGER.debug("useInternet=" + useInternet);
 			if (useInternet.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getPortletId() == 14));
+				portletOrder.removeIf(vo -> (vo.getPortletCode() != null && vo.getPortletCode().equals("weather")));
 			}
 			
 			// 협업 사용여부에 따라 제거 
 			if (useEzWorkspace.equals("NO")) {
 				portletOrder.removeIf(vo -> vo.getPortletUrl().contains("ezWorkspace"));
+			}
+			
+			if (useExternalMailServer.equalsIgnoreCase("YES")) {
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
 			}
 
 			JSONObject data = new JSONObject();
@@ -335,21 +374,26 @@ public class EzNewPortalGWController {
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
 			
 			boolean isUseQuestionAuth = false;
+			boolean isUseSurveyAuth = false;
 			
 			for (MenuInfoVO mVO : menuList) {
-				if (mVO.getMenuId()==3) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("approval")) {
 					useApproval = "YES";
 				} 
 				
-				if (mVO.getMenuId()==14 && useQuestion.equals("YES")) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("question") && useQuestion.equals("YES")) {
 					isUseQuestionAuth = true;
 				}
 				
-				if (mVO.getMenuId()==1) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("survey") && useSurvey.equals("YES")) {
+					isUseSurveyAuth = true;
+				}
+				
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("mail")) {
 					useMail = "YES";
 				}
 				
-				if (mVO.getMenuId()==2) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("schedule")) {
 					useSchedule = "YES";
 				}
 			}
@@ -360,11 +404,17 @@ public class EzNewPortalGWController {
 				useQuestion = "NO";
 			}
 			
+			if (isUseSurveyAuth) {
+				useSurvey = "YES";
+			} else {
+				useSurvey = "NO";
+			}
+			
 			boolean isUseCircular = false;
 			
 			for (MenuInfoVO mVO : menuList) {
 				
-				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("circular") && useCircular.equals("YES")) {
 					isUseCircular = true;
 					break;
 				} else {
@@ -381,7 +431,7 @@ public class EzNewPortalGWController {
 			boolean isUseAttitude = false;
 			
 			for (MenuInfoVO mVO : menuList) {
-				if (mVO.getMenuId()==9 && useAttitude.equals("YES")) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("attitude") && useAttitude.equals("YES")) {
 					isUseAttitude = true;
 					break;
 				} else {
@@ -395,10 +445,39 @@ public class EzNewPortalGWController {
 				useAttitude = "NO";
 			}
 			
-			LOGGER.debug("useAttitude : " + useAttitude + ", useQuestion : " + useQuestion + ", useCircular : " + useCircular);
+			if (useExternalMailServer.equalsIgnoreCase("YES")) {
+				useMail = "NO";
+			} else {
+				useMail = "YES";
+			}
+			
+			LOGGER.debug("useAttitude : " + useAttitude + ", useQuestion : " + useQuestion + ", useSurvey : " + useSurvey + ", useCircular : " + useCircular);
 			LOGGER.debug("useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
 			// =================================== 여기까지 end
 
+			//2019-08-07  자동리프레시 가져오기
+			String usePortalAutoRefreshInterval = ezCommonService.getTenantConfig("usePortalAutoRefreshInterval", tenantId);
+			LOGGER.debug("usePortalAutoRefreshInterval : " + usePortalAutoRefreshInterval);
+			
+			if (usePortalAutoRefreshInterval == null || usePortalAutoRefreshInterval.equals("")) {
+				LOGGER.debug("userPortalAutoRefreshInterval is none!");
+				String propertyName = "usePortalAutoRefreshInterval";
+				String propertyValue = "5";
+				String description = "포탈 자동 새로고침 간격, 단 0이면 새로고침 사용안함";
+				String configName = "포탈 자동 새로고침 간격";
+				String configType = "포탈";
+				
+				ezNewPortalService.addPortalTenantConfig(tenantId, propertyName, propertyValue, description, configName, configType);
+				usePortalAutoRefreshInterval = ezCommonService.getTenantConfig("usePortalAutoRefreshInterval", tenantId);
+			}
+			
+			if ("YES".equals(useEzWorkspace)) {
+				String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", tenantId);
+				String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", tenantId);
+				data.put("workspaceHostUrl", workspaceHostUrl);
+				data.put("workspaceContextRootUrl", workspaceContextRootUrl);
+			}
+			
 			data.put("usedTheme", userThemeSetting.getUsedTheme());
 			data.put("usedFrame", userThemeSetting.getUsedFrame());
 //			data.put("portletOrder", portletOrder);
@@ -409,6 +488,7 @@ public class EzNewPortalGWController {
 			data.put("userPhoto", userPhoto);
 			data.put("useAttitude", useAttitude);
 			data.put("useQuestion", useQuestion);
+			data.put("useSurvey", useSurvey);
 			data.put("useCircular", useCircular);
 			data.put("useEzWorkspace", useEzWorkspace);
 			data.put("useMail", useMail);
@@ -416,6 +496,7 @@ public class EzNewPortalGWController {
 			data.put("useSchedule", useSchedule);
 			data.put("lastLogin", lastLogin);
 			data.put("userEmail", info.getEmail());
+			data.put("usePortalAutoRefreshInterval", usePortalAutoRefreshInterval);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -573,12 +654,19 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			String deptId = info.getDeptId();
+			String lang = info.getLang();
+			
+			// deptpath 구하기
+			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
+			
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + ", deptPath : " + deptPath + ", lang : " + lang);
 			
 			// List<ThemeInfoVO> userThemeList =
 			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
-			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId, userId);
-			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId);
+			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId, userId, deptPath, lang);
+			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath, lang);
+			
 			boolean hasUserDefault = false;
 			int usedTheme = 0;
 			
@@ -595,7 +683,13 @@ public class EzNewPortalGWController {
 			for (int i = 0; i < userThemeList.size(); i++) {
 				if (userThemeList.get(i).getThemeId() == usedTheme) {
 					userThemeList.get(i).setThemeUsed(true);
+					hasUserDefault = true;
 				}
+			}
+			
+			// 자신의 default 테마도 없고, 기본테마에도 권한이 없는 경우 themelist의 첫번째를 선택하게 해줌
+			if (!hasUserDefault) {
+				userThemeList.get(0).setThemeUsed(true);
 			}
 			 
 			result.put("status", "ok");
@@ -630,6 +724,7 @@ public class EzNewPortalGWController {
 			String langType = info.getLang();
 			String logoType = "P";
 			JSONObject data = new JSONObject();
+			
 			/**
 			 * 1) 로고
 			 */
@@ -663,6 +758,9 @@ public class EzNewPortalGWController {
 			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+			
+			// 2020-04-09 김민성 - 메일 메뉴 컨피그 추가
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 			
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
@@ -708,65 +806,99 @@ public class EzNewPortalGWController {
 				useEzPMS = "NO";
 			}
 			
+			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+				useExternalMailServer = "NO";
+			}
+			
 			if (useQuestion.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 14));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 18));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 16));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 11));
+				menuList.removeIf(vo -> vo.getMenuCode() != null && (vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 15));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 8));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 7));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 9));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 10));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 12));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 5));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
-
+			
+			if (useExternalMailServer.equalsIgnoreCase("YES")) {
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
+			}
+			
+			// 20200326 조진호 - 패키지 타입이 메일인 경우 메일,주소록을 제외한 모든 메뉴 제거
+			String packageType = commonUtil.getPackageType(info.getTenantId());
+			
+			if (packageType.equals(CommonUtil.PT_MAIL)) {
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && !vo.getMenuCode().equals("mail") && !vo.getMenuCode().equals("address")));
+			}
+			
 			data.put("menuList", menuList);
 			/**
 			 * 3) 유틸메뉴 - 관리자 권한의 유무 - DB에서 가져오지 말고 그냥 다 출력
 			 */
 			String roleInfo = "user";
-			if (info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1) {
+			
+			// 전체관리자, 회사관리자, 웹폴더관리자면 관리자 버튼이 나타나도록 추가 -> 관리자 안에서 웹폴더관리자는 웹폴더 관리만 나타나도록 수정 
+			if (info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1 || info.getRollInfo().indexOf("wf=1") > -1) {
 				roleInfo = "admin";
 				// 권한 없는 사람이 강제로 주소를 치고 들어가는 상황을 대비해 admin 주소는 서버에서 올리는 걸로.
 				data.put("utilAdminUrl", "/admin/main.do");
 			}
+			//2019-09-20 메신저 다운로드 부분 추가
+			String useUtilTalk = ezCommonService.getTenantConfig("useUtilTalk", tenantId);
+			if (useUtilTalk == null || useUtilTalk.equals("")) {
+				useUtilTalk = "NO";
+			} else {
+				String talkFilePath = ezCommonService.getTenantConfig("talkFilePath", tenantId);				
+				data.put("talkFilePath", talkFilePath);
+			}
+			data.put("useUtilTalk", useUtilTalk);
+			//2019-10-04 통합검색 부분 추가
+			String useTotalSearch = ezCommonService.getTenantConfig("useTotalSearch", tenantId);
+			if (useTotalSearch == null || useTotalSearch.equals("")) {
+				useTotalSearch = "NO";
+			}
+			data.put("useTotalSearch", useTotalSearch);
+			
 			
 			/**
 			 * 4) 팝업 공지
 			 */
-			List<PersonalGetPopUpListUserVO> popupNotiList = ezPersonalService.getPopUpListUser(companyId, tenantId, offset);
+			List<PersonalGetPopUpListUserVO> popupNotiList = ezPersonalService.getPopUpListUserWithAuth(companyId, tenantId, offset, userId, deptId);
 			data.put("popupNotiList", popupNotiList);
 			
 			data.put("logoUrl", logoUrl);
@@ -890,47 +1022,47 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 14));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 18));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 16));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 11));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 15));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 8));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 7));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 9));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 10));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 12));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 5));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
 			
 			data.put("menuList", menuList);
@@ -1030,47 +1162,47 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 14));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 18));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 16));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 11));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 15));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 8));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 7));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 9));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 10));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 12));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 5));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
 			
 			data.put("menuList", compMenuList);
@@ -1267,47 +1399,47 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 14));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 18));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 16));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 11));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 15));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 8));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 7));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 9));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 10));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 12));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 5));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
 			
 
@@ -1315,7 +1447,7 @@ public class EzNewPortalGWController {
 			String useInternet = config.getProperty("config.useInternet");
 			
 			if (useInternet.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getPortletId() == 14));
+				portletList.removeIf(vo -> (vo.getPortletCode() != null && vo.getPortletCode().equals("weather")));
 			}
 			
 			data.put("portletList", portletList);
@@ -1439,31 +1571,43 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 			String offset = info.getOffSet();
-			String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat adf = new SimpleDateFormat("yyyy-MM-dd");
+			String nowDate = adf.format(cal.getTime());
 			String deptId = info.getDeptId();
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
-			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
-			String password = jspw;
-			String useQuestion = request.getParameter("useQuestion");
+			// String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
+			// String password = jspw;
+			//String useQuestion = request.getParameter("useQuestion");
+			String useSurvey = request.getParameter("useSurvey");
 			String useCircular = request.getParameter("useCircular");
 			String useMail = request.getParameter("useMail");
 			String useApproval = request.getParameter("useApproval");
 			String useSchedule = request.getParameter("useSchedule");
+			//2020-02-24 김정언
+			String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", tenantId);
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
 			JSONObject data = new JSONObject();
 
-			LOGGER.debug("useQuestion : " + useQuestion + ", useCircular : " + useCircular + ", useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
+			LOGGER.debug("useSurvey : " + useSurvey + ", useCircular : " + useCircular + ", useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
 
 			// 전자 설문 개수 불러오기
-			if (useQuestion.equals("YES")) {
-				int pollCount = ezQuestionService.wpCountPollCount(userId, tenantId, offset, companyId);
-
-				data.put("pollCount", pollCount);
+//			if (useQuestion.equals("YES")) {
+//				
+//				int pollCount = ezQuestionService.wpCountPollCount(userId, tenantId, offset, companyId);
+//				
+//				data.put("pollCount", pollCount);
+//				
+//			}
+			
+			if ("YES".equals(useSurvey)) {
+				int surveyCnt = ezSurveyService.getSurveyIngCnt(info);
+				data.put("surveyCnt", surveyCnt);
 			}
 
 			// 오늘 일정 개수 불러오기
-			if (useSchedule.equals("YES")) {
+			if ("YES".equals(useSchedule)) {
 				String startDate = nowDate + " 00:00:00";
 				String endDate = nowDate + " 23:59:59";
 				String startTime = commonUtil.getDateStringInUTC(nowDate + " 00:00:00", offset, true);
@@ -1543,19 +1687,19 @@ public class EzNewPortalGWController {
 				}
 
 				pidList += pidListSub;
-				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId);
+				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
 				int scheduleCount = sList.size();
 				data.put("scheduleCount", scheduleCount);
 			}
 
 			// 회람판 개수 불러오기
-			if (useCircular.equals("YES")) {
+			if ("YES".equals(useCircular)) {
 				int circularCount = ezCircularSerivce.getListCount("newCircular", userId, tenantId, companyId);
 				data.put("circularCount", circularCount);
 			}
 
 			// 결재할 문서 개수 불러오기
-			if (useApproval.equals("YES")) {
+			if ("YES".equals(useApproval)) {
 				String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
 				String lang = portletLang;
 				int approvalCount = ezNewPortalService.getApprovalDoingListCount(userId, companyId, tenantId, info.getOffSet(), approvalFlag, lang);
@@ -1563,21 +1707,15 @@ public class EzNewPortalGWController {
 			}
 
 			// 읽지 않은 메일 가져오기
-			if (useMail.equals("YES")) {
-				IMAPAccess ia = null;
-				String folderName = "INBOX";
+			if ("YES".equals(useMail)) {
 				int unreadMailCount = 0;
 
 				try {
-					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
-					unreadMailCount = ia.getUnreadCount(folderName);
+					unreadMailCount = (int) ezEmailService.getUnreadCountAll(null, userId, locale, tenantId).get("totalUnreadCountInAllAccounts");
 				} catch (Exception e) {
 					e.printStackTrace();
-				} finally {
-					if (ia != null) {
-						ia.close();
-					}
 				}
+
 				data.put("unreadMailCount", unreadMailCount);
 			}
 
@@ -1630,10 +1768,16 @@ public class EzNewPortalGWController {
 				}
 			}
 			
-			LOGGER.debug("useMemo : " + useMemo);
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
+			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+				useExternalMailServer = "NO";
+			}
+			
+			LOGGER.debug("useMemo : " + useMemo + ", useExternalMailServer : " + useExternalMailServer);
 			
 			data.put("useMemo", useMemo);
 			data.put("startPage", startPage);
+			data.put("useExternalMailServer", useExternalMailServer);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1687,27 +1831,53 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			LoginVO userInfo = new LoginVO();
 			String primary = "";
 			int tenantId = 0;
 			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
+			String lang = "";
 			
-			if (userId == null) {
+			// 2020-04-28 jwseo99 이거 안 쓰는 것 같음 왜 이런 코드를? 
+			// 이 주석이 내년 21년 될 때 까지 오류가 안 난다면 걍 폐기한다
+			/* if (userId == null) {
 				tenantId = ezNewPortalService.getTnenantIdByServerName(serverName);
 				primary = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
-			} else {
-				userInfo = commonUtil.getUserForGw(userId, serverName);
-				primary = userInfo.getPrimary();
-				tenantId = userInfo.getTenantId();
-				result.put("userCompany", userInfo.getCompanyID());
-				result.put("lang", userInfo.getLang());
+				lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
+				
+				if (lang == null || lang.equals("")) {
+					lang = "1";
+				}
+				
+				result.put("lang", lang);
+			} else { */
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			primary = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+			tenantId = userInfo.getTenantId();
+			lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
+			
+			if (lang == null || lang.equals("")) {
+				lang = "1";
 			}
+			
+			result.put("userCompany", userInfo.getCompanyID());
+			result.put("lang",lang);
 
 			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-
-			resultList = ezOrganAdminService.getCompanyList(primary, tenantId);
-
-			result.put("data", resultList);
+			resultList = ezOrganAdminService.getCompanyList(lang, tenantId);
+			
+			String roleInfo = userInfo.getRollInfo();
+			//회사관리자일 때는 회사리스트만 나오도록
+			List<OrganDeptVO> companyList = new ArrayList<OrganDeptVO>();
+			
+			if (roleInfo != null) {
+				for (OrganDeptVO companyInfo : resultList) {
+					if (roleInfo.indexOf("c=1") > -1 || (roleInfo.indexOf("k=1") > -1 && companyInfo.getCn().equals(userInfo.getCompanyID()))) {
+						companyList.add(companyInfo);
+					}
+				}
+			}
+			
+			result.put("data", companyList);
+			
 			result.put("primary", primary);
 			result.put("usePrimaryLangOnly", usePrimaryLangOnly);
 			result.put("status", "ok");
@@ -1739,9 +1909,10 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-
-			List<ThemeInfoVO> themeList = ezNewPortalService.getThemes(true, companyId, userInfo.getTenantId(), userId);
-
+			String lang = userInfo.getLang();
+			
+			List<ThemeInfoVO> themeList = ezNewPortalService.getThemes(true, companyId, userInfo.getTenantId(), userId, null, lang);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", themeList);
@@ -1769,8 +1940,13 @@ public class EzNewPortalGWController {
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
+			String lang = userInfo.getLang();
 			
-			ThemeInfoVO themeInfo = ezNewPortalService.getThemeInfo(themeId, companyId, tenantId);
+			if (lang == null || lang.equals("")) {
+				lang = "1";
+			}
+			
+			ThemeInfoVO themeInfo = ezNewPortalService.getThemeInfo(themeId, companyId, tenantId, lang);
 			List<FrameInfoVO> frameInfos = ezNewPortalService.getFrames(themeId, companyId, tenantId);
 			
 			JSONObject data = new JSONObject();
@@ -1878,6 +2054,7 @@ public class EzNewPortalGWController {
 			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
 			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티)
 			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+			String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
 			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
 			String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
 			String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
@@ -1888,7 +2065,7 @@ public class EzNewPortalGWController {
 			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
-			
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
@@ -1922,6 +2099,10 @@ public class EzNewPortalGWController {
 				useQuestion = "NO";
 			}
 			
+			if (useSurvey == null || useSurvey.equals("")) {
+				useSurvey = "YES";
+			}
+			
 			if (useWebfolder == null || useWebfolder.equals("")) {
 				useWebfolder = "NO";
 			}
@@ -1934,48 +2115,61 @@ public class EzNewPortalGWController {
 				useEzPMS = "NO";
 			}
 			
+			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+				useExternalMailServer = "NO";
+			}
+			
 			if (useQuestion.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 14));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
+			}
+			
+			if (useSurvey.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("survey")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 18));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 16));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 11));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 15));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 8));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 7));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 9));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 10));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 12));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 5));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
+			}
+			
+			if (useExternalMailServer.equalsIgnoreCase("YES")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
 			}
 			
 			result.put("status", "ok");
@@ -2047,10 +2241,39 @@ public class EzNewPortalGWController {
 			MenuInfoVO menuInfo = ezNewPortalService.getMenuInfo(menuId, companyId, tenantId, menuLang);
 			List<MenuNameVO> menuNames = ezNewPortalService.getMenuNames(menuId, usePrimaryLangOnly, primaryLang, companyId, tenantId);
 			
+			int menuNamesCount = menuNames.size();
 			JSONObject data = new JSONObject();
 			data.put("menuInfo", menuInfo);
-			data.put("menuNames", menuNames);
-
+			
+			if (menuNamesCount > 2) {
+				List<MenuNameVO> menuNamesWithOrder = new ArrayList<MenuNameVO>();
+				int[] langOrder = new int[3];
+				
+				if (primaryLang.equals("2")) {
+					langOrder[0] = 2;
+					langOrder[1] = 1;
+					langOrder[2] = 3;
+				} else if (primaryLang.equals("3")){
+					langOrder[0] = 3;
+					langOrder[1] = 1;
+					langOrder[2] = 2;
+				} else {
+					langOrder[0] = 1;
+					langOrder[1] = 2;
+					langOrder[2] = 3;
+				}
+				
+				for (int i = 0; i < langOrder.length; i++) {
+					int langIndex = langOrder[i] - 1;
+					
+					menuNamesWithOrder.add(menuNames.get(langIndex));
+				}
+				
+				data.put("menuNames", menuNamesWithOrder);
+			} else {
+				data.put("menuNames", menuNames);
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
@@ -2112,8 +2335,9 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 			
-			Map<String, Object> resultMap = ezNewPortalService.getMenuAuth(menuId, companyId, userInfo.getTenantId());
+			Map<String, Object> resultMap = ezNewPortalService.getMenuAuth(menuId, companyId, userInfo.getTenantId(), lang);
 			
 			JSONObject data = new JSONObject();
 			
@@ -2263,6 +2487,7 @@ public class EzNewPortalGWController {
 			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 			
 			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
@@ -2311,48 +2536,57 @@ public class EzNewPortalGWController {
 				useEzPMS = "NO";
 			}
 			
+			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+				useExternalMailServer = "NO";
+			}
+			
 			if (useQuestion.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 14));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 18));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 16));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 11));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 15));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 8));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 7));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 9));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 10));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 12));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 5));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
+			}
+			
+			if (useExternalMailServer.equalsIgnoreCase("YES")) {
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
 			}
 			
 
@@ -2360,12 +2594,41 @@ public class EzNewPortalGWController {
 			String useInternet = config.getProperty("config.useInternet");
 			
 			if (useInternet.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getPortletId() == 14));
+				portletList.removeIf(vo -> (vo.getPortletCode() != null && vo.getPortletCode().equals("weather")));
 			}
 			
 			for (PortletInfoVO pvo : portletList) {
 				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId(), usePrimaryLangOnly, primaryLang);
-				pvo.setPortletNameList(portletNameList);
+				
+				int menuNamesCount = portletNameList.size();
+				
+				if (menuNamesCount > 2) {
+					List<PortletNameInfoVO> portletNamesWithOrder = new ArrayList<PortletNameInfoVO>();
+					int[] langOrder = new int[3];
+					
+					if (primaryLang.equals("2")) {
+						langOrder[0] = 2;
+						langOrder[1] = 1;
+						langOrder[2] = 3;
+					} else if (primaryLang.equals("3")){
+						langOrder[0] = 3;
+						langOrder[1] = 1;
+						langOrder[2] = 2;
+					} else {
+						langOrder[0] = 1;
+						langOrder[1] = 2;
+						langOrder[2] = 3;
+					}
+					
+					for (int i = 0; i < langOrder.length; i++) {
+						int langIndex = langOrder[i] - 1;
+						
+						portletNamesWithOrder.add(portletNameList.get(langIndex));
+					}
+					pvo.setPortletNameList(portletNamesWithOrder);
+				} else {
+					pvo.setPortletNameList(portletNameList);
+				}
 			}
 						
 			data.put("PortletList", portletList);
@@ -2564,7 +2827,7 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			String parentBoardId = request.getParameter("parentBoardId");
-			String lang = info.getLang();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			
 			List<PortalBoardTreeVO> boardTree = ezNewPortalService.getBoardTree(parentBoardId, companyId, tenantId);
 			
@@ -2573,10 +2836,10 @@ public class EzNewPortalGWController {
 			for (int i = 0; i < boardTreeCount; i++) {
 				PortalBoardTreeVO boardInfo= boardTree.get(i);
 				
-				if (lang.equals("1")) {
-					boardInfo.setText(commonUtil.cleanValue(boardInfo.getBoardName1()));
+				if (lang.equals("")) {
+					boardInfo.setText(boardInfo.getBoardName1());
 				} else {
-					boardInfo.setText(commonUtil.cleanValue(boardInfo.getBoardName2()));
+					boardInfo.setText(boardInfo.getBoardName2());
 				}
 				
 				if (!boardInfo.getParent().equals("top")) {
@@ -2812,11 +3075,12 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-			String lang = info.getLang();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			
 			List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userId, mode, companyId, tenantId);
 
 			for (BoardMyFavoriteVO fvo : resultList) {
-				if (lang.equals("2")) {
+				if (!lang.equals("")) {
 					fvo.setBoardName(fvo.getBoardName2());
 				}
 				
@@ -2970,7 +3234,7 @@ public class EzNewPortalGWController {
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 
-		String password = request.getParameter("password");
+		String password = jspw;
 		String userId = request.getParameter("userId");
 
 		try {
@@ -3015,18 +3279,24 @@ public class EzNewPortalGWController {
 				LOGGER.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);
 
 				Folder folder = ia.getFolder(folderPath);
+				
+				// Folder.getUnreadMessageCount() 메소드 동작 방식이 folder가 open 상태일 때는 읽지 않은 메일 갯수를 IMAP search 명령을
+				// 통해 비효율적으로 구하는 관계로 folder open 전에 호출함. open 상태가 아닐 때는 IMAP status 명령을 사용하며 status 명령이
+				// 더 효율적임.				
+				int unreadCount = ia.getUnreadCount(folderPath);
+				
 				folder.open(Folder.READ_ONLY);
 
 				Message[] messages = null;
 
 				// set mailCount
 				int mailCount = 7;
-				int unreadCount = ia.getUnreadCount(folderPath);
+
 				// if (unreadCount < mailCount) {
 				// mailCount = unreadCount;
 				// }
 
-				messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, null, false, false, false, "receivedDate", false, 0, mailCount, false, null, info.getTenantId());
+				messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, new Date(), false, false, false, "receivedDate", false, 0, mailCount, false, null, info.getTenantId());
 
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -3377,7 +3647,16 @@ public class EzNewPortalGWController {
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
 			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, info.getCompanyID(), info.getTenantId());
-
+			
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			int listCount = list.size();
+			
+			for (int i = 0; i < listCount; i++) {
+				if (lang != null && !lang.equals("")) {
+					list.get(i).setFormName(list.get(i).getFormName2());
+				}
+			}
+			
 			JSONObject data = new JSONObject();
 			data.put("resultList", list);
 
@@ -3444,7 +3723,6 @@ public class EzNewPortalGWController {
 			
 			String offset = info.getOffSet();
 			String offSetMin = commonUtil.getMinuteUTC(offset);
-
 			
 			String startDate = (request.getParameter("STARTDATE") == null || request.getParameter("STARTDATE").equals("")) ? request.getParameter("selectDate") : request.getParameter("STARTDATE");
 			String endDate = (request.getParameter("ENDDATE") == null || request.getParameter("ENDDATE").equals("")) ? request.getParameter("selectDate") : request.getParameter("ENDDATE");
@@ -3478,6 +3756,8 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 			String deptId = info.getDeptId();
+			//2020-02-24 김정언
+			String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", tenantId);
 			
 			List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(userId, lang, tenantId ,companyId);
 			List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(userId, lang, tenantId ,companyId);
@@ -3569,7 +3849,7 @@ public class EzNewPortalGWController {
 				pidList = idList;
 			}		
 			
-			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",tenantId, companyId, userId);		
+			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",tenantId, companyId, userId, deptId, useAnnualScheduleYN);		
 			
 			LOGGER.debug("sList : " + sList.toString());
 			result.put("status", "ok");
@@ -3800,7 +4080,7 @@ public class EzNewPortalGWController {
 				List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(info.getCompanyId(), info.getTenantId(), info.getLang(), userId, info.getDeptId());
 				
 				for (MenuInfoVO mVO : menuList) {
-					if (mVO.getMenuId()==9 && useAttitude2.equals("YES")) {
+					if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("attitude") && useAttitude2.equals("YES")) {
 						useAttitude = "YES";
 					}	
 				}
@@ -3857,9 +4137,12 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 			String deptId = info.getDeptId();
+			//2020-02-24 김정언
+			String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", tenantId);
 			
 			// 메일, 결재, 일정, 전자설문, 회람판, 근태관리 권한이 있는지 확인
-			String useQuestion = "NO";
+//			String useQuestion = "NO";
+			String useSurvey = "NO";
 			String useCircular = "NO";
 			String useMail = "NO";
 			String useApproval = "NO";
@@ -3867,12 +4150,20 @@ public class EzNewPortalGWController {
 
 			// 1. tenantConfig가 YES인지 -- 회람판(USE_CIRCULAR), 근태관리(USE_ATTITUDE),
 			// 전자설문(useQuestion)
-			useQuestion = ezCommonService.getTenantConfig("useQuestion", info.getTenantId());
+//			useQuestion = ezCommonService.getTenantConfig("useQuestion", info.getTenantId());
+			useSurvey = ezCommonService.getTenantConfig("useSurvey", info.getTenantId());
 			useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", info.getTenantId());
 			
+			// 2020-04-09 김민성 - 메일 config 추가
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
+			
 			// 2. 메뉴에 권한이 있는지 ================ 수정하기 start
-			if (useQuestion == null || useQuestion.equals("")) {
-				useQuestion = "NO";
+//			if (useQuestion == null || useQuestion.equals("")) {
+//				useQuestion = "NO";
+//			}
+			
+			if (useSurvey == null || useSurvey.equals("")) {
+				useSurvey = "YES";
 			}
 			
 			if (useCircular == null || useCircular.equals("")) {
@@ -3881,37 +4172,46 @@ public class EzNewPortalGWController {
 			
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
 			
-			boolean isUseQuestionAuth = false;
+//			boolean isUseQuestionAuth = false;
+			boolean isUseSurveyAuth = false;
 			
 			for (MenuInfoVO mVO : menuList) {
-				if (mVO.getMenuId()==3) {
-					useApproval = "YES";
-				} 
-				
-				if (mVO.getMenuId()==14 && useQuestion.equals("YES")) {
-					isUseQuestionAuth = true;
-				}
-				
-				if (mVO.getMenuId()==1) {
-					useMail = "YES";
-				}
-				
-				if (mVO.getMenuId()==2) {
-					useSchedule = "YES";
+				if (mVO.getMenuCode() != null) {
+					if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("survey") && useSurvey.equals("YES")) {
+						isUseSurveyAuth = true;
+					}
+					
+					if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("approval")) {
+						useApproval = "YES";
+					} 
+					
+					if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("mail")) {
+						useMail = "YES";
+					}
+					
+					if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("schedule")) {
+						useSchedule = "YES";
+					}
 				}
 			}
 			
-			if (isUseQuestionAuth) {
-				useQuestion = "YES";
+//			if (isUseQuestionAuth) {
+//				useQuestion = "YES";
+//			} else {
+//				useQuestion = "NO";
+//			}
+			
+			if (isUseSurveyAuth) {
+				useSurvey = "YES";
 			} else {
-				useQuestion = "NO";
+				useSurvey = "NO";
 			}
 			
 			boolean isUseCircular = false;
 			
 			for (MenuInfoVO mVO : menuList) {
 				
-				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("circular") && useCircular.equals("YES")) {
 					isUseCircular = true;
 					break;
 				} else {
@@ -3925,8 +4225,16 @@ public class EzNewPortalGWController {
 				useCircular = "NO";
 			}
 			
+			if(useExternalMailServer.equalsIgnoreCase("YES")) {
+				useMail = "NO";
+			} else {
+				useMail = "YES";
+			}
+			
 			String offset = info.getOffSet();
-			String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat adf = new SimpleDateFormat("yyyy-MM-dd");
+			String nowDate = adf.format(cal.getTime());
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
 			String password = jspw;
@@ -3934,13 +4242,20 @@ public class EzNewPortalGWController {
 			
 			JSONObject data = new JSONObject();
 
-			LOGGER.debug("useQuestion : " + useQuestion + ", useCircular : " + useCircular + ", useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
+			LOGGER.debug("useSurvey : " + useSurvey + ", useCircular : " + useCircular + ", useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
 
 			// 전자 설문 개수 불러오기
+			/*
 			if (useQuestion.equals("YES")) {
 				int pollCount = ezQuestionService.wpCountPollCount(userId, tenantId, offset, companyId);
-
+				
 				data.put("pollCount", pollCount);
+			}
+			*/
+			
+			if (useSurvey.equals("YES")) {
+				int surveyCnt = ezSurveyService.getSurveyIngCnt(info);
+				data.put("surveyCnt", surveyCnt);
 			}
 
 			// 오늘 일정 개수 불러오기
@@ -4028,7 +4343,7 @@ public class EzNewPortalGWController {
 				}
 
 				pidList += pidListSub;
-				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId);
+				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId, deptId, useAnnualScheduleYN);
 				int scheduleCount = sList.size();
 				data.put("scheduleCount", scheduleCount);
 			}
@@ -4102,7 +4417,8 @@ public class EzNewPortalGWController {
 			}
 			
 			data.put("useCircular", useCircular);
-			data.put("useQuestion", useQuestion);
+//			data.put("useQuestion", useQuestion);
+			data.put("useSurvey", useSurvey);
 			data.put("useMail", useMail);
 			data.put("useApproval", useApproval);
 			data.put("useSchedule", useSchedule);
@@ -4450,47 +4766,47 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 14));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 18));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 16));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 11));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 15));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 8));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 7));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 9));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 10));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 12));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 5));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
 			
 
@@ -4498,7 +4814,7 @@ public class EzNewPortalGWController {
 			String useInternet = config.getProperty("config.useInternet");
 			
 			if (useInternet.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getPortletId() == 14));
+				themePortletList.removeIf(vo -> (vo.getPortletCode() != null && vo.getPortletCode().equals("weather")));
 			}
 			
 			result.put("status", "ok");
@@ -4544,6 +4860,334 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("ezNewPortal G/W updateThemePortletUsed ended.");
+		return result;
+	}
+	
+	/**
+	 * 포탈개인화 G/W [GET] 직위직책 리스트 불러오기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/authorities/titles/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getTitleList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getTitleList started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String type = request.getParameter("type");
+			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			
+			List<OrganJobVO> titleList = ezNewPortalService.getTitleList(type, tenantId, companyId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", titleList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezNewPortal G/W getTitleList ended.");
+		return result;
+	}
+
+	/**
+	 * 포탈개인화 G/W [GET] 포틀릿 - 웹폴더 포틀릿 조회
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezportal/portlets/getWebFolderFileList", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getWebFolderFileList(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getWebFolderPortlet started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+
+			int tenantId = info.getTenantId();
+			JSONObject data = new JSONObject();
+			
+			String folderId = ezWebFolderService_y.folderIdByUserIdAndFolderType(userId, tenantId);
+			
+			List<FileVO> webFolderFileList = ezNewPortalService.getWebFolderFileList(folderId, tenantId);
+			data.put("fileList", webFolderFileList);
+			data.put("folderId", folderId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezNewPortal G/W getWebFolderPortlet ended.");
+		return result;
+	}
+
+	//2019-06-18 테마별, 포틀릿별 권한 설정 개발
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getThemeAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getThemeAuth started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			String lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
+			
+			Map<String, Object> themeAuth = ezNewPortalService.getThemeAuth(companyId, tenantId, themeId, lang);
+			JSONObject data = new JSONObject();
+			
+			data.put("themeAuthsY", themeAuth.get("themeAuthsY"));
+			data.put("themeAuthsN", themeAuth.get("themeAuthsN"));
+			
+			result.put("data", data);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getThemeAuth ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	public JSONObject updateThemeAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId, @RequestBody JSONObject jsonParam) throws Exception {
+		LOGGER.debug("ezNewPortal G/W updateThemeAuth started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			JSONArray themeAuths = (JSONArray) jsonParam.get("themeAuths");
+			int tenantId = userInfo.getTenantId();
+			
+			ezNewPortalService.updateThemeAuth(themeAuths, themeId, companyId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezNewPortal G/W updateThemeAuth ended.");
+		return result;
+	}
+	
+	/**
+	 * 포탈개인화 G/W [GET] 권한그룹 리스트 불러오기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/authorities/groups/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getGroupList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getGroupList started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			
+			List<OrganGroupVO> groupList = ezNewPortalService.getGroupList(tenantId, companyId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", groupList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getGroupList ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/checks/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	public JSONObject checkThemeAuthNoList(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId, @RequestBody JSONObject jsonParam) throws Exception {
+		LOGGER.debug("ezNewPortal G/W checkThemeAuthNoList started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			boolean totalCheck = true;
+			String lang = userInfo.getLang();
+			
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			JSONArray themeAuths = (JSONArray) jsonParam.get("themeAuths");
+			
+			for (Object item : themeAuths) {
+				if (item instanceof JSONObject) {
+					JSONObject themeAuth = (JSONObject) item;
+					String authId = themeAuth.get("userId").toString();
+					boolean checkThemeAuth = true;
+					if (themeAuth.get("accessYN").toString().equals("false")) {
+						if (themeAuth.get("userType").toString().equals("true")) {
+							LoginVO authInfo = commonUtil.getUserForGw(authId, serverName);
+							String deptPath = authInfo.getDeptPathCode();
+							
+							checkThemeAuth = ezNewPortalService.checkThemeAuthNoList(companyId, tenantId, authId, deptPath, themeId, lang);
+							LOGGER.debug("checkThemeAuth : " + checkThemeAuth + ", authId : " + authId + ", tenantId : " + tenantId + ", deptPath : " + deptPath);
+						} else if (themeAuth.get("userType").toString().equals("false")) {
+							String deptPath = ezOrganService.getDeptPath(authId, tenantId);
+							checkThemeAuth = ezNewPortalService.checkThemeAuthNoList(companyId, tenantId, null, deptPath, themeId, lang);
+							LOGGER.debug("checkThemeAuth : " + checkThemeAuth + ", authId : " + authId + ", tenantId : " + tenantId + ", deptPath : " + deptPath);
+						}
+						
+						if (!checkThemeAuth) {
+							totalCheck = false;
+							break;
+						}
+					}
+					
+				}
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", totalCheck);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W checkThemeAuthNoList ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/authorities/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getPortletAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int portletId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getPortletAuth started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			String lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
+			
+			Map<String, Object> portletAuth = ezNewPortalService.getPortletAuth(companyId, tenantId, portletId, lang);
+
+			JSONObject data = new JSONObject();
+			
+			data.put("portletAuthsY", portletAuth.get("portletAuthsY"));
+			data.put("portletAuthsN", portletAuth.get("portletAuthsN"));
+			
+			result.put("data", data);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getPortletAuth ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/authorities/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	public JSONObject updatePortletAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int portletId, @RequestBody JSONObject jsonParam) throws Exception {
+		LOGGER.debug("ezNewPortal G/W updatePortletAuth started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			JSONArray portletAuths = (JSONArray) jsonParam.get("portletAuths");
+			int tenantId = userInfo.getTenantId();
+			
+			ezNewPortalService.updatePortletAuth(portletAuths, portletId, companyId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezNewPortal G/W updatePortletAuth ended.");
+		return result;
+	}
+	
+	// 2020-01-22 유은정  메뉴코드로 메뉴 권한 체크 관련 로직
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/menu/access", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject checkMenuAuth(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezNewPortal G/W checkMenuAuth started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String menuCode = request.getParameter("menuCode");
+			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String[] menuArr = menuCode.split(",");
+			
+			ArrayList<String> menuCodeList = new ArrayList<>(Arrays.asList(menuArr));
+			int tenantId = userInfo.getTenantId();
+			String deptId = userInfo.getDeptID();
+			String companyId = userInfo.getCompanyID();
+			String lang = userInfo.getLang();
+			
+			Map<String, Boolean> menuAccess = commonUtil.checkMenuAccess(menuCodeList, companyId, tenantId, lang, userId, deptId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("menuAccess", menuAccess);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W checkMenuAuth ended.");
 		return result;
 	}
 }

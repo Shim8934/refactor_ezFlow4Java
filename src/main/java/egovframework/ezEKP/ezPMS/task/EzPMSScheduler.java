@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -36,9 +35,6 @@ public class EzPMSScheduler {
 	@Autowired
 	private CommonUtil commonUtil;
 	
-	@Autowired
-	private Properties config;
-	
 	@Resource(name = "EzPMSService")
 	private EzPMSService ezPMSService;
 	
@@ -63,7 +59,9 @@ public class EzPMSScheduler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzPMSScheduler.class);
 	
 	//예정 종료일을 넘어선 경우에는 진행 프로젝트의 상태를 지연으로 변경 (진행 프로젝트만 해당 됨)
-	@Scheduled(cron = "${config.crone.pmsUpdateLateStatus}")
+//	@Scheduled(cron = "${config.crone.pmsUpdateLateStatus}")
+	// PMS가 아직 퍼스널에 정식 머지된 상황이 아니기 때문에 주석처리. jmocha_scheduler_server에서 삭제하는 방법을 취해보려 했으나 일단 이메일 스케쥴러를 타게 되면 자동으로 insert되기 때문에 이 방법밖에는 없음
+	// 향후 별도의 config으로 사용하지 않을 경우 돌지 않게할 필요가 있음. 이 모듈을 사용하지 않는 사이트의 경우 불필요한 리소스 낭비 2020-01-02 임민석
 	public void updateLateStatus() throws Exception {
 		LOGGER.debug("updateLateStatus started.");
 		

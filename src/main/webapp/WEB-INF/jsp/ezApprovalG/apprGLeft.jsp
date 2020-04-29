@@ -38,6 +38,11 @@
 			#mCSB_1_container {
 				margin-right: 0px;
 			}
+			.node_normal, .node_selected {
+				overflow: hidden;
+			    text-overflow: ellipsis;
+			    display: inline-block;
+			}
 	    </style>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.7.2.min.js')}"></script>
@@ -92,6 +97,11 @@
 		            $(".sbHolder").each(function (index) {
 		                $(this).addClass('instance');
 		            });
+		         //19.08.05 김보미 - 마우스 클릭시 볼드체   
+		         $(document).on("click", "span.list_text", function(){
+		        	 $("#left li").removeClass("on");
+		        	 $(this).parent().addClass("on");
+		         })
 		    });
 		    document.onselectstart = function () {
 		    	 if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -123,7 +133,7 @@
 		            treeView.DataBind("divUserContTree");
 
 		            //title3[0].setAttribute("TITLE", title3[0].innerHTML); 
- 		            $(".node_normal").css("width", "135px");
+ 		            $(".node_normal").css("width", "145px");
  		            
 					var node = $(".node_normal");
 					
@@ -185,7 +195,7 @@
 		        leftResize();
 		        $(".apprListBox").mCustomScrollbar({
 	        		theme : "dark"
-	        	});	
+	        	});
 		    };
 		    
 		    function UserContRequestData(pNodeID, pTreeID) {
@@ -202,7 +212,7 @@
 	            treeView.LoadFromID(pTreeID);
 	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID);
 	            
-	            /* var node = document.getElementById(pNodeID);
+	            var node = document.getElementById(pNodeID);
 		        var title2 = node.getElementsByClassName("node_div");
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
 		        
@@ -211,11 +221,11 @@
 		        }
 		        for(var i=0; i<title2.length; i++) {
 		        	var title3 = title2[i].getElementsByClassName("node_normal");
-		        	title3[0].setAttribute("TITLE", title3[0].innerHTML); 
-		        	title3[0].style.width = 135 - 16*(nodeLevel-1) +'px';
-		        	title3[0].style.textOverflow = 'ellipsis';
-		        	title3[0].style.overflow = 'hidden';
-		        } */		        
+		        	//title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+		        	title3[0].style.width = 145 - 16*(nodeLevel-1) +'px';
+		        	//title3[0].style.textOverflow = 'ellipsis';
+		        	//title3[0].style.overflow = 'hidden';
+		        }
 	        }
 		    
 		    function Tree_setconfig() {
@@ -276,7 +286,7 @@
 	            treeView.DataSource(xmlDomRet);
 	            treeView.DataBind("divUserContTree");
 	            
-	            $(".node_normal").css("width", "135px");
+	            $(".node_normal").css("width", "145px");
  		          
 				var node = $(".node_normal");
 					
@@ -989,6 +999,11 @@
 		                	PresentOpen = "DOC_ADMIN";
 		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forDoc.do?type=user";
 		                	break;
+						case "openGov":
+							//원문공개문서함
+							PresentOpen = "DOC_ADMIN";
+							window.parent.frames.right.document.location.href = "/admin/ezApprovalG/openGovForDoc.do?type=admin";
+							break;	
 		            }
 		        } catch (e) { }
 		    }
@@ -1173,12 +1188,12 @@
                    	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL5" onClick="setPresentValue('<spring:message code='ezApprovalG.t257'/>');convMain('6','')"><spring:message code='ezApprovalG.t257'/><span id=count6></span></span></li>
                   	<c:if test="${approvalFlag == 'G'}">
 						<c:if test="${infoXML != '' && infoXML != null }">
-                          	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL9" onclick="setPresentValue('<spring:message code='ezApprovalG.t1751'/>');convMain('9','')"><spring:message code='ezApprovalG.t1751'/></span></span></li>
+                          	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL9" onclick="setPresentValue('<spring:message code='ezApprovalG.t1751'/>');convMain('9','')"><spring:message code='ezApprovalG.t1751'/></span></li>
 						</c:if>
 					</c:if>
 					<c:if test="${userSendOut == 'YES'}">
                        	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL7" onclick="setPresentValue('<spring:message code='ezApprovalG.t1752'/>');convMain('7','')"><spring:message code='ezApprovalG.t1752'/><span id=count7></span></span></li>
-                       	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL8" onclick="setPresentValue('<spring:message code='ezApprovalG.t1275'/>');convMain('8','')"><spring:message code='ezApprovalG.t1275'/></span></span></li>
+                       	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL8" onclick="setPresentValue('<spring:message code='ezApprovalG.t1275'/>');convMain('8','')"><spring:message code='ezApprovalG.t1275'/></span></li>
 					</c:if>
 		        </ul>
 		        <h2 class="off" id="compH2">
@@ -1295,6 +1310,13 @@
                            	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="approvalForDoc_sub01" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.lhj14'/></span></li>
                            	<li><span class="sub_iconLNB tree_appr_complete"></span><span class="list_text" id="approvalForDoc_sub02" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.lhj15'/></span></li>
 						</ul>
+					</c:if>
+				</c:if>
+				<c:if test="${useOpenGov == 'YES'}">
+					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'ff=1')}">
+						<h2>
+							<span class="h2Title" id="openGov" onClick="Menu_Click(this)">원문공개문서함</span>
+						</h2>
 					</c:if>
 				</c:if>
 			</div>

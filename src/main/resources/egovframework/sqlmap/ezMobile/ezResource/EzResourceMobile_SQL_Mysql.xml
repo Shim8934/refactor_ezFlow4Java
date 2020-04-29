@@ -20,6 +20,8 @@
 		<result property="isUse"			column="ISUSE"				columnIndex="8"/>
 		<result property="useCompany"		column="USECOMPANY"			columnIndex="9"/>
 		<result property="calendarDay"		column="CALENDARDAY"			columnIndex="10"/>
+		<result property="holidayFlag"		column="HOLIDAYFLAG"			columnIndex="11"/>
+		<result property="holidayRepeat"		column="HOLIDAYREPEAT"			columnIndex="12"/>
 		</resultMap>
 	
 		<resultMap class="MResourceGetScheduleVO" 		id="resGetScheduleListVO">
@@ -684,7 +686,9 @@
                 	A.BRD_GB = '1'
 				AND
                 	A.TENANT_ID = #tenantID#		
-				
+			]]>
+			<isNotEqual property="v_PAUTHYN" compareValue="N">	
+		<![CDATA[
 			UNION
 			
 			SELECT
@@ -706,17 +710,14 @@
 				A.BRD_COMPANY = #v_PBRDCOMPANY#
 			AND 
 				A.BRD_GB = '2'
-			]]>	
-			<isNotEqual property="v_PAUTHYN" compareValue="A">			
-      		AND
-            	A.BRD_UPPER IN (SELECT B.RESID FROM TBL_RS_RESACL B WHERE (B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone') AND A.TENANT_ID = B.TENANT_ID )
-			</isNotEqual>
-			<![CDATA[
+			AND
+					A.APPROVEFLAG <> '2'
 			AND
                 A.TENANT_ID = #tenantID#
+            ]]>
+           </isNotEqual>
       	   ORDER BY
            BRD_GB, BRD_STEP	
-		]]>
 	</select>
   
   	<insert id="MResourceDAO.addResSch" parameterClass="Map" >
@@ -762,7 +763,6 @@
 		</isNotEmpty>
 		<![CDATA[
                 ALERTTIME = #v_PALERTTIME#,
-                APPROVEFLAG = IFNULL(#v_PAPPROVEFLAG#,'0'),
                 ALLDAY = IFNULL(#v_PALLDAY#,'0'),             
                 IMPORTANCE = #v_PIMPORTANCE#
 			WHERE
@@ -911,6 +911,8 @@
 				A.TENANT_ID = #tenantID#
 			AND 
 				A.RESCOMPANY = #v_PCOMPANYID#
+			AND
+				B.APPROVEFLAG <> '2'
       	   ORDER BY
            C.BRD_UPPER, C.BRD_STEP, B.BRD_STEP	
 		]]>
@@ -1052,6 +1054,8 @@
 			</isEmpty>	
 			<![CDATA[   	
 			AND
+				C.APPROVEFLAG <> '2'
+			AND
 				A.TENANT_ID = #tenantID#	
 			GROUP BY
 				A.NUM
@@ -1140,6 +1144,8 @@
 			<![CDATA[    
 			AND 
 				A.TENANT_ID = #tenantID#	
+			AND
+				D.APPROVEFLAG <> '2'
         	ORDER BY
         		STARTDATE ASC,
                 ENDDATE DESC
@@ -1325,7 +1331,9 @@
 	                ifnull(isrepeat, '0') isrepeat,
 	                ifnull(isuse, '0') isuse,
 	                ifnull(isrest, '0') isrest,
-	                usecompany
+	                usecompany,
+	                holidayflag,
+	                holidayrepeat
 	           	from 
 					tbl_holidaylist
 				where
@@ -1345,7 +1353,9 @@
 		                ifnull(isrepeat, '0') isrepeat,
 		                ifnull(isuse, '0') isuse,
 		                ifnull(isrest, '0') isrest,
-		                usecompany
+		                usecompany,
+	                	holidayflag,
+	                	holidayrepeat
 		           	from 
 		           		tbl_holidaylist 
 					where  
@@ -1366,7 +1376,9 @@
 		                ifnull(isrepeat, '0') isrepeat,
 		                ifnull(isuse, '0') isuse,
 		                ifnull(isrest, '0') isrest,
-		                usecompany
+		                usecompany,
+	                	holidayflag,
+	              		holidayrepeat
 					from 
 						tbl_holidaylist 
 					where  
@@ -1484,7 +1496,7 @@
 			AND
             	( C.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND C.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )	
 			OR 
-				C.OWNERID = #v_PUSERID# OR C.OWNERID LIKE CONCAT('%', ',' , #v_PUSERID#) OR C.OWNERID LIKE CONCAT(#v_PUSERID#, ',' , '%') )
+				C.OWNERID = #v_PUSERID# OR C.OWNERID LIKE CONCAT('%', ',' , #v_PUSERID#) OR C.OWNERID LIKE CONCAT(#v_PUSERID#, ',' , '%') OR C.OWNERID LIKE CONCAT('%', ',', #v_PUSERID#, ',', '%') )
 			</isNotEqual>
 			<isNotEmpty property="v_POWNERID">				
 			AND 
@@ -1584,7 +1596,7 @@
 			AND
             	( D.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND D.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )
 			 OR 
-			 	D.OWNERID = #v_PUSERID# OR D.OWNERID LIKE CONCAT('%', ',' , #v_PUSERID#) OR D.OWNERID LIKE CONCAT(#v_PUSERID#, ',' , '%') )
+			 	D.OWNERID = #v_PUSERID# OR D.OWNERID LIKE CONCAT('%', ',' , #v_PUSERID#) OR D.OWNERID LIKE CONCAT(#v_PUSERID#, ',' , '%') OR D.OWNERID LIKE CONCAT('%', ',', #v_PUSERID#, ',', '%') )
 			 </isNotEqual>
 			<isNotEmpty property="v_POWNERID">				
 			AND
@@ -1643,7 +1655,7 @@
       		AND
             	( A.BRD_UPPER IN (SELECT B.RESID FROM TBL_RS_RESACL B WHERE (B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone') AND A.TENANT_ID = B.TENANT_ID AND B.ACCESS_LVL = '1' )
             OR
-            	A.OWNERID = #v_PUSERID# OR A.OWNERID LIKE CONCAT('%', ',' , #v_PUSERID#) OR A.OWNERID LIKE CONCAT(#v_PUSERID#, ',' , '%') )
+            	A.OWNERID = #v_PUSERID# OR A.OWNERID LIKE CONCAT('%', ',' , #v_PUSERID#) OR A.OWNERID LIKE CONCAT(#v_PUSERID#, ',' , '%') OR A.OWNERID LIKE CONCAT('%', ',', #v_PUSERID#, ',', '%'))
 			</isNotEqual>
 			<![CDATA[
 			AND
@@ -1661,8 +1673,6 @@
 				TBL_RS_RESACL 
 			WHERE 
 				(
-						MEMBER_ID = #v_PUSERCOMPANY# 
-					OR 
 						MEMBER_ID = #v_PUSERDEPT# 
 					OR 
 						MEMBER_ID = #v_PUSERID# 
@@ -1670,8 +1680,41 @@
 						MEMBER_ID = 'everyone') 
 			AND 
 				TENANT_ID = #tenantID#  
+			]]>
+			<isEmpty property="v_brdID">	
+				AND 
+					ACCESS_LVL = 1 
+			</isEmpty>
+			<isNotEmpty property="v_brdID">
+				AND
+					RESID = #v_brdID#
+			</isNotEmpty>
+			AND
+				COMPANYID = #v_PBRDCOMPANY#
+	</select>
+	
+	<select id="MResourceDAO.getResApprBrdListCheck2" parameterClass="Map" resultMap="mResourceApprBrdVO">
+		<![CDATA[
+			SELECT
+				RESID
+			FROM 
+				TBL_RS_RESACL 
+			WHERE 
+				MEMBER_ID = #v_PUSERDEPT# 
+			AND 
+				TENANT_ID = #tenantID#  
+			]]>
+			<isEmpty property="v_brdID">	
 			AND 
 				ACCESS_LVL = 1 
+			</isEmpty>
+			<isNotEmpty property="v_brdID">
+			AND
+				RESID = #v_brdID#
+			</isNotEmpty>
+			<![CDATA[
+			AND
+				SDA_YN = 'Y'
 			AND
 				COMPANYID = #v_PBRDCOMPANY#
 		]]>
@@ -1701,12 +1744,25 @@
 			FROM 
 				TBL_RS_BRD
 			WHERE 
-				( OWNERID = #userId# OR OWNERID LIKE CONCAT('%', ',', #userId#) OR OWNERID LIKE CONCAT(#userId#, ',', '%') )
+				( OWNERID = #userId# OR OWNERID LIKE CONCAT('%', ',', #userId#) OR OWNERID LIKE CONCAT(#userId#, ',', '%') OR OWNERID LIKE CONCAT('%', ',', #userId#, ',', '%') )
 			AND 
 				TENANT_ID = #tenantId#  
 			AND
 				BRD_COMPANY = #companyId#
 		]]>
+	</select>
+	
+	<select id="MResourceDAO.getResUpperBrdID" parameterClass="Map" resultClass="String">	
+			SELECT
+				if(BRD_GB = '1', #ownerId#, BRD_UPPER) BRD_UPPER
+			FROM 
+				TBL_RS_BRD
+			WHERE 
+				BRD_ID = #ownerId#
+			AND 
+				TENANT_ID = #tenantId#  
+			AND
+				BRD_COMPANY = #companyId#
 	</select>
 </sqlMap>
 

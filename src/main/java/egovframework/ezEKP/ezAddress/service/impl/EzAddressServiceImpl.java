@@ -48,6 +48,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 	@Resource(name = "EzAddressDAO")
 	private EzAddressDAO ezAddressDAO;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, String> getTopFolderSubCount(int tenantId, String userId, String deptId, String companyId)
 			throws Exception {
@@ -395,8 +396,8 @@ public class EzAddressServiceImpl implements EzAddressService {
 			filterValue = pFilter.substring(splitIndex + 1);
 		}
 
-		filterValue = filterValue.replace("%", "\\%").replace("_", "\\_");
-
+//		filterValue = filterValue.replace("%", "\\%").replace("_", "\\_");
+		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 
 		String orderOptionParam = "orderOption=" + URLEncoder.encode(pOrderOption, "UTF-8");
@@ -517,6 +518,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 			vo.setsHomeAddr((String) resultObject.get("sHomeAddr"));
 			vo.setsMemo((String) resultObject.get("sMemo"));
 			vo.setsType((String) resultObject.get("sType"));
+			vo.setsFurigana((String) resultObject.get("sFurigana"));
 
 			if (primary.equals("1")) {
 				vo.setCreatorName((String) resultObject.get("creatorName"));
@@ -537,7 +539,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 	public void insertAddress(int tenantId, String pOwnerId, String pFolderId, String pCreatorId, String pCreatorName,
 			String pCreatorName2, String sName, String sEmail, String sCompany, String sDept, String sTitle,
 			String sCompanyPhone, String sFax, String sMobile, String sHomePage, String sCompanyZip,
-			String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo, String sType) throws Exception {
+			String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo, String sType, String sFurigana) throws Exception {
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 
 		String folderIdIdParam = "folderId=" + URLEncoder.encode(pFolderId, "UTF-8");
@@ -560,12 +562,13 @@ public class EzAddressServiceImpl implements EzAddressService {
 		String sHomeAddrParam = "sHomeAddr=" + URLEncoder.encode(sHomeAddr, "UTF-8");
 		String sMemoParam = "sMemo=" + URLEncoder.encode(sMemo, "UTF-8");
 		String sTypeParam = "sType=" + URLEncoder.encode(sType, "UTF-8");
+		String sFuriganaParam = "sFurigana=" + URLEncoder.encode(sFurigana, "UTF-8");
 
 		String inputParams = folderIdIdParam + "&" + ownerIdParam + "&" + creatorIdParam + "&" + creatorNameParam + "&"
 				+ creatorName2Param + "&" + sNameParam + "&" + sEmailParam + "&" + sCompanyParam + "&" + sDeptParam
 				+ "&" + sTitleParam + "&" + sCompanyPhoneParam + "&" + sFaxParam + "&" + sMobileParam + "&"
 				+ sHomepageParam + "&" + sCompanyZipParam + "&" + sCompanyAddrParam + "&" + sHomeZipParam + "&"
-				+ sHomeAddrParam + "&" + sMemoParam + "&" + sTypeParam;
+				+ sHomeAddrParam + "&" + sMemoParam + "&" + sTypeParam + "&" + sFuriganaParam;
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
@@ -584,7 +587,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 	public void updateAddress(int tenantId, String pAddressId, String pModifierId, String pModifierName,
 			String pModifierName2, String sName, String sEmail, String sCompany, String sDept, String sTitle,
 			String sCompanyPhone, String sFax, String sMobile, String sHomePage, String sCompanyZip,
-			String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo) throws Exception {
+			String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo, String sFurigana) throws Exception {
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 
 		String addressIdIdParam = "addressId=" + URLEncoder.encode(pAddressId, "UTF-8");
@@ -605,12 +608,13 @@ public class EzAddressServiceImpl implements EzAddressService {
 		String sHomeZipParam = "sHomeZip=" + URLEncoder.encode(sHomeZip, "UTF-8");
 		String sHomeAddrParam = "sHomeAddr=" + URLEncoder.encode(sHomeAddr, "UTF-8");
 		String sMemoParam = "sMemo=" + URLEncoder.encode(sMemo, "UTF-8");
+		String sFuriganaParam = "sFurigana=" + URLEncoder.encode(sFurigana, "UTF-8");
 
 		String inputParams = addressIdIdParam + "&" + modifierIdParam + "&" + modifierNameParam + "&"
 				+ modifierName2Param + "&" + sNameParam + "&" + sEmailParam + "&" + sCompanyParam + "&" + sDeptParam
 				+ "&" + sTitleParam + "&" + sCompanyPhoneParam + "&" + sFaxParam + "&" + sMobileParam + "&"
 				+ sHomepageParam + "&" + sCompanyZipParam + "&" + sCompanyAddrParam + "&" + sHomeZipParam + "&"
-				+ sHomeAddrParam + "&" + sMemoParam;
+				+ sHomeAddrParam + "&" + sMemoParam + "&" + sFuriganaParam;
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(

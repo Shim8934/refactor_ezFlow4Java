@@ -1595,6 +1595,40 @@
 							return;				    			
 			    	}
 			    }
+			    
+			    var changeOpenGovInfo_cross_dialogArguments = new Array();
+			    function btnChangeOpenGovInfo_onclick() {
+			        var DocList = new ListView();
+			        DocList.LoadFromID("DocList");
+			        var selRow = DocList.GetSelectedRows();
+			        if (selRow.length != 0) {
+			            var tr = selRow[0];
+			            var para = new Array();
+			            para[0] = tr.getAttribute("DATA6");
+			            para[1] = tr.getAttribute("DATA8");
+			            para[2] = arr_userinfo[1];
+			            para[3] = arr_userinfo[2];
+			            para[4] = g_bRecAdmin;
+			            para[5] = tr.getAttribute("DATA1");
+			
+			            var url = "/ezApprovalG/changeOpenGovInfo.do";
+			
+			            changeOpenGovInfo_cross_dialogArguments[0] = para;
+			            changeOpenGovInfo_cross_dialogArguments[1] = btnChangeOpenGovInfo_onclick_Complete;
+			
+			            var OpenWin = window.open(url, "ChangeOpenGovInfo_Cross", GetOpenWindowfeature(615, 510));
+			            try { OpenWin.focus(); } catch (e) { }
+			        }
+			        else {
+			            OpenAlertUI("<spring:message code='ezApprovalG.t632'/>");
+			        }
+			    }
+			
+			    function btnChangeOpenGovInfo_onclick_Complete(rtn) {
+			        if (rtn[0] == "TRUE") {
+			            GetRecordList();
+			        }
+			    }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1658,6 +1692,9 @@
 	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	            <li id="tdGongRam"><span id="GongRam" onclick="return btnSendAround_onclick()"><spring:message code='ezApprovalG.t1428'/></span></li>
 	            <li id="tdCabSelect"><span id="CabSelect" onclick="return CabinetSelect_onclick()"><spring:message code='ezApprovalG.t941'/></span></li>
+<%-- 	            <c:if test=""> 원문정보공개 사용하면 보이게 해줘야함 --%>
+<%-- 		            <li id="tdModifyOpenGov" style="<c:if test="${useOpenGov != 'YES'}">display:none;</c:if>"><span id="ModifyOpenGov" onclick="return btnChangeOpenGovInfo_onclick()">원문공개수정</span></li> --%>
+<%-- 	            </c:if> --%>
 	            <li id="tdSearchRec"><span class="icon16 icon16_search" id="SearchRec" onclick="return btnSearchRec_onclick(0,'OPEN')"></span></li>
 	            <li id="tdViewCabList" style="display:none"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
 	            <li style="vertical-align: middle; float:right"> <select id="rec_year" name="rec_year" style="width:75px;" onchange="onSelect_Year(this);">    

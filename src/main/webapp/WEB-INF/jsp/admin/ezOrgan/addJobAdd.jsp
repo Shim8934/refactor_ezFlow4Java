@@ -64,6 +64,7 @@
 		        createNodeInsert(xmlpara, objNode, "DATA");
 		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 		        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;mail;displayName");
+		        createNodeAndInsertText(xmlpara, objNode, "DISPLAY_TRASH_DEPT", "");
 
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 		        xmlHTTP.send(xmlpara);
@@ -231,7 +232,9 @@
 	        </tr>
 	        <tr>
 	            <td>
-	                <div style="border: 0px solid #ddd; margin-top:5px; height: 250px; width: auto; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
+	            	<div style="width:300px;">
+		                <div style="border: 0px solid #ddd; padding-top:5px; height: 250px; width: auto; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
+	                </div>
 	            </td>
 	        </tr>
 	    </table>

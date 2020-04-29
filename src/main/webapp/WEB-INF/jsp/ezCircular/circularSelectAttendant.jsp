@@ -54,6 +54,7 @@
 	        var ReturnFunction;
 	        var deptClickFlag; // 2018-05-11 (문성업) 직원 맴버를 전원 클릭하는 것 같은 효과를 나타내는 마우스 효과 (수정)
 	        var deptID = "<c:out value='${deptID}'/>";
+	        var lang = "<c:out value='${userInfo.lang}'/>";
 	        
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -197,8 +198,12 @@
 	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptName1 + "]]></DATA4>";
 	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName2 + "]]></DATA5>";
 	                pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
-	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
-	                
+	                if(lang == "1") {
+	               	 	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+	                }
+	                else {
+	                	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName2 + "]]></VALUE></CELL></ROW>";
+	                }
 	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                var Resultxml = loadXMLString(pparsingXML2);
 	
@@ -1134,14 +1139,14 @@
 					document.getElementById("Search_txtlist_table").style.display = "none";
 
 					if (pSeach) {
-						document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >"
-								+ strLang257
-								+ ""
-								+ "-[<span style='color:#017BEC;'>"
+						document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >"
+								+ "<span id='spn_deptName'>" + strLang257
+								+ "</span>"
+								+ "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span class='countColor'>"
 								//2018-07-10 김보미 - 전체 결과 갯수로 변경
 	 							//+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
 								+ getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])
-								+ strLang256 + "</span>]";
+								+ "</span></span>";
 						SelectDeptNM.setAttribute("countinfo", "1");
 					}
 				} else {
@@ -1515,7 +1520,7 @@
 								cell : "company;description;displayName;title;telephoneNumber;"
 										+ document
 												.getElementById("search_type").value,
-								prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+								prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
 								page : CurPage,
 								type : "user"
 							},
@@ -1795,32 +1800,35 @@
 								circularDeptList = "";
 								list = result.circularDeptList;
 
-								list
-										.forEach(function(vo, index) {
-											circularDeptList += ("<tr id='"
-													+ vo.circularBMID + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
-											circularDeptList += ("<td style='width:5%'>"
-													+ (index + 1) + "</td>");
-											circularDeptList += ("<td style='width:45%'>"
-													+ vo.title + "</td>");
-											circularDeptList += ("<td style='width:20%'>"
-													+ vo.regDate.substring(0,
-															16) + "</td>");
-
-											if (vo.memberNameCount == 0) {
-												circularDeptList += ("<td style='width:30%'>"
-														+ vo.memberName + "</td>");
-											} else {
-												circularDeptList += ("<td style='width:30%'>"
-														+ vo.memberName
-														+ " <spring:message code='ezCircular.t50' /> "
-														+ vo.memberNameCount
-														+ " <spring:message code='ezCircular.t51' />" + "</td>");
-											}
-
-											//circularDeptList += ("<td style='width:13%'>");
-											circularDeptList += ("</tr>");
-										});
+								if(list.length > 0) {
+									list.forEach(function(vo, index) {
+										circularDeptList += ("<tr id='"
+												+ vo.circularBMID + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
+										circularDeptList += ("<td style='width:5%'>"
+												+ (index + 1) + "</td>");
+										circularDeptList += ("<td style='width:45%'>"
+												+ vo.title + "</td>");
+										circularDeptList += ("<td style='width:20%'>"
+												+ vo.regDate.substring(0,
+														16) + "</td>");
+	
+										if (vo.memberNameCount == 0) {
+											circularDeptList += ("<td style='width:30%'>"
+													+ vo.memberName + "</td>");
+										} else {
+											circularDeptList += ("<td style='width:30%'>"
+													+ vo.memberName
+													+ " <spring:message code='ezCircular.t50' /> "
+													+ vo.memberNameCount
+													+ " <spring:message code='ezCircular.t51' />" + "</td>");
+										}
+	
+										//circularDeptList += ("<td style='width:13%'>");
+										circularDeptList += ("</tr>");
+									});
+								} else {
+									circularDeptList = "<tr><td colspan='4' style='text-align:center;'><spring:message code='ezCircular.t47' /></td></tr>";
+								}
 
 								$("#List_TBODY").html("");
 								$("#List_TBODY").append(circularDeptList);
@@ -2037,6 +2045,10 @@
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezCircular.t156' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezCircular.t157' /></option>
 	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezCircular.t158' /></option>
+	                                                        <c:if test="${primaryLang eq '3' }">
+		                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+		                                                    </c:if>
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezCircular.t159' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezCircular.t160' /></option>
 	                                                    </select>

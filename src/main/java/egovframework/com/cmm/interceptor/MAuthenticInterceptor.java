@@ -42,9 +42,6 @@ public class MAuthenticInterceptor extends WebContentInterceptor {
     private EgovFileScrty egovFileScrty;
     
     @Autowired
-    private CommonUtil commonUtil;
-    
-    @Autowired
 	private Properties config;
     
     /** Logger */

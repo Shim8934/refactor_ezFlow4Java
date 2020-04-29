@@ -27,12 +27,18 @@
    			var userName = "<c:out value='${userName}'/>";
 			var userName2 = "<c:out value='${userName2}'/>";
 			var listSize = "<c:out value='${listSize}'/>";
+			var lang = "<c:out value='${userInfo.primary}'/>";
     		
 	    	window.onload = function() {				
 	    		window.resizeTo(450 + (window.outerWidth - window.innerWidth), 275 + (window.outerHeight - window.innerHeight));
 	    		
 	    		document.getElementById("title").value = "<c:out value='${title}'/>";
-	        	document.getElementById("receiverlist").innerHTML = "<c:out value='${userName}'/>";
+	    		if(lang == "1") {
+	    			document.getElementById("receiverlist").innerHTML = "<c:out value='${userName}'/>";
+	    		}
+	    		else {
+	        		document.getElementById("receiverlist").innerHTML = "<c:out value='${userName2}'/>";
+	    		}
 	        	document.getElementById("receiverID").innerHTML = "<c:out value='${userID}'/>";
 	        	
 				g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };

@@ -8,7 +8,7 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
 
         name = pPrefix + "docnumber";
         
-        if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
+        if (approvalFlag == 'G' && (pDraftFlag == "SUSIN" || pDraftFlag == "HABYUI") && useReceiveDocNo == 'NO') {
         	name = "receiptnumber";
         }
         
@@ -341,6 +341,9 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
         	if (!field) {return true;}
         	
         	fractionsymbol = field.textContent;
+			if (pDraftFlag == "HABYUI" || pDraftFlag == "HAPYUI") {
+				fractionsymbol = arr_userinfo[5] + "-";
+			}
         	
         	var result = getCabinetSN(pDeptID);
         	var dataNodes = GetChildNodes(loadXMLString(result));
@@ -445,6 +448,7 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     	}
     }
 }
+
 function getCabinetSN(pDeptID) {
 	var rtnVal = "";
 	

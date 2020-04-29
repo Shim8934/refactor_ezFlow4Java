@@ -7,6 +7,15 @@
 	    <title>address_search</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
+	    <style>
+	    	.emptyDiv {
+	    		height: 140px;
+	    		padding-top: 60px;
+	    		color : #d0d0d0;
+	    		font-size : 12px;
+	    		font-weight: bold;
+	    	}
+	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezAddress.e1', 'msg')}"></script>

@@ -11,6 +11,7 @@
 	<typeAlias  alias="MailCancelVO" type="egovframework.ezEKP.ezEmail.vo.MailCancelVO"/>
 	<typeAlias  alias="MailPOP3VO" type="egovframework.ezEKP.ezEmail.vo.MailPOP3VO"/>
 	<typeAlias  alias="MailBlobVO" type="egovframework.ezEKP.ezEmail.vo.MailBlobVO"/>
+	<typeAlias  alias="MailDeletedIdVO" type="egovframework.ezEKP.ezEmail.vo.MailDeletedIdVO"/>
 	
 	<resultMap id="mailGeneral" class="MailGeneralVO">
 		<result property="listCount" column="LISTCOUNT" columnIndex="1"/>
@@ -96,6 +97,13 @@
 	
 	<resultMap id="mailBlob" class="MailBlobVO">
 		<result property="mailBlobId" column="MAIL_BLOB_ID" />
+		<result property="mailBoxId" column="MAILBOX_ID" />
+		<result property="mailUid" column="MAIL_UID" />
+	</resultMap>
+
+	<resultMap id="mailDeletedId" class="MailDeletedIdVO">
+		<result property="mailBoxId" column="MAILBOX_ID" />
+		<result property="mailUid" column="MAIL_UID" />
 	</resultMap>
 	
 	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
@@ -212,7 +220,7 @@
 	
 	<select id="EzEmailDAO.getOrphanedMailBlobList" resultMap="mailBlob">
 		<![CDATA[
-			SELECT MAIL_BLOB_ID
+			SELECT MAIL_BLOB_ID, a.MAILBOX_ID, a.MAIL_UID
 			FROM JAMES_MAIL_BLOB a
 			LEFT OUTER JOIN JAMES_MAIL b
 			ON a.MAILBOX_ID = b.MAILBOX_ID
@@ -225,6 +233,29 @@
 		<![CDATA[
 			DELETE FROM JAMES_MAIL_BLOB 
 			WHERE MAIL_BLOB_ID = #mailBlobId#
+       	]]>
+	</delete>
+
+	<select id="EzEmailDAO.getMailDeletedIdList" resultMap="mailDeletedId">
+		<![CDATA[
+			SELECT MAILBOX_ID, MAIL_UID
+			FROM JAMES_MAIL_DELETED_ID
+       	]]>
+	</select>
+	
+	<delete id="EzEmailDAO.deleteMailBlobWithDeletedId" parameterClass="MailDeletedIdVO">
+		<![CDATA[
+			DELETE FROM JAMES_MAIL_BLOB 
+			WHERE MAILBOX_ID = #mailBoxId#
+			AND MAIL_UID = #mailUid#
+       	]]>
+	</delete>
+	
+	<delete id="EzEmailDAO.deleteMailDeletedId" parameterClass="MailDeletedIdVO">
+		<![CDATA[
+			DELETE FROM JAMES_MAIL_DELETED_ID 
+			WHERE MAILBOX_ID = #mailBoxId#
+			AND MAIL_UID = #mailUid#
        	]]>
 	</delete>
 	

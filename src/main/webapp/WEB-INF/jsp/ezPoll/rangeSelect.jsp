@@ -482,12 +482,7 @@
     	    		var userName = "";
     	    		var deptId = "";
     	    		
-    	    		if (primary == "1") {
-    	    			userName = arrRows2[j].getAttribute("DATA4");
-    	    		}
-    	    		else {
-    	    			userName = arrRows2[j].getAttribute("DATA5");
-    	    		}
+    	    		userName = arrRows2[j].getAttribute("DATA4");
     	    		deptId = arrRows2[j].getAttribute("DATA6");
     	    		listOfTarget += userName + ", ";
     	    	}
@@ -605,7 +600,7 @@
                 	var pVaule = "";
                 	
                 	//userInfo 부분 추가
-                	 if (langData != "2") {
+                	 if (primary == "1") {
             	        pVaule = CurrNM;
                 	} else {
 	                    pVaule = CurrNM2;
@@ -657,13 +652,13 @@
             	    var CurrNM2 = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "nm2"));
             	    var CurrDeptID = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "deptid"));
 	                //lastindex = memberlist.length;
-    	            var pVaule = "";
+    	            var pVaule = CurrNM;
     	             
-        	       if (langData != "2") {
+        	        /* if (primary == "1") {
             	        pVaule = CurrNM;
                 	} else {
 	                    pVaule = CurrNM2;
-    	            } 
+    	            } */
         	        
 	                var _listview = new ListView();
     	            _listview.LoadFromID("MListView");

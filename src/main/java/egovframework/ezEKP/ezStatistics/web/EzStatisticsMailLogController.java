@@ -231,11 +231,13 @@ public class EzStatisticsMailLogController {
 			searchEndTime = searchEndTime.replaceAll("[^0-9]", "");
 		}
 
-		if (sysLang.equals(userInfo.getLang())) {
+		isPrimaryLang = userInfo.getPrimary();
+		logger.debug("isPrimaryLang=" + isPrimaryLang);
+		/*if (sysLang.equals(userInfo.getLang())) {
 			isPrimaryLang = sysLang;
 		} else { 
 			isPrimaryLang = userInfo.getLang();
-		}
+		}*/
 		
 		if (companyId == null || companyId.equals("Top/organ")) {
 			companyId = "";
@@ -344,6 +346,17 @@ public class EzStatisticsMailLogController {
 		String pageSize = request.getParameter("pageSize");
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String companyId = request.getParameter("companyId");
+		String orgSearchValue = searchValue;
+		
+		if (searchField != null && (searchField.equals("recipientEmail") || searchField.equals("senderEmail"))) {
+			String realEmailAddress = ezEmailUtil.getRealEmailAddress(searchValue);
+			
+			logger.debug("realEmailAddress=" + realEmailAddress);
+			
+			if (realEmailAddress != null && !realEmailAddress.isEmpty()) {
+				searchValue = realEmailAddress;
+			}
+		}
 		
 		if (!searchStartTime.isEmpty()) {
 			searchStartTime = searchStartTime.replaceAll("[^0-9]", "");

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -317,7 +318,8 @@
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t216" /></th>
-		    <td><c:out value="${pollStartDate}"/> ~ <c:out value="${pollEndDate}"/> </td>
+		    <%-- 2020-01-02 홍승비 - 전자설문 상세내역에서 초단위 제거 (타 모듈과 시간표기 통일) --%>
+		    <td><c:out value="${fn:substring(pollStartDate, 0, 16)}"/> ~ <c:out value="${fn:substring(pollEndDate, 0, 16)}"/> </td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t231" /></th>
@@ -327,7 +329,7 @@
 		    			<spring:message code="ezQuestion.t322" />
 		    		</c:when>
 		    		<c:otherwise>
-		    			<c:out value="${publicDate}"/> <spring:message code="ezQuestion.t323" /><c:out value="${qstUserPollItemVO.postTerm}"/> <spring:message code="ezQuestion.t324" />
+		    			<c:out value="${fn:substring(publicDate, 0, 16)}"/> <spring:message code="ezQuestion.t323" /><c:out value="${qstUserPollItemVO.postTerm}"/> <spring:message code="ezQuestion.t324" />
 		    		</c:otherwise>
 		    	</c:choose>
 			</td>

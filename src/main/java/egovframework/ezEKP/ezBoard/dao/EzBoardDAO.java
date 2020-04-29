@@ -686,10 +686,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.getSearchAllBoardItemCount", map);
 	}
 	
-	public int isDeptChk(String id, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", id);
-		map.put("tenantID", tenantID);
+	public int isDeptChk(Map<String, Object> map) throws Exception {
 		return (int) select("EzBoardDAO.isDeptChk", map);
 	}
 	
@@ -718,9 +715,73 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		update("EzBoardDAO.modUpdateDate", map);
 	}
 	
+	/* 2019-04-05 홍승비 - 좋아요 삽입 */
+	public void likeInsert(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.likeInsert", map);
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 삭제 */
+	public void likeDelete(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.likeDelete", map);
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 여부 체크 */
+	public String likeCheck(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.likeCheck", map);
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 갯수 가져오기 */
+	public int getlikeCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getlikeCount", map);
+	}
+	
 	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴하는 쿼리 */
 	@SuppressWarnings("unchecked")
 	public List<String> getPDOAddJobDeptID(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzBoardDAO.getPDOAddJobDeptID", map);
+	}
+	
+	/* 2019-05-15 홍승비 - 해당 부서ID로 상위부서ID(회사포함) 가져오기*/
+	public String getUpperDeptID(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.getUpperDeptID", map);
+	}
+	
+	/* 2019-09-18 홍승비 - 사용자의 직위와 직책 ID를 리턴하는 쿼리 (사내겸직 포함) */
+	@SuppressWarnings("unchecked")
+	public List<String> getUserJJID(Map<String, Object> map) {
+		return (List<String>) list("EzBoardDAO.getUserJJID", map);
+	}
+	
+	/* 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 권한정보를 리스트로 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<BoardPropertyVO> getACLListNew(Map<String, Object> map) throws Exception {
+		return (List<BoardPropertyVO>) list("EzBoardDAO.getACLListNew", map);
+	}
+
+	/* 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 그룹의 관리자 권한을 리스트로 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<String> checkIfBoardGroupAdminNew(Map<String, Object> map) {
+		return (List<String>) list("EzBoardDAO.checkIfBoardGroupAdminNew", map);
+	}
+
+	/* 2019-09-24 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 읽기권한을 리스트로 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<String> getCheckItemIDNew(Map<String, Object> map) {
+		return (List<String>) list("EzBoardDAO.getCheckItemIDNew", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<BoardPropertyVO> getAllSubBoardProperty(Map<String, Object> map) throws Exception {
+		return (List<BoardPropertyVO>) list("EzBoardDAO.getAllSubBoardProperty", map);
+	}
+
+	/* 2019-12-13 홍승비 - 게시물 이동 시 조회자 정보를 삭제하지 않고 유지하는 쿼리 */
+	public void updateBoardItemRead(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.updateBoardItemRead", map);
+	}
+
+	/* 2019-12-16 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라 기존 게시물의 조회자정보를 삽입하는 쿼리 */
+	public void insertBoardItemReadForCopy(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.insertBoardItemReadForCopy", map);
 	}
 }

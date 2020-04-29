@@ -18,8 +18,8 @@
         xmlHTTP.send(strQuery);
         
         var xmlDom = createXmlDom();
-        xmlDom = loadXMLString(xmlHTTP.responseText);
-
+		xmlDom = loadXMLString(xmlHTTP.responseText);
+		debugger;
         if (mode == "circulation") {
         	document.getElementById('TreeViewCC').innerHTML = "";
             var treeView = new TreeView();
@@ -28,7 +28,7 @@
             treeView.SetNodeClick("TreeViewNodeClickCC");
             treeView.SetNodeDblClick("TreeViewNodeDbClickCC");
             treeView.DataSource(xmlDom);
-            treeView.DataBind("TreeViewCC");
+			treeView.DataBind("TreeViewCC");
         } else if (mode == "aprG") {
         	document.getElementById('TreeView').innerHTML = "";
         	var treeView = new TreeView();
@@ -38,29 +38,38 @@
         	treeView.SetRequestData("RequestDataG");
         	treeView.SetNodeClick("TreeViewNodeClick");
         	treeView.DataSource(xmlDom);
-        	treeView.DataBind("TreeView");
+			treeView.DataBind("TreeView");
         } else {
         	document.getElementById('TreeView').innerHTML = "";
         	var treeView = new TreeView();
+        	var requestData = displayTrashDeptStr ? "RequestDataContainsTrashDept" : "RequestData";
         	treeView.SetID("FromTreeView");
         	treeView.SetUseAgency(true);
-        	treeView.SetRequestData("RequestData");
+        	treeView.SetRequestData(requestData);
         	treeView.SetNodeClick("TreeViewNodeClick");
         	treeView.DataSource(xmlDom);
-        	treeView.DataBind("TreeView");
+			treeView.DataBind("TreeView");
         }
     } catch (ErrMsg) {
         alert(" TreeViewinitialize : " + ErrMsg.description);
     }
 }
 
-function RequestData(pNodeID, pTreeID) {
-    var TreeIdx = pNodeID;
-    var treeNode = new TreeNode();
-    treeNode.LoadFromID(TreeIdx);
-    var deptID = treeNode.GetNodeData("CN");
+function RequestDataContainsTrashDept(pNodeID, pTreeID) {
+	RequestData(pNodeID, pTreeID, true);
+}
 
-    GetDeptSubTreeInfo(deptID, TreeIdx);
+function RequestData(pNodeID, pTreeID) {
+	RequestData(pNodeID, pTreeID, true);
+}
+
+function RequestData(pNodeID, pTreeID, displayTrashDept) {
+	var TreeIdx = pNodeID;
+	var treeNode = new TreeNode();
+	treeNode.LoadFromID(TreeIdx);
+	var deptID = treeNode.GetNodeData("CN");
+	
+	GetDeptSubTreeInfo(deptID, TreeIdx, true);
 }
 
 function RequestDataCC(pNodeID, pTreeID) {
@@ -72,11 +81,16 @@ function RequestDataCC(pNodeID, pTreeID) {
 	GetDeptSubTreeInfoCC(deptID, TreeIdx);
 }
 
-function GetDeptSubTreeInfo(deptID, TreeIdx) {
+function GetDeptSubTreeInfo(deptID, TreeIdx, displayTrashDept) {
     var xmlHTTP = createXMLHttpRequest();
     var xmlRtn = createXmlDom();
-        
-    var strQuery = "<DATA><DEPTID>" + deptID + "</DEPTID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName;displayName2</PROP></DATA>";
+
+	var displayTrashDeptStr = "";
+	if (displayTrashDept) {
+		displayTrashDeptStr = "<DISPLAY_TRASH_DEPT>true</DISPLAY_TRASH_DEPT>";
+	}
+    
+    var strQuery = "<DATA><DEPTID>" + deptID + "</DEPTID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName;displayName2</PROP>" + displayTrashDeptStr + "</DATA>";
     
     xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
     xmlHTTP.send(strQuery);
@@ -120,4 +134,18 @@ function GetDeptSubTreeInfoCC(deptID, TreeIdx) {
 	treeView.LoadFromID("FromTreeViewCC");
 	
 	treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+}
+
+//2020-04-23 : 트리뷰 선택된 노드로 스크롤 이동
+function treeViewScrollTo(pTreeViewID) {
+    try {
+        document.getElementById(pTreeViewID).parentNode.scrollTop = 0;
+
+        var selTreeViewNode = document.getElementById(pTreeViewID).getElementsByClassName("node_selected");
+        var centerH = ((Number(document.getElementById(pTreeViewID).parentNode.style.height.replace("px", "")) / 2) + document.getElementById(pTreeViewID).parentNode.getBoundingClientRect().top);
+
+        if (selTreeViewNode != null) {
+            document.getElementById(pTreeViewID).parentNode.scrollTop = (selTreeViewNode.item(0).parentNode.getBoundingClientRect().top - centerH);
+        }
+    } catch (e) { }
 }

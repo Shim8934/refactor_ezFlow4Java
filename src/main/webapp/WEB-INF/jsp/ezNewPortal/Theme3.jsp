@@ -21,9 +21,6 @@
 		width : 36px;
 		height : 36px;
 	}
-	.mainbg {
-		min-width : 1280px;
-	}
 	
 	#userList li {
 		cursor : pointer;
@@ -49,7 +46,7 @@
 <body class="mainbg" id="theme3Body">
 	<div id="Center">
 	<div style="position:relative;">
-		<aside id="quickSide" style="width:0px">
+		<aside id="quickSide" style="width:0px;height:100%">
 			<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/theme3Img/linkBtn_open.png"></p>
 			<div class="aside_quick">
 				<p class="quickmenu_title"><spring:message code='ezNewPortal.t020' /></p>
@@ -270,9 +267,10 @@
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
+			var portletCode = portletOrder[i].portletCode;
 			
 			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
-				(function (portletId, portletUrl, portletName) {
+				(function (portletId, portletUrl, portletName, portletCode) {
 					$.ajax({
 						type : "GET",
 						dataType : "html",
@@ -287,7 +285,11 @@
 								$("#" + portletId + "Portlet").css("background", "none");
 							}
 							
-							eventSetting(portletId, usedTheme);
+							eventSetting(portletId, usedTheme, portletCode, false);
+							
+							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+								sortableEvent();
+							}
 						},
 						error : function() {
 							var nonePage = "<article class='box_shadow'></article>"
@@ -303,22 +305,33 @@
 								return;
 							}
 							
+							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+								sortableEvent();
+							}
+							
 							return;
 						}
 					});
-				}(portletId, portletUrl, portletName));
+				}(portletId, portletUrl, portletName, portletCode));
 			/* } */
+			
 		}
 		
 		var useQuestion = "<c:out value='${useQuestion}'/>";
+		var useSurvey = "<c:out value='${useSurvey}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";
 		var useMail = "<c:out value='${useMail}'/>";
 		var useApproval = "<c:out value='${useApproval}'/>";
 		var useSchedule = "<c:out value='${useSchedule}'/>";
 		
 		//권한에 없는거는 보여주지 않기
+		/* 
 		if (useQuestion === "NO") {
 			$("#Poll").css("display", "none");
+		}
+		 */
+		if (useSurvey === "NO") {
+			$("#Survey").css("display", "none");
 		}
 		
 		if (useCircular === "NO") {
@@ -358,27 +371,57 @@
 		getQuickLink();		
 		
 		//포틀릿 드래그 앤 드롭
-		$(".portlet_area").sortable({
-			handle : ".sortablePortlet",
-			helper : "clone",
-			scroll: false,
-			start : function (event, block) {
-				/* 
-				$(".portlet.ui-sortable-helper").css("width", $(".portlet").not(block.item).not(block.placeholder).outerWidth());
-				
-				$(".ui-sortable-placeholder").css({
-					'width' : $(".portlet").not(block.item).not(block.placeholder).outerWidth(),
-					'height' : $(".portlet").not(".ui-sortable-helper").outerHeight()
-				}); */
-			},
-			update : function(event, ui) {
-				updatePortletOrderUser(usedTheme);
-			}
-		});
+		if (navigator.userAgent.toLowerCase().indexOf("firefox") == -1) {
+			sortableEvent();
+		}
 		
-		$(".portlet_area").disableSelection();
+		/* $(".portlet_area").disableSelection(); */
 		
+		settingPortalInterval();
 	});
+	
+	var settingPortalInterval = function () {
+		var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
+		
+		if (refreshInterval != null && refreshInterval != "0") {
+			window.setInterval(function() {
+				parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+			}, Number(refreshInterval) * 60000);
+		}
+	}
+	
+	var tryCount = 0;
+	
+	var sortableEvent = function () {
+		
+		//포틀릿 드래그 앤 드롭
+		try {
+			$(".portlet_area").sortable({
+				handle : ".sortablePortlet",
+				helper : "clone",
+				scroll: false,
+				start : function (event, block) {
+					/* 
+					$(".portlet.ui-sortable-helper").css("width", $(".portlet").not(block.item).not(block.placeholder).outerWidth());
+					
+					$(".ui-sortable-placeholder").css({
+						'width' : $(".portlet").not(block.item).not(block.placeholder).outerWidth(),
+						'height' : $(".portlet").not(".ui-sortable-helper").outerHeight()
+					}); */
+				},
+				update : function(event, ui) {
+					updatePortletOrderUser(usedTheme);
+				}
+			});
+		} catch (e) {
+			tryCount++;
+			if (tryCount <= 5) {
+				setTimeout(sortableEvent(), 100);
+			} else {
+				return;
+			}
+		}
+	}
 	
 	var frameSetting = function (frameSetId) {
 		frameId = frameSetId;

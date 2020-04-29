@@ -68,6 +68,12 @@
 					case 31:
 						url = "/admin/ezOrgan/jobInfoList.do";
 						break;
+					case 32:
+						url = "/admin/ezOrgan/loginStop.do";
+						break;
+					case 33:
+						url = "/admin/ezOrgan/groupList.do";
+						break;
 				}
 				window.open(url,"right");
 			}
@@ -109,6 +115,16 @@
 				<h2>
 					<span class="list_text" onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
 				</h2>
+				<c:if test="${useLoginStop == 'YES'}">
+					<h2>
+						<span class="list_text" onClick="goPage(32)" style="display:inline-block;width:100%;"><spring:message code='ezOrgan.hdp17' /></span>
+					</h2>
+				</c:if>
+				<c:if test="${packageType != 'mail'}">
+					<h2>
+						<span class="list_text" onClick="goPage(33)" style="display:inline-block;width:100%;"><spring:message code='ezOrgan.zNo004' /></span>
+					</h2>
+				</c:if>
 	  		</div>			
 		</div>
 		<!-- <script type="text/javascript">

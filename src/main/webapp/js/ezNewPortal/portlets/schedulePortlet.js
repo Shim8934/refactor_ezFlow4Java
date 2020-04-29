@@ -44,17 +44,28 @@ function getScheduleList_after(resultList, mode, date) {
 		for (var i = 0; i < 3; i++) {
 			if (resultList[i] != null && resultList[i] != "") {
 				var SCHEDULETYPE = resultList[i].scheduleType;
-				var SCHEDULEID = resultList[i].scheduleId;			            
+				var SCHEDULEID = resultList[i].scheduleId;
+				var PARENTID = resultList[i].parentId;	
 				var DATETYPE = resultList[i].dateType;
 				var REPEATCOUNT = resultList[i].repeatCount;
 				var STARTDATE = resultList[i].startDate;
 				var ENDDATE = resultList[i].endDate;
 				var TITLE = resultList[i].title;
+				var CREATORNAME = resultList[i].creatorName;
+				var CONTENTPATH = resultList[i].contentPath;
 				var startTime = STARTDATE.split(' ')[1].substring(0,5);
 				var endTime = ENDDATE.split(' ')[1].substring(0,5);
-				var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));			            
-				listHTML += "<li class='scheduleLi' onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\">";
-				listHTML += "<p class='scheduleTime'>";
+				var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));	
+				
+				// 2020-02-25 김정언 - 근태 현황일 경우에는 근태 상세보기로 이동 (DateType 4 : 근태 현황)
+				if (DATETYPE == "4") {
+					listHTML += "<li class='scheduleLi' onClick=\"open_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\">";
+					listHTML += "<p class='scheduleTime'>";					
+				}else{
+					listHTML += "<li class='scheduleLi' onClick=\"open_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\">";
+					listHTML += "<p class='scheduleTime'>";
+				}
+	        	
 				var timeClass = "";
 				if(SCHEDULETYPE == 1) {
 					timeClass = "Tindividual";
@@ -71,13 +82,25 @@ function getScheduleList_after(resultList, mode, date) {
 				} else {
 					listHTML += "";
 				}
-				if (Number($("#schedule_usedTheme").val()) == 1) {
-					listHTML += "<span class='" + timeClass + "_timeText' style='margin-left:6px; font-size:14px; color:#333;'>" + startTime + " ~ " + endTime + "</span></p>";
-				} else {
-					listHTML += "<span class='" + timeClass + "_timeText'>" + startTime + " ~ " + endTime + "</span></p>";
+				
+				// 2020-02-25 김정언
+				if(DATETYPE == "4") {
+					if (Number($("#schedule_usedTheme").val()) == 1) {
+						listHTML += "<img class='attiImg' src='/images/ezAttitude/" + CONTENTPATH + ".png' style='margin-left: 8px; vertical-align: sub;'/>"
+						listHTML += "<span class='" + timeClass + "_timeText' style='margin-left:6px; font-size:13px; color:#333; vertical-align: bottom;'>" + TITLE + " : " + CREATORNAME + "</span></p>";
+					} else {
+						listHTML += "<img class='attiImg' src='/images/ezAttitude/" + CONTENTPATH + ".png' style='margin-left: 8px; vertical-align: sub;'/>"
+						listHTML += "<span class='" + timeClass + "_timeText' style='vertical-align: bottom;'>" + TITLE + " : " + CREATORNAME + "</span></p>";
+					}
+				}else {
+					if (Number($("#schedule_usedTheme").val()) == 1) {
+						listHTML += "<span class='" + timeClass + "_timeText' style='margin-left:6px; font-size:13px; color:#333;'>" + startTime + " ~ " + endTime + "</span></p>";
+					} else {
+						listHTML += "<span class='" + timeClass + "_timeText'>" + startTime + " ~ " + endTime + "</span></p>";
+					}
+					listHTML += "<p class='scheduleText'>";
+					listHTML += ConvertCharToEntityReference(TITLE)+"</p></li>";					
 				}
-				listHTML += "<p class='scheduleText'>";
-				listHTML += ConvertCharToEntityReference(TITLE)+"</p></li>";
 			} else {
 				listHTML += "<li class='scheduleLi_nodata'>";
 				listHTML += "<p class='sNodataText'>" + strLang277 + "</p>";	
@@ -110,7 +133,7 @@ function scheduleWrite() {
     "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 }
 
-function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date, pageFrom) {
+function open_schedule(scheduleid, parentid, scheduletype, datetype, repeatcount, date, pageFrom) {
     date = date.substr(0, 10);
 
     var wWeight = "760";
@@ -119,15 +142,28 @@ function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date, pa
     var width = window.screen.availWidth;
     var left = (width - wWeight) / 2;
     var top = (heigth - wHeight) / 2;
-
-    //PNO-3
-    if (CrossYN())
-        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0","",
-            "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
-    else
-        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0","",
-            "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
-    //PNO-3 END
+    
+    // 2020-02-25 김정언 - 근태 상세보기
+    if(datetype == "4") {
+    	if (CrossYN()) {
+			var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + scheduleid + "&typeId=" + parentid, "", GetOpenWindowfeature(672, 640));
+			
+			try { OpenWin.focus(); } catch (e) { }
+		} else {
+			window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + scheduleid + "&typeId=" + parentid, "", 
+			    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+		}
+    }
+    else {    	
+    	//PNO-3
+    	if (CrossYN())
+    		window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0","",
+    				"top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
+    	else
+    		window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0","",
+    				"top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
+    	//PNO-3 END
+    }
 }
 
 function goSchedule() {

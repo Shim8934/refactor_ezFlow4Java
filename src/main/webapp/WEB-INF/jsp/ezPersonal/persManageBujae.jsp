@@ -112,17 +112,31 @@
 		        EDate.setFullYear(eYear, eMonth-1, eDay);
 		        EDate.setHours(eHour, eMin, 0, 0);
 		        
+		        /* 2020-01-28 홍승비 - 데이트피커와 타임피커의 사용자 직접입력 방지 */
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
 	    	   	$('#Stimepicker').timepicker();
 	        	$('#Stimepicker').timepicker('setTime', SDate);
-	        	$('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+	        	$('#Stimepicker').timepicker({
+	        		'timeFormat': 'H:i',
+	        		'disableTextInput': true
+	        	});
+				$("#Stimepicker").on("focus", function(){
+					$(this).trigger("blur");
+				});
 
 	        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        	$("#Edatepicker").datepicker('setDate', EDate);
 	        	$('#Etimepicker').timepicker();
 	        	$('#Etimepicker').timepicker('setTime', EDate);
-	        	$('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+	        	$('#Etimepicker').timepicker({
+	        		'timeFormat': 'H:i',
+	        		'disableTextInput': true
+	        	});
+				$("#Etimepicker").on("focus", function(){
+					$(this).trigger("blur");
+				});
+				
 		    });
 		    
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
@@ -172,14 +186,19 @@
 			var type_Complete;
 			var NoneActiveX = "YES";
 			function select_person(type) {
+				var selectedDept = deptid;
+				if (document.getElementById("deptList") != null && document.getElementById("deptList") != "undefined") {
+					selectedDept = document.getElementById("deptList").value;
+				}
+				
 			    type_Complete = type;
 			    if (CrossYN() || NoneActiveX == "YES") {
 			        selectperson_cross_dialogArguments[1] = select_person_Complete;
-			        var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type, "SelectPerson_cross", GetOpenWindowfeature(760, 535));
+			        var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept, "SelectPerson_cross", GetOpenWindowfeature(760, 535));
 			        try { OpenWin.focus(); } catch (e) { }
 			    }
 			    else {
-			        var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=" + type, "",
+			        var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept, "",
 		                "dialogHeight:535px;dialogwidth:760px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(760, 535));
 		
 			        if (typeof (rtnValue) != "undefined" && type == "") {
@@ -417,7 +436,7 @@
 			<c:if test="${approvalFlag =='G'}">
 				<span class="txt">▒ <spring:message code='ezPersonal.t55' /></span><br/>
 				<span class="txt">▒ <spring:message code='ezPersonal.t56' /></span><br/>
-				<span class="txt">▒ <spring:message code='ezPersonal.t57' /></span><br/>
+				<span class="txt">&emsp;&nbsp;<spring:message code='ezPersonal.t57' /></span><br/>
 				<span class="txt">▒ <spring:message code='ezPersonal.t58' /></span><br/>
 			</c:if>
 			<c:if test="${approvalFlag !='G'}">
@@ -458,9 +477,9 @@
 						<table>
 							<tr>
 								<td>
-								<input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
 	           						~
-	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />								</td>
+	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />								</td>
 							</tr>
 						</table>
 					</td>

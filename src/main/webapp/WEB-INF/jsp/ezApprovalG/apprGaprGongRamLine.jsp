@@ -750,20 +750,21 @@
 		            
 		            var strRows = "<ROWS>"; 
 		            
+		            /* 2019-11-28 홍승비 - 기안창과 회람발송 팝업창에서의 회람자 즐겨찾기 순번을 통일 (내림차순) */
 		            var i = 1;
 		            for (var cnt = listnodes.length-1; cnt >= 0; cnt-- ) {
 		            	//2018-10-11 김보미 - 공람자 순번 오름차순에서 내림차순으로 변경.(즐겨찾기 적용 후 공람자 추가시 순번이 이상하게 되기 때문)
- 		            	//var preDeptName = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
- 		                //var preDeptJobTitle = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
- 		                //var preDeptName1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
- 		                //var preDeptName2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
- 		                //var preWriterName1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[2])[0], "VALUE");
- 		                //var preWriterName2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[2])[0], "VALUE");
- 		                //var preDeptJobTitle1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
- 		                //var preDeptJobTitle2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
- 		                //var preDeptID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[8], "DATA8");
- 		                //var preUserID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[5], "DATA5");
-		            	var preDeptName = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[9], "DATA9");
+ 		            	var preDeptName = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
+ 		                var preDeptJobTitle = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
+ 		                var preDeptName1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
+ 		                var preDeptName2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
+ 		                var preWriterName1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[2])[0], "VALUE");
+ 		                var preWriterName2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[2])[0], "VALUE");
+ 		                var preDeptJobTitle1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
+ 		                var preDeptJobTitle2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
+ 		               var preDeptID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[8], "DATA8");
+ 		               var preUserID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[5], "DATA5");
+/* 		            	var preDeptName = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[9], "DATA9");
 		                var preDeptJobTitle = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[7], "DATA7");
 		                var preDeptName1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[9], "DATA9");
 		                var preDeptName2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[9], "DATA9");
@@ -772,7 +773,7 @@
 		                var preDeptJobTitle1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[7], "DATA7");
 		                var preDeptJobTitle2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[7], "DATA7");
 		                var preDeptID = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[8], "DATA8");
-		                var preUserID = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[5], "DATA5");
+		                var preUserID = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[5], "DATA5"); */
 		                
 		                strRows += "<ROW>";
 		                strRows += "<CELL>";
@@ -1176,7 +1177,8 @@
 	                	<table style="width:100%;table-layout: fixed">
 	                    	<tr>
 	                            <td style="text-align: left; height: 30px;">
-	                            	<input id="textUser" style="height:22px" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;<a class="imgbtn imgbck" style="vertical-align: middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+									<input id="textUser" style="height:22px" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;<a class="imgbtn imgbck" style="vertical-align: middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+									<a class="imgbtn imgbck" style="vertical-align: middle;"><span onclick="return btnAprLineSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
 	                            	<a class="imgbtn imgbck" style="vertical-align: middle;"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
 	                            </td>
 	                        </tr>
@@ -1199,8 +1201,8 @@
 	                                <table class="content" style="margin-bottom: 5px; width: 100%;">
 	                                    <tr>
 	                                        <td style="text-align: center;">
-	                                            <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
-	                                            <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
+	                                            <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.hsbFv01'/></span></a>
+	                                            <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.hsbFv02'/></span></a>
 	                                            <a class="imgbtn imgbck"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 	                                        </td>
 	                                    </tr>

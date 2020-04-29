@@ -416,8 +416,10 @@
 				var SDate;
 				var EDate;
 				if (startdate != "") {
-					SDate = new Date(startdate);
-					EDate = new Date(enddate);
+					var startArr = startdate.split("-"); 
+					SDate = new Date(startArr[0] + "/" + startArr[1] + "/" + startArr[2]);
+					var endArr = enddate.split("-"); 
+					EDate = new Date(endArr[0] + "/" + endArr[1] + "/" + endArr[2]);
 					$( "#Sdatepicker").datepicker( "option", "disabled", true );
 				} else {
 					SDate = new Date();

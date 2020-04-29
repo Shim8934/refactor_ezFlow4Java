@@ -126,7 +126,7 @@
  			                	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
 							}
 							result.list.forEach(function(vo, i) {
-								if(i > 0) {
+								if(userId != vo.aprMemberId) {
 									if (i == 1) {
 						            	document.getElementById("receiverlist").innerHTML = vo.aprMemberName;
 						            	document.getElementById("receiverID").innerHTML = vo.aprMemberId;
@@ -196,6 +196,8 @@
 	            			try {
 								window.opener.getUserAnnualList();
 								window.opener.parent.frames["left"].getAttitudeList();
+								//신청갯수
+						    	window.opener.parent.frames["left"].leftAnnualCount();
 	            			} catch (e) { }
 							window.close();
 	            		} else {

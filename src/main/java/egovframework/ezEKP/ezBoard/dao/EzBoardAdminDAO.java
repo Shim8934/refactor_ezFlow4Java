@@ -320,13 +320,27 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 	
 	/* 2018-09-18 홍승비 - 게시판 이름변경 시 마이게시판에 등록된 게시판명도 변경되도록 수정 */
-	public void saveBoardProperty3(Map<String, Object> map) throws Exception{		
+	public void saveBoardProperty3(Map<String, Object> map) throws Exception {		
 		update("EzBoardAdminDAO.saveBoardProperty3", map);
 	}
+	
+	/* 2019-05-29 홍승비 - 하위부서 허용/불가여부 체크하여 게시판그룹의 관리자 권한 가져오는 쿼리 추가 */
+	public String checkIfBoardGroupAdmin2(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardAdminDAO.checkIfBoardGroupAdmin2", map);
+	}
 
-	/* 2018-10-17 홍승비 - 모든 회사ID, 이름(다국어)을 리스트로 받아오는 쿼리 추가 */
-	@SuppressWarnings("unchecked")
-	public List<BoardPropertyVO> getCompanyList(Map<String, Object> map) throws Exception{
-		return (List<BoardPropertyVO>) list("EzBoardAdminDAO.getCompanyList", map);
+	/* 2019-11-08 홍승비 - 전달된 값으로 BOARDTREEPATH를 업데이트하는 쿼리 */
+	public void updateBoardTreePath(Map<String, Object> map) throws Exception {
+		update("EzBoardAdminDAO.updateBoardTreePath", map);
+	}
+
+	/* 2019-11-13 홍승비 - 권한복사 시 상위게시판에 권한정보 일부 삽입 또는 업데이트 */
+	public void saveACLIncludeUppderBoard2(Map<String, Object> map) throws Exception {
+		insert("EzBoardAdminDAO.saveACLIncludeUppderBoard2", map);
+	}
+	
+	/* 2020-01-16 홍승비 - 전달된 값으로 BOARDGROUPID를 업데이트하는 메서드 */
+	public void updateBoardGroupID(Map<String, Object> map) throws Exception {
+		update("EzBoardAdminDAO.updateBoardGroupID", map);
 	}
 }

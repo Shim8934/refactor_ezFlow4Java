@@ -25,7 +25,7 @@ function openOpinionUI_New(pOpinionType, CompleteFunction) {
 		parameter[0] = pDocID;		//DOCID
 		parameter[1] = pOpinionType;//OPINIONTYPE NAME
 		parameter[2] = "";			//DRAFTFLAG 
-		parameter[3] = "";			//DOCSTATE
+		parameter[3] = pDocState;	//DOCSTATE
 		parameter[4] = orgCompanyID;//ORGCOMPANYID
 		parameter[99] = ext;		//EXT
 		

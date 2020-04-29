@@ -107,7 +107,7 @@
                     reParam["ret"] = "OK";
                     
                     reParam["ouCode"] = GetAttribute(tr, "DATA1");
-                    reParam["pouCode"] = GetAttribute(tr, "DATA1");
+                    reParam["pouCode"] = GetAttribute(tr, "DATA5");
                     reParam["topOuCode"] = GetAttribute(tr, "DATA4");
                     reParam["chiefTitle"] = GetAttribute(tr, "DATA6");
                     reParam["Title"] = GetAttribute(tr, "DATA6");
@@ -133,7 +133,7 @@
                         var tr = SelectedRows[i];
 
                         reParam["ouCode"][i] = GetAttribute(tr, "DATA1");
-                        reParam["pouCode"][i] = GetAttribute(tr, "DATA1");
+                        reParam["pouCode"][i] = GetAttribute(tr, "DATA5");
                         reParam["topOuCode"][i] = GetAttribute(tr, "DATA4");
                         reParam["chiefTitle"][i] = GetAttribute(tr, "DATA6");
                         reParam["Title"][i] = GetAttribute(tr, "DATA6");
@@ -226,6 +226,46 @@
                 return;
             }
         }
+
+        //2020-04-23 : 외부수신처 검색 후 선택한 수신처로 조직도 이동
+        function btnsearchDept_onClick(){
+            var SelList = new ListView();
+            SelList.LoadFromID("OuterOrganSearchResult");
+            var oArrRows = SelList.GetSelectedRows();
+            var tr = oArrRows[0];
+            
+            if(tr){
+            	ShowProgressBar();
+            	
+                var xmlpara = createXmlDom();
+                xmlhttpSearch = createXMLHttpRequest();
+                var objNode;
+                createNodeInsert(xmlpara, objNode, "DATA");
+                createNodeAndInsertText(xmlpara, objNode, "PARENTCODE", GetAttribute(tr, "DATA5"));
+                createNodeAndInsertText(xmlpara, objNode, "SELCODE", GetAttribute(tr, "DATA1"));
+                xmlhttpSearch.open("Post", "/ezApprovalG/searchOrganGListDataTreeView.do", true);
+                xmlhttpSearch.onreadystatechange = event_SearchDeptTreeViewMove;
+                xmlhttpSearch.send(xmlpara);                   
+            }
+        }
+        
+        function event_SearchDeptTreeViewMove() {
+            if (xmlhttpSearch != null && xmlhttpSearch.readyState == 4) {
+                if (xmlhttpSearch.statusText == "OK") {
+                    reParam["ret"] = "SEARCH";
+                    reParam["search"] = xmlhttpSearch.responseText;
+                    
+                    xmlhttpSearch = null;
+                    
+                    if (ReturnFunction != null) {
+                        ReturnFunction(reParam);
+                    } else {
+                        window.returnValue = reParam;
+                        window.close();
+                    }
+                }
+            }
+        }        
     </script>
 </head>
 <body class="popup" style="overflow: hidden;">
@@ -240,6 +280,7 @@
         <div id="lvOuterOrganList" style="height: 480px;"></div>
     </div>
     <div class="btnpositionNew">
+        <a class="imgbtn" onclick="return btnsearchDept_onClick()"><span><spring:message code='ezApprovalG.t900001'/></span></a>
         <a class="imgbtn" onclick="return btnConfirm_onClick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
     </div>
     <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; display: none;" id="mailPanel">&nbsp;</div>

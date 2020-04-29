@@ -45,6 +45,8 @@ public class ResGetScheduleVO {
 	private String publicFlag;
 	/** 승인여부*/
 	private String approveFlag;
+	/** 반납여부*/
+	private String returnFlag;
 	/** 스케줄ID*/
 	private String scheduleID;
 	/** 등록자부서명*/
@@ -191,6 +193,12 @@ public class ResGetScheduleVO {
 	}
 	public void setApproveFlag(String approveFlag) {
 		this.approveFlag = approveFlag;
+	}
+	public String getReturnFlag() {
+		return returnFlag;
+	}
+	public void setReturnFlag(String returnFlag) {
+		this.returnFlag = returnFlag;
 	}
 	public String getScheduleID() {
 		return scheduleID;

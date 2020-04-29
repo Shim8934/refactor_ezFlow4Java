@@ -2021,7 +2021,8 @@
                 importance = #importance#,
                 option = #option#,
                 content = #content#,
-                hasfile = #hasFile#
+                hasfile = #hasFile#,
+                regdate = #regDate#
             WHERE 
                 circularid = #circularID#
             AND

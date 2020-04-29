@@ -14,7 +14,7 @@
 		<div id="left" class="lnb" style="overflow: auto">
 			<div class="left_title" title="<spring:message code='ezSurvey.t01'/>">
 				<spring:message code='ezSurvey.t01'/>
-				<span id="surveyConfig" class="sub_iconLNB tree_leftconfig" title="<<spring:message code="ezSurvey.t06"/>"></span>
+				<span id="surveyConfig" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezSurvey.t06"/>"></span>
 			</div>
 			<div class="btn_writeBox">
 				<c:if test="${mode == 1}">

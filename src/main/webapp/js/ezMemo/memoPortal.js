@@ -989,7 +989,6 @@ function memoFoldersInfo(type) {
 		async : false,
 		url : "/ezMemo/getMemoFoldersInfo.do",
 		success: function(result){
-			
 			var folderList = result["folders"];
 			var html="";
 			html += "<option value='0'>" + memoMessages.strLangMemo9 + "</option>";
@@ -1000,7 +999,11 @@ function memoFoldersInfo(type) {
 					folderName = folderName.substr(0, 10);
 					folderName += "...";
 				}
-				html += "<option value='"+list.folder_id+"'>"+ folderName +"</option>"
+				if (index === 0 && list.orders === 0) {
+					html += "<option value='"+list.folder_id+"'>"+ memoMessages.strLangMemo22 +"</option>"
+				} else {
+					html += "<option value='"+list.folder_id+"'>"+ folderName +"</option>"
+				}
 
 			});
 			$('#memoFolderList option').remove();

@@ -16,7 +16,7 @@
 	<body class="popup">
 		<h1><spring:message code='ezNewPortal.t122' /></h1>
 		<div class="preview">
-			<img alt="Theme<c:out value='${themeId }'/>_Frame<c:out value='${frameId}'/>" src="/images/ezNewPortal/themeImg/Theme<c:out value='${themeId }'/>_Frame<c:out value='${frameId}'/>.JPG">
+			<img alt="Theme<c:out value='${themeId }'/>_Frame<c:out value='${frameId}'/>" src="/images/ezNewPortal/themeImg/<c:out value='${imgFolder}'/>/Theme<c:out value='${themeId }'/>_Frame<c:out value='${frameId}'/>.png">
 		</div>
 	</body>
 </html>

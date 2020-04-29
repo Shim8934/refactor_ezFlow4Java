@@ -208,18 +208,36 @@ public class MBoardDAO extends EgovAbstractDAO {
 		delete("MBoardDAO.getBoardTree_Set_D", map);
 	}
 
-	/* 2018-10-05 홍승비 - 하위부서 허용/불가권한 적용되지 않는 오류 수정(EzBoardDAO 참고) */
-	public int isDeptChk(String id, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", id);
-		map.put("tenantID", tenantID);
+	/* 2018-10-05 홍승비 - 하위부서 허용/불가권한 적용되지 않는 오류 수정(EzBoardDAO 참고), 파라미터를 맵으로 수정 */
+	public int isDeptChk(Map<String, Object> map) throws Exception {
 		return (int) select("MBoardDAO.isDeptChk", map);
 	}
 	
 	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴하는 쿼리 */
 	@SuppressWarnings("unchecked")
 	public List<String> getPDOAddJobDeptID(Map<String, Object> map) throws Exception {
-		return (List<String>) list("EzBoardDAO.getPDOAddJobDeptID", map);
+		return (List<String>) list("MBoardDAO.getPDOAddJobDeptID", map);
 	}
 	
+	/* 2019-06-12 홍승비 - 해당 부서ID로 상위부서ID(회사포함) 가져오기*/
+	public String getUpperDeptID(Map<String, Object> map) throws Exception {
+		return (String) select("MBoardDAO.getUpperDeptID", map);
+	}
+
+	/* 2019-09-25 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 권한정보를 리스트로 리턴하는 쿼리  */
+	@SuppressWarnings("unchecked")
+	public List<MBoardInfoVO> getACLListNew(Map<String, Object> map) throws Exception {
+		return (List<MBoardInfoVO>) list("MBoardDAO.getACLListNew", map);
+	}
+
+	/* 2020-04-13 홍승비 - QNA게시판 게시물 카운트 추가 */
+	public int getQNABoardItemListCount(Map<String, Object> map) throws Exception {
+		return (int) select("MBoardDAO.getQNABoardItemListCount", map);
+	}
+	
+	/* 2020-04-13 홍승비- QNA게시판 게시물 리스트 추가  */
+	@SuppressWarnings("unchecked")
+	public List<MBoardItemVO> getQNABoardItemList(Map<String, Object> map) throws Exception {
+		return (List<MBoardItemVO>) list("MBoardDAO.getQNABoardItemList", map);
+	}
 }

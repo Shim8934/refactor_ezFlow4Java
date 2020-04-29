@@ -116,10 +116,13 @@
 	        	}
 	        }
 	        
+	        /* 2020-02-07 홍승비 - 주소록 가져오기, 내보내기 레이어 팝업도 동적으로 left 계산 */
 	        $(window).on("resize", function(){
 				var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
 	        	$("#addpopup").css("left", popupX);
-	        	$("#srarchpopup").css("left", popupX);	        	
+	        	$("#srarchpopup").css("left", popupX);
+	        	$("#importPopup").css("left", popupX);
+	        	$("#exportPopup").css("left", popupX);
 	        });
 	        
 	        function new_address() {
@@ -141,7 +144,7 @@
 	            var pTop = (pheight - conHeight) / 2;
 	            var pLeft = (pwidth - conWidth) / 2;
 	            window.open("/ezAddress/addressWrite.do?ownerid=" + encodeURIComponent(pOwerID) + "&folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType, "",
-	            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+	            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 510px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
 	        }
 	        function new_group() {
 	        	if (useAnyoneEdit != "YES") {
@@ -486,16 +489,10 @@
 	                alert("<spring:message code='ezAddress.t220' />");
 	                return;
                 } 
-                
-                if (pQname.indexOf('<') != -1 || pQname.indexOf('>') != -1 || pQname.indexOf(';') != -1) {
-	        		document.getElementById("qname").focus();
-		        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
-		        	return;
-		        }
 	        	
                 if (pQname.indexOf("&") > -1 || pQname.indexOf("<") > -1 || pQname.indexOf(">") > -1 
    	        		 || pQname.indexOf("\"") > -1 || pQname.indexOf("'") > -1 || pQname.indexOf(";") > -1) {
-              		alert("<spring:message code='ezAddress.t124' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ; ]");
+              		alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' ; ]");
               		document.getElementById("pQname").focus();
    	            	return;
    	        	}
@@ -544,6 +541,7 @@
 	            createNodeAndInsertText(xmlDom, objNode, "STYPE", "P");
 	            createNodeAndInsertText(xmlDom, objNode, "USERNM", "");
 	            createNodeAndInsertText(xmlDom, objNode, "USERNM2", "");
+	            createNodeAndInsertText(xmlDom, objNode, "FURIGANA", "");
 	            objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTACHLIST");
 	            
 	            xmlHTTP.open("POST", "/ezAddress/addressSave.do", false);	            
@@ -597,9 +595,20 @@
 	        	$("#srarchpopup").css("left", popupX);
 	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 	        	
+	        	// 검색 레이어 팝업 열기 전에 input 내용 지워주도록 처리. 2019-08-02 홍대표.
+	        	var inputElem = document.getElementById("srarchpopup").getElementsByTagName("input");
+	        	[].forEach.call(inputElem, function(elem){
+	        		if(elem.type == "checkbox") {
+	        			elem.checked = false;
+	        		}
+	        		
+	        		elem.value = "";
+	        	});
+	        	
 	        	$("#srarchpopup").modal();
 	        }	        
 	        function SearchOptionHidden() {
+	        	quick_add_close();
 	        	$.modal.close();
 	        }	        
 	        function ShowQuickAddres() {
@@ -621,6 +630,9 @@
 	        	
 	        	$("#addpopup").css("left", popupX);
 	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	
+	        	// 레이어 팝업에서 x 버튼과 배경을 눌러서 껏을 때, 동작 차이 버그 수정. 모든 검색 내용을 삭제 후 팝업 오픈 2019-08-02 홍대표
+	        	quick_add_close();
 	        	
 	        	$("#addpopup").modal();
 	        }	        
@@ -1091,7 +1103,7 @@
 					<tr>
 						<td style="text-align:center;">
 							<div class="btnpositionLayer">
-								<a class="imgbtn"><span onClick="crossImport()"><spring:message code='ezAddress.t25' /></span></a>
+								<a class="imgbtn"><span onClick="crossImport()"><spring:message code='ezEmail.t37' /></span></a>
 							</div>	
 						</td>
 					</tr>

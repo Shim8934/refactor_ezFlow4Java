@@ -11,7 +11,7 @@
 		<link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" />
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<style>
-			.node_selected
+			/* .node_selected
 			{
 			    font-size: 13px;
 			    height: 30px;
@@ -27,7 +27,7 @@
 			    overflow: hidden;
 			    box-sizing: border-box;
 			    font-weight: bold;
-			}
+			} */
 			
 			.node_div {height:30px;}
 			
@@ -99,7 +99,7 @@
         		
         		if(document.getElementById("TreeView").innerText == "") {
         			var msg = "<spring:message code='ezResource.t368' />";
-        			var strUrl = "/ezResource/nonResList.do?msg="+msg;
+        			var strUrl = "/ezResource/nonResList.do?msg="+encodeURIComponent(msg);
             		locationInfo("");
             		Navigate(strUrl);
         		}
@@ -130,6 +130,7 @@
                 		var brdID = TreeView.getvalue(nodeIdx, "DATA1");
                 		var brdNm = TreeView.getvalue(nodeIdx, "DATA2");
                 		var boardGubun = TreeView.getvalue(nodeIdx, "DATA7");
+                		document.getElementById(TreeView.gnodeid() + nodeIdx).className = "node_selected";
 		
         		        if (boardGubun == "1") {
                     		if ((!chkVal && i == 2) || (chkVal && i == 3)) {

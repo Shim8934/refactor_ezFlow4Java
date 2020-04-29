@@ -98,9 +98,11 @@
 		    var shareId = "${shareId}";
 		    var deletePermission = "${deletePermission}";
 		    var sendPermission = "${sendPermission}";
+		    var managePermission = "${managePermission}";
 		    var systemCountryCode = "${systemCountryCode}";
 		    var useShowSystemCountry = "${useShowSystemCountry}";
 		    var file 		 = new Array();
+		    var useMailConfirm = "${useMailConfirm}";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -185,7 +187,7 @@
 		        	btnReject.style.display = "";
 		        }
 				
-		        if (shareId != "") {
+		        if (shareId != "" && managePermission != "Y") {
 		        	btnReject.style.display = 'none';
 		        }
 		        
@@ -243,7 +245,7 @@
 		                document.getElementById("PreviewRayerW").style.width = "100%";
 		                document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
 		                document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
-		                document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
+// 		                document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
 		                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 80) + "px";
 		                document.getElementById("PreW_subject").style.width = (CurrenWidth - 155) + "px";
 		                
@@ -260,7 +262,7 @@
 		                document.getElementById("PreviewRayerH").style.display = "inline-block";
 		
 		                CurrenWidth = document.documentElement.clientWidth - 20;
-		                CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		                CurrentHeight = document.documentElement.clientHeight - 92 - (document.getElementById("mainmenu").clientHeight - 28);
 		                pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
 		                pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;
 		                document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
@@ -281,7 +283,7 @@
 		            }
 		            
 		        } else {
-		            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		            CurrentHeight = document.documentElement.clientHeight - 92 - (document.getElementById("mainmenu").clientHeight - 28);
 		            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		            document.getElementById("MailListRayer").style.width = "100%";
 		            document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
@@ -400,13 +402,19 @@
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWMAILIMAGE", previewMailImage);
 	            createNodeAndInsertText(xmlpara, objNode, "TEXTOPTION", "${mailGeneral.textOption}");
 	            
-	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", false);
+	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", true);
+	            xmlhttp.onreadystatechange = function() {
+		        	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		        	}
+	            }
 	            xmlhttp.send(xmlpara);		  
 		    }
 		    
 		    var Save_unloadSave = false;
 		    
 		    function Window_onunload() {
+		        console.log("Window_onunload started. Save_unloadSave=" + Save_unloadSave);
+		        
 		        if (window_onunload_Event && !Save_unloadSave) {		        	
 		            mailGeneralSave();
 		            
@@ -522,8 +530,14 @@
 				searchFromList = true;
 		    	
 	            try {
-	                var url;
-	                url = "/ezEmail/mailSearchView.do?keywordFromList="+encodeURIComponent(keywordFromList)+"&searchCheck=" +encodeURIComponent(searchField)+"&searchFromList=" +encodeURIComponent(searchFromList);
+	                var url = "/ezEmail/mailSearchView.do?keywordFromList=" + encodeURIComponent(keywordFromList) 
+	                		+ "&searchCheck=" + encodeURIComponent(searchField) 
+	                		+ "&searchFromList=" + encodeURIComponent(searchFromList);
+	                
+	                if (shareId != "") {
+	                	url += "&shareId=" + encodeURIComponent(shareId);
+	                }
+	                
 	                window.open(url, "right");
 	            } catch (e) { }
 	            
@@ -1000,9 +1014,59 @@
 					document.getElementById("file").value = null;
 				}
 			}
+			
+			// 20200407 조진호 - 한국고용정보원에서 개발된 해킹의심메일 신고 기능 표준 적용
+			var xmlhttp_HackinMail;
+			function moveHackingMail() {
+				
+				if (listContentArry.length < 1) {
+					alert("<spring:message code='ezEmail.zno001' />");
+					return;
+				}
+				
+				var szItemID = "";
+		        for (var i = 0; i < listContentArry.length; i++) {
+		            szItemID += document.getElementById(listContentArry[i]).getAttribute("_href") + ",";
+		        }
+				
+				var xmlpara = createXmlDom();
+			    var objNode;
+			    xmlhttp_HackinMail = createXMLHttpRequest();
+			    createNodeInsert(xmlpara, objNode, "DATA");
+			    createNodeAndInsertText(xmlpara, objNode, "CMD", "MOVE");
+			    createNodeAndInsertText(xmlpara, objNode, "UNIQUEID", szItemID);
+			    
+			    var requestUrl = "/ezEmail/hackingMailMoveAndSend.do";
+
+			    xmlhttp_HackinMail.open("POST", requestUrl, true);
+			    xmlhttp_HackinMail.onreadystatechange = moveHackingMail_complete;
+			    xmlhttp_HackinMail.send(xmlpara);
+			}
+			
+			function moveHackingMail_complete() {
+			    if (xmlhttp_HackinMail != null && xmlhttp_HackinMail.readyState == 4) {
+			        if (xmlhttp_HackinMail.status >= 200 && xmlhttp_HackinMail.status < 300) {
+			        	pRtnMessage = xmlhttp_HackinMail.responseText;
+			        	
+			        	if (pRtnMessage.indexOf("NO COPY processing failed.") > -1) {
+			        		alert(strLang241);
+			        	} else if ("OK") {
+				        	MailListRefresh();
+				            prevShow_Clear();
+				            alert("<spring:message code='ezEmail.zno003' />");
+			        	} else {
+			        		alert(strLang5);
+			        	}
+			        }
+			        else {
+			            alert(strLang5);
+			        }
+			    }
+			}
+			
 		</script>	
 	</head>
-	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
+	<body style="overflow:hidden;margin-bottom:0px;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<h1>${folderName}<span id="mailBoxInfo"></span>
 	      <span class="searchForm">
               <select name="searchCheck" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
@@ -1040,9 +1104,16 @@
 	          <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>
 	          <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
 	          <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
+	          <c:if test="${useMailConfirm == 'YES'}">
+	          <li onClick="mailConfirm_flag_btn()"><span><spring:message code="ezEmail.ksa13" /></span></li>
+			  </c:if>
 	          <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="icon16 icon16_star"></span></li>
 	          <li id="trashBtn"><span class="icon16 icon16_delete" onClick="deleteWork(false)"></span></li>
 	          <li onClick="MailListRefresh()"><span class="icon16 icon16_refresh"></span></li>
+	          <c:if test="${useHackingMailReport == 'YES'}">
+			  <li id="hackingMail" title="<spring:message code="ezEmail.zno002" />"><span class="icon16 icon16_spam" onClick="moveHackingMail()"></span></li>		
+			  </c:if>
+	          
 			 <!--  <li id="right">
 	          	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	           	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
@@ -1156,7 +1227,7 @@
 			                        			<span id="PreH_sub_MailSender"></span>
 			                        		</span>
 			                        	</span>
-			                        	<span class="t_right">
+			                        	<span class="t_right" style="margin-right:3px;">
 			                        		 <c:if test="${folderType == 'sent' or folderType == 'draft'}">
 				                        		<span class="cblack"><spring:message code="ezEmail.t704" /> : </span>
                   							</c:if>
@@ -1186,7 +1257,7 @@
                 </div>
             </div>
         </div>        
-        <div id="PreviewRayerW" style="border:0px;width:100%;height:300px;overflow:hidden;display:none;">
+        <div id="PreviewRayerW" style="border:0px;width:100%;overflow:hidden;display:none;">
             <div onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width:100%;display:list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
 				<img src="/images/prevview_bar_dotted.gif">
             </div>
@@ -1214,7 +1285,7 @@
 				                        		<span id="PreW_sub_MailSender"></span>
 				                        	</span>
 			                        	</span>
-			                        	<span class="t_right">
+			                        	<span class="t_right" style="margin-right:3px;">
 			                        		<c:if test="${folderType == 'sent' or folderType == 'draft'}">
 				                        		<span class="cblack"><spring:message code="ezEmail.t704" /> : </span>
                   							</c:if>
@@ -1256,7 +1327,7 @@
 			</div>
 		</div>
 		<div id="ContextMenuDiv" style="position:absolute;top:180px;z-index:6000;display:none;">
-		    <table cellpadding=2 cellspacing=1 border=0 style="width:150px;" class="popuplist">
+		    <table cellpadding=2 cellspacing=1 border=0 class="popuplist">
 		    <tr id="replyAllMenu">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="all_reply_mail_onclick();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_reall.gif" alt=""  align="absmiddle" hspace="5"><spring:message code="ezEmail.t512" /></span></td>
 		    </tr>
@@ -1281,13 +1352,18 @@
 		    <tr>
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="toggle_flag();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/icon-flag.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t550" /></span></td>
 		    </tr>
-		    <tr>
+		    <c:if test="${useMailConfirm == 'YES'}">
+		    <tr id="mailConfirm">
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailConfirm_flag_btn();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/view-document-confirm.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.ksa13" /></span></td>
+		    </tr>
+		    </c:if>
+		    <tr id="searchName">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/i_nsearch.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.kr.lsd03" /></span></td>
 		    </tr>
-		    <tr>
+		    <tr id="searchInThisBoxByName">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="searchInThisBoxByName();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;">&nbsp;&nbsp; - <spring:message code="ezEmail.kr.lsd06" /></span></td>
 		    </tr>
-		    <tr>
+		    <tr id="searchAllBoxByName">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="searchAllBoxByName();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;">&nbsp;&nbsp; - <spring:message code="ezEmail.kr.lsd07" /></span></td>
 		    </tr>
 		    </table>

@@ -295,7 +295,7 @@
 		    	ehour = etime.split(":")[0];
 		    	eminute = etime.split(":")[1];
 	
-		    	if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) == parseInt(endDay))) {
+		    	if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) <= parseInt(endDay))) {
 		    	    if (document.getElementById("alldaycheck").checked == false && (shour > ehour || (shour == ehour && sminute >= eminute))) {
 		    	        alert("<spring:message code='ezSchedule.t60' />");
 		    	        return;
@@ -1024,7 +1024,13 @@
 		    	
 		    	
 		    }	
-
+			
+		    function KeEventControl(obj) {
+	            if ((window.event.keyCode >= 48 && window.event.keyCode <= 57) || (window.event.keyCode >= 96 && window.event.keyCode <= 105)) {
+	                return false;
+	            }
+	            else obj.value = obj.value.replace(/[\a-zㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+	        }
 		</script>
 	</head>
 	<body class="popup">
@@ -1041,7 +1047,7 @@
 		      		<th><spring:message code='ezSchedule.t68' /><u>T</u>)</th>
 		      		<td>
 		      			<div>
-		          			<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" />
+		          			<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
 		        			<label for="btnT1" accesskye="T"></label>
 		        			<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" onChange="allDayTime()"/>
 		        			<spring:message code='ezSchedule.t69' />
@@ -1051,7 +1057,7 @@
 			    <tr>
 			    	<th><spring:message code='ezSchedule.t70' /><u>N</u>)</th>
 			      	<td>
-			        	<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" />
+			        	<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
 			        	<label for="btnT2" accesskye="N"></label>
 			      	</td>
 			    </tr>

@@ -69,6 +69,8 @@
 	        var selSpan = "";
 	        var AddressTreeView = null;
 	        var searchgubun = "N";
+	        var selectDomain = "${companyMailDomain}";
+	        var distributionMail = "${distributionMail}";
 	        
 	        window.onload = function () {
 	            try {
@@ -104,13 +106,23 @@
                 var objNode;
                 
                 createNodeInsert(xmlpara, objNode, "DATA");
-                //createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptID}");
-                //createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+                <c:choose>
+                <c:when test="${cChk == '1'}">
+                createNodeAndInsertText(xmlpara, objNode, "DEPTID", companyId);
+                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
+                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
+                createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "false");
+                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
+                </c:when>
+                <c:otherwise>
                 createNodeAndInsertText(xmlpara, objNode, "DEPTID", companyId);
                 createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
                 createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
                 createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
+                </c:otherwise>
+                </c:choose>
+                
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            xmlHTTP.send(xmlpara);
 	            ListTypeChangeIcon();
@@ -289,16 +301,22 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	async : true,
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", type : "user"},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
 		        		var headerData = createXmlDom();
 		        		
-	                    headerData = loadXMLString(result);
-// 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+	                    // headerData = loadXMLString(result);
+	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 	
 	                    if (CrossYN()) {
 	                        var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
+	                        $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
+				            	if($(this).find("DATA11").text() == "addJob"){
+				            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+				            		$(this).find("CELL").eq(0).find("DATA6").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            	}
+				            });
 	                        var Node = headerData.importNode(xmlRtn, true);
 	                        headerData.documentElement.appendChild(Node);
 	                    }
@@ -418,17 +436,27 @@
 		        	data : {
 		        		search : document.all("search_type").value + "::" + document.all("keyword").value, 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
-		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", 
+		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype",
+		        		<c:if test="${cChk == '1'}">		        		
+		        		company : "",
+		        		</c:if>
 		        		type : "user"
 		        	},
 		        	success : function(result){	
 		        		var headerData = createXmlDom();
-	                    headerData = loadXMLString(result);
-// 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+	                    // headerData = loadXMLString(result);
+ 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 						
 	                    var xmlDom = loadXMLString(result);
 	                    if (CrossYN()) {
 	                        var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
+	                        $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
+				            	if($(this).find("DATA11").text() == "addJob"){
+				            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+				            		$(this).find("CELL").eq(0).find("DATA6").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            		//$(this).find("CELL").eq(3).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            	}
+				            });
 	                        var Node = headerData.importNode(xmlRtn, true);
 	                        headerData.documentElement.appendChild(Node);
 	                    }
@@ -613,6 +641,11 @@
 	            	return;
 	            }
 	            
+	           	if (cn == "" && $("#selectDomain").val() == "") {
+					alert("<spring:message code='ezEmail.multiDomain.ksa17' />");
+					return;	
+	            }
+	            
 	            var xmlDom = createXmlDom();
 	            var xmlHTTP = createXMLHttpRequest();
 	            var objNode = "";
@@ -621,6 +654,7 @@
 	            createNodeAndInsertText(xmlDom, objNode, "CN", cn);
 	            createNodeAndInsertText(xmlDom, objNode, "NAME", document.all("TextName").value);
 	            createNodeAndInsertText(xmlDom, objNode, "ID", document.all("TextId").value);
+	            createNodeAndInsertText(xmlDom, objNode, "SELECTDOMAIN", selectDomain);
 	            
 	            var memberList = document.getElementById("ListViewMsgTo").children.item(0).children.item(1).children;
 	            var memberListLength = memberList.length;
@@ -1553,16 +1587,19 @@
 	            pListViewDL.DataSource(loadXMLString(xmlHTTP.responseText));
 	            pListViewDL.RowDataBind();
 	
-	            for (var i = 0; i < pListViewDL.GetRowCount() ; i++) {
-	                pListViewDL.GetDataRows()[i].draggable = true;
+	            var dataRows = pListViewDL.GetDataRows();
+	            var dataRowCount = pListViewDL.GetRowCount();
+	            
+	            for (var i = 0; i < dataRowCount; i++) {
+	                dataRows[i].draggable = true;
 	                if (CrossYN()) {
-	                    pListViewDL.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
+	                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 	                } else {
-	                    pListViewDL.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
+	                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
 	                }
 	
 	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                    pListViewDL.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+	                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
 	                }
 	                
 	            }
@@ -2468,7 +2505,7 @@
                 
                 if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
 		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1) {
-                	alert("<spring:message code='ezEmail.t31' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ]");
+                	alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' ]");
                 	document.getElementById("emailname").focus();
 		            return;
 		        }
@@ -2629,6 +2666,13 @@
 	
 	            makePageSelPage();
 	        }
+	        
+	        $(document).on("change", "#selectDomain", function() {
+				var mailDomain = "@" + $(this).val();
+	        	$("#mailDomain").text(mailDomain);
+	        	
+	        	selectDomain = $(this).val();
+	        });
     	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -2719,9 +2763,25 @@
 		                <th><spring:message code='ezEmail.lhm09' /></th>
 		                <td>
 		                    <input name="TextId" type="text" id="TextId" maxlength="20" class="txtClass" style="width:40%;" value="${cn}">
-		                    <span id="mailDomain" style="width:60%; font-weight: bold;">@${mailDomain}</span>
+		                    <span id="mailDomain" style="width:60%; font-weight: bold; display:none;">@${mailDomain}</span>
+							<c:if test="${cn eq ''}">
+								<span style="font-weight: bold; ">@</span>
+								<select id="selectDomain" style="width: 220px; ">
+									<c:forEach var="item" items="${domainList}">
+										<option value="<c:out value='${item}'/>" ${item eq companyMailDomain ? 'selected' : ''}><c:out value='${item}'/></option>
+									</c:forEach>
+								</select>
+							</c:if>
 		                </td>
 		            </tr>
+		            <c:if test="${cn ne ''}">
+			            <tr>
+			            	<th><spring:message code='main.t78' /></th>
+							<td style="width:100%">
+								${distributionMail}
+							</td>	
+			            </tr>
+		            </c:if>
 		        </table>
 		    <table style="width:100%;margin-top:10px">
 		        <tr>
@@ -2916,7 +2976,7 @@
 		                <table id="ListViewINPUT" style="display: none">
 		                    <tr>
 		                        <td>
-		                             <div id="ManualView" style="width: 648px; height: 476px; padding: 10px; border-right: 1px solid #ddd" class="box">
+		                             <div id="ManualView" style="width: 648px; height: 472px; padding: 10px; border-right: 1px solid #ddd; margin-top: 4px;" class="box">
 	                        		 	<table class="content">
 	                            			<tr>
 	                                			<th><spring:message code='ezEmail.t31' /></th>

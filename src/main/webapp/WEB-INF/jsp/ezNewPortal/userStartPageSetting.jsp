@@ -84,10 +84,10 @@ function setStartPage(event) {
 </style>
 </head>
 <body class="mainbody">
-	<h1><spring:message code='ezPortal.t265'/></h1>
+	<h1><spring:message code='ezNewPortal.t136'/></h1>
 	<div id="mainmenu">
 		<ul>
-			<li><span id="setStartPage"><spring:message code='ezPortal.t248'/></span></li>
+			<li><span id="setStartPage"><spring:message code='ezNewPortal.t137'/></span></li>
 		</ul>
 	</div>
 	<table border="0" cellspacing="0" cellpadding="0" class="ltitle">
@@ -99,8 +99,8 @@ function setStartPage(event) {
 		</tr>		
 		<tr>
 			<td height="50" > 
-				<div>▒&nbsp;<spring:message code='ezPortal.t266'/></div>
-                <div style="margin-top:3px">▒&nbsp;<spring:message code='ezPortal.t267'/></div>
+				<div>▒&nbsp;<spring:message code='ezNewPortal.t138'/></div>
+                <div style="margin-top:3px">▒&nbsp;<spring:message code='ezNewPortal.t139'/></div>
 			</td>
 		</tr>
 		<tr>
@@ -113,8 +113,8 @@ function setStartPage(event) {
 	<table class="mainlist"> 
 		<tr>
 			<th>&nbsp;</th>
-			<th><spring:message code='ezPortal.t268'/></th>
-			<th><spring:message code='ezPortal.t257'/></th>
+			<th><spring:message code='ezNewPortal.t140'/></th>
+			<th><spring:message code='ezNewPortal.t141'/></th>
 			<th> &nbsp;</th>
 		</tr>
 	</table>

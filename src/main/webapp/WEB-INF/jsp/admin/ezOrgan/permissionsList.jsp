@@ -34,6 +34,7 @@
 			var isAdmin = ${isAdmin};
 			var testObj = {};
 			var type = "";
+			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
 
 			document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -183,20 +184,22 @@
 				
 				cnt = acList.children[1].childElementCount;
 				
+				var noItemsChk = acList.children[1].children[0].getAttribute("id");
+				
+				if (cnt <= 1 && noItemsChk == "lvPermissionList_TR_noItems") {
+					return;
+				}
+				
 				var i = 0;
 				for (i; i < cnt; i++) {
 					var seq = acList.children[1].children[i].children[0].innerHTML;
 					
-					if (seq == "<spring:message code = 'ezOrgan.0hun07' />") {
-						
-					} else {
-						acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" 
-						+ seq 
-						+ "' value='" 
-						+ seq 
-						+ "' onchange='inputFunc(event,"
-						+ seq + ")'></input>";
-					}
+					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" 
+					+ seq 
+					+ "' value='" 
+					+ seq 
+					+ "' onchange='inputFunc(event,"
+					+ seq + ")'></input>";
 				} 
 			}
 			
@@ -384,7 +387,8 @@
 				
 				add.addEventListener("click", Permissions_Add);
 				del.addEventListener("click", Choose_Del);
-				mail.addEventListener("click", email_onclick);
+				if(useExternalMailServer == 'NO')
+					mail.addEventListener("click", email_onclick);
 			}
 			
 			var Tab1_SelectID = "";
@@ -746,7 +750,9 @@
 		            <!-- <li><span class="icon16 icon16_delete" onClick="Permissions_Del('MOD')"></span></li> -->
 		            <li><span class="icon16 icon16_delete" id="del"></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
+		            <c:if test="${ useExternalMailServer eq 'NO'}">
 		            <li id="email"><span class="icon16 icon16_mail_gray"></span></li>
+		            </c:if>
 		        </ul>
 		    </div>
 		    <script type="text/javascript">

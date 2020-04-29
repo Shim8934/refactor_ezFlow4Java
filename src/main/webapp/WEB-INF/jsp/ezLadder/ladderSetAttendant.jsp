@@ -34,6 +34,9 @@
 			}
 			.countColor {
 				color:#017BEC;
+			}
+			.imgbck.ladder {
+				margin-top: -30px !important;
 			}	    	
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezLadder.e1', 'msg')}"></script>
@@ -1950,6 +1953,10 @@
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezLadder.t041' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezLadder.t042' /></option>
 	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezLadder.t043' /></option>
+	                                                        <c:if test="${primaryLang eq '3' }">
+		                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+		                                                    </c:if>
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezLadder.t044' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezLadder.t045' /></option>
 	                                                    </select>
@@ -2063,7 +2070,7 @@
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver2(ListViewMsgTo)">
 	                        </td>
 	                        <td style="vertical-align: top; position: relative;">
-								<a class="imgbtn imgbck" id="ladderBmBtn" onclick="setBmGroup('add', 0);" style="position:  absolute; top: 0; right:  0; margin-top: -30px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t021" /></span></a>
+								<a class="imgbtn imgbck ladder" id="ladderBmBtn" onclick="setBmGroup('add', 0);" style="position:  absolute; top: 0; right:  0; margin-top: -30px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t021" /></span></a>
 	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:-30px;">
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezLadder.t013'/></span>
 	                            </h2>

@@ -1,16 +1,13 @@
 package egovframework.ezEKP.ezPersonal.service.impl;
 
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.annotation.Resource;
 
@@ -333,9 +330,64 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		map.put("v_pCompanyID", pComapnyID);
 		map.put("nowDate", nowDate);
 		map.put("tenantID", tenantID);
-
+		
+		List<PersonalGetPopUpListUserVO> popupList = ezPersonalDAO.getPopUpListUser(map);
+		
 		logger.debug("getPopUpListUser ended");
-		return (List<PersonalGetPopUpListUserVO>) ezPersonalDAO.getPopUpListUser(map);
+		return popupList;
+	}
+	
+	@Override
+	public List<PersonalGetPopUpListUserVO> getPopUpListUserWithAuth(String pComapnyID, int tenantID, String offset, String userId, String deptId) throws Exception {
+		logger.debug("getPopUpListUser started");
+		logger.debug("[params] companyId=" + pComapnyID + ", tenantId=" + tenantID + ", userId = " + userId + ", deptId = " + deptId);
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		//String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+		// 2018-11-23 황윤호 offset 적용 
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+
+		map.put("v_pCompanyID", pComapnyID);
+		map.put("nowDate", nowDate);
+		map.put("tenantID", tenantID);
+		
+		List<PersonalGetPopUpListUserVO> popupList = ezPersonalDAO.getPopUpListUser(map);
+		List<PersonalGetPopUpListUserVO> popupListWithAuth = new ArrayList<PersonalGetPopUpListUserVO>();
+		
+		if (popupList != null) {
+			for (PersonalGetPopUpListUserVO popup : popupList) {
+				map.put("companyId", pComapnyID);
+				map.put("tenantId", tenantID);
+				map.put("userId", userId);
+				map.put("itemSeq", popup.getItemSeq());
+				map.put("deptId", deptId);
+				
+				boolean popupYN = ezPersonalDAO.getPopupPermitYN(map);
+				
+				logger.debug("[popupAuth] popupSeq = " + popup.getItemSeq() + ", popupYN = " + popupYN);
+				
+				if (popupYN) {
+					popupListWithAuth.add(popup);
+				} else {
+					// popupYN이 false일 때 권한 그룹리스트 가져와서 체크
+					List<String> groupList = ezPersonalDAO.getPopupUserGroupList(map);
+					
+					if (groupList != null) {
+						for (String groupId : groupList) {
+							boolean groupPermissionYN = ezCommonService.getPermissionGroupAccessYN(groupId, pComapnyID, tenantID, userId, deptId, true);
+							
+							if (groupPermissionYN) {
+								popupListWithAuth.add(popup);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		logger.debug("getPopUpListUser ended");
+		return popupListWithAuth;
 	}
 	
 	@Override
