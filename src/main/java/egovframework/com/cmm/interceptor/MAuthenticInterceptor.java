@@ -1,6 +1,9 @@
 package egovframework.com.cmm.interceptor;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -63,6 +66,27 @@ public class MAuthenticInterceptor extends WebContentInterceptor {
 			if (mobileClientServerURL.contains(ip)) {				
 				return true;
 			} else {				
+                String[] allowedIPAddresses = mobileClientServerURL.split(",");
+                Set<String> allowedIPAddressSet = new HashSet<String>();
+                
+                for (int i = 0; i < allowedIPAddresses.length; i++) {
+                    allowedIPAddressSet.add(allowedIPAddresses[i].trim());
+                }
+				
+            	boolean isRemoteIpBelongToIpRange = false;
+            	Iterator<String> iter = allowedIPAddressSet.iterator();
+            	
+            	while (iter.hasNext()) {
+            		if (ip.startsWith(iter.next())) {
+            			isRemoteIpBelongToIpRange = true;
+            			break;
+            		}
+            	}
+                
+            	if (isRemoteIpBelongToIpRange) {
+            		return true;
+            	}
+            	
 				return false;
 			}
 		} else {			
