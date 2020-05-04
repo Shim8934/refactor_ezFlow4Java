@@ -5906,12 +5906,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		String adminType = request.getParameter("adminType");
 		String buttonHidden = "N";
 		String boardName = request.getParameter("boardName");
+		String boardViewForm = request.getParameter("boardViewForm");
 		String useOneLineCount = "NO";
 		String sortBy = "";
 		int page = 0;
 		
 		if (request.getParameter("buttonHidden") != null) {
 			buttonHidden = request.getParameter("buttonHidden");
+		}
+		/* 2020-05-04 홍승비 - 썸네일, 앨범형식보기 분기 파라미터 추가 (디폴트는 thumbnail) */
+		if (request.getParameter("boardViewForm") == null) {
+			boardViewForm = "thumbnail";
 		}
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
@@ -5946,6 +5951,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardProperty", boardProperty);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("boardViewForm", boardViewForm);
 
 		logger.debug("boardItemListThumbnail ended");
 		return "ezBoard/boardItemListThumbnail";

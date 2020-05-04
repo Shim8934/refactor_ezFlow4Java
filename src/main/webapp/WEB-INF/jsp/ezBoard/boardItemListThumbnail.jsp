@@ -150,7 +150,7 @@
 		    var starttime;
 		    var endtime;
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
-		    var boardViewForm = "thumbnail";
+		    var boardViewForm = "${boardViewForm}";
 		    var likeFlag = "${boardInfo.likeFlag}";
 		    var useNotReadCnt = "${useNotReadCnt}";
 		    var BoardGroupID = "${boardInfo.boardGroupID}";
@@ -252,6 +252,9 @@
 		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
 		    	});
+		    	
+		    	/* 2020-05-04 홍승비 - 썸네일, 앨범형식 보기 분기 추가 */
+		    	$("#boardViewSelect").val(boardViewForm).prop("selected", true);
 		    });
 		    
 		    /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
@@ -479,8 +482,10 @@
                 
                	var rowCnt = GetElementsByTagName(xmlDoc, "ROW").length;
                 var listXML = "";
+                /* 2020-05-04 홍승비 - 앨범형식 보기 시 특수문자 파싱 추가 */
                 for (var i = 0; i < rowCnt; i++) {
                 	var title= GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "TITLE")[0].textContent;
+                	title = MakeXMLString(title);
                 	var boardID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA1")[0].textContent;
                 	var itemID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA2")[0].textContent;
                 	var writerID = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA3")[0].textContent;
@@ -877,7 +882,7 @@
 		    }
 		
 		    function refresh_onclick() {
-		        window.location.href = "/ezBoard/boardItemListThumbnail.do?page=" + CurPage.toString() + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType;
+		        window.location.href = "/ezBoard/boardItemListThumbnail.do?page=" + CurPage.toString() + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType + "&boardViewForm=" + boardViewForm;
 		    }
 		
 		    function AddToMyBoards() {
@@ -1348,8 +1353,8 @@
 				</li> -->
 				<%-- 2019-04-09 홍승비 - 썸네일게시판의 보기형식 선택옵션 추가 --%>
 				<li>
-					<select style="padding-left:4px;" onchange="selectBoardView(this)">
-						<option value="thumbnail" selected><spring:message code='ezBoard.hsbal01' /></option>
+					<select id="boardViewSelect" style="padding-left:4px;" onchange="selectBoardView(this)">
+						<option value="thumbnail"><spring:message code='ezBoard.hsbal01' /></option>
 						<option value="album"><spring:message code='ezBoard.hsbal02' /></option>
 					</select>
 				</li>
