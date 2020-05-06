@@ -438,6 +438,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("companyList", companyList);
 		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
+		model.addAttribute("useAdditionalRole", ezCommonService.getTenantConfig("USE_AdditionalROle", userInfo.getTenantId()));
 		model.addAttribute("userLang", userLang);
 		logger.debug("aprManage ended.");
 		
@@ -9966,4 +9967,25 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
         return result;
     }
+    
+	/**
+	 * 2020-04-29 - 전자결재 결재자 aprtype 정보
+	 */	
+	@RequestMapping(value = "/ezApprovalG/getAprStateToAprType.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getAprStateToAprType(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("getAprStateToAprType started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String pDocID = request.getParameter("docID");
+		String pUserID = request.getParameter("userID");
+		String pDocState = request.getParameter("docState");
+		String pOrgCompanyID = request.getParameter("orgCompanyID");		
+
+		String aprType_aprState = ezApprovalGService.getAprType_AprState(pDocID, pUserID, pDocState, pOrgCompanyID, userInfo.getTenantId());
+		
+		logger.debug("getAprStateToAprType ended");
+		return aprType_aprState;
+	}    
 }
