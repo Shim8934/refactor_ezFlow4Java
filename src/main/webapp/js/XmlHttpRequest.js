@@ -1024,7 +1024,6 @@ function DivPopUpPosition_Layer(popUpW, popUpH) {
 
 function DivPopUpShow(popUpW, popUpH, URL) {
     try {
-        debugger;
         var Position = DivPopUpPosition(popUpW, popUpH);
         document.getElementById("iFrameLayer").src = URL;
         document.getElementById("iFramePanel").style.top = Position[0] + "px";
