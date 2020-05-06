@@ -89,7 +89,7 @@
 				            </a>
 				            <a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&journalId=${journal.journalId}">
 				            	<span>
-				            		<span class="attachFileName" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='black'" style="cursor: pointer; color: black;">
+				            		<span class="attachFileName" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='black'" style="cursor: pointer; color: black; display:inline;">
 				            			<c:out value='${file.fileName }'/>&nbsp;(${file.fileTransSize })
 				            		</span>
 				            	</span> 
