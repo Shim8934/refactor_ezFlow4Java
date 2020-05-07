@@ -4,17 +4,14 @@ package egovframework.ezEKP.ezResource.service.impl;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,13 +27,10 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
-import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.dao.EzResourceDAO;
-import egovframework.ezEKP.ezResource.service.EzResourceAdminService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
@@ -65,12 +59,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	@Resource(name="EzResourceDAO")
 	private EzResourceDAO ezResourceDAO;
 	
-	@Autowired
-	private EzOrganDAO ezOrganDao;
-	
-	@Autowired
-	private EzOrganAdminDAO ezOrganAdminDao;
-	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
@@ -85,9 +73,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@Autowired
 	private EzOrganService ezOrganService;
-	
-	@Autowired
-	private EzResourceAdminService ezResourceAdminService;
 
 	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID,String companyID, String treeType, int tenantID, String adminType) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -1064,8 +1049,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String gresFlag = scheRSDom.getElementsByTagName("gresFlag").item(i).getTextContent();
 			String allDay = scheRSDom.getElementsByTagName("allDay").item(i).getTextContent();
 			String writeDay = commonUtil.getDateStringInUTC(scheRSDom.getElementsByTagName("writeDay").item(i).getTextContent(), offset, false);
-			String jobTitle = "";
-			String jobTitle2 = "";
 				
 			/*if (pType == null || pType.equals("")) {
 				 jobTitle = scheRSDom.getElementsByTagName("jobtitle").item(i).getTextContent();
@@ -2235,8 +2218,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	@Override
 	public String getSubClsTree(String xmlStr, String langStr, String pComID, String pDeptID, String pUserID, int tenantID) throws Exception {
         String strUserID = "";
-        String strDeptPath = "";
-        String returnXML = "";
         String userAdminFlag = "";
         String strAdminType = "";
    
@@ -3708,6 +3689,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		boolean loopFlag = true;
 		String oSDate;
 		String oStartDate;
+		@SuppressWarnings("unused")
 		String oEDate;
 		String oEndDate;
 		String tEDate;

@@ -5,7 +5,6 @@ import java.util.Locale;
 
 import org.json.simple.JSONObject;
 
-import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;

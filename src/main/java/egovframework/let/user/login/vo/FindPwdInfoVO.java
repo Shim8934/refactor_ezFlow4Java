@@ -1,9 +1,6 @@
 package egovframework.let.user.login.vo;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-
-import net.fortuna.ical4j.model.DateTime;
 
 public class FindPwdInfoVO {
 

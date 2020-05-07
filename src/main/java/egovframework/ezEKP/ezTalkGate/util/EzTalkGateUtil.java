@@ -6,8 +6,6 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +17,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class EzTalkGateUtil {
 
-	private static final Logger logger = LoggerFactory.getLogger(EzTalkGateUtil.class);
-	
 	@Value("#{cryptos['EzTalkGateUtil.apb']}")
 	private String apb;
     private static final String iv = "5F1F6B63AAA65002";
