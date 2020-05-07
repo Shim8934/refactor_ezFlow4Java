@@ -1686,13 +1686,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("pollResOk ended.");
 		
-		/* 2020-04-17 홍승비 - JBoss IE 대응을 위해 pollState 파라미터에 encodeURIComponent 추가 */
+		/* 2020-05-07 홍승비 - pollState의 인코딩 방식 수정 (JBoss + IE 대응) */
 		/* 2018-10-01 홍승비 - 설문조사 응답 후 리스트로 이동하지 않고 해당 설문조사를 유지하도록 수정 */
 		if (notResponse == 0) {
 			response.getWriter().write("<script language='javascript'>\n");
 			//response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
 			response.getWriter().write("document.location.href = '/ezCommunity/pollRes.do?code=" + commonUtil.stripScriptTags(code) + "&pollManagerID=" + commonUtil.stripScriptTags(pollManagerID)
-					+ "&pollState=encodeURIComponent(" + commonUtil.stripScriptTags(pollState) + ")';\n");		
+					+ "&pollState=" + URLEncoder.encode(commonUtil.stripScriptTags(pollState), "UTF-8") + "';\n");
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
 		} else {
