@@ -700,7 +700,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String useReSend = ezCommonService.getTenantConfig("useReSend", loginInfo.getTenantId());
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", loginInfo.getTenantId());
 		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
-				
+		
+		// 20200508 조진호 - 패키지 타입이 메일인 경우 메일 게시가 보이지 않도록 처리하기 위해 추가
+		String packageType = commonUtil.getPackageType(loginInfo.getTenantId());
+		model.addAttribute("packageType", packageType);
+		
 		model.addAttribute("fromStr", fromStr);
 		model.addAttribute("fromEmail", fromEmail);
 		model.addAttribute("url", url);
