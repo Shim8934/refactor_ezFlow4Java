@@ -1180,7 +1180,12 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
         	if (tmpDocState == strDocState12) {
         		openLocation = "/ezApprovalG/recevGDeptHapyui.do";
         	} else {
-        		openLocation = "/ezApprovalG/recevGSusin.do";
+        		var docType = GetAttribute(pCurSelRow, "DATA15");
+        		if (docType == "001") {
+        			openLocation = "/ezApprovalG/recevG.do";
+        		} else {
+        			openLocation = "/ezApprovalG/recevGSusin.do";
+        		}
         	}
 
             openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);

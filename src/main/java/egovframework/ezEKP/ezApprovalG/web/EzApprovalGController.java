@@ -5416,6 +5416,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		String susinAdmin = "";
+		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+		
 		Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
 		
         String isNonElecRec = "";
@@ -5485,6 +5492,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("isNonElecRec", isNonElecRec);
 		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
+		model.addAttribute("susinAdmin", susinAdmin);
 		
 		logger.debug("recevG ended.");
 		
@@ -6093,6 +6101,31 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.setBebu(xmlDom, dirPath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo, "");
 		
 		logger.debug("setBebu ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 접수 재배부 요청 표출 Method
+	 */	
+	@RequestMapping(value = "/ezApprovalG/setReBebu.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String setReBebu(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		logger.debug("setReBebu started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("pDocID");
+		String receiveSN = request.getParameter("pReceiveSN");
+		String deptID = request.getParameter("pDeptID");
+		
+		String realPath = commonUtil.getRealPath(request);
+		String dirPath = realPath +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		userInfo.setRealPath(commonUtil.getRealPath(request));
+		
+		String result = ezApprovalGService.setReBebu(docID, receiveSN, deptID, userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+		
+		logger.debug("setReBebu ended");
 		
 		return result;
 	}
@@ -9271,6 +9304,40 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		ezApprovalGService.deleteOpinionTypeInfo(docID, opinionType, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("deleteOpinionTypeInfo ended.");
+		
+		return "json";
+	}
+	
+	/**
+	 * 전자결재G 재배부 후 재배부의견을 제외한 모든의견 삭제
+	 */
+	@RequestMapping(value = "/ezApprovalG/OpinionDel2.do", method = RequestMethod.POST)
+	public String OpinionDel2(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("OpinionDel2 started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		
+		ezApprovalGService.OpinionDel2(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("OpinionDel2 ended.");
+		
+		return "json";
+	}
+	
+	/**
+	 * 전자결재G 중계문서 접수 시 재배부의견은 삭제처리
+	 */
+	@RequestMapping(value = "/ezApprovalG/OpinionDel3.do", method = RequestMethod.POST)
+	public String OpinionDel3(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("OpinionDel3 started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		
+		ezApprovalGService.OpinionDel3(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("OpinionDel3 ended.");
 		
 		return "json";
 	}

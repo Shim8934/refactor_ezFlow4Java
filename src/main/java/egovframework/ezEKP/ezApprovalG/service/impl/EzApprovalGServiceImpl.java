@@ -6022,7 +6022,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			map.put("v_RECEIVESN", receivedSN);
-			map.put("v_SentDeptID", signList2.getSendDeptID());
+			map.put("v_SentDeptID", signList2.getSentDeptID());
 			map.put("v_SentDeptName", signList2.getSentDeptName());
 			map.put("v_SentDeptName2", signList2.getSentDeptName2());
 			map.put("v_ReceivedDeptID", signList2.getReceivedDeptID());
@@ -12540,6 +12540,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 				map.put("v_FUNCTIONTYPE", staASDoJak);
 				
+				
 				ezApprovalGDAO.insertBebuAprDocInfo(map);
 				ezApprovalGDAO.insertBebuExpAprDocInfo(map);
 				ezApprovalGDAO.insertBebuAprAttachInfo(map);
@@ -12552,6 +12553,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_APRSTATE", staASBaeBu);
 				map.put("v_DEPTID", deptID);
 				ezApprovalGDAO.insertBebuAprReceiptProcessInfo(map);
+				
+				// 중계문서에서 배부 받는 부서가 2개 이상일 때, 보낸 부서가 외부기관으로 입력되지 않는 오류 수정. 2020-05-13 홍대표.
+				boolean isRelayDoc = ezApprovalGDAO.isRelayDoc(map) > 0 ? true : false;
+				if (isRelayDoc) {
+					ApprGReceiveDocVO sentDeptInfo = ezApprovalGDAO.getBebuRelayDocSenderInfo(map);
+					Map<String, Object> map2 = new HashMap<>();
+					map2.put("v_DOCID", newID);
+					map2.put("companyID", companyID);
+					map2.put("v_TENANTID", tenantID);
+					map2.put("v_SENTDEPTID", sentDeptInfo.getSentDeptID());
+					map2.put("v_SENTDEPTNAME", sentDeptInfo.getSentDeptName());
+					map2.put("v_SENTDEPTNAME2", sentDeptInfo.getSentDeptName2());
+					
+					ezApprovalGDAO.updateBebuRelayDocSenderInfo(map2);
+				}
 				
 				String subSQL = updateDeliveryList(newID, docState, ezOrganService.getPropertyValue(docState, "displayName", tenantID), ezOrganService.getPropertyValue(docState, "displayName2", tenantID), deptID, 
 						deptName, deptName2, "", "", "", docState, "", companyID, "QUERY", lang, tenantID, userInfo.getDisplayName());
@@ -25912,6 +25928,37 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
+	public void OpinionDel2(String docID, String companyID, int tenantId) throws Exception {
+		logger.debug("OpinionDel2 started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantId);
+		map.put("opinionSN", 1);
+		
+		ezApprovalGDAO.OpinionDel2(map);
+		ezApprovalGDAO.updateReBebuOpinionSN(map);
+		
+		logger.debug("OpinionDel2 started");
+	}
+
+	@Override
+	public void OpinionDel3(String docID, String companyID, int tenantId) throws Exception {
+		logger.debug("OpinionDel3 started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantId);
+		
+		ezApprovalGDAO.OpinionDel3(map);
+		ezApprovalGDAO.updateHasOpinionYN(map);
+		
+		logger.debug("OpinionDel3 started");
+	}
+	
+	@Override
 	public int lastKyulJeHabYuiYN(String docID, String flag, String companyID, int tenantId) throws Exception {
 		int result = 0;
 		
@@ -30514,4 +30561,113 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
         return "<RESULT>TRUE</RESULT>";
     }
+
+	@Override
+	public String setReBebu(String docID, String receiveSN, String deptID, LoginVO userInfo, String companyID, int tenantId, String lang) throws Exception {
+		logger.debug("setReBebu started");
+		
+		
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("companyID", companyID);
+        map.put("v_DOCID", docID);
+        map.put("v_TENANTID", tenantId);
+        
+        Map<String, Object> deliveryDeptInfo = ezApprovalGDAO.getDeliveryDeptInfo(map);
+        
+        map.put("v_RECEIVEDDEPTID", (String) deliveryDeptInfo.get("CN"));
+        map.put("v_RECEIVEDDEPTNAME", (String) deliveryDeptInfo.get("DISPLAYNAME"));
+        map.put("v_RECEIVEDDEPTNAME2", (String) deliveryDeptInfo.get("DISPLAYNAME2"));
+        map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+
+        ezApprovalGDAO.updateReBebuAprReceiptProcessInfo(map);
+        
+		ezApprovalGDAO.deleteSetBebuExpAprLine(map);
+		ezApprovalGDAO.deleteSetBebuAprLineInfo(map);
+        
+		Map<String, Object> map3 = new HashMap<String, Object>();
+		map3.put("companyID", companyID);
+		map3.put("v_DOCID", docID);
+		map3.put("v_TENANTID", userInfo.getTenantId());
+		map3.put("v_FLAG", "APR");
+		
+		String docHref = ezApprovalGDAO.getDocInfoHref(map3);
+		String formURL = userInfo.getRealPath() + docHref;
+		String ext = getExtendedFileName(formURL);
+		
+		if("mht".equals(ext)) {
+			String loadMht = ezCommonService.loadMHTFile(formURL); // 결재문서 가져오기
+			// HTML -> MHT
+			String content = ezCommonService.startMHT2HTML(userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), loadMht, userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), userInfo.getRealPath(), userInfo.getLocale(), "", "");
+			//HTML 파싱 document 클래스 겹쳐서 임포트 못함
+			org.jsoup.nodes.Document doc = Jsoup.parse(content);
+			
+			Elements susinSignField = doc.select("[id^='" + receiveSN + "sign']");
+			
+			for (int i = 0; i < susinSignField.size(); i++) {
+				susinSignField.get(i).html(" ");
+			}
+			
+			Elements susinJikweField = doc.select("[id^='" + receiveSN + "jikwe']");
+			
+			for (int i = 0; i < susinJikweField.size(); i++) {
+				susinJikweField.get(i).html(" ");
+			}
+			
+			String tempHtml = doc.outerHtml();
+			OutputStream outputStream = null;
+			OutputStreamWriter output = null;
+			
+			try {
+				String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, userInfo.getRealPath(), userInfo.getLocale());
+				String tempMht = new File(formURL).getParentFile() + commonUtil.separator + docID + "_backup.mht";
+				FileUtils.copyFile(new File(formURL), new File(tempMht));
+				
+				outputStream = new FileOutputStream(new File(formURL));
+				output = new OutputStreamWriter(outputStream);
+				
+				output.write(convertedMHT);
+			}  catch (FileNotFoundException fnfe) {
+				logger.debug("fnfe: {}", fnfe);
+			} catch (IOException ioe) {
+				logger.debug("ioe: {}", ioe);
+			} catch (Exception e) {
+				logger.debug("e: {}", e);
+			}  finally{
+				
+				if (output != null) {
+					try {
+						output.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+					}
+				}
+				if (outputStream != null) {
+					try {
+						outputStream.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+						return "";
+					}
+				}
+			}
+		} else if("hwp".equals(ext)) {
+			HWPFile loadHwp = HWPReader.fromFile(formURL);
+			
+	        //재배부 요청시 수신결재칸 비워주기.
+			for (int i = 1; i < 10; i++) {
+				if (findHwpField("1sign" + i, loadHwp)) {
+					setHwpText("1sign" + i, " ", loadHwp);
+					setHwpText("1jikwe" + i, " ", loadHwp);
+				} else {
+					break;
+				}
+			}
+			
+			HWPWriter.toFile(loadHwp, formURL);
+		}
+		
+		logger.debug("setReBebu ended");
+		
+		return "TRUE";
+	}
 }

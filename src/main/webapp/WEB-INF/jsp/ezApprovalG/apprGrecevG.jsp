@@ -114,6 +114,7 @@
 			var docNumZeroCnt = "<c:out value = '${docNumZeroCnt}'/>";
 		    var nonElecRec = "<c:out value = '${isNonElecRec}'/>";
 		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
+		    var pSusinAdmin = "<c:out value = '${susinAdmin}'/>";
 		    
 			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 			
@@ -157,16 +158,16 @@
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    getDocInfo();
 		                    GetExchInfo();
-		                    if (pHasOpinionYN == "Y") {
-		                        var pInformationContent;
-		                        var Ans;
-		                        pInformationContent = "<spring:message code='ezApprovalG.t126'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
-		                        Ans = OpenInformationUI(pInformationContent);
+// 		                    if (pHasOpinionYN == "Y") {
+// 		                        var pInformationContent;
+// 		                        var Ans;
+// 		                        pInformationContent = "<spring:message code='ezApprovalG.t126'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
+// 		                        Ans = OpenInformationUI(pInformationContent);
 		
-		                        if (Ans) {
-		                            openOpinionUI("Display");
-		                        }
-		                    }
+// 		                        if (Ans) {
+// 		                            openOpinionUI("Display");
+// 		                        }
+// 		                    }
 		                }
 		            }
 		        } catch (e) {
@@ -204,6 +205,7 @@
 		            pGubun = "11";
 		            setProperty();
 		            process_AfterOpen();
+		            CheckOpinionYN();
 		            document.getElementById('form2').style.display = "none";
 		
 		            if (SignCount < 1) {
@@ -214,6 +216,38 @@
 		                document.getElementById("btntotaldocinfo").style.display = "none";
 		            }
 		        }
+		    }
+		    
+		    function CheckOpinionYN() {
+		        if (pHasOpinionYN == "Y") {
+		            var pInformationContent = "<spring:message code='ezApprovalG.t9'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
+		            OpenInformationUI(pInformationContent, CheckOpinionYN_Complete);
+		        }
+		    }
+		    function CheckOpinionYN_Complete(Ans) {
+		        DivPopUpHidden();
+		        if (Ans)
+		            //openOpinionUI("", CheckOpinionYN_Complete_Complete);
+		        	openOpinionUI_New("", CheckOpinionYN_Complete_Complete);
+		    }
+		
+		    function CheckOpinionYN_Complete_Complete(ret) {
+		        DivPopUpHidden();
+		        if (ret == "Clear") {
+					pHasOpinionYN = "N";
+				} else if (ret == "cancel") {
+					//do_nothing
+				} else {
+			        var objXML = createXmlDom();
+			        objXML = loadXMLString(ret);
+			        
+			        var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+			        if (NodeList.length != 0) {
+			            pHasOpinionYN = "Y";
+			        } else {
+			            pHasOpinionYN = "N";
+			        }
+				}
 		    }
 		    
 		    function DocumentComplete() {
@@ -252,6 +286,15 @@
 		                }
 		            }
 		        }
+		        
+		        //재배부 요청 버튼 보이는 함수. 2020-04-23 홍대표.
+		        setBtnEnable();
+		        
+		        // 문서과에서 접수 후 반송했을 때, 배부버튼이 보이지 않도록 처리하는 부분.
+	            if (g_DraftFlag == "REDRAFT" && pDraftFlag == "SUSIN") {
+	                setMenuBar("btnDistribute", false);
+	            }
+		        
 		        setProperty();
 		        setAutoProperty();
 		        document.getElementById('form2').style.display = "none";
@@ -261,7 +304,11 @@
 		            document.getElementById("btnSendDraft").style.display = "none";
 		            document.getElementById("btnRJunkyul").style.display = "none";
 		            document.getElementById("btntotaldocinfo").style.display = "none";
+	                // 사인칸이 없을 때만, 편철 버튼 보이도록 수정. 닷넷참고.
+		            document.getElementById("btnCabinet").style.display = "";
 		        }
+		        
+		        ClearDocCellInfo(); // 재배부시 문서 결재선 초기화
 		    }
 		    function FieldsAvailable2() {
 		        setAutoProperty();
@@ -337,6 +384,7 @@
 		        }
 		        document.getElementById('form2').style.display = "none";
 		        process_AfterOpen();
+		        CheckOpinionYN();
 		    }
 		    function DocumentComplete2() {
 		        var URL = encodeURI(pFormHref);
@@ -568,27 +616,31 @@
 		        }
 		    }
 		    function btnReDistribute_onclick() {
-		        var ret = openOpinionUI("BanSong");
-		        if (ret != "cancel" && ret != undefined) {
-		            var xmlpara = createXmlDom();
-		            var xmlhttp = createXMLHttpRequest();
-		
-		            var objNode;
-		            createNodeInsert(xmlpara, objNode, "PARAMETER");
-		            createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-		            createNodeAndInsertText(xmlpara, objNode, "pReceivSN", pSusinSN);
-		            createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-		
-		            xmlhttp.open("Post", "aspx/setReBebu.aspx", false);
-		            xmlhttp.send(xmlpara);
-		
-		            if (xmlhttp.responseText == "TRUE") {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1426'/>";
-		                OpenAlertUI(pAlertContent);
-		                btnClose_onclick();
-		            }
-		        }
+		        var ret = openOpinionUI_New("ReBebu", openOpinionUI_Distribute_Complete);
 		    }
+		    
+	        function btnReDistribute_onclick_complete() {
+	        	$.ajax({
+                    type : "POST",
+                    dataType : "text",
+                    async : false,
+                    url : "/ezApprovalG/setReBebu.do",
+                    data : {
+	       		            pDocID : pDocID,
+	       		            pReceiveSN : pSusinSN,
+	       		         	pDeptID : arr_userinfo[4],
+                    },
+                    success : function(text){
+                            result = text;
+        		            if (result == "TRUE") {
+        		            	delOpinionInfoAll2();
+        		                var pAlertContent = "<spring:message code='ezApprovalG.t1426'/>";
+        		                OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+        		            }
+                    }
+            	});
+	        }
+		    
 		    var writeboardselect_modal_dialogArguments = new Array();
 		    function btnBoard_onclick() {
 		        if (pFormHref == "") {
@@ -625,18 +677,22 @@
 		
 		    function btnRJunkyul_onclick() {
 		        var RecevState = getDocRecevState();
-		        if (RecevState != "011" && RecevState != "012" && RecevState != "014" && RecevState != "") {
-		            if (RecevState == "015") {
-		                var pAlertContent = strLang912;
-		                OpenAlertUI(pAlertContent);
-		            }
-		            else if (RecevState == "013") {
-		                var pAlertContent = strLang913;
-		                OpenAlertUI(pAlertContent);
-		            }
-		
-		            btnClose_onclick();
-		            return false;
+		        
+		        //중계문서 접수 > 반송 > 재기안 시 결재올림, 전결 할 때 화면 꺼지는 버그 수정 2020-05-12 홍대표
+		        if (isReDraft != "Y") {
+			        if (RecevState != "011" && RecevState != "012" && RecevState != "014" && RecevState != "") {
+			            if (RecevState == "015") {
+			                var pAlertContent = strLang912;
+			                OpenAlertUI(pAlertContent);
+			            }
+			            else if (RecevState == "013") {
+			                var pAlertContent = strLang913;
+			                OpenAlertUI(pAlertContent);
+			            }
+			
+			            btnClose_onclick();
+			            return false;
+			        }
 		        }
 		
 		        var Resultxml;
@@ -892,21 +948,24 @@
 			    		}
 			    		
 			    	});	
-		            
-		            if (RecevState != "011" && RecevState != "012" && RecevState != "014" && RecevState != "" ) {
-		                if (RecevState == "015") {
-		                    var pAlertContent = strLang912;
-		                    OpenAlertUI(pAlertContent);
-		                }
-		                else if (RecevState == "013") {
-		                    var pAlertContent = strLang913;
-		                    OpenAlertUI(pAlertContent);
-		                }
-		
-		                btnClose_onclick();
-		                return false;
+			    	
+			    	//중계문서 접수 > 반송 > 재기안 시 결재올림, 전결 할 때 화면 꺼지는 버그 수정 2020-05-12 홍대표
+		            if (isReDraft != "Y") {
+			            if (RecevState != "011" && RecevState != "012" && RecevState != "014" && RecevState != "" ) {
+			                if (RecevState == "015") {
+			                    var pAlertContent = strLang912;
+			                    OpenAlertUI(pAlertContent);
+			                }
+			                else if (RecevState == "013") {
+			                    var pAlertContent = strLang913;
+			                    OpenAlertUI(pAlertContent);
+			                }
+			
+			                btnClose_onclick();
+			                return false;
+			            }
+			            var rtnSignInfo;
 		            }
-		            var rtnSignInfo;
 		            var fields = message.GetFieldsList();
 		            var field = message.GetListItem(fields, "doctitle");
 		
@@ -1159,6 +1218,9 @@
 		                    else
 		                        pAlertContent = "<spring:message code='ezApprovalG.t1698'/>";
 		                        
+			                //중계문서 접수 시 재배부의견은 삭제처리 2020-05-11 홍대표
+			                delOpinionInfoAll3();
+		                    
 		                    OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
 		                    chkOK = true;
 		                }
@@ -1173,6 +1235,7 @@
 		                            return;
 		                        }
 		                    }
+		                    
 		                    pAlertContent = "[" + "<spring:message code='ezApprovalG.t1495'/>";
 		                    OpenAlertUI(pAlertContent);
 		                    return;
@@ -1420,7 +1483,7 @@
 		        <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo()" ><spring:message code='ezApprovalG.t1742'/></span></li>        
 		        <li id="btnSendDraft"><span onClick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
 		        <li id="btnRJunkyul" ><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li>
-			    <li id=btnCabinet><span  onClick="return btnCabinet_onclick()" ><spring:message code='ezApprovalG.t1406'/></span></li>
+			    <li id=btnCabinet style="display:none"><span  onClick="return btnCabinet_onclick()" ><spring:message code='ezApprovalG.t1406'/></span></li>
 			    <li id=btnAssign><span  onClick="return btnAssign_onclick()" ><spring:message code='ezApprovalG.t1430'/></span></li>
 			    <li id=btnReAssign style="display:none"><span  onClick="return btnReAssign_onclick()" ><spring:message code='ezApprovalG.t1431'/></span></li>
 			    <li id=btnDistribute><span  onClick="return btnDistribute_onclick()" ><spring:message code='ezApprovalG.t1432'/></span></li>

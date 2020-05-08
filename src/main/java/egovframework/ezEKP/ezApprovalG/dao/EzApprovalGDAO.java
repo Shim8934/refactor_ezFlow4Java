@@ -2980,6 +2980,18 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		delete("EzApprovalG.deleteOpinionTypeInfo", map);
 	}
 	
+	public void OpinionDel2(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.OpinionDel2", map);
+	}
+	
+	public void OpinionDel3(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.OpinionDel3", map);
+	}
+	
+	public void updateReBebuOpinionSN(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateReBebuOpinionSN", map);
+	}
+	
 	public void updateHasOpinionYN(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateHasOpinionYN", map);
 	}
@@ -3423,5 +3435,26 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
     public void updateReceivedDept(Map<String, Object> map) throws Exception {
         update("EzApprovalG.updateReceivedDept", map);
 }
+
+	public void updateReBebuAprReceiptProcessInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateReBebuAprReceiptProcessInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getDeliveryDeptInfo(Map<String, Object> map) throws Exception {
+		return (Map<String, Object>) select("EzApprovalG.getDeliveryDeptInfo", map);
+	}
+	
+	public int isRelayDoc(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.isRelayDoc", map);
+	}
+	
+	public ApprGReceiveDocVO getBebuRelayDocSenderInfo(Map<String, Object> map) throws Exception {
+		return (ApprGReceiveDocVO) select("EzApprovalG.getBebuRelayDocSenderInfo", map);
+	}
+	
+	public void updateBebuRelayDocSenderInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateBebuRelayDocSenderInfo", map);
+	}
 
 }

@@ -1295,4 +1295,22 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertSurveyTenantConfig",map);
 		}
 	}
+	
+	public void insertReBebuOpinionCode(Map<String, Object> map) {
+		String companyId = checkReBebuOpinionCode(map);
+		
+		try {
+			if (companyId == null) {
+				logger.debug("ReBebuOpinionCode data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertReBebuOpinionCode", map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public String checkReBebuOpinionCode(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkReBebuOpinionCode", map);
+	}
 }

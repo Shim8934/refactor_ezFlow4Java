@@ -251,6 +251,8 @@ public interface EzApprovalGService {
     public String getFindSimpleCabinetList(String processDeptCode, String productionYear, String searchKeyword, String flag, String companyID, String langType, int tenantID) throws Exception;
 
     public String setBebu(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet, LoginVO userInfo, String curDocNum) throws Exception;
+    
+    public String setReBebu(String docID, String receiveSN, String deptID, LoginVO userInfo, String companyID, int tenantId, String lang) throws Exception;
 
     public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID, String approvalFlag, String userFlag) throws Exception;
 
@@ -483,6 +485,10 @@ public interface EzApprovalGService {
     public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState, String nonElecRecYN) throws Exception;
 
     public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
+    
+	public void OpinionDel2(String docID, String companyID, int tenantId) throws Exception;
+	
+	public void OpinionDel3(String docID, String companyID, int tenantId) throws Exception;
 
     public int lastKyulJeHabYuiYN(String docID, String flag, String companyID, int tenantId) throws Exception;
 

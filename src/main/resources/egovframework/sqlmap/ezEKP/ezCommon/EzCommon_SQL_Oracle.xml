@@ -2321,4 +2321,31 @@
 			VIEWORDER  NUMBER(10,0)
 	</statement>
 	
+	<select id="EzCommonDAO.checkReBebuOpinionCode" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			companyid
+		FROM
+			TBL_CODELIST
+		WHERE
+			companyid = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			code1 = #code1#
+		AND
+			code2 = #code2#
+		AND
+			rownum = 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertReBebuOpinionCode" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_CODELIST
+			(CODE1, CODE2, NAME, ISUSE, DESCRIPT, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+		VALUES
+			(#code1#, #code2#, #name#, #isUse#, #descript#, #name2#, #name3#, #name4#, #tenantId#, #companyId#)
+	]]>
+	</insert>
 </sqlMap>
