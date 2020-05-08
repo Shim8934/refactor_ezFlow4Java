@@ -32118,6 +32118,7 @@
 			COMPANYID = #companyID#
 	</select>
 	<update id="EzApprovalG.updateDrafterToApproved" parameterClass="Map">
+        <![CDATA[
 		UPDATE
 			TBL_APRLINEINFO
 		SET
@@ -32130,6 +32131,9 @@
 			COMPANYID = #companyID#
 		AND
 			APRSTATE = '002'
+		AND
+		    APRTYPE <> '007'
+		]]>
 	</update>
 	
 	<update id="EzApprovalG.setAprLineStateBanSongToStay" parameterClass="Map">

@@ -13967,6 +13967,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map3.put("v_APRMEMBERSN", curAprMemberSN);
 			
 			ezApprovalGDAO.updateAprLineInfo(map3);
+
+			logger.debug("curAprType = " + curAprType);
 			
 			//처리하고있는 결재유형이 병렬협조일때
 			if (curAprType.equals(staATByungRyulHyubJo)) {
@@ -13997,7 +13999,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						break;
 					}
 				}
-			}
+			} else if (curAprType.equals(staATChamJo)) {
+			    int i = 0;
+			    do {
+                    map3.put("v_APRMEMBERSN", apprGAprLineVOList2.get(i).getAprMemberSN());
+                    ezApprovalGDAO.updateAprLineInfo(map3);
+                } while (staATChamJo.equals(apprGAprLineVOList2.get(i)));
+            }
 			
 			ezApprovalGDAO.setAprLineStateBanSongToStay(map);
 			logger.debug("doApprove passAprLine ended");
