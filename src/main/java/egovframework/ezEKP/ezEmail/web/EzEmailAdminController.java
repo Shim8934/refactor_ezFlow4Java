@@ -4,7 +4,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +23,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.tools.ant.taskdefs.GenerateKey.DistinguishedName;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -34,11 +31,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -52,7 +54,6 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
-import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -656,7 +657,7 @@ public class EzEmailAdminController {
 
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
-		String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
+		// String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 
 		int tenantID = auth.getTenantId();
 
@@ -743,7 +744,7 @@ public class EzEmailAdminController {
 		String returnData = "";
 		try {
 			Document doc = commonUtil.convertStringToDocument(bodyData);
-			String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
+			// String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 			String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 			String searchType = doc.getElementsByTagName("SEARCHTYPE").item(0).getTextContent();
 			String searchValue = doc.getElementsByTagName("SEARCHVALUE").item(0).getTextContent();
@@ -1574,7 +1575,7 @@ public class EzEmailAdminController {
 					}
 				}
 							
-				String bizmekaResult = "ERROR";
+				// String bizmekaResult = "ERROR";
 				
 				try {
 					/* 비즈메카 연동은 우선 생각하지 않는다. -> 필요할 때 논의 후 구현!
@@ -1753,7 +1754,7 @@ public class EzEmailAdminController {
 				int rc = ezEmailUserAdminService.addGroup(mailAddr);
 				
 				if (rc == 0) { // addGroup 성공
-					String bizmekaResult = "ERROR";
+					// String bizmekaResult = "ERROR";
 					
 					// insertDBData_dept 실패했을 경우 JMocha에서 부서 다시 삭제
 					try {
@@ -1882,7 +1883,7 @@ public class EzEmailAdminController {
 				logger.debug("updateGroupAdd rc=" + rc);
 				
 				if (rc == 0) { // updateGroup 성공
-					String bizmekaResult = "ERROR";
+					// String bizmekaResult = "ERROR";
 					
 					// insertDBData_user 실패했을 경우 JMocha에서 계정 다시 삭제.
 					try {
@@ -2088,6 +2089,7 @@ public class EzEmailAdminController {
 		return "json";
 	}
 	
+	@SuppressWarnings("unused")
 	private void removeEmailAddressBasedOnCompanyDomainName(String cn, String compId, int tenantId) {
 		try {
 			String companyDomainName = ezCommonService.getCompanyConfig(tenantId, compId, "DomainName");
@@ -2330,7 +2332,7 @@ public class EzEmailAdminController {
 	@ResponseBody
 	public JSONArray searchSignList(@CookieValue("loginCookie") String loginCookie, String companyId, String search, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("searchSignList started.");
-		search = URLDecoder.decode(search);
+		search = URLDecoder.decode(search, "UTF-8");
 		logger.debug("companyId=" + companyId);
 		logger.debug("search=" + search);
 		
@@ -2598,6 +2600,7 @@ public class EzEmailAdminController {
 	/**
 	 * 수취인안내설정 데이터 가져오기(copyright)
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezEmail/mailCopyrightData.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject mailCopyrightData(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -2694,6 +2697,7 @@ public class EzEmailAdminController {
 	/**
 	 * 전체 도메인 리스트
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezEmail/getMultiDomainList.do")
 	@ResponseBody
 	public JSONObject getMultiDomainList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -2733,6 +2737,7 @@ public class EzEmailAdminController {
 	/**
 	 * 전체 도메인 삭제
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezEmail/delMultiDomain.do")
 	@ResponseBody
 	public JSONObject delMultiDomain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -2815,6 +2820,7 @@ public class EzEmailAdminController {
 	/**
 	 * 회사 도메인 리스트
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezEmail/getCompanyMultiDomainList.do")
 	@ResponseBody
 	public JSONObject getCompanyMultiDomainList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {

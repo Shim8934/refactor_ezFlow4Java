@@ -1174,8 +1174,6 @@ public class EzJournalGWController {
 		LOGGER.debug("ezJournal G/W downloadFile started.");
 		LOGGER.debug("journalId=" + journalId);
 		
-		Gson gson = new Gson();
-		
 		JSONObject result = new JSONObject();
 		
 		int bufferSize = 4096;

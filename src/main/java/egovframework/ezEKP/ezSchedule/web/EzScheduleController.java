@@ -18,30 +18,11 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.filter.Filter;
-import net.fortuna.ical4j.filter.PeriodRule;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Period;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.WeekDay;
-import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.util.MapTimeZoneCache;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -90,6 +71,23 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.filter.Filter;
+import net.fortuna.ical4j.filter.PeriodRule;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Period;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.WeekDay;
+import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.util.MapTimeZoneCache;
 
 /** 
  * @Description [Controller] 스케쥴
@@ -421,7 +419,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String lang = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
 		String companyID = userInfo.getCompanyID();
-		String deptID = userInfo.getDeptID();
 		
 		//2020-02-24 김정언
 		String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", userInfo.getTenantId());
@@ -524,6 +521,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정관리 메인화면 호출함수
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezSchedule/scheduleMain.do", method = RequestMethod.GET)
 	public String  scheduleMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale, LoginVO loginVO) throws Exception {
 		
@@ -649,7 +647,8 @@ public class EzScheduleController extends EgovFileMngUtil {
         String idTypeTmp = request.getParameter("idtype");
         //2018-06-07 구해안checkbox 값을 가져와서 char[]에 담기
         String idTypeChk = request.getParameter("idTypeChk");
-        char[] chk_array = null;
+        @SuppressWarnings("unused")
+		char[] chk_array = null;
         if(idTypeChk != null && !idTypeChk.equals("")){
         	
         	chk_array = new char[idTypeChk.length()];
@@ -2146,8 +2145,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String lang = userInfo.getPrimary();
-		int tenantID = userInfo.getTenantId();
 		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());		
 		String startDate = request.getParameter("STARTDATE");
 		String endDate = request.getParameter("ENDDATE");
@@ -2264,7 +2261,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			description = "[" + msg.getMessage("ezSchedule.t278", locale) + " " + startDate + " ~ " + endDate;			
 		} else if (view.equals("0")) {
-			if(cal.DATE != 1){
+			if(Calendar.DATE != 1){
 				cal.add(Calendar.MONTH, 1);
 				cal.set(Calendar.DATE, 1);
 				startDate = sdf.format(cal.getTime());

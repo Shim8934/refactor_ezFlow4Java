@@ -277,7 +277,15 @@
 								if (useOpenGov == "YES" && result.vo.openGovFlag == "Y") {
 									document.getElementById("setOpenGovFlag").checked = true;	
 								}
-			                }
+							}
+							
+							//양식세부옵션
+							var OptArr = result.vo.aprOption.split(",");
+							for (var i = 0; i < OptArr.length; i++) {
+								if (document.getElementById(OptArr[i]) != null) {
+									document.getElementById(OptArr[i]).checked = true;
+								}
+							}							
 			            }
 						
 						<c:if test="${isReform}">
@@ -1009,9 +1017,21 @@
 		        } else {
 		        	$("#ApvForm_sub5").show();
 		        }
-		    }
+			}
+			
+			//양식 세부설정 기본값 설정
+			var aprtypeCheckBoxInt = new Array("_a1_", "_a2_", "_a3_");
+			function btnintAprType_onclick() {
+				$("input[name=aprOption_a]").each(function () {
+					$(this).prop("checked", false);
+				});
+
+				$(aprtypeCheckBoxInt).each(function () {
+					$("#" + this).prop("checked", true);
+				});
+			}		
+			//
 		</script>
-		
 		<!-- FormBuilder -->
 		<c:if test="${useReform}">
 		<script>
@@ -1046,7 +1066,8 @@
         </div>
         <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
-                <p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezApprovalG.t00004'/></span></p>
+				<p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezApprovalG.t00004'/></span></p>
+				<p id = "ApvForm_sub9"><span divname="ApvForm_div9" id="1tab9">양식 세부설정</span></p>
                 <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code='ezApprovalG.t1456'/></span></p>
                 <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApprovalG.t00005'/></span></p>
                 <p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>
@@ -1141,11 +1162,34 @@
                     </td>
                 </tr>
             </table>
-        </div>
+		</div>
+		<!--양식 세부설정-->
+		<div id="ApvForm_content9" style="width:100%;height:90%; padding-top:10px; display:none">
+			<h2 id="form" class="receiver_tltype01" style="margin-bottom:5px;">
+				<span style="min-width: 45px;" id="formstr" name="aprOption" code="a" >세부옵션</span>&nbsp;&nbsp;&nbsp;<a class="imgbtn"><span onclick="btnintAprType_onclick()">기본값설정</span></a>
+			</h2>
+			<table class="content" style="width:100%;">
+				<tr><!--의견-->
+					<th style="width:10%">의견</th>
+					<td style="width:10%"><input type="checkbox" id="_a1_" name="aprOption_a"><label for="_a1_">사용</label></td>
+					<td>결재의견 사용여부 선택</td>
+				</tr>
+				<tr><!--파일첨부-->
+					<th style="width:10%">파일첨부</th>
+					<td style="width:10%"><input type="checkbox" id="_a2_" name="aprOption_a"><label for="_a1_">사용</label></td>
+					<td>파일첨부 사용여부 선택</td>
+				</tr>
+				<tr><!--문서첨부-->
+					<th style="width:10%">문서첨부</th>
+					<td style="width:10%"><input type="checkbox" id="_a3_" name="aprOption_a"><label for="_a1_">사용</label></td>
+					<td>문서첨부 사용여부 선택</td>
+				</tr>								
+			</table>
+		</div>
 		
         <div id="ApvForm_content2" style="width:100%;display:none; padding-top:10px;">
             <h2 id="H1" class="receiver_tltype01" style="margin-bottom:5px;">
-            <span style="min-width: 45px;" id="Span1"><spring:message code='ezApproval.t00007'/></span>
+			<span style="min-width: 45px;" id="Span1"><spring:message code='ezApproval.t00007'/></span>
             </h2>
 			<div id="editor_content" style="padding-top:5px;">
 				<div id="mainmenu">

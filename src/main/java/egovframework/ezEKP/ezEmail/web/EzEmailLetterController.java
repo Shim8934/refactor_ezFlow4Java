@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezEmail.service.EzEmailAdminLetterService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -43,9 +42,6 @@ public class EzEmailLetterController {
 
 	@Autowired
 	private EzEmailAdminLetterService ezEmailAdminLetterService;
-
-	@Autowired
-	private EzOrganAdminService ezOrganAdminService;
 
 	/**
 	 * 편지지 버튼 클릭시 호출

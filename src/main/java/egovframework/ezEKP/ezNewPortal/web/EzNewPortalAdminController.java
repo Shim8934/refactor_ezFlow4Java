@@ -38,7 +38,6 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import net.fortuna.ical4j.model.property.Status;
 
 @Controller
 public class EzNewPortalAdminController extends EgovFileMngUtil {
@@ -1272,7 +1271,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		//게시판이 top인 목록 가져오기
-		String userId = userInfo.getId();
+		// String userId = userInfo.getId();
 		String companyId = request.getParameter("companyId");
 		String portletId = request.getParameter("portletId");
 		
@@ -1337,10 +1336,10 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	public String openSlideImageSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("openSlideImageSetting started.");
 
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		// LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		//게시판이 top인 목록 가져오기
-		String userId = userInfo.getId();
+		// String userId = userInfo.getId();
 		String companyId = request.getParameter("companyId");
 		String portletId = request.getParameter("portletId");
 		model.addAttribute("companyId", companyId);

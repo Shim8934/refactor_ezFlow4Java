@@ -24,16 +24,12 @@ import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
-import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @RestController
 public class MOptionGWController extends EgovFileMngUtil{
 
 private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController.class);
-	
-	@Autowired
-	private CommonUtil commonUtil;
 
 	@Autowired
 	private Properties config;

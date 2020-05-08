@@ -9,7 +9,6 @@ import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
@@ -87,9 +86,6 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Autowired
 	private Properties config;
 
-	@Autowired
-	private Properties globals;
-	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource; 
 
@@ -874,6 +870,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		}		
 	}
 	
+	@SuppressWarnings("unused")
 	private void sendInvalidRecipientNotiMail(String originalSender, String originalSubject, List<String> invalidAddressList,
 					Locale locale, String offset) {
 		try {

@@ -148,6 +148,8 @@ function getDocList_after(xml) {
     DocList.SetRowOnDblClick("lvDocList_DBSelChange");
     DocList.SetTitleIdx(0);
     DocList.SetUrgentFlag(false);
+    if(pListTypeValue == "1")  //2020-04-29 : 결재할문서 복수체크박스 추가
+        DocList.SetCheckBoxFlag(true);
     DocList.DataSource(xmlDoc);
     DocList.DataBind("lvDocList");
     
@@ -3078,3 +3080,156 @@ function getDateStrByLang(userLang, year, month, date) {
 		return year + strLang1028 + " " + month + strLang1029 + " " + date + strLang1030
 	}
 }
+
+//2020-04-29 : 리스트에서 직접 일괄결재 진행
+var ezchkpasswd_all_cross_dialogArguments = new Array();
+function chk_Passwd(pPwd) {
+    var parameter = pPwd;
+
+    ezchkpasswd_all_cross_dialogArguments[0] = parameter;
+    ezchkpasswd_all_cross_dialogArguments[1] = chk_Passwd_Complete;
+
+    DivPopUpShow(330, 215, "/ezApprovalG/ezchkPasswdall.do");
+}
+function chk_Passwd_Complete(chkpass) {
+    if (chkpass == "FALSE") {
+        var pAlertContent = strLang581;
+        OpenAlertUI(pAlertContent);
+        return;
+    }
+    else if (chkpass == "cancel") {
+        var pAlertContent = strLang582;
+        OpenAlertUI(pAlertContent);
+        return;
+    }
+
+    var DocList = new ListView();
+    DocList.LoadFromID("DocList");
+    var pCurSelRow = DocList.GetSelectedRows();    
+
+    var pMode = "";
+      
+    var xmlpara = createXmlDom();
+    var objRoot, objNode, doc, objNode2, objNodes, objDocinfoNode;
+    objRoot = createNodeInsert(xmlpara, objRoot, "PARAMETER");
+    createNodeAndInsertText(xmlpara, objNode, "USERID", arr_userinfo[1]);
+    createNodeAndInsertText(xmlpara, objNode, "DISPLAYNAME", arr_userinfo[2]);
+    createNodeAndInsertText(xmlpara, objNode, "TITLE", arr_userinfo[3]);
+    createNodeAndInsertText(xmlpara, objNode, "DEPTID", arr_userinfo[4]);
+    createNodeAndInsertText(xmlpara, objNode, "DEPTNAME", arr_userinfo[5]);
+    createNodeAndInsertText(xmlpara, objNode, "JIKCHEK", arr_userinfo[6]);
+    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
+    createNodeAndInsertText(xmlpara, objNode, "PASSWD", "");
+    createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", userLang);
+    var list = createNodeAndAppandNode(xmlpara, objRoot, list, "DOCIDS");
+    $(pCurSelRow).each(function(){
+        //대결처리, docstate : 공람, aprState : 대기, 보류 제외
+        var curDeptId = $(this).attr("DATA7");
+        var curAprMemberSN = $(this).attr("APRMEMBERSN");
+        orgCompanyID = $(this).attr("orgCompanyID");
+        var curAprType = "";
+
+        //대결자 결재도 일괄결제 제외
+        if(useAdditionalRole == "YES" && curDeptId.toUpperCase() != arr_userinfo[4])
+            return false;
+
+        //결재타입 정보
+        $.ajax({
+            type : "POST",
+            dataType : "text",
+            async : false,
+            url : "/ezApprovalG/getAprStateToAprType.do",
+            data : {
+                    docID : $(this).attr("DATA1"),
+                    userID : $(this).attr("DATA4"),
+                    docState : $(this).attr("DATA15"),
+                    orgCompanyID : orgCompanyID
+                    },
+            success: function(xml){
+                curAprType = xml;
+            }        			
+        });
+        
+        //결재타입이 001(결재), 004(전결), 007(참조), 019(검토) 만 일괄결재 처리
+        curAprType = curAprType.split("/")[0];
+        if(!(curAprType == "001") && !(curAprType == "004") && !(curAprType == "007") && !(curAprType == "019"))
+            return false;
+
+        doc = createNodeAndAppandNode(xmlpara, list, doc, "DOC");
+        $.ajax({
+              type : "POST",
+              dataType : "text",
+              async : false,
+              url : "/ezApprovalG/getLineMode.do",
+              data : {
+                      docID : $(this).attr("DATA1"),
+                      orgCompanyID : orgCompanyID
+                      },
+              success: function(xml){
+                  pMode = xml;
+              }        			
+        });  
+
+        createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCID", $(this).attr("DATA1"));
+        createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ORGAPRUSERID", $(this).attr("DATA4"));
+        createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "FORMID", $(this).attr("DATA17"));
+        var itemExt = $(this).attr("DATA3");
+        itemExt = itemExt.substr($(this).attr("DATA3").lastIndexOf(".")+1, itemExt.length).toUpperCase();
+        createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TYPE", itemExt);
+        createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCSTATE", $(this).attr("DATA12"));
+        createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "orgCompanyID", orgCompanyID);
+        createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "APRMEMBERSN", curAprMemberSN);
+        createNodeAndInsertText(xmlpara, objNode, "MODE", pMode);                
+    });
+
+    xmlhttp = createXMLHttpRequest();
+    xmlhttp.open("POST", "/ezApprovalG/doApprovAllG.do", false);
+    xmlhttp.send(xmlpara);
+    var RtnVal = xmlhttp.responseText;
+    var arrRtnVal = new Array();
+    arrRtnVal[0] = RtnVal.split("/")[0]; // OK or ERR
+    arrRtnVal[1] = RtnVal.split("/")[1]; // totalCount
+    arrRtnVal[2] = RtnVal.split("/")[2]; // trueCount
+    arrRtnVal[3] = RtnVal.split("/")[3]; // falseCount
+    if (arrRtnVal[0] == "OK") {
+        hideProgress();
+        pAlertContent = strLang933 + arrRtnVal[1] + strLang934;
+        pAlertContent += strLang935 + arrRtnVal[2] + strLang934;
+        if (arrRtnVal[3] != 0) {
+            pAlertContent += strLang936 + arrRtnVal[3] + strLang934;
+        }
+        pAlertContent += strLang931;
+        OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+    } else {
+        hideProgress();
+        pAlertContent = strLang932;
+        OpenAlertUI(pAlertContent);
+    }
+}
+function OpenAlertUI_Close() {
+    try{
+        DivPopUpHidden();
+        parent.frames["left"].getAprCount();
+        getDocList();
+    }catch(e){}
+}
+
+function CheckUsePassword() {
+    var result = "";
+    $.ajax({
+        type : "POST",
+        dataType : "text",
+        async : false,
+        url : "/ezApprovalG/getApprovalPWD.do",
+        success: function(text) {
+            result = text;
+        }        			
+    });
+    
+    if (result != "N") {
+        return true;
+    } else {
+        return false;
+    }
+}
+//일괄결재 끝

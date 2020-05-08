@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -3048,6 +3047,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					//첨부파일 관련
 					if (attachedFileList.size() > 0) {
 //						float attachLimitF = Float.parseFloat(attachLimit) * 1024 * 1024;
+						@SuppressWarnings("unused")
 						float size = 0;
 						
 						for (int i=0; i<attachedFileList.size(); i++) {
@@ -3473,7 +3473,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			//TODO
 		} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {}
@@ -3644,8 +3643,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			//TODO
-			
 			e.printStackTrace();
 		} finally {
 			if (fis != null) {
@@ -3792,8 +3789,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			//TODO
-			
 			e.printStackTrace();
 		} finally {
 			if (fis != null) {
@@ -3930,7 +3925,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			//TODO
 		} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {}

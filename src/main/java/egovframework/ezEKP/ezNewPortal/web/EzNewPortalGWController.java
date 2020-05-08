@@ -19,7 +19,6 @@ import javax.mail.Message;
 import javax.mail.UIDFolder;
 import javax.servlet.http.HttpServletRequest;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -80,9 +79,9 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
-import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -1577,8 +1576,8 @@ public class EzNewPortalGWController {
 			String nowDate = adf.format(cal.getTime());
 			String deptId = info.getDeptId();
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
-			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
-			String password = jspw;
+			// String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
+			// String password = jspw;
 			//String useQuestion = request.getParameter("useQuestion");
 			String useSurvey = request.getParameter("useSurvey");
 			String useCircular = request.getParameter("useCircular");
@@ -1832,13 +1831,14 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			LoginVO userInfo = new LoginVO();
 			String primary = "";
 			int tenantId = 0;
 			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 			String lang = "";
 			
-			if (userId == null) {
+			// 2020-04-28 jwseo99 이거 안 쓰는 것 같음 왜 이런 코드를? 
+			// 이 주석이 내년 21년 될 때 까지 오류가 안 난다면 걍 폐기한다
+			/* if (userId == null) {
 				tenantId = ezNewPortalService.getTnenantIdByServerName(serverName);
 				primary = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 				lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
@@ -1848,40 +1848,35 @@ public class EzNewPortalGWController {
 				}
 				
 				result.put("lang", lang);
-			} else {
-				userInfo = commonUtil.getUserForGw(userId, serverName);
-				primary = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
-				tenantId = userInfo.getTenantId();
-				lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
-				
-				if (lang == null || lang.equals("")) {
-					lang = "1";
-				}
-				
-				result.put("userCompany", userInfo.getCompanyID());
-				result.put("lang",lang);
+			} else { */
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			primary = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+			tenantId = userInfo.getTenantId();
+			lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
+			
+			if (lang == null || lang.equals("")) {
+				lang = "1";
 			}
+			
+			result.put("userCompany", userInfo.getCompanyID());
+			result.put("lang",lang);
 
 			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 			resultList = ezOrganAdminService.getCompanyList(lang, tenantId);
 			
-			if (userInfo != null) {
-				String roleInfo = userInfo.getRollInfo();
-				//회사관리자일 때는 회사리스트만 나오도록
-				List<OrganDeptVO> companyList = new ArrayList<OrganDeptVO>();
-				
-				if (roleInfo != null) {
-					for (OrganDeptVO companyInfo : resultList) {
-						if (roleInfo.indexOf("c=1") > -1 || (roleInfo.indexOf("k=1") > -1 && companyInfo.getCn().equals(userInfo.getCompanyID()))) {
-							companyList.add(companyInfo);
-						}
+			String roleInfo = userInfo.getRollInfo();
+			//회사관리자일 때는 회사리스트만 나오도록
+			List<OrganDeptVO> companyList = new ArrayList<OrganDeptVO>();
+			
+			if (roleInfo != null) {
+				for (OrganDeptVO companyInfo : resultList) {
+					if (roleInfo.indexOf("c=1") > -1 || (roleInfo.indexOf("k=1") > -1 && companyInfo.getCn().equals(userInfo.getCompanyID()))) {
+						companyList.add(companyInfo);
 					}
 				}
-				
-				result.put("data", companyList);
-			} else {
-				result.put("data", resultList);
 			}
+			
+			result.put("data", companyList);
 			
 			result.put("primary", primary);
 			result.put("usePrimaryLangOnly", usePrimaryLangOnly);
@@ -5175,7 +5170,7 @@ public class EzNewPortalGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			String[] menuArr = menuCode.split(",");
 			
-			ArrayList<String> menuCodeList = new ArrayList(Arrays.asList(menuArr));
+			ArrayList<String> menuCodeList = new ArrayList<>(Arrays.asList(menuArr));
 			int tenantId = userInfo.getTenantId();
 			String deptId = userInfo.getDeptID();
 			String companyId = userInfo.getCompanyID();

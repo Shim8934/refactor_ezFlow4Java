@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezPersonal.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.w3c.dom.Document;
@@ -13,8 +12,8 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzPersonalAdminService {

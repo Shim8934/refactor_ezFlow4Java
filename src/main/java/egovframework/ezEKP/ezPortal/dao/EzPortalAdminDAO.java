@@ -625,6 +625,7 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		delete("EzPortalAdminDAO.removeMenuItem_D3", map);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<String> getBeforeUsedPage(Map<String, Object> map) {
 		return (List<String>) list("EzPortalAdminDAO.getBeforeUsedPage", map);
 	}

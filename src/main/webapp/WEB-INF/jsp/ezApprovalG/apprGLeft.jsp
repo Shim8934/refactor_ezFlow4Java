@@ -1140,6 +1140,7 @@
 		</script>
 	</head>
 	<body ondragstart="return false" onselectstart="return false" class="newLeft">
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_left">&nbsp;</div>
 		<span  id="presentcell" style="display:none"></span>
 		<div id="left" class="lnb">
 	    	<!-- <div class="lnb_btn"></div> -->

@@ -26,8 +26,6 @@ import org.springframework.web.servlet.LocaleResolver;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -77,12 +75,6 @@ public class MLoginController {
     
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(MLoginController.class);
-    
-    @Autowired
-    private EzEmailUserAdminService ezEmailUserAdminService;
-    
-    @Autowired
-	private EzOrganAdminService ezOrganAdminService;
     
     @Autowired
     private LocaleResolver localeResolver;
