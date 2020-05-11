@@ -676,5 +676,7 @@ public interface EzApprovalGService {
     public String getBansongDeptID(String docID, String orgCompanyID, int tenantID, LoginVO userInfo) throws Exception;
     
     public String updateReceivedDept(String docID, String processorID, String processorName, String processorJobTitle, String receivedDeptID, String receivedDeptName, String processorName2, String processorJobTitle2, String receivedDeptName2, String companyID, int tenantId) throws Exception;
+    
+    public String setApprDocInfo(Document xmlDom, String companyID, int tenantId) throws Exception;
 
 }

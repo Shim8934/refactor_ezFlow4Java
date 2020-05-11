@@ -1800,7 +1800,11 @@
 		                	pSpecialRecordCode = "1";
 		                	tempPublic = ret[11];
 		                	SetDocOption(ret[20]);
-		                }
+						}
+
+						//2020-05-08 : 결재정보확인 시 문서정보 저장 후 문서 반영
+						setApprDocInfo();
+						SaveFile();
 		
 		                SummaryFlag = true;
 		

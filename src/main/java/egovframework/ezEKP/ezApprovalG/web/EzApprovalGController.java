@@ -9987,5 +9987,23 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("getAprStateToAprType ended");
 		return aprType_aprState;
-	}    
+	}  
+	
+	/**
+	 * 2020-05-08 - 결재정보확인 시 문서정보 저장
+	 */	
+	@RequestMapping(value = "/ezApprovalG/setApprDocInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String setApprDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception {
+		logger.debug("setApprDocInfo started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String returnVal = ezApprovalGService.setApprDocInfo(xmlDom, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("setApprDocInfo ended");
+		return returnVal;
+	}	
 }
