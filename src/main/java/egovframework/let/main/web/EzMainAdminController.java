@@ -1,9 +1,11 @@
 package egovframework.let.main.web;
 
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -25,6 +29,9 @@ public class EzMainAdminController {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name = "egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzMainAdminController.class);
 	
@@ -120,4 +127,17 @@ public class EzMainAdminController {
 		
 		return "admin/adminTop";
 	}	
+	
+	/* 2020-05-07 김수아 - 관리자 IP 제한 기능
+		접근 제한 화면
+	*/
+	@RequestMapping(value="/admin/accessBlockToAdmin.do")
+	public String accessBlockToAdmin(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("accessBlockToAdmin started.");
+		String blockMsg = egovMessageSource.getMessage("ezSystem.ksa10", locale);
+		
+		model.addAttribute("blockMsg", blockMsg);
+		
+		return "cmm/error/accessBlock";
+	}
 }

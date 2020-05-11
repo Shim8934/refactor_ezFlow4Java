@@ -165,7 +165,7 @@
 			    </tr>
 			    <tr>
 					<th><spring:message code='ezBoard.t155'/></th>
-					<td><input type="text" id="explanText" size="56"></td>
+					<td><input type="text" id="explanText" maxlength="50" style="width: 100%;"></td>
 					<!-- <td><textarea style="width:96%;resize:none;"id="explanText" rows="3"> </textarea></td> -->
 			    </tr>
 			</table>
