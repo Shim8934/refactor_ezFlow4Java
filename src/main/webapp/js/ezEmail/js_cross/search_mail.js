@@ -212,7 +212,21 @@ function searchRecurMail(sMailFolder, startDate, endDate) {
     }
     createNodeAndInsertText(xmlDOM, objNode, "STARTDATE", startDate);
     createNodeAndInsertText(xmlDOM, objNode, "ENDDATE", endDate);
-
+    // attach contain
+    var attachStatus = "";
+    var andorStatus = "";
+    if( $("#moreSearch").css("display") != "none"){
+    	if(document.querySelector("input[name=attachment]:checked").value != null ){
+    			attachStatus = document.querySelector("input[name=attachment]:checked").value;
+    	}
+    	
+    	if(document.querySelector("input[name=andor]:checked").value != null ){
+    		andorStatus = document.querySelector("input[name=andor]:checked").value;
+    	}
+    }
+    createNodeAndInsertText(xmlDOM, objNode, "ATTACHSTATUS", attachStatus);
+    createNodeAndInsertText(xmlDOM, objNode, "ANDORSTATUS", andorStatus);
+    	
     if (p_ListOrderObject == null) {
         event_HeaderClick(document.getElementById("tofromdate"));
     }

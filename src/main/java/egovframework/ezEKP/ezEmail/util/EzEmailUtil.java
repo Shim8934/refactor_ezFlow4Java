@@ -2516,7 +2516,7 @@ public class EzEmailUtil {
 				+ ",listCount=" + listCount);
 		
 		Map<String, Object> resultMap = getMailListFromJGw(userAccount, folderPath, searchField, searchValue, startDate, endDate, 
-				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount);
+				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount, extraMap);
 		
 		List<String> mailList = (List<String>) resultMap.get("mailList");
 		
@@ -2576,13 +2576,15 @@ public class EzEmailUtil {
 			String sortType,
 			boolean isAscending,
 			int startIndex,
-			int listCount
+			int listCount,
+			Map<String, Object> extraMap
 			) throws Exception {
 		logger.debug("getMailUidListFromJGw started.");
 		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField 
 				+ ",searchValue=" + searchValue + ",startDate=" + startDate + ",endDate=" + endDate 
 				+ ",isUnreadOnly=" + isUnreadOnly + ",isImportantOnly=" + isImportantOnly + ",searchSubFolder=" + searchSubFolder
-				+ ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex + ",listCount=" + listCount);
+				+ ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex + ",listCount=" + listCount
+				+ ",extraMap=" + extraMap);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
@@ -2598,6 +2600,15 @@ public class EzEmailUtil {
 		String isAscendingParam = "isAscending=" + isAscending;
 		String startIndexParam = "startIndex=" + startIndex;
 		String listCountParam = "listCount=" + listCount;
+		
+		String andorStatus = "andorStatus=";
+		String attachStatus = "attachStatus=";
+		
+		if(extraMap != null){
+			logger.debug("extraMAP is not null.extraMap:" + extraMap);
+			andorStatus += (String) extraMap.get("andorStatus");
+			attachStatus += (String) extraMap.get("attachStatus");
+		}
 		
 		String searchFieldParam = "";
 		String searchValueParam = "";
@@ -2620,7 +2631,8 @@ public class EzEmailUtil {
 		String inputParams = userAccountParam + "&" + folderPathParam + searchFieldParam // searchFieldParam , searchValueParam 여러개 보낸다는 가정에 위에서 처리
 				+ searchValueParam + "&" + startDateParam + "&" + endDateParam 
 				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
-				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam;
+				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam
+				+ "&" + attachStatus + "&" + andorStatus;
 		
 		logger.debug("inputParams=" + inputParams);
 
