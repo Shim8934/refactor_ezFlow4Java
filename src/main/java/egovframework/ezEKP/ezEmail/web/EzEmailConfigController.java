@@ -2290,6 +2290,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("mailGetUserDistribution started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		String lang = userInfo.getPrimary();
 		
 		String returnData = "";
 		
@@ -2311,6 +2313,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			sb.append("<LISTVIEWDATA><ROWS>");
 			if (dlList != null && dlList.size() > 0) {
 				for (MailDistributionVO dlVo : dlList) {
+					OrganUserVO ownerInfo = ezOrganService.getUserInfo(dlVo.getOwnerId(), lang, tenantId);
 					String ownerChk = dlVo.getOwnerId().equals(userId) ? "ownerChk_Y" : "ownerChk_N";
 					String policy = dlVo.getDisclosurePolicy();
 					String policyStr = policy.equals("all") ? "ezEmail.userDL21" : policy.equals("member") ? "ezEmail.userDL22" : "ezEmail.userDL23";
@@ -2320,6 +2323,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					String dlName = commonUtil.cleanValue(dlVo.getName());
 					String dlExplaination = commonUtil.cleanValue(dlVo.getExplaination());
 					String dlMail = commonUtil.cleanValue(dlVo.getMail());
+					String dlOwnerName = commonUtil.cleanValue(ownerInfo.getDisplayName());
 					
 					// commonUtil.cleanValue()
 					if (showDLListType.equals("setting")) { // 메일 환경설정
@@ -2334,6 +2338,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 							sb.append("<DATA6>" + ownerChk + "</DATA6>");
 						sb.append("</CELL>");
 						sb.append("<CELL><VALUE>" + dlName + "</VALUE></CELL>");
+						if (!userDLListType.equals("owner")) { // 소속 dl일 경우 소유자 표시
+							sb.append("<CELL><VALUE>" + dlOwnerName + "</VALUE></CELL>");
+						}
 						sb.append("<CELL><VALUE>" + policyStr + "</VALUE></CELL>");
 						sb.append("<CELL><VALUE>" + dlExplaination + "</VALUE></CELL>");
 						sb.append("<CELL><VALUE>" + dlVo.getEndDate() + "</VALUE></CELL>");
@@ -2652,6 +2659,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("searchUserDistribution started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		String lang = userInfo.getPrimary();
 		
 		String returnData = "";
 		
@@ -2670,6 +2679,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			sb.append("<LISTVIEWDATA><ROWS>");
 			if (dlList != null && dlList.size() > 0) {
 				for (MailDistributionVO dlVo : dlList) {
+					OrganUserVO ownerInfo = ezOrganService.getUserInfo(dlVo.getOwnerId(), lang, tenantId);
 					String ownerChk = dlVo.getOwnerId().equals(userId) ? "ownerChk_Y" : "ownerChk_N";
 					String policy = dlVo.getDisclosurePolicy();
 					String policyStr = policy.equals("all") ? "ezEmail.userDL21" : policy.equals("member") ? "ezEmail.userDL22" : "ezEmail.userDL23";
@@ -2679,6 +2689,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					String dlName = commonUtil.cleanValue(dlVo.getName());
 					String dlExplaination = commonUtil.cleanValue(dlVo.getExplaination());
 					String dlMail = commonUtil.cleanValue(dlVo.getMail());
+					String dlOwnerName = commonUtil.cleanValue(ownerInfo.getDisplayName());
 					
 					// commonUtil.cleanValue()
 					if (showDLListType.equals("setting")) { // 메일 환경설정
@@ -2693,6 +2704,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 							sb.append("<DATA6>" + ownerChk + "</DATA6>");
 						sb.append("</CELL>");
 						sb.append("<CELL><VALUE>" + dlName + "</VALUE></CELL>");
+						sb.append("<CELL><VALUE>" + dlOwnerName + "</VALUE></CELL>");
 						sb.append("<CELL><VALUE>" + policyStr + "</VALUE></CELL>");
 						sb.append("<CELL><VALUE>" + dlExplaination + "</VALUE></CELL>");
 						sb.append("<CELL><VALUE>" + dlVo.getEndDate() + "</VALUE></CELL>");

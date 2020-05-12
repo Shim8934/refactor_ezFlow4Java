@@ -26,8 +26,9 @@
 	    	.DL_Table tr>*:nth-child(1) { width: 14%; }
 	    	.DL_Table tr>*:nth-child(2) { width: 14%; }
 	    	.DL_Table tr>*:nth-child(3) { width: 8%; }
-	    	.DL_Table tr>*:nth-child(4) { }
-	    	.DL_Table tr>*:nth-child(5) { width: 8%; }
+	    	.DL_Table tr>*:nth-child(4) { width: 8%; }
+	    	.DL_Table tr>*:nth-child(5) { }
+	    	.DL_Table tr>*:nth-child(6) { width: 8%; }
 	    	#DL_Head tr{ border: 1px solid #d2d2d2; }
 	    	#DL_Head th{ border: none; }
 	    	.DL_Body_div {
@@ -53,6 +54,7 @@
 						<tr>
 							<th><spring:message code='ezEmail.lhm09' /></th>
 							<th><spring:message code='ezEmail.t710' /></th>
+							<th><spring:message code='ezEmail.userDL25' /></th>
 							<th><spring:message code='ezEmail.userDL03' /></th>
 							<th><spring:message code='ezEmail.userDL04' /></th>
 							<th><spring:message code='ezEmail.userDL05' /></th>
