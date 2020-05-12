@@ -1170,18 +1170,18 @@
 			</h2>
 			<table class="content" style="width:100%;">
 				<tr><!--의견-->
-					<th style="width:10%"><spring:message code='ezApprovalG.t63'/></th>
+					<th style="width:10%"><spring:message code='ezApprovalG.F0013'/></th>
 					<td style="width:10%"><input type="checkbox" id="_a1_" name="aprOption_a"><label for="_a1_"><spring:message code='ezApprovalG.t900009'/></label></td>
 					<td><spring:message code='ezApprovalG.t900005'/></td>
 				</tr>
 				<tr><!--파일첨부-->
-					<th style="width:10%"><spring:message code='ezApprovalG.t169'/></th>
-					<td style="width:10%"><input type="checkbox" id="_a2_" name="aprOption_a"><label for="_a1_"><spring:message code='ezApprovalG.t900009'/></label></td>
+					<th style="width:10%"><spring:message code='ezApprovalG.t264'/></th>
+					<td style="width:10%"><input type="checkbox" id="_a2_" name="aprOption_a"><label for="_a2_"><spring:message code='ezApprovalG.t900009'/></label></td>
 					<td><spring:message code='ezApprovalG.t900006'/></td>
 				</tr>
 				<tr><!--문서첨부-->
 					<th style="width:10%"><spring:message code='ezApprovalG.t57'/></th>
-					<td style="width:10%"><input type="checkbox" id="_a3_" name="aprOption_a"><label for="_a1_"><spring:message code='ezApprovalG.t900009'/></label></td>
+					<td style="width:10%"><input type="checkbox" id="_a3_" name="aprOption_a"><label for="_a3_"><spring:message code='ezApprovalG.t900009'/></label></td>
 					<td><spring:message code='ezApprovalG.t900007'/></td>
 				</tr>								
 			</table>
