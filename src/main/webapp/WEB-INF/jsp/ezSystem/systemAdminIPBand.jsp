@@ -227,16 +227,9 @@
 			}
 		}
 		
-		function deleteIPBand(selectedList) { // sua
+		function deleteIPBand(selectedList) {
 			var selectedListLen = selectedList.length;
 			var ipNo = "";
-			
-			if (selectedListLen == 0) {
-				alert("<spring:message code='ezSystem.jje10'/>");
-				return;
-			} else if (selectedListLen == 1) {
-				ipNo = selectedList[0].getAttribute("ipno");
-			}
 			
 			var con = confirm("<spring:message code='ezCircular.t46'/>");
 			if (con) {

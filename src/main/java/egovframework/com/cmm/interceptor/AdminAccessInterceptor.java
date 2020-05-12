@@ -80,6 +80,7 @@ public class AdminAccessInterceptor extends WebContentInterceptor {
 			
 			// 관리자 ip 제한 사용여부 체크
 			String useAdminIpAccess = ezCommonService.getTenantConfig("useAdminIPAccess", tenantId);
+			useAdminIpAccess = useAdminIpAccess.equals("") ? "NO" : useAdminIpAccess;
 			logger.debug("useAdminIpAccess=" + useAdminIpAccess);
 			 
 			 if (useAdminIpAccess.equalsIgnoreCase("no")) {
