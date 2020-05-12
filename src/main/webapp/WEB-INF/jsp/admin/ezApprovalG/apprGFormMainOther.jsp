@@ -1067,7 +1067,7 @@
         <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
 				<p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezApprovalG.t00004'/></span></p>
-				<p id = "ApvForm_sub9"><span divname="ApvForm_div9" id="1tab9"><spring:message code='ezApprovalG.t900008'/></span></p>
+				<p id = "ApvForm_sub9" style="display:none"><span divname="ApvForm_div9" id="1tab9"><spring:message code='ezApprovalG.t900008'/></span></p>
                 <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code='ezApprovalG.t1456'/></span></p>
                 <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApprovalG.t00005'/></span></p>
                 <p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>

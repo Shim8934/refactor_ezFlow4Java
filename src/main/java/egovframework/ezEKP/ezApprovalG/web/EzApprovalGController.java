@@ -1086,12 +1086,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("reformflag", ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getId(), userInfo.getCompanyID(), tenantID).getReformFlag());
 		}
 
+		String formId = ezApprovalGService.getFormId(formURL);
 		if (useOpenGov.equalsIgnoreCase("YES")) {
-            String formId = ezApprovalGService.getFormId(formURL);
             String openGovFlag = ezApprovalGService.getOpenGovFlag(formId, userInfo.getTenantId(), userInfo.getCompanyID());
             model.addAttribute("openGovFlag", openGovFlag);
         }
-
+		//결재 세부정보
+		String formAprOption = ezApprovalGService.getFormAprOptionInfo(formId, "FORM", userInfo.getCompanyID(), tenantID);
+		model.addAttribute("formAprOption", formAprOption);
+		//
 		model.addAttribute("useOpenGov", useOpenGov);
 		
 		/* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
@@ -4297,6 +4300,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 
 		model.addAttribute("useOpenGov", useOpenGov);
+		
+		//결재 세부정보
+		String formAprOption = ezApprovalGService.getFormAprOptionInfo(docID, "DOC", userInfo.getCompanyID(), userInfo.getTenantId());
+		model.addAttribute("formAprOption", formAprOption);
+		//		
 		
 		logger.debug("approvui ended");
 		

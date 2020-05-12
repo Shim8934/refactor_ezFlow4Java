@@ -150,7 +150,8 @@
 	        var curDocNum = "";
 	        
 	        var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
-	        
+			var formAprOption = "<c:out value='${formAprOption}'/>";
+			
 		    function getNextDocList() {
 		        NextDocID = "";
 		        if (selectedDocID != "") {
@@ -548,7 +549,7 @@
 			        if (pDraftFlag == "HABYUI") {
 			            setMenuBar("btntotaldocinfo", false);
 			        }
-			    }
+				}
 			    //SignCheck();
 			}
 	

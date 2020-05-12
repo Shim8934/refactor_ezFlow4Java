@@ -9903,6 +9903,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 rtnXML.append("<LISTOPENFLAG>" + resultMap.get("listOpenFlag") + "</LISTOPENFLAG>");
                 rtnXML.append("<FILEOPENFLAGLIST>" + resultMap.get("fileOpenFlagList") + "</FILEOPENFLAGLIST>");
             }
+            //결재 상세정보
+            rtnXML.append("<FORMAPROPTION>" + makeXMLString(makeListField(getFormAprOptionInfo(docID, companyID, tenantID))) + "</FORMAPROPTION>");
 		} else {
 			for (int k = 0; k < selecteds.length; k++) {
 				if (!selecteds[k].trim().equals("")) {
@@ -30650,5 +30652,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
     	logger.debug("setApprDocInfo ended");
     	return "TRUE";
+    }
+    
+    @Override
+    public String getFormAprOptionInfo(String key, String type, String companyID, int tenantID) throws Exception{
+    	logger.debug("getFormAprOptionInfo started");
+    	
+    	String aprOptionInfo = "";
+    	
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_KEY", key);
+        map.put("v_TYPE", type);
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", tenantID);  
+        
+        aprOptionInfo = ezApprovalGDAO.getFormAprOptionInfo(map);
+        
+    	logger.debug("getFormAprOptionInfo started");
+    	return aprOptionInfo;
     }
 }

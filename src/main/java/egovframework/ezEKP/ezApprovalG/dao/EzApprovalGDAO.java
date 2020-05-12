@@ -3421,6 +3421,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
     public void updateReceivedDept(Map<String, Object> map) throws Exception {
         update("EzApprovalG.updateReceivedDept", map);
-}
+    }
+    
+	public String getFormAprOptionInfo(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getFormAprOptionInfo", map);
+	}    
 
 }

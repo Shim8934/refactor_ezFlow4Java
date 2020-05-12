@@ -176,7 +176,8 @@
 			var useAnnualSusinYN = "<c:out value ='${useAnnualSusinYN}'/>";
 			
 			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
-			
+			var formAprOption = "<c:out value='${formAprOption}'/>";
+
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -609,8 +610,7 @@
 		                    pGubun = "6";
 		                }
 		            }		
-		        }
-		        
+				}
 //  		        SignCheck(); 
 		        
 		        if (pDraftFlag == "HABYUI") {

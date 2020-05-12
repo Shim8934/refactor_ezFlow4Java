@@ -1595,3 +1595,11 @@ function setApprDocInfo(){
 
     return xmlhttp.responseText;
 }
+
+//결재 세부옵션처리
+function setFormAprOption(){
+    if(formAprOption.indexOf("_a2_"))  //파일첨부
+        setMenuBar("btnFileAttach", false);
+    if(formAprOption.indexOf("_a3_"))  //문서첨부
+        setMenuBar("btnAprDocAttach", false);
+}
