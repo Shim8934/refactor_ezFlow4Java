@@ -55,6 +55,10 @@ public class ApprGReceiveDocVO {
 	private String aprCount;
 	
 	private String companyID;
+	/** 기안자*/
+	private String writerName;
+	/** 기안자(다국어)*/
+	private String writerName2;
 	
 	public String getCompanyID() {
 		return companyID;
@@ -217,6 +221,18 @@ public class ApprGReceiveDocVO {
 	}
 	public void setSendDeptID(String sendDeptID) {
 		this.sendDeptID = sendDeptID;
+	}
+	public String getWriterName() {
+		return writerName;
+	}
+	public void setWriterName(String writerName) {
+		this.writerName = writerName;
+	}
+	public String getWriterName2() {
+		return writerName2;
+	}
+	public void setWriterName2(String writerName2) {
+		this.writerName2 = writerName2;
 	}
 	
 }
