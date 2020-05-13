@@ -20,6 +20,19 @@
 		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
+		<style>
+			.likeButton {
+				padding:5px;
+				cursor:pointer;
+				display:inline-block;
+				border:1px solid #c7c7c7;
+			    border-radius:2px;
+			}
+			.likeButton:hover {
+				background-color:#f1f8ff;
+				border:1px solid #6793d8;
+			}
+		</style>
 		<script  type="text/javascript">
 		    window.offscreenBuffering = true;
 		    var fontSize = new Array("10px", "12px", "15px", "20px", "30px");
@@ -54,6 +67,10 @@
 		    var nowCommentCount = ""; // 댓글 옵션처리를 위해 전역변수로 변경
 		    var userInfoID = "${userInfo.id}"; // 댓글 삭제가능여부 판단을 위해 자신의 userID 사용
 			var gubun = "${guBun}";
+			var isLikeChecked = "<c:out value='${isLikeChecked}'/>";
+			var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
+			var likeCount = "${boardItem.likeCount}";
+			var likeCountAfter = 0;
 			var refreshFlag = "N";
 		    var pUse_Editor = "${useEditor}";
 			var pNoneActiveX = "YES";
@@ -177,6 +194,14 @@
  		            	getBoardComment();
  		            }
 		            
+		            /* 2020-04-09 홍승비 - 좋아요 버튼 사용+하단댓글 미사용 시, 좋아요+첨부파일 영역 패딩 상하 조절 */
+		            if (likeFlag != null && likeFlag == "Y") {
+						if (OneLineReplyFlag != "2") {
+							document.getElementById("likeDiv").style.padding = "5px 0px 0px 0px";
+							document.getElementById("attachTD").style.padding = "0px";
+						}
+		            }
+		            
 					if (gubun != "2") {
 		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
 		                    self.resizeTo(760, (800 + addheight));
@@ -238,7 +263,7 @@
 		                Span.innerText = strWriterName;
 		                Div.appendChild(Span);
 		                document.getElementById("WriteUserNM").innerHTML = Div.outerHTML;
-		            }
+		            } 
 		            
 		            if (g_progresswin) g_progresswin.close();
 		        }
@@ -312,6 +337,10 @@
 		            } else {
 		                contentHeight = document.documentElement.clientHeight - 268 - addheight + replyOffsetH
 		            }
+		            /* 2019-04-05 홍승비 - 좋아요 버튼 추가로 게시물 본문 세로길이 수정 */
+		        	if (likeFlag != null && likeFlag == "Y") {
+						contentHeight = contentHeight - 28;
+		        	}
 		            document.getElementById("message").style.height = contentHeight + "PX";
 		            document.getElementById("pad1").style.height = contentHeight + "PX";
 		        } else {
@@ -321,6 +350,9 @@
 		            } else {
 		                contentHeight = document.documentElement.clientHeight - 268 + replyOffsetH;
 		            }
+		        	if (likeFlag != null && likeFlag == "Y") {
+						contentHeight = contentHeight - 28;
+		        	}
 		            document.getElementById("message").style.height = contentHeight + "PX";
 		            document.getElementById("pad1").style.height = contentHeight + "PX";
 		        }
@@ -1251,6 +1283,57 @@
 		        window.close();
 		    }
 		    
+		    /* 2019-04-05 홍승비 - 좋아요 버튼 클릭 동작 */
+		    function clickLikeButton() {
+		    	var mod = "";
+		    	if (isLikeChecked == "Y") {
+		    		mod = "DELETE";
+		    	} else {
+		    		mod = "INSERT";
+		    	}
+		    	
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/clickLikeMod.do",
+					data : {
+						mod: mod,
+						itemID : pItemID
+					},
+					success: function(result){
+						isLikeChecked = result;
+						updateLikeCountImg(isLikeChecked);
+					}
+				});
+		    }
+		    
+		    /* 2019-04-05 홍승비 - 좋아요 버튼 이미지 및 좋아요 갯수 업데이트 */
+		    function updateLikeCountImg(isLikeChecked) {
+		    	$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/getLikeCount.do",
+					data : {
+						itemID : pItemID
+					},
+					success: function(result){
+						likeCountAfter = result;
+						if (parseInt(result) > 0) {
+							document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+						} else {
+							document.getElementById("likeCountSpan").innerText = "";
+						}
+						if (isLikeChecked == "Y") {
+				    		document.getElementById("likeButtonImg").src = "/images/like_on.png";
+				    	} else {
+				    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
+				    	}
+					}
+				});
+			}
+				
 		    /* 2019-04-12 홍승비 - 게시물 갱신 조건 체크 */
 		    function checkRefreshFlag() {
 		    	if (OneLineReplyFlag == "1") { // 레이어팝업의 경우 텍스트로 표출된 현재 댓글갯수를 가져옴
@@ -1260,7 +1343,7 @@
 		    	var opnenerHref = window.opener.location.href;
 		    	
 		    	// 댓글의 수가 달라졌고, 부모창의 주소가 게시판인 경우(새게시물 제외)에만 플래그값 변경
-		    	if ((commentCount != nowCommentCount) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
+		    	if (((likeCount != likeCountAfter) || (commentCount != nowCommentCount)) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
 		    		refreshFlag = "Y";
 		    	} else {
 		    		refreshFlag = "N";
@@ -1312,7 +1395,9 @@
                         			</c:if>
 			        				<li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 			                        <li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
+			                        <c:if test="${useExternalMailServer eq 'NO' }">
 			                        <li ID='btn_Mail' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
+			                        </c:if>
 			        			</c:when>
 			        			<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
 		        					<!--		강민수92	   -->
@@ -1532,7 +1617,25 @@
 		  <tr>
 		    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
 		        <iframe id="message" class="viewbox" name="message" style="padding:0; width:calc(100% - 2px); height:495px; overflow:auto; border:1px solid #ddd"></iframe>
-		        <%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
+				
+				<%-- 2019-04-05 홍승비 - 본문 하단, 첨부파일/한줄댓글 상단에 좋아요 버튼 추가 --%>
+				<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+					<div id="likeDiv" style="text-align:center; padding:5px 0px 7px 0px;">	
+					  	<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
+						  	<c:choose>
+						  		<c:when test="${isLikeChecked == 'Y'}">
+						  			<img id="likeButtonImg" src="/images/like_on.png"/>
+						  		</c:when>
+						  		<c:otherwise>
+						  			<img id="likeButtonImg" src="/images/like_off.png"/>
+						  		</c:otherwise>
+						  	</c:choose>
+						  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
+					  	</span>
+					</div>
+				</c:if>
+				
+				<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
 		        <c:if test="${boardPropertyVO.oneLineReply == '2'}">
 		        	<div style='height:auto;'>
 						<table class="mainlist" style="width:100%" >
@@ -1574,15 +1677,16 @@
 								</tr>
 							</c:if>
 						</table>
-						<table id="commentList" style="width:100%;margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+						<table id="commentList" style="width:100%;margin-top:2px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 					</div>
 		        </c:if>
 		        <%-- 본문하단 댓글영역 끝 --%>
 		    </td>
 		  </tr>
+			
 		<%-- 2020-02-13 홍승비 - 사용하지 않는 한줄댓글 코드 제거(본문하단 댓글으로 대체), 첨부파일 영역 확장 --%>
 		  <tr>
-		    <td class="pad1" style="vertical-align: top;">
+		    <td class="pad1" id="attachTD" style="vertical-align: top;">
 		        <table class="file">
 		        <tr>
 		          <th><spring:message code='ezBoard.t10025' /></th>
@@ -1598,7 +1702,7 @@
 		      </table>
 		    </td>
 		  </tr>
-
+		  
 		  <c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
 			  <tr>
 			    <td style="vertical-align: top;">

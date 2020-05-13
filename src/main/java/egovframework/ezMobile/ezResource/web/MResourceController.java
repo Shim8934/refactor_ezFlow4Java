@@ -1,16 +1,13 @@
 package egovframework.ezMobile.ezResource.web;
 
 import java.lang.reflect.Field;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.json.Json;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,23 +22,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.gson.Gson;
 
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
@@ -50,7 +40,6 @@ import egovframework.ezMobile.ezResource.vo.MResourceSearchVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
  * @Description [Controller] 자원관리
@@ -110,7 +99,6 @@ public class MResourceController extends EgovFileMngUtil {
 	public String getResMainList(HttpServletRequest request, LoginVO userInfo, MResourceSearchVO searchVO,@CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		LOGGER.debug("getResSchList started.");
 		
-		Gson gson = new Gson();
 		userInfo = commonUtil.userInfo(loginCookie);
 		String serverName = request.getServerName();
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
@@ -151,6 +139,7 @@ public class MResourceController extends EgovFileMngUtil {
 		if (status.equals("ok")) {
 			JSONObject dataObject = (JSONObject) resultBody.get("data");
 			
+			@SuppressWarnings("unchecked")
 			List<ResGetScheduleVO> getScheduleList = (List<ResGetScheduleVO>) dataObject.get("getScheduleList");
 			String count = dataObject.get("count").toString();
 			model.addAttribute("getScheduleList", getScheduleList);
@@ -182,14 +171,10 @@ public class MResourceController extends EgovFileMngUtil {
 		String url = gwServerUrl + "/mobile/ezresource/" + type + "/list";
 		String userId = "";
 		String companyId = "";
-		String writerDept = "";
-		String writerName = "";
 		
 		if(userInfo != null){
 			userId = userInfo.getId();			
 			companyId = userInfo.getCompanyID();
-			writerDept = userInfo.getDeptID();
-			writerName = userInfo.getDisplayName();
 		}
 		
 		String ownerId = searchVO.getOwnerId();
@@ -215,17 +200,15 @@ public class MResourceController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = result.getBody();
 				
-		String status = resultBody.get("status").toString();
+		resultBody.get("status").toString();
 		JSONArray scheduleList = new JSONArray();
-		
 
-	
-			scheduleList = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
-			
-			LOGGER.debug("scheduleList" + scheduleList);
-			
-			model.addAttribute("scheduleListCnt", scheduleList.size());
-			model.addAttribute("scheduleList", scheduleList);
+		scheduleList = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+
+		LOGGER.debug("scheduleList" + scheduleList);
+
+		model.addAttribute("scheduleListCnt", scheduleList.size());
+		model.addAttribute("scheduleList", scheduleList);
 
 		
 		LOGGER.debug("getResSchList ended.");
@@ -248,15 +231,12 @@ public class MResourceController extends EgovFileMngUtil {
 		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/folder-list";
 		String userId = "";
-		String companyId = "";
 		
 		if(userInfo != null){
 			userId = userInfo.getId();			
-			companyId = userInfo.getCompanyID();
 			brdCompany = userInfo.getCompanyID();
 		}
 		
-		String ownerId = searchVO.getOwnerId();				
 		RestTemplate rest = new RestTemplate();	
 		ResponseEntity<JSONObject> result = null;
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);		
@@ -275,10 +255,10 @@ public class MResourceController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = result.getBody();
 				
-		String status = resultBody.get("status").toString();
+		resultBody.get("status").toString();
 		JSONArray folderList = new JSONArray();
-		
 
+		@SuppressWarnings("unchecked")
 		Map<String, Object> resultMap = (Map<String, Object>) resultBody.get("data");	
 		folderList = gson.fromJson(gson.toJson(resultMap.get("list")), JSONArray.class);
 			
@@ -313,8 +293,6 @@ public class MResourceController extends EgovFileMngUtil {
 		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/favorite-list/users/" + userId;
 
-		String ownerId = searchVO.getOwnerId();
-				
 		RestTemplate rest = new RestTemplate();	
 		ResponseEntity<JSONObject> result = null;
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);		
@@ -331,17 +309,15 @@ public class MResourceController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = result.getBody();
 				
-		String status = resultBody.get("status").toString();
+		resultBody.get("status").toString();
 		JSONArray favoriteList = new JSONArray();
-		
 
-	
 		favoriteList = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
 			
-			LOGGER.debug("favoriteList" + favoriteList);
-			
-			model.addAttribute("favoriteListCnt", favoriteList.size());
-			model.addAttribute("favoriteList", favoriteList);
+		LOGGER.debug("favoriteList" + favoriteList);
+
+		model.addAttribute("favoriteListCnt", favoriteList.size());
+		model.addAttribute("favoriteList", favoriteList);
 		
 		LOGGER.debug("getResFavoriteList ended.");
 		return "json";
@@ -394,7 +370,7 @@ public class MResourceController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = result.getBody();
 				
-		String status = resultBody.get("status").toString();
+		resultBody.get("status").toString();
 		//Map<String, Object> scheduleDetail = (Map<String, Object>) resultBody.get("data");
         JSONObject scheduleDetail = gson.fromJson((String)resultBody.get("data"), JSONObject.class);
 			LOGGER.debug("scheduleDetail" + scheduleDetail);
@@ -451,7 +427,7 @@ public class MResourceController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = result.getBody();
 				
-		String status = resultBody.get("status").toString();
+		resultBody.get("status").toString();
 		//Map<String, Object> scheduleDetail = (Map<String, Object>) resultBody.get("data");
         JSONObject scheduleDetail = gson.fromJson((String)resultBody.get("data"), JSONObject.class);
 			LOGGER.debug("scheduleDetail" + scheduleDetail);
@@ -538,8 +514,7 @@ public class MResourceController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = result.getBody();
 				
-		String status = resultBody.get("status").toString();
-		JSONArray scheduleList = new JSONArray();
+		resultBody.get("status").toString();
 		
 /*		if (status.equals("ok")) {
 			
@@ -551,9 +526,6 @@ public class MResourceController extends EgovFileMngUtil {
 			model.addAttribute("scheduleList", scheduleList);
 		}*/
 		
-		
-		List<MResourceGetScheduleVO> resSchList = new ArrayList<MResourceGetScheduleVO>();
-
 		model.addAttribute("result", result);
 		
 		LOGGER.debug("addResSchedule ended.");
@@ -635,8 +607,7 @@ public class MResourceController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = result.getBody();
 				
-		String status = resultBody.get("status").toString();
-		JSONArray scheduleList = new JSONArray();
+		resultBody.get("status").toString();
 		
 /*		if (status.equals("ok")) {
 			
@@ -647,10 +618,6 @@ public class MResourceController extends EgovFileMngUtil {
 			model.addAttribute("scheduleListCnt", scheduleList.size());
 			model.addAttribute("scheduleList", scheduleList);
 		}*/
-		
-		
-		List<MResourceGetScheduleVO> resSchList = new ArrayList<MResourceGetScheduleVO>();
-		
 		
 		model.addAttribute("result", result);
 		
@@ -664,7 +631,6 @@ public class MResourceController extends EgovFileMngUtil {
 	@RequestMapping(value="/mobile/resource/DeleteResSchedule.do")
 	public String delResSchedule(HttpServletRequest request, LoginVO userInfo, MResourceSearchVO searchVO,@CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		LOGGER.debug("delResSchedule started.");
-		Gson gson = new Gson();
 		userInfo = commonUtil.userInfo(loginCookie);
 		String serverName = request.getServerName();		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
@@ -704,7 +670,7 @@ public class MResourceController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = result.getBody();
 				
-		String status = resultBody.get("status").toString();
+		resultBody.get("status").toString();
 		
 		LOGGER.debug("delResSchedule ended.");
 		return "json";
@@ -721,16 +687,10 @@ public class MResourceController extends EgovFileMngUtil {
 	
 		String serverName = request.getServerName();
 		String userId = "";
-		String companyId = "";
-		String writerDept = "";
-		String writerName = "";
 		String resourceId = searchVO.getOwnerId();
 		
 		if(userInfo != null){
 			userId = userInfo.getId();			
-			companyId = userInfo.getCompanyID();
-			writerDept = userInfo.getDeptID();
-			writerName = userInfo.getDisplayName();
 		}
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
@@ -764,8 +724,7 @@ public class MResourceController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = result.getBody();
 				
-		String status = resultBody.get("status").toString();
-		JSONArray scheduleList = new JSONArray();
+		resultBody.get("status").toString();
 		
 /*		if (status.equals("ok")) {
 			
@@ -793,16 +752,13 @@ public class MResourceController extends EgovFileMngUtil {
 	@RequestMapping(value="/mobile/resource/DeleteResFavorite.do")
 	public String delResFavorite(HttpServletRequest request, LoginVO userInfo, MResourceSearchVO searchVO,@CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		LOGGER.debug("delResFavorite started.");
-		Gson gson = new Gson();
 		userInfo = commonUtil.userInfo(loginCookie);
 		String serverName = request.getServerName();		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String companyId = "";
 		String userId = "";
 
 		
 		if(userInfo != null){		
-			companyId = userInfo.getCompanyID();
 			userId = userInfo.getId();
 		}
 		
@@ -829,7 +785,7 @@ public class MResourceController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = result.getBody();
 				
-		String status = resultBody.get("status").toString();
+		resultBody.get("status").toString();
 
 		LOGGER.debug("delResFavorite ended.");
 		return "json";
@@ -1156,10 +1112,8 @@ public class MResourceController extends EgovFileMngUtil {
 					value = field.get(obj);
 					 builder = builder.queryParam(field.getName(), value);
 				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				

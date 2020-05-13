@@ -8,11 +8,25 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
 		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<style>
 			#lstAttachLink {
 				height: 117px;
 				border: 1px solid #d2d2d2;
+			}
+			
+			.attachInnerNotice_p_on {
+				text-align: center;
+			}
+			
+			.attachInnerNotice_p_off {
+				display: none;
+			}
+			
+			.attachInnerNotice_span {
+				line-height: 55px;
 			}
 		</style>
 		<script type="text/javascript">
@@ -194,6 +208,8 @@
 		        }
 		        
 		        isbigyn = "N";
+		        
+		        showAttachInnerNotice();
 		    }
 		    
 		    function checkMailStatusAndFileUpload() {
@@ -272,11 +288,16 @@
 		        
 		        oTable.appendChild(objTr);
 		        document.getElementById("lstAttachLink").appendChild(oTable);
+		        //파일 첨부 안내문구 추가. 2020-04-01 홍대표.
+		        document.getElementById("lstAttachLink").appendChild(getAttachInnerNoticeObject());
 		        parent.DragObjectComplet();
 		        
 		        if (window.parent.totBigSizeAttachMBSize == 0) {
 					$("#btnBigFileUpload").css("display","none");
 		        }
+		        
+		      	//첨부파일 드래그 기능 추가. 2020-03-17 홍대표.
+		        setAttachSortable();
 		        
 		    }
 		    
@@ -386,6 +407,7 @@
 		                    TRRows.item(i).childNodes.item(1).setAttribute("_href", url);
 		                    TRRows.item(i).setAttribute("_uid", g_url);
 		                    TRRows.item(i).setAttribute("_big", big);
+		                    TRRows.item(i).setAttribute("draggable", true);
 		                    TRRows.item(i).setAttribute("_itemid", itemid);
 		                    TRRows.item(i).childNodes.item(1).setAttribute("style", "cursor:pointer");
 		                    
@@ -403,6 +425,7 @@
 		        		}
 		            }
 		        }
+		        
 		    }
 		 	
 		    /* 2018-04-25 김유진 - 첨부 파일삭제시 file 업로드 임시보관함 uid 업데이트 메서드 */
@@ -473,51 +496,54 @@
 		    
 		    function btnfiledel(type) {
 		        var filecnt = document.getElementById("filelist").childNodes.length;
-		    	var deleteFileList = document.querySelectorAll("#filelist input[name='fileSelect']:checked");
+		        
+		    	for (var i = 1; i < filecnt; i++) {
+		    		var filelistTable = document.getElementById("filelist");
+	                var elementTR = document.getElementById("filelist").childNodes[i];
+		    		var elementTRIsChecked = elementTR.childNodes[0].childNodes[0].checked;
+		    		var elementTrIsBig = GetAttribute(elementTR, "_big");
 		    	
-		    	if (type == "big") {
-		    		deleteFileList = document.querySelectorAll("#filelist tr[_big='Y']");	
-		    	}
-		    	
-		    	$.each(deleteFileList, function(i, e) {
-		    		var pAttachDelSN;
-	                var pAttachDelFileName;
-	                var is_newfile;
-	                var pNewNodeName = "";
-	                var Rtnval;
-	                var length = $('#filelist tr').length;
-	                var elementTR = type == "big" ? e : e.parentElement.parentElement;
-	                
-	                window.parent.DelAttachFileAtList(elementTR);
-	                
-	                var delfilesize = GetAttribute(elementTR, "_filesize");
-	               
-	                if (delfilesize == "") {
-	                    delfilesize = 0;
-	                }
- 
-	                if (GetAttribute(elementTR, "_big") == "Y") {
-	                    bigfilesize -= delfilesize;
-	                    bigfile.splice(i - 1, 1);
-	                } else {
-	                    filesize -= delfilesize;
-	                    file.splice(i - 1, 1);
-	                    
-	                    for (var j = 0; j < length; j++) {
-		                	
-	                    	if (i <= j && $('#filelist tr:eq(' + j + ')').is('[_fileindex]'))  {
-			                	$('#filelist tr:eq(' + j + ')').attr("_fileindex",$('#filelist tr:eq(' + j + ')').attr("_fileindex") - 1);
-		                	}
-		                } 
-	                    
-	                 	// 2018-04-25 김유진 - 첨부 파일에 클릭하면 다운로드 하는 기능 수정
-		                updateItemUid();
-	                }                
-	                
-	                document.getElementById("filelist").removeChild(elementTR);
-	                i--;
-	                filecnt--;
-		    	});
+					if ((type=="big" && elementTrIsBig=="Y") || (type!="big" && elementTRIsChecked)) {
+			    		var pAttachDelSN;
+		                var pAttachDelFileName;
+		                var is_newfile;
+		                var pNewNodeName = "";
+		                var Rtnval;
+		                var length = $('#filelist tr').length;
+		                
+		                window.parent.DelAttachFileAtList(elementTR);
+		                
+		                var delfilesize = GetAttribute(elementTR, "_filesize");
+		               
+		                if (delfilesize == "") {
+		                    delfilesize = 0;
+		                }
+	 
+		                if (elementTrIsBig == "Y") {
+		                    bigfilesize -= delfilesize;
+		                    bigfile.splice(i - 1, 1);
+		                } else {
+		                    filesize -= delfilesize;
+		                    file.splice(i - 1, 1);
+		                    
+		                    for (var j = 0; j < length; j++) {
+			                	
+		                    	if (i <= j && $('#filelist tr:eq(' + j + ')').is('[_fileindex]'))  {
+				                	$('#filelist tr:eq(' + j + ')').attr("_fileindex",$('#filelist tr:eq(' + j + ')').attr("_fileindex") - 1);
+			                	}
+			                } 
+		                    
+		                 	// 2018-04-25 김유진 - 첨부 파일에 클릭하면 다운로드 하는 기능 수정
+			                updateItemUid();
+		                }                
+		                
+		                document.getElementById("filelist").removeChild(elementTR);
+		                i--;
+		                filecnt--;
+		            }
+		        }
+		        
+		        showAttachInnerNotice();
 		    }
 			
 		    function checkall() {
@@ -689,6 +715,93 @@
 		        return true;
 		    }
 		    
+			function setAttachSortable() {
+				$("#lstAttachLink").multipleSortable({
+	              items : "tr[value]",
+	              opacity: 0.3,
+	              start : function(event, elem) { 
+	            	  $("#lstAttachLink tr").removeClass("multiple-sortable-selected");
+	                  $("#lstAttachLink tr").removeClass("ui-sortable-helper");
+	              },
+	              click : function(event) {
+	                  $("#lstAttachLink tr").removeClass("multiple-sortable-selected");
+	                  $("#lstAttachLink tr").removeClass("ui-sortable-helper");
+	              },
+	              stop : function(event, elem) {
+	              }
+	           });
+			}
+			
+			function moveAttachFileOrder(fileList) {
+				var fileIdxArr = [].map.call(fileList, function(fileNode){
+					return fileNode.getAttribute("_fileindex");
+				});
+				
+				saveAttachFileOrder(fileIdxArr);
+			}
+			
+			function saveAttachFileOrder(fileIdxArr){
+				 var itemid = window.parent.g_url;
+				 $.ajax({
+					type : 'post',
+					url : "/ezEmail/saveAttachFileOrder.do",
+					dataType : "json",
+					async : false,
+					data : {
+						fileIdxArr : fileIdxArr,
+						shareId : shareId,
+						itemid : itemid
+					},
+					success : function (result){
+// 						console.log("saveAttachFileOrder : " + result);
+						window.parent.g_url = result;
+						resetFileIdx();
+					}
+				 });
+			}
+			
+			function resetFileIdx() {
+				var fileList = document.querySelectorAll("#filelist tr[_fileindex]");
+				for (var i = 0; i < fileList.length; i++) {
+					fileList[i].setAttribute("_fileindex", i);
+				}
+			}
+		    
+			function arrayEqualCheck(arr1, arr2) {
+				if(arr1.length != arr2.length) {
+					return false;
+				}
+				
+				for (var i = 0; i < arr1.length; i++) {
+					if(arr1[i] != arr2[i]) {
+						return false;
+					}
+				}
+				return true;
+			}
+			
+			function getAttachInnerNoticeObject() {
+				var pElem = document.createElement("p");
+				pElem.id = "attachInnerNotice";
+				pElem.className = "attachInnerNotice_p_on";
+				
+				var spanElem = document.createElement("span");
+				spanElem.innerText = strLangHDP04;
+				spanElem.className = "attachInnerNotice_span";
+				
+				pElem.appendChild(spanElem);
+				
+				return pElem; 
+			}
+			
+			function showAttachInnerNotice() {
+		        var fileCnt = document.querySelectorAll("#filelist tr[value]").length;
+				if (file.length > 0 || bigfile.length > 0 || fileCnt > 0) {
+		        	 document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
+		        } else {
+		        	 document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_on";
+		        }
+			}
 		</script>
 	</head>  
     <body ondragover ="defaultenter(event)" ondragenter ="defaultenter(event)" style="overflow:hidden">   
@@ -702,7 +815,7 @@
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
              </div>
         </div>
-        <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
+        <div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
         <input id="file" type="file" onchange="filechange(event);return false;" multiple="multiple" style="width:1px;height:1px;display:none;" />
         <input type="hidden" value="업로드" onclick ="fileupload()" />

@@ -2560,7 +2560,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .btn_bottomframe{background-position:-26px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 하단 */
 .btn_leftframe{background-position:-52px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 왼쪽 */
 .btn_arrow_down{background-position:-78px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 아래화살표 */
-
+.icon16_spam {background-position: -234px -52px !important; width: 16px; height: 16px; display: inline-block; margin: 6px 0px 0px 0px;cursor: pointer;} /*icon16 스팸아이콘 */
 /* icon16 popup */
 .popup_icon16_delete{background-position:8px 6px !important; width:16px; height:16px; display:inline-block; margin: 0px; cursor:pointer; background-color: white !important;} /* icon16 삭제아이콘 */
 .popup_icon16_print{background-position:-70px -46px !important; width:16px; height:16px; display:inline-block; margin: 0px; cursor:pointer; background-color: white !important;} /* icon16 인쇄아이콘 */
@@ -3605,8 +3605,9 @@ input[type=range]::-ms-tooltip {display: none;}
 /* 메일 리스트 완료/완료 취소 */
 .icon_mail_Confirm{ background:url(../images/ImgIcon/view-document-confirm.gif) no-repeat; background-size:16px 15px; width:16px; height:16px; display:inline-block; margin: 7px 4px 0px 4px; cursor:pointer;}
 .icon_mail_Cancle{ background:url(../images/ImgIcon/view-document-cancel.gif) no-repeat; background-size:16px 15px; width:16px; height:16px; display:inline-block; margin: 7px 4px 0px 4px; cursor:pointer;}
-tr.mail_confirm > td{position:relative; }
+tr.mail_confirm > td:nth-child(7) { text-decoration: line-through; } 
+/*tr.mail_confirm > td{position:relative; }
 tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute; top:51%; left:0; border-bottom:1px solid #48494B; width:100%;}
-
+*/
 #ContextMenuDiv > .popuplist{ width:150px; }
 

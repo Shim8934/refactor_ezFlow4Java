@@ -50,7 +50,6 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
@@ -90,9 +89,6 @@ public class EzSystemAdminController {
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
-	
-	@Autowired
-	private EzEmailUtil ezEmailUtil;
 	
 	@Resource
 	private EgovMessageSource egovMessageSource;
@@ -210,6 +206,10 @@ public class EzSystemAdminController {
 		String useAllUserOldMailDelete = ezCommonService.getTenantConfig("useAllUserOldMailDelete", userInfo.getTenantId());
 		String useAllUserOldMailDeletePeriod = ezCommonService.getTenantConfig("useAllUserOldMailDeletePeriod", userInfo.getTenantId());
 		String usePortalAutoRefreshInterval = ezCommonService.getTenantConfig("usePortalAutoRefreshInterval", userInfo.getTenantId());
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
 		
 		model.addAttribute("configMap", configMap);
 		model.addAttribute("licensedUserCount", licensedUserCount);
@@ -220,6 +220,7 @@ public class EzSystemAdminController {
 		model.addAttribute("useAllUserOldMailDelete", useAllUserOldMailDelete);
 		model.addAttribute("useAllUserOldMailDeletePeriod", useAllUserOldMailDeletePeriod);
 		model.addAttribute("usePortalAutoRefreshInterval", usePortalAutoRefreshInterval);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
 		logger.debug("systemMainMenu ended");
 		
@@ -987,12 +988,12 @@ public class EzSystemAdminController {
 		
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", userInfo.getTenantId());
-		
+
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 
+		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", userInfo.getTenantId());
 		model.addAttribute("useIPAccess", useIPAccess);
 		logger.debug("systemIPManager ended");
 		 
@@ -1022,6 +1023,7 @@ public class EzSystemAdminController {
 	/*
 	 * 접속 허용 국가 리스트
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezSystem/getAccessCountryList.do", method=RequestMethod.POST)
 	public String getAccessCountryList(@CookieValue("loginCookie") String loginCookie, Model model, 
 			HttpServletRequest request) throws Exception {
@@ -1647,7 +1649,7 @@ public class EzSystemAdminController {
 			countryVO.setCountryCode(country); // 국가코드
 			countryVO.setCountryName(locale.getDisplayCountry(locale));
 			
-			if (realPath != null || !realPath.equals("")) { // path 없으면 이미지 경로 X
+			if (realPath != null && !realPath.isEmpty()) { // path 없으면 이미지 경로 X
 				// 국기가 없으면 물음표 국기 표시
 				String printImage = countryQuestionIcon;
 				try {

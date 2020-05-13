@@ -11,7 +11,7 @@ var CabinetMessages = {
 	strTtlCopy   : "フォルダコピー",
 	strInvalid   : "整数を入力してください。",
 	strParamErr  : "正しくないパラメータ値が存在します。",
-	strSave      : "保存されました。",
+	strSave      : "保存しました。",
 	strNoData    : "データが存在しません",
 	strNoInput   : "検索キーワードを入力してください。",
 	strNoUser    : "ユーザを選択してください。",

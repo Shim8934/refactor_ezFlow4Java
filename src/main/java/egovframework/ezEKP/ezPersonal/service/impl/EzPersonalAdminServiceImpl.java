@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezPersonal.service.impl;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalAdminDAO;
@@ -29,6 +29,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopupUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
@@ -46,9 +47,6 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	@Autowired
 	private CommonUtil commonUtil;
 
-	@Autowired
-	private EgovMessageSource egovMessageSource;
-	
 	@Resource(name="EzPersonalAdminDAO")
 	private EzPersonalAdminDAO ezPersonalAdminDAO;
 	
@@ -480,7 +478,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public void insertPopup(PersonalPopupVO vo, int tenantID, String offset) throws Exception {
+	public int insertPopup(PersonalPopupVO vo, int tenantID, String offset) throws Exception {
 		logger.debug("insertPopup started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -496,9 +494,11 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pContent", vo.getContent().replace("\"", "\'"));
 		map.put("tenantID", tenantID);
 		map.put("skinValue", vo.getSkinValue());
-
-		ezPersonalAdminDAO.insertPopup(map);
+		int itemSeq = ezPersonalAdminDAO.insertPopup(map);
+		logger.debug("itemSeq = " + itemSeq);
 		logger.debug("insertPopup ended");
+		
+		return itemSeq;
 	}
 
 	@Override
@@ -532,6 +532,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			map.put("v_pItemSeq", itemSeq);
 			map.put("tenantID", tenantID);
 			ezPersonalAdminDAO.deletePopup(map);
+			ezPersonalAdminDAO.deletePopupUser(map);
 		}
 		logger.debug("deletePopup ended");
 	}
@@ -1104,5 +1105,48 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 
 		logger.debug("checkJoinPoll ended");
 		return result;
+	}
+
+	@Override
+	public void updatePopupUser(List<PersonalPopupUserVO> userList, int tenantId, String companyId, int itemSeq) throws Exception {
+		logger.debug("updatePopupUser started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("itemSeq", itemSeq);
+		map.put("v_pItemSeq", itemSeq);
+		map.put("tenantID", tenantId);
+		
+		ezPersonalAdminDAO.deletePopupUser(map);
+		
+		int userListCount = userList.size();
+		
+		for (int i = 0; i < userListCount; i++) {
+			map.put("userId", userList.get(i).getUserId());
+			map.put("userType", userList.get(i).getUserType());
+			map.put("subdeptPermitted", userList.get(i).isSubdeptPermitted());
+			map.put("sn", userList.get(i).getSn());
+			
+			ezPersonalAdminDAO.updatePopupUser(map);
+		}
+		
+		logger.debug("updatePopupUser ended");
+	}
+
+	@Override
+	public List<PersonalPopupUserVO> getPopupUserList(int itemSeq, int tenantId, String companyId, String lang) throws Exception {
+		logger.debug("getPopupUserList started");
+		logger.debug("[params] itemSeq : " + itemSeq + ", tenantId : " + tenantId + ", companyId : " + companyId + ", lang : " + lang);
+		List<PersonalPopupUserVO> userList = new ArrayList<PersonalPopupUserVO>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemSeq", itemSeq);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("lang", lang);
+		
+		userList = ezPersonalAdminDAO.getPopupUserList(map);
+		logger.debug("userList = " + userList);
+		logger.debug("getPopupUserList ended");
+		return userList;
 	}
 }

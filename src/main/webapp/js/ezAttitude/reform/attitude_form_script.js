@@ -154,6 +154,7 @@ function attitude_annual_conn(formType, status) {
       })
       attitudeTypeList = attitudeTypeList.slice(0,-1);
       
+//2020-03-12 김정언
       if(attitudeTypeList === "A21"){
     	  $("input[id^=time]").each(function() {
     		  var number = Number($(this).attr("id").split("time")[1]);
@@ -682,20 +683,29 @@ for (var i = 0; i < 2; i++) {
 
 //timepicker
 for (var i = 0; i < 2; i++) {
-   var controlId = "time" + (timeLength + i);
-   var controlElement = document.getElementById(controlId);
-   if (controlElement != null) {
-      controlElement.removeAttribute("class");
-      
-      $(controlElement).timepicker({
-             timeFormat: "H:i"
-      });
+	var controlId = "time" + (timeLength + i);
+	var controlElement = document.getElementById(controlId);
+	if (controlElement != null) {
+		controlElement.removeAttribute("class");
 
-      if ($(controlElement).val() === "") {
-    	  var currentTime = new Date().getHours();
-    	  $(controlElement).timepicker('setTime', new Date(0,0,0,currentTime,0,0));		  
-      }  
-   }
+		$(controlElement).timepicker({
+			timeFormat: "H:i",
+			step : 60,
+			minTime : '8:00am',
+			maxTime : '8:00pm'
+		});
+
+		if ($(controlElement).val() === "") {
+			var currentTime = new Date().getHours();
+			var plusTime = currentTime + 2;
+
+			if(i == 0) {
+				$(controlElement).timepicker('setTime', new Date(0,0,0,currentTime,0,0));
+			} else {
+				$(controlElement).timepicker('setTime', new Date(0,0,0,plusTime,0,0));
+			}	  
+		}  
+	}
 }
 
 setInputViewer(document.getElementById("reform-title"+annualDataLength));
@@ -1262,21 +1272,23 @@ function halfOff(attitudeType , halfOffViewer, halfOffReformId) {
 		$("#" + halfOffViewer3[0] + ", #" + halfOffViewer3[1]).attr("viewer-disable","false");
 		$("#" + halfOffReformId).attr("viewer-format","{0}{2} ~ {1}{3}");
 		$("#" + halfOffReformId).attr("viewer",halfOffViewer2[0] + "," + halfOffViewer2[1] + "," + halfOffViewer3[0] + "," + halfOffViewer3[1]);
-		
+
 		var sTime = "";
 		var eTime = "";
-		
+		var plusTime = "";
+
 		//시작시간 선택
 		$("#" + halfOffViewer3[0]).change(function(e){
-			sTime = $(e.target).timepicker('getTime');
-			$("#" + halfOffViewer3[1]).timepicker('setTime', new Date(sTime));
+			sTime = $(e.target).timepicker('getTime').getHours();
+			plusTime = sTime + 2;
+			$("#" + halfOffViewer3[1]).timepicker('setTime', new Date(0,0,0,plusTime,0,0));
 		});
 
 		//종료시간 선택
 		$("#" + halfOffViewer3[1]).change(function(e){
-			eTime = $(e.target).timepicker('getTime');
-			if(eTime < sTime){
-				$("#" + halfOffViewer3[1]).timepicker('setTime', new Date(sTime));
+			eTime = $(e.target).timepicker('getTime').getHours();
+			if(eTime <= sTime){
+				$("#" + halfOffViewer3[1]).timepicker('setTime', new Date(0,0,0,plusTime,0,0));
 				parent.parent.OpenAlertUI("시작 시간을 종료 시간 보다 빠르게 지정해 주십시오.");
 			}
 		});
@@ -1293,4 +1305,16 @@ function halfOff(attitudeType , halfOffViewer, halfOffReformId) {
 function hideTime(){
 	$("#reform-title").attr("viewer-format","{0} ~ {1}");
 	$("#reform-title").attr("viewer","date1,date2");
+
+	var currentTime = new Date().getHours();
+	var plusTime = currentTime + 2;
+	$("#time1").timepicker('setTime', new Date(0,0,0,currentTime,0,0));
+	$("#time2").timepicker('setTime', new Date(0,0,0,plusTime,0,0));
+
+	$("#time1, #time2").timepicker({
+		timeFormat: "H:i",
+		step : 60,
+		minTime : '8:00am',
+		maxTime : '8:00pm'
+	});
 }

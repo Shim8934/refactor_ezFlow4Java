@@ -2,13 +2,29 @@ package egovframework.ezEKP.ezSurvey.web;
 
 import java.io.PrintWriter;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +37,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -31,35 +49,11 @@ import egovframework.ezEKP.ezSurvey.vo.ResponseVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.util.CellRangeAddress;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-
 @SuppressWarnings("unchecked")
 @Controller
 public class EzSurveyController extends EgovFileMngUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzSurveyController.class);
 
-	private static final String JSONObject = null;
-	
 	@Autowired
 	private CommonUtil commonUtil;
 	
@@ -327,6 +321,11 @@ public class EzSurveyController extends EgovFileMngUtil {
 			model.addAttribute("listType", listType);
 		}
 		
+		model.addAttribute("cn",user.getId());
+		model.addAttribute("companyId",user.getCompanyID());
+		model.addAttribute("dept",user.getDeptID());
+		model.addAttribute("lang",user.getLang());
+		
 		logger.debug("jspGetSelectUesrPage ended");
 		return "ezSurvey/user/selectUser";
 	}
@@ -499,6 +498,44 @@ public class EzSurveyController extends EgovFileMngUtil {
 		resultObj = surveyRestService.getSurveyItems(request, user.getId(), pageMode, title, creatorName, startDate, endDate, column, order, srchMode, srchOption, listCntSize, currentPage, userMode);
 		
 		logger.debug("jsonGetSurveyItems end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezSurvey/getSurveyPopupItems.do", method=RequestMethod.GET)
+	@ResponseBody
+	public String jsonGetSurveyPopupItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonGetSurveyPopupItems start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String mode          = request.getParameter("mode")        != null ? request.getParameter("mode")        : "";
+		String startDate     = request.getParameter("startDate")   != null ? request.getParameter("startDate")   : "";
+		String endDate       = request.getParameter("endDate")     != null ? request.getParameter("endDate")     : "";
+		@SuppressWarnings("unused")
+		JSONObject userObj = surveyRestService.getUserInformation(request, user.getId());
+		
+		JSONObject resultObj = new JSONObject();
+		
+		resultObj = surveyRestService.getSurveyPopupItems(request, user.getId(), mode, startDate, endDate);
+		
+		String cookieValue = "";
+		
+		Cookie[] cookies = request.getCookies();
+		
+		if (cookies != null) {
+			for (int i = 0; i < cookies.length; i++) {
+				Cookie cookie = cookies[i];
+				String cookieName = cookie.getName();
+				
+				if (cookieName.equals("SURV_POPUP" + "_" + user.getId())) {
+					cookieValue = cookies[i].getValue();
+				}
+			}
+			
+			if (cookieValue != null && !cookieValue.equals("")) {
+				resultObj.remove("surveyPopupList");
+			}
+		}
+		
+		logger.debug("jsonGetSurveyPopupItems end");
 		return resultObj.toString();
 	}
 	
@@ -681,7 +718,6 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return resultObj.toString();
 	}
 	
-	@SuppressWarnings({ "unchecked", "static-access" })
 	@RequestMapping(value="/ezSurvey/exportResultExcel.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void exportResultExcel(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
@@ -729,13 +765,13 @@ public class EzSurveyController extends EgovFileMngUtil {
 
 		// 1행 타이틀 font (bold, 맑은고딕, 크기 12pt)
 		XSSFFont titleFont = workbook.createFont();
-		titleFont.setBoldweight((short) titleFont.BOLDWEIGHT_BOLD);
+		titleFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
 		titleFont.setFontHeight((short) 240);
 		titleFont.setFontName(fontFamily);
 
 		// header font (bold, 맑은고딕)
 		XSSFFont headerFont = workbook.createFont();
-		headerFont.setBoldweight((short) headerFont.BOLDWEIGHT_BOLD);
+		headerFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
 		headerFont.setFontName(fontFamily);
 
 		// 기본 font(맑은고딕)
@@ -1206,9 +1242,9 @@ public class EzSurveyController extends EgovFileMngUtil {
 						int[][] orderArray = new int[bogiCount][bogiCount+1];
 						for(int[] rowArray:orderArray) {
 							rowArray[0] = optionId.get(count++);
-							for(int num:rowArray) {
+							/* for(int num:rowArray) {
 								num = 0;
-							}
+							} */
 						}
 						List<ResponseVO> responsVO = qVO.getResponses();
 						for(ResponseVO rVO:responsVO) {

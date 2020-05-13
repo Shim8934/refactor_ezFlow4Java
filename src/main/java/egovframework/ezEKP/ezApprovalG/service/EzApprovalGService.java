@@ -487,6 +487,8 @@ public interface EzApprovalGService {
     public int lastKyulJeHabYuiYN(String docID, String flag, String companyID, int tenantId) throws Exception;
 
     public String startXmlConvert(String content, String fontFamily, String fontSize, LoginVO userInfo) throws Exception;
+    
+    public String startXmlConvertHwp(String content, String fontFamily, String fontSize, LoginVO userInfo) throws Exception;
 
     public String getAprLineXmlForExt(String docID, LoginVO userInfo) throws Exception;
 
@@ -672,4 +674,10 @@ public interface EzApprovalGService {
                                     String publicity, String docID, String limitDate, String companyID, int tenantId, String modifyReason, LoginVO userInfo) throws Exception;
 
     public String getBansongDeptID(String docID, String orgCompanyID, int tenantID, LoginVO userInfo) throws Exception;
+    
+    public String updateReceivedDept(String docID, String processorID, String processorName, String processorJobTitle, String receivedDeptID, String receivedDeptName, String processorName2, String processorJobTitle2, String receivedDeptName2, String companyID, int tenantId) throws Exception;
+    
+    public String setApprDocInfo(Document xmlDom, String companyID, int tenantId) throws Exception;
+
+    public String getFormAprOptionInfo(String key, String type, String companyID, int tenantID) throws Exception;
 }

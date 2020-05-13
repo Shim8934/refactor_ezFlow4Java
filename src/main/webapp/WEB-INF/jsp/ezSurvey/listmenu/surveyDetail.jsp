@@ -52,6 +52,12 @@
 				<span><spring:message code="ezSurvey.t97"/><c:out value=" ${survey.openDays}"/> <spring:message code="ezSurvey.t45"/></span>
 			</li>
 		</c:if>
+		<li><span class="srvyInfo"></span><span><spring:message code="ezSurvey.t112" /> : </span>
+			<span><spring:message code="${survey.mailFlag == 1 ? 'ezSurvey.t114' : 'ezSurvey.t115'}"/></span>
+		</li>
+		<li><span class="srvyInfo"></span><span><spring:message code="ezSurvey.t113" /> : </span>
+			<span><spring:message code="${survey.popupFlag == 1 ? 'ezSurvey.t114' : 'ezSurvey.t115'}"/></span>
+		</li>
 	</ul>
 	
 	<div class="surveydetail-body" id="mainSurveyBody">
@@ -470,10 +476,12 @@
 						 }
 						 
 						 if (window.opener.SurveyItem != null) {
-							 if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload(); window.close();}
+							 if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
+							 if (window.opener && window.opener.openSurveyPopup)	{window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
 							 if (parent && parent.SurveyItem)               {parent.SurveyItem.reload();}
 						 } 
 						 
+						 window.close();
 						 break;
 				case 1 : alert(SurveyMessages.strParamErr)  ; resposeObj.responses = []; break;
 				case 2 : alert(SurveyMessages.strError)     ; resposeObj.responses = []; break;
@@ -761,6 +769,7 @@
 		
 		function afterDeleteSuccessfully() {
 			alert(SurveyMessages.strDel);
+			if (window.opener && window.opener.openSurveyPopup)    {window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
 			
 			if (window.opener.getPotletSurveyList != undefined) {
 				 window.opener.getPotletSurveyList();

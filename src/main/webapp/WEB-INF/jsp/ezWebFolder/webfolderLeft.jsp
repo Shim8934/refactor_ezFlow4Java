@@ -20,6 +20,9 @@
 	    	#mCSB_1_container {
 				margin-right: 0px;
 			}
+			.mCustomScrollBox{ /* contains plugin's markup */
+				height: 93%;
+			}
 	    </style>
 		<script type="text/javascript" >
 		    var companyFolderId = "";

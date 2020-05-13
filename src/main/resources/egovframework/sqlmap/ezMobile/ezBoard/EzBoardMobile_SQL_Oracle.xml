@@ -1868,5 +1868,263 @@
 				TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
+	
+	<select id="MBoardDAO.getQNABoardItemListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(itemid) totalcount
+			FROM 
+				TBL_BOARD_ITEM 
+			WHERE  
+				tenant_id = #tenantID#
+			AND
+				boardid = #boardID#
+			AND
+				startdate <= #nowDate#
+			AND
+				enddate > #nowDate#
+		]]>
+		<isNotEmpty property="pSearchText">
+		    <![CDATA[
+				AND
+					(title LIKE CONCAT('%' ,#pSearchText#, '%')
+					OR
+		    		writerName LIKE CONCAT('%' ,#pSearchText#, '%'))    
+			]]>
+		</isNotEmpty>
+		<isEqual property="apprFlag" compareValue="Y">
+			<![CDATA[
+				AND
+					apprflag = 'Y'
+			]]>
+		</isEqual>
+		<isEqual property="v_PADMINTYPE" compareValue="false">
+			<![CDATA[
+				AND 
+					(TOPWRITERID = #userID#
+					OR
+					WRITERID = #userID#)
+			]]>
+		</isEqual>
+	</select>
+	
+	<select id="MBoardDAO.getQNABoardItemList" parameterClass="Map" resultClass="MBoardItemVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				(SELECT 
+					A.boardid,
+					A.itemid,
+					A.writerid,
+					A.writername,
+					A.writerdeptname,
+					A.writercompanyname,
+					TO_DATE(A.startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+					TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
+					A.parentwritedate,
+					TO_NUMBER(A.parentwritedate) as orderparentwritedate,
+					A.importance,
+					A.title,
+					A.readcount,
+					A.attachments,
+					A.itemlevel,
+					A.abstract,
+					CASE WHEN D.totalcount IS NULL THEN '0' ELSE '1' END readflag,
+					A.extensionattribute5,
+					A.writername2,
+					A.writerdeptname2,
+					A.writercompanyname2,
+					(SELECT 
+						COUNT(*)  
+					FROM 
+						TBL_BOARD_ONELINEREPLY
+					WHERE  
+						tenant_id = A.tenant_id
+					AND
+						itemid = A.itemid) onelinecnt,
+						TO_CHAR(A.upperitemidtree) as upperitemidtree,
+						A.docno,
+						'' AS notice,
+						TO_CHAR(A.maincontent) as maincontent,
+						A.extensionattribute6,
+						A.extensionattribute7,
+						A.extensionattribute8,
+						A.extensionattribute9,
+						A.extensionattribute10,
+						(SELECT
+							gubun
+						FROM
+							TBL_BOARD_BOARDINFO B
+						WHERE
+							B.tenant_id = #tenantID#
+						AND
+							B.boardid = A.boardid) AS gubun
+					FROM
+						TBL_BOARD_ITEM A
+					LEFT OUTER JOIN
+						(SELECT
+							COUNT(userid) AS totalcount, 
+							itemid,
+							tenant_id 
+						FROM
+							TBL_BOARD_ITEM_READ
+						WHERE
+							tenant_id = #tenantID#
+						AND
+							userid = #userID#
+						AND
+							boardid = #boardID#
+						GROUP BY
+							itemid,
+							tenant_id ) D
+						ON
+							A.tenant_id = D.tenant_id
+						AND
+							A.itemid = D.itemid
+						WHERE
+							A.tenant_id = #tenantID#
+						AND
+							boardid = #boardID#
+						AND
+		                    startdate <= #nowDate#
+		                AND
+		                    enddate > #nowDate#
+			]]>
+			<isEqual property="apprFlag" compareValue="Y">
+				<![CDATA[
+					AND
+						A.apprflag = 'Y'
+				]]>
+			</isEqual>
+	        <isNotEmpty property="pSearchText">
+	            <![CDATA[
+	                AND
+	                    (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                        OR
+	                    A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	            ]]>
+	        </isNotEmpty>
+	        <isNotEmpty property="parentWriteDate">
+	            <![CDATA[
+	                AND
+	                    parentwritedate = #parentWriteDate#
+	            ]]>
+	        </isNotEmpty>
+	        <isNotEmpty property="upperitemidtree">
+	            <![CDATA[
+	                AND
+	                    TO_CHAR(upperitemidtree) > #upperitemidtree#
+	            ]]>        
+	        </isNotEmpty>
+			
+			<![CDATA[
+	            UNION 
+	              SELECT 
+	                A.boardid,
+	                A.itemid,
+	                A.writerid,
+	                A.writername,
+	                A.writerdeptname,
+	                A.writercompanyname,
+	                TO_DATE(A.startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+	                TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
+	                A.parentwritedate,
+	                TO_NUMBER(A.parentwritedate) as orderparentwritedate,
+	                A.importance,
+	                A.title,
+	                A.readcount,
+	                A.attachments,
+	                A.itemlevel,
+	                A.abstract,
+	                CASE WHEN D.totalcount IS NULL THEN '0' ELSE '1' END readflag,
+	                A.extensionattribute5,
+	                A.writername2,
+	                A.writerdeptname2,
+	                A.writercompanyname2,
+	                (SELECT 
+	                    COUNT(*)  
+	                FROM 
+	                    TBL_BOARD_ONELINEREPLY
+	                WHERE  
+	                    tenant_id = A.tenant_id
+	                AND
+	                    itemid = A.itemid) onelinecnt,
+	                    TO_CHAR(A.upperitemidtree) as upperitemidtree,
+	                    A.docno,
+	                    '' AS notice,
+	                    TO_CHAR(A.maincontent) as maincontent,
+	                    A.extensionattribute6,
+	                    A.extensionattribute7,
+	                    A.extensionattribute8,
+	                    A.extensionattribute9,
+	                    A.extensionattribute10,
+	                    (SELECT
+	                        gubun
+	                    FROM
+	                        TBL_BOARD_BOARDINFO B
+	                    WHERE
+	                        B.tenant_id = #tenantID#
+	                    AND
+	                        B.boardid = A.boardid) AS gubun
+                    FROM
+                        TBL_BOARD_ITEM A
+                    LEFT OUTER JOIN
+                        (SELECT
+                            COUNT(userid) AS totalcount, 
+                            itemid,
+                            tenant_id 
+                        FROM
+                            TBL_BOARD_ITEM_READ
+                        WHERE
+                            tenant_id = #tenantID#
+                        AND
+                            userid = #userID#
+                        AND
+                            boardid = #boardID#
+                        GROUP BY
+                            itemid,
+                            tenant_id ) D
+                        ON
+                            A.tenant_id = D.tenant_id
+                        AND
+                            A.itemid = D.itemid
+                        WHERE
+                            A.tenant_id = #tenantID#
+                        AND
+                            boardid = #boardID#
+		                AND
+		                    startdate <= #nowDate#
+		                AND
+		                    enddate > #nowDate#
+	            ]]>
+	            <isEqual property="apprFlag" compareValue="Y">
+	                <![CDATA[
+	                    AND
+	                        A.apprflag = 'Y'
+	                ]]>
+	            </isEqual>
+	            <isNotEmpty property="pSearchText">
+	                <![CDATA[
+	                    AND
+	                        (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                            OR
+	                        A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	                ]]>
+	            </isNotEmpty> 
+	            <isNotEmpty property="parentWriteDate">
+	                <![CDATA[
+	                    AND
+	                        parentwritedate < #parentWriteDate# 
+	                ]]>
+	            </isNotEmpty>
+	             <![CDATA[             
+	                ORDER BY
+	                    orderparentwritedate DESC, UPPERITEMIDTREE)
+			WHERE
+				ROWNUM <= #listSize#
+            ]]>
+	</select>
+	
 </sqlMap>
 

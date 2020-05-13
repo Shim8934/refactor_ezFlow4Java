@@ -64,7 +64,6 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
-import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
@@ -1954,6 +1953,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						List<String> messageIdList = ezEmailService.getMailPOP3List(loginInfo.getTenantId(), loginInfo.getId(), host, id);
 						
 						final Set<String> messageIds = new HashSet<String>(messageIdList);
+						@SuppressWarnings("serial")
 						SearchTerm searchTerm= new SearchTerm() {
 							@Override
 							public boolean match(Message message) {
@@ -2196,16 +2196,14 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String shareId = request.getParameter("shareId") == null ? "" : request.getParameter("shareId");
-		String email = userInfo.getEmail();
-		
+		String email = userInfo.getId() + "@" + userInfo.getEmail().split("@")[1];
 		logger.debug("userId:'" + userInfo.getId() + "',shareId:'" + shareId + "'");
 		
 		if(shareId == null || !shareId.equals("")) {
-			
-			MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
-			email = shareInfo.getShareMail();
+			email = shareId + "@" + userInfo.getEmail().split("@")[1];
 		}
-	
+		logger.debug("email:" + email);
+		
 		JSONArray returnJsonArr = new JSONArray();
 		returnJsonArr = ezEmailService.getFolderQuota(email, locale);
 		

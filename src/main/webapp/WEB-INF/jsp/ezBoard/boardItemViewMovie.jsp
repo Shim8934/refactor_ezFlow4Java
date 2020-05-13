@@ -25,6 +25,17 @@
 					MARGIN-TOP: 0mm;
 					MARGIN-BOTTOM: 0mm;
 				}
+			.likeButton {
+				padding:5px;
+				cursor:pointer;
+				display:inline-block;
+				border:1px solid #c7c7c7;
+			    border-radius:2px;
+			}
+			.likeButton:hover {
+				background-color:#f1f8ff;
+				border:1px solid #6793d8;
+			}
 		</style>
 		<script type="text/javascript">
 				window.offscreenBuffering = true;
@@ -57,6 +68,10 @@
 				var g_progresswin;
 				var OneLineReplyFlag = "${oneLineReplyFlag}";
 				var gubun = "${boardInfo.guBun}";
+				var isLikeChecked = "<c:out value='${isLikeChecked}'/>";
+				var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
+				var likeCount = "${boardItem.likeCount}";
+				var likeCountAfter = 0;
 				var refreshFlag = "N";
 				var commentCount = "${commentCount}";
 			    var nowCommentCount = ""; // 댓글 옵션처리를 위해 전역변수로 변경
@@ -97,6 +112,13 @@
  		            	getBoardComment();
  		            }
 		        };
+		        
+		        $(document).ready(function() {
+					/* 2019-04-05 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩 조절 */
+		            if (likeFlag != null && likeFlag == "Y") {
+						$(".movieTR").css("padding" , "20px 0px 0px 0px");
+		            }
+		        });
 		        
 		        function imageViewInit()
 		        {
@@ -536,6 +558,57 @@
 		            
 		            window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURI(pBoardID) + "&itemID=" + encodeURI(pItemID) + "&mode=modify" + "&location=", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=679,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        }
+		    	
+		        /* 2019-04-05 홍승비 - 좋아요 버튼 클릭 동작 */
+			    function clickLikeButton() {
+			    	var mod = "";
+			    	if (isLikeChecked == "Y") {
+			    		mod = "DELETE";
+			    	} else {
+			    		mod = "INSERT";
+			    	}
+			    	
+			    	$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/clickLikeMod.do",
+						data : {
+							mod: mod,
+							itemID : pItemID
+						},
+						success: function(result){
+							isLikeChecked = result;
+							updateLikeCountImg(isLikeChecked);
+						}
+					});
+			    }
+			    
+			    /* 2019-04-05 홍승비 - 좋아요 버튼 이미지 및 좋아요 갯수 업데이트 */
+			    function updateLikeCountImg(isLikeChecked) {
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/getLikeCount.do",
+						data : {
+							itemID : pItemID
+						},
+						success: function(result){
+							likeCountAfter = result;
+							if (parseInt(result) > 0) {
+								document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+							} else {
+								document.getElementById("likeCountSpan").innerText = "";
+							}
+							if (isLikeChecked == "Y") {
+					    		document.getElementById("likeButtonImg").src = "/images/like_on.png";
+					    	} else {
+					    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
+					    	}
+						}
+					});
+			    }
 			    
 			    /* 2019-04-12 홍승비 - 게시물 갱신 조건 체크 */
 			    function checkRefreshFlag () {
@@ -546,7 +619,7 @@
 			    	var opnenerHref = window.opener.location.href;
 			    	
 			    	// 댓글의 수가 달라졌고, 부모창의 주소가 게시판인 경우(새게시물 제외)에만 플래그값 변경
-			    	if ((commentCount != nowCommentCount) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
+			    	if (((likeCount != likeCountAfter) || (commentCount != nowCommentCount)) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
 			    		refreshFlag = "Y";
 			    	} else {
 			    		refreshFlag = "N";
@@ -639,7 +712,7 @@
 		  <tr>
 		    <td style="width:100%;  text-align:center; padding-top:10px;" >
 		        <table style="width:100%; border:1px solid #ddd; min-height:450px;">
-		        <tr style="display:table-cell;">
+		        <tr class="movieTR" style="display:table-cell;">
 		            <td style="display:inline-block;">
 		                <table id="movieTable">
 		                    <tr>  
@@ -650,6 +723,24 @@
 		           	    </table>
 		            </td>
 		        </tr>
+				<%-- 2019-04-05 홍승비 - 본문 하단에 좋아요 버튼 추가 --%>
+				<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+					<tr>
+						<td style="text-align:center; padding-bottom:5px;">
+						  	<span class="likeButton" style="cursor:pointer;" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
+							  	<c:choose>
+							  		<c:when test="${isLikeChecked == 'Y'}">
+							  			<img id="likeButtonImg" src="/images/like_on.png"/>
+							  		</c:when>
+							  		<c:otherwise>
+							  			<img id="likeButtonImg" src="/images/like_off.png"/>
+							  		</c:otherwise>
+							  	</c:choose>
+						  		<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
+						  	</span>
+						</td>
+					</tr>
+				</c:if>
 		        </table>
 		    </td>
 		  </tr>
@@ -711,7 +802,7 @@
 		<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
         <c:if test="${oneLineReplyFlag == '2'}">
         	<div style='height:auto;'>
-				<table class="mainlist" style="width:100%; min-width:745px; margin-top:1px;" >
+				<table class="mainlist" style="width:100%; min-width:745px; margin-top:8px;" >
 					<tr>
 						<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
 							<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
@@ -721,7 +812,7 @@
 						</th>
 					</tr>
 				</table>
-				<table id="commentList" style="width:100%; min-width:745px; margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+				<table id="commentList" style="width:100%; min-width:745px; margin-top:2px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 			</div>
         </c:if>
         <%-- 본문하단 댓글영역 끝 --%>

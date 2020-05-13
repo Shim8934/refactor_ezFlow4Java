@@ -1215,7 +1215,7 @@ public class EzEmailUtil {
 				
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' class='imgSpan' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align: top;'></span>";
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
-				if (useImageConvertServer != null && !useImageConvertServer.equalsIgnoreCase("0")) {
+				if (useImageConvertServer != null && !useImageConvertServer.equals("") && !useImageConvertServer.equalsIgnoreCase("0")) {
 					pAttachListHtml += " <span class='icon_rbtn2' title='" + egovMessageSource.getMessage("ezEmail.t487", locale) + "' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Preview('" + URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + bodyPartIndex + "','" + EgovStringUtil.getSpclStrCnvr2(filename) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align: top'></span>";
 				}
 				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16' style='vertical-align: top'></span></li>";
@@ -1791,7 +1791,7 @@ public class EzEmailUtil {
 				
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' class='imgSpan' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align: top;'></span>";
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
-				if (useImageConvertServer != null && !useImageConvertServer.equalsIgnoreCase("0")) {
+				if (useImageConvertServer != null && !useImageConvertServer.equals("") && !useImageConvertServer.equalsIgnoreCase("0")) {
 					pAttachListHtml += " <span class='icon_rbtn2' title='" + egovMessageSource.getMessage("ezEmail.t487", locale) + "' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Preview('" + URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + bodyPartIndex + "','" + EgovStringUtil.getSpclStrCnvr2(filename) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align: top'></span>";
 				}
 				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16' style='vertical-align: top'></span></li>";
@@ -2166,6 +2166,7 @@ public class EzEmailUtil {
 	/**
 	 * searches an open folder for messages matching the specified criterion. 
 	 */
+	@SuppressWarnings("serial")
 	public Message[] searchFolder (
 			Folder folder, 
 			String searchField, 
@@ -2361,7 +2362,7 @@ public class EzEmailUtil {
 				    public boolean match(Message message) {
 				        try {
 				        	String subject = getSubject(message);				        	
-				        	String from = getFullFromAddressOfMessage(message);
+				        	// String from = getFullFromAddressOfMessage(message);
 				        	
 				        	boolean subjectFlag = subject != null && subject.toLowerCase().contains(searchValue.toLowerCase()); 
 				        	boolean toFlag = toSearch(message, searchValue);
@@ -2489,6 +2490,7 @@ public class EzEmailUtil {
 		return messages;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Message[] advancedSearchFolder(
 			IMAPAccess ia,
 			String userAccount,
@@ -2516,7 +2518,7 @@ public class EzEmailUtil {
 		Map<String, Object> resultMap = getMailListFromJGw(userAccount, folderPath, searchField, searchValue, startDate, endDate, 
 				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount);
 		
-		List<String> mailList = (List<String>)resultMap.get("mailList");
+		List<String> mailList = (List<String>) resultMap.get("mailList");
 		
 		if (extraMap != null) {
 			extraMap.put("totalCount", (int)resultMap.get("totalCount"));
@@ -2560,6 +2562,7 @@ public class EzEmailUtil {
 		return messageList.toArray(new Message[0]);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> getMailListFromJGw(
 			String userAccount,
 			String folderPath, 
@@ -2676,6 +2679,7 @@ public class EzEmailUtil {
 			newMessage.setContent(mp);
 			
 			//set header
+			@SuppressWarnings("unchecked")
 			Enumeration<Header> e = oldMessage.getAllHeaders();
 			while(e.hasMoreElements()){
 				Header header = e.nextElement();
@@ -4975,7 +4979,7 @@ public class EzEmailUtil {
 
 				logger.debug("Mail send success.");
 
-				if (isSentSave) {
+				if (isSentSave && "YES".equalsIgnoreCase(config.getProperty("config.SentMailStoredInSentbox", "YES"))) {
 					// 유저 로케일이 없을시 시스템 로케일로 설정
 					if (locale == null) {
 						locale = Locale.getDefault();
@@ -5009,15 +5013,15 @@ public class EzEmailUtil {
 		}
 	}
 
-    public String spamSniperEnc(String emailAddress, String spamSniperAuthKey, String spamSniperAuthIv) throws Exception {
-    	logger.debug("spamSniperEnc start");
-    	String cryptResult = null;
+	public String spamSniperEnc(String emailAddress, String spamSniperAuthKey, String spamSniperAuthIv, long spamSniperUnixTime) throws Exception {
+		logger.debug("spamSniperEnc start");
+		String cryptResult = null;
 		String authKey = spamSniperAuthKey;
 		String authIv = spamSniperAuthIv;
 		String algorithm = "AES";
 		String mode = "CBC";
-		
-		if(!(emailAddress.equals("") || authKey.equals("") || authIv.equals(""))) {
+
+		if (!(emailAddress.equals("") || authKey.equals("") || authIv.equals(""))) {
 			byte[] secretKey = authKey.getBytes();
 
 			String transform = String.format("%s/%s/%s", algorithm, mode, "PKCS5Padding");
@@ -5027,18 +5031,23 @@ public class EzEmailUtil {
 			byte[] iv = authIv.getBytes();
 			int len = 16;
 
-			SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey , 0, len, algorithm);
+			SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey, 0, len, algorithm);
 			cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(iv, 0, len));
+			String encryptTarget = emailAddress;
 
-			byte[] encrypted = cipher.doFinal(emailAddress.getBytes());
+			if (spamSniperUnixTime > 0) {
+				encryptTarget += ".." + (System.currentTimeMillis() / 1000L + spamSniperUnixTime);
+			}
+
+			byte[] encrypted = cipher.doFinal(encryptTarget.getBytes());
 			cryptResult = new String(Hex.encode(encrypted));
 		}
-    	
-		logger.debug("emailAddress=" + emailAddress + ",spamSniperAuthKey=" + spamSniperAuthKey 
-				+ ",spamSniperAuthIv=" + spamSniperAuthIv);
+
+		logger.debug("emailAddress={},spamSniperAuthKey={},spamSniperAuthIv={},spamSniperUnixTime={}",
+				emailAddress, spamSniperAuthKey, spamSniperAuthIv, spamSniperUnixTime);
 		logger.debug("spamSniperEnc end");
-    	return cryptResult;
-    }
+		return cryptResult;
+	}
     
     // 메일 완료/완료취소 flag
     public boolean hasMailConfirmFlag(Message message) throws MessagingException {
@@ -5078,13 +5087,28 @@ public class EzEmailUtil {
     		int mailAddrRight = mailAddrName.lastIndexOf(">");
     		
     		if (mailAddrLeft < mailAddrRight) {
-    			String MailAddrNameTemp = mailAddrName.substring(0, mailAddrLeft);
-    			String MailAddrTemp = mailAddrName.substring(mailAddrLeft);
+    			String MailAddrNameTemp = mailAddrName;
+    			String MailAddrTemp = mailAddrName;
     			
-    			MailAddrTemp = MailAddrTemp.replaceAll("<", "").replaceAll(">", "").replaceAll(";", "");
-    			
-    			MailAddrNameTemp = MailAddrNameTemp.trim().replaceAll(",", " ").replaceAll(":", " ").replaceAll(";", " ");
-    			MailAddrNameTemp = "\"" + MailAddrNameTemp + "\"";
+    			if(mailAddrLeft == -1 || mailAddrRight == -1){
+    				// 메일 주소에 @도메인이 포함되어있지 않은 경우에 message.getFrom을 하게 되면 :>:;; 가 추가되는 경우가 생김.
+    				// @까지만 붙게 되면 :; 가 붙게 되는 현상이 생기기때문에 하위 코드에서 제거해주어야함.
+    				// 이에 다음과 같이 모두 제거하는 코드를 추가 
+    				// docs/eml/FROM 헤더에 도메인 없이 아이디만 온 경우_에러.eml 참고 
+    				
+    				MailAddrTemp = MailAddrTemp.replaceAll("<", "").replaceAll(">", "").replaceAll(";", "").replaceAll(":", "").trim();
+    				
+    				MailAddrNameTemp = MailAddrNameTemp.trim().replaceAll(",", " ").replaceAll(":", " ").replaceAll(";", " ").replaceAll("<", " ").replaceAll(">", " ");
+    				MailAddrNameTemp = "\"" + MailAddrNameTemp + "\"";
+    			} else {
+    				MailAddrNameTemp = mailAddrName.substring(0, mailAddrLeft);
+    				MailAddrTemp = mailAddrName.substring(mailAddrLeft);
+    				
+    				MailAddrTemp = MailAddrTemp.replaceAll("<", "").replaceAll(">", "").replaceAll(";", "");
+    				
+    				MailAddrNameTemp = MailAddrNameTemp.trim().replaceAll(",", " ").replaceAll(":", " ").replaceAll(";", " ");
+    				MailAddrNameTemp = "\"" + MailAddrNameTemp + "\"";
+    			}
 
     			reMailAddrName = MailAddrNameTemp;
     			reMailAddr = MailAddrTemp;

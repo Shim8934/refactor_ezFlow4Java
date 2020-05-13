@@ -918,6 +918,45 @@
 			COLNAME = 'FunctionTypeName'
 	</update>
 	
+	<select id="EzCommonDAO.checkTblBoardLike" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ITEMID
+			FROM 
+				TBL_BOARD_LIKE
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkTblBoardInfoLikeFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				LIKEFLAG
+			FROM 
+				TBL_BOARD_BOARDINFO
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createBoardLike"> 
+		CREATE TABLE "EZEKP2017"."TBL_BOARD_LIKE" (
+		 	"ITEMID" NVARCHAR2(40) NOT NULL ENABLE, 
+			"USERID" NVARCHAR2(20) NOT NULL ENABLE, 
+			"LIKEDATE" NVARCHAR2(20), 
+			"TENANT_ID" NUMBER(5,0) NOT NULL ENABLE, 
+			CONSTRAINT "TBL_BOARD_LIKE_PK" PRIMARY KEY ("ITEMID", "USERID", "TENANT_ID")
+		)
+	</statement>
+	
+	<statement id="EzCommonDAO.addBoardLikeFlag"> 
+		ALTER TABLE 
+			TBL_BOARD_BOARDINFO
+		ADD 
+			LIKEFLAG NCHAR(1) DEFAULT NULL
+	</statement>
+	
 	<select id="EzCommonDAO.checkQuickLinkLinkOrder">
 		<![CDATA[
 			SELECT
@@ -2231,6 +2270,7 @@
 			BEFOREDOCURL VARCHAR2(255 CHAR)
 	</statement>
 	
+<<<<<<< HEAD
 	<select id="EzCommonDAO.checkPwPolicy" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -2271,6 +2311,56 @@
 		  "NUMBER_OF_CHAR" NUMBER(11) NOT NULL,
 		  CONSTRAINT "PK2_TBL_PASSWORD_POLICY_PATTERN" PRIMARY KEY ("TENANT_ID","COMPANY_ID","USE_PATTERN_COUNT")
 		) 
+	</statement>
+	<select id="EzCommonDAO.checkAprAttachViewOrder">
+		<![CDATA[
+			SELECT 
+				VIEWORDER
+			FROM 
+				TBL_APRATTACHINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateAprAttachViewOrder">
+		ALTER TABLE 
+			TBL_APRATTACHINFO
+		ADD 
+			VIEWORDER  NUMBER(10,0)
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprEndAttachViewOrder">
+		<![CDATA[
+			SELECT 
+				VIEWORDER
+			FROM 
+				TBL_ENDATTACHINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateAprEndAttachViewOrder">
+		ALTER TABLE 
+			TBL_ENDATTACHINFO
+		ADD 
+			VIEWORDER  NUMBER(10,0)
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprTmpAttachViewOrder">
+		<![CDATA[
+			SELECT 
+				VIEWORDER
+			FROM 
+				TBL_TMPATTACHINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateAprTmpAttachViewOrder">
+		ALTER TABLE 
+			TBL_TMPATTACHINFO
+		ADD 
+			VIEWORDER  NUMBER(10,0)
 	</statement>
 	
 </sqlMap>

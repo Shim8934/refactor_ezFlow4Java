@@ -17,13 +17,13 @@ import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalLogoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
-import egovframework.ezEKP.ezNewPortal.vo.PortletAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
-import egovframework.ezEKP.ezNewPortal.vo.ThemeAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -206,8 +206,10 @@ public interface EzNewPortalService {
 
 	public int getApprovalDoingListCount(String userId, String companyId, int tenantId, String offset, String approvalFlag, String lang) throws Exception;
 	
+	/* 직위, 직책, 권한그룹 불러오는 부분 (xml로 받지 않도록)*/
+	public List<OrganJobVO> getTitleList(String type, int tenantId, String companyId) throws Exception;
+	public List<OrganGroupVO> getGroupList(int tenantId, String companyId) throws Exception;
 	public List<FileVO> getWebFolderFileList(String folderId, int tenantId) throws Exception;
 
 	public void addPortalTenantConfig(int tenantId, String propertyName, String propertyValue, String description, String configName, String configType) throws Exception;
-
 }

@@ -28,7 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
@@ -62,11 +61,8 @@ import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
-import egovframework.ezEKP.ezEmail.vo.*;
-import net.sf.cglib.core.Local;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.crypto.tls.ServerName;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -98,6 +94,13 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
+import egovframework.ezEKP.ezEmail.vo.MailColorVO;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
+import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezEmail.vo.MailReadVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.web.EzEmailMailReadController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -107,7 +110,6 @@ import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import net.htmlparser.jericho.Renderer;
@@ -480,7 +482,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
+			// String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
 			String sendName = ezEmailUtil.getSentFolderId(locale);
 			String tempName = ezEmailUtil.getDraftsFolderId(locale);
 			
@@ -801,6 +803,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String replyReadTime = "1";
 			String delaySendDate = "";
 			String unread = "";
+			@SuppressWarnings("unused")
 			String reSendFlag = "N";
 			String folderPath = "";
 						
@@ -2168,7 +2171,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			long draftUID = 0;
 			long sentFolderMessageUID = 0;
 			boolean mailSendCompleted = false;
-			
+			boolean invalidAddressesError = false; // 잘못된 메일주소가 존재할 경우 true
 //			LOGGER.debug(jsonObject.toJSONString());
 			
 			String importance = "3";
@@ -2180,6 +2183,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String textBody = "";
 			String from = "";
 			String charset = "";
+			@SuppressWarnings("unused")
 			String htmlbody = "";
 			String displayName = "";
 			String stateName = "";
@@ -2895,7 +2899,21 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			        draftFolder.close(true);
 			        
 			        pResult = "<RESULT>OK</RESULT>";
-			        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";	        
+			        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";	
+			        
+			        // useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
+					String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", info.getTenantId());
+					
+					if (autoSaveAddress.equals("YES")) {
+						try {
+							ezEmailUtil.outerMailInsertAddress(addressCheck,userId,info.getTenantId(),
+									userEmail,info.getUserName(),info.getUserName2());
+						} catch (Exception e) {
+							LOGGER.debug("AutoEmailUtil insert fail.");
+							e.printStackTrace();
+						}
+					}
+			        
 				} catch (Exception e) {
 					e.printStackTrace();
 					
@@ -2925,6 +2943,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							pResult += m.group(1) + "|";
 						}
 						
+						invalidAddressesError = true;
 						pResult = pResult.substring(0, pResult.length() - 1);
 						result.put("status", "error");
 		    			result.put("code", 1);			
@@ -2947,7 +2966,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						}
 					}
 					
-					return result;
+					// return result;
 				} finally {
 					if (ia != null) {
 						ia.close();
@@ -2975,15 +2994,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
                     
                     LOGGER.debug("sentFolderMessageUID message deleted successfully.");
                     
-                    result.put("status", "ok");
+                    /*result.put("status", "ok");
         			result.put("code", 0);			
-        			result.put("data", "");        			
+        			result.put("data", ""); */       			
                 } catch (Exception e) {
                 	e.printStackTrace();
                 	
-        			result.put("status", "error");
+        			/*result.put("status", "error");
         			result.put("code", 1);			
-        			result.put("data", "");
+        			result.put("data", "");*/
         			
                     LOGGER.error("Failed to delete sentFolderMessageUID message. sentFolderMessageUID=" + sentFolderMessageUID);
                 } finally {
@@ -3004,22 +3023,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				    		    
 			LOGGER.debug("mailInterSend ended. pResult=" + pResult);
 			
-			// useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
-			String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", info.getTenantId());
-			
-			if (autoSaveAddress.equals("YES")) {
-				try {
-					ezEmailUtil.outerMailInsertAddress(addressCheck,userId,info.getTenantId(),
-							userEmail,info.getUserName(),info.getUserName2());
-				} catch (Exception e) {
-					LOGGER.debug("AutoEmailUtil insert fail.");
-					e.printStackTrace();
-				}
+			if (!invalidAddressesError){
+				result.put("status", "ok");
+				result.put("code", 0);			
+				result.put("data", "");		
 			}
-			
-			result.put("status", "ok");
-			result.put("code", 0);			
-			result.put("data", "");		
 		} catch (Exception e) {
 			e.printStackTrace();
 			
@@ -4016,6 +4024,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			folderId = URLDecoder.decode(folderId, "UTF-8");
 			
+			@SuppressWarnings("unused")
 			boolean permanentlyDelete = true;
 
 			String serverName = request.getHeader("x-user-host");
@@ -4370,7 +4379,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		LOGGER.debug("MOBILE G/W MAIL getAddressInfo started.");
 		LOGGER.debug("userId=" + userId + ",addressId=" + addressId);
 		
-        JSONObject data = new JSONObject();
         JSONObject result = new JSONObject();
 		
         try {
@@ -4405,7 +4413,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		LOGGER.debug("MOBILE G/W MAIL deleteAddressInfo started.");
 		LOGGER.debug("userId=" + userId + ",addressId=" + addressId);
 		
-        JSONObject data = new JSONObject();
         JSONObject result = new JSONObject();
 		
         try {
@@ -4439,6 +4446,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 								
+			@SuppressWarnings("unused")
 			String ownerId = "";
 			String folderType = "";
 			String sName = "";
@@ -4449,6 +4457,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String sCompanyPhone = "";
 			String sMobile = "";
 			String sMemo = "";
+			@SuppressWarnings("unused")
 			String folderId = "";
 			String sFurigana = "";
 			
@@ -5766,6 +5775,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezemail/recpCheck/{messageId}/users/{userId:.+}",
                     method = RequestMethod.POST,
                     produces = "application/json;charset=utf-8")

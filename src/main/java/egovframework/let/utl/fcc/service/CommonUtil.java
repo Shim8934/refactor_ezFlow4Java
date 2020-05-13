@@ -40,6 +40,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -47,6 +48,7 @@ import java.util.Properties;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -88,6 +90,8 @@ import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
@@ -146,6 +150,9 @@ public class CommonUtil {
 	
 	@Resource(name = "jspw")
     private String jspw;
+
+	@Resource(name = "EzNewPortalService")
+	private EzNewPortalService ezNewPortalService;
 	
 	/* File separator 공통 함수 */
 	public String separator = "/";
@@ -1698,7 +1705,7 @@ public class CommonUtil {
 	}
 	
 	public Map<String, Object> transBean2Map(Object obj) {
-	    Map<String, Object> map = new HashMap();
+	    Map<String, Object> map = new HashMap<>();
 	    
 	    if (obj == null) {
 	        return map;
@@ -2092,6 +2099,66 @@ public class CommonUtil {
 		return sResult;
 	}
 	
-	
-	
+	//2020-01-22 유은정 메뉴코드로 메뉴 권한 체크
+	public Map<String, Boolean> checkMenuAccess(List<String> menuCodeList, String companyId, int tenantId, String lang, String userId, String deptId) {
+		logger.debug("checkMenuAccess started.");
+		logger.debug("[checkMenuAccess param] menuCodeList : " + menuCodeList.toString() + ", companyId : " + companyId + ", tenantId : " + tenantId + ", lang : " + lang + ", userId : " + userId + ", deptId : " + deptId);
+		Map<String, Boolean> menuAccessList = new LinkedHashMap<String, Boolean>();
+		
+		try {
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, lang, userId, deptId);
+			
+			menuCodeList.forEach(menuCode -> {
+				boolean menuAccess = false;
+				
+				if (menuCode.equals("workspace")) {//협업
+					try {
+						String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId);
+						List<MenuInfoVO> menuFilter = menuList.stream().filter(menuInfo -> menuInfo.getMenuUrl().contains("ezWorkspace"))
+								.collect(Collectors.toList());
+						
+						if (useEzWorkspace.equals("NO")) {
+							menuAccess = false;
+						} else {
+							if (menuFilter.size() > 0) {
+								menuAccess = true;
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else if(menuCode.equals("mail") || menuCode.equals("address")) {		// 메일, 주소록
+					String useExternalMailServer = "";
+					try {
+						useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
+						if (useExternalMailServer != null && useExternalMailServer.equals("YES")) {
+							menuAccess = false;
+						} else {
+							menuAccess = true;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					List<MenuInfoVO> menuFilter = menuList.stream().filter(menuInfo -> menuInfo.getMenuCode() != null && menuInfo.getMenuCode().equals(menuCode))
+												.collect(Collectors.toList());
+					
+					if (menuFilter.size() > 0) {
+						menuAccess = true;
+					}
+				}
+				
+				logger.debug("checkMenuAccess : " + menuCode + " -> " + menuAccess);
+				
+				menuAccessList.put(menuCode, menuAccess);
+			});
+			
+			logger.debug("menuAccessList : " + menuAccessList.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("checkMenuAccess ended.");
+		return menuAccessList;
+	}
 }

@@ -16,23 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `approv_conn_forminfo`
---
-
-DROP TABLE IF EXISTS `approv_conn_forminfo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `approv_conn_forminfo` (
-  `formid` varchar(40) NOT NULL,
-  `connbizpflag` char(1) NOT NULL DEFAULT 'N',
-  `connallsflag` char(1) NOT NULL DEFAULT 'N',
-  `tenant_id` mediumint(9) NOT NULL,
-  `companyid` varchar(20) NOT NULL,
-  PRIMARY KEY (`formid`,`tenant_id`,`companyid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `approvconnscmc`
 --
 
@@ -141,6 +124,26 @@ CREATE TABLE `james_mail_blob` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `james_mail_blob_new`
+--
+
+DROP TABLE IF EXISTS `james_mail_blob_new`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `james_mail_blob_new` (
+  `MAIL_BLOB_ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `MAIL_BYTES` longblob NOT NULL,
+  `MAIL_BODY_STRUCTURE` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `HEADER_BYTES` mediumblob NOT NULL,
+  `MAILBOX_ID` bigint(20) DEFAULT NULL,
+  `MAIL_UID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`MAIL_BLOB_ID`),
+  KEY `INDEX_MESSAGE_BLOB_MSG_ID` (`MAIL_BLOB_ID`),
+  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `james_mail_deleted_id`
 --
 
@@ -195,6 +198,8 @@ CREATE TABLE `james_mail_search` (
   `MAIL_UID` bigint(20) DEFAULT NULL,
   `IMPORTANCE` int(1) DEFAULT NULL,
   `MESSAGE_ID` varchar(500) DEFAULT NULL,
+  `MAIL_IP` varchar(200) DEFAULT NULL,
+  `COUNTRY_CODE` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`MAIL_SEARCH_ID`),
   KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
   KEY `MESSAGE_ID` (`MESSAGE_ID`(191)),
@@ -2012,6 +2017,7 @@ CREATE TABLE `talk_tblmessage` (
   `Type` varchar(10) DEFAULT NULL,
   `CompID` varchar(32) NOT NULL,
   `FileLimit` varchar(14) DEFAULT NULL,
+  `DelMsg` varchar(1) DEFAULT 'N',
   PRIMARY KEY (`RoomID`,`Mseq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2036,7 +2042,8 @@ CREATE TABLE `talk_tblmessage_backup` (
   `Size` int(11) DEFAULT NULL,
   `Type` varchar(10) DEFAULT NULL,
   `CompID` varchar(32) NOT NULL,
-  `FileLimit` varchar(14) DEFAULT NULL
+  `FileLimit` varchar(14) DEFAULT NULL,
+  `DelMsg` varchar(1) DEFAULT 'N'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2336,6 +2343,23 @@ CREATE TABLE `tbl_addjobmasterforhistory` (
   `VERSIONDATE` date NOT NULL,
   PRIMARY KEY (`CN`,`DEPTID`,`TENANT_ID`,`VERSIONDATE`),
   KEY `IDX_VERSIONDATE` (`VERSIONDATE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_admin_access_ip`
+--
+
+DROP TABLE IF EXISTS `tbl_admin_access_ip`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_admin_access_ip` (
+  `IPNO` int(11) NOT NULL AUTO_INCREMENT,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `IPADDRESS` varchar(100) NOT NULL,
+  `ACCESS` varchar(10) DEFAULT 'NO',
+  `EXPLANATION` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`IPNO`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2820,6 +2844,7 @@ DROP TABLE IF EXISTS `tbl_aprattachinfo`;
 CREATE TABLE `tbl_aprattachinfo` (
   `DOCID` varchar(80) NOT NULL,
   `ATTACHFILESN` bigint(10) NOT NULL,
+  `VIEWORDER` bigint(10) DEFAULT NULL,
   `ATTACHFILENAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHFILEHREF` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHFILESIZE` double(126,0) DEFAULT NULL,
@@ -2836,7 +2861,7 @@ CREATE TABLE `tbl_aprattachinfo` (
   `ATTACHUSERDEPTNAME2` varchar(400) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`ATTACHFILESN`)
+  PRIMARY KEY (`DOCID`,`ATTACHFILESN`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3188,9 +3213,9 @@ DROP TABLE IF EXISTS `tbl_attitude_annual`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_attitude_annual` (
   `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
-  `MONTHLY_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '월차 수',
-  `ANNUAL_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '연차 수',
-  `ADDITIONAL_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '추가 연차 수',
+  `MONTHLY_HOLIDAY_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '월차 수',
+  `ANNUAL_HOLIDAY_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '연차 수',
+  `ADDITIONAL_HOLIDAY_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '추가 연차 수',
   `JOIN_DATE` datetime DEFAULT NULL COMMENT '입사일',
   `COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
   `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
@@ -3262,8 +3287,8 @@ DROP TABLE IF EXISTS `tbl_attitude_annual_history`;
 CREATE TABLE `tbl_attitude_annual_history` (
   `ANNUAL_HISTORY_ID` int(20) NOT NULL AUTO_INCREMENT COMMENT '연차수정기록ID',
   `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
-  `ORIGIN_ANNUAL_CNT` decimal(4,1) NOT NULL COMMENT '기존연차수',
-  `CHANGE_ANNUAL_CNT` decimal(4,1) NOT NULL COMMENT '수정연차수',
+  `ORIGIN_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '기존연차수',
+  `CHANGE_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '수정연차수',
   `CHANGE_REASON` varchar(2000) DEFAULT NULL COMMENT '수정사유',
   `CHANGE_DATE` datetime NOT NULL COMMENT '수정일자',
   `CHANGE_USER_ID` varchar(80) NOT NULL COMMENT '수정자ID',
@@ -3429,6 +3454,82 @@ CREATE TABLE `tbl_attitude_modappl_history` (
   `CHANGE_DATE_TYPE` varchar(45) CHARACTER SET utf8mb4 DEFAULT NULL,
   PRIMARY KEY (`MOD_CNT`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_refresh`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_refresh`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_refresh` (
+  `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
+  `TOTAL_REFRESH_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '총 휴가 수',
+  `START_DATE` datetime DEFAULT NULL COMMENT '발생년도',
+  `END_DATE` datetime DEFAULT NULL COMMENT '종료년도',
+  `COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
+  PRIMARY KEY (`USER_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_refresh_history`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_refresh_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_refresh_history` (
+  `REFRESH_HISTORY_ID` int(20) NOT NULL AUTO_INCREMENT COMMENT '리프레시휴가수정기록ID',
+  `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
+  `ORIGIN_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '기존휴가수',
+  `CHANGE_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '수정휴가수',
+  `CHANGE_REASON` varchar(2000) DEFAULT NULL COMMENT '수정사유',
+  `CHANGE_DATE` datetime NOT NULL COMMENT '수정일자',
+  `CHANGE_USER_ID` varchar(80) NOT NULL COMMENT '수정자ID',
+  `COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
+  PRIMARY KEY (`REFRESH_HISTORY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_special`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_special`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_special` (
+  `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
+  `TOTAL_SPECIAL_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '총 휴가 수',
+  `COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
+  PRIMARY KEY (`USER_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_special_history`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_special_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_special_history` (
+  `SPECIAL_HISTORY_ID` int(20) NOT NULL AUTO_INCREMENT COMMENT '특별휴가수정기록ID',
+  `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
+  `ORIGIN_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '기존휴가수',
+  `CHANGE_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '수정휴가수',
+  `CHANGE_REASON` varchar(2000) DEFAULT NULL COMMENT '수정사유',
+  `CHANGE_DATE` datetime NOT NULL COMMENT '수정일자',
+  `CHANGE_USER_ID` varchar(80) NOT NULL COMMENT '수정자ID',
+  `COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
+  PRIMARY KEY (`SPECIAL_HISTORY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5821,6 +5922,76 @@ CREATE TABLE `tbl_dailyformcountlog` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_dbhosp_conndata`
+--
+
+DROP TABLE IF EXISTS `tbl_dbhosp_conndata`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_dbhosp_conndata` (
+  `SN` bigint(10) NOT NULL AUTO_INCREMENT,
+  `PARAM1` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM2` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM3` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM4` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM5` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM6` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM7` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM8` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM9` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM10` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CREATEDATE` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`SN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_dbhosp_connhist`
+--
+
+DROP TABLE IF EXISTS `tbl_dbhosp_connhist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_dbhosp_connhist` (
+  `SN` bigint(10) NOT NULL AUTO_INCREMENT,
+  `CONNKEY` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM1` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM2` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM3` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM4` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM5` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM6` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM7` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM8` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM9` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM10` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `IT_KEY` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CREATEDATE` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`SN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_dbhosp_connstate`
+--
+
+DROP TABLE IF EXISTS `tbl_dbhosp_connstate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_dbhosp_connstate` (
+  `SN` bigint(10) NOT NULL AUTO_INCREMENT,
+  `CONNKEY` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CONNSTATE` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SUCCESSYN` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CONNMSG` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DOCID` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CREATEID` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CREATEDATE` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`SN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_deletecabinetinfo`
 --
 
@@ -6375,6 +6546,7 @@ DROP TABLE IF EXISTS `tbl_endattachinfo`;
 CREATE TABLE `tbl_endattachinfo` (
   `DOCID` varchar(80) NOT NULL,
   `ATTACHFILESN` bigint(10) NOT NULL,
+  `VIEWORDER` bigint(10) DEFAULT NULL,
   `ATTACHFILENAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHFILEHREF` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHFILESIZE` double(126,0) DEFAULT NULL,
@@ -6391,7 +6563,7 @@ CREATE TABLE `tbl_endattachinfo` (
   `ATTACHUSERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`ATTACHFILESN`)
+  PRIMARY KEY (`DOCID`,`ATTACHFILESN`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6736,6 +6908,22 @@ CREATE TABLE `tbl_expendaprline_old` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_find_pwd`
+--
+
+DROP TABLE IF EXISTS `tbl_find_pwd`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_find_pwd` (
+  `sabun` varchar(100) NOT NULL,
+  `req_date` datetime DEFAULT NULL,
+  `CERTIFICATION_NUM` varchar(100) DEFAULT NULL,
+  `CERTIFICATION` varchar(100) DEFAULT NULL,
+  `PHONE_NUM` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_form_autorule`
 --
 
@@ -6826,6 +7014,7 @@ CREATE TABLE `tbl_formconninfo` (
   `CONNINFO` varchar(40) NOT NULL,
   `DESCRIPTION` varchar(100) DEFAULT NULL,
   `UPPERNODE` varchar(100) NOT NULL,
+  `TENANT_ID` mediumint(9) NOT NULL DEFAULT 0,
   PRIMARY KEY (`SN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6912,6 +7101,7 @@ CREATE TABLE `tbl_forminfo` (
   `formxslt` longtext DEFAULT NULL COMMENT '연동에서 XML을 HTML로 변환하기 위해 필요한 XSLT정보',
   `passaprlineflag` varchar(4) DEFAULT 'N' COMMENT '기결재통과플래그',
   `FORMGUIDE` longtext DEFAULT NULL,
+  `aproption` varchar(300) DEFAULT NULL COMMENT '양식 세부설정',
   PRIMARY KEY (`FORMID`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -8167,6 +8357,41 @@ CREATE TABLE `tbl_opengovmodifyhistory` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_password_policy`
+--
+
+DROP TABLE IF EXISTS `tbl_password_policy`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_password_policy` (
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANY_ID` varchar(100) NOT NULL,
+  `ENG_CHAR_TYPE` varchar(10) DEFAULT 'N',
+  `USE_ENG_CAPITAL_LETTER` varchar(10) DEFAULT 'N',
+  `USE_ENG_SMALL_LETTER` varchar(10) DEFAULT 'N',
+  `USE_NUMBER` varchar(10) DEFAULT 'N',
+  `USE_SPECIAL_CHAR` varchar(10) DEFAULT 'N',
+  PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_password_policy_pattern`
+--
+
+DROP TABLE IF EXISTS `tbl_password_policy_pattern`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_password_policy_pattern` (
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANY_ID` varchar(100) NOT NULL,
+  `USE_PATTERN_COUNT` int(11) NOT NULL,
+  `NUMBER_OF_CHAR` int(11) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`,`USE_PATTERN_COUNT`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_permissiongroupinfo`
 --
 
@@ -9063,6 +9288,7 @@ CREATE TABLE `tbl_portal_menu` (
   `icon_url` varchar(200) DEFAULT NULL COMMENT '메뉴 아이콘 이미지 경로',
   `default_order` int(11) DEFAULT NULL COMMENT '제공된 메뉴의 기본 순서',
   `menucode` varchar(100) DEFAULT NULL,
+  `size_` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='메뉴 정보 테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9101,6 +9327,7 @@ CREATE TABLE `tbl_portal_menu_comp` (
   `menu_used` int(11) DEFAULT 0 COMMENT '활성화(Y), 비활성화(N)',
   `company_lang` varchar(45) DEFAULT NULL,
   `company_order` int(11) DEFAULT NULL,
+  `menu_ipused` int(11) DEFAULT 0 COMMENT '활성화(Y), 비활성화(N)',
   PRIMARY KEY (`company_id`,`tenant_id`,`menu_id`),
   KEY `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
   CONSTRAINT `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
@@ -9312,6 +9539,8 @@ CREATE TABLE `tbl_portal_theme_comp` (
   `theme_id` int(11) NOT NULL DEFAULT 0 COMMENT '테마 아이디',
   `theme_used` int(4) DEFAULT 0 COMMENT '활성화(Y), 비활성화(N)',
   `theme_default` int(4) DEFAULT 0 COMMENT '기본(Y), 기본아님(N)',
+  `theme_birthused` int(4) DEFAULT 1,
+  `theme_bestempused` int(4) DEFAULT 1,
   PRIMARY KEY (`company_id`,`tenant_id`,`theme_id`),
   KEY `FK_tbl_portal_theme_comp_theme_id_tbl_portal_theme_theme_id` (`theme_id`),
   CONSTRAINT `FK_tbl_portal_theme_comp_theme_id_tbl_portal_theme_theme_id` FOREIGN KEY (`theme_id`) REFERENCES `tbl_portal_theme` (`theme_id`)
@@ -9824,6 +10053,28 @@ CREATE TABLE `tbl_ps_notice` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_ps_noticeimage`
+--
+
+DROP TABLE IF EXISTS `tbl_ps_noticeimage`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_ps_noticeimage` (
+  `NOTICEIMGID` varchar(76) CHARACTER SET utf8mb4 NOT NULL,
+  `NOTICEIMGNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+  `NOTICEIMGNAME2` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+  `FILENAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+  `IMAGEPATH` varchar(1024) CHARACTER SET utf8mb4 NOT NULL,
+  `REGUSERID` varchar(40) CHARACTER SET utf8mb4 NOT NULL,
+  `REGDATE` varchar(200) CHARACTER SET utf8mb4 NOT NULL,
+  `COMPANYID` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+  `ISUSE` bigint(10) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`NOTICEIMGID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_ps_popup`
 --
 
@@ -10094,6 +10345,21 @@ CREATE TABLE `tbl_qs_itemseq` (
   `ITEM_NO` bigint(10) DEFAULT 0,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   PRIMARY KEY (`TENANT_ID`,`BRD_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_query_history`
+--
+
+DROP TABLE IF EXISTS `tbl_query_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_query_history` (
+  `SEQ` int(11) NOT NULL AUTO_INCREMENT,
+  `QUERYSTR` varchar(1020) DEFAULT NULL,
+  `QUERYDATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`SEQ`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -11871,6 +12137,26 @@ CREATE TABLE `tbl_specialcataloginfo_cab` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_specialcataloginfo_doc`
+--
+
+DROP TABLE IF EXISTS `tbl_specialcataloginfo_doc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_specialcataloginfo_doc` (
+  `DOCID` varchar(80) NOT NULL,
+  `SERIALNO` varchar(12) NOT NULL,
+  `SC1` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SC2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SC3` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`DOCID`,`SERIALNO`,`TENANT_ID`,`COMPANYID`),
+  KEY `FK_TBL_SPECIALCATALOGINFO_DOC` (`TENANT_ID`,`COMPANYID`,`DOCID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_specialcataloginfo_rec`
 --
 
@@ -12797,6 +13083,7 @@ CREATE TABLE `tbl_tmpattachinfo` (
   `OWNERID` varchar(255) NOT NULL,
   `SN` bigint(10) NOT NULL,
   `ATTACHFILESN` bigint(10) NOT NULL,
+  `VIEWORDER` bigint(10) DEFAULT NULL,
   `ATTACHFILENAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHFILEHREF` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHFILESIZE` double(126,0) DEFAULT NULL,
@@ -12814,7 +13101,7 @@ CREATE TABLE `tbl_tmpattachinfo` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL COMMENT '원문정보공개 첨부파일 플래그',
   `FILEOPENFLAG` char(1) DEFAULT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`,`ATTACHFILESN`)
+  PRIMARY KEY (`OWNERID`,`SN`,`ATTACHFILESN`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -14008,67 +14295,6 @@ CREATE TABLE `tbl_webfolder_user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `v_addjobmaster`
---
-
-DROP TABLE IF EXISTS `v_addjobmaster`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `v_addjobmaster` (
-  `user_id` varchar(80) NOT NULL,
-  `dept_id` varchar(80) NOT NULL,
-  `title` varchar(100) DEFAULT NULL,
-  `sort_order` int(11) DEFAULT NULL,
-  PRIMARY KEY (`user_id`,`dept_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `v_deptmaster`
---
-
-DROP TABLE IF EXISTS `v_deptmaster`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `v_deptmaster` (
-  `dept_id` varchar(80) NOT NULL,
-  `dept_name` varchar(100) NOT NULL,
-  `parent_dept_id` varchar(80) DEFAULT NULL,
-  `sort_order` int(11) DEFAULT NULL,
-  PRIMARY KEY (`dept_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `v_usermaster`
---
-
-DROP TABLE IF EXISTS `v_usermaster`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `v_usermaster` (
-  `user_id` varchar(80) NOT NULL,
-  `user_name` varchar(100) NOT NULL,
-  `user_name_en` varchar(100) DEFAULT NULL,
-  `dept_id` varchar(80) NOT NULL,
-  `sort_order` int(11) DEFAULT NULL,
-  `email_address` varchar(80) NOT NULL,
-  `title` varchar(100) DEFAULT NULL,
-  `role` varchar(100) DEFAULT NULL,
-  `employee_number` varchar(50) DEFAULT NULL,
-  `home_phone` varchar(50) DEFAULT NULL,
-  `mobile` varchar(50) DEFAULT NULL,
-  `office_phone` varchar(50) DEFAULT NULL,
-  `fax` varchar(50) DEFAULT NULL,
-  `updatedt` datetime DEFAULT NULL,
-  `profile_image` blob DEFAULT NULL,
-  `birthdate` varchar(20) DEFAULT NULL,
-  `password` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Temporary view structure for view `vaprdoingdoclist`
 --
 
@@ -14611,4 +14837,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-03-13 16:54:39
+-- Dump completed on 2020-05-12 16:36:39

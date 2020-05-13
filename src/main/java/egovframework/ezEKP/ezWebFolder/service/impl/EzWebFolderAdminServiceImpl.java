@@ -1047,6 +1047,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		return fileName;
 	}
 	
+	@SuppressWarnings("unused")
 	private void drawPictureInExcel(Workbook workbook, Sheet sheet1, String picturePath, int colNum, int rowNum) throws Exception {
 		InputStream inputStream = new FileInputStream(picturePath);
 		byte[] imageBytes       = IOUtils.toByteArray(inputStream);

@@ -18,7 +18,6 @@ import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO;
-import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -120,7 +119,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 	}
 
 	@Override
-	public List<MPortalTimeLineVO> getTimeLineList(MCommonVO info, String sessionDate, String listCnt) throws Exception {
+	public List<MPortalTimeLineVO> getTimeLineList(MCommonVO info, String sessionDate, String listCnt, String approvalAccess, String boardAccess) throws Exception {
 		LOGGER.debug("getTimeLineList started");
 		
 		String userIDS = "'" + info.getUserId() + "'";
@@ -141,6 +140,8 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		map.put("tenantID", info.getTenantId());
 		map.put("companyID", info.getCompanyId());
 		map.put("primary", info.getPrimary());		
+		map.put("approvalAccess", approvalAccess);
+		map.put("boardAccess", boardAccess);
 		
 		List<MPortalTimeLineVO> mPortalTimeLineVOs = mOptionDAO.getTimeLineList(map);
 

@@ -1,7 +1,6 @@
 package egovframework.ezMobile.ezOrgan.web;
 
 import java.util.List;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -34,9 +33,6 @@ public class MOrganGWController {
 	@Autowired
 	private CommonUtil commonUtil;
 
-	@Autowired
-	private Properties config;
-	
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
 	
@@ -115,12 +111,19 @@ public class MOrganGWController {
 			String serverName = request.getHeader("x-user-host");
 			String primaryLang = request.getParameter("primaryLang");
 			primaryLang = (primaryLang == null || primaryLang.equals("")) ? "1" : primaryLang;
+			String deptID = request.getParameter("deptID");
+			String type= request.getParameter("type");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			String filePath = commonUtil.getUploadPath("upload_personal.PHOTO", info.getTenantId()) + commonUtil.separator;
 			String imgSrc = "";
 			
-			
 			MPersonListVO personInfo = mOrganService.getPersonInfo(userID, info.getTenantId(), primaryLang);
+			
+			if (type.equalsIgnoreCase("addJobUser")) {
+				MPersonListVO addJobDept = mOrganService.getUserAddjobInfo(userID, deptID, primaryLang, info.getTenantId());
+				personInfo.setCompany(addJobDept.getCompany());
+				personInfo.setDescription(addJobDept.getDescription());
+			} 
 			
 			if (personInfo.getExtensionAttribute2() != null && !personInfo.getExtensionAttribute2().equals("")) {
 				imgSrc = filePath + personInfo.getExtensionAttribute2();
@@ -142,6 +145,7 @@ public class MOrganGWController {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezorgan/dept-info/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mGetDeptInfo(HttpServletRequest request, @PathVariable String userId) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/dept-info/users/" + userId + "] started.");
@@ -174,6 +178,7 @@ public class MOrganGWController {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezorgan/low-dept-info/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mGetLowDeptInfo(HttpServletRequest request, @PathVariable String userId) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/low-dept-info/users/" + userId + "] started.");
@@ -206,6 +211,7 @@ public class MOrganGWController {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezorgan/high-dept-info/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mGetHighDeptInfo(HttpServletRequest request, @PathVariable String userId) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/high-dept-info/users/" + userId + "] started.");
@@ -240,6 +246,7 @@ public class MOrganGWController {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezorgan/depts/{deptID}/userList", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mGetDeptMemberList(HttpServletRequest request, @PathVariable String deptID) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/depts/" + deptID + "/userList] started.");

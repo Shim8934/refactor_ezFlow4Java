@@ -1667,7 +1667,7 @@
 				 	* 
 				 FROM
 				 	(SELECT 
-					 	ROW_NUMBER() OVER(order by CN) as RNUM, 
+					 	ROWNUM as RNUM, 
 						cn, 
 						displayName,
 						extensionAttribute15, 
@@ -1675,8 +1675,10 @@
 			          FROM 
 			          	(SELECT  
 			             	cn, 
+ 	                        CASE #v_LANGDATA# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END as userName,
 			                department as displayName, 
 			                '' as extensionAttribute15,
+			                '0' as addJobflag,
 			                'user' as type 
 			             FROM  
 			             	TBL_USERMASTER A
@@ -1694,27 +1696,33 @@
 							<include refid="organSearchTrashDept_user"/>
 						<![CDATA[
 		            		 
-					UNION ALL
-			            
-					SELECT
-						a.cn  ,
-						deptid as displayName ,
-						'' as extensionAttribute15,
-						'user' as type
-					FROM
-						TBL_USERMASTER b
-					INNER JOIN
-						TBL_ADDJOBMASTER A
-					ON
-						a.cn = b.cn AND a.tenant_id = b.tenant_id
-						$strSQL$ 
-						AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
-					]]>
-						<include refid="organSearchTrashDept_user"/>
-					<![CDATA[
-						AND A.TENANT_ID = #v_TENANT_ID#
-						$strSQLAddjobCom$
-					)  A) B 
+						UNION ALL
+				            
+						SELECT
+							a.cn  ,
+							CASE #v_LANGDATA# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END as userName,
+							deptid as displayName ,
+							'' as extensionAttribute15,
+							'1' as addJobflag,
+							'user' as type
+						FROM
+							TBL_USERMASTER b
+						INNER JOIN
+							TBL_ADDJOBMASTER A
+						ON
+							a.cn = b.cn AND a.tenant_id = b.tenant_id
+							$strSQL$ 
+							AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+						]]>
+							<include refid="organSearchTrashDept_user"/>
+						<![CDATA[
+							AND A.TENANT_ID = #v_TENANT_ID#
+							$strSQLAddjobCom$
+						)  A
+						ORDER BY
+							A.addJobflag, A.userName
+					
+					) B 
 					WHERE RNUM >= #startRow# AND RNUM < #endRow#
                ]]>
           </isEqual>

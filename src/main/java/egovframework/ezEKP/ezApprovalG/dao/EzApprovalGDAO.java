@@ -3358,7 +3358,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (String) select("EzApprovalG.getOpenGovFlag", map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public ApprGOpenGovInfoVO getOpenGovInfo(Map<String, Object> map) throws Exception {
 		return (ApprGOpenGovInfoVO) select("EzApprovalG.getOpenGovInfo", map);
 	}
@@ -3419,4 +3418,13 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGOpenGovCsvVO> getOpenGovCSV() throws Exception {
 		return (List< ApprGOpenGovCsvVO>) list("EzApprovalG.getOpenGovCSV");
 	}
+	
+    public void updateReceivedDept(Map<String, Object> map) throws Exception {
+        update("EzApprovalG.updateReceivedDept", map);
+    }
+    
+	public String getFormAprOptionInfo(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getFormAprOptionInfo", map);
+	}    
+
 }

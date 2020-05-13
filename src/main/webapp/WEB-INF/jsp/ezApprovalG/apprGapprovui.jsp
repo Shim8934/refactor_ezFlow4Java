@@ -175,6 +175,9 @@
 			//2020-01-23 김은석 추가
 			var useAnnualSusinYN = "<c:out value ='${useAnnualSusinYN}'/>";
 			
+			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
+			var formAprOption = "<c:out value='${formAprOption}'/>";
+
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -189,6 +192,9 @@
 					document.getElementById("btnAddSepAttach").style.display = "none";
 		        }
 		    	
+		    	if(useExternalMailServer == "NO") {
+		    		$("#btnMail").css("display","");
+		    	}
 		    };
 		    
 		    function getNextDocList()
@@ -604,8 +610,7 @@
 		                    pGubun = "6";
 		                }
 		            }		
-		        }
-		        
+				}
 //  		        SignCheck(); 
 		        
 		        if (pDraftFlag == "HABYUI") {
@@ -764,27 +769,45 @@
 			                }
 			            }
 		        	} else {
-		        		// 1 : 결재, 4 : 전결, 16 : 대결
-			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-			            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
-			                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-			                    var rtnval;
-			                    //rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
-			                    rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
-			                    if (!rtnval) {
-			                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
-			                        OpenAlertUI(pAlertContent);
-			                        setMenuDisable("btnApprove", false);
-			                        return;
-			                    }
-			                }
-			            }
+						// 1 : 결재, 4 : 전결, 16 : 대결
+						if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+							// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
+							if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+								var rtnval;
+								//rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+								rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
+								if (!rtnval) {
+									var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
+									OpenAlertUI(pAlertContent);
+									setMenuDisable("btnApprove", false);
+									return;
+								}
+							}
+						}
 		        	}
 		        } else {
 		        	//useReceiveDocNo 처리
 		        	if (useReceiveDocNo == 'NO') {
 			        	if (approvalFlag == "S") {
 			        		//일반 미처리
+							if (pDraftFlag == "HABYUI") {
+								// pDraftFlag != "HABYUI" <- 추가되서 일부서합의 채번작업 코드추가
+								// '현재진행 중인 결재가 개인순차합의가 아닌 경우' 추가
+								// 마지막 결재자가 합의인 경우 totalMemSN 값으로 해당 조건절 사용.
+								if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7 && habYuiAprStateFlag) || pAprLineType == strAprType4 || totalMemSN > 0) {
+									if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
+										var rtnval;
+										//rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+										rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
+										if (!rtnval) {
+											var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
+											OpenAlertUI(pAlertContent);
+											setMenuDisable("btnApprove", false);
+											return;
+										}
+									}
+								}
+							}
 			        	} else {
 			        		// 일단 복사해봄
 			        		if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
@@ -1777,7 +1800,11 @@
 		                	pSpecialRecordCode = "1";
 		                	tempPublic = ret[11];
 		                	SetDocOption(ret[20]);
-		                }
+						}
+
+						//2020-05-08 : 결재정보확인 시 문서정보 저장 후 문서 반영
+						setApprDocInfo();
+						SaveFile();
 		
 		                SummaryFlag = true;
 		
@@ -2171,7 +2198,7 @@
 		                  <li id="btnConn" style="display:none"><span onClick="return btnConn_onclick()"><spring:message code='ezApprovalG.t63'/></span></li>
 		                  <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 						  <li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
-		                  <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()"></span></li>
+		                  <li id="btnMail" style="display:none"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()"></span></li>
 		                  <c:if test="${useCabinet == 'YES'}">
 								<li id="btnAddRelatedCabinet"><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 						  </c:if>

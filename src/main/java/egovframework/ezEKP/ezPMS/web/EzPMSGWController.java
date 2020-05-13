@@ -23,7 +23,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 
@@ -79,9 +78,6 @@ public class EzPMSGWController {
 
 	@Autowired
 	private CommonUtil commonUtil;
-
-	@Autowired
-	private Properties config;
 
 	@Autowired
 	private EzCommonService ezCommonService;

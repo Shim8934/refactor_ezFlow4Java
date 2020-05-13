@@ -201,6 +201,18 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 	}
 	
 	@Override
+	public JSONObject getSurveyPopupItems(HttpServletRequest request, String userId, String mode, String startDate, String endDate) throws Exception {
+		String url                = "/rest/ezsurvey/survey-popupItem/get";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",    userId);
+		param.put("mode",      mode);
+		param.put("startDate", startDate);
+		param.put("endDate",   endDate);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
 	public JSONObject deleteItems(HttpServletRequest request, String userId, List<String> itemList) throws Exception {
 		String url                = "/rest/ezsurvey/survey-item/delete";
 		Map<String, Object> param = new HashMap<String, Object>();
