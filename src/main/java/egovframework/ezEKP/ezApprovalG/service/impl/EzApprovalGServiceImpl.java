@@ -9903,6 +9903,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 rtnXML.append("<LISTOPENFLAG>" + resultMap.get("listOpenFlag") + "</LISTOPENFLAG>");
                 rtnXML.append("<FILEOPENFLAGLIST>" + resultMap.get("fileOpenFlagList") + "</FILEOPENFLAGLIST>");
             }
+            //결재 상세정보
+            rtnXML.append("<FORMAPROPTION>" + makeXMLString(makeListField(getFormAprOptionInfo(docID, "DOC", companyID, tenantID))) + "</FORMAPROPTION>");
 		} else {
 			for (int k = 0; k < selecteds.length; k++) {
 				if (!selecteds[k].trim().equals("")) {
@@ -30519,5 +30521,154 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         logger.debug("updateReceivedDept ended");
         
         return "<RESULT>TRUE</RESULT>";
+    }
+    
+    @Override
+    public String setApprDocInfo(Document xmlDom, String companyID, int tenantID) throws Exception{
+    	logger.debug("setApprDocInfo started");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_DOCID", xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", tenantID);
+        
+        if(!xmlDom.getElementsByTagName("PUBLICATION").item(0).getTextContent().trim().equals("")) {
+        	map.put("v_ISPUBLIC", xmlDom.getElementsByTagName("PUBLICATION").item(0).getTextContent());
+        	map.put("v_FIRSTFLAG21", true);
+        	ezApprovalGDAO.updateAprDocInfo(map);
+        }
+        
+        boolean firstFlag = true;
+        if(!xmlDom.getElementsByTagName("SECURITY").item(0).getTextContent().trim().equals("")) {
+        	if(firstFlag) {
+        		map.put("v_SECURITYCODE", xmlDom.getElementsByTagName("SECURITY").item(0).getTextContent());
+				map.put("v_FIRSTFLAG", firstFlag);
+				firstFlag = false;        		
+        	}else {
+        		map.put("v_SECURITYCODE", xmlDom.getElementsByTagName("SECURITY").item(0).getTextContent());
+				map.put("v_FIRSTFLAG", firstFlag);     		
+        	}
+        }
+        
+        if(!xmlDom.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent().trim().equals("")) {
+        	if(firstFlag) {
+        		map.put("v_URGENTAPPROVAL", xmlDom.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent());
+				map.put("v_FIRSTFLAG6", firstFlag);
+				firstFlag = false;        		
+        	}else {
+        		map.put("v_URGENTAPPROVAL", xmlDom.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent());
+				map.put("v_FIRSTFLAG6", firstFlag);     		
+        	}        	
+        }
+        
+        if(!xmlDom.getElementsByTagName("KEYWORD").item(0).getTextContent().trim().equals("")) {
+        	if(firstFlag) {
+        		map.put("v_KEYWORD", xmlDom.getElementsByTagName("KEYWORD").item(0).getTextContent());
+				map.put("v_FIRSTFLAG7", firstFlag);
+				firstFlag = false;        		
+        	}else {
+        		map.put("v_KEYWORD", xmlDom.getElementsByTagName("KEYWORD").item(0).getTextContent());
+				map.put("v_FIRSTFLAG7", firstFlag);     		
+        	}          	
+        }
+        
+        if(!xmlDom.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim().equals("")) {
+        	if(firstFlag) {
+        		map.put("v_SPECIALRECORDCODE", xmlDom.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent());
+				map.put("v_FIRSTFLAG8", firstFlag);
+				firstFlag = false;        		
+        	}else {
+        		map.put("v_SPECIALRECORDCODE", xmlDom.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent());
+				map.put("v_FIRSTFLAG8", firstFlag);     		
+        	}          	
+        }        
+        
+        if(!xmlDom.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent().trim().equals("")) {
+        	if(firstFlag) {
+        		map.put("v_PUBLICITYCODE", xmlDom.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent());
+				map.put("v_FIRSTFLAG9", firstFlag);
+				firstFlag = false;        		
+        	}else {
+        		map.put("v_PUBLICITYCODE", xmlDom.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent());
+				map.put("v_FIRSTFLAG9", firstFlag);     		
+        	}         	
+        }
+        
+        if(!xmlDom.getElementsByTagName("PUBLICITYYN").item(0).getTextContent().trim().equals("")) {
+        	if(firstFlag) {
+        		map.put("v_PUBLICITYYN", xmlDom.getElementsByTagName("PUBLICITYYN").item(0).getTextContent());
+				map.put("v_FIRSTFLAG19", firstFlag);
+				firstFlag = false;        		
+        	}else {
+        		map.put("v_PUBLICITYYN", xmlDom.getElementsByTagName("PUBLICITYYN").item(0).getTextContent());
+				map.put("v_FIRSTFLAG19", firstFlag);     		
+        	}         	
+        }
+        
+        if(!xmlDom.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim().equals("")) {
+        	if(firstFlag) {
+        		map.put("v_LIMITRANGE", xmlDom.getElementsByTagName("LIMITRANGE").item(0).getTextContent());
+				map.put("v_FIRSTFLAG10", firstFlag);
+				firstFlag = false;        		
+        	}else {
+        		map.put("v_LIMITRANGE", xmlDom.getElementsByTagName("LIMITRANGE").item(0).getTextContent());
+				map.put("v_FIRSTFLAG10", firstFlag);     		
+        	}         	
+        }
+        
+        if(!xmlDom.getElementsByTagName("PAGENUM").item(0).getTextContent().trim().equals("")) {
+        	if(firstFlag) {
+        		map.put("v_PAGENUM", xmlDom.getElementsByTagName("PAGENUM").item(0).getTextContent());
+				map.put("v_FIRSTFLAG11", firstFlag);
+				firstFlag = false;        		
+        	}else {
+        		map.put("v_PAGENUM", xmlDom.getElementsByTagName("PAGENUM").item(0).getTextContent());
+				map.put("v_FIRSTFLAG11", firstFlag);     		
+        	}         	
+        }
+        
+        if(!xmlDom.getElementsByTagName("SUMMARY").item(0).getTextContent().trim().equals("")) {
+        	if(firstFlag) {
+        		map.put("v_SUMMARY", xmlDom.getElementsByTagName("SUMMARY").item(0).getTextContent());
+				map.put("v_FIRSTFLAG17", firstFlag);
+				firstFlag = false;        		
+        	}else {
+        		map.put("v_SUMMARY", xmlDom.getElementsByTagName("SUMMARY").item(0).getTextContent());
+				map.put("v_FIRSTFLAG17", firstFlag);     		
+        	}         	
+        }
+        
+        if(!xmlDom.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent().trim().equals("")) {
+        	if(firstFlag) {
+        		map.put("v_SECURITYAPPROVAL", xmlDom.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent());
+				map.put("v_FIRSTFLAG18", firstFlag);
+				firstFlag = false;        		
+        	}else {
+        		map.put("v_SECURITYAPPROVAL", xmlDom.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent());
+				map.put("v_FIRSTFLAG18", firstFlag);     		
+        	}          	
+        }    
+        ezApprovalGDAO.updateExpAprDocInfo(map);
+
+    	logger.debug("setApprDocInfo ended");
+    	return "TRUE";
+    }
+    
+    @Override
+    public String getFormAprOptionInfo(String key, String type, String companyID, int tenantID) throws Exception{
+    	logger.debug("getFormAprOptionInfo started");
+    	
+    	String aprOptionInfo = "";
+    	
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_KEY", key);
+        map.put("v_TYPE", type);
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", tenantID);  
+        
+        aprOptionInfo = ezApprovalGDAO.getFormAprOptionInfo(map);
+        
+    	logger.debug("getFormAprOptionInfo started");
+    	return aprOptionInfo;
     }
 }

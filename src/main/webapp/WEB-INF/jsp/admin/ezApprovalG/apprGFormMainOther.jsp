@@ -1067,7 +1067,7 @@
         <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
 				<p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezApprovalG.t00004'/></span></p>
-				<p id = "ApvForm_sub9"><span divname="ApvForm_div9" id="1tab9">양식 세부설정</span></p>
+				<p id = "ApvForm_sub9" style="display:none"><span divname="ApvForm_div9" id="1tab9"><spring:message code='ezApprovalG.t900008'/></span></p>
                 <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code='ezApprovalG.t1456'/></span></p>
                 <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApprovalG.t00005'/></span></p>
                 <p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>
@@ -1166,23 +1166,23 @@
 		<!--양식 세부설정-->
 		<div id="ApvForm_content9" style="width:100%;height:90%; padding-top:10px; display:none">
 			<h2 id="form" class="receiver_tltype01" style="margin-bottom:5px;">
-				<span style="min-width: 45px;" id="formstr" name="aprOption" code="a" >세부옵션</span>&nbsp;&nbsp;&nbsp;<a class="imgbtn"><span onclick="btnintAprType_onclick()">기본값설정</span></a>
+				<span style="min-width: 45px;" id="formstr" name="aprOption" code="a" ><spring:message code='ezApprovalG.t900003'/></span>&nbsp;&nbsp;&nbsp;<a class="imgbtn"><span onclick="btnintAprType_onclick()"><spring:message code='ezApprovalG.t900004'/></span></a>
 			</h2>
 			<table class="content" style="width:100%;">
 				<tr><!--의견-->
-					<th style="width:10%">의견</th>
-					<td style="width:10%"><input type="checkbox" id="_a1_" name="aprOption_a"><label for="_a1_">사용</label></td>
-					<td>결재의견 사용여부 선택</td>
+					<th style="width:10%"><spring:message code='ezApprovalG.F0013'/></th>
+					<td style="width:10%"><input type="checkbox" id="_a1_" name="aprOption_a"><label for="_a1_"><spring:message code='ezApprovalG.t900009'/></label></td>
+					<td><spring:message code='ezApprovalG.t900005'/></td>
 				</tr>
 				<tr><!--파일첨부-->
-					<th style="width:10%">파일첨부</th>
-					<td style="width:10%"><input type="checkbox" id="_a2_" name="aprOption_a"><label for="_a1_">사용</label></td>
-					<td>파일첨부 사용여부 선택</td>
+					<th style="width:10%"><spring:message code='ezApprovalG.t264'/></th>
+					<td style="width:10%"><input type="checkbox" id="_a2_" name="aprOption_a"><label for="_a2_"><spring:message code='ezApprovalG.t900009'/></label></td>
+					<td><spring:message code='ezApprovalG.t900006'/></td>
 				</tr>
 				<tr><!--문서첨부-->
-					<th style="width:10%">문서첨부</th>
-					<td style="width:10%"><input type="checkbox" id="_a3_" name="aprOption_a"><label for="_a1_">사용</label></td>
-					<td>문서첨부 사용여부 선택</td>
+					<th style="width:10%"><spring:message code='ezApprovalG.t57'/></th>
+					<td style="width:10%"><input type="checkbox" id="_a3_" name="aprOption_a"><label for="_a3_"><spring:message code='ezApprovalG.t900009'/></label></td>
+					<td><spring:message code='ezApprovalG.t900007'/></td>
 				</tr>								
 			</table>
 		</div>
