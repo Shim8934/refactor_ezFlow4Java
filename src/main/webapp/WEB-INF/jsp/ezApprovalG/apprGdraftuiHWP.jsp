@@ -171,6 +171,7 @@
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 			var newpDocID = "";
 	        var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
+	        var formAprOption = "<c:out value='${formAprOption}'/>";
 	        
 	        window.onload = function () {
 	            try {

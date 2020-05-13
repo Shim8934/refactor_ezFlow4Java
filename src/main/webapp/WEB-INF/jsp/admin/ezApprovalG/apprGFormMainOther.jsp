@@ -1067,7 +1067,7 @@
         <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
 				<p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezApprovalG.t00004'/></span></p>
-				<p id = "ApvForm_sub9"><span divname="ApvForm_div9" id="1tab9"><spring:message code='ezApprovalG.t900008'/></span></p>
+				<p id = "ApvForm_sub9" style="display:none"><span divname="ApvForm_div9" id="1tab9"><spring:message code='ezApprovalG.t900008'/></span></p>
                 <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code='ezApprovalG.t1456'/></span></p>
                 <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApprovalG.t00005'/></span></p>
                 <p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>
@@ -1170,18 +1170,18 @@
 			</h2>
 			<table class="content" style="width:100%;">
 				<tr><!--의견-->
-					<th style="width:10%"><spring:message code='ezApprovalG.t63'/></th>
+					<th style="width:10%"><spring:message code='ezApprovalG.F0013'/></th>
 					<td style="width:10%"><input type="checkbox" id="_a1_" name="aprOption_a"><label for="_a1_"><spring:message code='ezApprovalG.t900009'/></label></td>
 					<td><spring:message code='ezApprovalG.t900005'/></td>
 				</tr>
 				<tr><!--파일첨부-->
-					<th style="width:10%"><spring:message code='ezApprovalG.t169'/></th>
-					<td style="width:10%"><input type="checkbox" id="_a2_" name="aprOption_a"><label for="_a1_"><spring:message code='ezApprovalG.t900009'/></label></td>
+					<th style="width:10%"><spring:message code='ezApprovalG.t264'/></th>
+					<td style="width:10%"><input type="checkbox" id="_a2_" name="aprOption_a"><label for="_a2_"><spring:message code='ezApprovalG.t900009'/></label></td>
 					<td><spring:message code='ezApprovalG.t900006'/></td>
 				</tr>
 				<tr><!--문서첨부-->
 					<th style="width:10%"><spring:message code='ezApprovalG.t57'/></th>
-					<td style="width:10%"><input type="checkbox" id="_a3_" name="aprOption_a"><label for="_a1_"><spring:message code='ezApprovalG.t900009'/></label></td>
+					<td style="width:10%"><input type="checkbox" id="_a3_" name="aprOption_a"><label for="_a3_"><spring:message code='ezApprovalG.t900009'/></label></td>
 					<td><spring:message code='ezApprovalG.t900007'/></td>
 				</tr>								
 			</table>

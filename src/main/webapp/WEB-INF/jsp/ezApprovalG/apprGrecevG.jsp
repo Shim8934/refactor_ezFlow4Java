@@ -625,18 +625,22 @@
 		
 		    function btnRJunkyul_onclick() {
 		        var RecevState = getDocRecevState();
-		        if (RecevState != "011" && RecevState != "012" && RecevState != "014" && RecevState != "") {
-		            if (RecevState == "015") {
-		                var pAlertContent = strLang912;
-		                OpenAlertUI(pAlertContent);
-		            }
-		            else if (RecevState == "013") {
-		                var pAlertContent = strLang913;
-		                OpenAlertUI(pAlertContent);
-		            }
-		
-		            btnClose_onclick();
-		            return false;
+				
+		        //대외문서 접수 > 반송 > 재기안 시 결재올림, 전결 할 때 화면 꺼지는 버그 수정 2020-05-12 홍대표
+		        if (isReDraft != "Y") {
+			        if (RecevState != "011" && RecevState != "012" && RecevState != "014" && RecevState != "") {
+			            if (RecevState == "015") {
+			                var pAlertContent = strLang912;
+			                OpenAlertUI(pAlertContent);
+			            }
+			            else if (RecevState == "013") {
+			                var pAlertContent = strLang913;
+			                OpenAlertUI(pAlertContent);
+			            }
+			
+			            btnClose_onclick();
+			            return false;
+			        }
 		        }
 		
 		        var Resultxml;
@@ -892,19 +896,22 @@
 			    		}
 			    		
 			    	});	
-		            
-		            if (RecevState != "011" && RecevState != "012" && RecevState != "014" && RecevState != "" ) {
-		                if (RecevState == "015") {
-		                    var pAlertContent = strLang912;
-		                    OpenAlertUI(pAlertContent);
-		                }
-		                else if (RecevState == "013") {
-		                    var pAlertContent = strLang913;
-		                    OpenAlertUI(pAlertContent);
-		                }
-		
-		                btnClose_onclick();
-		                return false;
+		            //대외문서 접수 > 반송 > 재기안 시 결재올림, 전결 할 때 화면 꺼지는 버그 수정 2020-05-12 홍대표
+		            if (isReDraft != "Y") {
+			            if (RecevState != "011" && RecevState != "012" && RecevState != "014" && RecevState != "" ) {
+			                if (RecevState == "015") {
+			                    var pAlertContent = strLang912;
+			                    OpenAlertUI(pAlertContent);
+			                }
+			                else if (RecevState == "013") {
+			                    var pAlertContent = strLang913;
+			                    OpenAlertUI(pAlertContent);
+			                }
+			
+			                btnClose_onclick();
+			                return false;
+			            }
+			            var rtnSignInfo;
 		            }
 		            var rtnSignInfo;
 		            var fields = message.GetFieldsList();

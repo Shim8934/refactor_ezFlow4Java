@@ -4924,7 +4924,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-			result = ezOrganAdminService.getTitleListBoard(type, companyID, userInfo.getTenantId(), userInfo.getLang());
+			/* 2020-05-08 홍승비 - 직위, 직책 다국어 표출 시 기본 언어를 체크하도록 수정(현재 언어=기본 언어라면 1, 아니라면 2) */
+			result = ezOrganAdminService.getTitleListBoard(type, companyID, userInfo.getTenantId(), commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 			
 		} catch (Exception e) {
 			result = "ERROR";
