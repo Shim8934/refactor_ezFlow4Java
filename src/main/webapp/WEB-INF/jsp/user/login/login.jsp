@@ -55,6 +55,9 @@
 				color:#ff0000;
 			}
 			
+			#exDiv6 #div6_PwPolicyExplain p {
+				padding:0;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -272,6 +275,7 @@
 				$("#certificationPwd").val("");
 				$("#sabun").val("");
 				$("#exDiv6").modal();
+				$("#div6_PwPolicyExplain").html("");
 			}
 			
 			function sendFindPwd(){
@@ -327,8 +331,13 @@
 		    			}
 		    		,
 		    		url : "/user/login/checkCertification.do",
+                    dataType : "json",
 		    		success: function(text){
-		    			alert(text);
+		    			alert(text.resultMsg);
+		    			
+		    			if (text.resultKey == 1) {
+		    				$("#div6_PwPolicyExplain").html(text.pwPolicyExplain);
+		    			}
 		    		},
 		    		error: function(err){
 		    			alert("인증번호 확인  도중 오류가 발생하였습니다.");
@@ -617,10 +626,11 @@
 								<span style="color: #8e8e8e;"><spring:message code="ezPersonal.t950" /></span><br/>
 								<input type="password" id="certificationPwdRe" style="width: 160px;" value="">
 								<span style="color: #8e8e8e;"><spring:message code="ezPersonal.t951" /></span><br/>
+								<span id="div6_PwPolicyExplain" style="color: #8e8e8e; top:10px; letter-spacing: -2.1px;"></span>
+								<br>
 								<a class="imgbtn" onclick="changePasswordByCertification()" style="margin-top:8px; background-color: #f1f3f5">
 									<span><spring:message code="ezCircular.t25"/></span>
 								</a>
-								<span style="color: #8e8e8e; top:10px; letter-spacing: -2.1px;">▒  비밀번호는 영문/숫자/특문 조합으로 8자리 이상 입력해야 합니다.</span>
 							</td>
 						</tr>
 					</tbody>

@@ -5,8 +5,10 @@ import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,7 +116,7 @@ public class LoginController {
 	 */
     
     @RequestMapping(value="/user/login/login.do", method={RequestMethod.GET, RequestMethod.POST})
-	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model) throws Exception {
+	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model, Locale locale) throws Exception {
         String serverName = request.getServerName();
         int tenantId = loginService.getTenantId(serverName);
         
@@ -1175,9 +1178,9 @@ public class LoginController {
     }
     
   //모바일 인증
-    @RequestMapping(value = "/user/login/checkCertification.do", produces = "text/html; charset=utf-8", method=RequestMethod.POST)
+    @RequestMapping(value = "/user/login/checkCertification.do", produces = "application/json; charset=utf-8", method=RequestMethod.POST)
     @ResponseBody
-    public String checkCertification(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public Object checkCertification(Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
     	logger.debug("=========================================== checkCertification ============================================");
     	
     	String prm = egovFileScrty.getPrm();
@@ -1200,16 +1203,25 @@ public class LoginController {
 		loginVO.setDn("NOPASSWORD");
 		LoginVO resultVO = loginService.selectUser(loginVO);
     	
-    	String result = loginService.setCertification(resultVO.getSabun(), certificationNum, resultVO.getLocale());
+		Map<String, Object> resultMap = loginService.setCertification(resultVO.getSabun(), certificationNum, resultVO.getLocale());
+		int resultKey = (Integer) resultMap.get("resultKey");
+		if (resultKey == 1) {
+			logger.debug("certification success. get PwPolicyExplain.");
+			String companyId = resultVO.getCompanyID();
+			String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
+			resultMap.put("pwPolicyExplain", pwPolicyExplain);
+		}
+
+		// String result = loginService.setCertification(resultVO.getSabun(), certificationNum, resultVO.getLocale());
     	
     	logger.debug("=========================================== checkCertification ended ============================================");
-    	return result;
+    	return resultMap;
     }
     
   //모바일 인증 후 비밀번호 재설정
     @RequestMapping(value = "/user/login/changePasswordByCertification.do", produces = "text/html; charset=utf-8", method=RequestMethod.POST)
     @ResponseBody
-    public String changePasswordByCertification(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public String changePasswordByCertification(HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
     	logger.debug("=========================================== changePasswordByCertification ============================================");
     	
     	String prm = egovFileScrty.getPrm();
@@ -1248,14 +1260,17 @@ public class LoginController {
     	if(pwd.equals("")){
     		result = "fail|비밀번호를 입력해주십시오";
     	} else{
-    		 if(CheckPassword(pwd)) {
+    		String companyId = resultVO.getCompanyID();
+    		boolean chkPw = commonUtil.checkPwPolicy(pwd, companyId, tenantId);
+    		 if(chkPw) {
     			 if(!pwd.equals(pwdRe)){
     				 result = "fail|변경할 비밀번호/비밀번호 확인이 일치하지 않습니다.";
     			 } else {
     				 result = loginService.setPasswordByCertification(resultVO.getSabun(), certificationNum, pwd, resultVO);
     			 }
     		 } else {
-    			 result = "fail|비밀번호는 영문/숫자/특문 조합으로 8자리 이상 입력해야 합니다.";
+    			 String errMsg = egovMessageSource.getMessage("ezSystem.ksaPwPolicy35", locale);
+    			 result = "fail|" + errMsg;
     		 }
     	}
     	
