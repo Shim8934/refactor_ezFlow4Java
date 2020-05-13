@@ -6022,7 +6022,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			map.put("v_RECEIVESN", receivedSN);
-			map.put("v_SentDeptID", signList2.getSendDeptID());
+			map.put("v_SentDeptID", signList2.getSentDeptID());
 			map.put("v_SentDeptName", signList2.getSentDeptName());
 			map.put("v_SentDeptName2", signList2.getSentDeptName2());
 			map.put("v_ReceivedDeptID", signList2.getReceivedDeptID());
