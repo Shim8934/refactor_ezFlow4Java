@@ -39,7 +39,6 @@ import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -433,7 +432,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             }
 
             logger.debug("imgSrc = " + imgSrc);
-            Matcher matcher = Pattern.compile(imgSrc).matcher(tempHtml);
             tempHtml = Pattern.compile(imgSrc).matcher(tempHtml).replaceAll("file:///C:/IMAGE" + (imgSrcs.indexOf(imgSrc) + 1) + extension);
 
             imagesBuilder.append(commonUtil.CRLF + "Content-Type: " + contentType + commonUtil.CRLF);
