@@ -9904,7 +9904,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 rtnXML.append("<FILEOPENFLAGLIST>" + resultMap.get("fileOpenFlagList") + "</FILEOPENFLAGLIST>");
             }
             //결재 상세정보
-            rtnXML.append("<FORMAPROPTION>" + makeXMLString(makeListField(getFormAprOptionInfo(docID, companyID, tenantID))) + "</FORMAPROPTION>");
+            rtnXML.append("<FORMAPROPTION>" + makeXMLString(makeListField(getFormAprOptionInfo(docID, "DOC", companyID, tenantID))) + "</FORMAPROPTION>");
 		} else {
 			for (int k = 0; k < selecteds.length; k++) {
 				if (!selecteds[k].trim().equals("")) {
