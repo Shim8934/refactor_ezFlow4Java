@@ -11549,7 +11549,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				resultXML.append("<CELL>");
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
 				
-				if (fieldName.equals("FORMNAME") || fieldName.equals("SENTDEPTNAME") || fieldName.equals("RECEIVEDDEPTNAME")) {
+				if (fieldName.equals("FORMNAME") || fieldName.equals("SENTDEPTNAME") || fieldName.equals("RECEIVEDDEPTNAME") || fieldName.equals("WRITERNAME")) {
 					fieldName = fieldName + langData;
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
