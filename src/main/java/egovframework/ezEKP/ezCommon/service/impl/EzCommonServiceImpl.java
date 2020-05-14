@@ -1687,4 +1687,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 		ezCommonDAO.insertUseExternalMailServerConfig(map);
 	}
+	
+	@Override
+	public void addFormAprOptionColumn() throws Exception {
+		ezCommonDAO.addFormAprOptionColumn();
+	}
 }
