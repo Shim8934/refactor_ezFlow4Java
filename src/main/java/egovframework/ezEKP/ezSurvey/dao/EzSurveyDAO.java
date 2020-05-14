@@ -240,4 +240,11 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (int)select("EzSurveyDAO.getNoAnsweredIngSurveyList", map);
 	}
 
+	public void deleteResponseItems(Map<String, Object> map) {
+		delete("EzSurveyDAO.deleteResponseItems", map);
+	}
+	
+	public void deleteRespondents(Map<String, Object> map) {
+		delete("EzSurveyDAO.deleteRespondents", map);
+	}
 }
