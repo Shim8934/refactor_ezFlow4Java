@@ -1205,12 +1205,19 @@ public class LoginController {
     	
 		Map<String, Object> resultMap = loginService.setCertification(resultVO.getSabun(), certificationNum, resultVO.getLocale());
 		int resultKey = (Integer) resultMap.get("resultKey");
+		String pwPolicyExplain = "";
+		
 		if (resultKey == 1) {
-			logger.debug("certification success. get PwPolicyExplain.");
 			String companyId = resultVO.getCompanyID();
-			String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
-			resultMap.put("pwPolicyExplain", pwPolicyExplain);
+			String usePwPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy");
+			logger.debug("usePwPatternPolicy=" + usePwPatternPolicy);
+			
+			if (usePwPatternPolicy.equalsIgnoreCase("yes")) {
+				logger.debug("certification success. get PwPolicyExplain.");
+				pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
+			}
 		}
+		resultMap.put("pwPolicyExplain", pwPolicyExplain);
 
 		// String result = loginService.setCertification(resultVO.getSabun(), certificationNum, resultVO.getLocale());
     	
@@ -1261,7 +1268,8 @@ public class LoginController {
     		result = "fail|비밀번호를 입력해주십시오";
     	} else{
     		String companyId = resultVO.getCompanyID();
-    		boolean chkPw = commonUtil.checkPwPolicy(pwd, companyId, tenantId);
+    		String usePwPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy");
+    		boolean chkPw = usePwPatternPolicy.equalsIgnoreCase("yes") ? commonUtil.checkPwPolicy(pwd, companyId, tenantId) : true;
     		 if(chkPw) {
     			 if(!pwd.equals(pwdRe)){
     				 result = "fail|변경할 비밀번호/비밀번호 확인이 일치하지 않습니다.";
