@@ -12560,6 +12560,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_DEPTID", deptID);
 				ezApprovalGDAO.insertBebuAprReceiptProcessInfo(map);
 				
+                // 중계문서에서 배부 받는 부서가 2개 이상일 때, 보낸 부서가 외부기관으로 입력되지 않는 오류 수정. 2020-05-13 홍대표.
+                boolean isRelayDoc = ezApprovalGDAO.isRelayDoc(map) > 0 ? true : false;
+                if (isRelayDoc) {
+                        ApprGReceiveDocVO sentDeptInfo = ezApprovalGDAO.getBebuRelayDocSenderInfo(map);
+                        Map<String, Object> map2 = new HashMap<>();
+                        map2.put("v_DOCID", newID);
+                        map2.put("companyID", companyID);
+                        map2.put("v_TENANTID", tenantID);
+                        map2.put("v_SENTDEPTID", sentDeptInfo.getSentDeptID());
+                        map2.put("v_SENTDEPTNAME", sentDeptInfo.getSentDeptName());
+                        map2.put("v_SENTDEPTNAME2", sentDeptInfo.getSentDeptName2());
+
+                        ezApprovalGDAO.updateBebuRelayDocSenderInfo(map2);
+                }
+				
 				String subSQL = updateDeliveryList(newID, docState, ezOrganService.getPropertyValue(docState, "displayName", tenantID), ezOrganService.getPropertyValue(docState, "displayName2", tenantID), deptID, 
 						deptName, deptName2, "", "", "", docState, "", companyID, "QUERY", lang, tenantID, userInfo.getDisplayName());
 				
