@@ -7964,7 +7964,9 @@
 		      				TBL_EXPAPRDOCINFO.FORMNAME, 
 		      				TBL_EXPAPRDOCINFO.FORMNAME2, 
 		      				TBL_EXPAPRDOCINFO.URGENTAPPROVAL,
-		      				TBL_APRDOCINFO.COMPANYID
+		      				TBL_APRDOCINFO.COMPANYID,
+	      					TBL_APRDOCINFO.WRITERNAME,
+	      					TBL_APRDOCINFO.WRITERNAME2
 		      		FROM 
 		      				TBL_APRRECEIPTPROCESSINFO 
 		      		INNER JOIN 
@@ -8033,7 +8035,9 @@
 	      			TBL_EXPAPRDOCINFO.FORMNAME, 
 	      			TBL_EXPAPRDOCINFO.FORMNAME2, 
 	      			TBL_EXPAPRDOCINFO.URGENTAPPROVAL,
-	      			TBL_APRDOCINFO.COMPANYID
+	      			TBL_APRDOCINFO.COMPANYID,
+	      			TBL_APRDOCINFO.WRITERNAME,
+	      			TBL_APRDOCINFO.WRITERNAME2
 	      		FROM 
 	      			TBL_APRRECEIPTPROCESSINFO 
 	      		INNER JOIN 
@@ -30462,6 +30466,40 @@
 					AND
 						COMPANYID = #companyID#
 				)
+	</select>
+	<select id="EzApprovalG.getFormAprOptionInfo" parameterClass="Map" resultClass="String">
+		<isEqual property="v_TYPE" compareValue="DOC">
+		SELECT 
+			tbl_forminfo.aproption 
+		FROM 
+			tbl_aprdocinfo 
+		inner JOIN 
+			tbl_forminfo
+		ON
+			tbl_aprdocinfo.FORMID = tbl_forminfo.FORMID
+		AND
+			tbl_aprdocinfo.tenant_id = tbl_forminfo.tenant_id
+		AND
+			tbl_aprdocinfo.companyid = tbl_forminfo.companyid
+		WHERE
+			tbl_aprdocinfo.TENANT_ID = #v_TENANTID#
+		AND
+			tbl_aprdocinfo.COMPANYID = #companyID#
+		AND
+			tbl_aprdocinfo.DOCID = #v_KEY#
+		</isEqual>
+		<isEqual property="v_TYPE" compareValue="FORM">
+		SELECT 
+			tbl_forminfo.aproption 
+		FROM 
+			tbl_forminfo
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			FORMID = #v_KEY#		
+		</isEqual>
 	</select>
 	
 </sqlMap>

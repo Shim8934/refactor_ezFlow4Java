@@ -1283,7 +1283,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			if (vo1.getIsSolar() == 0) {//음력일 경우
 				String lunarDate = vo1.getHolidayDate();
 				
-				koreaCalendar.setLunarDate(Integer.parseInt(lunarDate.substring(0, 4)), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), true);
+				koreaCalendar.setLunarDate(Integer.parseInt(lunarDate.substring(0, 4)), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), false);
+				if(!startYear.equals(String.valueOf(koreaCalendar.getSolarYear()))) {
+					koreaCalendar.setLunarDate(Integer.parseInt(startYear), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), false);
+				}
+				
 				vo1.setHolidayDate(koreaCalendar.getSolarYear() + "-" + df.format(koreaCalendar.getSolarMonth()) + "-" + df.format(koreaCalendar.getSolarDay()));
 			}
 			
@@ -3834,7 +3838,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			if (vo1.getIsSolar() == 0) {//음력일 경우
 				String lunarDate = vo1.getHolidayDate();
 				
-				koreaCalendar.setLunarDate(Integer.parseInt(lunarDate.substring(0, 4)), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), true);
+				koreaCalendar.setLunarDate(Integer.parseInt(lunarDate.substring(0, 4)), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), false);
+				if(!startYear.equals(String.valueOf(koreaCalendar.getSolarYear()))) {
+					koreaCalendar.setLunarDate(Integer.parseInt(startYear), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), false);
+				}
+
 				vo1.setHolidayDate(koreaCalendar.getSolarYear() + "-" + df.format(koreaCalendar.getSolarMonth()) + "-" + df.format(koreaCalendar.getSolarDay()));
 			}
 			

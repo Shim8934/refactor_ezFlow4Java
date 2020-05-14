@@ -57,7 +57,8 @@ public class EzConnController {
 						"/ezConn/mailMain.do", "/ezConn/scheduleMain.do", "/ezConn/scheduleWrite.do",
 						"/ezConn/admin/organMain.do", "/ezConn/admin/scheduleMain.do", "/ezConn/scheduleRead.do",
 						"/ezConn/scheduleConfig.do", "/ezConn/mailConfig.do", "/ezConn/addressConfig.do",
-						"/ezConn/scheduleReceiveAttendant.do", "/ezConn/scheduleReceiveMember.do"
+						"/ezConn/scheduleReceiveAttendant.do", "/ezConn/scheduleReceiveMember.do",
+						"/ezConn/portalMain.do"
 						})
 	public void mailMain(
 					@RequestParam String id,
@@ -209,6 +210,8 @@ public class EzConnController {
 					String mailFullPath = request.getParameter("mailFullPath");
 					
 					resultPage = "/ezEmail/mailRead.do?PNFlag=Y&CONTENTCLASS=IPM.Note&URL=" + URLEncoder.encode(mailFullPath, "UTF-8");
+				} else if (requestUri.equals("/ezConn/portalMain.do")) {
+					resultPage = "/ezNewPortal/newPortalMain.do";
 				} else if (requestUri.equals("/ezConn/scheduleMain.do")) {
 					resultPage = "/ezSchedule/scheduleIndex.do?funCode=2";
 				} else if (requestUri.equals("/ezConn/scheduleWrite.do")) {

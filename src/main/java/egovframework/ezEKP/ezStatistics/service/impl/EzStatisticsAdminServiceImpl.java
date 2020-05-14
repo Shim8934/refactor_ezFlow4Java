@@ -26,7 +26,6 @@ import egovframework.ezEKP.ezStatistics.service.EzStatisticsAdminService;
 import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
 import egovframework.ezEKP.ezStatistics.vo.StatConnVO;
 import egovframework.ezEKP.ezStatistics.vo.StatDailyDocCountLogVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzStatisticsAdminService")
@@ -265,7 +264,6 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 				sb.append(commonUtil.getQueryResult(statConnVOs.get(i)));
 			}
 		}catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -288,7 +286,6 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 				sb.append(commonUtil.getQueryResult(connVo.get(i)));
 			}
 		}catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

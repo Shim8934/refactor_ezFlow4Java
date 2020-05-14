@@ -1143,7 +1143,9 @@ public class EzCircularController extends EgovFileMngUtil {
 					String originFile = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + fileName; // 복사할 파일의 경로
 					String copyFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + fileName;
 					
-					Files.copy(new File(originFile).toPath(), new File(copyFilePath).toPath());
+					File copyFile = new File(copyFilePath);
+					if(!copyFile.exists())
+						Files.copy(new File(originFile).toPath(), new File(copyFilePath).toPath());
 					//ezCircularService.copyFileList(pDirPath, attach.getFilePath().split("/")[2], circularID);
 				}
 			}

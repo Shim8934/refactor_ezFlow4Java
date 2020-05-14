@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,12 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ibm.icu.util.Calendar;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
-import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtilPublic;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
@@ -292,9 +289,6 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	public void updateSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, String defaultPath, int tenantId, String realPath, Locale locale) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		/*String uploadFilePath = commonUtil.separator + "uploadFile";*/
-		
-		//첨부파일 카운트
-		String hasattach = "N";
 		
 		map.put("v_SCHEDULEID", jsonParam.get("scheduleId").toString());
 		map.put("v_MODIFIERID", jsonParam.get("modifierId").toString());

@@ -8157,7 +8157,9 @@
 		      				TBL_EXPAPRDOCINFO.FORMNAME, 
 		      				TBL_EXPAPRDOCINFO.FORMNAME2, 
 		      				TBL_EXPAPRDOCINFO.URGENTAPPROVAL,
-		      				TBL_APRDOCINFO.COMPANYID
+		      				TBL_APRDOCINFO.COMPANYID,
+	      					TBL_APRDOCINFO.WRITERNAME,
+	      					TBL_APRDOCINFO.WRITERNAME2
 		      		FROM 
 		      				TBL_APRRECEIPTPROCESSINFO 
 		      		INNER JOIN 
@@ -8226,7 +8228,9 @@
 	      			TBL_EXPAPRDOCINFO.FORMNAME, 
 	      			TBL_EXPAPRDOCINFO.FORMNAME2, 
 	      			TBL_EXPAPRDOCINFO.URGENTAPPROVAL,
-	      			TBL_APRDOCINFO.COMPANYID
+	      			TBL_APRDOCINFO.COMPANYID,
+	      			TBL_APRDOCINFO.WRITERNAME,
+	      			TBL_APRDOCINFO.WRITERNAME2
 	      		FROM 
 	      			TBL_APRRECEIPTPROCESSINFO 
 	      		INNER JOIN 
@@ -31707,5 +31711,99 @@
         AND
             DOCID = #v_DOCID#
     </update>
+	<select id="EzApprovalG.getFormAprOptionInfo" parameterClass="Map" resultClass="String">
+		<isEqual property="v_TYPE" compareValue="DOC">
+		SELECT 
+			tbl_forminfo.aproption 
+		FROM 
+			tbl_aprdocinfo 
+		INNER JOIN 
+			tbl_forminfo
+		ON
+			tbl_aprdocinfo.FORMID = tbl_forminfo.FORMID
+		AND
+			tbl_aprdocinfo.tenant_id = tbl_forminfo.tenant_id
+		AND
+			tbl_aprdocinfo.companyid = tbl_forminfo.companyid
+		WHERE
+			tbl_aprdocinfo.TENANT_ID = #v_TENANTID#
+		AND
+			tbl_aprdocinfo.COMPANYID = #companyID#
+		AND
+			tbl_aprdocinfo.DOCID = #v_KEY#
+		</isEqual>
+		<isEqual property="v_TYPE" compareValue="FORM">
+		SELECT 
+			tbl_forminfo.aproption 
+		FROM 
+			tbl_forminfo
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			FORMID = #v_KEY#		
+		</isEqual>
+	</select>    
 	
+    <select id="EzApprovalG.isRelayDoc" parameterClass="Map" resultClass="int">
+        <isEqual property="v_FLAG" compareValue="APR">
+            SELECT
+                    COUNT(DOCID)
+            FROM
+                    TBL_APRDOCINFO
+            WHERE
+                    TENANT_ID = #v_TENANTID#
+            AND
+                    COMPANYID = #companyID#
+            AND
+                    FORMID = '9999999999'
+            AND
+                    DOCID = #v_DOCID#
+        </isEqual>
+        <isNotEqual property="v_FLAG" compareValue="APR">
+            SELECT
+                    COUNT(DOCID)
+            FROM
+                    TBL_ENDAPRDOCINFO
+            WHERE
+                    TENANT_ID = #v_TENANTID#
+            AND
+                    COMPANYID = #companyID#
+            AND
+                    FORMID = '9999999999'
+            AND
+                    DOCID = #v_DOCID#
+        </isNotEqual>
+    </select>
+
+    <select id="EzApprovalG.getBebuRelayDocSenderInfo" parameterClass="Map" resultClass="ApprGReceiveDocVO">
+        SELECT
+            SENTDEPTID,
+            SENTDEPTNAME,
+            SENTDEPTNAME2
+        FROM
+               TBL_APRRECEIPTPROCESSINFO
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = #v_DOCID#
+    </select>
+
+    <update id="EzApprovalG.updateBebuRelayDocSenderInfo" parameterClass="Map">
+        UPDATE
+            TBL_APRRECEIPTPROCESSINFO
+        SET
+            SENTDEPTID = #v_SENTDEPTID#,
+            SENTDEPTNAME = #v_SENTDEPTNAME#,
+            SENTDEPTNAME2 = #v_SENTDEPTNAME2#
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = #v_DOCID#
+    </update>
 </sqlMap>

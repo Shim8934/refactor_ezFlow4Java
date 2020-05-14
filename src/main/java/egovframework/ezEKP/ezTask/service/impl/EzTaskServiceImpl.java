@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
-import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezTask.dao.EzTaskDAO;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
@@ -1057,13 +1056,14 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			map.put("taskID", taskID);
 			
 			TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
-			String taskTitle = vo.getTitle();
-			taskTitle = commonUtil.stripScriptTags(taskTitle);
-			vo.setTitle(taskTitle);
 			
 			if (vo == null) {
 				continue;
 			}
+			
+			String taskTitle = vo.getTitle();
+			taskTitle = commonUtil.stripScriptTags(taskTitle);
+			vo.setTitle(taskTitle);
 			
 			//baonk added
 			if (vo.getTaskType().equals("4")) {
@@ -1516,6 +1516,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						break;
 					}
 					
+					@SuppressWarnings("unused")
 					String calcuDate = nsdf.format(date_cal.getTime());
 					String scheduleDate = nsdf.format(scheduleCalendar.getTime());
 					
@@ -1786,6 +1787,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						
 						if (yoil.length > 1) {
 							
+							@SuppressWarnings("unused")
 							String scheduleDate = nsdf.format(scheduleCalendar.getTime());
 							
 							while (true) {
@@ -2013,6 +2015,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						
 						if (yoil.length > 1) {
 							
+							@SuppressWarnings("unused")
 							String scheduleDate = nsdf.format(scheduleCalendar.getTime());
 							
 							while (true) {

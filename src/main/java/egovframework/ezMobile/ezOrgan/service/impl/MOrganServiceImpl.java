@@ -45,7 +45,6 @@ public class MOrganServiceImpl implements MOrganService {
 		LOGGER.debug("getPersonList started");
 		
 		// oracle List Size
-		int oracleRowNum = 0;
 		int oracleListSize = 50;
 		
 		if (rowNum != null && !rowNum.equals("")) {

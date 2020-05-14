@@ -2321,4 +2321,21 @@
 			VIEWORDER  NUMBER(10,0)
 	</statement>
 	
+	<select id="EzCommonDAO.checkFormAprOptionColumn">
+		<![CDATA[
+			SELECT 
+				APROPTION
+			FROM 
+				TBL_FORMINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateFormAprOptionColumn">
+		ALTER TABLE 
+			TBL_FORMINFO
+		ADD 
+			APROPTION NVARCHAR2(300 CHAR)
+	</statement>
+	
 </sqlMap>

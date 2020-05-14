@@ -1256,7 +1256,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
-	public void addAprAttachViewOrder() {
+	public void addAprAttachViewOrder() throws Exception {
 		try {
 			select("EzCommonDAO.checkAprAttachViewOrder");
 		} catch (Exception e) {
@@ -1266,7 +1266,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	public void addAprEndAttachViewOrder() {
+	public void addAprEndAttachViewOrder() throws Exception {
 		try {
 			select("EzCommonDAO.checkAprEndAttachViewOrder");
 		} catch (Exception e) {
@@ -1276,7 +1276,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	public void addAprTmpAttachViewOrder() {
+	public void addAprTmpAttachViewOrder() throws Exception {
 		try {
 			select("EzCommonDAO.checkAprTmpAttachViewOrder");
 		} catch (Exception e) {
@@ -1286,12 +1286,22 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	public void insertUseExternalMailServerConfig(Map<String, Object> map) throws Exception{
+	public void insertUseExternalMailServerConfig(Map<String, Object> map) throws Exception {
 		String propertyValue = (String) select("EzCommonDAO.checkMailTenantConfig");
 		
 		if (propertyValue == null) {
 			logger.debug("useExternalMailServer tenant config doesn't exist. insert data...");
 			insert("EzCommonDAO.insertSurveyTenantConfig",map);
+		}
+	}
+
+	public void addFormAprOptionColumn() {
+		try {
+			select("EzCommonDAO.checkFormAprOptionColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_forminfo APROPTION column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateFormAprOptionColumn");
 		}
 	}
 }

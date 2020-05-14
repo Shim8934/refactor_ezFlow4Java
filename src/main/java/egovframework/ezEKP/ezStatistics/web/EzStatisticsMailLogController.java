@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +18,6 @@ import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,9 +60,6 @@ public class EzStatisticsMailLogController {
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
-	
-	@Autowired
-	private Properties config;
 	
 	@Autowired
 	private EzStatisticsAdminService ezStatisticsAdminService;
@@ -207,7 +202,6 @@ public class EzStatisticsMailLogController {
 		String searchField = request.getParameter("searchField");
 		String searchValue = request.getParameter("searchValue");
 		String isPrimaryLang = "2";
-		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String startDate = request.getParameter("searchStartTime");
 		String endDate = request.getParameter("searchEndTime");
 		String companyId = request.getParameter("companyId");
@@ -346,7 +340,6 @@ public class EzStatisticsMailLogController {
 		String pageSize = request.getParameter("pageSize");
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String companyId = request.getParameter("companyId");
-		String orgSearchValue = searchValue;
 		
 		if (searchField != null && (searchField.equals("recipientEmail") || searchField.equals("senderEmail"))) {
 			String realEmailAddress = ezEmailUtil.getRealEmailAddress(searchValue);
