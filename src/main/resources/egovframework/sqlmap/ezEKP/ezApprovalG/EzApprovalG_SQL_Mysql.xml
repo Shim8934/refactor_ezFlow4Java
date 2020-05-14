@@ -31722,7 +31722,9 @@
 		ON
 			tbl_aprdocinfo.FORMID = tbl_forminfo.FORMID
 		AND
-			 tbl_aprdocinfo.TENANT_ID = tbl_forminfo.TENANT_ID
+			tbl_aprdocinfo.tenant_id = tbl_forminfo.tenant_id
+		AND
+			tbl_aprdocinfo.companyid = tbl_forminfo.companyid
 		WHERE
 			tbl_aprdocinfo.TENANT_ID = #v_TENANTID#
 		AND

@@ -30474,7 +30474,13 @@
 		FROM 
 			tbl_aprdocinfo 
 		inner JOIN 
-			tbl_forminfo on tbl_aprdocinfo.FORMID = tbl_forminfo.FORMID 
+			tbl_forminfo
+		ON
+			tbl_aprdocinfo.FORMID = tbl_forminfo.FORMID
+		AND
+			tbl_aprdocinfo.tenant_id = tbl_forminfo.tenant_id
+		AND
+			tbl_aprdocinfo.companyid = tbl_forminfo.companyid
 		WHERE
 			tbl_aprdocinfo.TENANT_ID = #v_TENANTID#
 		AND
