@@ -31717,8 +31717,12 @@
 			tbl_forminfo.aproption 
 		FROM 
 			tbl_aprdocinfo 
-		inner JOIN 
-			tbl_forminfo on tbl_aprdocinfo.FORMID = tbl_forminfo.FORMID 
+		INNER JOIN 
+			tbl_forminfo
+		ON
+			tbl_aprdocinfo.FORMID = tbl_forminfo.FORMID
+		AND
+			 tbl_aprdocinfo.TENANT_ID = tbl_forminfo.TENANT_ID
 		WHERE
 			tbl_aprdocinfo.TENANT_ID = #v_TENANTID#
 		AND
