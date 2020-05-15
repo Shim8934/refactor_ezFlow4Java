@@ -248,9 +248,13 @@ public class EzSurveyController extends EgovFileMngUtil {
 			JSONObject survey        = (JSONObject)surveyInf.get("survey");
 			JSONObject creator       = (JSONObject)surveyInf.get("creator");
 			String     participation = (String)surveyInf.get("participation");
+			// 20.05.06 강승구 : 설문응답여부 반환
+			String     resStatus 	 = (String)surveyInf.get("resStatus");
+			
 			model.addAttribute("survey" , survey);
 			model.addAttribute("creator", creator);
 			model.addAttribute("participation", participation);
+			model.addAttribute("resStatus", resStatus);
 		}
 		else {
 			int reasonCode = ((Long)surveyInf.get("code")).intValue();
@@ -1330,5 +1334,19 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		logger.debug("checkRespondent ended");
 		return resultObj;
+	}
+	
+	// 20.05.08 강승구 : 설문수정 코드
+	@RequestMapping(value="/ezSurvey/updateResponse.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonUpdateResponse(@RequestBody JSONObject responseItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jsonUpdateResponse started");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		responseItem.put("userId", user.getId());
+		
+		JSONObject resultObj = surveyRestService.saveResponse(request, responseItem);
+		
+		logger.debug("jsonUpdateResponse ended");
+		return resultObj.toString();
 	}
 }

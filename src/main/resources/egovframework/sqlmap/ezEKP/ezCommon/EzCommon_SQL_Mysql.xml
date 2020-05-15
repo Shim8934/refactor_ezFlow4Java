@@ -2449,4 +2449,18 @@
 			VIEWORDER  bigint(10) DEFAULT NULL 
 	</statement>
 	
+	<select id="EzCommonDAO.checkFormAprOptionColumn">
+		SELECT 
+			APROPTION
+		FROM 
+			TBL_FORMINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateFormAprOptionColumn">
+		ALTER TABLE 
+			TBL_FORMINFO
+		ADD COLUMN 
+			APROPTION  varchar(300) DEFAULT NULL COMMENT '양식 세부설정'
+	</statement>
+	
 </sqlMap>

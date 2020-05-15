@@ -888,6 +888,15 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		} else {
 			result.put("participation", "yes");
 		}
+		
+		// 20.05.06 강승구 - 설문 열 때 답변했던 것인지 확인
+		int responseCnt = ezSurveyDAO.getUserResponseCntForSurvey(map);
+		
+		if (responseCnt > 0) {
+			result.put("resStatus", "true");
+		} else {
+			result.put("resStatus", "false");
+		}
 
 		result.put("status", "ok");
 		result.put("code", 0);
@@ -1264,9 +1273,16 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			int responseCnt = ezSurveyDAO.getUserResponseCntForSurvey(map);
 			
 			if (responseCnt > 0) {
-				result.put("status", "error");
-				result.put("code", 5);
-				return result;
+				// 삭제하는 코드 삽입
+				Map<String, Object> resMap = new HashMap<String, Object>();
+				resMap.put("surveyId", surveyId);
+				resMap.put("userId", userInfo.getId());
+				
+				ezSurveyDAO.deleteRespondents(resMap);
+				ezSurveyDAO.deleteResponseItems(resMap);
+//				result.put("status", "error");
+//				result.put("code", 5);
+//				return result;
 			}
 		}
 		
