@@ -1526,12 +1526,16 @@ public class EzSystemAdminController {
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
+
+		String rollInfo = userInfo.getRollInfo();
+		boolean adminChk = rollInfo.indexOf("c=1") > -1;
 		
 		String useAdminIPAccess = ezCommonService.getTenantConfig("useAdminIPAccess", userInfo.getTenantId());
 		useAdminIPAccess = useAdminIPAccess.equals("") ? "NO" : useAdminIPAccess;
 		logger.debug("useAdminIPAccess=" + useAdminIPAccess);
 		
-		model.addAttribute("useAdminIPAccess", useAdminIPAccess);
+		model.addAttribute("useAdminIPAccess", useAdminIPAccess); 
+		model.addAttribute("adminChk", adminChk);     
 		logger.debug("systemAdminIPManager ended");
 		 
 		return "/ezSystem/systemAdminIPManager";
@@ -1539,21 +1543,27 @@ public class EzSystemAdminController {
 	
 	// 관리자 ip제한 사용여부 설정
 	@RequestMapping(value="/ezSystem/setUseAdminIPAccess.do", method=RequestMethod.POST)
+	@ResponseBody
 	public String setUseAdminIPAccess(@CookieValue("loginCookie") String loginCookie, Model model, String allowResult) throws Exception {
 		logger.debug("setUseAdminIPAccess started");
 		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		String rollInfo = userInfo.getRollInfo();
+		boolean adminChk = rollInfo.indexOf("c=1") > -1;
+		String returnStr = "OK";
+
 		// input 체크된 값으로 전달되기 때문에 tbl_tenant_config value에 맞게 변경
-		if (allowResult.equals("true")) {
-			allowResult = "YES";
+		allowResult = allowResult.equals("true") ? "YES" : "NO";
+		
+		if (adminChk) {
+			ezSystemAdminService.updateSystemAdminIPAllow(allowResult, userInfo.getTenantId());
 		} else {
-			allowResult = "NO";
+			returnStr = "adminFail";
 		}
 		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		ezSystemAdminService.updateSystemAdminIPAllow(allowResult, userInfo.getTenantId());
-		
 		logger.debug("setUseAdminIPAccess ended");
-		return "/ezSystem/systemIPBand";
+		return returnStr;
 	}
 	
 	// 관리자 IP 리스트 화면

@@ -42,6 +42,7 @@
 	<script type="text/javascript">
     	var Tab1_SelectID = "";
 		var useAdminIPAccess = "${useAdminIPAccess}";
+		var adminChk = ${adminChk};
     	
 		window.onload = function () {
 	     	if (useAdminIPAccess === "NO") {
@@ -171,6 +172,11 @@
         
      	// 사용여부 저장 버튼 클릭
 		function saveBtn() {
+     		if (!adminChk) {
+     			alert("<spring:message code='ezSystem.jje7' />");
+     			return;
+     		}
+     		
 			var allowResult = false;
 			if (!document.getElementById("ipRadio0").checked) {
 				allowResult = true;
@@ -184,7 +190,11 @@
 					alert("<spring:message code='ezCommunity.t283'/>");
 				},
 				success : function(data) {
-					alert("<spring:message code='ezCommunity.t282'/>");
+					if (data == "OK") {
+						alert("<spring:message code='ezCommunity.t282'/>");
+					} else if (data == "adminFail") {
+		     			alert("<spring:message code='ezSystem.jje7' />");
+					}
 				}
 			});
 		}
