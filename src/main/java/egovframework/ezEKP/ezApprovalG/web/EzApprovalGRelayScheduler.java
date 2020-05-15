@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
-import com.sun.org.apache.xerces.internal.dom.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,10 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,6 +40,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.ProcessingInstruction;
 import org.xml.sax.InputSource;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -1198,7 +1196,8 @@ public class EzApprovalGRelayScheduler {
          String strReceiveID = "";
          String strSendOrgCode = "";
          String strSendID = "";
-         String strTitle = "";
+         String strCompanyID = "";
+         /* String strTitle = "";
          String strXDocID = "";
          String strDocType = "";
          String strSendName = "";
@@ -1206,14 +1205,13 @@ public class EzApprovalGRelayScheduler {
          String strXDTDVersion = "";
          String strXSLVersion = "";
          String strRecDate = "";
-         String strCompanyID = "";
          String strCont_Role = "";
          String strCont = "";
          String strCont_Name = "";
          String strWriterName = "";
          String strWriterDept = "";
          boolean bRet;
-         boolean bGPKI;
+         boolean bGPKI; */
 
          List<List<String[]>> AdminMail = new ArrayList<List<String[]>>();
          List<String[]> receiveerrList = new ArrayList<String[]>();
@@ -1560,7 +1558,8 @@ public class EzApprovalGRelayScheduler {
         boolean bGPKI;
         String strCont_Role = "";
         String strCont = "";
-        String strCont_Name = "";
+        @SuppressWarnings("unused")
+		String strCont_Name = "";
 
         bRet = ezApprovalGService.insertRelayDB("", relayXML.getxDocID(), relayXML.getRecDate(), relayXML.getSendName(), relayXML.getReceiveID(), relayXML.getTitle(), "", relayXML.getSendID(), relayXML.getReceiveID(), relayXML.getxGW(), relayXML.getDocType(), relayXML.getdTDVersion(), relayXML.getxSLVersion(), "", "", "", relayXML.getFileDate(), relayXML.getCompanyID(), relayXML.getTenantID());
         logger.debug("#중계문서정보생성=" + bRet, "");
@@ -1642,7 +1641,8 @@ public class EzApprovalGRelayScheduler {
         boolean bGPKI;
         String strCont_Role = "";
         String strCont = "";
-        String strCont_Name = "";
+        @SuppressWarnings("unused")
+		String strCont_Name = "";
 
         bRet = ezApprovalGService.insertRelayDB("", relayXML.getxDocID(), relayXML.getRecDate(), relayXML.getSendName(), relayXML.getReceiveID(), relayXML.getTitle(), "", relayXML.getSendID(), relayXML.getReceiveID(), relayXML.getxGW(), relayXML.getDocType(), relayXML.getdTDVersion(), relayXML.getxSLVersion(), "", "", "", relayXML.getFileDate(), relayXML.getCompanyID(), relayXML.getTenantID());
         logger.debug("#중계문서정보생성=" + bRet, "");
@@ -1793,7 +1793,6 @@ public class EzApprovalGRelayScheduler {
         logger.debug("#발송문서정보갱신=" + UpdateSendDoc_ReqResend);
 
         NodeList contentNodeList = relayXML.getContentList();
-        Node contentNode = null;
 
         if(contentNodeList != null && relayXML.getContLength() > 0) {
 
@@ -1856,7 +1855,7 @@ public class EzApprovalGRelayScheduler {
             //삭제의 경우 별도의 document를 생성해서 처
             Element root = xmlDoc.getDocumentElement();
             Document newDom = builder.newDocument();
-            ProcessingInstructionImpl pi = (ProcessingInstructionImpl) newDom.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"siheng.xsl\"");
+            ProcessingInstruction pi = newDom.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"siheng.xsl\"");
             Node importStyle = newDom.importNode(pi, true);
             Node importNode = newDom.importNode(root, true);
             newDom.appendChild(importStyle);

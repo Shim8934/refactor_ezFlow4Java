@@ -2075,7 +2075,7 @@ public class EzEmailUtil {
     			}
     			
     		} else {
-    			if (!searchField.equals("") || startDate != null || endDate != null || searchSubFolder || isUnreadOnly || isImportantOnly) {
+    			if (!searchField[0].equals("") || startDate != null || endDate != null || searchSubFolder || isUnreadOnly || isImportantOnly) {
     				messages = searchFolder(folder, searchField[0], searchValue[0], startDate, endDate, searchSubFolder, null, isUnreadOnly, isImportantOnly, isFromMobile);
     			} else {
     				logger.debug("get all message.");

@@ -1469,7 +1469,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return result;
 	}
 	
-	@SuppressWarnings("unused")
 	private void setSurveyUserInfo(SurveyParticipantVO participant, String primary) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", participant.getCompanyId());
@@ -1488,7 +1487,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		participant.setUserName2(user.getUserName2());
 	}
 	
-	@SuppressWarnings("unused")
 	private void setSurveyDeptInfo(SurveyParticipantVO participant, String primary) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", participant.getTenantId());

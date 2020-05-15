@@ -16,6 +16,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
+// 안 쓰는 변수가 상당히 있다 필요한건가?
+@SuppressWarnings("unused")
 public class ApprGRelayXMLVO {
 
     private String relayFolderPath;
@@ -39,8 +41,8 @@ public class ApprGRelayXMLVO {
     private String dTDVersion;
     private String xSLVersion;
     private String recDate;
-    private String message;
-    private String acceptName;
+	private String message;
+	private String acceptName;
     private String cont;
     private String contRole;
     private String contName;
