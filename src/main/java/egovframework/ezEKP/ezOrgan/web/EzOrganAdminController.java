@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,7 +29,6 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
-import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -57,7 +55,6 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
-import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
@@ -71,8 +68,8 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -95,8 +92,6 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 public class EzOrganAdminController extends EgovFileMngUtil {
 	
     private static final Logger logger = LoggerFactory.getLogger(EzOrganAdminController.class);
-
-	private static final CopyOption REPLACE_EXISTING = null;
             
 	@Autowired	
 	private CommonUtil commonUtil;
@@ -211,6 +206,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addAprTmpAttachViewOrder(); // 2020-03-26 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (임시문서)
 	    	ezCommonService.insertUseExternalMailServerConfig();		// 2020-04-16 김민성 - 메일 기능 사용 관련 컨피그 추가(외부/내부)
 	    	ezCommonService.insertReBebuOpinionCode();		// 2020-05-14 홍대표 - 재배부요청 의견 코드 추가
+	    	ezCommonService.addFormAprOptionColumn(); // 2020-05-14 홍승비 - 전자결재 양식 옵션 관련 칼럼 추가
+	    	ezCommonService.insertAnnualScheduleTenantConfig(); // 2020-02-24 김정언 - useAnnualScheduleYN 컨피그 추가
+	    	ezCommonService.insertHalfOffAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 반반차 추가
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
@@ -927,7 +925,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				if (!companyDomainName.isEmpty()) {
 					logger.debug("Removing Email Address based on companyDomainName...");
 					
-					String newMailAddr = cn + "@" + companyDomainName;
+					// String newMailAddr = cn + "@" + companyDomainName;
 					
 					// 해당 주소를 james_recipient_rewrite 테이블에서 제거한다.
 					// ezEmailUserAdminService.removeGroup(newMailAddr);					
@@ -1443,15 +1441,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 			// 박예연 사용자 삭제시 웹폴더 개인 폴더들의 파일 데이터 삭제 추가 
 			JSONObject resultBody = null;
-			Map<String, Object> map = new HashMap<String, Object>();
 			try {
 				logger.debug("user delete webfolderData delete. start.");
-				JSONObject jsonObj = new JSONObject();
+				Map<String, Object> jsonObj = new HashMap<>();
 				jsonObj.put("userId", cn[i]);
 				jsonObj.put("adminId", userInfo.getId());
 				
 				resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/delete-user-alldata", 
-						null, request, "post", jsonObj);
+						null, request, "post", new JSONObject(jsonObj));
 				
 				if (!resultBody.get("status").equals("ok")) {
 					logger.debug("webfolderDelete error. status is " + resultBody.get("status"));
@@ -1788,8 +1785,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							ezOrganAdminService.insertDBData_user(vo, oriPass);
 							
 							String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+							String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantID);
 							
-							if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {							
+							if (useStandardFolderId != null && useStandardFolderId.equals("YES") && !useExternalMailServer.equalsIgnoreCase("YES")) {							
 								createDefaultFolders(loginCookie, mailAddr, locale);
 							}
 							
@@ -1906,6 +1904,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	* 조직도관리 사원정보 사진이미지 임시 업로드 실행 함수(Ie9)
 	*/
+	@SuppressWarnings("unused")
 	@RequestMapping(value = "/admin/ezOrgan/signImageUploadIe9.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String signImangeUploadIe9(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
@@ -4151,6 +4150,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		return companyName;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezOrgan/saveUserImagebyTemp.do", method = RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject saveUserImagebyTemp(@CookieValue("loginCookie") String loginCookie, OrganUserVO vo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
@@ -4726,12 +4726,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		String companyId = userInfo.getCompanyID();
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
+		String companyId = userInfo.getCompanyID();
 		model.addAttribute("companyId", companyId);
 		
 		logger.debug("normalUserList ended");
@@ -4745,12 +4745,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		String companyId = userInfo.getCompanyID();
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
+		String companyId = userInfo.getCompanyID();
 		model.addAttribute("companyId", companyId);
 		
 		logger.debug("stopUserList ended");
@@ -4928,7 +4928,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-			result = ezOrganAdminService.getTitleListBoard(type, companyID, userInfo.getTenantId(), userInfo.getLang());
+			/* 2020-05-08 홍승비 - 직위, 직책 다국어 표출 시 기본 언어를 체크하도록 수정(현재 언어=기본 언어라면 1, 아니라면 2) */
+			result = ezOrganAdminService.getTitleListBoard(type, companyID, userInfo.getTenantId(), commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 			
 		} catch (Exception e) {
 			result = "ERROR";

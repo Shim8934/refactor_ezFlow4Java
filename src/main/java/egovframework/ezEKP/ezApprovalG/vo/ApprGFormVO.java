@@ -70,6 +70,9 @@ public class ApprGFormVO {
 	/** 원문정보공개 */
 	private String openGovFlag;
 	
+	/**양식 세부설정**/
+	private String aprOption;
+	
 	public String getFormContID() {
 		return formContID;
 	}
@@ -356,6 +359,14 @@ public class ApprGFormVO {
 
 	public void setOpenGovFlag(String openGovFlag) {
 		this.openGovFlag = openGovFlag;
+	}
+
+	public String getAprOption() {
+		return aprOption;
+	}
+
+	public void setAprOption(String aprOption) {
+		this.aprOption = aprOption;
 	}
 
 }

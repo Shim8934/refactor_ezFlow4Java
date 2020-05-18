@@ -44,6 +44,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -3370,7 +3371,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (String) select("EzApprovalG.getOpenGovFlag", map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public ApprGOpenGovInfoVO getOpenGovInfo(Map<String, Object> map) throws Exception {
 		return (ApprGOpenGovInfoVO) select("EzApprovalG.getOpenGovInfo", map);
 	}
@@ -3434,7 +3434,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
     public void updateReceivedDept(Map<String, Object> map) throws Exception {
         update("EzApprovalG.updateReceivedDept", map);
-}
+    }
+    
+	public String getFormAprOptionInfo(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getFormAprOptionInfo", map);
+	}    
 
 	public void updateReBebuAprReceiptProcessInfo(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateReBebuAprReceiptProcessInfo", map);
@@ -3446,15 +3450,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 	
 	public int isRelayDoc(Map<String, Object> map) throws Exception {
-		return (int) select("EzApprovalG.isRelayDoc", map);
+        return (int) select("EzApprovalG.isRelayDoc", map);
 	}
 	
 	public ApprGReceiveDocVO getBebuRelayDocSenderInfo(Map<String, Object> map) throws Exception {
-		return (ApprGReceiveDocVO) select("EzApprovalG.getBebuRelayDocSenderInfo", map);
+	        return (ApprGReceiveDocVO) select("EzApprovalG.getBebuRelayDocSenderInfo", map);
 	}
 	
 	public void updateBebuRelayDocSenderInfo(Map<String, Object> map) throws Exception {
-		update("EzApprovalG.updateBebuRelayDocSenderInfo", map);
+	        update("EzApprovalG.updateBebuRelayDocSenderInfo", map);
 	}
-
 }

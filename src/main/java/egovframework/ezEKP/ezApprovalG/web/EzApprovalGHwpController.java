@@ -150,6 +150,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("useOpenGov", config.getProperty("config.useOpenGov"));
 		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
+		//결재 세부정보
+		String formId = ezApprovalGService.getFormId(formURL);
+		String formAprOption = ezApprovalGService.getFormAprOptionInfo(formId, "FORM", userInfo.getCompanyID(), userInfo.getTenantId());
+		model.addAttribute("formAprOption", formAprOption);
+		//		
 		
 		LOGGER.debug("draftuiHWP ended");
 		
@@ -319,6 +324,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 		model.addAttribute("useOpenGov", useOpenGov);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		//결재 세부정보
+		String formAprOption = ezApprovalGService.getFormAprOptionInfo(docID, "DOC", userInfo.getCompanyID(), userInfo.getTenantId());
+		model.addAttribute("formAprOption", formAprOption);
+		//		
 
 		LOGGER.debug("approvuiHWP ended");
 		

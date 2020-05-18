@@ -193,9 +193,8 @@ function PreviewRayerChange(pGubun) {
         MailOptionHidden();
         PreviewMode_ChangeBtn();
         // 주석처리한 이유?
-        if ( firstFlag) {
+        if (firstFlag) {
             Set_BoardConfig();
-        
         }
         isPreviewChange = false;
         scroll();
@@ -228,7 +227,10 @@ function PreviewRayerChange_photo(pGubun) {
             document.getElementById("MailListRayer").style.width = "100%";
             /* 2018-04-25 홍승비 - 크로스 브라우징 중복 코드 삭제 */
             document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-            document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+            /* 2019-04-11 홍승비 - 앨범형식 보기 시 사용하지 않는 div 분기처리 */
+            if (document.getElementById("BoardList_BODY") != null) {
+            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+            }
             g_bPrevShow = false;
         }
         else if (pGubun == "H") {
@@ -270,7 +272,10 @@ function PreviewRayerChange_photo(pGubun) {
             document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
             /* 2018-04-25 홍승비 - 크로스 브라우징 중복 코드 삭제 */
 			document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-           	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+			/* 2019-04-11 홍승비 - 앨범형식 보기 시 사용하지 않는 div 분기처리 */
+			if (document.getElementById("BoardList_BODY") != null) {
+				document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+			}
 
             /*document.getElementById("divList").style.overflow = "auto";*/
             document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 77) + "px";
@@ -1265,4 +1270,30 @@ function scroll() {
 	if (lastTh.attr("id") == null) {
 		lastTh.css("display", "none");
 	}*/
+}
+
+/* 2019-04-09 홍승비 - 썸네일게시판 앨범형식 보기 시 미리보기 동작 추가 */
+function ItemPreviewRead_AlbumClick(objDiv) {
+    selobj = objDiv;
+    onclickFlag = true;
+    if (g_bPrevShow) {
+    	ItemPreviewRead_Album(objDiv);
+    }
+}
+function ItemPreviewRead_Album(objDiv) {
+	if (objDiv.getElementsByClassName("albumTitle")[0].style.fontWeight == "bold") {
+		objDiv.getElementsByClassName("albumTitle")[0].style.fontWeight = "normal";
+	}
+	
+    var pboardid = objDiv.getAttribute("DATA1");
+    var pitemid = objDiv.getAttribute("DATA2");
+    
+    clickPreviweType = "PHOTO";
+    if (document.getElementById("previewmail_bar_h") != null) {
+        document.getElementById("previewmail_bar_h").style.cursor = "default";
+    }
+    xmlhttp = createXMLHttpRequest();
+	xmlhttp.open("POST", "/ezBoard/getPreviewItem.do?boardID=" + encodeURIComponent(pboardid) + "&itemID=" + encodeURIComponent(pitemid) + "&mode=" + pMode + "&location=GENERAL", true);
+    xmlhttp.onreadystatechange = event_ItemPreviewRead_photo;
+    xmlhttp.send();
 }

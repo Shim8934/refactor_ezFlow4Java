@@ -502,7 +502,7 @@
 	    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	    	}
 	        
-	        xmlhttp.open("GET", requestUrl, false);
+	        xmlhttp.open("GET", requestUrl, true);
 	        xmlhttp.send();
 	        xmlhttp = null;
 	        isDelted = true;

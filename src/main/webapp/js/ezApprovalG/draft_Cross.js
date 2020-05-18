@@ -2209,6 +2209,8 @@ function SetBtnStateTrue() {
         if (pDraftFlag == "DRAFT" || DocSN != "") {
             setMenuBar("btnSaveServer", true);
         }
+
+        //setFormAprOption();  //결재 세부옵션
     } catch (e) {
         alert("SetBtnStateTrue()" + e.description);
     }
@@ -2723,7 +2725,7 @@ function openAaprDocAttachUI() {
             aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
             
             if(approvalFlag == "G") {
-            	DivPopUpShow(1050, 500, url);
+            	DivPopUpShow(1050, 520, url);
             } else {
             	DivPopUpShow(1050, 560, url);
             }
@@ -3762,7 +3764,6 @@ function setMenuBar(id, flag) {
     else
         display_Value = "none";
 
-
     strCmd = id + ".style.display='" + display_Value + "'";
     eval(strCmd);
 }
@@ -4460,4 +4461,12 @@ function compareDocDateCurDate() {
 			field.textContent = CurrentDate;
 		}
 	} catch(e){ console.log("ERROR::::compareDocDateCurDate() " + e.description); }
+}
+
+//결재 세부옵션처리
+function setFormAprOption(){  
+    if(formAprOption.indexOf("_a2_"))  //파일첨부
+        setMenuBar("btnFileAttach", false);	
+    if(formAprOption.indexOf("_a3_"))  //문서첨부
+        setMenuBar("btnAprDocAttach", false);	
 }

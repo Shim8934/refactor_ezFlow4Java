@@ -237,7 +237,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("itemList", itemList);
 			model.addAttribute("userCont", userCont);
 		}
-		
+
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("apprGLeftVOList", apprGLeftVOList);
 		model.addAttribute("listType", commonUtil.stripScriptTags(listType));
@@ -438,6 +438,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("companyList", companyList);
 		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
+		model.addAttribute("useAdditionalRole", ezCommonService.getTenantConfig("USE_AdditionalROle", userInfo.getTenantId()));
 		model.addAttribute("userLang", userLang);
 		logger.debug("aprManage ended.");
 		
@@ -624,7 +625,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         int tenantID = userInfo.getTenantId();        
         
         //2018-09-04 강민수92 비공개문서일때 결재라인 안보이게 하기 위해 추가
-        if (publicityYN != null && publicityYN.equals("N")) {
+        if (publicityYN != null && publicityYN.equals("N") && userInfo.getRollInfo().indexOf("c=1") == -1) {
         	String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
         	String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), tenantID, approvalFlag);
         	
@@ -1085,12 +1086,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("reformflag", ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getId(), userInfo.getCompanyID(), tenantID).getReformFlag());
 		}
 
+		String formId = ezApprovalGService.getFormId(formURL);
 		if (useOpenGov.equalsIgnoreCase("YES")) {
-            String formId = ezApprovalGService.getFormId(formURL);
             String openGovFlag = ezApprovalGService.getOpenGovFlag(formId, userInfo.getTenantId(), userInfo.getCompanyID());
             model.addAttribute("openGovFlag", openGovFlag);
         }
-
+		//결재 세부정보
+		String formAprOption = ezApprovalGService.getFormAprOptionInfo(formId, "FORM", userInfo.getCompanyID(), tenantID);
+		model.addAttribute("formAprOption", formAprOption);
+		//
 		model.addAttribute("useOpenGov", useOpenGov);
 		
 		/* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
@@ -3828,7 +3832,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String docID = jsonObj.get("docID") == null ? null : jsonObj.get("docID").toString();
-		String formId = jsonObj.get("formId") == null ? "" : jsonObj.get("formId").toString();
+		// String formId = jsonObj.get("formId") == null ? "" : jsonObj.get("formId").toString();
 		String formText = jsonObj.get("html") == null ? "" : jsonObj.get("html").toString();
 		String orgCompanyID = jsonObj.get("orgCompanyID") == null? null : jsonObj.get("orgCompanyID").toString();
 		
@@ -4296,6 +4300,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 
 		model.addAttribute("useOpenGov", useOpenGov);
+		
+		//결재 세부정보
+		String formAprOption = ezApprovalGService.getFormAprOptionInfo(docID, "DOC", userInfo.getCompanyID(), userInfo.getTenantId());
+		model.addAttribute("formAprOption", formAprOption);
+		//		
 		
 		logger.debug("approvui ended");
 		
@@ -7193,7 +7202,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		//헤더 폰트 굵게
 		HSSFFont headerFont = workbook.createFont();
-		headerFont.setBoldweight((short) headerFont.BOLDWEIGHT_BOLD);
+		headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		
 		HSSFCellStyle headerStyle= workbook.createCellStyle();
 		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
@@ -7916,7 +7925,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		logger.debug("<<<xmlDom : " + commonUtil.convertDocumentToString(xmlDom));
 		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
-		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+		// String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		String langType = xmlDom.getElementsByTagName("LANGTYPE").item(0).getTextContent().trim();
 		String formID = xmlDom.getElementsByTagName("FORMID").item(0).getTextContent().trim();
 		String mode = xmlDom.getElementsByTagName("MODE").item(0).getTextContent().trim();
@@ -10033,4 +10042,43 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
         return result;
     }
+    
+	/**
+	 * 2020-04-29 - 전자결재 결재자 aprtype 정보
+	 */	
+	@RequestMapping(value = "/ezApprovalG/getAprStateToAprType.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getAprStateToAprType(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("getAprStateToAprType started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String pDocID = request.getParameter("docID");
+		String pUserID = request.getParameter("userID");
+		String pDocState = request.getParameter("docState");
+		String pOrgCompanyID = request.getParameter("orgCompanyID");		
+
+		String aprType_aprState = ezApprovalGService.getAprType_AprState(pDocID, pUserID, pDocState, pOrgCompanyID, userInfo.getTenantId());
+		
+		logger.debug("getAprStateToAprType ended");
+		return aprType_aprState;
+	}  
+	
+	/**
+	 * 2020-05-08 - 결재정보확인 시 문서정보 저장
+	 */	
+	@RequestMapping(value = "/ezApprovalG/setApprDocInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String setApprDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception {
+		logger.debug("setApprDocInfo started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String returnVal = ezApprovalGService.setApprDocInfo(xmlDom, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("setApprDocInfo ended");
+		return returnVal;
+	}	
 }

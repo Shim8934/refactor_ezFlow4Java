@@ -3,14 +3,9 @@ package egovframework.ezEKP.ezPersonal.dao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
@@ -26,14 +21,6 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @Repository("EzPersonalDAO")
 public class EzPersonalDAO extends EgovAbstractDAO {
 	
-    private static final Logger logger = LoggerFactory.getLogger(EzPersonalDAO.class);
-    
-    @Autowired
-    private Properties config;
-
-    @Autowired
-    private EzEmailUtil ezEmailUtil;
-    
 	@SuppressWarnings("unchecked")
 	public List<PersonalSliderImageVO> getSilderList (Map<String, Object> map) {
 		return (List<PersonalSliderImageVO>) list("EzPersonalDAO.getSliderList", map);

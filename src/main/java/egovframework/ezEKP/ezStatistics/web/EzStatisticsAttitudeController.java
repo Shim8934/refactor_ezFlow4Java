@@ -1,7 +1,5 @@
 package egovframework.ezEKP.ezStatistics.web;
 
-import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -19,13 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -183,6 +179,7 @@ public class EzStatisticsAttitudeController {
 	 * @return 
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezStatistics/deptList.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONArray deptList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
@@ -213,7 +210,6 @@ public class EzStatisticsAttitudeController {
 		
 		String status = resultBody.get("status").toString();		
 		
-		JSONObject jObject = new JSONObject();
 		JSONArray deptList = new JSONArray();
 		if (status.equals("ok")) {
 			deptList = (JSONArray) resultBody.get("data");
@@ -282,6 +278,7 @@ public class EzStatisticsAttitudeController {
 	/**
 	 * 개인별 통계 현황 데이터 반환 함수
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezStatistics/getAttitudeUser.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getAttitudeUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {

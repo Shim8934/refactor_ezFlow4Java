@@ -356,6 +356,7 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (String) select("EzResourceDAO.userResPermissionCheck", map);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<ResBrdVO> getResourcePortlet(Map<String, Object> map) throws Exception {
 		return (List<ResBrdVO>) list("EzResourceDAO.getResourcePortlet", map);
 	}

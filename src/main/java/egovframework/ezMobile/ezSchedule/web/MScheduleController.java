@@ -205,7 +205,7 @@ public class MScheduleController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = result.getBody();
 		
-		String status = resultBody.get("status").toString();
+		resultBody.get("status").toString();
 		
 		LOGGER.debug("mScheduleInsert ended.");
 	}
@@ -238,7 +238,7 @@ public class MScheduleController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = result.getBody();
 		
-		String status = resultBody.get("status").toString();
+		resultBody.get("status").toString();
 		
 		LOGGER.debug("mScheduleUpdate ended.");
 	}
@@ -270,7 +270,7 @@ public class MScheduleController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = result.getBody();
 		
-		String status = resultBody.get("status").toString();
+		resultBody.get("status").toString();
 		
 		LOGGER.debug("mScheduleDelete ended.");
 	}
@@ -301,7 +301,7 @@ public class MScheduleController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = result.getBody();
 		
-		String status = resultBody.get("status").toString();
+		resultBody.get("status").toString();
 		
 		//Gson gson = new Gson();
 

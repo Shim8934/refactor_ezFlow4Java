@@ -28,8 +28,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
-import org.antlr.grammar.v3.ANTLRParser.throwsSpec_return;
-import org.antlr.runtime.EarlyExitException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -398,7 +396,6 @@ public class EzEmailMailListController {
 				String msgto = "";
 				Address[] addresses = null;
 
-				int addressCount = 1;
 				String name = "";
 				
 				if (!viewSelectIndex.equals("3")) {
@@ -412,7 +409,6 @@ public class EzEmailMailListController {
 					addresses = message.getRecipients(Message.RecipientType.TO);
 					
 					if (addresses != null) {
-						addressCount = addresses.length;
 						String toHeader = message.getHeader("To")[0];
 						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
 						
@@ -844,7 +840,6 @@ public class EzEmailMailListController {
 				String msgto = "";
 				Address[] addresses = null;
 
-				int addressCount = 1;
 				String name = "";
 				
 				if (!viewSelectIndex.equals("3")) {
@@ -864,7 +859,6 @@ public class EzEmailMailListController {
 					addresses = message.getRecipients(Message.RecipientType.TO);
 					
 					if (addresses != null) {
-						addressCount = addresses.length;
 						String toHeader = message.getHeader("To")[0];
 						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
 						

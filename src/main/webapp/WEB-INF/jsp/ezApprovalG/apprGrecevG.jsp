@@ -677,8 +677,8 @@
 		
 		    function btnRJunkyul_onclick() {
 		        var RecevState = getDocRecevState();
-		        
-		        //중계문서 접수 > 반송 > 재기안 시 결재올림, 전결 할 때 화면 꺼지는 버그 수정 2020-05-12 홍대표
+				
+		        //대외문서 접수 > 반송 > 재기안 시 결재올림, 전결 할 때 화면 꺼지는 버그 수정 2020-05-12 홍대표
 		        if (isReDraft != "Y") {
 			        if (RecevState != "011" && RecevState != "012" && RecevState != "014" && RecevState != "") {
 			            if (RecevState == "015") {
@@ -948,8 +948,7 @@
 			    		}
 			    		
 			    	});	
-			    	
-			    	//중계문서 접수 > 반송 > 재기안 시 결재올림, 전결 할 때 화면 꺼지는 버그 수정 2020-05-12 홍대표
+		            //대외문서 접수 > 반송 > 재기안 시 결재올림, 전결 할 때 화면 꺼지는 버그 수정 2020-05-12 홍대표
 		            if (isReDraft != "Y") {
 			            if (RecevState != "011" && RecevState != "012" && RecevState != "014" && RecevState != "" ) {
 			                if (RecevState == "015") {

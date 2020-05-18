@@ -163,7 +163,7 @@
             </ul>
         </div>
 		<div class="listview" style="width:480px;height:310px;overflow-y:auto;overflow-x:hidden;">
-			<div id="lvDocTypeList" style="BORDER:0; HEIGHT: 300px; WIDTH: 470px"></div>
+			<div id="lvDocTypeList" style="BORDER:0; HEIGHT: 300px; WIDTH: 100%;"></div>
 		</div>
 		<table class="content" style="margin-top:5px">
 			<tr>

@@ -19,8 +19,9 @@ function Lineinfo_ini() {
     		Lineinfoini = true;
     		TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
     		InitListView();
-    		ChangeLineTab("Organ");
-    	}
+            ChangeLineTab("Organ");
+        }
+        treeViewScrollTo("FromTreeView");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
     }
 }
 
@@ -35,6 +36,8 @@ function circulation_ini() {
     displayUserListCC(DeptID);
     InitListViewCC();
     ChangeLineTabCC("Organ");
+
+    treeViewScrollTo("FromTreeViewCC");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
 }
 //#############################################################################################################################################결재선 내부 탭 이벤트
 var internalTab = false;
@@ -401,6 +404,7 @@ function InitListView() {
         pAPRLINE.SetID("lvAPRLINE");
         pAPRLINE.SetMulSelectable(false);
         pAPRLINE.SetHeightFree(true);
+        pAPRLINE.SetDrop("aprlineDrop");
         pAPRLINE.SetRowOnClick("OnSelChange_onclick");
         pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");
         pAPRLINE.SetSelectFlag(false);
@@ -821,10 +825,11 @@ function event_displayUserList(xml) {
     pUserList.SetID("pUserList");
     pUserList.SetRowOnClick("list2_onSel_Click"); 
     pUserList.SetRowOnDblClick("list2_onSel_DBclick");
+    pUserList.SetDrag("list2_onDragStart");  //2020-04-27 : 드래그앤드랍 추가
     pUserList.SetSelectFlag(false);
     pUserList.SetHeightFree(true);
     pUserList.DataSource(headerData);                 
-    pUserList.DataBind("UserList");                   
+    pUserList.DataBind("UserList");
 
     var userRows = pUserList.GetDataRows();
 
@@ -858,7 +863,7 @@ function event_displayUserListCC(xml) {
 	var pUserList = new ListView();
 	pUserList.SetID("DivUserList");
 	pUserList.SetRowOnClick("list3_onSel_Click"); 
-	pUserList.SetRowOnDblClick("list4_onSel_DBclick");
+    pUserList.SetRowOnDblClick("list4_onSel_DBclick");
 	pUserList.SetSelectFlag(false);
 	pUserList.SetHeightFree(true);
 	pUserList.DataSource(headerData);                 
@@ -1508,4 +1513,20 @@ function check_presence() {
         }
     }
     pSIPUriList = null;
+}
+
+//2020-04-27 : 드래그앤드랍 추가
+function list2_onDragStart(ev) {
+    dragTabMenu = "APRLINE";
+    ev.dataTransfer.setData("text", ev.target.id);
+
+    if (ev.target.getAttribute("selected") != "true") {
+        $(ev.target).click();
+    }
+}
+
+function aprlineDrop(ev) {
+    if (dragTabMenu == "APRLINE") {  //결재선 추가
+        list2_onSel_DBclick();  
+    }
 }

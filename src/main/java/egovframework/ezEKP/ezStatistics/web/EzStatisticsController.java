@@ -4,17 +4,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.hssf.util.Region;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.tools.ant.taskdefs.Definer.Format;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -291,12 +287,6 @@ public class EzStatisticsController {
 	public void qstResultAnalysisSaveA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveA started");
 		
-		String headerFLAG = "";
-		
-		if (request.getParameter("headerFlag") != null) {
-			headerFLAG = request.getParameter("headerFlag");
-        }
-		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		
 		HSSFSheet sheet;
@@ -431,12 +421,6 @@ public class EzStatisticsController {
    public void qstResultAnalysisSaveApproval(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
       logger.debug("qstResultAnalysisSaveApproval started");
       
-      String headerFLAG = "";
-      
-      if (request.getParameter("headerFlag") != null) {
-         headerFLAG = request.getParameter("headerFlag");
-        }
-  
       HSSFWorkbook workbook = new HSSFWorkbook();
       HSSFSheet sheet;
       
@@ -504,12 +488,6 @@ public class EzStatisticsController {
    public void qstResultAnalysisSaveApprovalTime(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
       logger.debug("qstResultAnalysisSaveApprovalTime started");
       
-      String headerFLAG = "";
-      
-      if (request.getParameter("headerFlag") != null) {
-         headerFLAG = request.getParameter("headerFlag");
-        }
-  
       HSSFWorkbook workbook = new HSSFWorkbook();
       HSSFSheet sheet;
       
@@ -595,12 +573,6 @@ public class EzStatisticsController {
 	public void qstResultAnalysisSaveTotalA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveTotalA started");
 	
-		String headerFLAG = "";
-		
-		if (request.getParameter("headerFlag") != null) {
-			headerFLAG = request.getParameter("headerFlag");
-        }
-		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		
 		HSSFSheet sheet;
@@ -700,12 +672,6 @@ public class EzStatisticsController {
 	@RequestMapping(value = "/ezStatistics/saticGetXlsWA.do", method = RequestMethod.POST)
 	public void qstResultAnalysisSaveWA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveM started");
-		
-		String headerFLAG = "";
-		
-		if (request.getParameter("headerFlag") != null) {
-			headerFLAG = request.getParameter("headerFlag");
-        }
 		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;

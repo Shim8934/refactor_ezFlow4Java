@@ -90,7 +90,7 @@
 				var inputList = ["uploadLimit", "departmentLimit", "userLimit"];
 				
 				if (selectedCompany === "*") {
-					inputList.put("companyLimit");
+					inputList.push("companyLimit");
 				}
 				var notValid = inputList.some(function(name) {
 					var element = document.getElementById(name);

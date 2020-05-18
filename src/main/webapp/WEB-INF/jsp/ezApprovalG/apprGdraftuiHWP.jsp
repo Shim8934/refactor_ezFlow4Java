@@ -171,6 +171,7 @@
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 			var newpDocID = "";
 	        var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
+	        var formAprOption = "<c:out value='${formAprOption}'/>";
 	        
 	        window.onload = function () {
 	            try {
@@ -611,6 +612,20 @@
 	                        }
 	                    }
 		            }
+
+					var FieldLists = HwpCtrl.GetFieldList();
+					var Fields = FieldLists.split(";");
+					var tempFields = FieldLists.split(";");
+
+					tempFields = Fields.reduce(function(tempArr,curr,index) {
+						tempArr.indexOf(curr) > -1 ? tempArr : tempArr.push(curr);
+						return tempArr;
+					},[]);
+
+					if (Fields.length !== tempFields.length) {
+						OpenAlertUI("동일한 Field가 존재합니다. 문서를 다시 확인해주세요.");
+						return;
+					}
 		
 		            if (HwpCtrl.CheckFieldExist("doctitle"))
 		                pDocTitle = trim(HwpCtrl.GetFieldText("doctitle"));

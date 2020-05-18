@@ -48,6 +48,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 	@Resource(name = "EzAddressDAO")
 	private EzAddressDAO ezAddressDAO;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, String> getTopFolderSubCount(int tenantId, String userId, String deptId, String companyId)
 			throws Exception {

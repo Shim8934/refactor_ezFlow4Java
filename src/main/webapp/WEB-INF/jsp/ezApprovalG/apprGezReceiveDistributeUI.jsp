@@ -1390,8 +1390,8 @@
 	    	else
 	    	    return true;
 	    }
-	    
-	    //배부창에서 참조할 수 없는 함수를 호출하고 있어서 추가. 2020-05-18 홍대표.
+		
+		//배부창에서 참조할 수 없는 함수를 호출하고 있어서 추가. 2020-05-18 홍대표.
 	    function checkOuterReceiver() {
 	    	var listview = new ListView();
 	    	listview.LoadFromID("lvRECEPTLIST");

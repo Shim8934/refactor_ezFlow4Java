@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -700,7 +699,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String useReSend = ezCommonService.getTenantConfig("useReSend", loginInfo.getTenantId());
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", loginInfo.getTenantId());
 		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
-				
+		
+		// 20200508 조진호 - 패키지 타입이 메일인 경우 메일 게시가 보이지 않도록 처리하기 위해 추가
+		String packageType = commonUtil.getPackageType(loginInfo.getTenantId());
+		model.addAttribute("packageType", packageType);
+		
 		model.addAttribute("fromStr", fromStr);
 		model.addAttribute("fromEmail", fromEmail);
 		model.addAttribute("url", url);
@@ -3044,6 +3047,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					//첨부파일 관련
 					if (attachedFileList.size() > 0) {
 //						float attachLimitF = Float.parseFloat(attachLimit) * 1024 * 1024;
+						@SuppressWarnings("unused")
 						float size = 0;
 						
 						for (int i=0; i<attachedFileList.size(); i++) {
@@ -3469,7 +3473,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			//TODO
 		} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {}
@@ -3640,8 +3643,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			//TODO
-			
 			e.printStackTrace();
 		} finally {
 			if (fis != null) {
@@ -3788,8 +3789,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			//TODO
-			
 			e.printStackTrace();
 		} finally {
 			if (fis != null) {
@@ -3926,7 +3925,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			//TODO
 		} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {}

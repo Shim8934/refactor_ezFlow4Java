@@ -234,7 +234,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		List<ScheduleInfoVO> sList = ezScheduleDAO.getScheduleList(map);
 
 		// 2020-02-24 김정언 - 근태 현황 일정관리 연동
-		if(useAnnualScheduleYN.equals("1")){
+		if(!useAnnualScheduleYN.equals("0")){
 			List<AttitudeVO> aList = ezAttitudeDAO.getAnuualListSchedule(map);
 
 			for (int j = 0; j < aList.size(); j++) {
@@ -245,7 +245,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 
 				if (aVo != null) {
 					sVo.setDateType("4");
-					sVo.setScheduleType("2");
+					if(useAnnualScheduleYN.equals("1")){ //부서일정일 경우
+						sVo.setScheduleType("2");						
+					} else if(useAnnualScheduleYN.equals("2")){ //회사일정일 경우
+						sVo.setScheduleType("3");
+					}
 					sVo.setScheduleId(aVo.getAttitudeId());
 					sVo.setParentId(aVo.getTypeId());
 					sVo.setStartDate(aVo.getStartDate());
@@ -259,8 +263,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					sVo.setCreatorName2(aVo.getWriterDeptName());
 					sVo.setTitle(aVo.getTypeName());
 					sVo.setContentPath(aVo.getImgPath());
-					sVo.setOwnerId(deptID);
-
+					if(useAnnualScheduleYN.equals("1")){ //부서일정일 경우
+						sVo.setOwnerId(deptID);
+					} else if(useAnnualScheduleYN.equals("2")){ //회사일정일 경우
+						sVo.setOwnerId(companyID);
+					}
 					sList.add(sVo);
 				}
 			}

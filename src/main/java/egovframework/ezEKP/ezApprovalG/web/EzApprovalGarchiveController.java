@@ -13,7 +13,6 @@ import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -1963,7 +1962,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 		//헤더 폰트 굵게
 		HSSFFont headerFont = workbook.createFont();
-		headerFont.setBoldweight((short) headerFont.BOLDWEIGHT_BOLD);
+		headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		
 		HSSFCellStyle headerStyle= workbook.createCellStyle();
 		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
@@ -2250,6 +2249,51 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		logger.debug("searchOrganGListData ended");
 		return strXML;
 	}
+	
+	/**
+	 * 2020-04-23 : 외부 수신처 검색 후 조직도 이동 시 검색정보
+	 * 
+	 * @throws Exception
+	 */	
+	@RequestMapping(value = "/ezApprovalG/searchOrganGListDataTreeView.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String searchOrganGListDataTreeView(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception {
+		logger.debug("searchOrganGListDataTreeView started");
+
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+        String parentoucode = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String selcode = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+        String strXML = "<DATA><ROWS>";
+        int intScope = 3;
+		
+		strXML += "<ROW><PARENTCODE>" + parentoucode + "</PARENTCODE><SELCODE>"  + selcode + "</SELCODE></ROW>";
+
+		int searchCnt = 0;
+		boolean read = true;
+		while(read && searchCnt < 10){
+			if(!parentoucode.equals("0000000")){
+
+				String strFilter = "(&(oucode=" + parentoucode + ")(objectclass=ucorg2))";
+				String tmpXML = ezOrganService.searchOuterOrgan(strFilter, intScope);
+
+				Document parentDom = commonUtil.convertStringToDocument(tmpXML);
+
+				parentoucode = parentDom.getElementsByTagName("DATA5").item(0).getTextContent();
+				selcode = parentDom.getElementsByTagName("DATA1").item(0).getTextContent();
+
+				strXML += "<ROW><PARENTCODE>" + parentoucode + "</PARENTCODE><SELCODE>"  + selcode + "</SELCODE></ROW>";
+
+				searchCnt = searchCnt + 1;
+			}else{
+				read = false;
+			}
+		}
+
+		strXML += "</ROWS></DATA>";
+
+		logger.debug("searchOrganGListDataTreeView ended");
+		return strXML;
+	}	
 
 	/**
 	 * 외부 수신처 이름 수정 팝업창 호출
@@ -2463,6 +2507,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String path = mapPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "sendXML" + commonUtil.separator + xmlPath;
 		logger.debug("xmlPath=" + xmlPath);
 		
+		//pubdoc 의 컨텐츠가 있는지 확인하여 내용이 없으면 senderr/temp 폴더로 이동
+        String sendPath = "senderr" + commonUtil.separator + "temp";
+		
 		xmlDom.getElementsByTagName("send-gw").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-gw").item(0).getTextContent().getBytes("euc-kr")));
 		xmlDom.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-name").item(0).getTextContent().getBytes("euc-kr")));
 		xmlDom.getElementsByTagName("title").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("title").item(0).getTextContent().getBytes("euc-kr")));
@@ -2472,6 +2519,25 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		for (int i = 0; i < xmlDom.getElementsByTagName("content").getLength(); i++) {
 				switch (xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-role").getNodeValue()) {
 				case "pubdoc":
+					
+					//pubdoc xml String으로 추출
+                    String pubdocString = xmlDom.getElementsByTagName("content").item(i).getTextContent();
+                    System.out.println("pubdocString: " + pubdocString);
+
+                    //pubdoc Document 생성
+                    Document pubdocDom = commonUtil.convertStringToDocument(pubdocString);
+
+                    //pubdoc content 들을 추출하여 길이 측정
+                    String pdc = pubdocDom.getElementsByTagName("content").item(0).getTextContent();
+                    System.out.println("pubdoc content 문자열 길이: " + pdc);
+
+                    //pubdoc content의 내용이 있을때 sendtemp로 전달
+                    if(pdc.length() > 0) {
+                          sendPath = "sendtemp";
+                    }
+
+                    System.out.println("sendPath: " + sendPath);
+					
 					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String("pubdoc.xml".getBytes("euc-kr")));
 					xmlDom.getElementsByTagName("content").item(i).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getTextContent().replace("&lt;", "<").replace("&gt;", ">").replace("\n", "").replace("\t", "").replace("&amp;", "&").getBytes("euc-kr")));
 					break;
@@ -2545,7 +2611,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         logger.debug("####sendID : " + sendID);
         logger.debug("####recevID : " + arrReceiveID[0]);
         logger.debug("####strTime : " + strTime);
-        result = ezApprovalGService.getFileName(mapPath, sendID + arrReceiveID[0] + strTime, "sendtemp", strXML, userInfo.getTenantId());
+        result = ezApprovalGService.getFileName(mapPath, sendID + arrReceiveID[0] + strTime, sendPath, strXML, userInfo.getTenantId());
         
         if (result.equals("FALSE")) {
                logger.debug("sendMsg Fail : " + sendID + arrReceiveID[0] + strTime);

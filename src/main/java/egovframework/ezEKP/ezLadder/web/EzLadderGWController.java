@@ -1,9 +1,7 @@
 package egovframework.ezEKP.ezLadder.web;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +27,6 @@ import egovframework.ezEKP.ezLadder.vo.LadderOrderVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
-import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -40,9 +37,6 @@ public class EzLadderGWController {
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties globals;
 	
 	@Resource(name="loginService")
 	private LoginService loginService;
@@ -84,6 +78,7 @@ public class EzLadderGWController {
 		return  pages;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ladder/ladder-list/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
 	public JSONObject gwladderList(@PathVariable String userId, LadderVO vo, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [GET /rest/ladder/ladder-list/users/" + userId + "] started.");
@@ -187,8 +182,6 @@ public class EzLadderGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			String serverName = request.getHeader("x-user-host");
-			String dbType = globals.getProperty("Globals.DbType");
 			String todayDate = commonUtil.getTodayUTCTime("");
 			
 			String logCookie = (String) jsonBodys.get("loginCookie");
@@ -395,6 +388,7 @@ public class EzLadderGWController {
 	/**
 	 * 댓글 추가
 	 * */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ladder/ladders/{ladderId}/comment/users/{userId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwInsertComment(@PathVariable String userId, @PathVariable String ladderId, @RequestBody JSONObject jsonBodys, LadderCommentVO cmtVO, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [POST /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
@@ -402,8 +396,6 @@ public class EzLadderGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			String serverName = request.getHeader("x-user-host");
-			String dbType = globals.getProperty("Globals.DbType");
 			String todayDate = commonUtil.getTodayUTCTime("");
 		
 			LoginVO userInfo = commonUtil.userInfo((String) jsonBodys.get("loginCookie"));
@@ -432,6 +424,7 @@ public class EzLadderGWController {
 	/**
 	 * 댓글 수정
 	 * */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ladder/ladders/{ladderId}/comment/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwUpdateComment(@PathVariable String userId, @PathVariable String ladderId, @RequestBody JSONObject jsonBodys, LadderCommentVO cmtVO) {
 		logger.debug("web G/W LADDER [PUT /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
@@ -460,6 +453,7 @@ public class EzLadderGWController {
 	/**
 	 * 댓글 삭제
 	 * */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ladder/ladders/{ladderId}/comment/users/{userId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject gwDeleteComment(@PathVariable String userId, @PathVariable String ladderId, @RequestBody JSONObject jsonBodys, LadderCommentVO cmtVO) {
 		logger.debug("web G/W LADDER [DELETE /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
@@ -487,6 +481,7 @@ public class EzLadderGWController {
 	/**
 	 * 이전 사다리 목록 순서 바꾸기
 	 * */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ladder/ladder-list/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwChangePreLadderList(@PathVariable String userId, LadderOrderVO ladOrderVO, LadderVO vo, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [PUT /rest/ladder/ladder-list/users/" + userId + "] started.");
@@ -540,6 +535,7 @@ public class EzLadderGWController {
 	/**
 	 * 사디리 게임 조회 
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ladder/ladderGame/{ladderId}/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
 	public JSONObject gwGetLadderGame(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request, LadderVO ladVO, LadderCommentVO cmtVO) {
 		logger.debug("web G/W LADDER [Get /rest/ladder/ladders/" + ladderId+ "/users/" + userId + "] started.");
@@ -580,8 +576,6 @@ public class EzLadderGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			String serverName = request.getHeader("x-user-host");
-			String dbType = globals.getProperty("Globals.DbType");
 			String logCookie = (String) jsonBodys.get("loginCookie");
 			String ladderId = (String) jsonBodys.get("ladderId");
 			LoginVO userInfo = commonUtil.userInfo(logCookie);
@@ -610,6 +604,7 @@ public class EzLadderGWController {
 	/**
 	 * 참여자 순서 바꾸기
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ladder/ladders/{ladderId}/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
 	public JSONObject gwSetUserOrder(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request, LadderVO ladVO) {
 		logger.debug("web G/W LADDER [PUT /rest/ladder/ladders/" + ladderId+ "/users/" + userId + "] started.");
@@ -643,6 +638,7 @@ public class EzLadderGWController {
 	/**
 	 * 사다리게임 시작
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ladder/start/{ladderId}/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
 	public JSONObject gwSetLadderStart(@PathVariable String ladderId , @PathVariable String userId, @RequestBody JSONObject jsonBodys, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [PUT /rest/ladder/start/" + ladderId+ "/users/" + userId + "] started.");

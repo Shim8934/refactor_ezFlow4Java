@@ -69,6 +69,7 @@ public class EzApprovalGOpenGovScheduler {
             logger.debug("makeOpenGovCSV ended csv Size : 0");
             logger.debug("makeOpenGovCSV ended");
 
+            bw.close();
             return;
         }
 

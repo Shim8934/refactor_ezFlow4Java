@@ -18,7 +18,7 @@
         xmlHTTP.send(strQuery);
         
         var xmlDom = createXmlDom();
-        xmlDom = loadXMLString(xmlHTTP.responseText);
+		xmlDom = loadXMLString(xmlHTTP.responseText);
 
         if (mode == "circulation") {
         	document.getElementById('TreeViewCC').innerHTML = "";
@@ -28,7 +28,7 @@
             treeView.SetNodeClick("TreeViewNodeClickCC");
             treeView.SetNodeDblClick("TreeViewNodeDbClickCC");
             treeView.DataSource(xmlDom);
-            treeView.DataBind("TreeViewCC");
+			treeView.DataBind("TreeViewCC");
         } else if (mode == "aprG") {
         	document.getElementById('TreeView').innerHTML = "";
         	var treeView = new TreeView();
@@ -38,7 +38,7 @@
         	treeView.SetRequestData("RequestDataG");
         	treeView.SetNodeClick("TreeViewNodeClick");
         	treeView.DataSource(xmlDom);
-        	treeView.DataBind("TreeView");
+			treeView.DataBind("TreeView");
         } else {
         	document.getElementById('TreeView').innerHTML = "";
         	var treeView = new TreeView();
@@ -48,7 +48,7 @@
         	treeView.SetRequestData(requestData);
         	treeView.SetNodeClick("TreeViewNodeClick");
         	treeView.DataSource(xmlDom);
-        	treeView.DataBind("TreeView");
+			treeView.DataBind("TreeView");
         }
     } catch (ErrMsg) {
         alert(" TreeViewinitialize : " + ErrMsg.description);
@@ -134,4 +134,18 @@ function GetDeptSubTreeInfoCC(deptID, TreeIdx) {
 	treeView.LoadFromID("FromTreeViewCC");
 	
 	treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+}
+
+//2020-04-23 : 트리뷰 선택된 노드로 스크롤 이동
+function treeViewScrollTo(pTreeViewID) {
+    try {
+        document.getElementById(pTreeViewID).parentNode.scrollTop = 0;
+
+        var selTreeViewNode = document.getElementById(pTreeViewID).getElementsByClassName("node_selected");
+        var centerH = ((Number(document.getElementById(pTreeViewID).parentNode.style.height.replace("px", "")) / 2) + document.getElementById(pTreeViewID).parentNode.getBoundingClientRect().top);
+
+        if (selTreeViewNode != null) {
+            document.getElementById(pTreeViewID).parentNode.scrollTop = (selTreeViewNode.item(0).parentNode.getBoundingClientRect().top - centerH);
+        }
+    } catch (e) { }
 }
