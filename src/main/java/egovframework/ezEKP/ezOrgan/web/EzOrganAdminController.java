@@ -206,6 +206,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addAprTmpAttachViewOrder(); // 2020-03-26 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (임시문서)
 	    	ezCommonService.insertUseExternalMailServerConfig();		// 2020-04-16 김민성 - 메일 기능 사용 관련 컨피그 추가(외부/내부)
 	    	ezCommonService.addFormAprOptionColumn(); // 2020-05-14 홍승비 - 전자결재 양식 옵션 관련 칼럼 추가
+	    	ezCommonService.insertAnnualScheduleTenantConfig(); // 2020-02-24 김정언 - useAnnualScheduleYN 컨피그 추가
+	    	ezCommonService.insertHalfOffAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 반반차 추가
     	} catch (Exception e) {
     		e.printStackTrace();
     	}

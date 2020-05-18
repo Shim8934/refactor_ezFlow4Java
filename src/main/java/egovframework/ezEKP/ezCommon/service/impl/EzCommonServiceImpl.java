@@ -1692,4 +1692,44 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addFormAprOptionColumn() throws Exception {
 		ezCommonDAO.addFormAprOptionColumn();
 	}
+
+	@Override
+	public void insertAnnualScheduleTenantConfig() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useAnnualScheduleYN");
+		map.put("propertyValue", "0");
+		map.put("description", "0:근태현황 일정관리 미연동, 1:근태현황 부서일정 연동, 2:근태현황 회사일정 연동");
+		map.put("configName", "근태현황 일정관리 연동");
+		map.put("configType", "근태관리");
+		map.put("regdate", "2020-02-24 00:00:00");
+
+		ezCommonDAO.insertAnnualScheduleTenantConfig(map);
+	}
+
+	@Override
+	public void insertHalfOffAttitudeType() {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();		
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("typeId", "A21");
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("tenantId", 0);
+				map.put("typeName", "반반차");
+				map.put("typeName2", "half off");
+				map.put("isUse", "1");
+				map.put("imgPath", "refresh");
+				map.put("parentId", "A05");
+				map.put("formId", 4);
+				map.put("isAdd", "0");
+				map.put("isDel", "0");
+				
+				ezCommonDAO.insertHalfOffAttitudeType(map);	
+			}
+		}
+	}
+	
 }
