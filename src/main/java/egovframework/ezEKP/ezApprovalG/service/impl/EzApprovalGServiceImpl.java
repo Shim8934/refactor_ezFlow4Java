@@ -30651,19 +30651,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 		} else if("hwp".equals(ext)) {
-			HWPFile loadHwp = HWPReader.fromFile(formURL);
-			
-	        //재배부 요청시 수신결재칸 비워주기.
-			for (int i = 1; i < 10; i++) {
-				if (findHwpField("1sign" + i, loadHwp)) {
-					setHwpText("1sign" + i, " ", loadHwp);
-					setHwpText("1jikwe" + i, " ", loadHwp);
-				} else {
-					break;
-				}
-			}
-			
-			HWPWriter.toFile(loadHwp, formURL);
+//			HWPFile loadHwp = HWPReader.fromFile(formURL);
+//			
+//	        //재배부 요청시 수신결재칸 비워주기.
+//			for (int i = 1; i < 10; i++) {
+//				if (findHwpField("1sign" + i, loadHwp)) {
+//					setHwpText("1sign" + i, " ", loadHwp);
+//					setHwpText("1jikwe" + i, " ", loadHwp);
+//				} else {
+//					break;
+//				}
+//			}
+//			
+//			HWPWriter.toFile(loadHwp, formURL);
 		}
 		
 		logger.debug("setReBebu ended");

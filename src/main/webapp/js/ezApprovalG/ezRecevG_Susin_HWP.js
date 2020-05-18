@@ -1632,3 +1632,61 @@ function getPublicLevel(PublicLevel) {
         strRtn = strRtn + ")";
     return strRtn;
 }
+
+function setBtnEnable() {
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezOrgan/getADInfos.do",
+		data : {
+			cn : arr_userinfo[4],
+			prop : "extensionAttribute4"
+		},
+		success: function(xml){
+			result = loadXMLString(xml);
+			
+			var tempFlag = false;
+		    if (getNodeText(GetChildNodes(result.documentElement)[0]) != "")
+		        tempFlag = true;
+
+		    if (tempFlag) { //문서과
+		        btnReqReSend.style.display = "";    //재전송요청
+		        btnDistribute.style.display = "";       //배부
+		        btnReDistribute.style.display = "none"; //재배부요청
+		        // 재접수 기능이 아직 없어서 주석처리.
+//		        btnRefresh.style.display = ""; //재접수
+		    }
+		    else {  //일반부서
+		        btnReqReSend.style.display = "none";     //재전송요청
+		        btnDistribute.style.display = "none";     //배부
+		        if (pSusinAdmin == "YES") {   //수발신담당자
+		            btnReDistribute.style.display = ""; //재배부요청
+		            btnAssign.style.display = "";   //지정
+		        }
+		        else {
+		            btnReAssign.style.display = "";; //재지정요청
+		        }
+		    }
+		}        			
+	});
+}
+
+function openOpinionUI_Distribute_Complete(ret) {
+    if (ret != "cancel") {
+        var NodeList;
+        var objXML = loadXMLString(ret);
+        NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+
+        if (NodeList.length != 0) {
+            pHasOpinionYN = "Y";
+
+            btnReDistribute_onclick_complete();
+        } else {
+            pHasOpinionYN = "N";
+            ret = "cancel";
+        }
+    }
+}
