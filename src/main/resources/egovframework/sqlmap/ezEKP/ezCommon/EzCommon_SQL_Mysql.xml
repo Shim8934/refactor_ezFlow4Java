@@ -2449,6 +2449,33 @@
 			VIEWORDER  bigint(10) DEFAULT NULL 
 	</statement>
 	
+	<select id="EzCommonDAO.checkReBebuOpinionCode" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			companyid
+		FROM
+			TBL_CODELIST
+		WHERE
+			companyid = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			code1 = #code1#
+		AND
+			code2 = #code2#
+		LIMIT 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertReBebuOpinionCode" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_CODELIST
+			(CODE1, CODE2, NAME, ISUSE, DESCRIPT, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+		VALUES
+			(#code1#, #code2#, #name#, #isUse#, #descript#, #name2#, #name3#, #name4#, #tenantId#, #companyId#)
+	]]>
+	</insert>
+	
 	<select id="EzCommonDAO.checkFormAprOptionColumn">
 		SELECT 
 			APROPTION
@@ -2463,4 +2490,39 @@
 			APROPTION  varchar(300) DEFAULT NULL COMMENT '양식 세부설정'
 	</statement>
 	
+	<select id="EzCommonDAO.checkAnnualScheduleTenantConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useAnnualScheduleYN'
+		AND
+			TENANT_ID = 0
+	</select>
+	<insert id="EzCommonDAO.insertAnnualScheduleTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+	</insert>
+	
+	<select id="EzCommonDAO.checkHalfOffAttitudeTypeForCompany" resultClass="String">
+		SELECT 
+			COMPANY_ID 
+		FROM
+			TBL_ATTITUDE_TYPE
+		WHERE
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			TYPE_ID = #typeId#
+	</select>
+	<insert id="EzCommonDAO.insertHalfOffAttitudeType">
+		INSERT INTO TBL_ATTITUDE_TYPE 
+			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID, ISADD, ISDEL)
+		VALUES
+			(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #isUse#, #imgPath#, #parentId#, #formId#, #isAdd#, #isDel#) 
+	</insert>
 </sqlMap>

@@ -211,7 +211,13 @@ public interface EzCommonService {
 	
 	public void insertUseExternalMailServerConfig() throws Exception;
 
+	public void insertReBebuOpinionCode() throws Exception;
+	
 	public void addFormAprOptionColumn() throws Exception;
+
+	public void insertAnnualScheduleTenantConfig();
+
+	public void insertHalfOffAttitudeType();
 	
 }
 

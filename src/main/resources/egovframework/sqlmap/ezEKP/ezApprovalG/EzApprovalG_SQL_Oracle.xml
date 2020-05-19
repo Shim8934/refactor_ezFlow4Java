@@ -28182,7 +28182,54 @@
 				opiniongb = #opinionType#
 		]]>
 	</delete>
-		
+
+	<delete id="EzApprovalG.OpinionDel2" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_APROPINIONINFO
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid = #docID#
+			AND
+				opiniongb <> '008'
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalG.OpinionDel3" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_APROPINIONINFO
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid = #docID#
+			AND
+				opiniongb = '008'
+		]]>
+	</delete>
+	
+	<update id="EzApprovalG.updateReBebuOpinionSN" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_APROPINIONINFO
+			SET
+				opinionSN = #opinionSN#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid = #docID#
+			AND
+				opiniongb = '008'
+		]]>
+	</update>
+
 	<update id="EzApprovalG.updateHasOpinionYN" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -30502,4 +30549,116 @@
 		</isEqual>
 	</select>
 	
+    <update id="EzApprovalG.updateReceivedDept" parameterClass="Map">
+        UPDATE
+            TBL_APRRECEIPTPROCESSINFO
+        SET
+            PROCESSORID = #v_PROCESSORID#,
+            PROCESSORNAME = #v_PROCESSORNAME#,
+            PROCESSORNAME2 = #v_PROCESSORNAME2#,
+            PROCESSORJOBTITLE = #v_PROCESSORJOBTITLE#,
+            PROCESSORJOBTITLE2 = #v_PROCESSORJOBTITLE2#,
+            RECEIVEDDEPTID = #v_RECEIVEDDEPTID#,
+            RECEIVEDDEPTNAME = #v_RECEIVEDDEPTNAME#,
+            RECEIVEDDEPTNAME2 = #v_RECEIVEDDEPTNAME2#
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = #v_DOCID#
+    </update>
+
+    <update id="EzApprovalG.updateReBebuAprReceiptProcessInfo" parameterClass="Map">
+        UPDATE
+            TBL_APRRECEIPTPROCESSINFO
+        SET
+            APRSTATE = '011',
+            RECEIVEDDEPTID = #v_RECEIVEDDEPTID#,
+            RECEIVEDDEPTNAME = #v_RECEIVEDDEPTNAME#,
+            RECEIVEDDEPTNAME2 = #v_RECEIVEDDEPTNAME2#,
+            PROCESSDATE = #v_SYSDATE#
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = #v_DOCID#
+    </update>
+	
+	<select id="EzApprovalG.getDeliveryDeptInfo" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			CN,
+			DISPLAYNAME,
+			DISPLAYNAME2
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			CN = (SELECT DEPTID FROM TBL_DOCDELIVERY WHERE DOCID = #v_DOCID# AND TENANT_ID = #v_TENANTID# and COMPANYID = #companyID#)
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			EXTENSIONATTRIBUTE2 = #companyID#
+	</select>
+	
+	<select id="EzApprovalG.isRelayDoc" parameterClass="Map" resultClass="int">
+		<isEqual property="v_FLAG" compareValue="APR">
+			SELECT
+				COUNT(DOCID)
+			FROM
+				TBL_APRDOCINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				FORMID = '9999999999'
+			AND
+				DOCID = #v_DOCID#
+	    </isEqual>
+	    <isNotEqual property="v_FLAG" compareValue="APR">
+			SELECT
+				COUNT(DOCID)
+			FROM
+				TBL_ENDAPRDOCINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				FORMID = '9999999999'
+			AND
+				DOCID = #v_DOCID#
+	    </isNotEqual>
+	</select>
+	
+    <select id="EzApprovalG.getBebuRelayDocSenderInfo" parameterClass="Map" resultClass="ApprGReceiveDocVO">
+        SELECT
+            SENTDEPTID,
+            SENTDEPTNAME,
+            SENTDEPTNAME2
+        FROM
+        	TBL_APRRECEIPTPROCESSINFO
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = #v_DOCID#
+    </select>
+    
+    <update id="EzApprovalG.updateBebuRelayDocSenderInfo" parameterClass="Map">
+        UPDATE
+            TBL_APRRECEIPTPROCESSINFO
+        SET
+            SENTDEPTID = #v_SENTDEPTID#,
+            SENTDEPTNAME = #v_SENTDEPTNAME#,
+            SENTDEPTNAME2 = #v_SENTDEPTNAME2#
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = #v_DOCID#
+    </update>
 </sqlMap>

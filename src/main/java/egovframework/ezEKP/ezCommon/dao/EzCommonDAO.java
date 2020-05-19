@@ -1294,6 +1294,24 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertSurveyTenantConfig",map);
 		}
 	}
+	
+	public void insertReBebuOpinionCode(Map<String, Object> map) {
+		String companyId = checkReBebuOpinionCode(map);
+		
+		try {
+			if (companyId == null) {
+				logger.debug("ReBebuOpinionCode data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertReBebuOpinionCode", map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public String checkReBebuOpinionCode(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkReBebuOpinionCode", map);
+	}
 
 	public void addFormAprOptionColumn() {
 		try {
@@ -1302,6 +1320,24 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_forminfo APROPTION column doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.updateFormAprOptionColumn");
+		}
+	}
+
+	public void insertAnnualScheduleTenantConfig(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkAnnualScheduleTenantConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("useAnnualScheduleYN tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertAnnualScheduleTenantConfig",map);
+		}
+	}
+
+	public void insertHalfOffAttitudeType(Map<String, Object> map) {
+		String companyId = (String) select("EzCommonDAO.checkHalfOffAttitudeTypeForCompany", map);
+
+		if (companyId == null) {
+			logger.debug("attitude_type 'half off' doesn't exist. insert data...");
+			insert("EzCommonDAO.insertHalfOffAttitudeType",map);
 		}
 	}
 }
