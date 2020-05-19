@@ -2490,7 +2490,7 @@
 		AND
 			TENANT_ID = #tenantId#
 		AND
-			PORTLET_ID = #typeId#
+			TYPE_ID = #typeId#
 	</select>
 	<insert id="EzCommonDAO.insertHalfOffAttitudeType">
 		INSERT INTO TBL_ATTITUDE_TYPE 
