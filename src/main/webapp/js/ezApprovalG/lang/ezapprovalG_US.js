@@ -811,10 +811,12 @@ var strOpinionType4 = "004";
 // 2011.06.17 추가
 var strOpinionType5 = "005";
 var strOpinionType6 = "006";
+var strOpinionType8 = "008";
 var strLangOpinionType1 = "General Comment";
 var strLangOpinionType2 = "Bounce opinion";
 var strLangOpinionType3 = "Hold opinion";
 var strLangOpinionType4 = "Return opinion";
+var strLangOpinionType8 = "재배부요청";
 
 // 2011.06.17 추가
 

@@ -1689,6 +1689,29 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
+	public void insertReBebuOpinionCode() throws Exception {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("code1", "A17");
+				map.put("code2", "008");
+				map.put("name", "재배부요청");
+				map.put("isUse", "1");
+				map.put("descript", "재배부요청");
+				map.put("name2", "재배부요청");
+				map.put("name3", "재배부요청");
+				map.put("name4", "재배부요청");
+				
+				ezCommonDAO.insertReBebuOpinionCode(map);
+			}
+		}
+	}
+	
+	@Override
 	public void addFormAprOptionColumn() throws Exception {
 		ezCommonDAO.addFormAprOptionColumn();
 	}

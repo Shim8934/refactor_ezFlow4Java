@@ -2524,18 +2524,15 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
                     String pubdocString = xmlDom.getElementsByTagName("content").item(i).getTextContent();
                     System.out.println("pubdocString: " + pubdocString);
 
-                    //pubdoc Document 생성
-                    Document pubdocDom = commonUtil.convertStringToDocument(pubdocString);
+                    int sIndex = pubdocString.indexOf("<content>") + 9;
+                    int eIndex = pubdocString.indexOf("</content>");
+                    
+                    String contentStr = pubdocString.substring(sIndex , eIndex).trim(); 
 
-                    //pubdoc content 들을 추출하여 길이 측정
-                    String pdc = pubdocDom.getElementsByTagName("content").item(0).getTextContent();
-                    System.out.println("pubdoc content 문자열 길이: " + pdc);
-
-                    //pubdoc content의 내용이 있을때 sendtemp로 전달
-                    if(pdc.length() > 0) {
-                          sendPath = "sendtemp";
+                    if(contentStr.length() > 0) {
+                    	sendPath = "sendtemp";
                     }
-
+                    
                     System.out.println("sendPath: " + sendPath);
 					
 					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String("pubdoc.xml".getBytes("euc-kr")));
