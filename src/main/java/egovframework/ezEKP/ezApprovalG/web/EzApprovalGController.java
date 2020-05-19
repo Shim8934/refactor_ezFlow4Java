@@ -6128,8 +6128,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String receiveSN = request.getParameter("pReceiveSN");
 		String deptID = request.getParameter("pDeptID");
 		
-		String realPath = commonUtil.getRealPath(request);
-		String dirPath = realPath +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		// String realPath = commonUtil.getRealPath(request);
+		// String dirPath = realPath +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		userInfo.setRealPath(commonUtil.getRealPath(request));
 		
 		String result = ezApprovalGService.setReBebu(docID, receiveSN, deptID, userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
