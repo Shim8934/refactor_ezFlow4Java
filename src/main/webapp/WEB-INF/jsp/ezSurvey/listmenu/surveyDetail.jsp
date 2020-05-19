@@ -326,10 +326,11 @@
 						responses.filter(function(item){
 							if(item.responsorId == userId) {
 								if(type == 9) { // 드롭다운 유형
-									document.getElementById('prevQstn' + level).querySelector("option[value='" + i + "']").selected = true;
+									//document.getElementById('prevQstn' + level).querySelector("option[value='" + i + "']").selected = true;
+									$('#prevQstn' + level).find('select').val(i).trigger('change');
 									document.getElementById('prevQstn' + level).querySelector("select").setAttribute('responseId', item["responseId"]);
 								} else {
-									document.getElementById('prevQstn' + level).querySelector("div[level='" + i + "']").querySelector("input").checked = true;
+									document.getElementById('prevQstn' + level).querySelector("div[level='" + i + "']").querySelector("input").click();
 									document.getElementById('prevQstn' + level).querySelector("div[level='" + i + "']").querySelector("input").setAttribute('responseId', item["responseId"]);
 								}
 							}
@@ -362,9 +363,10 @@
 					if(questionRes) {
 						for(i = 0; i < questionRes.length; i++) {
 							if(questionRes[i]["responsorId"] == userId) {
-								document.getElementById('prevQstn' + optionLevel).querySelector("input").value = questionRes[i]["sliderValue"];
-								document.getElementById('prevQstn' + optionLevel).querySelector("output").innerText = questionRes[i]["sliderValue"];
-								document.getElementById('prevQstn' + optionLevel).querySelector("output").setAttribute('responseId', questionRes[i]["responseId"]);
+								// document.getElementById('prevQstn' + optionLevel).querySelector("input").value = questionRes[i]["sliderValue"];
+								// document.getElementById('prevQstn' + optionLevel).querySelector("output").innerText = questionRes[i]["sliderValue"];
+								// document.getElementById('prevQstn' + optionLevel).querySelector("output").setAttribute('responseId', questionRes[i]["responseId"]);
+								$('#prevQstn' + optionLevel).find('input').val(questionRes[i]["sliderValue"]).trigger('change');
 							}
 						}
 					}
@@ -462,9 +464,6 @@
 			showAttachList();
 			setBodyHeight();
 			
-			// 20.05.06 강승구 : 설문응답여부에 따른 처리 코드추가
-			checkQuestionAnswer();
-			
 			window.addEventListener("load", function(e) {setBodyHeight();}, false);
 			window.addEventListener("resize", function(e) {setBodyHeight();}, false);
 			document.getElementById("surveyInfBttn").onclick = function(e) {toggleSurveyInformation();};
@@ -547,6 +546,9 @@
 			// 20.05.08 강승구 : 설문정보 수정버튼
 			var updateBttn = document.getElementById("suvyUdt");
 			if (updateBttn) {updateBttn.onclick = function(e) {saveSurveyResponses();};}
+
+			// 20.05.06 강승구 : 설문응답여부에 따른 처리 코드추가
+			checkQuestionAnswer();
 		}
 		// 첨부파일 리스트 나타내기
 		function showAttachList() {
