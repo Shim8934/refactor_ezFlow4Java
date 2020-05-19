@@ -194,3 +194,5 @@ var strLangKHA2 = "Statutory Holiday";
 var strLangGHA1 = ", ";
 /* 2019-04-03 */
 var strLangHSB1 = "MHT files to store failed.";
+/* 2020-05-19 */
+var strLang131_1 = "협업일정";

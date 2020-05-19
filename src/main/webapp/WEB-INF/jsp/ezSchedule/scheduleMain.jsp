@@ -75,6 +75,10 @@
 		    var publicIds = JSON.parse('${publicIds}');
 		    var LunarUse = false;		    
 		    var primaryLang = "<c:out value='${userInfo.primary}'/>";		// 2018-12-26 김민성 - 일정관리 기념일 다국어 처리
+		    
+		    /* 2020-05-18 협업-일정 연동 관련 추가 */
+		    var WorkspaceUrl = "<c:out value='${workspaceHostUrl}'/>";     // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+		    var g_bMobileExtra = false;       // 모바일 외부 서버 여부 (내/외부 네트워크 분리 환경에서만 설정) (true: 외부서버, false: 해당 없음)
 		    /* select_memorialDays(uselang); */
 		    
 		    /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
@@ -407,6 +411,9 @@
 		        var ret = "0";
 		        if (scheduleid.indexOf("GOOGLE") > -1)
 		            date = GetAttribute(srcEl, "StartDate") + "|" + srcEl.getAttribute;
+		        
+		        if (scheduleid.indexOf("collaboration") > -1) // 협업 일정
+		    		scheduleReadUrl = getRedirectScheduleDetailUrl(encodeURIComponent(scheduleid.replace("collaboration:", "")), date, repeatcount, 10);
 
 		        if (repeatcount == "Y") {	        	
 		            schedule_read_confirm_cross_dialogArguments[0] = "";
@@ -420,8 +427,9 @@
 		            if(scheduletype == 2 || scheduletype == 3) {
 		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
                                 "height = 640px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
-		            }
-		            else {
+		            } else if(scheduletype == 4) { // 협업
+		            	window.open(scheduleReadUrl, "", "height = 670px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		            }else {
 		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
                                 "height = 670px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		            }
@@ -453,6 +461,50 @@
 		        } else {
 		            return;
 		        }
+		    }
+		    
+		    function getRedirectScheduleDetailUrl(id, date, repeatCount, callTypeId, bMobile) {
+		        if (typeof (id) == "undefined" || typeof (date) == "undefined")
+		            return;
+		        var url = getWorkspaceUrl() + getWorkspaceAppPath() + ((typeof (bMobile) == "undefined" || bMobile == false) ? "/Account/SSO" : "/Account/MobileSSO");
+		        var returnUrl = "?returnUrl=" + getWorkspaceAppPath() + "/Scheduler/Main/Detail?scheduleId=" + id;
+
+		        //// ME 스페이스
+		        //returnUrl = returnUrl + "%26GroupId=0";
+
+		        // 반복 일정의 횟수
+		        if (typeof (repeatCount) != "undefined")
+		            if (parseInt(repeatCount) >= 1)
+		                returnUrl = returnUrl + "%26repeatdate=" + moment(date).format("YYYY-MM-DD") + "%26repeatcount=" + repeatCount;
+
+		        // 사이트 레이아웃 없이 단독으로 페이지만 호출되었는지 여부의 식별 값
+		        returnUrl = returnUrl + "%26singleCall=true";
+
+		        // 호출 페이지 타입
+		        if (typeof (callTypeId) != "undefined")
+		            returnUrl = returnUrl + "%26callTypeId=" + callTypeId;
+
+		        return url + returnUrl;
+		    }
+		    
+		    function getWorkspaceUrl() {
+		        var result = "";
+
+		        if (typeof (WorkspaceUrl) != "undefined")
+		            result = WorkspaceUrl;
+
+		        return result;
+		    }
+
+		    // 협업 웹응용프로그램 경로
+		    function getWorkspaceAppPath() {
+		        var result = "/ezWorkspace";    // 자바
+
+		        // 모바일 외부서버에서 접속 시 내부 서버를 통해 데이터를 처리하도록 Mobile 컨트롤러 경로를 붙여준다.
+		        if (typeof (g_bMobileExtra) != "undefined" && g_bMobileExtra === true)
+		            result = result + "/Mobile";
+
+		        return result;
 		    }
 		    
 		    // 2020-02-24 김정언 - 근태 상세보기

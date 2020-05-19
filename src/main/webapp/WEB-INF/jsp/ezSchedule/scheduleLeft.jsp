@@ -65,6 +65,7 @@
 			var sEndDate;
 			var typeCal;
 			var isCalendarView = true;
+			var useWorkspaceSchedule = "<c:out value='${useWorkspaceSchedule}'/>";
 			
 			//2018-06-08 구해안 left checkbox checkall			
 			function chk_all(){
@@ -447,6 +448,60 @@
 	        	//frm2.submit();
 	        	window.location.href = "/ezSchedule/scheduleLeft.do";
 	        } 
+	        
+	        function chk_DisplayChange2(obj) {
+	        	if (isCalendarView) {
+	        		var chk_str =  "";
+					var chk_total = $("input[name=chk_schedule]:checked").length;
+					var chk_fullLength = $("input[name=chk_schedule]").length;
+	
+	        		var chk_type = 4;//$("input[name=chk_schedule]").data("schedule-type");
+	        		var test = obj.firstElementChild.getAttribute("data-schedule-type");
+	        		if (typeCal == 0) {
+	        			$('.td_list td[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){							
+							$(value).toggleClass('chk_noneDisplay');
+						});
+	        		} else if (typeCal == 1) {
+	        			$('div[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+							$(value).toggleClass('chk_noneDisplay');
+						});
+	        		} else {
+	        			$('div[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+							$(value).addClass('chk_noneDisplay');
+						});
+	        		}
+	        	} else {
+					isCalendarView = true;
+					window.open("/ezSchedule/scheduleMain.do?funCode=2", "right");
+					
+					var chk_str =  "";
+					var chk_total = $("input[name=chk_schedule]:checked").length;
+					var chk_fullLength = $("input[name=chk_schedule]").length;
+					
+					var chk_type = 4;//$("input[name=chk_schedule]").data("schedule-type");
+	        		if (typeCal == 0) {
+	        			$('.td_list td[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){							
+							$(value).toggleClass('chk_noneDisplay');
+						});
+	        		} else if (typeCal == 1) {
+	        			$('div[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+							$(value).toggleClass('chk_noneDisplay');
+						});
+	        		} else {
+	        			$('div[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+							$(value).addClass('chk_noneDisplay');
+						});
+	        		}
+	        	}
+	        	
+	        	if(chk_total > 0 && chk_total < chk_fullLength) {
+					$('#select-all').prop('checked',false);					
+				} else if(chk_total == chk_fullLength) {
+					$('#select-all').prop('checked',true);	
+				} else if(chk_total == 0){
+					chk_str += $('#select-all').val();
+				}
+	        }
 		</script>
 	</head>
 
@@ -529,6 +584,15 @@
 					  		<span class="list_text"><spring:message code='ezSchedule.t223'/></span>
 						</label>
 					</li>	
+					<c:if test="${useWorkspaceSchedule eq 'YES'}">
+					<li>
+						<label class="IDcontainer" onchange="chk_DisplayChange2(this)">
+					  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="4" value="collaboration" class="checkSelect">
+					  		<span class="checkmark" style="background:rgb(63, 81, 181);"></span>
+					  		<span class="list_text">협업일정</span>
+						</label>
+					</li>	
+					</c:if>
 					<c:if test='${!empty groupList}'>
 						<c:forEach var="group" items="${groupList}">
 							<li>

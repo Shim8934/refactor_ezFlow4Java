@@ -296,6 +296,8 @@
  	var frameId = "<c:out value='${usedFrame}'/>";
  	var usedTheme = "<c:out value='${usedTheme}'/>";
  	var theme2 = true;
+ 	var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+    var workspaceContextRootUrl = "${workspaceContextRootUrl}";
  	
  	var quickLinkPage = {
  		current: 1,
@@ -983,8 +985,8 @@
     <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/Groupwareapi.js"></script>
     <script type="text/javascript">
 	    var g_UserID = "${userId}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
-	    var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
-	    var workspaceContextRootUrl = "${workspaceContextRootUrl}";
+	    /* var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+	    var workspaceContextRootUrl = "${workspaceContextRootUrl}"; */
 	    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
 	    var feedListCount = 10;
 	    var g_bRayful = false;

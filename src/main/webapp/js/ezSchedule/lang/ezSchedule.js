@@ -194,3 +194,5 @@ var strLangKHA2 = "법정공휴일";
 var strLangGHA1 = ", ";
 /* 2019-04-03 */
 var strLangHSB1 = "MHT 파일을 저장하는데 실패하였습니다.";
+/* 2020-05-19 */
+var strLang131_1 = "협업일정";

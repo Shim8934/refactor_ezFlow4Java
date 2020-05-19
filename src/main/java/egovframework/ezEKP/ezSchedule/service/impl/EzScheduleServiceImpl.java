@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,6 +19,9 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +30,11 @@ import org.w3c.dom.NodeList;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
@@ -53,6 +60,15 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	
 	@Resource(name="EzResourceService")
 	private EzResourceService ezResourceService;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
+	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -624,6 +640,59 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				resultList.add(vo);
 			}
 		}
+		
+		String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", tenantId);
+	    logger.debug("useWorkspaceSchedule : " + useWorkspaceSchedule);
+		
+	    // 협업 일정 가져오기
+	    if(useWorkspaceSchedule.equalsIgnoreCase("yes")) {
+	    	String[] sDate = orgStartDate.split("-");
+			String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
+			String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+			
+			String startDate = sDate[0] + "-" + sMon + "-" + sDay;
+			
+			String[] eDate = orgEndDate.split("-");		
+			String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
+			String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
+			
+			String endDate = eDate[0] + "-" + eMon + "-" + eDay;
+			
+			String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", tenantId);
+	        
+			String domain = workspaceHostUrl + "/ezWorkspace/api/GroupwareApi/post/scheduleread/";
+	    	String params = "userAccountId=" + URLEncoder.encode(userID, "UTF-8") + "&startDate=" + URLEncoder.encode(startDate, "UTF-8") 
+	    						+ "&endDate=" + URLEncoder.encode(endDate, "UTF-8") + "&searchTerm=" + "&bMobile=" + URLEncoder.encode("false", "UTF-8");
+	    	String workspaceScheduleLists = ezEmailUtil.getWebServiceResult(domain, params);
+	    	
+	    	if(workspaceScheduleLists != null && !workspaceScheduleLists.equals("")) {
+		    	JSONParser jsonparser = new JSONParser();
+		    	JSONArray jsonarray = (JSONArray)jsonparser.parse(workspaceScheduleLists);
+		    	
+		    	logger.debug("data.length = " + jsonarray.size());
+		    	
+		    	for(int i=0; i<jsonarray.size(); i++) {
+		    		ScheduleInfoVO sVo = new ScheduleInfoVO();
+		    		JSONObject jsonobject = (JSONObject)jsonarray.get(i);
+		    		
+		    		sVo.setDateType(jsonobject.get("ItemDateType").toString());
+					sVo.setScheduleType("4");
+					sVo.setScheduleId("collaboration:" + jsonobject.get("ItemId").toString());
+					sVo.setParentId("collaboration:" + jsonobject.get("ItemPostId").toString());
+					sVo.setStartDate(jsonobject.get("ItemStartDate").toString().replace("T", " "));
+					sVo.setEndDate(jsonobject.get("ItemEndDate").toString().replace("T", " "));
+					sVo.setCreatorName(jsonobject.get("ItemUserName").toString());
+					sVo.setTitle(jsonobject.get("ItemPostTitle").toString());
+					sVo.setOwnerId(jsonobject.get("ItemUserAccountId").toString());
+					sVo.setOwnerName(jsonobject.get("ItemUserName").toString());
+					
+					int importance = Integer.parseInt(jsonobject.get("ItemImportance").toString()) + 1;
+					sVo.setImportance(importance + "");
+	
+					resultList.add(sVo);
+		    	}
+			}
+	    }
 
 		logger.debug("=====getScheduleList Ended=====");
 		if (tempResultList != null) {

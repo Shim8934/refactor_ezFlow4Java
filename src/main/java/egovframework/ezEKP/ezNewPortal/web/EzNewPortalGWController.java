@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -516,12 +517,12 @@ public class EzNewPortalGWController {
 				usePortalAutoRefreshInterval = ezCommonService.getTenantConfig("usePortalAutoRefreshInterval", tenantId);
 			}
 			
-			if ("YES".equals(useEzWorkspace)) {
+			//if ("YES".equals(useEzWorkspace)) {
 				String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", tenantId);
 				String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", tenantId);
 				data.put("workspaceHostUrl", workspaceHostUrl);
 				data.put("workspaceContextRootUrl", workspaceContextRootUrl);
-			}
+			//}
 			
 			data.put("usedTheme", userThemeSetting.getUsedTheme());
 			data.put("usedFrame", userThemeSetting.getUsedFrame());
