@@ -26175,11 +26175,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		                                 itemCnt++;
 		                             }
 		                             
-		                             if(brParentEl.parent().tagName().toLowerCase().equals("td")) {
-		                            	 brParentEl.html("&nbsp;");
-		                             } else {
-		                            	 brParentEl.remove();
-		                             }
+		                           //쿠쿠닥스 에디터에서 문장안에 br 태그가 들어가는 경우는 없어 <p><br></p>는 비어있는 라인으로 처리함. 2020-05-20 홍대표.
+		                             brParentEl.html("&nbsp;");
+//		                             if(brParentEl.parent().tagName().toLowerCase().equals("td")) {
+//		                            	 brParentEl.html("&nbsp;");
+//		                             } else {
+//		                            	 brParentEl.remove();
+//		                             }
 								} else {
 									// br 태그에 스타일이 들어가는 오류 수정. 2020-01-31 홍대표.
 									String fixedBrEl = brParentEl.html().replaceAll("<br[\\s\\w]+.+?>", "<br>");
@@ -26202,18 +26204,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		                                 }
 		                             }
                                 
-		                             brParentEl.html("");
-                                    for (int m = 0; m < result.length; m++) {
-                                        if (!bAllEmpty) {
-                                            if (result[m] == null && result[m].equals("")) {
-                                            	brParentEl.append("<p>&nbsp;</p>");
-                                            } else {
-                                            	brParentEl.append("<p>" + result[m] + "</p>");
-                                            }
-                                        } else {
-                                            bAllEmpty = false;
-                                        }
-                                    }
+		                             //쿠쿠닥스 에디터에서 문장안에 br 태그가 들어가는 경우는 없어 <p><br></p>는 비어있는 라인으로 처리함. 2020-05-20 홍대표.
+		                             brParentEl.html("&nbsp;");
+//                                    for (int m = 0; m < result.length; m++) {
+//                                        if (!bAllEmpty) {
+//                                            if (result[m] == null && result[m].equals("")) {
+//                                            	brParentEl.append("<p>&nbsp;</p>");
+//                                            } else {
+//                                            	brParentEl.append("<p>" + result[m] + "</p>");
+//                                            }
+//                                        } else {
+//                                            bAllEmpty = false;
+//                                        }
+//                                    }
                                 }
 							}
 						}

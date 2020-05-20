@@ -47,12 +47,15 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRelayXMLVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+
+import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
 
 @Component
 public class EzApprovalGRelayScheduler {
@@ -81,6 +84,9 @@ public class EzApprovalGRelayScheduler {
 	
 	@Resource(name = "loginService")
     private LoginService loginService;
+	
+	@Autowired
+	private EzEmailScheduler ezEmailScheduler;
 	
 //	@RequestMapping(value = "/ezApprovalG/relay.do")
 //	@Scheduled(cron = "0 0/1 * * * *")
