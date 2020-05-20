@@ -83,7 +83,7 @@ public class EzApprovalGRelayScheduler {
     private LoginService loginService;
 	
 //	@RequestMapping(value = "/ezApprovalG/relay.do")
-	@Scheduled(cron = "0 0/1 * * * *")
+//	@Scheduled(cron = "0 0/1 * * * *")
 	public void receiverMain_old() throws Exception{
 		if (config.getProperty("config.Run_RelayScheduler").equals("NO")) {
 			return;
@@ -1165,6 +1165,13 @@ public class EzApprovalGRelayScheduler {
 		if (config.getProperty("config.Run_RelayScheduler").equals("NO")) {
 			return;
 		}
+		
+		//choose scheduler running server
+		if (!ezEmailScheduler.preScheduler("receiverMain")) {
+			logger.debug("receiverMain scheduler ended.");
+			return;
+		}
+		
 		logger.debug("receiverSchedulerMain Started");
 		 String strRelayFolderPath = "";
 		 String strAprDocPath =  "";
