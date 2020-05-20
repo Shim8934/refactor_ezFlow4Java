@@ -70,6 +70,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -134,11 +135,15 @@ public class EzScheduleController extends EgovFileMngUtil {
 	
 	@Resource(name="EzCabinetAdminService")
 	private EzCabinetAdminService cabinetAdminService;
+	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
 	
 	@Autowired
 	private Properties config;
+	
+	@Resource(name = "loginService")
+    private LoginService loginService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -3549,17 +3554,26 @@ public class EzScheduleController extends EgovFileMngUtil {
 	
     /* 협업 - 그룹웨어 일정 데이터 연동 */
 	@RequestMapping(value = "/ezSchedule/workspaceScheduleGetList.do", method = RequestMethod.POST, produces="application/json;charset=utf-8")
-	public String workspaceScheduleGetList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) throws Exception {
+	public String workspaceScheduleGetList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) throws Exception {
 		logger.debug("workspaceScheduleGetList started.");
 	
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		
-		List<ScheduleInfoVO> sList = null;
+		String userId = request.getParameter("USERID");
 		String keyword = request.getParameter("KEYWORD");
 		String startDate = request.getParameter("STARTDATE");
 		String endDate = request.getParameter("ENDDATE");
+		
+		String serverName = request.getServerName();
+		int tenantId = loginService.getTenantId(serverName);
+		
+		LoginVO loginVO = new LoginVO();
+		loginVO.setId(userId);
+		loginVO.setTenantId(tenantId);
+		loginVO.setDn("NOPASSWORD");
+		loginVO = loginService.selectUser(loginVO);
+		
+		List<ScheduleInfoVO> sList = null;
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
-		String indiList = "'" + loginVO.getId() + "'";
+		String indiList = "'" + userId + "'";
 		String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", loginVO.getTenantId());
 		
 		try {
