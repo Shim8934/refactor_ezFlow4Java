@@ -75,12 +75,14 @@
 			        });
 			        /* chk_IDchange(); */
 			        chk_DisplayChange();
+			        chk_DisplayChange2();
 			    } else {			    	
 			        $('.checkSelect').each(function() {
 			            $(this).prop('checked',false);  			            
 			        });
 			        /* chk_IDchange(); */
 			        chk_DisplayChange();
+			        chk_DisplayChange2();
 			    }
 			}   
 			function FindByAttributeValue(attribute, value, element_type)    {
@@ -456,18 +458,13 @@
 					var chk_fullLength = $("input[name=chk_schedule]").length;
 	
 	        		var chk_type = 4;//$("input[name=chk_schedule]").data("schedule-type");
-	        		var test = obj.firstElementChild.getAttribute("data-schedule-type");
 	        		if (typeCal == 0) {
 	        			$('.td_list td[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){							
 							$(value).toggleClass('chk_noneDisplay');
 						});
-	        		} else if (typeCal == 1) {
-	        			$('div[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-							$(value).toggleClass('chk_noneDisplay');
-						});
 	        		} else {
 	        			$('div[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-							$(value).addClass('chk_noneDisplay');
+							$(value).toggleClass('chk_noneDisplay');
 						});
 	        		}
 	        	} else {
@@ -483,13 +480,9 @@
 	        			$('.td_list td[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){							
 							$(value).toggleClass('chk_noneDisplay');
 						});
-	        		} else if (typeCal == 1) {
-	        			$('div[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-							$(value).toggleClass('chk_noneDisplay');
-						});
 	        		} else {
 	        			$('div[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-							$(value).addClass('chk_noneDisplay');
+							$(value).toggleClass('chk_noneDisplay');
 						});
 	        		}
 	        	}

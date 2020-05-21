@@ -3570,11 +3570,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginVO.setTenantId(tenantId);
 		loginVO.setDn("NOPASSWORD");
 		loginVO = loginService.selectUser(loginVO);
+		loginVO.setOffset(ezCommonService.selectUserGetTimeZone(userId, tenantId));
 		
 		List<ScheduleInfoVO> sList = null;
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 		String indiList = "'" + userId + "'";
-		String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", loginVO.getTenantId());
 		
 		try {
 			List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(loginVO.getId(), loginVO.getPrimary(), loginVO.getTenantId() ,loginVO.getCompanyID());
@@ -3667,7 +3667,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 				}	
 			}			
 				
-			sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, keyword.trim(), loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getId(), loginVO.getDeptID(), useAnnualScheduleYN);
+			sList = ezScheduleService.getScheduleListForWorkspace(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, keyword.trim(), loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getId(), loginVO.getDeptID());
 			
 			Collections.sort(sList, new EzScheduleCompareUtilPublic());
 			

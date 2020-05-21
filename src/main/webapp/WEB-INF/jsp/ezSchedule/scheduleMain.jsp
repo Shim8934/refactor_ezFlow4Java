@@ -475,7 +475,7 @@
 		        // 반복 일정의 횟수
 		        if (typeof (repeatCount) != "undefined")
 		            if (parseInt(repeatCount) >= 1)
-		                returnUrl = returnUrl + "%26repeatdate=" + moment(date).format("YYYY-MM-DD") + "%26repeatcount=" + repeatCount;
+		                returnUrl = returnUrl + "%26repeatdate=" + date + "%26repeatcount=" + repeatCount;
 
 		        // 사이트 레이아웃 없이 단독으로 페이지만 호출되었는지 여부의 식별 값
 		        returnUrl = returnUrl + "%26singleCall=true";
