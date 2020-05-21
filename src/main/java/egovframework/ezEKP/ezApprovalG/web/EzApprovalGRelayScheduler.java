@@ -55,8 +55,6 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
-import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
-
 @Component
 public class EzApprovalGRelayScheduler {
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGRelayScheduler.class);
