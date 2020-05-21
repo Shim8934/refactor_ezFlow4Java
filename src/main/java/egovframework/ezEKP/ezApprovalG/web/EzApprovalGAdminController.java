@@ -4360,7 +4360,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 첨부파일 개수제한 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/manageAttachLimit.do")
+	@RequestMapping(value = "/admin/ezApprovalG/manageAttachLimit.do", method = RequestMethod.GET)
 	public String manageAttachLimit(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("manageAttachLimit started.");
 		
@@ -4399,7 +4399,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 첨부파일 개수제한 설정값 가져오기 (GET)
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/getAttachLimit.do")
+	@RequestMapping(value = "/admin/ezApprovalG/getAttachLimit.do", method = RequestMethod.GET)
 	@ResponseBody
 	public int getAttachLimit(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getAttachLimit started");
@@ -4416,7 +4416,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 첨부파일 개수제한 설정 저장 (POST)
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/saveAttachLimit.do")
+	@RequestMapping(value = "/admin/ezApprovalG/saveAttachLimit.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void saveAttachLimit(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("saveAttachLimit started");
@@ -4433,7 +4433,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 첨부파일 개수제한 설정 삭제 (POST)
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/deleteAttachLimit.do")
+	@RequestMapping(value = "/admin/ezApprovalG/deleteAttachLimit.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void deleteAttachLimit(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("deleteAttachLimit started");
