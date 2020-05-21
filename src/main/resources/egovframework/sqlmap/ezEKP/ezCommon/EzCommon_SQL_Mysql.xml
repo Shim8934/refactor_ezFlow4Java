@@ -782,4 +782,22 @@
 			VIEWORDER  bigint(10) DEFAULT NULL 
 	</statement>
 	
+	<select id="EzCommonDAO.checkAprAttachLimit" resultClass="int">
+		<![CDATA[
+			SELECT 
+				ATTACHLIMITCNT
+			FROM 
+				TBL_APRATTACHLIMIT
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createAprAttachLimit"> 
+		CREATE TABLE `tbl_aprattachlimit` (
+			`ATTACHLIMITCNT`  bigint(10) DEFAULT NULL,
+			`TENANT_ID` mediumint(5) NOT NULL,
+			`COMPANYID` varchar(80) NOT NULL,
+			PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4; 
+	</statement>
+	
 </sqlMap>

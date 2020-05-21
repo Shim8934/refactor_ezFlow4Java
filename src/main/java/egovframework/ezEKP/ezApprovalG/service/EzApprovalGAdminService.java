@@ -183,4 +183,11 @@ public interface EzApprovalGAdminService {
 	public List<ApprGDocListVO> getDeleteDocList_json(String userID, String subQuery, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset, String lang, Locale locale) throws Exception;
 	
 	public String getExAttribute(String buJaeId, int tenantID) throws Exception;
+
+	/* 2020-05-15 홍승비 - 첨부파일 개수제한 관련 메서드 */
+	public int getAttachLimit(String companyID, int tenantId) throws Exception;
+	
+	public void saveAttachLimit(String attachLimit, String companyID, int tenantId) throws Exception;
+	
+	public void deleteAttachLimit(String companyID, int tenantId) throws Exception;
 }

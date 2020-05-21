@@ -84,6 +84,10 @@
 						//채번 관리
 						url = "/admin/ezApprovalG/docNumZeroCnt.do";
 						break;
+					/* 2020-05-14 홍승비 - 전자결재 첨부파일 개수제한 설정메뉴 */
+					case 16:
+						url = "/admin/ezApprovalG/manageAttachLimit.do";
+						break;
 				}
 				
 				window.open(url,"right");
@@ -138,7 +142,11 @@
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(11)"><spring:message code='main.t42'/></span><ul></ul></h2>	
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(12)"><spring:message code='main.t50'/></span><ul></ul></h2>	
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(13)"><spring:message code='main.t51'/></span><ul></ul></h2>	
+				
+				<%-- 2020-05-14 홍승비 - 전자결재 첨부파일 개수제한 설정메뉴 추가 --%>
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(16)"><spring:message code='ezApprovalG.hsbAL01'/></span><ul></ul></h2>
 			</div>
+			
 		<script type="text/javascript">
 			initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		</script>

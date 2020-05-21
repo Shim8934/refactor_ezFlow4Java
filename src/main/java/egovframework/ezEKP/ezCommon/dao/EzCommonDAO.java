@@ -514,4 +514,14 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			update("EzCommonDAO.updateAprTmpAttachViewOrder");
 		}
 	}
+
+	public void createAprAttachLimit() {
+		try {
+			select("EzCommonDAO.checkAprAttachLimit");
+		} catch (Exception e) {
+			logger.debug("tbl_aprattachlimit doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createAprAttachLimit");
+		}
+	}
 }

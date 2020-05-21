@@ -526,4 +526,25 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void removeAutoDoc(Map<String, Object> map) {
 		update("EzApprovalGAdminDAO.removeAutoDoc", map);
 	}
+
+	/* 2020-05-15 홍승비 - 첨부파일 개수제한 관련 쿼리 */
+	public int cntAttachLimit(Map<String, Object> map) throws Exception {
+		return (int)select("EzApprovalGAdminDAO.cntAttachLimit", map);
+	}
+	
+	public int getAttachLimit(Map<String, Object> map) throws Exception{
+		return (int)select("EzApprovalGAdminDAO.getAttachLimit", map);
+	}
+	
+	public void saveAttachLimit(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdminDAO.saveAttachLimit", map);
+	}
+	
+	public void deleteAttachLimit(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdminDAO.deleteAttachLimit", map);
+	}
+
+	public void updateAttachLimit(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdminDAO.updateAttachLimit", map);
+	}
 }

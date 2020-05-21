@@ -842,4 +842,22 @@
 			VIEWORDER  NUMBER(10,0)
 	</statement>
 	
+	<select id="EzCommonDAO.checkAprAttachLimit" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ATTACHLIMITCNT
+			FROM 
+				TBL_APRATTACHLIMIT
+			ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createAprAttachLimit">
+		CREATE TABLE "TBL_APRATTACHLIMIT" (
+			"ATTACHLIMITCNT" NUMBER(10,0), 
+	        "TENANT_ID" NUMBER(5,0) NOT NULL ENABLE, 
+		    "COMPANYID" NVARCHAR2(80) NOT NULL ENABLE,
+		    CONSTRAINT "PK_TBL_APRATTACHLIMIT" PRIMARY KEY ("TENANT_ID", "COMPANY_ID")
+	    )
+	</statement>
+	
 </sqlMap>

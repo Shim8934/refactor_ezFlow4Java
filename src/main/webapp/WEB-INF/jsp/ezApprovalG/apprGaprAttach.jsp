@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -69,6 +70,7 @@
 			var totalSize = 0;
 			var orgCompanyID = "${orgCompanyID}";
 			var ext = "${ext}";
+			var pCompanyID = "<c:out value='${userInfo.companyID}'/>"; // 원회사가 아닌 현재 소속 회사ID
 			
 			// 문서정보를 가져오는 함수
 			function getDocInfo()
@@ -735,6 +737,14 @@
 	
 		        var tempfilesize = 0;
 		        var filecnt = file.length;
+		        
+		        /* 2020-05-18 홍승비 - 첨부파일 개수제한 기능 추가 */
+				var checkAttachResult = checkAttachFileCntLimit(filelist.length);
+		        if (checkAttachResult == "NO") {
+		        	document.form.file1.value = "";
+		        	return;
+		        }
+		        
 		        for (var i = 0; i < filelist.length; i++) {
 		            /* if (filelist[i].size / 1024 / 1024 > 5) {
 		                alert(strLang25);
@@ -879,6 +889,41 @@
 		        for (var j = 0; j < cnt; j++) {
 		        	SetAttribute(afterRows[j], "ID", ("attachList_TR_" + j));
 		        }
+		    }
+		    
+		    /* 2020-05-18 홍승비 - 현재 첨부파일 개수 + 새로 업로드할 첨부파일 개수를 계산하여 개수제한을 체크하는 함수 */
+		    function checkAttachFileCntLimit(pNewAttachFileCnt) {
+		    	var resultTxt = "YES";
+ 		    	var listview = new ListView();
+			    listview.LoadFromID("attachList"); 
+			    
+			    var orgAttachFileCnt =  listview.GetDataRows().length;
+			    if (document.getElementById("attachList_TR_noItems") != null) {
+			    	orgAttachFileCnt = 0;
+			    }
+			    
+			    var sumAttachFileCnt = orgAttachFileCnt + pNewAttachFileCnt;
+			    
+            	$.ajax({
+                	type : "GET",
+                	url : "/admin/ezApprovalG/getAttachLimit.do",
+                	async : false,
+                	data : {
+                		companyID : pCompanyID
+                	},
+                	success : function(resultCnt) {
+                		if (resultCnt != -1 && sumAttachFileCnt > resultCnt) { // -1이라면 무제한
+                			alert("<spring:message code='ezApprovalG.hsbAL12' arguments='" + resultCnt + "'/>");
+                			resultTxt = "NO";
+                		}
+                	},
+                	error : function() {
+                		alert("<spring:message code='ezApprovalG.hsbAL13' />");
+                		resultTxt = "NO";
+                	}
+                });
+            	
+            	return resultTxt;
 		    }
 		    
 		</script>
