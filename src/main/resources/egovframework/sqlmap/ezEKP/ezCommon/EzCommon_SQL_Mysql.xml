@@ -2525,4 +2525,21 @@
 		VALUES
 			(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #isUse#, #imgPath#, #parentId#, #formId#, #isAdd#, #isDel#) 
 	</insert>
+	
+	<select id="EzCommonDAO.checkHolidayCheckTenantConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useHolidayCheckYN'
+		AND
+			TENANT_ID = 0
+	</select>
+	<insert id="EzCommonDAO.insertHolidayCheckTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+	</insert>
 </sqlMap>

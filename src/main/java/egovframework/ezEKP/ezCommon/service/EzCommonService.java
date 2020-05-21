@@ -218,6 +218,6 @@ public interface EzCommonService {
 	public void insertAnnualScheduleTenantConfig();
 
 	public void insertHalfOffAttitudeType();
-	
-}
 
+	public void insertHolidayCheckTenantConfig();	
+}

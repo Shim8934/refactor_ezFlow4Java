@@ -1754,5 +1754,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			}
 		}
 	}
-	
+
+	@Override
+	public void insertHolidayCheckTenantConfig() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useHolidayCheckYN");
+		map.put("propertyValue", "0");
+		map.put("description", "0: 휴일 출/퇴근 체크 미사용, 1: 휴일 출/퇴근 체크 사용");
+		map.put("configName", "휴일 출/퇴근 체크 사용여부");
+		map.put("configType", "근태관리");
+		map.put("regdate", "2020-05-21 00:00:00");
+
+		ezCommonDAO.insertHolidayCheckTenantConfig(map);
+	}	
 }

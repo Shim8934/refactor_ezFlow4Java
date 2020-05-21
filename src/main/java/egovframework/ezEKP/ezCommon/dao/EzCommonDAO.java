@@ -1340,4 +1340,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertHalfOffAttitudeType",map);
 		}
 	}
+
+	public void insertHolidayCheckTenantConfig(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkHolidayCheckTenantConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("useHolidayCheckYN tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertHolidayCheckTenantConfig",map);
+		}
+	}
 }
