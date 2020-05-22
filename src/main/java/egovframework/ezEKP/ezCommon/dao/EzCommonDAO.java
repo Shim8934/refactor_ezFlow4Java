@@ -514,4 +514,24 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			update("EzCommonDAO.updateAprTmpAttachViewOrder");
 		}
 	}
+
+	public void addDocStateIntoLastLines() {
+		try {
+			select("EzCommonDAO.checkDocStateIntoLastLines");
+		} catch (Exception e) {
+			logger.debug("TBL_LASTDEPTLINE docState column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.updateDocStateIntoLastLines");
+		}
+	}
+
+	public void addDocStateIntoLastDeptLines() {
+		try {
+			select("EzCommonDAO.checkDocStateIntoLastDeptLines");
+		} catch (Exception e) {
+			logger.debug("TBL_LASTDEPTLINE docState column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.updateDocStateIntoLastDeptLines");
+		}
+	}
 }

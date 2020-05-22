@@ -154,6 +154,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addAprAttachViewOrder(); // 2020-03-23 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (진행문서)
     	ezCommonService.addAprEndAttachViewOrder(); // 2020-03-25 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (완료문서)
     	ezCommonService.addAprTmpAttachViewOrder(); // 2020-03-26 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (임시문서)
+		ezCommonService.addDocStateIntoLastLines();
+		ezCommonService.addDocStateIntoLastDeptLines();
     	
     	logger.debug("init ended.");
     }

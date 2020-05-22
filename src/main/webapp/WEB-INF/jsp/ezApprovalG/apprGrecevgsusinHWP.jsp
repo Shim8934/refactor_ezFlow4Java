@@ -872,7 +872,8 @@
 		        				docID    : pDocID, 
 		        				userID 	 : pUserID,
 		        				formID   : pFormID,
-		        				mode     : ""
+		        				mode     : "",
+								docState : pDocState
 		        				},
 		        		success: function(xml){
 		        			result = loadXMLString(xml);

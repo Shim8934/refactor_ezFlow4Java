@@ -40,7 +40,7 @@ public interface EzApprovalGService {
 
 	public String getProxyUser(String id, String lang, int tenantID, String offset) throws Exception;
 
-	public String getAprLineInfoDB(String docID, String flag, String userID, String formID, String companyID, int tenantID, String isUsed, String beforeDocID, String mode) throws Exception;
+	public String getAprLineInfoDB(String docID, String flag, String userID, String formID, String companyID, int tenantID, String isUsed, String beforeDocID, String mode, String docState) throws Exception;
 	
 	public String getListHeader(String listCode, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -76,7 +76,7 @@ public interface EzApprovalGService {
 	
 	public String getAprType(String approvalFlag, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset, String reDraftFlag, String isUsed, String beforeDocID, String mode) throws Exception;
+	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset, String reDraftFlag, String isUsed, String beforeDocID, String mode, String docState) throws Exception;
 	
 	public String getTempList(String userID, String formID, String companyID, String lang, int tenantID) throws Exception;
 	

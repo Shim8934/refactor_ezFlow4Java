@@ -781,5 +781,37 @@
 		ADD COLUMN 
 			VIEWORDER  bigint(10) DEFAULT NULL 
 	</statement>
+
+	<select id="EzCommonDAO.checkDocStateIntoLastLines">
+		SELECT
+			docState
+		FROM
+			tbl_lastaprline
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateDocStateIntoLastLines">
+		ALTER TABLE
+			TBL_LASTAPRLINE
+		ADD COLUMN
+			docState VARCHAR(12) NOT NULL,
+		DROP PRIMARY KEY,
+		ADD PRIMARY KEY (`TENANT_ID`, `COMPANYID`, `USERID`(255), `FORMID`, `APRMEMBERSN`, `docState`)
+	</statement>
+
+	<select id="EzCommonDAO.checkDocStateIntoLastDeptLines">
+		SELECT
+			docState
+		FROM
+			TBL_LASTDEPTLINE
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateDocStateIntoLastDeptLines">
+		ALTER TABLE
+			TBL_LASTDEPTLINE
+		ADD COLUMN
+			docState VARCHAR(12) NOT NULL,
+		DROP PRIMARY KEY,
+		ADD PRIMARY KEY (`TENANT_ID`, `COMPANYID`, `USERID`(255), `FORMID`, `RECEIPTPOINTID`(255), `docState`)
+	</statement>
 	
 </sqlMap>

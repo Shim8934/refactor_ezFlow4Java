@@ -2311,6 +2311,8 @@
 	            	TENANT_ID = #v_TENANTID#
 	            AND
 					COMPANYID = #companyID#
+				AND
+					docState = #docState#
 	            ORDER BY 
 	            	APRMEMBERSN DESC 
             ]]>
@@ -22242,14 +22244,16 @@
 			TENANT_ID= #v_TENANTID#
 		AND
 			COMPANYID = #companyID#
+		AND
+			docState = #docState#
    </delete>
    
    <insert id="EzApprovalG.insertLastDeptLine" parameterClass="Map">
    	    INSERT INTO 
    	    	TBL_LASTDEPTLINE 
-   	    (    UserID,       FormID,     ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID) 
+   	    (    UserID,       FormID,     ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID, docState)
    	    (SELECT 
-   	    	#v_USERID# , #v_FORMID# , ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN,     'N',     ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, NULL,        ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID
+   	    	#v_USERID# , #v_FORMID# , ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN,     'N',     ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, NULL,        ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID, #docState#
 		 FROM 
 		 	TBL_RECEIPTPOINTINFO 
 		 WHERE 
@@ -22271,14 +22275,16 @@
         	TENANT_ID = #v_TENANTID#
         AND
         	COMPANYID = #companyID#
+        AND
+        	docstate = #docState#
    </delete>
    
    <insert id="EzApprovalG.insertLastAprLine" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_LASTAPRLINE 
-   		(     UserID,      FormID,    AprMemberSN, AprType, AprState, AprMemberID,   AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID) 
+   		(     UserID,      FormID,    AprMemberSN, AprType, AprState, AprMemberID,   AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID, docState)
    		(SELECT 
-   			#v_USERID# , #v_FORMID#, AprMemberSN, AprType,    '001',    AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath,     NULL,          NULL,    ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID 
+   			#v_USERID# , #v_FORMID#, AprMemberSN, AprType,    '001',    AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath,     NULL,          NULL,    ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID, #docState#
    		 FROM 
    		 	TBL_APRLINEINFO 
    		 WHERE 
