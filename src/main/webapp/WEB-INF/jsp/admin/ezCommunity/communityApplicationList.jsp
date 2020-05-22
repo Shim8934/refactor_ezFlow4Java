@@ -484,7 +484,9 @@
 			
 			// 폐쇄승인 리스트 승인 버튼 이벤트 메소드
 			function closeBtnClick(code) {
-				if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
+				
+				/* 2020-05-22 홍승비 - 관리자의 커뮤니티 폐쇄와 폐쇄 승인 시 메세지를 분리 */
+				if (confirm("<spring:message code = 'ezCommunity.hsbAd01' />")) {
 					$.ajax({
 						type : "GET",
 						dataType : "json",
