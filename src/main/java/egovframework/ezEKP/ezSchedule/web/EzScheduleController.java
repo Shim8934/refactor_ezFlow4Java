@@ -3554,7 +3554,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 	
     /* 협업 - 그룹웨어 일정 데이터 연동 */
 	@RequestMapping(value = "/ezSchedule/workspaceScheduleGetList.do", method = RequestMethod.POST, produces="application/json;charset=utf-8")
-	public String workspaceScheduleGetList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) throws Exception {
+	@ResponseBody
+	public List<ScheduleInfoVO> workspaceScheduleGetList(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("workspaceScheduleGetList started.");
 	
 		String userId = request.getParameter("USERID");
@@ -3572,121 +3573,121 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginVO = loginService.selectUser(loginVO);
 		loginVO.setOffset(ezCommonService.selectUserGetTimeZone(userId, tenantId));
 		
-		List<ScheduleInfoVO> sList = null;
-		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
-		String indiList = "'" + userId + "'";
+		String idList = "";
+		String indiList = "";
+		String pidList = "";
+		String pidListSub = "";
+		String indiListSub = "";
 		
-		try {
-			List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(loginVO.getId(), loginVO.getPrimary(), loginVO.getTenantId() ,loginVO.getCompanyID());
+		if(startDate != null && !startDate.equals("")) {
+			String[] sDate = startDate.split("-");
+			String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
+			String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
 			
-			for(int i = 0; i < tList.size(); i++){
-				if(i == 0){
-					indiList += ",";
-				}			
-				ScheduleSecretaryVO data = tList.get(i);			
-				indiList += "'" + data.getSecId() + "'";
-				
-				if(i != tList.size()-1){
-					indiList += ",";
-				}	
-			}
-			
-			String pidList = "'" + loginVO.getDeptID() + "'," + "'" + loginVO.getCompanyID() + "'";
-			String chkStartDate = "";
-			String chkEndDate = "";
-			
-			String utcStartTime = "";
-			String utcEndTime = "";
-			
-			if (keyword == null) keyword = "";
-			if (startDate == null) startDate = "";
-			if (endDate == null) endDate = "";			
-			chkStartDate = startDate;
-			chkEndDate = endDate;
-			
-			if ((startDate == null || startDate.equals("") || endDate == null || endDate.equals(""))) {
-				String utcTime = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Date now = sdf.parse(utcTime);
-				
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(now);
-				
-				cal.add(Calendar.MONTH, -3);
-				startDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), loginVO.getOffset(), false).substring(0, 10);
-				
-				cal.setTime(now);
-				cal.add(Calendar.MONTH, 3);
-				endDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), loginVO.getOffset(), false).substring(0, 10);
-			}
-			
-			startDate = startDate + " 00:00:00";
-			endDate = endDate + " 23:59:59";
-			utcStartTime = commonUtil.getDateStringInUTC(startDate, loginVO.getOffset(), true);
-			utcEndTime = commonUtil.getDateStringInUTC(endDate, loginVO.getOffset(), true);
-			
-			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId() , loginVO.getCompanyID());
-			
-			for(int i = 0; i < gList.size(); i++){
-				if(i == 0){
-					pidList += ",";
-				}			
-				ScheduleGroupListVO data = gList.get(i);			
-				pidList += "'" + data.getGroupId() + "'";
-				
-				if(i != gList.size()-1){
-					pidList += ",";
-				}	
-			}
-			
-			List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(loginVO.getId(), loginVO.getPrimary(), loginVO.getTenantId(), loginVO.getCompanyID());
-			
-			for(int i = 0; i < dList.size(); i++){
-				if(i == 0){
-					pidList += ",";
-				}			
-				ScheduleDeptVO data = dList.get(i);			
-				pidList += "'" + data.getDeptId() + "'";
-				
-				if(i != dList.size()-1){
-					pidList += ",";
-				}	
-			}
-			
-			List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(loginVO.getId(), loginVO.getPrimary(), loginVO.getTenantId(), loginVO.getCompanyID());
-			
-			for(int i = 0; i < cList.size(); i++){
-				if(i == 0){
-					pidList += ",";
-				}			
-				ScheduleCumulerVO data = cList.get(i);			
-				pidList += "'" + data.getDeptId() + "'";
-				
-				if(i != cList.size()-1){
-					pidList += ",";
-				}	
-			}			
-				
-			sList = ezScheduleService.getScheduleListForWorkspace(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, keyword.trim(), loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getId(), loginVO.getDeptID());
-			
-			Collections.sort(sList, new EzScheduleCompareUtilPublic());
-			
-			startDate = startDate.substring(0,10);
-			endDate = endDate.substring(0,10);
-			if (chkStartDate.equals("") && !chkStartDate.equals(startDate)) {
-				startDate = chkStartDate;
-				endDate = chkEndDate;
-			}
-			
-			ObjectMapper mapper = new ObjectMapper();
-			String jsonStr = mapper.writeValueAsString(sList);
-			
-			modelMap.addAttribute("scheduleList", jsonStr);
-		} catch (Exception e) {
-			e.printStackTrace();
+			startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
 		}
+		
+		if(endDate != null && !endDate.equals("")) {
+			String[] eDate = endDate.split("-");		
+			String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
+			String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
+			
+			endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
+		}
+		
+		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+		String utcStartTime = commonUtil.getDateStringInUTC(startDate, loginVO.getOffset(), true);
+		String utcEndTime = commonUtil.getDateStringInUTC(endDate, loginVO.getOffset(), true);
+		
+		List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(loginVO.getId(), loginVO.getPrimary(), loginVO.getTenantId() ,loginVO.getCompanyID());
+		List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(loginVO.getId(), loginVO.getPrimary(), loginVO.getTenantId() ,loginVO.getCompanyID());
+		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(loginVO.getId(), loginVO.getPrimary(), loginVO.getTenantId() ,loginVO.getCompanyID());
+		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId(), loginVO.getCompanyID());
+		
+		if (idList.equals("T") || idList.equals("")) {
+			indiList = "'" + loginVO.getId() + "'";
+			
+			if(tList != null && tList.size()>0){
+				for (int i = 0; i < tList.size(); i++) {
+					if (i == 0) {
+						indiListSub += ",";
+					}			
+					ScheduleSecretaryVO data = tList.get(i);			
+					indiListSub += "\'" + data.getSecId()+ "\',";			
+				}				
+			}
+			
+			pidList = "'" + loginVO.getDeptID() + "'," + "'" + loginVO.getCompanyID() + "'";
+			
+			
+			if(dList != null && dList.size()>0){
+				for (int i = 0; i < dList.size(); i++) {
+						if (i == 0) {
+							pidListSub += ",";
+						}	
+					ScheduleDeptVO data = dList.get(i);			
+					pidListSub += "\'" + data.getDeptId()+ "\',";				
+				}				
+			}
+			
+			if(cList != null && cList.size()>0 ){
+				for (int i = 0; i < cList.size(); i++) {							
+					if(dList == null || dList.size()<=0){
+						if (i == 0) {
+							pidListSub += ",";
+						}	
+					}
+					ScheduleCumulerVO data = cList.get(i);			
+					pidListSub += "\'" + data.getDeptId()+ "\',";				
+				}				
+			}
+			
+			for (int i = 0; i < gList.size(); i++) {
+				if((dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
+					if (i == 0) {
+						pidListSub += ",";
+					}
+				}
+					ScheduleGroupListVO data = gList.get(i);			
+					pidListSub += "\'" + data.getGroupId() + "\',";
+					
+					/*if (i != gList.size()-1) {
+						pidListSub += ",";
+					}*/
+				}
+			
+			if(indiListSub.equals("") || indiListSub == null){
+				indiListSub = ",\'\'";
+			}else{				
+				indiListSub = indiListSub.substring(0, indiListSub.length()-1);
+			}
+			
+			indiList += indiListSub;
+			
+			if(pidListSub.equals("") || pidListSub == null){
+				pidListSub = ",\'\'";
+			}else{				
+				pidListSub = pidListSub.substring(0, pidListSub.length()-1);
+			}
+			
+			pidList += pidListSub;
+			
+		} else if(idList.equals("chkAllFalse")) {
+			indiList = "";
+			pidList = "\'\'";
+		} else if (idList.equals("P")) {
+			indiList = "'" + loginVO.getId() + "'";
+			pidList = "";
+		} else {
+			pidList = idList;
+		}
+			
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleListForWorkspace(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, keyword.trim(), loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getId(), loginVO.getDeptID());
+		
+		Collections.sort(sList, new EzScheduleCompareUtilPublic());
+		
 		logger.debug("workspaceScheduleGetList ended.");
-		return "json";
+		return sList;
 	}
 	
 	/**
