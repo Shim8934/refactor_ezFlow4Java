@@ -109,17 +109,26 @@
 				var commuDesc = $("#searchType").find("option[value='C_ClubDesc']");
 				var commuCR = $("#searchType").find("option[value='C_CloseReason']");
 				
+				/* 2020-05-25 홍승비 - IE 브라우저 대응 옵션값 추가, 제거로 변경 */
 				if (selectedTabId == "closeCommu") { // 폐쇄승인
-					commuDesc.css("display", "none"); // 커뮤니티소개
-					commuDesc.attr("selected", false);
-					commuCR.css("display", ""); // 폐쇄사유
-					commuCR.attr("selected", false);
+
+					 // 커뮤니티소개 제거
+					if (commuDesc.length > 0) {
+						commuDesc.remove();
+					}
+					 // 폐쇄사유 추가
+					$("#searchType").append("<option value='C_CloseReason'><spring:message code = 'ezCommunity.t71' /></option>");
+					
 					commuName.attr("selected", true); // 커뮤니티이름 (default)
 				} else { // 신청승인
-					commuDesc.css("display", ""); // 커뮤니티소개
-					commuDesc.attr("selected", false);
-					commuCR.css("display", "none"); // 폐쇄사유
-					commuCR.attr("selected", false);
+					
+					 // 폐쇄사유 제거
+					if (commuCR.length > 0) {
+						commuCR.remove();
+					}
+					 // 커뮤니티소개 추가
+					$("#searchType").append("<option value='C_ClubDesc'><spring:message code = 'ezCommunity.t2008' /></option>");
+					
 					commuName.attr("selected", true); // 커뮤니티 이름 (default)
 				}
 				
@@ -620,9 +629,8 @@
 				<span id="idSpan" class="idSpan">${idSpanValue}</span>
 				<select id="searchType" name="QuerySelect" style="vertical-align: middle; height: 22px;">
 					<option selected value="C_ClubName"><spring:message code = 'ezCommunity.t9991' /></option>
-					<%-- 2020-01-06 홍승비 - 커뮤니티소개, 폐쇄사유 검색옵션 추가 --%>
-					<option value="C_ClubDesc"><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></option>
-					<option value="C_CloseReason" style="display:none;"><spring:message code = 'ezCommunity.t71' /></option>
+					<%-- 2020-01-06 홍승비 - 커뮤니티소개, 폐쇄사유 검색옵션 추가 (2020-05-25 홍승비 - 폐쇄사유 옵션 동적 추가/제거 형식으로 변경) --%>
+					<option value="C_ClubDesc"><spring:message code = 'ezCommunity.t2008' /></option>
 				</select>
 						
 				<input name="text" type="text" style="WIDTH:200px; vertical-align:middle; height: 22px;" id="searchValue" onkeydown="return keyword_onkeydown()"> 
