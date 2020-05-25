@@ -15,13 +15,13 @@
 				-webkit-margin-start:20px;
 			}
 			/* ellipisis 추가 */
-			.node_normal{
+			.node_normal {
 	    		overflow:hidden;
 	    		text-overflow:ellipsis;
 	    		display:inline-block;
 	    		width:135px;
 	    	}
-	    	.node_selected{
+	    	.node_selected {
 	    		overflow:hidden;
 	    		text-overflow:ellipsis;
 	    		display:inline-block;
@@ -463,6 +463,8 @@
 		                    objSpan.style.color = boardColor;
 		            }
 		            
+		            applyEllipsis();
+		            
 		            document.getElementById("rightfrm").style.height = "659px";
 		            if (chkPhotoBrd != "3") {
 		            	//2018-07-13 김보미 - 파라메터 추가
@@ -887,7 +889,7 @@
 	        			$("#spn_"+nodeId).css("width", customWidth+"px");
 	        		}
 	        	});
-	        }			
+	        }
 		</script>
 	</head>
 	
