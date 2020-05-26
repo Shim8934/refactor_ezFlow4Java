@@ -7,8 +7,14 @@
 		<title>admin_memberlist</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<style>
+			.radioTypeText {
+				vertical-align:text-bottom;
+			    margin-bottom:-2px;
+			    display:inline-block;
+			}
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		
 		<script type="text/javascript">
 		
 			/* 2020-01-14 홍승비 - 사용하지 않는 코드 정리 */
@@ -54,9 +60,9 @@
 					<th><spring:message code = 'ezCommunity.t31' /></th>
 					<td>
 						<input type="radio" name="flag" value="id" style="margin:0px 0px -2px 3px">
-		        		<label style="vertical-align:middle"><spring:message code = 'ezCommunity.t508' /></label>
+		        		<label class="radioTypeText"><spring:message code = 'ezCommunity.t508' /></label>
 		        		<input type="radio" name="flag" value="name" checked style="margin:0px 0px -2px 3px">
-		        		<label style="vertical-align:middle"><spring:message code = 'ezCommunity.t509' /></label>
+		        		<label class="radioTypeText"><spring:message code = 'ezCommunity.t509' /></label>
 		        		<input style="height:22px" name="ser" id ="ser" type="text">
 		        		<a class="imgbtn" style="vertical-align: middle;margin-top:2px"><span onClick="sendit()"><spring:message code = 'ezCommunity.t31' /></span></a>
 		        	</td>
