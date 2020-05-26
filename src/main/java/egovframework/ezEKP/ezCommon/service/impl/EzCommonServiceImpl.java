@@ -1653,6 +1653,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			}
 		}
 	}
+
+	@Override
+	public void createJmochaBigAttachDownloadLimit() throws Exception {
+		ezCommonDAO.createJmochaBigAttachDownloadLimit();
+	}
+	
+	@Override
+	public void insertMailBigSizeAttachLimit() throws Exception {
+		logger.debug("insertMailBigSizeAttachLimit started");
+		ezCommonDAO.insertMailBigSizeAttachLimit();
+		logger.debug("insertMailBigSizeAttachLimit ended");
+	}
 	
 	@Override
 	public void addIsBeforeDoc() throws Exception {

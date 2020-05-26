@@ -2300,6 +2300,47 @@
 	    FROM DUAL
 	]]>
 	</insert>
+	
+	<select id="EzCommonDAO.checkJmochaBigAttachDownloadLimit">
+		SELECT 
+			FILE_ID
+		FROM 
+			JMOCHA_BIGATTACH_DOWNLOAD_LIMIT
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.createJmochaBigAttachDownloadLimit">
+		CREATE TABLE JMOCHA_BIGATTACH_DOWNLOAD_LIMIT (
+		  "FILE_ID" NVARCHAR2(100) NOT NULL,
+		  "DOWNLOAD_COUNT" NUMBER,
+		  "LIMIT_COUNT" NUMBER,
+		  "TENANT_ID" NUMBER  DEFAULT 0 NOT NULL,
+		  CONSTRAINT "JMOCHA_BIGATTACH_DOWNLOAD_LIMIT_PK" PRIMARY KEY ("FILE_ID")
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkMailBigSizeAttachLimitTenantConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'MailBigSizeAttachLimitCount'
+		AND
+			TENANT_ID = 0
+	</select>
+	
+	<statement id="EzCommonDAO.insertMailBigSizeAttachLimit">
+   		INSERT ALL
+		    INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_NAME, CONFIG_TYPE) 
+		    VALUES (0, 'MailBigSizeAttachDownloadLimitCount', 0, '대용량첨부 다운로드 횟수 제한, 0일 경우 무제한', sysdate, '대용량첨부 다운로드 횟수 제한', '메일')
+		    INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_NAME, CONFIG_TYPE) 
+		    VALUES (0, 'MailBigSizeAttachLimitCount', 0, '대용량첨부 개수 제한, 0일 경우 무제한', sysdate, '대용량첨부 개수 제한', '메일')
+	    SELECT
+	    	*
+	    FROM DUAL
+	</statement>
 		
 	<select id="EzCommonDAO.checkAddIsBeforeDoc">
 		<![CDATA[

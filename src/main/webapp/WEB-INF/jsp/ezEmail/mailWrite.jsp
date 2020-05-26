@@ -103,6 +103,8 @@
 	    var g_showEnglishDisplay = "";
 	    var g_charsetCheck = "${charsetCheck}";
 	    var g_ReSendFlag = "${reSendFlag}";
+	    var BigSizeAttachLimitCount = "${bigSizeAttachLimitCount}";
+	    var BigSizeAttachDownloadLimitCount = "${bigSizeAttachDownloadLimitCount}";
 	    var BigSizeAttachMBSize = "${bigSizeMailAttachLimit}";
 	    var totBigSizeAttachMBSize = "${totBigSizeMailAttachLimit}";
 	    var totSizeAttachMBSize = "${mailAttachLimit}";
