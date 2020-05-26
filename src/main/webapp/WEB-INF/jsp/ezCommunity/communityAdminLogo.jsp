@@ -43,9 +43,9 @@
 				cursor:pointer;
 			}
 			.radioTypeText {
-				vertical-align: top;
-			    margin-top: 3px;
-			    display: inline-block;
+				vertical-align:text-bottom;
+			    margin-bottom:2px;
+			    display:inline-block;
 			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
