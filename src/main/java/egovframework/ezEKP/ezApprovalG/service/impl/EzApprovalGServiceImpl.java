@@ -13830,7 +13830,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
-        
+
         for (int i = 0; i < apprGAprLineVOList.size(); i++) {
 			sb.append(commonUtil.getQueryResult(apprGAprLineVOList.get(i)));
 		}
@@ -14004,7 +14004,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			    do {
                     map3.put("v_APRMEMBERSN", apprGAprLineVOList2.get(i).getAprMemberSN());
                     ezApprovalGDAO.updateAprLineInfo(map3);
-                } while (staATChamJo.equals(apprGAprLineVOList2.get(i)));
+                    i++;
+                } while (staATChamJo.equals(apprGAprLineVOList2.get(i - 1).getAprType()));
             }
 			
 			ezApprovalGDAO.setAprLineStateBanSongToStay(map);
