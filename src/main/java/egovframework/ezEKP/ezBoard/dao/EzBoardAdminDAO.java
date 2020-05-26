@@ -323,12 +323,6 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void saveBoardProperty3(Map<String, Object> map) throws Exception {		
 		update("EzBoardAdminDAO.saveBoardProperty3", map);
 	}
-
-	/* 2018-10-17 홍승비 - 모든 회사ID, 이름(다국어)을 리스트로 받아오는 쿼리 추가 */
-	@SuppressWarnings("unchecked")
-	public List<BoardPropertyVO> getCompanyList(Map<String, Object> map) throws Exception {
-		return (List<BoardPropertyVO>) list("EzBoardAdminDAO.getCompanyList", map);
-	}
 	
 	/* 2019-05-29 홍승비 - 하위부서 허용/불가여부 체크하여 게시판그룹의 관리자 권한 가져오는 쿼리 추가 */
 	public String checkIfBoardGroupAdmin2(Map<String, Object> map) throws Exception {

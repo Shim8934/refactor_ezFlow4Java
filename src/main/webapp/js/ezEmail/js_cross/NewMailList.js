@@ -240,6 +240,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_countryCode = SelectSingleNodeValue(XmlRows[Cnt], "countryCode");
                 var p_mailIP = SelectSingleNodeValue(XmlRows[Cnt], "mailIP");
                 var p_countryName = SelectSingleNodeValue(XmlRows[Cnt], "countryName");
+                var p_mailConfirm = SelectSingleNodeValue(XmlRows[Cnt], "mailConfirm");
                 var recipients = [];
             	var recipientsLen = 1;
                 
@@ -494,7 +495,11 @@ function MakeListInfoHTML(ConentObject) {
             						_TR.lastChild.appendChild(_img);
             					}
             				}
-                    	} 
+                    	}
+                    	
+                    	if (useMailConfirm == "YES" && p_mailConfirm == "true") {
+                            _TR.setAttribute("class", "mail_confirm");
+                    	}
                     	
                     	_TR.lastChild.appendChild(_TDColumSpan);
                     }
@@ -1175,7 +1180,7 @@ function MailListRefreshByTimeout() {
 
 function MailListRefresh() {
 	ContextMenuHidden();
-	
+
 	if (typeof(shareId) != "undefined" && shareId != "") {
 		parent.frames["left"].detailView(shareId);
 	} else {
@@ -1183,7 +1188,14 @@ function MailListRefresh() {
 	}
     
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
-        goToPageByNum(MailList.getAttribute("curPage"));
+    	// 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+        if (listContentArry.length > 0) {
+            for (var i = 1; i <= listContentArry.length; i++) {
+                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+            }
+        }
+    	
+    	goToPageByNum(MailList.getAttribute("curPage"));
     }
     else {
         if (listSubContentArry.length > 0) {
@@ -1213,6 +1225,14 @@ function MailListRefresh() {
             pGroupListClickObject.childNodes.item(0).childNodes.item(0).src = GroupminImg;
             var HeaderObject = document.getElementById("GroupSubHeader");
             var ContentObject = document.getElementById("GroupSubList");
+            
+            // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+            if (listContentArry.length > 0) {
+                for (var i = 1; i <= listContentArry.length; i++) {
+                    document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+                }
+            }
+            
             listSubContentArry = new Array();
             listContentArry = new Array();
             HeaderIni_SUB(HeaderObject);
@@ -1224,7 +1244,7 @@ function MailListRefresh() {
     }
     
     refreshUnreadCount();
-    
+
     // commented out to maintain the current preview content when the mail list is refreshed : dhlee
 //    prevShow_Clear();
 }
@@ -1392,20 +1412,16 @@ function event_listContextMenu(event) {
         EventMouseX = EventMouseX - Div_;
     }
     if (g_foldertype == "draft") {
-    	$("#ContextMenuDiv tbody :nth-child(3)").css("display","none");
+    	$("#ContextMenuDiv tbody #replyMenu").css("display","none");
     }
     
     var target = event.target ? event.target : event.srcElement;
     var targetTag = target.tagName;
 
     if (targetTag == 'SPAN'){ 
-		$("#ContextMenuDiv tbody :nth-child(9)").css("display","");
-		$("#ContextMenuDiv tbody :nth-child(10)").css("display","");
-		$("#ContextMenuDiv tbody :nth-child(11)").css("display","");
+		$("#ContextMenuDiv tbody #searchName, #searchInThisBoxByName, #searchAllBoxByName").css("display","");
 	} else {
-		$("#ContextMenuDiv tbody :nth-child(9)").css("display","none");
-	    $("#ContextMenuDiv tbody :nth-child(10)").css("display","none");
-	    $("#ContextMenuDiv tbody :nth-child(11)").css("display","none"); 	
+		$("#ContextMenuDiv tbody #searchName, #searchInThisBoxByName, #searchAllBoxByName").css("display","none");
 	}
 //    document.getElementById("mailPanel").style.display = "";
     document.getElementById("ContextMenuDiv").style.left = EventMouseX + "px";

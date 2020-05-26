@@ -314,11 +314,13 @@
 						var themeAuthsYList = "";
 						
 						themeAuthsY.forEach(function(item, index) {
-							if (item.userType) {
+							if (item.userType == 1) {
 								themeAuthsYList += ", " + item.userName;
 								themeAuthsYList += "(" + item.userDeptName + ")";
-							} else {
+							} else if (item.userType == 0) {
 								themeAuthsYList += ", " + item.userDeptName;
+							} else {
+								themeAuthsYList += ", " + item.userName;
 							}
 						});
 						
@@ -331,11 +333,13 @@
 						var themeAuthsNList = "";
 						
 						themeAuthsN.forEach(function(item, index) {
-							if (item.userType) {
+							if (item.userType == 1) {
 								themeAuthsNList += ", " + item.userName;
 								themeAuthsNList += "(" + item.userDeptName + ")";
-							} else {
+							} else if (item.userType == 0) {
 								themeAuthsNList += ", " + item.userDeptName;
+							} else {
+								themeAuthsNList += ", " + item.userName;
 							}
 						});
 						

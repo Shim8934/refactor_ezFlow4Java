@@ -5,7 +5,6 @@ import java.util.List;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO;
-import egovframework.let.user.login.vo.LoginDeviceVO;
 
 public interface MOptionService {
 
@@ -17,7 +16,7 @@ public interface MOptionService {
 
 	public void updateOption(String userId, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId) throws Exception;
 
-	public List<MPortalTimeLineVO> getTimeLineList(MCommonVO info, String sessionDate, String listCnt) throws Exception;
+	public List<MPortalTimeLineVO> getTimeLineList(MCommonVO info, String sessionDate, String listCnt, String approvalAccess, String boardAccess) throws Exception;
 
 	public MCommonVO commonInfoWeb(String serverName, String userId) throws Exception;
 	

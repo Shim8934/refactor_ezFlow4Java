@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -89,9 +88,6 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@Autowired
 	private CommonUtil commonUtil;
 
-	@Autowired
-	private Properties config;
-	
 	@Resource(name="EzPortalService")
 	private EzPortalService ezPortalService;
 	

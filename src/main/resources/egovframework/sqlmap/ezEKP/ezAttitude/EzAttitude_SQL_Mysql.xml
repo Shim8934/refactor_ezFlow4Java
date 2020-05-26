@@ -338,7 +338,9 @@
 				INNER JOIN 
 					tbl_attitude_type B 
 				ON 
-					(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
+				]]>
+					(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID AND ISDEL = 0)
+				<![CDATA[
 				INNER JOIN 
 					tbl_usermaster C
 				ON
@@ -2561,16 +2563,26 @@
 					A.TENANT_ID = #v_TENANTID#
 				AND
 					c.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
-				AND
-					A.DEPT_ID = #v_DEPTID#
+				<isNotEmpty prepend="AND" property="useAnnualScheduleYN">
+					<isEqual property="useAnnualScheduleYN" compareValue="1">
+					<![CDATA[
+						A.DEPT_ID = #v_DEPTID#
+					]]>
+					</isEqual>
+					<isEqual property="useAnnualScheduleYN" compareValue="2">
+					<![CDATA[
+						A.COMPANY_ID = #v_COMPANYID#
+					]]>
+					</isEqual>
+				</isNotEmpty>
 				<![CDATA[
 				AND  
 					(
-						(date_add(START_DATE, INTERVAL #v_OFFSETMIN# minute) >= #v_PSTARTDATE# and date_add(START_DATE, INTERVAL #v_OFFSETMIN# minute) <= #v_PENDDATE#) 
+						(START_DATE >= #v_PSTARTDATE# and START_DATE <= #v_PENDDATE#) 
 						or
-						(date_add(END_DATE, INTERVAL #v_OFFSETMIN# minute) >= #v_PSTARTDATE# and date_add(END_DATE, INTERVAL #v_OFFSETMIN# minute) < #v_PENDDATE#) 
+						(END_DATE >= #v_PSTARTDATE# and END_DATE < #v_PENDDATE#) 
 						or
-						(date_add(START_DATE, INTERVAL #v_OFFSETMIN# minute) < #v_PSTARTDATE# and date_add(END_DATE, INTERVAL #v_OFFSETMIN# minute) >= #v_PENDDATE#)
+						(START_DATE < #v_PSTARTDATE# and END_DATE >= #v_PENDDATE#)
 					)
 				]]>
 	</select>

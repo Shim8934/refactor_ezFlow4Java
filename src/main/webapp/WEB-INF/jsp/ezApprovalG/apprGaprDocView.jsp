@@ -672,6 +672,17 @@
 	        			SendMailToCancel_Function(GetCurrentlinelist);
 	        			var pAlertContent = strLang891 + "<br> " + strLang892;
 	        			OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+	        			
+	        			//2020-04-03 김정언 : 근태관리 연동양식일 경우 추가 - 강제회수
+	    		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+	    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-del-script').getAttribute("code");
+	    		        	var script = document.createElement("script");
+	    					script.type = "text/javascript";
+	    					script.innerHTML = code;
+	    					document.querySelector("head").appendChild(script);
+	    					
+	    		        	attitude_annual_conn(pDocID);
+	    		        }
 	        		}
 	        		else if (RtnVal == "ERR01") {
 	        			var pAlertContent = strLang895;
@@ -738,7 +749,9 @@
 		          <li id="btnhistory"><span onClick="btnhistory_onclick()" ><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 				  <li id="btnPrint" ><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()" ></span></li>
+				  <c:if test="${useExternalMailServer == 'NO'}">
                   <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()" ></span></li>
+                  </c:if>
 				  <c:if test="${useCabinet == 'YES'}">
 					<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 				  </c:if>

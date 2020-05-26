@@ -13,13 +13,9 @@ import org.springframework.stereotype.Component;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
-import egovframework.let.utl.fcc.service.CommonUtil;
 	
 @Component
 public class EzBoardScheduler {
-	@Autowired
-	private CommonUtil commonUtil;
-	
 	@Autowired
 	private Properties config;
 	

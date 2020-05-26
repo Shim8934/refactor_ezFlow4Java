@@ -240,6 +240,24 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.selectMultiLoginUser", map);
 	}
 	
+	public boolean getPermissionGroupAccessYN(Map<String, Object> map) throws Exception {
+		int permit = (int) select("EzCommonDAO.getPermissionGroupAccessYN", map);
+		
+		if (permit > 0) {
+			return true;
+		} else {
+			if (map.get("applySubDeptYN").toString().equals("true")) {
+				permit = (int) select("EzCommonDAO.getPermissionGroupAccessSubDeptY", map);
+				
+				if (permit > 0) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	public void createTblUserMultiLogin() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblUserMultiLogin");
@@ -501,8 +519,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	}
 
 	public void insertPortalThemePortletInitdata() {
-		// TODO Auto-generated method stub
-
 		//insert init data
 		List<OrganDeptVO> initList = ezNewPortalDAO.getInitCompanyList();
 		
@@ -618,6 +634,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	public void createBoardLike() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardLike");
+		} catch (Exception e) {
+			logger.debug("tbl_board_like doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createBoardLike");
+		}
+	}
+	
+	public void addBoardLikeFlag() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardInfoLikeFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info likeFlag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addBoardLikeFlag");
+		}
+	}
 
 	public void addQuickLinkLinkOrder() {
 		try {
@@ -638,7 +674,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addComCloseCompanyId");
 		}
 	}
-
+	
 	public void addWebfolderTotalLimit() {
 		try {
 			select("EzCommonDAO.checkWebfolderTotalLimit");
@@ -684,6 +720,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_memo_config addMemoextensionColumns doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.addMemoExtensionColumns");
+		}
+	}
+	
+	public void addSurveyAlamColums() {
+		try {
+			select("EzCommonDAO.checkSurveyAlamColums");
+		} catch (Exception e) {
+			logger.debug("tbl_survey addSurveyAlamColums doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addSurveyAlamColums");
 		}
 	}
 		
@@ -978,6 +1024,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<CountryVO> getCountryInfo(Map<String, Object> map) throws Exception {
 		return (List<CountryVO>) list("EzCommonDAO.getCountryInfo",map);
 	}
@@ -1000,6 +1047,41 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			
 			update("EzCommonDAO.snMenuAuth");
 		}
+	}
+	
+	public void addBoardManageTypeColumn() {
+		try {
+			select("EzCommonDAO.checkBoardManageTypeColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_board_boardmanage type doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addBoardManageTypeColumn");
+		}
+	}
+
+	public void createPersonalPopupUser() {
+		try {
+			select("EzCommonDAO.checkTblPsPopupUser");
+		} catch (Exception e) {
+			logger.debug("tbl_ps_popup_user doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblPsPopupUser");
+		}
+	}
+	
+	public void addSurveyMailSentFlagColumn() {
+		try {
+			select("EzCommonDAO.checkSurveyMailSentFlagColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_survey mail_sent_flag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addSurveyMailSentFlagColumn");
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LoginVO> getPermissionGroupMembers(Map<String, Object> map) throws Exception {
+		return (List<LoginVO>) list("EzCommonDAO.getPermissionGroupMembers", map);
 	}
 
 	public void addSnThemeAuth() {
@@ -1103,6 +1185,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				logger.debug(keyVal);
 				update("EzCommonDAO." + keyVal);
 			}
+
+		}
+	}
+			
+	public void insertTblTenantConfig(Map<String, Object> map) {
+		try {
+			if (getTenantConfig(map) == null) {throw new Exception(); }
+		} catch (Exception e) {
+			logger.debug("tbl_tenant_config. add config...");
+			insertUseSession(map);
 		}
 	}
 
@@ -1160,6 +1252,120 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertSurveyMenuName", map);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void addIsBeforeDoc() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddIsBeforeDoc");
+		} catch (Exception e) {
+			logger.debug("tbl_historydocinfo ISBEFOREDOC column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAddIsBeforeDoc");
+		}
+	}
+
+	public void addBeforeDocUrl() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddBeforeDocUrl");
+		} catch (Exception e) {
+			logger.debug("tbl_historydocinfo BEFOREDOCURL column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAddBeforeDocUrl");
+		}
+	}
+
+	public void addAprAttachViewOrder() throws Exception {
+		try {
+			select("EzCommonDAO.checkAprAttachViewOrder");
+		} catch (Exception e) {
+			logger.debug("tbl_aprattachinfo VIEWORDER column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAprAttachViewOrder");
+		}
+	}
+	
+	public void addAprEndAttachViewOrder() throws Exception {
+		try {
+			select("EzCommonDAO.checkAprEndAttachViewOrder");
+		} catch (Exception e) {
+			logger.debug("tbl_endattachinfo VIEWORDER column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAprEndAttachViewOrder");
+		}
+	}
+	
+	public void addAprTmpAttachViewOrder() throws Exception {
+		try {
+			select("EzCommonDAO.checkAprTmpAttachViewOrder");
+		} catch (Exception e) {
+			logger.debug("tbl_tmpattachinfo VIEWORDER column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAprTmpAttachViewOrder");
+		}
+	}
+	
+	public void insertUseExternalMailServerConfig(Map<String, Object> map) throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.checkMailTenantConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("useExternalMailServer tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertSurveyTenantConfig",map);
+		}
+	}
+	
+	public void insertReBebuOpinionCode(Map<String, Object> map) {
+		String companyId = checkReBebuOpinionCode(map);
+		
+		try {
+			if (companyId == null) {
+				logger.debug("ReBebuOpinionCode data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertReBebuOpinionCode", map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public String checkReBebuOpinionCode(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkReBebuOpinionCode", map);
+	}
+
+	public void addFormAprOptionColumn() {
+		try {
+			select("EzCommonDAO.checkFormAprOptionColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_forminfo APROPTION column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateFormAprOptionColumn");
+		}
+	}
+
+	public void insertAnnualScheduleTenantConfig(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkAnnualScheduleTenantConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("useAnnualScheduleYN tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertAnnualScheduleTenantConfig",map);
+		}
+	}
+
+	public void insertHalfOffAttitudeType(Map<String, Object> map) {
+		String companyId = (String) select("EzCommonDAO.checkHalfOffAttitudeTypeForCompany", map);
+
+		if (companyId == null) {
+			logger.debug("attitude_type 'half off' doesn't exist. insert data...");
+			insert("EzCommonDAO.insertHalfOffAttitudeType",map);
+		}
+	}
+
+	public void insertHolidayCheckTenantConfig(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkHolidayCheckTenantConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("useHolidayCheckYN tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertHolidayCheckTenantConfig",map);
 		}
 	}
 }

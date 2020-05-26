@@ -433,7 +433,7 @@
 			});
 			
 			function scheduleGetLunarUse() {
-				if (uselang != 3) {
+				if (uselang == 1) {
 				    $.ajax({
 			    		type : "GET",
 			    		dataType : "text",
@@ -550,7 +550,7 @@
 						for (var i = 0; i < result.length; i++) {
 							$("#" + result[i].typeId).text(result[i].count);
 							
-							if (result[i].typeId == "A02" || result[i].typeId == "A11" || result[i].typeId == "A12" || result[i].typeId == "A13") {
+							if (result[i].typeId == "A02" || result[i].typeId == "A11" || result[i].typeId == "A12" || result[i].typeId == "A13" || result[i].typeId == "A21") {
 								$("#F" + result[i].typeId).text(result[i].count);
 							}
 						}
@@ -1449,7 +1449,7 @@
 				    		} else if (vo.dateType == 3) {
 				    			objTr.append("<td><div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16) + "</span>\u00a0~\u00a0<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span></div></td>");
 				    		} else if (vo.dateType == 4 && vo.typeId != 'A04') {
-				    			objTr.append($("<td></td>").append($("<div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
+			    				objTr.append($("<td></td>").append($("<div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
 				    		} else if (vo.typeId == 'A04') {
 				    			if (vo.dateType == 4) {
 				    				objTr.append($("<td></td>").append($("<div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
@@ -1998,7 +1998,12 @@
 					    			
 						    		//일시
 					    			if (vo.dateType == 4 && vo.typeId != 'A04') {
-						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").html(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10) + " " +  iconStr);
+					    				//2020-03-13 김정언 : 반반차
+					    				if(vo.typeId == 'A21') {
+					    					$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").html(vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16)+ "</span>\u00a0~\u00a0" + vo.endDate.substring(0,11) + "<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span>" + " " +  iconStr);
+					    				} else {
+							    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").html(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10) + " " +  iconStr);
+					    				}
 						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").attr("attitudeid", vo.attitudeId);
 						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").attr("typeid", vo.typeId);
 						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").css("cursor", "pointer");
@@ -2279,6 +2284,13 @@
 			        <dl class="timeIcconDL">
 			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
 			            <dd class="timeIconDD"><spring:message code="ezAttitude.t256"/><span class="timeCountR" id="FA13">0</span></dd>
+			        </dl>
+			    </c:if>
+			    <!-- 2020-03-12  김정언 : 반반차 -->
+			    <c:if test="${A21typeInfo.isuse eq '1' }">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm02.png"></dt>
+			            <dd class="timeIconDD"><spring:message code="ezAttitude.kje04"/><span class="timeCountR" id="FA21">0</span></dd>
 			        </dl>
 			    </c:if>
 		    </div>

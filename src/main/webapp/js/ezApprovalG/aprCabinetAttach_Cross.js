@@ -332,6 +332,8 @@ function onreadystatechange_RecList_lv() {
                     OpenAlertUI(strLang555);
                     return null;
             }
+            makePageSelPageCA(); //2020-04-28 : 문서첨부 페이지네이션 
+
             hideProgress();
             g_CabListXmlhttp = null;
         }
@@ -361,7 +363,7 @@ function InsertToRecListView_lv(Resultxml) {
         }
 
 
-        var xmlDoc
+        var xmlDoc;
         if (CrossYN()) {
             var xmlLIST = createXmlDom();
             var nodeToImport = xmlLIST.importNode(ListViewData, true);
@@ -374,6 +376,8 @@ function InsertToRecListView_lv(Resultxml) {
             xmlDoc.appendChild(ListViewData);
         }
 
+        xmlDoc = insertSortInfoToHeader(g_HeaderInfoXml, xmlDoc);
+
         if (document.getElementById("lvtDoclist").innerHTML != "") document.getElementById("lvtDoclist").innerHTML = "";
         var DocList = new ListView();                           
         DocList.SetID("DocList");                               
@@ -384,8 +388,10 @@ function InsertToRecListView_lv(Resultxml) {
         DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");      
         DocList.SetOrderbyCol("COLNAME");
         DocList.SetTitleIdx(0);                                  
+        DocList.SetTitle("RecTitle");
         DocList.SetSecurityFlag(true);
-        DocList.DataSource(ListViewData);                             
+        DocList.SetSecurityIdx(13);
+        DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");                          
         DocList = null;
 
@@ -428,4 +434,112 @@ function openergetDocInfo_lv() {
     else {
         GetDocDeliveryList();
     }
+}
+
+//2020-04-28 : 문서첨부 페이지네이션 
+var BlockSize = 10;
+function makePageSelPageCA() {
+    var strtext;
+    var PagingHTML = "";
+    pageNum = curpage;
+    document.getElementById("tblPageRayer").innerHTML = "";
+
+    strtext = "<div class='pagenavi'>";
+    PagingHTML += strtext;
+    if (totalPage > 1 && pageNum != 1) {
+        strtext = "<span class='btnimg'><a onclick= 'return goToPageByNumCA(1)'>";
+        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+        PagingHTML += strtext;
+    } else {
+        strtext = "<span class='btnimg'><a >";
+        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+        PagingHTML += strtext;
+    }
+    if (totalPage > BlockSize) {
+        if (pageNum > BlockSize) {
+            strtext = "<span class='btnimg' onclick= 'return selbeforeBlockCA()'>";
+            strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' /></span>";
+            PagingHTML += strtext;
+        }
+        else {
+            strtext = "<span class='btnimg'>";
+            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+            PagingHTML += strtext;
+        }
+    }
+    else {
+        strtext = "<span class='btnimg'>";
+        strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+        PagingHTML += strtext;
+    }
+    var MaxNum;
+    var i;
+    var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+    if (totalPage >= (startNum + parseInt(BlockSize))) {
+        MaxNum = (startNum + parseInt(BlockSize)) - 1;
+    }
+    else {
+        MaxNum = totalPage;
+    }
+    for (i = startNum; i <= MaxNum; i++) {
+        if (i == pageNum) {
+            strtext = "<span class='on'>" + i + "</span>";
+            PagingHTML += strtext;
+        }
+        else {
+            strtext = "<span onclick = 'goToPageByNumCA(" + i + ")'>" + i + "</span>";
+            PagingHTML += strtext;
+        }
+    }
+    if (i == 1) {
+    	strtext = "<span class='on'>" + i + "</span>";
+        PagingHTML += strtext;
+    }
+    if (totalPage > BlockSize) {
+        if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+            strtext = "<span class='btnimg' onclick='return selafterBlockCA()'>";
+            strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'/></span>";
+            PagingHTML += strtext;
+        }
+        else {
+            strtext = "<span class='btnimg'>";
+            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+
+            PagingHTML += strtext;
+        }
+    }
+    else {
+        strtext = "<span class='btnimg'>";
+        strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+        PagingHTML += strtext;
+    }
+    if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+        strtext = "<span class='btnimg' onclick='return goToPageByNumCA(" + totalPage + ")'>";
+        strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif'/></span>";
+        PagingHTML += strtext;
+    }
+    else {
+        strtext = "<span class='btnimg'>";
+        strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+        PagingHTML += strtext;
+    }
+    PagingHTML += "</div>";
+
+    document.getElementById("tblPageRayer").innerHTML = PagingHTML;
+}
+function goToPageByNumCA(Value) {
+    curpage = Value;
+    pageNum = curpage;
+    makePageSelPageCA();
+    openergetDocInfo_lv();
+}
+function selbeforeBlockCA() {
+    var pageNum = curpage;
+    pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+    goToPageByNumCA(pageNum);
+}
+function selafterBlock() {
+	var pageNum = curpage;
+    pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+    goToPageByNumCA(pageNum);
 }

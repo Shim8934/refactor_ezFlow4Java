@@ -52,6 +52,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 	@Resource(name = "jspw")
     private String jspw;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONArray getMainMailList(MCommonVO info, Locale locale, String filter, String listSize) {
         
@@ -222,6 +223,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONArray getFolderList(MCommonVO info, Locale locale, String folderId) {
 		LOGGER.debug("MEmailServiceImpl getFolderList started.");

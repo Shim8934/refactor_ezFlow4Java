@@ -141,6 +141,7 @@
 	        var docNumZeroCnt = "<c:out value ='${docNumZeroCnt}'/>";
 
 	        //원문공개정보
+            var useOpenGov = "<c:out value ='${useOpenGov}'/>";
 			var basis = "<c:out value ='${basis}' />";
             var reason = "<c:out value ='${reason}' />";
             var listOpenFlag = "<c:out value ='${listOpenFlag}' />";
@@ -148,6 +149,9 @@
 	        
 	        var curDocNum = "";
 	        
+	        var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
+			var formAprOption = "<c:out value='${formAprOption}'/>";
+			
 		    function getNextDocList() {
 		        NextDocID = "";
 		        if (selectedDocID != "") {
@@ -343,6 +347,10 @@
 				        var isTrue = HwpCtrl.LoadFile(URL, false);
 
 				        FieldsAvailable(isTrue);
+				        
+				        if(useExternalMailServer == "NO") {
+				    		$("#btnMail").css("display","");
+				    	}
 				    }
 		            HwpCtrl.ChangeMode(3);
 		
@@ -541,7 +549,7 @@
 			        if (pDraftFlag == "HABYUI") {
 			            setMenuBar("btntotaldocinfo", false);
 			        }
-			    }
+				}
 			    //SignCheck();
 			}
 	
@@ -1356,6 +1364,10 @@
                                 limitDate = ret[31];
 							}
 
+							//2020-05-08 : 결재정보확인 시 문서정보 저장 후 문서 반영
+							setApprDocInfo();	
+							SaveFile();
+
 			                SummaryFlag = true;
 			                savexmlhttp = null;
 			                HwpCtrl.ChangeMode(3);
@@ -1435,7 +1447,7 @@
 	                        <li id="btnSave"><span onclick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
-	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
+	                        <li id="btnMail" style="display:none"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
 	                        <li id="btnHelper" style="display: none"><span onclick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t157'/></span></li>
 	                        <li id="tbtnTotalSave" style="display: none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	                    </ul>

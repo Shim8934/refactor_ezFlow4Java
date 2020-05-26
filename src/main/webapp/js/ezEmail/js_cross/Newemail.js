@@ -442,6 +442,14 @@ function Read_StatusChange(pGubun) {
     
     xmlHTTP.open("POST", url, false);
     xmlHTTP.send(xmlpara);
+    
+    // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+    if (listContentArry.length > 0) {
+        for (var i = 1; i <= listContentArry.length; i++) {
+            document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+        }
+    }
+    
     MailListRefresh();
 }
 var mail_movecopy_cross_dialogArguments = new Array();
@@ -500,6 +508,15 @@ function move_mail_onclick_Complete(moveUrl) {
             szItemID += document.getElementById(listSubContentArry[i]).getAttribute("_href") + ",";
         }
         Mail_CopyPostSend(moveUrl["cmd"], moveUrl["url"], szItemID);
+        
+        // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+        if (listContentArry.length > 0) {
+            for (var i = 1; i <= listContentArry.length; i++) {
+                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+            }
+        }
+        
+        MailListRefresh();
     }
 }
 var xmlhttp_mailCopy;
@@ -1588,6 +1605,15 @@ function mail_export() {
 	} else {
 		mailExport_start();
 	}
+	
+	// 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+    if (listContentArry.length > 0) {
+        for (var i = 1; i <= listContentArry.length; i++) {
+            document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+        }
+    }
+    
+    MailListRefresh();
     
 }
 
@@ -1840,6 +1866,13 @@ function toggle_flag() {
         flagXmlHttp.open("POST", url, true);
         flagXmlHttp.onreadystatechange = event_toggle_flag_end;
         flagXmlHttp.send(xmlDom);
+        
+        // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+        if (listContentArry.length > 0) {
+            for (var i = 1; i <= listContentArry.length; i++) {
+                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+            }
+        }
     }
     catch (e) { }
 }
@@ -2000,4 +2033,56 @@ function mailPrevIframeSize() {
 	previewmail_info = (Math.ceil((previewmail_info + sentDateStr)/10) * 10) + 10;
 	
 	$("#ifrmPreView" + pPreviewShow_HOW).height(pPreview - previewmail_info + 15);
+}
+
+function mailConfirm_flag_btn() {
+	var listContentArrLen = listContentArry.length;
+	var listSubContentArrLen = listSubContentArry.length;
+	var pSelectItem  = "";
+	var url = "/ezEmail/mailSetFlagForMailConfirm.do";
+	
+	if (listContentArrLen == 0 && listSubContentArrLen == 0) {
+        alert(strLang42);
+        return;
+    }
+
+	if (listContentArrLen > 0) {
+        for (var i = 0; i < listContentArry.length; i++) {
+            pSelectItem += document.getElementById(listContentArry[i]).getAttribute("_href") + ";";
+        }
+    } else {
+        pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+    }
+
+    flagXmlHttp = createXMLHttpRequest();
+    var xmlDom = createXmlDom();
+    console.log(pSelectItem);
+    var objNode;
+    createNodeInsert(xmlDom, objNode, "DATA");
+    createNodeAndInsertText(xmlDom, objNode, "ITEMID", pSelectItem);
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		url += "?shareId=" + encodeURIComponent(shareId);
+	}
+    
+    try {
+        flagXmlHttp.open("POST", url, true);
+        flagXmlHttp.onreadystatechange = function() {
+        	if(flagXmlHttp.readyState == 4) {
+        		if (flagXmlHttp.responseText == "OK") {
+        			mailConfirm_line(); 
+        		} else {
+        			alert(strLang321);
+        		}
+        	}
+        };
+        flagXmlHttp.send(xmlDom);
+    }
+    catch (e) { }
+}
+
+function mailConfirm_line() {
+	listContentArry.forEach(function(val, key) {
+		$("#"+val).toggleClass("mail_confirm");
+	});
 }

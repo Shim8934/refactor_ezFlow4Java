@@ -1,8 +1,6 @@
 package egovframework.ezEKP.ezLadder.vo;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class LadderBmUserVO {
 	/** 테넌트 id */

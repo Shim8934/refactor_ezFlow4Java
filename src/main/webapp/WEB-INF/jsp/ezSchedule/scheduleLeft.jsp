@@ -457,7 +457,7 @@
 	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
 	    	<div class="left_title" title="<spring:message code='ezSchedule.t1010'/>">
 	    		<spring:message code='ezSchedule.t1010'/>
-	        	<span id='Schedule_Config' onClick="Function_Flag('11')" class="sub_iconLNB tree_leftconfig" title="<spring:message code='ezSchedule.t1012'/>"></span>
+	        	<span id='Schedule_Config' onClick="Function_Flag('11')" class="sub_iconLNB tree_leftconfig" title="<spring:message code='ezPersonal.t999900007'/>"></span>
 	        </div>
 	        <div class="btn_writeBox" onclick="WriteSchedule()">
 	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span><spring:message code='ezSchedule.t214'/></p>

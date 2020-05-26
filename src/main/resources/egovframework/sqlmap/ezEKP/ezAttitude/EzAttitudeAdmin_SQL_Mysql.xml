@@ -1699,6 +1699,7 @@
 							   WHEN C.TYPE_ID = 'A11' THEN 1
 				               WHEN C.TYPE_ID = 'A12' THEN 0.5
 				               WHEN C.TYPE_ID = 'A13' THEN 0.5
+				               WHEN C.TYPE_ID = 'A21' THEN 0.25
 							   ELSE 0
 							END)
 				), 0) as annualCnt,
@@ -1758,7 +1759,7 @@
 			AND
 			 	A.CN = C.WRITER_ID)
 			AND 
-			 	(C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+			 	(C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13' OR C.TYPE_ID = 'A21')
 			AND 
 				C.MODAPPL <> '5'
 			AND 

@@ -351,7 +351,9 @@
 				INNER JOIN 
 					tbl_attitude_type B 
 				ON 
-					(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
+				]]>
+					(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID AND ISDEL = 0)
+				<![CDATA[
 				INNER JOIN 
 					tbl_usermaster C
 				ON
@@ -2871,17 +2873,27 @@
 				AND
 					A.TENANT_ID = #v_TENANTID#
 				AND
-					A.DEPT_ID = #v_DEPTID#
-				AND
 					c.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+				<isNotEmpty prepend="AND" property="useAnnualScheduleYN">
+					<isEqual property="useAnnualScheduleYN" compareValue="1">
+					<![CDATA[
+						A.DEPT_ID = #v_DEPTID#
+					]]>
+					</isEqual>
+					<isEqual property="useAnnualScheduleYN" compareValue="2">
+					<![CDATA[
+						A.COMPANY_ID = #v_COMPANYID#
+					]]>
+					</isEqual>
+				</isNotEmpty>
 				<![CDATA[
 				AND  
 					(
-						(START_DATE + #v_OFFSETMIN# / (24 * 60) >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND START_DATE + #v_OFFSETMIN# / (24 * 60) <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+						(START_DATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND START_DATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
 						or
-						(END_DATE + #v_OFFSETMIN# / (24 * 60) >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND END_DATE + #v_OFFSETMIN# / (24 * 60) < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+						(END_DATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND END_DATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
 						or
-						(START_DATE + #v_OFFSETMIN# / (24 * 60) < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND END_DATE + #v_OFFSETMIN# / (24 * 60) >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+						(START_DATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND END_DATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
 					)
 				]]>
 	</select>

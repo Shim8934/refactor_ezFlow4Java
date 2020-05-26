@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: 10.0.102.8    Database: jmocha
 -- ------------------------------------------------------
@@ -14,23 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `approv_conn_forminfo`
---
-
-DROP TABLE IF EXISTS `approv_conn_forminfo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `approv_conn_forminfo` (
-  `formid` varchar(40) NOT NULL,
-  `connbizpflag` char(1) NOT NULL DEFAULT 'N',
-  `connallsflag` char(1) NOT NULL DEFAULT 'N',
-  `tenant_id` mediumint(9) NOT NULL,
-  `companyid` varchar(20) NOT NULL,
-  PRIMARY KEY (`formid`,`tenant_id`,`companyid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `approvconnscmc`
@@ -141,6 +124,26 @@ CREATE TABLE `james_mail_blob` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `james_mail_blob_new`
+--
+
+DROP TABLE IF EXISTS `james_mail_blob_new`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `james_mail_blob_new` (
+  `MAIL_BLOB_ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `MAIL_BYTES` longblob NOT NULL,
+  `MAIL_BODY_STRUCTURE` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `HEADER_BYTES` mediumblob NOT NULL,
+  `MAILBOX_ID` bigint(20) DEFAULT NULL,
+  `MAIL_UID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`MAIL_BLOB_ID`),
+  KEY `INDEX_MESSAGE_BLOB_MSG_ID` (`MAIL_BLOB_ID`),
+  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `james_mail_deleted_id`
 --
 
@@ -195,9 +198,15 @@ CREATE TABLE `james_mail_search` (
   `MAIL_UID` bigint(20) DEFAULT NULL,
   `IMPORTANCE` int(1) DEFAULT NULL,
   `MESSAGE_ID` varchar(500) DEFAULT NULL,
+  `MAIL_IP` varchar(200) DEFAULT NULL,
+  `COUNTRY_CODE` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`MAIL_SEARCH_ID`),
   KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
   KEY `MESSAGE_ID` (`MESSAGE_ID`(191)),
+  KEY `IDX_SENDER` (`SENDER`(191)),
+  KEY `IDX_RECIPIENT` (`RECIPIENT`(191)),
+  KEY `IDX_ATTACHED_FILENAME` (`ATTACHED_FILENAME`(191)),
+  KEY `IDX_SUBJECT` (`SUBJECT`(191)),
   CONSTRAINT `james_mail_search_ibfk_1` FOREIGN KEY (`MAILBOX_ID`, `MAIL_UID`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -422,6 +431,22 @@ CREATE TABLE `jmocha_alias` (
   `alias_address` varchar(100) NOT NULL,
   PRIMARY KEY (`target_address`,`alias_address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jmocha_bigattach_download_limit`
+--
+
+DROP TABLE IF EXISTS `jmocha_bigattach_download_limit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_bigattach_download_limit` (
+  `file_id` varchar(100) NOT NULL,
+  `download_count` int(10) DEFAULT NULL,
+  `limit_count` int(10) DEFAULT NULL,
+  `tenant_id` mediumint(9) NOT NULL,
+  PRIMARY KEY (`file_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1234,6 +1259,58 @@ CREATE TABLE `jmocha_tenant_servername` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_user_distribution`
+--
+
+DROP TABLE IF EXISTS `jmocha_user_distribution`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_user_distribution` (
+  `DOMAIN_NAME` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) NOT NULL,
+  `OWNER_ID` varchar(100) NOT NULL,
+  `DISCLOSURE_POLICY` varchar(100) NOT NULL,
+  `EXPLAINATION` varchar(100) DEFAULT NULL,
+  `DL_END_DATE` date DEFAULT NULL,
+  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`),
+  KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jmocha_user_distribution_apply`
+--
+
+DROP TABLE IF EXISTS `jmocha_user_distribution_apply`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_user_distribution_apply` (
+  `DOMAIN_NAME` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) NOT NULL,
+  `APPLICANT_ID` varchar(100) NOT NULL,
+  `APPLICANT_DATE` date NOT NULL,
+  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`APPLICANT_ID`),
+  KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jmocha_user_distribution_member`
+--
+
+DROP TABLE IF EXISTS `jmocha_user_distribution_member`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_user_distribution_member` (
+  `DOMAIN_NAME` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) NOT NULL,
+  `MEMBER_ID` varchar(100) NOT NULL,
+  `REG_DATE` date NOT NULL,
+  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`MEMBER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_user_local_info`
 --
 
@@ -1386,6 +1463,33 @@ CREATE TABLE `jmocha_user_quota` (
   `MAX_STORAGE` double DEFAULT 0,
   `WARN_STORAGE` double DEFAULT 0,
   PRIMARY KEY (`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ked.tbl_endaprdocattachinfo_old`
+--
+
+DROP TABLE IF EXISTS `ked.tbl_endaprdocattachinfo_old`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ked.tbl_endaprdocattachinfo_old` (
+  `DOCID` varchar(80) NOT NULL,
+  `ATTACHSN` bigint(10) NOT NULL,
+  `ATTACHDOCNAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ATTACHDOCURL` varchar(1020) DEFAULT NULL,
+  `SUBATTACHYN` varchar(4) DEFAULT NULL,
+  `ATTACHUSERID` varchar(400) DEFAULT NULL,
+  `ATTACHUSERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ATTACHUSERDEPTID` varchar(400) DEFAULT NULL,
+  `ATTACHUSERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ATTACHUSERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ATTACHUSERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ATTACHUSERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ATTACHUSERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`ATTACHSN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1913,6 +2017,7 @@ CREATE TABLE `talk_tblmessage` (
   `Type` varchar(10) DEFAULT NULL,
   `CompID` varchar(32) NOT NULL,
   `FileLimit` varchar(14) DEFAULT NULL,
+  `DelMsg` varchar(1) DEFAULT 'N',
   PRIMARY KEY (`RoomID`,`Mseq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1937,7 +2042,8 @@ CREATE TABLE `talk_tblmessage_backup` (
   `Size` int(11) DEFAULT NULL,
   `Type` varchar(10) DEFAULT NULL,
   `CompID` varchar(32) NOT NULL,
-  `FileLimit` varchar(14) DEFAULT NULL
+  `FileLimit` varchar(14) DEFAULT NULL,
+  `DelMsg` varchar(1) DEFAULT 'N'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2237,6 +2343,23 @@ CREATE TABLE `tbl_addjobmasterforhistory` (
   `VERSIONDATE` date NOT NULL,
   PRIMARY KEY (`CN`,`DEPTID`,`TENANT_ID`,`VERSIONDATE`),
   KEY `IDX_VERSIONDATE` (`VERSIONDATE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_admin_access_ip`
+--
+
+DROP TABLE IF EXISTS `tbl_admin_access_ip`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_admin_access_ip` (
+  `IPNO` int(11) NOT NULL AUTO_INCREMENT,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `IPADDRESS` varchar(100) NOT NULL,
+  `ACCESS` varchar(10) DEFAULT 'NO',
+  `EXPLANATION` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`IPNO`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2721,6 +2844,7 @@ DROP TABLE IF EXISTS `tbl_aprattachinfo`;
 CREATE TABLE `tbl_aprattachinfo` (
   `DOCID` varchar(80) NOT NULL,
   `ATTACHFILESN` bigint(10) NOT NULL,
+  `VIEWORDER` bigint(10) DEFAULT NULL,
   `ATTACHFILENAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHFILEHREF` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHFILESIZE` double(126,0) DEFAULT NULL,
@@ -2737,7 +2861,7 @@ CREATE TABLE `tbl_aprattachinfo` (
   `ATTACHUSERDEPTNAME2` varchar(400) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`ATTACHFILESN`)
+  PRIMARY KEY (`DOCID`,`ATTACHFILESN`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3089,9 +3213,9 @@ DROP TABLE IF EXISTS `tbl_attitude_annual`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_attitude_annual` (
   `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
-  `MONTHLY_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '월차 수',
-  `ANNUAL_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '연차 수',
-  `ADDITIONAL_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '추가 연차 수',
+  `MONTHLY_HOLIDAY_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '월차 수',
+  `ANNUAL_HOLIDAY_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '연차 수',
+  `ADDITIONAL_HOLIDAY_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '추가 연차 수',
   `JOIN_DATE` datetime DEFAULT NULL COMMENT '입사일',
   `COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
   `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
@@ -3163,8 +3287,8 @@ DROP TABLE IF EXISTS `tbl_attitude_annual_history`;
 CREATE TABLE `tbl_attitude_annual_history` (
   `ANNUAL_HISTORY_ID` int(20) NOT NULL AUTO_INCREMENT COMMENT '연차수정기록ID',
   `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
-  `ORIGIN_ANNUAL_CNT` decimal(4,1) NOT NULL COMMENT '기존연차수',
-  `CHANGE_ANNUAL_CNT` decimal(4,1) NOT NULL COMMENT '수정연차수',
+  `ORIGIN_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '기존연차수',
+  `CHANGE_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '수정연차수',
   `CHANGE_REASON` varchar(2000) DEFAULT NULL COMMENT '수정사유',
   `CHANGE_DATE` datetime NOT NULL COMMENT '수정일자',
   `CHANGE_USER_ID` varchar(80) NOT NULL COMMENT '수정자ID',
@@ -3330,6 +3454,82 @@ CREATE TABLE `tbl_attitude_modappl_history` (
   `CHANGE_DATE_TYPE` varchar(45) CHARACTER SET utf8mb4 DEFAULT NULL,
   PRIMARY KEY (`MOD_CNT`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_refresh`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_refresh`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_refresh` (
+  `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
+  `TOTAL_REFRESH_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '총 휴가 수',
+  `START_DATE` datetime DEFAULT NULL COMMENT '발생년도',
+  `END_DATE` datetime DEFAULT NULL COMMENT '종료년도',
+  `COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
+  PRIMARY KEY (`USER_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_refresh_history`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_refresh_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_refresh_history` (
+  `REFRESH_HISTORY_ID` int(20) NOT NULL AUTO_INCREMENT COMMENT '리프레시휴가수정기록ID',
+  `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
+  `ORIGIN_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '기존휴가수',
+  `CHANGE_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '수정휴가수',
+  `CHANGE_REASON` varchar(2000) DEFAULT NULL COMMENT '수정사유',
+  `CHANGE_DATE` datetime NOT NULL COMMENT '수정일자',
+  `CHANGE_USER_ID` varchar(80) NOT NULL COMMENT '수정자ID',
+  `COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
+  PRIMARY KEY (`REFRESH_HISTORY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_special`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_special`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_special` (
+  `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
+  `TOTAL_SPECIAL_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '총 휴가 수',
+  `COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
+  PRIMARY KEY (`USER_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_attitude_special_history`
+--
+
+DROP TABLE IF EXISTS `tbl_attitude_special_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_attitude_special_history` (
+  `SPECIAL_HISTORY_ID` int(20) NOT NULL AUTO_INCREMENT COMMENT '특별휴가수정기록ID',
+  `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
+  `ORIGIN_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '기존휴가수',
+  `CHANGE_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '수정휴가수',
+  `CHANGE_REASON` varchar(2000) DEFAULT NULL COMMENT '수정사유',
+  `CHANGE_DATE` datetime NOT NULL COMMENT '수정일자',
+  `CHANGE_USER_ID` varchar(80) NOT NULL COMMENT '수정자ID',
+  `COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
+  PRIMARY KEY (`SPECIAL_HISTORY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5722,6 +5922,76 @@ CREATE TABLE `tbl_dailyformcountlog` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_dbhosp_conndata`
+--
+
+DROP TABLE IF EXISTS `tbl_dbhosp_conndata`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_dbhosp_conndata` (
+  `SN` bigint(10) NOT NULL AUTO_INCREMENT,
+  `PARAM1` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM2` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM3` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM4` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM5` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM6` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM7` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM8` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM9` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM10` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CREATEDATE` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`SN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_dbhosp_connhist`
+--
+
+DROP TABLE IF EXISTS `tbl_dbhosp_connhist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_dbhosp_connhist` (
+  `SN` bigint(10) NOT NULL AUTO_INCREMENT,
+  `CONNKEY` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM1` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM2` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM3` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM4` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM5` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM6` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM7` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM8` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM9` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARAM10` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `IT_KEY` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CREATEDATE` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`SN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_dbhosp_connstate`
+--
+
+DROP TABLE IF EXISTS `tbl_dbhosp_connstate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_dbhosp_connstate` (
+  `SN` bigint(10) NOT NULL AUTO_INCREMENT,
+  `CONNKEY` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CONNSTATE` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SUCCESSYN` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CONNMSG` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DOCID` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CREATEID` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `CREATEDATE` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`SN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_deletecabinetinfo`
 --
 
@@ -6104,7 +6374,8 @@ CREATE TABLE `tbl_endaprdocinfo` (
   `WRITERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`)
+  PRIMARY KEY (`DOCID`,`TENANT_ID`,`COMPANYID`),
+  KEY `idx_ORDERBY` (`ENDDATE`,`DOCNO`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6275,6 +6546,7 @@ DROP TABLE IF EXISTS `tbl_endattachinfo`;
 CREATE TABLE `tbl_endattachinfo` (
   `DOCID` varchar(80) NOT NULL,
   `ATTACHFILESN` bigint(10) NOT NULL,
+  `VIEWORDER` bigint(10) DEFAULT NULL,
   `ATTACHFILENAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHFILEHREF` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHFILESIZE` double(126,0) DEFAULT NULL,
@@ -6291,7 +6563,7 @@ CREATE TABLE `tbl_endattachinfo` (
   `ATTACHUSERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`ATTACHFILESN`)
+  PRIMARY KEY (`DOCID`,`ATTACHFILESN`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6636,6 +6908,22 @@ CREATE TABLE `tbl_expendaprline_old` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_find_pwd`
+--
+
+DROP TABLE IF EXISTS `tbl_find_pwd`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_find_pwd` (
+  `sabun` varchar(100) NOT NULL,
+  `req_date` datetime DEFAULT NULL,
+  `CERTIFICATION_NUM` varchar(100) DEFAULT NULL,
+  `CERTIFICATION` varchar(100) DEFAULT NULL,
+  `PHONE_NUM` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_form_autorule`
 --
 
@@ -6726,6 +7014,7 @@ CREATE TABLE `tbl_formconninfo` (
   `CONNINFO` varchar(40) NOT NULL,
   `DESCRIPTION` varchar(100) DEFAULT NULL,
   `UPPERNODE` varchar(100) NOT NULL,
+  `TENANT_ID` mediumint(9) NOT NULL DEFAULT 0,
   PRIMARY KEY (`SN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6811,7 +7100,8 @@ CREATE TABLE `tbl_forminfo` (
   `DRAFTALLFLAG` varchar(4) DEFAULT 'N',
   `formxslt` longtext DEFAULT NULL COMMENT '연동에서 XML을 HTML로 변환하기 위해 필요한 XSLT정보',
   `passaprlineflag` varchar(4) DEFAULT 'N' COMMENT '기결재통과플래그',
-  `FORMGUIDE` varchar(2000) DEFAULT NULL,
+  `FORMGUIDE` longtext DEFAULT NULL,
+  `aproption` varchar(300) DEFAULT NULL COMMENT '양식 세부설정',
   PRIMARY KEY (`FORMID`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6974,9 +7264,11 @@ CREATE TABLE `tbl_historydocinfo` (
   `CHANGEUSERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `CHANGEUSERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `CHANGEUSERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ISBEFOREDOC` varchar(4) DEFAULT NULL,
+  `BEFOREDOCURL` varchar(1020) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`CHANGESN`)
+  PRIMARY KEY (`DOCID`,`CHANGESN`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -8065,6 +8357,41 @@ CREATE TABLE `tbl_opengovmodifyhistory` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_password_policy`
+--
+
+DROP TABLE IF EXISTS `tbl_password_policy`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_password_policy` (
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANY_ID` varchar(100) NOT NULL,
+  `ENG_CHAR_TYPE` varchar(10) DEFAULT 'N',
+  `USE_ENG_CAPITAL_LETTER` varchar(10) DEFAULT 'N',
+  `USE_ENG_SMALL_LETTER` varchar(10) DEFAULT 'N',
+  `USE_NUMBER` varchar(10) DEFAULT 'N',
+  `USE_SPECIAL_CHAR` varchar(10) DEFAULT 'N',
+  PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_password_policy_pattern`
+--
+
+DROP TABLE IF EXISTS `tbl_password_policy_pattern`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_password_policy_pattern` (
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANY_ID` varchar(100) NOT NULL,
+  `USE_PATTERN_COUNT` int(11) NOT NULL,
+  `NUMBER_OF_CHAR` int(11) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`,`USE_PATTERN_COUNT`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_permissiongroupinfo`
 --
 
@@ -8961,6 +9288,7 @@ CREATE TABLE `tbl_portal_menu` (
   `icon_url` varchar(200) DEFAULT NULL COMMENT '메뉴 아이콘 이미지 경로',
   `default_order` int(11) DEFAULT NULL COMMENT '제공된 메뉴의 기본 순서',
   `menucode` varchar(100) DEFAULT NULL,
+  `size_` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='메뉴 정보 테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -8999,6 +9327,7 @@ CREATE TABLE `tbl_portal_menu_comp` (
   `menu_used` int(11) DEFAULT 0 COMMENT '활성화(Y), 비활성화(N)',
   `company_lang` varchar(45) DEFAULT NULL,
   `company_order` int(11) DEFAULT NULL,
+  `menu_ipused` int(11) DEFAULT 0 COMMENT '활성화(Y), 비활성화(N)',
   PRIMARY KEY (`company_id`,`tenant_id`,`menu_id`),
   KEY `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
   CONSTRAINT `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
@@ -9210,6 +9539,8 @@ CREATE TABLE `tbl_portal_theme_comp` (
   `theme_id` int(11) NOT NULL DEFAULT 0 COMMENT '테마 아이디',
   `theme_used` int(4) DEFAULT 0 COMMENT '활성화(Y), 비활성화(N)',
   `theme_default` int(4) DEFAULT 0 COMMENT '기본(Y), 기본아님(N)',
+  `theme_birthused` int(4) DEFAULT 1,
+  `theme_bestempused` int(4) DEFAULT 1,
   PRIMARY KEY (`company_id`,`tenant_id`,`theme_id`),
   KEY `FK_tbl_portal_theme_comp_theme_id_tbl_portal_theme_theme_id` (`theme_id`),
   CONSTRAINT `FK_tbl_portal_theme_comp_theme_id_tbl_portal_theme_theme_id` FOREIGN KEY (`theme_id`) REFERENCES `tbl_portal_theme` (`theme_id`)
@@ -9722,6 +10053,28 @@ CREATE TABLE `tbl_ps_notice` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_ps_noticeimage`
+--
+
+DROP TABLE IF EXISTS `tbl_ps_noticeimage`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_ps_noticeimage` (
+  `NOTICEIMGID` varchar(76) CHARACTER SET utf8mb4 NOT NULL,
+  `NOTICEIMGNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+  `NOTICEIMGNAME2` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+  `FILENAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+  `IMAGEPATH` varchar(1024) CHARACTER SET utf8mb4 NOT NULL,
+  `REGUSERID` varchar(40) CHARACTER SET utf8mb4 NOT NULL,
+  `REGDATE` varchar(200) CHARACTER SET utf8mb4 NOT NULL,
+  `COMPANYID` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+  `ISUSE` bigint(10) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`NOTICEIMGID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_ps_popup`
 --
 
@@ -9992,6 +10345,21 @@ CREATE TABLE `tbl_qs_itemseq` (
   `ITEM_NO` bigint(10) DEFAULT 0,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   PRIMARY KEY (`TENANT_ID`,`BRD_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_query_history`
+--
+
+DROP TABLE IF EXISTS `tbl_query_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_query_history` (
+  `SEQ` int(11) NOT NULL AUTO_INCREMENT,
+  `QUERYSTR` varchar(1020) DEFAULT NULL,
+  `QUERYDATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`SEQ`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -11769,6 +12137,26 @@ CREATE TABLE `tbl_specialcataloginfo_cab` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_specialcataloginfo_doc`
+--
+
+DROP TABLE IF EXISTS `tbl_specialcataloginfo_doc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_specialcataloginfo_doc` (
+  `DOCID` varchar(80) NOT NULL,
+  `SERIALNO` varchar(12) NOT NULL,
+  `SC1` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SC2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SC3` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`DOCID`,`SERIALNO`,`TENANT_ID`,`COMPANYID`),
+  KEY `FK_TBL_SPECIALCATALOGINFO_DOC` (`TENANT_ID`,`COMPANYID`,`DOCID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_specialcataloginfo_rec`
 --
 
@@ -12568,6 +12956,25 @@ CREATE TABLE `tbl_tmpaprdocattachinfo` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_tmpaprdocgroupinfo`
+--
+
+DROP TABLE IF EXISTS `tbl_tmpaprdocgroupinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_tmpaprdocgroupinfo` (
+  `OWNERID` varchar(255) NOT NULL,
+  `SN` bigint(10) NOT NULL,
+  `MAINDOCID` varchar(20) DEFAULT NULL,
+  `SUBDOCID` varchar(20) DEFAULT NULL,
+  `ORDERNUM` mediumint(5) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_tmpaprdocinfo`
 --
 
@@ -12676,6 +13083,7 @@ CREATE TABLE `tbl_tmpattachinfo` (
   `OWNERID` varchar(255) NOT NULL,
   `SN` bigint(10) NOT NULL,
   `ATTACHFILESN` bigint(10) NOT NULL,
+  `VIEWORDER` bigint(10) DEFAULT NULL,
   `ATTACHFILENAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHFILEHREF` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHFILESIZE` double(126,0) DEFAULT NULL,
@@ -12693,7 +13101,7 @@ CREATE TABLE `tbl_tmpattachinfo` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL COMMENT '원문정보공개 첨부파일 플래그',
   `FILEOPENFLAG` char(1) DEFAULT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`,`ATTACHFILESN`)
+  PRIMARY KEY (`OWNERID`,`SN`,`ATTACHFILESN`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -13935,8 +14343,7 @@ SET character_set_client = utf8;
  1 AS `FORMNAME2`,
  1 AS `URGENTAPPROVAL`,
  1 AS `companyName`,
- 1 AS `companyName2`,
- 1 AS `APRMEMBERISDEPTYN`*/;
+ 1 AS `companyName2`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -14039,8 +14446,7 @@ SET character_set_client = utf8;
  1 AS `FORMNAME2`,
  1 AS `URGENTAPPROVAL`,
  1 AS `companyName`,
- 1 AS `companyName2`,
- 1 AS `APRMEMBERISDEPTYN`*/;
+ 1 AS `companyName2`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -14273,7 +14679,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`ezEKP2017`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `vaprdoingdoclist` AS select `tbl_aprdocinfo`.`DOCID` AS `DOCID`,`tbl_aprdocinfo`.`FORMID` AS `FORMID`,`tbl_aprdocinfo`.`ORGDOCID` AS `ORGDOCID`,`tbl_aprdocinfo`.`DOCTYPE` AS `DOCTYPE`,case when `tbl_aprlineinfo`.`APRSTATE` = '000' then '017' else `tbl_aprdocinfo`.`DOCSTATE` end AS `DOCSTATE`,case when (`tbl_aprlineinfo`.`APRSTATE` = '000' and `tbl_aprdocinfo`.`FUNCTIONTYPE` <> '004') then '002' else `tbl_aprdocinfo`.`FUNCTIONTYPE` end AS `FUNCTIONTYPE`,`tbl_aprdocinfo`.`HREF` AS `HREF`,`tbl_aprdocinfo`.`DOCTITLE` AS `DOCTITLE`,`tbl_aprdocinfo`.`DOCNO` AS `DOCNO`,`tbl_aprdocinfo`.`HASATTACHYN` AS `HASATTACHYN`,`tbl_aprdocinfo`.`HASOPINIONYN` AS `HASOPINIONYN`,`tbl_aprdocinfo`.`STARTDATE` AS `STARTDATE`,`tbl_aprdocinfo`.`ENDDATE` AS `ENDDATE`,`tbl_aprdocinfo`.`WRITERID` AS `WRITERID`,`tbl_aprdocinfo`.`WRITERNAME` AS `WRITERNAME`,`tbl_aprdocinfo`.`WRITERJOBTITLE` AS `WRITERJOBTITLE`,`tbl_aprdocinfo`.`WRITERDEPTID` AS `WRITERDEPTID`,`tbl_aprdocinfo`.`WRITERDEPTNAME` AS `WRITERDEPTNAME`,`tbl_aprdocinfo`.`ISPUBLIC` AS `ISPUBLIC`,`tbl_aprdocinfo`.`WRITERNAME2` AS `WRITERNAME2`,`tbl_aprdocinfo`.`WRITERJOBTITLE2` AS `WRITERJOBTITLE2`,`tbl_aprdocinfo`.`WRITERDEPTNAME2` AS `WRITERDEPTNAME2`,`tbl_aprdocinfo`.`TENANT_ID` AS `TENANT_ID`,`tbl_aprdocinfo`.`COMPANYID` AS `COMPANYID`,`tbl_aprlineinfo`.`APRMEMBERSN` AS `APRMEMBERSN`,`tbl_aprlineinfo`.`APRTYPE` AS `APRTYPE`,`tbl_aprlineinfo`.`APRSTATE` AS `APRSTATE`,`tbl_aprlineinfo`.`APRMEMBERID` AS `APRMEMBERID`,`tbl_aprlineinfo`.`APRMEMBERNAME` AS `APRMEMBERNAME`,`tbl_aprlineinfo`.`APRMEMBERNAME2` AS `APRMEMBERNAME2`,`tbl_aprlineinfo`.`APRMEMBERJOBTITLE` AS `APRMEMBERJOBTITLE`,`tbl_aprlineinfo`.`APRMEMBERJOBTITLE2` AS `APRMEMBERJOBTITLE2`,`tbl_aprlineinfo`.`APRMEMBERDEPTID` AS `APRMEMBERDEPTID`,`tbl_aprlineinfo`.`APRMEMBERDEPTNAME` AS `APRMEMBERDEPTNAME`,`tbl_aprlineinfo`.`APRMEMBERDEPTNAME2` AS `APRMEMBERDEPTNAME2`,`tbl_aprlineinfo`.`RECEIVEDDATE` AS `RECEIVEDDATE`,`tbl_expaprdocinfo`.`FORMNAME` AS `FORMNAME`,`tbl_expaprdocinfo`.`FORMNAME2` AS `FORMNAME2`,`tbl_expaprdocinfo`.`URGENTAPPROVAL` AS `URGENTAPPROVAL`,`tbl_deptmaster`.`EXTENSIONATTRIBUTE3` AS `companyName`,`tbl_deptmaster`.`COMPNM2` AS `companyName2`,`tbl_aprlineinfo`.`APRMEMBERISDEPTYN` AS `APRMEMBERISDEPTYN` from (((`tbl_aprdocinfo` join `tbl_aprlineinfo` on(`tbl_aprdocinfo`.`DOCID` = `tbl_aprlineinfo`.`DOCID` and `tbl_aprdocinfo`.`TENANT_ID` = `tbl_aprlineinfo`.`TENANT_ID` and `tbl_aprdocinfo`.`COMPANYID` = `tbl_aprlineinfo`.`COMPANYID`)) join `tbl_expaprdocinfo` on(`tbl_aprdocinfo`.`DOCID` = `tbl_expaprdocinfo`.`DOCID` and `tbl_aprdocinfo`.`TENANT_ID` = `tbl_expaprdocinfo`.`TENANT_ID` and `tbl_aprdocinfo`.`COMPANYID` = `tbl_expaprdocinfo`.`COMPANYID`)) join `tbl_deptmaster` on(`tbl_aprdocinfo`.`COMPANYID` = `tbl_deptmaster`.`CN` and `tbl_aprdocinfo`.`TENANT_ID` = `tbl_deptmaster`.`TENANT_ID`)) where (`tbl_aprlineinfo`.`APRSTATE` = '002' or `tbl_aprlineinfo`.`APRSTATE` = '005' or `tbl_aprlineinfo`.`APRSTATE` = '000') and `tbl_aprdocinfo`.`STARTDATE` is not null */;
+/*!50001 VIEW `vaprdoingdoclist` AS select `tbl_aprdocinfo`.`DOCID` AS `DOCID`,`tbl_aprdocinfo`.`FORMID` AS `FORMID`,`tbl_aprdocinfo`.`ORGDOCID` AS `ORGDOCID`,`tbl_aprdocinfo`.`DOCTYPE` AS `DOCTYPE`,case when (`tbl_aprlineinfo`.`APRSTATE` = '002' and `tbl_aprlineinfo`.`APRTYPE` = '007') then '017' else `tbl_aprdocinfo`.`DOCSTATE` end AS `DOCSTATE`,case when (`tbl_aprlineinfo`.`APRSTATE` = '000' and `tbl_aprdocinfo`.`FUNCTIONTYPE` <> '004') then '002' else `tbl_aprdocinfo`.`FUNCTIONTYPE` end AS `FUNCTIONTYPE`,`tbl_aprdocinfo`.`HREF` AS `HREF`,`tbl_aprdocinfo`.`DOCTITLE` AS `DOCTITLE`,`tbl_aprdocinfo`.`DOCNO` AS `DOCNO`,`tbl_aprdocinfo`.`HASATTACHYN` AS `HASATTACHYN`,`tbl_aprdocinfo`.`HASOPINIONYN` AS `HASOPINIONYN`,`tbl_aprdocinfo`.`STARTDATE` AS `STARTDATE`,`tbl_aprdocinfo`.`ENDDATE` AS `ENDDATE`,`tbl_aprdocinfo`.`WRITERID` AS `WRITERID`,`tbl_aprdocinfo`.`WRITERNAME` AS `WRITERNAME`,`tbl_aprdocinfo`.`WRITERJOBTITLE` AS `WRITERJOBTITLE`,`tbl_aprdocinfo`.`WRITERDEPTID` AS `WRITERDEPTID`,`tbl_aprdocinfo`.`WRITERDEPTNAME` AS `WRITERDEPTNAME`,`tbl_aprdocinfo`.`ISPUBLIC` AS `ISPUBLIC`,`tbl_aprdocinfo`.`WRITERNAME2` AS `WRITERNAME2`,`tbl_aprdocinfo`.`WRITERJOBTITLE2` AS `WRITERJOBTITLE2`,`tbl_aprdocinfo`.`WRITERDEPTNAME2` AS `WRITERDEPTNAME2`,`tbl_aprdocinfo`.`TENANT_ID` AS `TENANT_ID`,`tbl_aprdocinfo`.`COMPANYID` AS `COMPANYID`,`tbl_aprlineinfo`.`APRMEMBERSN` AS `APRMEMBERSN`,`tbl_aprlineinfo`.`APRTYPE` AS `APRTYPE`,`tbl_aprlineinfo`.`APRSTATE` AS `APRSTATE`,`tbl_aprlineinfo`.`APRMEMBERID` AS `APRMEMBERID`,`tbl_aprlineinfo`.`APRMEMBERNAME` AS `APRMEMBERNAME`,`tbl_aprlineinfo`.`APRMEMBERNAME2` AS `APRMEMBERNAME2`,`tbl_aprlineinfo`.`APRMEMBERJOBTITLE` AS `APRMEMBERJOBTITLE`,`tbl_aprlineinfo`.`APRMEMBERJOBTITLE2` AS `APRMEMBERJOBTITLE2`,`tbl_aprlineinfo`.`APRMEMBERDEPTID` AS `APRMEMBERDEPTID`,`tbl_aprlineinfo`.`APRMEMBERDEPTNAME` AS `APRMEMBERDEPTNAME`,`tbl_aprlineinfo`.`APRMEMBERDEPTNAME2` AS `APRMEMBERDEPTNAME2`,`tbl_aprlineinfo`.`RECEIVEDDATE` AS `RECEIVEDDATE`,`tbl_expaprdocinfo`.`FORMNAME` AS `FORMNAME`,`tbl_expaprdocinfo`.`FORMNAME2` AS `FORMNAME2`,`tbl_expaprdocinfo`.`URGENTAPPROVAL` AS `URGENTAPPROVAL`,`tbl_deptmaster`.`EXTENSIONATTRIBUTE3` AS `companyName`,`tbl_deptmaster`.`COMPNM2` AS `companyName2` from (((`tbl_aprdocinfo` join `tbl_aprlineinfo` on(`tbl_aprdocinfo`.`DOCID` = `tbl_aprlineinfo`.`DOCID` and `tbl_aprdocinfo`.`TENANT_ID` = `tbl_aprlineinfo`.`TENANT_ID` and `tbl_aprdocinfo`.`COMPANYID` = `tbl_aprlineinfo`.`COMPANYID`)) join `tbl_expaprdocinfo` on(`tbl_aprdocinfo`.`DOCID` = `tbl_expaprdocinfo`.`DOCID` and `tbl_aprdocinfo`.`TENANT_ID` = `tbl_expaprdocinfo`.`TENANT_ID` and `tbl_aprdocinfo`.`COMPANYID` = `tbl_expaprdocinfo`.`COMPANYID`)) join `tbl_deptmaster` on(`tbl_aprdocinfo`.`COMPANYID` = `tbl_deptmaster`.`CN` and `tbl_aprdocinfo`.`TENANT_ID` = `tbl_deptmaster`.`TENANT_ID`)) where (`tbl_aprlineinfo`.`APRSTATE` = '002' or `tbl_aprlineinfo`.`APRSTATE` = '005') and (`tbl_aprdocinfo`.`FUNCTIONTYPE` <> '004' or `tbl_aprlineinfo`.`APRTYPE` <> '007') and `tbl_aprdocinfo`.`STARTDATE` is not null */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -14309,7 +14715,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`ezEKP2017`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `vendchamjodocinfo` AS select `tbl_endaprdocinfo`.`DOCID` AS `DOCID`,`tbl_endaprdocinfo`.`FORMID` AS `FORMID`,`tbl_endaprdocinfo`.`ORGDOCID` AS `ORGDOCID`,`tbl_endaprdocinfo`.`DOCTYPE` AS `DOCTYPE`,'017' AS `DOCSTATE`,'002' AS `FUNCTIONTYPE`,`tbl_endaprdocinfo`.`HREF` AS `HREF`,`tbl_endaprdocinfo`.`DOCTITLE` AS `DOCTITLE`,`tbl_endaprdocinfo`.`DOCNO` AS `DOCNO`,`tbl_endaprdocinfo`.`HASATTACHYN` AS `HASATTACHYN`,`tbl_endaprdocinfo`.`HASOPINIONYN` AS `HASOPINIONYN`,`tbl_endaprdocinfo`.`STARTDATE` AS `STARTDATE`,`tbl_endaprdocinfo`.`ENDDATE` AS `ENDDATE`,`tbl_endaprdocinfo`.`WRITERID` AS `WRITERID`,`tbl_endaprdocinfo`.`WRITERNAME` AS `WRITERNAME`,`tbl_endaprdocinfo`.`WRITERJOBTITLE` AS `WRITERJOBTITLE`,`tbl_endaprdocinfo`.`WRITERDEPTID` AS `WRITERDEPTID`,`tbl_endaprdocinfo`.`WRITERDEPTNAME` AS `WRITERDEPTNAME`,`tbl_endaprdocinfo`.`ISPUBLIC` AS `ISPUBLIC`,`tbl_endaprdocinfo`.`WRITERNAME2` AS `WRITERNAME2`,`tbl_endaprdocinfo`.`WRITERJOBTITLE2` AS `WRITERJOBTITLE2`,`tbl_endaprdocinfo`.`WRITERDEPTNAME2` AS `WRITERDEPTNAME2`,`tbl_endaprdocinfo`.`TENANT_ID` AS `TENANT_ID`,`tbl_endaprdocinfo`.`COMPANYID` AS `COMPANYID`,`tbl_endaprlineinfo`.`APRMEMBERSN` AS `APRMEMBERSN`,`tbl_endaprlineinfo`.`APRTYPE` AS `APRTYPE`,`tbl_endaprlineinfo`.`APRSTATE` AS `APRSTATE`,`tbl_endaprlineinfo`.`APRMEMBERID` AS `APRMEMBERID`,`tbl_endaprlineinfo`.`APRMEMBERNAME` AS `APRMEMBERNAME`,`tbl_endaprlineinfo`.`APRMEMBERNAME2` AS `APRMEMBERNAME2`,`tbl_endaprlineinfo`.`APRMEMBERJOBTITLE` AS `APRMEMBERJOBTITLE`,`tbl_endaprlineinfo`.`APRMEMBERJOBTITLE2` AS `APRMEMBERJOBTITLE2`,`tbl_endaprlineinfo`.`APRMEMBERDEPTID` AS `APRMEMBERDEPTID`,`tbl_endaprlineinfo`.`APRMEMBERDEPTNAME` AS `APRMEMBERDEPTNAME`,`tbl_endaprlineinfo`.`APRMEMBERDEPTNAME2` AS `APRMEMBERDEPTNAME2`,`tbl_endaprlineinfo`.`RECEIVEDDATE` AS `RECEIVEDDATE`,`tbl_expendaprdocinfo`.`FORMNAME` AS `FORMNAME`,`tbl_expendaprdocinfo`.`FORMNAME2` AS `FORMNAME2`,`tbl_expendaprdocinfo`.`URGENTAPPROVAL` AS `URGENTAPPROVAL`,`tbl_deptmaster`.`EXTENSIONATTRIBUTE3` AS `companyName`,`tbl_deptmaster`.`COMPNM2` AS `companyName2`,`tbl_endaprlineinfo`.`APRMEMBERISDEPTYN` AS `APRMEMBERISDEPTYN` from (((`tbl_endaprdocinfo` join `tbl_endaprlineinfo` on(`tbl_endaprdocinfo`.`DOCID` = `tbl_endaprlineinfo`.`DOCID` and `tbl_endaprdocinfo`.`TENANT_ID` = `tbl_endaprlineinfo`.`TENANT_ID` and `tbl_endaprdocinfo`.`COMPANYID` = `tbl_endaprlineinfo`.`COMPANYID`)) join `tbl_expendaprdocinfo` on(`tbl_endaprdocinfo`.`DOCID` = `tbl_expendaprdocinfo`.`DOCID` and `tbl_endaprdocinfo`.`TENANT_ID` = `tbl_expendaprdocinfo`.`TENANT_ID` and `tbl_endaprdocinfo`.`COMPANYID` = `tbl_expendaprdocinfo`.`COMPANYID`)) join `tbl_deptmaster` on(`tbl_endaprdocinfo`.`COMPANYID` = `tbl_deptmaster`.`CN` and `tbl_endaprdocinfo`.`TENANT_ID` = `tbl_deptmaster`.`TENANT_ID`)) where `tbl_endaprlineinfo`.`APRSTATE` <> '002' and `tbl_endaprlineinfo`.`APRSTATE` <> '005' and `tbl_endaprlineinfo`.`APRSTATE` = '000' */;
+/*!50001 VIEW `vendchamjodocinfo` AS select `tbl_endaprdocinfo`.`DOCID` AS `DOCID`,`tbl_endaprdocinfo`.`FORMID` AS `FORMID`,`tbl_endaprdocinfo`.`ORGDOCID` AS `ORGDOCID`,`tbl_endaprdocinfo`.`DOCTYPE` AS `DOCTYPE`,'017' AS `DOCSTATE`,'002' AS `FUNCTIONTYPE`,`tbl_endaprdocinfo`.`HREF` AS `HREF`,`tbl_endaprdocinfo`.`DOCTITLE` AS `DOCTITLE`,`tbl_endaprdocinfo`.`DOCNO` AS `DOCNO`,`tbl_endaprdocinfo`.`HASATTACHYN` AS `HASATTACHYN`,`tbl_endaprdocinfo`.`HASOPINIONYN` AS `HASOPINIONYN`,`tbl_endaprdocinfo`.`STARTDATE` AS `STARTDATE`,`tbl_endaprdocinfo`.`ENDDATE` AS `ENDDATE`,`tbl_endaprdocinfo`.`WRITERID` AS `WRITERID`,`tbl_endaprdocinfo`.`WRITERNAME` AS `WRITERNAME`,`tbl_endaprdocinfo`.`WRITERJOBTITLE` AS `WRITERJOBTITLE`,`tbl_endaprdocinfo`.`WRITERDEPTID` AS `WRITERDEPTID`,`tbl_endaprdocinfo`.`WRITERDEPTNAME` AS `WRITERDEPTNAME`,`tbl_endaprdocinfo`.`ISPUBLIC` AS `ISPUBLIC`,`tbl_endaprdocinfo`.`WRITERNAME2` AS `WRITERNAME2`,`tbl_endaprdocinfo`.`WRITERJOBTITLE2` AS `WRITERJOBTITLE2`,`tbl_endaprdocinfo`.`WRITERDEPTNAME2` AS `WRITERDEPTNAME2`,`tbl_endaprdocinfo`.`TENANT_ID` AS `TENANT_ID`,`tbl_endaprdocinfo`.`COMPANYID` AS `COMPANYID`,`tbl_endaprlineinfo`.`APRMEMBERSN` AS `APRMEMBERSN`,`tbl_endaprlineinfo`.`APRTYPE` AS `APRTYPE`,`tbl_endaprlineinfo`.`APRSTATE` AS `APRSTATE`,`tbl_endaprlineinfo`.`APRMEMBERID` AS `APRMEMBERID`,`tbl_endaprlineinfo`.`APRMEMBERNAME` AS `APRMEMBERNAME`,`tbl_endaprlineinfo`.`APRMEMBERNAME2` AS `APRMEMBERNAME2`,`tbl_endaprlineinfo`.`APRMEMBERJOBTITLE` AS `APRMEMBERJOBTITLE`,`tbl_endaprlineinfo`.`APRMEMBERJOBTITLE2` AS `APRMEMBERJOBTITLE2`,`tbl_endaprlineinfo`.`APRMEMBERDEPTID` AS `APRMEMBERDEPTID`,`tbl_endaprlineinfo`.`APRMEMBERDEPTNAME` AS `APRMEMBERDEPTNAME`,`tbl_endaprlineinfo`.`APRMEMBERDEPTNAME2` AS `APRMEMBERDEPTNAME2`,`tbl_endaprlineinfo`.`RECEIVEDDATE` AS `RECEIVEDDATE`,`tbl_expendaprdocinfo`.`FORMNAME` AS `FORMNAME`,`tbl_expendaprdocinfo`.`FORMNAME2` AS `FORMNAME2`,`tbl_expendaprdocinfo`.`URGENTAPPROVAL` AS `URGENTAPPROVAL`,`tbl_deptmaster`.`EXTENSIONATTRIBUTE3` AS `companyName`,`tbl_deptmaster`.`COMPNM2` AS `companyName2` from (((`tbl_endaprdocinfo` join `tbl_endaprlineinfo` on(`tbl_endaprdocinfo`.`DOCID` = `tbl_endaprlineinfo`.`DOCID` and `tbl_endaprdocinfo`.`TENANT_ID` = `tbl_endaprlineinfo`.`TENANT_ID` and `tbl_endaprdocinfo`.`COMPANYID` = `tbl_endaprlineinfo`.`COMPANYID`)) join `tbl_expendaprdocinfo` on(`tbl_endaprdocinfo`.`DOCID` = `tbl_expendaprdocinfo`.`DOCID` and `tbl_endaprdocinfo`.`TENANT_ID` = `tbl_expendaprdocinfo`.`TENANT_ID` and `tbl_endaprdocinfo`.`COMPANYID` = `tbl_expendaprdocinfo`.`COMPANYID`)) join `tbl_deptmaster` on(`tbl_endaprdocinfo`.`COMPANYID` = `tbl_deptmaster`.`CN` and `tbl_endaprdocinfo`.`TENANT_ID` = `tbl_deptmaster`.`TENANT_ID`)) where `tbl_endaprlineinfo`.`APRTYPE` = '007' and `tbl_endaprlineinfo`.`APRSTATE` = '002' and `tbl_endaprdocinfo`.`DOCSTATE` <> '031' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -14376,12 +14782,12 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`ezEKP2017`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `view_ezboardstd` AS select `b`.`ITEMID` AS `ITEMID`,`a`.`BOARDNAME` AS `BOARDNAME`,`a`.`BOARDNAME2` AS `BOARDNAME2`,`a`.`GUBUN` AS `GUBUN`,`b`.`TITLE` AS `title`,`b`.`WRITERDEPTNAME` AS `WRITERDEPTNAME`,`b`.`WRITERNAME` AS `WRITERNAME`,`b`.`WRITEDATE` AS `WRITEDATE`,`b`.`ATTACHMENTS` AS `ATTACHMENTS`,`b`.`BOARDID` AS `BOARDID`,`b`.`WRITERID` AS `WRITERID`,`b`.`CONTENTLOCATION` AS `Herf`,concat('/volumes/shared/ezFlow',`b`.`CONTENTLOCATION`) AS `CONTENTLOCATION`,`b`.`WRITERDEPTID` AS `WRITERDEPTID`,`a`.`TENANT_ID` AS `TENANT_ID`,`a`.`COMPANYID` AS `COMPANYID` from (`tbl_board_boardinfo` `a` join `tbl_board_item` `b` on(`a`.`BOARDID` = `b`.`BOARDID` and `a`.`TENANT_ID` = `b`.`TENANT_ID`)) where `b`.`APPRFLAG` <> 'C' and `b`.`APPRFLAG` <> 'N' or `b`.`APPRFLAG` is null */;
+/*!50001 VIEW `view_ezboardstd` AS select `b`.`ITEMID` AS `ITEMID`,`a`.`BOARDNAME` AS `BOARDNAME`,`a`.`BOARDNAME2` AS `BOARDNAME2`,`a`.`GUBUN` AS `GUBUN`,`b`.`TITLE` AS `title`,`b`.`WRITERDEPTNAME` AS `WRITERDEPTNAME`,`b`.`WRITERNAME` AS `WRITERNAME`,`b`.`WRITEDATE` AS `WRITEDATE`,`b`.`ATTACHMENTS` AS `ATTACHMENTS`,`b`.`BOARDID` AS `BOARDID`,`b`.`WRITERID` AS `WRITERID`,`b`.`CONTENTLOCATION` AS `Herf`,concat('/volumes/shared/ezFlow',`b`.`CONTENTLOCATION`) AS `CONTENTLOCATION`,`b`.`WRITERDEPTID` AS `WRITERDEPTID`,`a`.`TENANT_ID` AS `TENANT_ID`,`a`.`COMPANYID` AS `COMPANYID` from (`tbl_board_boardinfo` `a` join `tbl_board_item` `b` on(`a`.`BOARDID` = `b`.`BOARDID` and `a`.`TENANT_ID` = `b`.`TENANT_ID` and `a`.`GUBUN` <> 5 and `b`.`STARTDATE` <= current_timestamp() and `b`.`ENDDATE` > current_timestamp())) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -14431,4 +14837,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-02-14 18:48:46
+-- Dump completed on 2020-05-12 16:36:39

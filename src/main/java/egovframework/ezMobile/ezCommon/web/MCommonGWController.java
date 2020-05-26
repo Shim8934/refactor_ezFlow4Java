@@ -1,16 +1,9 @@
 package egovframework.ezMobile.ezCommon.web;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.net.URLConnection;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -23,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.fcc.service.MimeTypes;
@@ -51,9 +44,6 @@ public class MCommonGWController {
 	private CommonUtil commonUtil;
 
 	@Autowired
-	private Properties config;
-	
-	@Autowired
 	private KlibUtil klibUtil;
 
 	@Resource(name = "MOptionService")
@@ -62,6 +52,10 @@ public class MCommonGWController {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
+	@Resource(name = "loginService")
+    private LoginService loginService;
+	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezcommon/filedown", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mFileDown(HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/filedown] started.");
@@ -124,6 +118,30 @@ public class MCommonGWController {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezcommon/getTenantConfigWithServerName", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getTenantConfigWithServerName(HttpServletRequest request) throws Exception {
+		LOGGER.debug("MCommonGWController getTenantConfigWithServerName started");
+		
+		String serverName = request.getHeader("x-user-host");
+		int tenantId = loginService.getTenantId(serverName);
+		String tenantConfig = request.getParameter("tenantConfig");		
+		
+		LOGGER.debug("serverName=" + serverName + ",tenantId=" + tenantId + ",tenantConfig=" + tenantConfig);
+						
+		String config = ezCommonService.getTenantConfig(tenantConfig, tenantId);
+		
+		JSONObject result = new JSONObject();
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		result.put("data", config);
+
+		LOGGER.debug("MCommonGWController getTenantConfigWithServerName ended");
+		
+		return result;
+	}
+	
 	 /**
 	 * 2019-05-09 홍승비 - 모바일 G/W 테넌트 컨피그 받아오기
 	 */
@@ -157,6 +175,7 @@ public class MCommonGWController {
     }
 	
 	// 20190829 김수아 : tenantConfig 가져오기
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezcommon/getTenantConfig", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getTenantConfig(HttpServletRequest request) throws Exception {
 		LOGGER.debug("MCommonGWController getTenantConfig Start");

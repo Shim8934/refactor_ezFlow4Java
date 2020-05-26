@@ -124,6 +124,13 @@
 		    var docNumZeroCnt = "<c:out value = '${docNumZeroCnt}'/>";
 			//원문정보공개
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
+			
+			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
+			
+			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
+			
+			//문서유통 재배부요청 처리하기 위해 추가. 2020-05-14 홍대표.
+			var pSusinAdmin = "<c:out value = '${pSusinAdmin}'/>";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -342,6 +349,10 @@
 			        
 			        HwpCtrl.SetFieldFocus("doctitle");
 			        HwpCtrl.ezSetScrollPosInfo(0);
+			        
+			        if(useExternalMailServer == "NO") {
+				    	$("#btnMail").css("display","");
+				    }
 			    }
 			    catch (e) {
 			        alert("<spring:message code='ezApprovalG.t1373'/>" + e.description);
@@ -469,7 +480,39 @@
 			                    btnReAssign.style.display = "none";
 			                }
 			            }
-			        }
+			        } else {//외부수신문인 경우에는 접수처리를 해야한다.
+	                    pGubun = "11";
+	                    btnSetAprLine.style.display = "none";
+	                    btnSendDraft.style.display = "";
+	                    if (pDocType == "001") {
+	        		        //재배부 요청 버튼 보이는 함수. 2020-04-23 홍대표.
+	        		        setBtnEnable();
+	        		        
+	        		        // 문서과에서 접수 후 반송했을 때, 배부버튼이 보이지 않도록 처리하는 부분.
+	        	            if (g_DraftFlag == "REDRAFT" && pDraftFlag == "SUSIN") {
+	        	                setMenuBar("btnDistribute", false);
+	        	            }
+	                    	
+	                        btnReturn.style.display = "none";
+
+	                        var NewIsRelay = GetRelayDocInfo();
+	                        if (NewIsRelay) {
+	                            btnReqReSend.style.display = "";
+	                        } else {
+	                            btnReqReSend.style.display = "none";
+	                        }
+
+	                        if (pAprState == "011") {
+	                            btnDistribute.style.display = "";
+	                            btnReDistribute.style.display = "none";
+	                            btnAssign.style.display = "";
+	                            btnReAssign.style.display = "none";
+	                        } else if (pAprState == "012") {
+	                            btnReAssign.style.display = "";
+	                            btnAssign.style.display = "none";
+	                        }
+	                    }
+	                }
 			
 			        getGongRamDocInfo();
 			
@@ -602,9 +645,11 @@
 			            OpenAlertUI(pAlertContent);
 			            return;
 			        }
-			
-			        if (g_DraftFlag == "REDRAFT")
+			        
+			        /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+			        if (g_DraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
 			            delOpinionInfo();
+			        }
 			
 			        if (HwpCtrl.CheckFieldExist("doctitle"))
 			            pDocTitle = trim(HwpCtrl.GetFieldText("doctitle"));
@@ -757,6 +802,10 @@
 			                              pAlertContent = "<spring:message code='ezApprovalG.t1697'/>";
 			                        else
 			                            pAlertContent = "<spring:message code='ezApprovalG.t1698'/>";
+			                            
+					                //중계문서 접수 시 재배부의견은 삭제처리 2020-05-15 홍대표
+					                delOpinionInfoAll3();
+					                
 			                        OpenAlertUI(pAlertContent);
 			                        chkOK = true;
 			                        window.close();
@@ -1318,28 +1367,34 @@
 					return;
 				}
 			
-			    //var ret = openOpinionUI("BanSong");
-			    var ret = openOpinionUI_New("BanSong");
+			    var ret = openOpinionUI_New("ReBebu");
 			    if (ret != "cancel" && ret != undefined) {
-			        var xmlpara = createXmlDom();
-			        var xmlhttp = createXMLHttpRequest();
-			        var objNode;
-			        createNodeInsert(xmlpara, objNode, "PARAMETER");
-			        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-			        createNodeAndInsertText(xmlpara, objNode, "pReceivSN", pSusinSN);
-			        createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-			
-			
-			        xmlhttp.open("Post", "/myoffice/ezApprovalG/ReceivUI/aspx/setReBebu.aspx", false);
-			        xmlhttp.send(xmlpara);
-			
-			        if (getNodeText(loadXMLString(xmlhttp.responseText)) == "TRUE") {
-			            var pAlertContent = "<spring:message code='ezApprovalG.t1426'/>";
-			            OpenAlertUI(pAlertContent);
-			            btnClose_onclick();
-			        }
+			    	btnReDistribute_onclick_complete();
 			    }
 			}
+			
+	        function btnReDistribute_onclick_complete() {
+	        	$.ajax({
+                    type : "POST",
+                    dataType : "text",
+                    async : false,
+                    url : "/ezApprovalG/setReBebu.do",
+                    data : {
+	       		            pDocID : pDocID,
+	       		            pReceiveSN : pSusinSN,
+	       		         	pDeptID : arr_userinfo[4],
+                    },
+                    success : function(text){
+                            result = text;
+        		            if (result == "TRUE") {
+        		            	delOpinionInfoAll2();
+        		                var pAlertContent = "<spring:message code='ezApprovalG.t1426'/>";
+        		                OpenAlertUI(pAlertContent);
+        		                btnClose_onclick();
+        		            }
+                    }
+            	});
+	        }
 		
 			function JiJungBeBuDisable() {
 			    btnAssign.style.display = "none";
@@ -1747,7 +1802,7 @@
 	                        <li id="btnReqReSend" style="display: none"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
 	                        <li id="btnEdit"><span onclick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
-	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
+	                        <li id="btnMail" style="display:none"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
 	                        <li id="btnHelper" style="display: none"><span onclick="return btnHelper_onclick()" style="display: none;"><spring:message code='ezApprovalG.t157'/></span></li>
 	                        <li id="btnRefresh" style="display: none"><span onclick="return RefreshRecvDoc()"><spring:message code='ezApprovalG.t00013'/></span></li>
 	                    </ul>

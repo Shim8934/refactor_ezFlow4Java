@@ -866,6 +866,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 							for ( int i = 0 ; i< subAllFolder.size() ; i++ ) {
 								
 //								String folderId = subAllFolder.get(i).getFolderId();
+								@SuppressWarnings("unchecked")
 								Map<String, Object> map = oMapper.convertValue(subAllFolder.get(i), Map.class);
 								String folderId = (String) map.get("id");
 

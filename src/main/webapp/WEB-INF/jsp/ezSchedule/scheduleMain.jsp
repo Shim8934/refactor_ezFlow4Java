@@ -199,7 +199,7 @@
 		    }		    
 		    
 		    function schedule_get_lunaruse() {
-		    	if (uselang != 3) {
+		    	if (uselang == 1) {
 				    $.ajax({
 			    		type : "GET",
 			    		dataType : "text",
@@ -1291,7 +1291,7 @@
 	            <li id="dayView" class="${defaultView == '0' ? 'on' : 'off' }"><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li><li id="weekView" class="${defaultView == '1' ? 'on' : 'off' }"><span onclick='ViewChange("WEEK");'><spring:message code='ezSchedule.t141'/></span></li><li id="monView" class="${defaultView == '2' ? 'on' : 'off' }"><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
 	        </ul>
 	    </div>
-	    <c:if test="${useAnnualScheduleYN eq '1'}">
+	    <c:if test="${useAnnualScheduleYN ne '0'}">
 		    <div style="margin-bottom:10px;">
 			    <span style="color:#3d8fea;"><spring:message code='ezSchedule.kje01'/></span>
 		    </div>	    

@@ -7,8 +7,38 @@
 	<typeAlias  alias="ApprovPWDVO" 				type="egovframework.ezEKP.ezCommon.vo.ApprovPWDVO"/>
 	<typeAlias  alias="TenantServerNameVO" 			type="egovframework.let.user.login.vo.TenantServerNameVO"/>
 	<typeAlias  alias="TenantVO" 					type="egovframework.let.user.login.vo.TenantVO"/>
+    <typeAlias  alias="loginVO"                 	type="egovframework.let.user.login.vo.LoginVO"/>
 	<typeAlias  alias="CompanyInfoVO" 				type="egovframework.ezEKP.ezCommon.vo.CompanyInfoVO"/>
 	<typeAlias  alias="CountryVO" 					type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
+	
+	<!-- 로그인 처리를 위한 resultMap -->
+    <resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
+        <result property="id"                   column="cn"                         columnIndex="1"/>
+        <result property="password"             column="password"                   columnIndex="2"/>
+        <result property="displayName1"         column="displayname"                columnIndex="3"/>
+        <result property="displayName2"         column="displayname2"               columnIndex="4"      nullValue=""/>
+        <result property="deptID"               column="department"                 columnIndex="5"/>
+        <result property="deptName1"            column="description"                columnIndex="6"/>
+        <result property="deptName2"            column="description2"               columnIndex="7"      nullValue=""/>
+        <result property="title1"               column="title"                      columnIndex="8"/>
+        <result property="title2"               column="title2"                     columnIndex="9"      nullValue=""/>
+        <result property="companyID"            column="companyid"                  columnIndex="10"/>
+        <result property="companyName1"         column="company"                    columnIndex="11"/>
+        <result property="companyName2"         column="company2"                   columnIndex="12"     nullValue=""/>      
+        <result property="updateDT"             column="updatedt"                   columnIndex="13"/>
+        <result property="rollInfo"             column="rollinfo"                   columnIndex="14"/>
+        <result property="phone"                column="telephonenumber"            columnIndex="15"/>
+        <result property="email"                column="mail"                       columnIndex="16"/>
+        <result property="jikChek"              column="jikchek"                    columnIndex="17"/>
+        <result property="tenantId"             column="tenant_id"                  columnIndex="18"/>
+        <result property="deptPathCode"         column="deptPathCode"               columnIndex="19"/>
+        <result property="primary"              column="primaryLang"                columnIndex="20"/>
+        <result property="loginCnt"             column="loginCnt"                	columnIndex="21"/>
+        <result property="gyumJik"              column="gyumJik"                	columnIndex="22"/>
+        <result property="userFileUrl"          column="userFileUrl"                columnIndex="23"/>
+        <result property="sabun"              	column="sabun"                		columnIndex="24"/>
+        <result property="password_updatedt"    column="password_updatedt"          columnIndex="25"/>
+    </resultMap>    
 	
 	<select id="EzCommonDAO.getApprovPWD" parameterClass="userInfo" resultClass="ApprovPWDVO">
 		<![CDATA[
@@ -864,6 +894,43 @@
 			COLNAME = 'FunctionTypeName'
 	</update>
 	
+	<select id="EzCommonDAO.checkTblBoardLike" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ITEMID
+			FROM 
+				TBL_BOARD_LIKE
+			LIMIT 1
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkTblBoardInfoLikeFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				LIKEFLAG
+			FROM 
+				TBL_BOARD_BOARDINFO
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createBoardLike"> 
+		CREATE TABLE `tbl_board_like` (
+		  `ITEMID` varchar(80) NOT NULL,
+		  `USERID` varchar(80) NOT NULL,
+		  `LIKEDATE` varchar(40) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  PRIMARY KEY (`ITEMID`,`USERID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+	
+	<statement id="EzCommonDAO.addBoardLikeFlag"> 
+		ALTER TABLE 
+			TBL_BOARD_BOARDINFO
+		ADD 
+			LIKEFLAG VARCHAR(2) DEFAULT NULL
+	</statement>
+	
 	<select id="EzCommonDAO.checkQuickLinkLinkOrder">
 		<![CDATA[
 			SELECT
@@ -961,6 +1028,23 @@
 			b_memo_height SMALLINT(6) DEFAULT '0',
 			b_memo_status TINYINT(4) DEFAULT '0',
 			memo_id BIGINT(10) DEFAULT '0'
+			)
+	</statement>
+
+	<select id="EzCommonDAO.checkSurveyAlamColums">
+		SELECT
+			MAIL_FLAG
+		FROM
+			TBL_SURVEY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addSurveyAlamColums">
+		ALTER TABLE
+			TBL_SURVEY
+		ADD (
+			mail_flag TINYINT(4) DEFAULT '0',
+			popup_flag TINYINT(4) DEFAULT '0'
 			)
 	</statement>
 
@@ -1259,7 +1343,7 @@
 		INSERT INTO TBL_TENANT_CONFIG 
 			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES
-			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regDate#, #configType#) 
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
 	</insert>
 	
 	<select id="EzCommonDAO.getAllCompanyIds" resultClass="CompanyInfoVO">
@@ -1655,6 +1739,212 @@
 			sn INT DEFAULT 0
 	</statement>
 	
+	<select id="EzCommonDAO.checkBoardManageTypeColumn">
+		SELECT
+			TYPE
+		FROM
+			TBL_BOARD_BOARDMANAGE
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addBoardManageTypeColumn">
+		ALTER TABLE
+			TBL_BOARD_BOARDMANAGE
+		ADD 
+			TYPE VARCHAR(10) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblPsPopupUser">
+		SELECT 
+			USER_ID
+		FROM 
+			TBL_PS_POPUP_USER
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblPsPopupUser">
+		CREATE TABLE `tbl_ps_popup_user` (
+		  `itemseq` bigint(20) NOT NULL,
+		  `user_id` varchar(100) NOT NULL,
+		  `user_type` varchar(10) NOT NULL,
+		  `tenant_id` int(11) NOT NULL,
+		  `companyid` varchar(100) NOT NULL,
+		  `subdept_permitted` int(11) DEFAULT NULL,
+		  `sn` int(11) DEFAULT 0,
+		  PRIMARY KEY (`itemseq`,`user_id`,`user_type`,`tenant_id`,`companyid`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='팝업 공지 대상자 관련 테이블'
+	</statement>
+	
+	
+    <select id="EzCommonDAO.getPermissionGroupAccessYN" parameterClass="Map" resultClass="Integer">
+     	<![CDATA[
+			SELECT
+				COUNT(member_id)
+			FROM
+				tbl_permissiongroupinfo
+			WHERE
+				group_id = #groupId#
+			AND
+				company_id = #companyId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				(
+					(member_type = 'USER' AND member_id = #userId#)
+				  OR
+					(member_type = 'DEPT' AND sub_dept_yn = 'N' AND (member_id = #deptId# or member_id IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)))
+				  OR 
+					(member_type = 'JIKWI' AND member_id IN 
+						(
+							SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+							UNION DISTINCT
+							SELECT jobid FROM tbl_addjobmaster WHERE cn = #userId# AND tenant_id = #tenantId#
+						)
+					)
+				  OR
+					(member_type = 'JIKCHEK' AND member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
+			]]>
+			<isNotEqual property="applySubDeptYN" compareValue="true">
+			<![CDATA[
+				OR
+				  (member_type = 'DEPT' AND sub_dept_yn = 'Y' AND (member_id = #deptId# or member_id IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#))
+			]]>
+			</isNotEqual>
+			<![CDATA[
+				)
+     	]]>
+     </select>
+     
+     <select id="EzCommonDAO.getPermissionGroupAccessSubDeptY" parameterClass="Map" resultClass="int">
+     	<![CDATA[
+			SELECT
+				COUNT(CN)
+			FROM
+				tbl_deptmaster
+			WHERE
+				dept_cd_path REGEXP(
+						SELECT GROUP_CONCAT(dept_cd_path SEPARATOR '|')
+                              FROM tbl_deptmaster
+                              WHERE cn IN (
+										SELECT member_id
+                                              FROM tbl_permissiongroupinfo
+                                              WHERE 
+											group_id = #groupId#
+										AND
+											member_type = 'DEPT'
+										AND
+											sub_dept_yn = 'Y'
+									)
+				)
+			AND
+				(
+					cn = #deptId#
+				OR
+					cn IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)
+				)
+     	]]>
+     </select>
+     
+   	<select id="EzCommonDAO.checkSurveyMailSentFlagColumn">
+		SELECT
+			MAIL_SENT_FLAG
+		FROM
+			TBL_SURVEY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addSurveyMailSentFlagColumn">
+		ALTER TABLE
+			TBL_SURVEY
+		ADD 
+			MAIL_SENT_FLAG TINYINT(4) DEFAULT '0'
+	</statement>
+	
+     <select id="EzCommonDAO.getPermissionGroupMembers" parameterClass="Map" resultMap="login">
+     	<![CDATA[
+            SELECT  
+                a.cn, 
+				a.password,                
+				a.displayname, 
+				a.displayname2, 
+				a.department,               
+				a.description, 
+				a.description2, 
+				a.title, 
+				a.title2, 
+				a.physicaldeliveryofficename as companyid, 
+				a.company, 
+				a.company2, 
+				a.updatedt, 
+				a.extensionattribute1 as rollinfo, 
+				a.telephonenumber, 
+				a.mail, 
+				a.extensionattribute10 as jikchek, 
+				a.tenant_id, 
+				(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode, 
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang, 
+				a.loginCnt, 
+				a.extensionattribute4 as gyumJik, 
+				a.extensionattribute2 as userFileUrl, 
+				a.extensionattribute14 as sabun,
+				a.password_updatedt
+            FROM  
+                tbl_usermaster a
+            JOIN
+            	tbl_permissiongroupinfo b
+            ON
+           		a.tenant_id = b.tenant_id
+           	AND
+           		a.tenant_id = #tenantId#
+           	AND
+           		a.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
+           	AND
+        ]]>
+            	(
+					(b.member_type = 'JIKCHEK' AND a.extensionattribute8 = b.member_id)
+				OR
+					(b.member_type = 'JIKWI' AND a.extensionattribute7 = b.member_id)
+				OR
+					(b.member_type = 'ORGAN' AND a.physicaldeliveryofficename = b.member_id)
+				OR
+					(b.member_type = 'USER' AND a.cn = b.member_id)
+				OR
+					(b.member_type = 'DEPT' AND a.department = b.member_id)
+		        <isEqual property="applySubDeptYN" compareValue="true">
+				<![CDATA[
+				  OR
+					(a.department IN (
+								SELECT
+									CN
+								FROM
+									tbl_deptmaster
+								WHERE
+									dept_cd_path REGEXP(
+											SELECT GROUP_CONCAT(dept_cd_path SEPARATOR '|')
+			                                FROM tbl_deptmaster
+			                                WHERE cn IN (
+															SELECT member_id
+			                                                FROM tbl_permissiongroupinfo
+			                                                WHERE 
+																group_id = #groupId#
+															AND
+																member_type = 'DEPT'
+															AND
+																sub_dept_yn = 'Y'
+														)
+									)
+								)
+						)
+				
+				]]>
+				</isEqual>	
+				)
+            WHERE  
+                b.group_id = #groupId#
+            AND
+            	a.tenant_id = #tenantId#
+     </select>
+     
 	<select id="EzCommonDAO.checkSnThemeAuth">
 		SELECT
 			sn
@@ -2048,6 +2338,17 @@
 	]]>
 	</select>
 	
+	<select id="EzCommonDAO.checkMailTenantConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'useExternalMailServer'
+		AND
+			tenant_id = 0
+	</select>
+	
 	<insert id="EzCommonDAO.insertThemeAuthInit" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_THEME_AUTH
@@ -2135,5 +2436,168 @@
 	    	(#menuId#, 3, #companyID#, #tenantID#, '電子アンケート')
 	]]>
 	</insert>
-
+	
+	<select id="EzCommonDAO.checkAddIsBeforeDoc">
+		SELECT 
+			ISBEFOREDOC 
+		FROM 
+			TBL_HISTORYDOCINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAddIsBeforeDoc">
+		ALTER TABLE 
+			TBL_HISTORYDOCINFO
+		ADD COLUMN 
+			ISBEFOREDOC VARCHAR(4) DEFAULT NULL 
+	</statement>
+	
+	<select id="EzCommonDAO.checkAddBeforeDocUrl">
+		SELECT 
+			BEFOREDOCURL 
+		FROM 
+			TBL_HISTORYDOCINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAddBeforeDocUrl">
+		ALTER TABLE 
+			TBL_HISTORYDOCINFO
+		ADD COLUMN 
+			BEFOREDOCURL varchar(1020) DEFAULT NULL 
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprAttachViewOrder">
+		SELECT 
+			VIEWORDER
+		FROM 
+			TBL_APRATTACHINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAprAttachViewOrder">
+		ALTER TABLE 
+			TBL_APRATTACHINFO
+		ADD COLUMN 
+			VIEWORDER  bigint(10) DEFAULT NULL 
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprEndAttachViewOrder">
+		SELECT 
+			VIEWORDER
+		FROM 
+			TBL_ENDATTACHINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAprEndAttachViewOrder">
+		ALTER TABLE 
+			TBL_ENDATTACHINFO
+		ADD COLUMN 
+			VIEWORDER  bigint(10) DEFAULT NULL 
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprTmpAttachViewOrder">
+		SELECT 
+			VIEWORDER
+		FROM 
+			TBL_TMPATTACHINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateAprTmpAttachViewOrder">
+		ALTER TABLE 
+			TBL_TMPATTACHINFO
+		ADD COLUMN 
+			VIEWORDER  bigint(10) DEFAULT NULL 
+	</statement>
+	
+	<select id="EzCommonDAO.checkReBebuOpinionCode" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			companyid
+		FROM
+			TBL_CODELIST
+		WHERE
+			companyid = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			code1 = #code1#
+		AND
+			code2 = #code2#
+		LIMIT 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertReBebuOpinionCode" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_CODELIST
+			(CODE1, CODE2, NAME, ISUSE, DESCRIPT, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+		VALUES
+			(#code1#, #code2#, #name#, #isUse#, #descript#, #name2#, #name3#, #name4#, #tenantId#, #companyId#)
+	]]>
+	</insert>
+	
+	<select id="EzCommonDAO.checkFormAprOptionColumn">
+		SELECT 
+			APROPTION
+		FROM 
+			TBL_FORMINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateFormAprOptionColumn">
+		ALTER TABLE 
+			TBL_FORMINFO
+		ADD COLUMN 
+			APROPTION  varchar(300) DEFAULT NULL COMMENT '양식 세부설정'
+	</statement>
+	
+	<select id="EzCommonDAO.checkAnnualScheduleTenantConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useAnnualScheduleYN'
+		AND
+			TENANT_ID = 0
+	</select>
+	<insert id="EzCommonDAO.insertAnnualScheduleTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+	</insert>
+	
+	<select id="EzCommonDAO.checkHalfOffAttitudeTypeForCompany" resultClass="String">
+		SELECT 
+			COMPANY_ID 
+		FROM
+			TBL_ATTITUDE_TYPE
+		WHERE
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			TYPE_ID = #typeId#
+	</select>
+	<insert id="EzCommonDAO.insertHalfOffAttitudeType">
+		INSERT INTO TBL_ATTITUDE_TYPE 
+			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID, ISADD, ISDEL)
+		VALUES
+			(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #isUse#, #imgPath#, #parentId#, #formId#, #isAdd#, #isDel#) 
+	</insert>
+	
+	<select id="EzCommonDAO.checkHolidayCheckTenantConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useHolidayCheckYN'
+		AND
+			TENANT_ID = 0
+	</select>
+	<insert id="EzCommonDAO.insertHolidayCheckTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+	</insert>
 </sqlMap>

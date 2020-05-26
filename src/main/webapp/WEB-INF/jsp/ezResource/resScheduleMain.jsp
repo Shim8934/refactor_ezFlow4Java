@@ -201,9 +201,7 @@
 	    	if (xmlhttp == null || xmlhttp.readyState != 4)
 	            return;
 	    	if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
-		       if (getLang == 3) {
-		    	   schedule_get_holiday();
-		       } else {
+		       if (getLang == 1) {
 			       if (xmlhttp.responseText == "0" || xmlhttp.responseText == "1") {
 			            LunarUse = true;
 			       }
@@ -211,6 +209,8 @@
 			        	LunarUse = false;
 			       }
 			       schedule_get_holiday();
+		       } else {
+		    	   schedule_get_holiday();
 		       }
 	    	}
 	    }

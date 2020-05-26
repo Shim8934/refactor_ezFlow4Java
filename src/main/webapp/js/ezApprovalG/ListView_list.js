@@ -106,7 +106,8 @@ function ListView() {
     this.AddDataRow = AddDataRow;
     this.SetAlignLeft = SetAlignLeft;
     this.SetUrgentFlag = SetUrgentFlag;     //긴급결재  DATA14
-    this.SetSecurityFlag = SetSecurityFlag; //보안결재  DATA10 날짜비교
+    this.SetSecurityFlag = SetSecurityFlag; //보안결재  [DATA14, DATA10] 날짜비교 
+    this.SetSecurityIdx = SetSecurityIdx; //보안결재관련, 보안결재 날짜가 DATA14에 있는 경우도 있고 DATA10에 있는 경우도 있어서 기본값은 DATA10을 조회하게 하되 필요에따라 조회할 DATA 인덱스를 정할수있음
     this.SetAlignArr = SetAlignArr;
     this.GetTableWidth = GetTableWidth;
     this.SetTableWidth = SetTableWidth;
@@ -114,6 +115,7 @@ function ListView() {
     this.SetOrderbyCol = SetOrderbyCol; // Header order by 노드명 셋팅
     this.SetUnSelected = SetUnSelected;
     this.setDeleteRow = setDeleteRow;
+    this.SetCheckBoxFlag = SetCheckBoxFlag; //2020-04-27 : 체크박스 추가 (true : 사용, false : 미사용)
     
     //사용자 정의 이벤트 지정
     this.SetHeaderOnClick = SetHeaderOnClick;
@@ -121,6 +123,9 @@ function ListView() {
     this.SetRowOnClick = SetRowOnClick;
     this.SetRowOnDblClick = SetRowOnDblClick;
     this.SetContextHandler = SetContextHandler;
+    //2020-04-27 : 드래그앤드랍 추가
+    this.SetDrag = SetDrag;
+    this.SetDrop = SetDrop;    
 
     this.SetDebugMode = SetDebugMode;
     this.toString = ListView_ToString;
@@ -135,22 +140,26 @@ function ListView() {
     var _debugMode = false;
     var _useOcs = false;
     var _IE = true;
-    var _title = "";
+    var _title = null;
 
     var _headeronclick = null;
     var _headerondblclick = "";
     var _rowonclick = null;
     var _rowondblclick = "";
+    var _rowDrag = null;  //2020-04-27 : 드래그앤드랍 추가
+    var _rowDrop = null;  //2020-04-27 : 드래그앤드랍 추가    
     var _contextHandler = null;
     var _titleIdx = null;
     var _SecIdx = null;
     var _TableWidth = 0;
     var _WidthFlag = true;
-    var _SelectFlag = true;
+    var _SelectFlag = true;  //2020-04-27 : 체크박스 추가
     var _firstRowID = "";
     var _AlignLeft = null;
     var _UrgentFlag = false;
+    var _CheckBoxFlag = false;
     var _SecurityFlag = false;
+    var _securityIdx = 9;
     var _Align = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
     var _ListType = 0;
     var _SetHeightFree = false;
@@ -196,9 +205,27 @@ function ListView() {
     function SetUrgentFlag(flag) {
         _UrgentFlag = flag;
     }
+
+    //2020-04-27 : 체크박스 추가
+    function SetCheckBoxFlag(flag) {
+        _CheckBoxFlag = flag;
+    }    
+
+    //2020-04-27 : 드래그앤드랍 추가
+    function SetDrag(SetDrag) {
+        _rowDrag = SetDrag;
+    }
+
+    //2020-04-27 : 드래그앤드랍 추가
+    function SetDrop(SetDrop) {
+        _rowDrop = SetDrop;
+    }    
    
     function SetSecurityFlag(flag) {
         _SecurityFlag = flag;
+    }
+    function SetSecurityIdx(idx) {
+        _securityIdx = idx;
     }
 
     // 리스트헤더 정렬 배열
@@ -346,6 +373,9 @@ function ListView() {
             oTable.setAttribute("multiselectable", _isMultiSelectable);
             oTable.setAttribute("useocs", _useOcs);
 
+            if (_CheckBoxFlag)  //2020-04-27 : 체크박스 추가
+                oTable.setAttribute("checkBox", _CheckBoxFlag);            
+
             if (_rowonclick != null)
                 oTable.setAttribute("rowonclick", _rowonclick);
 
@@ -408,6 +438,13 @@ function ListView() {
             }
 
             objElm.appendChild(oTable);
+
+            //2020-04-27 : 드래그앤드랍 추가
+            if (_rowDrop != null) {
+                objElm.ondrop = new Function(_rowDrop + "(event)");
+                objElm.ondragover = new Function("allowDrop(event)");
+            }
+            //            
 
             if (_debugMode) yjTest("oTable", objElm.innerHTML);
 
@@ -476,7 +513,7 @@ function ListView() {
                 var strClass = "h5_center";  // 현재는 header에 class가 없으므로 고정함. //SelectSingleNodeValue(oHeaders[i], "CLASSNAME");	
                 
                 var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
-                if(strColName == "DocTitle")
+                if(strColName == "DocTitle" || strColName === _title)
                     _titleIdx = i;
                 
                 //2019-04-09 천성준 - (#15424) 공람정보 팝업에서 결재일시 잘려나오는것 때문에 width +20px해주는거 같은데 지금은 UI가 바뀌어서 필요없음 
@@ -616,6 +653,16 @@ function ListView() {
             }
         }
 
+        if (_CheckBoxFlag) {
+            var objTd = document.createElement("TH");
+            objTd.width = "21px";
+            var checkEle = document.createElement("INPUT");
+            checkEle.setAttribute("type", "checkbox");
+            checkEle.onclick = new Function("SetAllSelect('" + _thisID + "', this)");
+            objTd.appendChild(checkEle);
+            objTr.insertBefore(objTd, objTr.childNodes.item(0));
+        }        
+
         var objTheader = document.createElement("THEAD");
         objTheader.id = _thisID + "_THEAD";
 
@@ -648,6 +695,10 @@ function ListView() {
             try {
                 if (colCount == 0)
                     colCount = document.getElementById(_thisID).getElementsByTagName("th").length;
+                else{
+                    if (_CheckBoxFlag)  //2020-04-27 : 체크박스 추가
+                    colCount += 1;                
+                }
             } catch (e) {}
             
             if(_thisID == "attachList") {
@@ -672,10 +723,18 @@ function ListView() {
 
             return oTbody;
         }
+
         for (var i = 0; i < oRows.length; i++) {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + i);
+            objTr.setAttribute("name", _thisID + "_TR");  //2020-04-27 : 체크박스 추가
             objTr.style.cursor = "pointer";
+
+            //2020-04-27 : 드래그앤드랍 추가
+            if (_rowDrag != null) {
+                objTr.draggable = true;
+                objTr.ondragstart = new Function(_rowDrag + "(event)");
+            }            
 
             objTr.onmouseover = new Function("tr_mouseover(this)");
             objTr.onmouseout = new Function("tr_mouseout(this)");
@@ -693,11 +752,13 @@ function ListView() {
 
             var oCells = GetElementsByTagName(oRows[i], "CELL");
 
+            var checked = "";
             if (_SelectFlag && i == 0) {   //첫번째 row 선택지정 or 특정 row 선택
                 objTr.setAttribute("selected", "true");
                 objTr.style.backgroundColor = m_strColorSelect;
 
                 _firstRowID = _thisID + "_TR_" + i;      
+                checked = " checked='checked' ";
             }
             else {
                 objTr.setAttribute("selected", "false");
@@ -728,6 +789,17 @@ function ListView() {
 
             oTbody.appendChild(objTr);
 
+            //2020-04-27 : 체크박스 추가
+			if (_CheckBoxFlag) {
+
+                var objTd = document.createElement("TD");
+                objTd.style.width = "21px";
+			    objTd.innerHTML = "<INPUT TYPE='CHECKBOX' id='" + _thisID + "_TD_CheckBox_" + i + "' onclick='SelectCheckBox(\"" + _thisID + "\", " + i + ", event);' " + checked + ">";
+                objTd.onmouseover = new Function("td_mouseover(this)");
+                objTd.onmouseout = new Function("td_mouseout(this)");
+                objTr.appendChild(objTd);
+            }             
+
             if (_thisID == "DocList" && typeof(approvalFlag) != "undefined" && approvalFlag == "S") {
             	if (showOpinionImg) {
             		var objTd = document.createElement("TD");
@@ -743,7 +815,7 @@ function ListView() {
             		}
             		objTr.appendChild(objTd);
             	}
-            }
+            }           
             
             for (var j = 0; j < oCells.length; j++) {
                 var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
@@ -785,16 +857,16 @@ function ListView() {
                         objTd.style.textOverflow = "ellipsis";
                         objTd.style.whiteSpace = "nowrap";
 
-                        if (CrossYN()) {
-                            if (_SecurityFlag && oDatas[13].textContent.trim() != "" && oDatas[13].textContent >= strToday) {   //DATA10값
-                                objTd.style.color = m_SecurityColor;
-                            }
-                        }
-                        else {
-                            if (_SecurityFlag && oDatas[13].text.trim() != "" && oDatas[13].text >= strToday) {   //DATA10값
-                                objTd.style.color = m_SecurityColor;
-                            }
-                        }
+                        // if (CrossYN()) {
+                        //     if (_SecurityFlag && oDatas[13].textContent.trim() != "" && oDatas[13].textContent >= strToday) {   //DATA10값
+                        //         objTd.style.color = m_SecurityColor;
+                        //     }
+                        // }
+                        // else {
+                        //     if (_SecurityFlag && oDatas[13].text.trim() != "" && oDatas[13].text >= strToday) {   //DATA10값
+                        //         objTd.style.color = m_SecurityColor;
+                        //     }
+                        // }
                     }
                     else {  //상단 리스트일경우
                             objTd.title = strValue;
@@ -816,16 +888,15 @@ function ListView() {
                             else {
                                 objTd.width = "80%";
                             }
-
                         }
-                        if(oDatas[9]!=null){
+                        if(oDatas[_securityIdx]){
                         	if (CrossYN()) {
-                        		if (_SecurityFlag && oDatas[9].textContent != "" && oDatas[9].textContent >= strToday) {   //DATA10값
+                        		if (_SecurityFlag && oDatas[_securityIdx].textContent != "" && !isNaN(Date.parse(oDatas[_securityIdx].textContent)) && oDatas[_securityIdx].textContent >= strToday) {   //DATA10 혹은 DATA14의 값
                         			objTd.style.color = m_SecurityColor;
                         		}
                         	}
                         	else {
-                        		if (_SecurityFlag && oDatas[9].text != "" && oDatas[9].text >= strToday) {   //DATA10값
+                        		if (_SecurityFlag && oDatas[_securityIdx].text != "" && oDatas[_securityIdx].text >= strToday) {   //DATA10값
                         			objTd.style.color = m_SecurityColor;
                         		}
                         	}
@@ -952,10 +1023,11 @@ function ListView() {
         //첨부파일일때 쪽수 컬럼 안보이기 위함 2018-04-26 강민수92
         var objTrArr = objTr.id.split("_");
         
+        /* 2020-03-23 홍승비 - 리스트뷰에 새로운 로우 추가 시, tr_select 함수에 this.id가 아닌 고정된 ID값을 보내던 부분 수정  */
         if (_rowonclick != null)
-            objTr.onclick = new Function("tr_select(\"" + objTr.id + "\", \"" + _thisID + "\", " + _rowonclick + ");");
+            objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
         else
-            objTr.onclick = new Function("tr_select(\"" + objTr.id + "\", \"" + _thisID + "\");");
+            objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\");");
 
         var oCells = GetElementsByTagName(addXml, "CELL");
 
@@ -968,6 +1040,19 @@ function ListView() {
 
             objTr.setAttribute(strData, strValue);
         }
+
+        //2020-04-27 : 체크박스 추가
+        if (document.getElementById(_thisID).getAttribute("checkBox") == "true") {
+            var objTd = document.createElement("TD");
+            objTd.style.width = "21px";
+            var checkBoxIndex = objTr.id.split("_")[2];
+
+            objTd.innerHTML = "<INPUT TYPE='CHECKBOX' id='" + _thisID + "_TD_CheckBox_" + checkBoxIndex + "' onclick='SelectCheckBox(\"" + _thisID + "\", " + checkBoxIndex + ", event);' >";
+            objTd.onmouseover = new Function("td_mouseover(this)");
+            objTd.onmouseout = new Function("td_mouseout(this)");
+            objTr.appendChild(objTd);
+            objTr.setAttribute("name", _thisID + "_TR");
+        }        
 
         for (var j = 0; j < oCells.length; j++) {
             var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
@@ -1393,7 +1478,7 @@ function ListView() {
 
 //ROW 선택 함수
 function tr_select(pRowID, pTableID, callbackFunc) {
-
+	
     var oList = document.getElementById(pTableID);
     if (!oList)
         return;
@@ -1422,7 +1507,7 @@ function tr_select(pRowID, pTableID, callbackFunc) {
 
     //현재 클릭한 Row를 Select 한다.
     strAttribute = GetAttribute(oSourceTr, "selected");
-
+    
     if (strAttribute == "true") {
         oSourceTr.setAttribute("selected", "false");
         oSourceTr.style.backgroundColor = m_strColorDefault;
@@ -1434,6 +1519,11 @@ function tr_select(pRowID, pTableID, callbackFunc) {
 
     //각 리스트마다 마지막으로 선택한 ID를 보관한다.
     oList.setAttribute("lastSelectedRowID", pRowID);
+
+    //2020-04-27 : 체크박스 추가
+    var rowCheckBox = document.getElementById(pRowID.split("_")[0] + "_TD_CheckBox_" + pRowID.split("_")[2]);
+    if (rowCheckBox != null)
+        rowCheckBox.checked = true;    
 
     oList = null;
     oSourceTr = null;
@@ -1458,6 +1548,11 @@ function tr_unselectedAll(pTableID) {
         var objTr = document.getElementById(strID);
 
         if (objTr) {
+            //2020-04-27 : 체크박스 추가
+            if (document.getElementById(pTableID + "_TD_CheckBox_" + i) != null) {
+                document.getElementById(pTableID + "_TD_CheckBox_" + i).checked = false;
+            }
+
             objTr.setAttribute("selected", false);
             objTr.className = "";
             objTr.style.backgroundColor =  m_strColorDefault;
@@ -1656,4 +1751,68 @@ function setDeleteRow(nodeId) {
     objTr.appendChild(objTd);
     
     oTable.setAttribute("lastSelectedRowID", "");
+}
+
+//2020-04-27 : 체크박스 추가
+function SetAllSelect(pTableID, _this) {
+    try {
+        if (_this.checked) {
+            var thisObj = document.getElementsByName(pTableID + "_TR");
+
+            if (thisObj) {
+                for (var i = 0; i < thisObj.length; i++) {
+                    var pRowID = thisObj.item(i).getAttribute("id");
+
+                    var oList = document.getElementById(pTableID);
+                    if (!oList)
+                        return;
+
+                    var oSourceTr = document.getElementById(pRowID);
+                    if (!oSourceTr)
+                        return;
+
+                    oSourceTr.setAttribute("selected", "true");
+                    oSourceTr.style.backgroundColor = m_strColorSelect;
+
+                    document.getElementById(pTableID + "_TD_CheckBox_" + i).checked = true;
+
+                    oList.removeAttribute("lastSelectedRowID");
+
+                    oList = null;
+                    oSourceTr = null;
+                }
+            }
+        } else {
+            tr_unselectedAll(pTableID);
+        }
+    } catch (e) {
+
+    }
+}
+
+function SelectCheckBox(pTableID, pRowSN, event) {
+    event.stopPropagation();
+
+    var pSelCheckBox = document.getElementById(pTableID + "_TD_CheckBox_" + pRowSN);
+    var oSourceTr = document.getElementById(pTableID + "_TR_" + pRowSN);
+
+    var oList = document.getElementById(pTableID);
+    if (!oList)
+        return;
+
+    if (!oSourceTr)
+        return;
+
+    if (pSelCheckBox.checked) {
+        oSourceTr.setAttribute("selected", "true");
+        oSourceTr.style.backgroundColor = m_strColorSelect;
+    } else {
+        oSourceTr.setAttribute("selected", "false");
+        oSourceTr.style.backgroundColor = m_strColorDefault;
+    }
+}
+
+//2020-04-27 : 드래그앤드랍 추가
+function allowDrop(ev) {
+    ev.preventDefault();
 }

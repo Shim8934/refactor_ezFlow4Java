@@ -111,11 +111,16 @@
 		    
 		    /* 2019-02-20 홍승비 - 커뮤니티 CSRF 수정 (단순 호출 작동 시 get방식 사용 )*/
 		    function btn_Reply_Onclick() {
-		    	window.location.href = "/ezCommunity/board/bbsEditNew.do?mode=write&bName=${bName}&no=${grsNo}&head=${strTitle}&step=${myStep}&level=${myLevel}&ref=${grsRef}&pagec=${pagec}";
+		    	window.location.href 
+		    		= "/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + encodeURIComponent("${bName}") + "&no=" + encodeURIComponent("${grsNo}") +
+		    				"&head=" + encodeURIComponent("${strTitle}") + "&step=" + encodeURIComponent("${myStep}") + "&level=" + encodeURIComponent("${myLevel}") + 
+		    				"&ref=" + encodeURIComponent("${grsRef}") + "&pagec=" + encodeURIComponent("${pagec}");
 		    }
 				
 		    function btn_Modify_Onclick() {
-		        window.location.href = "/ezCommunity/board/bbsEditNew.do?mode=edit&bName=" + bName + "&no=" + grsNo + "&pagec=" + goToPage + "&block=" + nowBlock + "&sRadio= " + sRadio + "&keyword= " + keyword;
+		        window.location.href = "/ezCommunity/board/bbsEditNew.do?mode=edit&bName=" + encodeURIComponent(bName) + "&no=" + encodeURIComponent(grsNo) + 
+		        		"&pagec=" + encodeURIComponent(goToPage) + "&block=" + encodeURIComponent(nowBlock) + "&sRadio= " + encodeURIComponent(sRadio) + 
+		        		"&keyword= " + encodeURIComponent(keyword);
 		    }
 
 		    function OpenUserInfo(pUserID) {

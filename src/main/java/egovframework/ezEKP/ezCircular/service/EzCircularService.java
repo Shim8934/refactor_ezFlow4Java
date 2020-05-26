@@ -5,7 +5,6 @@ import java.util.List;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
-import egovframework.ezEKP.ezCircular.vo.CircularConfirmVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO;

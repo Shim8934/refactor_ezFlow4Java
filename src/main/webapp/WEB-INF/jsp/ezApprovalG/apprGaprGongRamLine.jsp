@@ -1177,7 +1177,8 @@
 	                	<table style="width:100%;table-layout: fixed">
 	                    	<tr>
 	                            <td style="text-align: left; height: 30px;">
-	                            	<input id="textUser" style="height:22px" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;<a class="imgbtn imgbck" style="vertical-align: middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+									<input id="textUser" style="height:22px" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;<a class="imgbtn imgbck" style="vertical-align: middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+									<a class="imgbtn imgbck" style="vertical-align: middle;"><span onclick="return btnAprLineSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
 	                            	<a class="imgbtn imgbck" style="vertical-align: middle;"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
 	                            </td>
 	                        </tr>
@@ -1200,8 +1201,8 @@
 	                                <table class="content" style="margin-bottom: 5px; width: 100%;">
 	                                    <tr>
 	                                        <td style="text-align: center;">
-	                                            <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
-	                                            <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
+	                                            <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.hsbFv01'/></span></a>
+	                                            <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.hsbFv02'/></span></a>
 	                                            <a class="imgbtn imgbck"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 	                                        </td>
 	                                    </tr>

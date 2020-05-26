@@ -447,6 +447,7 @@ function ListView() {
         _rowCount = oRows.length;
         var oHeaders = _dataSource.getElementsByTagName("HEADER");
         var colCount = oHeaders.length;
+        colCount = colCount == 0 ? 1 : colCount; // IE : objTd.colSpan = colCount 했을 때 인자로 0을 넘기면 오류남
         var strToday = GetTodayDate();
 
         // 2018-12-04 김민성 - 관리자 > 조직도/메일관리 > 공용배포그룹관리 > 데이터 없을 때 처리

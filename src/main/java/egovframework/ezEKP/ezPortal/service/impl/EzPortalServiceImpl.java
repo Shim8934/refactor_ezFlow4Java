@@ -70,7 +70,6 @@ import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPortalService")
@@ -98,9 +97,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties globals;
 	
 	@Autowired
 	private Properties config;
@@ -2140,7 +2136,7 @@ logger.debug("map.toString()" + map.toString());
 			str ="icon_topmenu icon_nav_voting";
 		} else if (url.equals("/ezBoard/boardMain.do?func=4")) { //사다리
 			str ="icon_topmenu icon_nav_laddergame";
-		} else if (url.equals("http://space.kaoni.com/myoffice/ezWorkspace/Account/SSO")) { //협업
+		} else if (url.contains("/ezWorkspace/Account/SSO")) { //협업
 			str ="icon_topmenu icon_nav_collaboration";
 		} else if (url.equals("/ezCabinet/cabinetMain.do")) { //캐비넷
 			str ="icon_topmenu icon_nav_cabinet";
@@ -3102,10 +3098,10 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 			int portletCanRemove = vo.getCanRemove();
 			int portletCanResize = vo.getCanResize();
 			int portletCanReplace = vo.getCanRemove();
-			int portletPaddingLeft = vo.getLeftMargin();
+			/* int portletPaddingLeft = vo.getLeftMargin();
 			int portletPaddingRight = vo.getRightMargin();
 			int portletPaddingTop = vo.getTopMargin();
-			int portletPaddingBottom = vo.getBottomMargin();
+			int portletPaddingBottom = vo.getBottomMargin(); */
 			String portletOwnerPageUID = vo.getOwnerPageUID();
 			String portletMandatory = vo.getMandatory();
 			String portletMoveURL = "";

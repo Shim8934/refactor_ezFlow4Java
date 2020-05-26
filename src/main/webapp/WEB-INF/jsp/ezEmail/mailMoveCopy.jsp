@@ -86,7 +86,7 @@
                 return;
             }
             
-        	if (getFolderDeptLevel(postTreeSelectIndex) > 5) {
+        	if (isFolderManager && getFolderDeptLevel(postTreeSelectIndex) > 5) {
             	alert("<spring:message code='ezEmail.ksaMailBox01' />");
             	return;
             }
@@ -118,7 +118,7 @@
                 return;
             }
             
-            if (getFolderDeptLevel(postTreeSelectIndex) > 5) {
+            if (isFolderManager && getFolderDeptLevel(postTreeSelectIndex) > 5) {
             	alert("<spring:message code='ezEmail.ksaMailBox01' />");
             	return;
             }

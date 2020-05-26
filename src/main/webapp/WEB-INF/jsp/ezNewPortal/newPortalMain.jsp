@@ -7,7 +7,7 @@
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css">
+<%-- 		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css"> --%>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/memo.css')}">
@@ -63,6 +63,7 @@
 	    	var layerFlag;
 	    	var memoFlag = "<c:out value='${useMemo}' />";
 	    	var useMemoContextMenu = false;
+	    	var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
 	    	
 	    	var beforeMemoId;
 	    	var beforeMemo;
@@ -185,7 +186,7 @@
 		                <dt class="mtitText" id="dMTime"></dt>
 		                <dd class="memoIcon memoX" id='closeMemo'></dd>
 		            </dl>
-			        <textarea id="dMContents"></textarea>
+			        <textarea id="dMContents" style="padding:5px;"></textarea>
 			        <div class="bigBottom_left" id='bottomLeft'></div>
 			        <div class="bigBottom_right" id='bottomRight'></div>
 		        </div>

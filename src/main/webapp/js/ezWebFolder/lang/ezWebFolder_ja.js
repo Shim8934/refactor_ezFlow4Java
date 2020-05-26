@@ -21,7 +21,7 @@ var messages = {
 	strLang20 : "検索条件がありません。", 						// ezBoard.t192
 	strLang21 : "期間の指定が正しくありません。", 						//ezWebFolder.t308
 	strLang22 : "期間の指定が正しくありません。", 						//ezWebFolder.t309
-	strLang23 : '共有機能は複数選択して処理することができません。\nn"ファイルまたはフォルダを一つだけ選択してください。',
+	strLang23 : "共有機能は複数選択して処理することができません。\nファイルまたはフォルダを一つだけ選択してください。",
 	strLang24 : "パラメータ値が足りていません。",
 	strLang25 : "アクセス権限がありません。",
 	strLang26 : "外",
@@ -49,6 +49,7 @@ var messages = {
 	successMoveFile: "ファイル（フォルダ）が移動されました。",
 	successCopyFile: " ファイル（フォルダ）がコピーされました。",
 	outOfStorageSpaceForOneTime: " アップロード容量が基本容量を超えています。",
-	outOfStorageSpace: "アップロード容量上限を超えています。"
+	outOfStorageSpace: "アップロード容量上限を超えています。",
+	strLangDragNDrop:"フォルダはアップロードすることができません。"
 
 }

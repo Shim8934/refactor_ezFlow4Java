@@ -918,6 +918,45 @@
 			COLNAME = 'FunctionTypeName'
 	</update>
 	
+	<select id="EzCommonDAO.checkTblBoardLike" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ITEMID
+			FROM 
+				TBL_BOARD_LIKE
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkTblBoardInfoLikeFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				LIKEFLAG
+			FROM 
+				TBL_BOARD_BOARDINFO
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createBoardLike"> 
+		CREATE TABLE "EZEKP2017"."TBL_BOARD_LIKE" (
+		 	"ITEMID" NVARCHAR2(40) NOT NULL ENABLE, 
+			"USERID" NVARCHAR2(20) NOT NULL ENABLE, 
+			"LIKEDATE" NVARCHAR2(20), 
+			"TENANT_ID" NUMBER(5,0) NOT NULL ENABLE, 
+			CONSTRAINT "TBL_BOARD_LIKE_PK" PRIMARY KEY ("ITEMID", "USERID", "TENANT_ID")
+		)
+	</statement>
+	
+	<statement id="EzCommonDAO.addBoardLikeFlag"> 
+		ALTER TABLE 
+			TBL_BOARD_BOARDINFO
+		ADD 
+			LIKEFLAG NCHAR(1) DEFAULT NULL
+	</statement>
+	
 	<select id="EzCommonDAO.checkQuickLinkLinkOrder">
 		<![CDATA[
 			SELECT
@@ -2261,5 +2300,187 @@
 	    FROM DUAL
 	]]>
 	</insert>
-
+		
+	<select id="EzCommonDAO.checkAddIsBeforeDoc">
+		<![CDATA[
+			SELECT 
+				ISBEFOREDOC 
+			FROM 
+				TBL_HISTORYDOCINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateAddIsBeforeDoc">
+		ALTER TABLE 
+			TBL_HISTORYDOCINFO
+		ADD 
+			ISBEFOREDOC CHAR(1 CHAR)
+	</statement>
+	
+	<select id="EzCommonDAO.checkAddBeforeDocUrl">
+		<![CDATA[
+			SELECT 
+				BEFOREDOCURL 
+			FROM 
+				TBL_HISTORYDOCINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateAddBeforeDocUrl">
+		ALTER TABLE 
+			TBL_HISTORYDOCINFO
+		ADD 
+			BEFOREDOCURL VARCHAR2(255 CHAR)
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprAttachViewOrder">
+		<![CDATA[
+			SELECT 
+				VIEWORDER
+			FROM 
+				TBL_APRATTACHINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateAprAttachViewOrder">
+		ALTER TABLE 
+			TBL_APRATTACHINFO
+		ADD 
+			VIEWORDER  NUMBER(10,0)
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprEndAttachViewOrder">
+		<![CDATA[
+			SELECT 
+				VIEWORDER
+			FROM 
+				TBL_ENDATTACHINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateAprEndAttachViewOrder">
+		ALTER TABLE 
+			TBL_ENDATTACHINFO
+		ADD 
+			VIEWORDER  NUMBER(10,0)
+	</statement>
+	
+	<select id="EzCommonDAO.checkAprTmpAttachViewOrder">
+		<![CDATA[
+			SELECT 
+				VIEWORDER
+			FROM 
+				TBL_TMPATTACHINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateAprTmpAttachViewOrder">
+		ALTER TABLE 
+			TBL_TMPATTACHINFO
+		ADD 
+			VIEWORDER  NUMBER(10,0)
+	</statement>
+	
+	<select id="EzCommonDAO.checkReBebuOpinionCode" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			companyid
+		FROM
+			TBL_CODELIST
+		WHERE
+			companyid = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			code1 = #code1#
+		AND
+			code2 = #code2#
+		AND
+			rownum = 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertReBebuOpinionCode" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_CODELIST
+			(CODE1, CODE2, NAME, ISUSE, DESCRIPT, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+		VALUES
+			(#code1#, #code2#, #name#, #isUse#, #descript#, #name2#, #name3#, #name4#, #tenantId#, #companyId#)
+	]]>
+	</insert>
+	
+	<select id="EzCommonDAO.checkFormAprOptionColumn">
+		<![CDATA[
+			SELECT 
+				APROPTION
+			FROM 
+				TBL_FORMINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateFormAprOptionColumn">
+		ALTER TABLE 
+			TBL_FORMINFO
+		ADD 
+			APROPTION NVARCHAR2(300 CHAR)
+	</statement>
+	
+	<select id="EzCommonDAO.checkAnnualScheduleTenantConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useAnnualScheduleYN'
+		AND
+			TENANT_ID = 0
+	</select>
+	<insert id="EzCommonDAO.insertAnnualScheduleTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+	</insert>
+	
+	<select id="EzCommonDAO.checkHalfOffAttitudeTypeForCompany" resultClass="String">
+		SELECT 
+			COMPANY_ID 
+		FROM
+			TBL_ATTITUDE_TYPE
+		WHERE
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			TYPE_ID = #typeId#
+	</select>
+	<insert id="EzCommonDAO.insertHalfOffAttitudeType">
+		INSERT INTO TBL_ATTITUDE_TYPE 
+			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID, ISADD, ISDEL)
+		VALUES
+			(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #isUse#, #imgPath#, #parentId#, #formId#, #isAdd#, #isDel#) 
+	</insert>
+	
+	<select id="EzCommonDAO.checkHolidayCheckTenantConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useHolidayCheckYN'
+		AND
+			TENANT_ID = 0
+	</select>
+	<insert id="EzCommonDAO.insertHolidayCheckTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+	</insert>
 </sqlMap>

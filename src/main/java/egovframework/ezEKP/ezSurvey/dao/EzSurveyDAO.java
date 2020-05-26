@@ -29,6 +29,14 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (SimpleDeptVO)select("EzSurveyDAO.getSimpleCompany", map);
 	}
 	
+	public SimpleUserVO getSurveyUserInfo(Map<String, Object> map) {
+		return (SimpleUserVO)select("EzSurveyDAO.getSurveyUserInfo", map);
+	}
+	
+	public SimpleDeptVO getSurveyDeptInfo(Map<String, Object> map) {
+		return (SimpleDeptVO)select("EzSurveyDAO.getSurveyDeptInfo", map);
+	}
+	
 	public List<SimpleDeptVO> getAllSimpleSubDepts(Map<String, Object> map) {
 		return (List<SimpleDeptVO>)list("EzSurveyDAO.getAllSimpleSubDepts", map);
 	}
@@ -113,6 +121,10 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (List<SurveyVO>)list("EzSurveyDAO.getTotalReceivedSurveyItems", searchVO);
 	}
 	
+	public List<SurveyVO> getTotalPopupSurveyItems(Map<String, Object> map) {
+		return (List<SurveyVO>)list("EzSurveyDAO.getTotalPopupSurveyItems", map);
+	}
+
 	public void deleteItems(Map<String, Object> map) {
 		update("EzSurveyDAO.deleteItems", map);
 	}
@@ -185,6 +197,41 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (int)select("EzSurveyDAO.getUserResponseCntForSurvey", map);
 	}
 
+	public boolean getSurveyPopupPermitYN(Map<String, Object> map) {
+		try {
+			int count = (int) select("EzPersonalDAO.getSurveyPopupPermitYN", map);
+			
+			if (count > 0) {
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+
+	public List<String> getSurveyGroupList(Map<String, Object> map) {
+		return (List<String>) list("EzPersonalDAO.getSurveyGroupList", map);
+	}
+
+	
+	public List<SurveyVO> getTodaySurveyList(Map<String, Object> map) {
+		return (List<SurveyVO>) list("EzSurveyDAO.getTodaySurveyList", map);
+	}
+	
+	public List<SurveyParticipantVO> getSurveyParticipantListForMail(Map<String, Object> map) {
+		return (List<SurveyParticipantVO>) list("EzSurveyDAO.getSurveyParticipantListForMail", map);
+	}
+	
+	public int getMailSentFlag(SurveyVO survey) {
+		return (int) select("EzSurveyDAO.getMailSentFlag", survey);
+	}
+	
+	public void updateMailSentFlag(Map<String, Object> map) {
+		update("EzSurveyDAO.updateMailSentFlag", map);
+	}
+	
 	public long checkRespondent(Map<String, Object> map) {
 		return (long)select("EzSurveyDAO.checkRespondent", map);
 	}
@@ -193,4 +240,11 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (int)select("EzSurveyDAO.getNoAnsweredIngSurveyList", map);
 	}
 
+	public void deleteResponseItems(Map<String, Object> map) {
+		delete("EzSurveyDAO.deleteResponseItems", map);
+	}
+	
+	public void deleteRespondents(Map<String, Object> map) {
+		delete("EzSurveyDAO.deleteRespondents", map);
+	}
 }

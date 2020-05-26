@@ -1,14 +1,10 @@
 package egovframework.ezEKP.ezAttitude.util;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.annotation.Resource;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -193,7 +189,7 @@ public class ExcelCellRef {
     	int commaIdx = checkStr.lastIndexOf(".");
     	if(commaIdx != -1) {
     		String decimal = checkStr.substring(commaIdx+1);
-    		if(!(decimal.equals("5") || decimal.equals("0"))) {
+    		if(!(decimal.equals("0") || decimal.equals("5") || decimal.equals("25") || decimal.equals("75"))) {
     			return false;
     		}
     	}

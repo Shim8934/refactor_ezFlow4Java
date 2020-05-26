@@ -1,4 +1,4 @@
-﻿﻿// ApprovUI\ApprovUI.js
+﻿// ApprovUI\ApprovUI.js
 var strLang2 = "합의";
 var strLang3 = "협조";
 var strLang4 = "반송";
@@ -812,10 +812,12 @@ var strOpinionType4 = "004";
 // 2011.06.17 추가
 var strOpinionType5 = "005";
 var strOpinionType6 = "006";
+var strOpinionType8 = "008";
 var strLangOpinionType1 = "일반의견";
 var strLangOpinionType2 = "반송의견";
 var strLangOpinionType3 = "보류의견";
 var strLangOpinionType4 = "회송의견";
+var strLangOpinionType8 = "재배부요청";
 
 // 2011.06.17 추가
 

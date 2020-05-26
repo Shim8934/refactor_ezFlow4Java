@@ -65,7 +65,6 @@ import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
-import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
@@ -161,7 +160,13 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String dotnetFlag = request.getParameter("dotnetFlag");
 		
 		userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-
+		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", userInfo.getTenantId());
+		if (useEncryptZipForEmail.equals("")) {
+			useEncryptZipForEmail = "NO";
+		}
+		
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useOnlyInnerMail", ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
@@ -1962,6 +1967,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						List<String> messageIdList = ezEmailService.getMailPOP3List(loginInfo.getTenantId(), loginInfo.getId(), host, id);
 						
 						final Set<String> messageIds = new HashSet<String>(messageIdList);
+						@SuppressWarnings("serial")
 						SearchTerm searchTerm= new SearchTerm() {
 							@Override
 							public boolean match(Message message) {
@@ -2770,6 +2776,61 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		logger.debug("mailUserDistributionApply ended. returnStr=" + returnStr);
 		return returnStr;
+	}
+	/**
+	 * 환경설정 > 편지함 관리
+	 */
+	@RequestMapping(value="/ezEmail/folderQuotaAndManage.do")
+	public String folderQuotaAndManage(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("folderQuotaAndManage started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String shareId = request.getParameter("shareId") == null ? "" : request.getParameter("shareId");
+		
+		String pDeleteBoxID = ezEmailUtil.getTrashFolderId(locale);
+		String pDeleteBoxName = ezEmailUtil.getTrashFolderId(locale);
+		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", userInfo.getTenantId());
+		if (useEncryptZipForEmail.equals("")) {
+			useEncryptZipForEmail = "NO";
+		}
+		
+		model.addAttribute("shareId", shareId);
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
+		model.addAttribute("pDeleteBoxID", pDeleteBoxID);
+		model.addAttribute("pDeleteBoxName", pDeleteBoxName);
+		
+		logger.debug("folderQuotaAndManage ended.");
+		
+		return "ezEmail/mailFolderQuotaAndManage";
+	}
+	
+	/**
+	 * 환경설정 > 편지함 관리 -- 리스트 출력
+	 */
+	@RequestMapping(value="/ezEmail/folderQuotaList.do",
+			method=RequestMethod.GET,
+			produces="text/xml; charset=utf-8" )
+	@ResponseBody	
+	public String folderQuotaList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("folderQuotaList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String shareId = request.getParameter("shareId") == null ? "" : request.getParameter("shareId");
+		String email = userInfo.getId() + "@" + userInfo.getEmail().split("@")[1];
+		logger.debug("userId:'" + userInfo.getId() + "',shareId:'" + shareId + "'");
+		
+		if(shareId == null || !shareId.equals("")) {
+			email = shareId + "@" + userInfo.getEmail().split("@")[1];
+		}
+		logger.debug("email:" + email);
+		
+		JSONArray returnJsonArr = new JSONArray();
+		returnJsonArr = ezEmailService.getFolderQuota(email, locale);
+		
+		logger.debug("jsonArr" , returnJsonArr);
+		logger.debug("folderQuotaList ended.");
+		return returnJsonArr.toString();
 	}
 	
 }

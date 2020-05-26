@@ -166,6 +166,7 @@
 			var wAprMemberSN = "";
 			
 			//원문공개정보
+            var useOpenGov = "<c:out value ='${useOpenGov}'/>";
 			var basis = "<c:out value ='${basis}'/>";
 			var reason = "<c:out value ='${reason}'/>";
 			var listOpenFlag = "<c:out value ='${listOpenFlag}'/>";
@@ -174,6 +175,9 @@
 			//2020-01-23 김은석 추가
 			var useAnnualSusinYN = "<c:out value ='${useAnnualSusinYN}'/>";
 			
+			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
+			var formAprOption = "<c:out value='${formAprOption}'/>";
+
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -188,6 +192,9 @@
 					document.getElementById("btnAddSepAttach").style.display = "none";
 		        }
 		    	
+		    	if(useExternalMailServer == "NO") {
+		    		$("#btnMail").css("display","");
+		    	}
 		    };
 		    
 		    function getNextDocList()
@@ -453,8 +460,11 @@
 			*/
 		    function process_AfterApprove(mode)
 		    {
-		        if (FirstHtml != "")
+				/* 2020-02-24 홍승비 - 결재문서의 변경내역(수정이력) 저장 시점을 편집 -> 저장 직후로 변경 */
+/* 		        if (FirstHtml != "") {
 		            UpdateDocHistory(FirstHtml);
+		        } */
+				
 		        if (mode == "1")
 		        {
 		            if (allFlag == "1" || allFlag == "2")
@@ -600,8 +610,7 @@
 		                    pGubun = "6";
 		                }
 		            }		
-		        }
-		        
+				}
 //  		        SignCheck(); 
 		        
 		        if (pDraftFlag == "HABYUI") {
@@ -689,7 +698,7 @@
 	    		}
 		        
 		        redrawMappingSign();
-		        UpdateLineHistory();
+		        //UpdateLineHistory(); //결재선 변경이력 남기는 로직 위치변경 770->1004
 		        if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 		                var rtnVal = ExcuteInfo("DOCNUM_BEFORE", "");
@@ -760,27 +769,45 @@
 			                }
 			            }
 		        	} else {
-		        		// 1 : 결재, 4 : 전결, 16 : 대결
-			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-			            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
-			                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-			                    var rtnval;
-			                    //rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
-			                    rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
-			                    if (!rtnval) {
-			                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
-			                        OpenAlertUI(pAlertContent);
-			                        setMenuDisable("btnApprove", false);
-			                        return;
-			                    }
-			                }
-			            }
+						// 1 : 결재, 4 : 전결, 16 : 대결
+						if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+							// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
+							if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+								var rtnval;
+								//rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+								rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
+								if (!rtnval) {
+									var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
+									OpenAlertUI(pAlertContent);
+									setMenuDisable("btnApprove", false);
+									return;
+								}
+							}
+						}
 		        	}
 		        } else {
 		        	//useReceiveDocNo 처리
 		        	if (useReceiveDocNo == 'NO') {
 			        	if (approvalFlag == "S") {
 			        		//일반 미처리
+							if (pDraftFlag == "HABYUI") {
+								// pDraftFlag != "HABYUI" <- 추가되서 일부서합의 채번작업 코드추가
+								// '현재진행 중인 결재가 개인순차합의가 아닌 경우' 추가
+								// 마지막 결재자가 합의인 경우 totalMemSN 값으로 해당 조건절 사용.
+								if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7 && habYuiAprStateFlag) || pAprLineType == strAprType4 || totalMemSN > 0) {
+									if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
+										var rtnval;
+										//rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+										rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
+										if (!rtnval) {
+											var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
+											OpenAlertUI(pAlertContent);
+											setMenuDisable("btnApprove", false);
+											return;
+										}
+									}
+								}
+							}
 			        	} else {
 			        		// 일단 복사해봄
 			        		if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
@@ -923,6 +950,9 @@
 		            return;
 		        }
 		        else {
+		        	//결재처리가 완료되었을때 결재선 변경이력 남기도록
+		        	UpdateLineHistory();
+		        	
 		            if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 		                    var rtnVal = ExcuteInfo("LAST_END_AFTER", "");
@@ -1300,13 +1330,15 @@
 		        PrintClick("Cross", pDocID, "ING");
 		    }
 		
+		    /* 2020-02-24 홍승비 - 편집모드 > 저장 시 원문서 정보와 수정이력을 바로 업데이트하도록 수정하여, 기존 경고창 주석처리 */
 		    function btnClose_onclick() {
-		    	if (editedFlag) {
+/* 		    	if (editedFlag) {
 		    		var pInformationContent = "<spring:message code='ezApprovalG.t148'/>" + "<br>" + "<spring:message code='ezApprovalG.t149'/>";
 				    OpenInformationUI(pInformationContent, btnClose_onclick_Complete);
 		    	} else {
 			        window.close();
-		    	}
+		    	} */
+		    	window.close();
 		    }
 		    
 		    function btnClose_onclick_Complete(rtn) {
@@ -1553,6 +1585,7 @@
 		        parameter[40] = "";
 		        parameter[45] = pPublicityYN;
 		        parameter[46] = nonElecRec;
+		        parameter[52] = OrgAprUserDeptID;
 			    
 			    if (nonElecRec == "Y") {
 			    	if (pGubun != "1") {
@@ -1581,7 +1614,7 @@
 			        parameter[42] = tempItemName2;
 		        }
 
-		        if(useOpenGov = "YES") {
+		        if(useOpenGov == "YES") {
                     parameter[52] = basis;
                     parameter[53] = reason;
                     parameter[54] = listOpenFlag;
@@ -1699,16 +1732,17 @@
 		                pPublicityYN = ret[21];             // 공개여부 및 공개등급 관련  
 		                
 		                //tempPublic 추가
-		                if (ret[11].substring(0,1) == '1') {
+		                /*if (ret[11].substring(0,1) == '1') {
 		                	tempPublic = 'Y';
 		                } else {
 		                	tempPublic = 'N';
-		                }
+		                }*/
 		                
 		                if (approvalFlag == "G") {
 			                pSpecialRecordCode = ret[10];
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
+                            tempPublic = ret[21]; //문서 공개/비공개
 			                //문서 공개 범위 설정
 			                //setPublicFlag();
 			                setPublicFlag();
@@ -1766,7 +1800,11 @@
 		                	pSpecialRecordCode = "1";
 		                	tempPublic = ret[11];
 		                	SetDocOption(ret[20]);
-		                }
+						}
+
+						//2020-05-08 : 결재정보확인 시 문서정보 저장 후 문서 반영
+						setApprDocInfo();
+						SaveFile();
 		
 		                SummaryFlag = true;
 		
@@ -1779,6 +1817,8 @@
 	    			btnClose_onclick();
 		        }
 		    }
+		    
+		    /* 2020-02-24 홍승비 - 편집모드 내부에 '취소' 버튼 추가 */
 			var editedFlag = false;
 		    function btnEdit_onclick()
 		    {
@@ -1792,11 +1832,13 @@
 	    			}
 	    			return;
 	    		}
-		        if (modeflag) {
+		        if (modeflag) { // 편집모드 진입
 		            modeflag = false;
 		            chkBtnConfirm("1");
 		            chkBtn(false, approvalFlag);            
 		            setMenuBar("btnAddRelatedCabinet", false);
+		            document.getElementById("btnEditCancle").style.display = ""; // 편집모드 내부 취소버튼 표출
+		            
 		            beforeHtml = message.Get_EditorBodyHTML();
 		            message.SetEditable(true);
 		            var contentEditable = message.DocumentBodyGetAttribute("contentEditable");
@@ -1804,7 +1846,7 @@
 		                message.DocumentBodySetAttribute("contentEditable", "inherit");
 		            btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t1767'/>";
 		        }
-		        else {
+		        else { // 편집모드 내부에서 '저장'
 		            var pInformationContent = "<spring:message code='ezApprovalG.t43'/>";
 		            OpenInformationUI(pInformationContent, btnEdit_onclick_Complete);
 		        }
@@ -1831,12 +1873,23 @@
 			                OpenAlertUI(pAlertContent);
 			                return;
 		            }
-		            if (FirstHtml == "")
-		                FirstHtml = beforeHtml;
+		            /* 2020-03-03 홍승비 - 화면 종료 없이 계속 편집 > 저장해도 정상적으로 수정이력을 저장하도록 수정 */
+					FirstHtml = beforeHtml;
+		            
+		            /* 2020-02-24 홍승비 - 편집모드 > 저장 > 즉시 편집 전&후의 html과 수정이력을 저장하도록 수정 */
+		            message.SetEditable(false);
+		            var afterEditDoc = message.Get_EditorBodyHTML();
+		            afterEditDoc = EmbedContentIntoXML(afterEditDoc);
+		            
+					// 편집 전 본문 html > isBeforeDoc 값을 "Y"로 전달, 저장한 편집전문서 파일경로 URL 리턴
+		            var beforeDocURL = UpdateDocHistory(FirstHtml, "Y", "");
+		            UpdateDocHistory(afterEditDoc, "N", beforeDocURL);
+		            SaveFile();
+		            
 			        btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t44'/>";
 			        editedFlag = true;
 		        }
-		        else {
+		        else { // 저장 > 취소
 		            message.Set_EditorInputBodyHTML(modifiOrgBody);
 		            message.Set_HtmlDocument();
 		            noFieldsAvailable = true;
@@ -1845,8 +1898,11 @@
 		        message.SetEditable(false);
 		        chkBtnConfirm("2");
 		        setMenuBar("btnAddRelatedCabinet", true);
+		        document.getElementById("btnEditCancle").style.display = "none"; 
+		        
 		        modeflag = true;
 		    }
+		    
 		    function btnSave_onclick() {
 		        var pDocID_ = "", pDocTitle_ = "";
 		        try {
@@ -2098,6 +2154,21 @@
 		    		return false;
 		    	}
 		    }
+		    
+		    /* 2020-02-24 홍승비 - 편집모드 > 취소버튼 동작 구현 */
+		    function btnEditCancle_onclick() {
+				message.Set_EditorInputBodyHTML(modifiOrgBody);
+	            message.Set_HtmlDocument();
+	            noFieldsAvailable = true;
+		        btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t44'/>";
+		        
+		        message.SetEditable(false);
+		        chkBtnConfirm("2");
+		        document.getElementById("btnEditCancle").style.display = "none"; 
+		        
+		        modeflag = true;
+		    }
+		    
 		</script>
 	</head>
 	<body class="popup" style="height:100%;">
@@ -2114,7 +2185,9 @@
 		                  <li id="btnJunKyul" style="display:none"><span onClick="return btnJunKyul_onclick()"  ><spring:message code='ezApprovalG.t25'/></span></li>
 		                  <span style="display:none"><li id="btnModAprLine"><span onClick="return btnModAprLine_onclick()" ><spring:message code='ezApprovalG.t52'/></span></li></span>
 		                  <span style="display:none"><li id="btnModAprDept"><span onClick="return btnModAprDept_onclick()" ><spring:message code='ezApprovalG.t154'/></span></li></span>                 
-		                  <li id="btnEdit"><span onClick="return btnEdit_onclick()"  ><spring:message code='ezApprovalG.t44'/></span></li>
+		                  <li id="btnEdit"><span onClick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
+		                  <%-- 2020-02-24 홍승비 - 편집모드 내부 취소버튼 구현 --%>
+		                  <li id="btnEditCancle" style="display:none"><span onClick="btnEditCancle_onclick()"><spring:message code='ezApprovalG.t1761'/></span></li>
 		                  <span style="display:none"><li id="btnDocInfo"><span onClick="return btnDocInfo_onclick()"  ><spring:message code='ezApprovalG.t54'/></span></li></span>            
 		                  <li id="btnOpinion"><span onClick="return btnOpinion_onclick()"  ><spring:message code='ezApprovalG.t55'/></span></li>
 		                  <li id="btnFileAttach"><span onClick="return btnFileAttach_onclick()" ><spring:message code='ezApprovalG.t56'/></span></li>
@@ -2125,7 +2198,7 @@
 		                  <li id="btnConn" style="display:none"><span onClick="return btnConn_onclick()"><spring:message code='ezApprovalG.t63'/></span></li>
 		                  <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 						  <li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
-		                  <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()"></span></li>
+		                  <li id="btnMail" style="display:none"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()"></span></li>
 		                  <c:if test="${useCabinet == 'YES'}">
 								<li id="btnAddRelatedCabinet"><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 						  </c:if>

@@ -251,6 +251,8 @@ public interface EzApprovalGService {
     public String getFindSimpleCabinetList(String processDeptCode, String productionYear, String searchKeyword, String flag, String companyID, String langType, int tenantID) throws Exception;
 
     public String setBebu(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet, LoginVO userInfo, String curDocNum) throws Exception;
+    
+    public String setReBebu(String docID, String receiveSN, String deptID, LoginVO userInfo, String companyID, int tenantId, String lang) throws Exception;
 
     public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID, String approvalFlag, String userFlag) throws Exception;
 
@@ -285,6 +287,9 @@ public interface EzApprovalGService {
     public String getUncompleteDocCount(String deptID, String companyID, String cabinetID, int tenantID) throws Exception;
 
     public String transferCabinet(Document xmlDom, int tenantID) throws Exception;
+    
+	/* 2020-02-24 홍승비 - 편집 전후 문서를 판단하기 위한 플래그 isBeforeDoc, 편집전문서 파일경로 beforeDocURL 추가 */
+	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, String isBeforeDoc, String beforeDocURL, LoginVO userInfo)  throws Exception;
 
     public String gongRamUpdate(String docID, String userID, String companyID, String lang, int tenantID) throws Exception;
 
@@ -322,7 +327,7 @@ public interface EzApprovalGService {
 
     public String gongRamSaveEnd(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet) throws Exception;
 
-    public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang, int tenantID) throws Exception;
+    public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang, int tenantID, String docID) throws Exception;
 
     public String checkAprLine(String docID, String mode, String userID, String companyID, int tenantID) throws Exception;
 
@@ -402,8 +407,6 @@ public interface EzApprovalGService {
 
     public String doCancelForce(String docID, String userID, String companyID, int tenantId) throws Exception;
 
-    public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, LoginVO userInfo) throws Exception;
-
     public String getKeepType(String lang, int tenantId, String companyID) throws Exception;
 
     public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String primaryLang, String approvalFlag, String lang) throws Exception;
@@ -482,10 +485,16 @@ public interface EzApprovalGService {
     public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState, String nonElecRecYN) throws Exception;
 
     public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
+    
+	public void OpinionDel2(String docID, String companyID, int tenantId) throws Exception;
+	
+	public void OpinionDel3(String docID, String companyID, int tenantId) throws Exception;
 
     public int lastKyulJeHabYuiYN(String docID, String flag, String companyID, int tenantId) throws Exception;
 
     public String startXmlConvert(String content, String fontFamily, String fontSize, LoginVO userInfo) throws Exception;
+    
+    public String startXmlConvertHwp(String content, String fontFamily, String fontSize, LoginVO userInfo) throws Exception;
 
     public String getAprLineXmlForExt(String docID, LoginVO userInfo) throws Exception;
 
@@ -671,4 +680,10 @@ public interface EzApprovalGService {
                                     String publicity, String docID, String limitDate, String companyID, int tenantId, String modifyReason, LoginVO userInfo) throws Exception;
 
     public String getBansongDeptID(String docID, String orgCompanyID, int tenantID, LoginVO userInfo) throws Exception;
+    
+    public String updateReceivedDept(String docID, String processorID, String processorName, String processorJobTitle, String receivedDeptID, String receivedDeptName, String processorName2, String processorJobTitle2, String receivedDeptName2, String companyID, int tenantId) throws Exception;
+    
+    public String setApprDocInfo(Document xmlDom, String companyID, int tenantId) throws Exception;
+
+    public String getFormAprOptionInfo(String key, String type, String companyID, int tenantID) throws Exception;
 }

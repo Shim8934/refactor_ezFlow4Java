@@ -1,4 +1,4 @@
-﻿var lastKyulName, lastKyuljiwee, LastSignSN, pAprLineB4type;
+﻿﻿var lastKyulName, lastKyuljiwee, LastSignSN, pAprLineB4type;
 var pOrgAttach;
 var bbtnApprove = "";
 var bbtnReject = "";
@@ -1103,6 +1103,8 @@ function chkBtnConfirm(para) {
 
         if (document.getElementById("btnMail").style.display == "")
             bbtnMail = "1";
+        else 
+        	bbtnMail = "";
 
         if (document.getElementById("btnSetTaskCode").style.display == "")
             bbtnSetTaskCode = "1";
@@ -1230,6 +1232,14 @@ function getDocInfo() {
             TaskCode = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[31]);
             tempSecurityDate = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[36]);
             */
+
+            if (useOpenGov == "YES") {
+                basis = SelectSingleNodeValueNew(result, "DATA/BASIS");
+                reason = SelectSingleNodeValueNew(result, "DATA/REASON");
+                listOpenFlag = SelectSingleNodeValueNew(result, "DATA/LISTOPENFLAG");
+                fileOpenFlagList = SelectSingleNodeValueNew(result, "DATA/FILEOPENFLAGLIST");
+                limitDate = SelectSingleNodeValueNew(result, "DATA/LIMITDATE");
+            }
         }
     } catch (e) {
         alert("getDocInfo :: " + e.description);
@@ -3205,7 +3215,7 @@ function openAaprDocAttachUI() {
         aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
         
         if(approvalFlag == "G") {
-        	DivPopUpShow(1050, 500, "/ezApprovalG/aprCabinetAttach.do");
+        	DivPopUpShow(1050, 520, "/ezApprovalG/aprCabinetAttach.do");
         } else {
         	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID+"&pDocID="+pDocID);
         }
@@ -3529,7 +3539,9 @@ function getHistory() {
 function getHistory_Complete() {
     DivPopUpHidden();
 }
-function UpdateDocHistory(pHtml) {
+
+/* 2020-02-24 홍승비 - 편집 전후 문서를 판단하기 위한 플래그 isBeforeDoc, 편집전문서 파일경로 beforeDocURL 파라미터 추가 */
+function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
 
     var xmlhttp2 = createXMLHttpRequest();
     var xmlpara = createXmlDom();
@@ -3538,11 +3550,13 @@ function UpdateDocHistory(pHtml) {
     createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
     createNodeAndInsertText(xmlpara, objNode, "pHtml", ConvertHTMLtoMHT(pHtml));
     createNodeAndInsertText(xmlpara, objNode, "mode", "mht");
+    createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", isBeforeDoc);
     
     xmlhttp2.open("POST", "/ezApprovalG/uploadDocHistory.do", false);
     xmlhttp2.send(xmlpara);
-
+    
     var URL = xmlhttp2.responseText;
+    var returnURL = "";
     if (URL.length < 255 && URL != "FALSE") {
         var xmlhttp = createXMLHttpRequest();
         var xmlpara = createXmlDom();
@@ -3554,18 +3568,20 @@ function UpdateDocHistory(pHtml) {
         createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
         createNodeAndInsertText(xmlpara, objNode, "pUserJobTitle", arr_userinfo[13]);
         createNodeAndInsertText(xmlpara, objNode, "pUserDeptID", arr_userinfo[4]);
-        createNodeAndInsertText(xmlpara, objNode, "pUserDeptName", arr_userinfo[15]);
+        createNodeAndInsertText(xmlpara, objNode, "pUserDeptName", ConvMakeXMLString(arr_userinfo[15]));
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
-        createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
+        createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", ConvMakeXMLString(arr_userinfo[16]));
         createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
+        createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", isBeforeDoc);
+        createNodeAndInsertText(xmlpara, objNode, "BEFOREDOCURL", beforeDocURL);
         
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);
         
         if (xmlhttp != null && xmlhttp.readyState == 4) {
           	 if (xmlhttp.statusText == "OK") {
-          		
+          		returnURL = xmlhttp.responseText;
           	 } else {
           		 var pAlertContent = strLang89;
                  OpenAlertUI(pAlertContent);
@@ -3575,6 +3591,8 @@ function UpdateDocHistory(pHtml) {
         var pAlertContent = strLang90;
         OpenAlertUI(pAlertContent);
     }
+    
+    return returnURL;
 }
 /**
  * 결재선의 이력관리
@@ -3582,6 +3600,7 @@ function UpdateDocHistory(pHtml) {
 function UpdateLineHistory() {
 	var result = "";
     
+	/* 2020-05-22 홍승비 - 사용자 부서에 특수문자 허용 + arr_userinfo[] 배열의 값은 c:out 태그로 저장하므로, DB 저장 시 역으로 특수문자 인코딩 진행 */
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -3593,11 +3612,11 @@ function UpdateLineHistory() {
 			userName : arr_userinfo[11],
 			userJobTitle : arr_userinfo[13],
 			userDeptID : arr_userinfo[4],
-			userDeptName : arr_userinfo[15],
+			userDeptName : ConvMakeXMLString(arr_userinfo[15]),
 			chkFlag : "CHECK",
 			userName2 : arr_userinfo[12],
 			userJobTitle2 : arr_userinfo[14],
-			userDeptName2 : arr_userinfo[16],
+			userDeptName2 : ConvMakeXMLString(arr_userinfo[16]),
 			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
@@ -4130,4 +4149,50 @@ function setDocNumFormat(pPrefix) {
     field.textContent = numHeader;
     if (numHeader.indexOf(strLang107) > 0)
         message.DocumentBodySetAttribute("docnum", numHeader);
+}
+
+/* 2020-03-06 홍승비 - 부서에 특수문자를 허용하므로, DB 저장 시 역인코딩을 위한 함수 추가 */
+function ConvMakeXMLString(str) {
+    str = ReplaceText(str, "&lt;", "<");
+    str = ReplaceText(str, "&gt;", ">");
+    str = ReplaceText(str, "&#039;", "'");
+    str = ReplaceText(str, "&#034;", "\"");
+	str = ReplaceText(str, "&amp;", "&");	    
+	str = ReplaceText(str, "&#92;", "\\");
+    return str;
+}
+
+//2020-05-08 : 결재정보/문서정보 저장
+function setApprDocInfo(){
+    var objNodes = GetChildNodes(GetChildNodes(document.getElementById('DOCINFO').dataSource.childNodes[0])[0]);
+
+    var xmlpara = createXmlDom();
+
+    var objNode;
+    createNodeInsert(xmlpara, objNode, "PARAMETER");  
+    createNodeAndInsertText(xmlpara, objNode, "DOCID", getNodeText(objNodes[0])); 
+    createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", tempPublic); 
+    createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
+    createNodeAndInsertText(xmlpara, objNode, "URGENTAPPROVAL", tempUrgent);
+    createNodeAndInsertText(xmlpara, objNode, "KEYWORD", tempKeyword); 
+    createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
+    createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
+    createNodeAndInsertText(xmlpara, objNode, "PUBLICITYYN", pPublicityYN);
+    createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", pLimitRange);
+    createNodeAndInsertText(xmlpara, objNode, "PAGENUM", pPageNum);   
+    createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
+    createNodeAndInsertText(xmlpara, objNode, "SECURITYAPPROVAL", tempSecurityDate);
+
+    xmlhttp.open("POST", "/ezApprovalG/setApprDocInfo.do", false);
+    xmlhttp.send(xmlpara);
+
+    return xmlhttp.responseText;
+}
+
+//결재 세부옵션처리
+function setFormAprOption(){  
+    if(formAprOption.indexOf("_a2_"))  //파일첨부
+        setMenuBar("btnFileAttach", false);	
+    if(formAprOption.indexOf("_a3_"))  //문서첨부
+        setMenuBar("btnAprDocAttach", false);	
 }

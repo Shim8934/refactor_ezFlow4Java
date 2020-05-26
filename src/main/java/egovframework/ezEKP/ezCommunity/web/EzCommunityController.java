@@ -14,7 +14,6 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -1793,12 +1792,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		String primary = userInfo.getPrimary();
-		//TODO 2016-04-27 이효진 사용하는곳 없음
-		/*if (!code.equals("")){
-			String titleName = ezCommunityService.getBoardTitleName(bName, code);
-		}
-		
-		int adminCheck = ezCommunityService.bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo());*/
 		String serverName = request.getServerName();
 		CommunityCBoardVO cBoardVO = null;
 		
@@ -1826,6 +1819,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			 } else {
 				 writerFakeName = cBoardVO.getUserName();
 			 }
+			 
+			 cBoardVO.setWriteDay(commonUtil.getDateStringInUTC(cBoardVO.getWriteDay(), userInfo.getOffset(), false));
+			 
 		} else { // 쓰기(mode :  "write")
 			if (userInfo.getLang().equals("2")) {
 				grsUserName = userInfo.getDisplayName2();
@@ -2222,9 +2218,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		String pollManagerID = request.getParameter("pollManagerID");
 		String pollState = URLDecoder.decode(request.getParameter("pollState"), "utf-8");
-		
-		//TODO 2016-12-15 이효진 사용되지 않음
-//		int userLevel = ezCommunityService.pollResGet1(userInfo.getId(), code, tenantID);
 		
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo)) {
 			return "cmm/error/egovError";

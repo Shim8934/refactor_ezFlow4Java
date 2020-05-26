@@ -169,7 +169,10 @@
 			//원문정보공개
 			var useOpenGov = "<c:out value='${useOpenGov}' />";
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
-
+			var newpDocID = "";
+	        var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
+	        var formAprOption = "<c:out value='${formAprOption}'/>";
+	        
 	        window.onload = function () {
 	            try {
 	                window.onresize();
@@ -262,6 +265,22 @@
 	                    hideProgress();
 	                    window.focus();
 	                    HwpCtrl.focus();
+	
+
+						var targetText = GetDocumentElement(HwpCtrl, "CONNROOT", true);
+
+						if (targetText != null && targetText.length > 0 ) {
+
+							  var xmlData = loadXMLString(targetText);
+    	
+    						  var connNodes = GetChildNodes(xmlData.documentElement);
+
+							  if(connNodes.length > 0) {
+								  document.getElementById('btnSaveServer').style.display = 'none';		
+							  }
+
+							
+						} 
 	
 	                    if (pFormHref == "") {
 	                        hideProgress();
@@ -593,6 +612,20 @@
 	                        }
 	                    }
 		            }
+
+					var FieldLists = HwpCtrl.GetFieldList();
+					var Fields = FieldLists.split(";");
+					var tempFields = FieldLists.split(";");
+
+					tempFields = Fields.reduce(function(tempArr,curr,index) {
+						tempArr.indexOf(curr) > -1 ? tempArr : tempArr.push(curr);
+						return tempArr;
+					},[]);
+
+					if (Fields.length !== tempFields.length) {
+						OpenAlertUI("동일한 Field가 존재합니다. 문서를 다시 확인해주세요.");
+						return;
+					}
 		
 		            if (HwpCtrl.CheckFieldExist("doctitle"))
 		                pDocTitle = trim(HwpCtrl.GetFieldText("doctitle"));
@@ -661,8 +694,10 @@
 	
 	                setDrafterAddress();
 	
-	                if (pDraftFlag == "REDRAFT")
+	                /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+	                if (pDraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
 	                    delOpinionInfo();
+	                }
 	
 	                if (nonElecRec != "Y") {
 		                if (LastSignSN == 1 || DraftLastFlag) {
@@ -1420,6 +1455,10 @@
 // 			        if (ListType == "21" && DraftFlag == "REDRAFT") {
 // 			            RemoveTmpDoc(DocSN);
 // 			        }
+			        
+			        if(Saveflag) {
+		        		newpDocID = createNewDoc();
+		        	}
 			
 			        var rtnVal = SaveTMPFile();
 			        if (rtnVal == "TRUE") {
@@ -1429,7 +1468,7 @@
 			                    var pAlertContent = "<spring:message code='ezApprovalG.t1581'/>";
 			                    OpenAlertUI(pAlertContent);
 			                    Saveflag = true;
-			                    window.close();
+			                    //window.close();
 			                } else {
 			                    Saveflag = true;
 			                }

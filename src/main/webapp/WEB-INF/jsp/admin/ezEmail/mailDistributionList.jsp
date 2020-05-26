@@ -43,6 +43,11 @@
 		        else {
 		            company_change();
 		        }
+		        
+		        var searchInput = $("#searchInputWrap input");
+		        var searchBtn = $("#searchInputWrap .imgbtn");
+		        var searchInputW = $("#searchInputWrap").width() - searchBtn.outerWidth() - 10;
+		        searchInput.width(searchInputW + "px");
 		    }
 		    function company_change() {
 		    	companyId = document.all("ListCompany") == null ? companyId : document.all("ListCompany").value;
@@ -378,7 +383,7 @@
 	</script>
 		<div style="width:825px;">
 		<!-- 검색 -->
-		<div style="border: 1px solid #e8e8e8; WIDTH:100%; border-bottom: 0px; height: 30px; box-sizing: border-box; line-height: 30px;">
+		<div style="border: 1px solid #e8e8e8; WIDTH:100%; height: 34px; box-sizing: border-box; line-height: 33px; margin-bottom:3px;">
 			<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;">
 				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC; font-weight:bold;" id="listCount"></span> <spring:message code='ezSystem.kyj2'/>]</span>
 			</div>
@@ -391,9 +396,11 @@
 					<option value="memberID"><spring:message code='ezEmail.ksaDistribution02' /></option> <!-- 구성원아이디 -->
 				</select>
 				</div>
-				<div style="display: inline-block;box-sizing: border-box; padding-right: 2px;width: 519px;padding-left: 5px;">
-					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px; width:89%">
-					<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
+				<div id="searchInputWrap" style="display: inline-block;box-sizing: border-box; padding-right: 2px;width: 519px;padding-left: 5px;">
+					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px;">
+					<a class="imgbtn" style="vertical-align:middle; height: 25.5px; box-sizing: border-box; margin-top: -1px; ">
+						<span onclick="search_click()" style="height: 100%; line-height: 2em;"><spring:message code="ezStatistics.t36" /></span>
+					</a>
 				</div>
 			</div>
 		</div>
@@ -409,27 +416,29 @@
 	                </div>
 	            </td>
 	            <td style="vertical-align:top; border-bottom:none">
-	                <div id="DIV_Member" style="width: 515px; height: 400px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto;">
-	                	<table class="shared_boxesTable public_distribution" style="display:none">
-	                		<thead id="distributionTitleTH">
-	                			<tr>
-	                				<th></th>
-	                			</tr>
-	                		</thead>
-				            <tbody id="distributionTitleTB">
-				            	<tr>
-				            		<td><span class="shared_boxesText" id="distriTitSpan"></span></td>
-				            	</tr>
-				            </tbody>
-				            <thead id="distributionListTH">
-				            	<tr>
-					                <th>▒ <spring:message code='ezEmail.t659' /></th>
-					            </tr>
-				            </thead>
-				            <tbody id="distributionListTB">
-				            </tbody>
-				        </table>
-	                </div>      
+	            	<div style="box-sizing: border-box; padding-left: 5px;">
+		                <div id="DIV_Member" style="width: 100%; height: 400px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto; box-sizing: border-box;">
+		                	<table class="shared_boxesTable public_distribution" style="display:none">
+		                		<thead id="distributionTitleTH">
+		                			<tr>
+		                				<th></th>
+		                			</tr>
+		                		</thead>
+					            <tbody id="distributionTitleTB">
+					            	<tr>
+					            		<td><span class="shared_boxesText" id="distriTitSpan"></span></td>
+					            	</tr>
+					            </tbody>
+					            <thead id="distributionListTH">
+					            	<tr>
+						                <th>▒ <spring:message code='ezEmail.t659' /></th>
+						            </tr>
+					            </thead>
+					            <tbody id="distributionListTB">
+					            </tbody>
+					        </table>
+		                </div>  
+	                </div>    
 	            </td>
 	        </tr>
 	    </table>

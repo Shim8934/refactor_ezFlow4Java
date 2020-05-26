@@ -568,11 +568,12 @@
 				// hack: temporarily disable the focus handler
 				// to deal with the fact that IE fires 'focus'
 				// events asynchronously
-				self.off('focus.timepicker');
+				/* 2020-03-25 timepicker timepicker 선택 후 재 클릭 시 선택 안되는 현상 수정 */
+				/*self.off('focus.timepicker');
 				self.on('focus.timepicker-ie-hack', function(){
 					self.off('focus.timepicker-ie-hack');
 					self.on('focus.timepicker', methods.show);
-				});
+				});*/
 
 				if (!_hideKeyboard(self)) {
 					self[0].focus();

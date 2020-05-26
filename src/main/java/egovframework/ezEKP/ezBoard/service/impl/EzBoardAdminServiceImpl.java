@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.StringJoiner;
 
 import javax.annotation.Resource;
@@ -41,9 +40,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	
 	@Resource(name="EzBoardAdminDAO")
 	private EzBoardAdminDAO ezBoardAdminDAO;
-	
-	@Autowired
-	private Properties globals;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -243,6 +239,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ISDEPT", isDept);
 		map.put("v_ISEQUALDEPT", isEqualDept);
 		
+		logger.debug("map in getBoardTree_Get2    ::   " + map.toString());
 		logger.debug("getBoardTree_Get2 ended");
 		return ezBoardAdminDAO.getBoardTree_Get2(map);
 	}
@@ -271,8 +268,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		/* 2019-06-04 홍승비 - 게시판그룹에 관리자권한 존재하는 경우, 해당 게시판그룹의 하위게시판 전부 가져오도록 수정 */
 		map.put("v_boardGroupAdmin_FG", boardGroupAdmin_FG);
 		
+		logger.debug("brdBoardTree map   ::  " + map.toString());
 		logger.debug("brdBoardTree ended");
-		logger.debug("map.toString() : " + map.toString());
 		return ezBoardAdminDAO.brdBoardTree(map);
 	}
 
@@ -683,6 +680,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PFORM", boardPropertyVO.getFormFlag());
 		map.put("v_PAPPRFLAG", boardPropertyVO.getApprFlag());
 		map.put("v_PAPPRMAILFLAG", boardPropertyVO.getApprMailFlag());
+		map.put("v_LIKEFLAG", boardPropertyVO.getLikeFlag());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());
 		
 		/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
@@ -1016,6 +1014,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_COMPANYID", vo.getCompanyID());
 		map.put("v_TENANTID", vo.getTenantID());
 		map.put("isAllGroupBoard", vo.getIsAllGroupBoard());
+		/* 2019-09-19 홍승비 - 권한의 TYPE값 추가 */
+		map.put("v_TYPE", vo.getType());
 		
 		// 해당 userID가 여러 회사의 레코드를 가지고 있을 수 있으므로, companyID 조건이 필요하다.
 		int tempCount = ezBoardAdminDAO.getBoardManage(map);

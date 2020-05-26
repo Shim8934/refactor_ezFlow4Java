@@ -5,25 +5,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -51,7 +47,6 @@ import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
-import egovframework.ezEKP.ezCircular.vo.CircularConfirmVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO;
@@ -85,9 +80,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties config;
 	
 	@Autowired
 	private EzCircularService ezCircularService;
@@ -1151,7 +1143,9 @@ public class EzCircularController extends EgovFileMngUtil {
 					String originFile = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + fileName; // 복사할 파일의 경로
 					String copyFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + fileName;
 					
-					Files.copy(new File(originFile).toPath(), new File(copyFilePath).toPath());
+					File copyFile = new File(copyFilePath);
+					if(!copyFile.exists())
+						Files.copy(new File(originFile).toPath(), new File(copyFilePath).toPath());
 					//ezCircularService.copyFileList(pDirPath, attach.getFilePath().split("/")[2], circularID);
 				}
 			}

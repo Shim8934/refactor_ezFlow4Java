@@ -2209,6 +2209,8 @@ function SetBtnStateTrue() {
         if (pDraftFlag == "DRAFT" || DocSN != "") {
             setMenuBar("btnSaveServer", true);
         }
+
+        //setFormAprOption();  //결재 세부옵션
     } catch (e) {
         alert("SetBtnStateTrue()" + e.description);
     }
@@ -2723,7 +2725,7 @@ function openAaprDocAttachUI() {
             aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
             
             if(approvalFlag == "G") {
-            	DivPopUpShow(1050, 500, url);
+            	DivPopUpShow(1050, 520, url);
             } else {
             	DivPopUpShow(1050, 560, url);
             }
@@ -3380,6 +3382,14 @@ function getDocInfo() {
         cabinetID = SelectSingleNodeValueNew(result, "DATA/CABINETID");
         TaskCode = SelectSingleNodeValueNew(result, "DATA/TASKCODE");
         tempSecurityDate = SelectSingleNodeValueNew(result, "DATA/SECURITYAPPROVAL");
+
+        if (useOpenGov == "YES") {
+            basis = SelectSingleNodeValueNew(result, "DATA/BASIS");
+            reason = SelectSingleNodeValueNew(result, "DATA/REASON");
+            listOpenFlag = SelectSingleNodeValueNew(result, "DATA/LISTOPENFLAG");
+            fileOpenFlagList = SelectSingleNodeValueNew(result, "DATA/FILEOPENFLAGLIST");
+            limitDate = SelectSingleNodeValueNew(result, "DATA/LIMITDATE");
+        }
     }
 }
 
@@ -3754,7 +3764,6 @@ function setMenuBar(id, flag) {
     else
         display_Value = "none";
 
-
     strCmd = id + ".style.display='" + display_Value + "'";
     eval(strCmd);
 }
@@ -4100,8 +4109,15 @@ function SaveTMPFile(AutoSave) {
     mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
     mhtBody = ConvertHTMLtoMHT(mhtBody);
 	
+    var docID = "";
+    if(Saveflag) {
+    	docID = newpDocID;
+    }
+    else {
+    	docID = pDocID
+    }
 	var data = {
-		docID : pDocID,
+		docID : docID,
         formId : pFormID,
 		html  : mhtBody
 	}
@@ -4136,7 +4152,10 @@ function SaveTMPDocInfo(AutoSave) {
         var objNode;
         createNodeInsert(xmlpara, objNode, "PARAMETER");
 
-        createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+        if(Saveflag) 
+        	createNodeAndInsertText(xmlpara, objNode, "DOCID", newpDocID);
+        else
+        	createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
         createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
             createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
@@ -4236,6 +4255,11 @@ function SaveTMPDocInfo(AutoSave) {
         if (isUsed == "reuse") {
             createNodeAndInsertText(xmlpara, objNode, "beforeDocID", beforeDocID);
             createNodeAndInsertText(xmlpara, objNode, "isUsed", isUsed);
+        }
+        
+        if(Saveflag) {
+        	createNodeAndInsertText(xmlpara, objNode, "saveFlag", Saveflag);
+        	createNodeAndInsertText(xmlpara, objNode, "oldDocID", pDocID);
         }
 
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
@@ -4437,4 +4461,12 @@ function compareDocDateCurDate() {
 			field.textContent = CurrentDate;
 		}
 	} catch(e){ console.log("ERROR::::compareDocDateCurDate() " + e.description); }
+}
+
+//결재 세부옵션처리
+function setFormAprOption(){  
+    if(formAprOption.indexOf("_a2_"))  //파일첨부
+        setMenuBar("btnFileAttach", false);	
+    if(formAprOption.indexOf("_a3_"))  //문서첨부
+        setMenuBar("btnAprDocAttach", false);	
 }

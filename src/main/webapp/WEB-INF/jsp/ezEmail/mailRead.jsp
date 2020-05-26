@@ -129,25 +129,15 @@
 		        	btnDelete.style.display = "none";
 		        }
 		        
-		        if (useCountryIP == "YES") {
-		        	if (useShowSystemCountry == "YES") {
-		        		if (countryCode != "") {
-		        			if (countryCode == "unknown") {
-		        				countryCode = "qm";
-        					}
-				        	document.getElementById("nationalFlag").src = "/images/countryIcon/" + countryCode + ".png";
+		        if (useCountryIP == "YES" && mailWritePreview != "true") {
+		        	if (useShowSystemCountry == "YES" || (useShowSystemCountry != "YES" && countryCode != systemCountryCode)) {
+			        	
+		        		if (document.getElementById("nationalFlag") != null) {
+			        		countryCode = countryCode == "unknown" ? "qm" : countryCode;
+			        		
+			        		document.getElementById("nationalFlag").src = "/images/countryIcon/" + countryCode + ".png";
 				        	document.getElementById("nationalFlag").style.display = "";
-		        		}
-		        	} else {
-		        		if (countryCode != systemCountryCode) {
-		        			if (countryCode == "unknown") {
-		        				countryCode = "qm";
-        					}
-				        	document.getElementById("nationalFlag").src = "/images/countryIcon/" + countryCode + ".png";
-				        	document.getElementById("nationalFlag").style.display = "";
-		        		} else {
-		        			document.getElementById("nationalFlag").style.display = "none";
-		        		}
+			        	}
 		        	}
 		        } 
 		        
@@ -564,7 +554,9 @@
 		                    <li id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
 		                    <li><span id="btnMove" onClick="move_onClick()"><spring:message code="ezEmail.t482" /></span></li>
 		                    <li id="PcSave"><span id="btnSave" onClick="download_mail()">PC <spring:message code="ezEmail.t48" /></span></li>
+		                    <c:if test="${packageType != 'mail'}">
 		                    <li id="BoardItem"><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
+		                    </c:if>
 		                    <li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
 		                    <li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          
 		                    <c:if test="${useCabinet == 'YES'}">

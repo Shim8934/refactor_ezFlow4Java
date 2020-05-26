@@ -7,25 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
+import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
 import egovframework.ezMobile.ezResource.vo.MResourceGetScheduleVO;
+import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
-import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
-import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
 import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -58,12 +44,10 @@ public class MResourceDAO extends EgovAbstractDAO {
 		return  list;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public MResourceScheduleVO getResScheduleDetail(Map<String, Object> map){
 		return  (MResourceScheduleVO) select("MResourceDAO.getResScheduleDetail", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public MResourceGetScheduleVO getResSchRepet(Map<String, Object> map){
 		return  (MResourceGetScheduleVO) select("MResourceDAO.getResSchRepet", map);
 	}
@@ -78,44 +62,40 @@ public class MResourceDAO extends EgovAbstractDAO {
 		return  (List<MResourceScheduleVO>) list("MResourceDAO.getResFavoriteList", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void addResSch(Map<String, Object> map){
 		insert("MResourceDAO.addResSch", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void modifyResSch(Map<String, Object> map){
 		update("MResourceDAO.modifyResSch", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void delResSch(Map<String, Object> map){
 		delete("MResourceDAO.delResSchRem", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void delResSchRepet(Map<String, Object> map){
 		delete("MResourceDAO.delResSchRemRepet", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void delResSch_I(Map<String, Object> map){
 		delete("MResourceDAO.delResSch_I", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public int getResSchMaxNum(Map<String, Object> map){
 		return (int)select("EzResourceDAO.resScheMaxNum", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void addResFavor(Map<String, Object> map){
 		insert("MResourceDAO.addResFavor", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void delResFavor(Map<String, Object> map){
 		delete("MResourceDAO.delResFavor", map);
+	}
+	
+	public String getResUpperBrdID(Map<String, Object> map){
+		return (String)select("MResourceDAO.getResUpperBrdID", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -152,7 +132,6 @@ public class MResourceDAO extends EgovAbstractDAO {
 			return  (List<ResScheGetHolidayVO>) list("MResourceDAO.getTholiday", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public MResourceScheduleVO getResBrdDetail(Map<String, Object> map){
 			return  (MResourceScheduleVO) select("MResourceDAO.getResBrdDetail", map);
 	}

@@ -1021,8 +1021,8 @@ function getExtInfo() {
         if (Nodes.length > 0) {
             field = message.GetListItem(fields, "symbol");
             if (field) {
-//                signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(GetChildNodes(Nodes[0])[0], "src"));
-                signPath = dirPath + sCompanyID + "/ExDocUserSign/" + GetAttribute(GetChildNodes(Nodes[0])[0], "src");
+                signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(GetChildNodes(Nodes[0])[0], "src"));
+//                signPath = dirPath + sCompanyID + "/ExDocUserSign/" + GetAttribute(GetChildNodes(Nodes[0])[0], "src");
                 if (GetAttribute(GetChildNodes(Nodes[0])[0], "width") == "" || GetAttribute(GetChildNodes(Nodes[0])[0], "width") == null)
                     var signWidth = 70;
                 else
@@ -1059,8 +1059,8 @@ function getExtInfo() {
         if (Nodes.length > 0) {
             field = message.GetListItem(fields, "logo");
             if (field) {
-//                signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(GetChildNodes(Nodes[0])[0], "src"));
-                signPath = dirPath + sCompanyID + "/ExDocUserSign/" + GetAttribute(GetChildNodes(Nodes[0])[0], "src");
+                signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(GetChildNodes(Nodes[0])[0], "src"));
+//                signPath = dirPath + sCompanyID + "/ExDocUserSign/" + GetAttribute(GetChildNodes(Nodes[0])[0], "src");
 
                 if (GetAttribute(GetChildNodes(Nodes[0])[0], "width") == "" || GetAttribute(GetChildNodes(Nodes[0])[0], "width") == null)
                     var signWidth = 70;
@@ -1853,6 +1853,10 @@ function SetPropertyValue() {
             }
             else {
                 switch (field.id) {
+	                case "receiptnumber":
+	                	// 재배부요청 시 배부받은 부서의 접수번호를 갱신하기 위해 추가. 2020-05-08 홍대표.
+	                	setDocNumFormat();
+	                	break;
                     case "receiptdate":
                         setNodeText(field, CurrentDate);
                         break;
@@ -1968,29 +1972,32 @@ function chk_Passwd()
     DivPopUpShow(350, 225, url);
 }
 
+var selectcabinet_cross_dialogArguments = new Array();
 function btnSetTaskCode_onclick() {
     try {
         var para = new Array();
         para[0] = cabinetID;
-        var url = "/myoffice/ezApprovalG/ezCabinet/SelectCabinet.aspx?initFlag=1";
-        var feature = "dialogWidth:850px;dialogHeight:455px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
-        feature = feature + GetShowModalPosition(850, 455);
 
-        if (url != "")
-            var rtn = window.showModalDialog(url, para, feature);
+        selectcabinet_cross_dialogArguments[0] = para;
+        selectcabinet_cross_dialogArguments[1] = btnSetTaskCode_onclick_Complete;
 
-
-        if (rtn[0] == "TRUE") {
-            var g_SelCabXml = rtn[1];
-            var xmlCab = createXmlDom();
-            xmlCab = loadXMLString(g_SelCabXml);
-
-            cabinetID = getNodeText(SelectNodes(xmlCab, "CABINETINFO/CABINET/CABINETID")[0]);
-            TaskCode = getNodeText(SelectNodes(xmlCab, "CABINETINFO/CABINET/TASKCODE")[0]);
-        }
+        DivPopUpShow(1000, 625, "/ezApprovalG/selectCabinet.do?initFlag=1");
     } catch (e) {
         alert("btnSetTaskCode_onclick : " + e.description);
     }
+}
+
+function btnSetTaskCode_onclick_Complete(rtn) {
+    DivPopUpHidden();
+    if (rtn[0] == "TRUE") {
+        var g_SelCabXml = rtn[1];
+        var xmlCab = createXmlDom();
+        xmlCab = loadXMLString(g_SelCabXml);
+
+        cabinetID = getNodeText(SelectNodes(xmlCab, "CABINETINFO/CABINET/CABINETID")[0]);
+        TaskCode = getNodeText(SelectNodes(xmlCab, "CABINETINFO/CABINET/TASKCODE")[0]);
+    }
+    TaskCode_Save();
 }
 
 function CheckSepAttParamXmlNull(g_SepAttachLVXml) {
@@ -2013,22 +2020,24 @@ function CheckSepAttParamXmlNull(g_SepAttachLVXml) {
 var aprsign1_cross_dialogArguments = new Array();
 function openSignUI() {
     try {
-
-        var objRoot;
-        var objNode;
+    	var result = "";
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/getSignRequest.do",
+    		data : {
+    			userID : pUserID
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+    	
         var SignNodeList;
 
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-
-        xmlhttp.open("Post", "/myoffice/ezApprovalG/ezAPRSIGN/aspx/GetSignRequest.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        SignNodeList = SelectNodes(loadXMLString(xmlhttp.responseText), "LISTVIEWDATA/ROWS/ROW");
+        SignNodeList = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
 
         if (SignNodeList.length != 0) {
             var parameter = pUserID;
@@ -2036,12 +2045,12 @@ function openSignUI() {
             aprsign1_cross_dialogArguments[0] = parameter;
             aprsign1_cross_dialogArguments[1] = openSignUI_Complete;
 
-            DivPopUpShow(350, 310, "/myoffice/ezApprovalG/ezAPRSIGN/AprSign1_Cross.aspx");
+            DivPopUpShow(350, 310, "/ezApprovalG/aprSign.do");
         } else {
             openSignUI_Complete("NAME");
         }
     } catch (e) {
-        alert("openSignUI : " + e.description);
+        alert("openSignUI()" + e.description);
     }
 }
 
@@ -2171,7 +2180,8 @@ function SendDraftMappingSign(ret) {
             if (field) {
 
                 if (ret != "NAME") {
-                    strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(ret) + "' border=0 embedding='1' ";
+                	//대외문서 접수자전결 시 savefile.do에서 에러가 발생해서 경로 수정. 2020-04-03 홍대표
+                    strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
 
@@ -2212,16 +2222,23 @@ function SendDraftMappingSign(ret) {
 
 function getSignDate() {
     var GyulJeDate;
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "getDate", "");
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/GetSignDate.aspx", false);
-    xmlhttp.send(xmlpara);
-    GyulJeDate = xmlhttp.responseText;
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getSignDate.do",
+		data : {
+			getDate : ""
+		},
+		success: function(text){
+			result = text;
+		}
+	});
+	
+    GyulJeDate = result;
+    
     return GyulJeDate;
 }
 
@@ -2293,76 +2310,66 @@ function SaveDraftDocInfo_susin() {
 
         var objNode;
         createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DocID", getNodeText(objNodes[0]));
-        createNodeAndInsertText(xmlpara, objNode, "FormID", getNodeText(objNodes[1]));
-        createNodeAndInsertText(xmlpara, objNode, "OrgDocID", getNodeText(objNodes[2]));
-        createNodeAndInsertText(xmlpara, objNode, "DocType", getNodeText(objNodes[3]));
-        createNodeAndInsertText(xmlpara, objNode, "DocState", getNodeText(objNodes[4]));
-        createNodeAndInsertText(xmlpara, objNode, "FunctionType", strAprState2);
-        createNodeAndInsertText(xmlpara, objNode, "Href", getNodeText(objNodes[6]));
-        field = message.GetListItem(fields, "doctitle");
-        createNodeAndInsertText(xmlpara, objNode, "DocTitle", getNodeText(field));
-
-        var field = message.GetListItem(fields, "deptshortedname");
-        if (field) {
-            createNodeAndInsertText(xmlpara, objNode, "DocNo", getfieldValue(field));
+        createNodeAndInsertText(xmlpara, objNode, "DOCID", getNodeText(objNodes[0]));
+        createNodeAndInsertText(xmlpara, objNode, "FORMID", getNodeText(objNodes[1]));
+        createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", getNodeText(objNodes[2]));
+        createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", getNodeText(objNodes[3]));
+        
+        createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", getNodeText(objNodes[4]));
+        createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", strAprState2);
+        createNodeAndInsertText(xmlpara, objNode, "HREF", getNodeText(objNodes[6]));        
+        
+        createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", message.GetDocTitle());
+        if (approvalFlag == 'G') {
+        	createNodeAndInsertText(xmlpara, objNode, "DOCNO", pDocNo);
+        } else {
+            var fieldname = "docnumber";
+            field = message.GetListItem(fields, fieldname);
+        	createNodeAndInsertText(xmlpara, objNode, "DOCNO",  field.textContent);
         }
-        else {
+        createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", pHasAttachYN);
+        createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", "");
+        createNodeAndInsertText(xmlpara, objNode, "STARTDATE", "DRAFT");
+        createNodeAndInsertText(xmlpara, objNode, "ENDDATE", "DRAFT");
+        createNodeAndInsertText(xmlpara, objNode, "WRITERID", getNodeText(objNodes[13]));
+        createNodeAndInsertText(xmlpara, objNode, "WRITERNAME", getNodeText(objNodes[14]));
+        createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE", getNodeText(objNodes[15]));
+        createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTID", getNodeText(objNodes[16]));
+        createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME", getNodeText(objNodes[17]));
+        
+        createNodeAndInsertText(xmlpara, objNode, "HTML", message.Get_EditorBodyHTML());
+        createNodeAndInsertText(xmlpara, objNode, "ORGHTML", pOrgHtml);
+        createNodeAndInsertText(xmlpara, objNode, "PUSERID", arr_userinfo[1]);
+        createNodeAndInsertText(xmlpara, objNode, "PUSERNAME", arr_userinfo[2]);
+        createNodeAndInsertText(xmlpara, objNode, "PDEPTID", arr_userinfo[4]);
+        createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
+        createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", tempKeep);
+        createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", tempPublic);
+        createNodeAndInsertText(xmlpara, objNode, "PUBLIC", "");
 
-            var field = message.GetListItem(fields, "docnumber")
-            if (field) {
-                var pExtDocFlag = message.document.body.getAttribute("extdocflag")
-                var field_receiptnum = message.GetListItem(fields, "receiptnumber");
-                if (field_receiptnum) {
-                    if (pExtDocFlag != null && pExtDocFlag == "Y" && getfieldValue(field_receiptnum).trim() != "") {
-                        createNodeAndInsertText(xmlpara, objNode, "DocNo", getfieldValue(field_receiptnum));
-                    } else {
-                        createNodeAndInsertText(xmlpara, objNode, "DocNo", getfieldValue(field));
-                    }
-                } else {
-                    createNodeAndInsertText(xmlpara, objNode, "DocNo", getfieldValue(field));
-                }
-            }
-            else {
-                var field = message.GetListItem(fields, "bedocnumber")
-                if (field)
-                    createNodeAndInsertText(xmlpara, objNode, "DocNo", getfieldValue(field));
-                else
-                    createNodeAndInsertText(xmlpara, objNode, "DocNo", "");
-            }
-        }
-
-
-        createNodeAndInsertText(xmlpara, objNode, "HasAttachYN", pHasAttachYN);
-        createNodeAndInsertText(xmlpara, objNode, "HasOpinionYN", "");
-        createNodeAndInsertText(xmlpara, objNode, "StartDate", "DRAFT");
-        createNodeAndInsertText(xmlpara, objNode, "EndDate", "DRAFT");
-        createNodeAndInsertText(xmlpara, objNode, "WriterID", getNodeText(objNodes[13]));
-        createNodeAndInsertText(xmlpara, objNode, "WriterName", getNodeText(objNodes[14]));
-        createNodeAndInsertText(xmlpara, objNode, "WriterJobTitle", getNodeText(objNodes[15]));
-        createNodeAndInsertText(xmlpara, objNode, "WriterDeptID", getNodeText(objNodes[16]));
-        createNodeAndInsertText(xmlpara, objNode, "WriterDeptName", getNodeText(objNodes[17]));
-        createNodeAndInsertText(xmlpara, objNode, "Html", message.Get_EditorBodyHTML());
-        createNodeAndInsertText(xmlpara, objNode, "OrgHtml", pOrgHtml);
-        createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
-        createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[2]);
-        createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-        createNodeAndInsertText(xmlpara, objNode, "security", tempSecurity);
-        createNodeAndInsertText(xmlpara, objNode, "keepperiod", tempKeep);
-        createNodeAndInsertText(xmlpara, objNode, "publication", tempPublic);
-        createNodeAndInsertText(xmlpara, objNode, "Public", "");
-        createNodeAndInsertText(xmlpara, objNode, "ItemCode", tempItemCode);
-        createNodeAndInsertText(xmlpara, objNode, "ItemName", tempItemName);
-        createNodeAndInsertText(xmlpara, objNode, "UrgentApproval", tempUrgent);
-        createNodeAndInsertText(xmlpara, objNode, "KeyWord", tempKeyword);
-        createNodeAndInsertText(xmlpara, objNode, "Xdocid", "");
+        createNodeAndInsertText(xmlpara, objNode, "ITEMCODE", tempItemCode);
+        createNodeAndInsertText(xmlpara, objNode, "ITEMNAME", tempItemName);
+        createNodeAndInsertText(xmlpara, objNode, "URGENTAPPROVAL", tempUrgent);
+        createNodeAndInsertText(xmlpara, objNode, "KEYWORD", tempKeyword);
+        createNodeAndInsertText(xmlpara, objNode, "XDOCID", "");
         createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
         createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
+        createNodeAndInsertText(xmlpara, objNode, "PUBLICITYYN", pPublicityYN);
         createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", pLimitRange);
         createNodeAndInsertText(xmlpara, objNode, "PAGENUM", pPageNum);
         createNodeAndInsertText(xmlpara, objNode, "CABINETID", cabinetID);
         createNodeAndInsertText(xmlpara, objNode, "TASKCODE", TaskCode);
-
+        
+        /*
+         * 수발신담당자 접수 > 원단위부서코드와 단위부서코드의 값이 같은 경우
+         * 
+         * pOrgDocNumdeCode는 처음 수신한 수발신부서의 단위번호코드이다.
+         * pDocNumCode의 값은 수발신담당자가 배부를 하였을 경우 
+         * 배부된 부서의 단위번호코드가 지정됨
+         */
+        if(!pDocNumCode) {
+        	pDocNumCode = pOrgDocNumCode;
+        }
         createNodeAndInsertText(xmlpara, objNode, "DOCNUMCODE", pDocNumCode);
         createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", pOrgDocNumCode);
         var g_SepAttachLVXml = "";
@@ -2380,14 +2387,99 @@ function SaveDraftDocInfo_susin() {
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
 
-        xmlhttp.open("POST", "/myoffice/ezApprovalG/DraftUI/aspx/dodraft.aspx", false);
+        if (nonElecRec == "Y") {
+    		var NonElecXML = createXmlDom();
+    		NonElecXML = loadXMLString(nonElecRecInfoXml);
+    		
+    		createNodeAndInsertText(xmlpara, objNode, "NONELECREC", nonElecRec);
+    		createNodeAndInsertText(xmlpara, objNode, "REGISTERTYPE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERTYPE"));
+    		createNodeAndInsertText(xmlpara, objNode, "REGISTERDATE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERDATE"));
+    		createNodeAndInsertText(xmlpara, objNode, "REGISTERYEAR", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERYEAR"));
+    		createNodeAndInsertText(xmlpara, objNode, "EXECUTEDATE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "EXECUTEDATE"));
+    		createNodeAndInsertText(xmlpara, objNode, "TITLE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "TITLE"));
+    		createNodeAndInsertText(xmlpara, objNode, "APRMEMBERTITLE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "APRMEMBERTITLE"));
+    		createNodeAndInsertText(xmlpara, objNode, "APRMEMBERTITLE2", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "APRMEMBERTITLE2"));
+    		createNodeAndInsertText(xmlpara, objNode, "DRAFTERNAME", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DRAFTERNAME"));
+    		createNodeAndInsertText(xmlpara, objNode, "DRAFTERNAME2", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DRAFTERNAME2"));
+    		createNodeAndInsertText(xmlpara, objNode, "RECEIPTMEMBER", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "RECEIPTMEMBER"));
+    		createNodeAndInsertText(xmlpara, objNode, "RECEIPTMEMBER2", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "RECEIPTMEMBER2"));
+    		createNodeAndInsertText(xmlpara, objNode, "SENDINGMEMBER", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "SENDINGMEMBER"));
+    		createNodeAndInsertText(xmlpara, objNode, "DELIVERYNO", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DELIVERYNO"));
+    		createNodeAndInsertText(xmlpara, objNode, "ORIGINREGSN", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "ORIGINREGSN"));
+    		createNodeAndInsertText(xmlpara, objNode, "ELECTRONICRECFLAG", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "ELECTRONICRECFLAG"));
+    		createNodeAndInsertText(xmlpara, objNode, "NONELECREC_CABINETID", cabinetID);
+    		
+    		// 시청각 기록물일경우
+    		if (SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERTYPE") == "5" || SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERTYPE") == "6") {
+    			createNodeAndInsertText(xmlpara, objNode, "AUDIOVISUALRECINFO", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "AUDIOVISUALRECINFO"));
+    			createNodeAndInsertText(xmlpara, objNode, "AUDIOVISUALRECSUMMARY", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "SUMMARY"));
+    		}
+    		
+    		// 분리첨부가 존재할 경우
+    		if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW").length > 0) {
+    			var sepAtt, Data, i;
+    			var rtnXml = createXmlDom();
+    	        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
+    			var sepLVXml = createXmlDom();
+                	sepLVXml = loadXMLString(nonElecRecInfoXml);
+                var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW");
+                
+                for (i = 0; i < rows.length; i++) {
+                    sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i].childNodes[0],"DATA1"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i].childNodes[1], "VALUE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i].childNodes[4], "VALUE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA2"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i].childNodes[6], "VALUE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA3"));
+                }
+                createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
+    		}
+    		
+    		// 특수목록이 존재하는 기록물 철 일경우
+    		if (SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "SPECIALCATALOGFLAG") == "1") {
+    			if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/SCDATA").length > 0) {
+	    			var sepAtt, Data, i;
+	    			var rtnXml = createXmlDom();
+	    			var root = createNodeInsert(rtnXml, root, "SPECIALCATALOGINFO");
+	    			var sepLVXml = createXmlDom();
+	    				sepLVXml = loadXMLString(nonElecRecInfoXml);
+	    			var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/SCDATA");
+	    			var rows2 = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/SCNAME");
+	    			
+	    			sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SCNAME");
+	    			Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST1", SelectSingleNodeValue(rows2[0], "LIST1"));
+	                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST2", SelectSingleNodeValue(rows2[0], "LIST2"));
+	                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST3", SelectSingleNodeValue(rows2[0], "LIST3"));
+	    			
+	    			for (i = 0; i < rows.length; i++) {
+	    				sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SCDATA");
+	                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SN", SelectSingleNodeValue(rows[i], "SN"));
+	                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST1", SelectSingleNodeValue(rows[i], "LIST1"));
+	                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST2", SelectSingleNodeValue(rows[i], "LIST2"));
+	                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST3", SelectSingleNodeValue(rows[i], "LIST3"));
+	    			}
+	    			
+	    			createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SPECIALCATALOGINFO", getXmlString(rtnXml));
+    			}
+    		}
+    	}
+        
+        xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
 
-        SetBtnStateFalse();
-
-        var dataNodes = GetChildNodes(loadXMLString(xmlhttp.responseText));
-        return getNodeText(dataNodes[0])
-
+        if (xmlhttp != null && xmlhttp.readyState == 4) {
+        	 if (xmlhttp.statusText == "OK") {
+        		 if (nonElecRec == "Y") {
+        			 nonElecRecTempCabSwitch(nonElecRecInfoXml);
+        		 }
+        		  SetBtnStateFalse();
+        	      var dataNodes = GetChildNodes(xmlhttp.responseXML);
+        	      return getNodeText(dataNodes[0]);
+        	 } else {
+        		return "FALSE";
+        	 }
+      }
     } catch (e) {
         alert("SaveDraftDocInfo_susin : " + e.description);
     }
@@ -2407,8 +2499,9 @@ function SignSave() {
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNTYPE", SignType[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNNAME", SignName[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "CONTENT", SignContent[i]);
+            createNodeAndAppandNodeText(xmlpara, objNode, subNode, "ORGCOMPANYID", orgCompanyID);
         }
-        xmlhttp.open("Post", "/myoffice/ezApprovalG/ezAPRSIGN/aspx/setSignInfo.aspx", false);
+        xmlhttp.open("Post", "/ezApprovalG/setSignInfo.do", false);
         xmlhttp.send(xmlpara);
     }
 }
@@ -2442,16 +2535,17 @@ function SetBtnStateFalse() {
 }
 
 function ConversionPt(cmm) {
-    if (cmm.indexOf("mm") > -1 || cmm.indexOf("pt") > -1 || cmm.indexOf("px") > -1) {
-        if (cmm.indexOf("px") > -1)
-            return cmm;
-        else {
-            cmm = ReplaceText(ReplaceText(cmm, "mm", ""), "pt", "");
-            return (cmm * 3.779527559055).toFixed(2);
-        }
-    }
-    else
-        return (cmm * 3.779527559055).toFixed(2);
+	var regex = /([\d*\.]*)\s*?(px|pt|mm)/ig;
+	return cmm.trim().replace(regex, function(str, g1, g2){
+		g2 = g2.toLowerCase();
+		if(g2 === "mm") {
+			return (g1 * 3.779527559055).toFixed(2);
+		} else if(g2 === "pt") {
+			return (g1 * 1.3333333333333).toFixed(2);
+		} else {
+			return g1;
+		}
+	});
 }
 
 function Document_mmTopx(pBodyTag) {
@@ -2461,6 +2555,7 @@ function Document_mmTopx(pBodyTag) {
     //엘리먼트를 찾는다.
     var ElementsRows = Content.getElementsByTagName("*");
     for (var Cnt = 0; Cnt < ElementsRows.length; Cnt++) {
+    	var Element = ElementsRows.item(Cnt);
         ElementsRows.item(Cnt).removeAttribute("bgColor");
 
         if (ElementsRows.item(Cnt).tagName == "P") {
@@ -2539,14 +2634,16 @@ function Document_mmTopx(pBodyTag) {
             ElementsRows.item(Cnt).removeAttribute("name");
         }
         else {
-            if (ElementsRows.item(Cnt).tagName != "COL" && ElementsRows.item(i).tagName != "COLGROUP" && ElementsRows.item(i).tagName != "TR") {
+        	//u태그 파싱 오류 수정 2020-01-10 홍대표
+            if (ElementsRows.item(Cnt).tagName != "COL" && ElementsRows.item(Cnt).tagName != "COLGROUP" && ElementsRows.item(Cnt).tagName != "TR") {
                 if (ElementsRows.item(Cnt).style.height != "") {
-                    ElementsRows.item(Cnt).style.setAttribute("Hidth", ConversionPt(ElementsRows.item(i).style.pixelHeight) + "px");
+                    ElementsRows.item(Cnt).style.setAttribute("height", ConversionPt(ElementsRows.item(i).style.pixelHeight) + "px");
                     ElementsRows.item(Cnt).style.removeProperty("height");
                 }
                 if (ElementsRows.item(Cnt).getAttribute("height") != null && ElementsRows.item(Cnt).getAttribute("height") != "") {
                     ElementsRows.item(Cnt).setAttribute("Height", ConversionPt(ElementsRows.item(Cnt).getAttribute("height")) + "px");
-                    ElementsRows.item(Cnt).removeAttribute("height");
+                    //table 태그의 높이속성이 적용되지 않는 버그때문에 주석처리 2019-05-13 홍대표
+//                    ElementsRows.item(Cnt).removeAttribute("height");
                 }
             }
             if (ElementsRows.item(Cnt).tagName == "TD") {
@@ -2560,25 +2657,16 @@ function Document_mmTopx(pBodyTag) {
 
                 //width
                 if (ElementsRows.item(Cnt).style.width != "") {
-                	if (ElementsRows.item(i).style.pixelWidth.indexOf("px") > -1) {
-                		ElementsRows.item(Cnt).style.setAttribute("width", ConversionPt(ElementsRows.item(i).style.pixelWidth) + "px");
-                	} else {
-                		ElementsRows.item(Cnt).style.setAttribute("width", ConversionPt(ElementsRows.item(i).style.pixelWidth + "px"));
-                	}
+                    ElementsRows.item(Cnt).style.setAttribute("width", ConversionPt(ElementsRows.item(Cnt).style.pixelWidth) + "px");
                     ElementsRows.item(Cnt).style.removeProperty("width");
                 }
-                
                 if (ElementsRows.item(Cnt).getAttribute("width") != null && ElementsRows.item(Cnt).getAttribute("width") != "") {
-                	if (ElementsRows.item(Cnt).getAttribute("width").indexOf("px") > -1) {
-                		ElementsRows.item(Cnt).setAttribute("width", ConversionPt(ElementsRows.item(Cnt).getAttribute("width")) + "px");
-                	} else {
-                		ElementsRows.item(Cnt).setAttribute("width", ConversionPt(ElementsRows.item(Cnt).getAttribute("width") + "px"));
-                	}
+                    ElementsRows.item(Cnt).setAttribute("width", ConversionPt(ElementsRows.item(Cnt).getAttribute("width")) + "px");
                 }
 
                 //height
                 if (ElementsRows.item(Cnt).style.height != "") {
-                    ElementsRows.item(Cnt).style.setAttribute("height", ConversionPt(ElementsRows.item(i).style.pixelHeight) + "px");
+                    ElementsRows.item(Cnt).style.setAttribute("height", ConversionPt(ElementsRows.item(Cnt).style.pixelHeight) + "px");
                     ElementsRows.item(Cnt).style.removeProperty("height");
                 }
                 if (ElementsRows.item(Cnt).getAttribute("height") != null && ElementsRows.item(Cnt).getAttribute("height") != "") {
@@ -2592,7 +2680,7 @@ function Document_mmTopx(pBodyTag) {
 
                 //height
                 if (ElementsRows.item(Cnt).style.height != "") {
-                    ElementsRows.item(Cnt).style.setAttribute("height", ConversionPt(ElementsRows.item(i).style.pixelHeight) + "px");
+                    ElementsRows.item(Cnt).setAttribute("height", ConversionPt(ElementsRows.item(Cnt).style.pixelHeight) + "px");
                     ElementsRows.item(Cnt).style.removeProperty("height");
                 }
                 if (ElementsRows.item(Cnt).getAttribute("height") != null && ElementsRows.item(Cnt).getAttribute("height") != "") {
@@ -2601,20 +2689,20 @@ function Document_mmTopx(pBodyTag) {
 
                 //width
                 if (ElementsRows.item(Cnt).style.width != "") {
-                	if (ElementsRows.item(i).style.pixelWidth.indexOf("px") > -1) {
-                		ElementsRows.item(Cnt).style.setAttribute("width", ConversionPt(ElementsRows.item(i).style.pixelWidth) + "px");
+                	if(isIE()) {
+                		ElementsRows.item(Cnt).setAttribute("width", "100%");
                 	} else {
-                		ElementsRows.item(Cnt).style.setAttribute("width", ConversionPt(ElementsRows.item(i).style.pixelWidth  + "px"));
+                		ElementsRows.item(Cnt).setAttribute("width", ConversionPt(ElementsRows.item(Cnt).style.pixelWidth) + "px");
                 	}
                     
                     ElementsRows.item(Cnt).style.removeProperty("width");
                 }
                 
                 if (ElementsRows.item(Cnt).getAttribute("width") != null && ElementsRows.item(Cnt).getAttribute("width") != "") {
-                	if (ElementsRows.item(Cnt).getAttribute("width").indexOf("px") > -1) {
-                		ElementsRows.item(Cnt).setAttribute("width", ConversionPt(ElementsRows.item(Cnt).getAttribute("width")) + "px");
+                	if(isIE()) {
+                		ElementsRows.item(Cnt).setAttribute("width", "100%");
                 	} else {
-                		ElementsRows.item(Cnt).setAttribute("width", ConversionPt(ElementsRows.item(Cnt).getAttribute("width") + "px"));
+                		ElementsRows.item(Cnt).setAttribute("width", ConversionPt(ElementsRows.item(Cnt).getAttribute("width")) + "px");
                 	}
                     
                 }
@@ -2622,7 +2710,7 @@ function Document_mmTopx(pBodyTag) {
             if (ElementsRows.item(Cnt).tagName == "TR") {
                 //width
                 if (ElementsRows.item(Cnt).style.width != "") {
-                    ElementsRows.item(Cnt).style.setAttribute("width", ConversionPt(ElementsRows.item(i).style.pixelWidth) + "px");
+                    ElementsRows.item(Cnt).setAttribute("width", ConversionPt(ElementsRows.item(Cnt).style.pixelWidth) + "px");
                     ElementsRows.item(Cnt).style.removeProperty("width");
                 }
                 if (ElementsRows.item(Cnt).getAttribute("width") != null && ElementsRows.item(Cnt).getAttribute("width") != "") {
@@ -2631,7 +2719,7 @@ function Document_mmTopx(pBodyTag) {
 
                 //height
                 if (ElementsRows.item(Cnt).style.height != "") {
-                    ElementsRows.item(Cnt).style.setAttribute("height", ConversionPt(ElementsRows.item(i).style.pixelHeight) + "px");
+                    ElementsRows.item(Cnt).setAttribute("height", ConversionPt(ElementsRows.item(Cnt).style.pixelHeight) + "px");
                     ElementsRows.item(Cnt).style.removeProperty("height");
                 }
                 if (ElementsRows.item(Cnt).getAttribute("height") != null && ElementsRows.item(Cnt).getAttribute("height") != "") {
@@ -2709,6 +2797,36 @@ function delOpinionInfo() {
 
     pHasOpinionYN = "";
     return xmlhttp.responseText;*/
+}
+
+//17.09.14:재배부 후 재배부의견을 제외한 모든의견 삭제
+function delOpinionInfoAll2() {
+	$.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : "/ezApprovalG/OpinionDel2.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(result) {
+		}
+	});
+}
+
+//17.09.14:중계문서 접수 시 재배부의견은 삭제처리
+function delOpinionInfoAll3() {
+	$.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : "/ezApprovalG/OpinionDel3.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(result) {
+		}
+	});
 }
 
 var selectcabinet_dialogArguments = new Array();

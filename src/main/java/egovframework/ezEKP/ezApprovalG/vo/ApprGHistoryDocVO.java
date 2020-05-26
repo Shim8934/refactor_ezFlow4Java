@@ -47,6 +47,8 @@ public class ApprGHistoryDocVO {
 	private String deptName2;
 	/** 조회 일자*/
 	private String readDate;
+	/** 2020-02-25 홍승비 - 편집전문서 URL */
+	private String beforeDocURL;
 	
 	public String getDocID() {
 		return docID;
@@ -185,6 +187,12 @@ public class ApprGHistoryDocVO {
 	}
 	public void setReadDate(String readDate) {
 		this.readDate = readDate;
+	}
+	public String getBeforeDocURL() {
+		return beforeDocURL;
+	}
+	public void setBeforeDocURL(String beforeDocURL) {
+		this.beforeDocURL = beforeDocURL;
 	}
 
 }

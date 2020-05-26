@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezEmail.service.impl;
 
 import java.io.File;
 import java.lang.reflect.Array;
+import java.io.InputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
@@ -1263,6 +1264,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return returnValue;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, String> getAliasAddressMap(List<String> addressList, int tenantId) throws Exception {
 		logger.debug("getAliasAddressMap started. tenantId=" + tenantId);
@@ -1302,7 +1304,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 				
 				if (reasonCode == 0) {
 					if ((JSONObject)responseObj.get("result") != null) {
-						resultMap = (JSONObject)responseObj.get("result");
+						resultMap = (JSONObject) responseObj.get("result");
 					}
 				}
 			}
@@ -2859,6 +2861,40 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return shareMailBoxPermissonInfo;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONArray getFolderQuota(String email, Locale locale) throws Exception {
+		logger.debug("getFolderQuota started.");
+		String userIdParam = "primaryMail=" + URLEncoder.encode(email, "UTF-8");
+		String inputParams = userIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getFolderQuota";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		
+		JSONArray jsonArr =  (JSONArray) object.get("resultData");
+		List<JSONObject> list = (List<JSONObject>) object.get("resultData");
+		
+		for(int i = 0; i <list.size(); i++){
+			
+			String mailboxName = (String) list.get(i).get("mailboxName");
+			list.get(i).put("mailboxChangeName", ezEmailUtil.getDisplayNameFromFolderId(mailboxName, locale));
+			// String mailboxId = (String) list.get(i).get("mailboxId");
+			double size = Double.parseDouble(list.get(i).get("mailboxQuota").toString());
+			String mailboxQuota = ezEmailUtil.getSizeWithUnit(size);
+			list.get(i).replace("mailboxQuota", mailboxQuota);
+			// String notReadCount = (String) list.get(i).get("notReadCount");
+			// String mailCount = (String) list.get(i).get("mailCount");
+		}
+			
+		logger.debug("getFolderQuota ended.");
+		return jsonArr;
+	}
+	
 	@Override
 	public int deleteUserFromAllSharedMailbox(String userId, int tenantId) throws Exception {
 		logger.debug("deleteUserFromAllSharedMailbox started.");
@@ -4379,4 +4415,24 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("sendUserDlMail ended.");
 	}
 	
+
+	@Override
+	public void sendMail(String userEmail, String password, Locale userLocale, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved, EmailImportance importance, String fileName, String contentType, InputStream inputStream) throws Exception {
+		logger.debug("sendMail started.");
+		logger.debug("from=" + from + ",subject=" + subject + ",isSaved=" + isSaved);
+
+		ezEmailUtil.createMail(userEmail, password)
+			.from(from)
+			.to(toArr)
+			.cc(ccArr)
+			.bcc(bccArr)
+			.subject(subject)
+			.content(content)
+			.importance(importance)
+			.saveSentMailbox(isSaved)
+			.attach(fileName, contentType, inputStream)
+		.send();
+		
+        logger.debug("sendMail ended.");
+	}
 }

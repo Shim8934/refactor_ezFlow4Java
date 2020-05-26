@@ -16,7 +16,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -381,7 +380,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 			String[] info = result.split(":");
 			
 			userID = info[0];
-			textName = ezOrganService.getPropertyValue(info[0], "displayname", userInfo.getTenantId());
+			String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+			textName = ezOrganService.getPropertyValue(info[0], "displayname" + lang, userInfo.getTenantId());
 			deptID = info[2];
 			startDate = info[3] + ":" + info[4];
 			endDate = info[5] + ":" + info[6];
@@ -513,6 +513,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("callBack", callBack);
 		model.addAttribute("saveMailFlag", saveMailFlag);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useSaveSentMail", "YES".equalsIgnoreCase(config.getProperty("config.SentMailStoredInSentbox", "YES")));
 
 		logger.debug("setApprovNoticeMail ended");
 		return "ezPersonal/persSetApprovNoticeMail";
@@ -909,7 +910,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		logger.debug("leftEnvironment started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		String funCode = "";
-		String topMenuID = "";
+		// String topMenuID = "";
 		String ezInfoSSL = "";
 		String SSL = "";
 		
@@ -917,9 +918,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 			funCode = req.getParameter("funCode");
 		}
 		
-		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").trim().equals("")) {
+		/* if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").trim().equals("")) {
 			topMenuID = req.getParameter("topMenuID");
-		}
+		} */
 		
 		if (config.getProperty("config.ezInfoSSL") != null && !config.getProperty("config.ezInfoSSL").equals("")) {
 			ezInfoSSL = config.getProperty("config.ezInfoSSL");
@@ -941,7 +942,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			firstScreen_Mail = "NO";
 		}
 
-		String accessList = ezPortalService.getAccessList(userInfo);
+		// String accessList = ezPortalService.getAccessList(userInfo);
 		
 		/*
 		 * 환경설정 좌측 메뉴 리스트에 있는 모듈의 URL과 이름을 map에 추가
@@ -980,6 +981,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 		String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 		String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 		
 		if (useAttitude == null || useAttitude.equals("")) {
 			useAttitude = "NO";
@@ -1025,6 +1027,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 			useEzPMS = "NO";
 		}
 		
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
 		if (useQuestion.equals("NO")) {
 			menuList.removeIf(vo -> (vo.getMenuId() == 14));
 		}
@@ -1067,6 +1073,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		if (useCommunity.equals("NO")) {
 			menuList.removeIf(vo -> (vo.getMenuId() == 5));
+		}
+		
+		if (useExternalMailServer.equalsIgnoreCase("YES")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 1));
 		}
 		/*
 		 * moduleList에 추가해준 모듈의 이름으로 확인 
@@ -1292,6 +1302,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		vo.setTenantId(userInfo.getTenantId());
+		
+		// displayname2가 null로 넘어오는데, 이럴 경우 displayname2은 displayname으로 대체되는 문제가 생겨서 추가
+		vo.setDisplayName2(userInfo.getDisplayName2());
 		
 		logger.debug("<<<1. : " + vo.getCn());
 		

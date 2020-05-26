@@ -26,7 +26,7 @@
 	<repositories>
 		<repository>
 			<id>mvn2</id>
-			<url>http://repo1.maven.org/maven2/</url>
+			<url>https://repo1.maven.org/maven2/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -36,7 +36,7 @@
 		</repository>
 		<repository>
 			<id>egovframe</id>
-			<url>http://www.egovframe.go.kr/maven/</url>
+			<url>https://www.egovframe.go.kr/maven/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -201,6 +201,12 @@
          -->
 
 		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcprov-jdk15on</artifactId>
+		    <version>1.51</version>
+		</dependency>
+
+		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.3.1</version>
@@ -236,7 +242,7 @@
         <dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.6.3</version>
+			<version>2.9.8</version>
 		</dependency>
 		<dependency>
 		    <groupId>com.google.code.gson</groupId>
@@ -386,13 +392,13 @@
         <!-- Azure Auth -->
         <dependency>
             <groupId>com.microsoft.azure</groupId>
-            <artifactId>adal4j</artifactId>
-            <version>1.1.1</version>
+            <artifactId>msal4j</artifactId>
+            <version>1.3.0</version>
         </dependency>
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>oauth2-oidc-sdk</artifactId>
-            <version>4.5</version>
+            <version>6.5</version>
             <exclusions>
             	<exclusion>
 	            	<groupId>javax.mail</groupId>
@@ -400,6 +406,11 @@
             	</exclusion>
             </exclusions>
         </dependency>        
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
+		</dependency>        
         <!-- Azure Auth - end -->
         
         <!-- 코린도 zip 암호화 -->

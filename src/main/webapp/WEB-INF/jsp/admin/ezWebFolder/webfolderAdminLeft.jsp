@@ -12,6 +12,14 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTree.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
+	    <style>
+	    	.mCSB_inside > .mCSB_container {
+	    		margin-right:10px;
+	    	}
+	    	.spanName {
+	    		width:65%;
+	    	}
+	    </style>
 		<script type="text/javascript" >
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
@@ -167,12 +175,12 @@
 				<h2><span onClick="companyFolder();"><spring:message code='ezWebFolder.t126'/></span></h2>
 				<h2><span onClick="companyFile(this);"><spring:message code='ezWebFolder.t127'/></span>
 				</h2>
-				<ul class="lnbUL" id='lnbUL' style="min-height: 200px; display: none; overflow-x: hidden; white-space: nowrap; padding: 5px 0px 0px 5px;">
+				<ul class="lnbUL" id='lnbUL' style="min-height: 200px; display: none; overflow-x: hidden; overflow-y: hidden; white-space: nowrap; padding: 5px">
 					<div id="folderTree" class="tree onlytree" ></div>
 				</ul>
 				<h2><span onClick="departmentFolder();"><spring:message code='ezWebFolder.t219'/></span></h2>
 				<h2><span onClick="departmentFile(this);"><spring:message code='ezWebFolder.t220'/></span></h2>
-				<ul class="lnbUL" id="lnbUL2" style="min-height: 200px; display: none; overflow-x: hidden; white-space: nowrap; padding: 5px 0px 0px 5px;">
+				<ul class="lnbUL" id="lnbUL2" style="min-height: 200px; display: none; overflow-x: hidden; overflow-y: hidden; white-space: nowrap; padding: 5px">
 					<div id="folderTree2" class="tree onlytree" ></div>
 				</ul>
 				<h2><span onClick="fileTransactionHistory();"><spring:message code='ezWebFolder.t128'/></span></h2>

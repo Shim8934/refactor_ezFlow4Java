@@ -10,8 +10,8 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -657,6 +657,29 @@ public class EzTalkGateController {
 		return result;
 	}
 	
+	@RequestMapping("/ezTalkGate/getNotUseMobileUserList.do")
+	@ResponseBody
+	public String getNotUseMobileUserList(HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getNotUseMobileUserList started.");
+
+		String result = "[]";
+
+		try {
+			String serverName = request.getServerName();
+			int tenantId = loginService.getTenantId(serverName);
+			logger.debug("serverName={}, tenantId={}", serverName, tenantId);
+
+			List<String> userList = ezOrganAdminService.getNotUseMobileUserList(tenantId);
+			result = JSONArray.toJSONString(userList);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		logger.debug("getNotUseMobileUserList ended. result={}", result);
+
+		return result;
+	}
+
 	private boolean checkIfUserExists(String id, String pw, int tenantId) throws Exception {
 		logger.debug("checkIfUserExists started. id=" + id + ",tenantId=" + tenantId);
 		

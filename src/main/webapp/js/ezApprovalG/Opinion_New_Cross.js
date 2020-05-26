@@ -120,8 +120,8 @@ function getDocMode() {
 
 /*
  * 의견팝업 오픈 타입
- * parameter : 공백, BanSong, BoRyu, HeSong (String)
- * return : 001, 002, 003, 004 (String)
+ * parameter : 공백, BanSong, BoRyu, HeSong, ReBebu (String)
+ * return : 001, 002, 003, 004, 008 (String)
  * default : 001
  */
 function getOpinionType(para) {
@@ -136,6 +136,8 @@ function getOpinionType(para) {
 		rtnVal = strOpinionType3;	//보류의견
 	} else if (pParameter == "HESONG") {
 		rtnVal = strOpinionType4;	//회송의견
+	} else if (pParameter == "REBEBU") {
+		rtnVal = strOpinionType8;	//재배부요청의견
 	}
 	
 	return rtnVal;
@@ -279,6 +281,13 @@ function deleteOpinionInfo_complete(ret) {
 		
 		OpinionList.DeleteRow(selIdx);
 		document.getElementById("txt_OpinionContent").value = "";
+		
+		/* 2020-04-02 홍승비 - 신규작성한 반송, 보류, 회송의견 삭제 시 버튼표출 플래그값 수정 */
+		if (GetAttribute(pSelectedRow[0], "ISNEWBBHOPINION") != null && GetAttribute(pSelectedRow[0], "ISNEWBBHOPINION") == "true") {
+	        if (typeof(isNewBBHOpinionFlag) != "undefined" && isNewBBHOpinionFlag != null) {
+	        	isNewBBHOpinionFlag = false;
+	        }
+		}
 		
 		ModifiedFlag = true;
 		showFirstOpinionRow();
@@ -503,6 +512,10 @@ function getAprOpinionXML(pOpContent) {
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA10", ppUserTitle2);
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA11", ppUserDeptName);
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA12", ppUserDeptName);
+        /* 2020-04-02 홍승비 - 신규 작성된 반송, 보류, 회송의견 판별용 데이터 추가 */
+        if (typeof(isNewBBHOpinionFlag) != "undefined" && isNewBBHOpinionFlag != null) {
+        	createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "ISNEWBBHOPINION", isNewBBHOpinionFlag);
+        }
 
         CELL = createNodeAndAppandNode(objXML, ROW, CELL, "CELL");
         createNodeAndAppandNodeText(objXML, CELL, CELLVALUE, "VALUE", ppUserDisplayName);
@@ -573,8 +586,8 @@ function getOpinionListInfo() {
 
 /*
  * 의견 타입 이름
- * parameter : 001, 002, 003, 004 (String)
- * retrun : 일반의견, 반송의견, 보류의견, 회송의견 (String)
+ * parameter : 001, 002, 003, 004, 008 (String)
+ * retrun : 일반의견, 반송의견, 보류의견, 회송의견, 재배부요청 (String)
  */
 function getOpinionTypeName(strOType) {
 	switch (strOType) {
@@ -589,6 +602,9 @@ function getOpinionTypeName(strOType) {
 			break;
 		case strOpinionType1:
 			return strLangOpinionType1;	//일반
+			break;
+		case strOpinionType8:
+			return strLangOpinionType8;	//재배부요청
 			break;
 		default:
 			return strLangOpinionType1;	//일반

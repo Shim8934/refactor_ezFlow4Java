@@ -559,11 +559,8 @@
 	FROM ( select A.memberid,
 		   E.GROUPNAME,
 		   E.DESCRIPTION,
-           case #v_LANG#
-	       when '1' then A.memberName                 
-		   when '2' then A.memberName2
-           end membername, 
-           '' as membername2,
+           A.memberName,               
+		   A.memberName2,
 		   A.status as status,
 		   (A.RESPONSEDATE + #v_OFFSETMIN#/(24*60)) as responsedate,
            '' as mail,

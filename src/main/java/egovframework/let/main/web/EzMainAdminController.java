@@ -4,13 +4,13 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -25,8 +25,6 @@ public class EzMainAdminController {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
-	
-	private static final Logger logger = LoggerFactory.getLogger(EzMainAdminController.class);
 	
 	@RequestMapping(value="/admin/main.do")
 	public String adminMain(HttpServletRequest request) throws Exception{		
@@ -51,8 +49,20 @@ public class EzMainAdminController {
 		String AdminActiveX = config.getProperty("config.AdminActiveX");
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
-		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		// String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
+		
+		// 2020-04-10 김민성 - 메일 컨피그 추가
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
+		if (useExternalMailServer.equalsIgnoreCase("YES")) {
+			model.addAttribute("use_mail", "NO");
+		} else {
+			model.addAttribute("use_mail", "YES");
+		}
 		
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("use_ezDMS", use_ezDMS);
@@ -66,6 +76,7 @@ public class EzMainAdminController {
 		/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가  */
 		model.addAttribute("use_community", use_community);
 		model.addAttribute("use_webfolder", useWebfolder);
+		
 		
 		if (firstScreenMail == null || firstScreenMail.equals("")) {
 			model.addAttribute("firstScreen_Mail", "NO");

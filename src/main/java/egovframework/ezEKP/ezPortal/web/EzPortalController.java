@@ -1216,7 +1216,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
 		
 		//새로고침 시간 컨피그화
-		String refreshSecond = config.getProperty("refreshSecond");
+		// String refreshSecond = config.getProperty("refreshSecond");
 		
 		boolean checkBrowser;
 		if (req.getHeader("User-Agent").indexOf("Trident") < 0 && req.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
@@ -1251,6 +1251,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		moduleList.put("/ezCircular/circularIndex.do", "circular");
 //		moduleList.put("/ezJournal/journalMain.do", "journal");
 		
+		@SuppressWarnings("unused")
 		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), "");
 		
 		Calendar cal = Calendar.getInstance();
@@ -1332,6 +1333,13 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("workspace author: " + userInfo.getId() + " " + hasWorkspace.toString());		
 		model.addAttribute("hasWorkspace", hasWorkspace);
 		
+		if (hasWorkspace) {
+			String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", userInfo.getTenantId());
+			String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", userInfo.getTenantId());
+			model.addAttribute("workspaceHostUrl", workspaceHostUrl);
+			model.addAttribute("workspaceContextRootUrl", workspaceContextRootUrl);
+		}
+
 		logger.debug("wpTotalSection ended");
 		
 		return "/ezPortal/portalWpTotalSection";
@@ -1876,7 +1884,11 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("dMaxCount", dMaxCount);
 			model.addAttribute("list", list);
 		} else {
+			String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", userInfo.getTenantId());
+			String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", userInfo.getTenantId());
 			model.addAttribute("userID", userInfo.getId());
+			model.addAttribute("workspaceHostUrl", workspaceHostUrl);
+			model.addAttribute("workspaceContextRootUrl", workspaceContextRootUrl);
 		}
 		model.addAttribute("hasWorkspace", hasWorkspace);
 
@@ -2859,6 +2871,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String parentPageID = "";
 		String pageID = "";
 		String gubunFlag = "";
+		@SuppressWarnings("unused")
 		String newMyPortalPage = "";
 		//String newMyPortalPageList = "";
 		String searchNewMyPortalPageList = "";

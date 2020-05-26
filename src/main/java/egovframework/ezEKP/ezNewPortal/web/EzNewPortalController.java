@@ -40,6 +40,7 @@ import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -94,7 +95,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	/**
 	 * 포탈 호출 함수
 	 */
-	@RequestMapping(value = "/ezNewPortal/newPortalMain.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/ezNewPortal/newPortalMain.do", method={RequestMethod.GET, RequestMethod.POST})
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalMain Start");
 		//초기화면 설정 확인
@@ -106,11 +107,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String status = resultBody.get("status").toString();
 		String returnUrl = "";
 		String useMemo = "";
+		String useExternalMailServer = "";
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			JSONObject startPage = (JSONObject) data.get("startPage");
 			useMemo = data.get("useMemo").toString();
+			useExternalMailServer = data.get("useExternalMailServer").toString();
 			
 			if (startPage != null) {
 				String startUrl = startPage.get("menuUrl").toString();
@@ -132,6 +135,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			returnUrl = "/ezEmail/mailMain.do";
 		}
 		
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("useMemo", useMemo);
 		model.addAttribute("mainUrl", returnUrl);
 		model.addAttribute("userDeptId", userInfo.getDeptID());
@@ -158,7 +162,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			JSONObject data = (JSONObject) resultBody.get("data");
 			
 			logger.debug("TopMenu : " + data.toJSONString());
-			
 			JSONArray popupNotiList = (JSONArray) data.get("popupNotiList");
 			int popupNotiListCount = popupNotiList.size();
 			JSONArray popupNotiListAfter = new JSONArray();
@@ -184,6 +187,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 					if (cookieValue != null && !cookieValue.equals("")) {
 						popupNotiListAfter.remove(popupNoti);
 					}
+					
+					cookieValue = "";
 				}
 			}
 			
@@ -193,7 +198,23 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		
 			if (packageType.equals(CommonUtil.PT_MAIL) || packageType.equals(CommonUtil.PT_BASIC)) {
 				logoMainUrl = "/ezEmail/mailMain.do";
+				
+				// 20200326 조진호 - 패키지 타입이 메일인 경우 사용자의 최종 로그인 시간과 ip를 탑메뉴 상단에 표기
+				String lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
+				String loginIP = "";
+				if (lastLogin != null) {
+					lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+					lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
+					loginIP = ezOrganService.getLoginIP(userInfo.getId(), userInfo.getTenantId());
+				} else {
+					lastLogin = "";
+					loginIP = "";
+				}
+				model.addAttribute("lastLogin", lastLogin);
+				model.addAttribute("loginIP", loginIP);
 			}
+			
+			model.addAttribute("packageType", packageType.toLowerCase());
 			
 			model.addAttribute("logoMainUrl", logoMainUrl);
 			model.addAttribute("logoUrl", data.get("logoUrl"));
@@ -409,6 +430,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
+			boolean useEzWorkspace = "YES".equals(data.get("useEzWorkspace"));
 			model.addAttribute("portletOrder", data.get("portletOrder"));
 			model.addAttribute("usedTheme", data.get("usedTheme"));
 			model.addAttribute("usedFrame", data.get("usedFrame"));
@@ -426,12 +448,17 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("useMail", data.get("useMail"));
 			model.addAttribute("useApproval", data.get("useApproval"));
 			model.addAttribute("useSchedule", data.get("useSchedule"));
-			model.addAttribute("useEzWorkspace", data.get("useEzWorkspace"));
+			model.addAttribute("useEzWorkspace", useEzWorkspace);
 			model.addAttribute("lastLogin", data.get("lastLogin"));
 			model.addAttribute("userEmail", data.get("userEmail"));
 			model.addAttribute("userId", userId);
 			model.addAttribute("usePortalAutoRefreshInterval", data.get("usePortalAutoRefreshInterval"));
 			
+			if (useEzWorkspace) {
+				model.addAttribute("workspaceHostUrl", data.get("workspaceHostUrl"));
+				model.addAttribute("workspaceContextRootUrl", data.get("workspaceContextRootUrl"));
+			}
+
 			String usedTheme = data.get("usedTheme").toString();
 			returnUrl += "Theme" + usedTheme;
 			logger.debug("returnUrl : " + returnUrl);
@@ -762,6 +789,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		return result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI())));
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/getPortalInfo.do", method=RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getPortalInfo(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {

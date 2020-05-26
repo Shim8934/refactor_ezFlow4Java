@@ -154,7 +154,7 @@
 		            return;
 		        }
 				
-		        var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContIns&companyID=" + encodeURI(companyID) + "&parentID=" + para[6] + "&contID=" + para[1];
+		        var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContIns&companyID=" + encodeURI(companyID) + "&parentID=" + encodeURIComponent(para[6]) + "&contID=" + encodeURIComponent(para[1]);
 		        formContMain_dialogArguments[0] = para;
 		        formContMain_dialogArguments[1] = btnInsFcont_onclick_complete;
 		        
@@ -204,7 +204,7 @@
 		            para[9] = g_multiDataNum;
 	
 		            
-		            var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContMod&companyID=" + encodeURI(companyID) + "&parentID=" + para[4];
+		            var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContMod&companyID=" + encodeURI(companyID) + "&parentID=" + encodeURIComponent(para[4]);
 		            formContMain_dialogArguments[0] = para;
 			        formContMain_dialogArguments[1] = UpdateFCont_complete;
 			        

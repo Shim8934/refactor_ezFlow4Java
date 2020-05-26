@@ -61,5 +61,6 @@ public interface EzPersonalService {
 	public String deleteShareApproval (String userID, String shareUserID, String companyID, int tenantID) throws Exception;
 	
 	public String getCheckDuplShareUser (String userID, String shareUserID, String companyID, int tenantID) throws Exception;
-	
+
+	List<PersonalGetPopUpListUserVO> getPopUpListUserWithAuth(String pComapnyID, int tenantID, String offset, String userId, String deptId) throws Exception;
 }

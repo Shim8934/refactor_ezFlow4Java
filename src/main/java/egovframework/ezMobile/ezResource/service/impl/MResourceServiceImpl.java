@@ -17,19 +17,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO;
-import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
-import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
-import egovframework.ezMobile.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.dao.MResourceDAO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
+import egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO;
+import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
+import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
+import egovframework.ezMobile.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -526,7 +525,6 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		int tempYoil = 0;
 		
 		// 자원예약 기간
-		Date resStartDate = vo.getStartDate();
 		Date resEndDate = vo.getEndDate();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1563,6 +1561,16 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("companyId", companyId);
 		
 		return mResourceDAO.getResAdminAuth(map);
+	}
+	
+	@Override
+	public String getResUpperBrdID(String ownerId, int tenantId, String companyId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("ownerId", ownerId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		return mResourceDAO.getResUpperBrdID(map);
 	}
 }
 

@@ -257,8 +257,8 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	
 	//테마별, 포틀릿별 권한관리 추가 개발
 	@SuppressWarnings("unchecked")
-	public List<ThemeAuthVO> getThemeAuth (Map<String, Object> map) throws Exception {
-		return (List<ThemeAuthVO>) list("ezNewPortal.getThemeAuth", map);
+	public List<Map<String, Object>> getThemeAuth (Map<String, Object> map) throws Exception {
+		return (List<Map<String, Object>>) list("ezNewPortal.getThemeAuth", map);
 	}
 	
 	public void deleteThemeAuth (Map<String, Object> map) throws Exception {
@@ -275,8 +275,8 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortletAuthVO> getPortletAuth (Map<String, Object> map) throws Exception {
-		return (List<PortletAuthVO>) list("ezNewPortal.getPortletAuth", map);
+	public List<Map<String, Object>> getPortletAuth (Map<String, Object> map) throws Exception {
+		return (List<Map<String, Object>>) list("ezNewPortal.getPortletAuth", map);
 	}
 	
 	public void deletePortletAuth (Map<String, Object> map) throws Exception {

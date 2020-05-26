@@ -9,11 +9,9 @@ function startEndTimeCheck(id, selectYear, selectMonth, selectDay) {
 		selectDay = "0" + selectDay;
 	}
 	if (Number(id.split("#date")[1]) % 2 != 0) {
-		var tempDate1 = new Date(selectYear + "-" + selectMonth + "-" + selectDay).getTime();
-		var tempDate2 = new Date(document.getElementById("date" + (Number(id.split("#date")[1]) + 1)).value).getTime();
-		if (tempDate1 > tempDate2) {
-			returnVal = false;
-		}
+		var tempDate1 = new Date(selectYear + "-" + selectMonth + "-" + selectDay);
+        $("#date" + (Number(id.split("#date")[1]) + 1)).datepicker('setDate', tempDate1);
+        returnVal = true;
 	} else {
 		var tempDate1 = new Date(document.getElementById("date" + (Number(id.split("#date")[1]) - 1)).value).getTime();
 		var tempDate2 = new Date(selectYear + "-" + selectMonth + "-" + selectDay).getTime();
@@ -134,6 +132,8 @@ function attitude_annual_conn(formType, status) {
       var attitudeTypeList = "";
       var startDateList = "";
       var endDateList = "";
+      var startTimeList = "";
+      var endTimeList = "";
       
       $("input[id^=date]").each(function() {
          var number = Number($(this).attr("id").split("date")[1]);
@@ -144,6 +144,8 @@ function attitude_annual_conn(formType, status) {
             endDateList += $("#date" + number).val() + ",";
          }
       })
+      
+      
       startDateList = startDateList.slice(0,-1);
       endDateList = endDateList.slice(0,-1);
       
@@ -151,6 +153,22 @@ function attitude_annual_conn(formType, status) {
          attitudeTypeList += $(this).val() + ",";
       })
       attitudeTypeList = attitudeTypeList.slice(0,-1);
+      
+//2020-03-12 김정언
+      if(attitudeTypeList === "A21"){
+    	  $("input[id^=time]").each(function() {
+    		  var number = Number($(this).attr("id").split("time")[1]);
+    		  //홀수는 시작 날짜, 짝수는 끝 날짜
+    		  if (number % 2 != 0) {//시작날짜(홀수)
+    			  startTimeList += $("#time" + number).val() + ",";
+    		  } else { //끝날짜(짝수)
+    			  endTimeList += $("#time" + number).val() + ",";
+    		  }
+    	  })
+    	  
+    	  startTimeList = startTimeList.slice(0,-1);
+    	  endTimeList = endTimeList.slice(0,-1);
+      }
       
       $.ajax({
          type:"POST",
@@ -162,6 +180,8 @@ function attitude_annual_conn(formType, status) {
             attitudeTypeList : attitudeTypeList,
             startDateList : startDateList,
             endDateList : endDateList,
+            startTimeList : startTimeList,
+            endTimeList : endTimeList,
             mobile : $('#mobile').val(),
             content : iframe_content_reform.GetEditorContent().replace(/(\s+)|(\s+)/gi, " "),
             formType : "annual",
@@ -183,7 +203,7 @@ function setAdditional(mdate1, mdate2, mcontrol, mdateadditional) {
    var controlVal = (document.getElementById(mcontrol).value == 'A12' || 
                   document.getElementById(mcontrol).value == 'A13' || 
                   document.getElementById(mcontrol).value == 'A15' || 
-                  document.getElementById(mcontrol).value == 'A16') ? 2 : 1;
+                  document.getElementById(mcontrol).value == 'A16') ? 2 : (document.getElementById(mcontrol).value == 'A21' ? 4 : 1);
    var holidayCnt = 0;
    if (annualDateResult == "") {
 	   annualDateResult = document.getElementById(mdate1).value.split("-")[0] + " 년 " + document.getElementById(mdate1).value.split("-")[1] + " 월 " + document.getElementById(mdate1).value.split("-")[2] + " 일 ~ " + document.getElementById(mdate2).value.split("-")[0] + " 년 " + document.getElementById(mdate2).value.split("-")[1] + " 월 " + document.getElementById(mdate2).value.split("-")[2] + " 일";
@@ -454,7 +474,10 @@ function setDocTitle(element) {
 	        }
 	        
 	        var attitudeType = $(this).siblings("select").val() == null ? "A12" : $(this).siblings("select").val();
-			var addAnnualCnt = (attitudeType == "" || attitudeType == "A11" || attitudeType == "A12" || attitudeType == "A13") ? true : false;
+            
+	        //2020-03-10 김정언 - 반반차
+	        halfOff(attitudeType, $(this).attr("viewer"), $(this).attr("id"));
+			var addAnnualCnt = (attitudeType == "" || attitudeType == "A11" || attitudeType == "A12" || attitudeType == "A13" || attitudeType == "A21") ? true : false;
 			var dateAdditionalId = $(this).attr("viewer-listener").substring($(this).attr("viewer-listener").lastIndexOf(',')+2,$(this).attr("viewer-listener").lastIndexOf('"'));
 			 			
 			totalDay = totalDay + Number($("#" + dateAdditionalId).text().trim().substr($("#" + dateAdditionalId).text().trim().indexOf("[")+1, $("#" + dateAdditionalId).text().trim().indexOf("일")-1).trim());
@@ -543,7 +566,8 @@ function plusBtnClick(trId) {
    $("#__reform_annual_data_length").attr("value", annualDataLength);
    var dateLength = Number($("#__reform_datapicker_length").attr("value")) + 1;
    $("#__reform_datapicker_length").attr("value",dateLength);
-   
+   var timeLength = Number($("#__reform_timepicker_length").attr("value")) + 1;
+   $("#__reform_timepicker_length").attr("value",timeLength);
 
    str = "<tr id='annualDataTr_" + annualDataLength + "'>"
    + "<td id='annualDateTd_" + annualDataLength + "' align='center' colspan='14' ordertab='2' style='border-bottom: 1px solid black;border-right: 1px solid black;position: relative; height:30px;' valign='middle'>"
@@ -557,8 +581,10 @@ function plusBtnClick(trId) {
    + "            <tr>"
    + "               <td style='border: none; padding: 0;'>"
    + "                  <p style='margin-top: 0pt;margin-bottom: 0pt;font-family: 굴림;font-size: 13px;text-align: center;opacity: 1;height: 80%;'>"
-   + "                     <input data-reform_date_picker_flag='1' data-reform_flag='1' data-reform_on_click='dateControlClick(&quot;dete" + dateLength + "&quot;)' id='date" + dateLength + "' onclick='return reform_onClickHandler(event);' onkeyup='reform_onKeyUpHandler(event);' readonly='readonly' style='width: 125px; height: 100%; box-sizing: border-box; border: none; text-align: center; font-family: 굴림; font-size: 13px; color: transparent; background-color: transparent;' type='text' value='' viewer-args-build='{0} 년 {1} 월 {2} 일' viewer-args-regexp='/(&#92;d{4})-(&#92;d{1,2})-(&#92;d{1,2})/'>"
-   + "                     <input data-reform_date_picker_flag='1' data-reform_flag='1' data-reform_on_click='dateControlClick(&quot;dete" + (dateLength + 1) + "&quot;)' id='date" + (dateLength + 1) + "' onclick='return reform_onClickHandler(event);' onkeyup='reform_onKeyUpHandler(event);' readonly='readonly' style='width: 125px; height: 100%; box-sizing: border-box; border: none; text-align: center; font-family: 굴림; font-size: 13px; margin-left: 15px; color: transparent; background-color: transparent;' type='text' value='' viewer-args-build='{0} 년 {1} 월 {2} 일' viewer-args-regexp='/(&#92;d{4})-(&#92;d{1,2})-(&#92;d{1,2})/'>"
+   + "                     <input data-reform_date_picker_flag='1' data-reform_flag='1' data-reform_on_click='dateControlClick(&quot;date" + dateLength + "&quot;)' id='date" + dateLength + "' onclick='return reform_onClickHandler(event);' onkeyup='reform_onKeyUpHandler(event);' readonly='readonly' style='width: 145px; height: 100%; box-sizing: border-box; border: none; text-align: right; font-family: 굴림; font-size: 18px; color: transparent; background-color: transparent;' type='text' value='' viewer-args-build='{0} 년 {1} 월 {2} 일' viewer-args-regexp='/(&#92;d{4})-(&#92;d{1,2})-(&#92;d{1,2})/'>"
+   + "                     <input data-reform_time_picker_flag='1' data-reform_flag='1' data-reform_on_click='timeControlClick(&quot;time" + timeLength + "&quot;)' id='time" + timeLength + "' onclick='return reform_onClickHandler(event);' onkeyup='reform_onKeyUpHandler(event);' style='display:none; width: 40px; height: 100%; box-sizing: border-box; border: none; text-align: center; font-family: 굴림; font-size: 16px; color: transparent; background-color: transparent;' type='text' value='' viewer-args-build=' {0} 시' viewer-args-regexp='/(&#92;d{2}):(&#92;d{2})/'>"
+   + "                     <input data-reform_date_picker_flag='1' data-reform_flag='1' data-reform_on_click='dateControlClick(&quot;date" + (dateLength + 1) + "&quot;)' id='date" + (dateLength + 1) + "' onclick='return reform_onClickHandler(event);' onkeyup='reform_onKeyUpHandler(event);' readonly='readonly' style='width: 100px; height: 100%; box-sizing: border-box; border: none; text-align: center; font-family: 굴림; font-size: 18px; margin-left: 15px; color: transparent; background-color: transparent;' type='text' value='' viewer-args-build='{0} 년 {1} 월 {2} 일' viewer-args-regexp='/(&#92;d{4})-(&#92;d{1,2})-(&#92;d{1,2})/'>"
+  + "                      <input data-reform_time_picker_flag='1' data-reform_flag='1' data-reform_on_click='timeControlClick(&quot;time" + (timeLength + 1) + "&quot;)' id='time" + (timeLength + 1) + "' onclick='return reform_onClickHandler(event);' onkeyup='reform_onKeyUpHandler(event);' style='display:none; width: 40px; height: 100%; box-sizing: border-box; border: none; text-align: center; font-family: 굴림; font-size: 16px; color: transparent; background-color: transparent;' type='text' value='' viewer-args-build=' {0} 시' viewer-args-regexp='/(&#92;d{2}):(&#92;d{2})/'>"
    + "                     <span id='date-additional" + annualDataLength + "' selectId='" + controlID1 + "' style='visibility: hidden;'> </span>"
    + "                  </p>"
    + "               </td>"
@@ -567,7 +593,7 @@ function plusBtnClick(trId) {
    + "      </table>"
    + "</div>"
    + "<p style='margin-top: 0pt;margin-bottom: 0pt;font-family: 굴림;font-size: 13px;height: 100%;/* vertical-align: top; */padding-left: 20px;'>"
-   + "<input data-reform_flag='1' data-reform_on_key_up='setDocTitle' id='reform-title" + annualDataLength + "' onclick='return reform_onClickHandler(event);' onkeyup='reform_onKeyUpHandler(event);' style='width: 83%; height: 100%; border: none; box-sizing: border-box; text-align: center; font-family: 굴림; font-size: 12px; letter-spacing: 0px; color: black; padding-left: 7px; background-color: transparent;' type='text' value='년  월  일 ~  년  월  일 [  일 ]' viewer='date" + dateLength + ",date" + (dateLength + 1) +"'   viewer-can-build='query(&quot;#reform-title-checkbox" + annualDataLength + "&quot;)[0].checked'   viewer-format='{0} ~ {1}' viewer-listener='setAdditional(&quot;date" + dateLength + "&quot;,&quot;date" + (dateLength + 1) +"&quot;,&quot;" + controlID1 + "&quot;,&quot;date-additional" + annualDataLength + "&quot;)'>"
+   + "<input data-reform_flag='1' data-reform_on_key_up='setDocTitle' id='reform-title" + annualDataLength + "' onclick='return reform_onClickHandler(event);' onkeyup='reform_onKeyUpHandler(event);' style='width: 83%; height: 100%; border: none; box-sizing: border-box; text-align: center; font-family: 굴림; font-size: 12px; letter-spacing: 0px; color: black; padding-left: 7px; background-color: transparent;' type='text' value='년  월  일 ~  년  월  일 [  일 ]' viewer='date" + dateLength + ",date" + (dateLength + 1) + ",time" + timeLength + ",time" + (timeLength +1 ) + "'   viewer-can-build='query(&quot;#reform-title-checkbox" + annualDataLength + "&quot;)[0].checked'   viewer-format='{0}{2} ~ {1}{3}' viewer-listener='setAdditional(&quot;date" + dateLength + "&quot;,&quot;date" + (dateLength + 1) +"&quot;,&quot;" + controlID1 + "&quot;,&quot;date-additional" + annualDataLength + "&quot;)'>"
    + "      <select data-reform_flag='1' data-reform_on_change='selectChange(&quot;" + controlID1 + "&quot;);' onchange='reformUseProc.defaultChangeHandler(this);' style='width: 65px; overflow: auto; position: absolute; left: 4px; top: 17px; z-index: 2;' size='0' id='" + controlID1 + "'>"
    + "      </select>"
    + "<input data-reform_flag='1' data-reform_on_click='minusBtnClick(&quot;annualDataTr_" + annualDataLength + "&quot;)' id='" + controlID2 + "' onclick='return reform_onClickHandler(event);' style='width: 16px;height: 16px;position: absolute;right: 27px;top: 17px;z-index: 2;padding: 0px;' type='button' value='-'>"
@@ -589,6 +615,10 @@ dateListStr = dateListStr.split("]")[0];
 dateListStr += ",\"date" + dateLength + "\",\"date" + (dateLength + 1) + "\"]";
 $("#__reform_date_picker_list").attr("value", dateListStr);
 
+var timeListStr = $("#__reform_time_picker_list").attr("value");
+timeListStr = timeListStr.split("]")[0];
+timeListStr += ",\"time" + timeLength + "\",\"time" + (timeLength + 1) + "\"]";
+$("#__reform_time_picker_list").attr("value", timeListStr);
 
 var noDataBoundListStr = $("#__reform_no_data_bound_control_list").attr("value");
 noDataBoundListStr = noDataBoundListStr.split("]")[0];
@@ -651,6 +681,33 @@ for (var i = 0; i < 2; i++) {
    }
 }
 
+//timepicker
+for (var i = 0; i < 2; i++) {
+	var controlId = "time" + (timeLength + i);
+	var controlElement = document.getElementById(controlId);
+	if (controlElement != null) {
+		controlElement.removeAttribute("class");
+
+		$(controlElement).timepicker({
+			timeFormat: "H:i",
+			step : 60,
+			minTime : '8:00am',
+			maxTime : '8:00pm'
+		});
+
+		if ($(controlElement).val() === "") {
+			var currentTime = new Date().getHours();
+			var plusTime = currentTime + 2;
+
+			if(i == 0) {
+				$(controlElement).timepicker('setTime', new Date(0,0,0,currentTime,0,0));
+			} else {
+				$(controlElement).timepicker('setTime', new Date(0,0,0,plusTime,0,0));
+			}	  
+		}  
+	}
+}
+
 setInputViewer(document.getElementById("reform-title"+annualDataLength));
 vacationSelectInfo(controlID1);
 
@@ -659,15 +716,6 @@ $("#__reform_datapicker_length").attr("value",Number(dateLength) + 1);
 
 
 }
-
-
-
-
-
-
-
-
-
 
 // https://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format/4673436#4673436
 if (!String.format) {
@@ -722,6 +770,8 @@ function setInputViewer(viewer) {
    
    var build = function() {
       setTimeout(function() {
+               formatter = viewer.getAttribute("viewer-format");
+            inputIdArray = viewer.getAttribute("viewer").split(",");
 		if (!document.getElementById(viewer.getAttribute("id"))) {
 			return;
 		}
@@ -762,6 +812,9 @@ function setInputViewer(viewer) {
       } else {
          getFormatValueFunc = (function(control, buildFormat, argsRegexp) {
             return function() {
+               if (control.getAttribute("viewer-disable") == "true") {
+                   return "";
+                  }
                var matches = getRegexMatches(new RegExp(argsRegexp), control.value);
             
                if (matches.length === 1 && matches[0] instanceof Array && buildFormat) {
@@ -1200,3 +1253,68 @@ function calDateRange(val1, val2)
 parent.$('#div_Content').on('click', function () {
 	$.datepicker._hideDatepicker();
 });
+
+//2020-03-10 김정언 : 반반차
+function halfOff(attitudeType , halfOffViewer, halfOffReformId) {
+	console.log("연차타입 : " + attitudeType);
+	console.log("뷰어 : " + halfOffViewer);
+	console.log("리폼아이디 : " + halfOffReformId);
+
+	//date id 가져오는 변수
+	var halfOffViewer2 = halfOffViewer.split(",");
+	var halfOffViewer3 = halfOffViewer.replace(/date/g, "time").split(",");
+
+	console.log("halfOffViewer2 : " + halfOffViewer2);
+	console.log("halfOffViewer3 : " + halfOffViewer3);
+
+	if(attitudeType === "A21"){
+		$("#" + halfOffViewer3[0] + ", #" + halfOffViewer3[1]).css("display","");
+		$("#" + halfOffViewer3[0] + ", #" + halfOffViewer3[1]).attr("viewer-disable","false");
+		$("#" + halfOffReformId).attr("viewer-format","{0}{2} ~ {1}{3}");
+		$("#" + halfOffReformId).attr("viewer",halfOffViewer2[0] + "," + halfOffViewer2[1] + "," + halfOffViewer3[0] + "," + halfOffViewer3[1]);
+
+		var sTime = "";
+		var eTime = "";
+		var plusTime = "";
+
+		//시작시간 선택
+		$("#" + halfOffViewer3[0]).change(function(e){
+			sTime = $(e.target).timepicker('getTime').getHours();
+			plusTime = sTime + 2;
+			$("#" + halfOffViewer3[1]).timepicker('setTime', new Date(0,0,0,plusTime,0,0));
+		});
+
+		//종료시간 선택
+		$("#" + halfOffViewer3[1]).change(function(e){
+			eTime = $(e.target).timepicker('getTime').getHours();
+			if(eTime <= sTime){
+				$("#" + halfOffViewer3[1]).timepicker('setTime', new Date(0,0,0,plusTime,0,0));
+				parent.parent.OpenAlertUI("시작 시간을 종료 시간 보다 빠르게 지정해 주십시오.");
+			}
+		});
+
+	} else {
+		$("#" + halfOffViewer2[2] + ", #" + halfOffViewer2[3]).css("display","none");
+		$("#" + halfOffReformId).attr("viewer-format","{0} ~ {1}");
+		$("#" + halfOffReformId).attr("viewer",halfOffViewer2[0] + "," + halfOffViewer2[1]);
+		$("#" + halfOffViewer3[0] + ", #" + halfOffViewer3[1]).attr("viewer-disable","true");
+	}
+}
+
+//2020-03-10 김정언 : 반반차
+function hideTime(){
+	$("#reform-title").attr("viewer-format","{0} ~ {1}");
+	$("#reform-title").attr("viewer","date1,date2");
+
+	var currentTime = new Date().getHours();
+	var plusTime = currentTime + 2;
+	$("#time1").timepicker('setTime', new Date(0,0,0,currentTime,0,0));
+	$("#time2").timepicker('setTime', new Date(0,0,0,plusTime,0,0));
+
+	$("#time1, #time2").timepicker({
+		timeFormat: "H:i",
+		step : 60,
+		minTime : '8:00am',
+		maxTime : '8:00pm'
+	});
+}

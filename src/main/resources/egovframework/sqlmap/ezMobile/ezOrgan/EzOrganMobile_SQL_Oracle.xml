@@ -97,7 +97,64 @@
     <select id="MOrganDAO.getPersonInfo" parameterClass="Map" resultClass="MPersonListVO">
         <![CDATA[
             SELECT
-                *
+                CN ,
+            	CASE $lang$
+                WHEN '1'
+                THEN DISPLAYNAME
+                ELSE DISPLAYNAME2
+                END DISPLAYNAME  ,
+             	DISPLAYNAME DISPLAYNAME1  ,
+             	DISPLAYNAME2 ,
+             	MAIL ,
+             	DEPARTMENT ,
+            	CASE $lang$
+                WHEN '1'
+                THEN DESCRIPTION
+                ELSE DESCRIPTION2
+                END DESCRIPTION  ,
+             	DESCRIPTION DESCRIPTION1  ,
+             	DESCRIPTION2 ,
+             	PHYSICALDELIVERYOFFICENAME ,
+            	CASE $lang$
+                WHEN '1'
+                THEN COMPANY
+                ELSE COMPANY2
+                END COMPANY  ,
+             	COMPANY COMPANY1  ,
+             	COMPANY2 ,
+            	CASE $lang$
+                WHEN '1'
+                THEN TITLE
+                ELSE TITLE2
+                END TITLE  ,
+             	TITLE TITLE1  ,
+             	TITLE2 TITLE2  ,
+             	TELEPHONENUMBER ,
+             	HOMEPHONE ,
+             	MOBILE ,
+	            FACSIMILETELEPHONENUMBER ,
+	            STREETADDRESS ,
+	            INFO ,
+	            EXTENSIONATTRIBUTE1 ,
+	            EXTENSIONATTRIBUTE2 ,
+	            EXTENSIONATTRIBUTE3 ,
+	            EXTENSIONATTRIBUTE4 ,
+	            EXTENSIONATTRIBUTE5 ,
+	            EXTENSIONATTRIBUTE6 ,
+	            EXTENSIONATTRIBUTE7 ,
+	            EXTENSIONATTRIBUTE8 ,
+	            EXTENSIONATTRIBUTE9 ,
+	            EXTENSIONATTRIBUTE10 ,
+	            EXTENSIONATTRIBUTE11 ,
+	            EXTENSIONATTRIBUTE12 ,
+	            EXTENSIONATTRIBUTE13 ,
+	            EXTENSIONATTRIBUTE14 ,
+	            EXTENSIONATTRIBUTE15 ,
+	            ADSPATH ,
+	            UPDATEDT ,
+	            SIPURI ,
+	            POSITIONCD ,
+			    FURIGANA
             FROM
                 tbl_usermaster
             WHERE
@@ -756,5 +813,54 @@
 			]]>
     	</isNotEqual>
     </select>
+    <select id="MOrganDAO.getOneDeptInfo" parameterClass="Map" resultClass="MOrganListVO">
+    	<![CDATA[
+    		SELECT
+				CN as DEPTID,
+				CASE
+					WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
+  					THEN DISPLAYNAME
+  					ELSE DISPLAYNAME$lang$
+  				END DEPTNAME
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				CN = #deptID#
+    	]]>
+    </select>
+    
+    <select id="MOrganDAO.getUserAddjobInfo" parameterClass="Map" resultClass="MPersonListVO">
+		<![CDATA[
+			SELECT
+				A.CN,
+                CASE $lang$
+                WHEN '1'
+                THEN TITLE
+                ELSE TITLE2
+                END TITLE,
+                CASE $lang$
+                WHEN '1'
+                THEN DISPLAYNAME
+                ELSE DISPLAYNAME2
+                END Description,
+                CASE $lang$
+                WHEN '1'
+                THEN EXTENSIONATTRIBUTE3
+                ELSE COMPNM2
+                END COMPANY 
+        	FROM
+        		TBL_ADDJOBMASTER A
+        	JOIN
+        		TBL_DEPTMASTER B   ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
+        	WHERE
+        		A.CN = #userID#
+        	AND
+        		A.DEPTID = #deptID#
+        	AND
+        		A.TENANT_ID = #tenantID#	
+		]]>
+	</select>
 </sqlMap>
 

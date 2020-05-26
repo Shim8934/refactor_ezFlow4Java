@@ -283,6 +283,11 @@
 	                document.getElementById("dept_select").style.display = "none";
 	            }
 	            else {
+	                document.getElementById("h1Title").style.marginBottom = "0px";
+	                document.getElementById("mailReceiverInfoTxt").style.display = "block";
+	                
+	                window.resizeTo(window.outerWidth, window.outerHeight+18);
+	                
 	                SelectReceiverWindow(eval('<c:out value="${defaultWin}"/>' + "Title"), eval("ListViewMsg" + '<c:out value="${defaultWin}"/>'));
 	            }
 	            
@@ -297,7 +302,7 @@
                   },
                   click : function(event) {
                 	  
-                	  var selectList = $("#" + event.currentTarget.id + " tr[selected=true]");
+                	  var selectList = $("#" + event.currentTarget.offsetParent.id + " tr[selected=true]");
                       
                       $(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
                       $(".receiver_borderbox tr").removeClass("ui-sortable-helper");
@@ -319,6 +324,7 @@
                 	  
                 	  // thead에 들어가는 현상 수정 
                 	  var elemParent = elem.item[0].parentNode;
+                	  var elemTalbeId = elemParent.parentElement.id;
                 	  
                 	  if (elemParent.tagName == 'THEAD'){
                 		  
@@ -333,6 +339,8 @@
                     	  
                     	  var childArry = $("#" + elemParent.id + " tr[id!=" + thName + "]");
                 		  
+                    	  document.getElementById(elemTalbeId).className = "receiver_list";
+                    	  
                 		  for (var i = 0;i < childArry.length; i++) {
                 			  elemParent.nextSibling.appendChild(childArry[i]); // tbody에 추가
                 		  }
@@ -4009,6 +4017,9 @@
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
+        <div id="mailReceiverInfoTxt" style="margin-bottom: 7px; display:none; ">
+			<span>※ <spring:message code='ezEmail.ksa15' /></span>
+		</div>
 	    <table style="width:100%;">
 	        <tr>
 	            <td style="vertical-align: top;">

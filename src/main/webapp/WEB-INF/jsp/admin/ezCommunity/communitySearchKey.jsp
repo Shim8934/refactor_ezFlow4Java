@@ -155,17 +155,26 @@
 				var commuDesc = $("#QuerySelect").find("option[value='pCommuintyDesc']");
 				var commuCR = $("#QuerySelect").find("option[value='pCommCloseReason']");
 				
+				/* 2020-05-25 홍승비 - IE 브라우저 대응 옵션값 추가, 제거로 변경 */
 				if (selectedTabId == "closeCommu") { // 폐쇄한 커뮤니티
-					commuDesc.css("display", "none"); // 커뮤니티소개
-					commuDesc.attr("selected", false);
-					commuCR.css("display", ""); // 폐쇄사유
-					commuCR.attr("selected", false);
+					
+					 // 커뮤니티소개 제거
+					if (commuDesc.length > 0) {
+						commuDesc.remove();
+					}
+					 // 폐쇄사유 추가
+					$("#QuerySelect").append("<option value='pCommCloseReason'><spring:message code = 'ezCommunity.t71' /></option>");
+					
 					commuName.attr("selected", true); // 커뮤니티이름 (default)
 				} else { // 개설된 커뮤니티
-					commuDesc.css("display", ""); // 커뮤니티소개
-					commuDesc.attr("selected", false);
-					commuCR.css("display", "none"); // 폐쇄사유
-					commuCR.attr("selected", false);
+					
+					 // 폐쇄사유 제거
+					if (commuCR.length > 0) {
+						commuCR.remove();
+					}
+					 // 커뮤니티소개 추가
+					$("#QuerySelect").append("<option value='pCommuintyDesc'><spring:message code = 'ezCommunity.t2008' /></option>");
+					
 					commuName.attr("selected", true); // 커뮤니티 이름 (default)
 				}
 				
@@ -642,9 +651,8 @@
 						
 						<select id="QuerySelect" name="QuerySelect" style="vertical-align: middle; height: 22px;">
 							<option selected value="pCommunityName"><spring:message code = 'ezCommunity.t9991' /></option>
-							<%-- 2020-01-06 홍승비 - 커뮤니티소개, 폐쇄사유 검색옵션 추가 --%>
-							<option value="pCommuintyDesc" ><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></option>
-							<option value="pCommCloseReason" style="display:none;"><spring:message code = 'ezCommunity.t71' /></option>
+							<%-- 2020-01-06 홍승비 - 커뮤니티소개, 폐쇄사유 검색옵션 추가 (2020-05-25 홍승비 - 폐쇄사유 옵션 동적 추가/제거 형식으로 변경) --%>
+							<option value="pCommuintyDesc" ><spring:message code = 'ezCommunity.t2008' /></option>
 						</select>
 						
 						<input name="text" type="text" style="WIDTH:200px; vertical-align:middle; height: 22px;" id="txt_SearchQuery" onKeyPress="return get_search_CommunityInfo(event)"> 

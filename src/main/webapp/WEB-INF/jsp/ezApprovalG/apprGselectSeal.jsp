@@ -44,7 +44,7 @@
 		        	var selectedXMLCells = GetChildNodes(SelectNodes(orgSealXML, "ROWS/ROW")[i], "CELL");
 		        	
 		        	newSealXML += "<ROW><CELL>";
-		        	newSealXML += "<VALUE>" + getNodeText(SelectSingleNode(selectedXMLCells[0], "VALUE")) + "</VALUE>";
+		        	newSealXML += "<VALUE>" + MakeXMLString(getNodeText(SelectSingleNode(selectedXMLCells[0], "VALUE"))) + "</VALUE>";
 		        	newSealXML += "<SNUM>" + getNodeText(SelectSingleNode(selectedXMLCells[0], "DATA1")) + "</SNUM>";
 		        	newSealXML += "<IMGHREF>" + getNodeText(SelectSingleNode(selectedXMLCells[0], "DATA2")) + "</IMGHREF>";
 		        	newSealXML += "<IMGWIDTH>" + getNodeText(selectedXMLCells[1]) + "</IMGWIDTH>";

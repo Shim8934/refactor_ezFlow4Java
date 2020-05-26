@@ -546,6 +546,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, jsonParam.get("modifierId").toString());
+			MScheduleInfoVO vo = mScheduleService.scheduleInfo(scheduleId, commonUtil.getMinuteUTC(info.getOffSet()), info.getTenantId());
 			
 			jsonParam.put("modifierName", info.getUserName());
 			jsonParam.put("modifierName2", info.getUserName2());
@@ -598,6 +599,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			content = content.replace("replace_" + scheme, scheme);
 	        
 			jsonParam.put("content", content);
+			jsonParam.put("repetition", vo.getRepetition());
 	        
 	        mScheduleService.updateSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId(), realPath, locale);
 	        
@@ -627,9 +629,6 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
-			String startDate = request.getParameter("startDate");
-			String endDate = request.getParameter("endDate");
-			String dateType = request.getParameter("dateType");
 			
 /*			if(dateType.equals("3")) {
 				mScheduleService.insertScheduleRepeDel(scheduleId, startDate, info.getTenantId());
@@ -678,10 +677,10 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			 
 			if(targetDate == null || targetDate.equals("")){   //파라메타값이 없을경우 오늘날짜
 			 
-				toYear = calForWeek.get(calForWeek.YEAR);  
-				toMonth = calForWeek.get(calForWeek.MONTH)+1;
-				toDay = calForWeek.get(calForWeek.DAY_OF_MONTH);
-				int yoil = calForWeek.get(calForWeek.DAY_OF_WEEK); //요일나오게하기(숫자로)
+				toYear = calForWeek.get(Calendar.YEAR);  
+				toMonth = calForWeek.get(Calendar.MONTH)+1;
+				toDay = calForWeek.get(Calendar.DAY_OF_MONTH);
+				int yoil = calForWeek.get(Calendar.DAY_OF_WEEK); //요일나오게하기(숫자로)
 
 			if(yoil != 1){   //해당요일이 일요일이 아닌경우
 				
@@ -706,10 +705,10 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			
 			String[] arrYMD = new String[7];
 			  
-			int inYear = calForWeek.get(calForWeek.YEAR);  
-			int inMonth = calForWeek.get(calForWeek.MONTH);
-			int inDay = calForWeek.get(calForWeek.DAY_OF_MONTH);
-			int yoil = calForWeek.get(calForWeek.DAY_OF_WEEK); //요일나오게하기(숫자로)
+			int inYear = calForWeek.get(Calendar.YEAR);  
+			int inMonth = calForWeek.get(Calendar.MONTH);
+			int inDay = calForWeek.get(Calendar.DAY_OF_MONTH);
+			int yoil = calForWeek.get(Calendar.DAY_OF_WEEK); //요일나오게하기(숫자로)
 			
 			yoil = yoil-1;
 			
@@ -718,9 +717,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			for(int i = 0; i < 7;i++){
 			
 				calForWeek.set(inYear, inMonth, inDay+i);  //
-				String y = Integer.toString(calForWeek.get(calForWeek.YEAR));  
-				String m = Integer.toString(calForWeek.get(calForWeek.MONTH)+1);
-				String d = Integer.toString(calForWeek.get(calForWeek.DAY_OF_MONTH));
+				String y = Integer.toString(calForWeek.get(Calendar.YEAR));  
+				String m = Integer.toString(calForWeek.get(Calendar.MONTH)+1);
+				String d = Integer.toString(calForWeek.get(Calendar.DAY_OF_MONTH));
 				
 				if(m.length() == 1) m = "0" + m; 
 				
@@ -731,7 +730,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			   
 			}
 			
-			List<Map> resultList = new ArrayList<Map>();
+			List<Map<String, Object>> resultList = new ArrayList<>();
 					
 			for (int i = 0; i < arrYMD.length; i++) {
 				

@@ -28,6 +28,8 @@ function Receptinfo_ini() {
         	initReceptListView();
         	document.getElementById("3tab1").onclick();
         }
+
+        treeViewScrollTo("tvTreeView2");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
     }
 }
 //#############################################################################################################################################수신처 내부 버튼 클릭 이벤트
@@ -1319,7 +1321,7 @@ function btnSearchDept_onClick_Complete(reParam) {
 
 function btnSearchDept_onClick_Complete_New(reParam) {
 	DivPopUpHidden();
-	
+
 	if (typeof(reParam) == "undefined" || reParam["ret"] == "NO" || reParam["ret"] == "") {
 		return;
 	}
@@ -1346,7 +1348,42 @@ function btnSearchDept_onClick_Complete_New(reParam) {
     			AprLineAddDeptG_New(reParam["ouCode"][i]);
     		}
     	}
-    }
+    } else if (reParam["ret"] == "SEARCH") {  //2020-04-23 : 외부 수신처 검색 후 조직도 이동
+        var rtnXml = reParam["search"];
+
+        var listview = new ListView();
+        listview.LoadFromID("lvRECEPTLIST");
+
+        var xmlRtn = createXmlDom();
+        xmlRtn = loadXMLString(rtnXml);   
+        
+        var nodes = xmlRtn.getElementsByTagName("ROW");
+
+        var nodeLevel = 1;
+
+        for(var i = nodes.length -1 ; i >= 0 ; i--){
+
+            $("#tvTreeView3").find("div[nodelevel=" + nodeLevel + "]").each(function(){
+                if($(this).attr("data1") == $(nodes.item(i)).find("SELCODE").eq(0).text()){
+
+                    var nodeID = "imgNode_" + $(this).attr("id");
+                    var nodeSpnDiv = "spn_" + $(this).attr("id");
+    
+                    if($("#" + nodeID).attr("src").indexOf("plus") > -1){
+                        $("#" + nodeID).click();
+                    }
+    
+                    if(i == 0){
+                        $("#" + nodeSpnDiv).click();
+                    }  
+                    
+                    return false;
+                }
+            });
+            nodeLevel++;
+        }
+        treeViewScrollTo("tvTreeView3");   //선택된 노드로 트리뷰 커서 이동
+   }
 }
 
 function event_getDeptFullTree() {
@@ -1366,6 +1403,8 @@ function event_getDeptFullTree() {
             treeView.SetNodeDblClick("TreeViewNodeDbClick");
             treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
             treeView.DataBind("TreeView2");
+
+            treeViewScrollTo("tvTreeView2");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
         }
         else {
             alert(strLang249 + g_xmlHTTP.statusText);

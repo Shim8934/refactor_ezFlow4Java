@@ -1549,9 +1549,11 @@
 						type 
 			          FROM 
 			          	(SELECT  
-			             	cn, 
+			             	cn,
+			             	CASE #v_LANGDATA# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END as userName,
 			                department as displayName, 
 			                '' as extensionAttribute15,
+			                '0' as addJobFlag,
 			                'user' as type 
 			             FROM  
 			             	TBL_USERMASTER A
@@ -1573,8 +1575,10 @@
 			            
 					SELECT
 						a.cn  ,
+						CASE #v_LANGDATA# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END as userName,
 						deptid as displayName ,
 						'' as extensionAttribute15,
+						'1' as addJobFlag,
 						'user' as type
 					FROM
 						TBL_USERMASTER b
@@ -1590,6 +1594,8 @@
 						AND A.TENANT_ID = #v_TENANT_ID#
 						$strSQLAddjobCom$
 						)  AA
+					ORDER BY
+						AA.addJobFlag, AA.userName
 					LIMIT #startRowForMySQL#, #count#
                ]]>
           </isEqual>

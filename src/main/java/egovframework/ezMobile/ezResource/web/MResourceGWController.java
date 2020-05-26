@@ -1,10 +1,8 @@
 package egovframework.ezMobile.ezResource.web;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -18,7 +16,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +30,6 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
-import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
@@ -63,9 +59,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 	@Autowired
 	private CommonUtil commonUtil;
 
-	@Autowired
-	private Properties config;	
-	
 	@Resource(name="MResourceService")
 	private MResourceService mResourceService;
 		
@@ -395,10 +388,14 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			String apprAuthYn = "N";
 			
-			for (MResourceGetAdmSubClsTreeVO rVO : list) {
+			/*for (MResourceGetAdmSubClsTreeVO rVO : list) {
 				if(rVO.getBrdId().equals(resourceId)){
 					apprAuthYn = "Y";
 				}
+			}*/
+			
+			if(list.stream().anyMatch(rVO -> rVO.getBrdId().equals(resourceId))) {
+				apprAuthYn = "Y";
 			}
 			
 			resVO.setApprAuthYn(apprAuthYn);
@@ -1149,10 +1146,15 @@ public class MResourceGWController extends EgovFileMngUtil {
 				
 				List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn, "");
 				if(!ownerId.equals("") && !ownerId.equals("1")) {
-					for(int i=0; i<list.size(); i++) {
+					/*for(int i=0; i<list.size(); i++) {
 						if(list.get(i).getBrdId().equals(ownerId)) {
 							authCheck = "Y";
 						}
+					}*/
+					// 20-03-06 김민성 - ownerId가 자원분류의 값이 아닌 자원ID 값인 경우가 있어 수정함
+					String ownerId2 = mResourceService.getResUpperBrdID(ownerId, tenantId, userCompany);
+					if(list.stream().anyMatch(res -> res.getBrdId().equals(ownerId2))) {
+						authCheck = "Y";
 					}
 				}
 				else {
@@ -1167,10 +1169,14 @@ public class MResourceGWController extends EgovFileMngUtil {
 			// 2018-10-31 김민성 - 자원 관리자 권한 가진 자원이 있는지 체크
 			List<String> adminResList = mResourceService.getResAdminAuth(userId, tenantId, brdCompany);
 			if(!ownerId.equals("")) {
-				for(int i=0; i<adminResList.size(); i++) {
+				/*for(int i=0; i<adminResList.size(); i++) {
 					if(adminResList.get(i).equals(ownerId)) {
 						adminYn = "Y";
 					}
+				}*/
+				String ownerId2 = ownerId;
+				if(adminResList.stream().anyMatch(res -> res.equals(ownerId2))) {
+					adminYn = "Y";
 				}
 			}
 			else {

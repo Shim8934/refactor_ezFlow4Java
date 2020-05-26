@@ -63,4 +63,6 @@ public interface MResourceService {
 	public MResourceScheduleVO getResBrdDetail(String ownerId, String companyId, int tenantId) throws Exception;
 	
 	public List<String> getResAdminAuth(String userId, int tenantId, String companyId) throws Exception;
+	
+	public String getResUpperBrdID(String ownerId, int tenantId, String companyId) throws Exception;
 }
