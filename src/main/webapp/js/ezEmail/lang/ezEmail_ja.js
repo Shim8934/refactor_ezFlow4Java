@@ -315,9 +315,9 @@ var strLangSharedMailbox03 = "パスワードを変更しました。";
 var strLangReceiverCount01 = "受信者は";
 var strLangReceiverCount02 = "人まで設定可能です。";
 
-var strLangHDP01 = "Up to";
-var strLangHDP02 = "Downloadable";
-var strLangHDP03 = "Up to {0} files can be attached to a large file.";
+var strLangHDP01 = "回まで";
+var strLangHDP02 = "ダウンロード可能";
+var strLangHDP03 = "大容量添付は{0}個まで可能です。";
 
 function GetLocalTime(Offset , pDateTime)
 {
