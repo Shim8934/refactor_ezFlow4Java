@@ -150,6 +150,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 					scheduleInfo = mScheduleService.scheduleMainList(info, listCnt);
 					scheduleList = scheduleInfo.get("list");
 					scheduleCnt = scheduleInfo.get("cnt");
+					
+					String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
+			        if(useWorkspaceSchedule.equalsIgnoreCase("YES")) {
+			        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", info.getTenantId());
+			        	dataObject.put("workspaceHostUrl", workspaceHostUrl);
+			        }
 				}
 				
 				/* 메일  */
@@ -320,6 +326,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 						mPortalTimeLineVO.setModule("3");
 						mPortalTimeLineVO.setWriterName((primary.equals("1") ? scheduleInfoVO.getCreatorName() : scheduleInfoVO.getCreatorName2()));
 						mPortalTimeLineVO.setSchID(scheduleInfoVO.getScheduleId());
+						mPortalTimeLineVO.setRepeatCount(scheduleInfoVO.getRepeatCount());
 						
 						if (shotDF.parse(scheduleInfoVO.getStartDate()).compareTo(shotDF.parse(nowDate)) == 0) {
 							if (longDF.parse(scheduleInfoVO.getStartDate()).compareTo(longDF.parse(sessionDate)) == 1) {
@@ -335,6 +342,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 							}
 						}
 					}
+					
+					String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
+			        if(useWorkspaceSchedule.equalsIgnoreCase("YES")) {
+			        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", info.getTenantId());
+			        	dataObject.put("workspaceHostUrl", workspaceHostUrl);
+			        }
 					
 					LOGGER.debug("## 일정관리 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				}

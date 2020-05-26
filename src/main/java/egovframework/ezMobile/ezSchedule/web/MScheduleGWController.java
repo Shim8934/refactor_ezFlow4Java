@@ -130,6 +130,12 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */
 			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchColumn, searchData);
 						
+			String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
+	        if(useWorkspaceSchedule.equalsIgnoreCase("YES")) {
+	        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", info.getTenantId());
+	        	result.put("workspaceHostUrl", workspaceHostUrl);
+	        }
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", sList);		
