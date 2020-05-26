@@ -42,6 +42,11 @@
 				margin-right:2px;
 				cursor:pointer;
 			}
+			.radioTypeText {
+				vertical-align: top;
+			    margin-top: 3px;
+			    display: inline-block;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -296,10 +301,10 @@
 		        </tr>
 		        <tr style="height:20px;text-align:center;">
 		            <td>
-		                <input type="radio" name="radType" value="type5" onclick="radioClick(this, 'rad')" style="cursor:pointer;" checked="checked"/>Type1
+		                <input type="radio" name="radType" value="type5" onclick="radioClick(this, 'rad')" style="cursor:pointer;" checked="checked"/><span class="radioTypeText">Type1</span>
 		            </td>
 		            <td>
-		                <input type="radio" name="radType" value="type2" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type2
+		                <input type="radio" name="radType" value="type2" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/><span class="radioTypeText">Type2</span>
 		            </td>
 		        </tr>
 		        <tr style="height:190px;">
@@ -312,10 +317,10 @@
 		        </tr>
 		        <tr style="height:20px;text-align:center;">
 		            <td>
-		                <input type="radio" name="radType" value="type3" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type3
+		                <input type="radio" name="radType" value="type3" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/><span class="radioTypeText">Type3</span>
 		            </td>
 		            <td>
-		                <input type="radio" name="radType" value="type4" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type4
+		                <input type="radio" name="radType" value="type4" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/><span class="radioTypeText">Type4</span>
 		            </td>
 		        </tr>
 	    	</table>
