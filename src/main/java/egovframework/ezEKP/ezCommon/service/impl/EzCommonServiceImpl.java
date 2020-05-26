@@ -1784,5 +1784,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("regdate", "2020-05-21 00:00:00");
 
 		ezCommonDAO.insertHolidayCheckTenantConfig(map);
-	}	
+	}
+
+	@Override
+    public void addDocStateIntoLastLines() throws Exception {
+	    ezCommonDAO.addDocStateIntoLastLines();
+    }
+
+    @Override
+    public void addDocStateIntoLastDeptLines() throws Exception {
+	    ezCommonDAO.addDocStateIntoLastDeptLines();
+    }
+
 }

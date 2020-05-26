@@ -134,7 +134,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     @PostConstruct
 	public void init() throws Exception {
     	logger.debug("init started.");
-    	
+
     	try {
 	    	ezCommonService.createTblCompanyConfig();
 	    	ezCommonService.createReformFlagColumn();
@@ -212,11 +212,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addFormAprOptionColumn(); // 2020-05-14 홍승비 - 전자결재 양식 옵션 관련 칼럼 추가
 	    	ezCommonService.insertAnnualScheduleTenantConfig(); // 2020-02-24 김정언 - useAnnualScheduleYN 컨피그 추가
 	    	ezCommonService.insertHalfOffAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 반반차 추가
-	    	ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가	    	
+	    	ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가
+			ezCommonService.addDocStateIntoLastLines();
+			ezCommonService.addDocStateIntoLastDeptLines();
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
-    	
+
     	logger.debug("init ended.");
     }
 

@@ -214,6 +214,10 @@ public interface EzCommonService {
 	public void addAprEndAttachViewOrder() throws Exception;
 	
 	public void addAprTmpAttachViewOrder() throws Exception;
+
+	public void addDocStateIntoLastLines() throws Exception;
+
+	public void addDocStateIntoLastDeptLines() throws Exception;
 	
 	public void insertUseExternalMailServerConfig() throws Exception;
 
