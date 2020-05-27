@@ -3852,6 +3852,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		saveFileName = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + extension; 
 		saveDir = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID);
 		
+		logger.debug("<<<userID : " + userInfo.getId());
+		logger.debug("<<<userName : " + userInfo.getDisplayName());
 		logger.debug("<<<realPath : " + realPath);
 		logger.debug("<<<path : " + path);
 		logger.debug("<<<saveFileName : " + saveFileName);
