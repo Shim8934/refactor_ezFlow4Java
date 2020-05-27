@@ -1968,8 +1968,9 @@ public class CommonUtil {
             	Boolean patternChk = true;
             	
             	for (Map<String, Object> pwPattern : pwPolicyPattern) {
-            		int patternCnt = (int) pwPattern.get("USE_PATTERN_COUNT");
-            		int numberOfChar = (int) pwPattern.get("NUMBER_OF_CHAR");
+            		
+            		int patternCnt = Integer.parseInt(String.valueOf(pwPattern.get("USE_PATTERN_COUNT")));
+            		int numberOfChar = Integer.parseInt(String.valueOf(pwPattern.get("NUMBER_OF_CHAR")));
             		logger.debug("patternCnt=" + patternCnt + ",iPatternCnt=" + iPatternCnt + ", numberOfChar=" + numberOfChar);
 
             		if (patternCnt == iPatternCnt) {
@@ -2075,8 +2076,8 @@ public class CommonUtil {
             if (pwPolicyPattern != null && pwPolicyPattern.size() > 0) {
         		String patternMsg1 = egovMessageSource.getMessage("ezSystem.ksaPwPolicy19", locale);
             	for (Map<String, Object> pwPattern : pwPolicyPattern) {
-            		int patternCnt = (int) pwPattern.get("USE_PATTERN_COUNT");
-            		int numberOfChar = (int) pwPattern.get("NUMBER_OF_CHAR");
+            		int patternCnt = Integer.parseInt(String.valueOf(pwPattern.get("USE_PATTERN_COUNT")));
+            		int numberOfChar = Integer.parseInt(String.valueOf(pwPattern.get("NUMBER_OF_CHAR")));
 
             		String patternMsgTemp = patternMsg1.replace("{0}", Integer.toString(patternCnt)) + " ";
             		
