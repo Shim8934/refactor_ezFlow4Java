@@ -4145,16 +4145,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		try{
 			userInfo = commonUtil.userInfo(loginCookie);
-			
-			//List<Map<String, Object>> searchList = new ArrayList<Map<String, Object>>();
-			JSONObject searchResult = new JSONObject();
-			Map<String, Object> ret = new HashMap<String, Object>();
-			String searchURL = "";
-			
-			searchResult = ezPortalService.callSearchServerForResult2(userInfo, paramData, searchURL, userInfo.getOffset());
+			JSONObject searchResult = ezPortalService.callSearchServerForResult2(userInfo, paramData);
 
-			//호출  url 불러오기
-			
 			//접속하고자 하는 url.
 			String totalSearchURL = config.getProperty("config.totalSearchURL");
 			
@@ -4164,34 +4156,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		/*if(type.equalsIgnoreCase("all")) {
-			//전체인 경우
-			paramData.put("type", "all");
-			searchURL = ezPortalService.getTotalSearchURL(userInfo, paramData);       // URL 생성
-			searchResult = ezPortalService.callSearchServerForResult(userInfo, paramData, searchURL, userInfo.getOffset());      // 데이터 추출
-			
-			ret.put("approvalList", searchResult);
-			
-			// 게시판인 경우
-			paramData.put("type", "board");
-			searchURL = ezPortalService.getTotalSearchURL(userInfo, paramData);       // URL 생성
-			searchResult = ezPortalService.callSearchServerForResult(userInfo, paramData, searchURL, userInfo.getOffset());      // 데이터 추출
-			
-			ret.put("boardList", searchResult);
-		} else if(type.equalsIgnoreCase("approval")) {
-			paramData.put("type", "approval");
-			searchURL = ezPortalService.getTotalSearchURL(userInfo, paramData);       // URL 생성
-			searchResult = ezPortalService.callSearchServerForResult(userInfo, paramData, searchURL, userInfo.getOffset());      // 데이터 추출
-			
-			ret.put("approvalList", searchResult);
-		} else if(type.equalsIgnoreCase("board")) {
-			paramData.put("type", "board");
-			searchURL = ezPortalService.getTotalSearchURL(userInfo, paramData);       // URL 생성
-			searchResult = ezPortalService.callSearchServerForResult(userInfo, paramData, searchURL, userInfo.getOffset());      // 데이터 추출
-			
-			ret.put("boardList", searchResult);			
-		}*/
 		
 		logger.debug("getTotalSearchList is ended.");
 		return result;

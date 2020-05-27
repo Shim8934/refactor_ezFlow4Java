@@ -8,15 +8,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
@@ -4243,7 +4237,6 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		return readFlag;
 	}
 
-	
 	/**
 	 *  통합검색 - 검색엔진 URL 만들기
 	 *  w : 검색영역
@@ -4257,22 +4250,21 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 	 * */
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject callSearchServerForResult2(LoginVO userInfo, Map<String, Object> param, String searchURL,
-			String offset) throws Exception {
-		String type = (String) param.get("type") != null ? (String) param.get("type") : "";
-		String keyword = (String) param.get("keyword") != null ? (String) param.get("keyword") : "";
-		String searchRange = (String) param.get("searchRange") != null ? (String) param.get("searchRange") : "";
-		String startDate = (String) param.get("startDate") != null ? (String) param.get("startDate") : "";
-		String endDate = (String) param.get("endDate") != null ? (String) param.get("endDate") : "";
-		String automax = (String) param.get("automax") != null ? (String) param.get("automax") : "";
+	public JSONObject callSearchServerForResult2(LoginVO userInfo, Map<String, Object> param) throws Exception {
+		String type = Optional.ofNullable(param.get("type")).map(Object::toString).orElse("");
+		String keyword = Optional.ofNullable(param.get("keyword")).map(Object::toString).orElse("");
+		String searchRange = Optional.ofNullable(param.get("searchRange")).map(Object::toString).orElse("");
+		String startDate = Optional.ofNullable(param.get("startDate")).map(Object::toString).orElse("");
+		String endDate = Optional.ofNullable(param.get("endDate")).map(Object::toString).orElse("");
+		String automax = Optional.ofNullable(param.get("automax")).map(Object::toString).orElse("");
 		String userID = userInfo.getId();
-		String page = (String) param.get("page") != null ? (String) param.get("page") : "";
-		int tenantID = (int) userInfo.getTenantId() ;
-		String companyID = (String) userInfo.getCompanyID();
+		String page = Optional.ofNullable(param.get("page")).map(Object::toString).orElse("");
+		int tenantID = userInfo.getTenantId() ;
+		String companyID = userInfo.getCompanyID();
 
 		logger.debug("[callSearchServerForResult2 Params] type : " + type + ", keyword : " + keyword + 
 				", searchRange : " + searchRange + ", startDate : " + startDate + ", endDate : " + endDate +
-				", automax : " + automax + ", userID : " + userID + ", page : " + page + "companyID : " + companyID);
+				", automax : " + automax + ", userID : " + userID + ", page : " + page + ", companyID : " + companyID);
 		
 		JSONObject json = new JSONObject();
 		json.put("w", type);
@@ -4280,115 +4272,18 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		json.put("page", page);
 		json.put("dsort", "11");
 		json.put("q", keyword);
-		
-		if (!searchRange.equalsIgnoreCase("all")) {
-			String searchType = "";
-			String range[] = searchRange.split("\\|");
-			int rangeCount = range.length;
-			
-			for (int i = 0; i < rangeCount; i++) {
-				
-				if (i != 0) {
-					searchType += "|";
-				}
-				
-				if(range[i].equalsIgnoreCase("TITLE")) {
-					searchType += "title";
-				} else if(range[i].equalsIgnoreCase("CONTENTS")) {
-					searchType += "contents";
-				} else if(range[i].equalsIgnoreCase("ATTACH")) {
-					searchType += "attach";
-				} else if(range[i].equalsIgnoreCase("WRITER")) {
-					searchType += "writer";
-				}
-			}
-			
-			logger.debug("[searchRange] : " + searchType);
-			json.put("searchRange", searchType);
-		} else {
-			json.put("searchRange", "title|contents|attach|writer");
-		}
-		/*if (!type.equalsIgnoreCase("all")) {
-			String range[] = searchRange.split("\\|");
-			int rangeCount = range.length;
-			List<String> rangeList = new ArrayList<String>();
-			
-			for (int i = 0; i < rangeCount; i++) {
-				if(range[i].equalsIgnoreCase("TITLE")) {
-					rangeList.add("{title:" + keyword + "}");
-				} else if(range[i].equalsIgnoreCase("CONTENTS")) {
-					rangeList.add("{contents:" + keyword + "}");
-				} else if(range[i].equalsIgnoreCase("ATTACH")) {
-					rangeList.add("{attach:" + keyword + "}");
-				} else if(range[i].equalsIgnoreCase("WRITER")) {
-					rangeList.add("{name:" + keyword + "}");
-				}
-			}
-			
-			String keyRange = "(";
-			
-			for(int i = 0; i < rangeList.size(); i++) {
-				if(i == 0) {
-					keyRange += rangeList.get(i);
-				} else {
-					keyRange += " ^[OR ";
-					keyRange += rangeList.get(i);
-				}
-			}
-			
-			keyRange += ")";
-			
-			json.put("csq", keyRange);
-		} else {
-			String keyRange = "";
-			json.put("csq", keyRange);
-		}*/
-		
+		json.put("searchRange", !searchRange.equalsIgnoreCase("all") ? searchRange.toLowerCase() : "title|contents|attach|writer");
 		json.put("view", userID);
 		json.put("tenant", tenantID);
 		json.put("company", companyID);
 		
 		if(startDate != "" && endDate != "" ) {
-			
-			String dateRange = "";
-			
-			startDate = startDate.replaceAll("-", "");
-			endDate = endDate.replaceAll("-", "");
-			
-			dateRange = startDate + "~" + endDate;
+			String dateRange = (startDate + "~" + endDate).replaceAll("-", "");
 			json.put("d1", dateRange);
 		}
 		
 		logger.debug("[JSON result] json = " + json.toJSONString());
-		//String jsonValue = json.toJSONString();
-		
-	
-		/*URL url = new URL(totalSearchURL);
-		URLConnection conn = url.openConnection();
-		conn.setDoOutput(true);
-		conn.setRequestProperty("content-type", "application/json");
-		conn.setRequestProperty("Accept", "application/json");
-		OutputStream os = conn.getOutputStream(); 
-		os.write(jsonValue.getBytes("UTF-8"));
-		os.flush();
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-		StringBuffer sb = new StringBuffer();
-		String returnText = "";
-		String jsonData;
-		
-		while ((jsonData = br.readLine()) != null) {
-            sb.append(jsonData);
-        }
-        returnText = sb.toString();
-        logger.debug("[returnText] " + returnText);
-		
-		JSONParser parser = new JSONParser();
-		Object obj = parser.parse(returnText);
-		JSONObject jsonObj = (JSONObject) obj;
-		
-		logger.debug("[jsonObj] " + jsonObj.toJSONString());*/
-		
+
 		return json;
 	}
 }

@@ -254,5 +254,5 @@ public interface EzPortalService {
 	
 	public String chkBoardReadAuthor(String boardID, String accessID, int tenantID) throws Exception;
 	
-	public JSONObject callSearchServerForResult2(LoginVO userInfo, Map<String, Object> param, String searchURL, String offset) throws Exception;
+	public JSONObject callSearchServerForResult2(LoginVO userInfo, Map<String, Object> param) throws Exception;
 }
