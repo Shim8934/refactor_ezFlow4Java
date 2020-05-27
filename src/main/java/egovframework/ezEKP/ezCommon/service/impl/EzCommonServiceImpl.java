@@ -1653,6 +1653,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			}
 		}
 	}
+
+	@Override
+	public void createJmochaBigAttachDownloadLimit() throws Exception {
+		ezCommonDAO.createJmochaBigAttachDownloadLimit();
+	}
+	
+	@Override
+	public void insertMailBigSizeAttachLimit() throws Exception {
+		logger.debug("insertMailBigSizeAttachLimit started");
+		ezCommonDAO.insertMailBigSizeAttachLimit();
+		logger.debug("insertMailBigSizeAttachLimit ended");
+	}
 	
 	@Override
 	public void addIsBeforeDoc() throws Exception {
@@ -1772,5 +1784,39 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("regdate", "2020-05-21 00:00:00");
 
 		ezCommonDAO.insertHolidayCheckTenantConfig(map);
+	}
+
+	@Override
+    public void addDocStateIntoLastLines() throws Exception {
+	    ezCommonDAO.addDocStateIntoLastLines();
+    }
+
+    @Override
+    public void addDocStateIntoLastDeptLines() throws Exception {
+	    ezCommonDAO.addDocStateIntoLastDeptLines();
+    }
+
+	public void insertAlternateHolidayAttitudeType() {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();		
+
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("typeId", "A24");
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("tenantId", 0);
+				map.put("typeName", "대체휴무");
+				map.put("typeName2", "alternate holiday");
+				map.put("isUse", "1");
+				map.put("imgPath", "refresh");
+				map.put("parentId", "A05");
+				map.put("formId", 9);
+				map.put("isAdd", "0");
+				map.put("isDel", "0");
+
+				ezCommonDAO.insertAlternateHolidayAttitudeType(map);	
+			}
+		}
 	}	
 }

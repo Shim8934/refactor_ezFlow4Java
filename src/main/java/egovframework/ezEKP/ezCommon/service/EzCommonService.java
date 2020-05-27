@@ -201,6 +201,10 @@ public interface EzCommonService {
 
 	public void addThemeAndPorteltAuthInit() throws Exception;
 	
+	public void createJmochaBigAttachDownloadLimit() throws Exception;
+	
+	public void insertMailBigSizeAttachLimit() throws Exception;
+
 	public void addIsBeforeDoc() throws Exception;
 
 	public void addBeforeDocUrl() throws Exception;
@@ -210,6 +214,10 @@ public interface EzCommonService {
 	public void addAprEndAttachViewOrder() throws Exception;
 	
 	public void addAprTmpAttachViewOrder() throws Exception;
+
+	public void addDocStateIntoLastLines() throws Exception;
+
+	public void addDocStateIntoLastDeptLines() throws Exception;
 	
 	public void insertUseExternalMailServerConfig() throws Exception;
 
@@ -221,5 +229,7 @@ public interface EzCommonService {
 
 	public void insertHalfOffAttitudeType();
 
-	public void insertHolidayCheckTenantConfig();	
+	public void insertHolidayCheckTenantConfig();
+
+	public void insertAlternateHolidayAttitudeType();	
 }

@@ -32,6 +32,10 @@
 				word-break: break-all;
 				padding-right: 5px;
 			}
+			<%-- 2020-05-26 홍승비 - 설문 등록자의 이름이 우측 하단으로 내려가는 경우, UI가 깨지지 않도록 이름 전체를 하단에 표출 --%>
+			.pollWriterName {
+				display:inline-block;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">

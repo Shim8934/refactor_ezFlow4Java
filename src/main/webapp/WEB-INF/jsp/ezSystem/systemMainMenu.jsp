@@ -97,6 +97,7 @@
 					var name = paramArray[i].name;
 					var value = paramArray[i].value;
 					var isNumber = value.match(/^\d+$/);
+					var alertMsg;
 					
 					if (!isNumber) {
 						var errFlag = true;
@@ -128,6 +129,12 @@
 							case "usePortalAutoRefreshInterval" :
 								alertMsg = "<spring:message code='ezSystem.yej01'/>: <spring:message code='ezEmail.t99000066'/>";
 								break;
+							case "MailBigSizeAttachLimitCount" :
+								alertMsg = "<spring:message code='ezEmail.hdp01'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							case "MailBigSizeAttachDownloadLimitCount" :
+								alertMsg = "<spring:message code='ezEmail.hdp02'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
 							default :
 								errFlag = false;
 						}
@@ -136,6 +143,11 @@
 							alert(alertMsg);
 							return false;
 						}
+					}
+					
+					if(document.getElementById("MailBigSizeAttachLimitCount").value > 20) {
+						alert("<spring:message code='ezEmail.hdp01'/>: <spring:message code='ezEmail.hdp06'/>");
+						return false;
 					}
 				}
 				return true;
@@ -336,6 +348,14 @@
 			    		<th><spring:message code="ezSystem.x0040"/></th>
 			    		<td><select data-paramId="useMailConfirm" id="use_MailConfirm"><option <c:if test="${configMap.useMailConfirm == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.useMailConfirm == null or configMap.useMailConfirm == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td>
 			    	</tr>
+			    	<tr data-name="mail">
+			    		<th><spring:message code="ezEmail.hdp01"/></th>
+			    		<td><input data-paramId="MailBigSizeAttachLimitCount" id="MailBigSizeAttachLimitCount" maxlength="2" type="text" value="<c:out value='${configMap.MailBigSizeAttachLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td>
+			    	</tr>
+	            	<tr data-name="mail">
+	            		<th><spring:message code="ezEmail.hdp02"/></th>
+	            		<td><input data-paramId="MailBigSizeAttachDownloadLimitCount" id="MailBigSizeAttachDownloadLimitCount" maxlength="5" type="text" value="<c:out value='${configMap.MailBigSizeAttachDownloadLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td>
+	            	</tr>
 		    	</c:if>
 	        </tbody>
 	    </table> 

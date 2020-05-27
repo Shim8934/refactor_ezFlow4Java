@@ -1622,13 +1622,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		strHTML.append("<table class=\"mainlist\"  style=\"width:100%;\" ><tr style='height:25px'>");
 		
+		/* 2020-05-26 홍승비 - 설문 등록자의 이름이 우측 하단으로 내려가는 경우, UI가 깨지지 않도록 이름 전체를 하단에 표출 */
 		//2018-07-03 김보미 - 제목th에 너비 추가
 		if (managerVO.getPollSubject().indexOf("\r\n") >= 0) {
 			strHTML.append("<th align=\"left\" class='pollTitle' title = \"" + managerVO.getPollSubject() + "\">" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;") + "</th>");
-			strHTML.append("<th align=\"right\" class='pollWriter'>" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + name + "</th>");
+			strHTML.append("<th align=\"right\" class='pollWriter'><span>" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;</span><div class='pollWriterName'>" + name + "</div></th>");
 		} else {
 			strHTML.append("<th align=\"left\" class='pollTitle' title = \"" + managerVO.getPollSubject() + "\">" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + commonUtil.cleanValue(managerVO.getPollSubject()) + "</th>");
-			strHTML.append("<th align=\"right\" class='pollWriter'>" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + name + "</th>");
+			strHTML.append("<th align=\"right\" class='pollWriter'><span>" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "</span><div class='pollWriterName'>" + name + "</div></th>");
 		}
 		
 		strHTML.append("</tr>");
