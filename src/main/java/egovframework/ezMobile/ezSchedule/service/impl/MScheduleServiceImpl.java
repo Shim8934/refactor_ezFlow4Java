@@ -465,6 +465,34 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		
 		return sList;
 	}
+	
+	@Override
+	public List<ScheduleInfoVO> scheduleListForWorkspace(MCommonVO info, String startDate, String endDate, String searchTitle) throws Exception {								
+		String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
+		String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
+		
+		String pidList = "'" + info.getUserId() + "'," + "'" + info.getDeptId() + "'," + "'" + info.getCompanyId() + "'";
+		String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
+		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(info.getUserId(), info.getTenantId(), info.getCompanyId());
+		
+		for (int i = 0; i < gList.size(); i++) {
+			if (i == 0) {
+				pidList += ",";
+			}
+			ScheduleGroupListVO data = gList.get(i);
+			pidList += "'" + data.getGroupId() + "'";
+			
+			if (i != gList.size()-1) {
+				pidList += ",";
+			}	
+		}
+
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleListForWorkspace(pidList,"\'\'", "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, searchTitle, info.getTenantId(), info.getCompanyId(), info.getUserId(), info.getDeptId());
+		
+		Collections.sort(sList, new EzScheduleCompareUtilPublic());
+		
+		return sList;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
