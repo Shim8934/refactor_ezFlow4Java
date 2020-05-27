@@ -2669,4 +2669,23 @@
 		VALUES
 			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
 	</insert>
+	
+	<select id="EzCommonDAO.checkAlternateHolidayAttitudeTypeForCompany" resultClass="String">
+		SELECT 
+			COMPANY_ID 
+		FROM
+			TBL_ATTITUDE_TYPE
+		WHERE
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			TYPE_ID = #typeId#
+	</select>
+	<insert id="EzCommonDAO.insertAlternateHolidayAttitudeType">
+		INSERT INTO TBL_ATTITUDE_TYPE 
+			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID, ISADD, ISDEL)
+		VALUES
+			(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #isUse#, #imgPath#, #parentId#, #formId#, #isAdd#, #isDel#) 
+	</insert>
 </sqlMap>
