@@ -2252,6 +2252,64 @@
 	]]>
 	</select>
 	
+	<select id="EzCommonDAO.checkUserDlTable">
+		SELECT 
+			USER_NAME
+		FROM 
+			JMOCHA_USER_DISTRIBUTION
+		LIMIT 1
+	</select>
+	
+	<select id="EzCommonDAO.checkUserDlMemberTable">
+		SELECT 
+			USER_NAME
+		FROM 
+			JMOCHA_USER_DISTRIBUTION_MEMBER
+		LIMIT 1
+	</select>
+	
+	<select id="EzCommonDAO.checkUserDlApplyTable">
+		SELECT 
+			USER_NAME
+		FROM 
+			JMOCHA_USER_DISTRIBUTION_APPLY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createUserDlTable"> 
+		CREATE TABLE `jmocha_user_distribution` (
+		  `DOMAIN_NAME` varchar(100) NOT NULL,
+		  `USER_NAME` varchar(100) NOT NULL,
+		  `OWNER_ID` varchar(100) NOT NULL,
+		  `DISCLOSURE_POLICY` varchar(100) NOT NULL,
+		  `EXPLAINATION` varchar(100) DEFAULT NULL,
+		  `DL_END_DATE` date DEFAULT NULL,
+		  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`),
+		  KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<statement id="EzCommonDAO.createUserDlMemberTable"> 
+		CREATE TABLE `jmocha_user_distribution_member` (
+		  `DOMAIN_NAME` varchar(100) NOT NULL,
+		  `USER_NAME` varchar(100) NOT NULL,
+		  `MEMBER_ID` varchar(100) NOT NULL,
+		  `REG_DATE` date NOT NULL,
+		  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`MEMBER_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+	
+	<statement id="EzCommonDAO.createUserDlApplyTable"> 
+		CREATE TABLE `jmocha_user_distribution_apply` (
+		  `DOMAIN_NAME` varchar(100) NOT NULL,
+		  `USER_NAME` varchar(100) NOT NULL,
+		  `APPLICANT_ID` varchar(100) NOT NULL,
+		  `APPLICANT_DATE` date NOT NULL,
+		  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`APPLICANT_ID`),
+		  KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
 	<select id="EzCommonDAO.checkThemeAuthInit" parameterClass="Map" resultClass="String">
 	<![CDATA[
 		SELECT
@@ -2379,6 +2437,43 @@
 	]]>
 	</insert>
 	
+	<select id="EzCommonDAO.checkJmochaBigAttachDownloadLimit">
+		SELECT 
+			FILE_ID
+		FROM 
+			JMOCHA_BIGATTACH_DOWNLOAD_LIMIT
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createJmochaBigAttachDownloadLimit">
+		CREATE TABLE `jmocha_bigattach_download_limit` (
+		  `file_id` varchar(100) NOT NULL,
+		  `download_count` int(10) DEFAULT NULL,
+		  `limit_count` int(10) DEFAULT NULL,
+		  `tenant_id` mediumint(9) NOT NULL,
+		  PRIMARY KEY (`file_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+	
+	<select id="EzCommonDAO.checkMailBigSizeAttachLimitTenantConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'MailBigSizeAttachLimitCount'
+		AND
+			tenant_id = 0
+	</select>
+	
+	<statement id="EzCommonDAO.insertMailBigSizeAttachLimit">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(tenant_id, property_name, property_value, description, regdate, config_name, config_type)
+		VALUES
+	    	(0, 'MailBigSizeAttachDownloadLimitCount', 0, '대용량첨부 다운로드 횟수 제한, 0일 경우 무제한', current_timestamp(), '대용량첨부 다운로드 횟수 제한', '메일'),
+	    	(0, 'MailBigSizeAttachLimitCount', 0, '대용량첨부 개수 제한, 0일 경우 무제한', current_timestamp(), '대용량첨부 개수 제한', '메일')
+	</statement>
+
 	<select id="EzCommonDAO.checkAddIsBeforeDoc">
 		SELECT 
 			ISBEFOREDOC 
@@ -2448,5 +2543,149 @@
 		ADD COLUMN 
 			VIEWORDER  bigint(10) DEFAULT NULL 
 	</statement>
+
+	<select id="EzCommonDAO.checkDocStateIntoLastLines">
+		SELECT
+			docState
+		FROM
+			tbl_lastaprline
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateDocStateIntoLastLines">
+		ALTER TABLE
+			TBL_LASTAPRLINE
+		ADD COLUMN
+			docState VARCHAR(12) NOT NULL,
+		DROP PRIMARY KEY,
+		ADD PRIMARY KEY (`TENANT_ID`, `COMPANYID`, `USERID`(255), `FORMID`, `APRMEMBERSN`, `docState`)
+	</statement>
+
+	<select id="EzCommonDAO.checkDocStateIntoLastDeptLines">
+		SELECT
+			docState
+		FROM
+			TBL_LASTDEPTLINE
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateDocStateIntoLastDeptLines">
+		ALTER TABLE
+			TBL_LASTDEPTLINE
+		ADD COLUMN
+			docState VARCHAR(12) NOT NULL,
+		DROP PRIMARY KEY,
+		ADD PRIMARY KEY (`TENANT_ID`, `COMPANYID`, `USERID`(255), `FORMID`, `RECEIPTPOINTID`(255), `docState`)
+	</statement>
 	
+	<select id="EzCommonDAO.checkReBebuOpinionCode" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			companyid
+		FROM
+			TBL_CODELIST
+		WHERE
+			companyid = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			code1 = #code1#
+		AND
+			code2 = #code2#
+		LIMIT 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertReBebuOpinionCode" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_CODELIST
+			(CODE1, CODE2, NAME, ISUSE, DESCRIPT, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+		VALUES
+			(#code1#, #code2#, #name#, #isUse#, #descript#, #name2#, #name3#, #name4#, #tenantId#, #companyId#)
+	]]>
+	</insert>
+	
+	<select id="EzCommonDAO.checkFormAprOptionColumn">
+		SELECT 
+			APROPTION
+		FROM 
+			TBL_FORMINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateFormAprOptionColumn">
+		ALTER TABLE 
+			TBL_FORMINFO
+		ADD COLUMN 
+			APROPTION  varchar(300) DEFAULT NULL COMMENT '양식 세부설정'
+	</statement>
+	
+	<select id="EzCommonDAO.checkAnnualScheduleTenantConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useAnnualScheduleYN'
+		AND
+			TENANT_ID = 0
+	</select>
+	<insert id="EzCommonDAO.insertAnnualScheduleTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+	</insert>
+	
+	<select id="EzCommonDAO.checkHalfOffAttitudeTypeForCompany" resultClass="String">
+		SELECT 
+			COMPANY_ID 
+		FROM
+			TBL_ATTITUDE_TYPE
+		WHERE
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			TYPE_ID = #typeId#
+	</select>
+	<insert id="EzCommonDAO.insertHalfOffAttitudeType">
+		INSERT INTO TBL_ATTITUDE_TYPE 
+			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID, ISADD, ISDEL)
+		VALUES
+			(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #isUse#, #imgPath#, #parentId#, #formId#, #isAdd#, #isDel#) 
+	</insert>
+	
+	<select id="EzCommonDAO.checkHolidayCheckTenantConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useHolidayCheckYN'
+		AND
+			TENANT_ID = 0
+	</select>
+	<insert id="EzCommonDAO.insertHolidayCheckTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+	</insert>
+	
+	<select id="EzCommonDAO.checkAlternateHolidayAttitudeTypeForCompany" resultClass="String">
+		SELECT 
+			COMPANY_ID 
+		FROM
+			TBL_ATTITUDE_TYPE
+		WHERE
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			TYPE_ID = #typeId#
+	</select>
+	<insert id="EzCommonDAO.insertAlternateHolidayAttitudeType">
+		INSERT INTO TBL_ATTITUDE_TYPE 
+			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID, ISADD, ISDEL)
+		VALUES
+			(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #isUse#, #imgPath#, #parentId#, #formId#, #isAdd#, #isDel#) 
+	</insert>
 </sqlMap>

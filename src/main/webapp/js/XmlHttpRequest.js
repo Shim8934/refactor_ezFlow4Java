@@ -711,7 +711,6 @@ function ConvertHTMLtoMHT(pContent) {
 
 function ConvertHTMLtoMHT(pContent, pType) {
 	var rtnVal = '';
-    pContent = pContent.replace(/&quot;/g, "\'");
 	$.ajax({
 		type : "POST",
 		dataType : "text",

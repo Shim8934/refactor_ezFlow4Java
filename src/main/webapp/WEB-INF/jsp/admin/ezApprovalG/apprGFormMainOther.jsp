@@ -279,13 +279,16 @@
 								}
 							}
 							
+			                /* 2020-05-14 홍승비 - 양식세부옵션 null 체크 추가 */
 							//양식세부옵션
-							var OptArr = result.vo.aprOption.split(",");
-							for (var i = 0; i < OptArr.length; i++) {
-								if (document.getElementById(OptArr[i]) != null) {
-									document.getElementById(OptArr[i]).checked = true;
+							if (result.vo.aprOption != null) {
+								var OptArr = result.vo.aprOption.split(",");
+								for (var i = 0; i < OptArr.length; i++) {
+									if (document.getElementById(OptArr[i]) != null) {
+										document.getElementById(OptArr[i]).checked = true;
+									}
 								}
-							}							
+							}
 			            }
 						
 						<c:if test="${isReform}">

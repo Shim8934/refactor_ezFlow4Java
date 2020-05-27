@@ -74,7 +74,7 @@ function addOpinion(DocID, pFlag) {
             else if (colidx == 4)
                 rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:100px; word-break: break-word; word-wrap: break-word;' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
             else
-                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:373px; word-break: break-word; word-wrap: break-word;'>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
+                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:373px; word-break: break-word; word-wrap: break-word;'>" + MakeXMLString(getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0])) + "</TD>";
         }
         rtnString = rtnString + "</TR>";
     }

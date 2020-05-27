@@ -230,6 +230,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_COMPANYID", companyID);
 		map.put("v_USERID", userID);
 		map.put("v_DEPTID", deptID);
+		map.put("useAnnualScheduleYN", useAnnualScheduleYN);
 		
 		List<ScheduleInfoVO> sList = ezScheduleDAO.getScheduleList(map);
 

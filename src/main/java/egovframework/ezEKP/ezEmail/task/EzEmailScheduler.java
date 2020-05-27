@@ -67,6 +67,7 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeletedIdVO;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -1249,6 +1250,47 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		logger.debug("broadcastQuotaWarning end.");
 	}
 	
+	
+	/**
+	 * 만료일 지난 사용자 공용배포그룹 삭제
+	 */
+	@Scheduled(cron = "${config.cron.useDistributionoDelete}")
+	public void useDistributionoDelete() throws Exception{
+		logger.debug("useDistributionoDelete scheduler started.");
+		
+		//choose scheduler running server
+		if (!preScheduler("useDistributionoDelete")) {
+			logger.debug("useDistributionoDelete scheduler ended.");
+			return;
+		}
+		
+		int tenantId = 0;
+		String delDLURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteDistribution";
+		
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", tenantId);
+		
+		if (useUserDefinedDL.equalsIgnoreCase("YES")) {
+			try {
+				List<MailDistributionVO> dlVoList = ezEmailService.getExpiredUserDistributionList();
+				for (MailDistributionVO dlVo : dlVoList) {
+					String domain = dlVo.getDomain();
+					String dlId = dlVo.getId();
+					logger.debug("domain=" + domain + ", dlId=" + dlId);
+					
+					String delDlInputParams = "domain=" + domain + "&cn=" + dlId;
+					String delDlResponse = ezEmailUtil.getWebServiceResult(delDLURL, delDlInputParams);		
+					logger.debug("delDlResponse=" + delDlResponse);
+					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+			}
+		}	
+		
+		logger.debug("useDistributionoDelete scheduler ended.");
+	}
+	
 	/**
 	 * org.apache.james.transport.mailets.JMochaQuotaWarning humanReadableByteCount(long bytes) 복사
 	 * 
@@ -1301,9 +1343,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				File[] files = file.listFiles(new DeleteExpireAttachFilter(bigSizeMailAttachDelDay));
 				
 				for (File expiredFile : files) {
+					File[] filelist = expiredFile.listFiles();
 					logger.debug("expired directory name=" + expiredFile.getName());
 					if (deleteDirectory(expiredFile)) {
 						logger.debug(expiredFile.getName() + " is deleted.");
+						//대용량 첨부파일 삭제 시 제한 횟수 정보도 삭제하는 로직 추가. 2020-03-12 홍대표.
+						ezEmailService.deleteBigAttachCountInfo(filelist, tenantVO.getTenantId());
 					}
 				}
 			}

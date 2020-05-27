@@ -85,6 +85,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.WebUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -536,88 +537,82 @@ public class CommonUtil {
 	}
 	
 	public boolean isLoginCookieExists(HttpServletRequest request, HttpServletResponse response) {
-        boolean isCookie = false;     
-        Cookie[] cookies = request.getCookies();
-        
-        String serverName = request.getServerName();
+		boolean usingSession = false;
 
-        int tenantID;
+		try {
+			String serverName = request.getServerName();
+			int tenantID = loginService.getTenantId(serverName);
+			String useSessionConfig = ezCommonService.getTenantConfig("useSession", tenantID);
 
-        String useSession = null;
-        try {
-			tenantID = loginService.getTenantId(serverName);
-			
-			useSession = ezCommonService.getTenantConfig("useSession", tenantID);
-		} catch (Exception e1) {
-			e1.printStackTrace();
+			// 세션 콘피그가 0 이거나 비어있으면 세션 로그인 사용 안 함
+			usingSession = !useSessionConfig.isEmpty() && !useSessionConfig.equals("0");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
 		}
-		
-		// 2018.10.22 이석화 변경 - 세션 0이면 세션 사용 안 함
-		// 2019.09.10 127.0.0.1 일 때는 세션 확인 안 함 (인사연동)
-		if (!useSession.equals("") && !useSession.equals("0") && !request.getRemoteAddr().equals("127.0.0.1")) {
-			/* session time을 위한 처리 주석 */	
-			/* 세션 사용 위해 주석 해제*/
-			HttpSession session = request.getSession(false);
-			
-			if (session != null) {
-		        if (cookies != null) {
-		            for (Cookie cookie : cookies) {
-		                if("loginCookie".equals(cookie.getName())){
-		                    //접속한 클라이언트 IP
-		                    String ip = ClientUtil.getClientIP(request);
-		                    String cValue = "";
-		                    try {
-		                        //쿠기에 저장되어 있는 IP
-		                        cValue = egovFileScrty.decryptAES(cookie.getValue());
-		
-		                        if(cValue.split("///")[3].equals(ip) && checkDeptId(cValue)){                  
-		                            isCookie = true;
-		                            break;
-		                        }
-		                    } catch (Exception e) {
-		                        e.printStackTrace();
-		                    }
-		                }
-		            }
-		        }
-	        } else {
-	        	if (cookies != null) {
-	        		for (Cookie cookie : cookies) {
-	        			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
-	        				cookie.setMaxAge(0);
-	        				cookie.setPath("/");
-	        				response.addCookie(cookie);
-	        				
-	        				request.getSession().invalidate();
-	        			}
-	        	    }
-	        	}
-	        } 
-		} else {
-			if (cookies != null) {
-				for (Cookie cookie : cookies) {
-					if("loginCookie".equals(cookie.getName())){
-						//접속한 클라이언트 IP
-						String ip = ClientUtil.getClientIP(request);
-						String cValue = "";
-						try {
-							//쿠기에 저장되어 있는 IP
-							cValue = egovFileScrty.decryptAES(cookie.getValue());
-							
-							if(cValue.split("///")[3].equals(ip) && checkDeptId(cValue)){                  
-								isCookie = true;
-								break;
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				}
+
+		// 세션 콘피그를 무시하고 로그인 쿠키만으로 사용할 수 있도록 해줌
+		boolean usingAsAPI = "yes".equalsIgnoreCase(request.getHeader("Use-As-API"));
+		// request 아이피가 127.0.0.1 일 때는 세션 콘피그 무시함 (인사연동)
+		boolean isLoopbackRequest = request.getRemoteAddr().equals("127.0.0.1");
+
+		if (!usingSession || usingAsAPI || isLoopbackRequest) {
+			return validLoginCookie(request);
+		}
+
+		return validSessionLoginCookie(request, response);
+	}
+
+	private boolean validLoginCookie(HttpServletRequest request) {
+		Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+
+		if (loginCookie == null) {
+			return false;
+		}
+
+		try {
+			String ip = ClientUtil.getClientIP(request);
+			String decryptedLoginCookie = egovFileScrty.decryptAES(loginCookie.getValue());
+
+			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
+			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	private boolean validSessionLoginCookie(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession(false);
+
+		if (session == null) {
+			clearAllCookies(request, response);
+
+			return false;
+		}
+
+		return validLoginCookie(request);
+	}
+
+	private void clearAllCookies(HttpServletRequest request, HttpServletResponse response) {
+		Cookie[] cookies = request.getCookies();
+
+		if (cookies == null) {
+			return;
+		}
+
+		for (Cookie cookie : cookies) {
+			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")) {
+				cookie.setMaxAge(0);
+				cookie.setPath("/");
+				response.addCookie(cookie);
+
+				request.getSession().invalidate();
 			}
 		}
-        return isCookie;
 	}
-	
+
 	public boolean checkDeptId(String cValue){
 		String[] decDataArray = cValue.split("///");
 		

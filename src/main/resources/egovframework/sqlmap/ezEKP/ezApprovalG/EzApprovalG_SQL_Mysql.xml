@@ -2690,6 +2690,8 @@
 	            	TENANT_ID = #v_TENANTID#
 	            AND
 					COMPANYID = #companyID#
+				AND
+					docState = #docState#
 	            ORDER BY 
 	            	APRMEMBERSN DESC 
             ]]>
@@ -7566,7 +7568,7 @@
 		   SELECT 
 				SUM(AttachFileSize)  TOTALSIZE  ,
                 CASE 
-                     WHEN SUM(AttachFileSize)  > 6000000 THEN 'Y'
+                     WHEN SUM(AttachFileSize)  > 5000000 THEN 'Y'
                 ELSE 
                 	'N'
                 END FLAG  
@@ -23231,14 +23233,16 @@
 			TENANT_ID= #v_TENANTID#
 		AND
 			COMPANYID = #companyID#
+		AND
+			docState = #docState#
    </delete>
    
    <insert id="EzApprovalG.insertLastDeptLine" parameterClass="Map">
    	    INSERT INTO 
    	    	TBL_LASTDEPTLINE 
-   	    (    UserID,       FormID,     ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID) 
+   	    (    UserID,       FormID,     ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID, docState)
    	    (SELECT 
-   	    	#v_USERID# , #v_FORMID# , ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN,     'N',     ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, NULL,        ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID
+   	    	#v_USERID# , #v_FORMID# , ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN,     'N',     ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, NULL,        ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID, #docState#
 		 FROM 
 		 	TBL_RECEIPTPOINTINFO 
 		 WHERE 
@@ -23260,14 +23264,16 @@
         	TENANT_ID = #v_TENANTID#
         AND
         	COMPANYID = #companyID#
+        AND
+        	docstate = #docState#
    </delete>
    
    <insert id="EzApprovalG.insertLastAprLine" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_LASTAPRLINE 
-   		(     UserID,      FormID,    AprMemberSN, AprType, AprState, AprMemberID,   AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID) 
+   		(     UserID,      FormID,    AprMemberSN, AprType, AprState, AprMemberID,   AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID, docState)
    		(SELECT 
-   			#v_USERID# , #v_FORMID#, AprMemberSN, AprType,    '001',    AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath,     NULL,          NULL,    ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID 
+   			#v_USERID# , #v_FORMID#, AprMemberSN, AprType,    '001',    AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath,     NULL,          NULL,    ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID, #docState#
    		 FROM 
    		 	TBL_APRLINEINFO 
    		 WHERE 
@@ -28310,6 +28316,53 @@
 		]]>
 	</delete>
 	
+	<delete id="EzApprovalG.OpinionDel2" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_APROPINIONINFO
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid = #docID#
+			AND
+				opiniongb <> '008'
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalG.OpinionDel3" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_APROPINIONINFO
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid = #docID#
+			AND
+				opiniongb = '008'
+		]]>
+	</delete>
+	
+	<update id="EzApprovalG.updateReBebuOpinionSN" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_APROPINIONINFO
+			SET
+				opinionSN = #opinionSN#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid = #docID#
+			AND
+				opiniongb = '008'
+		]]>
+	</update>
+	
 	<update id="EzApprovalG.updateHasOpinionYN" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -31711,14 +31764,84 @@
         AND
             DOCID = #v_DOCID#
     </update>
+
+    <update id="EzApprovalG.updateReBebuAprReceiptProcessInfo" parameterClass="Map">
+        UPDATE
+            TBL_APRRECEIPTPROCESSINFO
+        SET
+            APRSTATE = '011',
+            RECEIVEDDEPTID = #v_RECEIVEDDEPTID#,
+            RECEIVEDDEPTNAME = #v_RECEIVEDDEPTNAME#,
+            RECEIVEDDEPTNAME2 = #v_RECEIVEDDEPTNAME2#,
+            PROCESSDATE = #v_SYSDATE#
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = #v_DOCID#
+    </update>
+	
+	<select id="EzApprovalG.getDeliveryDeptInfo" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			CN,
+			DISPLAYNAME,
+			DISPLAYNAME2
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			CN = (SELECT DEPTID FROM TBL_DOCDELIVERY WHERE DOCID = #v_DOCID# AND TENANT_ID = #v_TENANTID# and COMPANYID = #companyID#)
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			EXTENSIONATTRIBUTE2 = #companyID#
+	</select>
+	
+	<select id="EzApprovalG.isRelayDoc" parameterClass="Map" resultClass="int">
+		<isEqual property="v_FLAG" compareValue="APR">
+			SELECT
+				COUNT(DOCID)
+			FROM
+				TBL_APRDOCINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				FORMID = '9999999999'
+			AND
+				DOCID = #v_DOCID#
+	    </isEqual>
+	    <isNotEqual property="v_FLAG" compareValue="APR">
+			SELECT
+				COUNT(DOCID)
+			FROM
+				TBL_ENDAPRDOCINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				FORMID = '9999999999'
+			AND
+				DOCID = #v_DOCID#
+	    </isNotEqual>
+	</select>
+	
 	<select id="EzApprovalG.getFormAprOptionInfo" parameterClass="Map" resultClass="String">
 		<isEqual property="v_TYPE" compareValue="DOC">
 		SELECT 
 			tbl_forminfo.aproption 
 		FROM 
 			tbl_aprdocinfo 
-		inner JOIN 
-			tbl_forminfo on tbl_aprdocinfo.FORMID = tbl_forminfo.FORMID 
+		INNER JOIN 
+			tbl_forminfo
+		ON
+			tbl_aprdocinfo.FORMID = tbl_forminfo.FORMID
+		AND
+			tbl_aprdocinfo.tenant_id = tbl_forminfo.tenant_id
+		AND
+			tbl_aprdocinfo.companyid = tbl_forminfo.companyid
 		WHERE
 			tbl_aprdocinfo.TENANT_ID = #v_TENANTID#
 		AND
@@ -31740,4 +31863,33 @@
 		</isEqual>
 	</select>    
 	
+    <select id="EzApprovalG.getBebuRelayDocSenderInfo" parameterClass="Map" resultClass="ApprGReceiveDocVO">
+        SELECT
+            SENTDEPTID,
+            SENTDEPTNAME,
+            SENTDEPTNAME2
+        FROM
+            TBL_APRRECEIPTPROCESSINFO
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = #v_DOCID#
+    </select>
+    
+    <update id="EzApprovalG.updateBebuRelayDocSenderInfo" parameterClass="Map">
+        UPDATE
+            TBL_APRRECEIPTPROCESSINFO
+        SET
+            SENTDEPTID = #v_SENTDEPTID#,
+            SENTDEPTNAME = #v_SENTDEPTNAME#,
+            SENTDEPTNAME2 = #v_SENTDEPTNAME2#
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = #v_DOCID#
+    </update>
 </sqlMap>

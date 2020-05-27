@@ -242,8 +242,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				if (mode == null) {
 					mode = "APR";
 				}
-				String docList = ezApprovalGService.getAprLineInfoDB(docID, "1", "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", mode);
-				
+				String docList = ezApprovalGService.getAprLineInfoDB(docID, "1", "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", mode, "");
+
 				Document docXML = commonUtil.convertStringToDocument(docList);
 				
 				for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
@@ -782,8 +782,13 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String dirPath = commonUtil.getRealPath(request) + approvalRoot;
 
 		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-
-                
+		String pSusinAdmin = "";
+        if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+        	pSusinAdmin = "YES";
+        } else {
+        	pSusinAdmin = "NO";
+        }
+        
 		Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
 		
 		if (xmlDom.getElementsByTagName("ORGHREF").getLength() > 0) {
@@ -852,6 +857,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		model.addAttribute("pSusinAdmin", pSusinAdmin);
 		
 		LOGGER.debug("ezRecevGSusinHWP ended");
 		

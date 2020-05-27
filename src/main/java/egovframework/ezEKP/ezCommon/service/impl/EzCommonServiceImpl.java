@@ -39,7 +39,6 @@ import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -433,7 +432,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             }
 
             logger.debug("imgSrc = " + imgSrc);
-            Matcher matcher = Pattern.compile(imgSrc).matcher(tempHtml);
             tempHtml = Pattern.compile(imgSrc).matcher(tempHtml).replaceAll("file:///C:/IMAGE" + (imgSrcs.indexOf(imgSrc) + 1) + extension);
 
             imagesBuilder.append(commonUtil.CRLF + "Content-Type: " + contentType + commonUtil.CRLF);
@@ -1616,6 +1614,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createRsFavoriteTable();
 	}
 
+	@Override
+	public void createUserDistributionTable() {
+		ezCommonDAO.createUserDistributionTable();
+	}
+	
 	@SuppressWarnings("serial")
 	@Override
 	public void insertTblTenantConfig(String configName) throws Exception {
@@ -1635,7 +1638,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		ezCommonDAO.insertTblTenantConfig(test.get(configName));
 	}
-	
+
+	@Override
 	public void addThemeAndPorteltAuthInit() throws Exception {
 		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1648,7 +1652,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				ezCommonDAO.insertPortletAuthInit(map);
 			}
 		}
-		
+	}
+
+	@Override
+	public void createJmochaBigAttachDownloadLimit() throws Exception {
+		ezCommonDAO.createJmochaBigAttachDownloadLimit();
+	}
+	
+	@Override
+	public void insertMailBigSizeAttachLimit() throws Exception {
+		logger.debug("insertMailBigSizeAttachLimit started");
+		ezCommonDAO.insertMailBigSizeAttachLimit();
+		logger.debug("insertMailBigSizeAttachLimit ended");
 	}
 	
 	@Override
@@ -1689,4 +1704,119 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 		ezCommonDAO.insertUseExternalMailServerConfig(map);
 	}
+	
+	@Override
+	public void insertReBebuOpinionCode() throws Exception {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("code1", "A17");
+				map.put("code2", "008");
+				map.put("name", "재배부요청");
+				map.put("isUse", "1");
+				map.put("descript", "재배부요청");
+				map.put("name2", "재배부요청");
+				map.put("name3", "재배부요청");
+				map.put("name4", "재배부요청");
+				
+				ezCommonDAO.insertReBebuOpinionCode(map);
+			}
+		}
+	}
+	
+	@Override
+	public void addFormAprOptionColumn() throws Exception {
+		ezCommonDAO.addFormAprOptionColumn();
+	}
+
+	@Override
+	public void insertAnnualScheduleTenantConfig() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useAnnualScheduleYN");
+		map.put("propertyValue", "0");
+		map.put("description", "0:근태현황 일정관리 미연동, 1:근태현황 부서일정 연동, 2:근태현황 회사일정 연동");
+		map.put("configName", "근태현황 일정관리 연동");
+		map.put("configType", "근태관리");
+		map.put("regdate", "2020-02-24 00:00:00");
+
+		ezCommonDAO.insertAnnualScheduleTenantConfig(map);
+	}
+
+	@Override
+	public void insertHalfOffAttitudeType() {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();		
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("typeId", "A21");
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("tenantId", 0);
+				map.put("typeName", "반반차");
+				map.put("typeName2", "half off");
+				map.put("isUse", "1");
+				map.put("imgPath", "refresh");
+				map.put("parentId", "A05");
+				map.put("formId", 4);
+				map.put("isAdd", "0");
+				map.put("isDel", "0");
+				
+				ezCommonDAO.insertHalfOffAttitudeType(map);	
+			}
+		}
+	}
+
+	@Override
+	public void insertHolidayCheckTenantConfig() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useHolidayCheckYN");
+		map.put("propertyValue", "0");
+		map.put("description", "0: 휴일 출/퇴근 체크 미사용, 1: 휴일 출/퇴근 체크 사용");
+		map.put("configName", "휴일 출/퇴근 체크 사용여부");
+		map.put("configType", "근태관리");
+		map.put("regdate", "2020-05-21 00:00:00");
+
+		ezCommonDAO.insertHolidayCheckTenantConfig(map);
+	}
+
+	@Override
+    public void addDocStateIntoLastLines() throws Exception {
+	    ezCommonDAO.addDocStateIntoLastLines();
+    }
+
+    @Override
+    public void addDocStateIntoLastDeptLines() throws Exception {
+	    ezCommonDAO.addDocStateIntoLastDeptLines();
+    }
+
+	public void insertAlternateHolidayAttitudeType() {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();		
+
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("typeId", "A24");
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("tenantId", 0);
+				map.put("typeName", "대체휴무");
+				map.put("typeName2", "alternate holiday");
+				map.put("isUse", "1");
+				map.put("imgPath", "refresh");
+				map.put("parentId", "A05");
+				map.put("formId", 9);
+				map.put("isAdd", "0");
+				map.put("isDel", "0");
+
+				ezCommonDAO.insertAlternateHolidayAttitudeType(map);	
+			}
+		}
+	}	
 }
