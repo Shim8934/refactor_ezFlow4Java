@@ -48,7 +48,6 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
@@ -87,9 +86,6 @@ public class EzSystemAdminController {
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
-	
-	@Autowired
-	private EzEmailUtil ezEmailUtil;
 	
 	@Resource
 	private EgovMessageSource egovMessageSource;
@@ -206,6 +202,11 @@ public class EzSystemAdminController {
 		List<String> defaultFontSizeList = Arrays.asList("8px,9px,10px,11px,12px,13px,14px,16px,18px,20px,24px,30px,36px,54px,72px".split(","));
 		String useAllUserOldMailDelete = ezCommonService.getTenantConfig("useAllUserOldMailDelete", userInfo.getTenantId());
 		String useAllUserOldMailDeletePeriod = ezCommonService.getTenantConfig("useAllUserOldMailDeletePeriod", userInfo.getTenantId());
+		String usePortalAutoRefreshInterval = ezCommonService.getTenantConfig("usePortalAutoRefreshInterval", userInfo.getTenantId());
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
 		
 		model.addAttribute("configMap", configMap);
 		model.addAttribute("licensedUserCount", licensedUserCount);
@@ -215,6 +216,8 @@ public class EzSystemAdminController {
 		model.addAttribute("defaultFontSizeList", defaultFontSizeList);
 		model.addAttribute("useAllUserOldMailDelete", useAllUserOldMailDelete);
 		model.addAttribute("useAllUserOldMailDeletePeriod", useAllUserOldMailDeletePeriod);
+		model.addAttribute("usePortalAutoRefreshInterval", usePortalAutoRefreshInterval);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
 		logger.debug("systemMainMenu ended");
 		
@@ -342,6 +345,7 @@ public class EzSystemAdminController {
 			sysLang = "primary";
 		}
 		
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
 				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
 		
@@ -503,7 +507,7 @@ public class EzSystemAdminController {
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
-		
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHistNotAdmin(Integer.valueOf(userInfo.getTenantId()), 
 				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, 
 				startDate, endDate, companyId, userInfo.getId());
@@ -624,6 +628,8 @@ public class EzSystemAdminController {
 		if (userInfoUser.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
+		
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = new ArrayList<ConnectionInfoVO>();
 		int totalCount = 0;
 		if (config.equals("u")){
@@ -693,11 +699,11 @@ public class EzSystemAdminController {
 			int j = 2;
 			
 			ConnectionInfoVO infoVo = loginHistList.get(i-j);
-			String userName = infoVo.getUsernm();
+			String userName = infoVo.getUsernm() + "(" + infoVo.getUserid() + ")";
 			String userDeptName = infoVo.getDeptnm();
 			String userCompanyName = infoVo.getCompanynm();
 			if (!sysLang.equals("primary")) {
-				userName = infoVo.getUsernm2();
+				userName = infoVo.getUsernm2() + "(" + infoVo.getUserid() + ")";
 				userDeptName = infoVo.getDeptnm2();
 				userCompanyName = infoVo.getCompanynm2();
 			}
@@ -979,12 +985,12 @@ public class EzSystemAdminController {
 		
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", userInfo.getTenantId());
-		
+
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 
+		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", userInfo.getTenantId());
 		model.addAttribute("useIPAccess", useIPAccess);
 		logger.debug("systemIPManager ended");
 		 
@@ -1014,6 +1020,7 @@ public class EzSystemAdminController {
 	/*
 	 * 접속 허용 국가 리스트
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezSystem/getAccessCountryList.do", method=RequestMethod.POST)
 	public String getAccessCountryList(@CookieValue("loginCookie") String loginCookie, Model model, 
 			HttpServletRequest request) throws Exception {
@@ -1054,11 +1061,18 @@ public class EzSystemAdminController {
 	 * 접속 허용 국가 저장
 	 */
 	@RequestMapping(value="/ezSystem/saveAccessCountryList.do", method=RequestMethod.POST)
+	@ResponseBody
 	public String saveAccessCountryList(@CookieValue("loginCookie") String loginCookie, Model model, 
 			HttpServletRequest request) throws Exception {
 		logger.debug("saveAccessCountryList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = "OK";
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			result = "PERMISSION_ERROR";
+			return result;
+		}
 		
 		String saveCountryList = request.getParameter("saveList");
 		logger.debug("saveCountryList=" + saveCountryList);
@@ -1066,7 +1080,7 @@ public class EzSystemAdminController {
 		ezSystemAdminService.setAccessCountry(userInfo.getTenantId(), saveCountryList);
 		
 		logger.debug("saveAccessCountryList ended");
-		return "json";
+		return result;
 	}
 	
 	
@@ -1314,15 +1328,10 @@ public class EzSystemAdminController {
 		String topID = userInfo.getCompanyID();
 		String companyId = request.getParameter("companyId");
 		String adminChk = "false";
-		
+		topID = companyId;
+
 		if (userInfo.getRollInfo().indexOf("c=1") != -1) {
 			adminChk = "true";
-			
-			if (!topID.equals(companyId)){
-				topID = companyId;
-			} else {
-				topID = "Top";
-			}
 		}
 		
 		model.addAttribute("userInfo", userInfo);
@@ -1525,7 +1534,7 @@ public class EzSystemAdminController {
 			countryVO.setCountryCode(country); // 국가코드
 			countryVO.setCountryName(locale.getDisplayCountry(locale));
 			
-			if (realPath != null || !realPath.equals("")) { // path 없으면 이미지 경로 X
+			if (realPath != null && !realPath.isEmpty()) { // path 없으면 이미지 경로 X
 				// 국기가 없으면 물음표 국기 표시
 				String printImage = countryQuestionIcon;
 				try {

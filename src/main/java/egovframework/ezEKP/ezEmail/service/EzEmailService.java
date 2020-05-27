@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezEmail.service;
 
+import java.io.InputStream;
+import java.io.File;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -14,6 +16,7 @@ import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
+import egovframework.ezEKP.ezEmail.vo.MailDeletedIdVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
@@ -39,6 +42,7 @@ public interface EzEmailService {
 	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName) throws Exception;
 	public void deleteMailDelete(int tenantId, String pUserID, String pFolderPath) throws Exception;
 	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception;
+	public List<MailDeletedIdVO> getMailDeletedIdList() throws Exception;
 	public List<MailDeleteVO> getMailDeleteList() throws Exception;
 	public List<MailReservationVO> getMailReserved(int tenantId, String pUserId) throws Exception;
 	public List<MailReservationVO> getMailReserved2() throws Exception;
@@ -56,13 +60,18 @@ public interface EzEmailService {
 	public void setMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId, List<String> pMessageIds) throws Exception;
 	public List<String> getMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId) throws Exception;
 	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList) throws Exception;
+	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList, String type, String companyId) throws Exception;
 	public int deleteIndividualAlias(String userId, int tenantID) throws Exception;
 	public String checkIndividualAlias(String individualAlias, int tenantId) throws Exception;
+	String checkIndividualAliasWithoutOwned(String userEmail, String individualAlias, int tenantId) throws Exception;
+	String updatePrimaryIndividualAlias(String userEmail, String originAlias, String updateAlias, int tenantId) throws Exception;
 	public Map<String, String> getAliasAddressMap(List<String> addressList, int tenantId) throws Exception;
 	
 	public void sendMail(String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception;
 	public void sendMail(String userEmail, String password, Locale userLocale, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved, EmailImportance importance) throws Exception;
 	public void sendMail(String userEmail, String password, Locale userLocale, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content) throws Exception;
+	public void sendMail(String userEmail, String password, Locale userLocale, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved, EmailImportance importance, String fileName, String contentType, InputStream inputStream) throws Exception;
+	
 	public void sendMailWithExplicitRecipients(InternetAddress[] recipients, String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception;
 	
 	public String mailContentDownload(String loginCookie, String url, String realPath) throws Exception;
@@ -126,4 +135,40 @@ public interface EzEmailService {
 	public JSONObject recallMailByMessageId(String address, String messageId) throws Exception;
 	public int getTotalUnreadCount(String userId, int tenantId) throws Exception;
 	public JSONObject getUnreadCountAll(JSONObject requestObject, String userId, Locale locale, int tenantId) throws Exception;
+	/**
+	 * 멀티도메인
+	 */
+	public String getMultiDomainList(int tenantId) throws Exception;
+	public int addMultiDomain(int tenantId, String domainName) throws Exception;
+	public int delMultiDomain(int tenantId, String delDomain, String saveDomainList) throws Exception;
+	public String getCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception;
+	public int saveCompanyMultiDomain(int tenantId, String companyId, String primaryDomain, String saveDomainList) throws Exception;
+	
+	public int addDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId, String selectDomain) throws Exception;
+	public String setIndividualAliasForMig(String userId, int tenantID, String targetAddr, String individualAliasList) throws Exception;
+	
+	public MailDistributionVO getDistributionInfo(String cn, int tenantId) throws Exception;
+	public int addDistributionList(String id, String name, List<String> memberList,List<Map<String, String>> distributionSubList, 
+			String companyId, int tenantID, String selectDomain, String ownerId, String policy, String explaination, String endDate, String loginCookie) throws Exception;
+	public List<MailDistributionVO> getUserOwnerDistributionList(String companyId, int tenantId, String ownerId) throws Exception;
+	public List<MailDistributionVO> getUserIncludedDistributionList(String companyId, int tenantId, String userId) throws Exception;
+	public int secessionDistribution(int tenantId, String cn, String userId) throws Exception;
+	public MailDistributionVO getUserDistributionInfo(String cn, int tenantId) throws Exception;
+	public JSONArray getUserDistributionApplyList(String cn, int tenantId) throws Exception;
+	public int setUserDistributionApply(String cn, int tenantId, String userId, String type) throws Exception;
+	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId,
+			String ownerId, String policy, String explaination, String endDate, String loginCookie) throws Exception;
+	public JSONArray getUserDistributionMemberList(String domain, String cn) throws Exception;
+	public int checkUserDistributionInCludedMember(String domain, String cn, String userId) throws Exception;
+	public List<MailDistributionVO> userDistributionListSearch(String domain, String searchRange, String searchValue, String userId) throws Exception;
+	public int checkUserDistributionApply(String cn, String domain, String userId) throws Exception;
+	public List<MailDistributionVO> getExpiredUserDistributionList() throws Exception;
+	public void sendUserDLMail(String loginCookie, String cn, String type, List<String> toList) throws Exception;
+	public JSONArray getFolderQuota(String String, Locale locale) throws Exception;
+	
+	public String setBigAttachCountInfo(String[] fileIdArr, int limitCount, int tenantId) throws Exception;
+	public String checkBigAttachDownloadCount(String fileId, int tenantId) throws Exception;
+	public void updateBigAttachDownloadCount(String fileId, int tenantId) throws Exception;
+	public void deleteBigAttachCountInfo(File[] fileList, int tenantId) throws Exception;
+	public void deleteBigAttachCountInfo(String[] fileIdArr, int tenantId) throws Exception;
 }

@@ -88,11 +88,14 @@
 	
 	<body scroll="no" class="popup"> 
 		<form method="post">
-		<h1><spring:message code='ezEmail.t605' /></h1>
+		<h1 style="margin-bottom: 0px;"><spring:message code='ezEmail.t605' /></h1>
 		<div id="close">
 		  <ul>
 		    <li><span onClick="window.returnValue=0;window.close()"></span></li>
 		  </ul>
+		</div>
+		<div style="margin-bottom: 7px;">
+			<span><spring:message code='ezEmail.ksaReservation01' /></span>
 		</div>
 		<div class="box" id="maillist" style="overflow:auto; height:250px;margin:0px;padding:0px;border-top:0px;border-right:1px solid #ddd">
 			<table class="mainlist" style="table-layout:fixed;width:100%;">

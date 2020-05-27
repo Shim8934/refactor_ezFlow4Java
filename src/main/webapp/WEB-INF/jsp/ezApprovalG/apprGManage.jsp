@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<!-- <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}"> -->
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-4.7.0/css/font-awesome.min.css')}" type="text/css"/>
 		<style> 
 			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
 			.pagetd{padding-top:6px; }
@@ -105,6 +106,9 @@
 		    var selRowChangeFlag = false;
 		    var orgCompanyID = "";
 		    var useHWP = "${useHWP}";
+			var userLang = "<c:out value = '${userLang}'/>";
+			var useAdditionalRole = "${useAdditionalRole}";
+			var userLang = "${userInfo.lang}";
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    
@@ -659,7 +663,7 @@
                             var AttachfilenameA2 = AttachfilenameA1.substr(AttachfilenameN1, AttachfilenameA1.length);
                             var AttachUrlA1 = GetAttribute(tr,"DATA1");
                             var AttachUrlN1 = AttachUrlA1.lastIndexOf(".");
-                            var AttachUrlA2 = AttachUrlA1.substr(AttachUrlN1, AttachUrlA1.length).toLowerCase(); //fileExt(.hwp, .ezd, .mht)
+                            var AttachUrlA2 = getOriginalFileExtension(AttachUrlA1); //fileExt(.hwp, .ezd, .mht)
                             AttachUrl = encodeURIComponent(GetAttribute(tr,"DATA1"));
                           
                             if (AttachfilenameN1 < 0) {
@@ -695,7 +699,7 @@
 	                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
 	                                    var openLocation;
 	                                    
-	                                    if (AttachUrlA2 == ".hwp" || AttachUrlA2 == ".ezd") {
+	                                    if (AttachUrlA2 == ".hwp") {
 	                                    	if (isIE()) {
 	                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 	                                    	} else {
@@ -782,9 +786,8 @@
 		            para[0] = pDocID;
 		            para[1] = pURL;
 		            var openLocation;
-		            var ext = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
-		            // 2018.07.26 (KLIB) - ezd 확장자 처리
-		            if (ext == "hwp" || ext == "ezd") {
+		            var ext = getOriginalFileExtension(pURL);
+		            if (ext == "hwp") {
 		            	if (isIE()) {
 			            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 		                } else {
@@ -854,10 +857,9 @@
 		            var FunctionType = pCurSelRow.getAttribute("DATA10");
 		            var Html = pCurSelRow.getAttribute("DATA3");
 		
-		            Html1 = Html.substring(Html.length - 3);
+		            var Html1 = getOriginalFileExtension(Html);
 		
-		            // 2018.07.26 (KLIB) - ezd 확장자 처리
-		            if (Html1 == "hwp" || Html1 == 'ezd') {
+		            if (Html1 == "hwp") {
 		                if (FunctionType == "000")                   //한글양식 미결 문서
 		                    openServerDraftUI("REDRAFT", pCurSelRow);
 		                else
@@ -930,11 +932,11 @@
 		                var pDocID = pCurSelRow.getAttribute("DATA1");
 		                var pURL = pCurSelRow.getAttribute("DATA3");
 		                var openLocation = "";
-		                var ext = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
+		                var ext = getOriginalFileExtension(pURL);
 		                
 		                if (ext == "doc") {
 		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
-		                } else if (ext == "hwp" || ext == "ezd") { // 2018.07.26 (KLIB) - ezd 확장자 처리
+		                } else if (ext == "hwp") { // 2018.07.26 (KLIB) - ezd 확장자 처리
 		                    if (CrossYN() && !(/netscape/i.test(navigator.appName) && /trident/i.test(navigator.userAgent) || /msie/i.test(navigator.userAgent))) {
 		                        alert(strLang1103);
 		                        return;
@@ -1094,8 +1096,9 @@
 		    }
 		
 		    function doCancelForce(pDocID, tempListType) {
+				var GetCurrentlinelist = getAprLinefor("APR", tempDocID);
 				var result = "";
-	        	
+				
 	        	$.ajax({
 	        		type : "POST",
 	        		dataType : "text",
@@ -1117,6 +1120,7 @@
 	        	var RtnVal = getNodeText(loadXMLString(result).documentElement);
 	        	
 		        if (RtnVal == "TRUE") {
+		        	SendMailToCancel_Function(GetCurrentlinelist);
 		            if (tempListType == "3") {
 		                var pAlertContent = strLang891 + "\n" + strLang892;
 		                alert(pAlertContent);
@@ -1126,6 +1130,7 @@
 		                alert(pAlertContent);
 		            }
 		            getDocList();
+		            attitude_annual_conn(pDocID);
 		
 		            try {
 		                parent.frames["left"].getAprCount();
@@ -1148,6 +1153,66 @@
 	                alert(pAlertContent);
 	            }
 		    }
+		    
+		    function SendMailToCancel_Function(GetCurrentlinelist) {
+	            var MemberList = loadXMLString(GetCurrentlinelist)
+	            var pDocTitle = GetDocTitleInfoData("APR", "DOCTITLE");
+	            var objNodes = SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW");
+	            g_szUserID = pUserID;
+	            g_senderinfo = "";
+	            for (i = 0; i < objNodes.length; i++) {
+	                var nowstate = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[12]);
+	                var LineUserID = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[4]);
+	                var LineSN = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[0]);
+	                if (nowstate == "002" || nowstate == "003") {
+	                    if (LineSN != "1") {
+	                        sendmail(LineUserID, pDocTitle, arr_userinfo[2], js_yyyy_mm_dd_hh_mm_ss(), "callback", "", true)
+	                    }
+	                }
+
+	            }
+	        }
+	        function GetDocTitleInfoData(mode, filed) {
+	            try {
+	                var value = "";
+	                var xmlpara = createXmlDom();
+	                var objNode;
+	                
+	                createNodeInsert(xmlpara, objNode, "PARAMETER");
+	                createNodeAndInsertText(xmlpara, objNode, "DocID", tempDocID);
+	                createNodeAndInsertText(xmlpara, objNode, "mode", mode);
+	                createNodeAndInsertText(xmlpara, objNode, "fields", filed);
+
+	                var xmlhttp = createXMLHttpRequest();
+	                xmlhttp.open("Post", "/ezApprovalG/GetDocInfoMode.do", false);
+	                xmlhttp.send(xmlpara);
+
+	                var xmlDocument = createXmlDom();
+	                xmlDocument = loadXMLString(xmlhttp.responseText);
+
+	                var objNodes = GetChildNodes(xmlDocument.documentElement);
+
+	                if (objNodes) {
+	                    if (objNodes.length > 0) {
+	                        value = getNodeText(objNodes[0]);
+	                    }
+	                }
+	                return value;
+	            }
+	            catch (e) { }
+	        }
+	        
+	        function js_yyyy_mm_dd_hh_mm_ss() {
+	            now = new Date();
+	            year = "" + now.getFullYear();
+	            month = "" + (now.getMonth() + 1); if (month.length == 1) { month = "0" + month; }
+	            day = "" + now.getDate(); if (day.length == 1) { day = "0" + day; }
+	            hour = "" + now.getHours(); if (hour.length == 1) { hour = "0" + hour; }
+	            minute = "" + now.getMinutes(); if (minute.length == 1) { minute = "0" + minute; }
+	            second = "" + now.getSeconds(); if (second.length == 1) { second = "0" + second; }
+	            return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+	        }
+		    
 		    function Recipent_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
@@ -1349,10 +1414,9 @@
 		        var pOrgCompanyID = tr.getAttribute("ORGCOMPANYID");
 		        var pDocTitle = tr.firstChild.textContent;
 		        
-		        // 2018.07.06 (KLIB) - ezd 확장자 처리
-		        var pHrefExt = pHref.substr(pHref.length - 3, pHref.length).toLowerCase();
+		        var pHrefExt = getOriginalFileExtension(pHref);
 		        
-		        if (pHrefExt === "hwp" || pHrefExt === "ezd") {
+		        if (pHrefExt === "hwp") {
 		            if (/msie/i.test(navigator.userAgent)) {
 		                alert(strLang1103);
 		                return;
@@ -1539,17 +1603,43 @@
 		            if (now.getTime() > exitTime)
 		                return;
 		        }
-		    }
-		    function btnApproveALL_onclick() {
+			}
+
+			//2020-04-29 : 일괄결재 리스트 직접결재
+			function btnApproveALL_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var pCurSelRow = DocList.GetSelectedRows();
 		        if (pCurSelRow.length == 0) {
 		            var pAlertContent = strLang930 + "<br>" + strLang336;
-		            //OpenAlertUI(pAlertContent);
-		            alert(pAlertContent);
+		            OpenAlertUI(pAlertContent);
 		            return;
-		        }
+				}else{
+					OpenInformationUI("<spring:message code='ezApprovalG.t900002'/>", btnApproveALL_onclick_Complete);
+				}
+			}
+
+			function btnApproveALL_onclick_Complete(rtn){
+				DivPopUpHidden();
+				if(rtn){
+					var aprAllType = document.getElementById("btnApproveALL").getAttribute("aprAllType");
+
+					if(aprAllType == "LIST"){
+						if (CheckUsePassword()) {
+							chk_Passwd(arr_userinfo[1]);
+							return;
+						}
+						else {
+							chk_Passwd_Complete("TRUE");
+						}
+					}else{
+						btnApproveALL_popup_onclick()
+					}					
+				}
+			}
+
+			//2020-04-29 : 일괄결재 , 기존 팝업결재
+		    function btnApproveALL_popup_onclick() {
 		        var xmlpara = createXmlDom();
 		        var objNode;
 		        createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -2129,6 +2219,23 @@
 		    	
 		    	return result == "FALSE" ? true : false;
 		    }
+
+			function getOriginalFileExtension(filePath) {
+				var pathLength = filePath.length;
+				var lastIndexOfDot = filePath.lastIndexOf(".");
+				
+				if (lastIndexOfDot < 0) {
+					return "";
+				}
+				
+				var ext = trim_Cross(filePath.substr(lastIndexOfDot + 1, filePath.length).toLowerCase());
+				
+				if (ext === "ezd") {
+					return getOriginalFileExtension(filePath.substr(0, lastIndexOfDot));
+				}
+				
+				return ext;
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px;">	
@@ -2153,7 +2260,7 @@
 				<li id="tbtnApprove" style="DISPLAY:none"><span id="btnApprove" onclick="return  btnApprove_onclick('0')" ><spring:message code='ezApprovalG.t1'/></span></li>
 				<li id="tbtnApprove1" style="DISPLAY:none"><span id="btnApprove1"  onclick ="return  btnApprove_onclick('1')" ><spring:message code='ezApprovalG.t1739'/></span></li>
 				<li class="important" id="tbtnNonElecRec" style="DISPLAY:none"><span id="btnNonElecRec" onclick="return btnNonElecRec_onclick()" >비전자문서등록</span></li><%-- 비전자문서 등록 --%>
-				<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
+				<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL" aprAllType="LIST"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>  <!--onclick 함수 파라미터(LIST : 리스트 직접 일괄결재, POPUP : 팝업창 일괄결재-->
 				<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
 				<li id="tbtnReturn" style="DISPLAY:none"><span id="btnReturn" onclick="return btnReturn_onclick()" ><spring:message code='ezApprovalG.t1434'/></span></li>

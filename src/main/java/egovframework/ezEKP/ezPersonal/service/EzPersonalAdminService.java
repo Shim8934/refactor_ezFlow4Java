@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezPersonal.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.w3c.dom.Document;
@@ -11,9 +10,10 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopupUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzPersonalAdminService {
@@ -40,7 +40,7 @@ public interface EzPersonalAdminService {
 	
 	String updateNotice(String companyID, String title, String title2, String content, Integer itemSeq, int tenantID) throws Exception;
 	
-	List<PersonalQuickLinkVO> getQuickLinkList(LoginVO loginVO, String lang) throws Exception;
+	List<PersonalQuickLinkVO> getQuickLinkList(LoginVO loginVO, String lang, String userLang) throws Exception;
 	
 	PersonalQuickLinkVO getQuickLink(String quickLinkID, int tenantID) throws Exception;
 	
@@ -64,7 +64,7 @@ public interface EzPersonalAdminService {
 
 	void saveQuickLink(LoginVO userInfo, Document doc) throws Exception;
 
-	void insertPopup(PersonalPopupVO vo, int tenantID, String offset) throws Exception;
+	int insertPopup(PersonalPopupVO vo, int tenantID, String offset) throws Exception;
 
 	void updatePopup(PersonalPopupVO vo, int tenantID, String offset) throws Exception;	
 
@@ -97,4 +97,8 @@ public interface EzPersonalAdminService {
 	String updatePoll(Document doc, int tenantID) throws Exception;
 
 	String checkJoinPoll(String userId, int tenantID, String itemSeq) throws Exception;
+	
+	void updatePopupUser(List<PersonalPopupUserVO> userList, int tenantId, String companyId, int itemSeq) throws Exception;
+	
+	List<PersonalPopupUserVO> getPopupUserList (int itemSeq, int tenantId, String companyId, String lang) throws Exception;
 }

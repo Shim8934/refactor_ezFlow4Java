@@ -81,8 +81,25 @@
 	}
 	.slideImageSetting {
 		position: absolute;
+	    right: 78px;
+	    top: 57px;
+        cursor: pointer;
+        display: inline-block;
+	}
+	.slideImageSetting img {
+		width : 12px;
+		height: 12px;
+	}
+	
+	.portletAuthSetting img {
+		width : 20px;
+		height: 20px;
+	}
+	
+	.portletAuthSetting {
+		position: absolute;
 	    right: 20px;
-	    top: 55px;
+	    top: 53px;
         cursor: pointer;
         display: inline-block;
 	}
@@ -94,6 +111,7 @@
 		<spring:message code='ezNewPortal.t056' />
 		<span class="title_bar"><img src="/images/name_bar.gif"></span>
 		<select class="companySelect" id="ListCompany"></select>
+		<span> <spring:message code='ezNewPortal.yej14' /></span>
 	</h1>
 		
 	<ul id="portletListContainer" class="col-container" style="overflow: auto"></ul>
@@ -427,9 +445,13 @@
 						listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t096' /> : </th>";
 						if (portletId == 34) { //슬라이드 이미지 포틀릿의 경우
 							listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
-							listHTML += "<div class='slideImageSetting'><a><img src='/images/admin/admin_portlet_set.png'></a></div></td>";
+							listHTML += "<div class='slideImageSetting'><a><img src='/images/admin/admin_portlet_set.png'></a></div>";
+							listHTML += "<div class='portletAuthSetting'><a class='imgbtn'><span><spring:message code='ezNewPortal.t074'/></span></a></div>";
+							listHTML += "</td>";
 						} else {
-							listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td>";
+							listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
+							listHTML += "<div class='portletAuthSetting'><a class='imgbtn'><span><spring:message code='ezNewPortal.t074'/></span></a></div>";
+							listHTML += "</td>";
 						}
 						listHTML += "</tr>";
 						
@@ -536,6 +558,9 @@
 						if (result[i].portletId == 34) {
 							$("#portlet" + result[i].portletId).find(".slideImageSetting").on("click", {"portletId" : result[i].portletId}, openSlideImageSetting);
 						}
+						
+						//포틀릿 권한 창 불러오기 버튼 활성화
+						$("#portlet" + result[i].portletId).find(".portletAuthSetting").on("click", {"portletId" : result[i].portletId}, openPortletAuthSetting);
 					}
 					
 					loadAfter();
@@ -591,9 +616,35 @@
 					
 				}
 			} else {
-				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(<spring:message code='ezNewPortal.t078' />) </th><td class='portletInfoTD'><input class='portletName' data1='1' type='text' maxlength='50'></td></tr>";
-				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(<spring:message code='ezNewPortal.t079' />) </th><td class='portletInfoTD'><input class='portletName' data1='2' type='text' maxlength='50'></td></tr>";
-				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(<spring:message code='ezNewPortal.t080' />) </th><td class='portletInfoTD'><input class='portletName' data1='3' type='text' maxlength='50'></td></tr>";
+				var mainTitle = "<spring:message code='ezNewPortal.t078' />";
+				var subTitle1 = "<spring:message code='ezNewPortal.t079' />";
+				var subTitle2 = "<spring:message code='ezNewPortal.t080' />";
+				
+				var mainTitleId = "1";
+				var subTitle1Id = "2";
+				var subTitle2Id = "3";
+				
+				if (primary == "2") {
+					mainTitle = "<spring:message code='ezNewPortal.t079' />";
+					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
+					subTitle2 = "<spring:message code='ezNewPortal.t080' />";
+					
+					mainTitleId = "2";
+					subTitle1Id = "1";
+					subTitle2Id = "3";
+				} else if (primary == "3") {
+					mainTitle = "<spring:message code='ezNewPortal.t080' />";
+					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
+					subTitle2 = "<spring:message code='ezNewPortal.t079' />";
+					
+					mainTitleId = "3";
+					subTitle1Id = "1";
+					subTitle2Id = "2";
+				}
+				
+				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + mainTitle + ") </th><td class='portletInfoTD'><input class='portletName' data1='" + mainTitleId + "' type='text' maxlength='50'></td></tr>";
+				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + subTitle1 + ") </th><td class='portletInfoTD'><input class='portletName' data1='" + subTitle1Id + "' type='text' maxlength='50'></td></tr>";
+				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + subTitle2 + ") </th><td class='portletInfoTD'><input class='portletName' data1='" + subTitle2Id + "' type='text' maxlength='50'></td></tr>";
 			}
 			
 			listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t098' /> </th><td class='portletInfoTD'>";
@@ -707,6 +758,24 @@
 	        var top = (heigth - wHeight) / 2;
 	        
 	        window.open("/admin/ezNewPortal/openSlideImageSetting.do?portletId=" + portletId + "&companyId=" + companyId, "",
+	            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1, top=" + top + ",left = " + left);
+		}
+		
+		var openPortletAuthSetting = function (event) {
+			var portletId = event.data.portletId;
+	 		var companiesObj = document.getElementById("ListCompany");
+			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
+			
+	        var wWeight = "401";
+	        var wHeight = "339";
+	
+	        var heigth = window.screen.availHeight;
+	        var width = window.screen.availWidth;
+	
+	        var left = (width - wWeight) / 2;
+	        var top = (heigth - wHeight) / 2;
+	        
+	        window.open("/admin/ezNewPortal/openPortletAuthSetting.do?portletId=" + portletId + "&companyId=" + companyId, "",
 	            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1, top=" + top + ",left = " + left);
 		}
 	</script>

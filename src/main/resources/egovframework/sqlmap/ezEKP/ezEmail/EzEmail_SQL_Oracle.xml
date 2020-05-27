@@ -11,6 +11,7 @@
 	<typeAlias  alias="MailCancelVO" type="egovframework.ezEKP.ezEmail.vo.MailCancelVO"/>
 	<typeAlias  alias="MailPOP3VO" type="egovframework.ezEKP.ezEmail.vo.MailPOP3VO"/>
 	<typeAlias  alias="MailBlobVO" type="egovframework.ezEKP.ezEmail.vo.MailBlobVO"/>
+	<typeAlias  alias="MailDeletedIdVO" type="egovframework.ezEKP.ezEmail.vo.MailDeletedIdVO"/>
 	
 	<resultMap id="mailGeneral" class="MailGeneralVO">
 		<result property="listCount" column="LISTCOUNT" columnIndex="1"/>
@@ -98,6 +99,11 @@
 		<result property="mailBlobId" column="MAIL_BLOB_ID" />
 		<result property="mailBoxId" column="MAILBOX_ID" />
 		<result property="mailUid" column="MAIL_UID" />		
+	</resultMap>
+	
+	<resultMap id="mailDeletedId" class="MailDeletedIdVO">
+		<result property="mailBoxId" column="MAILBOX_ID" />
+		<result property="mailUid" column="MAIL_UID" />
 	</resultMap>
 	
 	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
@@ -230,6 +236,29 @@
        	]]>
 	</delete>
 	
+	<select id="EzEmailDAO.getMailDeletedIdList" resultMap="mailDeletedId">
+		<![CDATA[
+			SELECT MAILBOX_ID, MAIL_UID
+			FROM JAMES_MAIL_DELETED_ID
+       	]]>
+	</select>
+	
+	<delete id="EzEmailDAO.deleteMailBlobWithDeletedId" parameterClass="MailDeletedIdVO">
+		<![CDATA[
+			DELETE FROM JAMES_MAIL_BLOB 
+			WHERE MAILBOX_ID = #mailBoxId#
+			AND MAIL_UID = #mailUid#
+       	]]>
+	</delete>
+	
+	<delete id="EzEmailDAO.deleteMailDeletedId" parameterClass="MailDeletedIdVO">
+		<![CDATA[
+			DELETE FROM JAMES_MAIL_DELETED_ID 
+			WHERE MAILBOX_ID = #mailBoxId#
+			AND MAIL_UID = #mailUid#
+       	]]>
+	</delete>
+	
 	<select id="EzEmailDAO.getMailReserved2" resultMap="mailReservation2">
 		<![CDATA[
 			SELECT 
@@ -262,4 +291,47 @@
        	]]>
 	</delete>
 	
+	<insert id="EzEmailDAO.setBigAttachCountInfo" parameterClass="Map">
+		INSERT INTO JMOCHA_BIGATTACH_DOWNLOAD_LIMIT
+			(file_id, download_count, limit_count, tenant_id)
+		<iterate property="fileIdArr" conjunction="UNION ALL">
+		SELECT #fileIdArr[]#, '0', #limitCount#, #tenantId# FROM DUAL
+		</iterate>
+	</insert>
+	
+	<select id="EzEmailDAO.checkBigAttachDownloadCount" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				LIMIT_COUNT
+	        FROM 
+	        	JMOCHA_BIGATTACH_DOWNLOAD_LIMIT
+	       	WHERE
+	       		FILE_ID = #fileId#
+	       	AND
+	       		TENANT_ID = #tenantId#
+	       	AND
+	       		DOWNLOAD_COUNT >= LIMIT_COUNT
+	       	AND
+	       		LIMIT_COUNT > 0
+       	]]>
+	</select>
+	
+	<update id="EzEmailDAO.updateBigAttachDownloadCount" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				JMOCHA_BIGATTACH_DOWNLOAD_LIMIT
+			SET
+     			DOWNLOAD_COUNT = DOWNLOAD_COUNT + 1
+     		WHERE
+      			FILE_ID = #fileId#
+      		AND 
+            	TENANT_ID = #tenantId#
+       	]]>
+	</update>
+	
+	<delete id="EzEmailDAO.deleteBigAttachCountInfo" parameterClass="Map">
+			DELETE FROM JMOCHA_BIGATTACH_DOWNLOAD_LIMIT
+     		WHERE FILE_ID IN (<iterate property="fileIdArr" conjunction=",">#fileIdArr[]#</iterate>)
+      		AND TENANT_ID = #tenantId#
+	</delete>
 </sqlMap>

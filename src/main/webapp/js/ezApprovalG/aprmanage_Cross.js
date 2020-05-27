@@ -148,6 +148,8 @@ function getDocList_after(xml) {
     DocList.SetRowOnDblClick("lvDocList_DBSelChange");
     DocList.SetTitleIdx(0);
     DocList.SetUrgentFlag(false);
+    if(pListTypeValue == "1")  //2020-04-29 : 결재할문서 복수체크박스 추가
+        DocList.SetCheckBoxFlag(true);
     DocList.DataSource(xmlDoc);
     DocList.DataBind("lvDocList");
     
@@ -766,6 +768,11 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
         }
         
         windowName = "openDraftUI_REDRAFT";
+        
+        //2020-01-16 홍대표. receptGubunYN이 Y인데 재기안 할 경우, 민원인 주소 입력 버튼이 사라지는 버그 수정. 닷넷 참고.
+        if (formDocType == "") {
+            formDocType = GetAttribute(pCurSelRow, "DATA15");
+        }
     }
 
     var pArgument = new Array();
@@ -1030,11 +1037,11 @@ function openViewDocInfo(type) {
     }
 
     var openLocation;
-    var formUrlExt = formURL.substr(formURL.length - 3, formURL.length).toLowerCase();
+    // 20191210 ezd 확장자 빼기
+    var formUrlExt = getOriginalFileExtension(formURL);
 
     if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
-    	// 2018.07.26 (KLIB) - ezd 확장자 처리
-        if (formUrlExt === "hwp" || formUrlExt === "ezd") {
+        if (formUrlExt === "hwp") {
             if (CrossYN() && isIE()) {
             	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
             } else {
@@ -1051,7 +1058,7 @@ function openViewDocInfo(type) {
     }
     else {
     	// 2018.07.06 (KLIB) - ezd 확장자 처리
-        if (formUrlExt === "hwp" || formUrlExt === "ezd") {
+        if (formUrlExt === "hwp") {
             if (CrossYN() && isIE()) {
             	openLocation = "/ezApprovalG/ezviewAprHWP.do";
             } else {
@@ -1119,6 +1126,8 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
         } else {
             var pURL = GetAttribute(pCurSelRow, "DATA3");
             var pDocID = GetAttribute(pCurSelRow, "DATA1");
+            var orgCompanyID = GetAttribute(pCurSelRow, "orgCompanyID");
+            
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
             	if (/chrome/i.test(navigator.userAgent)) {
             		alert(strLang1103);
@@ -1126,10 +1135,12 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             	} else {
             		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do";
             	}
+            } else if (pDraftFlag == "HAPYUI" && approvalFlag == "G") {
+            	openLocation = "/ezApprovalG/recevGDeptHapyui.do";
             } else {
-                openLocation = "/ezApprovalG/recev.do";
+            	openLocation = "/ezApprovalG/recev.do";
             }
-            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
+            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag) + "&orgCompanyID=" + encodeURI(orgCompanyID);
             openwindow(openLocation, "receive", 880, 550);
         }
     } else {
@@ -1158,6 +1169,8 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
         pArgument[1] = GetAttribute(pCurSelRow, "DATA2");
 
         var pURL = GetAttribute(pCurSelRow, "DATA3");
+        var tmpDocState = GetAttribute(pCurSelRow, "DATA12");
+        
         var openLocation = "";
         if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
         	openLocation = "/ezApprovalG/ezRecevGSusinHWP.do";
@@ -1165,7 +1178,17 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
             openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
         }
         else {
-            openLocation = "/ezApprovalG/recevGSusin.do";
+        	//docstate가 012(합의) 일 경우에 부서합의 페이지 띄우도록 수정 2019-02-27 홍대표
+        	if (tmpDocState == strDocState12) {
+        		openLocation = "/ezApprovalG/recevGDeptHapyui.do";
+        	} else {
+        		var docType = GetAttribute(pCurSelRow, "DATA15");
+        		if (docType == "001") {
+        			openLocation = "/ezApprovalG/recevG.do";
+        		} else {
+        			openLocation = "/ezApprovalG/recevGSusin.do";
+        		}
+        	}
 
             openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
         }
@@ -1736,6 +1759,7 @@ var totalPage = "";
 function td_Create1(strtext) {
     document.getElementById("tblPageRayer").innerHTML = strtext;
 }
+
 function makePageSelPage() {
     var strtext;
     var PagingHTML = "";
@@ -1749,28 +1773,28 @@ function makePageSelPage() {
         
         if (approvalFlag == "G") { //2018-10-01 김보미 - G버전일때 추가.
         	if (SearchCond[3] != null && SearchCond[3] != "") {
-        		period = SearchCond[3] + strLang1028 + " " + SearchCond[4] + strLang1029 + " " + SearchCond[5] + strLang1030 + " ~ " + SearchCond[6] + strLang1028 + " " + SearchCond[7] + strLang1029 + " " + SearchCond[8] + strLang1030;
+        		period = getDatePeriod(userLang, SearchCond[3], SearchCond[4], SearchCond[5], SearchCond[6], SearchCond[7], SearchCond[8]);
         	} else if (SearchCond[9] != null && SearchCond[9] != "") {
-        		period = SearchCond[9] + strLang1028 + " " + SearchCond[10] + strLang1029 + " " + SearchCond[11] + strLang1030 + " ~ " + SearchCond[12] + strLang1028 + " " + SearchCond[13] + strLang1029 + " " + SearchCond[14] + strLang1030;
+        		period = getDatePeriod(userLang, SearchCond[9], SearchCond[10], SearchCond[11], SearchCond[12], SearchCond[13], SearchCond[14]);
         	} else if (SearchCond[25] != "" && SearchCond[25] != null) {
-        		period = SearchCond[25].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[25].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[25].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[26].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[26].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[26].substring(8, 10)) + strLang1030;
+        		period = getDatePeriod(userLang, SearchCond[25].substring(0, 4), parseInt(SearchCond[25].substring(5, 7)), parseInt(SearchCond[25].substring(8, 10)), SearchCond[26].substring(0, 4), parseInt(SearchCond[26].substring(5, 7)), parseInt(SearchCond[26].substring(8, 10)));
         	} else {
-        		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        		period = getDatePeriod(userLang, (nowyear - 1), nowmonth, nowday, nowyear, nowmonth, nowday);
         	}
         } else {
         	if (SearchCond[5] != null && SearchCond[5] != "" ) {
         		//2018-09-27 배현상, 주간, 월간검색 시 날짜 표기오류 개선 
-        		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[5].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[5].substring(8,10)) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[6].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[6].substring(8, 10)) + strLang1030;
+        		period = getDatePeriod(userLang, SearchCond[5].substring(0, 4), parseInt(SearchCond[5].substring(5, 7)), parseInt(SearchCond[5].substring(8,10)), SearchCond[6].substring(0, 4), parseInt(SearchCond[6].substring(5, 7)), parseInt(SearchCond[6].substring(8, 10)));
         	} else if (SearchCond[3] != "" && SearchCond[3] != null) {
-        		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[3].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[3].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[4].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[4].substring(8, 10)) + strLang1030;
+        		period = getDatePeriod(userLang, SearchCond[3].substring(0, 4), parseInt(SearchCond[3].substring(5, 7)), parseInt(SearchCond[3].substring(8,10)), SearchCond[4].substring(0, 4), parseInt(SearchCond[4].substring(5, 7)), parseInt(SearchCond[4].substring(8, 10)));
         	} else if (SearchCond[25] != "" && SearchCond[25] != null) {
-        		period = SearchCond[25].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[25].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[25].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[26].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[26].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[26].substring(8, 10)) + strLang1030;
+        		period = getDatePeriod(userLang, SearchCond[25].substring(0, 4), parseInt(SearchCond[25].substring(5, 7)), parseInt(SearchCond[25].substring(8,10)), SearchCond[26].substring(0, 4), parseInt(SearchCond[26].substring(5, 7)), parseInt(SearchCond[26].substring(8, 10)));
         	} else {
-        		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        		period = getDatePeriod(userLang, (nowyear - 1), nowmonth, nowday, nowyear, nowmonth, nowday);
         	}
         }
     } else {
-        period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
+    	period = getDatePeriod(userLang, document.getElementById("sel_year").value, 1, 1, document.getElementById("sel_year").value, 12, 31);
     }
     //document.getElementById("presentcell").innerHTML = " - " + localValue;
     document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
@@ -2587,36 +2611,45 @@ function cancelYN_after(xml) {
         document.getElementById("tbtncallback").style.display = "";
         document.getElementById("tbtnforcecallback").style.display = "none";
     }
+    else if (RtnVal == "CALLBACK" && pListTypeValue == "3" && !GetBujaeFlag()) {
+    	document.getElementById("tbtncallback").style.display = "";
+    	document.getElementById("tbtnforcecallback").style.display = "none";
+    }
     else if (RtnVal == "CANCEL" && pListTypeValue == "3" && !GetBujaeFlag()) {
         document.getElementById("tbtncallback").style.display = "";
         document.getElementById("tbtnforcecallback").style.display = "none";
     }
     else {
     	if (forceCallBackYN == "YES") {
-    	var result = "";
-    	
-    	$.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/doForceCancelYN.do",
-    		data : {
-    			docID : temppDocID,
-    			userID : pUserID
-    		},
-    		success: function(xml){
-    			result = xml;
+    		//강제회수는 기안자만 가능하도록 수정
+    		if (!checkIsDrafter()) {
+    			return;
     		}
-    	});
-    	
-        var RtnVal = getNodeText(loadXMLString(result).documentElement);
-        if (RtnVal == "TRUE")
-        	document.getElementById("tbtnforcecallback").style.display = "";
-        else
-            document.getElementById("tbtnforcecallback").style.display = "none";
-
-        document.getElementById("tbtncallback").style.display = "none";
-        temppDocID = null;
+    		
+	    	var result = "";
+	    	
+	    	$.ajax({
+	    		type : "POST",
+	    		dataType : "text",
+	    		async : false,
+	    		url : "/ezApprovalG/doForceCancelYN.do",
+	    		data : {
+	    			docID : temppDocID,
+	    			userID : pUserID
+	    		},
+	    		success: function(xml){
+	    			result = xml;
+	    		}
+	    	});
+	    	
+	        var RtnVal = getNodeText(loadXMLString(result).documentElement);
+	        if (RtnVal == "TRUE")
+	        	document.getElementById("tbtnforcecallback").style.display = "";
+	        else
+	            document.getElementById("tbtnforcecallback").style.display = "none";
+	
+	        document.getElementById("tbtncallback").style.display = "none";
+	        temppDocID = null;
     	} else {
     		 document.getElementById("tbtnforcecallback").style.display = "none";
     	     document.getElementById("tbtncallback").style.display = "none";
@@ -2979,3 +3012,229 @@ function attitude_annual_conn(docId) {
 		error : function() { 			} 		
 	});  
 }
+
+function checkIsDrafter() {
+	var rtnVal = false;
+	
+	var DocList = new ListView();
+	DocList.LoadFromID("DocList");
+	
+	var oSelRow = DocList.GetSelectedRows();
+	if (oSelRow.length > 0) {
+		if (GetAttribute(oSelRow[0], "DATA16") == arr_userinfo[1]) {
+			rtnVal = true;
+		}
+	}
+	
+	return rtnVal;
+}
+
+function getEngMonth(month) {
+	var engMonthStr = "";
+	
+	switch(Number(month)) {
+		case 1 :
+			engMonthStr = "Jan";
+			break;
+		case 2 :
+			engMonthStr = "Feb";
+			break;
+		case 3 :
+			engMonthStr = "Mar";
+			break;
+		case 4 :
+			engMonthStr = "Apr";
+			break;
+		case 5 :
+			engMonthStr = "May";
+			break;
+		case 6 :
+			engMonthStr = "Jun";
+			break;
+		case 7 :
+			engMonthStr = "Jul";
+			break;
+		case 8 :
+			engMonthStr = "Aug";
+			break;
+		case 9 :
+			engMonthStr = "Sep";
+			break;
+		case 10 :
+			engMonthStr = "Oct";
+			break;
+		case 11 :
+			engMonthStr = "Nov";
+			break;
+		case 12 :
+			engMonthStr = "Dec";
+			break;
+	}
+	
+	return engMonthStr;
+}
+
+function getDatePeriod(userLang, startYear, startMonth, startDate, endYear, endMonth, endDate) {
+	return getDateStrByLang(userLang, startYear, startMonth, startDate) + " ~ " + getDateStrByLang(userLang, endYear, endMonth, endDate);
+}
+
+function getDateStrByLang(userLang, year, month, date) {
+	if (userLang == "2") {
+		return getEngMonth(month) + " " + date + ", " + year;
+	} else {
+		return year + strLang1028 + " " + month + strLang1029 + " " + date + strLang1030
+	}
+}
+
+//2020-04-29 : 리스트에서 직접 일괄결재 진행
+var ezchkpasswd_all_cross_dialogArguments = new Array();
+function chk_Passwd(pPwd) {
+    var parameter = pPwd;
+
+    ezchkpasswd_all_cross_dialogArguments[0] = parameter;
+    ezchkpasswd_all_cross_dialogArguments[1] = chk_Passwd_Complete;
+
+    DivPopUpShow(330, 215, "/ezApprovalG/ezchkPasswdall.do");
+}
+function chk_Passwd_Complete(chkpass) {
+    if (chkpass == "FALSE") {
+        var pAlertContent = strLang581;
+        OpenAlertUI(pAlertContent);
+        return;
+    }
+    else if (chkpass == "cancel") {
+        var pAlertContent = strLang582;
+        OpenAlertUI(pAlertContent);
+        return;
+    }
+
+    var DocList = new ListView();
+    DocList.LoadFromID("DocList");
+    var pCurSelRow = DocList.GetSelectedRows();    
+
+    var pMode = "";
+      
+    var xmlpara = createXmlDom();
+    var objRoot, objNode, doc, objNode2, objNodes, objDocinfoNode;
+    objRoot = createNodeInsert(xmlpara, objRoot, "PARAMETER");
+    createNodeAndInsertText(xmlpara, objNode, "USERID", arr_userinfo[1]);
+    createNodeAndInsertText(xmlpara, objNode, "DISPLAYNAME", arr_userinfo[2]);
+    createNodeAndInsertText(xmlpara, objNode, "TITLE", arr_userinfo[3]);
+    createNodeAndInsertText(xmlpara, objNode, "DEPTID", arr_userinfo[4]);
+    createNodeAndInsertText(xmlpara, objNode, "DEPTNAME", arr_userinfo[5]);
+    createNodeAndInsertText(xmlpara, objNode, "JIKCHEK", arr_userinfo[6]);
+    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
+    createNodeAndInsertText(xmlpara, objNode, "PASSWD", "");
+    createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", userLang);
+    var list = createNodeAndAppandNode(xmlpara, objRoot, list, "DOCIDS");
+    $(pCurSelRow).each(function(){
+        //대결처리, docstate : 공람, aprState : 대기, 보류 제외
+        var curDeptId = $(this).attr("DATA7");
+        var curAprMemberSN = $(this).attr("APRMEMBERSN");
+        orgCompanyID = $(this).attr("orgCompanyID");
+        var curAprType = "";
+
+        //대결자 결재도 일괄결제 제외
+        if(useAdditionalRole == "YES" && curDeptId.toUpperCase() != arr_userinfo[4])
+            return false;
+
+        //결재타입 정보
+        $.ajax({
+            type : "POST",
+            dataType : "text",
+            async : false,
+            url : "/ezApprovalG/getAprStateToAprType.do",
+            data : {
+                    docID : $(this).attr("DATA1"),
+                    userID : $(this).attr("DATA4"),
+                    docState : $(this).attr("DATA15"),
+                    orgCompanyID : orgCompanyID
+                    },
+            success: function(xml){
+                curAprType = xml;
+            }        			
+        });
+        
+        //결재타입이 001(결재), 004(전결), 007(참조), 019(검토) 만 일괄결재 처리
+        curAprType = curAprType.split("/")[0];
+        if(!(curAprType == "001") && !(curAprType == "004") && !(curAprType == "007") && !(curAprType == "019"))
+            return false;
+
+        doc = createNodeAndAppandNode(xmlpara, list, doc, "DOC");
+        $.ajax({
+              type : "POST",
+              dataType : "text",
+              async : false,
+              url : "/ezApprovalG/getLineMode.do",
+              data : {
+                      docID : $(this).attr("DATA1"),
+                      orgCompanyID : orgCompanyID
+                      },
+              success: function(xml){
+                  pMode = xml;
+              }        			
+        });  
+
+        createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCID", $(this).attr("DATA1"));
+        createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ORGAPRUSERID", $(this).attr("DATA4"));
+        createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "FORMID", $(this).attr("DATA17"));
+        var itemExt = $(this).attr("DATA3");
+        itemExt = itemExt.substr($(this).attr("DATA3").lastIndexOf(".")+1, itemExt.length).toUpperCase();
+        createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TYPE", itemExt);
+        createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCSTATE", $(this).attr("DATA12"));
+        createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "orgCompanyID", orgCompanyID);
+        createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "APRMEMBERSN", curAprMemberSN);
+        createNodeAndInsertText(xmlpara, objNode, "MODE", pMode);                
+    });
+
+    xmlhttp = createXMLHttpRequest();
+    xmlhttp.open("POST", "/ezApprovalG/doApprovAllG.do", false);
+    xmlhttp.send(xmlpara);
+    var RtnVal = xmlhttp.responseText;
+    var arrRtnVal = new Array();
+    arrRtnVal[0] = RtnVal.split("/")[0]; // OK or ERR
+    arrRtnVal[1] = RtnVal.split("/")[1]; // totalCount
+    arrRtnVal[2] = RtnVal.split("/")[2]; // trueCount
+    arrRtnVal[3] = RtnVal.split("/")[3]; // falseCount
+    if (arrRtnVal[0] == "OK") {
+        hideProgress();
+        pAlertContent = strLang933 + arrRtnVal[1] + strLang934;
+        pAlertContent += strLang935 + arrRtnVal[2] + strLang934;
+        if (arrRtnVal[3] != 0) {
+            pAlertContent += strLang936 + arrRtnVal[3] + strLang934;
+        }
+        pAlertContent += strLang931;
+        OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+    } else {
+        hideProgress();
+        pAlertContent = strLang932;
+        OpenAlertUI(pAlertContent);
+    }
+}
+function OpenAlertUI_Close() {
+    try{
+        DivPopUpHidden();
+        parent.frames["left"].getAprCount();
+        getDocList();
+    }catch(e){}
+}
+
+function CheckUsePassword() {
+    var result = "";
+    $.ajax({
+        type : "POST",
+        dataType : "text",
+        async : false,
+        url : "/ezApprovalG/getApprovalPWD.do",
+        success: function(text) {
+            result = text;
+        }        			
+    });
+    
+    if (result != "N") {
+        return true;
+    } else {
+        return false;
+    }
+}
+//일괄결재 끝

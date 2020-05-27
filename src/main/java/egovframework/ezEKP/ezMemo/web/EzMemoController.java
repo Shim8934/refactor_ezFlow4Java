@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezMemo.web;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +12,6 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -46,9 +44,6 @@ public class EzMemoController {
 	@Autowired
 	private CommonUtil commonUtil;
 	
-	@Autowired
-	private Properties config;
-	
 	@Resource(name="loginService")
 	private LoginService loginService;
 	
@@ -57,9 +52,6 @@ public class EzMemoController {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
-	
-	@Autowired
-	private SimpMessagingTemplate template;
 	
 	/**
 	 * 메모 메인페이지 호출
@@ -112,14 +104,14 @@ public class EzMemoController {
 	public String memoMain(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoMain started.");
 		
-		String brdID = "8";
+		// String brdID = "8";
 		String folderId = "0"; 
 		String folderName = egovMessageSource.getMessage("ezMemo.t001"); 
 		String configView = "false";
 		
-		if (request.getParameter("brdID") != null) {
+		/* if (request.getParameter("brdID") != null) {
 			brdID = request.getParameter("brdID");
-		}
+		} */
 		
 		if (request.getParameter("folderId") != null) {
 			folderId = request.getParameter("folderId");
@@ -335,6 +327,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezMemo/memoModify.do", method = RequestMethod.POST)
 	public String memoModify(String memoId, String contents, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoModify started.");
@@ -561,6 +554,7 @@ public class EzMemoController {
 		param.put("full_mode", 1);
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/createMemoConfig/users/" + userInfo.getId(), param, request, "post", null);
+		@SuppressWarnings("unused")
 		String status = resultBody.get("status").toString();
 		
 		logger.debug("insertMemoConfig ended");
@@ -826,8 +820,8 @@ public class EzMemoController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
-		int bottomPositon = Integer.parseInt(gadgetBottom);
-		int rightPosition = Integer.parseInt(gadgetRight);
+		int bottomPositon = (int)Double.parseDouble(gadgetBottom);
+		int rightPosition = (int)Double.parseDouble(gadgetRight);
 		
 		param.put("gadget_bottom", bottomPositon);
 		param.put("gadget_right", rightPosition);

@@ -199,7 +199,7 @@
 		    }		    
 		    
 		    function schedule_get_lunaruse() {
-		    	if (uselang != 3) {
+		    	if (uselang == 1) {
 				    $.ajax({
 			    		type : "GET",
 			    		dataType : "text",
@@ -259,14 +259,20 @@
 		            DivPopUpShow(980,470,"/ezSchedule/scheduleReceiveAttendant.do");
 		        	
 		            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);        	
-		        	var popupX = parent.document.body.clientWidth/2 - (730/2) - 305;
-		        	$("#iFramePanel").css("left", popupX);
+		            /* var popupX = parent.document.body.clientWidth/2 - (730/2) - 305;
+		        	$("#iFramePanel").css("left", popupX); */
 
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            windowonload_Complete("empty");
 		        }
 		        
+		    }
+		    
+		    window.onresize = function(){
+		    	if($("#iFramePanel") != undefined) {
+		    		$('#iFramePanel').css({ 'left' : ($(window).width() - $('#iFramePanel').width()) / 2, 'top' : ($(window).height() - $('#iFramePanel').height()) / 2 });
+		    	}
 		    }
 
 		    // aspx.cs에 있던 함수. 2016/08/22 by kgs
@@ -294,8 +300,8 @@
 		            DivPopUpShow(730,370,"/ezSchedule/scheduleReceiveMember.do");
 		            
 		            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);        	
-		        	var popupX = parent.document.body.clientWidth/2 - (730/2) - 220;
-		        	$("#iFramePanel").css("left", popupX);
+		        	/* var popupX = parent.document.body.clientWidth/2 - (730/2) - 220;
+		        	$("#iFramePanel").css("left", popupX); */
 		        	
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
@@ -411,8 +417,14 @@
 		            var pwidth = window.screen.availWidth;
 		            var pTop = (pheight - 670) / 2;
 		            var pLeft = (pwidth - 790) / 2;
+		            if(scheduletype == 2 || scheduletype == 3) {
+		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
+                                "height = 640px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		            }
+		            else {
 		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
                                 "height = 670px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		            }
 		        }
 		    }
 
@@ -430,13 +442,35 @@
 		            var pwidth = window.screen.availWidth;
 		            var pTop = (pheight - 660) / 2;
 		            var pLeft = (pwidth - 790) / 2;
+		            if(scheduletype == 2 || scheduletype == 3) {
+		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
+					            "height = 640px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		            }
+		            else {
 		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
 					            "height = 670px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		            }
 		        } else {
 		            return;
 		        }
 		    }
-			
+		    
+		    // 2020-02-24 김정언 - 근태 상세보기
+		   	function ReadAttitude(divID) {
+		   		var str = divID.split(":");
+		        var ScheduleID = str[0];
+		        var ParentID = str[1];
+		        
+		        if (CrossYN()) {
+					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + ScheduleID + "&typeId=" + ParentID, "", GetOpenWindowfeature(672, 640));
+					
+					try { OpenWin.focus(); } catch (e) { }
+				} else {
+					window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + ScheduleID + "&typeId=" + ParentID, "", 
+					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+				}
+		   	}
+		    
 		    function WriteSchedule() {
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
@@ -501,7 +535,13 @@
 		        if (GetAttribute(srcEl, "dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
 		            datetype = "1";
 		            sdate = GetAttribute(srcEl, "dispTime");
-		            edate = sdate.replace(":00:", ":30:");
+
+		        	// 2020-01-28 김민성 - 일보기/주보기에서 단위 시간 체크 추가
+		            var timeString = GetAttribute(srcEl, "dispTime").substring(11,16);
+		            var sdateTime = GetAttribute(srcEl, "id").split(":")[1][0];
+		            
+		            edateSplit = sdate.split(" ")[1].split(":");
+					edate = sdate.replace(sdate.split(" ")[1], edateSplit[0] + ":" + leadingZeros(edateSplit[1]*1+30, 2) + ":" + edateSplit[2]);
 		        } 
 		        // 월보기 클릭
 		        else if(GetAttribute(srcEl, "id").indexOf("ALL") < 0) {
@@ -1251,6 +1291,11 @@
 	            <li id="dayView" class="${defaultView == '0' ? 'on' : 'off' }"><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li><li id="weekView" class="${defaultView == '1' ? 'on' : 'off' }"><span onclick='ViewChange("WEEK");'><spring:message code='ezSchedule.t141'/></span></li><li id="monView" class="${defaultView == '2' ? 'on' : 'off' }"><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
 	        </ul>
 	    </div>
+	    <c:if test="${useAnnualScheduleYN ne '0'}">
+		    <div style="margin-bottom:10px;">
+			    <span style="color:#3d8fea;"><spring:message code='ezSchedule.kje01'/></span>
+		    </div>	    
+	    </c:if>
 	    
         <script type="text/javascript">
             //selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

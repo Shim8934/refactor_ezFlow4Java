@@ -40,6 +40,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -47,6 +48,7 @@ import java.util.Properties;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -83,11 +85,14 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.WebUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.service.LoginService;
@@ -142,6 +147,9 @@ public class CommonUtil {
 	
 	@Resource(name = "jspw")
     private String jspw;
+
+	@Resource(name = "EzNewPortalService")
+	private EzNewPortalService ezNewPortalService;
 	
 	/* File separator 공통 함수 */
 	public String separator = "/";
@@ -198,7 +206,8 @@ public class CommonUtil {
     
     public String stripScriptTagsAndFunctions(String src) {
     	if (src != null && !src.isEmpty()) {
-	        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert\\(.*\\)|confirm\\(.*\\)|prompt\\(.*\\)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+	        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert\\(.*?\\)|confirm\\(.*?\\)|prompt\\(.*?\\)|window.*?location",
+	        				Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 	        Matcher m = p.matcher(src);
 	        src = m.replaceAll("");
     	}
@@ -211,7 +220,6 @@ public class CommonUtil {
 			String decData = egovFileScrty.decryptAES(loginCookie);
 
 			String[] decDataArray = decData.split("///");
-			
 			String serverName = decDataArray[0];
 			String userID = decDataArray[1];
 			String locale = decDataArray[5];
@@ -529,89 +537,118 @@ public class CommonUtil {
 	}
 	
 	public boolean isLoginCookieExists(HttpServletRequest request, HttpServletResponse response) {
-        boolean isCookie = false;     
-        Cookie[] cookies = request.getCookies();
-        
-        String serverName = request.getServerName();
+		boolean usingSession = false;
 
-        int tenantID;
+		try {
+			String serverName = request.getServerName();
+			int tenantID = loginService.getTenantId(serverName);
+			String useSessionConfig = ezCommonService.getTenantConfig("useSession", tenantID);
 
-        String useSession = null;
-        try {
-			tenantID = loginService.getTenantId(serverName);
-			
-			useSession = ezCommonService.getTenantConfig("useSession", tenantID);
-		} catch (Exception e1) {
-			e1.printStackTrace();
+			// 세션 콘피그가 0 이거나 비어있으면 세션 로그인 사용 안 함
+			usingSession = !useSessionConfig.isEmpty() && !useSessionConfig.equals("0");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
 		}
-		
-		// 2018.10.22 이석화 변경 - 세션 0이면 세션 사용 안 함
-		// 2019.09.10 127.0.0.1 일 때는 세션 확인 안 함 (인사연동)
-		if (!useSession.equals("") && !useSession.equals("0") && !request.getRemoteAddr().equals("127.0.0.1")) {
-			/* session time을 위한 처리 주석 */	
-			/* 세션 사용 위해 주석 해제*/
-			HttpSession session = request.getSession(false);
-			
-			if (session != null) {
-		        if (cookies != null) {
-		            for (Cookie cookie : cookies) {
-		                if("loginCookie".equals(cookie.getName())){
-		                    //접속한 클라이언트 IP
-		                    String ip = ClientUtil.getClientIP(request);
-		                    String cValue = "";
-		                    try {
-		                        //쿠기에 저장되어 있는 IP
-		                        cValue = egovFileScrty.decryptAES(cookie.getValue());
-		
-		                        if(cValue.split("///")[3].equals(ip)){                  
-		                            isCookie = true;
-		                        }
-		                    } catch (Exception e) {
-		                        e.printStackTrace();
-		                    }
-		                }
-		            }
-		        }
-	        } else {
-	        	if (cookies != null) {
-	        		for (Cookie cookie : cookies) {
-	        			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
-	        				cookie.setMaxAge(0);
-	        				cookie.setPath("/");
-	        				response.addCookie(cookie);
-	        				
-	        				request.getSession().invalidate();
-	        			}
-	        	    }
-	        	}
-	        } 
-		} else {
-			if (cookies != null) {
-				for (Cookie cookie : cookies) {
-					if("loginCookie".equals(cookie.getName())){
-						//접속한 클라이언트 IP
-						String ip = ClientUtil.getClientIP(request);
-						String cValue = "";
-						try {
-							//쿠기에 저장되어 있는 IP
-							cValue = egovFileScrty.decryptAES(cookie.getValue());
-							
-							if(cValue.split("///")[3].equals(ip)){                  
-								isCookie = true;
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				}
+
+		// 세션 콘피그를 무시하고 로그인 쿠키만으로 사용할 수 있도록 해줌
+		boolean usingAsAPI = "yes".equalsIgnoreCase(request.getHeader("Use-As-API"));
+		// request 아이피가 127.0.0.1 일 때는 세션 콘피그 무시함 (인사연동)
+		boolean isLoopbackRequest = request.getRemoteAddr().equals("127.0.0.1");
+
+		if (!usingSession || usingAsAPI || isLoopbackRequest) {
+			return validLoginCookie(request);
+		}
+
+		return validSessionLoginCookie(request, response);
+	}
+
+	private boolean validLoginCookie(HttpServletRequest request) {
+		Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+
+		if (loginCookie == null) {
+			return false;
+		}
+
+		try {
+			String ip = ClientUtil.getClientIP(request);
+			String decryptedLoginCookie = egovFileScrty.decryptAES(loginCookie.getValue());
+
+			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
+			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	private boolean validSessionLoginCookie(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession(false);
+
+		if (session == null) {
+			clearAllCookies(request, response);
+
+			return false;
+		}
+
+		return validLoginCookie(request);
+	}
+
+	private void clearAllCookies(HttpServletRequest request, HttpServletResponse response) {
+		Cookie[] cookies = request.getCookies();
+
+		if (cookies == null) {
+			return;
+		}
+
+		for (Cookie cookie : cookies) {
+			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")) {
+				cookie.setMaxAge(0);
+				cookie.setPath("/");
+				response.addCookie(cookie);
+
+				request.getSession().invalidate();
 			}
 		}
-        return isCookie;
+	}
+
+	public boolean checkDeptId(String cValue){
+		String[] decDataArray = cValue.split("///");
+		
+		String userID = decDataArray[1];
+        String tenantId = "0";
+        String deptID = "";
+        
+        if (decDataArray.length >= 9) {
+            tenantId = decDataArray[8];	
+        }
+        if(decDataArray.length >= 10) {
+        	deptID = decDataArray[9];
+        }
+        
+        // ezSyncServer에서 ezFlow를 호출하는 경우에는 쿠키안에 부서 아이디가 포함되어 있지 않으므로
+        // 이 경우엔 true를 반환한다.
+        if ("".equals(deptID)) {
+        	return true;
+        }
+        
+		int isDept = ezCommonService.checkDeptId(userID, deptID, tenantId);
+		
+		if(isDept>0){
+			return true;
+		} else {
+			logger.debug("checkDeptId isDept=" + isDept + ",userID=" + userID + ",deptID=" + deptID);
+			
+			return false;
+		}
 	}
 	
 	public Document convertStringToDocument(String xmlStr) {
 		String replaceData = xmlStr.trim().replaceFirst("^([\\W]+)<","<");
 		replaceData = replaceData.replace("&shy;", "");
+		replaceData = replaceData.replace("\uffff", "");
+		replaceData = replaceData.replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", "");
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
         DocumentBuilder builder;
@@ -1659,7 +1696,7 @@ public class CommonUtil {
 	}
 	
 	public Map<String, Object> transBean2Map(Object obj) {
-	    Map<String, Object> map = new HashMap();
+	    Map<String, Object> map = new HashMap<>();
 	    
 	    if (obj == null) {
 	        return map;
@@ -1830,4 +1867,66 @@ public class CommonUtil {
 		return result;
 	}
 	
+	//2020-01-22 유은정 메뉴코드로 메뉴 권한 체크
+	public Map<String, Boolean> checkMenuAccess(List<String> menuCodeList, String companyId, int tenantId, String lang, String userId, String deptId) {
+		logger.debug("checkMenuAccess started.");
+		logger.debug("[checkMenuAccess param] menuCodeList : " + menuCodeList.toString() + ", companyId : " + companyId + ", tenantId : " + tenantId + ", lang : " + lang + ", userId : " + userId + ", deptId : " + deptId);
+		Map<String, Boolean> menuAccessList = new LinkedHashMap<String, Boolean>();
+		
+		try {
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, lang, userId, deptId);
+			
+			menuCodeList.forEach(menuCode -> {
+				boolean menuAccess = false;
+				
+				if (menuCode.equals("workspace")) {//협업
+					try {
+						String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId);
+						List<MenuInfoVO> menuFilter = menuList.stream().filter(menuInfo -> menuInfo.getMenuUrl().contains("ezWorkspace"))
+								.collect(Collectors.toList());
+						
+						if (useEzWorkspace.equals("NO")) {
+							menuAccess = false;
+						} else {
+							if (menuFilter.size() > 0) {
+								menuAccess = true;
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else if(menuCode.equals("mail") || menuCode.equals("address")) {		// 메일, 주소록
+					String useExternalMailServer = "";
+					try {
+						useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
+						if (useExternalMailServer != null && useExternalMailServer.equals("YES")) {
+							menuAccess = false;
+						} else {
+							menuAccess = true;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					List<MenuInfoVO> menuFilter = menuList.stream().filter(menuInfo -> menuInfo.getMenuCode() != null && menuInfo.getMenuCode().equals(menuCode))
+												.collect(Collectors.toList());
+					
+					if (menuFilter.size() > 0) {
+						menuAccess = true;
+					}
+				}
+				
+				logger.debug("checkMenuAccess : " + menuCode + " -> " + menuAccess);
+				
+				menuAccessList.put(menuCode, menuAccess);
+			});
+			
+			logger.debug("menuAccessList : " + menuAccessList.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("checkMenuAccess ended.");
+		return menuAccessList;
+	}
 }

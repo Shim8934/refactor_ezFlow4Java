@@ -222,7 +222,7 @@
 		                alert(strLang1103);
 		                return;
 		            } else {
-		            	openLocation += "/ezApprovalG/draftuiHWP.do";
+		            	openLocation += "/ezApprovalG/draftuiHWP.do?formURL=";
 		            	openLocation += encodeURIComponent(formURL) + "&draftFlag=" + encodeURIComponent('DRAFT') + "&formDocType=" + encodeURIComponent(formDocType);
 		                openLocation += "&susinSN=0&docState=&listType=1&aprState=";
 		                openLocation += "&isTmpDoc=";

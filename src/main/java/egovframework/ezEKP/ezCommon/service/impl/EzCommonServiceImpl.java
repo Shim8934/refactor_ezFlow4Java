@@ -1,80 +1,67 @@
 package egovframework.ezEKP.ezCommon.service.impl;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
-
-import javax.annotation.Resource;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DeadlockLoserDataAccessException;
-import org.springframework.stereotype.Service;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DeadlockLoserDataAccessException;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import javax.net.ssl.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service("EzCommonService")
 public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonService {
-	
+
 	@Autowired
 	private CommonUtil commonUtil;
 	
+	@Autowired
+	private KlibUtil klibUtil;
+	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
-	
+
 	@Resource(name = "EzCommonDAO")
 	private EzCommonDAO ezCommonDAO;
-	
+
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
-		
+
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonServiceImpl.class);
-	
+
 	@Override
 	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception {
 		return ezCommonDAO.getApprovPWD(userInfo);
@@ -89,17 +76,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         		isUTF8 = cookie.getValue();
         	}
         }
-        
+
         String realPath = commonUtil.getRealPath(request);
-        String filePath = pPhysicalFilePath;        
+        String filePath = pPhysicalFilePath;
         String fileName = pFileName;
         String fileExt = "";
-        
+
         if (fileName.lastIndexOf(".") > -1) {
             fileExt = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
         }
         fileName = getProperFileName(fileName, fileExt, isUTF8);
-        
+
         FileInputStream is = null;
         String userAgentHeader = request.getHeader("User-Agent");
         String usebrowser = ClientUtil.getClientInfo(request, "browser");//(userAgentHeader == null || userAgentHeader.equals("")) ? "NONE" : userAgentHeader.contains("MSIE") ?
@@ -108,9 +95,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         if(userAgentHeader == null || userAgentHeader.equals("")) {
         	usebrowser = "NONE";
         }
-        
+
         String type = pAttachment ? "attachment" : "inline";
-        
+
         if (isUTF8.equals("0") && (usebrowser.equals("Firefox") || usebrowser.equals("Safari"))) {
             response.addHeader("Content-Disposition", type + ";filename=\"" + new String(fileName.getBytes("UTF-8"), "ISO-8859-1") + "\"");
         } else {
@@ -122,23 +109,23 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         } else {
             response.setContentType("application/octet-stream");
         }
-                
+
         try {
 	        filePath = realPath + filePath;
 	        File file = new File(commonUtil.detectPathTraversal(filePath));
 	        is = new FileInputStream(file);
-	        
+
 	        IOUtils.copy(is,response.getOutputStream());
         } catch(Exception e) {
-        	
+
         } finally {
         	if (is != null) {
         		is.close();
         	}
-        }       
-        
+        }
+
 	}
-	
+
 	public String getProperFileName(String pOrgFileName, String pOrgFileExt, String pIsUTF8) throws Exception{
 		int length = 0;
         int lengthLimit = 10000;
@@ -157,49 +144,55 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             newFileName = pOrgFileName;
             while (length > lengthLimit){
                 newFileName = newFileName.substring(0, newFileName.length() - 1);
-                if (pIsUTF8.equals("0")) 
+                if (pIsUTF8.equals("0"))
                 	length = URLEncoder.encode(newFileName + pOrgFileExt,"UTF-8").replace("+", "%20").length();
-                else 
+                else
                 	length = URLEncoder.encode(newFileName + pOrgFileExt, "UTF-8").replace("+", "%20").length();
             }
             pOrgFileName = newFileName;
         }
-        
+
         return pOrgFileName + pOrgFileExt;
 	}
-	
+
 	/**
 	 * html -> mht 변환 실행 Method
 	 */
 	@Override
 	public String startHtml2Mht(String m_strHTML, String realPath, Locale locale) throws Exception{
-		StringBuilder m_strMHT = new StringBuilder();
-		String[] strHtml = {m_strHTML};
-		String m_strBoundary = "";
-		String[] m_ImageList = null;
-		String[] m_BackImageList = null;
-		
-        if (!strHtml[0].equals("")) {
-            //MHT 헤더 생성.
-        	m_strBoundary = makeHeader(m_strMHT);
-        	//이미지 경로 추출 및 가상경로 매칭.
-        	m_ImageList = extractImageSource(strHtml, realPath);
-            //백그라운드 경로 추출 및 가상경로 매칭
-        	m_BackImageList = extractBackgroundSource(strHtml, realPath);
-            //본문 인코딩
-        	doHtmlEncoding(strHtml[0], m_strMHT, m_strBoundary);
-            //이미지 인코딩
-            if (m_ImageList != null) {
-            	doImageEncoding(m_ImageList, m_strMHT, m_strBoundary, realPath);
-            }
-            //백그라운드 인코딩
-            if (m_BackImageList != null) {
-            	doBackgrondEncding(m_ImageList, m_BackImageList, m_strMHT, m_strBoundary, realPath);
-            }
+		StringBuilder mhtBuilder = new StringBuilder();
+		StringBuilder htmlBuilder = new StringBuilder(m_strHTML);
+        StringBuilder imagesBuilder = new StringBuilder();
+        StringBuilder backgroundImagesBuilder = new StringBuilder();
 
-            m_strMHT.append("--" + commonUtil.CRLF);
-            
-            return m_strMHT.toString();
+		String m_strBoundary = "";
+
+        if (!m_strHTML.equals("")) {
+            //MHT 헤더 생성.
+        	m_strBoundary = makeHeader(mhtBuilder);
+        	//이미지 경로 추출 및 가상경로 매칭.
+            List<String> imgSrcs = extractImageSource(htmlBuilder);
+            //이미지 인코딩
+            if (imgSrcs != null && !imgSrcs.isEmpty()) {
+                htmlBuilder = doImageEncoding(imgSrcs, htmlBuilder, imagesBuilder, m_strBoundary, realPath);
+            }
+            //백그라운드 경로 추출 및 가상경로 매칭
+            List<String> backgroundImgSrcs = extractBackgroundSource(htmlBuilder);
+            //백그라운드 인코딩
+            if (backgroundImgSrcs != null && !backgroundImgSrcs.isEmpty()) {
+                htmlBuilder = doBackgrondEncding(backgroundImgSrcs, htmlBuilder, backgroundImagesBuilder, m_strBoundary, realPath);
+            }
+            //본문 인코딩
+        	doHtmlEncoding(htmlBuilder, mhtBuilder, m_strBoundary);
+
+        	//이미지 삽입
+            mhtBuilder.append(imagesBuilder);
+            mhtBuilder.append(backgroundImagesBuilder);
+
+
+            mhtBuilder.append("--" + commonUtil.CRLF);
+
+            return mhtBuilder.toString();
         } else {
         	return egovMessageSource.getMessage("main.t0603", locale);
         }
@@ -208,19 +201,19 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	/**
 	 * html -> mht 변환 헤더설정 표출 Method
 	 */
-	private String makeHeader(StringBuilder m_strMHT) throws Exception{
+	private String makeHeader(StringBuilder mhtBuilder) throws Exception{
 		String m_strBoundary = createBoundary();
-        m_strMHT.append("MIME-Version: 1.0" + commonUtil.CRLF);
-        m_strMHT.append("Content-Type: Multipart/related;" + commonUtil.CRLF);
-        m_strMHT.append("  boundary=\"" + m_strBoundary + "\"" + commonUtil.CRLF);
-        m_strMHT.append("From: Kaoni MHT Component(UTF-8)" + commonUtil.CRLF);
-        m_strMHT.append("Subject: HTML to Mime-HTML" + commonUtil.CRLF);
-        m_strMHT.append("Date: " + getDate() + commonUtil.CRLF);
-        m_strMHT.append(commonUtil.CRLF + commonUtil.CRLF);
-        
+        mhtBuilder.append("MIME-Version: 1.0" + commonUtil.CRLF);
+        mhtBuilder.append("Content-Type: Multipart/related;" + commonUtil.CRLF);
+        mhtBuilder.append("  boundary=\"" + m_strBoundary + "\"" + commonUtil.CRLF);
+        mhtBuilder.append("From: Kaoni MHT Component(UTF-8)" + commonUtil.CRLF);
+        mhtBuilder.append("Subject: HTML to Mime-HTML" + commonUtil.CRLF);
+        mhtBuilder.append("Date: " + getDate() + commonUtil.CRLF);
+        mhtBuilder.append(commonUtil.CRLF + commonUtil.CRLF);
+
         return m_strBoundary;
     }
-	
+
 	/**
 	 * boundary 생성 표출 Method
 	 */
@@ -229,7 +222,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         SecureRandom Rnd = new SecureRandom();
 
         while (strBoundary.length() < 39) {
-            int nch = Rnd.nextInt(9)+1; 
+            int nch = Rnd.nextInt(9)+1;
 
             if (nch < 26) {
                 strBoundary += (char)(65 + nch);
@@ -239,19 +232,19 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         }
         return strBoundary;
     }
-	
+
 	/**
 	 * 날짜반환 표출 Method
 	 */
 	private String getDate() throws Exception{
         Calendar calendar = Calendar.getInstance();
-        
+
         String strDate = "";
         String strweek = "";
         String strMonth = "";
-        
+
         int week = calendar.get(Calendar.DAY_OF_WEEK);
-        
+
         switch (week) {
             case 1:
                 strweek = "Sun";
@@ -275,9 +268,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 strweek = "Sat";
                 break;
         }
-        
+
         int month = calendar.get(Calendar.MONTH);
-        
+
         switch (month)
         {
             case 0:
@@ -317,611 +310,361 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 strMonth = "Dec";
                 break;
         }
-        
+
         strDate = strweek + ", " + calendar.get(Calendar.DATE) + " " + strMonth + " " + calendar.get(Calendar.YEAR) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND);
 
         return strDate;
     }
-	
+
 	/**
 	 * html -> mht 변환 이미지추출 표출 Method
 	 */
-	private String[] extractImageSource(String[] strHtml, String realPath) throws Exception{
-		int npos = 0, nposStart = 0, nposEnd = 0, nImgCount = 0;
-        String strTempHtml = strHtml[0].toLowerCase();
-        String strImgsrc = "";
-        String strTempList[] = null;
-        String m_ImageList[] = null;
-        
-        //Img 태그의 갯수를 알아낸다.
-        while (true) {
-            npos = strTempHtml.indexOf("<img", npos);
-            if (npos > 0) {
-                nposStart = strTempHtml.indexOf(" src=", npos + 4);
-                if (nposStart > 0) {
-                    nposEnd = strTempHtml.indexOf("\"", nposStart + 6);
-                    if ((nposEnd - nposStart - 6) > 0) {
-                        npos = nposEnd;
-                        nImgCount++;
-                    } else {
-                        npos = npos + 4;
-                    }
-                } else {
-                    npos = npos + 4;
-                }
-            } else {
-            	break;
-            }
+	private List<String> extractImageSource(StringBuilder htmlBuilder) throws Exception{
+	    logger.debug("extractImageSource started.");
+
+        Document document = Jsoup.parse(htmlBuilder.toString());
+
+        List<String> imgSrcs = new ArrayList<String>();
+
+        Elements elements = document.getElementsByTag("img");
+        if (!elements.isEmpty()) {
+            List<String> finalImgSrcs = imgSrcs;
+            elements.forEach(element -> {
+                finalImgSrcs.add(element.attr("src"));
+            });
         }
 
-        //소스에서 image src를 추출
-        if (nImgCount > 0) {
-            //m_ImageList = new string[nImgCount];
-            strTempList = new String[nImgCount];
-            int i = 0;
-            npos = 0;
-            while (true) {
-                npos = strTempHtml.indexOf("<img", npos);
-                if (npos > 0) {
-                    nposStart = strTempHtml.indexOf(" src=", npos + 4);
-                    if (nposStart > 0) {
-                        nposEnd = strTempHtml.indexOf("\"", nposStart + 6);
-                        if ((nposEnd - nposStart - 6) > 0) {
-                            strImgsrc = strHtml[0].substring(nposStart + 6, nposEnd);
-                            npos = nposEnd;
-                            strTempList[i] = strImgsrc;
-                            i++;
-                        } else {
-                            npos = npos + 4;
-                        }
-                    } else {
-                        npos = npos + 4;
-                    }
-                } else {
-                	break;
-                }
-            }
+        imgSrcs = imgSrcs.stream().distinct().collect(Collectors.toList());
 
-            //중복된 이미지 경로를 걸러낸다.
-            nImgCount = 0;
-            boolean isSameUrl = false;
-            String strtempResource = "";
-            //if (strTempList != null)
-            //{
+        logger.debug("extractImageSource ended.");
 
-            for (int j = 0; j < strTempList.length; j++) {
-                strtempResource = strTempList[j];
-                for (int k = 0; k < j; k++) {
-                    if (j != k && strTempList[k].equals(strtempResource)) {
-                        isSameUrl = true;
-                    }
-                }
-
-                if (isSameUrl == false) {
-                    nImgCount++;
-                }
-                else{
-                	isSameUrl = false;
-                }
-            }
-
-            if (nImgCount > 0) {
-                m_ImageList = new String[nImgCount];
-                strtempResource = "";
-                nImgCount = 0;
-                for (int j = 0; j < strTempList.length; j++) {
-                    strtempResource = strTempList[j];
-                    for (int k = 0; k < j; k++) {
-                        if (j != k && strTempList[k].equals(strtempResource)) {
-                            isSameUrl = true;
-                        }
-                    }
-
-                    if (isSameUrl == false) {
-                        m_ImageList[nImgCount] = strtempResource;
-                        nImgCount++;
-                    } else {
-                    	isSameUrl = false;
-                    }
-                }
-
-                /* 2018-08-14 홍승비 - html->mht 변환 시 이미지 인코딩(content-type) 수정 */
-                int index = 1;
-                for (String strResource : m_ImageList) {
-                	String contentType = null;
-        			String extension = null;
-        	        BufferedInputStream bis = null;
-        	        
-        	        File f = new File(commonUtil.detectPathTraversal(realPath + strResource));
-        	        
-        	        try {
-        		        bis = new BufferedInputStream(new FileInputStream(f));
-        		        contentType = URLConnection.guessContentTypeFromStream(bis);
-        	        } catch(Exception e) {
-        	        } finally {
-        	        	if (bis != null) {
-        	        		bis.close();
-        	        	}
-        	        }
-        	        
-        	        if (contentType == null) {
-        	        	contentType = "application/octet-stream";
-        	        	extension = ".gif"; // 기존 확장자가 .gif로 고정되어 있었으므로, 디폴트로 사용함
-        	        } else {
-        	        	contentType = contentType.replace("image", "Image");
-        	        	extension = "." + contentType.split("/")[1];
-        	        }
-        	        
-                	strHtml[0] = strHtml[0].replace(strResource, "file:///C:/IMAGE" + index + extension);
-                    index++;
-                }
-            }
-        }
-        
-        return m_ImageList;
+        return imgSrcs;
     }
-	
+
 	/**
 	 * html -> mht 변환 배경화면추출 표출 Method
 	 */
-	private String[] extractBackgroundSource(String[] strHtml, String realPath) throws Exception {
+	private List<String> extractBackgroundSource(StringBuilder htmlBuilder) throws Exception {
 		logger.debug("extractBackgroundSource started.");
-		
-        String strTempHtml = strHtml[0].toLowerCase();
-        int npos = 0, nposStart = 0, nposEnd = 0;
-        int nImgCount = 0;
-        String strImgsrc = "";
-        String m_BackImageList[] = null;
-        List<String> L_BackImage = new ArrayList<String>();
 
-        //<body 태그의 Background갯수를 알아낸다.
-        while (true) {
-            npos = strTempHtml.indexOf("<body", npos);
-            if (npos >= 0) {
-                nposStart = strTempHtml.indexOf(" background-image:", npos + 5);
-                if (nposStart >= 0) {
-                	nposStart = strTempHtml.indexOf("url", nposStart);
-                	
-                	if (nposStart != -1) {
-	                	nposStart += 3;
-	                	
-	                	//에디터별로 url 내용이 달라서 url을 찾아내자
-	                	while (!((strTempHtml.charAt(nposStart) >= 0x41 && strTempHtml.charAt(nposStart) <= 0x5A) || (strTempHtml.charAt(nposStart) >= 0x61 && strTempHtml.charAt(nposStart) <= 0x7A))) {
-	                		nposStart += 1;
-	                	}
-	                	
-	                    nposEnd = strTempHtml.indexOf(");", nposStart);
-	                    
-	                    if (nposEnd != -1) {
-		                    while (!((strTempHtml.charAt(nposEnd) >= 0x41 && strTempHtml.charAt(nposEnd) <= 0x5A) || (strTempHtml.charAt(nposEnd) >= 0x61 && strTempHtml.charAt(nposEnd) <= 0x7A))) {
-		                    	nposEnd -= 1;
-		                	}
-		                    		                    
-		                    if ((nposEnd - nposStart) > 0) {
-		                        strImgsrc = strHtml[0].substring(nposStart, nposEnd + 1);
-		                        L_BackImage.add(strImgsrc);
-		                        npos = nposEnd;
-		                    } else {
-		                        npos = npos + 5;
-		                    }
-	                    } else {
-	                    	npos = npos + 5;
-	                    }
-                	} else {
-                		 npos = npos + 5;
-                	}
-                } else {
-                    npos = npos + 5;
-                }
-            } else {
-            	break;
-            }
-        }
+        Document document = Jsoup.parse(htmlBuilder.toString());
 
-        //<table 태그의 Background갯수를 알아낸다.
-        npos = 0;
-        while (true) {
-        	if (strTempHtml.indexOf("background", npos) > 0) {
-        		npos = strTempHtml.indexOf("<table", npos);
-        		if (npos >= 0) {
-        			nposStart = strTempHtml.indexOf(" background-image:", npos + 6);
-        			if (nposStart >= 0) {
-                    	nposStart = strTempHtml.indexOf("url", nposStart);
-                    	
-                    	if (nposStart != -1) {
-	                    	nposStart += 3;
-	                    	
-	                    	//에디터별로 url 내용이 달라서 url을 찾아내자
-	                    	while (!((strTempHtml.charAt(nposStart) >= 0x41 && strTempHtml.charAt(nposStart) <= 0x5A) || (strTempHtml.charAt(nposStart) >= 0x61 && strTempHtml.charAt(nposStart) <= 0x7A))) {
-	                    		nposStart += 1;
-	                    	}
-	                    	
-	                        nposEnd = strTempHtml.indexOf(");", nposStart);
-	                        
-	                        if (nposEnd != -1) {
-		                        while (!((strTempHtml.charAt(nposEnd) >= 0x41 && strTempHtml.charAt(nposEnd) <= 0x5A) || (strTempHtml.charAt(nposEnd) >= 0x61 && strTempHtml.charAt(nposEnd) <= 0x7A))) {
-		                        	nposEnd -= 1;
-		                    	}
-		                        
-		                        if ((nposEnd - nposStart) > 0) {
-		                            strImgsrc = strHtml[0].substring(nposStart, nposEnd + 1);
-		                            L_BackImage.add(strImgsrc);
-		                            npos = nposEnd;
-		        				} else {
-		        					npos = npos + 6;
-		        				}
-	                        } else {
-	                        	npos = npos + 6;
-	                        }
-                    	} else {
-                    		npos = npos + 6;
-                    	}
-        			} else {
-        				npos = npos + 6;
-        			}
-        		} else {
-        			break;
-        		}
-        	} else {
-        		break;
-        	}
-        }
+        List<String> backgroundImgSrcs = new ArrayList<String>();
 
-        //<td 태그의 Background갯수를 알아낸다.
-        npos = 0;
-        while (true) {
-        	if (strTempHtml.indexOf("background", npos) > 0) {
-        		npos = strTempHtml.indexOf("<td", npos);
-        		if (npos >= 0) {
-        			nposStart = strTempHtml.indexOf(" background-image:", npos + 3);
-        			if (nposStart >= 0) {
-                    	nposStart = strTempHtml.indexOf("url", nposStart);
-                    	
-                    	if (nposStart != -1) {
-	                    	nposStart += 3;
-	                    	
-	                    	//에디터별로 url 내용이 달라서 url을 찾아내자
-	                    	while (!((strTempHtml.charAt(nposStart) >= 0x41 && strTempHtml.charAt(nposStart) <= 0x5A) || (strTempHtml.charAt(nposStart) >= 0x61 && strTempHtml.charAt(nposStart) <= 0x7A))) {
-	                    		nposStart += 1;
-	                    	}
-	                    	
-	                        nposEnd = strTempHtml.indexOf(");", nposStart);
-	                        
-	                        if (nposEnd != -1) {
-		                        while (!((strTempHtml.charAt(nposEnd) >= 0x41 && strTempHtml.charAt(nposEnd) <= 0x5A) || (strTempHtml.charAt(nposEnd) >= 0x61 && strTempHtml.charAt(nposEnd) <= 0x7A))) {
-		                        	nposEnd -= 1;
-		                    	}
-		                        
-		                        if ((nposEnd - nposStart) > 0) {
-		                            strImgsrc = strHtml[0].substring(nposStart, nposEnd + 1);
-		                            L_BackImage.add(strImgsrc);
-		                            npos = nposEnd;
-		        				} else {
-		        					npos = npos + 3;
-		        				}
-	                        } else {
-	                        	npos = npos + 3;
-	                        }
-                    	} else {
-                    		npos = npos + 3;
-                    	}
-        			} else {
-        				npos = npos + 3;
-        			}
-        		} else {
-        			break;
-        		}
-        	} else {
-        		break;
-        	}
-        }
+        Elements elements = document.select("body[style*='background-image'], table[style*='background-image'], td[style*='background-image']");
+        if (!elements.isEmpty()) {
+            List<String> finalBackgroundImgSrcs = backgroundImgSrcs;
+            elements.forEach(element -> {
+                String[] firstSplit = element.attr("style").split(":");
+                String[] secondSplit;
+                int tempCount = 0;
 
-        if (L_BackImage.size() > 1) {
-            nImgCount = 0;
-            boolean isSameUrl = false;
-            String strtempResource = "";
-            for (int j = 0; j < L_BackImage.size(); j++) {
-                strtempResource = L_BackImage.get(j);
-                for (int k = 0; k < j; k++) {
-                    if (j != k && L_BackImage.get(k).equals(strtempResource)) {
-                        isSameUrl = true;
-                    }
-                }
+                for (int i = 0; i < firstSplit.length; i++) {
+                    secondSplit = firstSplit[i].split(";");
 
-                if (isSameUrl == false) {
-                    nImgCount++;
-                } else {
-                	isSameUrl = false;
-                }
-            }
-
-            if (nImgCount > 0) {
-                m_BackImageList = new String[nImgCount];
-                strtempResource = "";
-                nImgCount = 0;
-                for (int j = 0; j < L_BackImage.size(); j++) {
-                    strtempResource = L_BackImage.get(j);
-                    for (int k = 0; k < j; k++) {
-                        if (j != k && L_BackImage.get(k).equals(strtempResource)) {
-                            isSameUrl = true;
+                    if (i % 2 != 0) {
+                        if (secondSplit.length == 1) break;
+                        if (secondSplit[1].trim().equalsIgnoreCase("background-image")) {
+                            finalBackgroundImgSrcs.add(firstSplit[i + 1].split(";")[0].trim());
+                            logger.debug(finalBackgroundImgSrcs.get(tempCount));
+                            tempCount++;
+                        }
+                    } else {
+                        if (i + 1 == firstSplit.length) break;
+                        if (firstSplit[i].split(";")[secondSplit.length - 1].trim().equalsIgnoreCase("background-image")) {
+                            finalBackgroundImgSrcs.add(firstSplit[i + 1].split(";")[0].trim());
+                            logger.debug(finalBackgroundImgSrcs.get(tempCount));
+                            tempCount++;
                         }
                     }
-
-                    if (isSameUrl == false) {
-                        m_BackImageList[nImgCount] = strtempResource;
-                        nImgCount++;
-                    } else {
-                    	isSameUrl = false;
-                    }
                 }
-            }
-        
-            /* 2018-08-14 홍승비 - html->mht 변환 시 배경이미지 인코딩(content-type) 수정 */
-            L_BackImage = null;
-            int index = 1;
-            for (String strResource : m_BackImageList) {
-            	String contentType = null;
-    			String extension = null;
-    	        BufferedInputStream bis = null;
-    	        
-    	        File f = new File(commonUtil.detectPathTraversal(realPath + commonUtil.separator + strResource));
-    	        
-    	        try {
-    		        bis = new BufferedInputStream(new FileInputStream(f));
-    		        contentType = URLConnection.guessContentTypeFromStream(bis);
-    	        } catch(Exception e) {
-    	        } finally {
-    	        	if (bis != null) {
-    	        		bis.close();
-    	        	}
-    	        }
-    	        
-    	        if (contentType == null) {
-    	        	contentType = "application/octet-stream";
-    	        	extension = ".gif"; // 기존 확장자가 .gif로 고정되어 있었으므로, 디폴트로 사용함
-    	        } else {
-    	        	contentType = contentType.replace("image", "Image");
-    	        	extension = "." + contentType.split("/")[1];
-    	        }
-    	        
-            	strHtml[0] = strHtml[0].replace(strResource, "file:///C:/BACKGROUNDIMAGE" + index + extension);
-                index++;
-            }
+            });
         }
-        
+
+        backgroundImgSrcs = backgroundImgSrcs.stream().distinct().collect(Collectors.toList());
+
         logger.debug("extractBackgroundSource ended.");
-        
-        return m_BackImageList;
+
+        return backgroundImgSrcs;
     }
-	
+
 	/**
 	 * html -> mht 변환 html 인코딩 실행 Method
 	 */
-	private void doHtmlEncoding(String strHtml, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
-        m_strMHT.append("--" + m_strBoundary + commonUtil.CRLF);
-        m_strMHT.append("Content-Type: Text/HTML" + commonUtil.CRLF);
-        m_strMHT.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
-        m_strMHT.append("Content-Location: file://c:" + commonUtil.separator + "test.htm" + commonUtil.CRLF);
-        m_strMHT.append(commonUtil.CRLF);
-        
-        byte[] arr = strHtml.getBytes("UTF-8");
+	private void doHtmlEncoding(StringBuilder htmlBuilder, StringBuilder mhtBuilder, String m_strBoundary) throws Exception{
+        mhtBuilder.append("--" + m_strBoundary + commonUtil.CRLF);
+        mhtBuilder.append("Content-Type: Text/HTML" + commonUtil.CRLF);
+        mhtBuilder.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
+        mhtBuilder.append("Content-Location: file://c:" + commonUtil.separator + "test.htm" + commonUtil.CRLF);
+        mhtBuilder.append(commonUtil.CRLF);
+
+        byte[] arr = htmlBuilder.toString().getBytes("UTF-8");
         String strMhtBase64 = Base64.getMimeEncoder().encodeToString(arr);
-        
-        m_strMHT.append(strMhtBase64 + commonUtil.CRLF);
-        m_strMHT.append("--" + m_strBoundary);
+
+        mhtBuilder.append(strMhtBase64 + commonUtil.CRLF);
+        mhtBuilder.append("--" + m_strBoundary);
     }
-	
+
 	/**
 	 * html -> mht 변환 이미지인코딩 실행 Method
-	 * @param realPath 
+	 * @param realPath
 	 */
-	private void doImageEncoding(String[] m_ImageList, StringBuilder m_strMHT, String m_strBoundary, String realPath) throws Exception{
-		/* 2018-08-13 홍승비 - html->mht 변환 시 이미지 인코딩(content-type) 수정 */
-		for (int i = 0; i < m_ImageList.length; i++) {
-			String contentType = null;
-			String extension = null;
-	        BufferedInputStream bis = null;
-	        File f = new File(commonUtil.detectPathTraversal(realPath + m_ImageList[i]));
-	        
-	        try {
-		        bis = new BufferedInputStream(new FileInputStream(f));
-		        contentType = URLConnection.guessContentTypeFromStream(bis);
-	        } catch(Exception e) {
-	        } finally {
-	        	if (bis != null) {
-	        		bis.close();
-	        	}
-	        }
-	        
-	        if (contentType == null) {
-	        	contentType = "application/octet-stream";
-	        	extension = ".gif"; // 기존 확장자가 .gif로 고정되어 있었으므로, 디폴트로 사용함
-	        } else {
-	        	contentType = contentType.replace("image", "Image");
-	        	extension = "." + contentType.split("/")[1];
-	        }
-	        
-            m_strMHT.append(commonUtil.CRLF + "Content-Type: " + contentType + commonUtil.CRLF);
-            m_strMHT.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
-            m_strMHT.append("Content-Location: file:///C:/IMAGE" + (i + 1) + extension + commonUtil.CRLF);
-            m_strMHT.append(commonUtil.CRLF);
-            //이미지 본문 영역
+	private StringBuilder doImageEncoding(List<String> imgSrcs, StringBuilder htmlBuilder, StringBuilder imagesBuilder, String m_strBoundary, String realPath) throws Exception {
+	    logger.debug("doImageEncoding started.");
 
-            String strTemp = m_ImageList[i].substring(0, 5);
+	    String tempHtml = htmlBuilder.toString();
+
+        for(String imgSrc : imgSrcs) {
+            String contentType = "application/octet-stream";
+            String extension = ".gif"; //기존확장자가.gif로고정되어있었으므로,디폴트로사용함
+
+            try {
+                contentType = URLConnection.guessContentTypeFromStream(Files.newInputStream(Paths.get(realPath + imgSrc)));
+            } catch (IOException e) {
+                //url 일 시 realPath + path 로 exception 발생 -> 위의 default값 사용하므로 따로 exception 처리 하지 않음.
+            }
+
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            } else {
+                contentType = contentType.replace("image", "Image");
+                extension = "." + contentType.split("/")[1];
+            }
+
+            logger.debug("imgSrc = " + imgSrc);
+            tempHtml = Pattern.compile(imgSrc).matcher(tempHtml).replaceAll("file:///C:/IMAGE" + (imgSrcs.indexOf(imgSrc) + 1) + extension);
+
+            imagesBuilder.append(commonUtil.CRLF + "Content-Type: " + contentType + commonUtil.CRLF);
+            imagesBuilder.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
+            imagesBuilder.append("Content-Location: file:///C:/IMAGE" + (imgSrcs.indexOf(imgSrc) + 1) + extension + commonUtil.CRLF);
+            imagesBuilder.append(commonUtil.CRLF);
+
             ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
             InputStream in = null;
 
-            if (strTemp.startsWith("http")) {
-            	if (strTemp.equals("https")) {
+            logger.debug("index = " + imgSrcs.indexOf(imgSrc));
+
+            if (imgSrc.startsWith("http")) {
+                if (imgSrc.equals("https")) {
                     // Create a trust manager that does not validate certificate chains
-                    TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
-                            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                                return null;
-                            }
-                            
-                            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                            }
-                            
-                            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                            }
+                    TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return null;
                         }
+
+                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                        }
+
+                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                        }
+                    }
                     };
-             
+
                     // Install the all-trusting trust manager
-                    SSLContext sc = SSLContext.getInstance("SSL");
-                    sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                    SSLContext sc = null;
+                    try {
+                        sc = SSLContext.getInstance("SSL");
+                        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-             
+
                     // Create all-trusting host name verifier
                     HostnameVerifier allHostsValid = new HostnameVerifier() {
-                        public boolean verify(String hostname, SSLSession session) {
+                        public boolean verify(String hostname, SSLSession session7) {
                             return true;
                         }
                     };
-             
+
                     // Install the all-trusting host verifier
-                    HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);            		
-            	}
-            	
-            	URL url = new URL(m_ImageList[i]);
-            	in = url.openStream();
-                int len = 0;
-                byte[] buf = new byte[1024];
-                
-                while ((len = in.read(buf)) != -1) {
-                	byteOutStream.write(buf, 0, len);
+                    HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+                }
+
+                try {
+                    URL url = new URL(imgSrc);
+                    in = url.openStream();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else {
-            	try {
-            		File file = new File(commonUtil.detectPathTraversal(realPath + m_ImageList[i]));
-            		in = new FileInputStream(file);
-				} catch (Exception e) {
-					try {
-						logger.debug("not found image(" + m_ImageList[i] + ") :::" + e.getMessage());
-						File file = new File(commonUtil.detectPathTraversal(m_ImageList[i]));
-						in = new FileInputStream(file);
-						// 이미지 못찾을떄 사진없음 이미지 보여주기
-					} catch (FileNotFoundException e2) {
-						logger.debug("change default image" + e2.getMessage());
-						
-						in = new FileInputStream(commonUtil.detectPathTraversal(realPath + "/images/default_pic.jpg"));
-					}
-				}
-                int len = 0;
-                byte[] buf = new byte[1024];
-                
-                while ((len = in.read(buf)) != -1) {
-                	byteOutStream.write(buf, 0, len);
+                try {
+                    in = new FileInputStream(realPath + imgSrc);
+                    logger.debug(realPath + imgSrc + " is exist.");
+                } catch (Exception e) {
+                    try {
+                        in = new FileInputStream(imgSrc);
+                        logger.debug(realPath + imgSrc + " is not exist. ::: " + e.getMessage());
+                        logger.debug(imgSrc + " is exist.");
+                    } catch (Exception e2) {
+                        try {
+                            in = new FileInputStream(realPath + "/images/default_pic.jpg");
+                            logger.debug(imgSrc + " is not exist. ::: " + e2.getMessage());
+                            logger.debug("change default image.");
+                        } catch (Exception e3) {
+                            logger.debug("path = " + realPath + "/images/default_pic.jpg");
+                            logger.debug(e3.getMessage());
+                        }
+                    }
                 }
-//                if (m_ImageList[i].length() > 1) {
-//                	if (m_ImageList[i].indexOf("files" + commonUtil.separator + "upload_approvalG") == -1) {
-//                		try {
-//                			deleteFile(realPath + m_ImageList[i].replace("&amp;", "&"));
-//                		} catch (Exception e) {
-//                			deleteFile(m_ImageList[i].replace("&amp;", "&"));
-//                		}
-//                	}
-//                }
             }
-            
-            
-            byte[] imageByte = byteOutStream.toByteArray();
-            String strImageData = new String(Base64.getMimeEncoder().encodeToString(imageByte));
-            
-            in.close();
-            byteOutStream.close();
-            
-            m_strMHT.append(strImageData + commonUtil.CRLF);
-            m_strMHT.append("--" + m_strBoundary);
-            
+
+            int len = 0;
+            byte[] buf = new byte[1024];
+
+            try {
+                while ((len = in.read(buf)) != -1) {
+                    byteOutStream.write(buf, 0, len);
+                }
+
+                byte[] imageByte = byteOutStream.toByteArray();
+                String strImageData = new String(Base64.getMimeEncoder().encodeToString(imageByte));
+
+                byteOutStream.close();
+
+                imagesBuilder.append(strImageData + commonUtil.CRLF);
+                imagesBuilder.append("--" + m_strBoundary);
+            } catch (Exception e) {
+                logger.debug(e.getMessage());
+            }
         }
+
+        htmlBuilder = new StringBuilder(tempHtml);
+
+        logger.debug("doImageEncoding ended.");
+
+        return htmlBuilder;
     }
-	
+
 	/**
 	 * html -> mht 변환 배경화면인코딩 실행 Method
 	 */
-	private void doBackgrondEncding(String[] m_ImageList, String[] m_BackImageList, StringBuilder m_strMHT, String m_strBoundary, String realPath) throws Exception{
-		/* 2018-08-13 홍승비 - html->mht 변환 시 배경이미지 인코딩(content-type) 수정 */
-		for (int i = 0; i < m_BackImageList.length; i++) {
-			String contentType = null;
-			String extension = null;
-	        BufferedInputStream bis = null;
-	        File f = new File(commonUtil.detectPathTraversal(realPath + commonUtil.separator + m_BackImageList[i]));
-	        
-	        try {
-		        bis = new BufferedInputStream(new FileInputStream(f));
-		        contentType = URLConnection.guessContentTypeFromStream(bis);
-	        } catch(Exception e) {
-	        } finally {
-	        	if (bis != null) {
-	        		bis.close();
-	        	}
-	        }
-	        
-	        if (contentType == null) {
-	        	contentType = "application/octet-stream";
-	        	extension = ".gif"; // 기존 확장자가 .gif로 고정되어 있었으므로, 디폴트로 사용함
-	        } else {
-	        	contentType = contentType.replace("image", "Image");
-	        	extension = "." + contentType.split("/")[1];
-	        }
-	        
-            m_strMHT.append(commonUtil.CRLF + "Content-Type: " + contentType + commonUtil.CRLF);
-            m_strMHT.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
-            m_strMHT.append("Content-Location: file:///C:/BACKGROUNDIMAGE" + (i + 1) + extension + commonUtil.CRLF);
-            m_strMHT.append(commonUtil.CRLF);
-            //이미지 본문 영역
-            
+	private StringBuilder doBackgrondEncding(List<String> backgroundImgSrcs, StringBuilder htmlBuilder, StringBuilder backgroundImagesBuilder, String m_strBoundary, String realPath) throws Exception{
+        logger.debug("doBackgrondEncding started.");
+
+        String tempHtml = htmlBuilder.toString();
+
+        for(String backgroundImgSrc : backgroundImgSrcs) {
+            String contentType = "application/octet-stream";
+            String extension = ".gif"; //기존확장자가.gif로고정되어있었으므로,디폴트로사용함
+
+            try {
+                contentType = URLConnection.guessContentTypeFromStream(Files.newInputStream(Paths.get(realPath, backgroundImgSrc)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            } else {
+                contentType = contentType.replace("image", "Image");
+                extension = "." + contentType.split("/")[1];
+            }
+
+            backgroundImagesBuilder.append(commonUtil.CRLF + "Content-Type: " + contentType + commonUtil.CRLF);
+            backgroundImagesBuilder.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
+            backgroundImagesBuilder.append("Content-Location: file:///C:/BACKGROUNDIMAGE" + (backgroundImgSrcs.indexOf(backgroundImgSrc) + 1) + extension + commonUtil.CRLF);
+            backgroundImagesBuilder.append(commonUtil.CRLF);
+
             ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
             InputStream in = null;
-            String strTemp = m_BackImageList[i].substring(0, 4);
-            
-            if (strTemp.equals("http")) {
-            	m_BackImageList[i] = m_BackImageList[i].substring(m_BackImageList[i].indexOf("/fileroot/"));
-            	
-            	File file = new File(commonUtil.detectPathTraversal(realPath + m_BackImageList[i]));
-            	in = new FileInputStream(file);
-            	int len = 0;
-            	byte[] buf = new byte[1024];
-            	
-            	while ((len = in.read(buf)) != -1) {
-            		byteOutStream.write(buf, 0, len);
-            	}
-            	
-            	//URL 안쓰지만 훗날 쓰일지도 몰라서
-//            	URL url = new URL(m_BackImageList[i]);
-//            	in = url.openStream();
-//                int len = 0;
-//                byte[] buf = new byte[1024];
-//                
-//                while ((len = in.read(buf)) != -1) {
-//                	byteOutStream.write(buf, 0, len);
-//                }
-            	
+
+            logger.debug("index = " + backgroundImgSrcs.indexOf(backgroundImgSrc));
+
+            if (backgroundImgSrc.startsWith("http")) {
+                if (backgroundImgSrc.equals("https")) {
+                    // Create a trust manager that does not validate certificate chains
+                    TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
+
+                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                        }
+
+                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                        }
+                    }
+                    };
+
+                    // Install the all-trusting trust manager
+                    SSLContext sc = null;
+                    try {
+                        sc = SSLContext.getInstance("SSL");
+                        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+                    // Create all-trusting host name verifier
+                    HostnameVerifier allHostsValid = new HostnameVerifier() {
+                        public boolean verify(String hostname, SSLSession session7) {
+                            return true;
+                        }
+                    };
+
+                    // Install the all-trusting host verifier
+                    HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+                }
+
+                try {
+                    URL url = new URL(backgroundImgSrc);
+                    in = url.openStream();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
-            	realPath = realPath + commonUtil.separator;
-            	
-            	File file = new File(commonUtil.detectPathTraversal(realPath + m_BackImageList[i]));
-            	in = new FileInputStream(file);
-                int len = 0;
-                byte[] buf = new byte[1024];
-                
-                while ((len = in.read(buf)) != -1) {
-                	byteOutStream.write(buf, 0, len);
+                try {
+                    in = new FileInputStream(realPath + backgroundImgSrc);
+                    logger.debug(realPath + backgroundImgSrc + " is exist.");
+                } catch (Exception e) {
+                    try {
+                        in = new FileInputStream(backgroundImgSrc);
+                        logger.debug(realPath + backgroundImgSrc + " is not exist. ::: " + e.getMessage());
+                        logger.debug(backgroundImgSrc + " is exist.");
+                    } catch (Exception e2) {
+                        try {
+                            in = new FileInputStream(realPath + "/images/default_pic.jpg");
+                            logger.debug(backgroundImgSrc + " is not exist. ::: " + e2.getMessage());
+                            logger.debug("change default image.");
+                        } catch (Exception e3) {
+                            logger.debug("path = " + realPath + "/images/default_pic.jpg");
+                            logger.debug(e3.getMessage());
+                        }
+                    }
                 }
             }
-            
-            byte[] imageByte = byteOutStream.toByteArray();
-            String strImageData = Base64.getMimeEncoder().encodeToString(imageByte);
-            
-            in.close();
-            byteOutStream.close();
-            
-            m_strMHT.append(strImageData + commonUtil.CRLF);
-            m_strMHT.append("--" + m_strBoundary);
+
+            int len = 0;
+            byte[] buf = new byte[1024];
+
+            try {
+                while ((len = in.read(buf)) != -1) {
+                    byteOutStream.write(buf, 0, len);
+                }
+
+                byte[] imageByte = byteOutStream.toByteArray();
+                String strImageData = new String(Base64.getMimeEncoder().encodeToString(imageByte));
+
+                byteOutStream.close();
+
+                backgroundImagesBuilder.append(strImageData + commonUtil.CRLF);
+                backgroundImagesBuilder.append("--" + m_strBoundary);
+            } catch (Exception e) {
+                logger.debug(e.getMessage());
+            }
         }
+
+        htmlBuilder = new StringBuilder(tempHtml);
+
+        logger.debug("doBackgrondEncding ended.");
+
+        return htmlBuilder;
     }
-	
+
 	/**
 	 * html -> mht 변환 표출 Method
 	 */
@@ -930,14 +673,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         String filePath = "";
         String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", tenantID) + commonUtil.separator;
         String domain = request.getServerName() +":" +request.getServerPort();
-        
+
         filePath = realPath + uploadModule;
-        File file = new File(commonUtil.detectPathTraversal(filePath));
-        
+        File file = new File(filePath);
+
         if (!file.exists()) {
         	file.mkdir();
         }
-        
+
         String url = "";
         if (type.equals("HTMLPORTLET") || type.equals("BOARDCONTENT") || type.equals("BOARDCONTENTTEMP") || type.equals("BOARDFORM") || type.equals("COMMUNITYCONTENT") || type.equals("")) {
         	url = request.getParameter("href");
@@ -948,28 +691,28 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         } else if (type.equals("TASKCONTENT") || type.equals("TASKCONTENT2")) {
         	url = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + itemID;
         }
-        
+
         String m_strMHT = "";
-        
+
         try {
     		m_strMHT = loadMHTFile(realPath + url);
 		} catch (Exception e) {
 			m_strMHT= "";
 		}
-        
+
         String strHTML = startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain, scheme);
-        
+
         if (strHTML.trim().length() > 0) {
         	return strHTML;
         } else {
         	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type></HEAD><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
         }
 	}
-	
+
 	/**
 	 * html -> mht 변환 실행 표출 Method
-	 * @param domain 
-	 * @param scheme 
+	 * @param domain
+	 * @param scheme
 	 */
 	@Override
 	public String startMHT2HTML(String m_strLPath, String m_strMHT, String m_strSPath, String realPath, Locale locale, String domain, String scheme) throws Exception{
@@ -984,7 +727,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		strBoundary = getBoundaryText(m_strMHT);
 		logger.debug("strBoundary="+strBoundary);
-		
+
 		if (m_strMHT != null && !m_strMHT.equals("")) {
 			if (strBoundary.equals("error")) {
 				return egovMessageSource.getMessage("main.t0600", locale);
@@ -1002,7 +745,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 					String[] strMimeChunk = m_Mimechunk[i].split(commonUtil.CRLF + commonUtil.CRLF);
 					String[] strMime_info_p = strMimeChunk[0].trim().split(commonUtil.CRLF);
 					String[] strMime_info_tupe = strMime_info_p[0].split(": ");
-					
+
 					if (strMime_info_tupe[0].equals("Content-Type")) {
 						if (strMime_info_tupe[1].equals("Text/HTML")) {
 							m_strHTML = doMHTDecoding(strMimeChunk[1].trim(), m_strHTML, isUTF8);
@@ -1010,7 +753,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 						/* 2018-08-14 홍승비 - mht->html 변환 시 이미지 디코딩(content-type) 수정 */
 						else if (strMime_info_tupe[1].contains("Image/") || strMime_info_tupe[1].contains("application/octet-stream")) {
 							String[] strMime_info_location = strMime_info_p[2].split(": ");
-							
+
 							if (strMime_info_location[0].equals("Content-Location")) {
 								m_ListImageLocation.add(strMime_info_location[1]);
 								extension = "." + strMime_info_location[1].split("\\.")[1];
@@ -1019,7 +762,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 						}
 					}
 				}
-				
+
 				if (m_ListImageLocation.size() == m_ListImageLocalLocation.size()) {
 					for (int i = 0; i < m_ListImageLocation.size(); i++) {
 						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i).replace(realPath, ""));
@@ -1027,7 +770,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				} else {
 					return egovMessageSource.getMessage("main.t0601", locale);
 				}
-				
+
 //				배경이미지 url의 표현방법 수정//태그프리,CK는 정상으로 들어옴
 				if(m_strHTML.contains("///fileroot")){//NAMO//2018.04.05 재수정
 					m_strHTML = m_strHTML.replace("///fileroot", "/fileroot");
@@ -1042,17 +785,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				return m_strHTML;
 			}
 		} else {
-			
+
 			return egovMessageSource.getMessage("main.t0602", locale);
 		}
 	}
-		
+
 	/**
 	 * html -> mht 변환 이미지디코딩 표출 Method
 	 */
 	private String doImageDecoding(String strImageMht, String m_strSPath, String m_strLPath, String extension) throws Exception{
 		byte[] imageBytes = Base64.getMimeDecoder().decode(strImageMht);
-		
+
 		/* 2018-08-16 홍승비 - mht파일 내의 이미지 이름을 .tmp -> 원래 확장자로 변경 */
 		String strImageName = UUID.randomUUID() + extension;
         String SfilePath = m_strSPath + strImageName;
@@ -1062,7 +805,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         if (!file.exists()) {
         	file.mkdir();
         }
-        
+
         OutputStream bos = null;
         try {
         	bos = new FileOutputStream(new File(commonUtil.detectPathTraversal(LfilePath)));
@@ -1078,7 +821,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				}
 			}
 		}
-        
+
 		return SfilePath;
 	}
 
@@ -1087,7 +830,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 */
 	private String doMHTDecoding(String strMht, String m_strHTML, boolean isUTF8) {
 		byte[] arr = Base64.getMimeDecoder().decode(strMht);
-		
+
 		try {
 			//m_strHTML = new String(arr, "utf-8");
 			if(isUTF8)
@@ -1097,7 +840,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
+
 		return m_strHTML;
 	}
 
@@ -1107,7 +850,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	private String getBoundaryText(String m_strMHT) {
 		String strTemp = m_strMHT;
         int nPos = strTemp.indexOf("boundary=");
-        
+
         if (nPos > 0) {
             int nEndPos = strTemp.indexOf("\"", nPos + 10);
             return "--" + strTemp.substring(nPos + 10, nEndPos);
@@ -1122,8 +865,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public String loadMHTFile(String strMHTpath) throws Exception{
 		String strMhtData = "";
-		BufferedReader br = new BufferedReader(new FileReader(commonUtil.detectPathTraversal(strMHTpath.trim())));
-	    try {
+		byte[] fileBytes = Files.readAllBytes(Paths.get(commonUtil.detectPathTraversal(strMHTpath.trim())));
+
+		// klib 복호화
+		if (strMHTpath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+			fileBytes = klibUtil.decrypt(fileBytes);
+		}
+
+	    try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(fileBytes)))) {
 	        StringBuilder sb = new StringBuilder();
 	        String line = br.readLine();
 
@@ -1133,13 +882,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	            line = br.readLine();
 	        }
 	        strMhtData = sb.toString();
-	    } finally {
-	        br.close();
 	    }
-	    
+
         return strMhtData.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
     }
-	
+
 	@Override
 	public String selectUserGetLang(String userID, int tenantID) throws Exception {
 		return ezCommonDAO.selectUserGetLang(userID, tenantID);
@@ -1149,27 +896,27 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public String selectUserGetTimeZone(String userID, int tenantID) throws Exception {
 		return ezCommonDAO.selectUserGetTimeZone(userID, tenantID);
 	}
-		
+
     private String getTenantConfigForLocal(String property, int tenantID) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("property", property.toUpperCase());
         map.put("tenantID", tenantID);
-        
+
         String propertyValue = ezCommonDAO.getTenantConfig(map);
-		
+
 		logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID);
 		logger.debug("PROPERTY VALUE : " + propertyValue);
-        
+
         if (propertyValue == null) {
             propertyValue = "";
         }
-        
+
         return propertyValue;
     }
-	
+
 	@Override
 	public String getTenantConfig(String property, int tenantID) throws Exception {
-		return getTenantConfigForLocal(property, tenantID);	    
+		return getTenantConfigForLocal(property, tenantID);
 	}
 
 	@Override
@@ -1179,19 +926,19 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		Map<String, Object> map = ezCommonDAO.getTenantConfigs(tenantID);
 
 		logger.debug("getTenantConfigs ended");
-		
+
 		return map;
 	}
 
 	@Override
 	public void insertTblUserLocalInfo(String userID, String timeZone, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("v_TENANT_ID", tenantID);
 		map.put("userID", userID);
 		map.put("timeZone", timeZone);
 		map.put("lang", lang);
-		
+
 		ezCommonDAO.insertTblUserLocalInfo(map);
 	}
 
@@ -1200,33 +947,33 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 */
 	public String saveUserLocalInfo (String pUserID, LoginVO userInfo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("v_TENANT_ID", userInfo.getTenantId());
 		map.put("userID", pUserID);
-		
+
 		ezCommonDAO.deleteUserLocalInfo(map);
-	
+
 		Map<String, Object> map1 = new HashMap<String, Object>();
-		
+
 		logger.debug("pUserID="+pUserID);
 		logger.debug("timeZone="+userInfo.getOffset());
 		logger.debug("lang="+userInfo.getLang());
-		
+
 		map1.put("v_TENANT_ID", userInfo.getTenantId());
 		map1.put("userID", pUserID);
 		map1.put("timeZone", userInfo.getOffset());
 		map1.put("lang", userInfo.getLang());
-		
+
 		ezCommonDAO.insertTblUserLocalInfo(map1);
-		
+
 		return "OK";
 	}
-	
+
 	@Override
 	public List<TenantVO> getTenantList() throws Exception {
         return ezCommonDAO.getTenantList();
 	}
-	
+
 	@Override
 	public List<TenantServerNameVO> getTenantServerNameList() throws Exception {
         return ezCommonDAO.getTenantServerNameList();
@@ -1236,7 +983,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public int getTenantIdByDomainName(String domainName) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("DOMAIN_NAME", domainName);
-		
+
 		return ezCommonDAO.getTenantIdByDomainName(map);
 	}
 
@@ -1246,13 +993,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("tenant_id", tenantID);
 		map.put("user_id", userID);
 		map.put("property_name", propertyName);
-		
+
 		String propertyValue = ezCommonDAO.getUserConfigInfo(map);
-        
+
         if (propertyValue == null) {
             propertyValue = "";
         }
-        
+
         return propertyValue;
 
 	}
@@ -1264,7 +1011,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("user_id", userID);
 		map.put("property_name", propertyName);
 		map.put("property_value", propertyValue);
-		
+
 		return ezCommonDAO.updateUserConfigInfo(map);
 	}
 
@@ -1275,15 +1022,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("user_id", userID);
 		map.put("property_name", propertyName);
 		map.put("property_value", propertyValue);
-		
+
 		ezCommonDAO.insertUserConfigInfo(map);
 	}
-	
+
 	@Override
 	public void createTblCompanyConfig() throws Exception {
 		ezCommonDAO.createTblCompanyConfig();
 	}
-	
+
 	@Override
 	public void createReformFlagColumn() throws Exception {
 		ezCommonDAO.createReformFlagColumn();
@@ -1295,71 +1042,71 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         map.put("property", property.toUpperCase());
         map.put("companyID", companyID);
         map.put("tenantID", tenantID);
-        
+
         String propertyValue = ezCommonDAO.getCompanyConfig(map);
-		
+
 		logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID + "||" + "COMPANYID : " + companyID);
 		logger.debug("PROPERTY VALUE : " + propertyValue);
-        
+
         if (propertyValue == null) {
             propertyValue = "";
         }
-        
+
         return propertyValue;
     }
-	
+
 	@Override
 	public void insertCompanyConfig(int tenantId, String companyId, String propertyName, String propertyValue) throws Exception {
 		logger.debug("insertCompanyConfig started");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("tenantID", tenantId);
 		map.put("companyID", companyId);
 		map.put("propertyName", propertyName);
 		map.put("propertyValue", propertyValue);
-		
+
 		logger.debug("PROPERTY NAME : " + propertyName + "||" + "TENANTID : " + tenantId + "||" + "COMPANYID : " + companyId);
 		logger.debug("PROPERTY VALUE : " + propertyValue);
-		
+
 		ezCommonDAO.insertCompanyConfig(map);
-		
+
 		logger.debug("insertCompanyConfig ended");
 	}
-	
+
 	@Override
 	public void updateCompanyConfig(int tenantId, String companyId, String propertyName, String propertyValue) throws Exception {
 		logger.debug("updateCompanyConfig started");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("tenantID", tenantId);
 		map.put("companyID", companyId);
 		map.put("propertyName", propertyName);
 		map.put("propertyValue", propertyValue);
-		
+
 		logger.debug("PROPERTY NAME : " + propertyName + "||" + "TENANTID : " + tenantId + "||" + "COMPANYID : " + companyId);
 		logger.debug("PROPERTY VALUE : " + propertyValue);
-		
+
 		ezCommonDAO.updateCompanyConfig(map);
-		
+
 		logger.debug("updateCompanyConfig ended");
 	}
-	
+
 	@Override
 	public void deleteCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception {
 		logger.debug("deleteCompanyConfig started");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("tenantID", tenantId);
 		map.put("companyID", companyId);
 		map.put("propertyName", propertyName);
-		
+
 		logger.debug("PROPERTY NAME : " + propertyName + "||" + "TENANTID : " + tenantId + "||" + "COMPANYID : " + companyId);
-		
+
 		ezCommonDAO.deleteCompanyConfig(map);
-		
+
 		logger.debug("deleteCompanyConfig ended");
 	}
 	
@@ -1433,22 +1180,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addMailToJMochaDistribution() throws Exception {
 		ezCommonDAO.addMailToJMochaDistribution();
 	}
-	
+
 	@Override
 	public void addAddJobMasterOrderBy() throws Exception {
 		ezCommonDAO.addAddJobMasterOrderBy();
 	}
-	
+
 	@Override
 	public void createTblIPAccessID() throws Exception {
 		ezCommonDAO.createTblIPAccessID();
 	}
-	
+
 	@Override
 	public void createTblIPAccessIP() throws Exception {
 		ezCommonDAO.createTblIPAccessIP();
 	}
-	
+
 	@Override
 	public void createJMochaDistributionSub() throws Exception {
 		ezCommonDAO.createJMochaDistributionSub();
@@ -1458,12 +1205,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addUserMasterManualFlag() throws Exception {
 		ezCommonDAO.addUserMasterManualFlag();
 	}
-	
+
 	@Override
 	public void addDeptMasterManualFlag() throws Exception {
 		ezCommonDAO.addDeptMasterManualFlag();
 	}
-	
+
 	@Override
 	public void addAddJobMasterManualFlag() throws Exception {
 		ezCommonDAO.addAddJobMasterManualFlag();
@@ -1473,11 +1220,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createJMochaMailSignatureTemplate() throws Exception {
 		ezCommonDAO.createJmochaMailSignatureTemplate();
 	}
-	
+
 	public void createJobMasterTable() throws Exception {
 		ezCommonDAO.createJobMasterTable();
 	}
-	
+
 	@Override
 	public String getUseSession(Map<String, Object> map) {
 		return ezCommonDAO.getUseSession(map);
@@ -1495,9 +1242,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void createWebfolderToken() throws Exception {
 		ezCommonDAO.createWebfolderToken();
-		
+
 	}
-	
+
 	@Override
 	public void addUserMasterPasswordUpdateDT() throws Exception {
 		ezCommonDAO.addUserMasterPasswordUpdateDT();
@@ -1562,15 +1309,34 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	@Override
 	public void addTblPortalThemeUserIsDefault() throws Exception {
-		ezCommonDAO.addTblPortalThemeUserIsDefault();
+        ezCommonDAO.addTblPortalThemeUserIsDefault();
+    }
+
+	@Override
+	public void createJmochaMailCopyright() throws Exception {
+		ezCommonDAO.createJmochaMailCopyright();
+	}
+
+	@Override
+	public void createJamesMailDeletedId() throws Exception {
+		ezCommonDAO.createJamesMailDeletedId();
 	}
 	
 	@Override
 	public void updateListOptionData() throws Exception {
 		ezCommonDAO.updateListOptionData();
 	}
+
+	@Override
+	public void createBoardLike() throws Exception{
+		ezCommonDAO.createBoardLike();
+	}
 	
 	@Override
+	public void addBoardLikeFlag() throws Exception{
+		ezCommonDAO.addBoardLikeFlag();
+	}
+	
 	public void addMsgInMailSearch() throws Exception {
 		ezCommonDAO.addMsgInMailSearch();
 	}
@@ -1594,12 +1360,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addMemoExtensionColumns() throws Exception {
 		ezCommonDAO.addMemoExtensionColumns();
 	}
+	
+	@Override
+	public void addSurveyAlamColums() throws Exception {
+		ezCommonDAO.addSurveyAlamColums();
+	}
 
 	@Override
 	public void addFormVersion() throws Exception {
 		ezCommonDAO.addFormVersion();
 	}
-	
+
 	@Override
 	public void addAddJobMasterProxy() throws Exception {
 		ezCommonDAO.addAddJobMasterProxy();
@@ -1615,23 +1386,414 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void createResourcePortlet() throws Exception {
+		ezCommonDAO.createTblResourcePortlet();
+	}
+	
+	@Override
 	public void addThemeContentLang() throws Exception {
 		ezCommonDAO.addThemeContent2();
 		ezCommonDAO.addThemeContent3();
 	}
 
 	@Override
+	public void createThemeAndPortletAuth() throws Exception {
+		ezCommonDAO.createTblThemeAuth();
+		ezCommonDAO.createTblPortletAuth();
+	}
+
+	@Override
+	public void addMenuAndPortletCode() throws Exception {
+		ezCommonDAO.addMenuCode();
+		ezCommonDAO.addPortletCode();
+	}
+	
+	@Override
 	public List<CountryVO> getCountryInfo(Map<String, Object> map) throws Exception {
 		return ezCommonDAO.getCountryInfo(map);
 	}
 	
 	@Override
+	public void insertSurveyTenantConfig() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useSurvey");
+		map.put("propertyValue", "YES");
+		map.put("description", "YES: 사용 NO: 사용안함 (default: YES)");
+		map.put("configName", "전자설문 리뉴얼 모듈 사용여부");
+		map.put("configType", "기타모듈");
+		map.put("regdate", "2019-06-25 00:00:00");
+
+		ezCommonDAO.insertSurveyTenantConfig(map);
+	}
+
+	@Override
+	public void insertPortletInfo() throws Exception {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		int[] portletIds = {51, 70, 73};
+		
+		Map<String, Object> rsMap = new HashMap<String, Object>();
+		rsMap.put("portletId", portletIds[0]);
+		rsMap.put("menuId", 6);
+		rsMap.put("portletUrl", "/ezNewPortal/resourcePortlet.do");
+		rsMap.put("portletType", "G");
+		rsMap.put("defaultOrder", 21);
+		rsMap.put("portletUsed", 1);
+		rsMap.put("portletOrder", 21);
+		rsMap.put("boardId", null);
+		ezCommonDAO.insertPortletInfo(rsMap);
+		
+		Map<String, Object> wfMap = new HashMap<String, Object>();
+		wfMap.put("portletId", portletIds[1]);
+		wfMap.put("menuId", 10);
+		wfMap.put("portletUrl", "/ezNewPortal/webFolderPortlet.do");
+		wfMap.put("portletType", "G");
+		wfMap.put("defaultOrder", 22);
+		wfMap.put("portletUsed", 1);
+		wfMap.put("portletOrder", 22);
+		wfMap.put("boardId", null);
+		ezCommonDAO.insertPortletInfo(wfMap);
+		
+		String surveyMenuId = checkSurveyMenu();
+		int surveyMenu = 0;
+		boolean isSurveyMenuNew = false;
+		
+		if (surveyMenuId == null) {
+			logger.debug("surveyMenu doesn't exist. add survey menu data...");
+			insertSurveyMenu();
+			surveyMenu = Integer.parseInt(checkSurveyMenu());
+			isSurveyMenuNew = true;
+		} else {
+			surveyMenu = Integer.parseInt(surveyMenuId);
+		}
+		
+		Map<String, Object> svMap = new HashMap<String, Object>();
+		svMap.put("portletId", portletIds[2]);
+		svMap.put("menuId", surveyMenu);
+		svMap.put("portletUrl", "/ezNewPortal/surveyPortlet.do");
+		svMap.put("portletType", "G");
+		svMap.put("defaultOrder", 20);
+		svMap.put("portletUsed", 1);
+		svMap.put("portletOrder", 20);
+		svMap.put("boardId", null);
+		ezCommonDAO.insertPortletInfo(svMap);
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				rsMap.put("companyId", company.getCompanyId());
+				rsMap.put("tenantId", company.getTenantId());
+				ezCommonDAO.insertRsPortletInfo(rsMap); // 자원관리 포틀릿 유무 확인 후 insert
+				
+				wfMap.put("companyId", company.getCompanyId());
+				wfMap.put("tenantId", company.getTenantId());
+				ezCommonDAO.insertWfPortletInfo(wfMap); // 웹폴더 포틀릿 유무 확인 후 insert
+				
+				svMap.put("companyId", company.getCompanyId());
+				svMap.put("tenantId", company.getTenantId());
+				
+				if (isSurveyMenuNew) {
+					ezCommonDAO.insertSurveyMenuInfo(svMap);
+				}
+				
+				ezCommonDAO.insertSvPortletInfo(svMap); // 전자설문 포틀릿 유무 확인 후 insert
+				
+			}
+		}
+	}
+
+	private void insertSurveyMenu() {
+		logger.debug("insertSurveyMenu started");
+		ezCommonDAO.insertSurveyMenu();
+		logger.debug("insertSurveyMenu ended");
+	}
+
+	private String checkSurveyMenu() {
+		logger.debug("checkSurveyMenu started");
+		String surveyMenuId = ezCommonDAO.checkSurveyMenu();
+		logger.debug("[surveyMenuId]" + surveyMenuId);
+		return surveyMenuId;
+	}
+
 	public void createAccessCountry() throws Exception {
 		ezCommonDAO.createTblAccessCountry();
 	}
-
+	
 	@Override
 	public void addSnMenuAuth() throws Exception {
 		ezCommonDAO.addSnMenuAuth();
 	}
+	
+	@Override
+	public void addBoardManageTypeColumn() throws Exception {
+		ezCommonDAO.addBoardManageTypeColumn();
+	}
+
+	@Override
+	public void createPersonalPopupUser() throws Exception {
+		ezCommonDAO.createPersonalPopupUser();
+	}
+
+	@Override
+	public boolean getPermissionGroupAccessYN(String groupId, String companyId, int tenantId, String userId,
+			String deptId, boolean applySubDeptYN) throws Exception {
+		logger.debug("getPermissionGroupAccessYN started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("deptId", deptId);
+		map.put("applySubDeptYN", applySubDeptYN);
+		
+		boolean accessYN = ezCommonDAO.getPermissionGroupAccessYN(map);
+		
+		logger.debug("getPermissionGroupAccessYN ended.");
+		return accessYN;
+	}
+
+	@Override
+	public void addSurveyMailSentFlagColumn() throws Exception {
+		ezCommonDAO.addSurveyMailSentFlagColumn();
+	}
+	
+	@Override
+	public List<LoginVO> getPermissionGroupMembers(String groupId, String companyId, int tenantId, boolean applySubDeptYN) throws Exception {
+		logger.debug("getPermissionGroupMembers started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("applySubDeptYN", applySubDeptYN);
+		
+		logger.debug("getPermissionGroupMembers ended.");
+		return ezCommonDAO.getPermissionGroupMembers(map);
+	}
+
+	@Override
+	public void addSnThemeAndPortletAuth() throws Exception {
+		ezCommonDAO.addSnThemeAuth();
+		ezCommonDAO.addSnPortletAuth();
+	}
+	
+	@Override
+	public void alterChamjoView() throws Exception {
+		ezCommonDAO.alterChamjoView();
+	}
+	
+	@Override
+	public void addAddressFurigana() throws Exception {
+		ezCommonDAO.addAddressFurigana();
+	}
+	
+	@Override
+	public void createOpenGovTable() throws Exception {
+		ezCommonDAO.createOpenGovTable();
+	}
+	
+	@Override
+	public void addOpenGovFlag() throws Exception {
+        ezCommonDAO.addOpenGovFlag();
+    }
+
+	@Override
+	public int checkDeptId(String userID, String deptID, String tenantId) {
+		logger.debug("checkDeptId started");
+		int result = 0;
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("tenantID", tenantId);
+		map.put("deptID", deptID);
+		map.put("userID", userID);
+		result= ezCommonDAO.checkDeptId(map);
+		logger.debug("checkDeptId ended");
+		return result;
+	}
+
+	@Override
+	public void createRsFavoriteTable() {
+		ezCommonDAO.createRsFavoriteTable();
+	}
+
+	@Override
+	public void createUserDistributionTable() {
+		ezCommonDAO.createUserDistributionTable();
+	}
+	
+	@SuppressWarnings("serial")
+	@Override
+	public void insertTblTenantConfig(String configName) throws Exception {
+		logger.debug("insertTest started");
+		Map<String, Map<String, Object>> test = new HashMap<String,  Map<String, Object>>();
+		test.put("mailConfirm", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useMailConfirm"); // property_name
+			put("property_value","NO");
+			put("config_name","메일 완료/완료취소");
+			put("regdate","2020-01-28 00:00:00");
+			put("description","메일 완료/완료취소 기능 사용 여부(default: NO)");
+			put("config_type","메일");
+			put("property","useMailConfirm"); // property_name
+		}});
+		
+		
+		ezCommonDAO.insertTblTenantConfig(test.get(configName));
+	}
+
+	@Override
+	public void addThemeAndPorteltAuthInit() throws Exception {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				ezCommonDAO.insertThemeAuthInit(map);
+				ezCommonDAO.insertPortletAuthInit(map);
+			}
+		}
+	}
+
+	@Override
+	public void createJmochaBigAttachDownloadLimit() throws Exception {
+		ezCommonDAO.createJmochaBigAttachDownloadLimit();
+	}
+	
+	@Override
+	public void insertMailBigSizeAttachLimit() throws Exception {
+		logger.debug("insertMailBigSizeAttachLimit started");
+		ezCommonDAO.insertMailBigSizeAttachLimit();
+		logger.debug("insertMailBigSizeAttachLimit ended");
+	}
+	
+	@Override
+	public void addIsBeforeDoc() throws Exception {
+		ezCommonDAO.addIsBeforeDoc();
+	}
+
+	@Override
+	public void addBeforeDocUrl() throws Exception {
+		ezCommonDAO.addBeforeDocUrl();
+	}
+	
+	@Override
+	public void addAprAttachViewOrder() throws Exception {
+		ezCommonDAO.addAprAttachViewOrder();
+	}
+	
+	@Override
+	public void addAprEndAttachViewOrder() throws Exception {
+		ezCommonDAO.addAprEndAttachViewOrder();
+	}
+	
+	@Override
+	public void addAprTmpAttachViewOrder() throws Exception {
+		ezCommonDAO.addAprTmpAttachViewOrder();
+	}
+
+	@Override
+	public void insertUseExternalMailServerConfig() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useExternalMailServer");
+		map.put("propertyValue", "NO");
+		map.put("description", "메일 모듈 사용 여부. YES: 외부메일 사용 NO: 내부메일 사용(default: NO)");
+		map.put("configName", "메일 모듈 사용 여부");
+		map.put("configType", "메일");
+		map.put("regdate", "2020-04-16 00:00:00");
+
+		ezCommonDAO.insertUseExternalMailServerConfig(map);
+	}
+	
+	@Override
+	public void insertReBebuOpinionCode() throws Exception {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("code1", "A17");
+				map.put("code2", "008");
+				map.put("name", "재배부요청");
+				map.put("isUse", "1");
+				map.put("descript", "재배부요청");
+				map.put("name2", "재배부요청");
+				map.put("name3", "재배부요청");
+				map.put("name4", "재배부요청");
+				
+				ezCommonDAO.insertReBebuOpinionCode(map);
+			}
+		}
+	}
+	
+	@Override
+	public void addFormAprOptionColumn() throws Exception {
+		ezCommonDAO.addFormAprOptionColumn();
+	}
+
+	@Override
+	public void insertAnnualScheduleTenantConfig() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useAnnualScheduleYN");
+		map.put("propertyValue", "0");
+		map.put("description", "0:근태현황 일정관리 미연동, 1:근태현황 부서일정 연동, 2:근태현황 회사일정 연동");
+		map.put("configName", "근태현황 일정관리 연동");
+		map.put("configType", "근태관리");
+		map.put("regdate", "2020-02-24 00:00:00");
+
+		ezCommonDAO.insertAnnualScheduleTenantConfig(map);
+	}
+
+	@Override
+	public void insertHalfOffAttitudeType() {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();		
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("typeId", "A21");
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("tenantId", 0);
+				map.put("typeName", "반반차");
+				map.put("typeName2", "half off");
+				map.put("isUse", "1");
+				map.put("imgPath", "refresh");
+				map.put("parentId", "A05");
+				map.put("formId", 4);
+				map.put("isAdd", "0");
+				map.put("isDel", "0");
+				
+				ezCommonDAO.insertHalfOffAttitudeType(map);	
+			}
+		}
+	}
+
+	@Override
+	public void insertHolidayCheckTenantConfig() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useHolidayCheckYN");
+		map.put("propertyValue", "0");
+		map.put("description", "0: 휴일 출/퇴근 체크 미사용, 1: 휴일 출/퇴근 체크 사용");
+		map.put("configName", "휴일 출/퇴근 체크 사용여부");
+		map.put("configType", "근태관리");
+		map.put("regdate", "2020-05-21 00:00:00");
+
+		ezCommonDAO.insertHolidayCheckTenantConfig(map);
+	}
+
+	@Override
+    public void addDocStateIntoLastLines() throws Exception {
+	    ezCommonDAO.addDocStateIntoLastLines();
+    }
+
+    @Override
+    public void addDocStateIntoLastDeptLines() throws Exception {
+	    ezCommonDAO.addDocStateIntoLastDeptLines();
+    }
+
 }

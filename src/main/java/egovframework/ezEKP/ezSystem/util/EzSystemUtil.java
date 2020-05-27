@@ -40,9 +40,9 @@ public class EzSystemUtil {
 		 * mBuilder -> 메모리 정보
 		 */
 		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
-			String command = "'model name'";
+			/* 2020-03-12 홍승비 - 시스템 모니터링 grep 명령어 파라미터 수정 */
 			ProcessBuilder builder = new ProcessBuilder("uname", "-nro");
-			ProcessBuilder cBuilder = new ProcessBuilder("grep", "CPU", "/proc/cpuinfo");
+			ProcessBuilder cBuilder = new ProcessBuilder("grep", "model\\ name", "/proc/cpuinfo");
 			ProcessBuilder mBuilder = new ProcessBuilder("cat", "/proc/meminfo");
 			
 			Process process = builder.start();				

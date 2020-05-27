@@ -28,7 +28,7 @@ var messages = {
 	strLang27 : "people (teams),",
 	strLang28 : "het was added to the shares.",
 	strLang29 : "het modify the shares.",
-	strLang30 : "Not owner of the file",
+	strLang30 : "Not owner of the file or folder.",
 	strLang31 : "You do not have anyone to share with. ",
 	strLang32 : "Are you sure you want to cancel sharing?",
 	strLang33 : "You canceled sharing.",
@@ -39,6 +39,8 @@ var messages = {
 	strLang38 : "Please select a file or folder.",
 	strLang39 : "Please select one file or folder.",
 	strLang40 : "You can't delete a folder unless it's a folder creator.",
+	strLang41 : "You can't delete it unless you're the creator of the file or folder.",
+	strLang42 : "You cannot modify the name unless you are the creator of the file or folder.",
 	completeDuplicateJob : "Processing completed.",
 	parameterError: "Insufficient parameters.",
 	serverError: "An error has occurred.",
@@ -48,5 +50,6 @@ var messages = {
 	successMoveFile: "You have successfully moved the file.",
 	successCopyFile: "You have successfully copied the files.",
 	outOfStorageSpaceForOneTime: "It has exceeded the one-time upload capacity.",
-	outOfStorageSpace: "The capacity has been exceeded."
+	outOfStorageSpace: "The capacity has been exceeded.",
+	strLangDragNDrop: "Folders can not be uploaded."
 }

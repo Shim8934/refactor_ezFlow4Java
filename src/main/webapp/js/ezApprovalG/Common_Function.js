@@ -135,3 +135,59 @@ function OpenInformationUI_Complete(RtnVal, Complete_Function)
     }
 }
 
+function getEngMonth(month) {
+	var engMonthStr = "";
+	
+	switch(Number(month)) {
+		case 1 :
+			engMonthStr = "Jan";
+			break;
+		case 2 :
+			engMonthStr = "Feb";
+			break;
+		case 3 :
+			engMonthStr = "Mar";
+			break;
+		case 4 :
+			engMonthStr = "Apr";
+			break;
+		case 5 :
+			engMonthStr = "May";
+			break;
+		case 6 :
+			engMonthStr = "Jun";
+			break;
+		case 7 :
+			engMonthStr = "Jul";
+			break;
+		case 8 :
+			engMonthStr = "Aug";
+			break;
+		case 9 :
+			engMonthStr = "Sep";
+			break;
+		case 10 :
+			engMonthStr = "Oct";
+			break;
+		case 11 :
+			engMonthStr = "Nov";
+			break;
+		case 12 :
+			engMonthStr = "Dec";
+			break;
+	}
+	
+	return engMonthStr;
+}
+
+function getDatePeriod(userLang, startYear, startMonth, startDate, endYear, endMonth, endDate) {
+	return getDateStrByLang(userLang, startYear, startMonth, startDate) + " ~ " + getDateStrByLang(userLang, endYear, endMonth, endDate);
+}
+
+function getDateStrByLang(userLang, year, month, date) {
+	if (userLang == "2") {
+		return getEngMonth(month) + " " + date + ", " + year;
+	} else {
+		return year + strLang1028 + " " + month + strLang1029 + " " + date + strLang1030
+	}
+}

@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
+import java.util.StringJoiner;
 
 import javax.annotation.Resource;
 
@@ -40,9 +40,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	
 	@Resource(name="EzBoardAdminDAO")
 	private EzBoardAdminDAO ezBoardAdminDAO;
-	
-	@Autowired
-	private Properties globals;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -161,8 +158,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			String fullPath = realPath + commonUtil.detectPathTraversal(docPath);
 			File doc = new File(fullPath);
 			
+			/* 2020-01-09 홍승비 - 파일경로 폴더 생성 방식 수정 (존재하지 않는 상위폴더를 전부 생성하도록 수정) */
 			if (!doc.exists() || !doc.isDirectory()) {
-				doc.mkdir();
+				doc.mkdirs();
 			}
 			
 			dbPath = docPath + boardID + ".mht";
@@ -241,6 +239,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ISDEPT", isDept);
 		map.put("v_ISEQUALDEPT", isEqualDept);
 		
+		logger.debug("map in getBoardTree_Get2    ::   " + map.toString());
 		logger.debug("getBoardTree_Get2 ended");
 		return ezBoardAdminDAO.getBoardTree_Get2(map);
 	}
@@ -269,8 +268,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		/* 2019-06-04 홍승비 - 게시판그룹에 관리자권한 존재하는 경우, 해당 게시판그룹의 하위게시판 전부 가져오도록 수정 */
 		map.put("v_boardGroupAdmin_FG", boardGroupAdmin_FG);
 		
+		logger.debug("brdBoardTree map   ::  " + map.toString());
 		logger.debug("brdBoardTree ended");
-		logger.debug("map.toString() : " + map.toString());
 		return ezBoardAdminDAO.brdBoardTree(map);
 	}
 
@@ -681,6 +680,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PFORM", boardPropertyVO.getFormFlag());
 		map.put("v_PAPPRFLAG", boardPropertyVO.getApprFlag());
 		map.put("v_PAPPRMAILFLAG", boardPropertyVO.getApprMailFlag());
+		map.put("v_LIKEFLAG", boardPropertyVO.getLikeFlag());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());
 		
 		/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
@@ -1014,6 +1014,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_COMPANYID", vo.getCompanyID());
 		map.put("v_TENANTID", vo.getTenantID());
 		map.put("isAllGroupBoard", vo.getIsAllGroupBoard());
+		/* 2019-09-19 홍승비 - 권한의 TYPE값 추가 */
+		map.put("v_TYPE", vo.getType());
 		
 		// 해당 userID가 여러 회사의 레코드를 가지고 있을 수 있으므로, companyID 조건이 필요하다.
 		int tempCount = ezBoardAdminDAO.getBoardManage(map);
@@ -1066,6 +1068,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		try {
 			String copyList = doc.getElementsByTagName("COPYLIST").item(0).getTextContent();
 			String[] copyListArray = copyList.split(",");
+			int copyListSize = copyListArray.length;
 			StringBuilder  buf = new StringBuilder ();
 			
 			for (String k : copyListArray) {
@@ -1081,11 +1084,11 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			map.put("v_TENANTID", tenantID);
 			
 			for (int i = 0; i < doc.getElementsByTagName("BOARDID").getLength(); i++) {
-				String boardID = doc.getElementsByTagName("BOARDID").item(i).getTextContent();
-				String defaultBoardID = doc.getElementsByTagName("DEFAULTBOARDID").item(0).getTextContent();
-				String parentBoardID = doc.getElementsByTagName("PARENTBOARDID").item(i).getTextContent();
+				String boardID = doc.getElementsByTagName("BOARDID").item(i).getTextContent(); // 복사한 권한을 부여할 게시판들 (목표점)
+				String defaultBoardID = doc.getElementsByTagName("DEFAULTBOARDID").item(0).getTextContent(); // 복사할 권한이 들어있는 기존의 게시판 (시작점)
+				String parentBoardID = doc.getElementsByTagName("PARENTBOARDID").item(i).getTextContent(); // 복사한 권한을 부여할 게시판들의 부모 게시판ID
 
-				if (boardID.equals(defaultBoardID)) {
+				if (boardID.equals(defaultBoardID)) { // 시작점과 목표점이 동일하다면, 넘어간다.
 					continue;
 				}
 				
@@ -1098,6 +1101,30 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				ezBoardAdminDAO.deleteBoardManage(map);
 				// 새로운 권한 부여 시 companyID를 삽입한다.
 				ezBoardAdminDAO.copyBoardAcl(map);
+				
+				/* 2019-11-13 홍승비 - 권한을 복사할 목표 게시판이 하위게시판인 경우, 해당 게시판의 상위게시판에도 접근권한을 부여 */
+				String parentBoardIDs = getAllUpperBoardID(boardID, tenantID);
+				String parentBoardIDList[] = parentBoardIDs.split(",");
+				int parentBoardIDListSize = parentBoardIDList.length;
+				
+				for (int u = 0; u < parentBoardIDListSize - 1; u++) {
+					for (int a = 0; a < copyListSize; a++) {
+						Map<String, Object> mapU = new HashMap<String, Object>();
+						BoardPropertyVO boardManageProp = getACL(defaultBoardID, copyListArray[a], tenantID);
+						
+						// 접근권한이 '허용'인 경우에만 상위로 접근권한을 전파
+						if (boardManageProp != null && boardManageProp.getAccess_() != null && boardManageProp.getAccess_().equals("1")) {
+							mapU.put("v_ORGBOARDID", defaultBoardID); // 권한을 복사할 기존 게시판ID
+							mapU.put("v_BOARDID", parentBoardIDList[u]); // 권한의 복사 목표점이 되는 게시판ID
+							mapU.put("v_PARENTBOARDID", parentBoardIDList[u + 1]); // 권한의 복사 목표점이 되는 게시판의 부모게시판ID
+							mapU.put("v_BOARDGROUPACL", boardManageProp.getBoardGroupACL());
+							mapU.put("v_ACCESSID", copyListArray[a]);
+							mapU.put("v_TENANTID", tenantID);
+							
+							ezBoardAdminDAO.saveACLIncludeUppderBoard2(mapU); // copyBoardAcl과 유사하나, 권한 중에서는 접근권한만을 복사한다.
+						}
+					}
+				}
 			}
 			
 			/* 2018-10-10 홍승비 - 권한복사 시 기존 트리캐시 제거하도록 수정 */
@@ -1212,5 +1239,64 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		logger.debug("checkIfBoardGroupAdmin2 ended");
 		return result;
+	}
+	
+	/* 2019-11-08 홍승비 - 전달된 값으로 BOARDTREEPATH를 업데이트하는 메서드 */
+	@Override
+	public void updateBoardTreePath(String boardID, String newBoardTreePath, int tenantID) throws Exception {
+		logger.debug("updateBoardTreePath started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BOARDID", boardID);
+		map.put("v_BOARDTREEPATH", newBoardTreePath);
+		map.put("v_TENANTID", tenantID);
+		
+		ezBoardAdminDAO.updateBoardTreePath(map);
+		logger.debug("updateBoardTreePath ended");
+	}
+	
+	/* 2019-11-13 홍승비 - 주어진 게시판ID에 대하여 자신을 포함한 모든 상위게시판들을 문자열로 이어붙여 가져오는 메서드 */
+	@Override
+	public String getAllUpperBoardID(String boardID, int tenantID) throws Exception {
+		logger.debug("getAllUpperBoardProperty started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		StringJoiner parentBoardIDs = new StringJoiner(",");
+		parentBoardIDs.add(boardID);
+		String tempBoardID = boardID;
+		
+		boolean isParentBoardExist = true;
+		while (isParentBoardExist == true) {
+			map.put("boardID", tempBoardID);
+			map.put("tenantID", tenantID);
+			
+			String tempParentBoardID = ezBoardAdminDAO.getParentBoardID(map);
+			if (tempParentBoardID != null) {
+				parentBoardIDs.add(tempParentBoardID);
+				tempBoardID = tempParentBoardID;
+			} else {
+				isParentBoardExist = false;
+			}
+			map.clear();
+		}
+
+		logger.debug("getAllUpperBoardProperty ended");
+		return parentBoardIDs.toString();
+	}
+	
+	/* 2020-01-16 홍승비 - 전달된 값으로 BOARDGROUPID를 업데이트하는 메서드 */
+	@Override
+	public void updateBoardGroupID(String boardID, String newBoardGroupID, int tenantID) throws Exception {
+		logger.debug("updateBoardGroupID started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BOARDID", boardID);
+		map.put("v_NEWBOARDGROUPID", newBoardGroupID);
+		map.put("v_TENANTID", tenantID);
+		
+		ezBoardAdminDAO.updateBoardGroupID(map);
+		logger.debug("updateBoardGroupID ended");
 	}
 }

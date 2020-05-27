@@ -131,7 +131,7 @@
         </div>
 		<table style="width:500px" id="toggle_tbl1" class="content">
 			<tr>
-				<th>
+				<th style='text-align:center;'>
 					<spring:message code="ezBoard.t5011"/>
 				</th>
 				<td colspan="3">

@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ibm.icu.util.ChineseCalendar;
 
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPMS.dao.EzPMSDAO;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
@@ -67,9 +66,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Resource(name = "jspw")
     private String jspw;
 
-	@Autowired
-	private EzCommonService ezCommonService;
-	
 	@Override
 	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, Map<String, Object> search, String lang, String position, String companyId) {
 		LOGGER.debug("[SERVICE] getProjectList started.");
@@ -1753,7 +1749,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			ezPMSDAO.addProjectMember(map);
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
 
@@ -1831,7 +1826,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 			map.put("restDueday", restDueday);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -1881,7 +1875,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 			map.put("restDueday", restDueday);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -3570,7 +3563,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			holidayDateList.addAll(getWorkingDays2(sdf.parse(planStartDate), sdf.parse(planEndDate), solarHolidayMap, lunarHolidayMap));
 			
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

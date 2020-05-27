@@ -62,9 +62,12 @@ function onInputTextarea(event) {
 		return;
 	}
 	
+	var selectionStart = textarea.selectionStart;
 	textarea.oldValue = value;
 	textarea.setAttribute("value", value);
 	textarea.innerHTML = value;
+	textarea.selectionStart = selectionStart;
+	textarea.selectionEnd = selectionStart;
 	
 	if (textarea.hasAttribute("auto-height")) {
 		textarea.style.height = "0px";

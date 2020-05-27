@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
@@ -118,6 +119,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 
 /** 
  * @Description [Controller] 메일 쓰기
@@ -165,6 +167,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+
+	@Autowired
+	private EzEmailUserAdminService ezEmailUserAdminService;
 	
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
@@ -229,7 +234,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		// ezPMS 프로젝트 아이디
 		String ezPMSProjectId = "";
-		String ezPMSRoleId = "";
+		// String ezPMSRoleId = "";
 		// ezPMS 게시판 아이디
 		String ezPMSBoardId = "";
 		
@@ -399,6 +404,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		//파일첨부 제한 관련 변수 설정 
 		String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", loginInfo.getTenantId());
 		String bigSizeMailAttachLimit = ezCommonService.getTenantConfig("BigSizeMailAttachLimit", loginInfo.getTenantId());
+		String bigSizeAttachLimitCount = ezCommonService.getTenantConfig("MailBigSizeAttachLimitCount", loginInfo.getTenantId());
+		String bigSizeAttachDownloadLimitCount = ezCommonService.getTenantConfig("MailBigSizeAttachDownloadLimitCount", loginInfo.getTenantId());
 		String totBigSizeMailAttachLimit = ezCommonService.getTenantConfig("totBigSizeMailAttachLimit", loginInfo.getTenantId());
 		String pBigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", loginInfo.getTenantId());
 		logger.debug("mailAttachLimit=" + mailAttachLimit + ",bigSizeMailAttachLimit=" + bigSizeMailAttachLimit
@@ -406,13 +413,26 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String bigSizeMailAttachDelDate = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(pBigAttachDownloadDay), "yyyy-MM-dd");
         String pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), Integer.parseInt(pBigAttachDownloadDay), "yyyy/MM/dd");
+        int pBigAttachLimitCount = Integer.parseInt(bigSizeAttachLimitCount);
+        int pBigAttachDownloadLimitCount = Integer.parseInt(bigSizeAttachDownloadLimitCount);
         String pAttachWarning = egovMessageSource.getMessage("ezEmail.lhm18", locale) + mailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm19", locale) 
-        	+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm20", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.lhm21", locale);
+        	+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm20", locale); // 일반첨부파일은 총 10MB까지 가능하며, 대용량첨부는 800MB까지 가능(
+        
+        if(pBigAttachLimitCount > 0) {
+        	pAttachWarning += egovMessageSource.getMessageExtend("ezEmail.hdp03", new Object[] {pBigAttachLimitCount}, locale) + ", "; // 일반첨부파일은 총 10MB까지 가능하며, 대용량첨부는 800MB까지 가능(최대 1개 첨부,
+        }
+        
+        if(pBigAttachDownloadLimitCount > 0) {
+        	pAttachWarning += egovMessageSource.getMessageExtend("ezEmail.hdp04", new Object[] {pBigAttachDownloadLimitCount}, locale) + ", "; // 일반첨부파일은 총 10MB까지 가능하며, 대용량첨부는 800MB까지 가능(최대 1개 첨부, 1회까지 다운로드 가능,
+        }
+        
+        pAttachWarning += pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.lhm21", locale); // 일반첨부파일은 총 10MB까지 가능하며, 대용량첨부는 800MB까지 가능(최대 1개 첨부, 1회까지 다운로드 가능, 14일후 자동삭제)
+        
         if(totBigSizeMailAttachLimit.equals("0")){
         	pAttachWarning = egovMessageSource.getMessage("ezEmail.kms01", locale) + mailAttachLimit +egovMessageSource.getMessage("ezEmail.kms02", locale);
         }
         logger.debug("bigSizeMailAttachDelDate=" + bigSizeMailAttachDelDate + ",pBigAttachDownloadPeriod=" + pBigAttachDownloadPeriod
-        		+ ",pAttachWarning=" + pAttachWarning);
+        		+ ",pAttachWarning=" + pAttachWarning + ",pBigAttachLimitCount=" + pBigAttachLimitCount+ ",pBigAttachDownloadLimitCount=" + pBigAttachDownloadLimitCount);
         
         // set pAutoSaveTime,mailSendObject
  		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
@@ -492,14 +512,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         urlOwn = _url;
         logger.debug("_cmd=" + _cmd + ",_url=" + _url);
         
-        String _attach = "";
+        /* String _attach = "";
         if (request.getParameter("attach") != null) {
         	_attach = request.getParameter("attach");
 		}
         String includeContent = "";
         if (request.getParameter("include") != null) {
         	includeContent = request.getParameter("include");
-		}
+		} */
 		
 		// make mail top level folders
         IMAPAccess ia = null;
@@ -1307,6 +1327,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			bodyType = "0";
 		}
 		
+		boolean useAdditionalInfo = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailWriteRecipientAdditional", loginInfo.getTenantId()));
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
 		model.addAttribute("to", to);
@@ -1385,6 +1407,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
 		model.addAttribute("isMailToMe", isMailToMe); // 내게쓰기 버튼 클릭시  checkobx checked
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
+		model.addAttribute("useAdditionalInfo", useAdditionalInfo);
+		model.addAttribute("bigSizeAttachLimitCount", bigSizeAttachLimitCount);
+		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount);
 		
 		//업무일지 아이디
 		model.addAttribute("journalId", journalId);
@@ -1787,7 +1812,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String changeSizeStr = doc.getElementsByTagName("CHANGESIZE").item(0).getTextContent();	
 		int changeSize = Integer.parseInt(changeSizeStr);
 		
-		String endDate = doc.getElementsByTagName("ENDDAY").item(0).getTextContent();	
+		// String endDate = doc.getElementsByTagName("ENDDAY").item(0).getTextContent();	
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String realPath = commonUtil.getRealPath(request);
@@ -2151,7 +2176,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String changeSizeStr = doc.getElementsByTagName("CHANGESIZE").item(0).getTextContent();	
 		int changeSize = Integer.parseInt(changeSizeStr);
 		
-		String endDate = doc.getElementsByTagName("ENDDAY").item(0).getTextContent();	
+		// String endDate = doc.getElementsByTagName("ENDDAY").item(0).getTextContent();	
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2499,7 +2524,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String changeSizeStr = doc.getElementsByTagName("CHANGESIZE").item(0).getTextContent();	
 		int changeSize = Integer.parseInt(changeSizeStr);
 		
-		String endDate = doc.getElementsByTagName("ENDDAY").item(0).getTextContent();	
+		// String endDate = doc.getElementsByTagName("ENDDAY").item(0).getTextContent();	
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -3212,6 +3237,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						}
 						
 						// 기존 메시지의 모든 헤더를 적용한다.
+						@SuppressWarnings("unchecked")
 						Enumeration<Header> e = oldMessage.getAllHeaders();
 						
 						while (e.hasMoreElements()) {
@@ -3411,7 +3437,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String simpleMime = "";
 		String delaySendTime = "";
 		String htmlBody = "";
-		String pSecurityMail = "";
+		// String pSecurityMail = "";
 		String replySendTime = "";
 		String replyReadTime = "";
 		String isEachMail = "";
@@ -3423,13 +3449,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String secureReadCount = null;
 		String secureReadDate = null;
 		int secureId = 0;
-		String connUrl = "";
+		/* String connUrl = "";
 		String author = "";
 		String pMessageID = "";
 		String eCharSet = "";
 		String eContentTransferEncoding = "";
 		String eSimpleMIME = "";
-		String eSimpleMIMEContentTransferEncoding = "";
+		String eSimpleMIMEContentTransferEncoding = ""; */
 		String modeFlag = ""; // 20190807 김수아 : 메일 작성 미리보기
 		
 		String realPath = commonUtil.getRealPath(request);
@@ -3437,6 +3463,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		// 클라이언트로부터 전달된 XML 형태의 요청 데이터를 XML 문서로 변환한다.
 		Document xmlDoc = commonUtil.convertStringToDocument(bodyData);
+		
+		if (xmlDoc == null) {
+			return "<DATA>parse error</DATA>";
+		}
+		
 		Element root = xmlDoc.getDocumentElement();
 		
 		Node tempNode = null;
@@ -3454,12 +3485,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				orgUrl = tempNode.getTextContent();
 			}
 		}
-		if (root.getElementsByTagName("CONNURL") != null) {
+		/* if (root.getElementsByTagName("CONNURL") != null) {
 			tempNode = root.getElementsByTagName("CONNURL").item(0);
 			if (tempNode != null) {
 				connUrl = tempNode.getTextContent();
 			}
-		}
+		} */
 		if (root.getElementsByTagName("CMD") != null) {
 			tempNode = root.getElementsByTagName("CMD").item(0);
 			if (tempNode != null) {
@@ -3478,12 +3509,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				orgMailCmd = tempNode.getTextContent();
 			}
 		}
-		if (root.getElementsByTagName("AUTHOR") != null) {
+		/* if (root.getElementsByTagName("AUTHOR") != null) {
 			tempNode = root.getElementsByTagName("AUTHOR").item(0);
 			if (tempNode != null) {
 				author = tempNode.getTextContent();
 			}
-		}
+		} */
 		if (root.getElementsByTagName("SUBJECT") != null) {
 			tempNode = root.getElementsByTagName("SUBJECT").item(0);
 			if (tempNode != null) {
@@ -3552,12 +3583,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				htmlBody = htmlBody.replaceAll("src=\"" + hostUrl + "/ezEmail/downloadInline\\.do", "src=\"/ezEmail/downloadInline\\.do");
 			}
 		}
-		if (root.getElementsByTagName("SECURITYMAIL") != null) {
+		/* if (root.getElementsByTagName("SECURITYMAIL") != null) {
 			tempNode = root.getElementsByTagName("SECURITYMAIL").item(0);
 			if (tempNode != null) {
 				pSecurityMail = tempNode.getTextContent();
 			}
-		}
+		} */
 		if (root.getElementsByTagName("REPLYSENDTIME") != null) {
 			tempNode = root.getElementsByTagName("REPLYSENDTIME").item(0);
 			if (tempNode != null) {
@@ -3817,6 +3848,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				
 				// simpleMime의 값이 1인 경우는 Plain Text 형식이다.
 				if (simpleMime.equals("1")) {
+					textBody += addCopyrightText(userInfo, textBody, "text/plain"); // copyrightText
+					
 				 // 메일을 발송하는 경우
 		            if (!cmd.toUpperCase().equals("SAVE")) {
 		                // 예약 메일의 경우
@@ -3835,6 +3868,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		            }
 		        // HTML 형식의 경우
 		        } else {
+		        	htmlBody += addCopyrightText(userInfo, htmlBody, "text/html"); // copyrightText
+					
 					// HTML 안에 포함된 인라인 이미지들에 대한 다운로드 링크를 cid 형식으로 변환한다.
 		        	// 이후 Related Part 처리 코드에서 변환을 하지만 Related Part 없이 HTML 파트만으로
 		        	// 인라인 이미지를 포함하고 있는 메일이 있어 추가함. 이 경우 이 처리를 하지 않으면
@@ -4652,27 +4687,40 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            	
 			                // mailSendCompleted가 true인 경우는 Transport.send가 완료된 이후에 예외가 발생하여 Retry하는 경우이다.
 			                // 이 경우에는 메일을 다시 전송하지 않는다.
-			                if (mailSendCompleted == false) {			     			                	
-				            	Address[] allRecipients = message.getAllRecipients();
+			                if (mailSendCompleted == false) {				                	
+		                		Address[] allRecipients = message.getAllRecipients();
 				            	
 				            	message.removeHeader("TO");
 				        		message.removeHeader("CC");
 				        		message.removeHeader("BCC");
 				        		
-				            	for (Address a : allRecipients) {
-				            		logger.debug("address=" + a);
+								String useAdvancedEachMail = ezCommonService.getTenantConfig("useAdvancedEachMail", userInfo.getTenantId());
+								
+								if (useAdvancedEachMail.equals("YES")) {				        		
+					        		message.setRecipients(RecipientType.TO, allRecipients);
+					        		
+					        		message.setHeader("X-JMocha-Each-Mail", "true");
 				            		
-				            		try {
-					            		message.setRecipient(RecipientType.TO, a);
-					            		
-					            		Transport.send(message);
-				            		} catch (Exception e) {
-				            			e.printStackTrace();
-				            		}
+					        		Transport.send(message);
 				            		
 	    			            	sentFolderMessageUID = 0;
-	    			            	mailSendCompleted = true;				            		
-				            	}
+	    			            	mailSendCompleted = true;				
+								} else {
+					            	for (Address a : allRecipients) {
+					            		logger.debug("address=" + a);
+					            		
+					            		try {
+						            		message.setRecipient(RecipientType.TO, a);
+						            		
+						            		Transport.send(message);
+					            		} catch (Exception e) {
+					            			e.printStackTrace();
+					            		}
+					            		
+		    			            	sentFolderMessageUID = 0;
+		    			            	mailSendCompleted = true;				            		
+					            	}									
+								}
 			                }
 			            	
 			                // this deletion code block has been moved here because
@@ -5331,9 +5379,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String pOrganPropList = "company;description;title;mail;extensionAttribute3";
 		String pOrganListType = "all";
 		String pDLSearchList = "";
-		String pDLCellList = "displayname";
+		/* String pDLCellList = "displayname";
 		String pDLPropList = "mail";
-		String pDLListType = "group";
+		String pDLListType = "group"; */
 		String pAddressFilter = "";
 		String pSharedMailboxSearchList = "";
 		
@@ -5359,37 +5407,37 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				pSharedMailboxSearchList = tempNode.getTextContent();
 			}
 		}
-		if (root.getElementsByTagName("CELL") != null) {
+		/* if (root.getElementsByTagName("CELL") != null) {
 			tempNode = root.getElementsByTagName("CELL").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pOrganCellList = tempNode.getTextContent();
 				pDLCellList = tempNode.getTextContent();
 			}
-		}
+		} */
 		if (root.getElementsByTagName("ORGPROP") != null) {
 			tempNode = root.getElementsByTagName("ORGPROP").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pOrganPropList = tempNode.getTextContent();
 			}
 		}
-		if (root.getElementsByTagName("DLPROP") != null) {
+		/* if (root.getElementsByTagName("DLPROP") != null) {
 			tempNode = root.getElementsByTagName("DLPROP").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pDLPropList = tempNode.getTextContent();
 			}
-		}
+		} */
 		if (root.getElementsByTagName("ORGTYPE") != null) {
 			tempNode = root.getElementsByTagName("ORGTYPE").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pOrganListType = tempNode.getTextContent();
 			}
 		}
-		if (root.getElementsByTagName("DLTYPE") != null) {
+		/* if (root.getElementsByTagName("DLTYPE") != null) {
 			tempNode = root.getElementsByTagName("DLTYPE").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pDLListType = tempNode.getTextContent();
 			}
-		}
+		} */
 		if (root.getElementsByTagName("ADDFILTER") != null) {
 			tempNode = root.getElementsByTagName("ADDFILTER").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
@@ -5412,18 +5460,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         }        
 		
         String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo);	
+        String dlXML = getOrganDLSearch(pDLSearchList, userInfo);
         
         if (useShowAllCompanies.equals("YES")) {
         	// Company ID를 본래값으로 복원한다.
         	userInfo.setCompanyID(orgCompanyId);
         }
         
-        String dlXML = getOrganDLSearch(pDLSearchList, userInfo);
         String addressXML = getAddressSearch(pAddressFilter, userInfo);
         String sharedMailboxXML = getSharedMailboxSearch(pSharedMailboxSearchList, userInfo);
-
+        
+        // 20190619 조진호 - 메일 주소 검색 대상 순서 변경 추가
+     	String mailAddressSearchOrder =  ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder");
+        
         logger.debug("mailNameCheck ended.");
-        return String.format("<RESULT><ORGAN>%s</ORGAN><DL>%s</DL><ADDRESS>%s</ADDRESS><SHAREDMAILBOX>%s</SHAREDMAILBOX></RESULT>", organXML, dlXML, addressXML, sharedMailboxXML);
+        return String.format("<RESULT><ORGAN>%s</ORGAN><DL>%s</DL><ADDRESS>%s</ADDRESS><SHAREDMAILBOX>%s</SHAREDMAILBOX><MAILADDRESSSEARCHORDER><LISTVIEWDATA><ROWS><ROW><CELL><VALUE>%s</VALUE></CELL></ROW></ROWS></LISTVIEWDATA></MAILADDRESSSEARCHORDER></RESULT>", organXML, dlXML, addressXML, sharedMailboxXML, mailAddressSearchOrder);
 	}
 	
 	/**
@@ -5442,6 +5493,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 * 편지쓰기 창에서 입력받은 메일이 존재하는지 검색. 
 	 * 메일쓰기 창에서 받는사람 도메인 확인 메소드
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezEmail/mailCheck.do", method = RequestMethod.GET)
 	@ResponseBody
 	public List<String> mailCheck(@CookieValue("loginCookie") String loginCookie, Locale locale, 
@@ -5583,6 +5635,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", userInfo.getTenantId());
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userInfo.getTenantId()); // 사용자 정의 DL
 		
 		if (mailMaxReceiverCount.equals("")) {
 			mailMaxReceiverCount = "200";
@@ -5596,6 +5649,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
 		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("useUserDefinedDL", useUserDefinedDL);
 		
 		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
 		model.addAttribute("useShowAllCompanies", useShowAllCompanies);
@@ -5620,6 +5674,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+	        String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
+			
+	        // useShowAllCompanies가 YES이고 company 패러메터가 전달된 경우에는
+	        // Company ID를 ""로 세트하여 그룹사 전체를 대상으로 검색하도록 한다.
+	        if (useShowAllCompanies.equals("YES")) {
+				String companyId  = request.getParameter("company");
+				
+				if (companyId != null) {
+					userInfo.setCompanyID("");
+				}
+	        }
 			
 			List<MailDistributionVO> distributionList = ezEmailService.getDistributionList(userInfo.getCompanyID(), userInfo.getTenantId());
 			
@@ -5676,6 +5742,35 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String cn = request.getParameter("cn");
 		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String companyName = userInfo.getCompanyName();
+
+		/* 사용자 정의 공용배포그룹 컨피그가 활성화 되어있을때 공용배포그룹의 구성원 보기는 공개정책에 의해서 공개 허용 여부가 정해짐
+		 * 공개 허용 : policy가 all일 경우, policy가 멤버이면서 구성원일 경우, 관리자 페이지에서 생성된 공용배포그룹일 경우
+		 */
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userInfo.getTenantId());
+		if (useUserDefinedDL.equalsIgnoreCase("YES")) {
+			MailDistributionVO userDlVo = ezEmailService.getUserDistributionInfo(cn, userInfo.getTenantId());
+			if (userDlVo != null) { // null이면 관리자에서 생성된 dl
+				String dlOwnerId = userDlVo.getOwnerId();
+				if (!dlOwnerId.equals(userInfo.getId())) {
+					String dlPolicy = userDlVo.getDisclosurePolicy();
+					logger.debug("userDistribution policy=" + dlPolicy);
+					
+					if (dlPolicy.equals("member")) {
+						int chk = ezEmailService.checkUserDistributionInCludedMember(domain, cn, userInfo.getId());
+						logger.debug("chk=" + chk);
+						
+						dlPolicy = chk == 0 ? "all" : dlPolicy;
+					}
+					
+					if (!dlPolicy.equals("all")) {
+						model.addAttribute("list", null);
+						model.addAttribute("dlPolicy", dlPolicy);
+						logger.debug("== mailSelectDLMember ended.");
+						return "ezEmail/mailSelectDLMember";
+					}
+				}
+			}
+		}
 		
 		try {
 			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
@@ -5939,6 +6034,56 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 수신인 추가시 부서나 이메일주소 등을 덧붙는 접두사를 반환
+	 * email 파라미터로 OrganUserVO를 구한 후 접두사 만듦
+	 */
+	@RequestMapping(value="/ezEmail/mailGetUserAdditionalInfo.do", produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public String mailGetUserAdditionalInfo(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception {
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		int tenantId = loginVO.getTenantId();
+
+		String email = request.getParameter("email");
+		String userId = loginVO.getEmail().equals(email)
+				? loginVO.getId()
+				: ezOrganService.getCNByEmail(email, loginVO.getTenantId());
+		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, loginVO.getPrimary(), loginVO.getTenantId());
+
+		if (userInfo == null) {
+			return "";
+		}
+
+		String additionalFormat = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalFormat", tenantId);
+		String additionalParameters = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalParameters", tenantId);
+		String[] fieldNameArray = additionalParameters.split(";");
+		int size = fieldNameArray.length;
+		Object[] args = new String[size];
+
+		for (int i = 0; i < size; i++) {
+			try {
+				Field field = OrganUserVO.class.getDeclaredField(fieldNameArray[i]);
+				field.setAccessible(true);
+				String value = field.get(userInfo).toString();
+				args[i] = value;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				args[i] = "";
+			}
+		}
+
+		try {
+			return String.format(additionalFormat, args);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return "";
+		}
+	}
+
+	/**
 	 * 사원 Organ 정보 호출 함수
 	 */
 	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType, LoginVO userInfo) {
@@ -6042,6 +6187,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         
         try {
         	String searchValue = pSearchList.split("::")[1];
+        	searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
         	
 			List<MailSharedMailboxVO> sharedMailboxList = ezEmailService.getSharedMailboxSearchList(userInfo.getCompanyID(), userInfo.getTenantId(), searchValue);
 			
@@ -6234,86 +6380,168 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 			Document organXML = commonUtil.convertStringToDocument(
 					getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo));
+			Document dlXML = commonUtil.convertStringToDocument(getOrganDLSearch(pDLSearchList, userInfo));			
 			
 	        if (useShowAllCompanies.equals("YES")) {
 	        	// Company ID를 본래값으로 복원한다.
 	        	userInfo.setCompanyID(orgCompanyId);
 	        }
 	        
-			Document dlXML = commonUtil.convertStringToDocument(getOrganDLSearch(pDLSearchList, userInfo));
 			Document addressXML = commonUtil.convertStringToDocument(getAddressSearch(pAddressFilter, userInfo));
 			Document sharedMailboxXML = commonUtil.convertStringToDocument(getSharedMailboxSearch(pSharedMailboxSearchList, userInfo));
 
 			HashMap<String, Object> jsonObject = null;
+
 			List<Object> jsonList = new ArrayList<Object>();
-
-			NodeList organRow = organXML.getElementsByTagName("ROW");
-			for (int i = 0; i < organRow.getLength(); i++) {
-				Element row = (Element) organRow.item(i);
-				NodeList organList = row.getElementsByTagName("CELL");
-				Element organCell = (Element) organList.item(0);
-				if (organCell.getElementsByTagName("DATA6").item(0) != null 
-						&& !organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim().equals("")) {
-					jsonObject = new HashMap<String, Object>();
-					jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
-					jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
-					jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
-					jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
-					jsonObject.put("type", "");
-					jsonObject.put("href", "");
-					jsonList.add(jsonObject);
-				}
-			}
-
-			NodeList dlRow = dlXML.getElementsByTagName("ROW");
-			for (int i = 0; i < dlRow.getLength(); i++) {
-				Element row = (Element) dlRow.item(i);
-				NodeList dlList = row.getElementsByTagName("CELL");
-				Element dlCell = (Element) dlList.item(0);
-				if (dlCell.getElementsByTagName("DATA3").item(0) != null 
-						&& !dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
-					jsonObject = new HashMap<String, Object>();
-					jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
-					jsonObject.put("title", "");
-					jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
-					jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
-					jsonObject.put("type", "");
-					jsonObject.put("href", "");
-					jsonList.add(jsonObject);
-				}
-			}
-
-			NodeList addressRow = addressXML.getElementsByTagName("ROW");
-			for (int i = 0; i < addressRow.getLength(); i++) {
-				Element row = (Element) addressRow.item(i);
-				if (row.getElementsByTagName("SEMAIL").item(0) != null 
-						&& !row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim().equals("")) {
-					jsonObject = new HashMap<String, Object>();
-					jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
-					jsonObject.put("title", "");
-					jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
-					jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
-					jsonObject.put("type", row.getElementsByTagName("STYPE").item(0).getTextContent());
-					jsonObject.put("href", row.getElementsByTagName("ADDRESSID").item(0).getTextContent() + "|!|" + row.getElementsByTagName("FOLDERTYPE").item(0).getTextContent());
-					jsonList.add(jsonObject);
-				}
-			}
 			
-			NodeList sharedMailboxRow = sharedMailboxXML.getElementsByTagName("ROW");
-			for (int i = 0; i < sharedMailboxRow.getLength(); i++) {
-				Element row = (Element) sharedMailboxRow.item(i);
-				NodeList sharedMailboxList = row.getElementsByTagName("CELL");
-				Element sharedMailboxCell = (Element) sharedMailboxList.item(0);
-				if (sharedMailboxCell.getElementsByTagName("DATA3").item(0) != null
-						&& !sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
-					jsonObject = new HashMap<String, Object>();
-					jsonObject.put("name", sharedMailboxCell.getElementsByTagName("VALUE").item(0).getTextContent());
-					jsonObject.put("title", "");
-					jsonObject.put("description", egovMessageSource.getMessage("ezEmail.sharedMailbox02", locale));
-					jsonObject.put("mail", sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent());
-					jsonObject.put("type", "");
-					jsonObject.put("href", "");
-					jsonList.add(jsonObject);
+			// 20190619 조진호 - 메일 주소 검색 대상 순서 변경 추가
+			String mailAddressSearchOrder = ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder");
+
+			if (mailAddressSearchOrder.equals("")) {
+				NodeList organRow = organXML.getElementsByTagName("ROW");
+				for (int i = 0; i < organRow.getLength(); i++) {
+					Element row = (Element) organRow.item(i);
+					NodeList organList = row.getElementsByTagName("CELL");
+					Element organCell = (Element) organList.item(0);
+					if (organCell.getElementsByTagName("DATA6").item(0) != null 
+							&& !organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim().equals("")) {
+						jsonObject = new HashMap<String, Object>();
+						jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
+						jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
+						jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
+						jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
+						jsonObject.put("type", "");
+						jsonObject.put("href", "");
+						jsonList.add(jsonObject);
+					}
+				}
+
+				NodeList dlRow = dlXML.getElementsByTagName("ROW");
+				for (int i = 0; i < dlRow.getLength(); i++) {
+					Element row = (Element) dlRow.item(i);
+					NodeList dlList = row.getElementsByTagName("CELL");
+					Element dlCell = (Element) dlList.item(0);
+					if (dlCell.getElementsByTagName("DATA3").item(0) != null 
+							&& !dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
+						jsonObject = new HashMap<String, Object>();
+						jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
+						jsonObject.put("title", "");
+						jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
+						jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
+						jsonObject.put("type", "");
+						jsonObject.put("href", "");
+						jsonList.add(jsonObject);
+					}
+				}
+
+				NodeList addressRow = addressXML.getElementsByTagName("ROW");
+				for (int i = 0; i < addressRow.getLength(); i++) {
+					Element row = (Element) addressRow.item(i);
+					if (row.getElementsByTagName("SEMAIL").item(0) != null 
+							&& !row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim().equals("")) {
+						jsonObject = new HashMap<String, Object>();
+						jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
+						jsonObject.put("title", "");
+						jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
+						jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
+						jsonObject.put("type", row.getElementsByTagName("STYPE").item(0).getTextContent());
+						jsonObject.put("href", row.getElementsByTagName("ADDRESSID").item(0).getTextContent() + "|!|" + row.getElementsByTagName("FOLDERTYPE").item(0).getTextContent());
+						jsonList.add(jsonObject);
+					}
+				}
+				
+				NodeList sharedMailboxRow = sharedMailboxXML.getElementsByTagName("ROW");
+				for (int i = 0; i < sharedMailboxRow.getLength(); i++) {
+					Element row = (Element) sharedMailboxRow.item(i);
+					NodeList sharedMailboxList = row.getElementsByTagName("CELL");
+					Element sharedMailboxCell = (Element) sharedMailboxList.item(0);
+					if (sharedMailboxCell.getElementsByTagName("DATA3").item(0) != null
+							&& !sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
+						jsonObject = new HashMap<String, Object>();
+						jsonObject.put("name", sharedMailboxCell.getElementsByTagName("VALUE").item(0).getTextContent());
+						jsonObject.put("title", "");
+						jsonObject.put("description", egovMessageSource.getMessage("ezEmail.sharedMailbox02", locale));
+						jsonObject.put("mail", sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent());
+						jsonObject.put("type", "");
+						jsonObject.put("href", "");
+						jsonList.add(jsonObject);
+					}
+				}
+			} else {
+				String[] mailAddressSearchOrderSplit = mailAddressSearchOrder.split(";");
+
+				for (int j = 0; j < mailAddressSearchOrderSplit.length; j++) {
+					if (mailAddressSearchOrderSplit[j].equalsIgnoreCase("organ")) {
+						NodeList organRow = organXML.getElementsByTagName("ROW");
+						for (int i = 0; i < organRow.getLength(); i++) {
+							Element row = (Element) organRow.item(i);
+							NodeList organList = row.getElementsByTagName("CELL");
+							Element organCell = (Element) organList.item(0);
+							if (organCell.getElementsByTagName("DATA6").item(0) != null 
+									&& !organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim().equals("")) {
+								jsonObject = new HashMap<String, Object>();
+								jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
+								jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
+								jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
+								jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
+								jsonObject.put("type", "");
+								jsonObject.put("href", "");
+								jsonList.add(jsonObject);
+							}
+						}
+					} else if (mailAddressSearchOrderSplit[j].equalsIgnoreCase("address")) {
+						NodeList addressRow = addressXML.getElementsByTagName("ROW");
+						for (int i = 0; i < addressRow.getLength(); i++) {
+							Element row = (Element) addressRow.item(i);
+							if (row.getElementsByTagName("SEMAIL").item(0) != null 
+									&& !row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim().equals("")) {
+								jsonObject = new HashMap<String, Object>();
+								jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
+								jsonObject.put("title", "");
+								jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
+								jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
+								jsonObject.put("type", row.getElementsByTagName("STYPE").item(0).getTextContent());
+								jsonObject.put("href", row.getElementsByTagName("ADDRESSID").item(0).getTextContent() + "|!|" + row.getElementsByTagName("FOLDERTYPE").item(0).getTextContent());
+								jsonList.add(jsonObject);
+							}
+						}
+					} else if (mailAddressSearchOrderSplit[j].equalsIgnoreCase("dl")) {
+						NodeList dlRow = dlXML.getElementsByTagName("ROW");
+						for (int i = 0; i < dlRow.getLength(); i++) {
+							Element row = (Element) dlRow.item(i);
+							NodeList dlList = row.getElementsByTagName("CELL");
+							Element dlCell = (Element) dlList.item(0);
+							if (dlCell.getElementsByTagName("DATA3").item(0) != null 
+									&& !dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
+								jsonObject = new HashMap<String, Object>();
+								jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
+								jsonObject.put("title", "");
+								jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
+								jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
+								jsonObject.put("type", "");
+								jsonObject.put("href", "");
+								jsonList.add(jsonObject);
+							}
+						}
+					} else if (mailAddressSearchOrderSplit[j].equalsIgnoreCase("shared")) {
+						NodeList sharedMailboxRow = sharedMailboxXML.getElementsByTagName("ROW");
+						for (int i = 0; i < sharedMailboxRow.getLength(); i++) {
+							Element row = (Element) sharedMailboxRow.item(i);
+							NodeList sharedMailboxList = row.getElementsByTagName("CELL");
+							Element sharedMailboxCell = (Element) sharedMailboxList.item(0);
+							if (sharedMailboxCell.getElementsByTagName("DATA3").item(0) != null
+									&& !sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
+								jsonObject = new HashMap<String, Object>();
+								jsonObject.put("name", sharedMailboxCell.getElementsByTagName("VALUE").item(0).getTextContent());
+								jsonObject.put("title", "");
+								jsonObject.put("description", egovMessageSource.getMessage("ezEmail.sharedMailbox02", locale));
+								jsonObject.put("mail", sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent());
+								jsonObject.put("type", "");
+								jsonObject.put("href", "");
+								jsonList.add(jsonObject);
+							}
+						}
+					}
 				}
 			}
 			
@@ -6496,4 +6724,239 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("downloadAttachInWriter ended");
 	}
 	
+	/**
+	 * 공용배포그룹 전체 검색
+	 * - useUserDefined == YES 일 때 수신자 설정 > 공용그룹 > 검색  박스 출력 
+	 *   '전체'로 셀랙트 박스 선택 후 검색 시  관리자페이지에서 생성한 공용배포그룹까지 검색
+	 */
+	@RequestMapping(value = "/ezEmail/mailGetUserDistributionSearchAll.do", produces="text/xml; charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String mailGetUserDistributionSearchAll(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model,
+			HttpServletRequest request) throws Exception {
+		logger.debug("mailGetUserDistributionSearchAll started.");
+
+		String searchValue = request.getParameter("searchValue");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String returnData = "";
+
+		List<MailDistributionVO> distributionList = ezEmailService.getDistributionSearchList(userInfo.getCompanyID(), userInfo.getTenantId(), searchValue);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<LISTVIEWDATA><ROWS>");
+		for (MailDistributionVO vo : distributionList) {
+			sb.append("<ROW><CELL>");
+			sb.append("<VALUE>" + commonUtil.cleanValue(vo.getName()) + "</VALUE>");
+			sb.append("<DATA1>" + commonUtil.cleanValue(vo.getId()) + "</DATA1>");
+			sb.append("<DATA2>" + commonUtil.cleanValue(vo.getMail()) + "</DATA2>");
+			sb.append("</CELL></ROW>");
+		}
+		sb.append("</ROWS></LISTVIEWDATA>");
+		
+		returnData = sb.toString();
+
+		logger.debug("mailGetUserDistributionSearchAll ended.");
+		return returnData;
+	}
+	
+	/*
+	 * 수신인 안내문구 
+	 * 
+	 */
+	private String addCopyrightText (LoginVO userInfo, String mailBody, String type) throws Exception {
+		int tenantId = userInfo.getTenantId();
+		String companyId = userInfo.getCompanyID();
+		String defaultFontAndSize = "";
+		String addCopyrightStr = "";
+
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				String fontFamily = editorFontStyle.split("\\|")[0];
+				String fontSize = editorFontStyle.split("\\|")[1];
+				
+				defaultFontAndSize = "font-size:" + fontSize + ";font-family:" + fontFamily + ";";
+			}
+		}
+		
+		String copyrightDiv = "<p>&nbsp;</p><div id=\"recipientPharse\" style=\"box-sizing:border-box; padding:5px 3px; border:1px solid #999; "
+				+ defaultFontAndSize + " color: rgb(153, 153, 153);\">%s</div>";
+		String useCopyrightMenu = ezCommonService.getTenantConfig("useCopyright", tenantId);
+		useCopyrightMenu = useCopyrightMenu.equals("") ? "NO" : useCopyrightMenu;
+		String useCopyright = ezCommonService.getCompanyConfig(tenantId, companyId, "useCopyright");
+		useCopyright = useCopyright.equals("") ? "YES" : useCopyright;
+		String copyrightText = ezEmailUserAdminService.getCopyrightText(userInfo.getTenantId(), companyId);	
+		logger.debug("tenantId=" + tenantId + ", companyId=" + companyId 
+				+ "useCopyright=" + useCopyright + ", copyrightText=" + copyrightText + ", useCopyrightMenu=" + useCopyrightMenu);
+
+		if (useCopyrightMenu.equals("YES") && !useCopyright.equals("NO") && !copyrightText.trim().equals("")) {
+			mailBody = mailBody.replaceAll("\\p{Z}", " "); // 유니코드 범주내에서 구분 기호, 공백을  replacAll
+			
+			if ((!copyrightText.equals("id=\"recipientPharse\"")) || (mailBody.indexOf(copyrightText) > -1) || (mailBody.indexOf(copyrightText.replace(" ", "&nbsp;")) > -1)) {
+				logger.debug("copyrightText ended.");
+				return addCopyrightStr;
+			}
+			
+			if (type.equals("text/html")) {
+				addCopyrightStr = String.format(copyrightDiv, copyrightText);
+			} else if(type.equals("text/plain")) {
+				String line = "--------------------------------------------------";
+				addCopyrightStr = "\r\n" + line;
+				addCopyrightStr += "\r\n" + copyrightText; // 태그 제외 된 copyright 문구, copyright 문구 뒤가 1-3개씩 잘리는 현상때문에 줄바꿈 추가
+				addCopyrightStr += "\r\n" + line + "\r\n";
+			}
+		}
+
+		logger.debug("addCopyrightStr=" + addCopyrightStr);
+		return addCopyrightStr;
+	}
+	
+	/**
+	 * 일반 첨부파일 순서 저장 함수
+	 */
+	@RequestMapping(value="/ezEmail/saveAttachFileOrder.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveAttachFileOrder( @CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
+		logger.debug("saveAttachFileOrder started.");
+		
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userInfo.get(1);
+		
+		String returnValue = "";
+		
+		long uid = 0;
+		String strUid = request.getParameter("itemid");
+		String[] fileIdxArr = request.getParameterValues("fileIdxArr[]");
+		
+		uid = strUid != null ? Long.parseLong(strUid) : uid;
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null && !shareId.equals("")) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("saveAttachFileOrder ended.");
+					
+					return "";
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
+		}
+		
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
+		
+		if (uid != 0) {
+			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+					userEmail, password);
+			
+			IMAPAccess ia = null;
+			try {
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
+				
+				Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
+				folder.open(Folder.READ_WRITE);
+				Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
+				
+				if (oldMessage != null) {
+					MimeMessage newMessage = sa.createMimeMessage();
+					Multipart multipart = new MimeMultipart();
+					
+					Multipart mp = (Multipart)oldMessage.getContent();
+					int count = mp.getCount();
+					BodyPart p = null;
+					int nonAttachCount = 0;
+					
+					// 첨부파일 파트 이전에 존재하는 파트들의 갯수를 구한다.
+					// 이 로직이 제대로 동작하려면 첨부파일들이 모두 메시지의 뒷부분에 연속으로 위치하여야 한다.
+					for (int i = 0; i < count; i++) {
+						p = mp.getBodyPart(i);
+						
+						if (p.getDisposition() == null) {
+							nonAttachCount++;
+						} else {
+							break;
+						}
+					}
+					
+					BodyPart[] oldAttachPartArr = new BodyPart[count - nonAttachCount];
+					for (int i = 0; i < count; i++) {
+						p = mp.getBodyPart(i);
+						
+						if (i < nonAttachCount) {
+							multipart.addBodyPart(p);
+						} else if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+							oldAttachPartArr[i - nonAttachCount] = p;
+						}
+					}
+					
+					for (int i = 0; i < fileIdxArr.length; i++) {
+						multipart.addBodyPart(oldAttachPartArr[Integer.parseInt(fileIdxArr[i])]);
+					}
+					
+					@SuppressWarnings("unchecked")
+					Enumeration<Header> e = oldMessage.getAllHeaders();
+					while(e.hasMoreElements()){
+						Header header = e.nextElement();
+						newMessage.setHeader(header.getName(), header.getValue());
+					}
+					
+					if (multipart.getCount() != 0) {
+						newMessage.setContent(multipart);
+						newMessage.setFlag(Flags.Flag.SEEN, true);
+						AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
+						returnValue += uids[0].uid;
+					}
+					
+					oldMessage.setFlag(Flags.Flag.DELETED, true);
+					
+				} else {
+					logger.debug("oldMessage is null. uid = " + uid);
+				}
+				folder.close(true);
+				
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
+			}
+		}
+		
+		logger.debug("saveAttachFileOrder ended. returnValue=" + returnValue);
+		
+		return returnValue;	
+	}
+	
+	/**
+	 * 대용량첨부 횟수 정보 입력 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/setBigAttachCountInfo.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String setBigAttachCountInfo( @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("setBigAttachCountInfo started.");
+		
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String[] fileIdArr = request.getParameterValues("bigAttach[]");
+		int bigSizeAttachDownloadLimitCount = Integer.parseInt(request.getParameter("BigSizeAttachDownloadLimitCount"));
+		int tenantId = userInfo.getTenantId();
+        
+        ezEmailService.setBigAttachCountInfo(fileIdArr, bigSizeAttachDownloadLimitCount, tenantId);
+        
+        logger.debug("setBigAttachCountInfo ended.");
+        
+		return "";
+	}
 }

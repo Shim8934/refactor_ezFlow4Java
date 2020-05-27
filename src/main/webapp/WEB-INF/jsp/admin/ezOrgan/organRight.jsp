@@ -264,10 +264,10 @@
 			    if (CrossYN()){
 			        companyinfo_dialogArguments[0] = args;
 			        companyinfo_dialogArguments[1] = add_company_Complete;
-			        var OpenWin = window.open("/admin/ezOrgan/companyInfo.do", "CompanyInfo", GetOpenWindowfeature(328, 260));
+			        var OpenWin = window.open("/admin/ezOrgan/companyInfo.do", "CompanyInfo", GetOpenWindowfeature(448, 260));
 			        try { OpenWin.focus(); } catch (e) { }
 			    }else{
-			        var rtnValue = window.showModalDialog("/admin/ezOrgan/companyInfo.do", treeNode.GetNodeData("CN"), "dialogHeight:230px; dialogWidth:328px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(328, 260));
+			        var rtnValue = window.showModalDialog("/admin/ezOrgan/companyInfo.do", treeNode.GetNodeData("CN"), "dialogHeight:230px; dialogWidth:448px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(448, 260));
 
 			        if (typeof (rtnValue) != "undefined"){
 			            getDeptFullTree(rtnValue);
@@ -304,15 +304,17 @@
 				args[0] = treeNode.GetNodeData("CN");
 				args[1] = treeNode.GetNodeData("VALUE");
 				
+				var companyInfoURL = "/admin/ezOrgan/companyInfo.do?selectCN=" + args[0] + "&pageType=modify"; 
+				
 				if (CrossYN()) {
 				    companyinfo_dialogArguments[0] = args;
 				    companyinfo_dialogArguments[1] = info_company_Complete;
 				    
-                    var OpenWin = window.open("/admin/ezOrgan/companyInfo.do", "CompanyInfo", GetOpenWindowfeature(328, 260));
+                    var OpenWin = window.open(companyInfoURL, "CompanyInfo", GetOpenWindowfeature(328, 295));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				} else {
-                    var rtnValue = window.showModalDialog("/admin/ezOrgan/companyInfo.do", args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 260));
+                    var rtnValue = window.showModalDialog(companyInfoURL, args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 295));
 
 				    if (typeof (rtnValue) != "undefined") {
 				        alert("<spring:message code='ezOrgan.x0005' />");
@@ -347,15 +349,17 @@
 				args[0] = treeNode.GetNodeData("CN");
 				args[1] = "";
 				
+				var deptInfoURL = "/admin/ezOrgan/deptInfo.do?selectCN=" + args[0]; 
+				
 				if (CrossYN()) {
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = add_dept_Complete;
 				    
-				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 320));
+				    var OpenWin = window.open(deptInfoURL , "DeptInfo", GetOpenWindowfeature(435, 350));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else{
-				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args,"dialogHeight:320px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 320));
+				    var rtnValue = window.showModalDialog(deptInfoURL, args,"dialogHeight:350px; dialogWidth:435px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(435, 350));
                     
 				    if (typeof (rtnValue) != "undefined"){
 				        getDeptFullTree(rtnValue);
@@ -433,16 +437,18 @@
 				args[0] = treeNode.GetNodeData("CN");
 				args[1] = treeNode.GetNodeData("VALUE");
 				
+				var deptInfoURL = "/admin/ezOrgan/deptInfo.do?selectCN=" + args[0] + "&pageType=modify"; 
+				
 				if (CrossYN()) {
 				    deptinfo_dialogArguments = new Array();
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = info_dept_Complete;
 				    
-				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 320));
+				    var OpenWin = window.open(deptInfoURL, "DeptInfo", GetOpenWindowfeature(435, 350));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else {
-				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args, "dialogHeight:320px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 320));
+				    var rtnValue = window.showModalDialog(deptInfoURL, args, "dialogHeight:350px; dialogWidth:435px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(435, 350));
 
 				    if (typeof (rtnValue) != "undefined") {
 				        alert("<spring:message code='ezOrgan.t7' />");
@@ -531,7 +537,7 @@
 		    function mov_dept_CompleteWithTimeout(rtnValue) {
 		    	 setTimeout(function() {
 		    		 mov_dept_Complete(rtnValue);
-	                }, 10);
+	                }, 100);
 		    }
 		    
 		    function GetDeptFullPath(DeptID, topid){
@@ -770,10 +776,38 @@
 					}
 				}
 			}
-
+		    
+		    function getUserCompanyID(userID) {
+		    	var rtnVal = "";
+		    	
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezOrgan/getUserCompanyID.do",
+					data : {
+						cn : userID
+					},
+					async : false,
+					success : function(result) {
+						rtnVal = result;
+					},
+					error : function(){
+					}
+				});
+		    	
+		    	return rtnVal;
+		    }
+		    
 		    function mail_manage(){
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
+		        
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
 
 		        if (listview.GetSelectedRows().length == 0) {
 					alert("<spring:message code='ezOrgan.t50' />");
@@ -784,14 +818,36 @@
 			    } else if (listview.GetSelectedRows().length > 1) {
 					alert("<spring:message code='ezOrgan.t51' />");
 					return;
-				} else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+				} else if (listview.GetSelectedRows()[0].getAttribute("DATA4") == 'addJob'){
 		    		alert("<spring:message code='ezOrgan.psb02' />");
 					return;
 			    }
 
-			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
+		        var selectId = GetAttribute(listview.GetSelectedRows()[0],"DATA2");
+		        var selectCompanyId = getUserCompanyID(selectId); 
+		        var url = "/admin/ezOrgan/configEmail.do?id=" + selectId + "&type=user" + "&companyId=" + selectCompanyId;
+			    window.open(url, "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
 			}
-
+		    
+		    function deptMail_manage() {
+		    	var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+				
+		        if (nodeIdx.length == 0) {
+		        	alert("<spring:message code='ezEmail.multiDomain.ksa23' />");
+					return;
+		        }
+				
+		        var selectId = treeNode.GetNodeData("CN");
+		        var selectCompanyId = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+		        var url = "/admin/ezOrgan/configEmail.do?id=" + selectId + "&type=dept" + "&companyId=" + selectCompanyId;
+			    window.open(url, "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
+		    }
+		    
 			function Change_List(){
 				var treeView = new TreeView();
 				treeView.LoadFromID("FromTreeView");
@@ -1268,7 +1324,7 @@
 	    		}
 		    	
 	    		var trIdx = listview.GetSelectedRows()[0];
-	    		var mobileOwner = $(trIdx).children().eq(0).text();
+	    		var mobileOwner = $(trIdx).children().eq(1).text();
 	    		var data = listview.GetSelectedRows()[0].getAttribute("DATA2");
 		    	document.getElementById("userSend").value = data;
 		    	
@@ -1406,12 +1462,14 @@
 				userID = userID.substring(indexCN);
 				inputpassword_dialogArguments[1] = mod_pwd_complete;
 
+				/* 2020-01-02 홍승비 - 크롬과 IE의 창 크기 통일 */
 				//크롬일때 alert창 크기때문에 크롬일때 구별
 				var agent = navigator.userAgent.toLowerCase();
 				if (agent.indexOf("chrome") != -1) {
 					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 192));
 				} else {
-					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 200));	
+					//var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 200));
+					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 192));
 				}
 			}
 
@@ -1464,7 +1522,7 @@
 			function move_user_CompleteWithTimeout(rtnValue) {
 				setTimeout(function() {
 					move_user_Complete(rtnValue);
-				}, 10);
+				}, 100);
 			}
 
 			// 사원이동 수행
@@ -1929,15 +1987,18 @@
 					<li id="usermenu8"><span onClick="mov_dept()"><spring:message code='ezOrgan.t82' /></span></li>
 					<li id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></li>
 				</c:if>
+				<c:if test="${useExternalMailServer == 'NO' }">
 				<li id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
+				<li id="usermenu6"><span onClick="deptMail_manage()"><spring:message code='ezEmail.multiDomain.ksa22' /></span></li>
 				<li id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></li>
+				</c:if>
 				<c:if test="${useSyncServer == 'YES'}">			
 					<li id="usermenu24"><span onClick="syncOrganAccounts()"><spring:message code='ezOrgan.lhm5' /></span></li>
 				</c:if>
 				<c:if test="${useBizmekaTalk == 'YES'}">
 					<li id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></li>
 				</c:if>
-				<c:if test="${useDisablePopImap == 'YES'}">
+				<c:if test="${useDisablePopImap == 'YES' && useExternalMailServer == 'NO'}">
 					<li id="usermenu22"><span onClick="mod_pop3Imap()">POP3/IMAP</span></li>
 				</c:if>
 				<c:if test="${useMobileManagemant == 'YES' }">

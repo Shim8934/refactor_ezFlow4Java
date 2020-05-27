@@ -18,7 +18,9 @@ public interface EzWebFolderAdminService {
 	WebfolderConfigVO getWebfolderConfig(String companyId, int tenantId) throws Exception;
 	//List<CapacityVO> getListUserCapacity(String realColmn, String order, String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception;
 	//void updateNewAmount(List<String> targetList, String type, String newStorageValue, String companyId, int tenantId) throws Exception;
-	List<FileLogVO> getListFileLogs(String realColmn, String order, String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String actionType, int startPoint, int endPoint, String primary, String offset, int tenantId) throws Exception;
+	List<FileLogVO> getListFileLogs(String realColmn, String order, String companyId, String searchChk, String startDate, 
+			String endDate, String fileExt, String fileName, String userName, String fileType, String actionType, 
+			int startPoint, int endPoint, String primary, String offset, int tenantId, String sortType, String sortColumn) throws Exception;
 	void insertFileLog(FileLogVO fileLog) throws Exception;
 	void insertFolder(FolderVO folder) throws Exception;
 	void insertFolder2(FolderVO folder) throws Exception;

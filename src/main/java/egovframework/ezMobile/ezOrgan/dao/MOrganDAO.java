@@ -53,4 +53,12 @@ public class MOrganDAO extends EgovAbstractDAO {
 	public List<MOrganListVO> getHighDeptInfo(Map<String, Object> map) throws Exception {
 		return (List<MOrganListVO>) list("MOrganDAO.getHighDeptInfo", map);
 	}
+	
+	public MOrganListVO getOneDeptInfo(Map<String, Object> map) throws Exception {
+		return (MOrganListVO) select("MOrganDAO.getOneDeptInfo", map);
+	}
+	
+	public MPersonListVO getUserAddjobInfo(Map<String, Object> map) throws Exception {
+		return (MPersonListVO) select("MOrganDAO.getUserAddjobInfo", map);
+	}
 }

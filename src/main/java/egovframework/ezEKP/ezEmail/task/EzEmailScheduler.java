@@ -9,7 +9,6 @@ import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
@@ -67,6 +66,8 @@ import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
+import egovframework.ezEKP.ezEmail.vo.MailDeletedIdVO;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -86,9 +87,6 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Autowired
 	private Properties config;
 
-	@Autowired
-	private Properties globals;
-	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource; 
 
@@ -125,6 +123,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Scheduled(cron = "${config.cron.mailboxQuotaListUpdate}")
 	public void mailboxQuotaListUpdate() throws Exception {
 		logger.debug("mailboxQuotaListUpdate scheduler started.");
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("mailboxQuotaListUpdate scheduler ended.");
+			return;
+		}
 		
 		if (!preScheduler("mailboxQuotaListUpdate")) {
 			logger.debug("mailboxQuotaListUpdate scheduler ended.");
@@ -176,6 +180,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Scheduled(cron = "${config.cron.deleteAllUserOldMail}")
 	public void deleteAllUserMail() throws Exception {
 		logger.debug("deleteAllUserOldMail scheduler started.");
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("deleteAllUserOldMail scheduler ended.");
+			return;
+		}
 		
 		if (!preScheduler("deleteAllUserOldMail")) {
 			logger.debug("deleteAllUserOldMail scheduler ended.");
@@ -260,12 +270,29 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	public void deleteMailBlob() throws Exception {
 		logger.debug("deleteMailBlob started.");
 		
-		String schedulerId = config.getProperty("config.SchedulerServer");
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
 		
+		if (useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("deleteMailBlob ended.");
+			return;
+		}
+		
+		//choose scheduler running server
+		if (!preScheduler("deleteMailBlob")) {
+			logger.debug("deleteMailBlob ended.");
+			return;
+		}
+				
 		int count = 0;
 		
-		// 1번 서버가 james_mail 테이블과 james_mail_blob 테이블을 조인하여 james_mail에 없는 blob 레코드를 삭제하는 작업을 수행한다.
-		if (schedulerId != null && schedulerId.equals("1")) {
+		String useMailDeletedId = ezCommonService.getTenantConfig("useMailDeletedId", 0);
+		
+		Calendar now = Calendar.getInstance();
+		int hour = now.get(Calendar.HOUR_OF_DAY);
+		int minute = now.get(Calendar.MINUTE);
+		
+		// 오전 3시에는 james_mail 테이블과 james_mail_blob 테이블을 outer join하여 삭제할 blob 목록을 구한다.
+		if (!useMailDeletedId.equals("YES") || (hour == 3 && minute < 10)) {
 			List<MailBlobVO> orphanedMailBlobList = ezEmailService.getOrphanedMailBlobList();
 			
 			logger.debug("orphanedMailBlobList count=" + orphanedMailBlobList.size());
@@ -280,17 +307,38 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 								
 				Thread.sleep(sleepTime);
 			}
+		// 그 외에는 james_mail_deleted_id 테이블에 있는 목록을 기초로 삭제할 blob 목록을 구한다.
+		} else {
+			List<MailDeletedIdVO> mailDeletedIdList = ezEmailService.getMailDeletedIdList();
+			
+			logger.debug("mailDeletedIdList count=" + mailDeletedIdList.size());
+									
+			for (MailDeletedIdVO mailDeletedIdVO : mailDeletedIdList) {
+				if (++count % 120 == 1) {
+					logger.debug("Deleting mailBoxId=" + mailDeletedIdVO.getMailBoxId() + ",mailUid=" + mailDeletedIdVO.getMailUid() + ",count=" + count);
+				}
+				
+				// 레코드가 하나씩 삭제될 때마다 즉시 반영되도록 하기 위해 Service Layer를 거치지 않고 직접 DAO에 접근하도록 함.
+				ezEmailDAO.deleteMailBlobWithDeletedId(mailDeletedIdVO);
+				ezEmailDAO.deleteMailDeletedId(mailDeletedIdVO);
+			}				
 		}
 		
 		logger.debug("deleteMailBlob ended. count=" + count);
 	}
-	
+		
 	/**
 	 * 환경설정 - 자동삭제 스케줄러
 	 */
 	@Scheduled(cron = "${config.cron.autoDelete}")
 	public void autoDelete() throws Exception{
 		logger.debug("autoDelete scheduler started.");
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("autoDelete scheduler ended.");
+			return;
+		}
 		
 		//choose scheduler running server
 		if (!preScheduler("autoDelete")) {
@@ -360,6 +408,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Scheduled(cron = "${config.cron.reservedMailSend}")
 	public void reservedMailSend() throws Exception{
 		logger.debug("reservedMailSend scheduler started.");
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("reservedMailSend scheduler ended.");
+			return;
+		}
 		
 		//choose scheduler running server
 		if (!preScheduler("reservedMailSend")) {
@@ -817,6 +871,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		}		
 	}
 	
+	@SuppressWarnings("unused")
 	private void sendInvalidRecipientNotiMail(String originalSender, String originalSubject, List<String> invalidAddressList,
 					Locale locale, String offset) {
 		try {
@@ -867,6 +922,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     public void processMailStatLogs() throws Exception {
         logger.debug("processMailStatLogs scheduler started.");
         
+        String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("processMailStatLogs scheduler ended.");
+			return;
+		}
+		
         //choose scheduler running server
         if (!preScheduler("processMailStatLogs")) {
             logger.debug("processMailStatLogs scheduler ended.");
@@ -1055,6 +1116,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	public void broadcastQuotaWarning() throws Exception {
 		logger.debug("broadcastQuotaWarning started.");
 		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+			logger.debug("broadcastQuotaWarning scheduler ended.");
+			return;
+		}
+		
 		//choose scheduler running server
 		if (!preScheduler("broadcastQuotaWarning")) {
 			logger.debug("broadcastQuotaWarning scheduler ended.");
@@ -1183,6 +1250,47 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		logger.debug("broadcastQuotaWarning end.");
 	}
 	
+	
+	/**
+	 * 만료일 지난 사용자 공용배포그룹 삭제
+	 */
+	@Scheduled(cron = "${config.cron.useDistributionoDelete}")
+	public void useDistributionoDelete() throws Exception{
+		logger.debug("useDistributionoDelete scheduler started.");
+		
+		//choose scheduler running server
+		if (!preScheduler("useDistributionoDelete")) {
+			logger.debug("useDistributionoDelete scheduler ended.");
+			return;
+		}
+		
+		int tenantId = 0;
+		String delDLURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteDistribution";
+		
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", tenantId);
+		
+		if (useUserDefinedDL.equalsIgnoreCase("YES")) {
+			try {
+				List<MailDistributionVO> dlVoList = ezEmailService.getExpiredUserDistributionList();
+				for (MailDistributionVO dlVo : dlVoList) {
+					String domain = dlVo.getDomain();
+					String dlId = dlVo.getId();
+					logger.debug("domain=" + domain + ", dlId=" + dlId);
+					
+					String delDlInputParams = "domain=" + domain + "&cn=" + dlId;
+					String delDlResponse = ezEmailUtil.getWebServiceResult(delDLURL, delDlInputParams);		
+					logger.debug("delDlResponse=" + delDlResponse);
+					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+			}
+		}	
+		
+		logger.debug("useDistributionoDelete scheduler ended.");
+	}
+	
 	/**
 	 * org.apache.james.transport.mailets.JMochaQuotaWarning humanReadableByteCount(long bytes) 복사
 	 * 
@@ -1235,9 +1343,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				File[] files = file.listFiles(new DeleteExpireAttachFilter(bigSizeMailAttachDelDay));
 				
 				for (File expiredFile : files) {
+					File[] filelist = expiredFile.listFiles();
 					logger.debug("expired directory name=" + expiredFile.getName());
 					if (deleteDirectory(expiredFile)) {
 						logger.debug(expiredFile.getName() + " is deleted.");
+						//대용량 첨부파일 삭제 시 제한 횟수 정보도 삭제하는 로직 추가. 2020-03-12 홍대표.
+						ezEmailService.deleteBigAttachCountInfo(filelist, tenantVO.getTenantId());
 					}
 				}
 			}
@@ -1256,10 +1367,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			try {
 				//set SchedulerServer
 				String server = config.getProperty("config.SchedulerServer");
-				
-				// 클러스터 환경에서 dead lock을 피하기 위해 각 서버 번호(초) 만큼 sleep한다.
-				Thread.sleep(Integer.parseInt(server) * 1000);
-				
+								
 				String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setSchedulerServer";
 				
 				String schedulerParam = "scheduler=" + URLEncoder.encode(scheduler, "UTF-8");

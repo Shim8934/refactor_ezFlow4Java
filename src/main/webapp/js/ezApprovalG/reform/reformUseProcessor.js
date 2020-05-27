@@ -562,7 +562,15 @@ reformUseProc.doDataLoad = function(controls) {
 				}
 			}
 		} else if (controlType == "text" || controlType == "textarea") {
-			controlElement.setAttribute("oninput", "reformUseProc.defaultChangeHandler(this);");
+			var eventName = "";
+			
+			if (controlElement.hasAttribute("data-reform_date_picker_flag") || controlElement.hasAttribute("data-reform_time_picker_flag")) {
+				eventName = "onchange";
+			} else {
+				eventName = "oninput";
+			}
+			
+			controlElement.setAttribute(eventName, "reformUseProc.defaultChangeHandler(this);");
 			
 			// remove the current data
 			controlElement.value = "";
@@ -840,9 +848,11 @@ reformUseProc.onLoadHandler = function() {
 	
 	var stageName = reformUseProc.getCurrentStage();
 	var isRedraft = false;
+	var isReuse = false;
 	
 	if (window.parent && parent.parent) {
 		isRedraft = parent.parent.pDraftFlag === "REDRAFT";
+		isReuse = parent.parent.isUsed === "reuse";
 	}
 	
 	// hide hidden controls
@@ -926,12 +936,25 @@ reformUseProc.onLoadHandler = function() {
 				} else if (typeof (controlElement.type) !== "undefined" && controlElement.type != "button") {
 					var eventName;
 					if (controlElement.type == "text" || controlElement.type === "textarea") {
-						eventName = "oninput";
+						if (controlElement.hasAttribute("data-reform_date_picker_flag") || controlElement.hasAttribute("data-reform_time_picker_flag")) {
+							eventName = "onchange";
+						} else {
+							eventName = "oninput";
+						}
 					} else {
 						eventName = "onchange";
 					}
 					
 					controlElement.setAttribute(eventName, "reformUseProc.defaultChangeHandler(this);");
+					
+					if (controlElement.type == "textarea") {
+						controlElement.addEventListener("blur", function(e) {
+							var target = e.target;
+							if (target.hasAttribute("value")) {
+								target.innerHTML = target.getAttribute("value");
+							}
+						});
+					}
 				}
 			}
 		}
@@ -1010,7 +1033,7 @@ reformUseProc.onLoadHandler = function() {
 					});					
 				}
 				
-				if (stageName == "draft" && (!isRedraft || $(controlElement).val() === "")) {
+				if (stageName == "draft" && (!(isRedraft || isReuse) || $(controlElement).val() === "")) {
 					$(controlElement).datepicker('setDate', new Date());
 				}
 			}
@@ -1056,7 +1079,7 @@ reformUseProc.onLoadHandler = function() {
 					'step': timeGap
 				});
 				
-				if (stageName == "draft" && (!isRedraft || $(controlElement).val() === "")) {
+				if (stageName == "draft" && (!(isRedraft || isReuse) || $(controlElement).val() === "")) {
 					$(controlElement).timepicker('setTime', new Date());
 				}
 			}

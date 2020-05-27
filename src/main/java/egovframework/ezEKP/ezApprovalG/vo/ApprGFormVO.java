@@ -67,6 +67,12 @@ public class ApprGFormVO {
 	/** 폼버전 */
 	private String formVersion;
 	
+	/** 원문정보공개 */
+	private String openGovFlag;
+	
+	/**양식 세부설정**/
+	private String aprOption;
+	
 	public String getFormContID() {
 		return formContID;
 	}
@@ -345,6 +351,22 @@ public class ApprGFormVO {
 
 	public void setFormVersion(String formVersion) {
 		this.formVersion = formVersion;
+	}
+
+	public String getOpenGovFlag() {
+		return openGovFlag;
+	}
+
+	public void setOpenGovFlag(String openGovFlag) {
+		this.openGovFlag = openGovFlag;
+	}
+
+	public String getAprOption() {
+		return aprOption;
+	}
+
+	public void setAprOption(String aprOption) {
+		this.aprOption = aprOption;
 	}
 
 }

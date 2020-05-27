@@ -13,6 +13,7 @@
 		<script type="text/javascript">
 			var ReturnFunction;
 			var isAdd = true;
+			var pageType = "${pageType}";
 			
 			$(document).ready(function(){
 				var RetValue;
@@ -93,7 +94,13 @@
 					OpenAlertUI("<spring:message code='ezOrgan.t115'/>");
 					return;
 				}
-							
+					
+				var selectDomain = $("#selectDomain").val();
+				if (pageType == "add" && selectDomain == "") {
+					OpenAlertUI("도메인이 지정되어 있지 않습니다. \n도메인을 설정해 주세요.");
+	            	return;
+	            }
+				
 				if (CompanyName.value == "") {
 					OpenAlertUI("<spring:message code='ezOrgan.t116'/>");
 					return;
@@ -140,7 +147,8 @@
 		        	dataType : "text",
 		        	url : "/admin/ezOrgan/saveCompanyInfo.do",
 		        	async : false,
-		        	data : {parentCn : parentCn, cn : CompanyID.value, displayName : CompanyName.value, displayName2 : CompanyName2.value, mailId : mailId, operatorId : operatorID.value, manualFlag : "Y"},
+		        	data : {parentCn : parentCn, cn : CompanyID.value, displayName : CompanyName.value, displayName2 : CompanyName2.value, mailId : mailId, operatorId : operatorID.value, manualFlag : "Y",
+		        		selectDomain : selectDomain},
 		        	success : function(result){
 		        		 var retVal = result;
 		        		 
@@ -235,9 +243,26 @@
         </div>
 		<table class="content"> 
 			<tr> 
-		    	<th><spring:message code='ezOrgan.t121' /></th> 
-		    	<td><input id="CompanyID" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="20"></td> 
+		    	<th><spring:message code='ezOrgan.t121' /><span style="color:red"> *</span></th> 
+		    	<td>
+		    		<c:set var="companyIdWidth" value="${pageType eq 'add' ? 'width:45%;' : 'width:100%;' }" />
+		    		<input id="CompanyID" style="<c:out value="${companyIdWidth }" /> -moz-box-sizing:border-box;box-sizing:border-box;" maxlength="20">
+					<c:if test="${pageType eq 'add' }">
+				    	<span style="font-weight: bold; ">@</span>
+						<select id="selectDomain" style="width: 48%; ">
+							<c:forEach var="item" items="${domainList}">
+								<option value="<c:out value='${item}'/>" ${item eq tenantDomain ? 'selected' : ''}><c:out value='${item}'/></option>
+							</c:forEach>
+						</select>
+					</c:if>
+		    	</td> 
 		  	</tr> 
+		  	<c:if test="${pageType eq 'modify' }">
+			  	<tr>
+			  		<th><spring:message code='main.t78' /></th>
+			  		<td>${companyMailDomain}</td>
+			  	</tr>
+		  	</c:if>
 		  	<tr> 
 		  		<th id="parentHeader"><spring:message code='ezOrgan.t122' /></th> 
 		    	<td> <input id="ParentID" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" readonly="readonly"></td> 
@@ -247,7 +272,7 @@
 		    	<td> <input id="operatorID" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="50"></td> 
 		  	</tr> 
 		  	<tr>
-			    <th><spring:message code='ezOrgan.t123' /></th>
+			    <th><spring:message code='ezOrgan.t123' /><span style="color:red"> *</span></th>
 			    <td style="padding:0;">
 			    	<table style="width:100%;-moz-box-sizing:border-box;box-sizing:border-box;">
 			    		<tr class="primary">

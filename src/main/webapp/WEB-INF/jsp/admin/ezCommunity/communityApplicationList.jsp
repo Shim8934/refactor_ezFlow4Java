@@ -104,13 +104,43 @@
 				document.getElementById("searchValue").value = "";
 				document.getElementsByName("cCateA")[0].value = "0";
 				
+				/* 2020-01-03 홍승비 - 폐쇄신청 커뮤니티의 경우, 검색옵션으로 커뮤니티이름과 폐쇄사유를 사용 */
+				var commuName = $("#searchType").find("option[value='C_ClubName']");
+				var commuDesc = $("#searchType").find("option[value='C_ClubDesc']");
+				var commuCR = $("#searchType").find("option[value='C_CloseReason']");
+				
+				/* 2020-05-25 홍승비 - IE 브라우저 대응 옵션값 추가, 제거로 변경 */
+				if (selectedTabId == "closeCommu") { // 폐쇄승인
+
+					 // 커뮤니티소개 제거
+					if (commuDesc.length > 0) {
+						commuDesc.remove();
+					}
+					 // 폐쇄사유 추가
+					$("#searchType").append("<option value='C_CloseReason'><spring:message code = 'ezCommunity.t71' /></option>");
+					
+					commuName.attr("selected", true); // 커뮤니티이름 (default)
+				} else { // 신청승인
+					
+					 // 폐쇄사유 제거
+					if (commuCR.length > 0) {
+						commuCR.remove();
+					}
+					 // 커뮤니티소개 추가
+					$("#searchType").append("<option value='C_ClubDesc'><spring:message code = 'ezCommunity.t2008' /></option>");
+					
+					commuName.attr("selected", true); // 커뮤니티 이름 (default)
+				}
+				
 				pCurPage = 1;
 				applicationCommuList();
 			}
 			
+			/* 2020-01-06 홍승비 - 커뮤니티소개 검색옵션 추가 */
 			// (신청승인 / 폐쇄승인 ) 리스트 호출
 			function applicationCommuList() {
 				var url = (selectedTabId == "admitCommu" ? "/admin/ezCommunity/admitCom.do" : "/admin/ezCommunity/closeCom.do");
+				var searchType2 = document.getElementById("searchType");
 				
 				$.ajax({
 					type : "POST",
@@ -120,8 +150,9 @@
 					data : 
 					{
 						pageNum     : pCurPage,
-						searchType  : document.getElementsByName("cCateA")[0].value,
-						searchValue : make_searchstring(document.getElementById("searchValue").value)
+						searchType  : document.getElementsByName("cCateA")[0].value, // 카테고리 종류
+						searchType2  : searchType2.options[searchType2.selectedIndex].value, // 커뮤니티 검색옵션
+						searchValue : make_searchstring(document.getElementById("searchValue").value) // 검색값
 					},
 					success : function (data) {
 						pCurPage   = data.pageNum;
@@ -462,7 +493,9 @@
 			
 			// 폐쇄승인 리스트 승인 버튼 이벤트 메소드
 			function closeBtnClick(code) {
-				if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
+				
+				/* 2020-05-22 홍승비 - 관리자의 커뮤니티 폐쇄와 폐쇄 승인 시 메세지를 분리 */
+				if (confirm("<spring:message code = 'ezCommunity.hsbAd01' />")) {
 					$.ajax({
 						type : "GET",
 						dataType : "json",
@@ -596,6 +629,8 @@
 				<span id="idSpan" class="idSpan">${idSpanValue}</span>
 				<select id="searchType" name="QuerySelect" style="vertical-align: middle; height: 22px;">
 					<option selected value="C_ClubName"><spring:message code = 'ezCommunity.t9991' /></option>
+					<%-- 2020-01-06 홍승비 - 커뮤니티소개, 폐쇄사유 검색옵션 추가 (2020-05-25 홍승비 - 폐쇄사유 옵션 동적 추가/제거 형식으로 변경) --%>
+					<option value="C_ClubDesc"><spring:message code = 'ezCommunity.t2008' /></option>
 				</select>
 						
 				<input name="text" type="text" style="WIDTH:200px; vertical-align:middle; height: 22px;" id="searchValue" onkeydown="return keyword_onkeydown()"> 

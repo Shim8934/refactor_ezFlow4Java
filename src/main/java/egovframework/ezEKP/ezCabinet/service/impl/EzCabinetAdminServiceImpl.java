@@ -9,8 +9,6 @@ import javax.annotation.Resource;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
@@ -18,15 +16,12 @@ import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
-import egovframework.ezEKP.ezCabinet.web.EzCabinetAdminController;
 import egovframework.let.user.login.vo.LoginVO;
 
 @Service("EzCabinetAdminService")
 public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 	@Resource(name = "EzCabinetAdminDAO")
 	private EzCabinetAdminDAO ezCabinetAdminDAO;
-	
-	private static final Logger logger = LoggerFactory.getLogger(EzCabinetAdminController.class);
 	
 	@Override
 	public CompanyCapacityVO getCompanyCapacity(String companyId, int tenantId) throws Exception {

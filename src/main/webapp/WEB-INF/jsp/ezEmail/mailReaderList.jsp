@@ -333,6 +333,10 @@
 	            </ul>
 	        </div>
 	        <div class="portlet_tabpart01" id="TabDiv">
+	        	<div style="margin-bottom: 7px;">
+					<span>※ <spring:message code='ezEmail.ksa14' /></span>
+				</div>
+	        	
 	            <div class="portlet_tabpart01_top" id="tab1">
 	                <p id="MailEnv_sub1"><span divname="ALL" id="1tab1"><spring:message code='ezEmail.t588' /></span></p>
 	                <p id="MailEnv_sub2"><span divname="READ" id="1tab2"><spring:message code='ezEmail.t99000072' /></span></p>
@@ -353,7 +357,7 @@
 	                    </tr>
 	                </table>
 	            </table>
-	            <div id="contentlist" name="contentlist" style="border: 0px solid blue; height: 330px; width: 100%; overflow-y: auto;overflow-x:hidden;" >
+	            <div id="contentlist" name="contentlist" style="border: 0px solid blue; height: 315px; width: 100%; overflow-y: auto;overflow-x:hidden;" >
 	                <table class="mainlist" style="width: 100%;" id="MailList">
 	                </table>
 	            </div>

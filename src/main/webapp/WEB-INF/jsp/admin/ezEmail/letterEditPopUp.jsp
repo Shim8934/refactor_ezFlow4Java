@@ -32,11 +32,11 @@
 						</colgroup>
 						<tr>
 							<th style="font-weight: normal"><spring:message code='ezEmail.letter8'/> (${primary})</th>
-							<td><input type="text" id="displayname" name="displayname" maxlength="40" placeholder="<spring:message code='ezEmail.letter10'/>"></td>
+							<td><input type="text" id="displayname" name="displayname" maxlength="40" ></td>
 						</tr>
 						<tr>
 							<th style="font-weight: normal"><spring:message code='ezEmail.letter8'/> (${secondary})</th>
-							<td><input type="text" id="displayname2" name="displayname2" maxlength="40" placeholder="<spring:message code='ezEmail.letter10'/>"></td>
+							<td><input type="text" id="displayname2" name="displayname2" maxlength="40" ></td>
 						</tr>
 					</table>
 				</div> <!-- leLetterInfo End -->

@@ -16,7 +16,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +56,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
@@ -64,6 +64,7 @@ import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezOrgan.web.EzOrganAdminController;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
@@ -105,6 +106,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 	@Resource(name = "crypto") 
 	private EgovFileScrty egovFileScrty;
 	
+	@Autowired
+	private EzEmailService ezEmailService;
+	
 	@Resource(name = "EzPersonalService")
 	private EzPersonalService ezPersonalService;
 	
@@ -137,6 +141,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 	
 	@Autowired
     private EzEmailUtil ezEmailUtil;
+	
+	@Autowired
+	private EzOrganAdminController ezOrganAdminController;
 	
     // dhlee
     @Autowired
@@ -373,7 +380,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 			String[] info = result.split(":");
 			
 			userID = info[0];
-			textName = ezOrganService.getPropertyValue(info[0], "displayname", userInfo.getTenantId());
+			String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+			textName = ezOrganService.getPropertyValue(info[0], "displayname" + lang, userInfo.getTenantId());
 			deptID = info[2];
 			startDate = info[3] + ":" + info[4];
 			endDate = info[5] + ":" + info[6];
@@ -505,6 +513,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("callBack", callBack);
 		model.addAttribute("saveMailFlag", saveMailFlag);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useSaveSentMail", "YES".equalsIgnoreCase(config.getProperty("config.SentMailStoredInSentbox", "YES")));
 
 		logger.debug("setApprovNoticeMail ended");
 		return "ezPersonal/persSetApprovNoticeMail";
@@ -901,7 +910,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		logger.debug("leftEnvironment started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		String funCode = "";
-		String topMenuID = "";
+		// String topMenuID = "";
 		String ezInfoSSL = "";
 		String SSL = "";
 		
@@ -909,9 +918,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 			funCode = req.getParameter("funCode");
 		}
 		
-		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").trim().equals("")) {
+		/* if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").trim().equals("")) {
 			topMenuID = req.getParameter("topMenuID");
-		}
+		} */
 		
 		if (config.getProperty("config.ezInfoSSL") != null && !config.getProperty("config.ezInfoSSL").equals("")) {
 			ezInfoSSL = config.getProperty("config.ezInfoSSL");
@@ -933,7 +942,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			firstScreen_Mail = "NO";
 		}
 
-		String accessList = ezPortalService.getAccessList(userInfo);
+		// String accessList = ezPortalService.getAccessList(userInfo);
 		
 		/*
 		 * 환경설정 좌측 메뉴 리스트에 있는 모듈의 URL과 이름을 map에 추가
@@ -972,6 +981,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 		String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 		String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 		
 		if (useAttitude == null || useAttitude.equals("")) {
 			useAttitude = "NO";
@@ -1017,6 +1027,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 			useEzPMS = "NO";
 		}
 		
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
 		if (useQuestion.equals("NO")) {
 			menuList.removeIf(vo -> (vo.getMenuId() == 14));
 		}
@@ -1059,6 +1073,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		if (useCommunity.equals("NO")) {
 			menuList.removeIf(vo -> (vo.getMenuId() == 5));
+		}
+		
+		if (useExternalMailServer.equalsIgnoreCase("YES")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 1));
 		}
 		/*
 		 * moduleList에 추가해준 모듈의 이름으로 확인 
@@ -1185,6 +1203,18 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", userInfo.getTenantId());
 		String useAllowUserMobileManagement = ezCommonService.getTenantConfig("useAllowUserMobileManagement", userInfo.getTenantId());
 		
+		boolean useMailAliasSettingOnLogin = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailAliasSettingOnLogin", userInfo.getTenantId()));
+		
+		if (useMailAliasSettingOnLogin) {
+			int mailIdLength = labelMail.indexOf("@");
+			if (mailIdLength > 0) {
+				labelMail = labelMail.substring(0, mailIdLength);
+			}
+
+			String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+			model.addAttribute("domainName", domainName);
+		}
+		
 		if (useMobileManagemant.equals("YES") && useAllowUserMobileManagement.equals("YES")) {
 			userMobileManaged = "YES";
 		}
@@ -1222,6 +1252,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("LiteralFurigana", literalFurigana);
 		model.addAttribute("LiteralExtensionPhone", literalExtensionPhone);
 		model.addAttribute("LiteralOfficeMobile", literalOfficeMobile);
+		model.addAttribute("useMailAliasSettingOnLogin", useMailAliasSettingOnLogin);
 		
 		logger.debug("changePersonInfo ended");
 		return "/ezPersonal/persChangePersonInfo";
@@ -1239,6 +1270,23 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute2", "", "user", userInfo.getTenantId());
 
+	    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        date.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String nowDate = date.format(new Date()); 
+
+        // 비즈메카톡과의 프로필 사진 연동을 위해 updateDT 필드를 갱신한다.
+        ezOrganAdminService.updateProperty(userInfo.getId(), "updateDT", nowDate, "user", userInfo.getTenantId());
+		
+        String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", userInfo.getTenantId());
+        
+        if (useBizmekaTalk.equals("YES")) {
+        	try {
+        		ezOrganAdminController.invokeEzTalkSyncServer(userInfo.getTenantId());
+        	} catch (Exception e) {
+        		e.printStackTrace();
+        	}
+        }
+		
 		logger.debug("deletePicture ended");
 		return result;
 	}
@@ -1255,6 +1303,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		vo.setTenantId(userInfo.getTenantId());
 		
+		// displayname2가 null로 넘어오는데, 이럴 경우 displayname2은 displayname으로 대체되는 문제가 생겨서 추가
+		vo.setDisplayName2(userInfo.getDisplayName2());
+		
 		logger.debug("<<<1. : " + vo.getCn());
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1264,6 +1315,16 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		ezOrganAdminService.updateDBData_user(vo);
 
+        String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", userInfo.getTenantId());
+        
+        if (useBizmekaTalk.equals("YES")) {
+        	try {
+        		ezOrganAdminController.invokeEzTalkSyncServer(userInfo.getTenantId());
+        	} catch (Exception e) {
+        		e.printStackTrace();
+        	}
+        }
+		
 		logger.debug("saveUserInfo ended");
 		return "OK";
 	}
@@ -1482,6 +1543,16 @@ public class EzPersonalController extends EgovFileMngUtil {
         // 비즈메카톡과의 프로필 사진 연동을 위해 updateDT 필드를 갱신한다.
         ezOrganAdminService.updateProperty(userInfo.getId(), "updateDT", nowDate, "user", userInfo.getTenantId());
 		
+        String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", userInfo.getTenantId());
+        
+        if (useBizmekaTalk.equals("YES")) {
+        	try {
+        		ezOrganAdminController.invokeEzTalkSyncServer(userInfo.getTenantId());
+        	} catch (Exception e) {
+        		e.printStackTrace();
+        	}
+        }
+        
 		logger.debug("photoUploadByUser ended");
 	}
 	
@@ -2237,5 +2308,66 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		logger.debug("getBujaeInfo ended");
 		return result;
+	}
+
+	/**
+	 * 사용자가 설정하는 alias 메일주소 도메인체크 및 중복체크 실행 함수<br>
+	 * - 사용자 기본 이메일 주소(cn@도메인)를 제외한 alias는 중복에 안 걸림
+	 */
+	@RequestMapping(value = "/ezPersonal/checkEmailId.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String checkEmailId(@CookieValue("loginCookie") String loginCookie, @RequestParam String emailId) throws Exception {
+		logger.debug("checkEmailId started.");
+
+		String returnValue = "ERROR";
+
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			logger.debug("userId={}, emailId={}", userInfo.getId(), emailId);
+
+			int tenantId = userInfo.getTenantId();
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+			String userEmail = userInfo.getId() + "@" + domain;
+			String aliasEmail = emailId + "@" + domain;
+			returnValue = ezEmailService.checkIndividualAliasWithoutOwned(userEmail, aliasEmail, tenantId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("checkEmailId ended. returnValue={}", returnValue);
+
+		return returnValue;
+	}
+
+	/**
+	 * 사용자가 설정하는 alias 메일주소 도메인체크 및 중복체크 실행 함수 <br>
+	 * - 사용자 기본 이메일 주소(cn@도메인)를 제외한 alias는 중복에 안 걸림
+	 */
+	@RequestMapping(value = "/ezPersonal/saveUserEmail.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveUserEmail(@CookieValue("loginCookie") String loginCookie, @RequestParam String emailId) throws Exception {
+		logger.debug("saveUserEmail started.");
+
+		String returnValue = "ERROR";
+
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String userId = userInfo.getId();
+			logger.debug("userId={}, emailId={}", userId, emailId);
+
+			int tenantId = userInfo.getTenantId();
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+			String userEmail = userId + "@" + domain;
+			String updateAlias = emailId + "@" + domain;
+			String originAlias = ezCommonService.getUserConfigInfo(tenantId, userId, "userFriendlyEmailAddress");
+
+			returnValue = ezEmailService.updatePrimaryIndividualAlias(userEmail, originAlias, updateAlias, tenantId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("saveUserEmail ended. returnValue={}", returnValue);
+
+		return returnValue;
 	}
 }

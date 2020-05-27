@@ -68,7 +68,8 @@ function CalendarView(pTagetID) {
             if (typeCal == 2) {
                 var tempyear = sDate.getFullYear();
                 var tempmemorial;
-                var tempyearmemorial
+                var tempyearmemorial;
+                var LunarDate2;
                 if (tempyear > 1800 && tempyear <= 2101) {
                     var month = sDate.getMonth() + 1;
                     var LunarDate = lunarCalc(tempyear, month, sDate.getDate(), 1);
@@ -76,7 +77,11 @@ function CalendarView(pTagetID) {
                     var LunarDateday = LunarDate.day;
                     tempmemorial = memorialDayCheck(sDate, LunarDate);
                     tempyearmemorial = yearmemorialDayCheck(sDate, LunarDate);
-                    LunarDate = LunarDatemonth + "." + LunarDateday;
+                    LunarDate2 = LunarDatemonth + "." + LunarDateday;
+                    
+                    if (LunarDate.leapMonth) {
+                    	LunarDate2 = strLangkmsr04 + LunarDate2;
+                    }
                 }
                 oTable.className = "calendar_day_title";
                 if (tempyear > 1800 && tempyear <= 2101) {
@@ -86,6 +91,12 @@ function CalendarView(pTagetID) {
 
                     for (var i = 0; i < tempmemorial.length; i++) {
                         memorial = tempmemorial[i];
+                        
+                        // 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && memorial.solarLunar == 2) {
+                        	continue;
+                        }
+                        
                         if (uselang == "1") {
                             if (i == tempmemorial.length - 1)
                                 holidayname += memorial.name;
@@ -104,6 +115,12 @@ function CalendarView(pTagetID) {
 
                     for (var i = 0; i < tempyearmemorial.length; i++) {
                         yearmemorial = tempyearmemorial[i];
+                        
+                        // 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && yearmemorial.solarLunar == 2) {
+                        	continue;
+                        }
+                        
                         if (uselang == "1") {
                             if (i == tempyearmemorial.length - 1)
                                 holidayname2 += yearmemorial.name;
@@ -127,7 +144,7 @@ function CalendarView(pTagetID) {
 
                     var dayText;
                     if (LunarUse)
-                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) +  " (" + LunarDate + ")";
+                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) +  " (" + LunarDate2 + ")";
                     else
                         dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
 
@@ -563,6 +580,10 @@ function MonthData(oThisDate, TDIndex) {
         var LunarDatemonth = LunarDate.month;
         var LunarDateday = LunarDate.day;
         LunarDate2 = LunarDatemonth + "." + LunarDateday;
+        
+        if (LunarDate.leapMonth) {
+        	LunarDate2 = strLangkmsr04 + LunarDate2;
+        }
     }
 
     var objTd = document.createElement("TD");
@@ -582,6 +603,12 @@ function MonthData(oThisDate, TDIndex) {
 
     for (var i = 0; i < tempmemorial.length; i++) {
         memorial = tempmemorial[i];
+        
+        // 윤달일 때 기념일 안나타나도록 수정
+        if(LunarDate.leapMonth == 1 && memorial.solarLunar == 2) {
+        	continue;
+        }
+        
         if (uselang == "1") {
             if (i == tempmemorial.length - 1)
                 holidayname += memorial.name;
@@ -597,9 +624,15 @@ function MonthData(oThisDate, TDIndex) {
         if (memorial.holiday)
             isholiday = true;
     }
-
+	
     for (var i = 0; i < tempyearmemorial.length; i++) {
         yearmemorial = tempyearmemorial[i];
+        
+        // 윤달일 때 기념일 안나타나도록 수정
+        if(LunarDate.leapMonth == 1 && yearmemorial.solarLunar == 2) {
+        	continue;
+        }
+        
         if (uselang == "1") {
             if (i == tempyearmemorial.length - 1)
                 holidayname2 += yearmemorial.name;
@@ -943,6 +976,10 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         var LunarDatemonth = LunarDate.month;
         var LunarDateday = LunarDate.day;
         LunarDate2 = LunarDatemonth + "." + LunarDateday;
+        
+        if (LunarDate.leapMonth) {
+        	LunarDate2 = strLangkmsr04 + LunarDate2;
+        }
     }
 
     var divID = (startOfWeek.getFullYear()) + "-" + leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2);
@@ -957,6 +994,12 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
 
         for (var i = 0; i < tempmemorial.length; i++) {
             memorial = tempmemorial[i];
+            
+            // 윤달일 때 기념일 안나타나도록 수정
+            if(LunarDate.leapMonth == 1 && memorial.solarLunar == 2) {
+            	continue;
+            }
+            
             if (uselang == "1") {
                 if (i == tempmemorial.length - 1)
                     holidayname += memorial.name;
@@ -975,6 +1018,12 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
 
         for (var i = 0; i < tempyearmemorial.length; i++) {
             yearmemorial = tempyearmemorial[i];
+            
+            // 윤달일 때 기념일 안나타나도록 수정
+            if(LunarDate.leapMonth == 1 && yearmemorial.solarLunar == 2) {
+            	continue;
+            }
+            
             if (uselang == "1") {
                 if (i == tempyearmemorial.length - 1)
                     holidayname2 += yearmemorial.name;
@@ -1083,7 +1132,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         dTd.className = "calendar_t_text";
         dTd.setAttribute("id", "TD_" + divID + "_" + k + ":3_Value");
         dTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
-        dTd.setAttribute("dispTime", divID + " " + leadingZeros(k, 2) + ":00:00");
+        dTd.setAttribute("dispTime", divID + " " + leadingZeros(k, 2) + ":30:00");
         dTr.appendChild(dTd);
         dTable.appendChild(dTr);
         objTd.appendChild(dTable);
@@ -1178,7 +1227,7 @@ function DayData(j) {
     s_Td.className = "calendar_t_text";
     s_Td.setAttribute("ondblclick", "newSchedule_onclick(event)");
     s_Td.setAttribute("id", "TD_" + divID + "_" + j + ":3_Value");
-    s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":00:00");
+    s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":30:00");
     s_Tr.appendChild(s_Td);
     sTable.appendChild(s_Tr);
     return sTable;

@@ -18,5 +18,8 @@ public enum CheckName {
 	USE_HTMLMODE,
 	editorFontStyle,
 	useSession,
-	useSessionMobile
+	useSessionMobile,
+	useMailConfirm,
+	MailBigSizeAttachDownloadLimitCount,
+	MailBigSizeAttachLimitCount
 }

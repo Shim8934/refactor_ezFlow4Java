@@ -235,6 +235,12 @@ var SurveyFile = function() {
 			var liElmt   = imgObj.parentElement;
 			var filePath = liElmt.getAttribute("path");
 			
+			// 2020-03-13 김민성 - 질문 수정 > url 삭제시 url 삭제 메소드 분기 타도록 추가
+			if(filePath == null) {
+				deleteUrlFile(imgObj, event);
+				return;
+			}
+			
 			$.ajax({
 				type: "POST",
 				url: "/ezSurvey/deleteAttachFile.do",
@@ -372,6 +378,12 @@ var SurveyFile = function() {
 					attInf.textContent = attachList[i]["fname"];
 					attInf.setAttribute("title", attachList[i]["fname"]);
 					delImg.addEventListener("click", function(e) {deleteUrlFile(this, e);}, false);
+					
+					avaDiv.appendChild(attImg);
+					attDiv.appendChild(avaDiv);
+					attDiv.appendChild(attInf);
+					liElmt.setAttribute("fname", attachList[i]["fname"]);
+					liElmt.setAttribute("furl", attachList[i]["furl"]);
 				}
 				else {
 					var sName         = document.createElement("span");
@@ -383,14 +395,15 @@ var SurveyFile = function() {
 					attInf.appendChild(sName);
 					attInf.appendChild(sSize);
 					delImg.addEventListener("click", function(e) {deleteFile(this, e);}, false);
+					
+					avaDiv.appendChild(attImg);
+					attDiv.appendChild(avaDiv);
+					attDiv.appendChild(attInf);
+					liElmt.setAttribute("fname", attachList[i]["fname"]);
+					liElmt.setAttribute("fsize", attachList[i]["fileSize"]);
+					liElmt.setAttribute("path" , attachList[i]["fpath"]);
 				}
 				
-				avaDiv.appendChild(attImg);
-				attDiv.appendChild(avaDiv);
-				attDiv.appendChild(attInf);
-				liElmt.setAttribute("fname", attachList[i]["fname"]);
-				liElmt.setAttribute("fsize", attachList[i]["fileSize"]);
-				liElmt.setAttribute("path" , attachList[i]["fpath"]);
 				liElmt.appendChild(attDiv);
 				liElmt.appendChild(delImg);
 				ulElmt.appendChild(liElmt);

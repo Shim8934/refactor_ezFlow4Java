@@ -423,6 +423,7 @@
 	            	if (HwpCtrl.CheckFieldExist("doctitle")) {
 	            		docTitle = HwpCtrl.GetFieldText("doctitle");
 	            	}
+
 	            	//여기다 발송의뢰반송 메일알람 추가
 	                SendSimsaBansong(docTitle);
 	                var pAlertContent = "<spring:message code='ezApprovalG.t256'/>";
@@ -531,6 +532,7 @@
 	    		url : "/ezApprovalG/saveEndFileHwp.do",
 	    		data : {
 	    			docID : pOrgDocID,
+                    // formId : pFormID,
 	    			html  : HwpCtrl.GetCloneData("", "HWP")
 	    		},
 	    		success: function(xml){
@@ -538,15 +540,19 @@
 	    		}        			
 	    	});
 	        
+	        var reqData = {
+    			docID : pDocID,
+                   // formId : pFormID,
+    			html  :  HwpCtrl.GetCloneData("", "HWP")
+        	}
+	        
 	        $.ajax({
 	    		type : "POST",
 	    		dataType : "text",
 	    		async : false,
 	    		url : "/ezApprovalG/saveFileHWP.do",
-	    		data : {
-	    			docID : pDocID,
-	    			html  :  HwpCtrl.GetCloneData("", "HWP")
-	    		},
+	    		contentType : "application/json",
+	    		data : JSON.stringify(reqData),
 	    		success: function(text){
 	    		}        			
 	    	});
@@ -1219,7 +1225,7 @@ function CheckUsePassword() {
                         <li id="btnSend"><span onclick="return btnSend_onclick()"><spring:message code='ezApprovalG.t214'/></span></li>
                         <li id="btnBoard"><span onclick="return btnBoard_onclick()"><spring:message code='ezApprovalG.t215'/></span></li>
                         <li id="btnReject"><span onclick="return btnReject_onclick()"><spring:message code='ezApprovalG.t49'/></span></li>
-                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
+                        <li id="btnPrint"><span class='icon16 popup_icon16_print' onclick="return btnPrint_onclick()"></span></li>
                     </ul>
                 </div>
                 <div id="close">

@@ -511,6 +511,7 @@ function func_addaddr_Complete(ret) {
             createNodeAndInsertText(xmlDom, objNode, "STYPE", "P");
             createNodeAndInsertText(xmlDom, objNode, "USERNM", "");
             createNodeAndInsertText(xmlDom, objNode, "USERNM2", "");
+            createNodeAndInsertText(xmlDom, objNode, "FURIGANA", "");
             objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTACHLIST");
             
             xmlHTTP.open("POST", "/ezAddress/addressSave.do", false);
@@ -612,7 +613,14 @@ function func_reject_Complete(retVal) {
         var objXml = new DOMParser().parseFromString('<DATA></DATA>', "text/xml");
         var objRoot = objXml.documentElement;
 
-
+        if (typeof(shareId) != "undefined" && shareId != "") {
+        	var objRow = objXml.createElement("ROW");
+            objRoot.appendChild(objRow);
+            
+            var objNode = objXml.createElement("SHAREID");
+            objNode.appendChild(objXml.createCDATASection(shareId));
+            objRow.appendChild(objNode);
+       }
 
         for (var i = 0 ; i < retVal.length ; i++) {
             var objRow = objXml.createElement("ROW");
@@ -969,6 +977,7 @@ function Item_View(vItem, pCItemID, vWriter, pBrdid, vGbnBoard, pBrdnm, brd_Gubu
     openwindow(openLocation, "", 880, 550);
 }
 
+/* 2019-12-19 홍승비 - 메일링크에 직접 encodeURIComponent 추가 */
 /* 2018-07-19 홍승비 - 답변메일, 새 게시 메일로 알리는 기능 -> 사간겸직 시 현재 회사가 아닌 곳에서 보내진 승인메일은 alert 처리 */
 function Item_View_New(pBoardID, pItemID, pBoardType) {
     if (pBoardType == "3" || pBoardType == "4" || pBoardType == "7") {
@@ -978,7 +987,7 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
         var pLeft = (pwidth - 765) / 2;
 
         var xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+        xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
         xmlhttp.send();
         
         var xmlDoc = xmlhttp.responseXML;
@@ -995,10 +1004,10 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
         /* 2018-11-06 홍승비 - 포토, 썸네일게시물 메일 내부에서 접근 시 .aspx->.do로 수정, 동영상게시판 구분 추가 */
         else if (getNodeText(xmlDoc.documentElement) != "0" && pBoardType != "7") {
           //  window.open("/myoffice/ezBoardSTD/BoardItemView_Photo.aspx?&ItemID=" + pItemID + "&BoardID=" + pBoardID + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
-            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=793,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");   
+            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL", "", "height=793,width=790, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");   
         } else if (getNodeText(xmlDoc.documentElement) != "0" && pBoardType == "7") {
           //  window.open("/myoffice/ezBoardSTD/BoardItemView_Photo.aspx?&ItemID=" + pItemID + "&BoardID=" + pBoardID + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
-            window.open("/ezBoard/boardItemViewMovie.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=679,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");   
+            window.open("/ezBoard/boardItemViewMovie.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL", "", "height=679,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");   
         }
         else {
             alert(strLang166);
@@ -1015,7 +1024,7 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
         var isDotNet = false;
         var dotNetUrl;
         var xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+        xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
         xmlhttp.send();
         
         var xmlDoc = xmlhttp.responseXML;
@@ -1044,7 +1053,7 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
             if (isDotNet) {
                 window.open(dotNetUrl + "/myoffice/ezBoardSTD/BoardItemView_Cross.aspx?ItemID=" + pItemID + "&BoardID=" + pBoardID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");                
             } else {
-                window.open("/ezBoard/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");
+                window.open("/ezBoard/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");
             }
         } else {
             alert(strLang166);
@@ -1062,7 +1071,7 @@ function Item_View_APPR(pBoardID, pItemID, pgubun) {
     pwidth = pwidth - 359;
 
     var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+    xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
     xmlhttp.send();
     
     var xmlDoc = xmlhttp.responseXML;
@@ -1079,12 +1088,12 @@ function Item_View_APPR(pBoardID, pItemID, pgubun) {
     /* 2018-11-06 홍승비 - 포토, 썸네일게시물 승인을 위해 .aspx->.do로 수정, 동영상게시판 구분 추가 */
     else if (getNodeText(xmlDoc.documentElement) != "0") {
         if (pgubun == "3" || pgubun == "4") {
-            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=793,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL", "", "height=793,width=790, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
         } else if (pgubun == "7") {
-        	 window.open("/ezBoard/boardItemViewMovie.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=679,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+        	 window.open("/ezBoard/boardItemViewMovie.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL", "", "height=679,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
         }
         else {
-            window.open("/ezBoard/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=720,width=765, status = no, scrollbars=1, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+            window.open("/ezBoard/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL", "", "height=720,width=765, status = no, scrollbars=1, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
         }
     }
     else {
@@ -1106,7 +1115,7 @@ function item_View_New_Community(pBoardID, pItemID, pCommunityID) {
     pwidth = pwidth - 359;
 
     var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("GET", "/ezCommunity/getItemViewNew.do?itemID=" + pItemID + "&boardID=" + pBoardID, false);
+    xmlhttp.open("GET", "/ezCommunity/getItemViewNew.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), false);
     xmlhttp.send();
     
     var xmlDoc = xmlhttp.responseXML;
@@ -1121,9 +1130,9 @@ function item_View_New_Community(pBoardID, pItemID, pCommunityID) {
     	 alert(strLangHSB01 + xmlDoc.getElementsByTagName("DATA2")[0].childNodes[0].nodeValue + strLangHSB02);
     } else {
     if (CrossYN())
-        window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&code=" + pCommunityID, "", "height=720,width=765, status = no, toolbar=no, scrollbars=1, menubar=no, location=no, resizable=1, top=0, left=0", "");
+        window.open("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(pCommunityID), "", "height=720,width=765, status = no, toolbar=no, scrollbars=1, menubar=no, location=no, resizable=1, top=0, left=0", "");
     else
-        window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&code=" + pCommunityID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+        window.open("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(pCommunityID), "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
     }
 }
 
@@ -1183,6 +1192,6 @@ function mail_link(){
 		}
 	}
 	
-	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(880, 900));
+	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(880, 900, true));
 
 }

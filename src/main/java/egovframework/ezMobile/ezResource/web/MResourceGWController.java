@@ -1,10 +1,8 @@
 package egovframework.ezMobile.ezResource.web;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -18,7 +16,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +30,6 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
-import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
@@ -63,9 +59,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 	@Autowired
 	private CommonUtil commonUtil;
 
-	@Autowired
-	private Properties config;	
-	
 	@Resource(name="MResourceService")
 	private MResourceService mResourceService;
 		
@@ -89,7 +82,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [get] 자원예약리스트조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/main-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/main-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceMainList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/main-list/users/{userId}] started.");
 
@@ -241,11 +234,16 @@ public class MResourceGWController extends EgovFileMngUtil {
 				authYn = "A";
 			}*/
 			
-			// 2018-11-07 김민성 - 자원 관리자 권한 가진 자원 체크
-			List<MResourceGetAdmSubClsTreeVO> adminCheckList = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
+			// 2018-11-07 김민성 - 자원 관리자 권한 가진 자원분류 체크
+			List<MResourceGetAdmSubClsTreeVO> adminCheckList = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn, brdId);
 
 			if(adminCheckList.size() > 0) {
-				authYn = "Y";
+				authYn = "U";
+				for(int i=0; i<adminCheckList.size(); i++) {
+					if(adminCheckList.get(i).getAccessLvl() == 1) {
+						authYn = "Y";
+					}
+				}
 			}
 			LOGGER.debug("authYn : " + authYn);
 			
@@ -284,7 +282,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [get] 즐겨찾기 대상 자원리스트 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/favorite-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/favorite-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceFavoriteList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/favorite-list/users/{userId}] started.");
 		JSONObject result = new JSONObject();
@@ -390,10 +388,14 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			String apprAuthYn = "N";
 			
-			for (MResourceGetAdmSubClsTreeVO rVO : list) {
+			/*for (MResourceGetAdmSubClsTreeVO rVO : list) {
 				if(rVO.getBrdId().equals(resourceId)){
 					apprAuthYn = "Y";
 				}
+			}*/
+			
+			if(list.stream().anyMatch(rVO -> rVO.getBrdId().equals(resourceId))) {
+				apprAuthYn = "Y";
 			}
 			
 			resVO.setApprAuthYn(apprAuthYn);
@@ -688,7 +690,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [delete] 즐겨찾기삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/favorite/users/{userId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/favorite/users/{userId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject delFavorite(@PathVariable String resourceId, @PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [DELETE /mobile/ezresource/resources/{resourceId}/favorite/{userId}] started.");
 		JSONObject result = new JSONObject();
@@ -779,13 +781,18 @@ public class MResourceGWController extends EgovFileMngUtil {
 			//의미확인후 삭제 또는 변경
 			cID = "VIEW";	
 			List<ResScheGetHolidayVO> getHoliday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
+			List<ResScheGetHolidayVO> getHoliday2 = mResourceService.getTholiday(cID.trim(), "ALL", info.getTenantId());
 			
 			LOGGER.debug("userId : " + userId);
 			LOGGER.debug("companyID : " + cID);
 			
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+			resultMap.put("getHoliday", getHoliday);
+			resultMap.put("memorialDay", getHoliday2);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", getHoliday);
+			result.put("data", resultMap);
 			
 		} catch (Exception e) {
 			
@@ -804,7 +811,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [get] 자원예약 승인대상 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/approve-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/approve-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject approveList( @PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/approve-list/users/{userId}] started.");
 		JSONObject result = new JSONObject();
@@ -968,7 +975,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [post] 자원예약 승인/미승인 처리결과 메일 전송
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/send-mail/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/send-mail/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject sendMailApprove(@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [POST /mobile/ezresource/send-mail/users/{userId}] started.");
 		JSONObject result = new JSONObject();
@@ -1054,7 +1061,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [get] 승인대상 자원리스트 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/apprFolder-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/apprFolder-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceApprFolderList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/apprfolder-list/users/{userId}] started.");
 		JSONObject result = new JSONObject();
@@ -1098,7 +1105,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [get] 승인대상 자원권한체크
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/auth-check/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/auth-check/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceApprFolderListCheck(@PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/auth-check/users/{userId}] started.");
 		JSONObject result = new JSONObject();
@@ -1137,12 +1144,17 @@ public class MResourceGWController extends EgovFileMngUtil {
 			LOGGER.debug("authYn: " + authYn);
 			if(!authYn.equals("A")) {
 				
-				List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
+				List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn, "");
 				if(!ownerId.equals("") && !ownerId.equals("1")) {
-					for(int i=0; i<list.size(); i++) {
+					/*for(int i=0; i<list.size(); i++) {
 						if(list.get(i).getBrdId().equals(ownerId)) {
 							authCheck = "Y";
 						}
+					}*/
+					// 20-03-06 김민성 - ownerId가 자원분류의 값이 아닌 자원ID 값인 경우가 있어 수정함
+					String ownerId2 = mResourceService.getResUpperBrdID(ownerId, tenantId, userCompany);
+					if(list.stream().anyMatch(res -> res.getBrdId().equals(ownerId2))) {
+						authCheck = "Y";
 					}
 				}
 				else {
@@ -1157,10 +1169,14 @@ public class MResourceGWController extends EgovFileMngUtil {
 			// 2018-10-31 김민성 - 자원 관리자 권한 가진 자원이 있는지 체크
 			List<String> adminResList = mResourceService.getResAdminAuth(userId, tenantId, brdCompany);
 			if(!ownerId.equals("")) {
-				for(int i=0; i<adminResList.size(); i++) {
+				/*for(int i=0; i<adminResList.size(); i++) {
 					if(adminResList.get(i).equals(ownerId)) {
 						adminYn = "Y";
 					}
+				}*/
+				String ownerId2 = ownerId;
+				if(adminResList.stream().anyMatch(res -> res.equals(ownerId2))) {
+					adminYn = "Y";
 				}
 			}
 			else {

@@ -27,7 +27,6 @@ public class PersonalPopupVO {
 	private int inUse;
 	/** 스킨번호 (default 0)*/
 	private int skinValue;
-	
 
 	public String getCompanyID() {
 		return companyID;

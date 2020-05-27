@@ -609,7 +609,7 @@
 						return;
 					}
 
-					if (confirm(strLang30)) {
+					if (confirm(strLangKJE01)) {
 						var inputElmt = document.getElementsByName("checks");
 						var length    = inputElmt.length;
 
@@ -1021,7 +1021,9 @@
 		            <li><span class="icon16 icon16_delete" onClick="AddJob_Del('ALL', '')"></span></li>
 		            <!-- <li><span class="icon16 icon16_delete" onClick="AddJob_Del('DEL', '')"></span></li> -->
 					<!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
+					<c:if test="${useExternalMailServer eq 'NO'}">
 		            <li onClick="email_onclick()"><span class="icon16 icon16_mail_gray"></span></li>
+		            </c:if>
 		        </ul>
 		    </div>
 		    <script type="text/javascript">

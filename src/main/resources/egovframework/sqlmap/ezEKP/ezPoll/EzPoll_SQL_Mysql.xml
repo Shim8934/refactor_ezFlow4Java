@@ -1652,7 +1652,7 @@
     	<isEmpty property="companyUser">
 		<![CDATA[
 			SELECT 
-				a.cn,  
+				a.cn,
 				a.password,
 				a.displayname,
 				a.displayname2,
@@ -1705,7 +1705,7 @@
     	<isNotEmpty property="companyUser">
 		<![CDATA[
 			SELECT 
-				a.cn,  
+				a.cn,
 				a.password,
 				a.displayname,
 				a.displayname2,
@@ -1804,7 +1804,9 @@
 				]]>
 			</isNotEmpty>
 		)
-		</dynamic>	
+		</dynamic>
+		GROUP BY
+			a.CN
     </select> 
     
     <!-- <select id="EzPollDAO.getAddJobDept" resultClass="String">

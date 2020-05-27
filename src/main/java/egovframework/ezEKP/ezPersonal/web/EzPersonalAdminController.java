@@ -11,7 +11,6 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -38,6 +37,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -50,10 +52,10 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopupUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
-import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -88,10 +90,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
-	
-	//TODO getLocalTime, 추후 commonUtil 로 이동시 삭제
-	@Autowired
-	private EzResourceService ezResourceService;
 	
 	@Autowired
 	private EzPersonalAdminService ezPersonalAdminService;
@@ -342,7 +340,19 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("getQuickLinkList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		List<PersonalQuickLinkVO> list = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang());
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String lang = userInfo.getLang();
+		logger.debug("[getQuickLinkList] primaryLang : " + primaryLang + ", lang : " + lang);
+		
+		String userLang = "1";
+		
+		if (primaryLang.equals(lang)) {
+			userLang = "1";
+		} else {
+			userLang = lang;
+		}
+		
+		List<PersonalQuickLinkVO> list = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang(), userLang);
 		
 		JSONObject json = new JSONObject();
 		json.put("list", list);
@@ -367,9 +377,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			mode = request.getParameter("mode");
 		}
 		
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		JSONObject json = new JSONObject();
 		json.put("strUserLang", commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()));
-		json.put("primary", userInfo.getPrimary());
+		json.put("primary", primaryLang);
 		json.put("mode", mode);
 		json.put("lang", userInfo.getLang());
 		
@@ -418,7 +429,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickLink 권한등록화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/selectTarget.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezPersonal/selectTargetQuickLink.do", method = RequestMethod.GET)
 	public String selectTarget(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("selectTarget started");
 
@@ -436,7 +447,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("topID", topID);
 
 		logger.debug("selectTarget ended");
-		return "admin/ezPersonal/personalSelectTarget";
+		return "admin/ezPersonal/personalSelectTargetQuickLink";
 	}
 	
 	/**
@@ -879,6 +890,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 				endDate = endDate.substring(0, endDate.indexOf("."));
 				vo.setEndDate(endDate);
 			}
+			
 		} else {
 			vo.setWidth(600);
 			vo.setHeight(600);
@@ -901,23 +913,51 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 팝업공지 공지사항 등록,수정 실행 함수
 	 */
 	
-	@RequestMapping(value = "/admin/ezPersonal/savePopup.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/savePopup.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String savePopup(@CookieValue("loginCookie") String loginCookie,PersonalPopupVO vo) throws Exception {
+	public String savePopup(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject jObj) throws Exception {
 		logger.debug("savePopup started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		
+		PersonalPopupVO vo = new PersonalPopupVO();
+		vo.setCompanyID(jObj.get("companyID").toString());
+		
+		if (jObj.get("itemSeq") == null || jObj.get("itemSeq").toString().equals("null") || jObj.get("itemSeq").toString().equals("")) {
+			vo.setItemSeq(null);
+		} else {
+			vo.setItemSeq(Integer.parseInt(jObj.get("itemSeq").toString()));
+		}
+		
+		vo.setTitle(jObj.get("title").toString());
+		vo.setTitle2(jObj.get("title2").toString());
+		vo.setStartDate(jObj.get("startDate").toString());
+		vo.setEndDate(jObj.get("endDate").toString());
+		vo.setWidth(Integer.parseInt(jObj.get("width").toString()));
+		vo.setHeight(Integer.parseInt(jObj.get("height").toString()));
+		vo.setPosition(jObj.get("position").toString());
+		vo.setContent(jObj.get("content").toString());
+		vo.setSkinValue(Integer.parseInt(jObj.get("skinValue").toString()));
+		 ObjectMapper mapper = new ObjectMapper();
+		List<PersonalPopupUserVO> authList = mapper.convertValue(jObj.get("authList"), new TypeReference<List<PersonalPopupUserVO>>() {});
 		
 		if (vo.getTitle2().equals("")) {
 			vo.setTitle2(vo.getTitle());
 		}
 		
 		if (vo.getItemSeq() == null) {
-			ezPersonalAdminService.insertPopup(vo, userInfo.getTenantId(), userInfo.getOffset());
+			int itemSeq = ezPersonalAdminService.insertPopup(vo, userInfo.getTenantId(), userInfo.getOffset());
+			
+			//update authList
+			ezPersonalAdminService.updatePopupUser(authList, tenantId, vo.getCompanyID(), itemSeq);
 		} else {
 			ezPersonalAdminService.updatePopup(vo, userInfo.getTenantId(), userInfo.getOffset());
+			
+			//update authList
+			ezPersonalAdminService.updatePopupUser(authList, tenantId, vo.getCompanyID(), vo.getItemSeq());
 		}
-
+		
 		logger.debug("savePopup ended");
 		return "OK";
 	}
@@ -985,9 +1025,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/employeeOfMonth.do", method = RequestMethod.GET)
 	public String employeeOfMonth(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("employeeOfMonth started");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		logger.debug("employeeOfMonth ended");
 		return "admin/ezPersonal/personalEmployeeOfMonth";
 	}
@@ -1410,6 +1447,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/** 
 	 * 빠른설문 config 조회 함수  
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezPersonal/getLightPollConfig.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject getLightPollConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -1441,6 +1479,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/** 
 	 *빠른설문 itemseq 조회 함수  
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezPersonal/getPollItem.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject getPollItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam String itemseq) throws Exception {
@@ -1473,6 +1512,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/** 
 	 * 팝업공지 config 조회 함수  
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezPersonal/getPopupConfig.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject getPopupConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -1566,6 +1606,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/** 
 	 * 현재 진행중인 설문조사 get
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezPersonal/getOnUsePoll.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject getOnUsePoll(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -1650,6 +1691,68 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		json.put("userId", userInfo.getId());
 		
 		logger.debug("showLayerPopup ended");
+		return json;
+	}
+	
+	@RequestMapping(value = "/admin/ezPersonal/personalPopupUser.do", method = RequestMethod.GET)
+	public String personalPopupUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("personalPopupUser started");
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String deptID = auth.getDeptID();
+		String cn = request.getParameter("cn") == null ? "" : request
+				.getParameter("cn");
+		String textName = request.getParameter("name") == null ? "" : request
+				.getParameter("name");
+		String useOcs = config.getProperty("config.USE_OCS");
+		String companyId = request.getParameter("companyId");
+		String lang = auth.getLang();
+		
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("cn", cn);
+		model.addAttribute("textName", textName);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("dept", auth.getDeptID());
+		model.addAttribute("lang", lang);
+		
+		logger.debug("personalPopupUser ended");
+		return "/admin/ezPersonal/personalPopupUser";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/personalPopupGetUserList", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONObject personalPopupGetUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("personalPopupGetUserList started");
+		JSONObject json = new JSONObject();
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String itemSeq = request.getParameter("itemSeq");
+		logger.debug("itemSeq = " + itemSeq);
+		
+		if (itemSeq != null && !itemSeq.equals("")) {
+			int itemId = Integer.parseInt(itemSeq);
+			int tenantId = userInfo.getTenantId();
+			String companyId = request.getParameter("companyId");
+			String lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
+			List<PersonalPopupUserVO> userList = ezPersonalAdminService.getPopupUserList(itemId, tenantId, companyId, lang);
+			
+			if (userList != null && userList.size() > 0) {
+				json.put("status", "ok");
+				json.put("userList", userList);
+			} else {
+				json.put("status", "no");
+			}
+		} else {
+			json.put("status", "no");
+		}
+		
+		logger.debug("personalPopupGetUserList ended");
 		return json;
 	}
 }

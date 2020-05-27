@@ -37,7 +37,18 @@
 			.iPBInnerDiv_Top{display:inline-block; float:right; width:40px; margin-top: 15px;}
 			.iPBInnerDiv_Top i{font-size:25px; color:black; cursor:pointer;}
 			.iPBInnerDiv_TopOff{display:none; float:right; width:40px;}
-			.iPBInnerDiv{height:50px; padding-right: 15px}
+			.iPBInnerDiv{height:50px; padding-right: 15px}	
+			.likeButton {
+				padding:5px;
+				cursor:pointer;
+				display:inline-block;
+				border:1px solid #c7c7c7;
+			    border-radius:2px;
+			}
+			.likeButton:hover {
+				background-color:#f1f8ff;
+				border:1px solid #6793d8;
+			}
 		</style>
 		<script type="text/javascript">
 				window.offscreenBuffering = true;
@@ -70,7 +81,13 @@
 				var g_progresswin;
 				var OneLineReplyFlag = "${oneLineReplyFlag}";
 				var gubun = "${boardInfo.guBun}";
+				var isLikeChecked = "<c:out value='${isLikeChecked}'/>";
+				var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
+				var likeCount = "${boardItem.likeCount}";
+				var likeCountAfter = 0;
 				var commentCount = "${commentCount}";
+			    var nowCommentCount = ""; // 댓글 옵션처리를 위해 전역변수로 변경
+			    var userInfoID = "${userInfo.id}"; // 댓글 삭제가능여부 판단을 위해 자신의 userID 사용
 				var refreshFlag = "N";
 		        var ImageCount = "";
 		        var viewimage = "";
@@ -108,7 +125,24 @@
 		            
 		            /* 2018-07-24 홍승비 - 투표 모듈의 이미지 레이어팝업 포토+썸넬게시물에도 적용 */
 		            addThumbnailEvent();
+		            
+		            /* 2019-11-05 홍승비 - 본문 하단에 댓글영역 표출 */
+ 		            if (OneLineReplyFlag == "2") {
+ 		            	document.getElementById("bodyPopup").style.overflowX = "hidden";
+ 		            	document.getElementById("bodyPopup").style.overflowY = "auto";
+ 		            	self.resizeTo(794, 914);
+ 		            	getBoardComment();
+ 		            }
 		        };
+		        
+		        $(document).ready(function() {
+					/* 2019-04-05 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩과 height 조절 */
+		            if (likeFlag != null && likeFlag == "Y") {
+						$(".MainContentTD").css({"padding" : "15px 0px 4px 0px", "height" : "47px"});
+						$("#MainContent").css("height", "35px");
+		            }
+		        });
+		        
 		        //강민수92 댓글 클릭 이벤트
 			    function btn_One_Line_Reply_Onclick() {
 			    	if (OneLineReplyFlag == "1") {
@@ -213,7 +247,8 @@
 					xmlhttp = null;
 					return true;
 				}
-		
+				
+				/* 2020-02-14 홍승비 - 불필요한 구분값 체크 코드 정리 (포토게시판의 구분값은 "3") */
 				var checkpassword_dialogArguments = new Array();
 				function btn_Delete_Onclick()
 				{
@@ -230,99 +265,58 @@
 		
 					//게시판관리자 또는 게시판그룹관리자 또는 게시물작성자가 아니면 지울 수 없다
 				    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
-				        if (gubun == "2") {
-				            if (CrossYN()) {
-				                checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
-				                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(340, 200));
-				                try { OpenWin.focus(); } catch (e) { }
-				            } else {
-				                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
-				                if (typeof (ret) == "undefined") {
-				                    alert("<spring:message code='ezBoard.t265'/>");
-				                    return;
-				                }
-		
-				                if (ret != "OK") {
-				                    alert("<spring:message code='ezBoard.t265'/>");
-				                    return;
-				                }
-		
-				                if (!confirm(strLang48)) return;
-		
-				                var xmlhttp = createXMLHttpRequest();
-				                xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
-				                xmlhttp.send();
-		
-				                if (xmlhttp.responseText == "NO") {
-				                    alert("<spring:message code='ezBoard.t265'/>");
-		                            return;
-		                        }
-		
-				                xmlhttp = null;
-				                try {
-				                	window.opener.leftCountRf(pBoardID);
-								} catch (e) {
-								}
-				                try {
-				                    window.opener.refresh_onclick();
-				                } catch (e) {
-				                }
-				                window.close();
-				            }
-				        }
-				        else {
-				            alert("<spring:message code='ezBoard.t265'/>");
-				            // GS 수정(2006.02.10) : 익명게시판인 경우 게시물 삭제 시 암호가 맞아도 삭제가 안되는 문제 수정 (return의 위치가 잘못되었음)
-				            return;
-				        }
-		
+			            alert("<spring:message code='ezBoard.t265'/>");
+			            // GS 수정(2006.02.10) : 익명게시판인 경우 게시물 삭제 시 암호가 맞아도 삭제가 안되는 문제 수정 (return의 위치가 잘못되었음)
+			            return;
 				    } else {
-				        if (gubun != "2") {
-		
-				            if (!confirm(strLang48)) return;
-		
-				            var xmlhttp = createXMLHttpRequest();
-				            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
-				            xmlhttp.send();
-		
-				            if (xmlhttp.responseText == "NO") {
-				                alert("<spring:message code='ezBoard.t265'/>");
-		                        return;
-		                    }
-		
-				            xmlhttp = null;
-				            try {
-			                	window.opener.leftCountRf(pBoardID);
-							} catch (e) {
-							}
-				            try {
-				                window.opener.refresh_onclick();
-				            } catch (e) {
-				            }
-				            
-				            //2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
-							if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
-								parent.opener.photoBoardMovePage(null);
-							}
-				            
-				            // 게시판 포틀릿 리스트 업데이트 되도록 수정
-				            if (parent.opener.getBoardPortletInfo != undefined) {
-				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
-				            	var customBoardCount = customBoardList.length;
-				            	
-				            	for (var i = 0; i < customBoardCount; i++) {
-				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
-				            		
-				            		if (boardId == pBoardID) {
-				            			var portletId = customBoardList[i].parentElement.id;
-				            			portletId = portletId.substring(0, portletId.indexOf("P"));
-				            			parent.opener.getBoardPortletInfo(portletId);
-				            		}
-				            	}
+			            if (!confirm(strLang48)) {
+			            	return;
+			            }
+	
+			            var xmlhttp = createXMLHttpRequest();
+			            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
+			            xmlhttp.send();
+	
+			            if (xmlhttp.responseText == "NO") {
+			                alert("<spring:message code='ezBoard.t265'/>");
+	                        return;
+	                    } else if (xmlhttp.responseText == "ERROR") {
+			                alert("<spring:message code='ezBoard.t1020'/>");
+			                return;
+			            }
+	
+			            xmlhttp = null;
+			            try {
+		                	window.opener.leftCountRf(pBoardID);
+						} catch (e) {
+						}
+			            try {
+			                window.opener.refresh_onclick();
+			            } catch (e) {
+			            }
+			            
+			            //2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
+						if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
+							parent.opener.photoBoardMovePage(null);
+						}
+			            
+			            // 게시판 포틀릿 리스트 업데이트 되도록 수정
+			            if (parent.opener.getBoardPortletInfo != undefined) {
+			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+			            	var customBoardCount = customBoardList.length;
+			            	
+			            	for (var i = 0; i < customBoardCount; i++) {
+			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+			            		
+			            		if (boardId == pBoardID) {
+			            			var portletId = customBoardList[i].parentElement.id;
+			            			portletId = portletId.substring(0, portletId.indexOf("P"));
+			            			parent.opener.getBoardPortletInfo(portletId);
+			            		}
 			            	}
-							
-				            window.close();
-				        }
+		            	}
+						
+			            window.close();
 				    }
 				}
 		
@@ -340,7 +334,10 @@
 		        if (xmlhttp.responseText == "NO") {
 		            alert("<spring:message code='ezBoard.t265'/>");
 		            return;
-		        }
+		        } else if (xmlhttp.responseText == "ERROR") {
+	                alert("<spring:message code='ezBoard.t1020'/>");
+	                return;
+	            }
 		
 		        xmlhttp = null;
 		        try {
@@ -482,148 +479,8 @@
 		
 					window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");			
 				}
-		
-// 				function OneLineReply_onkeydown(e)
-// 				{
-// 				    if (e.keyCode == 13) {
-// 				        e.returnValue = false;
-// 				        e.cancelBubble = true;
-// 				        Save_OneLineReply(e);
-// 				    }
-// 				}
-		
-// 				function Save_OneLineReply(e)
-// 				{
-// 					if (Reply_FG != "true") 
-// 					{
-// 						alert("<spring:message code='ezBoard.t303'/>");
-// 						return;
-// 					}
-					
-// 				    e.returnValue = false;
-// 				    e.cancelBubble = true;
-		
-// 					//event.returnValue = false;
-// 					//event.cancelBubble = true;
-					
-// 					//2011-04 : 한줄 답변 옵션 처리
-// 					if(OneLineReplyFlag == "1")
-// 					{
-// 					    if (document.getElementById("onelinereply").value == "") 
-// 					    {
-// 						    alert("<spring:message code='ezBoard.t307'/>");
-// 						    return;
-// 					    }
-// 					}
-					
-// 					//2011.04.13 익명게시판의 경우 한줄답변 등록시 password 추가
-// 					if (gubun == "2" && trim(document.getElementById("txtPassWord").value) == "" )
-// 					{
-// 					    alert("<spring:message code='ezBoard.t391'/>");
-// 					    txtPassWord.focus();
-// 						return;
-// 					}
-					
-// 					var pReplyID = "";
-// 					pReplyID = generateGuid();
-					
-// 					var content,password;
-// 					if (OneLineReplyFlag == "1"){
-// 						content = MakeXMLString(document.getElementById('onelinereply').value);
-// 					}else{
-// 						content = "";
-// 					}
-// 					if (gubun != "2") {
-// 					    password = "";
-// 					}
-// 					else {
-// 					    password = rsa.encrypt(document.getElementById("txtPassWord").value);
-// 					}
-					
-// 					$.ajax({
-// 						type : "POST",
-// 						dataType : "text",
-// 						async : false,
-// 						url : "/ezBoard/saveOneLineReply.do",
-// 						data : { boardID    : pBoardID, 
-// 								 itemID 	: pItemID,
-// 								 replyID	: pReplyID,
-// 								 content	: content,
-// 								 password	: password
-									 
-// 							   },
-// 						success: function(){
-// 							reloadOneline();
-// 						}
-// 					});
-// 				}
-		
-// 				function reloadOneline(){
-// 				    if (OneLineReplyFlag == "1")
-// 				        document.getElementById('onelinereply').value = "";
-// 				    if (gubun == "2")
-// 				        document.getElementById('txtPassWord').value = "";
-// 				    getOneLineReply();
-// 				}
 				
-// 				function delete_onelinereply(pReplyID)
-// 				{
-// 				     var xmlhttp = createXMLHttpRequest();
-				    
-// 				    //게시판관리자 또는 게시판그룹관리자 또는 게시물작성자가 아니면 지울 수 없다
-// 					if(BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") 
-// 					{
-// 					    xmlhttp.open("POST", "/ezBoard/checkOneLineOwner.do?replyID=" + pReplyID, false);
-// 					    xmlhttp.send();
-		        			
-// 					    if (xmlhttp.responseText.substr(0,2) != "OK")
-// 					    {
-// 						    alert("<spring:message code='ezBoard.t310'/>");
-// 						    return;
-// 					    }
-		        			
-// 					    if (!confirm("<spring:message code='ezBoard.t311'/>")) 
-// 					    	return;
-		
-// 					} else {
-// 						    if(!confirm("<spring:message code='ezBoard.t311'/>")) 
-// 						    	return;
-// 						}
-					
-// 					xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID+"&guBun="+gubun, false);
-// 					xmlhttp.send();
-// 					getOneLineReply();			
-// 					xmlhttp = null;
-// 				}
-				
-// 			    function getOneLineReply()
-// 			    {
-// 			        var xmlhttp = createXMLHttpRequest();
-// 			        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
-// 			        xmlhttp.send();
-// 			        var xmldom = createXmlDom();
-// 			        //xmldom.loadXML(xmlhttp.responseText);
-// 			        xmldom = loadXMLString(xmlhttp.responseText);
-// 			        xmlhttp = null;
-// 			        strHTML = "";
-// 			        var temp;
-// 			        for (var i=0; i<xmldom.getElementsByTagName("REPLYID").length; i++)
-// 			        {
-// 			            temp = i+1;
-// 			            strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "\")'><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i))+ "\")'><p>";
-// 			        }
-// 			        if (i==0)
-// 			            strHTML = "<spring:message code='ezBoard.t312'/>";
-		            
-// 		            try
-// 		            {
-// 		                document.getElementById("onelinereplylist").innerHTML = strHTML;
-// 		            }
-// 		            catch(e)
-// 		            {
-// 		            }
-// 			    }
-				
+				/* 2020-02-14 홍승비 - 하단댓글 기능 적용으로 기존 한줄댓글 코드 제거 */
 				function ReplaceText( orgStr, findStr, replaceStr )
 				{
 					var re = new RegExp( findStr, "gi" );
@@ -644,8 +501,9 @@
 					if (strItemID != "") window.location.href = window.location.href.replace(pItemID, strItemID);
 				}
 				
+				/* 2019-11-28 홍승비 - 사용하지 않는 함수 주석처리 */
 				// 게시 보기(새거)
-				function Item_View_New(pBoardID, pItemID)
+/* 				function Item_View_New(pBoardID, pItemID)
 				{
 					var pheigth = window.screen.availHeight;
 					var pwidth = window.screen.availWidth;
@@ -655,7 +513,7 @@
 					pwidth = pwidth - 359;
 							
 					window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "", "height=700,width=1000, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");	
-				}
+				} */
 				function GoTop()
 				{
 				    message.AGoTop.click();
@@ -680,7 +538,7 @@
 		            document.getElementById("mainimages").style.display = "none";
 		            document.getElementById("mainimages").src = mainfilename;
 		            document.getElementById("mainimages").name = imagefilename.name;
-		            document.getElementById("MainContent").innerHTML = imagefilename.title;
+		            document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title);
 		
 		            imageloding();
 		        }
@@ -795,7 +653,10 @@
 		                    if (xmlhttp.responseText == "NO") {
 		                        alert("<spring:message code='ezBoard.t265'/>");
 		                        return;
-		                    }
+		                    } else if (xmlhttp.responseText == "ERROR") {
+				                alert("<spring:message code='ezBoard.t1020'/>");
+				                return;
+				            }
 		
 		                    xmlhttp = null;
 		                    try {
@@ -988,7 +849,7 @@
 		            for(var i = 0; i < ImageCount; i++)
 		            {
 		                var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(result[i].split('/')[7]);
-		                document.getElementById("viewboxlist").innerHTML += "<img src='" + imgSrc + "' style='border:0' title='" + imagecontet[i] + "' id='image" + i + "' name='" + imageid[i] + "' style='cursor:pointer;' onclick='ImageMain(this)' onmouseover='imagemouseover(this)' onmouseout='imagemouseout(this)'/>";
+		                document.getElementById("viewboxlist").innerHTML += "<img src='" + imgSrc + "' style='border:0' title='" + MakeXMLString(imagecontet[i]) + "' id='image" + i + "' name='" + imageid[i] + "' style='cursor:pointer;' onclick='ImageMain(this)' onmouseover='imagemouseover(this)' onmouseout='imagemouseout(this)'/>";
 		                if (CrossYN())
 		                    document.getElementById("image" + i).style.opacity = "0.35";
 		                else
@@ -1569,14 +1430,67 @@
 					return feature;
 				}
 			  	
+			  	 /* 2019-04-05 홍승비 - 좋아요 버튼 클릭 동작 */
+			    function clickLikeButton() {
+			    	var mod = "";
+			    	if (isLikeChecked == "Y") {
+			    		mod = "DELETE";
+			    	} else {
+			    		mod = "INSERT";
+			    	}
+			    	
+			    	$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/clickLikeMod.do",
+						data : {
+							mod: mod,
+							itemID : pItemID
+						},
+						success: function(result){
+							isLikeChecked = result;
+							updateLikeCountImg(isLikeChecked);
+						}
+					});
+			    }
+			  	 
+			    /* 2019-04-05 홍승비 - 좋아요 버튼 이미지 및 좋아요 갯수 업데이트 */
+			    function updateLikeCountImg(isLikeChecked) {
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/getLikeCount.do",
+						data : {
+							itemID : pItemID
+						},
+						success: function(result){
+							likeCountAfter = result;
+							if (parseInt(result) > 0) {
+								document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+							} else {
+								document.getElementById("likeCountSpan").innerText = "";
+							}
+							if (isLikeChecked == "Y") {
+					    		document.getElementById("likeButtonImg").src = "/images/like_on.png";
+					    	} else {
+					    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
+					    	}
+						}
+					});
+				}
+					
 			    /* 2019-04-12 홍승비 - 게시물 갱신 조건 체크 */
 			    function checkRefreshFlag () {
-			    	var nowCommentCount = document.getElementById("commentCount").innerText;
+			    	if (OneLineReplyFlag == "1") { // 레이어팝업의 경우 텍스트로 표출된 현재 댓글갯수를 가져옴
+			    		nowCommentCount = document.getElementById("commentCount").innerText;
+			    		nowCommentCount = nowCommentCount.substring(nowCommentCount.indexOf("[") + 1, nowCommentCount.indexOf("]"));
+			    	}
 			    	var opnenerHref = window.opener.location.href;
-			    	nowCommentCount = nowCommentCount.substring(nowCommentCount.indexOf("[") + 1, nowCommentCount.indexOf("]"));
 			    	
 			    	// 댓글의 수가 달라졌고, 부모창의 주소가 게시판인 경우(새게시물 제외)에만 플래그값 변경
-			    	if ((commentCount != nowCommentCount) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
+			    	if (((likeCount != likeCountAfter) || (commentCount != nowCommentCount)) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
 			    		refreshFlag = "Y";
 			    	} else {
 			    		refreshFlag = "N";
@@ -1584,7 +1498,7 @@
 			    }
 		</script>
 	</head>
-	<body class="popup">
+	<body  id="bodyPopup" class="popup" style="overflow:hidden; height:100%;">
 		<table class="layout" style="border-spacing:0; border-bottom:1px solid #ddd; border:0px; width:100%; min-width:745px;">
 		  <tr>
 		    <td style="height:20px; vertical-align:top">
@@ -1666,7 +1580,7 @@
 		            <tr>
 		                <th><spring:message code='ezBoard.t1008'/></th>
 		                <td id="cimagecontent" colspan="3" style="padding-right:0px">
-		                    <div id="Div2" style="OVERFLOW-Y: auto; height:55px;WIDTH: 100%; padding-top:5px;padding-bottom:5px; vertical-align:middle;"><c:out value="${boardItem.mainContent}"/></div>
+		                    <div id="Div2" style="OVERFLOW-Y: auto; height:55px;WIDTH: 100%; padding-top:5px;padding-bottom:5px; vertical-align:middle; white-space:pre;"><c:out value="${boardItem.mainContent}"/></div>
 		                </td>
 		            </tr>
 		          </table>
@@ -1697,10 +1611,28 @@
 		            </td>
 		        </tr>
 		        <tr>
-		        	<td style="padding:10px 0px; height:83px; text-align:center" colspan="3">
+		        	<td class="MainContentTD" style="padding:10px 0px; height:83px; text-align:center" colspan="3">
 		            	<div id="MainContent" style="height:60px; padding-left:23%; padding-right:24%;"></div>
 		            </td>
 		        </tr>
+			<%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>
+			<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+				<tr>
+					<td style="text-align:center; padding-bottom:8px;" colspan="3">
+					  	<span class="likeButton" style="cursor:pointer; margin-left:-7px;" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
+						  	<c:choose>
+						  		<c:when test="${isLikeChecked == 'Y'}">
+						  			<img id="likeButtonImg" src="/images/like_on.png"/>
+						  		</c:when>
+						  		<c:otherwise>
+						  			<img id="likeButtonImg" src="/images/like_off.png"/>
+						  		</c:otherwise>
+						  	</c:choose>
+					  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
+					  	</span>
+					</td>
+				</tr>
+			</c:if>
 		        </table>
 		    </td>
 		  </tr>
@@ -1783,6 +1715,23 @@
 <!-- 		 	 	</tr> -->
 <%-- 		  	</c:otherwise> --%>
 <%-- 		  </c:choose> --%>
+			<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
+	        <c:if test="${oneLineReplyFlag == '2'}">
+	        	<div style='height:auto;'>
+					<table class="mainlist" style="width:100%; min-width:745px; margin-top:8px;" >
+						<tr>
+							<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
+							</th>
+							<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
+								<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+							</th>
+						</tr>
+					</table>
+					<table id="commentList" style="width:100%; min-width:745px; margin-top:2px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+				</div>
+	        </c:if>
+	        <%-- 본문하단 댓글영역 끝 --%>
 		  <c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
 			  <tr>
 			    <td style="height:20px">

@@ -487,6 +487,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		return returnValue;
 	}
 	
+	@SuppressWarnings("unused")
 	private Set<String> unSubscribeAndGetSubscribeFolderSet(Folder folder, Set<String> folderSet) throws MessagingException {
 		if (folder.exists()) {
 			if (folder.isSubscribed()) {

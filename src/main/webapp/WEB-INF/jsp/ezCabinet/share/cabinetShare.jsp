@@ -110,8 +110,9 @@
 								<img id="removeBttn" src="/images/kr/cm/arr_left.gif" >
 							</td>
 							
+							<%-- 2020-01-23 홍승비 - 공유자 TD에 min-width 추가(IE 브라우저 대응) --%>
 							<!-- right -->
-							<td>
+							<td style="min-width:410px;">
 								<h2 class="receiver_tltype01">
 									<span style="min-width: 45px;"><spring:message code="ezCabinet.t130" /></span>
 								</h2>

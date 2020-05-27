@@ -1554,19 +1554,19 @@
 	   				APRTYPE,
 	   				C.NAME$v_LANG$
 			]]>
-			<isEqual property="userFlag" compareValue="0">
+			<isEqual property="userFlag" compareValue="1">
 				ORDER BY
 					APRTYPE,
 					APRMEMBERDEPTNAME,
 					APRMEMBERNAME
 			</isEqual>
-			<isEqual property="userFlag" compareValue="1">
+			<isEqual property="userFlag" compareValue="2">
 				ORDER BY
 					APRMEMBERDEPTNAME,
 					APRMEMBERNAME,
 					APRTYPE
 			</isEqual>
-			<isEqual property="userFlag" compareValue="2">
+			<isEqual property="userFlag" compareValue="3">
 				ORDER BY
 					APRMEMBERNAME,
 					APRMEMBERDEPTNAME,
@@ -1687,6 +1687,8 @@
 				tenant_id = #tenantID#
 			AND
 				companyid = #companyID#
+			AND
+				formid != '9999999999';
 		]]>
 	</select>
 
@@ -1702,6 +1704,7 @@
 				formfilelocation,
 				formconnflag,
 				reformflag,
+				aprOption,
 				tenant_id,
 				companyid)
 			VALUES
@@ -1714,6 +1717,7 @@
 				#v_PURL#,
 				#v_PFORMCONNFLAG#,
 				#v_PREFORMFLAG#,
+				##v_formAprOption##,
 				#tenantID#,
 				#companyID#)
 		]]>
@@ -1731,7 +1735,8 @@
 				formdescription = #v_PFORMDESCRIPT#,
 				formfilelocation = #v_PURL#,
 				formconnflag = #v_PFORMCONNFLAG#,
-				reformflag = #v_PREFORMFLAG#
+				reformflag = #v_PREFORMFLAG#,
+				aprOption = #v_formAprOption#
 			WHERE
 				tenant_id = #tenantID#
 			AND
@@ -1794,6 +1799,47 @@
 			]]>
 		</isEqual>
 	</insert>
+	
+	<update id="EzApprovalGAdminDAO.updateAutoDoc" parameterClass="Map">
+		UPDATE 
+			TBL_AUTODOCNUM_ITEM
+		SET
+			ITEMNAME = #v_TASKNAME#,
+			KEEPPERIOD = (SELECT 
+							SUBSTR(NAME$lang$, INSTR(NAME$lang$, ';', 1, 1)+1, INSTR(NAME$lang$, ';', 1, 2) - INSTR(NAME$lang$, ';', 1, 1)-1) AS NAME
+						FROM 
+							TBL_CODELIST 
+						WHERE 
+							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
+						AND
+							code1 = 'SA52'
+						AND
+							SUBSTR(NAME$lang$, INSTR(NAME, ';', 1, 2)+1) = #v_KEEPINGPERIOD#),
+			KEEPPERIODCODE = #v_KEEPINGPERIOD#,
+			SECURITYLEVEL = #itemSecurity#,
+			ISPUBLIC = #isPublic#
+		WHERE
+			ITEMCODE = #v_TASKCODE#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.removeAutoDoc" parameterClass="Map">
+		UPDATE 
+			TBL_AUTODOCNUM_ITEM
+		SET
+			USEFLAG = 'N'
+		WHERE
+			ITEMCODE = #taskCode#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+	</update>
 
 	<insert id="EzApprovalGAdminDAO.setAutoDocNum" parameterClass="Map">
 		<selectKey keyProperty="id" resultClass="String">
@@ -1883,7 +1929,7 @@
 			AND
 				containertypeid = #v_CONTTYPEID#
 			AND
-				containerowndepid = (SELECT containerowndepid FROM TBL_CONTAINER WHERE containerID = #v_DEPTID# AND tenant_id = #tenantID#)
+				containerowndepid = (SELECT containerowndepid FROM TBL_CONTAINER WHERE containerID = #v_DEPTID# AND tenant_id = #tenantID# AND  companyid = #companyID#)
 		]]>
 	</select>
 
@@ -2086,37 +2132,36 @@
 		#v_DEPTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 	<!-- ]]> -->
 	<!-- </procedure> -->
-	<select id="EzApprovalGAdmin.getTaskCodeNodeExist"
-		parameterClass="Map" resultClass="Integer">
-		<isEqual property="v_DEPTID" compareValue="">
-			<![CDATA[
-				SELECT
-					NVL(COUNT(taskcode), 0)
-				FROM
-					TBL_CABINETCLASS
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					taskcode = #v_TASKCODE#
-			]]>
-		</isEqual>
+	<select id="EzApprovalGAdmin.getTaskCodeNodeExist" parameterClass="Map" resultClass="Integer">
+	<![CDATA[
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_CABINETCLASS
+		INNER JOIN
+			TBL_CABINET
+		ON
+			TBL_CABINETCLASS.CABINETCLASSNO = TBL_CABINET.CABINETCLASSNO
+		AND
+			TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
+		AND
+			TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+		WHERE
+			TBL_CABINETCLASS.COMPANYID = #companyID#
+		AND
+			TBL_CABINETCLASS.TENANT_ID = #tenantID#
+		AND
+			TBL_CABINETCLASS.TASKCODE = #v_TASKCODE#
+		AND
+			TBL_CABINET.DELETEDATE IS NULL
+		AND
+			TBL_CABINET.DELFLAG = '0'
+	]]>
 		<isNotEqual property="v_DEPTID" compareValue="">
-			<![CDATA[
-				SELECT
-					NVL(COUNT(taskcode), 0)
-				FROM
-					TBL_CABINETCLASS
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					taskcode = #v_TASKCODE#
-				AND
-					TRIM(processdeptcode) = #v_DEPTID#
-			]]>
+		<![CDATA[
+			AND
+				TRIM(PROCESSDEPTCODE) = #v_DEPTID#
+		]]>
 		</isNotEqual>
 	</select>
 

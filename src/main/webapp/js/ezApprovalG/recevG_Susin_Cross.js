@@ -385,7 +385,7 @@ function GetDraftAprLineInfo(ret) {
 	
 	                    if (OrderSuggester[i] == "Y")
 	                        field.textContent = strLang75 + field.textContent;
-	
+
 	                    if (OrderReporter[i] == "Y")
 	                        field.textContent = strLang76 + field.textContent;
 	                }
@@ -496,7 +496,7 @@ function SGetDraftAprLineInfo(ret) {
             DrawAutoAprLine(ret[1], pDraftFlag);
         }
         
-        FieldsAvailable();
+        // FieldsAvailable(); 가온누리 살리려고 우선 주석 -> 가변결재선 체크해보고 수정필요
         xmlReDraft = "R";
 
         if (xmlReDraft == "C") {
@@ -3012,6 +3012,36 @@ function delOpinionInfo() {
 
     pHasOpinionYN = "";
     return xmlhttp.responseText;*/
+}
+
+//17.09.14:재배부 후 재배부의견을 제외한 모든의견 삭제
+function delOpinionInfoAll2() {
+	$.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : "/ezApprovalG/OpinionDel2.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(result) {
+		}
+	});
+}
+
+//17.09.14:중계문서 접수 시 재배부의견은 삭제처리
+function delOpinionInfoAll3() {
+	$.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : "/ezApprovalG/OpinionDel3.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(result) {
+		}
+	});
 }
 
 function SignCheck() {

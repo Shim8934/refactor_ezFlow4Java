@@ -267,9 +267,10 @@
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
+			var portletCode = portletOrder[i].portletCode;
 			
 			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
-				(function (portletId, portletUrl, portletName) {
+				(function (portletId, portletUrl, portletName, portletCode) {
 					$.ajax({
 						type : "GET",
 						dataType : "html",
@@ -284,7 +285,7 @@
 								$("#" + portletId + "Portlet").css("background", "none");
 							}
 							
-							eventSetting(portletId, usedTheme);
+							eventSetting(portletId, usedTheme, portletCode, false);
 							
 							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
 								sortableEvent();
@@ -311,19 +312,26 @@
 							return;
 						}
 					});
-				}(portletId, portletUrl, portletName));
+				}(portletId, portletUrl, portletName, portletCode));
 			/* } */
+			
 		}
 		
 		var useQuestion = "<c:out value='${useQuestion}'/>";
+		var useSurvey = "<c:out value='${useSurvey}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";
 		var useMail = "<c:out value='${useMail}'/>";
 		var useApproval = "<c:out value='${useApproval}'/>";
 		var useSchedule = "<c:out value='${useSchedule}'/>";
 		
 		//권한에 없는거는 보여주지 않기
+		/* 
 		if (useQuestion === "NO") {
 			$("#Poll").css("display", "none");
+		}
+		 */
+		if (useSurvey === "NO") {
+			$("#Survey").css("display", "none");
 		}
 		
 		if (useCircular === "NO") {
@@ -369,8 +377,19 @@
 		
 		/* $(".portlet_area").disableSelection(); */
 		
+		settingPortalInterval();
 	});
-
+	
+	var settingPortalInterval = function () {
+		var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
+		
+		if (refreshInterval != null && refreshInterval != "0") {
+			window.setInterval(function() {
+				parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+			}, Number(refreshInterval) * 60000);
+		}
+	}
+	
 	var tryCount = 0;
 	
 	var sortableEvent = function () {

@@ -480,7 +480,8 @@ function getExtInfo()
 			if( HwpCtrl.CheckFieldExist("sealsign") )
 			{
 				HwpCtrl.SetFieldText("sealsign", "");
-				HwpCtrl.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape("/Upload_ApprovalG/SealImg/nostamp.gif"), 12);
+				//관인없을 경우, 경로가 닷넷 경로 그대로 사용하던 오류 수정. 2019-11-22 홍대표.
+				HwpCtrl.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape("/files/sealImg/nostamp.gif"), 12);
 			}
 		}
 	}

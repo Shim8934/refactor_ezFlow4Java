@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -11,6 +12,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 		<STYLE title="ezform_style_1">
 			P {
 					MARGIN-TOP: 0mm;
@@ -29,6 +31,17 @@
 			.iPBInnerDiv_Top i{font-size:25px; color:black; cursor:pointer;}
 			.iPBInnerDiv_TopOff{display:none; float:right; width:40px;}
 			.iPBInnerDiv{height:50px; padding-right: 15px}
+			.likeButton {
+				padding:5px;
+				cursor:pointer;
+				display:inline-block;
+				border:1px solid #c7c7c7;
+			    border-radius:2px;
+			}
+			.likeButton:hover {
+				background-color:#f1f8ff;
+				border:1px solid #6793d8;
+			}
 		</STYLE>
 		<script type="text/javascript">
 		    window.offscreenBuffering = true;
@@ -60,8 +73,9 @@
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var pReservedItem = "";
 		    var g_progresswin;
-		    var OneLineReplyFlag = "";
 			var gubun = "${boardInfo.guBun}";
+	        var isLikeChecked = "<c:out value='${isLikeChecked}'/>";
+			var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
 		    var ImageCount = "";
 		    var viewimage = "";
 		    var pListImage = "";
@@ -73,6 +87,11 @@
 		    var imagetotalcount = "";
 		    var imgWidth = "57px";
 		    var imgHeight = "37px";
+		    /* 2019-11-06 홍승비 - 댓글기능관련 변수 추가 */
+		    var OneLineReplyFlag = "${boardInfo.oneLineReply}";
+		    var userInfoID = "${userInfo.id}";
+		    var mode = "${mode}";
+		    
 		    window.onresize = window_resize;
 		    window.onload = function () {
 		        imageViewInit();
@@ -87,15 +106,29 @@
 		        
 		        /* 2018-07-24 홍승비 - 투표 모듈의 이미지 레이어팝업 포토+썸넬게시물 미리보기에도 적용 */
 	            addThumbnailEvent();
+		        
+	            /* 2019-11-06 홍승비 - 본문 하단에 댓글영역 표출 */
+	            if (OneLineReplyFlag == "2" && mode != "temp") {
+	            	getBoardComment();
+	            }
 		    }
+		    
+	        $(document).ready(function() {
+				/* 2019-04-08 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩과 height 조절 */
+	            if (likeFlag != null && likeFlag == "Y") {
+					$(".MainContentTD").css({"padding" : "0px 0px 4px 0px", "height" : "47px"});
+					$("#MainContent").css("height", "35px");
+	            }
+	        });
+	        
 		    function window_resize() {
 		        CurrentHeight = document.documentElement.clientHeight;
-		        if (CurrentHeight < 317)
-		            document.getElementById("trheight").style.height = 317 + "px";
+		        if (CurrentHeight < 300)
+		            document.getElementById("trheight").style.height = 300 + "px";
 		        else
-		            document.getElementById("trheight").style.height = (CurrentHeight - 287) + "px";
-		
+		            document.getElementById("trheight").style.height = (CurrentHeight - 300) + "px";
 		    }
+		    
 	        function generateGuid() {
 	            var result = "";
 	            for (var i = 0, j = 0; j < 32; j++) {
@@ -177,7 +210,7 @@
 	            xmlhttp = null;
 	            return true;
 	        }
-	
+/* 	
 	        function btn_Reply_Onclick() {
 	            if (Reply_FG != "true") {
 	                alert("<spring:message code='ezBoard.t303'/>");
@@ -186,7 +219,8 @@
 	
 	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=reply"
 	        }
-	
+	 */
+/* 	 
 	        function OneLineReply_onkeydown(e) {
 	            if (e.keyCode == 13) {
 	                e.returnValue = false;
@@ -281,7 +315,8 @@
 	            getOneLineReply();
 	            xmlhttp = null;
 	        }
-	
+	*/
+/* 	
 	        function getOneLineReply() {
 	            var xmlhttp = createXMLHttpRequest();
 	            xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&gubun=" + gubun, false);
@@ -294,7 +329,7 @@
 	            var temp;
 	            for (var i = 0; i < xmldom.getElementsByTagName("REPLYID").length; i++) {
 	                temp = i + 1;
-	                /* 2018-06-29 홍승비 -댓글쓴 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정헤야함 */
+	              // 2018-06-29 홍승비 -댓글쓴 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정헤야함
 	                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "\")'><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><p>";
 	            }
 	            if (i == 0)
@@ -306,7 +341,7 @@
 	            catch (e) {
 	            }
 	        }
-	
+	 */
 	        function ReplaceText(orgStr, findStr, replaceStr) {
 	            var re = new RegExp(findStr, "gi");
 	            return (orgStr.replace(re, replaceStr));
@@ -346,7 +381,7 @@
 				document.getElementById("mainimages").style.display = "none";
 	            document.getElementById("mainimages").src = mainfilename;
 	            document.getElementById("mainimages").name = imagefilename.name;
-	            document.getElementById("MainContent").innerHTML = imagefilename.title;
+	            document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title);
 	
 	            imageloding();
 	        }
@@ -553,7 +588,7 @@
 	            document.getElementById("viewBox").innerHTML += "<span id='viewboxlist'>";
 	            for (var i = 0; i < ImageCount; i++) {
 	                var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(result[i].split('/')[7]);
-	                document.getElementById("viewboxlist").innerHTML += "<img src='" + imgSrc + "' style='border:0' title='" + imagecontet[i] + "' id='image" + i + "' name='" + imageid[i] + "' style='cursor:pointer;' onclick='ImageMain(this)' onmouseover='imagemouseover(this)' onmouseout='imagemouseout(this)'/>";
+	                document.getElementById("viewboxlist").innerHTML += "<img src='" + imgSrc + "' style='border:0' title='" + MakeXMLString(imagecontet[i]) + "' id='image" + i + "' name='" + imageid[i] + "' style='cursor:pointer;' onclick='ImageMain(this)' onmouseover='imagemouseover(this)' onmouseout='imagemouseout(this)'/>";
 	                if (CrossYN())
 	                    document.getElementById("image" + i).style.opacity = "0.35";
 	                else
@@ -909,6 +944,57 @@
 		  			$imgPopupDiv.css("overflow", "auto");
 		  		}
 		  	}
+		  	
+		  	 /* 2019-04-08 홍승비 - 좋아요 버튼 클릭 동작 */
+		    function clickLikeButton() {
+		    	var mod = "";
+		    	if (isLikeChecked == "Y") {
+		    		mod = "DELETE";
+		    	} else {
+		    		mod = "INSERT";
+		    	}
+		    	
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/clickLikeMod.do",
+					data : {
+						mod: mod,
+						itemID : pItemID
+					},
+					success: function(result){
+						isLikeChecked = result;
+						updateLikeCountImg(isLikeChecked);
+					}
+				});
+		    }
+		  	 
+		    /* 2019-04-08 홍승비 - 좋아요 버튼 이미지 및 좋아요 갯수 업데이트 */
+		    function updateLikeCountImg(isLikeChecked) {
+		    	$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/getLikeCount.do",
+					data : {
+						itemID : pItemID
+					},
+					success: function(result){
+						if (parseInt(result) > 0) {
+							document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+						} else {
+							document.getElementById("likeCountSpan").innerText = "";
+						}
+						if (isLikeChecked == "Y") {
+				    		document.getElementById("likeButtonImg").src = "/images/like_on.png";
+				    	} else {
+				    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
+				    	}
+					}
+				});
+		    }
+		    
 			</script>
 		</head>
 		<body>
@@ -939,10 +1025,28 @@
 			            </td>
 			        </tr>
 			        <tr>
-			        	<td style="padding:10px 0px; height:88px; text-align:center" colspan="3">
+			        	<td class="MainContentTD" style="padding:10px 0px; height:88px; text-align:center" colspan="3">
 			            	<div id="MainContent" style="height:88px; padding-left:23%; padding-right:24%;"></div>
 			            </td>
 			        </tr>
+		        <%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>
+				<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+					<tr>
+						<td style="text-align:center; padding-top:10px; padding-bottom:12px;" colspan="3">
+						  	<span class="likeButton" style="cursor:pointer; margin-left:-7px;" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
+							  	<c:choose>
+							  		<c:when test="${isLikeChecked == 'Y'}">
+							  			<img id="likeButtonImg" src="/images/like_on.png"/>
+							  		</c:when>
+							  		<c:otherwise>
+							  			<img id="likeButtonImg" src="/images/like_off.png"/>
+							  		</c:otherwise>
+							  	</c:choose>
+						  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${likeCount > 0}"> (<c:out value="${likeCount}"/>)</c:if></span>
+						  	</span>
+						</td>
+					</tr>
+				</c:if>
 			        </table>
 			    </td>
 			  </tr>
@@ -970,6 +1074,23 @@
 				</div>
 		        </td>
 		    </tr>
+   			<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
+	        <c:if test="${boardInfo.oneLineReply == '2' && mode != 'temp'}">
+	        	<div style='height:auto;'>
+					<table class="mainlist" style="width:100%; min-width:732px; margin-top:8px; padding-bottom: 15px;" >
+						<tr>
+							<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
+							</th>
+							<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
+								<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+							</th>
+						</tr>
+					</table>
+					<table id="commentList" style="width:100%; min-width:732px; margin-top:2px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+				</div>
+	        </c:if>
+	        <%-- 본문하단 댓글영역 끝 --%>
 		</table>
 		
 		  <%-- 2018-07-20 홍승비 - 이미지 클릭 시 레이어팝업 표출 --%>

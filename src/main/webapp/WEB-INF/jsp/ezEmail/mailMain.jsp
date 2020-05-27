@@ -16,11 +16,11 @@
             <c:choose>
             	<c:when test="${funCode eq '2'}">
 		    		<frame src="/ezEmail/mailLeft.do?funCode=2" id="left" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>
-		        	<frame name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
+		        	<frame id="right" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
             	</c:when>
             	<c:otherwise>
 		    		<frame src="/ezEmail/mailLeft.do?funCode=1&subCode=<c:out value='${subCode}'/>" id="left" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>
-		        	<frame name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
+		        	<frame id="right" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
             	</c:otherwise>
             </c:choose>
 	    </frameset>

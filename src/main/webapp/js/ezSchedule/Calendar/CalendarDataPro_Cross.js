@@ -186,8 +186,13 @@ function getCalWeekViewSource_after() {
         var nlength = SelectNodes(listNode, "DATA/ROW").length;
         var k = 0;
         for (var i = 0; i < nlength; i++) {
-            var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
+        	var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
 
+        	// 2020-02-24 김정언 - 근태 현황은 [월보기]에서만 지원한다.
+        	if (SelectSingleNodeValue(objNodes, "DATETYPE") == "4") {
+        		continue;
+        	}
+        	
             var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
             var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");
             var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
@@ -307,6 +312,11 @@ function getCalDayViewSource_after() {
         for (var i = 0; i < nlength; i++) {
             var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
 
+            // 2020-02-24 김정언 - 근태 현황은 [월보기]에서만 지원한다.
+            if (SelectSingleNodeValue(objNodes, "DATETYPE") == "4") {
+            	continue;
+            }
+            
             var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
             var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");
             var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
@@ -449,6 +459,8 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     pTempData.ParentID = SelectSingleNodeValue(objNodes, "PARENTID");
     pTempData.OwnerID = SelectSingleNodeValue(objNodes, "OWNERID");
     pTempData.CreatorID = SelectSingleNodeValue(objNodes, "CREATORID");
+    pTempData.CreatorName = SelectSingleNodeValue(objNodes, "CREATORNAME");
+    pTempData.ContentPath = SelectSingleNodeValue(objNodes, "CONTENTPATH");
     pTempData.ModifierID = SelectSingleNodeValue(objNodes, "MODIFIERID");
     pTempData.ScheduleType = SelectSingleNodeValue(objNodes, "SCHEDULETYPE");
     pTempData.Importance = SelectSingleNodeValue(objNodes, "IMPORTANCE");
@@ -699,7 +711,7 @@ function CalDataSize(oAppointment, order, tempData) {
 
 
 function CalMonthDataBind(oAppointment) {
-
+	
     var objElm = document.getElementById("TD_" + oAppointment.trID + "_Value");
     if (objElm) {    	
 
@@ -740,9 +752,21 @@ function CalMonthDataBind(oAppointment) {
 
         var pTime = "";
         var pSubject;
-        if (oAppointment.DateType != 2) {
-            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
-            pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
+        var pImg = document.createElement('img');
+        
+        // 2020-02-24 김정언
+        if (oAppointment.DateType == 4) {
+        	pImg.src = '/images/ezAttitude/' + oAppointment.ContentPath + '.png';
+        	pImg.className = "attiImg";
+        	pImg.style["vertical-align"] = "sub";
+        	pImg.style["margin-right"] = "3px";
+        	oTd.appendChild(pImg);
+            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay;
+            pSubject = oAppointment.Subject + " : " + oAppointment.CreatorName;
+        }
+        else if (oAppointment.DateType != 2) {
+        	pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay;
+        	pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
         }
         else {
             pTime = strLang39;
@@ -765,6 +789,8 @@ function CalMonthDataBind(oAppointment) {
         oTd.setAttribute("ParentID", oAppointment.ParentID);
         oTd.setAttribute("OwnerID", oAppointment.OwnerID);
         oTd.setAttribute("CreatorID", oAppointment.CreatorID);
+        oTd.setAttribute("CreatorName", oAppointment.CreatorName);
+        oTd.setAttribute("ContentPath", oAppointment.ContentPath);
         oTd.setAttribute("ModifierID", oAppointment.ModifierID);
         oTd.setAttribute("ScheduleType", oAppointment.ScheduleType);
         oTd.setAttribute("Importance", oAppointment.Importance);
@@ -791,14 +817,22 @@ function CalMonthDataBind(oAppointment) {
         oTd.setAttribute("ptime", pTime);
         
         
-        oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
-        oTd.setAttribute("onmouseout", "hideTooltip(this)");
-        var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+        // 2020-02-24 김정언 - 근태 현황일 경우에는 근태 상세보기로 이동 (DateType 4 : 근태 현황)
+        if(oAppointment.DateType == 4) {
+        	var divID = "\"" + oAppointment.ScheduleID + ":" + oAppointment.ParentID + "\"";
+        	oTd.setAttribute("ondblclick", "ReadAttitude(" + divID + ")");
+        }
+        else {
+        	var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+        	oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");        	
+        	oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
+        	oTd.setAttribute("onmouseout", "hideTooltip(this)");
+        }
 
-        var oText = document.createTextNode(pSubject);        
+        var oText = document.createTextNode(pSubject);
         //oTd.innerHTML += pSubject;
-        oTd.appendChild(oText);
+       	oTd.appendChild(oText); 
+
         
         oTr.appendChild(oTd);
         objElm.appendChild(oTr);
@@ -822,7 +856,7 @@ function CalMonthDataBind(oAppointment) {
 
 
 function CalWeekDataBind(oAppointment, order) {
-
+	
     var objDivS = document.getElementById("TD_" + oAppointment.trID + "_Value");
     var objDivE = document.getElementById("TD_" + oAppointment.endDiv + "_Value");
     if (objDivS && objDivE) {

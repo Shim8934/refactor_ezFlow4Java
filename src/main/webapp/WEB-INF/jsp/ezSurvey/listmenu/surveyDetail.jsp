@@ -23,11 +23,14 @@
 	<div class="header-wrapper">
 		<div class="surveydetail-header">
 			<ul class="on">	
-				<c:if test="${(survey.draftFlag ne 1) && (participation eq 'yes')}">
+				<c:if test="${(survey.draftFlag ne 1) && (participation eq 'yes') && (resStatus ne true) || (survey.multiAnswerFlag ne 0)}">
 					<li class="off"><span id="saveResult"><spring:message code="ezSurvey.t17"/></span></li>
 				</c:if>
 				<c:if test="${empty mode and user == creator.id}">
 					<li class="off"><span id="suvyDlt"><spring:message code="ezSurvey.t21"/></span></li>
+				</c:if>
+				<c:if test="${(survey.draftFlag ne 1) && (participation eq 'yes') && (survey.multiAnswerFlag eq 0) && (resStatus eq true)}">
+					<li class="off"><span id="suvyUdt"><spring:message code="ezSurvey.t78"/></span></li>
 				</c:if>
 			</ul>
 		</div>
@@ -52,6 +55,12 @@
 				<span><spring:message code="ezSurvey.t97"/><c:out value=" ${survey.openDays}"/> <spring:message code="ezSurvey.t45"/></span>
 			</li>
 		</c:if>
+		<li><span class="srvyInfo"></span><span><spring:message code="ezSurvey.t112" /> : </span>
+			<span><spring:message code="${survey.mailFlag == 1 ? 'ezSurvey.t114' : 'ezSurvey.t115'}"/></span>
+		</li>
+		<li><span class="srvyInfo"></span><span><spring:message code="ezSurvey.t113" /> : </span>
+			<span><spring:message code="${survey.popupFlag == 1 ? 'ezSurvey.t114' : 'ezSurvey.t115'}"/></span>
+		</li>
 	</ul>
 	
 	<div class="surveydetail-body" id="mainSurveyBody">
@@ -115,7 +124,11 @@
 			surveyId : surveyId,
 			responses : []
 		};
+		// 20.05.06 강승구 : 설문응답여부 코드추가
+		var resStatus	 = ${resStatus};
 		userEvent();
+		
+		var jsonResult;
 		
 		function getQuestions() {
 			$.ajax({
@@ -124,7 +137,7 @@
 				data: {surveyId : surveyId, logic : "logic"},
 				contentType: "application/json; charset=utf-8",
 				dataType: "JSON",
-				async: true,
+				async: false,
 				cache: false,
 				success : function(data) {
 					var question  = JSON.parse(JSON.stringify(data["questions"]));
@@ -235,11 +248,222 @@
 			document.getElementById("mainSurveyBody").style.height = (wdHeight - 74) + "px";
 		}
 		
+		// 20.05.06 강승구 : 설문응답에 따라 데이터 셋팅
+		function checkQuestionAnswer() {
+			if(survey.multiAnswerFlag == 0 && resStatus){
+				$.ajax({
+					type: "GET",
+					url: "/ezSurvey/getSurveyQuestions.do",
+					data: {surveyId : surveyId, logic : "answer"},
+					contentType: "application/json; charset=utf-8",
+					dataType: "JSON",
+					async: false,
+					cache: false,
+					success : function(data) {
+						previousQuestionSetting(data);
+					},
+					error : function(error) {
+						alert(SurveyMessages.strError);
+					}
+				});
+			}
+		}
+
+		// 20.05.07 강승구 : 설문의 각 질문 하나씩 처리
+		function previousQuestionSetting(questionsData) {
+			if(questionsData) {
+				if(questionsData.questions.length > 0) {
+					for (var i = 0; i < questionsData.questions.length; i++) {
+						showQuestionSetting(questionsData.questions[i]);
+					}
+				}
+			}
+		}
+
+		// 20.05.07 강승구 : 설문의 보기(option) 유형별 처리
+		function showQuestionSetting(question) {
+			if(question) {
+				var questionType = parseInt(question["type"]);
+				switch(questionType) {
+					case 1:
+					case 2:
+					case 9: 
+						checkQuestions(question["option"], question["level"], questionType);
+						break;
+					case 3:
+					case 4:
+					case 7:
+					case 8:
+						controlQuestions(question);
+						break;
+					case 5:
+					case 6:
+						writeQuestionsText(question);
+						break;
+				}
+			}
+		}
+
+		// 20.05.07 강승구 : 선택형(단일선택, 다중선택, 드롭다운) 질문에 대한 값 세팅처리
+		function checkQuestions(options, level, type) {
+			var userId = "${user}";
+			
+			for (var i = 0; i < options.length; i++) {
+				var responses     = options[i]["responses"];
+				var otherFlag     = options[i]["otherFlag"];
+				var responsesCnt  = responses ? responses.length : 0;
+				
+				if(responses) {
+					if (otherFlag == 1) {		// 기타사항
+						responses.filter(function(item){
+							if(item.responsorId == userId) {
+								document.getElementById('othInput' + level).value = item["texts"];
+								document.getElementById('prevQstn' + level).querySelector("input[otherflag]").checked = true;
+								document.getElementById('prevQstn' + level).querySelector("input[otherflag]").setAttribute('responseId', item["responseId"]);
+							}
+						});
+					} else {
+						responses.filter(function(item){
+							if(item.responsorId == userId) {
+								if(type == 9) { // 드롭다운 유형
+									//document.getElementById('prevQstn' + level).querySelector("option[value='" + i + "']").selected = true;
+									$('#prevQstn' + level).find('select').val(i).trigger('change');
+									document.getElementById('prevQstn' + level).querySelector("select").setAttribute('responseId', item["responseId"]);
+								} else {
+									document.getElementById('prevQstn' + level).querySelector("div[level='" + i + "']").querySelector("input").click();
+									document.getElementById('prevQstn' + level).querySelector("div[level='" + i + "']").querySelector("input").setAttribute('responseId', item["responseId"]);
+								}
+							}
+						});
+					}
+				}
+			}
+		}
+
+		// 20.05.08 강승구 : 기타유형(단일행렬, 다중선택행렬, 슬라이드형, 순위형)
+		function controlQuestions(question) {
+			var userId = "${user}";
+
+			if(question) {
+				var type     = parseInt(question["type"]);
+				var questionRes = question["responses"];
+				var optionLevel = question["level"];
+				var returnObj   = "";
+
+				if (type == 3 || type == 4) {			// 행렬형태
+					returnObj = getMtrDataSet(question, userId);
+					
+					for(i = 0; i < returnObj.length; i++) {
+						for(j = 0; j < returnObj[i]["matrixData"].length; j++) {
+							document.getElementById('prevQstn' + optionLevel).querySelector("input[value='" + returnObj[i]["matrixData"][j] + "']").checked = true;
+							document.getElementById('prevQstn' + optionLevel).querySelector("input[value='" + returnObj[i]["matrixData"][j] + "']").setAttribute('responseId', returnObj[i]["responseId"]);
+						}
+					}
+				} else if (type == 7) {					// 슬라이드 형태
+					if(questionRes) {
+						for(i = 0; i < questionRes.length; i++) {
+							if(questionRes[i]["responsorId"] == userId) {
+								// document.getElementById('prevQstn' + optionLevel).querySelector("input").value = questionRes[i]["sliderValue"];
+								// document.getElementById('prevQstn' + optionLevel).querySelector("output").innerText = questionRes[i]["sliderValue"];
+								// document.getElementById('prevQstn' + optionLevel).querySelector("output").setAttribute('responseId', questionRes[i]["responseId"]);
+								$('#prevQstn' + optionLevel).find('input').val(questionRes[i]["sliderValue"]).trigger('change');
+							}
+						}
+					}
+				} else if (type == 8) {					// 순위 형태
+					if(questionRes) {
+						for(i = 0; i < questionRes.length; i++) {
+							if(questionRes[i]["responsorId"] == userId) {
+								var optionRank = 'rank-order' + questionRes[i]["rankingLevel"];
+								var resOptionId = questionRes[i]["optionId"];
+								
+								document.getElementById('prevQstn' + optionLevel).querySelector("span[id='" + optionRank + "']").parentNode.querySelector("option[optionid='" + resOptionId + "']").selected = true;
+								document.getElementById('prevQstn' + optionLevel).querySelector("span[id='" + optionRank + "']").parentNode.querySelector("select").setAttribute('responseId', questionRes[i]["responseId"]);
+							}
+						}
+					}
+				}
+			}			
+		}
+
+		// 20.05.08 강승구 : 행렬정보 반환
+		function getMtrDataSet(question, userId) {
+			var options     = question["option"];
+			var responses   = question["responses"];
+			var rows        = [];
+			var cols        = [];
+			var dataSetArr  = [];
+			var maxYValue   = 0;
+			
+			if(responses) {
+				// 단일데이터에서 행렬구분([0,1,2,3] -> [0,1],[2,3])
+				for (var i = 0; i < options.length; i++) {
+					if (options[i]["colLevel"] == -1) {
+						rows.push(options[i]);
+					}
+					else if (options[i]["rowLevel"] == -1) {
+						cols.push(options[i]);
+					}
+				}
+				
+				// 행/렬 정보 정렬
+				rows.sort(function(rowA, rowB) {return rowA["rowLevel"] - rowB["rowLevel"]});
+				cols.sort(function(colA, colB) {return colA["colLevel"] - colA["colLevel"]});
+				
+				// 행(ROW)단위로 데이터 구분
+				for (i = 0; i < rows.length; i++) {
+					var dataset      = {};
+					var rowData      = [];
+					var rowId        = rows[i]["optionId"];
+					dataset["name"]  = rows[i]["content"];		// 디버그 확인용 변수[지워서 따로 커스터마이징 하셔도 됩니다.]
+
+					for (j = 0; j < cols.length; j++) {
+						var colId     = cols[j]["optionId"];
+						
+						for(k = 0; k < responses.length; k++) {
+							if(responses[k]["rowId"] == rowId && responses[k]["columnId"] == colId && responses[k]["responsorId"] == userId) {
+								rowData.push(i + "," + j);
+								dataset["responseId"] = responses[k]["responseId"];
+							}
+						}
+					}
+
+					dataset["matrixData"] = rowData;
+					dataSetArr.push(dataset);
+				}
+			}
+
+			return dataSetArr;
+		}
+
+		// 20.05.07 강승구 : 텍스트형(단답형, 문장형) 질문에 대한 값 세팅처리
+		function writeQuestionsText(question) {
+			var userId = "${user}";
+			var responses = question["responses"];
+			var level = question["level"];
+			var type = question["type"];
+
+			if(responses && level) {
+				for (i = 0; i < responses.length; i++) {
+					if (responses[i].responsorId == userId) {
+						if(type == 5) {
+							document.getElementById('prevQstn' + level).querySelector("input").value = responses[i].texts;
+							document.getElementById('prevQstn' + level).querySelector("input").setAttribute('responseId', responses[i]["responseId"]);
+						} else {
+							document.getElementById('prevQstn' + level).querySelector("textarea").value = responses[i].texts;
+							document.getElementById('prevQstn' + level).querySelector("textarea").setAttribute('responseId', responses[i]["responseId"]);
+						}
+					}
+				}
+			}
+		}
+		
 		function userEvent() {
 			SurveyCreate.changeMode(true); //change download mode
 			getQuestions();
 			showAttachList();
 			setBodyHeight();
+			
 			window.addEventListener("load", function(e) {setBodyHeight();}, false);
 			window.addEventListener("resize", function(e) {setBodyHeight();}, false);
 			document.getElementById("surveyInfBttn").onclick = function(e) {toggleSurveyInformation();};
@@ -318,6 +542,13 @@
 			var saveResult = document.getElementById("saveResult");
 			if (cancelBttn) {cancelBttn.onclick = function(e) {window.close();};}
 			if (saveResult) {saveResult.onclick = function(e) {saveSurveyResponses();};}
+
+			// 20.05.08 강승구 : 설문정보 수정버튼
+			var updateBttn = document.getElementById("suvyUdt");
+			if (updateBttn) {updateBttn.onclick = function(e) {saveSurveyResponses();};}
+
+			// 20.05.06 강승구 : 설문응답여부에 따른 처리 코드추가
+			checkQuestionAnswer();
 		}
 		// 첨부파일 리스트 나타내기
 		function showAttachList() {
@@ -425,8 +656,12 @@
 				}
 			}
 			
-			if (periodResult != "fail" && requiredResult != "fail" && responseResult != "fail") {
+			if ((periodResult != "fail" && requiredResult != "fail" && responseResult != "fail" && !resStatus) || survey.multiAnswerFlag != 0) {
 				saveResponse();
+			} else if (periodResult != "fail" && requiredResult != "fail" && responseResult != "fail" && survey.multiAnswerFlag == 0 && resStatus) {
+				console.log(resposeObj);
+				console.log("수정!");
+				updateResponse();
 			}
 		}
 		// 응답 저장
@@ -453,14 +688,54 @@
 				resposeObj.responses = [];
 			}
 		}
+
+		// 20.05.08 강승구 : 응답 수정
+		function updateResponse() {
+			if (resposeObj.responses.length > 0) {
+				$.ajax({
+					type: "POST",
+					url: "/ezSurvey/updateResponse.do",
+					data: JSON.stringify(resposeObj),
+					contentType: "application/json; charset=utf-8",
+					dataType: "JSON",
+					async: false,
+					cache: false,
+					success : function(data) {
+						afterSaveSuccessfully(data);
+					},
+					error : function(error) {
+						alert(SurveyMessages.strError);
+					}
+				});
+			}
+			else {
+				alert(SurveyMessages.strNoResponse);
+				resposeObj.responses = [];
+			}
+		}
 		
 		function afterSaveSuccessfully(data) {
 			var code = data.code;
+			
 			switch(code) {
 				case 0 : alert(SurveyMessages.strSave2)    ;
 						 resposeObj.responses = [];
-						 if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload(); window.close();}
-						 if (parent && parent.SurveyItem)               {parent.SurveyItem.reload();}
+						 
+						 if (window.opener.getPotletSurveyList != undefined) {
+							 window.opener.getPotletSurveyList();
+							 // 일단 현 상황에 맞춰 주석처리
+							 // 나중에 필요하면 주석 풀면 됌
+							 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
+							 window.close();
+						 }
+						 
+						 if (window.opener.SurveyItem != null) {
+							 if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
+							 if (window.opener && window.opener.openSurveyPopup)	{window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
+							 if (parent && parent.SurveyItem)               {parent.SurveyItem.reload();}
+						 } 
+						 
+						 window.close();
 						 break;
 				case 1 : alert(SurveyMessages.strParamErr)  ; resposeObj.responses = []; break;
 				case 2 : alert(SurveyMessages.strError)     ; resposeObj.responses = []; break;
@@ -479,6 +754,7 @@
 			var wrapper    = $("#prevQstn" + id);
 			var checkedBtn = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked");
 			var optId      = parseInt(checkedBtn.attr("optionid"));
+			var responseId = parseInt(checkedBtn.attr("responseId"));
 			
 			if (!isNaN(optId)) {
 				if (checkedBtn.attr("otherFlag") == 1) {
@@ -494,6 +770,7 @@
 					}
 				}
 				optionId['optionId'] = optId;
+				optionId['responseId'] = responseId;
 				answer.push(optionId);
 				answerObj['answers'] = answer;
 				answerObj['type'] = type;
@@ -516,6 +793,7 @@
 				if (checkBox[i].checked == true) {
 					//var optLevel = parseInt(checkBox[i].value);
 					var optId    = parseInt(checkBox[i].getAttribute('optionid'));
+					var responseId = parseInt(checkBox[i].getAttribute('responseId'));
 					var optionId = {};
 					
 					if (!isNaN(optId)) {
@@ -532,6 +810,7 @@
 							}
 						}
 						optionId['optionId'] = optId;
+						optionId['responseId'] = responseId;
 						answer.push(optionId);
 					}
 				}
@@ -556,6 +835,7 @@
 			for (var i = 0; i < trLength; i++) {
 				var rowColObj = {};
 				var rowColIds = $("input[name = qstn" + id + "opt" + i + "]:checked").attr("optionid");
+				var responseId = $("input[name = qstn" + id + "opt" + i + "]:checked").attr("responseId");
 				
 				if (rowColIds != undefined) {
 					var rowColArray = rowColIds.split(",");
@@ -564,6 +844,7 @@
 					
 					rowColObj['rowId'] = parseInt(row);
 					rowColObj['colId'] = parseInt(col);
+					rowColObj['responseId'] = responseId;
 					answer.push(rowColObj);
 				}
 			}
@@ -593,6 +874,7 @@
 				
 				rowColObj['rowId'] = parseInt(row);
 				rowColObj['colId'] = parseInt(col);
+				rowColObj['responseId'] = checkedOpts[i].getAttribute("responseId");
 				answer.push(rowColObj);
 			}
 			if (answer.length > 0) {
@@ -610,20 +892,23 @@
 			var wrapper   = $("#prevQstn" + id);
 			var txtAnswer = "";
 			var optionId  = "";
+			var responseId = "";
 			
 			if (type == 5) {
 				txtAnswer = wrapper.find(".shortanswer").val();
 				optionId = parseInt(wrapper.find(".shortanswer").attr("optionid"));
+				responseId = parseInt(wrapper.find(".shortanswer").attr("responseId"));
 			}
 			else if (type == 6) {
 				txtAnswer = wrapper.find(".paragraph").val();
 				optionId = parseInt(wrapper.find(".paragraph").attr("optionid"));
-				
+				responseId = parseInt(wrapper.find(".paragraph").attr("responseId"));
 			}
 			
 			if (txtAnswer != "") {
 				txtObj['texts'] = txtAnswer;
 				txtObj['optionId'] = optionId;
+				txtObj['responseId'] = responseId;
 				answer.push(txtObj);
 			}
 			
@@ -642,10 +927,12 @@
 			var wrapper   = $("#prevQstn" + id);
 			var outputVal = parseInt(document.getElementById("slider" + id).textContent);
 			var optionId  = parseInt($("#slider" + id).attr("optionid"));
+			var responseId = parseInt($("#slider" + id).attr("responseid"));
 			
 			if (!isNaN(outputVal)) {
 				sliderObj['sliderValue'] = outputVal;
 				sliderObj['optionId'] = optionId;
+				sliderObj['responseId'] = responseId;
 				answer.push(sliderObj);
 			}
 			
@@ -683,10 +970,12 @@
 					var rankingObj = {};
 					var rankNum = i + 1;
 					var optionId = parseInt($("select[name='ranking" + id + i + "'] option:selected").attr("optionid"));
+					var responseId = parseInt($("select[name='ranking" + id + i + "']").attr("responseid"));
 					
 					if (!isNaN(optionId)) {
 						rankingObj['rankingLevel'] = rankNum;
 						rankingObj['optionId'] = optionId;
+						rankingObj['responseId'] = responseId;
 						answer.push(rankingObj);
 					}
 					
@@ -709,9 +998,11 @@
 			var answer = [];
 			var wrapper = $("#prevQstn" + id);
 			var optId = parseInt($("select[name=drdw" + id + "] option:selected").attr("optionid"));
+			var responseId = parseInt($("select[name=drdw" + id + "]").attr("responseid"));
 			
 			if (!isNaN(optId)) {
 				drdwObj['optionId'] = optId;
+				drdwObj['responseId'] = responseId;
 				answer.push(drdwObj);
 			}
 			
@@ -748,6 +1039,16 @@
 		
 		function afterDeleteSuccessfully() {
 			alert(SurveyMessages.strDel);
+			if (window.opener && window.opener.openSurveyPopup)    {window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
+			
+			if (window.opener.getPotletSurveyList != undefined) {
+				 window.opener.getPotletSurveyList();
+				 // 일단 현 상황에 맞춰 주석처리
+				 // 나중에 필요하면 주석 풀면 됌
+				 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
+				 window.close();
+			 }
+			
 			if (window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
 			window.close();
 		}

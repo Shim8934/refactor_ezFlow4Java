@@ -549,11 +549,13 @@ function openFileAttachUI()
 	return ret;
 }
 
-function SaveApproveInfo(pApproveFlag)
-{
-	if (SaveFile() != "TRUE")
-		return "FALSE";
-	
+function SaveApproveInfo(pApproveFlag) {
+	var rtnVal = SaveFile();
+
+	if (rtnVal.toUpperCase() != "TRUE") {
+        return rtnVal;
+	}
+
 	SignSave();
 	
 	var xmlpara = createXmlDom();
@@ -770,16 +772,20 @@ function SaveApproveInfo(pApproveFlag)
 function SaveFile() {
 	var result = "";
 	
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : HwpCtrl.GetCloneData("", "HWP"),
+		orgCompanyID : orgCompanyID
+	}
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			html  : HwpCtrl.GetCloneData("", "HWP"),
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -791,15 +797,19 @@ function SaveFile() {
 function SaveOrgFile() {
 	var result = "";
 	
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : OrgHtml
+	}
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			html  : OrgHtml
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1296,8 +1306,9 @@ function getLastOpinon()
 		}
 	});
 	
+	var content = "";
 	if (loadXMLString(result).documentElement.childNodes.length > 0 )
-	    var content = getNodeText(loadXMLString(result).documentElement.childNodes(0));		
+	    content = getNodeText(loadXMLString(result).documentElement.childNodes[0]);		
 
 	if (HwpCtrl.CheckFieldExist("memo"))
 		HwpCtrl.SetFieldText("memo", content);
@@ -1308,7 +1319,7 @@ function openAaprDocAttachUI()
 	try{
 		var parameter = pDocID;
 		var url = "/ezApprovalG/aprCabinetAttach.do";
-		var feature	= "status:no;dialogWidth:1050px;dialogHeight:500px;edge:sunken;scroll:no;help:no"; 
+		var feature	= "status:no;dialogWidth:1050px;dialogHeight:520px;edge:sunken;scroll:no;help:no"; 
 		var ret = window.showModalDialog(url,parameter,feature);
 
 		if (ret != "cancel") {
@@ -1496,6 +1507,7 @@ function setRecevInfo(ret) {
     }
 }
 
+/* 2020-02-27 홍승비 - mht 문서 수정이력 비교용 파라미터 추가 (데이터 삽입 시 오류 방지) */
 function UpdateDocHistory(pHtml) {
 	var xmlhttp2 = createXMLHttpRequest();
 	var xmlpara = createXmlDom();
@@ -1504,6 +1516,7 @@ function UpdateDocHistory(pHtml) {
 	createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
 	createNodeAndInsertText(xmlpara, objNode, "pHtml", pHtml);
 	createNodeAndInsertText(xmlpara, objNode, "mode", "hwp");
+    createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", "");
 
     xmlhttp2.open("POST", "/ezApprovalG/uploadDocHistory.do", false);
 	xmlhttp2.send(xmlpara);
@@ -1525,6 +1538,8 @@ function UpdateDocHistory(pHtml) {
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
         createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
+        createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", "");
+        createNodeAndInsertText(xmlpara, objNode, "BEFOREDOCURL", "");
         
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);
@@ -1554,4 +1569,37 @@ function setPublicFlag2() {
         PublicText = " ";
     
     HwpCtrl.SetFieldText("publication", PublicText);
+}
+
+//2020-05-08 : 결재정보/문서정보 저장
+function setApprDocInfo(){
+    var xmlpara = createXmlDom();
+
+    var objNode;
+    createNodeInsert(xmlpara, objNode, "PARAMETER");  
+    createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID); 
+    createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", pPublicityYN); 
+    createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
+    createNodeAndInsertText(xmlpara, objNode, "URGENTAPPROVAL", tempUrgent);
+    createNodeAndInsertText(xmlpara, objNode, "KEYWORD", tempKeyword); 
+    createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
+    createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
+    createNodeAndInsertText(xmlpara, objNode, "PUBLICITYYN", pPublicityYN);
+    createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", pLimitRange);
+    createNodeAndInsertText(xmlpara, objNode, "PAGENUM", pPageNum);   
+    createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
+    createNodeAndInsertText(xmlpara, objNode, "SECURITYAPPROVAL", tempSecurityDate);
+
+    xmlhttp.open("POST", "/ezApprovalG/setApprDocInfo.do", false);
+    xmlhttp.send(xmlpara);
+
+    return xmlhttp.responseText;
+}
+
+//결재 세부옵션처리
+function setFormAprOption(){
+    if(formAprOption.indexOf("_a2_"))  //파일첨부
+        setMenuBar("btnFileAttach", false);
+    if(formAprOption.indexOf("_a3_"))  //문서첨부
+        setMenuBar("btnAprDocAttach", false);
 }

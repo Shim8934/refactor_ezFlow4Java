@@ -57,7 +57,7 @@
 				</form>
 			</div>
 			<div class="btnpositionJsp" style="width:100%;text-align:center;float:left;margin-top:10px;padding:7px;">
-		        <a class="imgbtn" onclick="submitClick()"><span><spring:message code="ezEmail.t38"/></span></a>
+		        <a class="imgbtn" onclick="submitClick()"><span><spring:message code="ezEmail.t48"/></span></a>
 		    </div>
 		</div>
 		<script>

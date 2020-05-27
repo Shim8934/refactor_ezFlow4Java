@@ -103,6 +103,8 @@
 	    var g_showEnglishDisplay = "";
 	    var g_charsetCheck = "${charsetCheck}";
 	    var g_ReSendFlag = "${reSendFlag}";
+	    var BigSizeAttachLimitCount = "${bigSizeAttachLimitCount}";
+	    var BigSizeAttachDownloadLimitCount = "${bigSizeAttachDownloadLimitCount}";
 	    var BigSizeAttachMBSize = "${bigSizeMailAttachLimit}";
 	    var totBigSizeAttachMBSize = "${totBigSizeMailAttachLimit}";
 	    var totSizeAttachMBSize = "${mailAttachLimit}";
@@ -186,6 +188,7 @@
         var preview_g_url_forRead = "";
         var previewChk = false;
         var ReadMailOpenNewWin;
+        var g_useAdditionalInfo = ${useAdditionalInfo};
         
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -501,7 +504,7 @@
 	    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	    	}
 	        
-	        xmlhttp.open("GET", requestUrl, false);
+	        xmlhttp.open("GET", requestUrl, true);
 	        xmlhttp.send();
 	        xmlhttp = null;
 	        isDelted = true;
@@ -1306,6 +1309,9 @@
 		        	document.getElementById("SelMailSign").disabled = true;
 		        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
 		        	document.getElementById("SelMailSign").classList.add("disabled"); // plainTextDisable style
+		        	
+		        	// 대용량 첨부파일 없애기
+		        	dadiframe.btnfiledel('big');
 	        	} else {
 	        		document.getElementById("bodyType").options[0].selected = true;
 	        	}

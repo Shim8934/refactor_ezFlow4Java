@@ -6,7 +6,9 @@
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <script type = "text/javascript">
 	        var pUse_Editor = "${userEditor}";
@@ -14,8 +16,32 @@
 	        var flag = "<c:out value='${flag}' />";
 	        var dotnetFlag = "${dotnetFlag}";
 	        var shareId = "${shareId}";
-	        
-	        window.onload = window_onload;
+	        var CurrentHeight = 0;
+		    var CurrenWidth = 0;
+		    var selectFolderName = "";
+			var selectFolderId = "";
+			var selectFolderNameSpl = "";
+			var protocol = window.location.protocol;
+			var useEncryptZipForEmail = "${useEncryptZipForEmail}";
+			var host = defineHost(protocol) + window.location.host + '/websocket/${userId}';
+			var uploading = "uploading";
+			var enc = "encrypt";
+		    var dec = "decrypt";
+		    var webSocket =  null;
+		    var importExportMode = false;
+			function defineHost(protocol){
+	    		var host = "";
+
+	    		if (protocol == "https:") {
+			    	host = 'wss://';
+			    } else {
+			    	host = 'ws://';
+			    }
+	    		
+		    	return host;
+		    }
+			
+		    window.onload = window_onload;
 	        document.onselectstart = function () { return false; };
 	        function window_onload() {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -86,7 +112,17 @@
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailOutOfOffice.do";
 	                    break;
 	                case "MailEnv_div9":
-	                    document.getElementById("MailEnv_ifrm").src = "mail_ReceiveDeny.aspx";
+	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAddressSearchOrder.do";
+	                    break;
+	                case "MailEnv_div10":
+	                	var requestUrl = "/ezEmail/folderQuotaAndManage.do";
+	                    if (shareId != "") {
+	                		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	                	}
+	                    document.getElementById("MailEnv_ifrm").src = requestUrl;
+	                    break;
+	                case "MailEnv_div11":
+	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailUserDistribution.do";
 	                    break;
 	            }
 	        }
@@ -127,6 +163,345 @@
 	            }
 	        }
 	        
+		 // 메일박스 내보내기 config 확인
+			function mailbox_export(selectFolderName, selectFolderNameSpl, folderTotalCount) {
+
+				this.selectFolderName = selectFolderName;
+            	this.selectFolderNameSpl = selectFolderNameSpl;
+				console.log('folderTotalCount=' + folderTotalCount);
+				if (folderTotalCount === null || typeof folderTotalCount === "undefined") {
+					// 이 경우가 나오면 안되요.
+					console.log('folderTotalCount is null or undefined');
+					return;
+				} else if (folderTotalCount < 1) {
+					alert("<spring:message code='ezEmail.kyj13' />");
+					return;
+				}
+
+				var exportType = "MAILBOX";
+
+				if (useEncryptZipForEmail == "YES") {
+					mailExportOption_onClick(exportType);
+				} else {
+					if (confirm("<spring:message code='ezEmail.lhm36' />")) {
+						mailbox_export_start();
+					}
+				}
+			}
+		    
+		    // 메일박스 내보내기
+		    function mailbox_export_start(pwd){
+		    	
+		    	// 웹소켓 연결
+	            webSocket= new WebSocket(host);
+		    	var encryptPw = "";
+	            
+		    	if (typeof pwd != "undefined") {
+		    		encryptPw = pwd;
+		    	}
+		    	
+		        // 서버로부터 메세지가 왔을 때 실행되는 함수 
+ 				webSocket.onmessage = function(message){
+ 					importExportMode = true;
+		        	var obj = JSON.parse(message.data);
+		        	
+		        	if (obj.status == "transferStart") {
+		            	userkey = obj.userkey;
+		            	ShowMailProgressNew();
+			            ShowPercent(0);
+			            
+			            var requestUrl = "/ezEmail/mailboxExportZip.do";
+			            
+			            if (typeof(shareId) != "undefined" && shareId != "") {
+			            	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+				    	}
+			            
+						$.ajax({
+							type : "POST",
+							dataType : "text",
+							async : true,
+							url : requestUrl,
+							data : { folderPath : selectFolderName, userkey : userkey},
+							success : function(result) {
+								if (result == "") {
+									if(webSocket == null){
+										return;
+									} else {
+										alert("<spring:message code='ezEmail.lhm33' />");
+										webSocket.close();
+										HiddenMailProgressNew();
+									}
+								} else if (result == "CANCEL") {
+									console.log('User Cancel');
+									webSocket.close();
+									HiddenMailProgressNew();
+								} else {
+									
+									if (useEncryptZipForEmail == 'YES' && encryptPw != ""){
+										ShowPercent(enc);
+									}
+									
+									var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
+											+ encodeURIComponent('${folderName}')
+											+ "&temp=" + result + "&encryptPw=" + encodeURIComponent(encryptPw)
+											+ "&userkey=" + encodeURIComponent(userkey);
+									
+									if (typeof(shareId) != "undefined" && shareId != "") {
+										fullpath += "&shareId=" + encodeURIComponent(shareId);
+							    	}
+									
+									AttachDownFrame.location.href = fullpath;
+									AttachDownFrame.target = "_blank";
+					          
+								}
+							}
+						});
+						
+		            } else if (obj.status == 'progress') {
+		            	
+		            	if (obj.percent <= 100) {
+			            	ShowPercent(obj.percent);
+		            	}
+		            	
+		            } else if (obj.status == 'end') {
+		            	webSocket.close();
+		            	HiddenMailProgressNew();
+		            }
+		        };
+		     // 웹소켓 연결 해제시 실행 되는 함수
+		        webSocket.onclose = function(event){
+		        	webSocket = null;
+		        	importExportMode = false;
+		        };
+		    }
+		  
+		    function ShowPercent(data) {
+				$("#progressNum").text("");
+				if (data == uploading){ // 리소스 정리예정
+					$("#progressNum").text("<spring:message code='ezEmail.kyj10' />");
+				} else if (data == dec) {
+					$("#progressNum").text("<spring:message code='ezEmail.kyj11' />");
+				} else if (data == enc) {
+					$("#progressNum").text("<spring:message code='ezEmail.kyj12' />");
+				} else {
+					$("#progressNum").text("<spring:message code='ezEmail.kyj01' /> : " + data + " %");
+				} 
+			}
+		    	        
+	        function HiddenMailProgressNew() {
+				document.getElementById("progressNum").text = '';
+				document.getElementById("mailPanel").style.display = "none";
+				document.getElementById("mailPanel").style.backgroundColor = "";
+				document.getElementById("MailProgress").style.backgroundColor = "";
+				document.getElementById("MailProgress").style.display = "none";
+			    document.getElementById("cancleProgressBtn").style.display = "none";
+				parent.document.getElementById("left").contentWindow.hideProgress();
+				
+				if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
+					parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+				} 
+			}
+
+			function ShowMailProgressNew() {
+				CurrentHeight = document.body.clientHeight;
+		        CurrenWidth = document.body.clientWidth;
+			    document.getElementById("mailPanel").style.display = "block";
+			    document.getElementById("mailPanel").style.opacity = 0.5;
+			    document.getElementById("mailPanel").style.background = "rgba(0,0,0,0.7)";
+			    document.getElementById("MailProgress").style.backgroundColor = "#ffffff";
+			    document.getElementById("MailProgress").style.top = (CurrentHeight / 2) + "px";
+			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 150 + "px";
+			    document.getElementById("MailProgress").style.display = "";
+			    document.getElementById("cancleProgressBtn").style.display = "block";
+			    parent.document.getElementById("left").contentWindow.showProgress();
+			    
+			    if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
+					parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
+				} 
+			}
+
+			function cancleProgress(){
+	        	HiddenMailProgressNew();
+	        	webSocket.close();
+	        	$("#MailEnv_ifrm")[0].contentWindow.requestFolderList();
+			}
+			
+			function showDim() {
+				CurrentHeight = document.body.clientHeight;
+		        CurrenWidth = document.body.clientWidth;
+			    document.getElementById("mailPanel").style.display = "block";
+			    document.getElementById("mailPanel").style.opacity = 0.5;
+			    document.getElementById("mailPanel").style.background = "rgba(0,0,0,0.7)";
+				parent.document.getElementById("left").contentWindow.showProgress();
+			    
+			    if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
+					parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
+				} 
+			}
+			
+			function hiddenDim() {
+				document.getElementById("mailPanel").style.display = "none";
+				document.getElementById("mailPanel").style.backgroundColor = "";
+				parent.document.getElementById("left").contentWindow.hideProgress();
+				
+				if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
+					parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+				} 
+			}
+			
+			function DivPopUpShow(popUpW, popUpH, URL) {
+		        try {
+		            var Position = DivPopUpPosition(popUpW, popUpH);
+		            document.getElementById("iFrameLayer").src = URL;
+		            document.getElementById("iFramePanel").style.top = (Position[0]-10) + "px";
+		            document.getElementById("iFramePanel").style.left = (Position[1]-220) + "px";
+		            document.getElementById("iFramePanel").style.height = popUpH + "px";
+		            document.getElementById("iFrameLayer").style.width = popUpW + "px";
+		            document.getElementById("iFrameLayer").style.height = popUpH + "px";
+		            showDim();
+		            document.getElementById("iFramePanel").style.display = "";
+		        } catch (e) {
+		        	console.log(e);
+		        }
+		    }
+
+		    function DivPopUpHidden() {
+		        try {
+		        	hiddenDim();
+					document.getElementById("mailPanel").style.backgroundColor = "";
+		            document.getElementById("iFramePanel").style.display = "none";
+		            document.getElementById("iFrameLayer").src = "/blank.htm";
+		        } catch (e) {}
+		    }
+		    
+		    //TODO: copy일때 비동기로 처리하도록 함수 따로 만들어야함.
+		    function mail_make_folder(szCMD, szURL, destURL, szName) {
+		    	var xmlHTTP = createXMLHttpRequest();
+		        var xmlDOM = createXmlDom();
+		        var objNode;
+		        createNodeInsert(xmlDOM, objNode, "DATA");
+		        createNodeAndInsertText(xmlDOM, objNode, "CMD", szCMD);
+		        createNodeAndInsertText(xmlDOM, objNode, "URL", szURL);
+		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", destURL);
+		        createNodeAndInsertText(xmlDOM, objNode, "NAME", szName);
+		        
+				var requestUrl = "/ezEmail/mailMakeFolder.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	            }
+		        
+		        xmlHTTP.open("POST", requestUrl, false);
+		        xmlHTTP.send(xmlDOM);
+		        
+		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300) {
+		            return xmlHTTP.responseText;
+		        } else {
+		            return "ERROR";
+		        }
+		    }
+		    
+		    var inputNameDlg_cross_dialogArguments = new Array();
+            function add_onclick(selectFolderName, selectFolderNameSpl) {
+            	this.selectFolderName = selectFolderName;
+            	this.selectFolderNameSpl = selectFolderNameSpl;
+                inputNameDlg_cross_dialogArguments[0] = "";
+                inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
+                inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
+                DivPopUpShow(330, 150, "/ezEmail/inputNameDlg.do");
+            }
+            
+            function add_onclick_Complete(szName) {
+		        DivPopUpHidden();
+		        if (typeof (szName) == "undefined" || szName.trim() == "") {
+		            return;
+		        }
+		        else if (checkBadFolderName(szName)) {
+		            return;
+		        }
+		        
+		        var szURL = selectFolderName;
+		        var result = mail_make_folder("NEW", szURL, "", szName);
+		        if (result != "OK") {
+		            if (result == "ALREADY_EXISTS") {
+		                alert("<spring:message code='ezEmail.t456' />");
+		            } else {
+		                alert("<spring:message code='ezEmail.t457' />");
+		            }
+		            return;
+		        }
+		        
+                $("#MailEnv_ifrm")[0].contentWindow.requestFolderList();
+                if(window.parent.frames["left"].configFlag == "false") {
+			        window.parent.frames["left"].mailbox_treeview_reload();
+		        }
+                
+		    }
+            
+            function modify_onclick(selectFolderName, selectFolderNameSpl) {
+            	this.selectFolderName = selectFolderName;
+            	this.selectFolderNameSpl = selectFolderNameSpl;
+            	
+		        if (selectFolderId == -1) {
+		            alert("<spring:message code='ezEmail.t158' />");
+		            return;
+		        }
+		        else if (checkTopLevelFolder(selectFolderName)) {
+		            alert("<spring:message code='ezEmail.t458' />");
+		            return;
+		        }
+		        inputNameDlg_cross_dialogArguments[0] = selectFolderNameSpl;
+		        inputNameDlg_cross_dialogArguments[1] = modify_onclick_Complete;
+		        inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
+		        DivPopUpShow(330, 150,"/ezEmail/inputNameDlg.do");
+		    }
+            
+		    function modify_onclick_Complete(szName) {
+		        DivPopUpHidden();
+		        if (typeof (szName) == "undefined" || szName.trim() == "" || szName == selectFolderNameSpl) {
+		            return;
+		        }
+		        if (checkBadFolderName(szName)) {
+		            return;
+		        }
+
+		        var result = mail_make_folder("MODIFY", selectFolderName, "", szName);
+		        
+		        if (result != "OK") {
+		        	if (result == "ALREADY_EXISTS") {
+		        		alert("<spring:message code='ezEmail.lhm05' />");
+		        	} else {
+		        		alert("<spring:message code='ezEmail.t459' />");
+		        	}
+		        	return;
+		        }
+		        $("#MailEnv_ifrm")[0].contentWindow.requestFolderList();
+		        if(window.parent.frames["left"].configFlag == "false") {
+			        window.parent.frames["left"].mailbox_treeview_reload();
+		        }
+		    }
+		    
+		    function checkBadFolderName(szName) 
+			{
+				var szBadChars = /[\<\>\~\#\%\&\*\'\"\+\|\\\.\/]/g;
+				var szChangedName = szName.replace(szBadChars, "");
+				if(szChangedName != szName)
+				{
+					alert("<spring:message code='ezEmail.t479' />< ~ # % & * ' \" + | \\ . / >)<spring:message code='ezEmail.t480' />");
+					return true;
+				}
+				return false;
+			}
+			
+		 // 2016-12-28 이효민 추가
+			function checkTopLevelFolder(nodeIdx) {
+				var folderUrl = nodeIdx;
+				if (folderUrl.indexOf(".") > -1) {
+					return false;
+				} else {
+					return true;
+				}
+			}
 	    </script>
 	    <title><spring:message code='ezEmail.t904' /></title>
 	</head>
@@ -152,19 +527,38 @@
 		                    <p id = "MailEnv_sub6"><span divname="MailEnv_div6" id="1tab6"><spring:message code='ezEmail.t117' /></span></p>
 		                    <p id = "MailEnv_sub7"><span divname="MailEnv_div7" id="1tab7"><spring:message code='ezEmail.t283' /></span></p>
 		                    <p id = "MailEnv_sub8"><span divname="MailEnv_div8" id="1tab8"><spring:message code='ezEmail.t203' /></span></p>
+		                    <p id = "MailEnv_sub9"><span divname="MailEnv_div9" id="1tab9"><spring:message code='ezEmail.t99000084' /></span></p>
+		                    <p id = "MailEnv_sub10"><span divname="MailEnv_div10" id="1tab10"><spring:message code='ezEmail.t455' /></span></p>
+		                    <c:if test="${useUserDefinedDL eq 'YES'}">
+		                    <p id = "MailEnv_sub11"><span divname="MailEnv_div11" id="1tab11"><spring:message code='ezEmail.t57' /></span></p>
+		                    </c:if>
 					    </c:when>
 					    <c:when test="${flag eq 'email' && shareId != null}">
 					    	<p id = "MailEnv_sub5"><span divname="MailEnv_div5" id="1tab1"><spring:message code='ezEmail.t146' /></span></p>
 		                    <p id = "MailEnv_sub6"><span divname="MailEnv_div6" id="1tab6"><spring:message code='ezEmail.t117' /></span></p>
 		        			<p id = "MailEnv_sub7"><span divname="MailEnv_div7" id="1tab7"><spring:message code='ezEmail.t283' /></span></p>
+		                    <p id = "MailEnv_sub10"><span divname="MailEnv_div10" id="1tab10"><spring:message code='ezEmail.t455' /></span></p>
 					    </c:when>
 					    <c:otherwise>
 							<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab1"><spring:message code='ezPersonal.yej01' /></span></p>
 					    </c:otherwise>
-				    </c:choose>
+				    </c:choose>	
 	            </div>
 	        </div>
 	        <iframe id = "MailEnv_ifrm" style ="width:100%;height:100%;" frameborder="0" ></iframe>
+		        <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" oncontextmenu="event_listContextMenuAndId(event); return false;">&nbsp;</div>
+			<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+	            <img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
+	            <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;">4567467</div>
+	            <a class="btnposition" id="cancleProgressBtn" style="display: none; padding-top: 10px; width: 50px; height:20px; 
+	      			cursor:pointer; margin:0 auto;" onclick="cancleProgress();">
+	            <input type="button" value="<spring:message code="ezEmail.t39" />"/></a>
+	        </div>
+<!-- 			<div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" onclick="" oncontextmenu="event_listContextMenuAndId(event); return false;">&nbsp;</div> -->
+			<div class="layerpopup"  style="z-index: 9009; position: absolute;display: none;" id="iFramePanel">
+	    		<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
+			</div>
+			<iframe name="AttachDownFrame" id="AttachDownFrame" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display:none"></iframe>
 	</body>
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");

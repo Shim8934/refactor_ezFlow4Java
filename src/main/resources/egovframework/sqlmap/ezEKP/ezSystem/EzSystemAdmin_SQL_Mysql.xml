@@ -88,7 +88,8 @@
 					C.CONNECTOS,
 					C.COMPANYID,
 					C.COMPANYNM,
-					C.COMPANYNM2
+					C.COMPANYNM2,
+					C.USERID
 			FROM 
 					TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
 			ON 
@@ -99,6 +100,9 @@
 						AND C.COMPANYID=#companyId#
 					</isNotEqual>
 					<include refid="EzSystemAdminDAO.searchQuery"/>
+					<isEqual property="search_keycode" compareValue="6">
+						AND C.USERID LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
 			ORDER BY 
 					SEQUENCE DESC
 		<isNotEqual property="v_start" compareValue="-1">
@@ -117,7 +121,8 @@
 					C.CONNECTIP,
 					C.CONNECTBROWSER,
 					C.CONNECTOS,
-					C.COMPANYID
+					C.COMPANYID,
+					C.USERID
 			FROM 
 					TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
 			ON 
@@ -143,7 +148,10 @@
 		<isNotEqual property="companyId" compareValue="Top/organ">
 			AND COMPANYID = #companyId#
 		</isNotEqual>	
-				<include refid="EzSystemAdminDAO.searchQuery"/>
+		<include refid="EzSystemAdminDAO.searchQuery"/>
+		<isEqual property="search_keycode" compareValue="6">
+			AND USERID LIKE CONCAT('%', #search_keyword#,'%')
+		</isEqual>
 	</select>
 	
 	<select id="EzSystemAdminDAO.getLoginHistCountNotAdmin" parameterClass="map" resultClass="int">
@@ -403,7 +411,7 @@
 		SET 
 			COUNTRY_CODE = #countryCode#
 		WHERE 
-			TENANT_ID = #tenantId#;
+			TENANT_ID = #tenantId#
 		]]>
 	</update>
 	

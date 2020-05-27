@@ -80,10 +80,17 @@
                 window.close();
         }
         function btn_Copy_onclick() {
-            if (PostTreeView.selectedIndex == -1) {
+            var postTreeSelectIndex = PostTreeView.selectedIndex();
+        	if (postTreeSelectIndex == -1) {
                 alert("<spring:message code='ezEmail.t536' />");
                 return;
             }
+            
+        	if (isFolderManager && getFolderDeptLevel(postTreeSelectIndex) > 5) {
+            	alert("<spring:message code='ezEmail.ksaMailBox01' />");
+            	return;
+            }
+            
             var retVal = new Array();
             retVal["cmd"] = "COPY";
             retVal["url"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
@@ -105,9 +112,15 @@
             }
         }
         function btn_Move_onclick() {
-            if (PostTreeView.selectedIndex == -1) {
+        	var postTreeSelectIndex = PostTreeView.selectedIndex();
+            if (postTreeSelectIndex == -1) {
                 alert("<spring:message code='ezEmail.t537' />");
                 return;
+            }
+            
+            if (isFolderManager && getFolderDeptLevel(postTreeSelectIndex) > 5) {
+            	alert("<spring:message code='ezEmail.ksaMailBox01' />");
+            	return;
             }
 
             var retVal = new Array();
@@ -178,6 +191,13 @@
             var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false, isFolderManager)
             PostTreeView.putchildxml(nodeIdx, childxml);
         }
+        
+	     // 폴더 뎁스 레벨
+		function getFolderDeptLevel(nodeIdx) {
+			var folderUrl = PostTreeView.getvalue(nodeIdx, "href");
+			return folderUrl.split(".").length;
+		}
+        
     </script>
 </head>
 <body scroll="no" class="popup" onload="javascript:window_onload()">

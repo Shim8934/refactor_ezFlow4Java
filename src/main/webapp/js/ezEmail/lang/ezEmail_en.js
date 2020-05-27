@@ -36,7 +36,7 @@ var strLang35 = "Messages";
 var strLang36 = "Unread Messages";
 var strLang37 = "By Sender";
 var strLang41 = "Two-Line View";
-var strLang42 = "Select a message.";
+var strLang42 = "Select a mail.";
 var strLang44 = "Select one message only.";
 var strLang52 = "Error occurred while copying message.";
 var strLang53 = "Successfully copied.";
@@ -314,6 +314,11 @@ var strLangSharedMailbox03 = "Changed password.";
 
 var strLangReceiverCount01 = "The maximum number of recipients is ";
 var strLangReceiverCount02 = ".";
+
+var strLangHDP01 = "Up to";
+var strLangHDP02 = "Downloadable";
+var strLangHDP03 = "Up to {0} files can be attached to a large file.";
+var strLangHDP04 = "You can drag and drop to add files and change the order of added files.";
 
 function GetLocalTime(Offset , pDateTime)
 {

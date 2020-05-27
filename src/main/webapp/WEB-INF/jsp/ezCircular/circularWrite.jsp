@@ -40,7 +40,7 @@
 	    	var userMyName2 = "<c:out value='${userMyName2}'/>";
 	    	var listSize = "<c:out value='${listSize}'/>";
 	    	var defaultFontAndSize  = "<c:out value='${defaultFontAndSize}'/>";
-	    	var strAttach = "${strAttach}'";
+	    	var strAttach = "${strAttach}";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -312,7 +312,7 @@
 							window.opener.getLeftCount();
 							window.opener.refresh_onclick();
 							window.close();
-		                	alert("<spring:message code='ezBoard.t10033'/>");	
+		                	alert("<spring:message code='ezCircular.t73'/>");	
 		                },
 		                error: function() {
 		                	alert("<spring:message code='ezCircular.t102'/>");	
@@ -424,24 +424,24 @@
 	          					<select id="importance" class="select">
 	          						<c:choose>
 	          							<c:when test="${result.importance eq '0' }">
-	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
-			          						<option value="1" ><spring:message code="ezCircular.t116"/></option>
 		   									<option value="0" selected><spring:message code="ezCircular.t185"/></option>
+			          						<option value="1" ><spring:message code="ezCircular.t116"/></option>
+	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
 	          							</c:when>
 	          							<c:when test="${result.importance eq '1' }">
-	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
-	          								<option value="1" selected><spring:message code="ezCircular.t116"/></option>
    											<option value="0" ><spring:message code="ezCircular.t185"/></option>
+	          								<option value="1" selected><spring:message code="ezCircular.t116"/></option>
+	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
 	          							</c:when>
 	          							<c:when test="${result.importance eq '2' }">
-	          								<option value="2" selected><spring:message code="ezCircular.t117"/></option>
-			          						<option value="1" ><spring:message code="ezCircular.t116"/></option>
 		   									<option value="0" ><spring:message code="ezCircular.t185"/></option>
+			          						<option value="1" ><spring:message code="ezCircular.t116"/></option>
+	          								<option value="2" selected><spring:message code="ezCircular.t117"/></option>
 	          							</c:when>
 	          							<c:otherwise>
-	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
-			          						<option value="1" selected><spring:message code="ezCircular.t116"/></option>
 		   									<option value="0" ><spring:message code="ezCircular.t185"/></option>
+			          						<option value="1" selected><spring:message code="ezCircular.t116"/></option>
+	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
 	          							</c:otherwise>
 	          						</c:choose>
    								</select>	

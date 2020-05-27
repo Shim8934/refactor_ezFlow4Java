@@ -196,6 +196,9 @@
 .calendar_layer .text .td_list td.company{color:#ff1e70;}
 .calendar_layer .text .td_list td .company{display:inline-block; width:11px; height:11px; border:1px solid #e01662; background:#ff1c71; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 회사 */
 /* //개인,부서,회사 색상 */
+td .icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 4px 0px; padding:0; vertical-align:middle;}/* 위 화살표 */
+td .icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 4px 0px; padding:0; vertical-align:middle;}/* 아래화살표 */
+
 .calendar_layer .text .td_list td .icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 위 화살표 */
 .calendar_layer .text .td_list td .icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 아래화살표 */
 .calendar_layer .text .td_list td .width_11{display:inline-block; width:13px; height:13px; background:transparent; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 공백width */

@@ -1,12 +1,5 @@
 package egovframework.ezEKP.ezApprovalG.dao;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
@@ -20,6 +13,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDeptTempletVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO;
@@ -29,6 +23,9 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovCsvVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
@@ -47,6 +44,13 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @Repository("EzApprovalGDAO")
 public class EzApprovalGDAO extends EgovAbstractDAO {
@@ -1619,6 +1623,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateHistoryForLine(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.updateHistoryForLine", map);
 	}
+	public void updateHistoryForLine2(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.updateHistoryForLine2", map);
+	}
 	
 	public void insertFormRecvTB(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertFormRecvTB", map);
@@ -2046,6 +2053,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public void insertDocSendAprDocAttachInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertDocSendAprDocAttachInfo", map);
+	}
+
+	public void insertDocSendAprOpenGovDocInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertDocSendAprOpenGovDocInfo", map);
+	}
+
+	public void insertDocSendAprOpenGovFileInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertDocSendAprOpenGovFileInfo", map);
 	}
 
 	public void insertDocSendAprReceiptProcessInfo(Map<String, Object> map) throws Exception{
@@ -2793,7 +2808,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 
 	public void deleteTmpAprDocInfo(Map<String, Object> map) throws Exception{
-		delete("EzApprovalG.deleteLastAprLine", map);
+		delete("EzApprovalG.deleteTmpAprDocInfo", map);
 	}
 	
 	public void deleteReSendEndReceiptPointInfo(Map<String, Object> map) throws Exception{
@@ -2964,6 +2979,18 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 
 	public void deleteOpinionTypeInfo(Map<String, Object> map) throws Exception {
 		delete("EzApprovalG.deleteOpinionTypeInfo", map);
+	}
+	
+	public void OpinionDel2(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.OpinionDel2", map);
+	}
+	
+	public void OpinionDel3(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.OpinionDel3", map);
+	}
+	
+	public void updateReBebuOpinionSN(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateReBebuOpinionSN", map);
 	}
 	
 	public void updateHasOpinionYN(Map<String, Object> map) throws Exception {
@@ -3256,12 +3283,181 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGProxyVO> getProxyInfo_A(Map<String, Object> map) throws Exception {
 		return (List<ApprGProxyVO>) list("EzApprovalG.getProxyInfo_A", map);
 	}
-	
+
 	public int checkDocIdIsDuplicated(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.checkDocIdIsDuplicated", map);
 	}
 	
 	public int checkProxyAprLine(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.checkProxyAprLine", map);
+	}
+	
+	public ApprGFormVO getFormPath(Map<String, Object> map) throws Exception {
+		return (ApprGFormVO) select("EzApprovalG.getFormPath", map);
+	}
+
+	public void insertOpenGovAttachInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertOpenGovAttachInfo", map);
+	}
+
+	public void deleteOpenGovAttachInfo(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteOpenGovAttachInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGOpenGovAttachVO> getAttachListForOpenGov(Map<String, Object> map) throws Exception {
+		return (List<ApprGOpenGovAttachVO>) list("EzApprovalG.getAttachListForOpenGov", map);
+	}
+
+	public void aprMakeTmp2Ing13(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.aprMakeTmp2Ing13", map);		
+	}
+
+	public void aprMakeTmp2Ing14(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.aprMakeTmp2Ing14", map);
+	}
+
+    public void aprDeleteDocInfo13(Map<String, Object> map) throws Exception {
+	    delete("EzApprovalGDAO.aprDeleteDocInfo13", map);
+    }
+
+    public void aprDeleteDocInfo14(Map<String, Object> map) throws Exception {
+        delete("EzApprovalGDAO.aprDeleteDocInfo14", map);
+    }
+
+	//2019-05-03 공람자지정
+	public void deleteGongRamLineInfo(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteGongRamLineInfo", map);
+	}
+	
+	public void insertGongRamLineInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertGongRamLineInfo", map);
+	}
+	
+	public int checkGongRamLineCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.checkGongRamLineCount", map);
+	}
+	
+	public void insertGongRamSendAprLineInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertGongRamSendAprLineInfo", map);
+	}
+	
+	public void insertGongRamSendExpAprLine(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertGongRamSendExpAprLine", map);
+	}
+	
+	public void deleteGongRamSendAprLineInfo(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteGongRamSendAprLineInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> getGongRamLineInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.getGongRamLineInfo", map);
+	}
+
+	public void insertOpenGovDocInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertOpenGovDocInfo", map);		
+	}
+
+	public void deleteOpenGovDocInfo(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteOpenGovDocInfo", map);		
+	}
+
+	public void updateFileOpenFlag(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateFileOpenFlag", map);
+	}
+
+	public String getOpenGovFlag(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getOpenGovFlag", map);
+	}
+
+	public ApprGOpenGovInfoVO getOpenGovInfo(Map<String, Object> map) throws Exception {
+		return (ApprGOpenGovInfoVO) select("EzApprovalG.getOpenGovInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getFileOpenFlagList(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzApprovalG.getFileOpenFlagList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListForOpenGovVO> getSearchDocListForOpenGov(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListForOpenGovVO>) list("EzApprovalG.getSearchDocListForOpenGov", map);
+	}
+
+	public int getSearchDocListCountForOpenGov(Map<String, Object> map) throws Exception {
+		return (int)select("EzApprovalG.getSearchDocListCountForOpenGov", map);
+	}
+
+	public ApprGOpenGovInfoVO getOpenGovInfoForUpdate(Map<String, Object> map) throws Exception {
+		return (ApprGOpenGovInfoVO) select("EzApprovalG.getOpenGovInfoForUpdate", map);
+	}
+
+	public void updateOpenGovDocInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateOpenGovDocInfo_EXPENDAPRDOCINFO", map);
+		update("EzApprovalG.updateOpenGovDocInfo_RECORD", map);
+		update("EzApprovalG.updateOpenGovDocInfo_OPENGOVDOCINFO", map);
+	}
+
+	public void updateOpenGovDocInfoComp_createDate(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateOpenGovDocInfoComp_createDate", map);
+	}
+	
+	public void updateOpenGovFileInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateOpenGovDocInfo_OPENGOVFILEINFO", map);
+	}
+
+	public int isSN(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.isSN", map);
+	}
+
+	public int getSN(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getSN", map);
+	}
+
+	public void insertModifyOpenGovHistory(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertModifyOpenGovHistory", map);
+	}
+
+	public String getOpenGovLimitDate(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getOpenGovLimitDate", map);
+	}
+
+	public void updateOpenGovDocFileSize(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateOpenGovDocFileSize", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGOpenGovCsvVO> getOpenGovCSV() throws Exception {
+		return (List< ApprGOpenGovCsvVO>) list("EzApprovalG.getOpenGovCSV");
+	}
+	
+    public void updateReceivedDept(Map<String, Object> map) throws Exception {
+        update("EzApprovalG.updateReceivedDept", map);
+    }
+    
+	public String getFormAprOptionInfo(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getFormAprOptionInfo", map);
+	}    
+
+	public void updateReBebuAprReceiptProcessInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateReBebuAprReceiptProcessInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getDeliveryDeptInfo(Map<String, Object> map) throws Exception {
+		return (Map<String, Object>) select("EzApprovalG.getDeliveryDeptInfo", map);
+	}
+	
+	public int isRelayDoc(Map<String, Object> map) throws Exception {
+        return (int) select("EzApprovalG.isRelayDoc", map);
+	}
+	
+	public ApprGReceiveDocVO getBebuRelayDocSenderInfo(Map<String, Object> map) throws Exception {
+	        return (ApprGReceiveDocVO) select("EzApprovalG.getBebuRelayDocSenderInfo", map);
+	}
+	
+	public void updateBebuRelayDocSenderInfo(Map<String, Object> map) throws Exception {
+	        update("EzApprovalG.updateBebuRelayDocSenderInfo", map);
 	}
 }

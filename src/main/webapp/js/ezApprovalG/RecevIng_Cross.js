@@ -80,6 +80,107 @@ function openOpinionUI_Complete(ret) {
     }
 }
 
+function openOpinionUI_New(pOpinionType, CompleteFunction) {
+	try {
+		var parameter = new Array();
+		parameter[0] = pDocID;		//DOCID
+		parameter[1] = pOpinionType;//OPINIONTYPE NAME
+		parameter[2] = KuyjeType;	//DRAFTFLAG 결재는 공백 고정 
+		parameter[3] = pDocState;	//DOCSTATE
+		parameter[4] = orgCompanyID;//ORGCOMPANYID
+		parameter[99] = ext;		//EXT
+		
+		apropinion_cross_dialogArguments[0] = parameter;
+		if (typeof(CompleteFunction) != "undefined") {
+			apropinion_cross_dialogArguments[1] = CompleteFunction; 
+		} else {
+			apropinion_cross_dialogArguments[1] = openOpinionUI_New_Complete;
+		}
+		
+		DivPopUpShow(530, 520, "/ezApprovalG/aprOpinionNew.do");
+	} catch (e) {
+		alert("openOpinionUI_New ::: " + e.description);
+	}
+}
+function openOpinionUI_New_Complete(ret) {
+	try {
+		DivPopUpHidden();
+		if (ret == "Clear") {
+			pHasOpinionYN = "N";
+		} else if (ret == "cancel") {
+			//do_nothing
+		} else {
+	        var objXML = createXmlDom();
+	        objXML = loadXMLString(ret);
+	        
+	        var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+	        if (NodeList.length != 0) {
+	            pHasOpinionYN = "Y";
+	        } else {
+	            pHasOpinionYN = "N";
+	            ret = "cancel";
+	        }
+	        makeOpinionList(objXML);
+		}
+	} catch (e) {
+		alert("openOpinionUI_New_Complete ::: " + e.description);
+	}
+}
+
+function makeOpinionList(OpinionXML) {
+
+    var fields = message.GetFieldsList();
+    var field = message.GetListItem(fields, "opinions");
+    if (!field) return;
+    var firstFlag = true;
+    var NodeList = SelectNodes(OpinionXML, "LISTVIEWDATA/ROWS/ROW");
+    if (NodeList.length > 0) {
+        var strOpinion = " ";
+        for (i = NodeList.length - 1; i >= 0; i--) {
+            if (getNodeText(GetChildNodes(NodeList[i])[9]) == "001") {
+                if (firstFlag) {
+                    strOpinion = "<P>[" + strLang27 + "</P>";
+                    firstFlag = false;
+                }
+                if (getNodeText(GetChildNodes(NodeList[i])[2]) != "")
+                    strOpinion = strOpinion + "<P>" + getNodeText(GetChildNodes(NodeList[i])[2]) + "&nbsp;&nbsp;&nbsp;";
+                else
+                    strOpinion = strOpinion + "<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
+                strOpinion = strOpinion + getNodeText(GetChildNodes(NodeList[i])[1]) + "&nbsp;&nbsp;&nbsp;";
+                strOpinion = strOpinion + getNodeText(GetChildNodes(NodeList[i])[6]) + "</P>";
+            }
+        }
+        field.innerHTML = strOpinion;
+
+        if (OpinionAction == "ADD" || OpinionAction == "DEL")
+            SaveFile();
+
+        OpinionAction = "";
+    }
+    else {
+        field.innerHTML = " ";
+    }
+}
+
+function openOpinionUI_Distribute_Complete(ret) {
+	DivPopUpHidden();
+    if (ret != "cancel") {
+        var NodeList;
+        var objXML = loadXMLString(ret);
+        NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+
+        if (NodeList.length != 0) {
+            pHasOpinionYN = "Y";
+
+            btnReDistribute_onclick_complete();
+        } else {
+            pHasOpinionYN = "N";
+            ret = "cancel";
+        }
+    }
+}
+
 function openFileAttachUI() {
     try {
         var parameter = pDocID;
@@ -177,19 +278,26 @@ function getGyulJeDate() {
 
 function setSusinUpdataDocID() {
     try {
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "pOrgDocID", pOrgDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-
-        xmlhttp.open("POST", "../DraftUI/aspx/setSusinUpdateDocID.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
+    	var result = "";
+    	
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/setSusinUpdateDocID.do",
+    		data : {
+    			orgDocID : pOrgDocID,
+    			docID    : pDocID,
+    			deptID   : arr_userinfo[4]
+    		},
+    		success: function(xml){
+    			result = loadXMLString(xml);
+    		}        			
+    	});
+        
+        var dataNodes = GetChildNodes(result);
+        
+        return getNodeText(dataNodes[0]);
 
     } catch (e) {
         alert("setSusinUpdataDocID : " + e.description);
@@ -365,64 +473,31 @@ function setBtnEnable() {
 		},
 		success: function(xml){
 			result = loadXMLString(xml);
+			
+			var tempFlag = false;
+		    if (getNodeText(GetChildNodes(result.documentElement)[0]) != "")
+		        tempFlag = true;
+
+		    if (tempFlag) { //문서과
+		        btnReqReSend.style.display = "";    //재전송요청
+		        btnDistribute.style.display = "";       //배부
+		        btnReDistribute.style.display = "none"; //재배부요청
+		        // 재접수 기능이 아직 없어서 주석처리.
+//		        btnRefresh.style.display = ""; //재접수
+		    }
+		    else {  //일반부서
+		        btnReqReSend.style.display = "none";     //재전송요청
+		        btnDistribute.style.display = "none";     //배부
+		        if (pSusinAdmin == "YES") {   //수발신담당자
+		            btnReDistribute.style.display = ""; //재배부요청
+		            btnAssign.style.display = "";   //지정
+		        }
+		        else {
+		            btnReAssign.style.display = "";; //재지정요청
+		        }
+		    }
 		}        			
 	});
-	
-
-    var tempFlag = false;
-    if (result != "")
-        tempFlag = true;
-
-    var pExtDocFlag = message.CKEDITOR.instances.editor1.document.$.body.getAttribute("ExtDocFlag", 0);
-
-    if (pExtDocFlag == null)
-    {
-        btnDistribute.style.display = "";
-        btnAssign.style.display = "";
-    }
-    else if (pAprState == "011")
-    {
-        if (tempFlag) {
-            btnDistribute.style.display = "";
-            btnReDistribute.style.display = "none";
-        }
-        else {
-            btnDistribute.style.display = "none";
-            btnReDistribute.style.display = "";
-        }
-
-        btnAssign.style.display = "";
-        btnReAssign.style.display = "none";
-    }
-    else if (pAprState == "012")
-    {
-        btnDistribute.style.display = "none";
-        btnReDistribute.style.display = "none";
-        btnAssign.style.display = "none";
-        btnReAssign.style.display = "";
-    }
-    else if (pAprState == "014")
-    {
-        btnDistribute.style.display = "none";
-        btnReDistribute.style.display = "";
-        btnAssign.style.display = "";
-        btnReAssign.style.display = "none";
-    }
-    else if (pAprState == "015" || pAprState == "022")
-    {
-        if (tempFlag) {
-            btnDistribute.style.display = "";
-            btnReDistribute.style.display = "none";
-        }
-        else {
-            btnDistribute.style.display = "none";
-            btnReDistribute.style.display = "";
-        }
-
-        btnAssign.style.display = "";
-        btnReAssign.style.display = "none";
-    }
-
 }
 
 function document_oncontextmenu() {
@@ -434,12 +509,16 @@ function document_oncontextmenu() {
     }
 }
 
-function chk_Passwd() {
+var ezchkpasswd_cross_dialogArguments = new Array();
+function chk_Passwd()
+{
     var parameter = pUserID;
-    var url = "../ezchkPasswd_Cross.aspx";
-    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
-    var ret = window.showModalDialog(url, parameter, feature);
-    return ret;
+    var url = "/ezApprovalG/ezchkPasswd.do";
+
+    ezchkpasswd_cross_dialogArguments[0] = parameter;
+    ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
+
+    DivPopUpShow(350, 225, url);
 }
 
 

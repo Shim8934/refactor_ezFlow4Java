@@ -271,6 +271,11 @@
 			    	}
 		    	} else {
 		        	if (forceCallBackYN == "YES") {
+		        		//강제회수는 기안자만 가능하도록 수정
+		        		if (!checkIsDrafter()) {
+		        			return;
+		        		}
+		        		
 						var result = "";
 
 						$.ajax({
@@ -518,7 +523,7 @@
 		        		type : "POST",
 		        		dataType : "text",
 		        		async : false,
-		        		url : "/ezApprovalG/doCancelForce.do",
+		        		url : "/ezApprovalG/doCancel.do",
 		        		data : {
 		        			docID : pDocID,
 		        			userID : pUserID,
@@ -667,6 +672,17 @@
 	        			SendMailToCancel_Function(GetCurrentlinelist);
 	        			var pAlertContent = strLang891 + "<br> " + strLang892;
 	        			OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+	        			
+	        			//2020-04-03 김정언 : 근태관리 연동양식일 경우 추가 - 강제회수
+	    		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+	    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-del-script').getAttribute("code");
+	    		        	var script = document.createElement("script");
+	    					script.type = "text/javascript";
+	    					script.innerHTML = code;
+	    					document.querySelector("head").appendChild(script);
+	    					
+	    		        	attitude_annual_conn(pDocID);
+	    		        }
 	        		}
 	        		else if (RtnVal == "ERR01") {
 	        			var pAlertContent = strLang895;
@@ -684,6 +700,34 @@
 	        			OpenAlertUI(pAlertContent);
 	        		}
 	        	}
+	        }
+	        
+	        function checkIsDrafter() {
+	        	var rtnVal = false;
+	        	
+	        	try {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezApprovalG/getDocData.do",
+						data : {
+							docID : pDocID,
+							mode : "APR",
+							sel : "WRITERID"
+						},
+						success: function(xml) {
+							var docXml = loadXMLString(xml);
+							if (SelectSingleNodeValueNew(docXml, "DATA/WRITERID") == arr_userinfo[1]) {
+								rtnVal = true;
+							}
+						}
+	        		});
+	        	} catch (e) {
+	        		console.error(e);
+	        	}
+	        	
+	        	return rtnVal;
 	        }
 		</script>
 	</head>
@@ -705,7 +749,9 @@
 		          <li id="btnhistory"><span onClick="btnhistory_onclick()" ><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 				  <li id="btnPrint" ><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()" ></span></li>
+				  <c:if test="${useExternalMailServer == 'NO'}">
                   <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()" ></span></li>
+                  </c:if>
 				  <c:if test="${useCabinet == 'YES'}">
 					<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 				  </c:if>

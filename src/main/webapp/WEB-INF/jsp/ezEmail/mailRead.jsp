@@ -55,6 +55,7 @@
 		    var shareId = "${shareId}";
 		    var deletePermission = "${deletePermission}";
 		    var sendPermission = "${sendPermission}";
+		    var managePermission = "${managePermission}";
 		    var mailWritePreview = "${mailWritePreview}"; // 메일 작성 > 미리보기
 		    var g_uid = "${uid}";
 		    var countryName = "${countryName}";
@@ -111,6 +112,10 @@
 		            document.getElementById("HolderElse").style.display = "";
 		        }
 		        
+		        /* if (shareId != "" && managePermission != "Y") {
+		        	document.getElementById("btn_reject").parentNode.style.display = "none";
+		        } */
+		        
 		        if (shareId != "" && sendPermission != "Y") {
 		        	btnReply.style.display = "none";
 		        	btnAllReply.style.display = "none";
@@ -124,25 +129,15 @@
 		        	btnDelete.style.display = "none";
 		        }
 		        
-		        if (useCountryIP == "YES") {
-		        	if (useShowSystemCountry == "YES") {
-		        		if (countryCode != "") {
-		        			if (countryCode == "unknown") {
-		        				countryCode = "qm";
-        					}
-				        	document.getElementById("nationalFlag").src = "/images/countryIcon/" + countryCode + ".png";
+		        if (useCountryIP == "YES" && mailWritePreview != "true") {
+		        	if (useShowSystemCountry == "YES" || (useShowSystemCountry != "YES" && countryCode != systemCountryCode)) {
+			        	
+		        		if (document.getElementById("nationalFlag") != null) {
+			        		countryCode = countryCode == "unknown" ? "qm" : countryCode;
+			        		
+			        		document.getElementById("nationalFlag").src = "/images/countryIcon/" + countryCode + ".png";
 				        	document.getElementById("nationalFlag").style.display = "";
-		        		}
-		        	} else {
-		        		if (countryCode != systemCountryCode) {
-		        			if (countryCode == "unknown") {
-		        				countryCode = "qm";
-        					}
-				        	document.getElementById("nationalFlag").src = "/images/countryIcon/" + countryCode + ".png";
-				        	document.getElementById("nationalFlag").style.display = "";
-		        		} else {
-		        			document.getElementById("nationalFlag").style.display = "none";
-		        		}
+			        	}
 		        	}
 		        } 
 		        
@@ -559,7 +554,9 @@
 		                    <li id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
 		                    <li><span id="btnMove" onClick="move_onClick()"><spring:message code="ezEmail.t482" /></span></li>
 		                    <li id="PcSave"><span id="btnSave" onClick="download_mail()">PC <spring:message code="ezEmail.t48" /></span></li>
+		                    <c:if test="${packageType != 'mail'}">
 		                    <li id="BoardItem"><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
+		                    </c:if>
 		                    <li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
 		                    <li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          
 		                    <c:if test="${useCabinet == 'YES'}">
@@ -629,8 +626,8 @@
 		                    <td nowrap class="pos2" id="btnInsertAddr">
 		                    	<c:if test="${mailWritePreview != true}">
 			                    	<a style="margin-right:5px;"><span onClick="func_addaddr()" id="btn_addaddr"><img title="<spring:message code='ezEmail.t554' />" src="/images/email/icon_address_add.png" style="border:0px" /></span></a>
-			                    	<c:if test="${shareId == null or shareId == ''}">
-			                    		<a style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img title="<spring:message code='ezEmail.t270' />" src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
+		                    		<c:if test="${(shareId == null) || (shareId ne '' && managePermission eq 'Y')}">
+		                    			<a style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img title="<spring:message code='ezEmail.t270' />" src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
 			                    	</c:if>
 			                    </c:if>
 		                    </td>

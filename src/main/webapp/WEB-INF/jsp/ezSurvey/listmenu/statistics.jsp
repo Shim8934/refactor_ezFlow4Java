@@ -22,7 +22,7 @@
 	
 	<body class="surveyBody">
 		<div class="header-wrapper">
-			<div class="surveydetail-header"><spring:message code="ezSurvey.t33"/></div>
+			<div class="surveydetail-header" style="font-weight:bold"><spring:message code="ezSurvey.t33"/></div>
 			<div id="close"><ul><li><span id="cancelBttn"></span></li></ul></div>
 		</div>
 		<div class="surveydetail-body" id="mainSurveyBody">
@@ -565,7 +565,12 @@
 					var ulElmt            = document.createElement("ul");
 					var spanElmt1         = document.createElement("span");
 					otherHeader.className = "others-div";
-					spanElmt1.textContent = SurveyMessages.strViewOther;
+
+					// 20.05.13 강승구 : IE, Edge에서 undefined로 표시되는 문제 해결
+					if(SurveyMessages.strViewOther) {
+						spanElmt1.textContent = SurveyMessages.strViewOther;
+					}
+					
 					otherHeader.appendChild(spanElmt1);
 					ulElmt.className      = "txt-respul";
 					wrapDivElmt.className = "other-wrap";

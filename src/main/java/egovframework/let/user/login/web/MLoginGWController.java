@@ -587,6 +587,321 @@ public class MLoginGWController {
 		}    	      
     }
     
+    @SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezUser/loginFromAzure/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")    
+    public JSONObject loginFromAzure(@PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
+    	LOGGER.debug("loginFromAzure started. userId=" + userId);
+    	
+    	JSONObject result = new JSONObject();
+    	
+    	try {
+    		String uid = userId;
+    		
+    		if (uid == null || uid.equals("")) {
+    			LOGGER.debug("invalid uid=" + uid);
+    			
+    			result.put("status", "error");
+    			result.put("code", "2");			
+    			result.put("data", "invalid uid");
+    			
+    		    return result;
+    		}
+    		
+    		String serverName = request.getHeader("x-user-host");
+    		int tenantId = loginService.getTenantId(serverName);
+    		
+    		LoginVO loginVO = new LoginVO();
+    		
+    		loginVO.setId(uid);
+    		loginVO.setDn("NOPASSWORD");
+    		loginVO.setTenantId(tenantId);
+    		
+    		LoginVO resultVO = loginService.selectUser(loginVO);
+    		
+    		// 2019-05-08 홍승비 - LoginCookieSSO를 사용하는지 값을 확인
+    		String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);	    	
+    		result.put("useLoginCookieSSO", useSSOCookie);
+    					
+    		if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
+    			LOGGER.debug("user does not exist :" + uid);
+            	
+    			result.put("status", "error");
+    			result.put("code", "3");			
+    			result.put("data", "user does not exist");
+    			
+    			return result;
+    		} else {
+        		String ipip = request.getHeader("ip") == null ? ClientUtil.getClientIP(request) : request.getHeader("ip");
+        		resultVO.setIp(ipip);
+        		LOGGER.debug("ipipipipipip = " + ipip);
+        		LOGGER.debug("ipipipipipip1 = " + request.getHeader("ip"));
+        		LOGGER.debug("ipipipipipip2 = " + ClientUtil.getClientIP(request));
+        		
+    			// 로그인 후 IP 주소 체크
+				boolean ipAddressChk = ipAccessCheck(resultVO);
+				LOGGER.debug("ipAddressChk=" + ipAddressChk);
+				
+				if (!ipAddressChk) {
+					result.put("status", "error");
+	    			result.put("code", "7");			
+	    			result.put("data", "user does not exist");
+	    			
+	    			return result;
+				}
+    			
+    			// 모바일 사용 설정 확인 
+    			String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", tenantId);
+    			
+    			if (useMobileManagemant.equals("YES")) {
+    				String notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, uid, "notUseMobileLogin");
+    				String adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, uid, "adminOrderNotUsedMobileLogin");
+    				
+    				notUseAllMobileLogin = notUseAllMobileLogin.equals("") ? "0" : notUseAllMobileLogin;
+    				adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
+    				
+    				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
+    					LOGGER.debug("cannot use mobile login. userId=" + uid);
+    					
+    					result.put("status", "error");
+    					result.put("code", "6");
+    					result.put("data", "cannot use mobile login.");
+    					
+    					return result;
+    				} else {
+    					String deviceId = request.getParameter("deviceID") == null ? "" : request.getParameter("deviceID");
+    					
+    					if (!deviceId.equals("")) {
+    						String inputParams = "userId=" + uid + "&deviceId=" + deviceId;
+    						LOGGER.debug("userId=" + uid + ",deviceId=" + deviceId);
+    						
+    						String requestURL = "/ezTalkGate/getUserMobileDeviceUsedInfo";
+    						String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+    						LOGGER.debug("getResult=" + getResult);
+    						
+    						JSONParser parser = new JSONParser();
+    						JSONObject resultObj = (JSONObject) parser.parse(getResult);
+
+    						if (Integer.valueOf(String.valueOf(resultObj.get("data"))) > 0) {
+    							LOGGER.debug("this device cannot use. userId=" + uid);
+    							
+    							result.put("status", "error");
+    							result.put("code", "6");			
+    							result.put("data", "this device cannot use.");
+    							
+    							return result;
+    						} else { 
+    							// 0이지만 그전 사용자의 config 확인
+    							String oldUserId = String.valueOf(resultObj.get("oldUserId"));
+    							notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, oldUserId, "notUseMobileLogin");
+    							adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, oldUserId, "adminOrderNotUsedMobileLogin");
+    		    				
+    		    				notUseAllMobileLogin = notUseAllMobileLogin.equals("") ? "0" : notUseAllMobileLogin;
+    		    				adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
+    						
+    		    				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
+    		    					LOGGER.debug("cannot use mobile login. oldUserId=" + oldUserId);
+    		    					
+    		    					result.put("status", "error");
+    		    					result.put("code", "6");
+    		    					result.put("data", "cannot use mobile login.");
+    		    					
+    		    					return result;
+    		    				}
+    						}
+    					}
+    				}
+    			}
+    			
+				// 공유사서함 기능을 사용할 경우 공유사서함 계정으로의 로그인을 막는다.
+	    		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+	    		
+	    		if (useSharedMailbox.equals("YES")) {
+	    			if (resultVO.getDeptID() != null && resultVO.getDeptID().startsWith("shared_mailbox_")) {
+	    				LOGGER.debug("Cannot login with shared mailbox account.");
+	    				
+	    				result.put("status", "error");
+		    			result.put("code", "3");			
+		    			result.put("data", "user does not exist");
+		    			
+	        	        return result;
+	    			}
+	    		}
+	    		
+	    		// 사용자정지 여부를 체크
+	        	String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+	        	
+	        	if (useLoginStop != null && useLoginStop.equals("YES")) {
+	        		int flag = checkStopUser(tenantId, resultVO.getId());
+	        		if(flag > 0) {
+	        			LOGGER.debug("stopUser");
+	        			result.put("status", "error");
+    					result.put("code", "8");			
+    					result.put("data", "stopUser");
+    					
+    					return result;
+	        		}
+	        	}
+				                	
+		    	String mIp = request.getHeader("ip");
+		    	String mAgent = request.getHeader("agent");
+		    	String mBrowser = request.getHeader("browser");
+		    	String mOs = request.getHeader("os");
+		    	
+		    	if (mIp == null) {
+		    		mIp = ClientUtil.getClientIP(request);
+		    	}
+		    	
+		    	if (mAgent == null) {
+		    		mAgent = ClientUtil.getClientInfo(request, "agent");
+		    	}
+		    	
+		    	if (mBrowser == null) {
+		    		mBrowser = ClientUtil.getClientInfo(request, "browser");
+		    	}
+		    	
+		    	if (mOs == null) {
+		    		mOs = ClientUtil.getClientInfo(request, "os");
+		    	}
+		    	
+				loginVO.setIp(mIp);
+				
+				//IP Address,  마지막 login시간 저장
+				loginService.updateUser(loginVO);
+				
+				//접속 로그정보 저장
+				resultVO.setIp(mIp);
+				resultVO.setAgent(mAgent);
+				resultVO.setOs(mOs);
+				resultVO.setBrowser(mBrowser);
+				resultVO.setTenantId(tenantId);
+				
+				if(resultVO.getTitle2() == null){
+					resultVO.setTitle2("");
+				}
+				
+				loginService.insertLog(resultVO);
+				
+				//DB에서 모바일 환경설정 값 가져옴
+				MOptionVO mOptionVO = mOptionService.optionInfo(uid, tenantId);
+				
+				String acceptLanguage = request.getHeader("Accept-Language");    				
+				String lang = "";
+				String timeZone = "";
+				String maintype = "";
+				String listCnt = "";    				
+				String useSecurity = "";					
+				String returnValue = "";
+				
+				String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+				
+				//userMobileInfo 테이블에 정보가 없을 때 (첫 로그인)
+				if (mOptionVO == null) {    			        
+					
+					//UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
+					if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
+						if (primaryLang.equals("1")) {
+							acceptLanguage = "ko";
+						} else if (primaryLang.equals("3")) {
+							acceptLanguage = "ja";
+						}
+					}
+					
+					if (acceptLanguage != null) {
+						returnValue = acceptLanguage.substring(0, 2);
+						//이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
+					} else {				        
+						returnValue = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
+					}
+					
+					lang = commonUtil.getLangNumFromTwoLetterLang(returnValue);
+					
+					//브라우저 언어가 한국어/일본어가 아닐 경우 시스템 언어로 설정(영어/중국어 추후 지원)
+					if (lang.equals("")) {						
+						lang = primaryLang;
+					}
+					
+					timeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
+				    
+				    if (timeZone.equals("")) {
+				    	timeZone = "235|+09:00";
+				    }
+				    
+					maintype = "D";
+					listCnt = "10";    				    
+					useSecurity = "N";
+					
+					mOptionService.insertOption(uid, timeZone, lang, maintype, listCnt, useSecurity, tenantId);    					
+				} else {
+					lang = mOptionVO.getLang();
+					timeZone = mOptionVO.getTimeZone();
+					maintype = mOptionVO.getMainType();
+					listCnt = mOptionVO.getListCnt();        				
+					useSecurity = mOptionVO.getUseSecurity();
+					returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
+				}
+				// 20180711 조진호 - 로그인 성공시 로그인실패 횟수 초기화
+				ezCommonService.updateUserConfigInfo(tenantId, uid, "LoginFailCount", "0");
+				
+				// 2018-01-08 장진혁 - 모바일에서 메일만 사용할 경우 YES or NO 
+				String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", tenantId);
+				// 2018-11-02 배현상 - 공유결재문서 사용 유무 YES or NO 
+				String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", tenantId);
+				// 2019-08-30 김수아 - 모바일 세션 시간 config - useMobileSession 
+				String useSessionMobile = ezCommonService.getTenantConfig("useSessionMobile", tenantId);
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("uid", uid);
+				map.put("ip", mIp);
+				map.put("locale", returnValue);
+				map.put("lang", lang);
+				map.put("timeZone", timeZone);
+				map.put("tenantId", tenantId+"");
+				map.put("mainType", maintype);
+				map.put("listCnt", listCnt);    				
+				map.put("useSecurity", useSecurity);    		
+				map.put("companyID", resultVO.getCompanyID());
+				map.put("primaryLang", primaryLang);
+				map.put("rollInfo", resultVO.getRollInfo());
+				map.put("useSessionMobile", useSessionMobile);    				
+				
+				// LoginCookieSSO는 모바일용 쿠키가 아니라 웹버전 연동 쿠키임
+				Map<String, Object> mapSSO = new HashMap<String, Object>();
+				
+				if (!useSSOCookie.trim().isEmpty() && !"NO".equalsIgnoreCase(useSSOCookie)) {
+					mapSSO.put("userPw", "userPw");
+					mapSSO.put("encryptedUserPw", "encryptedUserPw");
+					mapSSO.put("deptID", resultVO.getDeptID());
+					mapSSO.put("companyID", resultVO.getCompanyID());
+				}
+				
+				if (commonUtil.getPrimaryData(lang, tenantId) == "1") {
+					map.put("userName", resultVO.getDisplayName1());
+				} else {
+					map.put("userName", resultVO.getDisplayName2());
+				}
+				
+				map.put("useMobileMailOnly", useMobileMailOnly);
+				map.put("useShareApproval", useShareApproval);
+				
+				result.put("status", "ok");
+				result.put("code", "0");
+				result.put("data", map);
+				result.put("dataSSO", mapSSO);
+				
+				LOGGER.debug("loginFromAzure ended.");
+				
+				return result;
+    		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", "1");			
+			result.put("data", "fail");
+			
+			return result;
+		}    	      
+    }
+    
     /**
      * 하이브리드 앱에 로그인 한 뒤 기기 정보를 업데이트 한다.  
      */
@@ -666,6 +981,84 @@ public class MLoginGWController {
     	return result;
     }
     
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezUser/login/users/{userId}/valid", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject valid(@PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
+		LOGGER.debug("valid started.");
+		JSONObject result = new JSONObject();
+
+		String serverName = request.getHeader("x-user-host");
+		int tenantId = loginService.getTenantId(serverName);
+		// 모바일 사용 설정 확인
+		String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", tenantId);
+
+		check: if (useMobileManagemant.equals("YES")) {
+			String notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId, "notUseMobileLogin");
+			String adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId, "adminOrderNotUsedMobileLogin");
+
+			notUseAllMobileLogin = notUseAllMobileLogin.equals("") ? "0" : notUseAllMobileLogin;
+			adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
+
+			if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
+				LOGGER.debug("cannot use mobile login. userId={}", userId);
+
+				result.put("status", "error");
+				result.put("code", "6");
+				result.put("data", "cannot use mobile login.");
+
+				return result;
+			}
+
+			String deviceId = request.getParameter("deviceID") == null ? "" : request.getParameter("deviceID");
+
+			if (deviceId.trim().isEmpty()) {
+				break check;
+			}
+
+			String inputParams = "userId=" + userId + "&deviceId=" + deviceId;
+			LOGGER.debug("userId=" + userId + ",deviceId=" + deviceId);
+
+			String requestURL = "/ezTalkGate/getUserMobileDeviceUsedInfo";
+			String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+			LOGGER.debug("getResult=" + getResult);
+
+			JSONParser parser = new JSONParser();
+			JSONObject resultObj = (JSONObject) parser.parse(getResult);
+
+			if (Integer.valueOf(String.valueOf(resultObj.get("data"))) > 0) {
+				LOGGER.debug("this device cannot use. userId=" + userId);
+
+				result.put("status", "error");
+				result.put("code", "6");
+				result.put("data", "this device cannot use.");
+
+				return result;
+			}
+			// 0이지만 그전 사용자의 config 확인
+			String oldUserId = String.valueOf(resultObj.get("oldUserId"));
+			notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, oldUserId, "notUseMobileLogin");
+			adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, oldUserId, "adminOrderNotUsedMobileLogin");
+
+			notUseAllMobileLogin = notUseAllMobileLogin.equals("") ? "0" : notUseAllMobileLogin;
+			adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
+
+			if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
+				LOGGER.debug("cannot use mobile login. oldUserId=" + oldUserId);
+
+				result.put("status", "error");
+				result.put("code", "6");
+				result.put("data", "cannot use mobile login.");
+
+				return result;
+			}
+		}
+
+		result.put("status", "ok");
+		result.put("code", "0");
+		LOGGER.debug("valid ended.");
+		return result;
+	}
+
     private int checkState(int tenantID, String userId, int numberOfLoginFailPermit) throws Exception {        
         if (numberOfLoginFailPermit <= 0) {        	
         	//Users will never be blocked

@@ -1,4 +1,4 @@
-﻿﻿// ApprovUI\ApprovUI.js
+﻿// ApprovUI\ApprovUI.js
 var strLang2 = "합의";
 var strLang3 = "협조";
 var strLang4 = "반송";
@@ -682,10 +682,12 @@ var strLang1028 = "년";
 var strLang1029 = "월";
 var strLang1030 = "일";
 var strLang1031 = "익명게시판 또는 포토게시판 또는 URL링크 게시판에는 메일/결재문서 게시를 할 수 없습니다.";
+var strLang1038 = "외부발송문서 본문에는 이미지와 링크가 들어갈 수 없습니다.";
 
 // DocType : 문서형태 A01
 var strDocType4 = "004";
 var strLangDocType4 = "시행문";
+var strLangDocType5 = "합의";
 
 // DocState : 문서상태A02
 var strDocState1 = "001";
@@ -810,10 +812,12 @@ var strOpinionType4 = "004";
 // 2011.06.17 추가
 var strOpinionType5 = "005";
 var strOpinionType6 = "006";
+var strOpinionType8 = "008";
 var strLangOpinionType1 = "일반의견";
 var strLangOpinionType2 = "반송의견";
 var strLangOpinionType3 = "보류의견";
 var strLangOpinionType4 = "회송의견";
+var strLangOpinionType8 = "재배부요청";
 
 // 2011.06.17 추가
 

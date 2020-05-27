@@ -116,10 +116,13 @@
 	        	}
 	        }
 	        
+	        /* 2020-02-07 홍승비 - 주소록 가져오기, 내보내기 레이어 팝업도 동적으로 left 계산 */
 	        $(window).on("resize", function(){
 				var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
 	        	$("#addpopup").css("left", popupX);
-	        	$("#srarchpopup").css("left", popupX);	        	
+	        	$("#srarchpopup").css("left", popupX);
+	        	$("#importPopup").css("left", popupX);
+	        	$("#exportPopup").css("left", popupX);
 	        });
 	        
 	        function new_address() {
@@ -141,7 +144,7 @@
 	            var pTop = (pheight - conHeight) / 2;
 	            var pLeft = (pwidth - conWidth) / 2;
 	            window.open("/ezAddress/addressWrite.do?ownerid=" + encodeURIComponent(pOwerID) + "&folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType, "",
-	            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+	            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 510px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
 	        }
 	        function new_group() {
 	        	if (useAnyoneEdit != "YES") {
@@ -538,6 +541,7 @@
 	            createNodeAndInsertText(xmlDom, objNode, "STYPE", "P");
 	            createNodeAndInsertText(xmlDom, objNode, "USERNM", "");
 	            createNodeAndInsertText(xmlDom, objNode, "USERNM2", "");
+	            createNodeAndInsertText(xmlDom, objNode, "FURIGANA", "");
 	            objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTACHLIST");
 	            
 	            xmlHTTP.open("POST", "/ezAddress/addressSave.do", false);	            
@@ -1099,7 +1103,7 @@
 					<tr>
 						<td style="text-align:center;">
 							<div class="btnpositionLayer">
-								<a class="imgbtn"><span onClick="crossImport()"><spring:message code='ezAddress.t25' /></span></a>
+								<a class="imgbtn"><span onClick="crossImport()"><spring:message code='ezEmail.t37' /></span></a>
 							</div>	
 						</td>
 					</tr>

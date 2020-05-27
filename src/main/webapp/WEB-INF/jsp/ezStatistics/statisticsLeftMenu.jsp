@@ -184,6 +184,7 @@
            			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(17)"><spring:message code='ezStatistics.t1045' /></span></li>
            			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(18)"><spring:message code='ezStatistics.t1048' /></span></li>
 	            </ul>
+	            <c:if test="${useExternalMailServer == 'NO' }">
 	      	    <h2 class="off" id="menu2H2">
             		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="MAIL" onclick="openFolder('menu2')" ><spring:message code='ezStatistics.t2' /></span>
 	      	    </h2>
@@ -196,6 +197,7 @@
            			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(22)"><spring:message code='ezStatistics.kyj1' /></span></li>
            			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(23)"><spring:message code='ezStatistics.kyj2' /></span></li>
 			    </ul>
+			    </c:if>
 	            <c:if test="${packageType == 'standard'}">
 	            	<c:if test="${use_approvalG == 'YES'}">
 	            		<h2 class="off" id="menu3H2">

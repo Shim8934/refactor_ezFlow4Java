@@ -135,9 +135,9 @@
                        	listXML += strEmergent + strSpace + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title");
                        	listXML += "</div>";
                        	
-                       	/* 2018-05-04 홍승비 - 댓글 표시하기 */
+                       	/* 2018-05-04 홍승비 - 댓글 표시하기, 2020-03-16 홍승비 - 댓글 영역 표출 스타일 수정 */
                        	if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
-                       		listXML += "<SPAN class= '" + bClass + "' style='color:#c64200;'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                       		listXML += "<SPAN class= '" + bClass + "' style='color:#c64200; position:absolute; padding-left:1px;'>[" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
                        	}
                         listXML += "</TD><TD></TD>";
 					}
@@ -153,7 +153,7 @@
                        	listXML += "</div>";
 	                    
 						if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
-                       		listXML += "<SPAN class ='" + bClass + "' style='color:#c64200;'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                       		listXML += "<SPAN class ='" + bClass + "' style='color:#c64200; position:absolute; padding-left:1px;'>[" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
                        	}
                     	listXML += "</TD><TD></TD>";
 					}				
@@ -667,17 +667,7 @@
         
 	</head>
 	<body class = "cmhome_body">
-		<h1 class="type1_h1">
-		<c:choose>
-			<c:when test="${userInfo == '1' }">
-				${boardInfo.boardName}
-			</c:when>
-			<c:otherwise>
-				${boardInfo.boardName2}
-			</c:otherwise>
-		</c:choose>
-		<span id="mailBoxInfo"></span>
-		</h1>
+		<h1 class="type1_h1">${multiBoardName}<span id="mailBoxInfo"></span></h1>
 		
 		<div id="mainmenu">
 			<ul>

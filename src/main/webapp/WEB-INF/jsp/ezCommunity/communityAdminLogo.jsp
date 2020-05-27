@@ -42,6 +42,11 @@
 				margin-right:2px;
 				cursor:pointer;
 			}
+			.radioTypeText {
+				vertical-align:text-bottom;
+			    margin-bottom:2px;
+			    display:inline-block;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -135,11 +140,11 @@
 		        		tempLogoPath = result["tempLogoPath"];
 		        		
 		        		var check = "false";
-				           
 					 	document.getElementById("filename1").innerText = logoFile.name;
-				            
+					 	
+					 	/* 2020-01-13 홍승비 - 확장자 체크 부분 수정 */
 				        var extension = logoFile.name.split('.');
-				        check = compareExtension(check, extension[1]);
+				        check = compareExtension(check, extension[extension.length - 1]);
 				            
 				        if (check == "false") {
 				            alert("<spring:message code ='ezCommunity.lhj03' />");
@@ -184,11 +189,11 @@
 		      			tempThumbPath = result["tempThumbPath"];
 		       			
 		       			var check = "false";
-			            
 			            document.getElementById("filename2").innerText = thumbFile.name;
 			            
+			            /* 2020-01-13 홍승비 - 확장자 체크 부분 수정 */
 			            var extension = thumbFile.name.split('.');
-			            check = compareExtension(check, extension[1]);
+			            check = compareExtension(check, extension[extension.length - 1]);
 			            
 			            if (check == "false") {
 			                alert("<spring:message code ='ezCommunity.lhj03' />");
@@ -296,10 +301,10 @@
 		        </tr>
 		        <tr style="height:20px;text-align:center;">
 		            <td>
-		                <input type="radio" name="radType" value="type5" onclick="radioClick(this, 'rad')" style="cursor:pointer;" checked="checked"/>Type1
+		                <input type="radio" name="radType" value="type5" onclick="radioClick(this, 'rad')" style="cursor:pointer;" checked="checked"/><span class="radioTypeText">Type1</span>
 		            </td>
 		            <td>
-		                <input type="radio" name="radType" value="type2" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type2
+		                <input type="radio" name="radType" value="type2" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/><span class="radioTypeText">Type2</span>
 		            </td>
 		        </tr>
 		        <tr style="height:190px;">
@@ -312,10 +317,10 @@
 		        </tr>
 		        <tr style="height:20px;text-align:center;">
 		            <td>
-		                <input type="radio" name="radType" value="type3" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type3
+		                <input type="radio" name="radType" value="type3" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/><span class="radioTypeText">Type3</span>
 		            </td>
 		            <td>
-		                <input type="radio" name="radType" value="type4" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type4
+		                <input type="radio" name="radType" value="type4" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/><span class="radioTypeText">Type4</span>
 		            </td>
 		        </tr>
 	    	</table>

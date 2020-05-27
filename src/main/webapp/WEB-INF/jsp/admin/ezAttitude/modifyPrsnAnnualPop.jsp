@@ -74,7 +74,8 @@
 	   					changeReason : changeReason,
 	   					companyId : companyId,
 	   					annualCnt : annualCnt,
-	   					userId : userId
+	   					userId : userId,
+	   					flagCheck : "additionalChange"
 	   				},
 					success : function(resultStatus) {
 	            		if (resultStatus == "success") {

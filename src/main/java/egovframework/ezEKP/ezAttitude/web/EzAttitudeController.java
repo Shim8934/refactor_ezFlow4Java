@@ -49,7 +49,6 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
-import egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -315,10 +314,16 @@ public class EzAttitudeController {
 		}
 		//2018-05-14 이효진 다음달일땐 searchEndDate "" 으로 가져가서 미입력조회없이 tr에 정보없다고 script로
 		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
 		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("searchDeptId", searchDeptId);
 		model.addAttribute("searchStartDate", searchStartDate);
 		model.addAttribute("searchEndDate", searchEndDate);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
 		LOGGER.debug("popupAbsentedList ended.");
 		
@@ -490,7 +495,7 @@ public class EzAttitudeController {
 		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		boolean attitudeAdminCheck = false;
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			attitudeAdminCheck = true;
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -700,7 +705,7 @@ public class EzAttitudeController {
 			
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("userId", userInfo.getId())
-					.queryParam("typeIdArr", "A11,A12,A13");
+					.queryParam("typeIdArr", "A11,A12,A13,A21");
 			
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 			
@@ -717,6 +722,7 @@ public class EzAttitudeController {
 			model.addAttribute("A11typeInfo", typeList.get(0));
 			model.addAttribute("A12typeInfo", typeList.get(1));
 			model.addAttribute("A13typeInfo", typeList.get(2));
+			model.addAttribute("A21typeInfo", typeList.get(3));
 		}
 		
 		model.addAttribute("userInfo", userInfo);
@@ -831,6 +837,7 @@ public class EzAttitudeController {
 	/**
 	 * 회사 휴일정보
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezAttitude/getHolidayList.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getHolidayList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -1173,6 +1180,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태 내용
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezAttitude/getAttitudeItem.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getAttitudeItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -1321,6 +1329,7 @@ public class EzAttitudeController {
 		return attitudeConfigVO;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezAttitude/getAttModAppList.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject getAttModAppList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
@@ -1519,7 +1528,7 @@ public class EzAttitudeController {
 			resultj.put("list", list);
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			//권한부서 리스트
 			//c , k , wa -> 회사의 모든부서
@@ -1581,11 +1590,11 @@ public class EzAttitudeController {
 	public void qstResultsaticGetXlsAtt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		LOGGER.debug("qstResultsaticGetXlsAtt started");
 		
-		String headerFLAG = "";
+		/* String headerFLAG = "";
 		 
 		if (request.getParameter("headerFlag") != null) {
 			headerFLAG = request.getParameter("headerFlag");
-		}
+		} */
 		  
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
@@ -1925,7 +1934,7 @@ public class EzAttitudeController {
 			}
 		}
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -1999,7 +2008,7 @@ public class EzAttitudeController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
-		String font = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+		// String font = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
 		
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
@@ -2114,12 +2123,14 @@ public class EzAttitudeController {
 	/**
 	 * 부서근태현황 main
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezAttitude/attitudeDeptMain.do", method = RequestMethod.GET)
 	public String attitudeUserMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request,
 			@RequestParam(required=false)String deptid) throws Exception {
 		LOGGER.debug("attitudeUserMain started");
 		
 		String adminFlag = "false";
+		@SuppressWarnings("unused")
 		String isAllDept = "";
 		String displayFlag = "false";
 		
@@ -2129,7 +2140,7 @@ public class EzAttitudeController {
 		String url = "";
 		
 		//전체관리자(c), 회사관리자(k), 근태관리자(wa) 면 모든부서..
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -2314,7 +2325,7 @@ public class EzAttitudeController {
 				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption + "||searchDeptId =" + searchDeptId);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			isAdmin = "Y";
 		}
 		
@@ -2371,7 +2382,9 @@ public class EzAttitudeController {
 		LOGGER.debug("/ezAttitude/attitudeItemDetail started");
 		
 		String deptId = "";
+		@SuppressWarnings("unused")
 		String isAllDept = "";
+		@SuppressWarnings("unused")
 		String adminFlag = "";
 		String authFlag = "";
 		JSONObject attitudeVO = new JSONObject();
@@ -2434,7 +2447,7 @@ public class EzAttitudeController {
 		//해당 근태에 대한 부서
 		deptId = (String) attitudeVO.get("deptId") == null ? "null" : (String) attitudeVO.get("deptId");
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -2702,7 +2715,7 @@ public class EzAttitudeController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String attitudeId = request.getParameter("attitudeId");
+		// String attitudeId = request.getParameter("attitudeId");
 		String typeId = request.getParameter("typeId");
 		String region = request.getParameter("region");
 		String mobile = request.getParameter("mobile");
@@ -2815,6 +2828,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태작성 - 조직도(받는사람,참조,숨은참조) 화면 호출 함수
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezAttitude/attNewReceiverChoose.do", method = RequestMethod.GET)
 	public String attNewReceiverChoose(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -2825,6 +2839,7 @@ public class EzAttitudeController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		@SuppressWarnings("unused")
 		String adminFlag = "";
 		String isAllDept = "";
 		String defaultWin = request.getParameter("defaultwin") == null ? "To" : request.getParameter("defaultwin").trim();
@@ -2835,7 +2850,7 @@ public class EzAttitudeController {
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -3026,7 +3041,7 @@ public class EzAttitudeController {
 		bodyStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		
 		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
+		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		headerStyle.setFont(font);
 		
 		Row row;
@@ -3573,7 +3588,7 @@ public class EzAttitudeController {
 		bodyStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		
 		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
+		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		headerStyle.setFont(font);
 		
 		Row row;
@@ -3942,6 +3957,7 @@ public class EzAttitudeController {
 		return "/ezAttitude/manageAnnCanAppList";
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezAttitude/getAnnCanAppList.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject getAnnCanAppList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
@@ -4140,7 +4156,7 @@ public class EzAttitudeController {
 			resultj.put("list", list);
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			//권한부서 리스트
 			//c , k , wa -> 회사의 모든부서
@@ -4284,7 +4300,7 @@ public class EzAttitudeController {
 			}
 		}
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
@@ -4545,6 +4561,8 @@ public class EzAttitudeController {
 					.queryParam("attitudeTypeList", request.getParameter("attitudeTypeList"))
 					.queryParam("startDateList", request.getParameter("startDateList"))
 					.queryParam("endDateList", request.getParameter("endDateList"))
+					.queryParam("startTimeList", request.getParameter("startTimeList"))
+					.queryParam("endTimeList", request.getParameter("endTimeList"))
 					.queryParam("docId", request.getParameter("docId"));	
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 		} else if (request.getParameter("status").equals("1")) {
@@ -4654,6 +4672,7 @@ public class EzAttitudeController {
 		return data;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezAttitude/getAnnualreg.do")
 	@ResponseBody
 	public JSONObject getAnnualreg(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
@@ -4832,5 +4851,19 @@ public class EzAttitudeController {
 		LOGGER.debug("getTotalAttCount ended.");
 		
 		return totalAnnual;
+	}
+	
+	/**
+	 * 휴일 출/퇴근 체크 컨피그 조회
+	 */
+	@RequestMapping(value="/ezAttitude/holidayCheck.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String getHolidayCheckConfig(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		LOGGER.debug("getHolidayCheckConfig started.");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String useHolidayCheckYN = ezCommonService.getTenantConfig("useHolidayCheckYN", userInfo.getTenantId());
+		
+		LOGGER.debug("getHolidayCheckConfig ended.");
+		return useHolidayCheckYN;
 	}
 }

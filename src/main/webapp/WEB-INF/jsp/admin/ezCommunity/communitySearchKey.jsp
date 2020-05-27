@@ -150,6 +150,34 @@
 				document.getElementById("txt_SearchQuery").value = "";
 				document.getElementsByName("cCateA")[0].value = "0";
 				
+				/* 2020-01-03 홍승비 - 폐쇄한 커뮤니티의 경우, 검색옵션으로 커뮤니티이름과 폐쇄사유를 사용 (커뮤니티소개 등의 정보가 삭제되므로) */
+				var commuName = $("#QuerySelect").find("option[value='pCommunityName']");
+				var commuDesc = $("#QuerySelect").find("option[value='pCommuintyDesc']");
+				var commuCR = $("#QuerySelect").find("option[value='pCommCloseReason']");
+				
+				/* 2020-05-25 홍승비 - IE 브라우저 대응 옵션값 추가, 제거로 변경 */
+				if (selectedTabId == "closeCommu") { // 폐쇄한 커뮤니티
+					
+					 // 커뮤니티소개 제거
+					if (commuDesc.length > 0) {
+						commuDesc.remove();
+					}
+					 // 폐쇄사유 추가
+					$("#QuerySelect").append("<option value='pCommCloseReason'><spring:message code = 'ezCommunity.t71' /></option>");
+					
+					commuName.attr("selected", true); // 커뮤니티이름 (default)
+				} else { // 개설된 커뮤니티
+					
+					 // 폐쇄사유 제거
+					if (commuCR.length > 0) {
+						commuCR.remove();
+					}
+					 // 커뮤니티소개 추가
+					$("#QuerySelect").append("<option value='pCommuintyDesc'><spring:message code = 'ezCommunity.t2008' /></option>");
+					
+					commuName.attr("selected", true); // 커뮤니티 이름 (default)
+				}
+				
 				pCurPage = 1;
 				communityList();
 			}
@@ -164,8 +192,11 @@
 				}
 			}
 			
+			/* 2020-01-03 홍승비 - 개설된 커뮤니티 검색 시 커뮤니티소개 검색옵션 다시 추가 */
 			// 개설된 커뮤니티  리스트 호출
 			function openCommunityList() {
+				var QuerySelect = document.getElementById("QuerySelect");
+				
 				$.ajax({
 					type : "POST",
 					dataType: "json",
@@ -174,8 +205,9 @@
 					data : 
 					{
 						pageNum     : pCurPage,
-						searchType  : document.getElementsByName("cCateA")[0].value,
-						searchValue : document.getElementById("txt_SearchQuery").value 
+						searchType  : document.getElementsByName("cCateA")[0].value, // 카테고리 종류
+						searchType2 : QuerySelect.options[QuerySelect.selectedIndex].value, // 커뮤니티 검색옵션
+						searchValue : document.getElementById("txt_SearchQuery").value // 검색값
 					},
 					success : function (data) {
 						pCurPage   = data.pageNum;
@@ -239,7 +271,10 @@
 				});
 			}
 			
+			/* 2020-01-06 홍승비 - 폐쇄한 커뮤니티 검색 시 폐쇄사유 추가 */
 			function closedCommunityList() {
+				var QuerySelect = document.getElementById("QuerySelect");
+				
 				$.ajax({
 					type : "POST",
 					dataType: "json",
@@ -248,6 +283,7 @@
 					data :
 					{
 						pageNum     : pCurPage,
+						searchType2 : QuerySelect.options[QuerySelect.selectedIndex].value, // 커뮤니티 검색옵션
 						searchValue : document.getElementById("txt_SearchQuery").value
 					},
 					success : function (data) {
@@ -615,7 +651,8 @@
 						
 						<select id="QuerySelect" name="QuerySelect" style="vertical-align: middle; height: 22px;">
 							<option selected value="pCommunityName"><spring:message code = 'ezCommunity.t9991' /></option>
-							<%-- <option value="pCommuintyDesc" ><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></option> --%>
+							<%-- 2020-01-06 홍승비 - 커뮤니티소개, 폐쇄사유 검색옵션 추가 (2020-05-25 홍승비 - 폐쇄사유 옵션 동적 추가/제거 형식으로 변경) --%>
+							<option value="pCommuintyDesc" ><spring:message code = 'ezCommunity.t2008' /></option>
 						</select>
 						
 						<input name="text" type="text" style="WIDTH:200px; vertical-align:middle; height: 22px;" id="txt_SearchQuery" onKeyPress="return get_search_CommunityInfo(event)"> 

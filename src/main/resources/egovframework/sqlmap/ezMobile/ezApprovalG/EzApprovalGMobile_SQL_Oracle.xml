@@ -1,0 +1,2079 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezApprovalGMobile">
+	<typeAlias  alias="MCommonVO"	 						type="egovframework.ezMobile.ezOption.vo.MCommonVO"/>
+	<typeAlias  alias="MApprGTLVO" 							type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO"/>
+	<typeAlias  alias="MApprGLeftVO" 						type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO"/>
+	<typeAlias  alias="MApprGDocInfoVO" 					type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO"/>
+	<typeAlias  alias="MApprGAttachInfoVO" 					type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO"/>
+	<typeAlias  alias="MApprGAprLineInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO"/>
+	<typeAlias  alias="MApprGOpinionInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO"/>
+	<typeAlias  alias="MApprGAbsenteeInfoVO"				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO"/>
+	
+	<select id="MApprovalG.getDoApproveList" parameterClass="Map" resultClass="MApprGDocInfoVO" remapResults="true">
+		<isEqual property="type" compareValue="DO">
+			<![CDATA[
+			SELECT A.* FROM (
+			SELECT LIST.* FROM (
+				SELECT 
+					DOCID,
+					DOCTITLE,
+					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE, 
+					WRITERNAME$lang$ WRITERNAME,
+					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					HASATTACHYN,
+					HASOPINIONYN,
+					APRTYPE,
+					FUNCTIONTYPE,
+					APRMEMBERSN,
+					URGENTAPPROVAL,
+					'APR' "MODE",
+					companyID
+				FROM 
+					VAPRDOINGDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND
+	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRMEMBERID IN ($id$) 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			<![CDATA[
+				UNION ALL
+				
+				SELECT 
+					DOCID,
+					DOCTITLE,
+					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
+					WRITERNAME$lang$ WRITERNAME,
+					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					HASATTACHYN,
+					HASOPINIONYN,
+					APRTYPE,
+					FUNCTIONTYPE,
+					APRMEMBERSN,
+					URGENTAPPROVAL,
+					'END' "MODE",
+					companyID
+				FROM 
+					VENDCHAMJODOCINFO 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND
+	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRMEMBERID IN ($id$) 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			<![CDATA[
+				) LIST
+				ORDER BY 
+					LIST.STARTDATE DESC
+				) A
+				WHERE 
+					ROWNUM <= #listSize#
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="DRAFT">
+			<![CDATA[
+			SELECT A.* FROM (
+				SELECT 
+					DOCID,
+					DOCTITLE,
+					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
+					WRITERNAME$lang$ WRITERNAME,
+					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					HASATTACHYN,
+					HASOPINIONYN,
+					FUNCTIONTYPE,
+					URGENTAPPROVAL,
+					companyID
+				FROM 
+					VAPRWILLDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND
+	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND 
+		         	APRMEMBERSN = 1 
+	   			AND
+	   				APRMEMBERID = #userId# 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND 
+		         	DocState <> '017'
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			<![CDATA[
+				ORDER BY
+					STARTDATE DESC
+			) A
+			WHERE 
+				ROWNUM <= #listSize#
+				
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="ING">
+			<![CDATA[
+			SELECT A.* FROM (
+				SELECT 
+					DISTINCT DOCID,
+					DOCTITLE,
+					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
+					WRITERNAME$lang$ WRITERNAME,
+					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					HASATTACHYN,
+					HASOPINIONYN,
+					APRTYPE,
+					FUNCTIONTYPE,
+					URGENTAPPROVAL,
+					companyID
+				FROM 
+					VAPRWILLDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND
+	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRMEMBERID = #userId# 
+	   			AND 
+	   				APRTYPE <> '015'
+			]]>
+			<isEqual property="mainViewYN" compareValue="YES">
+				AND	    
+					AprState != '001'
+		    </isEqual>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			<![CDATA[
+				ORDER BY 
+					STARTDATE DESC
+			) A
+			WHERE
+				ROWNUM <= #listSize#
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="END">
+		SELECT ENDT.* FROM (
+			SELECT
+				DISTINCT A.DOCID,
+				A.DOCTITLE,
+				TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
+				A.WRITERNAME$lang$ WRITERNAME,
+				A.WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+				A.HASATTACHYN,
+				A.HASOPINIONYN,
+				B.APRTYPE,
+				E.CODE2 FUNCTIONTYPE,
+				C.URGENTAPPROVAL,
+				A.companyID,
+				A.ENDDATE
+			FROM
+				TBL_ENDAPRDOCINFO A
+			LEFT OUTER JOIN
+	   			TBL_ENDAPRLINEINFO B
+		   	ON
+	   			A.DOCID = B.DOCID
+		   	AND
+	   			A.TENANT_ID = B.TENANT_ID
+		   	AND
+	   			A.COMPANYID = B.COMPANYID
+			INNER JOIN
+				TBL_EXPENDAPRDOCINFO C
+			ON
+		   		A.DOCID = C.DOCID
+		   	AND
+		   		A.TENANT_ID = C.TENANT_ID
+		   	AND
+		   		A.COMPANYID = C.COMPANYID
+		   	<isEqual property="approvalFlag" compareValue="S">
+		   		INNER JOIN
+		   			TBL_CODELIST E
+		   		ON
+		   			A.DOCSTATE = E.CODE2 
+			    AND 
+				 	A.TENANT_ID = E.TENANT_ID
+                AND 
+                 	A.COMPANYID = E.COMPANYID
+    	        INNER JOIN 
+    			 	TBL_CODELIST F
+    		    ON 
+    			 	A.FUNCTIONTYPE = F.CODE2 
+			    AND 
+				 	A.TENANT_ID = F.TENANT_ID
+                AND 
+                 	A.COMPANYID = F.COMPANYID
+		   	</isEqual>
+		   	<isEqual property="approvalFlag" compareValue="G">
+		   		INNER JOIN
+		   			TBL_CODELIST E
+		   		ON
+		   			A.DOCSTATE = E.CODE2 
+			    AND 
+				 	A.TENANT_ID = E.TENANT_ID
+                AND 
+                 	A.COMPANYID = E.COMPANYID
+		   	</isEqual>
+		   	<![CDATA[
+	   			WHERE
+	   				A.TENANT_ID = #tenantID#
+	   			AND
+					A.COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND
+	   				C.DELFLAG IS NULL
+	   			AND
+	   				A.ENDDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				B.APRMEMBERID = #userId# 
+			]]>
+			<isEqual property="approvalFlag" compareValue="S">
+				AND  
+					E.CODE1 ='SA02'
+				AND  
+					F.CODE1 ='A04'
+		   	</isEqual>
+			<isEqual property="approvalFlag" compareValue="G">
+				AND  
+					E.CODE1 ='A02'
+		   	</isEqual>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			<![CDATA[
+				ORDER BY 
+					A.ENDDATE DESC
+			) ENDT
+			WHERE
+				ROWNUM <= #listSize#
+				
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="SHARE">
+			<![CDATA[
+			SLEECT A.* FROM (
+			SELECT LIST.* FROM (
+				SELECT 
+					DOCID,
+					DOCTITLE,
+					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
+					WRITERNAME$lang$ WRITERNAME,
+					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					HASATTACHYN,
+					HASOPINIONYN,
+					APRTYPE,
+					FUNCTIONTYPE,
+					APRMEMBERSN,
+					URGENTAPPROVAL,
+					'APR' "MODE",
+					companyID
+				FROM 
+					VAPRDOINGDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND
+	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			<![CDATA[
+				UNION ALL
+				
+				SELECT 
+					DOCID,
+					DOCTITLE,
+					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
+					WRITERNAME$lang$ WRITERNAME,
+					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					HASATTACHYN,
+					HASOPINIONYN,
+					APRTYPE,
+					FUNCTIONTYPE,
+					APRMEMBERSN,
+					URGENTAPPROVAL,
+					'END' "MODE",
+					companyID
+				FROM 
+					VENDCHAMJODOCINFO 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND
+	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			<![CDATA[
+				) LIST
+				ORDER BY 
+					LIST.STARTDATE DESC
+				) A
+				WHERE 
+					ROWNUM <= #listSize#
+			]]>
+		</isEqual>
+	</select>
+	
+	<select id="MApprovalG.getDoApproveListCount" parameterClass="Map" resultClass="Integer" remapResults="true">
+		<isEqual property="type" compareValue="DO">
+			<![CDATA[
+				SELECT 
+					COUNT(*)
+				FROM ( 
+				SELECT 
+					DOCID
+				FROM 
+					VAPRDOINGDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			 AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND 
+	   				APRMEMBERID IN ($id$) 
+	   			AND 
+	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			<![CDATA[
+				UNION ALL
+				
+				SELECT 
+					DOCID
+				FROM 
+					VENDCHAMJODOCINFO 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND
+	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRMEMBERID IN ($id$) 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			) LIST
+		</isEqual>
+		<isEqual property="type" compareValue="DRAFT">
+			<![CDATA[
+				SELECT 
+					COUNT(DOCID)
+				FROM 
+					VAPRWILLDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND 
+		         	APRMEMBERSN = 1 
+	   			AND
+	   				APRMEMBERID = #userId# 
+	   			AND 
+	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRTYPE <> '015'
+	   			AND 
+		         	DocState <> '017'
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="type" compareValue="ING">
+			<![CDATA[
+			SELECT COUNT(*)
+			FROM (
+				SELECT 
+					DISTINCT DOCID, APRTYPE
+				FROM 
+					VAPRWILLDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND
+	   				APRMEMBERID = #userId# 
+	   			AND 
+	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRTYPE <> '015'
+			]]>
+			<isEqual property="mainViewYN" compareValue="YES">
+				AND	    
+					AprState != '001'
+		    </isEqual>
+			<isNotEmpty property="searchText" prepend="AND">
+			 	(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			)
+		</isEqual>
+		<isEqual property="type" compareValue="END">
+			SELECT
+				COUNT(DISTINCT A.DOCID)
+			FROM
+				TBL_ENDAPRDOCINFO A
+			LEFT OUTER JOIN
+	   			TBL_ENDAPRLINEINFO B
+		   	ON
+	   			A.DOCID = B.DOCID
+		   	AND
+	   			A.TENANT_ID = B.TENANT_ID
+		   	AND
+	   			A.COMPANYID = B.COMPANYID
+			INNER JOIN
+				TBL_EXPENDAPRDOCINFO C
+			ON
+		   		A.DOCID = C.DOCID
+		   	AND
+		   		A.TENANT_ID = C.TENANT_ID
+		   	AND
+		   		A.COMPANYID = C.COMPANYID
+		   	<isEqual property="approvalFlag" compareValue="S">
+		   		INNER JOIN
+		   			TBL_CODELIST E
+		   		ON
+		   			A.DOCSTATE = E.CODE2 
+			    AND 
+				 	A.TENANT_ID = E.TENANT_ID
+                AND 
+                 	A.COMPANYID = E.COMPANYID
+    	        INNER JOIN 
+    			 	TBL_CODELIST F
+    		    ON 
+    			 	A.FUNCTIONTYPE = F.CODE2 
+			    AND 
+				 	A.TENANT_ID = F.TENANT_ID
+                AND 
+                 	A.COMPANYID = F.COMPANYID 
+                LEFT OUTER JOIN  
+              		TBL_ENDRECEIPTPOINTINFO G 
+              	ON 
+              		A.DOCID = G.DocID 
+			    AND 
+			  		A.TENANT_ID = G.TENANT_ID
+                AND 
+                	A.COMPANYID = G.COMPANYID              
+		   	</isEqual>
+		   	<![CDATA[
+	   			WHERE
+	   				A.TENANT_ID = #tenantID#
+	   			AND
+					A.COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND
+	   				C.DELFLAG IS NULL
+	   			AND
+	   				A.ENDDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				B.APRMEMBERID = #userId# 
+			]]>
+			<isEqual property="approvalFlag" compareValue="S">
+				AND  
+					E.CODE1 ='SA02'
+				AND  
+					F.CODE1 ='A04'
+		   	</isEqual>
+			<isNotEmpty property="searchText" prepend="AND">
+				(A.DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				A.WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="type" compareValue="SHARE">
+			<![CDATA[
+				SELECT 
+					COUNT(*)
+				FROM ( 
+				SELECT 
+					DOCID
+				FROM 
+					VAPRDOINGDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			 AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND 
+	   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
+	   			AND 
+	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			<![CDATA[
+				UNION ALL
+				
+				SELECT 
+					DOCID
+				FROM 
+					VENDCHAMJODOCINFO 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND
+	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			) LIST
+		</isEqual>
+	</select>
+	
+	<select id="MApprovalG.getLeftCount" parameterClass="Map" resultClass="MApprGLeftVO">
+		<![CDATA[
+			SELECT
+				(	SELECT 
+						COUNT(*)
+					FROM 
+					(SELECT
+						DOCID
+					FROM
+						VAPRDOINGDOCLIST 
+		   			WHERE
+		   				TENANT_ID = #tenantID#
+		   			AND
+		   				COMPANYID = #companyID#
+		   			AND 
+		   				APRMEMBERID IN ($id$) 
+		   			AND 
+	   					STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+		   			AND
+		   				APRTYPE <> '015' 
+		   			AND
+		   				APRMEMBERSN <> 1
+		   				
+		   			UNION ALL
+				
+					SELECT 
+						DOCID
+					FROM 
+						VENDCHAMJODOCINFO 
+		   			WHERE
+		   				TENANT_ID = #tenantID#
+		   			AND
+		   				COMPANYID = #companyID#
+		   			AND
+	   					STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+		   			AND
+		   				APRMEMBERID IN ($id$) 
+		   			AND 
+		   				APRTYPE <> '015'
+		   			AND
+		   				APRMEMBERSN <> 1) LIST ) aprDoCount,
+				(SELECT 
+						COUNT(DOCID)
+					FROM 
+						VAPRWILLDOCLIST 
+		   			WHERE
+		   				TENANT_ID = #tenantID#
+		   			AND
+		   				COMPANYID = #companyID#
+		   			AND 
+			         	APRMEMBERSN = 1 
+		   			AND
+		   				APRMEMBERID = #userId# 
+		   			AND 
+	   					STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+		   			AND
+		   				APRTYPE <> '015'
+		   			AND 
+			         	DocState <> '017') aprDraftCount,
+			(
+				SELECT COUNT(*)
+				FROM (
+				SELECT 
+						DISTINCT DOCID, APRTYPE
+					FROM 
+						VAPRWILLDOCLIST 
+		   			WHERE
+		   				TENANT_ID = #tenantID#
+		   			AND
+		   				COMPANYID = #companyID#
+		   			AND
+		   				APRMEMBERID = #userId# 
+		   			AND 
+	   					STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+		   			AND
+		   				APRTYPE <> '015'
+			]]>
+					<isEqual property="mainViewYN" compareValue="YES">
+						AND	    
+							AprState != '001'
+				    </isEqual>
+		    	)
+			) aprIngCount,
+			(
+			SELECT COUNT(*)
+			FROM (
+			SELECT
+				DISTINCT A.DOCID, B.APRTYPE
+			FROM
+				TBL_ENDAPRDOCINFO A
+			LEFT OUTER JOIN
+	   			TBL_ENDAPRLINEINFO B
+		   	ON
+	   			A.DOCID = B.DOCID
+		   	AND
+	   			A.TENANT_ID = B.TENANT_ID
+		   	AND
+	   			A.COMPANYID = B.COMPANYID
+			INNER JOIN
+				TBL_EXPENDAPRDOCINFO C
+			ON
+		   		A.DOCID = C.DOCID
+		   	AND
+		   		A.TENANT_ID = C.TENANT_ID
+		   	AND
+		   		A.COMPANYID = C.COMPANYID
+		   	<isEqual property="approvalFlag" compareValue="S">
+		   		INNER JOIN
+		   			TBL_CODELIST E
+		   		ON
+		   			A.DOCSTATE = E.CODE2 
+			    AND 
+				 	A.TENANT_ID = E.TENANT_ID
+                AND 
+                 	A.COMPANYID = E.COMPANYID
+    	        INNER JOIN 
+    			 	TBL_CODELIST F
+    		    ON 
+    			 	A.FUNCTIONTYPE = F.CODE2 
+			    AND 
+				 	A.TENANT_ID = F.TENANT_ID
+                AND 
+                 	A.COMPANYID = F.COMPANYID 
+                LEFT OUTER JOIN  
+              		TBL_ENDRECEIPTPOINTINFO G 
+              	ON 
+              		A.DOCID = G.DocID 
+			    AND 
+			  		A.TENANT_ID = G.TENANT_ID
+                AND 
+                	A.COMPANYID = G.COMPANYID              
+		   	</isEqual>
+		   	<![CDATA[
+	   			WHERE
+	   				A.TENANT_ID = #tenantID#
+	   			AND
+	   				A.COMPANYID = #companyID#
+	   			AND
+	   				C.DELFLAG IS NULL
+	   			AND
+	   				A.ENDDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				B.APRMEMBERID = #userId# 
+			]]>
+			<isEqual property="approvalFlag" compareValue="S">
+				AND  
+					E.CODE1 ='SA02'
+				AND  
+					F.CODE1 ='A04'
+		   	</isEqual>
+		   	)
+		   	) aprEndCount
+		   	<isEqual property="useShareApproval" compareValue="YES">
+			   	<![CDATA[
+				   	,(	SELECT 
+							COUNT(DOCID)
+						FROM 
+						(SELECT
+							DOCID
+						FROM
+							VAPRDOINGDOCLIST 
+			   			WHERE
+			   				TENANT_ID = #tenantID#
+			   			AND
+			   				COMPANYID = #companyID#
+			   			AND 
+			   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
+			   			AND 
+	   						STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+			   			AND
+			   				APRTYPE <> '015' 
+			   			AND
+			   				APRMEMBERSN <> 1
+			   				
+			   			UNION ALL
+					
+						SELECT 
+							DOCID
+						FROM 
+							VENDCHAMJODOCINFO 
+			   			WHERE
+			   				TENANT_ID = #tenantID#
+			   			AND
+			   				COMPANYID = #companyID#
+			   			AND
+	   						STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+			   			AND
+			   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
+			   			AND 
+			   				APRTYPE <> '015'
+			   			AND
+			   				APRMEMBERSN <> 1) LIST ) aprShareCount
+				]]>
+		   	</isEqual>
+		   	FROM DUAL
+	</select>
+	
+	<select id="MApprovalG.getAprLineInfo" parameterClass="Map" resultClass="MApprGAprLineInfoVO">
+		<isNotEqual property="type" compareValue="END">
+			SELECT
+	          	A.APRSTATE,
+	          	A.APRTYPE,
+	          	CASE 
+					WHEN (A.APRMEMBERNAME$lang$ = '' OR A.APRMEMBERNAME$lang$ IS NULL) THEN A.APRMEMBERNAME
+					ELSE A.APRMEMBERNAME$lang$
+				END APRMEMBERNAME,
+	          	CASE 
+					WHEN (A.APRMEMBERJOBTITLE$lang$ = '' OR A.APRMEMBERJOBTITLE$lang$ IS NULL) THEN A.APRMEMBERJOBTITLE
+					ELSE A.APRMEMBERJOBTITLE$lang$
+				END APRMEMBERJOBTITLE,
+	          	CASE 
+					WHEN (A.APRMEMBERDEPTNAME$lang$ = '' OR A.APRMEMBERDEPTNAME$lang$ IS NULL) THEN A.APRMEMBERDEPTNAME
+					ELSE A.APRMEMBERDEPTNAME$lang$
+				END APRMEMBERDEPTNAME,
+	          	TO_CHAR(A.RECEIVEDDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') RECEIVEDDATE,
+	          	TO_CHAR(A.PROCESSDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') PROCESSDATE,
+				CASE 
+					WHEN (B.PROXYUSERNAME$lang$ = '' OR B.PROXYUSERNAME$lang$ IS NULL) THEN B.PROXYUSERNAME
+					ELSE B.PROXYUSERNAME$lang$
+				END PROXYUSERNAME,
+				CASE 
+					WHEN (B.PROXYUSERJOBTITLE$lang$ = '' OR B.PROXYUSERJOBTITLE$lang$ IS NULL) THEN B.PROXYUSERJOBTITLE
+					ELSE B.PROXYUSERJOBTITLE$lang$
+				END PROXYUSERJOBTITLE,
+				CASE 
+					WHEN (B.PROXYUSERDEPTNAME$lang$ = '' OR B.PROXYUSERDEPTNAME$lang$ IS NULL) THEN B.PROXYUSERDEPTNAME
+					ELSE B.PROXYUSERDEPTNAME$lang$
+				END PROXYUSERDEPTNAME,
+				(SELECT 
+					EXTENSIONATTRIBUTE2
+				FROM
+					TBL_USERMASTER
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					CN = A.APRMEMBERID) APRMEMBERPHOTO
+	        FROM 
+	           	TBL_APRLINEINFO A 
+	        INNER JOIN 
+	           	TBL_EXPAPRLINE B
+	        ON 
+	           	A.DOCID = B.DOCID 
+	        AND 
+	           	A.APRMEMBERSN = B.APRMEMBERSN
+	        AND
+	           	A.TENANT_ID = B.TENANT_ID
+	        AND
+	           	A.COMPANYID = B.COMPANYID
+	        WHERE 
+	           	A.DOCID = #docID#  
+	        AND
+	           	A.TENANT_ID = #tenantID#   
+	        AND
+	           	A.COMPANYID = #companyID#
+	        ORDER BY 
+				A.APRMEMBERSN DESC  
+		</isNotEqual>
+		<isEqual property="type" compareValue="END">
+			SELECT
+	          	A.APRSTATE,
+	          	A.APRTYPE,
+	          	CASE 
+					WHEN (A.APRMEMBERNAME$lang$ = '' OR A.APRMEMBERNAME$lang$ IS NULL) THEN A.APRMEMBERNAME
+					ELSE A.APRMEMBERNAME$lang$
+				END APRMEMBERNAME,
+	          	CASE 
+					WHEN (A.APRMEMBERJOBTITLE$lang$ = '' OR A.APRMEMBERJOBTITLE$lang$ IS NULL) THEN A.APRMEMBERJOBTITLE
+					ELSE A.APRMEMBERJOBTITLE$lang$
+				END APRMEMBERJOBTITLE,
+	          	CASE 
+					WHEN (A.APRMEMBERDEPTNAME$lang$ = '' OR A.APRMEMBERDEPTNAME$lang$ IS NULL) THEN A.APRMEMBERDEPTNAME
+					ELSE A.APRMEMBERDEPTNAME$lang$
+				END APRMEMBERDEPTNAME,
+	          	TO_CHAR(A.RECEIVEDDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') RECEIVEDDATE,
+	          	TO_CHAR(A.PROCESSDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') PROCESSDATE,
+				CASE 
+					WHEN (B.PROXYUSERNAME$lang$ = '' OR B.PROXYUSERNAME$lang$ IS NULL) THEN B.PROXYUSERNAME
+					ELSE B.PROXYUSERNAME$lang$
+				END PROXYUSERNAME,
+				CASE 
+					WHEN (B.PROXYUSERJOBTITLE$lang$ = '' OR B.PROXYUSERJOBTITLE$lang$ IS NULL) THEN B.PROXYUSERJOBTITLE
+					ELSE B.PROXYUSERJOBTITLE$lang$
+				END PROXYUSERJOBTITLE,
+				CASE 
+					WHEN (B.PROXYUSERDEPTNAME$lang$ = '' OR B.PROXYUSERDEPTNAME$lang$ IS NULL) THEN B.PROXYUSERDEPTNAME
+					ELSE B.PROXYUSERDEPTNAME$lang$
+				END PROXYUSERDEPTNAME,
+				(SELECT 
+					EXTENSIONATTRIBUTE2
+				FROM
+					TBL_USERMASTER
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					CN = A.APRMEMBERID) APRMEMBERPHOTO
+	        FROM 
+	           	TBL_ENDAPRLINEINFO A 
+	        INNER JOIN 
+	           	TBL_EXPENDAPRLINE B
+	        ON 
+	           	A.DOCID = B.DOCID 
+	        AND 
+	           	A.APRMEMBERSN = B.APRMEMBERSN
+	        AND
+	           	A.TENANT_ID = B.TENANT_ID
+	        AND
+	           	A.COMPANYID = B.COMPANYID
+	        WHERE 
+	           	A.DOCID = #docID#  
+	        AND
+	           	A.TENANT_ID = #tenantID#   
+	        AND
+	           	A.COMPANYID = #companyID#
+	        ORDER BY 
+				A.APRMEMBERSN DESC  
+		</isEqual>
+	</select>
+	
+	<select id="MApprovalG.getAprDocHref" parameterClass="Map" resultClass="String">
+		<isEqual property="type" compareValue="DO">
+			<isEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT 
+						HREF
+					FROM
+						VAPRDOINGDOCLIST 
+		   			WHERE
+		   				TENANT_ID = #tenantID#
+		   			AND
+		   				COMPANYID = #companyID#
+		   			AND
+		   				DOCID = #docID#
+		   			AND
+		   				ROWNUM = 1
+				]]>
+			</isEqual>
+			<isNotEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT 
+						HREF
+					FROM
+						VENDCHAMJODOCINFO 
+		   			WHERE
+		   				TENANT_ID = #tenantID#
+		   			AND
+		   				COMPANYID = #companyID#
+		   			AND
+		   				DOCID = #docID#
+		   			AND
+		   				ROWNUM = 1
+				]]>
+			</isNotEqual>
+		</isEqual>
+		<isEqual property="type" compareValue="ING">
+			<![CDATA[
+				SELECT 
+					HREF
+				FROM
+					VAPRWILLDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND
+	   				DOCID = #docID#
+	   			AND
+	   				ROWNUM = 1
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="DRAFT">
+			<![CDATA[
+				SELECT 
+					HREF
+				FROM
+					VAPRWILLDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND
+	   				DOCID = #docID#
+	   			AND
+	   				ROWNUM = 1
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="END">
+			<![CDATA[
+				SELECT 
+					HREF
+				FROM
+					TBL_ENDAPRDOCINFO 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND
+	   				DOCID = #docID#
+	   			AND
+	   				ROWNUM = 1
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="SHARE">
+			<isEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT 
+						HREF
+					FROM
+						VAPRDOINGDOCLIST 
+		   			WHERE
+		   				TENANT_ID = #tenantID#
+		   			AND
+		   				COMPANYID = #companyID#
+		   			AND
+		   				DOCID = #docID#
+		   			AND
+		   				ROWNUM = 1
+				]]>
+			</isEqual>
+			<isNotEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT 
+						HREF
+					FROM
+						VENDCHAMJODOCINFO 
+		   			WHERE
+		   				TENANT_ID = #tenantID#
+		   			AND
+		   				COMPANYID = #companyID#
+		   			AND
+		   				DOCID = #docID#
+		   			AND
+		   				ROWNUM = 1
+				]]>
+			</isNotEqual>
+		</isEqual>
+	</select>
+	
+	<select id="MApprovalG.getAprCommentCount" parameterClass="Map" resultClass="String">
+		<isEqual property="type" compareValue="END">
+			<![CDATA[
+				SELECT
+					COUNT(*)
+				FROM
+					TBL_ENDAPROPINIONINFO
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+			]]>
+		</isEqual>
+		<isNotEqual property="type" compareValue="END">
+			<![CDATA[
+				SELECT
+					COUNT(*)
+				FROM
+					TBL_APROPINIONINFO
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<select id="MApprovalG.getOpinionInfo" parameterClass="Map" resultClass="MApprGOpinionInfoVO">
+		<isEqual property="type" compareValue="END">
+			<![CDATA[
+				SELECT 
+					 CONTENT,
+					 OPINIONGB,
+					 USERID,
+					 CASE 
+	   					WHEN (USERNAME$lang$ = '' OR USERNAME$lang$ IS NULL) 
+	   					THEN USERNAME
+	   					ELSE USERNAME$lang$
+	   				 END USERNAME,
+	   				 CASE 
+	   					WHEN (USERJOBTITLE$lang$ = '' OR USERJOBTITLE$lang$ IS NULL) 
+	   					THEN USERJOBTITLE
+	   					ELSE USERJOBTITLE$lang$
+	   				 END USERJOBTITLE,
+	   				 CASE 
+	   					WHEN (USERDEPTNAME$lang$ = '' OR USERDEPTNAME$lang$ IS NULL) 
+	   					THEN USERDEPTNAME
+	   					ELSE USERDEPTNAME$lang$
+	   				 END USERDEPTNAME
+				FROM 
+					TBL_ENDAPROPINIONINFO  
+				WHERE 
+					TENANT_ID =#tenantID#
+				AND
+					COMPANYID = #companyID#	
+				AND 
+					DOCID = #docID#
+				ORDER BY 
+					OPINIONSN DESC
+			]]>
+		</isEqual>
+		<isNotEqual property="type" compareValue="END">
+			<![CDATA[
+				SELECT 
+					 CONTENT,
+					 OPINIONGB,
+					 USERID,
+					 CASE 
+	   					WHEN (USERNAME$lang$ = '' OR USERNAME$lang$ IS NULL) 
+	   					THEN USERNAME
+	   					ELSE USERNAME$lang$
+	   				 END USERNAME,
+	   				 CASE 
+	   					WHEN (USERJOBTITLE$lang$ = '' OR USERJOBTITLE$lang$ IS NULL) 
+	   					THEN USERJOBTITLE
+	   					ELSE USERJOBTITLE$lang$
+	   				 END USERJOBTITLE,
+	   				 CASE 
+	   					WHEN (USERDEPTNAME$lang$ = '' OR USERDEPTNAME$lang$ IS NULL) 
+	   					THEN USERDEPTNAME
+	   					ELSE USERDEPTNAME$lang$
+	   				 END USERDEPTNAME
+				FROM 
+					TBL_APROPINIONINFO  
+				WHERE 
+					TENANT_ID =#tenantID#
+				AND
+					COMPANYID = #companyID#	
+				AND 
+					DOCID = #docID#
+				ORDER BY 
+					OPINIONSN DESC
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<select id="MApprovalG.getAttachList" parameterClass="Map" resultClass="MApprGAttachInfoVO">
+		<isNotEqual property="type" compareValue="END">
+			<![CDATA[
+				SELECT 
+					attachName,
+					attachHref,
+					attachFileSize
+				FROM (
+					SELECT
+						DISPLAYNAME attachName,
+						ATTACHFILEHREF attachHref,
+						ATTACHFILESIZE attachFileSize,
+						ATTACHFILESN ATTACHSN
+					FROM
+						TBL_APRATTACHINFO
+					WHERE
+						TENANT_ID = #tenantID# 
+					AND
+						COMPANYID = #companyID#
+					AND
+						DOCID = #docID#
+						
+					UNION ALL
+					
+					SELECT
+						ATTACHDOCNAME attachName,
+						ATTACHDOCURL attachHref,
+						0 attachFileSize,
+						ATTACHSN
+					FROM
+						TBL_APRDOCATTACHINFO
+					WHERE
+						TENANT_ID = #tenantID# 
+					AND
+						COMPANYID = #companyID#
+					AND
+						DOCID = #docID#
+				) LIST
+				ORDER BY ATTACHSN
+			]]>
+		</isNotEqual>
+		<isEqual property="type" compareValue="END">
+			<![CDATA[
+			SELECT
+				attachName,
+				attachHref,
+				attachFileSize
+			FROM (
+				SELECT
+					DISPLAYNAME attachName,
+					ATTACHFILEHREF attachHref,
+					ATTACHFILESIZE attachFileSize,
+					ATTACHFILESN ATTACHSN
+				FROM
+					TBL_ENDATTACHINFO
+				WHERE
+					TENANT_ID = #tenantID# 
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+					
+				UNION ALL
+				
+				SELECT
+					ATTACHDOCNAME attachName,
+					ATTACHDOCURL attachHref,
+					0 attachFileSize,
+					ATTACHSN
+				FROM
+					TBL_ENDAPRDOCATTACHINFO
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+			) LIST
+			ORDER BY ATTACHSN
+			]]>
+		</isEqual>
+	</select>
+	
+	<select id="MApprovalG.getAbsenteeInfo" parameterClass="MCommonVO" resultClass="String">
+		<![CDATA[
+			SELECT
+				EXTENSIONATTRIBUTE5
+			FROM
+				TBL_USERMASTER
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				CN = #userId#
+		]]>
+	</select>
+	
+	<select id="MApprovalG.checkPass" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_USERMASTER
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				cn = #userID#
+			AND
+				password = #password#
+		]]>
+	</select>
+	
+	<select id="MApprovalG.getAprDocInfo" parameterClass="Map" resultClass="MApprGDocInfoVO">
+		<isEqual property="type" compareValue="DO">
+			<isEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT
+						DOCID,
+						ORGDOCID,
+						FORMID,
+						HREF,
+						HASATTACHYN,
+						APRMEMBERID,
+						APRMEMBERNAME,
+						APRMEMBERNAME2,
+						APRMEMBERDEPTID,
+						DOCSTATE,
+						DOCTITLE,
+						CASE 
+		   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+		   					ELSE WRITERNAME$lang$
+		   				END WRITERNAME,
+		   				CASE 
+		   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+		   					ELSE WRITERDEPTNAME$lang$
+		   				END WRITERDEPTNAME,
+		   				CASE 
+		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+		   					ELSE WRITERJOBTITLE$lang$
+		   				END WRITERJOBTITLE
+					FROM
+						VAPRDOINGDOCLIST
+					WHERE
+						TENANT_ID = #tenantID#
+					AND
+						COMPANYID = #companyID#
+					AND
+						DOCID = #docID#
+				]]>
+				<isNotEmpty property="aprMemberSN" prepend="AND">
+					APRMEMBERSN = #aprMemberSN#
+				</isNotEmpty>
+		   			AND
+		   				ROWNUM = 1
+			</isEqual>
+			<isNotEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT
+						DOCID,
+						ORGDOCID,
+						FORMID,
+						HREF,
+						HASATTACHYN,
+						APRMEMBERID,
+						APRMEMBERNAME,
+						APRMEMBERNAME2,
+						APRMEMBERDEPTID,
+						DOCSTATE,
+						DOCTITLE,
+						CASE 
+		   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+		   					ELSE WRITERNAME$lang$
+		   				END WRITERNAME,
+		   				CASE 
+		   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+		   					ELSE WRITERDEPTNAME$lang$
+		   				END WRITERDEPTNAME,
+		   				CASE 
+		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+		   					ELSE WRITERJOBTITLE$lang$
+		   				END WRITERJOBTITLE
+					FROM
+						VENDCHAMJODOCINFO
+					WHERE
+						TENANT_ID = #tenantID#
+					AND
+						COMPANYID = #companyID#
+					AND
+						DOCID = #docID#
+				]]>
+				<isNotEmpty property="aprMemberSN" prepend="AND">
+					APRMEMBERSN = #aprMemberSN#
+				</isNotEmpty>
+				<![CDATA[
+		   			AND
+		   				ROWNUM = 1
+		   		]]>
+			</isNotEqual>
+		</isEqual>
+		<isEqual property="type" compareValue="ING">
+			<![CDATA[
+				SELECT
+					DOCID,
+					ORGDOCID,
+					FORMID,
+					HREF,
+					HASATTACHYN,
+					APRMEMBERID,
+					APRMEMBERNAME,
+					APRMEMBERNAME2,
+					APRMEMBERDEPTID,
+					DOCSTATE,
+					DOCTITLE,
+					CASE 
+	   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+	   					ELSE WRITERNAME$lang$
+	   				END WRITERNAME,
+	   				CASE 
+	   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+	   					ELSE WRITERDEPTNAME$lang$
+	   				END WRITERDEPTNAME,
+	   				CASE 
+	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+	   					ELSE WRITERJOBTITLE$lang$
+	   				END WRITERJOBTITLE
+				FROM
+					VAPRWILLDOCLIST
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+	   			AND
+	   				ROWNUM = 1
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="DRAFT">
+			<![CDATA[
+				SELECT
+					DOCID,
+					ORGDOCID,
+					FORMID,
+					HREF,
+					HASATTACHYN,
+					APRMEMBERID,
+					APRMEMBERNAME,
+					APRMEMBERNAME2,
+					APRMEMBERDEPTID,
+					DOCSTATE,
+					DOCTITLE,
+					CASE 
+	   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+	   					ELSE WRITERNAME$lang$
+	   				END WRITERNAME,
+	   				CASE 
+	   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+	   					ELSE WRITERDEPTNAME$lang$
+	   				END WRITERDEPTNAME,
+	   				CASE 
+	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+	   					ELSE WRITERJOBTITLE$lang$
+	   				END WRITERJOBTITLE
+				FROM
+					VAPRWILLDOCLIST
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+	   			AND
+	   				ROWNUM = 1
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="END">
+			SELECT
+				A.DOCID,
+				A.ORGDOCID,
+				A.FORMID,
+				A.HREF,
+				A.HASATTACHYN,
+				B.APRMEMBERID,
+				B.APRMEMBERNAME,
+				B.APRMEMBERNAME2,
+				B.APRMEMBERDEPTID,
+				A.DOCSTATE,
+				A.DOCTITLE,
+				CASE 
+   					WHEN (A.WRITERNAME$lang$ = '' OR A.WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+   					ELSE A.WRITERNAME$lang$
+   				END WRITERNAME,
+   				CASE 
+   					WHEN (A.WRITERDEPTNAME$lang$ = '' OR A.WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+   					ELSE A.WRITERDEPTNAME$lang$
+   				END WRITERDEPTNAME,
+   				CASE 
+   					WHEN (A.WRITERJOBTITLE$lang$ = '' OR A.WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+   					ELSE A.WRITERJOBTITLE$lang$
+   				END WRITERJOBTITLE
+			FROM
+				TBL_ENDAPRDOCINFO A
+			LEFT OUTER JOIN
+	   			TBL_ENDAPRLINEINFO B
+		   	ON
+	   			A.DOCID = B.DOCID
+		   	AND
+	   			A.TENANT_ID = B.TENANT_ID
+		   	AND
+	   			A.COMPANYID = B.COMPANYID
+			INNER JOIN
+				TBL_EXPENDAPRDOCINFO C
+			ON
+		   		A.DOCID = B.DOCID
+		   	AND
+		   		A.TENANT_ID = C.TENANT_ID
+		   	AND
+		   		A.COMPANYID = C.COMPANYID
+		   	<isEqual property="approvalFlag" compareValue="S">
+		   		INNER JOIN
+		   			TBL_CODELIST E
+		   		ON
+		   			A.DOCSTATE = E.CODE2 
+			    AND 
+				 	A.TENANT_ID = E.TENANT_ID
+                AND 
+                 	A.COMPANYID = E.COMPANYID
+    	        INNER JOIN 
+    			 	TBL_CODELIST F
+    		    ON 
+    			 	A.FUNCTIONTYPE = F.CODE2 
+			    AND 
+				 	A.TENANT_ID = F.TENANT_ID
+                AND 
+                 	A.COMPANYID = F.COMPANYID 
+                LEFT OUTER JOIN  
+              		TBL_ENDRECEIPTPOINTINFO G 
+              	ON 
+              		A.DOCID = G.DocID 
+			    AND 
+			  		A.TENANT_ID = G.TENANT_ID
+                AND 
+                	A.COMPANYID = G.COMPANYID              
+		   	</isEqual>
+		   	<![CDATA[
+	   			WHERE
+	   				A.TENANT_ID = #tenantID#
+	   			AND
+	   				A.COMPANYID = #companyID#
+	   			AND
+					A.DOCID = #docID#
+			]]>
+			<isEqual property="approvalFlag" compareValue="S">
+				AND  
+					E.CODE1 ='SA02'
+				AND  
+					F.CODE1 ='A04'
+		   	</isEqual>
+	   			AND
+	   				ROWNUM = 1
+		</isEqual>
+		<isEqual property="type" compareValue="SHARE">
+			<isEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT
+						DOCID,
+						ORGDOCID,
+						FORMID,
+						HREF,
+						HASATTACHYN,
+						APRMEMBERID,
+						APRMEMBERNAME,
+						APRMEMBERNAME2,
+						APRMEMBERDEPTID,
+						DOCSTATE,
+						DOCTITLE,
+						CASE 
+		   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+		   					ELSE WRITERNAME$lang$
+		   				END WRITERNAME,
+		   				CASE 
+		   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+		   					ELSE WRITERDEPTNAME$lang$
+		   				END WRITERDEPTNAME,
+		   				CASE 
+		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+		   					ELSE WRITERJOBTITLE$lang$
+		   				END WRITERJOBTITLE
+					FROM
+						VAPRDOINGDOCLIST
+					WHERE
+						TENANT_ID = #tenantID#
+					AND
+						COMPANYID = #companyID#
+					AND
+						DOCID = #docID#
+				]]>
+				<isNotEmpty property="aprMemberSN" prepend="AND">
+					APRMEMBERSN = #aprMemberSN#
+				</isNotEmpty>
+		   			AND
+		   				ROWNUM = 1
+			</isEqual>
+			<isNotEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT
+						DOCID,
+						ORGDOCID,
+						FORMID,
+						HREF,
+						HASATTACHYN,
+						APRMEMBERID,
+						APRMEMBERNAME,
+						APRMEMBERNAME2,
+						APRMEMBERDEPTID,
+						DOCSTATE,
+						DOCTITLE,
+						CASE 
+		   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+		   					ELSE WRITERNAME$lang$
+		   				END WRITERNAME,
+		   				CASE 
+		   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+		   					ELSE WRITERDEPTNAME$lang$
+		   				END WRITERDEPTNAME,
+		   				CASE 
+		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+		   					ELSE WRITERJOBTITLE$lang$
+		   				END WRITERJOBTITLE
+					FROM
+						VENDCHAMJODOCINFO
+					WHERE
+						TENANT_ID = #tenantID#
+					AND
+						COMPANYID = #companyID#
+					AND
+						DOCID = #docID#
+				]]>
+				<isNotEmpty property="aprMemberSN" prepend="AND">
+					APRMEMBERSN = #aprMemberSN#
+				</isNotEmpty>
+		   			AND
+		   				ROWNUM = 1
+			</isNotEqual>
+		</isEqual>
+	</select>
+	
+	<insert id="MApprovalG.insertOpinionInfo" parameterClass="Map">
+		<![CDATA[
+	   		INSERT INTO TBL_APROPINIONINFO (
+	   			DocID,      UserID,     OpinionGB,    Content,      UserName,     UserName2,     UserJobTitle,     UserJobTitle2,     UserDeptID,    UserDeptName,     UserDeptName2,      OpinionSN,   TENANT_ID, COMPANYID
+	   		)
+	   		SELECT
+	   			#docID#,    CN,			#opinionGB#,  #content#,	DISPLAYNAME,  DISPLAYNAME2,  TITLE,			   TITLE2,			  DEPARTMENT,	 DESCRIPTION,	   DESCRIPTION2,	   (SELECT CASE WHEN MAX(OPINIONSN) IS NULL THEN 1 ELSE MAX(OPINIONSN) + 1 END OPINIONSN FROM TBL_APROPINIONINFO WHERE TENANT_ID = #tenantID# AND COMPANYID = #companyID# AND DOCID = #docID#), #tenantID#, #companyID#
+	   		FROM
+	   			TBL_USERMASTER
+	   		WHERE
+	   			TENANT_ID = #tenantID#
+	   		AND
+	   			CN = #userID#	
+		]]>
+   </insert>
+   
+   <update id="MApprovalG.updateDocOpinionInfo" parameterClass="Map">
+   		<![CDATA[
+   			UPDATE
+	   			TBL_APRDOCINFO
+	   		SET
+	   			HASOPINIONYN = #hasOpinionYN#
+	   		WHERE
+	   			TENANT_ID = #tenantID#
+	   		AND
+	   			COMPANYID = #companyID#
+	   		AND
+	   			DOCID = #docID#
+		]]>
+   </update>
+   
+   <update id="MApprovalG.setAbsenteeInfo" parameterClass="MApprGAbsenteeInfoVO">
+   		<![CDATA[
+   			UPDATE
+   				TBL_USERMASTER
+   			SET
+   				EXTENSIONATTRIBUTE5 = #absenteeInfo#
+   			WHERE
+   				TENANT_ID = #tenantId#
+   			AND
+   				CN = #userId#
+		]]>
+   </update>
+   
+   <update id="MApprovalG.delAbsenteeInfo" parameterClass="Map">
+   		<![CDATA[
+   			UPDATE
+   				TBL_USERMASTER
+   			SET
+   				EXTENSIONATTRIBUTE5 = NULL
+   			WHERE
+   				TENANT_ID = #tenantID#
+   			AND
+   				CN = #userId#
+		]]>
+   </update>
+   
+   <delete id="MApprovalG.deleteOpinionInfo" parameterClass="Map">
+   		<![CDATA[
+   			DELETE FROM 
+		  		TBL_APROPINIONINFO
+	    	WHERE  
+	    		TENANT_ID = #tenantID#
+	    	AND
+	    		COMPANYID = #companyID#
+	    	AND
+	    		DOCID = #docID#
+	    	AND
+	    		USERID = #userID#
+		]]>
+   </delete>
+   
+   <select id="MApprovalG.getAprMemberSn" parameterClass="Map" resultClass="MApprGDocInfoVO">
+			<![CDATA[
+				SELECT
+					DOCID,
+					ORGDOCID,
+					FORMID,
+					HREF,
+					HASATTACHYN,
+					APRMEMBERID,
+					APRMEMBERNAME,
+					APRMEMBERNAME2,
+					APRMEMBERDEPTID,
+					DOCSTATE,
+					DOCTITLE,
+					APRMEMBERSN,
+					CASE 
+	   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+	   					ELSE WRITERNAME$lang$
+	   				END WRITERNAME,
+	   				CASE 
+	   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+	   					ELSE WRITERDEPTNAME$lang$
+	   				END WRITERDEPTNAME,
+	   				CASE 
+	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+	   					ELSE WRITERJOBTITLE$lang$
+	   				END WRITERJOBTITLE
+				FROM
+					VAPRDOINGDOCLIST
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+	   			AND
+	   				ROWNUM = 1
+		]]>
+		</select>
+	<select id="MApprovalG.getCheckAprState" parameterClass="Map" resultClass="Integer">
+		<isEqual property="mode" compareValue="APR">
+			<![CDATA[
+				SELECT
+					COUNT(DOCID)
+				FROM
+					VAPRDOINGDOCLIST
+				WHERE
+					TENANT_ID = #tenantId#
+				AND
+					COMPANYID = #companyId#
+				AND
+					DOCID = #docId#
+				AND
+					APRMEMBERSN = #aprMemberSN#
+				AND
+					APRSTATE IN ('002', '005', '000')
+			]]>
+		</isEqual>
+		<isNotEqual property="mode" compareValue="APR">
+			<![CDATA[
+				SELECT
+					COUNT(DOCID)
+				FROM
+					VENDCHAMJODOCINFO
+				WHERE
+					TENANT_ID = #tenantId#
+				AND
+					COMPANYID = #companyId#
+				AND
+					DOCID = #docId#
+				AND
+					APRMEMBERSN = #aprMemberSN#
+				AND
+					APRSTATE IN ('002', '005', '000')
+			]]>
+		</isNotEqual>
+	</select>
+</sqlMap>

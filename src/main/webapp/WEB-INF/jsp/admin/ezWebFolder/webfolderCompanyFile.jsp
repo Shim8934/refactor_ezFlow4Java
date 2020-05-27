@@ -38,6 +38,11 @@
 			var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
 			var resultErr4 = "<spring:message code='ezWebFolder.t249'/>";
 			var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
+			var _selectedCell = null;
+			var _cellInfo        = {};
+			var sortColumn = null;
+			var sortType = null;
+			var strLang43  = "<spring:message code='ezWebFolder.t308'/>";
 			
 			capacity.setFolderIdProvider(function() {
 				return "<c:out value='${folderId}'/>";
@@ -94,12 +99,52 @@
 					optionView(event.target);
 				});
 				
+				var listHeader = document.getElementsByClassName("headListClick");
+				for(var i = 0 ; i <listHeader.length; i++) {
+					listHeader[i].addEventListener("click", function(event) {
+						sortByHeader(this);
+					});
+				}
+				
 				document.getElementById("listCount").addEventListener("change", function() {
 					optionHidden();
 					pagination.setListSize(this.value);
 					refreshView();
 				});
 			});
+			
+			function sortByHeader(cell) {
+				var column = cell.getAttribute("data-column");
+				
+				if (!column) {return;}
+				
+				if (_selectedCell != null) {
+					var orderOption = cell.getAttribute("orderoption") == "DESC" ? "ASC" : "DESC";
+					cell.setAttribute("orderoption", orderOption);
+					
+					if (cell.cellIndex != _selectedCell) {
+						var lastSelectedCell = document.getElementById("BoardList_THEAD").rows[0].cells[_selectedCell];
+						lastSelectedCell.removeChild(lastSelectedCell.lastElementChild);
+						var spanElmt = document.createElement("span");
+						cell.appendChild(spanElmt);
+					}
+					
+					var spanImg       = cell.lastElementChild;
+					spanImg.className = orderOption == "DESC" ? "spanDown" : "spanUp";
+				} else {
+					cell.setAttribute("orderoption", "DESC");
+					var spanElmt       = document.createElement("span");
+					spanElmt.className = "spanDown";
+					cell.appendChild(spanElmt);
+				}
+				
+				_selectedCell = cell.cellIndex;
+				
+				var order     = cell.getAttribute("orderoption");
+				this.sortType = order;
+				this.sortColumn = column;
+				search_Set(currentPage);
+			}
 			
 			function optionHidden() {
 		 	    document.getElementById("layer_Viewpopup").style.display = "none";
@@ -160,7 +205,7 @@
 				<li><span class="icon16 icon16_delete" onclick="fileDelete();"></span></li>
 				<li><span class="icon16 icon16_refresh" onclick="refreshView();"></span></li>
 				<li id="">
-					<select id="fileTypeSelect">
+					<select id="fileTypeSelect" onchange="search_Set('1');">
 						<option value="1" selected><spring:message code='ezWebFolder.t191'/></option>
 						<option value="2"         ><spring:message code='ezWebFolder.t192'/></option>
 						<option value="3"         ><spring:message code='ezWebFolder.t193'/></option>
@@ -223,7 +268,7 @@
 			</div>
 			<div class="wfdivBttn">
 				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t123'/></span></a>
-				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t112'/></span></a>
+				<a class="webfolderBttn" style="display:none"><span><spring:message code='ezWebFolder.t112'/></span></a>
 			</div>
 		</div>
 		</div>
@@ -238,14 +283,14 @@
 					<thead id ="BoardList_THEAD">
 						<tr>
 							<th class="wfFilecheck" style="text-align: center; "><input type="checkbox"></th>
-							<th headers="ft" class="wfFileType" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
-							<th headers="fn" class="wfFileName" ><spring:message code='ezWebFolder.t156'/></th>
-							<th headers="fs" class="wfFileSize" style="text-align: center; " ><spring:message code='ezWebFolder.t157'/></th>
-							<th headers="un" class="wfFileCreator" ><spring:message code='ezWebFolder.t189'/></th>
-							<th headers="cd" class="wfFileAdminDate" ><spring:message code='ezWebFolder.t190'/></th>
-							<th headers="ud" class="wfFileAdminDate" ><spring:message code='ezWebFolder.t198'/></th>
-							<th              class="wfFilePath"><spring:message code='ezWebFolder.t199'/></th>
-							<th headers="dt" class="wfFileDownload" style="text-align: center;"><spring:message code='ezWebFolder.t200'/></th>
+							<th headers="ft" class="wfFileType		headListClick" data-column="FILETYPE_ICON" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
+							<th headers="fn" class="wfFileName		headListClick" data-column="FILE_NAME" ><spring:message code='ezWebFolder.t156'/></th>
+							<th headers="fs" class="wfFileSize		headListClick" data-column="FILE_SIZE" style="text-align: center; " ><spring:message code='ezWebFolder.t157'/></th>
+							<th headers="un" class="wfFileCreator	headListClick" data-column="CREATE_NAME1" ><spring:message code='ezWebFolder.t189'/></th>
+							<th headers="cd" class="wfFileAdminDate	headListClick" data-column="CREATE_DATE" ><spring:message code='ezWebFolder.t190'/></th>
+							<th headers="ud" class="wfFileAdminDate	headListClick" data-column="UPDATE_DATE" ><spring:message code='ezWebFolder.t198'/></th>
+							<th              class="wfFilePath		" data-column="FILE_PATH" ><spring:message code='ezWebFolder.t199'/></th>
+							<th headers="dt" class="wfFileDownload	headListClick" data-column="DOWN_COUNT" style="text-align: center;"><spring:message code='ezWebFolder.t200'/></th>
 						</tr>
 					</thead>
 				</table>

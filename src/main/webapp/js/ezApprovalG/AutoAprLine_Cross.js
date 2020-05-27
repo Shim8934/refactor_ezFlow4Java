@@ -10,6 +10,18 @@
     retvalue[2] = "R";
     retvalue[3] = "";
 
+    var docState = "";
+    switch (pDraftFlag) {
+        case "SUSIN" :
+            docState = '011';
+            break;
+        case "HABYUI" :
+            docState = '012';
+            break;
+        case "DRAFT" :
+            break;
+    }
+
     var result = "";
     $.ajax({
 		type : "POST",
@@ -22,7 +34,8 @@
 				formID   : pFormID,
 				isUsed   : type,
 				beforeDocID : beforeDocID,
-				mode     : ""
+				mode     : "",
+                docState : docState
 				},
 		success: function(xml){
 			result = xml;

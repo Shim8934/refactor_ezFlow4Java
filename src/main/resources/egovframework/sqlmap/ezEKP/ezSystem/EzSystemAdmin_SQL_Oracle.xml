@@ -37,28 +37,28 @@
 			<isNotEmpty property="search_keyword" >
 				<isEqual property="lang" compareValue="primary" >
 					<isEqual property="search_keycode" compareValue="1">
-						USERNM LIKE '%'||#search_keyword#||'%'
+						USERNM LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="2">
-						DEPTNM LIKE '%'||#search_keyword#||'%'
+						DEPTNM LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 					</isEqual>
 				</isEqual>
 				<isNotEqual property="lang" compareValue="primary">
 					<isEqual property="search_keycode" compareValue="1">
-						USERNM2 LIKE '%'||#search_keyword#||'%'
+						USERNM2 LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="2">
-						DEPTNM2 LIKE '%'||#search_keyword#||'%'
+						DEPTNM2 LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 					</isEqual>
 				</isNotEqual>
 				<isEqual property="search_keycode" compareValue="3">
-					CONNECTIP LIKE '%'||#search_keyword#||'%'
+					CONNECTIP LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 				</isEqual>
 				<isEqual property="search_keycode" compareValue="4">
-					CONNECTBROWSER LIKE '%'||#search_keyword#||'%'
+					CONNECTBROWSER LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 				</isEqual>
 				<isEqual property="search_keycode" compareValue="5">
-					CONNECTOS LIKE '%'||#search_keyword#||'%'
+					CONNECTOS LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 				</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
@@ -88,7 +88,8 @@
 	            X.CONNECTOS,
 				X.COMPANYID,
 				X.COMPANYNM,
-				X.COMPANYNM2
+				X.COMPANYNM2,
+				X.USERID
             FROM (
 				SELECT 
 			    	ROWNUM AS rnum,
@@ -103,7 +104,8 @@
 					A.CONNECTOS,
 					A.COMPANYID,
 					A.COMPANYNM,
-					A.COMPANYNM2
+					A.COMPANYNM2,
+					A.USERID
 				FROM 
 					(
 					SELECT  
@@ -118,7 +120,8 @@
 						C.CONNECTOS,
 						C.COMPANYID,
 						C.COMPANYNM,
-						C.COMPANYNM2
+						C.COMPANYNM2,
+						C.USERID
 					FROM 
 						TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
 					ON 
@@ -127,6 +130,9 @@
 						C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID#
 						$companyOracleStr$
 						<include refid="EzSystemAdminDAO.searchQuery"/>
+						<isEqual property="search_keycode" compareValue="6">
+							AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+						</isEqual>
 				    ORDER BY 
 				    	C."SEQUENCE" DESC
 					) A
@@ -150,6 +156,9 @@
 		WHERE	C.TENANT_ID = #v_tenantID# AND U.TENANT_ID = #v_tenantID# 
 		$companyOracleStr$
 		<include refid="EzSystemAdminDAO.searchQuery"/>
+		<isEqual property="search_keycode" compareValue="6">
+			AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+		</isEqual>
 	</select>
 	
 	<select id="EzSystemAdminDAO.getLoginHistNotAdmin" parameterClass="map" resultClass="ConnectionInfoVO">
@@ -491,7 +500,7 @@
 		SET 
 			COUNTRY_CODE = #countryCode#
 		WHERE 
-			TENANT_ID = #tenantId#;
+			TENANT_ID = #tenantId#
 		]]>
 	</update>
 	

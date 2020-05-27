@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
@@ -75,9 +74,6 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	private CommonUtil commonUtil;
 	
 	@Autowired
-	private EgovMessageSource egovMessageSource;
-	
-	@Autowired
 	private Properties globals;
 	
 	@Autowired
@@ -89,6 +85,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	/**
 	 * root 폴더 존재 여부 확인 - 존재하지 않을 경우 생성
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/checkRootFolder", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject checkRootFolder(@PathVariable String userId, HttpServletRequest request) {
 		LOGGER.debug("checkRootFolder started.");
@@ -434,7 +431,6 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	public JSONObject folderDelete (@PathVariable String folderId , HttpServletRequest request,@RequestBody JSONObject jsonObject) {
 		LOGGER.debug("folderDelete started");
 		JSONObject jsonObj = new JSONObject();
-		JSONObject data = new JSONObject();
 		String serverName = request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host") : "";
 //		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -738,6 +734,8 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String searchEndDate = request.getParameter("searchEndDate") 		!= null ? request.getParameter("searchEndDate") 	: "" ;
 		String searchPageCount = request.getParameter("searchPageCount") 	!= null ? request.getParameter("searchPageCount") 	: "" ;
 		String isExplorer = request.getParameter("isExplorer") 				!= null ? request.getParameter("isExplorer") 		: "" ;
+		String sortType 		= request.getParameter("sortType") 			!= null ? request.getParameter("sortType") 			: "" ;
+		String sortColumn 		= request.getParameter("sortColumn") 		!= null ? request.getParameter("sortColumn") 		: "" ;
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
 		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
@@ -834,7 +832,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			
 			fileList = service.getFileList2(folderId, userId, deptId, tenantId , comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
-					searchPageCount, pStart, pEnd, offset, primary);
+					searchPageCount, pStart, pEnd, offset, primary, sortType, sortColumn);
 			
 			LOGGER.debug("fileListSize : " + fileList.size()+ " || searchStartDate : " +searchStartDate+" || searchEndDate : "+searchEndDate );
 			
@@ -1252,8 +1250,13 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			LoginVO userInfoAdmin = commonUtil.getUserForGw(adminId, serverName);
 			
 			String folderIdTypeU = service.folderIdByUserIdAndFolderType(userId, userInfo.getTenantId());
-			folderIDList[0] = folderIdTypeU;
-			
+			if (folderIdTypeU == null){
+	            LOGGER.debug("The user folder does not exist.");
+	            result.put("status", "ok");
+	            result.put("code", 3);
+	            return result;
+	         }
+	         folderIDList[0] = folderIdTypeU;
 			
 			if (!isWebfolderAdmin(userInfoAdmin)) {
 				result.put("status", "error");

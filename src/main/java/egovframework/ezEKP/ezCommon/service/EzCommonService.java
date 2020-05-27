@@ -116,6 +116,10 @@ public interface EzCommonService {
 	public void insertPortalThemePortletInitdata() throws Exception;
 	
 	public void addJournalFormDelFlag() throws Exception;
+	
+	public void createJmochaMailCopyright() throws Exception;
+	
+	public void createJamesMailDeletedId() throws Exception;
 
 	public void updateTaskUrl() throws Exception;
 
@@ -126,6 +130,10 @@ public interface EzCommonService {
 	public void addTblPortalThemeUserIsDefault() throws Exception;
 
 	public void updateListOptionData() throws Exception;
+	
+	public void createBoardLike() throws Exception;
+	
+	public void addBoardLikeFlag() throws Exception;
 
 	public void addQuickLinkLinkOrder() throws Exception;
 	
@@ -139,11 +147,23 @@ public interface EzCommonService {
 
 	public void addMemoExtensionColumns() throws Exception;
 
+	public void addSurveyAlamColums() throws Exception;
+	
 	public void addAddJobMasterProxy() throws Exception;
 
 	public void createAttitudeAnnual() throws Exception;
 
+	public void createResourcePortlet() throws Exception;
+
+	public void insertSurveyTenantConfig() throws Exception;
+
 	public void addThemeContentLang() throws Exception;
+
+	public void insertPortletInfo() throws Exception;
+
+	public void createThemeAndPortletAuth() throws Exception;
+
+	public void addMenuAndPortletCode() throws Exception;
 
 	public List<CountryVO> getCountryInfo(Map<String, Object> map) throws Exception;
 
@@ -151,5 +171,63 @@ public interface EzCommonService {
 	
 	public void addSnMenuAuth() throws Exception;
 
-}
+	public void addBoardManageTypeColumn() throws Exception;
 
+	public void createPersonalPopupUser() throws Exception;
+
+	public boolean getPermissionGroupAccessYN (String groupId, String companyId, int tenantId, String userId, String deptId, boolean applySubDeptYN) throws Exception;
+	
+	public void addSurveyMailSentFlagColumn() throws Exception;
+	
+	public List<LoginVO> getPermissionGroupMembers (String groupId, String companyId, int tenantId, boolean applySubDeptYN) throws Exception;
+	
+	public void addSnThemeAndPortletAuth() throws Exception;
+
+	public void alterChamjoView() throws Exception;
+
+	public void addAddressFurigana() throws Exception;
+
+	public void createOpenGovTable() throws Exception;
+
+	public void addOpenGovFlag() throws Exception;
+
+	public int checkDeptId(String userID, String deptID, String tenantId);
+
+	public void createRsFavoriteTable();
+	
+	public void createUserDistributionTable();
+
+	public void insertTblTenantConfig(String configName) throws Exception;
+
+	public void addThemeAndPorteltAuthInit() throws Exception;
+	
+	public void createJmochaBigAttachDownloadLimit() throws Exception;
+	
+	public void insertMailBigSizeAttachLimit() throws Exception;
+
+	public void addIsBeforeDoc() throws Exception;
+
+	public void addBeforeDocUrl() throws Exception;
+	
+	public void addAprAttachViewOrder() throws Exception;
+	
+	public void addAprEndAttachViewOrder() throws Exception;
+	
+	public void addAprTmpAttachViewOrder() throws Exception;
+
+	public void addDocStateIntoLastLines() throws Exception;
+
+	public void addDocStateIntoLastDeptLines() throws Exception;
+	
+	public void insertUseExternalMailServerConfig() throws Exception;
+
+	public void insertReBebuOpinionCode() throws Exception;
+	
+	public void addFormAprOptionColumn() throws Exception;
+
+	public void insertAnnualScheduleTenantConfig();
+
+	public void insertHalfOffAttitudeType();
+
+	public void insertHolidayCheckTenantConfig();	
+}

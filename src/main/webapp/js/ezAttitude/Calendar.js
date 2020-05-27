@@ -235,6 +235,12 @@ function monthDate(oThisDate, TDIndex) {
 	
 	for (var i = 0; i < tempmemorial.length; i++) {
         memorial = tempmemorial[i];
+        
+        // 2020-04-03 김민성 - 윤달일 때 음력 기념일 안나타나도록 수정
+        if (lunarDate.leapMonth && memorial.solarLunar == 2) {
+        	continue;
+        }
+        
         if (uselang == "1") {
             if (i == tempmemorial.length - 1) {
             	holidayname += memorial.name;

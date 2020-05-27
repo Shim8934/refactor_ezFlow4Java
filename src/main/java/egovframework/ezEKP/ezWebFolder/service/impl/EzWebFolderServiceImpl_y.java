@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -19,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_m;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_y;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
@@ -30,7 +30,6 @@ import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.com.cmm.service.EgovFileMngUtil;
 
 @Service("EzWebFolderService_y")
 public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFolderService_y{
@@ -115,6 +114,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		LOGGER.debug("getFolderTree. userId :" + userId + ", folderType :" + folderType);
 		map.put("primary", primary);
 		map.put("tenantId", tenantId);
+		map.put("compId", compId);
 
 		if (folderType.equals("U") || folderType.equals("")) {
 			map.put("userId", userId);
@@ -274,7 +274,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			String searchFileName, String searchStartDate,
 			String searchEndDate, String searchCreateName,
 			String searchFileType, String searchPageCount, int pStart,
-			int pEnd, String offset, String primary) throws Exception {
+			int pEnd, String offset, String primary, String sortType, String sortColumn) throws Exception {
 		LOGGER.debug("getFileList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -302,6 +302,8 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("pEnd", pEnd);
 		map.put("primary", primary);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("sortType", sortType);
+		map.put("sortColumn", sortColumn);
 		
 		LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
 		
@@ -327,12 +329,36 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("idList", idList);
 		map.put("flag", flag);
 		
+		if (sortType.equals("")){
+			map.put("orderByData", ", UPDATE_DATE DESC" );
+		} else {
+			if (sortColumn.equals("CREATE_NAME") || sortColumn.equals("CREATOR_NAME")){
+				sortColumn = "CREATE_NAME1";
+			} else if (sortColumn.equals("SHARE_STATUS")){
+				sortColumn = "FILESHARE_STATUS";
+			} else if (sortColumn.equals("TARGET_PATH")){
+				sortColumn = "FILE_PATH";
+			} else if (sortColumn.equals("TARGET_SIZE")){
+				sortColumn = "FILE_SIZE";
+			} else if (sortColumn.equals("TARGET_NAME")){
+				sortColumn = "FILE_NAME";
+			}  else if (sortColumn.equals("TARGET_TYPE") || sortColumn.equals("TARGET_ICON_URL")){
+				sortColumn = "TYPE_ICON";
+			}  
+			
+			String secondSort = "";
+			secondSort = " , " + sortColumn + " " + sortType;
+			
+			if (sortColumn.equals("TYPE_ICON") && sortType.equals("DESC")){
+				secondSort = " DESC , " + sortColumn + " " + sortType;
+			}
+			
+			secondSort += ", UPDATE_DATE DESC " ;
+			map.put("orderByData", secondSort);
+		}
+		
 		if (flag.equals("1")) {
-//			if (parentId.equals("root")) {
-//				filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileListR(map);
-//			} else {
-				filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileList2(map);
-//			}
+			filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileList2(map);
 		} else {
 			filevo = (List<FileVO>) ezWebFolderDAO_y.getFileList2(map);
 		}
@@ -767,7 +793,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 			if (folderType.equals("C")) {
 				if (folderPath.equals("|" + folderVO.getFolderId() + "|")) {
-					if (folderVO.getOwnerId().equals(comId)) {
+					if (idList.contains(folderVO.getOwnerId())) {
 						status = "ok";
 					}
 				} else {
@@ -940,6 +966,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			map.put("fileSize", fileSize[i] );
 			
 			// 새로운 filePath로 경로 생성 및 db 업데이트
+			@SuppressWarnings("unused")
 			int updateResult = ezWebFolderDAO_y.updateFileRealData(map);
 			
 			// 로그 찍기

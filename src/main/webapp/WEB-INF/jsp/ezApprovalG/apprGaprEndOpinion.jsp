@@ -9,7 +9,13 @@
 	    <style>
 	    	.mainlist tr th {
 	    		border-top:0px;
-	    	}	    	
+	    	}
+			.listview {
+				width: 100%; height: 190px; overflow-x:hidden; overflow-y: AUTO;
+			}
+			#txt_OpinionContent {
+				width: 100%; height: 180px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none;
+			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -129,6 +135,7 @@
 	        }
 	        function txt_OpinionContent_onchange() { }
 	    </script>
+	    
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezApprovalG.t55'/></h1>
@@ -143,7 +150,7 @@
 	
 	    <h2 style="margin-top:10px;margin-bottom:3px" ><spring:message code='ezApprovalG.t423'/></h2>
 	
-	    <textarea id="txt_OpinionContent" name="txt_OpinionContent" class="textarea" style="width: 498px; Height: 150px; resize:none;" onfocus="return txt_OpinionContent_onfocus()" onchange="return txt_OpinionContent_onchange()"></textarea>
+	    <textarea id="txt_OpinionContent" name="txt_OpinionContent" class="textarea" onfocus="return txt_OpinionContent_onfocus()" onchange="return txt_OpinionContent_onchange()"></textarea>
 	
 	  	<div class="btnposition btnpositionNew">
 	      <a class="imgbtn" id="bbtn_OpinionAdd" ><span id="btn_OpinionAdd" onClick="return btn_OpinionAdd_onclick()" ><spring:message code='ezApprovalG.t268'/></span></a>

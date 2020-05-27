@@ -512,7 +512,12 @@
 		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
 		        }
 		        
-		        var OpenWin = window.open(requestUrl, "mail_NewInboxRule_cross", GetOpenWindowfeature(605, 580));
+		        /* 2020-05-07 홍승비 - 크로스브라우징 높이 조절 */
+		        var pHeight = 580;
+		        if (navigator.userAgent.indexOf("Chrome") != -1) {
+		        	pHeight = 584;
+		        }
+		        var OpenWin = window.open(requestUrl, "mail_NewInboxRule_cross", GetOpenWindowfeature(605, pHeight));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function New_InboxRule_Complete(newWin) {

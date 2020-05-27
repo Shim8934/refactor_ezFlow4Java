@@ -41,7 +41,7 @@
 				alert("<spring:message code='ezApprovalG.csj06'/>");
 			} else if (parseInt(target.value) >= 9) {
 				alert("<spring:message code='ezApprovalG.csj08'/>");
-			} else if (parseInt(target.value) < 2) {
+			} else if (parseInt(target.value) < 1) {
 				alert("<spring:message code='ezApprovalG.csj07'/>");
 			} else {
 				resultVal = true;
@@ -119,7 +119,7 @@
 			<tr>
 				<th><spring:message code='ezApprovalG.csj09'/></th>
 				<td>
-					<spring:message code='ezApprovalG.csj11'/> : 2 ,
+					<spring:message code='ezApprovalG.csj11'/> : 1 ,
 					<spring:message code='ezApprovalG.csj10'/> : 8
 				</td>
 			</tr>

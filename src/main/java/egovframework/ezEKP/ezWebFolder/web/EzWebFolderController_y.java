@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,9 +27,6 @@ public class EzWebFolderController_y {
 
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties config;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderController_y.class);
 	
@@ -139,6 +135,8 @@ public class EzWebFolderController_y {
 		param.put("searchCreateName", orElse(request.getParameter("searchCreateName")	, ""));
 		param.put("searchFileType"	, orElse(request.getParameter("searchFileType")		, ""));
 		param.put("searchPageCount"	, orElse(request.getParameter("searchPageCount")	, ""));
+		param.put("sortType"		, orElse(request.getParameter("sortType")			, ""));
+		param.put("sortColumn"		, orElse(request.getParameter("sortColumn")			, ""));
 		
 		LOGGER.debug("folderId : " + folderId);
 		LOGGER.debug(	"listCount : " + request.getParameter("listCount") 
@@ -284,7 +282,6 @@ public class EzWebFolderController_y {
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderId = request.getParameter("folderId");
-		String[] fileIDList = folderId.split(",");
 		
 		JSONObject jsonObj 	= new JSONObject();
 		if ( folderId == null ) {

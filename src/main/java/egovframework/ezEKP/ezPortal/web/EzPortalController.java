@@ -43,6 +43,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
@@ -132,6 +133,10 @@ public class EzPortalController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzPollService")
 	private EzPollService ezPollService;
+	
+	@Resource(name = "EzBoardController")
+	private EzBoardController ezBoardController;
+	
 	/**
 	 * 포탈 메인 화면 호출 함수
 	 */
@@ -1212,7 +1217,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
 		
 		//새로고침 시간 컨피그화
-		String refreshSecond = config.getProperty("refreshSecond");
+		// String refreshSecond = config.getProperty("refreshSecond");
 		
 		boolean checkBrowser;
 		if (req.getHeader("User-Agent").indexOf("Trident") < 0 && req.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
@@ -1247,6 +1252,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		moduleList.put("/ezCircular/circularIndex.do", "circular");
 //		moduleList.put("/ezJournal/journalMain.do", "journal");
 		
+		@SuppressWarnings("unused")
 		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), "");
 		
 		Calendar cal = Calendar.getInstance();
@@ -1328,6 +1334,13 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("workspace author: " + userInfo.getId() + " " + hasWorkspace.toString());		
 		model.addAttribute("hasWorkspace", hasWorkspace);
 		
+		if (hasWorkspace) {
+			String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", userInfo.getTenantId());
+			String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", userInfo.getTenantId());
+			model.addAttribute("workspaceHostUrl", workspaceHostUrl);
+			model.addAttribute("workspaceContextRootUrl", workspaceContextRootUrl);
+		}
+
 		logger.debug("wpTotalSection ended");
 		
 		return "/ezPortal/portalWpTotalSection";
@@ -1872,7 +1885,11 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("dMaxCount", dMaxCount);
 			model.addAttribute("list", list);
 		} else {
+			String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", userInfo.getTenantId());
+			String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", userInfo.getTenantId());
 			model.addAttribute("userID", userInfo.getId());
+			model.addAttribute("workspaceHostUrl", workspaceHostUrl);
+			model.addAttribute("workspaceContextRootUrl", workspaceContextRootUrl);
 		}
 		model.addAttribute("hasWorkspace", hasWorkspace);
 
@@ -2855,6 +2872,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String parentPageID = "";
 		String pageID = "";
 		String gubunFlag = "";
+		@SuppressWarnings("unused")
 		String newMyPortalPage = "";
 		//String newMyPortalPageList = "";
 		String searchNewMyPortalPageList = "";
@@ -4190,25 +4208,37 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String boardID = (String) paramData.get("boardID");
-		String userID = userInfo.getId();
+		String itemID = (String) paramData.get("itemID");
+		
+/*		String userID = userInfo.getId();
 		String deptID = userInfo.getDeptID();
-		int tenantID = userInfo.getTenantId();
+		int tenantID = userInfo.getTenantId();*/
 		String readAuthor = "";
 
+		/* 2020-01-23 홍승비 - 전체관리자인 경우에만 모든 읽기권한 true로 리턴 */
 		// 관리자 권한인 경우 readAuthor는 true로 return
-		if(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+		if(userInfo.getRollInfo().indexOf("c=1") > -1) {
 			readAuthor = "true";
 			
 			return readAuthor;
 		}			
 		
+		boolean readCheck = ezBoardController.accessCheck(boardID, itemID, "GENERAL", userInfo);
+		logger.debug("totalSearch readCheck : " + readCheck);
+		
+		if (readCheck) {
+			readAuthor = "true";
+		} else {
+			readAuthor = "false";
+		}
+		
 		// 유저 권한이 부서 권한보다 우선시 된다.
 		// 유저 권한이 없을 경우 부서 권한을 찾아보기.
-		readAuthor = ezPortalService.chkBoardReadAuthor(boardID, userID, tenantID);
+		/*readAuthor = ezPortalService.chkBoardReadAuthor(boardID, userID, tenantID);
 		
 		if(readAuthor.equalsIgnoreCase("")) {
 			readAuthor = ezPortalService.chkBoardReadAuthor(boardID, deptID, tenantID);
-		}
+		}*/
 		
 		logger.debug("chkBoardReadAuthor is ended.");
 		return readAuthor;

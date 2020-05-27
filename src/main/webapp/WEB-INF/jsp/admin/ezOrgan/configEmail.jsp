@@ -9,6 +9,10 @@
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
+			var userId = "${userId}";
+			var companyId = "${companyId}";
+			var configEmailType = "${configEmailType}";
+			
 			function Delete_Address() {
 			    var index = document.getElementById("ListEmail").selectedIndex;
 			    
@@ -103,8 +107,23 @@
 			    }
 			}
 		
-			function Add_Address() {
-				var email = prompt("<spring:message code='ezOrgan.t151' />", "");
+			function Add_Address_save_Complete() {
+		        DivPopUpHidden();
+		    }
+			
+			function Add_Address_save() {
+				var heigth = window.screen.availHeight;
+				var width = window.screen.availWidth;
+				var left = (width - 620) / 2;
+				var top = (heigth - 425) / 2;
+				var szHref = "/admin/ezOrgan/configEmailAdd.do?id=" + encodeURIComponent(userId) + "&companyId=" + companyId;
+				var strFeature = "status:no;dialogHeight: 155px;dialogWidth: 450px;help: no;resizable:yes";
+				     
+				DivPopUpShow(450, 155, szHref);
+			}	
+			
+			function Add_Address(email) {
+				//var email = prompt("<spring:message code='ezOrgan.t151' />", "");
 				
 				if (email == null) {
 					return;
@@ -157,6 +176,7 @@
 				if (document.getElementById("CheckPolicy").checked == true)
 					if (confirm("Email" + "<spring:message code='ezOrgan.t156' />"))
 						document.getElementById("CheckPolicy").checked = false; */
+				return "OK";
 			}
 			
 			function Check_ID(pValue) {
@@ -216,6 +236,8 @@
 				}
 		
 				objRoot = createNodeAndInsertText(xmlDom, objNode, "PRIMARYMAIL", primarymail);
+				objRoot = createNodeAndInsertText(xmlDom, objNode, "TYPE", configEmailType);
+				objRoot = createNodeAndInsertText(xmlDom, objNode, "COMPANYID", companyId);
 				
 		        /* 2016-12-19 이효민 : 사용하지 않음.
 		        if (document.getElementById("CheckPolicy").checked == true)
@@ -260,11 +282,15 @@
 				</tr>
 			</table>
 			<div class="btnpositionNew">
-				<a class="imgbtn" onClick="Add_Address()"><span><spring:message code='ezOrgan.t164' /></span></a>
+				<a class="imgbtn" onClick="Add_Address_save()"><span><spring:message code='ezOrgan.t164' /></span></a>
 				<a class="imgbtn" onClick="Delete_Address()"><span><spring:message code='ezOrgan.t165' /></span></a>
 				<a class="imgbtn" style="WIDTH:auto" onClick="Set_Primary()"><span>Primary<spring:message code='ezOrgan.t166' /></span></a>
 				<a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezOrgan.t167' /></span></a>
 			</div>
 		</form>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	        <iframe src="" style="border:none;" id="iFrameLayer"></iframe>
+	    </div>
 	</body>
 </html>
