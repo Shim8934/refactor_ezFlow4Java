@@ -2270,7 +2270,6 @@
 			BEFOREDOCURL VARCHAR2(255 CHAR)
 	</statement>
 	
-<<<<<<< HEAD
 	<select id="EzCommonDAO.checkPwPolicy" resultClass="String">
 		<![CDATA[
 			SELECT 
