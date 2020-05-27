@@ -1170,6 +1170,25 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public void createUserDistributionTable() {
+		Map<String, String> map = new HashMap<String, String>(){{
+			put("EzCommonDAO.checkUserDlTable", "createUserDlTable");
+			put("EzCommonDAO.checkUserDlMemberTable", "createUserDlMemberTable");
+			put("EzCommonDAO.checkUserDlApplyTable", "createUserDlApplyTable");
+		}};
+		
+		for (String key : map.keySet()) {
+			try {
+				select(key);
+			} catch (Exception e) {
+				String keyVal = map.get(key);
+				logger.debug(keyVal);
+				update("EzCommonDAO." + keyVal);
+			}
+
+		}
+	}
+			
 	public void insertTblTenantConfig(Map<String, Object> map) {
 		try {
 			if (getTenantConfig(map) == null) {throw new Exception(); }
@@ -1236,6 +1255,25 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void createJmochaBigAttachDownloadLimit() throws Exception {
+		try {
+			select("EzCommonDAO.checkJmochaBigAttachDownloadLimit");
+		} catch (Exception e) {
+			logger.debug("jmocha_bigattach_download_limit doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createJmochaBigAttachDownloadLimit");
+		}
+	}
+
+	public void insertMailBigSizeAttachLimit() throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.checkMailBigSizeAttachLimitTenantConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("mail big size attach limit tenant config doesn't exist. insert data...");
+			update("EzCommonDAO.insertMailBigSizeAttachLimit");
+		}
+	}
+		
 	public void addIsBeforeDoc() throws Exception {
 		try {
 			select("EzCommonDAO.checkAddIsBeforeDoc");
@@ -1285,7 +1323,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.updateAprTmpAttachViewOrder");
 		}
 	}
-	
+
 	public void insertUseExternalMailServerConfig(Map<String, Object> map) throws Exception {
 		String propertyValue = (String) select("EzCommonDAO.checkMailTenantConfig");
 		
@@ -1338,6 +1376,44 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		if (companyId == null) {
 			logger.debug("attitude_type 'half off' doesn't exist. insert data...");
 			insert("EzCommonDAO.insertHalfOffAttitudeType",map);
+		}
+	}
+
+	public void insertHolidayCheckTenantConfig(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkHolidayCheckTenantConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("useHolidayCheckYN tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertHolidayCheckTenantConfig",map);
+		}
+	}
+
+	public void addDocStateIntoLastLines() {
+		try {
+			select("EzCommonDAO.checkDocStateIntoLastLines");
+		} catch (Exception e) {
+			logger.debug("TBL_LASTDEPTLINE docState column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.updateDocStateIntoLastLines");
+		}
+	}
+
+	public void addDocStateIntoLastDeptLines() {
+		try {
+			select("EzCommonDAO.checkDocStateIntoLastDeptLines");
+		} catch (Exception e) {
+			logger.debug("TBL_LASTDEPTLINE docState column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.updateDocStateIntoLastDeptLines");
+		}
+	}
+
+	public void insertAlternateHolidayAttitudeType(Map<String, Object> map) {
+		String companyId = (String) select("EzCommonDAO.checkAlternateHolidayAttitudeTypeForCompany", map);
+
+		if (companyId == null) {
+			logger.debug("attitude_type 'alternate holiday' doesn't exist. insert data...");
+			insert("EzCommonDAO.insertAlternateHolidayAttitudeType",map);
 		}
 	}
 }

@@ -4852,4 +4852,18 @@ public class EzAttitudeController {
 		
 		return totalAnnual;
 	}
+	
+	/**
+	 * 휴일 출/퇴근 체크 컨피그 조회
+	 */
+	@RequestMapping(value="/ezAttitude/holidayCheck.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String getHolidayCheckConfig(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		LOGGER.debug("getHolidayCheckConfig started.");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String useHolidayCheckYN = ezCommonService.getTenantConfig("useHolidayCheckYN", userInfo.getTenantId());
+		
+		LOGGER.debug("getHolidayCheckConfig ended.");
+		return useHolidayCheckYN;
+	}
 }

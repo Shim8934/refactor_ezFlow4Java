@@ -3571,7 +3571,7 @@ function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
         createNodeAndInsertText(xmlpara, objNode, "pUserDeptName", ConvMakeXMLString(arr_userinfo[15]));
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
-        createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
+        createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", ConvMakeXMLString(arr_userinfo[16]));
         createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
         createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", isBeforeDoc);
         createNodeAndInsertText(xmlpara, objNode, "BEFOREDOCURL", beforeDocURL);
@@ -3600,6 +3600,7 @@ function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
 function UpdateLineHistory() {
 	var result = "";
     
+	/* 2020-05-22 홍승비 - 사용자 부서에 특수문자 허용 + arr_userinfo[] 배열의 값은 c:out 태그로 저장하므로, DB 저장 시 역으로 특수문자 인코딩 진행 */
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -3611,11 +3612,11 @@ function UpdateLineHistory() {
 			userName : arr_userinfo[11],
 			userJobTitle : arr_userinfo[13],
 			userDeptID : arr_userinfo[4],
-			userDeptName : arr_userinfo[15],
+			userDeptName : ConvMakeXMLString(arr_userinfo[15]),
 			chkFlag : "CHECK",
 			userName2 : arr_userinfo[12],
 			userJobTitle2 : arr_userinfo[14],
-			userDeptName2 : arr_userinfo[16],
+			userDeptName2 : ConvMakeXMLString(arr_userinfo[16]),
 			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){

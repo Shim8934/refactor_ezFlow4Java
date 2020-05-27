@@ -26,34 +26,33 @@
 					document.getElementById("PrimaryTimeZone").value = "235|+09:00";
 				}
 				
+				parameterTableSetting();
 			}
+			
+			function parameterTableSetting() {
+				$("#parameterTable tr[class='menuTit']").each(function(i, e) { 
+					var thisEle = $(e);
+					var TitMenuName = thisEle.attr("data-menuName");
+					var TitTrSize = $("#parameterTable tr[data-name=" + TitMenuName + "]").size();
+					thisEle.children("th:first-child").attr("rowspan", TitTrSize + 1);
+				});
+				
+				$("#parameterTable").css("opacity","1");
+			} 
 			
 			function update_Sys_Param() {
 				
 				//checkUseSession();
 				
-				var paramArray
-					= [
-						{ name : "BigSizeMailAttachDelDay", value : document.getElementById("BigSizeMailAttachDelDay").value.trim() },
-						{ name : "totBigSizeMailAttachLimit", value : document.getElementById("totBigSizeMailAttachLimit").value.trim() },
-						{ name : "MailAttachLimit", value : document.getElementById("MailAttachLimit").value.trim() },				
-						{ name : "ExpirePassPeriod", value : document.getElementById("ExpirePassPeriod").value.trim() },
-						{ name : "MaxAllowedCountOfLoginFail", value : document.getElementById("MaxAllowedCountOfLoginFail").value.trim() },				
-						{ name : "INDIVIDUALMAILUSER", value : document.getElementById("INDIVIDUALMAILUSER").value.trim() },
-						{ name : "IS_READ_DELETE", value : document.getElementById("IS_READ_DELETE").value.trim() },
-						{ name : "PrimaryLang", value : document.getElementById("PrimaryLang").value.trim() },
-						{ name : "PrimaryTimeZone", value : document.getElementById("PrimaryTimeZone").value.trim() },
-						{ name : "USE_FileExtension", value : document.getElementById("USE_FileExtension").value.trim() },
-						{ name : "LicenseKey", value : document.getElementById("LicenseKey").value.trim() },
-						{ name : "Use_FromAddress", value : document.getElementById("Use_FromAddress").value.trim() },
-						{ name : "USE_HTMLMODE", value : document.getElementById("Use_HTMLMode").value.trim() },
-						{ name : "editorFontStyle", value : editorFontStyle },
-						{ name : "useAllUserOldMailDeletePeriod", value : useAllUserOldMailDeletePeriod },
-						{ name : "useSession", value : document.getElementById("useSession").value.trim() },
-						{ name : "useSessionMobile", value : document.getElementById("useSessionMobile").value.trim() },
-						{ name : "useMailConfirm", value : document.getElementById("use_MailConfirm").value.trim() },
-						{ name : "usePortalAutoRefreshInterval", value : document.getElementById("usePortalAutoRefreshInterval").value.trim() }
-					  ];
+				var paramArray = [];
+				$("#parameterTable *[data-paramId]").each(function(i, e) { 
+					var paramObj = {
+						name : e.getAttribute("data-paramId"),
+						value : e.value.trim()
+					}
+					
+					paramArray.push(paramObj);
+				});
 				
 				// 파라미터 체크로직 인덱스가 아닌 이름으로 찾도록 수정. 2020-03-04 홍대표.
 				if(!checkParamValid(paramArray)) {
@@ -85,13 +84,11 @@
 			}
 			
 			function checkUseSession() {
-				
 				$.ajax({
 					type : "GET",
 					url : "/admin/ezSystem/checkUseSession.do",
 					dataType: "json",
-					success : function(result) {
-					}
+					success : function(result) {}
 				});
 			}
 			
@@ -100,6 +97,7 @@
 					var name = paramArray[i].name;
 					var value = paramArray[i].value;
 					var isNumber = value.match(/^\d+$/);
+					var alertMsg;
 					
 					if (!isNumber) {
 						var errFlag = true;
@@ -131,6 +129,12 @@
 							case "usePortalAutoRefreshInterval" :
 								alertMsg = "<spring:message code='ezSystem.yej01'/>: <spring:message code='ezEmail.t99000066'/>";
 								break;
+							case "MailBigSizeAttachLimitCount" :
+								alertMsg = "<spring:message code='ezEmail.hdp01'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							case "MailBigSizeAttachDownloadLimitCount" :
+								alertMsg = "<spring:message code='ezEmail.hdp02'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
 							default :
 								errFlag = false;
 						}
@@ -140,6 +144,11 @@
 							return false;
 						}
 					}
+					
+					if(document.getElementById("MailBigSizeAttachLimitCount").value > 20) {
+						alert("<spring:message code='ezEmail.hdp01'/>: <spring:message code='ezEmail.hdp06'/>");
+						return false;
+					}
 				}
 				return true;
 			}
@@ -147,20 +156,26 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code='main.kms1'/></h1>
-	    <table class="content">
+	    <table class="content" id="parameterTable" style="opacity:0;">
+	    	<thead>
+	    		<tr>
+	    			<th></th>
+	    			<th><spring:message code="main.kms1"/></th>
+	    			<th><spring:message code="main.kms3"/></th>
+	    		</tr>
+	    	</thead>
 	        <tbody>
-	            <tr><th><spring:message code="main.kms1"/></th><th><spring:message code="main.kms3"/></th></tr>
-	            <tr><th><spring:message code="ezSystem.lsh001"/></th><td><input id="useSession" minlength="1" maxLength="4" type="text" value="<c:out value='${configMap.useSession}'/>"> (<spring:message code="ezSystem.lsh002"/>)</td></tr>
-	            <tr><th><spring:message code="ezSystem.ksaMobileSession"/></th><td><input id="useSessionMobile" minlength="1"  maxLength="4" type="text" value="<c:out value='${configMap.useSessionMobile}'/>"> (<spring:message code="ezSystem.lsh002"/>)</td></tr>
-	            <tr <c:if test="${useExternalMailServer == 'YES'}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0001"/></th><td><input id="BigSizeMailAttachDelDay" maxlength="3" type="text" value="<c:out value='${configMap.BigSizeMailAttachDelDay}'/>"> (<spring:message code="ezSystem.x0010"/>)</td></tr>          
-	            <tr <c:if test="${useExternalMailServer == 'YES'}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0002"/></th><td><input id="totBigSizeMailAttachLimit" maxlength="4" type="text" value="<c:out value='${configMap.totBigSizeMailAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>, <spring:message code="ezSystem.x0019"/>)</td></tr>
-	            <tr <c:if test="${useExternalMailServer == 'YES'}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0003"/></th><td><input id="MailAttachLimit" maxlength="3" type="text" value="<c:out value='${configMap.MailAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>)</td></tr>                              
-	            <tr <c:if test="${isDotNetAdmin == true}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0005"/></th><td><input id="ExpirePassPeriod" maxlength="3" type="text" value="<c:out value='${configMap.ExpirePassPeriod}'/>"> (<spring:message code="ezSystem.x0010"/>, <spring:message code="ezSystem.x0014"/>)</td></tr>
-	            <tr <c:if test="${isDotNetAdmin == true}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0038"/></th><td><input id="MaxAllowedCountOfLoginFail" maxlength="4" type="text" value="<c:out value='${configMap.MaxAllowedCountOfLoginFail}'/>"> (<spring:message code="ezSystem.x0014"/>)</td></tr>            
-	            <tr <c:if test="${useExternalMailServer == 'YES'}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0006"/></th><td><input id="INDIVIDUALMAILUSER" maxlength="3" type="text" value="<c:out value='${configMap.INDIVIDUALMAILUSER}'/>"> (<spring:message code="ezSystem.x0015"/>)</td></tr>
-	            <tr <c:if test="${useExternalMailServer == 'YES'}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0007"/></th><td><select id="IS_READ_DELETE"><option <c:if test="${configMap.IS_READ_DELETE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezSystem.hsb01"/></option><option <c:if test="${configMap.IS_READ_DELETE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezSystem.hsb02"/></option></select></td></tr>
-	            <tr><th><spring:message code="ezSystem.x0008"/></th><td><select id="PrimaryLang" style="display:none;"><option <c:if test="${configMap.PrimaryLang == '1'}">selected="selected"</c:if> value="1"><spring:message code="ezPersonal.s81"/></option><option <c:if test="${configMap.PrimaryLang == '3'}">selected="selected"</c:if> value="3"><spring:message code="ezPersonal.s84"/></option></select>	
-	           			<select id="PrimaryTimeZone">
+	        	<!-- 통합 -->
+	        	<tr class="menuTit" data-MenuName="common">
+	        		<th><spring:message code="ezSystem.x0041" /> </th>
+	        	</tr>
+	        	<tr data-name="common">
+	        		<th><spring:message code="ezSystem.lsh001"/> </th>
+	        		<td><input data-paramId="useSession" Id="useSession" minlength="1" maxLength="4" type="text" value="<c:out value='${configMap.useSession}'/>"> (<spring:message code="ezSystem.lsh002"/>)</td>
+	        	</tr>
+	        	<tr data-name="common"><th><spring:message code="ezSystem.ksaMobileSession"/></th><td><input data-paramId="useSessionMobile" Id="useSessionMobile" minlength="1"  maxLength="4" type="text" value="<c:out value='${configMap.useSessionMobile}'/>"> (<spring:message code="ezSystem.lsh002"/>)</td></tr>
+	        	<tr data-name="common"><th><spring:message code="ezSystem.x0008"/></th><td><select data-paramId="PrimaryLang" Id="PrimaryLang" style="display:none;"><option <c:if test="${configMap.PrimaryLang == '1'}">selected="selected"</c:if> value="1"><spring:message code="ezPersonal.s81"/></option><option <c:if test="${configMap.PrimaryLang == '3'}">selected="selected"</c:if> value="3"><spring:message code="ezPersonal.s84"/></option></select>	
+	           			<select data-paramId="PrimaryTimeZone" Id="PrimaryTimeZone">
          					<option value="000|-12:00">(GMT-12:00) <spring:message code='ezPersonal.s5'/></option>
          					<option value="001|-11:00">(GMT-11:00) <spring:message code='ezPersonal.s6'/></option>
          					<option value="002|-10:00">(GMT-10:00) <spring:message code='ezPersonal.s7'/></option>
@@ -262,16 +277,13 @@
 	       				</select>
 					</td>
 				</tr>
-	            <tr><th><spring:message code="ezSystem.x0009"/></th><td><input id="USE_FileExtension" type="text" value="<c:out value='${configMap.USE_FileExtension}'/>"> (<spring:message code="ezSystem.x0012"/>, <spring:message code="ezSystem.x0013"/>: jpg,doc,xls)</td></tr>
-	            <tr><th><spring:message code="ezSystem.x0016"/></th><td><input id="LicenseKey" maxlength="200" type="text" value="<c:out value='${configMap.LicenseKey}'/>" style="width:40%" /> (<spring:message code="ezSystem.x0017"/>: ${licensedUserCount}, <spring:message code="ezSystem.x0018"/>: ${userCount})</td></tr>
-	            <tr <c:if test="${useExternalMailServer == 'YES'}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0020"/></th><td><select id="Use_FromAddress"><option <c:if test="${configMap.Use_FromAddress == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.Use_FromAddress == null or configMap.Use_FromAddress == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
-	            <tr><th><spring:message code="ezSystem.lhj1"/></th><td><select id="Use_HTMLMode"><option <c:if test="${configMap.USE_HTMLMODE == null or configMap.USE_HTMLMODE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.USE_HTMLMODE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
-
-
-				<c:if test="${configMap.PrimaryLang == '1' and configMap.editorFontStyle != null}">
-	            	<tr>
+	        	<tr data-name="common"><th><spring:message code="ezSystem.x0009"/></th><td><input data-paramId="USE_FileExtension" Id="USE_FileExtension" type="text" value="<c:out value='${configMap.USE_FileExtension}'/>"> (<spring:message code="ezSystem.x0012"/>, <spring:message code="ezSystem.x0013"/>: jpg,doc,xls)</td></tr>
+	        	<tr data-name="common"><th><spring:message code="ezSystem.x0016"/></th><td><input data-paramId="LicenseKey" Id="LicenseKey" maxlength="200" type="text" value="<c:out value='${configMap.LicenseKey}'/>" style="width:40%" /> (<spring:message code="ezSystem.x0017"/>: ${licensedUserCount}, <spring:message code="ezSystem.x0018"/>: ${userCount})</td></tr>
+	        	<tr data-name="common"><th><spring:message code="ezSystem.lhj1"/></th><td><select data-paramId="Use_HTMLMode" Id="Use_HTMLMode"> <option <c:if test="${configMap.USE_HTMLMODE == null or configMap.USE_HTMLMODE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.USE_HTMLMODE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
+	        	<c:if test="${configMap.PrimaryLang == '1' and configMap.editorFontStyle != null}">
+	            	<tr data-name="common">
 		            	<th><spring:message code="ezSystem.lhm1"/></th>
-		            	<td>
+		            	<td><input type="hidden" data-paramId="editorFontStyle" Id="editorFontStyle"/>
 		            		<select id="editorFontFamily">
 		            			<c:forEach items="${defaultFontFamilyList}" var="item">
 		            				<option value="${item.trim()}">${item.trim()}</option>
@@ -292,36 +304,59 @@
 		            	editorFontFamily.value = editorFontStyle.split("|")[0];
 		            	editorFontSize.value = editorFontStyle.split("|")[1];
 		            	
-		            	editorFontFamily.addEventListener("change", function () {editorFontStyle = document.getElementById("editorFontFamily").value + "|" + document.getElementById("editorFontSize").value;});
-		            	editorFontSize.addEventListener("change", function () {editorFontStyle = document.getElementById("editorFontFamily").value + "|" + document.getElementById("editorFontSize").value;});
+		            	editorFontFamily.addEventListener("change", function () {editorFontStyle = document.getElementById("editorFontFamily").value + "|" + document.getElementById("editorFontSize").value; document.getElementById("editorFontStyle").value = editorFontStyle; });
+		            	editorFontSize.addEventListener("change", function () {editorFontStyle = document.getElementById("editorFontFamily").value + "|" + document.getElementById("editorFontSize").value; document.getElementById("editorFontStyle").value = editorFontStyle; });
 		            </script>
 		    	</c:if>
+		    	<tr data-name="common"><th><spring:message code="ezSystem.x0003"/></th><td><input data-paramId="MailAttachLimit" id="MailAttachLimit" maxlength="3" type="text" value="<c:out value='${configMap.MailAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>)</td></tr>                              
+		        <tr data-name="common"><th><spring:message code="ezSystem.x0005"/></th><td><input data-paramId="ExpirePassPeriod" id="ExpirePassPeriod" maxlength="3" type="text" value="<c:out value='${configMap.ExpirePassPeriod}'/>"> (<spring:message code="ezSystem.x0010"/>, <spring:message code="ezSystem.x0014"/>)</td></tr>
+		        <tr data-name="common"><th><spring:message code="ezSystem.x0038"/></th><td><input data-paramId="MaxAllowedCountOfLoginFail" id="MaxAllowedCountOfLoginFail" maxlength="4" type="text" value="<c:out value='${configMap.MaxAllowedCountOfLoginFail}'/>"> (<spring:message code="ezSystem.x0014"/>)</td></tr>            
 		    	
-				<c:if test="${useAllUserOldMailDelete eq 'YES' and useExternalMailServer eq 'NO'}">
-			    	<tr>
-						<th><spring:message code="ezSystem.kyj3" /></th>
-						<td>
-							<input id="useAllUserOldMailDeletePeriod" maxlength="3" type="text" value="<c:out value='${useAllUserOldMailDeletePeriod}'/>"> (<spring:message code="ezSystem.kyj4"/>, <spring:message code="ezSystem.kyj5"/>)
-						</td>
-					</tr>
-					<script>
-						var mailDeletePeriod = document.getElementById("useAllUserOldMailDeletePeriod");
-						
-						mailDeletePeriod.addEventListener("change", function () {
-							useAllUserOldMailDeletePeriod = document.getElementById("useAllUserOldMailDeletePeriod").value;
-						});
-					</script>
-				</c:if>
-		    	<tr <c:if test="${useExternalMailServer == 'YES'}">style="display:none;"</c:if>>
-		    		<th><spring:message code="ezSystem.x0040"/></th>
-		    		<td><select id="use_MailConfirm"><option <c:if test="${configMap.useMailConfirm == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.useMailConfirm == null or configMap.useMailConfirm == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td>
-		    	</tr>
-		    	<tr>
+	        	<!-- 포탈 -->
+		    	<tr class="menuTit" data-MenuName="portal"><th><spring:message code="ezSystem.x0042" /></th></tr>
+				<tr data-name="portal">
 					<th><spring:message code="ezSystem.yej01" /></th>
 					<td>
-						<input id="usePortalAutoRefreshInterval" maxlength="3" type="text" value="<c:out value='${usePortalAutoRefreshInterval}'/>"> (<spring:message code="ezSystem.yej02"/>)
+						<input data-paramId="usePortalAutoRefreshInterval" Id="usePortalAutoRefreshInterval" maxlength="3" type="text" value="<c:out value='${usePortalAutoRefreshInterval}'/>"> (<spring:message code="ezSystem.yej02"/>)
 					</td>
 				</tr>
+				
+	        	<!-- 메일 -->
+	        	<c:if test="${useExternalMailServer != 'YES'}">
+		        	<tr class="menuTit" data-MenuName="mail"><th><spring:message code="ezSystem.x0043" /></th></tr>
+		            <tr data-name="mail"><th><spring:message code="ezSystem.x0001"/></th><td><input data-paramId="BigSizeMailAttachDelDay" id="BigSizeMailAttachDelDay" maxlength="3" type="text" value="<c:out value='${configMap.BigSizeMailAttachDelDay}'/>"> (<spring:message code="ezSystem.x0010"/>)</td></tr>          
+		            <tr data-name="mail"><th><spring:message code="ezSystem.x0002"/></th><td><input data-paramId="totBigSizeMailAttachLimit" id="totBigSizeMailAttachLimit" maxlength="4" type="text" value="<c:out value='${configMap.totBigSizeMailAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>, <spring:message code="ezSystem.x0019"/>)</td></tr>
+		            <tr data-name="mail"><th><spring:message code="ezSystem.x0006"/></th><td><input data-paramId="INDIVIDUALMAILUSER" id="INDIVIDUALMAILUSER" maxlength="3" type="text" value="<c:out value='${configMap.INDIVIDUALMAILUSER}'/>"> (<spring:message code="ezSystem.x0015"/>)</td></tr>
+		            <tr data-name="mail"><th><spring:message code="ezSystem.x0007"/></th><td><select data-paramId="IS_READ_DELETE" id="IS_READ_DELETE"><option <c:if test="${configMap.IS_READ_DELETE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezSystem.hsb01"/></option><option <c:if test="${configMap.IS_READ_DELETE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezSystem.hsb02"/></option></select></td></tr>
+		            <tr data-name="mail"><th><spring:message code="ezSystem.x0020"/></th><td><select data-paramId="Use_FromAddress" id="Use_FromAddress"><option <c:if test="${configMap.Use_FromAddress == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.Use_FromAddress == null or configMap.Use_FromAddress == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
+					<c:if test="${useAllUserOldMailDelete eq 'YES'}">
+				    	<tr>
+							<th><spring:message code="ezSystem.kyj3" /></th>
+							<td>
+								<input data-paramId="useAllUserOldMailDeletePeriod" id="useAllUserOldMailDeletePeriod" maxlength="3" type="text" value="<c:out value='${useAllUserOldMailDeletePeriod}'/>"> (<spring:message code="ezSystem.kyj4"/>, <spring:message code="ezSystem.kyj5"/>)
+							</td>
+						</tr>
+						<script>
+							var mailDeletePeriod = document.getElementById("useAllUserOldMailDeletePeriod");
+							
+							mailDeletePeriod.addEventListener("change", function () {
+								useAllUserOldMailDeletePeriod = document.getElementById("useAllUserOldMailDeletePeriod").value;
+							});
+						</script>
+					</c:if>
+			    	<tr data-name="mail">
+			    		<th><spring:message code="ezSystem.x0040"/></th>
+			    		<td><select data-paramId="useMailConfirm" id="use_MailConfirm"><option <c:if test="${configMap.useMailConfirm == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.useMailConfirm == null or configMap.useMailConfirm == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td>
+			    	</tr>
+			    	<tr data-name="mail">
+			    		<th><spring:message code="ezEmail.hdp01"/></th>
+			    		<td><input data-paramId="MailBigSizeAttachLimitCount" id="MailBigSizeAttachLimitCount" maxlength="2" type="text" value="<c:out value='${configMap.MailBigSizeAttachLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td>
+			    	</tr>
+	            	<tr data-name="mail">
+	            		<th><spring:message code="ezEmail.hdp02"/></th>
+	            		<td><input data-paramId="MailBigSizeAttachDownloadLimitCount" id="MailBigSizeAttachDownloadLimitCount" maxlength="5" type="text" value="<c:out value='${configMap.MailBigSizeAttachDownloadLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td>
+	            	</tr>
+		    	</c:if>
 	        </tbody>
 	    </table> 
 	    <div class="btnpositionJsp">

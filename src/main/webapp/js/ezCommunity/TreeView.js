@@ -672,14 +672,22 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
         else
             objSpan.style.color = eval(preSelectID).getAttribute("DATA4", "0");
     }
-
+    
     if (pNodeID != "" && pNodeID != "undefined") {
         var objSpan = document.getElementById("spn_" + pNodeID);
         objSpan.className = TreeClasses["selected"];
 
-        if (objSpan.getAttribute("style", "") != "")
+        if (objSpan.getAttribute("style", "") != "") {
             objSpan.removeAttribute("style");
-
+        }
+        
+        /* 2020-05-25 홍승비 - 게시판 클릭 시 색상 유지되도록 수정 */
+        var boardColor = document.getElementById(pNodeID).getAttribute("DATA4");
+        if (boardColor != "" && boardColor != null) {
+        	 // 상단 코드에서 기존 style을 초기화하므로, 전체 스타일 설정에 색상 스타일을 덮어씌워도 무관함
+        	objSpan.setAttribute("style", "color:" + boardColor);
+        }
+        
         treeDiv.setAttribute("SELECTNODEID", pNodeID);
 
         if (callbackFunc != null & typeof (callbackFunc) == "function")
