@@ -101,7 +101,7 @@
 	                	$("#chkNotify").prop("disabled", true);
 	                	$("#chkNotify").prop("checked", false);
 	                }
-	                /* 2018-07-13 홍승비 - URL게시판 구분 추가 */
+	                /* 2018-07-13 홍승비 - 일반설정 화면 온로드 시 URL게시판 구분 추가 */
 	                else if ($("#chkURLBoard").is(":checked")) {
 		            	document.getElementById("txtURL").style.display = "";
 		            	document.getElementById("trAttribute").style.display = "none";
@@ -113,15 +113,18 @@
 	                    $("#chkbackgroundimage").prop("disabled", true);
 	                    $("#chkform").prop("disabled", true);
 	                    $("#chkApprBoard").prop("disabled", true);
-	                    $("#chkOneLine").prop("disabled", true);
 	                    $("#chkBoardLike").prop("disabled", true);
 	                    
 	                    $("#chkNotify").prop("checked", false);
 	                    $("#chkbackgroundimage").prop("checked", false);
 	                    $("#chkform").prop("checked", false);
 	                    $("#chkApprBoard").prop("checked", false);
-	                    $("#chkOneLine").prop("checked", false);
 	                    $("#chkBoardLike").prop("checked", false);
+	                    
+						/* 2020-05-27 홍승비 - URL 게시판인 경우, 댓글 disabled 처리 */
+						$("#chkOneLineBottom").prop("disabled", true);
+						$("#chkOneLineLayer").prop("disabled", true);
+						$("#chkOneLineNone").prop("disabled", true);
 	                }
 	                
 	                if (!$("#chkURLBoard").is(":checked")) {
@@ -412,6 +415,7 @@
 	                chkMovieBoard.checked = false;
 	            }
 	            
+	            // URL 게시판이 체크된 경우, 옵션과 댓글의 사용여부를 전부 disabled 처리한다. (댓글은 '사용안함' 고정) 
 	             if (chkURLBoard.checked == true) {
                     document.getElementById("txtURL").style.display = "";
                     document.getElementById("expireTr").style.display = "none";
@@ -423,8 +427,11 @@
 					$("#chkbackgroundimage").prop("disabled", true);
 					$("#chkform").prop("disabled", true);
 					$("#chkApprBoard").prop("disabled", true);
-					$("#chkOneLine").prop("disabled", true);
 					$("#chkBoardLike").prop("disabled", true);
+					/* 2020-05-27 홍승비 - URL 게시판인 경우, 댓글 사용안함 고정 + disabled 처리 */
+					$("#chkOneLineBottom").prop("disabled", true);
+					$("#chkOneLineLayer").prop("disabled", true);
+					$("#chkOneLineNone").prop("disabled", true);
 					
                     document.getElementById("chkApprBoard").checked = false;
                     checkApprBoard();                   
@@ -439,7 +446,8 @@
                     document.getElementById("chkOneLineBottom").checked = false;
                     document.getElementById("chkOneLineLayer").checked = false;
                     document.getElementById("chkOneLineNone").checked = true; // 댓글옵션  '사용안함' 체크
-	            } else {
+	            } 
+	             else { // URL 게시판이 아닌 경우
 					document.getElementById("txtURL").style.display = "none";
                     document.getElementById("expireTr").style.display = "";
                     document.getElementById("deleteAfterTr").style.display = "";
@@ -459,8 +467,11 @@
 	                    $("#chkApprBoard").prop("disabled", false);
 					}
 					
-					$("#chkOneLine").prop("disabled", false);
 					$("#chkBoardLike").prop("disabled", false);
+					/* 2020-05-27 홍승비 - URL 게시판이 아닌 경우, 댓글 disabled 해제 */
+					$("#chkOneLineBottom").prop("disabled", false);
+					$("#chkOneLineLayer").prop("disabled", false);
+					$("#chkOneLineNone").prop("disabled", false);
 	            }
 
 	            /* 2019-04-29 홍승비 - 포토, 썸네일, 익명, 동영상게시판 선택 시 답변메일발송 disabled 처리 */
@@ -915,6 +926,7 @@
 	                	<input type="checkbox" id="chkURLBoard" onclick="checkboardtype()" />
 	                	URL<spring:message code="ezBoard.t0006"/>
 	                </c:if>
+	                 <%-- URL 필드를 게시판 구분 필드로 이동 --%>
 	                 <input type="text" id="txtURL" style="width: 73%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />                
 	            </td>
 	        </tr>
@@ -933,31 +945,9 @@
 	                <c:if test="${model.replyNotify != '1'}">	                   
 	                	<span style="display:inline-block;"><input type="checkbox" id="chkNotify" onclick="checkboardtype()" /><spring:message code="ezBoard.t168" />&nbsp;</span>
 	                </c:if>
-	                <%--
-	        		<c:if test="${model.oneLineReply == '1'}">	                
-	                	<span style="display:inline-block;"><input type="checkbox" id="chkOneLine" onclick="checkboardtype()" checked /><spring:message code="ezBoard.t81" />&nbsp;</span>
-	                </c:if>
-	                <c:if test="${model.oneLineReply != '1'}">	                  
-	                	<span style="display:inline-block;"><input type="checkbox" id="chkOneLine" onclick="checkboardtype()" /><spring:message code="ezBoard.t81" />&nbsp;</span>
-	                </c:if>
-	                --%>
 	        	</td>
 	        </tr>
 	        
-	        <%--
-	        <tr id="tr3" style="${style}">
-	            <th><spring:message code="ezBoard.t999020" /></th>
-	            <td>
-	                <input type="checkbox" id="chkApprBoard" onclick="checkApprBoard()"><spring:message code="ezBoard.t162" />
-	            </td>
-	        </tr>
-	         <tr id="trLike" style="${style}">
-	            <th><spring:message code="ezBoard.hsb11" /></th>
-	            <td>
-	                <input type="checkbox" id="chkBoardLike"><spring:message code="ezBoard.t162" />
-	            </td>
-	        </tr>
-	        --%>
 	        <%-- 승인여부 체크 시 나타나는 승인메일옵션과 승인자 리스트 --%>
 	        <tr id="chkApprListMail" style="display:none;">
 	            <th><spring:message code="ezBoard.t999019" /></th>
@@ -974,29 +964,7 @@
 	                <div class="listview" style="height:100px;overflow-y:auto;overflow-x:hidden;" id="AccessList"></div>
 	            </td>
 	        </tr>
-	        <%--
-	        <tr id="trPortlet" style="${style}">
-	            <th><spring:message code="ezBoard.t481" /></th>
-	            <td>
-	                <input type="checkbox" id="chkPortletBoard" onclick="checkboardtype()" />
-	                <spring:message code="ezBoard.t162" />
-	            </td>
-	        </tr>
-	        <tr id="tr1" style="${style}">
-	            <th><spring:message code="ezBoard.t5011" /></th>
-	            <td>
-	                <input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" />
-	                <spring:message code="ezBoard.t162" />
-	            </td>
-	        </tr>
-	        <tr id="tr2" style="${style}">
-	            <th><spring:message code="ezBoard.t999027" /></th>
-	            <td>
-	                <input type="checkbox" id="chkform" onclick="checkboardtype()" />
-	                <spring:message code="ezBoard.t162" />
-	            </td>
-	        </tr>
-	        --%>
+	        
 			<%-- 2019-11-05 홍승비 - 댓글의 옵션처리 추가 --%>
 	        <tr id="oneLineTr" style="${style}">
 				<th><spring:message code="ezBoard.t81" /></th>
@@ -1035,45 +1003,6 @@
 	            </td>
 	        </tr>
 	        
-	        <%-- URL 필드를 게시판 구분 필드로 이동 --%>
-	   <%--      
-	        <tr style="${style}">
-	            <th>URL</th>
-	            <td>
-	                <input type="text" id="txtURL" style="width: 100%" value="<c:out value='${model.url}' />" />
-	            </td>
-	        </tr>
-	         --%>
-	        
-	        <%--
-	        <tr id="chkNotifyTr" style="${style}">
-	            <th><spring:message code="ezBoard.t168" /></th>
-	            <td>
-	            	<c:if test="${model.replyNotify == '1'}">	            	
-	                	<input type="checkbox" id="chkNotify" onclick="checkboardtype()" checked />
-	                	<spring:message code="ezBoard.t95" />
-	                </c:if>
-	                <c:if test="${model.replyNotify != '1'}">	                   
-	                	<input type="checkbox" id="chkNotify" onclick="checkboardtype()" />
-	                	<spring:message code="ezBoard.t95" />
-	                </c:if>		                 
-	            </td>
-	        </tr>
-	        --%>
-	        <%--2011-04 : 한줄 답변 옵션화 처리.--%>
-	        <%--
-	        <tr id="oneLineTr" style="${style}">
-	            <th><spring:message code="ezBoard.t81" /></th>
-	            <td>
-<%-- 	            	<c:if test="${model.oneLineReply == '1'}">	                
-	                	<input type="checkbox" id="chkOneLine" onclick="checkboardtype()" checked />
-	                	<spring:message code="ezBoard.t496" />
-	                </c:if>
-	                <c:if test="${model.oneLineReply != '1'}">	                  
-	                	<input type="checkbox" id="chkOneLine" onclick="checkboardtype()" />
-	                	<spring:message code="ezBoard.t496" />
-	                </c:if> --%>
-	                	        
 	        <%-- 확장칼럼 --%>
 	        <tr id="trAttribute" style="${style}">
 	            <th><spring:message code="ezBoard.t999028" /></th>
