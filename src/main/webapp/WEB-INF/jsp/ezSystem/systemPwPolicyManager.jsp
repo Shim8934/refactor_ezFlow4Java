@@ -204,6 +204,12 @@
                 document.getElementById("chkSpecial").checked = useSpecialChar;
             }
             
+            var matcheElements = document.querySelectorAll("td[_PatternCnt]");
+            matcheElements.forEach(function(e, i) {
+	   			var querySelectElement = e.querySelector("SELECT");
+	   			querySelectElement.value = "unlimit";
+        	});
+            
             if (pwPolicyPattern.length > 0) {
 	            for (var i = 0; i < pwPolicyPattern.length; i++) {
 	            	var nowPattern = pwPolicyPattern[i];
@@ -230,12 +236,6 @@
 	                    }
 	            	}
 	            }
-            } else {
-            	var matcheElements = document.querySelectorAll("td[_PatternCnt]");
-                matcheElements.forEach(function(e, i) {
-    	   			var querySelectElement = e.querySelector("SELECT");
-    	   			querySelectElement.value = "unlimit";
-            	});
             }
         } else {
         	document.getElementById("chkEngCapitalLetter").checked = false;

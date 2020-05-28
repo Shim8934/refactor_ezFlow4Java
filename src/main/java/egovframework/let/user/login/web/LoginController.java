@@ -450,6 +450,7 @@ public class LoginController {
     	        		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
     	        	} else {
     	        		String expirePassPeriod = ezCommonService.getCompanyConfig(tenantId, companyId, "ExpirePassPeriod");
+    	        		expirePassPeriod = expirePassPeriod.trim().equals("") ? "0" : expirePassPeriod;
     	        		logger.debug("companyId=" + companyId + ", ExpirePassPeriod=" + expirePassPeriod);
     		        	// String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
     		        	
