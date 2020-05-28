@@ -508,7 +508,7 @@
 		<![CDATA[
 			SELECT
 				IPADDRESS,
-				ACCESS,
+				ALLOW_ACCESS AS "ACCESS",
 				EXPLANATION
 			FROM 
 				TBL_ADMIN_ACCESS_IP
@@ -523,7 +523,7 @@
 		</selectKey>
 		<![CDATA[
 			INSERT INTO 
-				TBL_ADMIN_ACCESS_IP (IPNO, TENANT_ID, IPADDRESS, "ACCESS", EXPLANATION) 
+				TBL_ADMIN_ACCESS_IP (IPNO, TENANT_ID, IPADDRESS, ALLOW_ACCESS, EXPLANATION) 
 			VALUES (#id#, #tenantID#, #ipAddress#, #access#, #explanation#)
 		]]>
 	</insert>
@@ -534,7 +534,7 @@
 				TBL_ADMIN_ACCESS_IP
 			SET 
 				IPADDRESS=#ipAddress#,
-				"ACCESS"=#access#,
+				ALLOW_ACCESS=#access#,
 				EXPLANATION=#explanation#
 			WHERE 
 				IPNO=#ipNo#
@@ -545,7 +545,7 @@
 		<![CDATA[
 			SELECT 
 				IPADDRESS,
-				ACCESS,
+				ALLOW_ACCESS AS "ACCESS",
 				EXPLANATION
 			FROM 
 				TBL_ADMIN_ACCESS_IP

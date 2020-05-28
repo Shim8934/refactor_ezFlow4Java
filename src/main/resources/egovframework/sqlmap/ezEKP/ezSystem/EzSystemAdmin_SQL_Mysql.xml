@@ -419,7 +419,7 @@
 			SELECT
 				IPNO, 
 				IPADDRESS,
-				ACCESS,
+				ALLOW_ACCESS AS "ACCESS",
 				EXPLANATION
 			FROM 
 				TBL_ADMIN_ACCESS_IP
@@ -431,7 +431,7 @@
 	<insert id="EzSystemAdminDAO.insertAdminIPBand" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO 
-				TBL_ADMIN_ACCESS_IP (TENANT_ID, IPADDRESS, ACCESS, EXPLANATION) 
+				TBL_ADMIN_ACCESS_IP (TENANT_ID, IPADDRESS, ALLOW_ACCESS, EXPLANATION) 
 			VALUES (#tenantID#, #ipAddress#, #access#, #explanation#)
 		]]>
 	</insert>
@@ -442,7 +442,7 @@
 				TBL_ADMIN_ACCESS_IP
 			SET 
 				IPADDRESS=#ipAddress#,
-				ACCESS=#access#,
+				ALLOW_ACCESS=#access#,
 				EXPLANATION=#explanation#
 			WHERE 
 				IPNO=#ipNo#
@@ -453,7 +453,7 @@
 		<![CDATA[
 			SELECT 
 				IPADDRESS,
-				ACCESS,
+				ALLOW_ACCESS AS "ACCESS",
 				EXPLANATION
 			FROM 
 				TBL_ADMIN_ACCESS_IP
