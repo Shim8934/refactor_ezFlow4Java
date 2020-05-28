@@ -1233,4 +1233,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createAprAttachLimit() throws Exception {
 		ezCommonDAO.createAprAttachLimit();
 	}
+	
+	@Override
+    public void addDocStateIntoLastLines() throws Exception {
+	    ezCommonDAO.addDocStateIntoLastLines();
+    }
+
+    @Override
+    public void addDocStateIntoLastDeptLines() throws Exception {
+	    ezCommonDAO.addDocStateIntoLastDeptLines();
+    }
+    
 }
