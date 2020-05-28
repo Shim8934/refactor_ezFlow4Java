@@ -328,7 +328,7 @@
 		            <tr data-name="mail"><th><spring:message code="ezSystem.x0007"/></th><td><select data-paramId="IS_READ_DELETE" id="IS_READ_DELETE"><option <c:if test="${configMap.IS_READ_DELETE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezSystem.hsb01"/></option><option <c:if test="${configMap.IS_READ_DELETE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezSystem.hsb02"/></option></select></td></tr>
 		            <tr data-name="mail"><th><spring:message code="ezSystem.x0020"/></th><td><select data-paramId="Use_FromAddress" id="Use_FromAddress"><option <c:if test="${configMap.Use_FromAddress == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.Use_FromAddress == null or configMap.Use_FromAddress == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
 					<c:if test="${useAllUserOldMailDelete eq 'YES'}">
-				    	<tr>
+				    	<tr data-name="mail">
 							<th><spring:message code="ezSystem.kyj3" /></th>
 							<td>
 								<input data-paramId="useAllUserOldMailDeletePeriod" id="useAllUserOldMailDeletePeriod" maxlength="3" type="text" value="<c:out value='${useAllUserOldMailDeletePeriod}'/>"> (<spring:message code="ezSystem.kyj4"/>, <spring:message code="ezSystem.kyj5"/>)
