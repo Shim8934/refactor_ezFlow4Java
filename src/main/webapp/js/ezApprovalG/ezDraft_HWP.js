@@ -825,6 +825,9 @@ function SetBtnStateTrue()
 //		else {
 //		    setMenuBar("btnSaveServer", true);
 //		}ddd
+
+		//setFormAprOption();  //결재 세부옵션
+
 	}catch(e){
 		alert("SetBtnStateTrue()" + e.description);
 	}
@@ -1277,7 +1280,7 @@ function openAaprDocAttachUI()
   try{
 	var parameter = pDocID;
 	var url = "/ezApprovalG/aprCabinetAttach.do?draftFlag=" + pDraftFlag;
-	var feature	= "status:no;dialogWidth:1050px;dialogHeight:500px;edge:sunken;scroll:no;help:no"; 
+	var feature	= "status:no;dialogWidth:1050px;dialogHeight:520px;edge:sunken;scroll:no;help:no"; 
 	var ret = window.showModalDialog(url,parameter,feature);
 
 	if(ret != "cancel")
@@ -1874,4 +1877,12 @@ function OpenInformationUI(pInformationContent) {
 	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 	var RtnVal = window.showModalDialog(url,parameter,feature);
 	return RtnVal;
+}
+
+//결재 세부옵션처리
+function setFormAprOption(){  
+    if(formAprOption.indexOf("_a2_"))  //파일첨부
+        setMenuBar("btnFileAttach", false);	
+    if(formAprOption.indexOf("_a3_"))  //문서첨부
+        setMenuBar("btnAprDocAttach", false);	
 }

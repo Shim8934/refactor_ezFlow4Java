@@ -7,7 +7,6 @@ import java.util.Map;
 
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
-import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
@@ -50,4 +49,7 @@ public interface EzSystemAdminService {
 	public IPBandVO getSystemAdminIPBand(String ipNo) throws Exception;
 	public void updateAdminIPBand(String ipNo, String ipAddress, String access, String explanation) throws Exception;
 	public void deleteAdminIPBand(String ipNo) throws Exception;
+	public Map<String, Object> getPwPolicy(int tenantId, String companyId) throws Exception;
+	public void updateCompanyConfigParam(int tenantID, List<Map<String, String>> list, String companyID) throws Exception;
+	public int updatePwPolicy(int tenantId, String companyId, Map<String, String> patternTypeMap, List<Map<String, Object>> PwPolicyPatternList) throws Exception;
 }

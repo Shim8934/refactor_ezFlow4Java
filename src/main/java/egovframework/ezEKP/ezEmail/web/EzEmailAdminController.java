@@ -4,7 +4,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +23,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.tools.ant.taskdefs.GenerateKey.DistinguishedName;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -34,11 +31,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -52,7 +54,6 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
-import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -167,9 +168,12 @@ public class EzEmailAdminController {
 		logger.debug("bodyData=" + bodyData);
 
 		// 관리자 권한체크
-		LoginVO auth = commonUtil.checkAdmin(loginCookie);
-		if (auth == null) {
-			return "cmm/error/adminDenied";
+		LoginVO auth = commonUtil.userInfo(loginCookie);
+		if (auth.getRollInfo().indexOf("c=1") == -1 && auth.getRollInfo().indexOf("k=1") == -1) {
+			String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", auth.getTenantId());
+			if (!useUserDefinedDL.equalsIgnoreCase("YES")) {
+				return "cmm/error/adminDenied";
+			}
 		}
 
 		String returnData = "";
@@ -272,8 +276,13 @@ public class EzEmailAdminController {
 
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userVO = commonUtil.userInfo(loginCookie);
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userVO.getTenantId());
 		if (auth == null) {
-			return "cmm/error/adminDenied";
+			if (!useUserDefinedDL.equalsIgnoreCase("YES")) {
+				return "cmm/error/adminDenied";
+			}
+			auth = userVO;
 		}
 
 		String deptID = auth.getDeptID();
@@ -283,6 +292,9 @@ public class EzEmailAdminController {
 				.getParameter("name");
 		String useOcs = config.getProperty("config.USE_OCS");
 		String companyId = request.getParameter("companyId");
+		String userDL =  request.getParameter("userDL");
+		if (userDL == null ) { userDL = ""; }
+		String offsetMin = commonUtil.getMinuteUTC(auth.getOffset());
 		
 		int tenantId = auth.getTenantId();
 		String mailDomain = ezCommonService.getCompanyConfig(tenantId, companyId, "DomainName");
@@ -297,8 +309,28 @@ public class EzEmailAdminController {
 		logger.debug("mailDomain=" + mailDomain + ", companyDomainList=" + companyDomainList);
 		
 		String distributionMail = "";
+		
+		String ownerId = "";
+		String ownerName = "";
+		String policy = "";
+		String explain = "";
+		String endDate = "";
 		if (!cn.equals("")) { // 편집일 경우
-			MailDistributionVO distributionVo = ezEmailService.getDistributionInfo(cn, tenantId);
+			MailDistributionVO distributionVo = null;
+			if (useUserDefinedDL.equalsIgnoreCase("YES") && !userDL.equals("")) {
+				distributionVo = ezEmailService.getUserDistributionInfo(cn, tenantId);
+				
+				ownerId = distributionVo.getOwnerId();
+				policy = distributionVo.getDisclosurePolicy();
+				explain = distributionVo.getExplaination();
+				endDate = distributionVo.getEndDate();
+				OrganUserVO ownerVo = ezOrganService.getUserInfo(ownerId, auth.getPrimary(), tenantId);
+				ownerName = ownerVo.getDisplayName();
+				logger.debug("ownerId=" + ownerId + ", ownerName=" + ownerName + ", policy=" + policy + ", explain=" + explain 
+						+ ", endDate=" + endDate);
+			} else {
+				distributionVo = ezEmailService.getDistributionInfo(cn, tenantId);
+			}
 			
 			if (distributionVo != null) {	
 				distributionMail = distributionVo.getMail();
@@ -316,6 +348,16 @@ public class EzEmailAdminController {
 		model.addAttribute("domainList", domainList);
 		model.addAttribute("distributionMail", distributionMail);
 		model.addAttribute("companyMailDomain", companyMailDomain);
+		model.addAttribute("userDL", userDL);
+		model.addAttribute("offsetMin", offsetMin);
+		model.addAttribute("userId", auth.getId());
+		model.addAttribute("userName", userVO.getDisplayName());
+		
+		model.addAttribute("ownerId", ownerId);
+		model.addAttribute("ownerName", ownerName);
+		model.addAttribute("policy", policy);
+		model.addAttribute("endDate", endDate);
+		model.addAttribute("explain", explain);
 		
 		String cChk = "0";
 		
@@ -342,8 +384,13 @@ public class EzEmailAdminController {
 
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userVO = commonUtil.userInfo(loginCookie);
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userVO.getTenantId());
 		if (auth == null) {
-			return "cmm/error/adminDenied";
+			if (!useUserDefinedDL.equalsIgnoreCase("YES")) {
+				return "cmm/error/adminDenied";
+			}
+			auth = userVO;
 		}
 
 		Document doc = commonUtil.convertStringToDocument(bodyData);
@@ -353,6 +400,11 @@ public class EzEmailAdminController {
 		String id = doc.getElementsByTagName("ID").item(0).getTextContent();
 		String selectDomain = doc.getElementsByTagName("SELECTDOMAIN").item(0).getTextContent();
 		selectDomain = selectDomain != null ? selectDomain : "";
+		
+		String ownerId = doc.getElementsByTagName("OWNERID").item(0) == null ? "" : doc.getElementsByTagName("OWNERID").item(0).getTextContent();
+		String policy = doc.getElementsByTagName("POLICY").item(0) == null ? "" : doc.getElementsByTagName("POLICY").item(0).getTextContent();
+		String explaination = doc.getElementsByTagName("EXPLAINATION").item(0) == null ? "" : doc.getElementsByTagName("EXPLAINATION").item(0).getTextContent();
+		String endDate = doc.getElementsByTagName("ENDDATE").item(0) == null ? "" : doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 		
 		NodeList memberIdList = doc.getElementsByTagName("MEMBERID");
 		NodeList addressIdList = doc.getElementsByTagName("ADDRESSID");
@@ -433,8 +485,7 @@ public class EzEmailAdminController {
 					}
 				}
 
-				
-				reasonCode = ezEmailService.addDistributionList(id, name, memberList, distributionSubList, companyId, tenantID, selectDomain);
+				reasonCode = ezEmailService.addDistributionList(id, name, memberList, distributionSubList, companyId, tenantID, selectDomain, ownerId, policy, explaination, endDate, loginCookie);
 			// 기존 공용배포그룹을 수정하는 경우
 			} else {
 				if (useBizmekaSpambox.equals("YES")) {
@@ -451,7 +502,7 @@ public class EzEmailAdminController {
 					}
 				}
 								
-				reasonCode = ezEmailService.updateDistributionList(cn, name, memberList, distributionSubList, companyId, tenantID);
+				reasonCode = ezEmailService.updateDistributionList(cn, name, memberList, distributionSubList, companyId, tenantID, ownerId, policy, explaination, endDate, loginCookie);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -650,13 +701,18 @@ public class EzEmailAdminController {
 
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userVO = commonUtil.userInfo(loginCookie);
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userVO.getTenantId());
 		if (auth == null) {
-			return "cmm/error/adminDenied";
+			if (!useUserDefinedDL.equalsIgnoreCase("YES")) {
+				return "cmm/error/adminDenied";
+			}
+			auth = userVO;
 		}
 
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
-		String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
+		// String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 
 		int tenantID = auth.getTenantId();
 
@@ -743,7 +799,7 @@ public class EzEmailAdminController {
 		String returnData = "";
 		try {
 			Document doc = commonUtil.convertStringToDocument(bodyData);
-			String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
+			// String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 			String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 			String searchType = doc.getElementsByTagName("SEARCHTYPE").item(0).getTextContent();
 			String searchValue = doc.getElementsByTagName("SEARCHVALUE").item(0).getTextContent();
@@ -1574,7 +1630,7 @@ public class EzEmailAdminController {
 					}
 				}
 							
-				String bizmekaResult = "ERROR";
+				// String bizmekaResult = "ERROR";
 				
 				try {
 					/* 비즈메카 연동은 우선 생각하지 않는다. -> 필요할 때 논의 후 구현!
@@ -1753,7 +1809,7 @@ public class EzEmailAdminController {
 				int rc = ezEmailUserAdminService.addGroup(mailAddr);
 				
 				if (rc == 0) { // addGroup 성공
-					String bizmekaResult = "ERROR";
+					// String bizmekaResult = "ERROR";
 					
 					// insertDBData_dept 실패했을 경우 JMocha에서 부서 다시 삭제
 					try {
@@ -1882,7 +1938,7 @@ public class EzEmailAdminController {
 				logger.debug("updateGroupAdd rc=" + rc);
 				
 				if (rc == 0) { // updateGroup 성공
-					String bizmekaResult = "ERROR";
+					// String bizmekaResult = "ERROR";
 					
 					// insertDBData_user 실패했을 경우 JMocha에서 계정 다시 삭제.
 					try {
@@ -2088,6 +2144,7 @@ public class EzEmailAdminController {
 		return "json";
 	}
 	
+	@SuppressWarnings("unused")
 	private void removeEmailAddressBasedOnCompanyDomainName(String cn, String compId, int tenantId) {
 		try {
 			String companyDomainName = ezCommonService.getCompanyConfig(tenantId, compId, "DomainName");
@@ -2330,7 +2387,7 @@ public class EzEmailAdminController {
 	@ResponseBody
 	public JSONArray searchSignList(@CookieValue("loginCookie") String loginCookie, String companyId, String search, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("searchSignList started.");
-		search = URLDecoder.decode(search);
+		search = URLDecoder.decode(search, "UTF-8");
 		logger.debug("companyId=" + companyId);
 		logger.debug("search=" + search);
 		
@@ -2598,6 +2655,7 @@ public class EzEmailAdminController {
 	/**
 	 * 수취인안내설정 데이터 가져오기(copyright)
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezEmail/mailCopyrightData.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject mailCopyrightData(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -2694,6 +2752,7 @@ public class EzEmailAdminController {
 	/**
 	 * 전체 도메인 리스트
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezEmail/getMultiDomainList.do")
 	@ResponseBody
 	public JSONObject getMultiDomainList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -2733,6 +2792,7 @@ public class EzEmailAdminController {
 	/**
 	 * 전체 도메인 삭제
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezEmail/delMultiDomain.do")
 	@ResponseBody
 	public JSONObject delMultiDomain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -2815,6 +2875,7 @@ public class EzEmailAdminController {
 	/**
 	 * 회사 도메인 리스트
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezEmail/getCompanyMultiDomainList.do")
 	@ResponseBody
 	public JSONObject getCompanyMultiDomainList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -2938,4 +2999,5 @@ public class EzEmailAdminController {
 		
 		return "admin/ezEmail/adminMailLeft";
 	}
+	
 }

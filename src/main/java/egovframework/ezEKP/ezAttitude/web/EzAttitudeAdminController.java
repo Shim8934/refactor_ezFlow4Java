@@ -1,11 +1,9 @@
 package egovframework.ezEKP.ezAttitude.web;
 
-import java.awt.Font;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -20,12 +18,7 @@ import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -62,11 +55,8 @@ import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezAttitude.util.ExcelCellRef;
-import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
-import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -1362,6 +1352,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근태권한관리 리스트 조회하는 함수
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthList.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONArray getAttitudeAuthList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -1515,6 +1506,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근태권한관리 권한추가 권한자 지정시(조직도)
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezAttitude/selectAttitudeAuthor.do", method = RequestMethod.GET)
 	public String selectAttitudeAuthor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LOGGER.debug("/admin/ezAttitude/selectAttitudeAuthor started");
@@ -1577,6 +1569,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근태권한관리 권한부서 선택하기 (부서리스트)
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezAttitude/selectAttitudeAuthorDept.do", method = RequestMethod.GET)
 	public String selectAttitudeAuthorDept(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {
 		LOGGER.debug("selectAttitudeAuthorDept started");
@@ -1878,6 +1871,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근무시간관리 부서근무시간수정 화면
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezAttitude/editAttitudeDeptConf.do", method = RequestMethod.GET)
 	public String editAttitudeDeptConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LOGGER.debug("/admin/ezAttitude/editAttitudeDeptConf started");
@@ -2018,6 +2012,7 @@ public class EzAttitudeAdminController {
 			@RequestParam(required=false)String pageInfo) throws Exception {
 		LOGGER.debug("attModAppDetail started");
 		
+		@SuppressWarnings("unused")
 		String attModDeptId = "";
 		String authFlag = "";
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -2277,11 +2272,11 @@ public class EzAttitudeAdminController {
 		bodyStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		
 		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
+		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		headerStyle.setFont(font);
 
 		HSSFFont font1 = workbook.createFont();
-		font1.setColor(font.COLOR_RED);
+		font1.setColor(HSSFFont.COLOR_RED);
 		bodyStyle.setFont(font1);
 		
 		Row row;
@@ -2328,6 +2323,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 연차현황관리 엑셀업로드
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezAttitude/annualExcelUpload.do", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject annualExcelUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
@@ -2385,6 +2381,7 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
+		@SuppressWarnings("unused")
 		String resultStatus = "";
 		
 		if (status.equals("ok")) {
@@ -2407,6 +2404,7 @@ public class EzAttitudeAdminController {
 	public String annualHistoryPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LOGGER.debug("annualHistoryPop started.");
 		
+		@SuppressWarnings("unused")
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = request.getParameter("userId");
 		String companyId = request.getParameter("companyId");
@@ -2712,7 +2710,7 @@ public class EzAttitudeAdminController {
 		bodyStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		
 		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
+		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		headerStyle.setFont(font);
 		
 		Row row;
@@ -2885,6 +2883,7 @@ public class EzAttitudeAdminController {
 	public String saveJoinDate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("saveJoinDate started.");
 		
+		@SuppressWarnings("unused")
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = request.getParameter("userId");
 		String companyId = request.getParameter("companyId");

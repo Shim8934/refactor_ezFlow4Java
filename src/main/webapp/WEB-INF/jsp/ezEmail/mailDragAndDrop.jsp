@@ -103,6 +103,7 @@
 		        var bigFileCheck = false;
 		        var bodyTypeVal = window.parent.document.getElementById("bodyType").value; // 0:html, 1:plainText
 		        var bodyTypeIsPlain = bodyTypeVal != 1 ? false : true;
+		        var newBigAttachCount = 0;
 		        
 		        if (status == 1) {
 		        	isbigyn = "Y";
@@ -119,6 +120,7 @@
 		                bigFileCheck = true;
 		                bigfile[filecnt + i] = filelist[i];
 		                tempbigfilesize += filelist[i].size;
+		                newBigAttachCount++;
 		            } else {
 		                file[filecnt + i] = filelist[i];
 		                tempfilesize += filelist[i].size;
@@ -127,6 +129,12 @@
 				
 		        if (isbigyn == "Y") {
 		            bigFileCheck = true;
+		        }
+		        
+		        if (bigFileCheck == true) {
+		        	if(!bigFileAttachCountCheck(newBigAttachCount)) {
+		        		return;
+		        	}
 		        }
 		
 		        if (bigFileCheck == true && window.parent.FtotBigSizeAttachSize == 0) {
@@ -802,6 +810,17 @@
 		        	 document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_on";
 		        }
 			}
+			
+		    function bigFileAttachCountCheck(newBigAttachCount) {
+		        var BigSizeAttachLimitCount = window.parent.BigSizeAttachLimitCount;
+		        var curBigAttachCount = document.querySelectorAll("#filelist tr[_big='Y']").length;
+		        if (BigSizeAttachLimitCount > 0 && curBigAttachCount + newBigAttachCount > BigSizeAttachLimitCount) {
+		        	alert(strLangHDP03.replace("{0}", BigSizeAttachLimitCount));
+		        	return false;
+		        }
+		        return true;
+		    }
+		    
 		</script>
 	</head>  
     <body ondragover ="defaultenter(event)" ondragenter ="defaultenter(event)" style="overflow:hidden">   

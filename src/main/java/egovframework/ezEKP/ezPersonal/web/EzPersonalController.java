@@ -16,7 +16,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -911,7 +910,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		logger.debug("leftEnvironment started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		String funCode = "";
-		String topMenuID = "";
+		// String topMenuID = "";
 		String ezInfoSSL = "";
 		String SSL = "";
 		
@@ -919,9 +918,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 			funCode = req.getParameter("funCode");
 		}
 		
-		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").trim().equals("")) {
+		/* if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").trim().equals("")) {
 			topMenuID = req.getParameter("topMenuID");
-		}
+		} */
 		
 		if (config.getProperty("config.ezInfoSSL") != null && !config.getProperty("config.ezInfoSSL").equals("")) {
 			ezInfoSSL = config.getProperty("config.ezInfoSSL");
@@ -943,7 +942,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			firstScreen_Mail = "NO";
 		}
 
-		String accessList = ezPortalService.getAccessList(userInfo);
+		// String accessList = ezPortalService.getAccessList(userInfo);
 		
 		/*
 		 * 환경설정 좌측 메뉴 리스트에 있는 모듈의 URL과 이름을 map에 추가
@@ -1149,6 +1148,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String companyID = userInfo.getCompanyID();
+		logger.debug("companyID=" + companyID);
+		
 		String noneActiveX = "YES";
 		String userMobileManaged = "NO";
 		// 모바일 설정
@@ -1224,6 +1226,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 			useZipCodeSearch = "YES";
 		}
 		
+		String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyID, userInfo.getTenantId(), locale);
+		
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("txtInfo", pInfo);
 		model.addAttribute("labelCompany", labelCompany);
@@ -1254,6 +1258,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("LiteralExtensionPhone", literalExtensionPhone);
 		model.addAttribute("LiteralOfficeMobile", literalOfficeMobile);
 		model.addAttribute("useMailAliasSettingOnLogin", useMailAliasSettingOnLogin);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
 		
 		logger.debug("changePersonInfo ended");
 		return "/ezPersonal/persChangePersonInfo";

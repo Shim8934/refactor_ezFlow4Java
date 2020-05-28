@@ -26,6 +26,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -48,7 +50,6 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
@@ -58,6 +59,7 @@ import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
+import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -87,9 +89,6 @@ public class EzSystemAdminController {
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
-	
-	@Autowired
-	private EzEmailUtil ezEmailUtil;
 	
 	@Resource
 	private EgovMessageSource egovMessageSource;
@@ -989,7 +988,7 @@ public class EzSystemAdminController {
 		
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		
+
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
@@ -1025,6 +1024,7 @@ public class EzSystemAdminController {
 	/*
 	 * 접속 허용 국가 리스트
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezSystem/getAccessCountryList.do", method=RequestMethod.POST)
 	public String getAccessCountryList(@CookieValue("loginCookie") String loginCookie, Model model, 
 			HttpServletRequest request) throws Exception {
@@ -1659,6 +1659,118 @@ public class EzSystemAdminController {
 		
 		logger.debug("deleteAdminIPBand ended");
 	}
+
+	/**
+	 * 암호 정책 관리 화면
+	 * */
+	@RequestMapping(value = "/admin/ezSystem/passwordPolicyMain.do", method = RequestMethod.GET)
+	public String passwordPolicyMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("passwordPolicyMain started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
+		
+		// 회사리스트
+		List<OrganDeptVO> companyList = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), tenantID);
+		List<OrganDeptVO> resultCompanyList = new ArrayList<OrganDeptVO>();
+		
+		for(OrganDeptVO company : companyList) {
+			if(company.getCn().equals(userInfo.getCompanyID()) || userInfo.getRollInfo().indexOf("c=1") != -1) {
+				resultCompanyList.add(company);
+			}
+		}
+		
+		boolean isDotNetAdmin = false;
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId());
+		
+		if (dotNetIntegration.equals("YES")) {
+			if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1) {
+				isDotNetAdmin = true;
+			}			
+		}
+		
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("companyList", resultCompanyList);
+		model.addAttribute("isDotNetAdmin", isDotNetAdmin);
+		
+		logger.debug("passwordPolicyMain ended.");
+		return "/ezSystem/systemPwPolicyManager";
+	}
+	
+	/**
+	 * 회사별 암호 정책관리
+	 */
+	@RequestMapping(value = "/admin/ezSystem/getPasswordPolicy.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> getPasswordPolicy(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getPasswordPolicy started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		String companyId = userInfo.getCompanyID();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		
+		String reCompanyId = request.getParameter("companyId");
+		if (reCompanyId != null && !reCompanyId.equals("")) {
+			companyId = reCompanyId;
+		}
+		logger.debug("tenantId=" + tenantId + ", companyId=" + companyId);
+		
+		String expirePassPeriod = ezCommonService.getCompanyConfig(tenantId, companyId, "ExpirePassPeriod"); // 암호 만료기간
+		expirePassPeriod = expirePassPeriod.equals("") ? "0" : expirePassPeriod;
+		String maxAllowedCountOfLoginFail = ezCommonService.getCompanyConfig(tenantId, companyId, "MaxAllowedCountOfLoginFail"); // 암호 최대 오류 횟수
+		maxAllowedCountOfLoginFail = maxAllowedCountOfLoginFail.equals("") ? "0" : maxAllowedCountOfLoginFail;
+		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy"); // 암호 정책관리 사용여부
+		usePasswordPatternPolicy = usePasswordPatternPolicy.equals("") ? "NO" : usePasswordPatternPolicy;
+		logger.debug("expirePassPeriod=" + expirePassPeriod + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail 
+				+ ", usePasswordPatternPolicy=" + usePasswordPatternPolicy);
+		
+		Map<String, Object> pwPolicyMap = ezSystemAdminService.getPwPolicy(tenantId, companyId);
+
+		returnMap.put("expirePassPeriod", expirePassPeriod);
+		returnMap.put("maxAllowedCountOfLoginFail", maxAllowedCountOfLoginFail);
+		returnMap.put("usePasswordPatternPolicy", usePasswordPatternPolicy);
+		returnMap.put("pwPolicyMap", pwPolicyMap);
+		logger.debug("return :: " + returnMap.toString());
+		
+		logger.debug("getPasswordPolicy ended.");
+		return returnMap;
+	}
+	
+	/**
+	 * 암호 정책 저장
+	 * */
+	@RequestMapping(value = "/admin/ezSystem/updatePasswordPolicy.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String updatePasswordPolicy(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("updatePasswordPolicy started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		
+		String data = request.getParameter("data");
+		logger.debug("data=" + data);
+		
+		JSONParser jsonParse = new JSONParser();
+		JSONObject dataObj = new JSONObject();
+		dataObj = (JSONObject) jsonParse.parse(data);
+		
+		String companyId = (String) dataObj.get("companyId");
+		List<Map<String, String>> configList =  new ObjectMapper().readValue(dataObj.get("setConfig").toString(), 
+				new TypeReference<List<Map<String,Object>>> (){});
+		Map<String, String> patternTypeMap = new ObjectMapper().readValue(dataObj.get("patternType").toString(), 
+				new TypeReference<Map<String,String>> (){});	
+		List<Map<String, Object>> patternSetting = new ObjectMapper().readValue(dataObj.get("patternSetting").toString(),  
+				new TypeReference<List<Map<String,Object>>> (){});
+
+		PasswordPolicyVO pwPolicyVo = new PasswordPolicyVO();
+		pwPolicyVo.setCompanyId(companyId);
+		ezSystemAdminService.updateCompanyConfigParam(tenantID, configList, companyId);
+		ezSystemAdminService.updatePwPolicy(tenantID, companyId, patternTypeMap, patternSetting);
+		
+		return "";
+	}
 	
 	private List<CountryVO> countryVOList(String[] countryCodeList, String userLang, String realPath)
 			throws Exception {
@@ -1693,7 +1805,7 @@ public class EzSystemAdminController {
 			countryVO.setCountryCode(country); // 국가코드
 			countryVO.setCountryName(locale.getDisplayCountry(locale));
 			
-			if (realPath != null || !realPath.equals("")) { // path 없으면 이미지 경로 X
+			if (realPath != null && !realPath.isEmpty()) { // path 없으면 이미지 경로 X
 				// 국기가 없으면 물음표 국기 표시
 				String printImage = countryQuestionIcon;
 				try {

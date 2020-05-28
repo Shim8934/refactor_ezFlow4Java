@@ -49,7 +49,6 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
-import egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -838,6 +837,7 @@ public class EzAttitudeController {
 	/**
 	 * 회사 휴일정보
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezAttitude/getHolidayList.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getHolidayList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -1180,6 +1180,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태 내용
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezAttitude/getAttitudeItem.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getAttitudeItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -1328,6 +1329,7 @@ public class EzAttitudeController {
 		return attitudeConfigVO;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezAttitude/getAttModAppList.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject getAttModAppList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
@@ -1588,11 +1590,11 @@ public class EzAttitudeController {
 	public void qstResultsaticGetXlsAtt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		LOGGER.debug("qstResultsaticGetXlsAtt started");
 		
-		String headerFLAG = "";
+		/* String headerFLAG = "";
 		 
 		if (request.getParameter("headerFlag") != null) {
 			headerFLAG = request.getParameter("headerFlag");
-		}
+		} */
 		  
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
@@ -2006,7 +2008,7 @@ public class EzAttitudeController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
-		String font = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+		// String font = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
 		
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
@@ -2121,12 +2123,14 @@ public class EzAttitudeController {
 	/**
 	 * 부서근태현황 main
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezAttitude/attitudeDeptMain.do", method = RequestMethod.GET)
 	public String attitudeUserMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request,
 			@RequestParam(required=false)String deptid) throws Exception {
 		LOGGER.debug("attitudeUserMain started");
 		
 		String adminFlag = "false";
+		@SuppressWarnings("unused")
 		String isAllDept = "";
 		String displayFlag = "false";
 		
@@ -2378,7 +2382,9 @@ public class EzAttitudeController {
 		LOGGER.debug("/ezAttitude/attitudeItemDetail started");
 		
 		String deptId = "";
+		@SuppressWarnings("unused")
 		String isAllDept = "";
+		@SuppressWarnings("unused")
 		String adminFlag = "";
 		String authFlag = "";
 		JSONObject attitudeVO = new JSONObject();
@@ -2709,7 +2715,7 @@ public class EzAttitudeController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String attitudeId = request.getParameter("attitudeId");
+		// String attitudeId = request.getParameter("attitudeId");
 		String typeId = request.getParameter("typeId");
 		String region = request.getParameter("region");
 		String mobile = request.getParameter("mobile");
@@ -2822,6 +2828,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태작성 - 조직도(받는사람,참조,숨은참조) 화면 호출 함수
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezAttitude/attNewReceiverChoose.do", method = RequestMethod.GET)
 	public String attNewReceiverChoose(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -2832,6 +2839,7 @@ public class EzAttitudeController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		@SuppressWarnings("unused")
 		String adminFlag = "";
 		String isAllDept = "";
 		String defaultWin = request.getParameter("defaultwin") == null ? "To" : request.getParameter("defaultwin").trim();
@@ -3033,7 +3041,7 @@ public class EzAttitudeController {
 		bodyStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		
 		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
+		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		headerStyle.setFont(font);
 		
 		Row row;
@@ -3580,7 +3588,7 @@ public class EzAttitudeController {
 		bodyStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		
 		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
+		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		headerStyle.setFont(font);
 		
 		Row row;
@@ -3949,6 +3957,7 @@ public class EzAttitudeController {
 		return "/ezAttitude/manageAnnCanAppList";
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezAttitude/getAnnCanAppList.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject getAnnCanAppList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
@@ -4663,6 +4672,7 @@ public class EzAttitudeController {
 		return data;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezAttitude/getAnnualreg.do")
 	@ResponseBody
 	public JSONObject getAnnualreg(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
@@ -4841,5 +4851,19 @@ public class EzAttitudeController {
 		LOGGER.debug("getTotalAttCount ended.");
 		
 		return totalAnnual;
+	}
+	
+	/**
+	 * 휴일 출/퇴근 체크 컨피그 조회
+	 */
+	@RequestMapping(value="/ezAttitude/holidayCheck.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String getHolidayCheckConfig(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		LOGGER.debug("getHolidayCheckConfig started.");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String useHolidayCheckYN = ezCommonService.getTenantConfig("useHolidayCheckYN", userInfo.getTenantId());
+		
+		LOGGER.debug("getHolidayCheckConfig ended.");
+		return useHolidayCheckYN;
 	}
 }

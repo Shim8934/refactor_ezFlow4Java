@@ -58,7 +58,7 @@ public class EzMainAdminController {
 		String AdminActiveX = config.getProperty("config.AdminActiveX");
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
-		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		// String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
 		
 		// 2020-04-10 김민성 - 메일 컨피그 추가

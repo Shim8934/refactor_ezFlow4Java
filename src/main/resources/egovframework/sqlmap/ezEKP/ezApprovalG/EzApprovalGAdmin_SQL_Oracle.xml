@@ -1704,6 +1704,7 @@
 				formfilelocation,
 				formconnflag,
 				reformflag,
+				aprOption,
 				tenant_id,
 				companyid)
 			VALUES
@@ -1716,6 +1717,7 @@
 				#v_PURL#,
 				#v_PFORMCONNFLAG#,
 				#v_PREFORMFLAG#,
+				##v_formAprOption##,
 				#tenantID#,
 				#companyID#)
 		]]>
@@ -1733,7 +1735,8 @@
 				formdescription = #v_PFORMDESCRIPT#,
 				formfilelocation = #v_PURL#,
 				formconnflag = #v_PFORMCONNFLAG#,
-				reformflag = #v_PREFORMFLAG#
+				reformflag = #v_PREFORMFLAG#,
+				aprOption = #v_formAprOption#
 			WHERE
 				tenant_id = #tenantID#
 			AND
@@ -4591,5 +4594,69 @@
 			    #companyID# )
 		]]>				
 	</insert>
+		
+	<select id="EzApprovalGAdminDAO.cntAttachLimit" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				COUNT(ATTACHLIMITCNT)
+			FROM 
+				TBL_APRATTACHLIMIT 
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getAttachLimit" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				IFNULL(ATTACHLIMITCNT, -1)  
+			FROM 
+				TBL_APRATTACHLIMIT 
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+		]]>
+	</select>
+	
+	<insert id="EzApprovalGAdminDAO.saveAttachLimit" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_APRATTACHLIMIT
+				(ATTACHLIMITCNT,
+				COMPANYID,
+				TENANT_ID)
+			VALUES
+				(#v_ATTACHLIMIT#,
+				#v_COMPANYID#,
+				#v_TENANTID#)
+		]]>
+	</insert>
+	
+	<update id="EzApprovalGAdminDAO.updateAttachLimit" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_APRATTACHLIMIT
+			SET
+				ATTACHLIMITCNT = #v_ATTACHLIMIT#
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+		]]>
+	</update>
+	
+	<delete id="EzApprovalGAdminDAO.deleteAttachLimit" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_APRATTACHLIMIT
+        	WHERE
+        		TENANT_ID = #v_TENANTID#
+        	AND
+        		COMPANYID = #v_COMPANYID#
+		]]>
+	</delete>
+	
 </sqlMap>
 

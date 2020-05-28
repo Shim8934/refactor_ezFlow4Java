@@ -937,7 +937,8 @@
 					TBL_AUTODOCNUM_ITEM.itemName,
 					TBL_AUTODOCNUM_ITEM.itemName2,
 					TBL_AUTODOCNUM_ITEM.useFlag,
-					TBL_AUTODOCNUM_ITEM.keepPeriodCode
+					TBL_AUTODOCNUM_ITEM.keepPeriodCode,
+					aproption
 				FROM
 					TBL_FORMINFO
 				JOIN 
@@ -967,7 +968,8 @@
 					formdescription,
 					formfilelocation,
 					formconnflag,
-					opengovflag 
+					opengovflag,
+					aproption 
 				FROM
 					TBL_FORMINFO
 				WHERE
@@ -1694,7 +1696,8 @@
 				reformflag,
 				companyid,
 				tenant_id,
-				opengovflag)
+				opengovflag,
+				aprOption)
 			VALUES
 				(#v_PFORMCONTAINERID#,
 				#v_PFORMID#,
@@ -1707,7 +1710,8 @@
 				#v_PREFORMFLAG#,
 				#companyID#,
 				#tenantID#,
-				#v_POPENGOVFLAG#)
+				#v_POPENGOVFLAG#,
+				#v_formAprOption#)
 		]]>
 	</insert>
 
@@ -1725,7 +1729,8 @@
 				formconnflag = #v_PFORMCONNFLAG#,
 				reformflag = #v_PREFORMFLAG#,
 				formversion = formversion + 1,
-				opengovflag = #v_POPENGOVFLAG#
+				opengovflag = #v_POPENGOVFLAG#,
+				aprOption = #v_formAprOption#
 			WHERE
 				tenant_id = #tenantID#
 			AND
@@ -4539,7 +4544,7 @@
 			    #companyID# )
 		]]>				
 	</insert>
-
+	
 	<select id="EzApprovalGAdminDAO.getAdminTotalDownload" parameterClass="Map" resultClass="ApprGAttachInfoVO">
 				SELECT * FROM (
 				<isEqual property="v_PMODE" compareValue="ALL">
@@ -4801,4 +4806,68 @@
 		AND
 			COMPANYID = #companyID#
 	</select>
+	
+	<select id="EzApprovalGAdminDAO.cntAttachLimit" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				COUNT(ATTACHLIMITCNT)
+			FROM 
+				TBL_APRATTACHLIMIT 
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getAttachLimit" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				IFNULL(ATTACHLIMITCNT, -1)
+			FROM 
+				TBL_APRATTACHLIMIT 
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+		]]>
+	</select>
+	
+	<insert id="EzApprovalGAdminDAO.saveAttachLimit" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_APRATTACHLIMIT
+				(ATTACHLIMITCNT,
+				COMPANYID,
+				TENANT_ID)
+			VALUES
+				(#v_ATTACHLIMIT#,
+				#v_COMPANYID#,
+				#v_TENANTID#)
+		]]>
+	</insert>
+	
+	<update id="EzApprovalGAdminDAO.updateAttachLimit" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_APRATTACHLIMIT
+			SET
+				ATTACHLIMITCNT = #v_ATTACHLIMIT#
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+		]]>
+	</update>
+	
+	<delete id="EzApprovalGAdminDAO.deleteAttachLimit" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_APRATTACHLIMIT
+        	WHERE
+        		TENANT_ID = #v_TENANTID#
+        	AND
+        		COMPANYID = #v_COMPANYID#
+		]]>
+	</delete>
+	
 </sqlMap>

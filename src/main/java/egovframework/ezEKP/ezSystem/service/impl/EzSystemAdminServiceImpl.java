@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezSystem.service.impl;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -9,13 +8,11 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -42,10 +39,10 @@ import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.CheckName;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
-import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.DataForModulesEnum;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
+import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -66,9 +63,6 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-    private Properties config;
 	
 	@Override
 	public List<SysParamVO> getSysParam(int tenantID) throws Exception {	
@@ -813,6 +807,101 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		}
 		
 		logger.debug("setAccessCountry ended");
+	}
+
+	// 암호 정책 
+	@Override
+	public Map<String, Object> getPwPolicy(int tenantId, String companyId) throws Exception {
+		logger.debug("getPwPolicy started");
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("tenantId", tenantId); 
+		paramMap.put("companyId", companyId);
+		
+		Map<String, Object> returnMap = null;
+		
+		Map<String, String> pwPolicy = ezSystemAdminDAO.getPwPolicy(paramMap); // 암호 정책
+		List<Map<String, Object>> pwPolicyPattern = ezSystemAdminDAO.getPwPolicyPattern(paramMap); // 암호 정책 패턴
+		
+		if (pwPolicy != null && pwPolicyPattern != null) {
+			returnMap = new HashMap<String, Object>();
+			returnMap.put("pwPolicy", pwPolicy);
+			returnMap.put("pwPolicyPattern", pwPolicyPattern);
+		}
+		
+		logger.debug("getPwPolicy ended");
+		return returnMap;
+	}
+
+	// 암호 정책 저장
+	@Override
+	public int updatePwPolicy(int tenantId, String companyId, Map<String, String> patternTypeMap, 
+			List<Map<String, Object>> PwPolicyPatternList) throws Exception {
+		logger.debug("updatePwPolicy started");
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("tenantId", tenantId);
+		paramMap.put("companyId", companyId);
+		
+		PasswordPolicyVO pwPolicyVO = new PasswordPolicyVO();
+		pwPolicyVO.setTenantId(tenantId);		
+		pwPolicyVO.setCompanyId(companyId);
+		pwPolicyVO.setEngCharType(patternTypeMap.get("useEngType"));
+		pwPolicyVO.setUseCapitalLetter(patternTypeMap.get("engCapitalLetter"));
+		pwPolicyVO.setUseSmallLetter(patternTypeMap.get("engSmallLetter"));
+		pwPolicyVO.setUseNumber(patternTypeMap.get("useNumber"));
+		pwPolicyVO.setUseSpecial(patternTypeMap.get("useSpecial"));
+		logger.debug("pwPolicyVO=" + pwPolicyVO.toString());
+
+		// 암호 정책 설정 저장
+		int updateChk = ezSystemAdminDAO.updatePwPolicy(pwPolicyVO);
+		if (updateChk <= 0) {
+			logger.debug("tbl_password_policy insert.");
+			ezSystemAdminDAO.insertPwPolicy(pwPolicyVO);
+		}
+
+		// 암호 패턴 설정 삭제 및 저장
+		ezSystemAdminDAO.deletePwPolicyPattern(paramMap);
+		for (Map<String, Object> patternMap : PwPolicyPatternList) {
+			patternMap.putAll(paramMap);
+			
+			logger.debug("insertPwPolicyPattern. patternMap=" + patternMap.toString());
+			ezSystemAdminDAO.insertPwPolicyPattern(patternMap);
+		}
+		
+		logger.debug("updatePwPolicy ended");
+		return 0;
+	}
+	
+	// companyConfig 저장
+	@Override
+	public void updateCompanyConfigParam(int tenantID, List<Map<String, String>> list, String companyID) throws Exception {
+		logger.debug("updateCompanyConfig started. tenantID=" + tenantID + ", companyId=" + companyID);
+		
+		SysParamVO sysParamVO = new SysParamVO();
+		sysParamVO.setTenantID(tenantID);		
+		sysParamVO.setCompanyID(companyID);
+		
+		for (int i = 0; i < list.size(); i++) {					
+			String paramName = list.get(i).get("name");
+			String paramValue = list.get(i).get("value");
+			logger.debug("paramName:" + paramName + ", paramValue:" + paramValue);
+			
+			if (paramName.equals("ExpirePassPeriod") || paramName.equals("MaxAllowedCountOfLoginFail")) {
+				int changeInt = Integer.parseInt(paramValue);
+				paramValue = Integer.toString(changeInt);
+			}
+			
+			sysParamVO.setName(paramName);
+			sysParamVO.setValue(paramValue);
+			
+			int updateChk = ezSystemAdminDAO.updateCompanyConfigParam(sysParamVO);
+			if (updateChk <= 0) {
+				logger.debug("inserst companyConfig");
+				ezSystemAdminDAO.insertCompanyConfigParam(sysParamVO);
+			}
+		}
+		logger.debug("updateCompanyConfig ended. tenantID=" + tenantID);
 	}
 	
 	@Override

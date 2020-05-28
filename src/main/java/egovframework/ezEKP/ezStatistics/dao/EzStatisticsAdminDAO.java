@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezStatistics.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -83,20 +82,16 @@ public class EzStatisticsAdminDAO extends EgovAbstractDAO{
 		return (List<StatConnVO>) list("EzStatisticsAdminDAO.getConnOS", statApprVO);	
 	}
 
-	@SuppressWarnings("unchecked")
 	public void insertCustomDocBatch() {
 		insert("EzStatisticsAdminDAO.insertCustomDocBatch");	
 	}
-	@SuppressWarnings("unchecked")
 	public void insertCustomFormBatch() {
 		insert("EzStatisticsAdminDAO.insertCustomFormBatch");	
 	}
 
-	@SuppressWarnings("unchecked")
 	public void deleteCustomDocBatch() {
 		insert("EzStatisticsAdminDAO.deleteCustomDocBatch");	
 	}
-	@SuppressWarnings("unchecked")
 	public void deleteCustomFormBatch() {
 		insert("EzStatisticsAdminDAO.deleteCustomFormBatch");	
 	}

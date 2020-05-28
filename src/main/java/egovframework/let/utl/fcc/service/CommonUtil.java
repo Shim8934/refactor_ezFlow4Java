@@ -85,6 +85,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.WebUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -93,6 +94,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -140,6 +142,9 @@ public class CommonUtil {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name="EzSystemAdminService")
+	private EzSystemAdminService ezSystemAdminService;
 	
     @Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;    
@@ -536,88 +541,82 @@ public class CommonUtil {
 	}
 	
 	public boolean isLoginCookieExists(HttpServletRequest request, HttpServletResponse response) {
-        boolean isCookie = false;     
-        Cookie[] cookies = request.getCookies();
-        
-        String serverName = request.getServerName();
+		boolean usingSession = false;
 
-        int tenantID;
+		try {
+			String serverName = request.getServerName();
+			int tenantID = loginService.getTenantId(serverName);
+			String useSessionConfig = ezCommonService.getTenantConfig("useSession", tenantID);
 
-        String useSession = null;
-        try {
-			tenantID = loginService.getTenantId(serverName);
-			
-			useSession = ezCommonService.getTenantConfig("useSession", tenantID);
-		} catch (Exception e1) {
-			e1.printStackTrace();
+			// 세션 콘피그가 0 이거나 비어있으면 세션 로그인 사용 안 함
+			usingSession = !useSessionConfig.isEmpty() && !useSessionConfig.equals("0");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
 		}
-		
-		// 2018.10.22 이석화 변경 - 세션 0이면 세션 사용 안 함
-		// 2019.09.10 127.0.0.1 일 때는 세션 확인 안 함 (인사연동)
-		if (!useSession.equals("") && !useSession.equals("0") && !request.getRemoteAddr().equals("127.0.0.1")) {
-			/* session time을 위한 처리 주석 */	
-			/* 세션 사용 위해 주석 해제*/
-			HttpSession session = request.getSession(false);
-			
-			if (session != null) {
-		        if (cookies != null) {
-		            for (Cookie cookie : cookies) {
-		                if("loginCookie".equals(cookie.getName())){
-		                    //접속한 클라이언트 IP
-		                    String ip = ClientUtil.getClientIP(request);
-		                    String cValue = "";
-		                    try {
-		                        //쿠기에 저장되어 있는 IP
-		                        cValue = egovFileScrty.decryptAES(cookie.getValue());
-		
-		                        if(cValue.split("///")[3].equals(ip) && checkDeptId(cValue)){                  
-		                            isCookie = true;
-		                            break;
-		                        }
-		                    } catch (Exception e) {
-		                        e.printStackTrace();
-		                    }
-		                }
-		            }
-		        }
-	        } else {
-	        	if (cookies != null) {
-	        		for (Cookie cookie : cookies) {
-	        			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
-	        				cookie.setMaxAge(0);
-	        				cookie.setPath("/");
-	        				response.addCookie(cookie);
-	        				
-	        				request.getSession().invalidate();
-	        			}
-	        	    }
-	        	}
-	        } 
-		} else {
-			if (cookies != null) {
-				for (Cookie cookie : cookies) {
-					if("loginCookie".equals(cookie.getName())){
-						//접속한 클라이언트 IP
-						String ip = ClientUtil.getClientIP(request);
-						String cValue = "";
-						try {
-							//쿠기에 저장되어 있는 IP
-							cValue = egovFileScrty.decryptAES(cookie.getValue());
-							
-							if(cValue.split("///")[3].equals(ip) && checkDeptId(cValue)){                  
-								isCookie = true;
-								break;
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				}
+
+		// 세션 콘피그를 무시하고 로그인 쿠키만으로 사용할 수 있도록 해줌
+		boolean usingAsAPI = "yes".equalsIgnoreCase(request.getHeader("Use-As-API"));
+		// request 아이피가 127.0.0.1 일 때는 세션 콘피그 무시함 (인사연동)
+		boolean isLoopbackRequest = request.getRemoteAddr().equals("127.0.0.1");
+
+		if (!usingSession || usingAsAPI || isLoopbackRequest) {
+			return validLoginCookie(request);
+		}
+
+		return validSessionLoginCookie(request, response);
+	}
+
+	private boolean validLoginCookie(HttpServletRequest request) {
+		Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+
+		if (loginCookie == null) {
+			return false;
+		}
+
+		try {
+			String ip = ClientUtil.getClientIP(request);
+			String decryptedLoginCookie = egovFileScrty.decryptAES(loginCookie.getValue());
+
+			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
+			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	private boolean validSessionLoginCookie(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession(false);
+
+		if (session == null) {
+			clearAllCookies(request, response);
+
+			return false;
+		}
+
+		return validLoginCookie(request);
+	}
+
+	private void clearAllCookies(HttpServletRequest request, HttpServletResponse response) {
+		Cookie[] cookies = request.getCookies();
+
+		if (cookies == null) {
+			return;
+		}
+
+		for (Cookie cookie : cookies) {
+			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")) {
+				cookie.setMaxAge(0);
+				cookie.setPath("/");
+				response.addCookie(cookie);
+
+				request.getSession().invalidate();
 			}
 		}
-        return isCookie;
 	}
-	
+
 	public boolean checkDeptId(String cValue){
 		String[] decDataArray = cValue.split("///");
 		
@@ -1870,6 +1869,230 @@ public class CommonUtil {
 		}
 		
 		return result;
+	}
+	
+	// 암호 정책관리 체크
+	@SuppressWarnings("unchecked")
+	public Boolean checkPwPolicy (String pwStr, String companyId, int tenantId) throws Exception {
+		logger.debug("commonUtil. checkPwPolicy Started.");
+		logger.debug("companyId=" + companyId + ", tenantId=" + tenantId + ", pwStr=" + pwStr);
+		
+		Boolean bResult = false;
+		
+		// 1. 암호 정책관리 사용 여부 확인
+		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy");
+		if (!usePasswordPatternPolicy.equals("YES")) {
+			logger.debug("commonUtil. checkPwPolicy ended. usePasswordPatternPolicy config is 'NO'");
+			return true;
+		}
+		
+		Map<String, Object> pwMap = ezSystemAdminService.getPwPolicy(tenantId, companyId);
+		if (pwMap != null) {
+			logger.debug("pwMap=" + pwMap.toString());
+			
+			Boolean bEngCapitalLetter = false; // 대문자 포함시 true(대소문자 구분 안할 경우 bEngSmallLetter는 무조건 false로 하고 bEngCapitalLetter 만 사용)
+			Boolean bEngSmallLetter = false;   // 소문자 포함시 true(대소문자 구분 안할 경우 bEngSmallLetter는 무조건 false)
+			Boolean bNumber = false;           // 숫자 포함시 true
+			Boolean bSpecialChar = false;      // 특수문자 포함시 true
+			
+			Map<String, String> pwPolicyMap = (Map<String, String>) pwMap.get("pwPolicy");
+			List<Map<String, Object>> pwPolicyPattern = (List<Map<String, Object>>) pwMap.get("pwPolicyPattern");
+			
+			String engCharType = pwPolicyMap.get("ENG_CHAR_TYPE"); // 영문 (대소문자)  :: Y or N
+			String useEngCapitalLetter = pwPolicyMap.get("USE_ENG_CAPITAL_LETTER"); // 대문자 사용여부  :: Y or N
+			String useEngSmallLetter = pwPolicyMap.get("USE_ENG_SMALL_LETTER"); // 소문자 사용여부  :: Y or N
+			String useNumber = pwPolicyMap.get("USE_NUMBER"); // 숫자 사용여부  :: Y or N
+			String useSpecial = pwPolicyMap.get("USE_SPECIAL_CHAR"); // 특수문자 사용여부  :: Y or N
+			logger.debug("engCharType=" + engCharType + ", useEngCapitalLetter=" + useEngCapitalLetter + ", useEngSmallLetter=" + useEngSmallLetter
+					+ ", useNumber=" + useNumber + ", useSpecial=" + useSpecial);
+			
+		    // 2. 영문 대소문자 구분 사용 여부 (
+			if (engCharType != null) {
+				if (engCharType.equalsIgnoreCase("Y")) {
+					// 영문 대문자 사용
+                	bEngCapitalLetter = Pattern.compile("[A-Z]").matcher(pwStr).find();
+	                if (useEngCapitalLetter != null && useEngCapitalLetter.equalsIgnoreCase("N")) {
+	                    if (bEngCapitalLetter) {
+	            			logger.debug("commonUtil. checkPwPolicy ended. (useEngCapitalLetter)");
+	                        return false;
+	                    }
+	                }
+
+	                // 영문 소문자 사용
+	                bEngSmallLetter = Pattern.compile("[a-z]").matcher(pwStr).find();
+	                if (useEngSmallLetter != null && useEngSmallLetter.equalsIgnoreCase("N")) {
+	                    if (bEngSmallLetter) {
+	            			logger.debug("commonUtil. checkPwPolicy ended. (useEngSmallLetter)");
+	                        return false;
+	                    }
+	                }
+				} else {
+					bEngCapitalLetter = Pattern.compile("[a-zA-Z]").matcher(pwStr).find();
+        			logger.debug("!!!!! =" + bEngCapitalLetter);
+				}
+			}
+			
+            // 3. 숫자 사용
+            bNumber = Pattern.compile("[1-9]").matcher(pwStr).find();
+            if (useNumber != null && useNumber.equalsIgnoreCase("N")) {
+                if (bNumber) {
+        			logger.debug("commonUtil. checkPwPolicy ended. (useNumber)");
+                    return false;
+                }
+            }
+
+            // 4. 특수문자 사용
+            bSpecialChar = Pattern.compile("[~!@#$%^&*()=+|\\/:;?\"<>']").matcher(pwStr).find();
+            if (useSpecial != null && useSpecial.equalsIgnoreCase("N")) {
+                if (bSpecialChar){
+        			logger.debug("commonUtil. checkPwPolicy ended. (useSpecial)");
+                    return false;
+                }
+            }
+            
+            int iPatternCnt = 0;
+			logger.debug("bEngCapitalLetter=" + bEngCapitalLetter + ", bEngSmallLetter=" + bEngSmallLetter + 
+					", bNumber=" + bNumber + ", bSpecialChar=" + bSpecialChar);
+            if (bEngCapitalLetter){ iPatternCnt++;} 
+            if (bEngSmallLetter){ iPatternCnt++;} 
+            if (bNumber){ iPatternCnt++;} 
+            if (bSpecialChar){ iPatternCnt++;} 
+			
+            // 5. 패턴 사용 수, 글자수 확인
+            if (pwPolicyPattern != null && pwPolicyPattern.size() > 0) {
+            	Boolean patternChk = true;
+            	
+            	for (Map<String, Object> pwPattern : pwPolicyPattern) {
+            		
+            		int patternCnt = Integer.parseInt(String.valueOf(pwPattern.get("USE_PATTERN_COUNT")));
+            		int numberOfChar = Integer.parseInt(String.valueOf(pwPattern.get("NUMBER_OF_CHAR")));
+            		logger.debug("patternCnt=" + patternCnt + ",iPatternCnt=" + iPatternCnt + ", numberOfChar=" + numberOfChar);
+
+            		if (patternCnt == iPatternCnt) {
+            			 if (numberOfChar == 0) { // 사용불가
+            				 patternChk = false;
+                         } else if (numberOfChar > pwStr.length()){
+                        	 patternChk = false;
+                         } else {
+                        	 patternChk = true;
+                         }
+            		}
+            	} // for end.
+            	bResult = patternChk;
+            } else {
+        		logger.debug("!!!! ");
+            	bResult = true;
+            } // if end
+		} else {
+            // 비밀번호 정책이 사용되지 않은 경우 무조선 통과
+            bResult = true;
+		}
+		
+		logger.debug("commonUtil. checkPwPolicy ended. result=" + bResult);
+		return bResult;
+	}
+	
+	// 암호 정책 패턴 설명 문구
+	@SuppressWarnings("unchecked")
+	public String getPwPolicyExplain (String companyId, int tenantId, Locale locale) throws Exception {
+		logger.debug("commonUtil. getPwPolicyExplain Started.");
+		logger.debug("companyId=" + companyId + ", tenantId=" + tenantId);
+		
+		String sResult = "";
+		String patternContent = "";
+		int patternCount = 0;
+		String patternContentTemp = "<p>▒ " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy36", locale) + " : ${str}</p>";
+		String patternContentTemp2 = "<br/> <span>&nbsp;&nbsp;&nbsp; > ${str}</span>";
+		
+		// 1. 암호 정책관리 사용 여부 확인
+		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy");
+		if (!usePasswordPatternPolicy.equals("YES")) {
+			logger.debug("commonUtil. getPwPolicyExplain ended. usePasswordPatternPolicy config is 'NO'");
+			return "";
+		}
+		
+		Map<String, Object> pwMap = ezSystemAdminService.getPwPolicy(tenantId, companyId);
+		if (pwMap != null) {
+			logger.debug("pwMap=" + pwMap.toString());
+
+			Map<String, String> pwPolicyMap = (Map<String, String>) pwMap.get("pwPolicy");
+			List<Map<String, Object>> pwPolicyPattern = (List<Map<String, Object>>) pwMap.get("pwPolicyPattern");
+			
+			String engCharType = pwPolicyMap.get("ENG_CHAR_TYPE"); // 영문 (대소문자)  :: Y or N
+			String useEngCapitalLetter = pwPolicyMap.get("USE_ENG_CAPITAL_LETTER"); // 대문자 사용여부  :: Y or N
+			String useEngSmallLetter = pwPolicyMap.get("USE_ENG_SMALL_LETTER"); // 소문자 사용여부  :: Y or N
+			String useNumber = pwPolicyMap.get("USE_NUMBER"); // 숫자 사용여부  :: Y or N
+			String useSpecial = pwPolicyMap.get("USE_SPECIAL_CHAR"); // 특수문자 사용여부  :: Y or N
+			logger.debug("engCharType=" + engCharType + ", useEngCapitalLetter=" + useEngCapitalLetter + ", useEngSmallLetter=" + useEngSmallLetter
+					+ ", useNumber=" + useNumber + ", useSpecial=" + useSpecial);
+			
+		    // 2. 영문 대소문자 구분 사용 여부 (
+			if (engCharType != null) {
+				if (engCharType.equalsIgnoreCase("Y")) {
+					// 영문 대문자 사용
+	                if (useEngCapitalLetter != null && useEngCapitalLetter.equalsIgnoreCase("Y")) {
+	                    patternContent = (patternCount + 1) + ". " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy27", locale);
+	                    patternCount += 1;
+	                }
+
+	                // 영문 소문자 사용
+	                if (useEngSmallLetter != null && useEngSmallLetter.equalsIgnoreCase("Y")) {
+	                	if (!patternContent.equals("")) {
+	                		patternContent += ", ";
+	                    }
+	                    patternContent += (patternCount + 1) + ". " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy28", locale);
+	                    patternCount += 1;
+	                }
+				} else {
+					patternContent = (patternCount + 1) + ". " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy16", locale);
+		            patternCount += 1;
+				}
+			}
+			
+            // 3. 숫자 사용
+            if (useNumber != null && useNumber.equalsIgnoreCase("Y")) {
+            	if (!patternContent.equals("")) {
+            		patternContent += ", ";
+                }
+            	patternContent += (patternCount + 1) + ". " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy17", locale);
+            	patternCount += 1;
+            }
+
+            // 4. 특수문자 사용
+            if (useSpecial != null && useSpecial.equalsIgnoreCase("Y")) {
+            	if (!patternContent.equals("")) {
+            		patternContent += ", ";
+                }
+            	patternContent += (patternCount + 1) + ". " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy18", locale);
+            	patternCount += 1;
+            }
+            
+            // 5. 패턴 사용 수, 글자수 확인
+            if (pwPolicyPattern != null && pwPolicyPattern.size() > 0) {
+        		String patternMsg1 = egovMessageSource.getMessage("ezSystem.ksaPwPolicy19", locale);
+            	for (Map<String, Object> pwPattern : pwPolicyPattern) {
+            		int patternCnt = Integer.parseInt(String.valueOf(pwPattern.get("USE_PATTERN_COUNT")));
+            		int numberOfChar = Integer.parseInt(String.valueOf(pwPattern.get("NUMBER_OF_CHAR")));
+
+            		String patternMsgTemp = patternMsg1.replace("{0}", Integer.toString(patternCnt)) + " ";
+            		
+            		if (numberOfChar <= 0) {
+            			patternMsgTemp += egovMessageSource.getMessage("ezSystem.ksaPwPolicy21", locale);
+            		} else {
+            			patternMsgTemp += numberOfChar + egovMessageSource.getMessage("ezSystem.ksaPwPolicy26", locale);
+            		}
+            		
+            		patternContent += patternContentTemp2.replace("${str}", patternMsgTemp);
+            	} // for end.
+            }
+            
+            if (!patternContent.equals("")) {
+            	sResult = patternContentTemp.replace("${str}", patternContent);
+            }
+		}
+		
+		logger.debug("commonUtil. checkPwPolicy ended. result=" + sResult);
+		return sResult;
 	}
 	
 	//2020-01-22 유은정 메뉴코드로 메뉴 권한 체크

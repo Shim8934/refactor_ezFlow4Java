@@ -103,6 +103,8 @@
 	    var g_showEnglishDisplay = "";
 	    var g_charsetCheck = "${charsetCheck}";
 	    var g_ReSendFlag = "${reSendFlag}";
+	    var BigSizeAttachLimitCount = "${bigSizeAttachLimitCount}";
+	    var BigSizeAttachDownloadLimitCount = "${bigSizeAttachDownloadLimitCount}";
 	    var BigSizeAttachMBSize = "${bigSizeMailAttachLimit}";
 	    var totBigSizeAttachMBSize = "${totBigSizeMailAttachLimit}";
 	    var totSizeAttachMBSize = "${mailAttachLimit}";
@@ -502,7 +504,7 @@
 	    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	    	}
 	        
-	        xmlhttp.open("GET", requestUrl, false);
+	        xmlhttp.open("GET", requestUrl, true);
 	        xmlhttp.send();
 	        xmlhttp = null;
 	        isDelted = true;

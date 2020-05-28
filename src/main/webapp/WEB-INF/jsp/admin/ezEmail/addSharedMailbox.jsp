@@ -495,7 +495,7 @@
 		                return;
 		            }
 		            
-		            if (!CheckPassword(document.getElementById('TextPassword').value)) {
+		            if (!sharedMailCheckPassword(document.getElementById('TextPassword').value)) {
 						alert("<spring:message code='main.jjh04'/>");
 						document.getElementById('TextPassword').focus();
 						return;

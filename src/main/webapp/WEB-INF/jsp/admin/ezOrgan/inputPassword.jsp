@@ -13,10 +13,18 @@
 		<script type="text/javascript">
 			var ReturnFunction;
 			var confirmStr;
+			var companyID;
 
 			$(document).ready(function(){
 				try {
 					ReturnFunction = opener.inputpassword_dialogArguments[1];
+					companyID = opener.userComId
+					
+					var windowH = window.outerHeight;
+					var windowW = window.outerWidth;
+					var pwPolicyExplainH = $("#pwPolicyExplain").height();
+					window.resizeTo(windowW, windowH + pwPolicyExplainH);
+					
 				} catch (e) {}     
 			});		
 
@@ -27,11 +35,17 @@
 					return;
 				}
 
-				if (!CheckPassword(document.getElementById('NewPassword').value)) {
-					alert("<spring:message code='main.jjh04'/>");
-					document.getElementById('NewPassword').focus();
-					return;
-				}
+				var checkPw = CheckPassword(document.getElementById('NewPassword').value, companyID);
+		        if (checkPw != "OK"){
+		        	if (checkPw == "ERROR") {
+		        		alert("<spring:message code='ezSystem.ksaPwPolicy34'/>");
+		        	} else {
+		        		alert("<spring:message code='ezSystem.ksaPwPolicy35'/>");
+		        	}
+		        	
+		        	document.getElementById('NewPassword').focus();
+		        	return;
+		        }
 
 				if (NewPassword.value != ConfirmPassword.value) {
 					alert("<spring:message code='ezOrgan.t230' />");
@@ -61,7 +75,7 @@
 				<li><span onclick="window.close()"></span></li>
 			</ul>
 		</div>
-		<div style="margin-top: 5px; color: #393939;"><span>▒ <spring:message code='main.jjh04'/></span></div>
+		<div id="pwPolicyExplain" style="margin-top: 5px; color: #393939;"><span>${pwPolicyExplain }</span></div>
 		<table class="content" style="margin-top: 3px"> 
 			<tr>
 				<th><spring:message code="ezOrgan.t232" /></th>

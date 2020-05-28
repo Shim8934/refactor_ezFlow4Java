@@ -41,7 +41,7 @@ public interface EzApprovalGService {
 
     public String getProxyUser(String id, String lang, int tenantID, String offset) throws Exception;
 
-    public String getAprLineInfoDB(String docID, String flag, String userID, String formID, String companyID, int tenantID, String isUsed, String beforeDocID, String mode) throws Exception;
+    public String getAprLineInfoDB(String docID, String flag, String userID, String formID, String companyID, int tenantID, String isUsed, String beforeDocID, String mode, String docState) throws Exception;
 
     public String getListHeader(String listCode, String companyID, String lang, int tenantID) throws Exception;
 
@@ -77,7 +77,7 @@ public interface EzApprovalGService {
 
     public String getAprType(String approvalFlag, String companyID, String lang, int tenantID) throws Exception;
 
-    public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset, String reDraftFlag, String isUsed, String beforeDocID, String mode) throws Exception;
+    public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset, String reDraftFlag, String isUsed, String beforeDocID, String mode, String docState) throws Exception;
 
     public String getTempList(String userID, String formID, String companyID, String lang, int tenantID) throws Exception;
 
@@ -251,6 +251,8 @@ public interface EzApprovalGService {
     public String getFindSimpleCabinetList(String processDeptCode, String productionYear, String searchKeyword, String flag, String companyID, String langType, int tenantID) throws Exception;
 
     public String setBebu(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet, LoginVO userInfo, String curDocNum) throws Exception;
+    
+    public String setReBebu(String docID, String receiveSN, String deptID, LoginVO userInfo, String companyID, int tenantId, String lang) throws Exception;
 
     public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID, String approvalFlag, String userFlag) throws Exception;
 
@@ -483,6 +485,10 @@ public interface EzApprovalGService {
     public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState, String nonElecRecYN) throws Exception;
 
     public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
+    
+	public void OpinionDel2(String docID, String companyID, int tenantId) throws Exception;
+	
+	public void OpinionDel3(String docID, String companyID, int tenantId) throws Exception;
 
     public int lastKyulJeHabYuiYN(String docID, String flag, String companyID, int tenantId) throws Exception;
 
@@ -676,5 +682,8 @@ public interface EzApprovalGService {
     public String getBansongDeptID(String docID, String orgCompanyID, int tenantID, LoginVO userInfo) throws Exception;
     
     public String updateReceivedDept(String docID, String processorID, String processorName, String processorJobTitle, String receivedDeptID, String receivedDeptName, String processorName2, String processorJobTitle2, String receivedDeptName2, String companyID, int tenantId) throws Exception;
+    
+    public String setApprDocInfo(Document xmlDom, String companyID, int tenantId) throws Exception;
 
+    public String getFormAprOptionInfo(String key, String type, String companyID, int tenantID) throws Exception;
 }

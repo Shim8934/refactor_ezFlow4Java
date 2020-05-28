@@ -652,6 +652,7 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		int tenantID = info.getTenantId();
 		String offset = info.getOffSet();
+		@SuppressWarnings("unused")
 		boolean saveMHTResult = false;
 		String filePath = commonUtil.getUploadPath("upload_board.ROOT", info.getTenantId());
 		
@@ -828,6 +829,7 @@ public class MBoardServiceImpl implements MBoardService {
 	public void updateItem(JSONObject boardListVO, MCommonVO info, String realPath, String mhtData) throws Exception {
 		logger.debug("updateItem started");
 		
+		@SuppressWarnings("unused")
 		boolean saveMHTResult = false;
 		String filePath = commonUtil.getUploadPath("upload_board.ROOT", info.getTenantId());
 		

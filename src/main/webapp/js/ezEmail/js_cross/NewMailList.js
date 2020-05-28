@@ -1180,7 +1180,7 @@ function MailListRefreshByTimeout() {
 
 function MailListRefresh() {
 	ContextMenuHidden();
-	
+
 	if (typeof(shareId) != "undefined" && shareId != "") {
 		parent.frames["left"].detailView(shareId);
 	} else {
@@ -1188,7 +1188,14 @@ function MailListRefresh() {
 	}
     
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
-        goToPageByNum(MailList.getAttribute("curPage"));
+    	// 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+        if (listContentArry.length > 0) {
+            for (var i = 1; i <= listContentArry.length; i++) {
+                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+            }
+        }
+    	
+    	goToPageByNum(MailList.getAttribute("curPage"));
     }
     else {
         if (listSubContentArry.length > 0) {
@@ -1218,6 +1225,14 @@ function MailListRefresh() {
             pGroupListClickObject.childNodes.item(0).childNodes.item(0).src = GroupminImg;
             var HeaderObject = document.getElementById("GroupSubHeader");
             var ContentObject = document.getElementById("GroupSubList");
+            
+            // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+            if (listContentArry.length > 0) {
+                for (var i = 1; i <= listContentArry.length; i++) {
+                    document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+                }
+            }
+            
             listSubContentArry = new Array();
             listContentArry = new Array();
             HeaderIni_SUB(HeaderObject);
@@ -1229,7 +1244,7 @@ function MailListRefresh() {
     }
     
     refreshUnreadCount();
-    
+
     // commented out to maintain the current preview content when the mail list is refreshed : dhlee
 //    prevShow_Clear();
 }

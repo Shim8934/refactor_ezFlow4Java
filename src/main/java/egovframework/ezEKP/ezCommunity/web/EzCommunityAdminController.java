@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezCommunity.web;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -45,12 +44,6 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 public class EzCommunityAdminController {
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties config;
-	
-	@Autowired
-	private Properties globals;
 	
 	@Autowired
 	private EzCommonService ezCommonService;

@@ -69,6 +69,9 @@
 	    	case "ADMINIPMANAGER":
 	    		parent.frames[1].location.href = "/admin/ezSystem/systemAdminIPManager.do";
 	    		break;
+	    	case "PASSWORDPOLICY":
+	    		parent.frames[1].location.href = "/admin/ezSystem/passwordPolicyMain.do";
+	    		break;
 	    }
     }
 
@@ -117,6 +120,7 @@
 	            <h2><span id="ADMINIPMANAGER" style="display:inline-block;width:100%;" onClick="menu_change('ADMINIPMANAGER')" ><spring:message code='ezSystem.ksa08'/></span></h2>
 	            </c:if>
 	            <h2><span id="MULTILOGIN" style="display:inline-block;width:100%;" onClick="menu_change('MULTILOGIN')" ><spring:message code="ezSystem.kbh08" /></span></h2>
+	            <h2><span id="PASSWORDPOLICY" style="display:inline-block;width:100%;" onClick="menu_change('PASSWORDPOLICY')" ><spring:message code='ezSystem.ksaPwPolicy01' /></span></h2>
 	            <c:if test="${cChk == '1' }">
 	            <h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span></h2>
 	            </c:if>

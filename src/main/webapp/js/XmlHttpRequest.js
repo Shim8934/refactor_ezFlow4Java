@@ -711,7 +711,6 @@ function ConvertHTMLtoMHT(pContent) {
 
 function ConvertHTMLtoMHT(pContent, pType) {
 	var rtnVal = '';
-    pContent = pContent.replace(/&quot;/g, "\'");
 	$.ajax({
 		type : "POST",
 		dataType : "text",
@@ -1031,6 +1030,11 @@ function DivPopUpShow(popUpW, popUpH, URL) {
         document.getElementById("iFramePanel").style.height = popUpH + "px";
         document.getElementById("iFrameLayer").style.width = popUpW + "px";
         document.getElementById("iFrameLayer").style.height = popUpH + "px";
+        //2020-05-06 : right frame 리스트에서 divPopup 사용 시 left frame 영역도 적용
+        try{
+            if(typeof(window.parent.frames.left) == "object")
+                window.parent.frames.left.document.getElementById("mailPanel_left").style.display = "";
+        }catch(e){}
         document.getElementById("mailPanel").style.display = "";
         document.getElementById("iFramePanel").style.display = "";
     } catch (e) {}
@@ -1038,6 +1042,11 @@ function DivPopUpShow(popUpW, popUpH, URL) {
 
 function DivPopUpHidden() {
     try {
+        //2020-05-06 : right frame 리스트에서 divPopup 사용 시 left frame 영역도 적용
+        try{
+            if(typeof(window.parent.frames.left) == "object")
+                window.parent.frames.left.document.getElementById("mailPanel_left").style.display = "none";
+        }catch(e){}        
         document.getElementById("mailPanel").style.display = "none";
         document.getElementById("iFramePanel").style.display = "none";
         document.getElementById("iFrameLayer").src = "/blank.htm";

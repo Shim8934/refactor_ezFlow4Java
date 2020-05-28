@@ -1,7 +1,5 @@
 package egovframework.ezMobile.ezOption.web;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -9,11 +7,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
-
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +27,6 @@ import com.google.gson.Gson;
 
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
-import egovframework.ezMobile.ezPortal.web.MPortalController;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -106,6 +99,7 @@ private static final Logger logger = LoggerFactory.getLogger(MOptionController.c
 		
 		JSONObject resultBody = result.getBody();
 				
+		@SuppressWarnings("unused")
 		String status = resultBody.get("status").toString();
 		//Map<String, Object> scheduleDetail = (Map<String, Object>) resultBody.get("data");
         JSONObject Detail = gson.fromJson((String)resultBody.get("data"), JSONObject.class);
@@ -182,6 +176,7 @@ private static final Logger logger = LoggerFactory.getLogger(MOptionController.c
 		
 		JSONObject resultBody = result.getBody();
 				
+		@SuppressWarnings("unused")
 		String status = resultBody.get("status").toString();
 
 		model.addAttribute("result", result);

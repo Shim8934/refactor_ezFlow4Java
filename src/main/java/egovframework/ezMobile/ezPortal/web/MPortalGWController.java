@@ -557,7 +557,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			
 			String menuCodeStr = "approval,mail,schedule,board,resource,workspace,address";
 			String[] menuCodeArr = menuCodeStr.split(",");
-			ArrayList<String> menuCodeList =  new ArrayList(Arrays.asList(menuCodeArr));
+			ArrayList<String> menuCodeList =  new ArrayList<>(Arrays.asList(menuCodeArr));
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 			String deptId = info.getDeptId();

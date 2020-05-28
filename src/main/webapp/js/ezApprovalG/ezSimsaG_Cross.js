@@ -223,6 +223,8 @@ function makeXML(newDocID) {
 	        if (field.fontSize !== null) {
 	            defaultFontSize = field.fontSize;
 	        }
+	        
+	        styleToAttribute(field);
 
 	        var strBody = Document_Encode(field.innerHTML, defaultFontFamily, defaultFontSize);
 
@@ -739,6 +741,19 @@ function removeTags(input, allowed) {
     return input.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
         return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
     });
+}
+
+function styleToAttribute(bodyElem) {
+	var pElem = bodyElem.getElementsByTagName("p");
+	for (var i = 0; i < pElem.length; i++) {
+		if (pElem[i].style && pElem[i].style.textAlign) {
+			pElem[i].align = pElem[i].style.removeProperty("text-align");
+		}
+		
+		if (pElem[i].getAttribute("style") == "") {
+			pElem[i].removeAttribute("style");
+		}
+	}
 }
 
 function FileUpload(pFileName, pURL, localPath)

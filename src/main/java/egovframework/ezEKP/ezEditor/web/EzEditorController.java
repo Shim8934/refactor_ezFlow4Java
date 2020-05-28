@@ -6,11 +6,10 @@ import java.awt.image.Raster;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Base64;
-import java.util.Iterator;
 import java.util.Base64.Decoder;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.UUID;
-import java.util.Base64.Decoder;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -18,7 +17,6 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.tools.ant.taskdefs.condition.IsSet;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -282,11 +280,11 @@ public class EzEditorController extends EgovFileMngUtil {
 
 			if (check == true) {
 				// Find a suitable ImageReader
-				Iterator readers = ImageIO.getImageReadersByFormatName("JPEG");
+				Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("JPEG");
 				ImageReader reader = null;
 
 				while (readers.hasNext()) {
-					reader = (ImageReader) readers.next();
+					reader = readers.next();
 					if (reader.canReadRaster()) {
 						break;
 					}
@@ -622,6 +620,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * namo에디터 업로드 실행 Method
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezEditor/namoUpload.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String namoUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {

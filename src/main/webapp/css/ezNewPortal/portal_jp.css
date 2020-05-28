@@ -1254,3 +1254,10 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:547px; z-index
 
 /* 20190626 class mainbg 옮김 */
 .mainbg {min-width : 1260px;}
+
+/* 2020-05-07 홍승비 - 퀵메뉴 다국어 스타일 추가 */
+.quickMenuBtn span, .quickMenuBtn span div {
+	font-size:12px;
+	font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
+	text-decoration: none;
+}
