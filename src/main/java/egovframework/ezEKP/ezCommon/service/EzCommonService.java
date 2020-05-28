@@ -215,6 +215,8 @@ public interface EzCommonService {
 	
 	public void addAprTmpAttachViewOrder() throws Exception;
 
+	public void createAprAttachLimit() throws Exception;
+	
 	public void addDocStateIntoLastLines() throws Exception;
 
 	public void addDocStateIntoLastDeptLines() throws Exception;

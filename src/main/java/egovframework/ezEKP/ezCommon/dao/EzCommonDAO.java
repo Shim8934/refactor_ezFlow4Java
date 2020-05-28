@@ -1323,7 +1323,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.updateAprTmpAttachViewOrder");
 		}
 	}
-
+	
 	public void insertUseExternalMailServerConfig(Map<String, Object> map) throws Exception {
 		String propertyValue = (String) select("EzCommonDAO.checkMailTenantConfig");
 		
@@ -1388,6 +1388,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public void createAprAttachLimit() {
+		try {
+			select("EzCommonDAO.checkAprAttachLimit");
+		} catch (Exception e) {
+			logger.debug("tbl_aprattachlimit doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createAprAttachLimit");
+		}
+	}
+	
 	public void addDocStateIntoLastLines() {
 		try {
 			select("EzCommonDAO.checkDocStateIntoLastLines");

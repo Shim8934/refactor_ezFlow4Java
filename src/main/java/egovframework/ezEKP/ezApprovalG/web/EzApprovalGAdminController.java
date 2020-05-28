@@ -4145,7 +4145,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("setDocNumZeroCnt ended | result = " + rtnVal);
 		return rtnVal;
 	}
-
+	
 	@RequestMapping(value = "/admin/ezApprovalG/enforceSihangSeal.do", method = RequestMethod.GET)
 	public String enforceSihangSeal(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("enforceSihangSeal started");
@@ -4355,5 +4355,94 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("getModifyOpenGovHistoryReason ended.");
 
 		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 첨부파일 개수제한 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/manageAttachLimit.do")
+	public String manageAttachLimit(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("manageAttachLimit started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		// 전체관리자, 회사관리자만 접근 가능
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			// 전체관리자는 모든 회사 표출, 그 외에는 자신의 소속 회사만 표출
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+		}
+		
+		int apprAttachLimitMax = 100; // 첨부파일 개수제한 default 최대값은 100개
+		String apprAttachCntLimitMax = ezCommonService.getTenantConfig("ApprAttachCntLimitMax", userInfo.getTenantId());
+		if (apprAttachCntLimitMax != null && !apprAttachCntLimitMax.equals("")) {
+			apprAttachLimitMax = Integer.parseInt(apprAttachCntLimitMax);
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		model.addAttribute("apprAttachLimitMax", apprAttachLimitMax);
+		
+		logger.debug("manageAttachLimit ended.");
+		return "/admin/ezApprovalG/apprGManageAttachLimit";
+	}
+	
+	/**
+	 * 전자결재G관리 첨부파일 개수제한 설정값 가져오기 (GET)
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getAttachLimit.do")
+	@ResponseBody
+	public int getAttachLimit(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getAttachLimit started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		
+		int result = ezApprovalGAdminService.getAttachLimit(companyID, userInfo.getTenantId());
+		
+		logger.debug("getAttachLimit ended");
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 첨부파일 개수제한 설정 저장 (POST)
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/saveAttachLimit.do")
+	@ResponseBody
+	public void saveAttachLimit(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("saveAttachLimit started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		String attachLimit = request.getParameter("attachLimit");
+		
+		ezApprovalGAdminService.saveAttachLimit(attachLimit, companyID, userInfo.getTenantId());
+		
+		logger.debug("saveAttachLimit ended");
+	}
+	
+	/**
+	 * 전자결재G관리 첨부파일 개수제한 설정 삭제 (POST)
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/deleteAttachLimit.do")
+	@ResponseBody
+	public void deleteAttachLimit(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("deleteAttachLimit started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		
+		ezApprovalGAdminService.deleteAttachLimit(companyID, userInfo.getTenantId());
+		
+		logger.debug("deleteAttachLimit ended");
 	}
 }

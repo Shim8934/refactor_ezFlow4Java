@@ -15,6 +15,7 @@ import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
+
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -30,6 +31,7 @@ import javax.net.ssl.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -1787,6 +1789,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void createAprAttachLimit() throws Exception {
+		ezCommonDAO.createAprAttachLimit();
+	}
+	
+	@Override
     public void addDocStateIntoLastLines() throws Exception {
 	    ezCommonDAO.addDocStateIntoLastLines();
     }
@@ -1795,7 +1802,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void addDocStateIntoLastDeptLines() throws Exception {
 	    ezCommonDAO.addDocStateIntoLastDeptLines();
     }
-
+    
 	public void insertAlternateHolidayAttitudeType() {
 		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();		
 
