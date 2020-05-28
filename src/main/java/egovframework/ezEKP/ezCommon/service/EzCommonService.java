@@ -208,6 +208,12 @@ public interface EzCommonService {
 	public void addIsBeforeDoc() throws Exception;
 
 	public void addBeforeDocUrl() throws Exception;
+
+	public void setCompanyConfigs() throws Exception;
+	
+	public void createPwPolicyTable() throws Exception;
+	
+	public void createPwPolicyPatternTable() throws Exception;
 	
 	public void addAprAttachViewOrder() throws Exception;
 	

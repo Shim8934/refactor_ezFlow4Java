@@ -16,6 +16,7 @@ import java.util.Properties;
 import java.util.Random;
 
 import egovframework.com.cmm.EgovMessageSource;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -459,9 +460,10 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	}
 	
 	@Override
-	public String setCertification(String sabun, String certificationNum, Locale locale) throws Exception {
+	public Map<String, Object> setCertification(String sabun, String certificationNum, Locale locale) throws Exception {
 		logger.debug("setCertification ended.");
 		logger.debug("sabun = " + sabun + ", certificationNum = " + certificationNum);
+		int resultKey = 0; // 1:인증성공, -1:잘못된인증번호
 		String result = "";
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("certificationNum", certificationNum);
@@ -473,6 +475,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 			result = egovMessageSource.getMessage("login.zno016", locale);
 		} else if(!findPwdInfo.getCertification_Num().equals(certificationNum)) {
 			result = egovMessageSource.getMessage("login.zno017", locale);
+			resultKey = -1;
 		} else {
 			Calendar nowCal = Calendar.getInstance();
 			nowCal.setTime(new Date());
@@ -492,15 +495,19 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 				
 				if(fidPwd > 0){
 					result = egovMessageSource.getMessage("login.zno020", locale);
+					resultKey = 1;
 				} else {
 					result = egovMessageSource.getMessage("login.zno017", locale);
 				}
 			}
 		}
 		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("resultMsg", result);
+		resultMap.put("resultKey", resultKey);
 		
 		logger.debug("setCertification ended.");
-		return result;
+		return resultMap;
 	}
 	
 	@Override

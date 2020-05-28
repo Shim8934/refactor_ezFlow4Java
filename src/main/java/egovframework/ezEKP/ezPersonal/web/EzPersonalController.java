@@ -1148,6 +1148,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String companyID = userInfo.getCompanyID();
+		logger.debug("companyID=" + companyID);
+		
 		String noneActiveX = "YES";
 		String userMobileManaged = "NO";
 		// 모바일 설정
@@ -1223,6 +1226,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 			useZipCodeSearch = "YES";
 		}
 		
+		String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyID, userInfo.getTenantId(), locale);
+		
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("txtInfo", pInfo);
 		model.addAttribute("labelCompany", labelCompany);
@@ -1253,6 +1258,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("LiteralExtensionPhone", literalExtensionPhone);
 		model.addAttribute("LiteralOfficeMobile", literalOfficeMobile);
 		model.addAttribute("useMailAliasSettingOnLogin", useMailAliasSettingOnLogin);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
 		
 		logger.debug("changePersonInfo ended");
 		return "/ezPersonal/persChangePersonInfo";

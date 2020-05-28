@@ -198,6 +198,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertMailBigSizeAttachLimit(); // 2020-03-12 홍대표 - 메일 대용량 첨부 제한 컨피그 추가.
 	    	ezCommonService.addIsBeforeDoc(); // 2020-02-24 홍승비 - 전자결재문서 편집전후여부 플래그 컬럼 추가
 	    	ezCommonService.addBeforeDocUrl(); // 2020-02-27 홍승비 - 전자결재문서 편집전후 문서경로 URL컬럼 추가
+	    	ezCommonService.setCompanyConfigs(); // 2020-03-30 김수아 - companyConfig 추가
+	    	ezCommonService.createPwPolicyTable(); // 2020-04-06 김수아 - tbl_password_policy table
+	    	ezCommonService.createPwPolicyPatternTable(); // 2020-04-06 김수아 - tbl_password_policy_Pattern table
 	    	ezCommonService.addBoardLikeFlag(); // 2019-04-05 홍승비 - 게시판 좋아요 기능 관련 테이블 생성 및 칼럼 추가
 	    	ezCommonService.createBoardLike();
 	    	ezCommonService.addSurveyAlamColums(); // 2019-10-07 이석화 - 설문 알림 컬럼 추가
@@ -523,6 +526,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							
 							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2,
 									mailAddr, parentCn, ldapPath, extensionAttribute15, skipInitData, manualFlag, tenantID, userInfo);
+							
+							// companyConfigs setting
+							ezCommonService.setCompanyConfigs();
 							
 							if (!operatorId.equals("")) {
 								ezCommonService.insertCompanyConfig(tenantID, cn, operatorMailIdPropertyName, operatorId);
@@ -1194,7 +1200,25 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 조직도관리 암호관리 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/inputPassword.do", method = RequestMethod.GET)
-	public String inputPassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String inputPassword(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		int tenantId = userInfo.getTenantId();
+		
+		String companyId = request.getParameter("companyId");
+		String type = request.getParameter("type");
+		type = type == null ? "" : type;
+		logger.debug("companyId="+ companyId + ", type=" + type);
+		
+		String pwPolicyExplain = "";
+		
+		if (type.equals("shared")) {
+			pwPolicyExplain = "▒ " + egovMessageSource.getMessage("main.jjh04", locale);
+		} else {
+			pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
+		}
+		
+		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
 		return "admin/ezOrgan/inputPassword";
 	}
 	

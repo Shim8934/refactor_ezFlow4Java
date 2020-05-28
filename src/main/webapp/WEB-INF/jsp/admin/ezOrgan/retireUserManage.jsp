@@ -32,6 +32,7 @@
 			var strListInfo = "";
 			var CheckBoxArr = new Array();
 			var companyId = "${companyId}";
+			var userComId = "${companyId}";
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -276,9 +277,11 @@
 			        return;
 			    }
 			    
+			    userComId = document.getElementById("ListCompany").value;
+			    
 		        inputpassword_dialogArguments[0] = length + "<spring:message code='ezOrgan.t40' />";
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
-		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 192));
+		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?companyId=" + userComId, "InputPassword", GetOpenWindowfeature(467, 192));
 		        try { OpenWin.focus(); } catch (e) { }			    
 			}
 			

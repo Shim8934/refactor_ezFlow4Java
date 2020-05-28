@@ -2502,6 +2502,46 @@
 			BEFOREDOCURL varchar(1020) DEFAULT NULL 
 	</statement>
 	
+	<select id="EzCommonDAO.checkPwPolicy" resultClass="String">
+		<![CDATA[
+			SELECT 
+				TENANT_ID
+			FROM 
+				TBL_PASSWORD_POLICY
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createPwPolicy"> 
+		CREATE TABLE `tbl_password_policy` (
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANY_ID` varchar(100) NOT NULL,
+		  `ENG_CHAR_TYPE` varchar(10) DEFAULT 'N',
+		  `USE_ENG_CAPITAL_LETTER` varchar(10) DEFAULT 'N',
+		  `USE_ENG_SMALL_LETTER` varchar(10) DEFAULT 'N',
+		  `USE_NUMBER` varchar(10) DEFAULT 'N',
+		  `USE_SPECIAL_CHAR` varchar(10) DEFAULT 'N',
+		  PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+	
+	<select id="EzCommonDAO.checkPwPolicyPattern" resultClass="String">
+		<![CDATA[
+			SELECT 
+				TENANT_ID
+			FROM 
+				TBL_PASSWORD_POLICY_PATTERN
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createPwPolicyPattern"> 
+		CREATE TABLE `tbl_password_policy_pattern` (
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANY_ID` varchar(100) NOT NULL,
+		  `USE_PATTERN_COUNT` int(11) NOT NULL,
+		  `NUMBER_OF_CHAR` int(11) NOT NULL,
+		  PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`,`USE_PATTERN_COUNT`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 
+	</statement>
 	<select id="EzCommonDAO.checkAprAttachViewOrder">
 		SELECT 
 			VIEWORDER
