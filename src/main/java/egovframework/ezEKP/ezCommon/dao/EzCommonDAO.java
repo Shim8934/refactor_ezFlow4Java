@@ -1171,6 +1171,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	}
 
 	public void createUserDistributionTable() {
+		@SuppressWarnings("serial")
 		Map<String, String> map = new HashMap<String, String>(){{
 			put("EzCommonDAO.checkUserDlTable", "createUserDlTable");
 			put("EzCommonDAO.checkUserDlMemberTable", "createUserDlMemberTable");

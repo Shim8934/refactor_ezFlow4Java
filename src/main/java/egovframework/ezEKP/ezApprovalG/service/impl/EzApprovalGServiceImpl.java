@@ -26199,7 +26199,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
                                     // br이 포함되었으나 아무 문구가 없는 경우 (ex. <p><br><p>) 화면상에는 한줄 줄바꿈이기 때문에 
                                     // br태그 앞뒤로 모두 비어있을 경우 한칸은 줄바꿈에서 제외한다.
-    								 boolean bAllEmpty = true;
+    								 @SuppressWarnings("unused")
+									boolean bAllEmpty = true;
 		                             // String InnerHTML = "";
 		                             for (int i = 0; i < result.length; i++) {
 		                                 if (result[i] != null && !result[i].equals("")) {
