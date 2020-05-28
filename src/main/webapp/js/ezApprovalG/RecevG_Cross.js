@@ -1853,6 +1853,10 @@ function SetPropertyValue() {
             }
             else {
                 switch (field.id) {
+	                case "receiptnumber":
+	                	// 재배부요청 시 배부받은 부서의 접수번호를 갱신하기 위해 추가. 2020-05-08 홍대표.
+	                	setDocNumFormat();
+	                	break;
                     case "receiptdate":
                         setNodeText(field, CurrentDate);
                         break;
@@ -2793,6 +2797,36 @@ function delOpinionInfo() {
 
     pHasOpinionYN = "";
     return xmlhttp.responseText;*/
+}
+
+//17.09.14:재배부 후 재배부의견을 제외한 모든의견 삭제
+function delOpinionInfoAll2() {
+	$.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : "/ezApprovalG/OpinionDel2.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(result) {
+		}
+	});
+}
+
+//17.09.14:중계문서 접수 시 재배부의견은 삭제처리
+function delOpinionInfoAll3() {
+	$.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : "/ezApprovalG/OpinionDel3.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(result) {
+		}
+	});
 }
 
 var selectcabinet_dialogArguments = new Array();

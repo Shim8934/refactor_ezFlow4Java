@@ -3014,6 +3014,36 @@ function delOpinionInfo() {
     return xmlhttp.responseText;*/
 }
 
+//17.09.14:재배부 후 재배부의견을 제외한 모든의견 삭제
+function delOpinionInfoAll2() {
+	$.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : "/ezApprovalG/OpinionDel2.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(result) {
+		}
+	});
+}
+
+//17.09.14:중계문서 접수 시 재배부의견은 삭제처리
+function delOpinionInfoAll3() {
+	$.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : "/ezApprovalG/OpinionDel3.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(result) {
+		}
+	});
+}
+
 function SignCheck() {
     var objNodes = getNodeText(xmldoc.documentElement);
     var SignXML = createXmlDom();

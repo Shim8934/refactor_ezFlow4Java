@@ -2873,9 +2873,19 @@
 				AND
 					A.TENANT_ID = #v_TENANTID#
 				AND
-					A.DEPT_ID = #v_DEPTID#
-				AND
 					c.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+				<isNotEmpty prepend="AND" property="useAnnualScheduleYN">
+					<isEqual property="useAnnualScheduleYN" compareValue="1">
+					<![CDATA[
+						A.DEPT_ID = #v_DEPTID#
+					]]>
+					</isEqual>
+					<isEqual property="useAnnualScheduleYN" compareValue="2">
+					<![CDATA[
+						A.COMPANY_ID = #v_COMPANYID#
+					]]>
+					</isEqual>
+				</isNotEmpty>
 				<![CDATA[
 				AND  
 					(

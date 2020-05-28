@@ -1390,6 +1390,47 @@
 	    	else
 	    	    return true;
 	    }
+		
+		//배부창에서 참조할 수 없는 함수를 호출하고 있어서 추가. 2020-05-18 홍대표.
+	    function checkOuterReceiver() {
+	    	var listview = new ListView();
+	    	listview.LoadFromID("lvRECEPTLIST");
+	    	
+	    	var cnt = listview.GetRowCount();
+	    	var row = listview.GetDataRows();
+
+	    	if (cnt > 0) {
+	    		var checkOuter = row[0].getAttribute("DATA3");
+	    		var checkAddress = row[0].getAttribute("DATA1");
+	    		
+	    		if (cnt > 8 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
+	    	        document.getElementById("inputSummaryOuterReceiverList").focus();
+	    	        document.getElementById("trSummaryOuterReceiverList").style.display = "";
+	    	        document.getElementById("btnaddress").style.display = "none";
+	    	        document.getElementById("btnaddressChange").style.display = "none";
+	    		} else if (cnt <= 8 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
+	    	        document.getElementById("trSummaryOuterReceiverList").style.display = "none";
+	    	        document.getElementById("btnaddress").style.display = "";
+	    	        if (useReceiveInfoName == '1') {
+//	                	document.getElementById("btnaddressChange").style.display = "";
+	                } else {
+	                	document.getElementById("btnaddressChange").style.display = "";
+	                }
+	    		} else if (checkOuter == "Y" && checkAddress.indexOf("Address") != -1) {
+	    			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
+	    	        document.getElementById("btnaddress").style.display = "";
+	    	        if (useReceiveInfoName == '1') {
+//	                	document.getElementById("btnaddressChange").style.display = "";
+	                } else {
+	                	document.getElementById("btnaddressChange").style.display = "";
+	                }
+	    		} else {
+	    			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
+	    	        document.getElementById("btnaddress").style.display = "";
+	    	        document.getElementById("btnaddressChange").style.display = "none";
+	    		}
+	    	}
+	    }
 	    </script>
 	    <style>
 	    	.mainlist tr th {border-top:0px}

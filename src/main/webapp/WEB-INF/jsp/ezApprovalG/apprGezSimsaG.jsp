@@ -1399,6 +1399,9 @@
 	                        break;
 	                }
 	            }
+	            
+	            // 한글기안기에서 접수 할 때, table 태그에 align이 있어도 적용되지 않고 align 속성을 가진 p태그로 감싸져 있어야 해서 처리. 2020-05-20 홍대표.
+	            coverTableWithP(Content);
 
 	            var rtnVal = Content.innerHTML.replace(/width_kaoni/g, "width").replace(/height_kaoni/g, "height");
 	            rtnVal = rtnVal.replace(/\r/g, "").replace(/\n/g, "").replace(/&nbsp; /g, "&nbsp;&nbsp;");
@@ -1779,6 +1782,20 @@
 					return false;
 				}
 			}
+		    
+		    function coverTableWithP(bodyContent){
+	            var tableElementArray = bodyContent.getElementsByTagName("table");
+	            for (var i = 0; i < tableElementArray.length; i++) {
+	            	var tableElement = tableElementArray[i];
+	            	if (tableElement.parentElement.tagName.toLowerCase() != "p" && tableElement.getAttribute("align")) {
+	            		var pElem = document.createElement("p");
+	            		pElem.innerHTML = tableElement.outerHTML;
+	            		pElem.setAttribute("align", tableElement.getAttribute("align"));
+	            		tableElement.parentNode.insertBefore(pElem, tableElement);
+	            		tableElement.remove();
+	            	}
+	            }
+		    }
 		</script>
 	</head>
 	<body class="popup"  style="overflow:hidden;height:100%;">

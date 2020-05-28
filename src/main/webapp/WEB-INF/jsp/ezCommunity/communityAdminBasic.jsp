@@ -7,11 +7,16 @@
 		<title>admin_basic</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<style>
+			.radioTypeText {
+				vertical-align: middle;
+			    margin-top: 2px;
+			    display: inline-block;
+			}
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		
 		<script type="text/javascript">
-		
 			var pPermitCount = "<c:out value = '${pPermitCount}' />";
 	
 			function check() {
@@ -113,7 +118,7 @@
 							</c:otherwise>
 						</c:choose>
 						
-						<spring:message code ='ezCommunity.t451' />
+						<span class="radioTypeText"><spring:message code ='ezCommunity.t451' /></span>
 						
 						<c:choose>
 							<c:when test="${club.c_ClubConfirmType == '3'}">
@@ -125,7 +130,7 @@
 							</c:otherwise>
 						</c:choose>
 						
-						<spring:message code ='ezCommunity.t14' />
+						<span class="radioTypeText"><spring:message code ='ezCommunity.t14' /></span>
 						
 						<div style="margin-top:5px">
 							<spring:message code ='ezCommunity.t452' /><br>
@@ -146,7 +151,7 @@
 							</c:otherwise>
 						</c:choose>
 						
-						<spring:message code ='ezCommunity.t454' />
+						<span class="radioTypeText"><spring:message code ='ezCommunity.t454' /></span>
 						
 						<c:choose>
 							<c:when test="${club.c_ClubGubun == '3' }">
@@ -158,7 +163,7 @@
 							</c:otherwise>
 						</c:choose>
 						
-						<spring:message code ='ezCommunity.t17' />
+						<span class="radioTypeText"><spring:message code ='ezCommunity.t17' /></span>
 						
 						<div style="margin-top:5px">
 							<spring:message code ='ezCommunity.t1017' /><br>
@@ -179,7 +184,7 @@
 							</c:otherwise>
 						</c:choose>
 						
-						<spring:message code ='ezCommunity.t457' />
+						<span class="radioTypeText"><spring:message code ='ezCommunity.t457' /></span>
 						
 						<c:choose>
 							<c:when test="${club.isIn == '2' }">

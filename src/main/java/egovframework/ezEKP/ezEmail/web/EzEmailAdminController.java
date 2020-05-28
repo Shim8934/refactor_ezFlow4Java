@@ -168,9 +168,12 @@ public class EzEmailAdminController {
 		logger.debug("bodyData=" + bodyData);
 
 		// 관리자 권한체크
-		LoginVO auth = commonUtil.checkAdmin(loginCookie);
-		if (auth == null) {
-			return "cmm/error/adminDenied";
+		LoginVO auth = commonUtil.userInfo(loginCookie);
+		if (auth.getRollInfo().indexOf("c=1") == -1 && auth.getRollInfo().indexOf("k=1") == -1) {
+			String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", auth.getTenantId());
+			if (!useUserDefinedDL.equalsIgnoreCase("YES")) {
+				return "cmm/error/adminDenied";
+			}
 		}
 
 		String returnData = "";
@@ -273,8 +276,13 @@ public class EzEmailAdminController {
 
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userVO = commonUtil.userInfo(loginCookie);
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userVO.getTenantId());
 		if (auth == null) {
-			return "cmm/error/adminDenied";
+			if (!useUserDefinedDL.equalsIgnoreCase("YES")) {
+				return "cmm/error/adminDenied";
+			}
+			auth = userVO;
 		}
 
 		String deptID = auth.getDeptID();
@@ -284,6 +292,9 @@ public class EzEmailAdminController {
 				.getParameter("name");
 		String useOcs = config.getProperty("config.USE_OCS");
 		String companyId = request.getParameter("companyId");
+		String userDL =  request.getParameter("userDL");
+		if (userDL == null ) { userDL = ""; }
+		String offsetMin = commonUtil.getMinuteUTC(auth.getOffset());
 		
 		int tenantId = auth.getTenantId();
 		String mailDomain = ezCommonService.getCompanyConfig(tenantId, companyId, "DomainName");
@@ -298,8 +309,28 @@ public class EzEmailAdminController {
 		logger.debug("mailDomain=" + mailDomain + ", companyDomainList=" + companyDomainList);
 		
 		String distributionMail = "";
+		
+		String ownerId = "";
+		String ownerName = "";
+		String policy = "";
+		String explain = "";
+		String endDate = "";
 		if (!cn.equals("")) { // 편집일 경우
-			MailDistributionVO distributionVo = ezEmailService.getDistributionInfo(cn, tenantId);
+			MailDistributionVO distributionVo = null;
+			if (useUserDefinedDL.equalsIgnoreCase("YES") && !userDL.equals("")) {
+				distributionVo = ezEmailService.getUserDistributionInfo(cn, tenantId);
+				
+				ownerId = distributionVo.getOwnerId();
+				policy = distributionVo.getDisclosurePolicy();
+				explain = distributionVo.getExplaination();
+				endDate = distributionVo.getEndDate();
+				OrganUserVO ownerVo = ezOrganService.getUserInfo(ownerId, auth.getPrimary(), tenantId);
+				ownerName = ownerVo.getDisplayName();
+				logger.debug("ownerId=" + ownerId + ", ownerName=" + ownerName + ", policy=" + policy + ", explain=" + explain 
+						+ ", endDate=" + endDate);
+			} else {
+				distributionVo = ezEmailService.getDistributionInfo(cn, tenantId);
+			}
 			
 			if (distributionVo != null) {	
 				distributionMail = distributionVo.getMail();
@@ -317,6 +348,16 @@ public class EzEmailAdminController {
 		model.addAttribute("domainList", domainList);
 		model.addAttribute("distributionMail", distributionMail);
 		model.addAttribute("companyMailDomain", companyMailDomain);
+		model.addAttribute("userDL", userDL);
+		model.addAttribute("offsetMin", offsetMin);
+		model.addAttribute("userId", auth.getId());
+		model.addAttribute("userName", userVO.getDisplayName());
+		
+		model.addAttribute("ownerId", ownerId);
+		model.addAttribute("ownerName", ownerName);
+		model.addAttribute("policy", policy);
+		model.addAttribute("endDate", endDate);
+		model.addAttribute("explain", explain);
 		
 		String cChk = "0";
 		
@@ -343,8 +384,13 @@ public class EzEmailAdminController {
 
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userVO = commonUtil.userInfo(loginCookie);
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userVO.getTenantId());
 		if (auth == null) {
-			return "cmm/error/adminDenied";
+			if (!useUserDefinedDL.equalsIgnoreCase("YES")) {
+				return "cmm/error/adminDenied";
+			}
+			auth = userVO;
 		}
 
 		Document doc = commonUtil.convertStringToDocument(bodyData);
@@ -354,6 +400,11 @@ public class EzEmailAdminController {
 		String id = doc.getElementsByTagName("ID").item(0).getTextContent();
 		String selectDomain = doc.getElementsByTagName("SELECTDOMAIN").item(0).getTextContent();
 		selectDomain = selectDomain != null ? selectDomain : "";
+		
+		String ownerId = doc.getElementsByTagName("OWNERID").item(0) == null ? "" : doc.getElementsByTagName("OWNERID").item(0).getTextContent();
+		String policy = doc.getElementsByTagName("POLICY").item(0) == null ? "" : doc.getElementsByTagName("POLICY").item(0).getTextContent();
+		String explaination = doc.getElementsByTagName("EXPLAINATION").item(0) == null ? "" : doc.getElementsByTagName("EXPLAINATION").item(0).getTextContent();
+		String endDate = doc.getElementsByTagName("ENDDATE").item(0) == null ? "" : doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 		
 		NodeList memberIdList = doc.getElementsByTagName("MEMBERID");
 		NodeList addressIdList = doc.getElementsByTagName("ADDRESSID");
@@ -434,8 +485,7 @@ public class EzEmailAdminController {
 					}
 				}
 
-				
-				reasonCode = ezEmailService.addDistributionList(id, name, memberList, distributionSubList, companyId, tenantID, selectDomain);
+				reasonCode = ezEmailService.addDistributionList(id, name, memberList, distributionSubList, companyId, tenantID, selectDomain, ownerId, policy, explaination, endDate, loginCookie);
 			// 기존 공용배포그룹을 수정하는 경우
 			} else {
 				if (useBizmekaSpambox.equals("YES")) {
@@ -452,7 +502,7 @@ public class EzEmailAdminController {
 					}
 				}
 								
-				reasonCode = ezEmailService.updateDistributionList(cn, name, memberList, distributionSubList, companyId, tenantID);
+				reasonCode = ezEmailService.updateDistributionList(cn, name, memberList, distributionSubList, companyId, tenantID, ownerId, policy, explaination, endDate, loginCookie);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -651,8 +701,13 @@ public class EzEmailAdminController {
 
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userVO = commonUtil.userInfo(loginCookie);
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userVO.getTenantId());
 		if (auth == null) {
-			return "cmm/error/adminDenied";
+			if (!useUserDefinedDL.equalsIgnoreCase("YES")) {
+				return "cmm/error/adminDenied";
+			}
+			auth = userVO;
 		}
 
 		Document doc = commonUtil.convertStringToDocument(bodyData);
@@ -2944,4 +2999,5 @@ public class EzEmailAdminController {
 		
 		return "admin/ezEmail/adminMailLeft";
 	}
+	
 }

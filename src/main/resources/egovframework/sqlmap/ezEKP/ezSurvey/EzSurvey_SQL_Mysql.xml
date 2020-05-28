@@ -1196,6 +1196,17 @@
 		]]>
 	</insert>
 	
+	<delete id="EzSurveyDAO.deleteResponseItems" parameterClass="Map">
+		<![CDATA[
+			delete from 
+				tbl_survey_response 
+			where
+				survey_id = #surveyId# 
+			and 
+				user_id = #userId#
+		]]>
+	</delete>
+	
 	<select id="EzSurveyDAO.getAllResponsesForSurvey" resultMap="responseVO">
 		<![CDATA[
 			select * from 
@@ -1254,6 +1265,17 @@
 			)
 		]]>
 	</insert>
+	
+	<delete id="EzSurveyDAO.deleteRespondents" parameterClass="Map">
+		<![CDATA[
+			delete from 
+				tbl_survey_respondent 
+			where
+				survey_id = #surveyId# 
+			and 
+				user_id = #userId#
+		]]>
+	</delete>
 	
 	<!--***********************************************************************************
 	**                                Survey Permit Check process                          **

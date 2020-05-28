@@ -1414,6 +1414,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				response.getWriter().print(egovMessageSource.getMessage("main.t4", locale));
 				
 				return;
+			} else {
+				//대용량 첨부파일 다운로드 횟수 제한 처리 2020-03-10 홍대표.
+				String exceededFilelimit = ezEmailService.checkBigAttachDownloadCount(fileId, tenantId);
+				if (exceededFilelimit != null) {
+					response.setContentType("text/plain; charset=utf-8");
+					response.getWriter().print(egovMessageSource.getMessageExtend("ezEmail.hdp05", new Object[] {exceededFilelimit}, locale));
+					
+					return;
+				} else {
+					ezEmailService.updateBigAttachDownloadCount(fileId, tenantId);
+				}
 			}
 			
 			for (int i = 0; i < files.length; i++) {
