@@ -146,7 +146,7 @@
 <!-- 	            </td> -->
 <!-- 	        </tr> -->
         </table>
-			<span style="color: red;">※ <spring:message code='ezAttitude.t315' /></span>
+			<span style="color: red;font-weight: bold;font-size: 13px;">※ <spring:message code='ezAttitude.t315' /></span>
        		<input name="companyId" id="companyId" type="hidden" value="${companyId}">
        		<input name="flagCheck" id="flagCheck" type="hidden" value="excelChange">
         </form>
