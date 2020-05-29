@@ -1525,7 +1525,8 @@ public class EzAttitudeAdminController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
-				.queryParam("userId", userInfo.getId());
+				.queryParam("userId", userInfo.getId())
+				.queryParam("primary", userInfo.getPrimary());
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -1596,7 +1597,8 @@ public class EzAttitudeAdminController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
-				.queryParam("userId", userId);
+				.queryParam("userId", userId)
+				.queryParam("primary", userInfo.getPrimary());
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -1891,7 +1893,8 @@ public class EzAttitudeAdminController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
-				.queryParam("userId", userInfo.getId());
+				.queryParam("userId", userInfo.getId())
+				.queryParam("primary", userInfo.getPrimary());
 		
 		RestTemplate rest = new RestTemplate();
 		
