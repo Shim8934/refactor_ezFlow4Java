@@ -1,6 +1,9 @@
 package egovframework.ezEKP.ezApprovalG.vo;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -16,10 +19,10 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
-// 안 쓰는 변수가 상당히 있다 필요한건가?
-@SuppressWarnings("unused")
 public class ApprGRelayXMLVO {
 
+	private static final Logger logger = LoggerFactory.getLogger(ApprGRelayXMLVO.class);
+	
     private String relayFolderPath;
     private String filePath;
     Document xmlDoc = null;
@@ -50,6 +53,7 @@ public class ApprGRelayXMLVO {
     private NodeList contentList;
 
     public ApprGRelayXMLVO(String filePath) {
+    	
         this.filePath = filePath;
 
         try {
@@ -61,10 +65,10 @@ public class ApprGRelayXMLVO {
             this.xmlDoc = builder.parse(new InputSource(filePath));
 
             this.sendOrgCode = getXMLproperty("sendOrgCode");
-            System.out.println("#송신기관코드=" + this.sendOrgCode);
+            logger.debug("#송신기관코드=" + this.sendOrgCode);
 
             this.sendID = getXMLproperty("sendID");
-            System.out.println("#송신부서코드=" + this.sendID);
+            logger.debug("#송신부서코드=" + this.sendID);
 
             if (!this.xmlDoc.getElementsByTagName("title").item(0).getTextContent().equals("")) {
                 this.title = getXMLproperty("title");
@@ -73,33 +77,37 @@ public class ApprGRelayXMLVO {
                     this.title = this.title.substring(1, 125);
                 }
             }
-            System.out.println("#문서제목=" + this.title);
+            logger.debug("#문서제목=" + this.title);
+            
+            //tbl_recrelayinfo subject 에서 xml escape 처리(서마종에서 <> 있어서 오류가 발생)
+            logger.debug("#escapeXml 문서제목=" + StringEscapeUtils.escapeXml10(this.title));
+            
             this.xDocID = getXMLproperty("xDocID");
-            System.out.println("#문서고유번호=" + this.xDocID);
+            logger.debug("#문서고유번호=" + this.xDocID);
             this.docType = getXMLproperty("docType");
-            System.out.println("#문서종류=" + this.docType);
+            logger.debug("#문서종류=" + this.docType);
             this.writerName = getXMLproperty("writerName");
 
             if (this.writerName == null || this.writerName.equals("")) {
                 this.writerName = "미확인";
             }
 
-            System.out.println("#문서작성자이름=" + this.writerName);
+            logger.debug("#문서작성자이름=" + this.writerName);
             this.writerDept = getXMLproperty("writerDept");
 
             if (this.writerDept == null || this.writerDept.equals("")) {
                 this.writerDept = "미확인";
             }
 
-            System.out.println("#문서작성자부서=" + this.writerDept);
+            logger.debug("#문서작성자부서=" + this.writerDept);
             this.sendName = getXMLproperty("sendName");
-            System.out.println("#송신기관명=" + this.sendName);
+            logger.debug("#송신기관명=" + this.sendName);
             this.xGW = getXMLproperty("XGW");
-            System.out.println("#송신그룹웨어명=" + this.xGW);
+            logger.debug("#송신그룹웨어명=" + this.xGW);
             this.dTDVersion = getXMLproperty("DTDVersion");
-            System.out.println("#DTD버전=" + this.dTDVersion);
+            logger.debug("#DTD버전=" + this.dTDVersion);
             this.xSLVersion = getXMLproperty("XSLVersion");
-            System.out.println("#XSL버전=" + this.xSLVersion);
+            logger.debug("#XSL버전=" + this.xSLVersion);
 
             if (this.xmlDoc.getElementsByTagName("date").item(0).getTextContent().length() > 0) {
                 this.recDate = getXMLproperty("recDate");
@@ -111,15 +119,15 @@ public class ApprGRelayXMLVO {
                 this.recDate = getDateStringInUTC(getTodayUTCTime(""), "235|+09:00", true);
             }
 
-            System.out.println("#날짜=" + this.recDate);
+            logger.debug("#날짜=" + this.recDate);
 
             this.message = getXMLproperty("message");
 
             this.acceptName = getXMLproperty("acceptName");
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println(e.getStackTrace());
+            logger.debug("e.getMessage(): " + e.getMessage());
+            logger.debug("e.getStackTrace(): " + e.getStackTrace());
         }
 
     }
@@ -161,7 +169,17 @@ public class ApprGRelayXMLVO {
     }
 
     public String getReceiveID() {
-        return receiveID;
+    	
+    	this.receiveID = null;
+    	
+        try {
+        	this.receiveID = getXMLproperty("receiveId");
+		} catch (UnsupportedEncodingException e) {
+            logger.debug("e.getMessage(): " + e.getMessage());
+            logger.debug("e.getStackTrace(): " + e.getStackTrace());
+		}
+        
+        return this.receiveID;
     }
 
     public String getTitle() {
@@ -206,63 +224,82 @@ public class ApprGRelayXMLVO {
 
     public String getMessage() {
 
-        String result = null;
+        this.message = null;
 
         try {
-            result = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("content").item(0).getTextContent()), "euc-kr");
+        	this.message = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("content").item(0).getTextContent()), "euc-kr");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println(e.getStackTrace());
+            logger.debug("e.getMessage(): " + e.getMessage());
+            logger.debug("e.getStackTrace(): " + e.getStackTrace());
         }
 
-        return result;
+        return this.message;
     }
 
     public String getAcceptName() {
 
-        String result = null;
+        this.acceptName = null;
 
         try {
-            result = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr") + "(" + new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr") + ")";
+        	this.acceptName = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr") + "(" + new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr") + ")";
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println(e.getStackTrace());
+            logger.debug("e.getMessage(): " + e.getMessage());
+            logger.debug("e.getStackTrace(): " + e.getStackTrace());
         }
 
-        return result;
+        return this.acceptName;
     }
 
     public String getCont(int count) {
-        return xmlDoc.getElementsByTagName("content").item(count).getTextContent();
+    	
+    	this.cont = xmlDoc.getElementsByTagName("content").item(count).getTextContent();;
+    	
+        return this.cont;
     }
 
     public String getContRole(int count) {
-        return xmlDoc.getElementsByTagName("content").item(count).getAttributes().getNamedItem("content-role").getTextContent();
+    	this.contRole = xmlDoc.getElementsByTagName("content").item(count).getAttributes().getNamedItem("content-role").getTextContent();
+        return this.contRole;
     }
 
     public String getContName(int count) {
 
-        String result = null;
+        this.contName = null;
 
         try {
-            result = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("content").item(count).getAttributes().getNamedItem("filename").getTextContent()), "euc-kr");
+        	this.contName = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("content").item(count).getAttributes().getNamedItem("filename").getTextContent()), "euc-kr");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println(e.getStackTrace());
+            logger.debug("e.getMessage(): " + e.getMessage());
+            logger.debug("e.getStackTrace(): " + e.getStackTrace());
         }
 
-        return result;
+        return this.contName;
     }
 
     public int getContLength() {
-        return xmlDoc.getElementsByTagName("content").getLength();
+    	this.contLength = xmlDoc.getElementsByTagName("content").getLength();
+        return this.contLength;
     }
 
     public NodeList getContentList() {
-        return xmlDoc.getElementsByTagName("content");
+    	this.contentList = xmlDoc.getElementsByTagName("content");
+        return this.contentList;
     }
 
-    public void setRelayFolderPath(String relayFolderPath) {
+    
+    public String getEscapeTitle() {
+    	return StringEscapeUtils.escapeXml10(this.title);
+	}
+    
+    public String getEscapeDept() {
+    	return StringEscapeUtils.escapeXml10(this.writerDept);
+    }
+    
+    public String getEscapeName() {
+    	return StringEscapeUtils.escapeXml10(this.writerName);
+    }
+
+	public void setRelayFolderPath(String relayFolderPath) {
         this.relayFolderPath = relayFolderPath;
     }
 
@@ -305,7 +342,7 @@ public class ApprGRelayXMLVO {
     public void setReceiveID(String receiveID) {
         this.receiveID = receiveID;
         xmlDoc.getElementsByTagName("receive-id").item(0).setTextContent(receiveID);
-        System.out.println("#수신부서코드=" + receiveID);
+        logger.debug("#수신부서코드=" + receiveID);
     }
 
     public void setTitle(String title) {
@@ -367,10 +404,10 @@ public class ApprGRelayXMLVO {
      * </pre>
      */
     public String getDateStringInUTC(String dateStr, String offset, boolean timeZoneToUTC) {
-//		System.out.println("dateStr=" + dateStr + ", offset=" + offset + ", timeZoneToUTC=" + timeZoneToUTC);
+//		logger.debug("dateStr=" + dateStr + ", offset=" + offset + ", timeZoneToUTC=" + timeZoneToUTC);
 
         if (dateStr == null) {
-            System.out.println("dateStr is null.");
+            logger.debug("dateStr is null.");
             return null;
         }
 
@@ -379,7 +416,7 @@ public class ApprGRelayXMLVO {
         }
 
         if (offset == null || offset.indexOf("|") == -1) {
-            System.out.println("offset is null or offset format is wrong.");
+            logger.debug("offset is null or offset format is wrong.");
             return dateStr;
         }
 
@@ -413,7 +450,7 @@ public class ApprGRelayXMLVO {
                 pattern = "yyyy-MM-dd HH:mm:ss";
             }
         }
-//		System.out.println("pattern=" + pattern);
+//		logger.debug("pattern=" + pattern);
 
         String[] offsetArr = offset.split("\\|");
 
@@ -431,11 +468,11 @@ public class ApprGRelayXMLVO {
                 resultDateStr = userFormat.format(utcFormat.parse(dateStr));
             }
         } catch (ParseException e) {
-            System.out.println("Check the dateStr format.");
+            logger.debug("Check the dateStr format.");
             return dateStr;
         }
 
-//		System.out.println("resultDateStr=" + resultDateStr);
+//		logger.debug("resultDateStr=" + resultDateStr);
         return resultDateStr;
     }
 
@@ -446,7 +483,7 @@ public class ApprGRelayXMLVO {
      * @throws Exception
      */
     public String getTodayUTCTime(String format) throws Exception {
-        System.out.println("getTodayUTCTime started");
+        logger.debug("getTodayUTCTime started");
 
         ZoneId utc = ZoneId.of("UTC");
         ZonedDateTime getTime = ZonedDateTime.of(LocalDateTime.now(utc), utc);
@@ -459,14 +496,14 @@ public class ApprGRelayXMLVO {
             try {
                 formatter = DateTimeFormatter.ofPattern(format);
             } catch (Exception e) {
-                System.out.println("formatter error :: " + e.getMessage());
+                logger.debug("formatter error :: " + e.getMessage());
                 formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             }
         }
 
         String today = getTime.format(formatter);
 
-        System.out.println("getTodayUTCTime ended");
+        logger.debug("getTodayUTCTime ended");
 
         return today;
     }
@@ -499,7 +536,7 @@ public class ApprGRelayXMLVO {
                 break;
             case "title":
                 result = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("title").item(0).getTextContent().getBytes("UTF-8")), "euc-kr");
-                break;
+                break;   
             case "xDocID":
                 result = xmlDoc.getElementsByTagName("doc-id").item(0).getTextContent();
                 break;
@@ -527,7 +564,10 @@ public class ApprGRelayXMLVO {
             case "recDate":
                 result = xmlDoc.getElementsByTagName("date").item(0).getTextContent();
                 break;
-
+            case "receiveId":
+                result = xmlDoc.getElementsByTagName("receive-id").item(0).getTextContent();
+                break;
+                
         }
 
         return result;
