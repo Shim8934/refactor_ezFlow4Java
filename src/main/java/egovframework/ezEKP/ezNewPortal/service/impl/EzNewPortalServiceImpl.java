@@ -943,28 +943,39 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	public String convertLunarToSolar (String birthday, int compMonth) {
 		LOGGER.debug("convertLunarToSolar started.");
+		/*
+		 * 20.05.29 강승구 : 음력변환 오류 수정
+		 * 아직 윤달, 평달에 대한 문제 해결 필요
+		 */
 		String result = "";
 		ChineseCalendar cc = new ChineseCalendar();
-		Calendar cal = Calendar.getInstance();
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		birthday = cal.get(1) + birthday.substring(4);
 		
-		cc.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(birthday.substring(0, 4)) + 2637);
-		
-		String monthStr = birthday.substring(5,7);
-		int month = 0;
-		
-		if (monthStr.indexOf("0") == 0) { //1월~9월까지는 앞에 0이 붙기때문에 제거해야함.
-			monthStr = monthStr.substring(1);
+		if(birthday.length() == 10) {
+			birthday = birthday.replace("-", "");
 		}
 		
-		month = Integer.parseInt(monthStr);
-		
-		cc.set(ChineseCalendar.MONTH, month - 1);
-		cc.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(birthday.substring(8)));
+		cc.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(birthday.substring(0,4)) + 2637);
+        cc.set(ChineseCalendar.MONTH        , Integer.parseInt(birthday.substring(4,6)) - 1);
+        cc.set(ChineseCalendar.DAY_OF_MONTH , Integer.parseInt(birthday.substring(6,8)));
+        cc.set(ChineseCalendar.IS_LEAP_MONTH, 0);
 
-		cal.setTimeInMillis(cc.getTimeInMillis());
+        cal.setTimeInMillis(cc.getTimeInMillis());
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		result = sdf.format(cal.getTime());
+        String year  = String.valueOf(cal.get(Calendar.YEAR        )    );
+        String month = String.valueOf(cal.get(Calendar.MONTH       ) + 1);
+        String day   = String.valueOf(cal.get(Calendar.DAY_OF_MONTH)    );
+
+        String pad4Str = "0000";
+        String pad2Str = "00";
+
+        String retYear  = (pad4Str + year ).substring(year .length());
+        String retMonth = (pad2Str + month).substring(month.length());
+        String retDay   = (pad2Str + day  ).substring(day  .length());
+
+        result = retYear + "-" + retMonth + "-" + retDay;
+        LOGGER.debug("convert lunar date to solar date : " + result);
 		
 		String monthComp = String.valueOf(compMonth);
 		

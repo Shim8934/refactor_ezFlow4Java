@@ -969,25 +969,39 @@ function getHolidayList() {
 
 //휴일 체크
 function checkHoliday(obj, themeId) {
+	var useHolidayCheckYN;
+	
+	$.ajax({
+		type : "POST",
+		async : false,
+		url : "/ezAttitude/holidayCheck.do",
+		data : {},
+		success : function(result) {
+			useHolidayCheckYN = result;
+		}
+	});
+	
 	var todayLunar = lunarCalc(nowAttiTime.getFullYear(), nowAttiTime.getMonth() + 1, nowAttiTime.getDate(), 1);
 	var todayMemorialDayList = memorialDayCheck(nowAttiTime, todayLunar);
 	var todayYearMemorialDayList = yearmemorialDayCheck(nowAttiTime, todayLunar);
 	var addAttitude = true; // true 등록 가능
 	
-	if (closedDay[nowAttiTime.getDay()] == "1"){ //회사지정 휴일인지 체크
-		addAttitude = false;				
-	} else if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) { //기념일체크
-		if (todayMemorialDayList.length != 0 ) {
-			for (var i = 0; i < todayMemorialDayList.length; i++) {
-				if (todayMemorialDayList[i].holiday ==  true) { //휴무일인 기념일일때
-					addAttitude = false;
+	if(useHolidayCheckYN == "0"){	
+		if (closedDay[nowAttiTime.getDay()] == "1"){ //회사지정 휴일인지 체크
+			addAttitude = false;				
+		} else if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) { //기념일체크
+			if (todayMemorialDayList.length != 0 ) {
+				for (var i = 0; i < todayMemorialDayList.length; i++) {
+					if (todayMemorialDayList[i].holiday ==  true) { //휴무일인 기념일일때
+						addAttitude = false;
+					}
 				}
-			}
-		} 
-		if (todayYearMemorialDayList.length != 0) {
-			for (var i = 0; i < todayYearMemorialDayList.length; i++) {
-				if (todayYearMemorialDayList[i].holiday == true) { //휴무일인 기념일일때
-					addAttitude = false;
+			} 
+			if (todayYearMemorialDayList.length != 0) {
+				for (var i = 0; i < todayYearMemorialDayList.length; i++) {
+					if (todayYearMemorialDayList[i].holiday == true) { //휴무일인 기념일일때
+						addAttitude = false;
+					}
 				}
 			}
 		}

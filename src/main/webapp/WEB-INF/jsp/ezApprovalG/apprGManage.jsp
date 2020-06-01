@@ -106,7 +106,9 @@
 		    var selRowChangeFlag = false;
 		    var orgCompanyID = "";
 		    var useHWP = "${useHWP}";
-		    var userLang = "<c:out value = '${userLang}'/>";
+			var userLang = "<c:out value = '${userLang}'/>";
+			var useAdditionalRole = "${useAdditionalRole}";
+			var userLang = "${userInfo.lang}";
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    
@@ -1601,17 +1603,43 @@
 		            if (now.getTime() > exitTime)
 		                return;
 		        }
-		    }
-		    function btnApproveALL_onclick() {
+			}
+
+			//2020-04-29 : 일괄결재 리스트 직접결재
+			function btnApproveALL_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var pCurSelRow = DocList.GetSelectedRows();
 		        if (pCurSelRow.length == 0) {
 		            var pAlertContent = strLang930 + "<br>" + strLang336;
-		            //OpenAlertUI(pAlertContent);
-		            alert(pAlertContent);
+		            OpenAlertUI(pAlertContent);
 		            return;
-		        }
+				}else{
+					OpenInformationUI("<spring:message code='ezApprovalG.t900002'/>", btnApproveALL_onclick_Complete);
+				}
+			}
+
+			function btnApproveALL_onclick_Complete(rtn){
+				DivPopUpHidden();
+				if(rtn){
+					var aprAllType = document.getElementById("btnApproveALL").getAttribute("aprAllType");
+
+					if(aprAllType == "LIST"){
+						if (CheckUsePassword()) {
+							chk_Passwd(arr_userinfo[1]);
+							return;
+						}
+						else {
+							chk_Passwd_Complete("TRUE");
+						}
+					}else{
+						btnApproveALL_popup_onclick()
+					}					
+				}
+			}
+
+			//2020-04-29 : 일괄결재 , 기존 팝업결재
+		    function btnApproveALL_popup_onclick() {
 		        var xmlpara = createXmlDom();
 		        var objNode;
 		        createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -2232,7 +2260,7 @@
 				<li id="tbtnApprove" style="DISPLAY:none"><span id="btnApprove" onclick="return  btnApprove_onclick('0')" ><spring:message code='ezApprovalG.t1'/></span></li>
 				<li id="tbtnApprove1" style="DISPLAY:none"><span id="btnApprove1"  onclick ="return  btnApprove_onclick('1')" ><spring:message code='ezApprovalG.t1739'/></span></li>
 				<li class="important" id="tbtnNonElecRec" style="DISPLAY:none"><span id="btnNonElecRec" onclick="return btnNonElecRec_onclick()" >비전자문서등록</span></li><%-- 비전자문서 등록 --%>
-				<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
+				<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL" aprAllType="LIST"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>  <!--onclick 함수 파라미터(LIST : 리스트 직접 일괄결재, POPUP : 팝업창 일괄결재-->
 				<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
 				<li id="tbtnReturn" style="DISPLAY:none"><span id="btnReturn" onclick="return btnReturn_onclick()" ><spring:message code='ezApprovalG.t1434'/></span></li>

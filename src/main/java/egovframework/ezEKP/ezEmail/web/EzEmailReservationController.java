@@ -24,7 +24,6 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -479,7 +478,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
     			}
     		}
 			
-			Enumeration headers = message.getAllHeaders();
+			@SuppressWarnings("unchecked")
+			Enumeration<Header> headers = message.getAllHeaders();
             while (headers.hasMoreElements()) {
               Header h = (Header) headers.nextElement();
               logger.debug("@@"+h.getName() + ": " + h.getValue());

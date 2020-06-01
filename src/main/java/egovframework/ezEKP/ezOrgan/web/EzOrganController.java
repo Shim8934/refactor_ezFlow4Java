@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -46,11 +46,11 @@ public class EzOrganController {
 	@Autowired
 	private EzOrganService ezOrganService;	
 
-	@Autowired
-	private EgovMessageSource messageSource;
-	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name = "loginService")
+    private LoginService loginService;
 	
 	/**
 	 * 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
@@ -163,7 +163,7 @@ public class EzOrganController {
 		String isPrimary = userInfo.getPrimary();
 		String page = request.getParameter("page");
 		String noAddJob = request.getParameter("noAddJob");
-		String companyId = request.getParameter("companyId") == null ? "" : request.getParameter("companyId");
+		// String companyId = request.getParameter("companyId") == null ? "" : request.getParameter("companyId");
 		String infoXML = "";
 
 		logger.debug("page=" + page);
@@ -178,7 +178,7 @@ public class EzOrganController {
 		
 		if (celllist.toUpperCase().indexOf("EXTENSIONATTRIBUTE5") > -1) {
             String[] arryCell = celllist.toUpperCase().split(";");
-            String tooltip = "";
+            // String tooltip = "";
             int idx = 0;
             
             for (int j = 0; j < arryCell.length; j++) {
@@ -188,7 +188,7 @@ public class EzOrganController {
             }
             
             for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
-                Element Nodetip = doc.createElement("TOOLTIP");
+                // Element Nodetip = doc.createElement("TOOLTIP");
 
                 if (!doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().equals("")) {
                 	//2018-07-12 이효진 미사용 소스 주석처리
@@ -515,4 +515,27 @@ public class EzOrganController {
 		logger.debug("getListType ended.");
 		return listType;
 	}
+	
+	/*
+	 * 암호 정책 확인
+	 */
+ 	@RequestMapping(value = "/ezOrgan/checkPasswordPolicy.do", method = RequestMethod.POST)
+ 	@ResponseBody
+ 	public String checkPasswordPolicy(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+ 		logger.debug("checkPasswordPolicy started.");
+ 		
+ 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+ 		int tenantId = userInfo.getTenantId();
+
+ 		String chkPwPolicy = "";
+ 		
+ 		String pwStr = request.getParameter("pw");
+ 		String chkCompanyId = request.getParameter("chkCompanyId");
+ 		
+ 		Boolean test = commonUtil.checkPwPolicy(pwStr, chkCompanyId, tenantId);
+ 		chkPwPolicy = test ? "OK" : chkPwPolicy;
+ 		
+ 		logger.debug("checkPasswordPolicy ended. chkPwPolicy=" + chkPwPolicy);
+ 		return chkPwPolicy;
+ 	}
 }

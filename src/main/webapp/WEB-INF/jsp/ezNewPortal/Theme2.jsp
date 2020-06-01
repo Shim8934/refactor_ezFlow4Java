@@ -602,7 +602,7 @@
 		list.forEach(function(item, index) {
 			if(item.scheduleType === '1') {
 				pScheduleList.push(item);	
-			} else if (item.scheduleType === '2' || item.scheduleType === '3') {
+			} else if (item.scheduleType === '2') {
 				dScheduleList.push(item);
 			}
 		});

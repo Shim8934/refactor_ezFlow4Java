@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import org.springframework.web.util.WebUtils;
 
@@ -35,13 +34,10 @@ public class UserEmailInterceptor extends WebContentInterceptor {
 	@Autowired
 	private EzEmailService ezEmailService;
 
-	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserEmailInterceptor.class);
 
 	private static final String EMAIL_ALIAS_PAGE = "/user/login/email.do";
 
-	/**
-	 */
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {
 		try {
@@ -67,7 +63,7 @@ public class UserEmailInterceptor extends WebContentInterceptor {
 			String userId = loginVO.getId();
 			String userPrimaryEmail = loginVO.getEmail();
 			String userFriendlyEmailAddress = ezCommonService.getUserConfigInfo(tenantId, userId, "userFriendlyEmailAddress");
-			boolean isPrimaryDifferentFromCn = !userPrimaryEmail.startsWith(userId + "@");
+			boolean hasAlias = !userPrimaryEmail.startsWith(userId + "@");
 			boolean hasFriendlyPrimary = !userFriendlyEmailAddress.trim().isEmpty();
 			boolean isEmailPage = requestUri.startsWith(EMAIL_ALIAS_PAGE);
 
@@ -76,26 +72,19 @@ public class UserEmailInterceptor extends WebContentInterceptor {
 					response.sendRedirect("/ezNewPortal/newPortalMain.do");
 					return false;
 				}
-			} else {
-				if (isPrimaryDifferentFromCn) {
-					String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
-					String userEmail = new StringBuilder(userId).append("@").append(domainName).toString();
-					ezEmailService.updatePrimaryIndividualAlias(userEmail, "", userPrimaryEmail, tenantId);
-					LOGGER.debug("auto alias apply. userEmail: {}, aliasEmail: {}", userEmail, userPrimaryEmail);
-				} else if (!isEmailPage) {
-					response.sendRedirect(EMAIL_ALIAS_PAGE);
-					return false;
-				}
+			} else if (hasAlias) {
+				String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+				String userEmail = new StringBuilder(userId).append("@").append(domainName).toString();
+				ezEmailService.updatePrimaryIndividualAlias(userEmail, "", userPrimaryEmail, tenantId);
+				LOGGER.debug("auto alias apply. userEmail: {}, aliasEmail: {}", userEmail, userPrimaryEmail);
+			} else if (!isEmailPage) {
+				response.sendRedirect(EMAIL_ALIAS_PAGE);
+				return false;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return true;
-	}
-
-	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-		CommonUtil.addXUACompatibleHeaderToResponse(request, response);
 	}
 }

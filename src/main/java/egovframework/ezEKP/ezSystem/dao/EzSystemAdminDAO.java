@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
+import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -136,4 +137,37 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		return update("EzSystemAdminDAO.updateAccessCountry", paramMap);
 	}
 
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getPwPolicy(Map<String, Object> paramMap) throws Exception {
+		return (Map<String, String>) select("EzSystemAdminDAO.getPwPolicy", paramMap);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> getPwPolicyPattern(Map<String, Object> paramMap) throws Exception {
+		return (List<Map<String, Object>>) list("EzSystemAdminDAO.getPwPolicyPattern", paramMap);
+	}
+
+	public int insertPwPolicy(PasswordPolicyVO pwPolicyVo) throws Exception {
+		return update("EzSystemAdminDAO.insertPwPolicy", pwPolicyVo);
+	}
+
+	public int insertPwPolicyPattern(Map<String, Object> paramMap) throws Exception {
+		return update("EzSystemAdminDAO.insertPwPolicyPattern", paramMap);
+	}
+
+	public int updatePwPolicy(PasswordPolicyVO pwPolicyVo) throws Exception {
+		return update("EzSystemAdminDAO.updatePwPolicy", pwPolicyVo);
+	}
+	
+	public int deletePwPolicyPattern(Map<String, Object> paramMap) throws Exception {
+		return update("EzSystemAdminDAO.deletePwPolicyPattern", paramMap);
+	}
+	
+	public int updateCompanyConfigParam(SysParamVO sysParamVO) throws Exception {
+		return update("EzSystemAdminDAO.updateCompanyConfigParam", sysParamVO);
+	}
+
+	public int insertCompanyConfigParam(SysParamVO sysParamVO) throws Exception {
+		return update("EzSystemAdminDAO.insertCompanyConfigParam", sysParamVO);
+	}
 }

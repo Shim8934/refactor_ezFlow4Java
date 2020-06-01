@@ -196,6 +196,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (int) select("EzOrganDAO.getMemberListCount2", map);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<String> getChildCompany(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzOrganDAO.getChildCompany", map);
 	}

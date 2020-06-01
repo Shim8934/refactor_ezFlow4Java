@@ -40,7 +40,7 @@
 	    	var userMyName2 = "<c:out value='${userMyName2}'/>";
 	    	var listSize = "<c:out value='${listSize}'/>";
 	    	var defaultFontAndSize  = "<c:out value='${defaultFontAndSize}'/>";
-	    	var strAttach = "${strAttach}'";
+	    	var strAttach = "${strAttach}";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {

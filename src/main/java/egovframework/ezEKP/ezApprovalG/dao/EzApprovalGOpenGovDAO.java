@@ -38,15 +38,18 @@ public class EzApprovalGOpenGovDAO extends EgovAbstractDAO {
     }
 
     //scheduler
-    public List<ApprGOpenGovCsvVO> getOpenGovCsv(Map<String, Object> map) throws Exception {
+    @SuppressWarnings("unchecked")
+	public List<ApprGOpenGovCsvVO> getOpenGovCsv(Map<String, Object> map) throws Exception {
         return (List<ApprGOpenGovCsvVO>) list("EzApprovalGOpenGov.getOpenGovCsv", map);
 
     }
-    public List<String> getResendDate() throws Exception {
+    @SuppressWarnings("unchecked")
+	public List<String> getResendDate() throws Exception {
         return (List<String>) list("EzApprovalGOpenGov.getResendDate");
     }
 
-    public List<ApprGOpenGovCsvVO> getOpenGovResendCsv(Map<String, Object> map) throws Exception {
+    @SuppressWarnings("unchecked")
+	public List<ApprGOpenGovCsvVO> getOpenGovResendCsv(Map<String, Object> map) throws Exception {
         return (List<ApprGOpenGovCsvVO>) list("EzApprovalGOpenGov.getOpenGovResendCsv", map);
     }
 

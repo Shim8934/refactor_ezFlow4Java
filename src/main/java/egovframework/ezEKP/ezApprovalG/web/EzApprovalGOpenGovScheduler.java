@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezApprovalG.web;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGOpenGovService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import org.slf4j.Logger;
@@ -35,6 +36,9 @@ public class EzApprovalGOpenGovScheduler {
     EzApprovalGService ezApprovalGService;
 
     @Autowired
+    EzEmailScheduler ezEmailScheduler;
+
+    @Autowired
     EzApprovalGOpenGovService ezApprovalGOpenGovService;
 
 //    @Scheduled(cron = "0 0/1 * * * *")
@@ -42,9 +46,8 @@ public class EzApprovalGOpenGovScheduler {
     public void makeOpenGovCSV() throws Exception {
         logger.debug("makeOpenGovCSV started.");
 
-        if (!config.getProperty("config.useOpenGov").equals("YES")) {
-            logger.debug("useOpenGov is not 'YES'.");
-
+        if (!config.getProperty("config.useOpenGov").equals("YES") || !ezEmailScheduler.preScheduler("makeOpenGovCSV")) {
+            logger.debug("makeOpenGovCSV scheduler ended.");
             return;
         }
 
@@ -69,6 +72,7 @@ public class EzApprovalGOpenGovScheduler {
             logger.debug("makeOpenGovCSV ended csv Size : 0");
             logger.debug("makeOpenGovCSV ended");
 
+            bw.close();
             return;
         }
 

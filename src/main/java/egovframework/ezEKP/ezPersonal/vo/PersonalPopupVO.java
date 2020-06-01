@@ -1,7 +1,5 @@
 package egovframework.ezEKP.ezPersonal.vo;
 
-import java.util.List;
-
 public class PersonalPopupVO {
 	/** 회사 아이디*/
 	private String companyID;

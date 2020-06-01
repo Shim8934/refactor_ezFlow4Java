@@ -114,3 +114,17 @@ function GetSubTreeInfo_KMS(nodeNM, TreeIdx, nodeLevel) {
 
     treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
 }
+
+//2020-04-23 : 트리뷰 선택된 노드로 스크롤 이동
+function treeViewScrollTo(pTreeViewID) {
+    try {
+        document.getElementById(pTreeViewID).parentNode.scrollTop = 0;
+
+        var selTreeViewNode = document.getElementById(pTreeViewID).getElementsByClassName("node_selected");
+        var centerH = ((Number(document.getElementById(pTreeViewID).parentNode.style.height.replace("px", "")) / 2) + document.getElementById(pTreeViewID).parentNode.getBoundingClientRect().top);
+
+        if (selTreeViewNode != null) {
+            document.getElementById(pTreeViewID).parentNode.scrollTop = (selTreeViewNode.item(0).parentNode.getBoundingClientRect().top - centerH);
+        }
+    } catch (e) { }
+}

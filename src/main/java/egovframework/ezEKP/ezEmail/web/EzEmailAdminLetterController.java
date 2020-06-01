@@ -35,7 +35,6 @@ import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
 import egovframework.ezEKP.ezEmail.vo.MailLetterVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -768,7 +767,6 @@ public class EzEmailAdminLetterController {
 		try {
 			reader = new FileReader(htmlFile);
 			result = "";
-			String newResult = "";
 
 			int c;
 
@@ -893,6 +891,7 @@ public class EzEmailAdminLetterController {
 	 * 
 	 * @param letterNo(편지지 번호)
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezEmail/readLetter", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject readLetter(@CookieValue("loginCookie") String loginCookie, String letterNo, String popUpType, HttpServletRequest request) throws Exception {
@@ -929,6 +928,7 @@ public class EzEmailAdminLetterController {
 						letterHtml += letterHtmlTemp;
 					}
 
+					br.close();
 					returnJson.put("letterHtml", letterHtml);
 					logger.debug("letterHtml=" + letterHtml);
 				}

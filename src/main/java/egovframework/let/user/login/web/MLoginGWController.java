@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
@@ -135,6 +136,7 @@ public class MLoginGWController {
     		loginVO.setTenantId(tenantId);
     		
     		LoginVO resultVO = loginService.selectUser(loginVO);
+    		String companyId = resultVO.getCompanyID();
     		
     		/* 2019-05-08 홍승비 - LoginCookieSSO를 사용하는지 값을 확인 */
     		String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);	    	
@@ -142,7 +144,9 @@ public class MLoginGWController {
     		
     		int numberOfLoginFailPermit = 0;
     		// 로그인 실패 최대 허용 횟수를 구한다.
-			String maxAllowedCountOfLoginFail = ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId);
+    		String maxAllowedCountOfLoginFail = ezCommonService.getCompanyConfig(tenantId, companyId, "MaxAllowedCountOfLoginFail");
+    		LOGGER.debug("companyId=" + companyId + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail);
+			// String maxAllowedCountOfLoginFail = ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId);
 					
 			if (!maxAllowedCountOfLoginFail.equals("")) {
 				try {
@@ -325,7 +329,8 @@ public class MLoginGWController {
         					
         					return result;
         				} else {
-        					String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
+        	        		String expirePassPeriod = ezCommonService.getCompanyConfig(tenantId, companyId, "ExpirePassPeriod");
+        					//String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
         					
         					if (!expirePassPeriod.trim().equals("0")) {
         						int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());

@@ -111,6 +111,8 @@
 		
 		function ok_Click() {
 			newName = document.getElementById("nameInput").value;
+			/* 2020-05-06 홍승비 - 폴더명 앞뒤공백제거 코드 추가 */
+			newName = newName.trim();
 			
 			if (newName == "") {
 				if (functionType == "insert" && fileId == 0) {

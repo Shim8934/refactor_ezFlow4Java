@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -15,7 +14,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -49,7 +47,6 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
-import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
@@ -59,6 +56,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
+@SuppressWarnings("unchecked")
 @RestController
 public class EzAttitudeGWController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzAttitudeGWController.class);
@@ -372,6 +370,7 @@ public class EzAttitudeGWController {
 		
 		try {
 	         String userId = request.getParameter("userId");
+	         String primary = request.getParameter("primary");
 	         String serverName = request.getHeader("x-user-host");
 	         MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 	         
@@ -381,7 +380,8 @@ public class EzAttitudeGWController {
 	         if (companyId == null || companyId.equals("")) {
 	            companyId = info.getCompanyId();
 	         }
-	         List<DeptViewVO> deptList = ezAttitudeService.getDeptViewList(userId, companyId, info.getTenantId(), info.getPrimary());
+	         /* 2020-05-29 홍승비 - 권한부서 선택 시, 현재 사용자가 아닌 권한자의 userID가 넘어가기 때문에 primary 값을 전달하지 못하는 오류 수정 */
+	         List<DeptViewVO> deptList = ezAttitudeService.getDeptViewList(userId, companyId, info.getTenantId(), primary);
 	         
 	         result.put("status", "ok");
 	         result.put("code", 0);
@@ -1008,6 +1008,7 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			String order = orderCell + " " + orderOption;
+			@SuppressWarnings("unused")
 			String isAllDept = "";
 
 			if (adminFlag == null) {
@@ -1386,10 +1387,10 @@ public class EzAttitudeGWController {
 			String listSize = request.getParameter("listSize");
 			String orderCell = request.getParameter("orderCell");
 			String orderOption = request.getParameter("orderOption");
-			String offsetMin = request.getParameter("offsetMin");
+			// String offsetMin = request.getParameter("offsetMin");
 			String isAdmin = request.getParameter("isAdmin") == null ? "" : request.getParameter("isAdmin");
-			String statistics = request.getParameter("statistics");
-			String isuse = "1";
+			// String statistics = request.getParameter("statistics");
+			// String isuse = "1";
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantId = info.getTenantId();
@@ -1458,7 +1459,7 @@ public class EzAttitudeGWController {
 			String listSize = request.getParameter("listSize");
 			String orderCell = request.getParameter("orderCell");
 			String orderOption = request.getParameter("orderOption");
-			String offsetMin = request.getParameter("offsetMin");
+			// String offsetMin = request.getParameter("offsetMin");
 			String duplicated = request.getParameter("duplicated");
 			String isAdmin = request.getParameter("isAdmin") == null ? "" : request.getParameter("isAdmin");
 			
@@ -1895,7 +1896,7 @@ public class EzAttitudeGWController {
 			String listSize = request.getParameter("listSize");
 			String orderCell = request.getParameter("orderCell");
 			String orderOption = request.getParameter("orderOption");
-			String offsetMin = request.getParameter("offsetMin");
+			// String offsetMin = request.getParameter("offsetMin");
 			String isAdmin = request.getParameter("isAdmin") == null ? "" : request.getParameter("isAdmin");
 			String statistics = request.getParameter("statistics");
 			String isuse = "1";
@@ -2084,7 +2085,7 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			String searchUserName = request.getParameter("searchUserName");
 			String searchDeptName = request.getParameter("searchDeptName");
-			String searchDeptId = request.getParameter("searchDeptId") == null ? "" : request.getParameter("searchDeptId");
+			// String searchDeptId = request.getParameter("searchDeptId") == null ? "" : request.getParameter("searchDeptId");
 			String searchTitle = request.getParameter("searchTitle");
 			String pageNum = request.getParameter("pageNum");
 			String listSize = request.getParameter("listSize");
@@ -2278,6 +2279,7 @@ public class EzAttitudeGWController {
 				result.put("status", "ok");
 				result.put("code", 0);
 				result.put("data", resultMsg);
+				wb.close();
 				return result;
 			}
 			int numOfCells = 0;
@@ -2320,7 +2322,8 @@ public class EzAttitudeGWController {
 	            }
 	        }
 	        
-	        Map<String, Object> excelTitle = excelList.get(0);
+	        @SuppressWarnings("unused")
+			Map<String, Object> excelTitle = excelList.get(0);
 	        
 	        wb.close();
 	        
@@ -2490,8 +2493,8 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deletecancelannual] started.");
 		
 		JSONObject result = new JSONObject();
-		JSONObject data = new JSONObject();
-		JSONObject attJson = new JSONObject();
+		// JSONObject data = new JSONObject();
+		// JSONObject attJson = new JSONObject();
 		
 		int status = 0;
 		
@@ -2535,8 +2538,8 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/cancelannual/count] started.");
 
 		JSONObject result = new JSONObject();
-		JSONObject data = new JSONObject();
-		JSONObject attJson = new JSONObject();
+		// JSONObject data = new JSONObject();
+		// JSONObject attJson = new JSONObject();
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
@@ -2622,13 +2625,14 @@ public class EzAttitudeGWController {
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
-		JSONObject attJson = new JSONObject();
+		// JSONObject attJson = new JSONObject();
 
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			String order = orderCell + " " + orderOption;
+			@SuppressWarnings("unused")
 			String isAllDept = "";
 
 			if (adminFlag == null) {
@@ -2737,7 +2741,7 @@ public class EzAttitudeGWController {
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
-		JSONObject attJson = new JSONObject();
+		// JSONObject attJson = new JSONObject();
 		
 		try{
 			String[] ids = idList.split(",");

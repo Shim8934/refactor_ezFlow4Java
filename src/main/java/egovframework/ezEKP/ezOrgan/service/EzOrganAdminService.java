@@ -1,9 +1,6 @@
 package egovframework.ezEKP.ezOrgan.service;
 
 import java.util.List;
-import java.util.Map;
-
-
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;

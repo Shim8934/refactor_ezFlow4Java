@@ -1,12 +1,11 @@
-﻿﻿﻿
-//#############################################################################################################################################사용자리스트 원클릭 이벤트 list2_onSel_Click()
+﻿﻿//#############################################################################################################################################사용자리스트 원클릭 이벤트 list2_onSel_Click()
 function list2_onSel_Click() {
 }
 //#############################################################################################################################################사용자리스트 더블클릭 이벤트 list2_onSel_DBclick()
 function list2_onSel_DBclick() {
     var pUserList = new ListView();      
     pUserList.LoadFromID("pUserList");
-    
+
 	var selnode = pUserList.GetSelectedRows();
 	var RtnVal = CheckSignCellValue();  
     
@@ -20,14 +19,17 @@ function list2_onSel_DBclick() {
     	if (approvalFlag == "S") {
     		var lineArea = CheckLineArea_BeforeAdd();
     		if (!lineArea) {return;}
-    		
-    		SAPRLINEATTENDADDFunction(selnode, "PERSON");
-            initJunGyul();
+			
+			for(var i = selnode.length-1 ; i >= 0 ; i--){
+				SAPRLINEATTENDADDFunction(selnode[i], "PERSON");
+				initJunGyul();
+			}
     	} else {
     		if (selnode.length != 0) {
-    			aprlinecount = 0;
-    			
-    			APRLINEATTENDADDFunction(selnode, "PERSON");
+				aprlinecount = 0;
+
+    			for(var i = selnode.length-1 ; i >= 0 ; i--)
+    				APRLINEATTENDADDFunction(selnode[i], "PERSON");
     		}
     	}
     }
@@ -1395,7 +1397,7 @@ function AprLineDupulicationChecking(Mode, selnode, pSelectedRow) {
             }
         }
         else {
-            if (GetAttribute(totalRow[i], "DATA4") == GetAttribute(pSelectedRow[0], "DATA2")) {
+            if (GetAttribute(totalRow[i], "DATA4") == GetAttribute(pSelectedRow, "DATA2")) {
                 if (GetAttribute(totalRow[i], "DATA4") == optGamsabu) {
                     if (totalRow[i].cells[4].innerText == strLangS51) {
                         chkDuplflag = true;
@@ -1515,7 +1517,7 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
 					return; 
 				}
 			}
-			
+
 			var pAPRLINE = new ListView();      //// ListView 선언
 			pAPRLINE.LoadFromID("lvAPRLINE"); 
 			
@@ -1532,7 +1534,7 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
 				}
 				else
 				{
-					if(GetAttribute(totalRow[i],"DATA4") == GetAttribute(pSelectedRow[0],"DATA2"))
+					if(GetAttribute(totalRow[i],"DATA4") == GetAttribute(pSelectedRow,"DATA2"))
 					{
 						if(GetAttribute(totalRow[i],"DATA4") == optGamsabu) 
 						{					    
@@ -1765,9 +1767,9 @@ function AprLineUserAdd(AprLineAddIndex, AprLineRow, pSelectedRow, selnode)
     pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
     pparsingXML = pparsingXML + "<DATA2>" + "" + "</DATA2>";
     pparsingXML = pparsingXML + "<DATA3>" + pDocID + "</DATA3>";
-    pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA2")) + "</DATA4>";
+    pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA2")) + "</DATA4>";
     pparsingXML = pparsingXML + "<DATA5>" + "N" + "</DATA5>";
-    pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA3")) + "</DATA6>";
+    pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA3")) + "</DATA6>";
     pparsingXML = pparsingXML + "<DATA7>" + "" + "</DATA7>";
     pparsingXML = pparsingXML + "<DATA8>" + "N" + "</DATA8>";
     pparsingXML = pparsingXML + "<DATA9>" + "N" + "</DATA9>";
@@ -1804,18 +1806,21 @@ function AprLineUserAdd(AprLineAddIndex, AprLineRow, pSelectedRow, selnode)
     }
     pparsingXML = pparsingXML + "<DATA12>" + strAprState1 + "</DATA12>";
 
-    pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA7")) + "</DATA13>";
-    pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA8")) + "</DATA14>";
-    pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA9")) + "</DATA15>";
-    pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA10")) + "</DATA16>";
-    pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA11")) + "</DATA17>";
-    pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(GetAttribute(pSelectedRow[0], "DATA12")) + "</DATA18>";
+    pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA7")) + "</DATA13>";
+    pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA8")) + "</DATA14>";
+    pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA9")) + "</DATA15>";
+    pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA10")) + "</DATA16>";
+    pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA11")) + "</DATA17>";
+    pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA12")) + "</DATA18>";
     pparsingXML = pparsingXML + "</CELL><CELL>";
-    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pSelectedRow[0].cells[0].innerText) + "</VALUE>";
+	//pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pSelectedRow[0].cells[0].innerText) + "</VALUE>";
+	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA4")) + "</VALUE>";
     pparsingXML = pparsingXML + "</CELL><CELL>";
-    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pSelectedRow[0].cells[2].innerText) + "</VALUE>";
+	//pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pSelectedRow[0].cells[2].innerText) + "</VALUE>";
+	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA6")) + "</VALUE>";
     pparsingXML = pparsingXML + "</CELL><CELL>";
-    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pSelectedRow[0].cells[1].innerText) + "</VALUE>";
+	//pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pSelectedRow[0].cells[1].innerText) + "</VALUE>";
+	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA5")) + "</VALUE>";
     pparsingXML = pparsingXML + "</CELL><CELL>";
 
     if (AprLineAddIndex > 1) {
@@ -4125,5 +4130,110 @@ function APRLINEXMLParsingCC() {
         return strXML;
     } catch (e) {
         alert("APRLINEXMLParsing :: " + e.description);
+    }
+}
+
+//2020-04-28 : 결재선 부서검색
+function btnAprLineSearchDept_onClick() {
+	try{
+        var tmpDeptName = textUser.value;
+        if (tmpDeptName.length == 0) {
+            var pAlertContent = strLang240;
+            document.getElementById("textUser").focus();
+            OpenAlertUI(pAlertContent);
+            return;
+        }
+
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezOrgan/getSearchList.do",
+			data : {
+				search : "EXACT_EXTENSIONATTRIBUTE2::" + CompanyID + ";;displayname::" + tmpDeptName,
+				cell   : "extensionAttribute3;displayname;extensionAttribute9;",
+				prop   : "",
+				type   : "group"
+			},
+			success: function(xml){
+				document.getElementById("textUser").focus();
+                xmlDOM = loadXMLString(xml);
+                adCount = xmlDOM.getElementsByTagName("ROW").length;
+			},
+	    	error : function(error){
+	    		document.getElementById("textUser").focus();
+                alert(strLang241 + error.responseText);
+	    	}
+		});
+		
+        if (adCount == 0) {
+            var pAlertContent = strLang242;
+            OpenAlertUI(pAlertContent);
+            return;
+        }
+        else if (adCount == 1) {
+            g_xmlHTTP = createXMLHttpRequest();
+
+            var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) +
+					"</DEPTID><TOPID>" + CompanyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+            g_xmlHTTP.onreadystatechange = event_getAprLineDeptFullTree;
+            g_xmlHTTP.send(strQuery);
+        }
+        else {
+            var rgParams = new Array();
+            rgParams["addrBook"] = xmlDOM;
+            rgParams["deptid"] = "";
+            if (CrossYN() && ext !='hwp') {
+                checkname2_cross_dialogArguments[0] = rgParams;
+                checkname2_cross_dialogArguments[1] = btnAprLineSearchDept_onClick_Complete2;
+
+                DivPopUpShow(609, 372, "/ezPersonal/checkName2.do");
+            }
+            else {
+                window.showModalDialog("/ezPersonal/checkName2.do", rgParams, "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken");
+
+                if (rgParams["deptid"] != "") {
+                    g_xmlHTTP = createXMLHttpRequest();
+                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + CompanyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+                    g_xmlHTTP.onreadystatechange = event_getAprLineDeptFullTree;
+                    g_xmlHTTP.send(strQuery);
+                }
+            }
+        }
+
+	}catch(e){}
+}
+
+function btnAprLineSearchDept_onClick_Complete2(rgParams) {
+    DivPopUpHidden();
+    if (rgParams["deptid"] != "") {
+        g_xmlHTTP = createXMLHttpRequest();
+        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + CompanyID + "</TOPID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+        g_xmlHTTP.onreadystatechange = event_getAprLineDeptFullTree;
+        g_xmlHTTP.send(strQuery);
+    }
+}
+
+function event_getAprLineDeptFullTree() {
+    if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
+        if (g_xmlHTTP.statusText == "OK") {
+        	document.getElementById('TreeView').innerHTML = "";
+        	var treeView = new TreeView();
+        	treeView.SetID("FromTreeView");
+        	treeView.SetUseAgency(true);
+        	treeView.SetRequestData("RequestData");
+        	treeView.SetNodeClick("TreeViewNodeClick");
+        	treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
+			treeView.DataBind("TreeView");
+
+            treeViewScrollTo("FromTreeView");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
+        }
+        else {
+            alert(strLang249 + g_xmlHTTP.statusText);
+            g_xmlHTTP = null;
+        }
     }
 }

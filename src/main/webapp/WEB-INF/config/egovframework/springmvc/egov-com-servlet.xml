@@ -53,6 +53,9 @@
             <mvc:exclude-mapping path="/user/login/actionLogoutWithRedirectUri.do"/>            
             <mvc:exclude-mapping path="/user/login/login.do"/>
             <mvc:exclude-mapping path="/user/login/changeExPassword.do"/>
+            <mvc:exclude-mapping path="/user/login/sendFindPwd.do"/>  
+            <mvc:exclude-mapping path="/user/login/checkCertification.do"/>  
+            <mvc:exclude-mapping path="/user/login/changePasswordByCertification.do"/>  
             <mvc:exclude-mapping path="/ezApprovalG/excelExportOut.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadAttachCommon.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadInlineDotNet.do"/>
@@ -69,6 +72,7 @@
             <mvc:exclude-mapping path="/ezTalkGate/**"/>
             <mvc:exclude-mapping path="/ezConn/**"/>
             <mvc:exclude-mapping path="/ezUCMessenger/**"/>  
+            <mvc:exclude-mapping path="/user/login/checkPasswordPolicy.do"/>  
 		    <bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
         

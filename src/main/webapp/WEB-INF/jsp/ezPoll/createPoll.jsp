@@ -1190,7 +1190,7 @@
 	
 				</tr>
 				<tr> 
-					<td style="width:100%;height:350px; margin:0px 0px 8px 0px; " id="EdtorSize" class="pollTd01">
+					<td style="width:100%;height:500px; margin:0px 0px 8px 0px; " id="EdtorSize" class="pollTd01">
 		               <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%;overflow:auto; border-top:0px" ></iframe>
 	           		</td>
 				</tr>		

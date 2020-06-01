@@ -1,41 +1,27 @@
 package egovframework.ezEKP.ezAttitude.web;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.bouncycastle.asn1.cmp.CAKeyUpdAnnContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.ibm.icu.text.DecimalFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
-import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
-import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
 
 @Component
 public class EzAttitudeScheduler {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzAttitudeScheduler.class);
-	
-	@Autowired
-	private CommonUtil commonUtil;
 	
 	@Resource(name = "EzAttitudeService")
 	private EzAttitudeService ezAttitudeService;
@@ -65,6 +51,7 @@ public class EzAttitudeScheduler {
 			String annualGnrtStd = (String)annualConf.get("annualGnrtStd");// 0:입사일기준 1:회계연도기준
 			String useAnnualTmnt = (String)annualConf.get("useAnnualTmnt");//연차소멸 여부 1:사용 0:미사용
 			String initialDate = (String)annualConf.get("initialDate"); // 기산일 
+			@SuppressWarnings("unused")
 			String roundOffRule = (String)annualConf.get("roundOffRule");//1:0.5 0:1.0
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

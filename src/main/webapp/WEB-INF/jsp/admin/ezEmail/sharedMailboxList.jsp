@@ -47,6 +47,11 @@
 		        } else {
 		        	companyChange();
 		        }
+		        
+		        var searchInput = $("#searchInputWrap input");
+		        var searchBtn = $("#searchInputWrap .imgbtn");
+		        var searchInputW = $("#searchInputWrap").width() - searchBtn.outerWidth() - 10;
+		        searchInput.width(searchInputW + "px");
 		    }
 		    
 		    function companyChange() {
@@ -285,7 +290,7 @@
 		        
 		        inputpassword_dialogArguments[0] = strLangSharedMailbox02;
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
-		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));	
+		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?type=shared", "InputPassword", GetOpenWindowfeature(467, 185));	
 		        try { OpenWin.focus(); } catch (e) { }
 			}
 			
@@ -443,11 +448,11 @@
 		</script>
 		<div style="width:825px;">
 		<!-- 검색 -->
-		<div style="border: 1px solid #e8e8e8; WIDTH:100%; border-bottom: 0px; height: 30px; box-sizing: border-box;">
-			<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;">
+		<div style="border: 1px solid #e8e8e8; WIDTH:100%; height: 34px; box-sizing: border-box; line-height: 33px; margin-bottom:3px;">
+			<div id="jobTotalInfoRayer" style="display: inline-block;">
 				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC; font-weight:bold;" id="listCount"></span> <spring:message code='ezSystem.kyj2'/>]</span>
 			</div>
-			<div id="userSearchRayer" style="float:right; display: inline-block; line-height: 30px;">
+			<div id="userSearchRayer" style="float:right; display: inline-block;">
 				<div style="display: inline-block; float:left;">
 				<select id="searchType" style="height: 26px; width: 143px;">
 					<option value="displayname"><spring:message code='ezEmail.sharedMailbox18' /></option> <!-- 공유사서함 이름 -->
@@ -456,9 +461,11 @@
 					<option value="memberID"><spring:message code='ezEmail.ksaSharedMailbox26' /></option> <!-- 공유자 ID -->
 				</select>
 				</div>
-				<div style="display: inline-block;box-sizing: border-box; padding-right: 2px;width: 518px;padding-left: 5px;">
-					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px; width:86%">
-					<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
+				<div id="searchInputWrap" style="display: inline-block;box-sizing: border-box; padding-right: 2px;width: 518px;padding-left: 5px;">
+					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px;">
+					<a class="imgbtn" style="vertical-align:middle; height: 25.5px; box-sizing: border-box; margin-top: -1px;">
+						<span onclick="search_click()" style="height: 100%; line-height: 2em;"><spring:message code="ezStatistics.t36" /></span>
+					</a>
 				</div>
 			</div>
 		</div>

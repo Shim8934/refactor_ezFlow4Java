@@ -2471,6 +2471,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag, String reformMht, String reformHtml, String reformFunction) throws Exception {
 		logger.debug("saveFormInfo started.");
+		@SuppressWarnings("unused")
 		String strBeforeMHT = "";
 		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(formInfo);
@@ -2484,6 +2485,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String useFlag = "";
 		String formConnFlag = "";
 		String openGovFlag = "";
+		String formAprOption = "";
 		
 		String formName = doc.getElementsByTagName("FormName").item(0).getTextContent();
 		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
@@ -2503,12 +2505,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
 			openGovFlag = doc.getElementsByTagName("openGovFlag").item(0).getTextContent();
 		}
+		formAprOption = doc.getElementsByTagName("APPROPTION").item(0).getTextContent();
 
 		String recevGroupXML = "";
 		if (formRecevGroup != null && !formRecevGroup.equals("")) {
 			recevGroupXML = formRecevGroup;
 		}
 		
+		// 안 쓰고 있음 혹시 모르니 유지
+		@SuppressWarnings("unused")
 		boolean isUpdate = false;
 		String saveFileFolder = "";
 		String saveFileName = "";
@@ -2555,6 +2560,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("tenantID", userInfo.getTenantId());
 		// FormBuilder
 		map.put("v_PREFORMFLAG", useReform ? "Y" : "N");
+		// 양식 상세옵션
+		map.put("v_formAprOption", formAprOption);
 
 		if (formID.equals("")) {
 			formID = generateNextFormId(companyID, userInfo.getTenantId());
@@ -2929,6 +2936,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("filePath : " + filePath);
 		String saveFileFolder = realPath + filePath;
 		String saveFileName = saveFileFolder + commonUtil.separator + docID + ".mht";
+		@SuppressWarnings("unused")
 		String strBeforeMHT = "";
 		
 		logger.debug("saveFileFolder : " + saveFileFolder);
@@ -2972,6 +2980,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String saveFormInfoHWP(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception {
 		logger.debug("saveFormInfoHWP started.");
+		@SuppressWarnings("unused")
 		String strBeforeMHT = "";
 		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(formInfo);
@@ -2986,6 +2995,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String formConnFlag = "";
 		String formDraftAllFlag = "";
 		String openGovFlag = "";
+		String formAprOption = "";
 
 		String formName = doc.getElementsByTagName("FormName").item(0).getTextContent();
 		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
@@ -3005,6 +3015,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
 			openGovFlag = doc.getElementsByTagName("openGovFlag").item(0).getTextContent();
 		}
+		formAprOption = doc.getElementsByTagName("APPROPTION").item(0).getTextContent();
 
 		String recevGroupXML = "";
 		if (formRecevGroup != null && !formRecevGroup.equals("")) {
@@ -3055,6 +3066,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_POPENGOVFLAG", openGovFlag);
 		map.put("companyID", companyID);
 		map.put("tenantID", userInfo.getTenantId());
+		map.put("v_formAprOption", formAprOption);
 
 		String result = "";
 		
@@ -4147,7 +4159,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return auth;
 	}
-
+	
 	@Override
 	public List<ApprGAttachInfoVO> getAdminTotalDownload(String docIdList, String mode, String companyID, int tenantID) throws Exception {
 		logger.debug("getAdminTotalDownload started");
@@ -4287,4 +4299,55 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("getModifyOpenGovHistoryReason ended.");
 		return reason;
 	}
+	
+	/* 2020-05-15 홍승비 - 첨부파일 개수제한 관련 메서드 */
+	@Override
+	public int getAttachLimit(String companyID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantId);
+		
+		int result = -1;
+		int resultCnt = ezApprovalGAdminDAO.cntAttachLimit(map);
+		
+		if (resultCnt > 0) {
+			result = ezApprovalGAdminDAO.getAttachLimit(map);
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public void saveAttachLimit(String attachLimit, String companyID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_ATTACHLIMIT", attachLimit);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantId);
+		
+		int result = -1;
+		int resultCnt = ezApprovalGAdminDAO.cntAttachLimit(map);
+		
+		if (resultCnt > 0) {
+			result = ezApprovalGAdminDAO.getAttachLimit(map);
+		}
+		
+		if (result == -1) { // 레코드가 없다면 삽입
+			ezApprovalGAdminDAO.saveAttachLimit(map);
+		} else { // 레코드가 있다면 업데이트
+			ezApprovalGAdminDAO.updateAttachLimit(map);
+		}
+	}
+	
+	@Override
+	public void deleteAttachLimit(String companyID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantId);
+		
+		ezApprovalGAdminDAO.deleteAttachLimit(map);
+	}
+	
 }

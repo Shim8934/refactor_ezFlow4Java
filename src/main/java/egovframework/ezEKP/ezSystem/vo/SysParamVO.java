@@ -8,6 +8,8 @@ public class SysParamVO {
 	
 	private int tenantID;
 	
+	private String companyID;
+	
 	public String getName() {
 		return name;
 	}
@@ -30,6 +32,14 @@ public class SysParamVO {
 	
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
+	}
+
+	public String getCompanyID() {
+		return companyID;
+	}
+
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
 	}
 	
 }

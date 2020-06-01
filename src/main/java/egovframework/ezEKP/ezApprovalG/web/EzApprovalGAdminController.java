@@ -810,7 +810,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String htmlData = request.getParameter("htmlData");
 		String realPath = commonUtil.getRealPath(request);
 		
-		String result = ezApprovalGAdminService.editApprovalDoc(docID, companyID, formMHT, formHTML, realPath, userInfo, filePath, htmlData);
+		ezApprovalGAdminService.editApprovalDoc(docID, companyID, formMHT, formHTML, realPath, userInfo, filePath, htmlData);
 		
 		logger.debug("editApprDoc ended.");
 		return "";
@@ -3467,8 +3467,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		boolean publicFlag = false;
 		boolean securityFlag = false;
 		String userSecurityCode = "";
-		String startDate = "";
-		String endDate = "";
+		// String startDate = "";
+		// String endDate = "";
 		List<ApprGDocListVO> list = null;
 		
 		if (pageNum == null || pageNum.equals("")) {
@@ -3699,7 +3699,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String DocDelDeptNameArr[] = request.getParameter("DeptNameList").split(";");
 		String deleteDay = request.getParameter("deleteDay");
 		String companyID = request.getParameter("companyID");
-		String result = ezApprovalGAdminService.deleteDocListjson(DocDelIDArr, DocDelNoArr, DocDelTitleArr, DocDelWriterNameArr, DocDelDeptNameArr, deleteDay, userInfo.getId(), userInfo.getOffset(), companyID, userInfo.getTenantId());
+		ezApprovalGAdminService.deleteDocListjson(DocDelIDArr, DocDelNoArr, DocDelTitleArr, DocDelWriterNameArr, DocDelDeptNameArr, deleteDay, userInfo.getId(), userInfo.getOffset(), companyID, userInfo.getTenantId());
 		
 		logger.debug("delDocListjson ended");
 		
@@ -3858,7 +3858,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String buJaeId = request.getParameter("buJaeId");
-		String proxyuserid = request.getParameter("proxyuserid");
+		// String proxyuserid = request.getParameter("proxyuserid");
 		String buJaeInfo = request.getParameter("buJae");
 		String buJaeInfo2 = "";
 		String proxyInfo = request.getParameter("proxy");
@@ -3908,7 +3908,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("selectPerson started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		// String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
@@ -3934,7 +3934,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("selectPerson started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		// String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
@@ -4145,7 +4145,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("setDocNumZeroCnt ended | result = " + rtnVal);
 		return rtnVal;
 	}
-
+	
 	@RequestMapping(value = "/admin/ezApprovalG/enforceSihangSeal.do", method = RequestMethod.GET)
 	public String enforceSihangSeal(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("enforceSihangSeal started");
@@ -4232,7 +4232,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String draftFromMonth = request.getParameter("draftFromMonth");
 		String draftFromDay = request.getParameter("draftFromDay");
 
-        String draftFrom = "";
+        @SuppressWarnings("unused")
+		String draftFrom = "";
 
         if (draftFromYear != null && !draftFromYear.equals("")) {
             draftFrom = draftFromYear + "-" + draftFromMonth + "-" + draftFromDay;
@@ -4241,7 +4242,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String draftToMonth = request.getParameter("draftToMonth");
         String draftToDay = request.getParameter("draftToDay");
 
-        String draftTo = "";
+        @SuppressWarnings("unused")
+		String draftTo = "";
 
         if (draftToYear != null && !draftToYear.equals("")) {
             draftTo = draftToYear + "-" + draftToMonth + "-" + draftToDay;
@@ -4251,7 +4253,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String apprFromMonth = request.getParameter("apprFromMonth");
         String apprFromDay = request.getParameter("apprFromDay");
 
-        String aprFrom = "";
+        @SuppressWarnings("unused")
+		String aprFrom = "";
 
         if (apprFromYear != null && !apprFromYear.equals("")) {
             aprFrom = apprFromYear + "-" + apprFromMonth + "-" + apprFromDay;
@@ -4260,7 +4263,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String apprToYear = request.getParameter("apprToYear");
         String apprToMonth = request.getParameter("apprToMonth");
         String apprToDay = request.getParameter("apprToDay");
-        String aprTo = "";
+        @SuppressWarnings("unused")
+		String aprTo = "";
 
         if (apprToYear != null && !apprToYear.equals("")) {
             aprTo = apprToYear + "-" + apprToMonth + "-" + apprToDay;
@@ -4351,5 +4355,94 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("getModifyOpenGovHistoryReason ended.");
 
 		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 첨부파일 개수제한 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/manageAttachLimit.do", method = RequestMethod.GET)
+	public String manageAttachLimit(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("manageAttachLimit started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		// 전체관리자, 회사관리자만 접근 가능
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			// 전체관리자는 모든 회사 표출, 그 외에는 자신의 소속 회사만 표출
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+		}
+		
+		int apprAttachLimitMax = 100; // 첨부파일 개수제한 default 최대값은 100개
+		String apprAttachCntLimitMax = ezCommonService.getTenantConfig("ApprAttachCntLimitMax", userInfo.getTenantId());
+		if (apprAttachCntLimitMax != null && !apprAttachCntLimitMax.equals("")) {
+			apprAttachLimitMax = Integer.parseInt(apprAttachCntLimitMax);
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		model.addAttribute("apprAttachLimitMax", apprAttachLimitMax);
+		
+		logger.debug("manageAttachLimit ended.");
+		return "/admin/ezApprovalG/apprGManageAttachLimit";
+	}
+	
+	/**
+	 * 전자결재G관리 첨부파일 개수제한 설정값 가져오기 (GET)
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getAttachLimit.do", method = RequestMethod.GET)
+	@ResponseBody
+	public int getAttachLimit(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getAttachLimit started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		
+		int result = ezApprovalGAdminService.getAttachLimit(companyID, userInfo.getTenantId());
+		
+		logger.debug("getAttachLimit ended");
+		return result;
+	}
+	
+	/**
+	 * 전자결재G관리 첨부파일 개수제한 설정 저장 (POST)
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/saveAttachLimit.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void saveAttachLimit(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("saveAttachLimit started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		String attachLimit = request.getParameter("attachLimit");
+		
+		ezApprovalGAdminService.saveAttachLimit(attachLimit, companyID, userInfo.getTenantId());
+		
+		logger.debug("saveAttachLimit ended");
+	}
+	
+	/**
+	 * 전자결재G관리 첨부파일 개수제한 설정 삭제 (POST)
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/deleteAttachLimit.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void deleteAttachLimit(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("deleteAttachLimit started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		
+		ezApprovalGAdminService.deleteAttachLimit(companyID, userInfo.getTenantId());
+		
+		logger.debug("deleteAttachLimit ended");
 	}
 }

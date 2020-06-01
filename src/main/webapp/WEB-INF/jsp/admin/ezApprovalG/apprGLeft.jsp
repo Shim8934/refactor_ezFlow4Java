@@ -99,6 +99,10 @@
 						//시행문변환 - 관인등록
 						url = "/admin/ezApprovalG/enforceSihangSeal.do";
 						break;
+					/* 2020-05-14 홍승비 - 전자결재 첨부파일 개수제한 설정메뉴 */
+					case "attachLimit":
+						url = "/admin/ezApprovalG/manageAttachLimit.do";
+						break;
 				}
 				
 				window.open(url,"right");
@@ -172,6 +176,8 @@
 				<c:if test="${useOpenGov == 'YES'}">
 					<h2><span style="display:inline-block;width:100%;" onClick="goPage(16)">원문공개문서함</span></h2>				
 				</c:if>
+				<%-- 2020-05-14 홍승비 - 전자결재 첨부파일 개수제한 설정메뉴 추가 --%>
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage('attachLimit')"><spring:message code='ezApprovalG.hsbAL01'/></span><ul></ul></h2>
 			</div>
 		</div>
 	</body>

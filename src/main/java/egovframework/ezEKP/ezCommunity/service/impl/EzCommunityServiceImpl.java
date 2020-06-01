@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -118,12 +117,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties globals;
-	
-	@Autowired
-	private Properties config;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityServiceImpl.class);
 	
@@ -1629,13 +1622,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		strHTML.append("<table class=\"mainlist\"  style=\"width:100%;\" ><tr style='height:25px'>");
 		
+		/* 2020-05-26 홍승비 - 설문 등록자의 이름이 우측 하단으로 내려가는 경우, UI가 깨지지 않도록 이름 전체를 하단에 표출 */
 		//2018-07-03 김보미 - 제목th에 너비 추가
 		if (managerVO.getPollSubject().indexOf("\r\n") >= 0) {
 			strHTML.append("<th align=\"left\" class='pollTitle' title = \"" + managerVO.getPollSubject() + "\">" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;") + "</th>");
-			strHTML.append("<th align=\"right\" class='pollWriter'>" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + name + "</th>");
+			strHTML.append("<th align=\"right\" class='pollWriter'><span>" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;</span><div class='pollWriterName'>" + name + "</div></th>");
 		} else {
 			strHTML.append("<th align=\"left\" class='pollTitle' title = \"" + managerVO.getPollSubject() + "\">" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + commonUtil.cleanValue(managerVO.getPollSubject()) + "</th>");
-			strHTML.append("<th align=\"right\" class='pollWriter'>" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + name + "</th>");
+			strHTML.append("<th align=\"right\" class='pollWriter'><span>" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "</span><div class='pollWriterName'>" + name + "</div></th>");
 		}
 		
 		strHTML.append("</tr>");
@@ -1693,13 +1687,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("pollResOk ended.");
 		
-		/* 2020-04-17 홍승비 - JBoss IE 대응을 위해 pollState 파라미터에 encodeURIComponent 추가 */
+		/* 2020-05-07 홍승비 - pollState의 인코딩 방식 수정 (JBoss + IE 대응) */
 		/* 2018-10-01 홍승비 - 설문조사 응답 후 리스트로 이동하지 않고 해당 설문조사를 유지하도록 수정 */
 		if (notResponse == 0) {
 			response.getWriter().write("<script language='javascript'>\n");
 			//response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
 			response.getWriter().write("document.location.href = '/ezCommunity/pollRes.do?code=" + commonUtil.stripScriptTags(code) + "&pollManagerID=" + commonUtil.stripScriptTags(pollManagerID)
-					+ "&pollState=encodeURIComponent(" + commonUtil.stripScriptTags(pollState) + ")';\n");		
+					+ "&pollState=" + URLEncoder.encode(commonUtil.stripScriptTags(pollState), "UTF-8") + "';\n");
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
 		} else {
@@ -3541,17 +3535,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			strHTML.append("<td class=\"t1\" width=\"90px\" >" + cBoard.getWriteDay().substring(0, 10) + "</td>");
 			 
-			/*String localPdsPath = "";*/
 			if (iColSpan == 6) {
-				//TODO 2016-04-26 이효진 사용하는 곳이 아직 없어서 주석처리
-				/*String file = cBoard.getCharFileName();
-				
-				if (bName.equals("c_clubpds")) {
-					localPdsPath = config.getProperty("upload_community.PDS");	
-				} else {
-					localPdsPath = config.getProperty("upload_community.PDS1");
-				}*/
-			
 				strHTML.append("<td class=\"t1\" >");
 				
 				if (cBoard.getCharFileName().equals("")) {
@@ -4309,9 +4293,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		Map<String, Object> map = new HashMap<String, Object>();
 		StringBuilder sb = new StringBuilder();
 		String cateA = "0";
-		String cateB = "0";
-		String cateC = "0";
-		int caca = 0;
 		
 		if (!c_Cate_A.equals("0")) {
 			map = new HashMap<String, Object>();
@@ -4343,7 +4324,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		if (!cateA.equals("0")) {
 			sb.append(egovMessageSource.getMessage("ezCommunity."+cateA, userInfo.getLocale()));
-			caca = 1;
 		}
 		
 		/*if (!cateB.equals("0")) {
