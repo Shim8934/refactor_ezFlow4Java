@@ -30,6 +30,7 @@
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
 			var locale = "${locale}";
 			var primaryLang = "${primaryLang}";
+			var companyID = "${companyID}";
 			
 			$(function () {
 				var toYear = new Date().getFullYear();
@@ -248,10 +249,17 @@
 				        return;
 				    }
 			    	
-			    	if (!CheckPassword(document.getElementById('txtNewPassword').value)) {
-						alert("<spring:message code='main.jjh04'/>");
-						return;
-					};	
+			    	var checkPw = CheckPassword(document.getElementById('txtNewPassword').value, companyID);
+			        if (checkPw != "OK"){
+			        	if (checkPw == "ERROR") {
+			        		alert("<spring:message code='ezSystem.ksaPwPolicy34'/>");
+			        	} else {
+			        		alert("<spring:message code='ezSystem.ksaPwPolicy35'/>");
+			        	}
+			        	
+			        	document.getElementById('txtNewPassword').focus();
+			        	return;
+			        }	
 			    	
 			        if (document.getElementById('txtNewPassword').value != document.getElementById('txtNewPasswordConfirm').value) {
 			            //alert("<spring:message code='ezPersonal.t193'/>");
@@ -509,8 +517,8 @@
        			<a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
     		</div>    		
     		<h2><spring:message code='ezPersonal.t185'/></h2>
-    		<div>▒ <spring:message code='ezPersonal.t186'/></div>    		
-			<div style="margin-top:3px">▒ <spring:message code='main.jjh04'/></div>  
+    		<div>▒ <spring:message code='ezPersonal.t186'/></div>
+    		<div style="margin-top:3px">${pwPolicyExplain }</div> 		
     		<table class="content" style="margin-top:5px;width:50%">
         		<!-- 표준모듈 (2007.02.21) 수정 -->
         		<tr>

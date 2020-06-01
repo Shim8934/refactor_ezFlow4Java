@@ -370,6 +370,7 @@ public class EzAttitudeGWController {
 		
 		try {
 	         String userId = request.getParameter("userId");
+	         String primary = request.getParameter("primary");
 	         String serverName = request.getHeader("x-user-host");
 	         MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 	         
@@ -379,7 +380,8 @@ public class EzAttitudeGWController {
 	         if (companyId == null || companyId.equals("")) {
 	            companyId = info.getCompanyId();
 	         }
-	         List<DeptViewVO> deptList = ezAttitudeService.getDeptViewList(userId, companyId, info.getTenantId(), info.getPrimary());
+	         /* 2020-05-29 홍승비 - 권한부서 선택 시, 현재 사용자가 아닌 권한자의 userID가 넘어가기 때문에 primary 값을 전달하지 못하는 오류 수정 */
+	         List<DeptViewVO> deptList = ezAttitudeService.getDeptViewList(userId, companyId, info.getTenantId(), primary);
 	         
 	         result.put("status", "ok");
 	         result.put("code", 0);

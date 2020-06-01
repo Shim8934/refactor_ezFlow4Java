@@ -69,6 +69,8 @@ var SurveyCreate     = function() {
 	var bnk = null;
 	
 	function initEvents(reuseSurvey) {
+		// 2020.04.23 강승구 : 수정작업 중 다른메뉴 클릭시 modifyflag 수정하는 코드추가
+		if(reuseSurvey){		window.parent.frames["left"].surveyId = reuseSurvey.surveyId;	}
 		surveyItem            = reuseSurvey     ? reuseSurvey.surveyId    : null;
 		var modifyFlag        = reuseSurvey     ? reuseSurvey.modifyFlag  : 0;
 		surveyObj["surveyId"] = modifyFlag == 1 ? reuseSurvey["surveyId"] : -1;
@@ -213,9 +215,14 @@ var SurveyCreate     = function() {
 	
 	function startUpload() {document.getElementById("fileBttn").click();}
 	function cancelThisSurvey() { 
-		surveyObj['infor'] = {};
-		surveyObj['questions'] = [];
-		window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
+		// 2020.04.23 강승구 : 취소 후 modifyflag 수정 및 취소메세지 추가
+		if(confirm(SurveyMessages.strCancelMsg) == true) {
+			surveyObj['infor'] = {};
+			surveyObj['questions'] = [];
+			changeSurveyState();
+			window.parent.frames["left"].surveyId = -1;
+			window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
+		}
 	}
 	// 설문 저장
 	function saveSurvey() {

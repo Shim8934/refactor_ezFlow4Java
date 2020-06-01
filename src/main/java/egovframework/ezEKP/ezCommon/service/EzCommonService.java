@@ -208,6 +208,12 @@ public interface EzCommonService {
 	public void addIsBeforeDoc() throws Exception;
 
 	public void addBeforeDocUrl() throws Exception;
+
+	public void setCompanyConfigs() throws Exception;
+	
+	public void createPwPolicyTable() throws Exception;
+	
+	public void createPwPolicyPatternTable() throws Exception;
 	
 	public void addAprAttachViewOrder() throws Exception;
 	
@@ -215,6 +221,8 @@ public interface EzCommonService {
 	
 	public void addAprTmpAttachViewOrder() throws Exception;
 
+	public void createAprAttachLimit() throws Exception;
+	
 	public void addDocStateIntoLastLines() throws Exception;
 
 	public void addDocStateIntoLastDeptLines() throws Exception;

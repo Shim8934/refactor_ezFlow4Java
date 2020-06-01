@@ -160,5 +160,6 @@ var SurveyMessages = {
 	strSendMail  : "메일 발송 여부를 지정해 주세요.",
 	strPopup     : "팝업 공지 여부를 지정해 주세요.",
 	strSend      : "발송",
-	strNotSend   : "미발송"
+	strNotSend   : "미발송",
+	strCancelMsg : "취소하시겠습니까?"
 }
