@@ -98,7 +98,7 @@
         <![CDATA[
             SELECT
                 CN ,
-            	CASE $lang$
+            	CASE #lang#
                 WHEN '1'
                 THEN DISPLAYNAME
                 ELSE DISPLAYNAME2
@@ -107,7 +107,7 @@
              	DISPLAYNAME2 ,
              	MAIL ,
              	DEPARTMENT ,
-            	CASE $lang$
+            	CASE #lang#
                 WHEN '1'
                 THEN DESCRIPTION
                 ELSE DESCRIPTION2
@@ -115,14 +115,14 @@
              	DESCRIPTION DESCRIPTION1  ,
              	DESCRIPTION2 ,
              	PHYSICALDELIVERYOFFICENAME ,
-            	CASE $lang$
+            	CASE #lang#
                 WHEN '1'
                 THEN COMPANY
                 ELSE COMPANY2
                 END COMPANY  ,
              	COMPANY COMPANY1  ,
              	COMPANY2 ,
-            	CASE $lang$
+            	CASE #lang#
                 WHEN '1'
                 THEN TITLE
                 ELSE TITLE2
