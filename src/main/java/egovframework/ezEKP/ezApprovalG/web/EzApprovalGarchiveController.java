@@ -2604,6 +2604,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         
         // 여러부서 보낼수 있게 수정 -> 문서유통센터에서 전화옴 19.12.18
         // 문서유통센터에서 전화옴 19.12.18 xml 파일 하나 떨구는 걸로 변경
+        logger.debug("####sendPath : " + sendPath);
         logger.debug("####mapPath : " + mapPath);
         logger.debug("####sendID : " + sendID);
         logger.debug("####recevID : " + arrReceiveID[0]);
