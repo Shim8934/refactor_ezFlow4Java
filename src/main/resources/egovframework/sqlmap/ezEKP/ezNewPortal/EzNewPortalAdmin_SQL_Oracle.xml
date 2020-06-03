@@ -685,7 +685,7 @@
 			MERGE INTO TBL_PORTAL_LOGO
 			USING DUAL
 			ON (
-					company_id = #tenantId#
+					company_id = TO_CHAR(#tenantId#)
 				AND
 					tenant_id = #tenantId#
 				AND
@@ -698,7 +698,7 @@
 				INSERT
 					(company_id, tenant_id, logo_type, logo_url)
 				VALUES
-					(#tenantId#, #tenantId#, #logoType#, #logoUrl#)
+					(TO_CHAR(#tenantId#), #tenantId#, #logoType#, #logoUrl#)
 		]]>
 		</isEqual>
 	</update>

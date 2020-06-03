@@ -72,7 +72,7 @@
    		<![CDATA[
    			(SELECT 
 				DOCTITLE as title,
-				TO_DATE(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset#/(24*60) AS STARTDATE,
+				STARTDATE + #offset#/(24*60) AS STARTDATE,
 				1 as module,
 		]]>	
 				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
@@ -128,7 +128,7 @@
 			
    			(SELECT 
 				DOCTITLE as title,
-				TO_DATE(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset#/(24*60) AS STARTDATE,
+				STARTDATE + #offset#/(24*60) AS STARTDATE,
 				1 as module,
 		]]>	
 				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>

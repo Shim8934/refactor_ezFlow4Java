@@ -4019,7 +4019,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		// 권한 널체크
 		if(extensionAttribute1.length == 0) {
 			extensionAttribute1 = new String[1];
-			extensionAttribute1[0] = "";
+			extensionAttribute1[0] = "c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;e=0";
 		}
 
 		// 아이디, 권한, 날짜, 테턴트 셋

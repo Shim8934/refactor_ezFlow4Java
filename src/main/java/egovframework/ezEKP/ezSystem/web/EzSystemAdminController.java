@@ -607,7 +607,6 @@ public class EzSystemAdminController {
 		logger.debug("systemLoginHistExcelExport controller started.");
 		
 		LoginVO userInfoUser = commonUtil.userInfo(loginCookie);
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		String offset = userInfoUser.getOffset();
 		String currPage = request.getParameter("pageNum");
@@ -692,9 +691,9 @@ public class EzSystemAdminController {
 			cell.setCellStyle(headerStyle);
 		}
 		
-		String systemLang = userInfo.getLang();
+		String systemLang = userInfoUser.getLang();
 		String systemCountryName = "";
-		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfoUser.getTenantId());
 		
 		for (int i = 2; i < totalCount + 2; i++) {
 			row = sheet.createRow(i);
