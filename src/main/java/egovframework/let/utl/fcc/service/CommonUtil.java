@@ -933,7 +933,9 @@ public class CommonUtil {
 		} else if (dateStr.length() == 21) {
 			if (dateStr.indexOf("/") > -1) {
 				pattern = "yyyy/MM/dd aa h:mm:ss";
-			} else {
+			} else if (dateStr.indexOf(".") > -1) {
+				pattern = "yyyy-MM-dd HH:mm:ss";
+			} else{
 				pattern = "yyyy-MM-dd aa h:mm:ss";
 			}
 		} else {

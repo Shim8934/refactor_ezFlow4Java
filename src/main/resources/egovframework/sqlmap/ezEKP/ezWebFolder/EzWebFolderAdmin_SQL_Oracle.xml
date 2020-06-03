@@ -85,7 +85,30 @@
 		]]>
 		</isEqual>
 					)
-				) AS TOTAL_USED
+				) AS TOTAL_USED,
+			(      SELECT       
+								NVL(COUNT(FILES.FILE_SIZE), 0)      
+									FROM       TBL_WEBFOLDER_FILE FILES        
+									JOIN         TBL_WEBFOLDER_FOLDER FOLDER2        ON         FILES.TENANT_ID = FOLDER2.TENANT_ID        
+									AND         FILES.FOLDER_ID = FOLDER2.FOLDER_ID     
+									WHERE       FILES.TENANT_ID = FOLDER.TENANT_ID     
+									AND     
+									(      
+										(        
+											FOLDER2.FOLDER_PATH LIKE FOLDER.FOLDER_PATH || '%'      
+												AND        FILES.USE_STATUS = 'Y'             )           
+
+		<isEqual property="type" compareValue="U">
+		<![CDATA[
+						OR (
+							FILES.DELETER_ID = MAIN.CN
+						AND
+							FILES.USE_STATUS <> 'Y'
+						)
+		]]>
+		</isEqual>
+					)     
+				) AS TOTAL_COUNT 									
 			FROM
 		<isEqual property="type" compareValue="C">
 				(
@@ -328,6 +351,7 @@
 		<result property="totalUsed"           column="TOTAL_USED" />
 		<result property="companyId"           column="COMPANY_ID" />
 		<result property="tenantId"            column="TENANT_ID" />
+		<result property="totalCount"			column="TOTAL_COUNT"/>
 	</resultMap>
 	
 	<!-- FileLog resultMap -->

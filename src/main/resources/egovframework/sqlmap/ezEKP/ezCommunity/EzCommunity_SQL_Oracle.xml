@@ -364,7 +364,7 @@
 				filename,
 				charfilename,
 				readnum,
-				TO_DATE(writeday, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writeday,
+				to_char(TO_DATE(writeday, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)), 'YYYY-MM-DD HH24:MI:SS') AS writeday,
 				username,
 				username2,
 				id,
