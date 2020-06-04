@@ -29,6 +29,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,7 @@ import org.xml.sax.InputSource;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRelayConfigVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRelayXMLVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
@@ -1163,302 +1165,7 @@ public class EzApprovalGRelayScheduler {
     		e.printStackTrace();
     	}
     }
-    
-	@Scheduled(cron = "0 0/1 * * * *")
-    public void receiverMain() throws Exception{
-		if (config.getProperty("config.Run_RelayScheduler").equals("NO")) {
-			return;
-		}
-		
-		//choose scheduler running server
-		if (!ezEmailScheduler.preScheduler("receiverMain")) {
-			logger.debug("receiverMain scheduler ended.");
-			return;
-		}
-		
-		logger.debug("receiverSchedulerMain Started");
-		 String strRelayFolderPath = "";
-		 String strAprDocPath =  "";
-
-    	 List<OrganUserVO> list = ezApprovalGService.getTenantID();
-		 int tenantID = list.get(0).getTenantId();
-		 
-		 if(!(config.getProperty("config.RelaySchedulerTenant") == null || config.getProperty("config.RelaySchedulerTenant").equals(""))) {
-			 tenantID = Integer.parseInt(config.getProperty("config.RelaySchedulerTenant"));
-		 }
-    	 
-         strRelayFolderPath = config.getProperty("relay_root").trim() + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files" + config.getProperty("upload_relay.ROOT").trim();
-         strAprDocPath = config.getProperty("relay_root").trim() + commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID).trim(); 
-         
-         if (!strRelayFolderPath.substring(strRelayFolderPath.length() - 1).equals(commonUtil.separator)) {
-        	 strRelayFolderPath = strRelayFolderPath + commonUtil.separator;
-         }
-         
-         if (!strAprDocPath.substring(strAprDocPath.length() - 1).equals(commonUtil.separator)) {
-        	 strAprDocPath = strAprDocPath + commonUtil.separator;
-         }
-         
-         logger.debug("relayFolderPath = " + strRelayFolderPath + "// aprDocPath = " + strAprDocPath);
-
-         String strFileName = "";
-         String strFilePath = "";
-         String strFileType = "";
-         String strFileDate = "";
-         String strReceiveID = "";
-         String strSendOrgCode = "";
-         String strSendID = "";
-         String strCompanyID = "";
-         /* String strTitle = "";
-         String strXDocID = "";
-         String strDocType = "";
-         String strSendName = "";
-         String strXGW = "";
-         String strXDTDVersion = "";
-         String strXSLVersion = "";
-         String strRecDate = "";
-         String strCont_Role = "";
-         String strCont = "";
-         String strCont_Name = "";
-         String strWriterName = "";
-         String strWriterDept = "";
-         boolean bRet;
-         boolean bGPKI; */
-
-         List<List<String[]>> AdminMail = new ArrayList<List<String[]>>();
-         List<String[]> receiveerrList = new ArrayList<String[]>();
-         List<String[]> xmlparsingerrList = new ArrayList<String[]>();
-         List<String[]> senderrList = new ArrayList<String[]>();
-         
-         //receiveerr 폴더에 쌓인 XML 파일들을 접수 처리 한다.
-         if (config.getProperty("USE_RECEIVEERR_FILE_MOVE_RECEIVETEMP").equals("YES")) {
-        	 File dirFile = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receiveerr"));
-        	 
-        	 logger.debug("receiveerrPath = " + strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receiveerr");
-        	 
-        	 if (dirFile.exists()) {
-        		 for (File tempFile : dirFile.listFiles()) {
-        			 if (tempFile.isFile()) {
-        				 //receiveerr 폴더의 파일들을 수신처리 하기위해, ReceiveTemp로 이동 한다.
-        				 String errorfilename = tempFile.getName();
-        				 String errorfilepath = tempFile.getParent() + commonUtil.separator + errorfilename;
-        				 String errorfileextension = errorfilename.substring(errorfilename.indexOf("."), errorfilename.length());
-        				 
-        				 logger.debug("errorfilename = " + errorfilename);
-        				 logger.debug("errorfilepath = " + errorfilepath);
-        				 logger.debug("errorfileextension = " + errorfileextension);
-        				 
-        				 if (errorfileextension.toLowerCase().equals(".xml")) {
-        					 File receiveTemp = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receivetemp" + commonUtil.separator + errorfilename));
-        					 File receiveComp = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receiveComp" + commonUtil.separator + errorfilename));
-        					 File receive = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receive" + commonUtil.separator + errorfilename));
-        					 
-        					 logger.debug("receiveTemp = " + strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receivetemp" + commonUtil.separator + errorfilename);
-        					 logger.debug("receiveComp = " + strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receiveComp" + commonUtil.separator + errorfilename);
-        					 logger.debug("receive = " + strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receive" + commonUtil.separator + errorfilename);
-
-        					 
-        					 boolean checkresult = CheckXMLElements(errorfilepath);
-        					 boolean XMLLoadTest = TryXMLLoad(errorfilepath);
-        					 
-        					 if (!receiveTemp.exists() && !receiveComp.exists() && !receive.exists()) {
-        						 if (XMLLoadTest && checkresult) {
-        							 Document xmlDoc = commonUtil.xmlLod(errorfilepath);
-        							 
-        							 String[] receiveerrFileInfo = new String[5];
-        							 //receiveerr 폴더의 XML 파일명
-        							 receiveerrFileInfo[0] = errorfilename;
-        							 //송신기관명
-        							 receiveerrFileInfo[1] = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("send-name").item(0).getTextContent()), "euc-kr");
-        							 //수신기관코드
-        							 receiveerrFileInfo[2] = xmlDoc.getElementsByTagName("receive-id").item(0).getTextContent();
-        							 //문서제목
-        							 receiveerrFileInfo[3] = MakeDNString(new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("title").item(0).getTextContent()), "euc-kr"));
-        							 //송신일자
-        							 receiveerrFileInfo[4] = xmlDoc.getElementsByTagName("date").item(0).getTextContent();
-        							 
-        							 receiveerrList.add(receiveerrFileInfo);
-        							 
-        							 receiveerrFileInfo = null;
-        							 File fileMove = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receivetemp" + commonUtil.separator + errorfilename));
-        							 FileUtils.moveFile(tempFile, fileMove);
-        							 xmlDoc = null;
-        						 }
-        					 }
-        					 
-        					 receiveTemp = null;
-        					 receiveComp = null;
-        					 receive = null;
-        				 }
-        			 }
-        		 }
-        	 }
-    		 
-    		 if (config.getProperty("USE_EMAIL_NOTIFICATION").equals("YES")) {
-    			 AdminMail.add(receiveerrList);
-    		 }
-    		 dirFile = null;
-         }
-         
-         //receivetemp 폴더에 쌓인 전송용통합파일(pack.xml)을 풀어 수신처리 한다.
-         File receiveDir = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receivetemp"));
-         
-         logger.debug("receiveDir = " + strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receivetemp");
-         
-         if (receiveDir.exists()) {
-        	 for (File receiveTempFile : receiveDir.listFiles()) {
-        		 try {
-        			 strFileName = receiveTempFile.getName();
-        			 strFilePath = receiveTempFile.getParent() + commonUtil.separator + strFileName;
-        			 strFileType =  strFileName.substring(strFileName.indexOf("."), strFileName.length()).toUpperCase();
-        			 
-        			 if (strFileType.equals(".XML")) {
-        				 logger.debug("receiveFile Started");
-        				 logger.debug("receiveFileName : " + strFileName + " receiveFilePath : " + strFilePath + " receiveFileType : " + strFileType);
-        				 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        				 
-        				 strFileDate = sdf.format(receiveTempFile.lastModified()).toString();
-        				 strReceiveID = strFileName.substring(7,14);
-        				 
-        				 if (!TryXMLLoad(strFilePath)) {
-        					 String[] xmlParsingErrInfo = new String[2];
-        					 xmlParsingErrInfo[0] = strFileName;
-        					 xmlParsingErrInfo[1] = TryXMLLoadWithReturnMessage(strFilePath);
-        					 xmlparsingerrList.add(xmlParsingErrInfo);
-        					 AdminMail.add(xmlparsingerrList);
-        					 
-        					 File receiveTemp = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receivetemperr"));
-        					 
-        					 if (!receiveTemp.exists()){
-        						 receiveTemp.mkdirs();
-        					 }
-        					 
-        					 File fileMove = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receivetemperr" + commonUtil.separator + strFileName));
-        					 FileUtils.moveFile(receiveDir, fileMove);
-        					 
-        					 logger.debug("비정상적인 XML파일, 수신처리 할 수 없습니다.", "");
-        					 logger.debug("파일을 receivetemperr 폴더로 이동 하였습니다.", "");
-        					 logger.debug("=============================================>수신종료.", "");
-        					 
-        					 continue;
-        				 }
-        				 
-        				 ApprGRelayXMLVO relayXML = new ApprGRelayXMLVO(strFilePath);
-        				 
-        				 strSendOrgCode = relayXML.getSendOrgCode();
-        				 logger.debug("#송신기관코드=" + strSendOrgCode);
-        				 strSendID = relayXML.getSendID();
-        				 logger.debug("#송신부서코드=" + strSendID);
-        				 
-        				 //수신기관코드가 회사ID랑 다를 경우 회사ID로 맞추어 준다.(보정처리)
-        				 boolean RecvIDCheck = false;
-        				 List <OrganDeptVO> extensionAttr4ID = ezOrganService.getExtensionAttr4ID(strReceiveID);
-        				 int listSize = extensionAttr4ID.size();
-        				 
-        				 if (listSize > 0) {
-        					 for (int m = 0; m < listSize; m++) {
-        						 strCompanyID = extensionAttr4ID.get(m).getExtensionAttribute2();
-        					 }
-        				 } else {
-        					 strCompanyID = config.getProperty("config.companyNum");
-        				 }
-        				 
-        				 logger.debug("strCompanyID = " + strCompanyID);
-        				 
-        				 if (listSize > 0) {
-        					 for (int m = 0; m < listSize; m++) {
-        						 if (strReceiveID.trim().equals(extensionAttr4ID.get(m).getExtensionAttribute4())) {
-        							 strReceiveID = extensionAttr4ID.get(m).getCn();
-        							 RecvIDCheck = true;
-        							 break;
-        						 }
-        					 }
-        				 } else {
-        					 if (!strCompanyID.trim().equals("")) {
-        						 if (!strReceiveID.trim().equals(strCompanyID.trim())){
-        							 strReceiveID = strCompanyID.trim();
-        						 }
-        						 RecvIDCheck = true;
-        					 }
-        				 }
-        				 
-        				 relayXML.setReceiveID(strReceiveID);
-        				 relayXML.setCompanyID(strCompanyID);
-        				 relayXML.setTenantID(tenantID);
-        				 relayXML.setAprDocPath(strAprDocPath);
-        				 relayXML.setFileDate(strFileDate);
-        				 relayXML.setRelayFolderPath(strRelayFolderPath);
-        				 
-        				 if (RecvIDCheck) {
-        					
-        				  //대상 파일 이동 처리	 
-        				  receiveTempFile(relayXML); 
-        					 
-        				 } else {
-        					 logger.debug("#수신부서코드=" + strReceiveID, "해당 수신기관코드가 존재하지 않습니다.");
-        				 }
-        			 }
-					
-				} catch (Exception e) {
-					logger.debug("#대외문서 접수 중 에러. 파일명 = " + receiveTempFile.getName());
-					backupErrorXml(strRelayFolderPath, receiveTempFile);
-					e.printStackTrace();
-					continue;
-				}
-        	 }
-         }
-
-         File senderr = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "senderr"));
-         File [] fileList = senderr.listFiles();
-         
-         logger.debug("senderrPath = " + strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "senderr");
-         
-         if (fileList != null) {
-    		 for (File tempFile : fileList) {
-
-    			 String errorfilename = tempFile.getName();
-    		     String errorfilepath = tempFile.getParent() + commonUtil.separator + errorfilename;
-    		     String errorfileextension = errorfilename.substring(errorfilename.indexOf("."), errorfilename.length());
- 
-                 if (errorfileextension.toLowerCase().equals(".xml")) {
-                     String[] senderrInfo = new String[7];
-                     Document xmlDoc = commonUtil.xmlLod(errorfilepath);
-
-                     //receiveerr 폴더의 XML 파일명
-                     senderrInfo[0] = errorfilename;
-                     //송신기관명
-                     senderrInfo[1] = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("send-name").item(0).getTextContent()), "euc-kr");
-                     //수신기관코드
-                     senderrInfo[2] = xmlDoc.getElementsByTagName("receive-id").item(0).getTextContent();
-                     //문서제목
-                     senderrInfo[3] = MakeDNString(new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("title").item(0).getTextContent()), "euc-kr"));
-                     
-                     senderrInfo[4] = MakeDNString(new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr"));
-                     senderrInfo[5] = MakeDNString(new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr"));
-                     //송신일자
-                     senderrInfo[6] = xmlDoc.getElementsByTagName("date").item(0).getTextContent();
-                     
-                     senderrList.add(senderrInfo);
-                     
-                     File dir3 = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "senderrtemp"));
-                     if (!dir3.exists()) {
-                    	 dir3.mkdirs();
-                     }
-                     File fileMove = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "senderrtemp" + commonUtil.separator + errorfilename));
-
-                     dir3.renameTo(fileMove);
-                 }
-             }
-         }
-		 if (config.getProperty("USE_EMAIL_NOTIFICATION").equals("YES")) {
-			 if (receiveerrList.size() > 0) {
-				 AdminMail.add(receiveerrList);
-			 }
-		 }
-         senderr = null;
-
-		 logger.debug("receiverSchedulerMain ended");
-	}
-    
+        
     //수신대상파일 처리
     public void receiveTempFile(ApprGRelayXMLVO relayXML) throws Exception {
 
@@ -1901,5 +1608,314 @@ public class EzApprovalGRelayScheduler {
 
     }
 
+    public ApprGRelayConfigVO relayConfig() {
+    	
+    	ApprGRelayConfigVO resultVO = null;
+    	
+ 		try {
+ 		 
+ 			//저장된 tenantID들 중에서 첫번째를 조회
+ 			List<OrganUserVO> list;
+ 	
+ 			list = ezApprovalGService.getTenantID();
+ 			int tenantID = list.get(0).getTenantId();
+ 				 			
+ 			String strCompanyID = config.getProperty("config.companyNum");
+				
+ 			String configRelayRoot = config.getProperty("relay_root").trim();
+ 			String configRelaySchedulerTenant = config.getProperty("RelaySchedulerTenant");
+ 			String configUloadRelayRoot = config.getProperty("upload_relay.ROOT").trim();
+ 			String separator = commonUtil.separator;
+ 			
+ 			//RelaySchedulerTenant가 빈값이 아니라면 tenantID에 할당
+ 			if(!(configRelaySchedulerTenant == null || configRelaySchedulerTenant.equals(""))) {
+ 				 tenantID = Integer.parseInt(configRelaySchedulerTenant);
+ 			}
+ 			
+ 			String relayUploadPath = commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID).trim();
+ 			
+ 			resultVO = new ApprGRelayConfigVO(configRelayRoot, configUloadRelayRoot, relayUploadPath, tenantID, separator);
+ 			
+ 		    String configReceiveerrMove = config.getProperty("USE_RECEIVEERR_FILE_MOVE_RECEIVETEMP");
+ 		    
+ 		    String configMailNoti = config.getProperty("USE_EMAIL_NOTIFICATION");
+
+ 		    resultVO.setStrCompanyID(strCompanyID);
+ 		    resultVO.setConfigReceiveerrMove(configReceiveerrMove);
+ 		    resultVO.setConfigMailNoti(configMailNoti);
+ 		    
+ 		} catch (Exception e) {
+             logger.debug("e.getMessage(): " + e.getMessage());
+             logger.debug("e.getStackTrace(): " + e.getStackTrace());
+ 		}
+ 		
+ 		logger.debug("resultVO: " + resultVO.toString());
+    	return resultVO;
+    }
+    
+	@Scheduled(cron = "0 0/1 * * * *")
+    public void receiverMain() throws Exception{
+		if (config.getProperty("config.Run_RelayScheduler").equals("NO")) {
+			return;
+		}
+		
+		//choose scheduler running server
+		if (!ezEmailScheduler.preScheduler("receiverMain")) {
+			logger.debug("receiverMain scheduler ended.");
+			return;
+		}
+		
+		logger.debug("receiverSchedulerMain Started");
+
+		ApprGRelayConfigVO configVO = relayConfig();
+
+		logger.debug("pathVO = " + configVO.toString());
+
+		// receiveerr 폴더에 쌓인 XML 파일들을 접수 처리 한다.
+		if (configVO.getConfigReceiveerrMove().equals("YES")) {
+			File dirFile = new File(commonUtil.detectPathTraversal(configVO.getReceiveerrPath()));
+
+			logger.debug("receiveerrPath = " + configVO.getReceiveerrPath());
+
+			if (dirFile.exists()) {
+				for (File tempFile : dirFile.listFiles()) {
+					if (tempFile.isFile()) {
+						// receiveerr 폴더의 파일들을 수신처리 하기위해, ReceiveTemp로 이동 한다.
+						String errorfilename = tempFile.getName();
+						String errorfilepath = tempFile.getPath();
+						String errorfileextension = FilenameUtils.getExtension(errorfilename);
+
+						logger.debug("errorfilename = " + errorfilename);
+						logger.debug("errorfilepath = " + errorfilepath);
+						logger.debug("errorfileextension = " + errorfileextension);
+
+						if (errorfileextension.toLowerCase().equals("xml")) {
+							File receiveTemp = new File(
+									commonUtil.detectPathTraversal(configVO.getReceivetempPath(errorfilename)));
+							File receiveComp = new File(
+									commonUtil.detectPathTraversal(configVO.getReceiveCompPath(errorfilename)));
+							File receive = new File(
+									commonUtil.detectPathTraversal(configVO.getReceivePath(errorfilename)));
+
+							logger.debug("receiveTemp = " + configVO.getReceivetempPath(errorfilename));
+							logger.debug("receiveComp = " + configVO.getReceiveCompPath(errorfilename));
+							logger.debug("receive = " + configVO.getReceivePath(errorfilename));
+
+							boolean checkresult = CheckXMLElements(errorfilepath);
+							boolean XMLLoadTest = TryXMLLoad(errorfilepath);
+
+							if (!receiveTemp.exists() && !receiveComp.exists() && !receive.exists()) {
+								if (XMLLoadTest && checkresult) {
+
+									ApprGRelayXMLVO receiveErrXML = new ApprGRelayXMLVO(errorfilepath);
+
+									String[] receiveerrFileInfo = new String[5];
+									// receiveerr 폴더의 XML 파일명
+									receiveerrFileInfo[0] = errorfilename;
+									// 송신기관명
+									receiveerrFileInfo[1] = receiveErrXML.getSendName();
+									// 수신기관코드
+									receiveerrFileInfo[2] = receiveErrXML.getReceiveID();
+									// 문서제목
+									receiveerrFileInfo[3] = receiveErrXML.getEscapeTitle();
+									// 송신일자
+									receiveerrFileInfo[4] = receiveErrXML.getRecDate();
+
+									configVO.addReceiveerrList(receiveerrFileInfo);
+
+									receiveerrFileInfo = null;
+									File fileMove = new File(commonUtil.detectPathTraversal(configVO.getReceivetempPath(errorfilename)));
+									FileUtils.moveFile(tempFile, fileMove);
+								}
+							}
+							receiveTemp = null;
+							receiveComp = null;
+							receive = null;
+						}
+					}
+				}
+			}
+
+			if (configVO.getConfigMailNoti().equals("YES")) {
+				if (configVO.getReceiveerrList().size() > 0) {
+					configVO.addAdminMail(configVO.getReceiveerrList());
+				}
+			}
+			dirFile = null;
+		}
+
+		System.out.println("configVO: " + configVO.toString());
+
+		// receivetemp 폴더에 쌓인 전송용통합파일(pack.xml)을 풀어 수신처리 한다.
+		File receiveDir = new File(commonUtil.detectPathTraversal(configVO.getReceivetempPath()));
+
+		logger.debug("receiveDir = " + configVO.getReceivetempPath());
+
+		if (receiveDir.exists()) {
+			for (File receiveTempFile : receiveDir.listFiles()) {
+				try {
+					String strFileName = receiveTempFile.getName();
+					String strFilePath = receiveTempFile.getPath();
+					String strFileType = FilenameUtils.getExtension(strFileName);
+
+					if (strFileType.toLowerCase().equals("xml")) {
+						logger.debug("receiveFile Started");
+						logger.debug("receiveFileName : " + strFileName + " receiveFilePath : " + strFilePath
+								+ " receiveFileType : " + strFileType);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+						// 파일생성일
+						String strFileDate = sdf.format(receiveTempFile.lastModified()).toString();
+						// 수신기관아이디
+						String strReceiveID = strFileName.substring(7, 14);
+
+						if (!TryXMLLoad(strFilePath)) {
+							String[] xmlParsingErrInfo = new String[2];
+							xmlParsingErrInfo[0] = strFileName;
+							xmlParsingErrInfo[1] = TryXMLLoadWithReturnMessage(strFilePath);
+							configVO.addXmlparsingerrList(xmlParsingErrInfo);
+							configVO.addAdminMail(configVO.getXmlparsingerrList());
+
+							File receiveTemp = new File(
+									commonUtil.detectPathTraversal(configVO.getReceivetemperrPath()));
+
+							if (!receiveTemp.exists()) {
+								receiveTemp.mkdirs();
+							}
+
+							File fileMove = new File(commonUtil.detectPathTraversal(configVO.getReceivetemperrPath(strFileName)));
+							FileUtils.moveFile(receiveDir, fileMove);
+
+							logger.debug("비정상적인 XML파일, 수신처리 할 수 없습니다.");
+							logger.debug("파일을 receivetemperr 폴더로 이동 하였습니다.");
+							logger.debug("=============================================>수신종료.");
+
+							continue;
+						}
+
+						ApprGRelayXMLVO relayXML = new ApprGRelayXMLVO(strFilePath);
+
+						// 송신기관코드
+						String strSendOrgCode = relayXML.getSendOrgCode();
+						logger.debug("#송신기관코드=" + strSendOrgCode);
+
+						// 송신부서코드
+						String strSendID = relayXML.getSendID();
+						logger.debug("#송신부서코드=" + strSendID);
+
+						// 수신기관코드가 회사ID랑 다를 경우 회사ID로 맞추어 준다.(보정처리)
+						boolean RecvIDCheck = false;
+						List<OrganDeptVO> extensionAttr4ID = ezOrganService.getExtensionAttr4ID(strReceiveID);
+						int listSize = extensionAttr4ID.size();
+
+						if (listSize > 0) {
+							for (int m = 0; m < listSize; m++) {
+								configVO.setStrCompanyID(extensionAttr4ID.get(m).getExtensionAttribute2());
+							}
+						}
+
+						if (listSize > 0) {
+							for (int m = 0; m < listSize; m++) {
+								if (strReceiveID.trim().equals(extensionAttr4ID.get(m).getExtensionAttribute4())) {
+									strReceiveID = extensionAttr4ID.get(m).getCn();
+									RecvIDCheck = true;
+									break;
+								}
+							}
+						} else {
+							if (!configVO.getStrCompanyID().trim().equals("")) {
+								if (!strReceiveID.trim().equals(configVO.getStrCompanyID().trim())) {
+									strReceiveID = configVO.getStrCompanyID().trim();
+								}
+								RecvIDCheck = true;
+							}
+						}
+
+						relayXML.setReceiveID(strReceiveID);
+						relayXML.setCompanyID(configVO.getStrCompanyID());
+						relayXML.setTenantID(configVO.getTenantID());
+						relayXML.setAprDocPath(configVO.getStrAprDocPath());
+						relayXML.setFileDate(strFileDate);
+						relayXML.setRelayFolderPath(configVO.getStrRelayFolderPath());
+
+						if (RecvIDCheck) {
+
+							// 대상 파일 이동 처리
+							receiveTempFile(relayXML);
+
+						} else {
+							logger.debug("#수신부서코드=" + strReceiveID + " 해당 수신기관코드가 존재하지 않습니다.");
+						}
+					}
+
+				} catch (Exception e) {
+					logger.debug("#대외문서 접수 중 에러. 파일명 = " + receiveTempFile.getName());
+					backupErrorXml(configVO.getStrRelayFolderPath(), receiveTempFile);
+					e.printStackTrace();
+					continue;
+				}
+			}
+		}
+
+		// receiveerr 폴더에 쌓인 XML 파일들을 접수 처리 한다.
+		File senderr = new File(commonUtil.detectPathTraversal(configVO.getSenderrPath()));
+		File[] fileList = senderr.listFiles();
+
+		logger.debug("senderrPath = " + configVO.getSenderrPath());
+
+		if (fileList != null) {
+			for (File tempFile : fileList) {
+
+				String errorfilename = tempFile.getName();
+				String errorfilepath = tempFile.getPath();
+				String errorfileextension = FilenameUtils.getExtension(errorfilename);
+
+				logger.debug("errorfilename = " + errorfilename);
+				logger.debug("errorfilepath = " + errorfilepath);
+				logger.debug("errorfileextension = " + errorfileextension);
+
+				if (errorfileextension.toLowerCase().equals("xml")) {
+					String[] senderrInfo = new String[7];
+
+					ApprGRelayXMLVO sendErrXML = new ApprGRelayXMLVO(errorfilepath);
+
+					// receiveerr 폴더의 XML 파일명
+					senderrInfo[0] = errorfilename;
+					// 송신기관명
+					senderrInfo[1] = sendErrXML.getSendName();
+					// 수신기관코드
+					senderrInfo[2] = sendErrXML.getReceiveID();
+					// 문서제목
+					senderrInfo[3] = sendErrXML.getEscapeTitle();
+					// 부서명
+					senderrInfo[4] = sendErrXML.getEscapeDept();
+					// 사용자명
+					senderrInfo[5] = sendErrXML.getEscapeName();
+					// 송신일자
+					senderrInfo[6] = sendErrXML.getRecDate();
+
+					configVO.addSenderrList(senderrInfo);
+
+					File dir3 = new File(commonUtil.detectPathTraversal(configVO.getSenderrtempPath()));
+					if (!dir3.exists()) {
+						dir3.mkdirs();
+					}
+					File fileMove = new File(commonUtil.detectPathTraversal(configVO.getSenderrtempPath(errorfilename)));
+
+					dir3.renameTo(fileMove);
+				}
+			}
+		}
+		if (configVO.getConfigMailNoti().equals("YES")) {
+			if (configVO.getSenderrList().size() > 0) {
+				configVO.addAdminMail(configVO.getSenderrList());
+			}
+		}
+		senderr = null;
+
+		System.out.println("configVO: " + configVO.toString());
+
+		 logger.debug("receiverSchedulerMain ended");
+	}
     
 }

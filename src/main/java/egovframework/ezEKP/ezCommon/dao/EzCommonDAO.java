@@ -1171,6 +1171,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	}
 
 	public void createUserDistributionTable() {
+		@SuppressWarnings("serial")
 		Map<String, String> map = new HashMap<String, String>(){{
 			put("EzCommonDAO.checkUserDlTable", "createUserDlTable");
 			put("EzCommonDAO.checkUserDlMemberTable", "createUserDlMemberTable");
@@ -1294,6 +1295,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public void createPwPolicyTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkPwPolicy");
+		} catch (Exception e) {
+			logger.debug("tbl_password_policy doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createPwPolicy");
+		}
+	}
+
+	public void createPwPolicyPatternTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkPwPolicyPattern");
+		} catch (Exception e) {
+			logger.debug("tbl_password_policy_Pattern doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createPwPolicyPattern");
+		}
+	}
+			
 	public void addAprAttachViewOrder() throws Exception {
 		try {
 			select("EzCommonDAO.checkAprAttachViewOrder");
@@ -1323,7 +1344,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.updateAprTmpAttachViewOrder");
 		}
 	}
-
+	
 	public void insertUseExternalMailServerConfig(Map<String, Object> map) throws Exception {
 		String propertyValue = (String) select("EzCommonDAO.checkMailTenantConfig");
 		
@@ -1388,6 +1409,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public void createAprAttachLimit() {
+		try {
+			select("EzCommonDAO.checkAprAttachLimit");
+		} catch (Exception e) {
+			logger.debug("tbl_aprattachlimit doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createAprAttachLimit");
+		}
+	}
+	
 	public void addDocStateIntoLastLines() {
 		try {
 			select("EzCommonDAO.checkDocStateIntoLastLines");

@@ -8,6 +8,9 @@ import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
@@ -15,6 +18,7 @@ import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
+
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -30,6 +34,7 @@ import javax.net.ssl.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -60,6 +65,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
 
+	@Resource(name = "EzSystemAdminService")
+	private EzSystemAdminService ezSystemAdminService;
+
+	@Resource(name = "EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
+	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonServiceImpl.class);
 
 	@Override
@@ -1676,6 +1687,56 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.addBeforeDocUrl();
 	}
 	
+	@SuppressWarnings("serial")
+	@Override
+	public void setCompanyConfigs()  throws Exception {
+		logger.debug("setCompanyConfigs started.");
+		List<Map<String, String>> list = new ArrayList<Map<String,String>>();
+		list.add(new HashMap<String, String>(){{ put("name","ExpirePassPeriod"); put("value","0"); }});
+		list.add(new HashMap<String, String>(){{ put("name","MaxAllowedCountOfLoginFail"); put("value","0"); }});
+		list.add(new HashMap<String, String>(){{ put("name","UsePasswordPatternPolicy"); put("value","NO"); }});
+		     
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			int tenantId = tenantVo.getTenantId();
+			logger.debug("tenantId=" + tenantId);
+
+			List<OrganDeptVO> companyList = ezOrganAdminService.getCompanyList("1", tenantId);
+			logger.debug("companyList size=" + companyList.size());
+			for (OrganDeptVO companyVo : companyList) {
+				String companyId = companyVo.getCn();
+				logger.debug("companyId=" + companyId);
+				for (Map<String, String> config : list) {
+					try {
+						String propertyName = config.get("name");
+						String propertyValue = config.get("value");
+						
+						insertCompanyConfig(tenantId, companyId, propertyName, propertyValue);
+					} catch(Exception e) {
+						logger.debug("Config already.");
+					}
+				}
+			}
+		}
+		
+		logger.debug("setCompanyConfigs ended.");
+	}
+	
+	@Override
+	public void createPwPolicyTable()  throws Exception {
+		logger.debug("createPwPolicyTable started.");
+		ezCommonDAO.createPwPolicyTable();
+		logger.debug("createPwPolicyTable ended.");
+	}
+
+	@Override
+	public void createPwPolicyPatternTable()  throws Exception {
+		logger.debug("createPwPolicyPatternTable started.");
+		ezCommonDAO.createPwPolicyPatternTable();
+		logger.debug("createPwPolicyPatternTable ended.");
+	}
+	
 	@Override
 	public void addAprAttachViewOrder() throws Exception {
 		ezCommonDAO.addAprAttachViewOrder();
@@ -1787,6 +1848,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void createAprAttachLimit() throws Exception {
+		ezCommonDAO.createAprAttachLimit();
+	}
+	
+	@Override
     public void addDocStateIntoLastLines() throws Exception {
 	    ezCommonDAO.addDocStateIntoLastLines();
     }
@@ -1795,7 +1861,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void addDocStateIntoLastDeptLines() throws Exception {
 	    ezCommonDAO.addDocStateIntoLastDeptLines();
     }
-
+    
 	public void insertAlternateHolidayAttitudeType() {
 		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();		
 

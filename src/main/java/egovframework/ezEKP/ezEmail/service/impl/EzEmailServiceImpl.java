@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezEmail.service.impl;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.io.InputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -68,12 +67,9 @@ import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
-import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
-import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.service.impl.EzOrganServiceImpl;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;

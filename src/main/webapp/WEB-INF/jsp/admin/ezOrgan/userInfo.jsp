@@ -352,11 +352,17 @@
 		            alert("<spring:message code='ezOrgan.t257' />");
 		            return;
 		        }
-				if (RetValue[2] == "" && !CheckPassword(document.getElementById('Password').value)) {
-					alert("<spring:message code='main.jjh04'/>");
-					document.getElementById('Password').focus();
-					return;
-				}	        
+		        var checkPw = CheckPassword(document.getElementById('Password').value, companyID);
+		        if (RetValue[2] == "" && checkPw != "OK"){
+		        	if (checkPw == "ERROR") {
+		        		alert("<spring:message code='ezSystem.ksaPwPolicy34'/>");
+		        	} else {
+		        		alert("<spring:message code='ezSystem.ksaPwPolicy35'/>");
+		        	}
+		        	
+		        	document.getElementById('Password').focus();
+		        	return;
+		        }
 		        if (UserName.value.indexOf("(") > -1 || UserName.value.indexOf(")") > -1 || UserName.value.indexOf("&") > -1
 		        		 || UserName.value.indexOf("<") > -1 || UserName.value.indexOf(">") > -1 
 		        		 || UserName.value.indexOf("\"") > -1 || UserName.value.indexOf("'") > -1) {

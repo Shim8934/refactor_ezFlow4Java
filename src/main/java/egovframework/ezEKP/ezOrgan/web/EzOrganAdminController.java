@@ -134,7 +134,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     @PostConstruct
 	public void init() throws Exception {
     	logger.debug("init started.");
-
+    	
     	try {
 	    	ezCommonService.createTblCompanyConfig();
 	    	ezCommonService.createReformFlagColumn();
@@ -198,6 +198,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertMailBigSizeAttachLimit(); // 2020-03-12 홍대표 - 메일 대용량 첨부 제한 컨피그 추가.
 	    	ezCommonService.addIsBeforeDoc(); // 2020-02-24 홍승비 - 전자결재문서 편집전후여부 플래그 컬럼 추가
 	    	ezCommonService.addBeforeDocUrl(); // 2020-02-27 홍승비 - 전자결재문서 편집전후 문서경로 URL컬럼 추가
+	    	ezCommonService.setCompanyConfigs(); // 2020-03-30 김수아 - companyConfig 추가
+	    	ezCommonService.createPwPolicyTable(); // 2020-04-06 김수아 - tbl_password_policy table
+	    	ezCommonService.createPwPolicyPatternTable(); // 2020-04-06 김수아 - tbl_password_policy_Pattern table
 	    	ezCommonService.addBoardLikeFlag(); // 2019-04-05 홍승비 - 게시판 좋아요 기능 관련 테이블 생성 및 칼럼 추가
 	    	ezCommonService.createBoardLike();
 	    	ezCommonService.addSurveyAlamColums(); // 2019-10-07 이석화 - 설문 알림 컬럼 추가
@@ -207,6 +210,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addAprAttachViewOrder(); // 2020-03-23 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (진행문서)
 	    	ezCommonService.addAprEndAttachViewOrder(); // 2020-03-25 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (완료문서)
 	    	ezCommonService.addAprTmpAttachViewOrder(); // 2020-03-26 홍승비 - 전자결재 일반 첨부파일 순서조정용 칼럼 추가 (임시문서)
+	    	ezCommonService.createAprAttachLimit(); // 2020-05-15 홍승비 - 전자결재 일반 첨부파일 개수제한 테이블 추가 (회사별 데이터)
 	    	ezCommonService.insertUseExternalMailServerConfig();		// 2020-04-16 김민성 - 메일 기능 사용 관련 컨피그 추가(외부/내부)
 	    	ezCommonService.insertReBebuOpinionCode();		// 2020-05-14 홍대표 - 재배부요청 의견 코드 추가
 	    	ezCommonService.addFormAprOptionColumn(); // 2020-05-14 홍승비 - 전자결재 양식 옵션 관련 칼럼 추가
@@ -220,7 +224,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
-
+    	
     	logger.debug("init ended.");
     }
 
@@ -522,6 +526,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							
 							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2,
 									mailAddr, parentCn, ldapPath, extensionAttribute15, skipInitData, manualFlag, tenantID, userInfo);
+							
+							// companyConfigs setting
+							ezCommonService.setCompanyConfigs();
 							
 							if (!operatorId.equals("")) {
 								ezCommonService.insertCompanyConfig(tenantID, cn, operatorMailIdPropertyName, operatorId);
@@ -1193,7 +1200,25 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 조직도관리 암호관리 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/inputPassword.do", method = RequestMethod.GET)
-	public String inputPassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String inputPassword(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		int tenantId = userInfo.getTenantId();
+		
+		String companyId = request.getParameter("companyId");
+		String type = request.getParameter("type");
+		type = type == null ? "" : type;
+		logger.debug("companyId="+ companyId + ", type=" + type);
+		
+		String pwPolicyExplain = "";
+		
+		if (type.equals("shared")) {
+			pwPolicyExplain = "▒ " + egovMessageSource.getMessage("main.jjh04", locale);
+		} else {
+			pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
+		}
+		
+		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
 		return "admin/ezOrgan/inputPassword";
 	}
 	
@@ -3994,7 +4019,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		// 권한 널체크
 		if(extensionAttribute1.length == 0) {
 			extensionAttribute1 = new String[1];
-			extensionAttribute1[0] = "";
+			extensionAttribute1[0] = "c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;e=0";
 		}
 
 		// 아이디, 권한, 날짜, 테턴트 셋
