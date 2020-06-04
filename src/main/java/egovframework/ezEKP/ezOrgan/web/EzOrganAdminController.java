@@ -1345,6 +1345,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					logger.debug("updateGroupDel rc=" + rc);							
 				}
 				
+				// 사용자 정의 공용배포그룹 관련 테이블에서 user를 제거한다.
+				int delUserDL = ezEmailUserAdminService.deleteAllUserDistributionForMember(mailAddr, domain);
+				logger.debug("delUserDl=" + delUserDL); // 0 성공, -1 실패
+				
 				// 공유사서함 기능 사용 시 공유사서함의 공유자에서 해당 유저를 제외한다.
 				String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantID);
 	    		
