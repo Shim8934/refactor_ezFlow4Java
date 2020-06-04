@@ -1884,5 +1884,29 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				ezCommonDAO.insertAlternateHolidayAttitudeType(map);	
 			}
 		}
+	}
+
+	@Override
+	public void insertBeforeOutComeAttitudeType() {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();		
+
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("typeId", "A25");
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				map.put("tenantId", 0);
+				map.put("typeName", "퇴근");
+				map.put("typeName2", "outCom");
+				map.put("isUse", "1");
+				map.put("imgPath", "inOut");
+				map.put("formId", 3);
+				map.put("isAdd", "0");
+				map.put("isDel", "0");
+
+				ezCommonDAO.insertBeforeOutComeAttitudeType(map);	
+			}
+		}
 	}	
 }
