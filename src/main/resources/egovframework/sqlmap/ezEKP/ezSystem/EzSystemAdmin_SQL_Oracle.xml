@@ -173,7 +173,8 @@
 	            X.DEPTNM2,
 	            X.CONNECTIP,
 	            X.CONNECTBROWSER,
-	            X.CONNECTOS
+	            X.CONNECTOS,
+	            X.USERID
             FROM (
 				SELECT 
 			    	ROWNUM AS rnum,
@@ -185,7 +186,8 @@
 					A.DEPTNM2,
 					A.CONNECTIP,
 					A.CONNECTBROWSER,
-					A.CONNECTOS
+					A.CONNECTOS,
+					A.USERID
 				FROM 
 					(
 					SELECT  
@@ -197,7 +199,8 @@
 						C.DEPTNM2,
 						C.CONNECTIP,
 						C.CONNECTBROWSER,
-						C.CONNECTOS
+						C.CONNECTOS,
+						C.USERID
 					FROM 
 						TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
 					ON 
