@@ -6821,7 +6821,7 @@
 	<select id="EzApprovalG.getHistoryForDoc" parameterClass="Map" resultClass="ApprGHistoryDocVO">
 		SELECT 
 				DOCID,
-				ROW_NUMBER() OVER (ORDER BY CHANGEDATE ASC) AS CHANGESN, 
+				T1.ROWNUM AS CHANGESN,
 				URL, 
 				CHANGEUSERID, 
 				CHANGEUSERJOBTITLE, 
@@ -6834,16 +6834,21 @@
 				CHANGEDATE, 
 				CHKFLAG,
 				IFNULL(BEFOREDOCURL, '') AS BEFOREDOCURL
-   		FROM 
-				TBL_HISTORYDOCINFO 
-   		WHERE 
-   				DOCID = #v_DOCID#
-   		AND
-   				TENANT_ID = #v_TENANTID#
-   		AND
-   				COMPANYID = #companyID#
-		AND
-   				(ISBEFOREDOC = 'N' OR ISBEFOREDOC IS NULL OR TRIM(ISBEFOREDOC) = '')
+   		FROM (
+   			SELECT
+   				H.*,
+   				@ROWNUM := @ROWNUM + 1 AS ROWNUM
+   			FROM
+				TBL_HISTORYDOCINFO H,
+				(SELECT @ROWNUM := 0) R1
+	   		WHERE 
+	   			DOCID = #v_DOCID#
+	   		AND
+	   			TENANT_ID = #v_TENANTID#
+	   		AND
+	   			COMPANYID = #companyID#
+			AND
+	   			(ISBEFOREDOC = 'N' OR ISBEFOREDOC IS NULL OR TRIM(ISBEFOREDOC) = '')
    		<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
    			<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="10">
    				<isEqual property="v_ORDEROPTIONVALUE" compareValue="changedate">
@@ -6862,8 +6867,11 @@
    		</isGreaterThan>
    		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
    			  ORDER BY 
-   			 			CHANGEDATE DESC
+   			 			CHANGEDATE ASC
    		</isLessEqual>
+   		)T1
+   		ORDER BY
+   			T1.ROWNUM DESC
 	</select>
 <!-- 	<procedure id="EzApprovalG.getHistoryForLine" parameterClass="Map" resultClass="ApprGHistoryLineVO"> -->
 <!-- 		{CALL EZSP_GETHISTORYFORLINE(#v_DOCID#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->

@@ -239,5 +239,7 @@ public interface EzCommonService {
 
 	public void insertHolidayCheckTenantConfig();
 
-	public void insertAlternateHolidayAttitudeType();	
+	public void insertAlternateHolidayAttitudeType();
+
+	public void insertBeforeOutComeAttitudeType();	
 }

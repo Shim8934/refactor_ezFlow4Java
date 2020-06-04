@@ -1447,4 +1447,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertAlternateHolidayAttitudeType",map);
 		}
 	}
+
+	public void insertBeforeOutComeAttitudeType(Map<String, Object> map) {
+		String companyId = (String) select("EzCommonDAO.checkBeforeOutComeAttitudeTypeForCompany", map);
+
+		if (companyId == null) {
+			logger.debug("attitude_type_id 'A25' doesn't exist. insert data...");
+			insert("EzCommonDAO.insertBeforeOutComeAttitudeType",map);
+		}
+	}
 }

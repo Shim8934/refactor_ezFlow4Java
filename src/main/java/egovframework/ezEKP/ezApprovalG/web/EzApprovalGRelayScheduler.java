@@ -1737,7 +1737,7 @@ public class EzApprovalGRelayScheduler {
 			}
 
 			if (configVO.getConfigMailNoti().equals("YES")) {
-				if (configVO.getSenderrList().size() > 0) {
+				if (configVO.getReceiveerrList().size() > 0) {
 					configVO.addAdminMail(configVO.getReceiveerrList());
 				}
 			}

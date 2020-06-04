@@ -438,7 +438,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			for (int j = 0; j < options.size(); j++, maxOptionId++) {
 				JSONObject optionObj = (JSONObject)options.get(j);
 				JSONObject optionAtt = (JSONObject)optionObj.get("attach");
-				String optionContent = commonUtil.stripScriptTags(optionObj.get("content").toString());
+				String optionContent = "";
+				if(optionObj.get("content") != null) {
+					optionContent = commonUtil.stripScriptTags(optionObj.get("content").toString());
+				}
 				int optionLevel      = optionObj.get("level")     != null ? ((Long)optionObj.get("level")).intValue()     : 0;
 				int otherFlag        = optionObj.get("otherFlag") != null ? ((Long)optionObj.get("otherFlag")).intValue() : 0;
 				int logicNum         = optionObj.get("logic")     != null ? ((Long)optionObj.get("logic")).intValue()     : -1;
@@ -692,13 +695,13 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			switch(column) {
 				case "at" : sqlQuery = "attach_flag "                                              + order; break;
 				case "cd" : sqlQuery = "create_date "                                              + order; break;
-				case "tt" : sqlQuery = "title "                                                    + order; break;
+				case "tt" : sqlQuery = "CAST(SUBSTR(title, 1, 100) AS varchar(100)) "              + order; break;
 				case "ed" : sqlQuery = "end_date "                                                 + order; break;
 				case "ut" : sqlQuery = "participate_flag "                                         + order; break;
 				case "ct" : sqlQuery = primary.equals("1") ? "user_name1 " + order : "user_name2 " + order; break;
 				case "pl" : sqlQuery = "result_public_flag "                                       + order; break;
 				case "an" : sqlQuery = "anonymous_flag "                                           + order; break;
-				default   : sqlQuery = "title "                                                    + order; break;
+				default   : sqlQuery = "CAST(SUBSTR(title, 1, 100) AS varchar(100)) "              + order; break;
 			}
 		}
 		
