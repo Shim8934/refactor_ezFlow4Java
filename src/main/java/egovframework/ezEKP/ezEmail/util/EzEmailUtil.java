@@ -2513,7 +2513,7 @@ public class EzEmailUtil {
 		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField + "searchValue=" + searchValue 
 				+ ",startDate=" + startDate + ",endDate=" + endDate + ",searchSubFolder=" + searchSubFolder + ",isUnreadOnly=" + isUnreadOnly 
 				+ ",isImportantOnly=" + isImportantOnly + ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex
-				+ ",listCount=" + listCount);
+				+ ",listCount=" + listCount + ",extraMap=" + extraMap);
 		
 		Map<String, Object> resultMap = getMailListFromJGw(userAccount, folderPath, searchField, searchValue, startDate, endDate, 
 				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount, extraMap);
@@ -2606,13 +2606,13 @@ public class EzEmailUtil {
 		
 		if(extraMap != null){
 			logger.debug("extraMAP is not null.extraMap:" + extraMap);
-			andorStatus += (String) extraMap.get("andorStatus");
-			attachStatus += (String) extraMap.get("attachStatus");
+			andorStatus += extraMap.get("andorStatus") == "" ? "and" : extraMap.get("andorStatus");
+			attachStatus += extraMap.get("attachStatus") == "" ? "all" :  extraMap.get("attachStatus");
 		}
 		
 		String searchFieldParam = "";
 		String searchValueParam = "";
-		if (searchField != null ) {
+		if (searchField != null && searchField.length > 0 ) {
 			for ( int i= 0 ; i < searchField.length ; i++ ) {
 				searchFieldParam += "&searchField=" + URLEncoder.encode(searchField[i], "UTF-8");
 			}
@@ -2620,7 +2620,7 @@ public class EzEmailUtil {
 			searchFieldParam += "&searchField=" + URLEncoder.encode("", "UTF-8");
 		}
 		
-		if (searchValue != null ) {
+		if (searchValue != null && searchValue.length > 0) {
 			for ( int i= 0 ; i < searchValue.length ; i++ ) {
 				searchValueParam += "&searchValue=" + URLEncoder.encode(searchValue[i], "UTF-8");
 			}

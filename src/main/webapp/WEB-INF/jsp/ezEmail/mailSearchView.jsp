@@ -44,6 +44,7 @@
 			var searchCArray = new Array();
 			var searchKArray = new Array();
 			var shareId = "${shareId}";
+			var listType = "searchList";
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -1131,7 +1132,7 @@
 		<h2 class="h2_dot"><spring:message code="ezEmail.t655" /><span id="resultCount"></span></h2>
 		    
 		<div id="printblock"> 
-			<table class="mainlist" style="width:100%;table-layout:fixed;" id="mainlist">
+			<table class="mainlist" style="width:100%;table-layout:fixed;" id="maillist">
 				<tr> 
 			        <th style="width: 26px; padding: 0px; color: black;padding-left:3px;" align="center" nowrap title><input type="checkbox" onClick="check_change(this)" id="Checkbox1"></th>
 			        <th style="width: 24px; padding: 0px; color: black;padding-left:3px;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="importance" orderoption="ASC" ><img src="/images/ImgIcon/view-importance.gif" border="0"></th>

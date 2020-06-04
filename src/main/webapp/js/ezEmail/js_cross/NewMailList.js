@@ -900,11 +900,38 @@ function GetListInfo(HeaderObject, ContentObject) {
     var pOrderyOption = p_ListorderType + " ORDER BY \"" + p_ListOrderby + "\" " + p_ListOrderOption;
 
     createNodeInsert(xmlpara, objNode, "DATA");
+    createNodeAndInsertText(xmlpara, objNode, "STARTDATE", startDate);
+    createNodeAndInsertText(xmlpara, objNode, "ENDDATE", endDate);
     createNodeAndInsertText(xmlpara, objNode, "FOLDERID", g_moveUrl);
     createNodeAndInsertText(xmlpara, objNode, "SORTTYPE", pOrderyOption);
     pOldSearchKeyword = SearchKeyword;
+    if (mailsearchDetail == "N" && document.getElementsByName('keyword').item(0) == ""){
+    	searchKArray = [];
+    	searchCArray = [];
+    }
+    for (var i = 0 ; i < searchCArray.length; i++ ){
+    	searchKArray[i] = ReplaceText(searchKArray[i], "&", "&amp;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], "<", "&lt;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], ">", "&gt;");
+    	searchKArray[i] = ReplaceText(searchKArray[i], "'", "''");
+    	createNodeAndInsertText(xmlpara, objNode, "KEYWORD", searchKArray[i]);
+    	createNodeAndInsertText(xmlpara, objNode, "CATEGORY", searchCArray[i]);
+    }
     createNodeAndInsertText(xmlpara, objNode, "SEARCH", SearchKeyword);
     createNodeAndInsertText(xmlpara, objNode, "START", pStart);
+    var attachStatus = "all";
+	var andorStatus = "and";
+	if(document.querySelector("input[name=attachment]:checked").value != null ){
+		attachStatus = document.querySelector("input[name=attachment]:checked").value;
+	} 
+	
+	if(document.querySelector("input[name=andor]:checked").value != null ){
+		andorStatus = document.querySelector("input[name=andor]:checked").value;
+	}
+	
+	createNodeAndInsertText(xmlpara, objNode, "ATTACHSTATUS", attachStatus);
+	createNodeAndInsertText(xmlpara, objNode, "ANDORSTATUS", andorStatus);
+    
     
     if (p_ListorderValue == "GROUPSUBLIST") {
     	createNodeAndInsertText(xmlpara, objNode, "END", "ALL");

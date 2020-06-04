@@ -10,6 +10,12 @@ function PreviewH_onMouserDown(e) {
     else if (newPos_H > parseInt(CurrenWidth * 0.75)) {
         newPos_H = parseInt(CurrenWidth * 0.75);
     }
+    /*
+    if(mailsearchDetail == "Y" && mailSearchDetailCheck == "N"){
+    	CurrentHeight = (document.getElementById("moreSearch").offsetHeight +20); 
+    	mailSearchDetailCheck = "Y";
+    } 
+	*/
 
     document.getElementById("ResizeBarH").style.left = newPos_H + "px";
     document.getElementById("ResizeBarH").style.display = "";
@@ -24,12 +30,21 @@ function PreviewW_onMouserDown(e) {
     curevent = (typeof event == 'undefined' ? e : event)
 
     var newPos_W = curevent.clientY;
-
-    if (newPos_W < (parseInt(CurrentHeight * 0.25) + 90)) {
-        newPos_W = parseInt(CurrentHeight * 0.25) + 90;
-    }
-    else if (newPos_W > (parseInt(CurrentHeight * 0.65) + 90)) {
-        newPos_W = (parseInt(CurrentHeight * 0.65) + 90);
+    
+    if(mailsearchDetail == "Y"){
+    	if (newPos_W < (parseInt(CurrentHeight * 0.25) + 120)) {
+  	       newPos_W = parseInt(CurrentHeight * 0.25) + 120;
+   	  	}
+     	else if (newPos_W > (parseInt(CurrentHeight * 0.65) + 140)) {
+         	newPos_W = (parseInt(CurrentHeight * 0.65) + 140);
+     	}
+    } else {
+   		if (newPos_W < (parseInt(CurrentHeight * 0.25) + 90)) {
+ 	       newPos_W = parseInt(CurrentHeight * 0.25) + 90;
+  	  	}
+    	else if (newPos_W > (parseInt(CurrentHeight * 0.65) + 90)) {
+        	newPos_W = (parseInt(CurrentHeight * 0.65) + 90);
+    	}
     }
 
     document.getElementById("ResizeBarW").style.top = newPos_W + "px";
@@ -49,6 +64,7 @@ function MailPreviewEnd(e) {
         document.getElementById("mailPanel").style.display = "none";
         if (PreviewH_Move) {
             var newPos_H = parseInt(document.getElementById("ResizeBarH").style.left) - 10;
+            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
             if (pMailListWidthH > newPos_H) {
                 pMailPreWidthH = pMailPreWidthH + (pMailListWidthH - newPos_H);
                 pMailListWidthH = newPos_H;
@@ -56,11 +72,17 @@ function MailPreviewEnd(e) {
                 pMailPreWidthH = CurrenWidth - newPos_H;
                 pMailListWidthH = newPos_H;
             }
+            
             document.getElementById("ifrmPreViewH").style.display = "";
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-            document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+            if(mailsearchDetail == "Y" ){
+            	document.getElementById("contentlist").style.height 
+            		= (CurrentHeight - (document.getElementById("moreSearch").offsetHeight +126)) + "px";
+            } else {
+            	document.getElementById("contentlist").style.height = (CurrentHeight - 111) + "px";
+            }
             document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 10) + "px";
             document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
@@ -76,12 +98,27 @@ function MailPreviewEnd(e) {
         }
         else if (PreviewW_Move) {
             var newPos_W = parseInt(document.getElementById("ResizeBarW").style.top) - 90;
-            if (pMailListHeightW > newPos_W) {
-                pMailPreHeightW = pMailPreHeightW + (pMailListHeightW - newPos_W);
-                pMailListHeightW = newPos_W;
+            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+            if(mailsearchDetail == "Y"){
+            	if (pMailListHeightW > newPos_W) {
+            		pMailPreHeightW = pMailPreHeightW + (pMailListHeightW - newPos_W);
+            		pMailListHeightW = newPos_W;
+            	} else {
+            		pMailPreHeightW = CurrentHeight - newPos_W;
+            		pMailListHeightW = newPos_W;
+            	}
+            	pMailListHeightW = pMailListHeightW - (document.getElementById("moreSearch").offsetHeight +20);
+            	pMailPreHeightW = pMailPreHeightW + (document.getElementById("moreSearch").offsetHeight +20);
+            	
             } else {
-                pMailPreHeightW = CurrentHeight - newPos_W;
-                pMailListHeightW = newPos_W;
+            	
+            	if (pMailListHeightW > newPos_W) {
+            		pMailPreHeightW = pMailPreHeightW + (pMailListHeightW - newPos_W);
+            		pMailListHeightW = newPos_W;
+            	} else {
+            		pMailPreHeightW = CurrentHeight - newPos_W;
+            		pMailListHeightW = newPos_W;
+            	}
             }
             
             document.getElementById("ifrmPreViewW").style.display = "";
@@ -165,22 +202,44 @@ function MailPreviewResize(e) {
         }
     }
     else if (PreviewW_Move) {
-        curevent = (typeof event == 'undefined' ? e : event)
-        var minSize = parseInt(100);
-        var maxSize = parseInt(document.documentElement.clientHeight-100);
-        if (curevent.clientY < minSize || curevent.clientY > maxSize) {
-            MailPreviewEnd(e);
+		if(mailsearchDetail == "N"){
+			curevent = (typeof event == 'undefined' ? e : event)
+	        var minSize = parseInt(100);
+	        var maxSize = parseInt(document.documentElement.clientHeight-100);
+	        if (curevent.clientY < minSize || curevent.clientY > maxSize) {
+	            MailPreviewEnd(e);
+	        }
+	        else {
+	            var newPos_W = curevent.clientY;
+	            if (newPos_W < (parseInt(CurrentHeight * 0.25) + 90))
+	                newPos_W = parseInt(CurrentHeight * 0.25) + 90;
+	            else if (newPos_W > (parseInt(CurrentHeight * 0.65) + 90)) {
+	                newPos_W = (parseInt(CurrentHeight * 0.65) + 90);
+	            }
+	            document.getElementById("ResizeBarW").style.top = newPos_W + "px";
+	        }
+	        setTimeout(function () { isScrollMailList(); }, 500);
+				
+        } else {
+        	curevent = (typeof event == 'undefined' ? e : event)
+        	var minSize = parseInt(100);
+        	var maxSize = parseInt(document.documentElement.clientHeight-100);
+        	if (curevent.clientY < minSize || curevent.clientY > maxSize) {
+        		MailPreviewEnd(e);
+        	}
+        	else {
+        		var newPos_W = curevent.clientY;
+	            if (newPos_W < (parseInt(CurrentHeight * 0.25) )+  (document.getElementById("moreSearch").offsetHeight + 20))
+	                newPos_W = parseInt(CurrentHeight * 0.25 +  (document.getElementById("moreSearch").offsetHeight + 20));
+	            else if (newPos_W > (parseInt(CurrentHeight * 0.65) ) +  (document.getElementById("moreSearch").offsetHeight + 20)) {
+	                newPos_W = (parseInt(CurrentHeight * 0.65)  +  (document.getElementById("moreSearch").offsetHeight + 20));
+	            }
+	        		
+	        		document.getElementById("ResizeBarW").style.top = newPos_W + "px";
+	        	}
+	        	setTimeout(function () { isScrollMailList(); }, 500);
+        	
         }
-        else {
-            var newPos_W = curevent.clientY;
-            if (newPos_W < (parseInt(CurrentHeight * 0.25) + 90))
-                newPos_W = parseInt(CurrentHeight * 0.25) + 90;
-            else if (newPos_W > (parseInt(CurrentHeight * 0.65) + 90)) {
-                newPos_W = (parseInt(CurrentHeight * 0.65) + 90);
-            }
-            document.getElementById("ResizeBarW").style.top = newPos_W + "px";
-        }
-        setTimeout(function () { isScrollMailList(); }, 500);
     }
 }
 // 수아 수정 (매개변수 fromE추가)
@@ -1212,13 +1271,17 @@ function PreviewRayerChange(pGubun) {
             pPreviewShow_HOW = "OFF";
             document.getElementById("PreviewRayerW").style.display = "none";
             document.getElementById("PreviewRayerH").style.display = "none";
-            CurrentHeight = document.documentElement.clientHeight - 92 - (document.getElementById("mainmenu").clientHeight - 28);
+            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = "100%";
+            if(mailsearchDetail == "Y"){
+            	CurrentHeight = CurrentHeight - (document.getElementById("moreSearch").offsetHeight + 20); 
+            	mailSearchDetailCheck = "Y";
+            }
             if (navigator.userAgent.indexOf('Firefox') != -1)
-                document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+                document.getElementById("contentlist").style.height = (CurrentHeight - 111) + "px";
             else
-                document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+                document.getElementById("contentlist").style.height = (CurrentHeight - 111) + "px";
             g_bPrevShow = false;
             
             CurrenWidth = document.documentElement.clientWidth - 20;
@@ -1240,6 +1303,10 @@ function PreviewRayerChange(pGubun) {
 
             CurrenWidth = document.documentElement.clientWidth - 10;
             CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+//            if(mailsearchDetail == "Y"){
+//            	CurrentHeight = CurrentHeight - (document.getElementById("moreSearch").offsetHeight + 20); 
+//            	mailSearchDetailCheck = "Y";
+//            }
             document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
             document.getElementById("ResizeBarW").style.width = (CurrenWidth - 10) + "px";
             pMailListHeightW = parseInt(CurrentHeight * (pMailListDiv / 100));
@@ -1290,7 +1357,10 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("PreviewRayerH").style.display = "inline-block";
 
             CurrenWidth = document.documentElement.clientWidth - 20;
-            CurrentHeight = document.documentElement.clientHeight - 92 - (document.getElementById("mainmenu").clientHeight - 28);
+            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+            if(mailsearchDetail == "Y"){
+            	CurrentHeight = CurrentHeight - (document.getElementById("moreSearch").offsetHeight + 20); 
+            } 
             pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
             pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;
 
@@ -1310,9 +1380,9 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
             if (navigator.userAgent.indexOf('Firefox') != -1)
-                document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+                document.getElementById("contentlist").style.height = (CurrentHeight - 111) + "px";
             else
-                document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+                document.getElementById("contentlist").style.height = (CurrentHeight - 111) + "px";
             document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
             document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 2 + "px";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
@@ -1388,6 +1458,11 @@ function Window_resize() {
 
                 CurrenWidth = document.documentElement.clientWidth - 10;
                 CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+//                if(mailsearchDetail == "Y"){
+//                	CurrentHeight = CurrentHeight - (document.getElementById("moreSearch").offsetHeight + 20); 
+//                	mailSearchDetailCheck = "Y";
+//                } 
+                
                 document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
                 document.getElementById("ResizeBarW").style.width = (CurrenWidth + 10) + "px";
                 pMailListHeightW = parseInt(CurrentHeight * (pMailListDiv / 100));
@@ -1401,9 +1476,10 @@ function Window_resize() {
                 else
                     document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
 //                document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
-                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
+//                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
                 document.getElementById("PreW_subject").style.width = (CurrenWidth - 155) + "px";
                 
+
                 pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
                 pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
                 
@@ -1433,7 +1509,7 @@ function Window_resize() {
                 document.getElementById("PreviewRayerH").style.display = "inline-block";
 
                 CurrenWidth = document.documentElement.clientWidth - 20;
-                CurrentHeight = document.documentElement.clientHeight - 92 - (document.getElementById("mainmenu").clientHeight - 28);
+                CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
                 pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
                 pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;
 
@@ -1449,11 +1525,22 @@ function Window_resize() {
                 document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
                 document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
                 
-                if (navigator.userAgent.indexOf('Firefox') != -1)
-                    document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
-                else
-                    document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
-                
+                if (navigator.userAgent.indexOf('Firefox') != -1) {
+                	if(mailsearchDetail == "Y"){
+                		document.getElementById("contentlist").style.height 
+                			= (CurrentHeight - (document.getElementById("moreSearch").offsetHeight +126)) + "px";
+                	} else {
+                		document.getElementById("contentlist").style.height = (CurrentHeight - 111) + "px";
+                	}
+                } else {
+                	if(mailsearchDetail == "Y"){
+                		document.getElementById("contentlist").style.height 
+                			= (CurrentHeight - (document.getElementById("moreSearch").offsetHeight +126)) + "px";
+                	} else {
+                		document.getElementById("contentlist").style.height = (CurrentHeight - 111) + "px";
+                		
+                	}
+                }
                 document.getElementById("PreviewRayerH").style.width = pMailPreWidthH - 10 + "px";
                 document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 2 + "px";
                 document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
@@ -1484,14 +1571,18 @@ function Window_resize() {
             else if (pPreviewShow_HOW == "OFF") {
                 document.getElementById("PreviewRayerW").style.display = "none";
                 document.getElementById("PreviewRayerH").style.display = "none";
-                CurrentHeight = document.documentElement.clientHeight - 92 - (document.getElementById("mainmenu").clientHeight - 28);
+                
+                CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+                
                 document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
                 document.getElementById("MailListRayer").style.width = "100%";
-                
+//                if(mailsearchDetail == "Y"){
+//	            	CurrentHeight = CurrentHeight - (document.getElementById("moreSearch").offsetHeight + 20); 
+//	            }
                 if (navigator.userAgent.indexOf('Firefox') != -1)
-                    document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+                    document.getElementById("contentlist").style.height = (CurrentHeight - 111) + "px";
                 else
-                    document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+                    document.getElementById("contentlist").style.height = (CurrentHeight - 111) + "px";
                 
                 CurrenWidth = document.documentElement.clientWidth - 20;
 
@@ -2028,7 +2119,17 @@ function mailOpenPopup(btn, event) {
 function mailPrevIframeSize() {
 	var previewmail_info = $("#PreContent_Rayer" + pPreviewShow_HOW).find(".previewmail_info").outerHeight();
 	var sentDateStr = $("#PreContent_Rayer" + pPreviewShow_HOW).find(".sentDateStr").outerHeight();
-	var pPreview = pPreviewShow_HOW == "H" ? CurrentHeight : pMailPreHeightW;
+	CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+	var pPreview 	= pPreviewShow_HOW == "H" ? CurrentHeight : pMailPreHeightW;
+	if(pPreviewShow_HOW == "H"){
+		if(mailsearchDetail == "Y" ){
+			pPreview = CurrentHeight - (document.getElementById("moreSearch").offsetHeight +20); 
+        } 
+	} else if(pPreviewShow_HOW == "W"){
+		if(mailsearchDetail == "Y"){
+			pPreview = parseInt(pPreview)- (document.getElementById("moreSearch").offsetHeight + 20);
+		} 
+	}	
 	
 	previewmail_info = (Math.ceil((previewmail_info + sentDateStr)/10) * 10) + 10;
 	
