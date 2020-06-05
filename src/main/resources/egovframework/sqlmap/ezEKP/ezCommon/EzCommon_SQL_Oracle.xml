@@ -2387,7 +2387,7 @@
 		]]>
 	</select>
 	<statement id="EzCommonDAO.createPwPolicy"> 
-		CREATE TABLE "tbl_password_policy" (
+		CREATE TABLE "TBL_PASSWORD_POLICY" (
 		  "TENANT_ID" NUMBER NOT NULL,
 		  "COMPANY_ID" NVARCHAR2(100) NOT NULL,
 		  "ENG_CHAR_TYPE" NVARCHAR2(10) DEFAULT 'N',
@@ -2405,11 +2405,12 @@
 				TENANT_ID
 			FROM 
 				TBL_PASSWORD_POLICY_PATTERN
-		    rownum = 1
+			WHERE
+		    	rownum = 1
 		]]>
 	</select>
 	<statement id="EzCommonDAO.createPwPolicyPattern"> 
-		CREATE TABLE "tbl_password_policy_pattern" (
+		CREATE TABLE "TBL_PASSWORD_POLICY_PATTERN" (
 		  "TENANT_ID" NUMBER NOT NULL,
 		  "COMPANY_ID" NVARCHAR2(100) NOT NULL,
 		  "USE_PATTERN_COUNT" NUMBER(11) NOT NULL,
