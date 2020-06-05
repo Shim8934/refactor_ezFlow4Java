@@ -1870,7 +1870,7 @@
 	
 	<statement id="EzCommonDAO.alterAprDoingView">
 		<![CDATA[
-		ALTER VIEW 
+		CREATE OR REPLACE VIEW 
 			vaprdoingdoclist 
 		AS
 			SELECT
@@ -1952,7 +1952,7 @@
 	</statement>
 	<statement id="EzCommonDAO.alterChamjoView">
 	<![CDATA[
-		ALTER VIEW 
+		CREATE OR REPLACE VIEW 
 			vendchamjodocinfo 
 		AS
 		    SELECT 
