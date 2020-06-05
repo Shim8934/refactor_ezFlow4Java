@@ -47,7 +47,7 @@
 				color : black;
 			}
 			
-			#attiCalendar td[typeId=A01][modappl='0'], #attiCalendar td[typeId=A03] {
+			#attiCalendar td[typeId=A01][modappl='0'], #attiCalendar td[typeId=A03], #attiCalendar td[typeId=A25] {
 				cursor : default;
 			}
 			
@@ -318,7 +318,7 @@
 					});
 				}
 				
-				$('#attiCalendar').on('dblclick', 'tr td[typeid]:not(td[typeid=A01], td[typeid=A02], td[typeid=A03])', function() {
+				$('#attiCalendar').on('dblclick', 'tr td[typeid]:not(td[typeid=A01], td[typeid=A02], td[typeid=A03], td[typeid=A25])', function() {
 					attitudeItemView(this);
 				});
 				$(document).on('dblclick', '.td_day3', function() {//표형식 상세보기
@@ -688,8 +688,16 @@
 							tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png' style='vertical-align:middle'/>" + result[i].typeName + iconStr + "</td></tr>";
 							calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>", calendarHTML.indexOf("TD_" + startDate + "_Value")), tdHTML);
 						} else {
-							tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png' style='vertical-align:middle'/>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>";
-							calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>", calendarHTML.indexOf("TD_" + startDate + "_Value")), tdHTML);
+							if(result[i].typeId == 'A25'){ //전일퇴근일 경우
+								var dayBefore = Number(startDate.substring(8,10)) - 1;
+								var day = dayBefore < 10 ? "0" + dayBefore : String(dayBefore);
+				    			var startDate2 = startDate.substring(0,8) + day;
+								tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png' style='vertical-align:middle'/>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " (" + Number(startDate.substring(8,10)) + "일)" + iconStr + "</td></tr>";
+								calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>", calendarHTML.indexOf("TD_" + startDate2 + "_Value")), tdHTML);																
+							}else {
+								tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png' style='vertical-align:middle'/>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>";
+								calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>", calendarHTML.indexOf("TD_" + startDate + "_Value")), tdHTML);								
+							}
 						} 
 					}
 				} else { //부서근태현황일때
@@ -700,7 +708,7 @@
 						} else if (result[i].modAppl  == '3') {
 							iconStr = " <img class='pencil' src='/images/ezAttitude/change.png' />";
 						}
-						if (result[i].typeId != 'A01' && result[i].typeId != 'A03' && result[i].typeId != null) {
+						if (result[i].typeId != 'A01' && result[i].typeId != 'A03' && result[i].typeId != null && result[i].typeId != 'A25') {
 							startDate = result[i].startDate.split(" ")[0];
 							endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
 							
@@ -1215,6 +1223,25 @@
 				
 				document.getElementById("popupDay_title").innerText = "<spring:message code='ezAttitude.t141'/> [" + date + "]";
 				
+				var result2;
+				
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezAttitude/getAttitudeList.do",
+					data : {
+						startDate : date,
+						endDate : date,
+						deptFlag : deptFlag,
+						typeId : "A25",
+						selectedDeptID : encodeURIComponent(authDeptList.value)
+					},
+					success : function(result) {
+						result2 = result;
+					}
+				});
+					
 				$.ajax({
 					type : "POST",
 					dataType : "json",
@@ -1235,7 +1262,9 @@
 				    		var objTr = $("<tr></tr>").append($("<td colspan='7' style='text-align:center; width:820px; border-top:none;'></td>").text("<spring:message code='ezAttitude.t142'/>"));
 				    		$("#addpopupDay_list tbody").append(objTr);
 				    	} else {
-				    		inoutAttitudeList(result);
+				    		//전일퇴근과 기존 근태내역을 합친다.
+				    		result2 = result2.concat(result);
+				    		inoutAttitudeList(result2);
 				    		attitudeList(result);
 				    		
 			    			var i = 1;
@@ -1267,31 +1296,31 @@
 				var endTimeList = []; //퇴근시간 배열
 				
 		    	result.forEach(function(vo, index) {
-		    		if (vo.typeId == "A01" || vo.typeId == "A03" || vo.typeId == "A02" || vo.typeId == "A07" || vo.typeId == "A08") { //출근, 퇴근, 지각, 휴근, 조퇴
+		    		if (vo.typeId == "A01" || vo.typeId == "A03" || vo.typeId == "A02" || vo.typeId == "A07" || vo.typeId == "A08" || vo.typeId == "A25") { //출근, 퇴근/전일퇴근, 지각, 휴근, 조퇴
 			    		//no, 이름, 출근, 퇴근, 근태유형, 일시, 근무지 및 내용
 		    			if (vo.typeId == "A01") { //출근리스트
 				    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
-			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(11,16))));
-			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+			    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(11,16))));
+			    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 				    		objTr.append($("<td style='max-width:8%; width:8%;' title ='" + "<spring:message code='ezAttitude.t231'/>" + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text("<spring:message code='ezAttitude.t231'/>")));
 			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
-		    			} else if (vo.typeId == "A03" || vo.typeId == "A08") { //퇴근, 조퇴
+		    			} else if (vo.typeId == "A03" || vo.typeId == "A08" || vo.typeId == "A25") { //퇴근/전일퇴근, 조퇴
 		    				endTimeList.push(vo);
 		    			} else if (vo.typeId == "A02") { //지각
 				    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
-			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span>")));
-			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+			    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span>")));
+			    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 				    		objTr.append($("<td style='max-width:8%; width:8%;' title ='" + vo.typeName + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.typeName)));
 			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    			} else { //휴근
 				    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
-			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttBlueText'>" + vo.startDate.substring(11,16) + "</span>")));
-			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span>")));
+			    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttBlueText'>" + vo.startDate.substring(11,16) + "</span>")));
+			    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span>")));
 			    			objTr.append($("<td style='max-width:8%; width:8%;' title ='" + vo.typeName + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.typeName)));
 			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
@@ -1301,8 +1330,8 @@
 		    		if (vo.typeId == null || vo.typeId == "") {
 		    			objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
 		    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "234'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
-		    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
-		    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+		    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+		    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    			objTr.append($("<td style='max-width:8%; width:8%;' title ='" + "<spring:message code='ezAttitude.t61'/>" + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text("<spring:message code='ezAttitude.t61'/>")));
 		    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    			objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
@@ -1315,7 +1344,7 @@
 		    	//퇴근 리스트
 		    	endTimeList.forEach(function(vo, index) {
 		    		if (vo.typeId == "A08") { //조퇴
-			    		$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span class='AttRedText'>" + vo.startDate.substring(11,16) + "</span></div>");
+			    		$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span class='AttRedText'>" + vo.startDate.substring(11,16) + "</span></div>");
 
 			    		if ($("#TR_" + vo.writerId + " td:eq(4)").text() == "<spring:message code='ezAttitude.t113' />") {//지각이면 "지각,조퇴" 형태로 되게끔.
 		    				$("#TR_" + vo.writerId + " td:eq(4)").html("<div style='width:55px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><spring:message code='ezAttitude.t113' />" + ", " + vo.typeName + "</div>");
@@ -1324,14 +1353,16 @@
 		    				$("#TR_" + vo.writerId + " td:eq(4)").html("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.typeName + "</div>");
 			    			$("#TR_" + vo.writerId + " td:eq(4)").attr("title", vo.typeName);
 		    			}
+		    		} else if (vo.typeId == "A25") { //전일퇴근
+		    			$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(11,16) + " (" + Number(vo.startDate.substring(8,10)) + "일)" + "</div>");		    				
 		    		} else { //퇴근
-			    		$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(11,16) + "</div>");
+		    			$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(11,16) + "</div>");		    				
 		    		}
 		    	});
 			}
 			function attitudeList(result) {
 		    	result.forEach(function(vo, index) {
-					if (vo.typeId != "A01" && vo.typeId != "A03" && vo.typeId != "A02" && vo.typeId != "A07" && vo.typeId != "A08" && vo.typeId != null) { //출근, 퇴근, 지각, 휴근, 조퇴가 아니면
+					if (vo.typeId != "A01" && vo.typeId != "A03" && vo.typeId != "A02" && vo.typeId != "A07" && vo.typeId != "A08" && vo.typeId != null && vo.typeId != "A25") { //출근, 퇴근/전일퇴근, 지각, 휴근, 조퇴가 아니면
 			    		var contentTrim = $.trim($("<p></p>").html(vo.content).text());
 			    		var statusContent = "";
 			    		
@@ -1836,9 +1867,9 @@
 					}
 					
 					var typeText = $("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").text();
-					//출근, 퇴근, 지각, 휴근, 조퇴
-		    		if (vo.typeId == "A01" || vo.typeId == "A03" || vo.typeId == "A02" || vo.typeId == "A07" || vo.typeId == "A08") { 
-			    		// 출근, 퇴근, 근태유형
+					//출근, 퇴근/전일퇴근, 지각, 휴근, 조퇴
+		    		if (vo.typeId == "A01" || vo.typeId == "A03" || vo.typeId == "A02" || vo.typeId == "A07" || vo.typeId == "A08" || vo.typeId == "A25") { 
+			    		// 출근, 퇴근/전일퇴근, 근태유형
 		    			if (vo.typeId == "A01") { //출근리스트
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").html("<span class='" + iconStrClass + "'>" + vo.startDate.substring(11,16) + "</span>" + iconStr);
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", "<spring:message code='ezAttitude.t231' />");
@@ -1911,6 +1942,10 @@
 			    			}
 		    			} else if (vo.typeId == "A03") { //퇴근
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(2)").html("<span class='" + iconStrClass + "'>" + vo.startDate.substring(11,16) + "<span>" +  iconStr);
+			    		} else if(vo.typeId == "A25") { //전일 퇴근
+			    			var dayBefore = Number(vo.startDate.substring(8,10)) - 1;
+			    			var day = dayBefore < 10 ? "0" + dayBefore : String(dayBefore);
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,8) + day + " td:eq(2)").html("<span class='" + iconStrClass + "'>" + vo.startDate.substring(11,16) + " (" + Number(vo.startDate.substring(8,10)) + "일)" + "<span>" +  iconStr);
 			    		} else if (vo.typeId == "A08") { //조퇴
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(2)").html("<span class='AttRedText " + iconStrClass + "'>" +vo.startDate.substring(11,16) + "</span>" + iconStr);
 			    			if (typeText != "" || typeText.indexOf("<spring:message code='ezAttitude.t113' />") > -1) {//지각이면 "지각,조퇴" 형태로 되게끔.

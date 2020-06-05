@@ -588,6 +588,37 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 	}
 	
 	@Override
+	public int deleteAllUserDistributionForMember(String targetEmail, String domain) throws Exception {
+		logger.debug("deleteAllUserDistributionForMember started.");
+		logger.debug("targetEmail=" + targetEmail + ", domain=" + domain);
+		
+		int reasonCode = -100;
+		
+		try {
+			String inputParams = "targetEmail=" + targetEmail + "&domain=" + domain;
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteAllUserDistributionForMember";
+			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			logger.debug("response=" + response);
+			
+			if (response != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+				String resultCode = (String)responseObj.get("resultCode");
+				
+				if (resultCode.equalsIgnoreCase("OK")) {
+					reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				}
+			}	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("deleteAllUserDistributionForMember ended.");
+		return reasonCode;
+	}
+	
+	@Override
 	public String getCopyrightText(int tenantId, String companyId) throws Exception {
 		logger.debug("getCopyrightText started. tenantId=" + tenantId);
 

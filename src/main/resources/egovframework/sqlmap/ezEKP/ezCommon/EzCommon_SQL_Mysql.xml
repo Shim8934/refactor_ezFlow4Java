@@ -2747,4 +2747,22 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4; 
 	</statement>
 	
+	<select id="EzCommonDAO.checkBeforeOutComeAttitudeTypeForCompany" resultClass="String">
+		SELECT 
+			COMPANY_ID 
+		FROM
+			TBL_ATTITUDE_TYPE
+		WHERE
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			TYPE_ID = #typeId#
+	</select>
+	<insert id="EzCommonDAO.insertBeforeOutComeAttitudeType">
+		INSERT INTO TBL_ATTITUDE_TYPE 
+			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, FORM_ID, ISADD, ISDEL)
+		VALUES
+			(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #isUse#, #imgPath#, #formId#, #isAdd#, #isDel#) 
+	</insert>
 </sqlMap>

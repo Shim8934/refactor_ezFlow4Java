@@ -31,6 +31,7 @@ var messages = {
 	strLang30 : "진행문서",
 	strLang31 : "기안문서",
 	strLang32 : "부서수신함",
+	strLang33 : "이미 퇴근을 등록하였습니다.",
 	strLang586 : "1월",
 	strLang587 : "2월",
 	strLang588 : "3월",
