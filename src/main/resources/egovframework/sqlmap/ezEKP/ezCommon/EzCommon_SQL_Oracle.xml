@@ -2670,4 +2670,24 @@
 			OPENGOVFLAG VARCHAR(4) DEFAULT 'N'
 			)
 	</statement>
+	
+	<select id="EzCommonDAO.checkSurveyAlamColums">
+		<![CDATA[
+		SELECT
+			MAIL_FLAG
+		FROM
+			TBL_SURVEY
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addSurveyAlamColums">
+		ALTER TABLE
+			TBL_SURVEY
+		ADD (
+			MAIL_FLAG NUMBER(4, 0) DEFAULT 0,
+			POPUP_FLAG NUMBER(4, 0) DEFAULT 0
+			)
+	</statement>
 </sqlMap>
