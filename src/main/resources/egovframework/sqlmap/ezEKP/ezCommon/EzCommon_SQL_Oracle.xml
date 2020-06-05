@@ -2603,4 +2603,71 @@
 	    )
 	</statement>
 	
+	<select id="EzCommonDAO.checkTblOpenGovDocInfo" resultClass="String">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_OPENGOVDOCINFO
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkTblOpenGovfileInfo" resultClass="String">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_OPENGOVFILEINFO
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblOpenGovDocInfo"> 
+		CREATE TABLE "TBL_OPENGOVDOCINFO" (
+		  "DOCID" NVARCHAR2(80) NOT NULL ENABLE,
+		  "OPENFLAG" CHAR(9) DEFAULT NULL,
+		  "BASIS" NVARCHAR2(200) DEFAULT NULL,
+		  "REASON" NVARCHAR2(1000) DEFAULT NULL,
+		  "OPENLIMITDATE" DATE DEFAULT NULL,
+		  "CREATEDATE" DATE DEFAULT NULL,
+		  "UPDATEDATE" DATE DEFAULT NULL,
+		  "TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+		  "COMPANYID" NVARCHAR2(20) NOT NULL ENABLE,
+		  "LISTOPENFLAG" char(2) DEFAULT NULL,
+		  CONSTRAINT "TBL_OPENGOVDOCINFO_PK" PRIMARY KEY ("DOCID", "TENANT_ID", "COMPANYID")
+		)
+	</statement>
+	
+	<statement id="EzCommonDAO.createTblOpenGovFileInfo"> 
+		CREATE TABLE `TBL_OPENGOVFILEINFO` (
+		  "DOCID" NVARCHAR2(80) NOT NULL ENABLE,
+		  "SN" NUMBER(10,0) NOT NULL ENABLE,
+		  "FILEOPENFLAG" CHAR(1) DEFAULT NULL,
+		  "COMPANYID" NVARCHAR2(20) NOT NULL ENABLE,
+		  "TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+		  CONSTRAINT "TBL_OPENGOVFILEINFO_PK" PRIMARY KEY ("DOCID", "SN", "COMPANYID", "TENANT_ID")
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkOpenGovFlag">
+		<![CDATA[
+		SELECT
+			OPENGOVFLAG
+		FROM
+			TBL_FORMINFO
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addOpenGovFlag">
+		ALTER TABLE
+			TBL_FORMINFO
+		ADD (
+			OPENGOVFLAG VARCHAR(4) DEFAULT 'N'
+			)
+	</statement>
 </sqlMap>
