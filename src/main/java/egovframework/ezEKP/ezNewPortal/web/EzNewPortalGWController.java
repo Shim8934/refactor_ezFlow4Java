@@ -202,6 +202,12 @@ public class EzNewPortalGWController {
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId);
 			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
+			
+			String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
+			String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
+			String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
+			String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
+			
 			LOGGER.debug("[config] useQuestion : " + useQuestion + ", useSurvey : " + useSurvey + ", useMemo : " + useMemo + ", useCabinet : " + useCabinet
 						+ ", useVote : " + useVote + ", useJournal : " + useJournal + ", useCircular : " + useCircular + ", useAttitue : " + useAttitude
 						+ ", useWebfolder : " + useWebfolder + ", useEzPMS : " + useEzPMS + ", useCommunity : " + useCommunity + ", useEzWorkspace : " + useEzWorkspace
@@ -258,6 +264,22 @@ public class EzNewPortalGWController {
 				useExternalMailServer = "NO";
 			}
 			
+			if (useSchedule == null || useSchedule.equals("")) {
+				useSchedule = "YES";
+			}
+			
+			if (useResource == null || useResource.equals("")) {
+				useResource = "YES";
+			}
+			
+			if (useBoard == null || useBoard.equals("")) {
+				useBoard = "YES";
+			}
+			
+			if (useToDo == null || useToDo.equals("")) {
+				useToDo = "YES";
+			}
+			
 			if (useQuestion.equals("NO")) {
 				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
@@ -304,6 +326,22 @@ public class EzNewPortalGWController {
 			
 			if (useCommunity.equals("NO")) {
 				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
+			}
+			
+			if (useSchedule.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("schedule")));
+			}
+			
+			if (useResource.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("resource")));
+			}
+			
+			if (useBoard.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("board")));
+			}
+			
+			if (useToDo.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("task")));
 			}
 			
 			//인터넷 사용이 NO 인 경우에는 weather portlet사용 불가능
@@ -367,7 +405,7 @@ public class EzNewPortalGWController {
 			// 메일, 결재, 일정, 전자설문, 회람판, 근태관리 권한이 있는지 확인
 			String useMail = "NO";
 			String useApproval = "NO";
-			String useSchedule = "NO";
+			//String useSchedule = "NO";
 
 			// 2. 메뉴에 권한이 있는지 ================ 수정하기 start
 			
@@ -494,6 +532,8 @@ public class EzNewPortalGWController {
 			data.put("useMail", useMail);
 			data.put("useApproval", useApproval);
 			data.put("useSchedule", useSchedule);
+			data.put("useBoard", useBoard);
+			data.put("useResource", useResource);
 			data.put("lastLogin", lastLogin);
 			data.put("userEmail", info.getEmail());
 			data.put("usePortalAutoRefreshInterval", usePortalAutoRefreshInterval);
@@ -744,10 +784,11 @@ public class EzNewPortalGWController {
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
 			
 			//tenant config가 NO인 경우 사용자 메뉴 순서에서도 나오면 안됨
-			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
+			//컨피그 : useQuestion(전자설문), useSurvey(전자설문 리뉴얼), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
 			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
 			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티)
 			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+			String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
 			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
 			String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
 			String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
@@ -758,6 +799,11 @@ public class EzNewPortalGWController {
 			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+			
+			String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
+			String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
+			String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
+			String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
 			
 			// 2020-04-09 김민성 - 메일 메뉴 컨피그 추가
 			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
@@ -810,6 +856,26 @@ public class EzNewPortalGWController {
 				useExternalMailServer = "NO";
 			}
 			
+			if (useSurvey == null || useSurvey.equals("")) {
+				useSurvey = "YES";
+			}
+			
+			if (useSchedule == null || useSchedule.equals("")) {
+				useSchedule = "YES";
+			}
+			
+			if (useResource == null || useResource.equals("")) {
+				useResource = "YES";
+			}
+			
+			if (useBoard == null || useBoard.equals("")) {
+				useBoard = "YES";
+			}
+			
+			if (useToDo == null || useToDo.equals("")) {
+				useToDo = "YES";
+			}
+			
 			if (useQuestion.equals("NO")) {
 				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
@@ -857,6 +923,26 @@ public class EzNewPortalGWController {
 			if (useExternalMailServer.equalsIgnoreCase("YES")) {
 				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
 				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
+			}
+			
+			if (useSurvey.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("survey")));
+			}
+			
+			if (useSchedule.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("schedule")));
+			}
+			
+			if (useResource.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("resource")));
+			}
+			
+			if (useBoard.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("board")));
+			}
+			
+			if (useToDo.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("task")));
 			}
 			
 			// 20200326 조진호 - 패키지 타입이 메일인 경우 메일,주소록을 제외한 모든 메뉴 제거
@@ -1774,6 +1860,11 @@ public class EzNewPortalGWController {
 				useExternalMailServer = "NO";
 			}
 			
+			String useContextmenu = ezCommonService.getTenantConfig("USE_CONTEXTMENU", tenantId);
+			if (useContextmenu == null || useContextmenu.equals("")) {
+				useContextmenu = "YES";
+			}
+			
 			LOGGER.debug("useMemo : " + useMemo + ", useExternalMailServer : " + useExternalMailServer);
 			
 			//2020-04-14 강승구 : 메뉴코드에서 메뉴URL로 변경하는 부분
@@ -1784,6 +1875,7 @@ public class EzNewPortalGWController {
 			data.put("startPage", startPage);
 			data.put("useExternalMailServer", useExternalMailServer);
 			data.put("convertMenu", convertMenu);
+			data.put("useContextmenu", useContextmenu);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

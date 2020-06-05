@@ -26,6 +26,8 @@
 		        	//2018-08-08 김보미 - 주석제거
 //		            document.getElementById("UserInfo").parentNode.onclick();
 		            document.getElementById("UserInfo").onclick();
+		        } else if("${usePortal}" == "NO") {
+		        	document.getElementById("TimeZone").onclick();			        	
 		        } else {
 		        	if ("${portalEnv}" == "1") {
 			            //document.getElementById("Portal_sub1").parentNode.onclick()
@@ -236,7 +238,7 @@
                		<c:if test="${packageType == 'standard'}">
 						<c:if test="${firstScreen_Mail != 'YES'}">
 							<c:choose>
-								<c:when test="${portalEnv == '0'}">
+								<c:when test="${portalEnv == '0' and usePortal eq 'YES'}">
 	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t034' /></span></li>
 	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t136' /></span></li>
 			                    </c:when>
@@ -250,7 +252,9 @@
 							</c:choose>
 						</c:if>
 		            </c:if>
+		            <c:if test="${usePortal eq 'YES' }">
                    	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="UserInfo" name="UserInfo" onClick="Open_Func(this)"><spring:message code='ezPersonal.t172' /></span></li>
+                   	</c:if>
                    	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="TimeZone" name="TimeZone" onClick="Open_Func(this)"><spring:message code='ezPersonal.s3' /></span></li>
 		        </ul>
 		        <h2 class="on">
@@ -264,6 +268,8 @@
                     <c:if test="${firstScreen_Mail != 'YES' && packageType != 'mail'}">
        					<c:if test="${isScheduleUsed == 'Y'}">
                           	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()"><spring:message code='ezPersonal.t999900007' /></span></li>
+	                   </c:if>
+	                   <c:if test="${isTaskUsed == 'Y'}">
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="TaskEnv" name="TaskEnv" onClick="Task_Config()"><spring:message code='ezTask.hyh001' /></span></li>
 	                   </c:if>
 	                    <c:if test="${packageType == 'standard'}">

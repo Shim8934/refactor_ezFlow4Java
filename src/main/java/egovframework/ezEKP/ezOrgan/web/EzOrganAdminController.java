@@ -2577,6 +2577,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			useExternalMailServer = "NO";
 		}
 		
+		String useBoard = ezCommonService.getTenantConfig("useBoard", user.getTenantId());
+		if (useBoard == null || useBoard.equals("")) {
+			useBoard = "YES";
+		}
+		
+		String useSurvey = ezCommonService.getTenantConfig("useSurvey", user.getTenantId());
+		if (useSurvey == null || useSurvey.equals("")) {
+			useSurvey = "YES";
+		}
+		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
@@ -2602,6 +2612,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("useWebfolder", useWebfolder);
         model.addAttribute("packageType", packageType);
         model.addAttribute("useExternalMailServer", useExternalMailServer);
+        model.addAttribute("useBoard", useBoard);
+        model.addAttribute("useSurvey", useSurvey);
 		
 		logger.debug("permissionsList ended.");
 		

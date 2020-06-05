@@ -246,9 +246,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", userInfo.getTenantId());
+		String useMailApprNoti = ezCommonService.getTenantConfig("useMailApprNoti", userInfo.getTenantId());
 		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useShareApproval", useShareApproval);
+		model.addAttribute("useMailApprNoti", useMailApprNoti);
 		
 		logger.debug("ezApprovalConfig ended");
 		return "ezPersonal/persEzApprovalConfig";
@@ -983,6 +985,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 		
+		String usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
+		String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
+		String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
+		String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
+		
 		if (useAttitude == null || useAttitude.equals("")) {
 			useAttitude = "NO";
 		}
@@ -1029,6 +1036,18 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
 			useExternalMailServer = "NO";
+		}
+		
+		if (useSchedule == null || useSchedule.equals("")) {
+			useSchedule = "YES";
+		}
+		
+		if (useBoard == null || useBoard.equals("")) {
+			useBoard = "YES";
+		}
+		
+		if (useToDo == null || useToDo.equals("")) {
+			useToDo = "YES";
 		}
 		
 		if (useQuestion.equals("NO")) {
@@ -1078,6 +1097,18 @@ public class EzPersonalController extends EgovFileMngUtil {
 		if (useExternalMailServer.equalsIgnoreCase("YES")) {
 			menuList.removeIf(vo -> (vo.getMenuId() == 1));
 		}
+		
+		if (useSchedule.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 2));
+		}
+		
+		if (useBoard.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 4));
+		}
+		
+		if (useToDo.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 17));
+		}
 		/*
 		 * moduleList에 추가해준 모듈의 이름으로 확인 
 		 */
@@ -1106,6 +1137,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 				model.addAttribute("isWebfolderUsed", "Y");
 			} else if (menuId == 12) {
 				model.addAttribute("isPMSUsed", "Y");
+			} else if (menuId == 17) {
+				model.addAttribute("isTaskUsed", "Y");
 			}
 		}
 		
@@ -1115,6 +1148,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("firstScreen_Mail", firstScreen_Mail);
         model.addAttribute("packageType", packageType);
         model.addAttribute("portalEnv", portalEnv);
+        model.addAttribute("usePortal", usePortal);
         
 		logger.debug("leftEnvironment ended");
 		return "/ezPersonal/persLeftEnvirionment";

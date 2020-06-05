@@ -29,9 +29,9 @@
 //						window.open("/admin/ezPortal/portalMain.do", "bottom");
 	 					window.open("/admin/ezNewPortal/portalMain.do", "bottom");
 					</c:if>
-					<c:if test="${use_portal != 'YES'}">
+					/* <c:if test="${use_portal != 'YES'}">
 						window.open("/admin/ezPersonal/personalMain.do", "bottom");
-					</c:if>
+					</c:if> */
 					
 					<c:if test="${useActiveX == 'YES'}">
 						var userAgent = window.navigator.userAgent;
@@ -190,8 +190,12 @@
 			      			<li><span id="menu31" onClick="menu_change(170, event)"><spring:message code="main.t78" /></span></li>
 			      			</c:if>
 			      			<c:if test="${packageType != 'mail'}">      
+			      				<c:if test="${useSchedule == 'YES' }">
 				      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="ezSchedule.t1010" /></span></li>
+				      			</c:if>
+				      			<c:if test="${useBoard == 'YES' }">
 				      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="ezBoard.t0006" /></span></li>
+			      				</c:if>
 			      			</c:if>
 			      			
 			      			<%-- 전자결재 --%>
@@ -207,7 +211,9 @@
 			      				<li><span id="menu07" onClick="menu_change(630, event)"><spring:message code="main.t1006" /></span></li>
 			      				</c:if>
 								<%-- 자원관리 --%>
+								<c:if test="${useResource == 'YES'}">
 			      				<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>
+								</c:if>
 								<%-- 업무일지 --%>
 								<c:if test="${use_journal == 'YES'}">
 									<li><span id="menu19" onClick="menu_change(690, event)"><spring:message code="ezJournal.t1" /></span></li>

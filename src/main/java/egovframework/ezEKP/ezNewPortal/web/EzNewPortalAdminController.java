@@ -72,8 +72,14 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		String usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
+		
+		if(usePortal == null || usePortal.equals("")) {
+			usePortal = "YES";
+		}
         
         model.addAttribute("packageType", packageType);
+        model.addAttribute("usePortal", usePortal);
 		
 		if (userInfo == null) {
 			LOGGER.debug("portalMain accessDenied.");
@@ -97,8 +103,10 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		String usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
         
         model.addAttribute("packageType", packageType);
+        model.addAttribute("usePortal", usePortal);
 		
 		if (userInfo == null) {
 			LOGGER.debug("portalLeftMenu accessDenied.");

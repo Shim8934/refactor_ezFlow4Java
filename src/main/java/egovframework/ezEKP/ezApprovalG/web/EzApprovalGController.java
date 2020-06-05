@@ -3061,6 +3061,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			use_cabinet = cabinetAdminService.checkModuleActive("apprv", userInfo);
 		}
 		
+		String useBoard = ezCommonService.getTenantConfig("useBoard", userInfo.getTenantId());
+		if(useBoard == null || useBoard.equals("")) {
+			useBoard = "YES";
+		}
+		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
 		} else {
@@ -3174,6 +3179,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("formVersion", formVersion);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		model.addAttribute("useBoard", useBoard);
 		logger.debug("contDocView ended.");
 		
 		return "ezApprovalG/apprGcontDocView";
