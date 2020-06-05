@@ -491,7 +491,7 @@
 					objDl = $("<dl></dl>").addClass("statsDL");
 					objDt = $("<dt></dt>");
 					
-					if (result[i].typeId == 'A01' || result[i].typeId == 'A03' || result[i].typeId == 'A05') {
+					if (result[i].typeId == 'A01' || result[i].typeId == 'A03' || result[i].typeId == 'A05' || result[i].typeId == 'A25') {
 						continue;
 					} else {
 						objDt.addClass(result[i].imgPath);
