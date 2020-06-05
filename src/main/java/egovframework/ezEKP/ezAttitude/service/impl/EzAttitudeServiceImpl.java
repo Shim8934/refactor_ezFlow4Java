@@ -218,14 +218,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			endDate = startDate + " 23:59:59"; 
 			startDate = startDate + " 00:00:00";
 		} else if (typeId.equals("A25")) {
-			String[] dateArr = startDate.split("-");
-			int dayAfter = Integer.parseInt(dateArr[2]) + 1;
-			String day = (dayAfter < 10 ? "0" + Integer.toString(dayAfter) : Integer.toString(dayAfter));
+			String dayAfter = commonUtil.getDayAfter(startDate);
 			
-			startDate = dateArr[0] + "-" + dateArr[1] + "-" + day + " 00:00:00";
 			//전날 퇴근한 경우
-			endDate = dateArr[0] + "-" + dateArr[1] + "-" + day + " 23:59:59";
-			//typeId = "";
+			startDate = dayAfter + " 00:00:00";
+			endDate = dayAfter + " 23:59:59";
 		} else {
 			startDate = startDate + " 00:00:00";
 			endDate = endDate + " 23:59:59";
@@ -2554,11 +2551,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     	LOGGER.debug("getIsAttitude started");
     	Map<String,Object> map = new HashMap<String, Object>();
     	
-    	//2020-06-03 김정언 : 새벽 퇴근 기능 추가
-    	Calendar c = Calendar.getInstance();
-    	c.add(Calendar.DATE, -1);
-    	String dayBefore = new java.text.SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
-    	
     	if (startDate.equals("")) {
 			startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
     	}
@@ -2577,13 +2569,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     	else if (typeId.equals("A08")) {
     		typeId = "A03,A08";
     	}
+    	//2020-06-03 김정언 : 새벽 퇴근 기능 추가
     	else if(typeId.equals("A26")) { //전날 출근이 찍혀 있는지 확인한다.
     		typeId = "A01,A02";
-    		startDate = dayBefore;
+    		startDate = commonUtil.getDayBefore(startDate.split(" ")[0]);
     	}
     	else if(typeId.equals("A25")) { //전날 퇴근이 찍혀 있는지 확인한다.
     		typeId = "A03,A08";
-    		startDate = dayBefore;
+    		startDate = commonUtil.getDayBefore(startDate.split(" ")[0]);
     	}
     	else if(typeId.equals("A27")) { //오늘 날짜로 전날 퇴근이 찍혀 있는지 확인한다.
     		typeId = "A25";

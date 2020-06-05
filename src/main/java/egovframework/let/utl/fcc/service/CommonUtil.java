@@ -33,12 +33,16 @@ import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -2158,5 +2162,37 @@ public class CommonUtil {
 		
 		logger.debug("checkMenuAccess ended.");
 		return menuAccessList;
+	}
+
+
+	public String getDayAfter(String date) throws Exception {
+		logger.debug("getDayAfter started");
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		
+		if(date == null || date.equals("")){
+			throw new Exception("formatter error");
+		}else {
+			LocalDate dayAfter = LocalDate.parse(date, formatter); 
+			dayAfter = dayAfter.plusDays(1);
+			
+			logger.debug("getDayAfter ended");
+			return dayAfter.toString();
+		}
+	}
+
+	public String getDayBefore(String date) throws Exception {
+		logger.debug("getDayBefore started");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		
+		if(date == null || date.equals("")){
+			throw new Exception("formatter error");
+		}else {
+			LocalDate dayBefore = LocalDate.parse(date, formatter); 
+			dayBefore = dayBefore.minusDays(1);
+			
+			logger.debug("getDayBefore ended");
+			return dayBefore.toString();
+		}
 	}
 }
