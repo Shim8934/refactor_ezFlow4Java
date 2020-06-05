@@ -360,24 +360,28 @@
 	    			mode : "new"
 	    		},
 	    		success : function(result) {
-	    			getAttitudeList();
-	    			try{
-	    				var calType = "";
-	    				var btnOnNodes = parent.frames["right"].document.getElementsByClassName("on");
-	    				for (var i = 0; i < btnOnNodes.length; i++) {
-	    					if (btnOnNodes[i].getAttribute("id") != null && btnOnNodes[i].getAttribute("id") == "btnTableList") {
-	    						calType = btnOnNodes[i].getAttribute("id");
-	    						break;
-	    					}
-	    				}
-	    				
-	    				if (calType == "btnTableList") {
-	    					parent.frames["right"].getAttitudeTableList();
-	    				} else {
-		    				parent.frames["right"].getAttitudeMainList();
-	    				}
-	    				
-	    			}catch(e){}
+	    			if(result == "outAttError"){
+	    				alert("<spring:message code='ezAttitude.kje21'/>");
+	    			}else {
+		    			getAttitudeList();
+		    			try{
+		    				var calType = "";
+		    				var btnOnNodes = parent.frames["right"].document.getElementsByClassName("on");
+		    				for (var i = 0; i < btnOnNodes.length; i++) {
+		    					if (btnOnNodes[i].getAttribute("id") != null && btnOnNodes[i].getAttribute("id") == "btnTableList") {
+		    						calType = btnOnNodes[i].getAttribute("id");
+		    						break;
+		    					}
+		    				}
+		    				
+		    				if (calType == "btnTableList") {
+		    					parent.frames["right"].getAttitudeTableList();
+		    				} else {
+			    				parent.frames["right"].getAttitudeMainList();
+		    				}
+		    				
+		    			}catch(e){}
+	    			}
 	    		},
 	    		complete : function() {
 	    			afterAlertDate = new Date();

@@ -917,7 +917,11 @@ function addAttitude(obj, themeId) {
 			mode : "new"
 		},
 		success : function(result) {
-			getAttitudeList(themeId);
+			if(result == "outAttError"){
+				alert(messages.strLang33);
+			}else {
+				getAttitudeList(themeId);				
+			}
 		},
 		complete : function() {
 			afterAlertDate = new Date();
@@ -1039,7 +1043,7 @@ function checkAttitude(obj, themeId) {
 		getAttitudeList(themeId);
 		try{parent.frames["right"].getAttitudeMainList();}catch(e){}
 	}
-	}
+}
 
 function getIsAttitude(typeId) {
 	var isAttitudeReturn = "";
