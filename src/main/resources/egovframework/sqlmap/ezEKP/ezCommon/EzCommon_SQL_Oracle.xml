@@ -1870,7 +1870,7 @@
 	
 	<statement id="EzCommonDAO.alterAprDoingView">
 		<![CDATA[
-		ALTER VIEW 
+		CREATE OR REPLACE VIEW 
 			vaprdoingdoclist 
 		AS
 			SELECT
@@ -1952,7 +1952,7 @@
 	</statement>
 	<statement id="EzCommonDAO.alterChamjoView">
 	<![CDATA[
-		ALTER VIEW 
+		CREATE OR REPLACE VIEW 
 			vendchamjodocinfo 
 		AS
 		    SELECT 
@@ -2387,7 +2387,7 @@
 		]]>
 	</select>
 	<statement id="EzCommonDAO.createPwPolicy"> 
-		CREATE TABLE "tbl_password_policy" (
+		CREATE TABLE "TBL_PASSWORD_POLICY" (
 		  "TENANT_ID" NUMBER NOT NULL,
 		  "COMPANY_ID" NVARCHAR2(100) NOT NULL,
 		  "ENG_CHAR_TYPE" NVARCHAR2(10) DEFAULT 'N',
@@ -2405,11 +2405,12 @@
 				TENANT_ID
 			FROM 
 				TBL_PASSWORD_POLICY_PATTERN
-		    rownum = 1
+			WHERE
+		    	rownum = 1
 		]]>
 	</select>
 	<statement id="EzCommonDAO.createPwPolicyPattern"> 
-		CREATE TABLE "tbl_password_policy_pattern" (
+		CREATE TABLE "TBL_PASSWORD_POLICY_PATTERN" (
 		  "TENANT_ID" NUMBER NOT NULL,
 		  "COMPANY_ID" NVARCHAR2(100) NOT NULL,
 		  "USE_PATTERN_COUNT" NUMBER(11) NOT NULL,
@@ -2603,4 +2604,91 @@
 	    )
 	</statement>
 	
+	<select id="EzCommonDAO.checkTblOpenGovDocInfo" resultClass="String">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_OPENGOVDOCINFO
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkTblOpenGovfileInfo" resultClass="String">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_OPENGOVFILEINFO
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblOpenGovDocInfo"> 
+		CREATE TABLE "TBL_OPENGOVDOCINFO" (
+		  "DOCID" NVARCHAR2(80) NOT NULL ENABLE,
+		  "OPENFLAG" CHAR(9) DEFAULT NULL,
+		  "BASIS" NVARCHAR2(200) DEFAULT NULL,
+		  "REASON" NVARCHAR2(1000) DEFAULT NULL,
+		  "OPENLIMITDATE" DATE DEFAULT NULL,
+		  "CREATEDATE" DATE DEFAULT NULL,
+		  "UPDATEDATE" DATE DEFAULT NULL,
+		  "TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+		  "COMPANYID" NVARCHAR2(20) NOT NULL ENABLE,
+		  "LISTOPENFLAG" char(2) DEFAULT NULL,
+		  CONSTRAINT "TBL_OPENGOVDOCINFO_PK" PRIMARY KEY ("DOCID", "TENANT_ID", "COMPANYID")
+		)
+	</statement>
+	
+	<statement id="EzCommonDAO.createTblOpenGovFileInfo"> 
+		CREATE TABLE `TBL_OPENGOVFILEINFO` (
+		  "DOCID" NVARCHAR2(80) NOT NULL ENABLE,
+		  "SN" NUMBER(10,0) NOT NULL ENABLE,
+		  "FILEOPENFLAG" CHAR(1) DEFAULT NULL,
+		  "COMPANYID" NVARCHAR2(20) NOT NULL ENABLE,
+		  "TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+		  CONSTRAINT "TBL_OPENGOVFILEINFO_PK" PRIMARY KEY ("DOCID", "SN", "COMPANYID", "TENANT_ID")
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkOpenGovFlag">
+		<![CDATA[
+		SELECT
+			OPENGOVFLAG
+		FROM
+			TBL_FORMINFO
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addOpenGovFlag">
+		ALTER TABLE
+			TBL_FORMINFO
+		ADD (
+			OPENGOVFLAG VARCHAR(4) DEFAULT 'N'
+			)
+	</statement>
+	
+	<select id="EzCommonDAO.checkSurveyAlamColums">
+		<![CDATA[
+		SELECT
+			MAIL_FLAG
+		FROM
+			TBL_SURVEY
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addSurveyAlamColums">
+		ALTER TABLE
+			TBL_SURVEY
+		ADD (
+			MAIL_FLAG NUMBER(4, 0) DEFAULT 0,
+			POPUP_FLAG NUMBER(4, 0) DEFAULT 0
+			)
+	</statement>
 </sqlMap>

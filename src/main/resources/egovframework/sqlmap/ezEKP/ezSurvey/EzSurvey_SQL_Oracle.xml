@@ -1031,4 +1031,41 @@
 		]]>
 	</select>
 	
+	<select id="EzSurveyDAO.getTotalPopupSurveyItems" resultMap="surveyVO">
+		<include refid="surveySelect"/>
+		WHERE
+			use_status = 1
+		AND
+			tenant_id = #tenantId#
+		AND
+			modify_flag = 0
+		<isEqual property="mode" compareValue="popup" prepend=" AND ">
+			<![CDATA[(start_date <= #today# and end_date >= #today#)]]>
+			
+			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1 or user_id = #userId#)</isEmpty>
+			<isNotEmpty property="surveyIds" prepend=" AND ">
+				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
+			</isNotEmpty>
+			AND 
+				draft_flag = 0
+			AND
+				popup_flag = 1
+			AND
+				survey_id NOT IN (
+					SELECT
+						DISTINCT(SURV.survey_id)
+					FROM
+						tbl_survey SURV
+					INNER JOIN
+						tbl_survey_respondent RESP
+					ON
+						SURV.survey_id = RESP.survey_id
+					AND
+						RESP.user_id = #userId#
+			    )
+		</isEqual>	
+		ORDER BY
+			update_date DESC, survey_id DESC
+	</select>
+	
 </sqlMap>
