@@ -463,7 +463,11 @@ public class EzAttitudeController {
 				resultStatus = "success";
 			}
 		} else {
-			resultStatus = "error";
+			if(resultBody.get("message").toString().equals("error")){
+				resultStatus = "outAttError";
+			}else {
+				resultStatus = "error";				
+			}
 		}
 		
 		LOGGER.debug("/ezAttitude/attitudeSave ended");

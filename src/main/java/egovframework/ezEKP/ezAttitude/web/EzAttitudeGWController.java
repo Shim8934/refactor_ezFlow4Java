@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -167,8 +169,8 @@ public class EzAttitudeGWController {
 				offSet = adminInfo.getOffSet();
 			}
 			
-			if (typeId.equals("A01") || typeId.equals("A02") || typeId.equals("A03") || typeId.equals("A08")) {
-				if (typeId.equals("A03")) {
+			if (typeId.equals("A01") || typeId.equals("A02") || typeId.equals("A03") || typeId.equals("A08") || typeId.equals("A25")) {
+				if (typeId.equals("A03") || typeId.equals("A25")) {
 					isOutCheck = "true";
 				}
 				checkAttitude = ezAttitudeService.getIsAttitude(typeId, userId, startDate, offSet, info.getCompanyId(), info.getTenantId(), isOutCheck);
@@ -182,11 +184,14 @@ public class EzAttitudeGWController {
 				checkAttitude = "dupl";
 			} else {
 				if (!checkAttitude.equals("") && !checkAttitude.equals("0") && typeId.equals("A03")) { //이미 퇴근이 있는 경우
-					AttitudeVO attVO = ezAttitudeService.getAttitudeInfo(checkAttitude, info.getOffSet(), info.getPrimary(), info.getCompanyId(), info.getTenantId());
+					result.put("status", "error");
+					result.put("message", "error");
+					return result;
+					/*AttitudeVO attVO = ezAttitudeService.getAttitudeInfo(checkAttitude, info.getOffSet(), info.getPrimary(), info.getCompanyId(), info.getTenantId());
 					if (startDate == null || startDate.equals("")) {
 						startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), info.getOffSet(), false);						
 					}
-					ezAttitudeService.updateAttitude(checkAttitude, startDate, null, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attVO, userId, info, info, info.getTenantId(), info.getCompanyId());
+					ezAttitudeService.updateAttitude(checkAttitude, startDate, null, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attVO, userId, info, info, info.getTenantId(), info.getCompanyId());*/
 				} else {
 					ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, offSet, info.getCompanyId(), info.getTenantId(), mode, adminId);					
 				}

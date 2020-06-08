@@ -99,8 +99,12 @@ function TreeNode() {
         if (strExpanded.toUpperCase() == "TRUE")
             bExpanded = true;
 
-        if(bExpanded)
+        if (bExpanded) {
             treeDiv.style.height = "21px";
+        }
+        
+        /* 2020-06-05 홍승비 - IE11 환경에서 커뮤니티 팝업홈 관리메뉴 > 게시판명 우측에 스크롤 발생하는 오류 수정 */
+        treeDiv.style.overflow = "hidden";
 
         //부모노드의 점선 이미지와 동일하게 세팅한다.
         var arrParentDotImg = GetParentDotImg(pParentNode);

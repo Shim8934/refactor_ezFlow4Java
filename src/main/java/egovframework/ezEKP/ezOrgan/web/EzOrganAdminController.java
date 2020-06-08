@@ -221,6 +221,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.addDocStateIntoLastDeptLines();
 	    	ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가	
 	    	ezCommonService.insertAlternateHolidayAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 대체휴무 추가
+	    	ezCommonService.insertBeforeOutComeAttitudeType(); // 2020-06-03  김정언 - 근태관리 휴가유형 전일퇴근 추가
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
@@ -1344,6 +1345,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					logger.debug("updateGroupDel rc=" + rc);							
 				}
+				
+				// 사용자 정의 공용배포그룹 관련 테이블에서 user를 제거한다.
+				int delUserDL = ezEmailUserAdminService.deleteAllUserDistributionForMember(mailAddr, domain);
+				logger.debug("delUserDl=" + delUserDL); // 0 성공, -1 실패
 				
 				// 공유사서함 기능 사용 시 공유사서함의 공유자에서 해당 유저를 제외한다.
 				String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantID);
