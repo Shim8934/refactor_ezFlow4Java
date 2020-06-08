@@ -3135,7 +3135,7 @@ function chk_Passwd_Complete(chkpass) {
         var curAprType = "";
 
         //대결자 결재도 일괄결제 제외
-        if(useAdditionalRole == "YES" && curDeptId.toUpperCase() != arr_userinfo[4])
+        if(useAdditionalRole == "YES" && curDeptId != arr_userinfo[4])
             return false;
 
         //결재타입 정보
