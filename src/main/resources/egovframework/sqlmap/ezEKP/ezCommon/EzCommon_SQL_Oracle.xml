@@ -2248,7 +2248,7 @@
 		WHERE
 			property_name = 'useExternalMailServer'
 		AND
-			tenant_id = #tenantId#
+			tenant_id = 0
 	</select>
 	
 	<insert id="EzCommonDAO.insertThemeAuthInit" parameterClass="Map">
@@ -2593,7 +2593,7 @@
 		INSERT INTO TBL_TENANT_CONFIG 
 			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES
-			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, TO_DATE(#regDate#, 'YYYY-MM-DD HH24:MI:SS'), #configType#) 
 	</insert>
 	
 	<select id="EzCommonDAO.checkHalfOffAttitudeTypeForCompany" resultClass="String">
