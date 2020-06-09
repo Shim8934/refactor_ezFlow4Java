@@ -2610,9 +2610,9 @@
 	</select>
 	<insert id="EzCommonDAO.insertHalfOffAttitudeType">
 		INSERT INTO TBL_ATTITUDE_TYPE 
-			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID, ISADD, ISDEL)
+			("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID, ISADD, ISDEL)
 		VALUES
-			(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #isUse#, #imgPath#, #parentId#, #formId#, #isAdd#, #isDel#) 
+			((SELECT NVL(MAX("ORDER"), 0) + 1 FROM TBL_ATTITUDE_TYPE WHERE TENANT_ID = #tenantId#), #typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #isUse#, #imgPath#, #parentId#, #formId#, #isAdd#, #isDel#) 
 	</insert>
 	
 	<select id="EzCommonDAO.checkHolidayCheckTenantConfig" resultClass="String">
@@ -2629,7 +2629,7 @@
 		INSERT INTO TBL_TENANT_CONFIG 
 			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES
-			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, TO_DATE(#regDate#, 'YYYY-MM-DD HH24:MI:SS'), #configType#) 
 	</insert>
 	
 	<select id="EzCommonDAO.checkAlternateHolidayAttitudeTypeForCompany" resultClass="String">
@@ -2646,9 +2646,9 @@
 	</select>
 	<insert id="EzCommonDAO.insertAlternateHolidayAttitudeType">
 		INSERT INTO TBL_ATTITUDE_TYPE 
-			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID, ISADD, ISDEL)
+			("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID, ISADD, ISDEL)
 		VALUES
-			(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #isUse#, #imgPath#, #parentId#, #formId#, #isAdd#, #isDel#) 
+			((SELECT NVL(MAX("ORDER"), 0) + 1 FROM TBL_ATTITUDE_TYPE WHERE TENANT_ID = #tenantId#), #typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #isUse#, #imgPath#, #parentId#, #formId#, #isAdd#, #isDel#) 
 	</insert>
 	
 	<select id="EzCommonDAO.checkAprAttachLimit" resultClass="String">
@@ -2757,4 +2757,24 @@
 			POPUP_FLAG NUMBER(4, 0) DEFAULT 0
 			)
 	</statement>
+	
+	<select id="EzCommonDAO.checkBeforeOutComeAttitudeTypeForCompany" resultClass="String">
+		SELECT 
+			COMPANY_ID 
+		FROM
+			TBL_ATTITUDE_TYPE
+		WHERE
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			TYPE_ID = #typeId#
+	</select>
+	<insert id="EzCommonDAO.insertBeforeOutComeAttitudeType">
+		INSERT INTO TBL_ATTITUDE_TYPE 
+			("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, FORM_ID, ISADD, ISDEL)
+		VALUES
+			((SELECT NVL(MAX("ORDER"), 0) + 1 FROM TBL_ATTITUDE_TYPE WHERE TENANT_ID = #tenantId#), #typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #isUse#, #imgPath#, #formId#, #isAdd#, #isDel#) 
+	</insert>
+	
 </sqlMap>
