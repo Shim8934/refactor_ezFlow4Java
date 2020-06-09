@@ -1775,7 +1775,6 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='팝업 공지 대상자 관련 테이블'
 	</statement>
 	
-	
     <select id="EzCommonDAO.getPermissionGroupAccessYN" parameterClass="Map" resultClass="Integer">
      	<![CDATA[
 			SELECT
@@ -2346,7 +2345,7 @@
 		WHERE
 			property_name = 'useExternalMailServer'
 		AND
-			tenant_id = 0
+			tenant_id = #tenantId#
 	</select>
 	
 	<insert id="EzCommonDAO.insertThemeAuthInit" parameterClass="Map">

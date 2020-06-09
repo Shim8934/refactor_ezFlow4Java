@@ -1898,6 +1898,22 @@
 		)
 	</statement>
 	
+	<select id="EzCommonDAO.checkSurveyMailSentFlagColumn">
+		SELECT
+			MAIL_SENT_FLAG
+		FROM
+			TBL_SURVEY
+		WHERE 
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.addSurveyMailSentFlagColumn">
+		ALTER TABLE
+			TBL_SURVEY
+		ADD 
+			MAIL_SENT_FLAG NUMBER(12) DEFAULT 0
+	</statement>
+	
 	<select id="EzCommonDAO.checkAlterChamjoView" resultClass="int">
 		SELECT
 			(SELECT COUNT(*) FROM TBL_APRLINEINFO WHERE APRTYPE = '007' AND APRSTATE = '002') +
@@ -2222,6 +2238,17 @@
 		AND
 			ROWNUM = 1
 	]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkMailTenantConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'useExternalMailServer'
+		AND
+			tenant_id = #tenantId#
 	</select>
 	
 	<insert id="EzCommonDAO.insertThemeAuthInit" parameterClass="Map">
@@ -2630,7 +2657,8 @@
 				ATTACHLIMITCNT
 			FROM 
 				TBL_APRATTACHLIMIT
-			ROWNUM <= 1
+			WHERE
+				ROWNUM <= 1
 		]]>
 	</select>
 	<statement id="EzCommonDAO.createAprAttachLimit">
