@@ -1775,7 +1775,6 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='팝업 공지 대상자 관련 테이블'
 	</statement>
 	
-	
     <select id="EzCommonDAO.getPermissionGroupAccessYN" parameterClass="Map" resultClass="Integer">
      	<![CDATA[
 			SELECT
@@ -2599,7 +2598,18 @@
 		DROP PRIMARY KEY,
 		ADD PRIMARY KEY (`TENANT_ID`, `COMPANYID`, `USERID`(255), `FORMID`, `APRMEMBERSN`, `docState`)
 	</statement>
-
+	<statement id="EzCommonDAO.deleteLastAprLinePrimaryKey"> 
+		ALTER TABLE 
+			TBL_LASTAPRLINE
+		DROP 
+			PRIMARY KEY
+	</statement>
+	<statement id="EzCommonDAO.addLastAprLinePrimaryKey"> 
+		ALTER TABLE 
+			TBL_LASTAPRLINE
+		ADD PRIMARY KEY (TENANT_ID, COMPANYID, USERID, FORMID, APRMEMBERSN, DOCSTATE)
+	</statement>
+	
 	<select id="EzCommonDAO.checkDocStateIntoLastDeptLines">
 		SELECT
 			docState
@@ -2614,6 +2624,17 @@
 			docState VARCHAR(12) NOT NULL,
 		DROP PRIMARY KEY,
 		ADD PRIMARY KEY (`TENANT_ID`, `COMPANYID`, `USERID`(255), `FORMID`, `RECEIPTPOINTID`(255), `docState`)
+	</statement>
+	<statement id="EzCommonDAO.deleteLastDeptLinePrimaryKey"> 
+		ALTER TABLE 
+			TBL_LASTDEPTLINE
+		DROP 
+			PRIMARY KEY
+	</statement>
+	<statement id="EzCommonDAO.addLastDeptLinePrimaryKey"> 
+		ALTER TABLE 
+			TBL_LASTDEPTLINE
+		ADD PRIMARY KEY(TENANT_ID, COMPANYID, USERID, FORMID, RECEIPTPOINTID, DOCSTATE)
 	</statement>
 	
 	<select id="EzCommonDAO.checkReBebuOpinionCode" parameterClass="Map" resultClass="String">
