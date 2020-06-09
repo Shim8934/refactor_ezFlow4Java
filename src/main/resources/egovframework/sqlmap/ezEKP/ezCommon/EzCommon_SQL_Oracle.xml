@@ -1860,6 +1860,44 @@
 			sn INT DEFAULT 0
 	</statement>
 	
+	<select id="EzCommonDAO.checkBoardManageTypeColumn">
+		SELECT
+			TYPE
+		FROM
+			TBL_BOARD_BOARDMANAGE
+		WHERE 
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.addBoardManageTypeColumn">
+		ALTER TABLE
+			TBL_BOARD_BOARDMANAGE
+		ADD 
+			TYPE VARCHAR2(10)
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblPsPopupUser">
+		SELECT 
+			USER_ID
+		FROM 
+			TBL_PS_POPUP_USER
+		WHERE 
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblPsPopupUser">
+		CREATE TABLE TBL_PS_POPUP_USER (
+		  "ITEMSEQ" NUMBER(10,0) NOT NULL ENABLE,
+		  "USER_ID" NVARCHAR2(50) NOT NULL ENABLE, 
+		  "USER_TYPE" NVARCHAR2(10) NOT NULL ENABLE, 
+		  "TENANT_ID" NUMBER(5,0) NOT NULL ENABLE, 
+		  "COMPANYID" NVARCHAR2(20) NOT NULL ENABLE, 
+		  "SUBDEPT_PERMITTED" NUMBER(11),
+		  "SN" NUMBER(11) DEFAULT 0,
+		  CONSTRAINT "PK_PS_POPUP_USER" PRIMARY KEY ("ITEMSEQ", "USER_ID", "USER_TYPE", "TENANT_ID", "COMPANYID")
+		)
+	</statement>
+	
 	<select id="EzCommonDAO.checkAlterChamjoView" resultClass="int">
 		SELECT
 			(SELECT COUNT(*) FROM TBL_APRLINEINFO WHERE APRTYPE = '007' AND APRSTATE = '002') +
