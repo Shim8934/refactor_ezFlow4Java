@@ -2534,6 +2534,64 @@
 			VIEWORDER  NUMBER(10,0)
 	</statement>
 	
+	<select id="EzCommonDAO.checkDocStateIntoLastLines">
+		<![CDATA[
+			SELECT
+				DOCSTATE
+			FROM
+				TBL_LASTAPRLINE
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateDocStateIntoLastLines">
+		ALTER TABLE
+			TBL_LASTAPRLINE
+		ADD
+			DOCSTATE NVARCHAR2(12) DEFAULT '011' NOT NULL
+	</statement>
+	<statement id="EzCommonDAO.deleteLastAprLinePrimaryKey"> 
+		ALTER TABLE 
+			TBL_LASTAPRLINE
+		DROP 
+			PRIMARY KEY
+	</statement>
+	<statement id="EzCommonDAO.addLastAprLinePrimaryKey"> 
+		ALTER TABLE 
+			TBL_LASTAPRLINE
+		ADD CONSTRAINT 
+			TBL_LASTAPRLINE_PK2 PRIMARY KEY(TENANT_ID, COMPANYID, USERID, FORMID, APRMEMBERSN, DOCSTATE)
+	</statement>
+	
+	<select id="EzCommonDAO.checkDocStateIntoLastDeptLines">
+		<![CDATA[
+			SELECT
+				DOCSTATE
+			FROM
+				TBL_LASTDEPTLINE
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateDocStateIntoLastDeptLines">
+		ALTER TABLE
+			TBL_LASTDEPTLINE
+		ADD
+			DOCSTATE NVARCHAR2(12) DEFAULT '011' NOT NULL
+	</statement>
+	<statement id="EzCommonDAO.deleteLastDeptLinePrimaryKey"> 
+		ALTER TABLE 
+			TBL_LASTDEPTLINE
+		DROP 
+			PRIMARY KEY
+	</statement>
+	<statement id="EzCommonDAO.addLastDeptLinePrimaryKey"> 
+		ALTER TABLE 
+			TBL_LASTDEPTLINE
+		ADD CONSTRAINT 
+			TBL_LASTDEPTLINE_PK2 PRIMARY KEY(TENANT_ID, COMPANYID, USERID, FORMID, RECEIPTPOINTID, DOCSTATE)
+	</statement>
+	
 	<select id="EzCommonDAO.checkReBebuOpinionCode" parameterClass="Map" resultClass="String">
 	<![CDATA[
 		SELECT

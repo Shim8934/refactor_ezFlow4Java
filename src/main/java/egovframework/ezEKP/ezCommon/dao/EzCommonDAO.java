@@ -1423,9 +1423,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		try {
 			select("EzCommonDAO.checkDocStateIntoLastLines");
 		} catch (Exception e) {
-			logger.debug("TBL_LASTDEPTLINE docState column doesn't exist. creating the column...");
+			logger.debug("TBL_LASTAPRLINE docState column doesn't exist. creating the column...");
 
 			update("EzCommonDAO.updateDocStateIntoLastLines");
+			
+			// 오라클의 경우, 기존 프라이머리 키 제거하고 새로운 키 삽입하는 동작 추가
+			if (globals.getProperty("Globals.DbType").equals("oracle")) {
+				update("EzCommonDAO.deleteLastAprLinePrimaryKey");
+				update("EzCommonDAO.addLastAprLinePrimaryKey");
+			}
 		}
 	}
 
@@ -1436,6 +1442,12 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("TBL_LASTDEPTLINE docState column doesn't exist. creating the column...");
 
 			update("EzCommonDAO.updateDocStateIntoLastDeptLines");
+			
+			// 오라클의 경우, 기존 프라이머리 키 제거하고 새로운 키 삽입하는 동작 추가
+			if (globals.getProperty("Globals.DbType").equals("oracle")) {
+				update("EzCommonDAO.deleteLastDeptLinePrimaryKey");
+				update("EzCommonDAO.addLastDeptLinePrimaryKey");
+			}
 		}
 	}
 
