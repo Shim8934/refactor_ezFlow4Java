@@ -413,6 +413,7 @@ public class EzNewPortalGWController {
 			
 			boolean isUseQuestionAuth = false;
 			boolean isUseSurveyAuth = false;
+			boolean isUseScheduleAuth = false;
 			
 			for (MenuInfoVO mVO : menuList) {
 				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("approval")) {
@@ -431,8 +432,8 @@ public class EzNewPortalGWController {
 					useMail = "YES";
 				}
 				
-				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("schedule")) {
-					useSchedule = "YES";
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("schedule") && useSchedule.equals("YES")) {
+					isUseScheduleAuth = true;
 				}
 			}
 			
@@ -446,6 +447,12 @@ public class EzNewPortalGWController {
 				useSurvey = "YES";
 			} else {
 				useSurvey = "NO";
+			}
+			
+			if(isUseScheduleAuth) {
+				useSchedule = "YES";
+			} else {
+				useSchedule = "NO";
 			}
 			
 			boolean isUseCircular = false;
@@ -2165,6 +2172,11 @@ public class EzNewPortalGWController {
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 
+			String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
+			String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
+			String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
+			String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
+			
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
 			}
@@ -2215,6 +2227,22 @@ public class EzNewPortalGWController {
 			
 			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
 				useExternalMailServer = "NO";
+			}
+			
+			if (useSchedule == null || useSchedule.equals("")) {
+				useSchedule = "YES";
+			}
+			
+			if (useResource == null || useResource.equals("")) {
+				useResource = "YES";
+			}
+			
+			if (useBoard == null || useBoard.equals("")) {
+				useBoard = "YES";
+			}
+			
+			if (useToDo == null || useToDo.equals("")) {
+				useToDo = "YES";
 			}
 			
 			if (useQuestion.equals("NO")) {
@@ -2268,6 +2296,22 @@ public class EzNewPortalGWController {
 			if (useExternalMailServer.equalsIgnoreCase("YES")) {
 				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
 				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
+			}
+			
+			if (useSchedule.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("schedule")));
+			}
+			
+			if (useResource.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("resource")));
+			}
+			
+			if (useBoard.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("board")));
+			}
+			
+			if (useToDo.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("task")));
 			}
 			
 			result.put("status", "ok");
@@ -2587,6 +2631,11 @@ public class EzNewPortalGWController {
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 			
+			String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
+			String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
+			String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
+			String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
+			
 			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 
@@ -2638,6 +2687,22 @@ public class EzNewPortalGWController {
 				useExternalMailServer = "NO";
 			}
 			
+			if (useSchedule == null || useSchedule.equals("")) {
+				useSchedule = "YES";
+			}
+			
+			if (useResource == null || useResource.equals("")) {
+				useResource = "YES";
+			}
+			
+			if (useBoard == null || useBoard.equals("")) {
+				useBoard = "YES";
+			}
+			
+			if (useSurvey == null || useSurvey.equals("")) {
+				useSurvey = "YES";
+			}
+			
 			if (useQuestion.equals("NO")) {
 				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
@@ -2685,6 +2750,22 @@ public class EzNewPortalGWController {
 			if (useExternalMailServer.equalsIgnoreCase("YES")) {
 				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
 				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
+			}
+			
+			if (useSchedule.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("schedule")));
+			}
+			
+			if (useResource.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("resource")));
+			}
+			
+			if (useBoard.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("board")));
+			}
+			
+			if (useSurvey.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("survey")));
 			}
 			
 
@@ -4251,6 +4332,7 @@ public class EzNewPortalGWController {
 //			useQuestion = ezCommonService.getTenantConfig("useQuestion", info.getTenantId());
 			useSurvey = ezCommonService.getTenantConfig("useSurvey", info.getTenantId());
 			useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", info.getTenantId());
+			useSchedule = ezCommonService.getTenantConfig("useSchedule", info.getTenantId());
 			
 			// 2020-04-09 김민성 - 메일 config 추가
 			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
@@ -4272,6 +4354,7 @@ public class EzNewPortalGWController {
 			
 //			boolean isUseQuestionAuth = false;
 			boolean isUseSurveyAuth = false;
+			boolean isUseScheduleAuth = false;
 			
 			for (MenuInfoVO mVO : menuList) {
 				if (mVO.getMenuCode() != null) {
@@ -4287,8 +4370,8 @@ public class EzNewPortalGWController {
 						useMail = "YES";
 					}
 					
-					if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("schedule")) {
-						useSchedule = "YES";
+					if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("schedule") && useSchedule.equals("YES")) {
+						isUseScheduleAuth = true;
 					}
 				}
 			}
@@ -4303,6 +4386,12 @@ public class EzNewPortalGWController {
 				useSurvey = "YES";
 			} else {
 				useSurvey = "NO";
+			}
+			
+			if (isUseScheduleAuth) {
+				useSchedule = "YES";
+			} else {
+				useSchedule = "NO";
 			}
 			
 			boolean isUseCircular = false;
