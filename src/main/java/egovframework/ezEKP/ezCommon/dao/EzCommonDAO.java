@@ -1173,9 +1173,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public void createUserDistributionTable() {
 		@SuppressWarnings("serial")
 		Map<String, String> map = new HashMap<String, String>(){{
-			put("EzCommonDAO.checkUserDlTable", "createUserDlTable");
-			put("EzCommonDAO.checkUserDlMemberTable", "createUserDlMemberTable");
-			put("EzCommonDAO.checkUserDlApplyTable", "createUserDlApplyTable");
+			put("EzCommonDAO.checkUserDlTable", "EzCommonDAO.createUserDlTable");
+			put("EzCommonDAO.checkUserDlMemberTable", "EzCommonDAO.createUserDlMemberTable");
+			put("EzCommonDAO.checkUserDlApplyTable", "EzCommonDAO.createUserDlApplyTable");
 		}};
 		
 		for (String key : map.keySet()) {
@@ -1183,8 +1183,8 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				select(key);
 			} catch (Exception e) {
 				String keyVal = map.get(key);
-				logger.debug(keyVal);
-				update("EzCommonDAO." + keyVal);
+				logger.debug(keyVal + " started.");
+				update(keyVal);
 			}
 
 		}

@@ -1643,7 +1643,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("regdate","2020-01-28 00:00:00");
 			put("description","메일 완료/완료취소 기능 사용 여부(default: NO)");
 			put("config_type","메일");
-			put("property","useMailConfirm"); // property_name
+			put("property","USEMAILCONFIRM"); // property_name
 		}});
 		
 		
