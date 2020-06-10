@@ -193,7 +193,7 @@ public class EzAttitudeGWController {
 					}
 					ezAttitudeService.updateAttitude(checkAttitude, startDate, null, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attVO, userId, info, info, info.getTenantId(), info.getCompanyId());*/
 				} else {
-					ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, offSet, info.getCompanyId(), info.getTenantId(), mode, adminId);					
+					ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, offSet, info.getCompanyId(), info.getTenantId(), mode, adminId, "0", "", "");					
 				}
 			}
 			
