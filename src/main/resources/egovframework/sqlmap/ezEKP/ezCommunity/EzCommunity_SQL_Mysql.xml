@@ -5307,9 +5307,9 @@
 				#tenantID#)
 		]]>
 	</insert>
-	<procedure id="EzCommunityDAO.commMAkeOkSet2"				parameterClass="Map">
-		{CALL EZSP_COMM_MAKE_OK_SET2(#v_BANNERFILENAME#, #v_FILENAME#, #v_FILESIZE#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.commMAkeOkSet2"				parameterClass="Map"> -->
+<!-- 		{CALL EZSP_COMM_MAKE_OK_SET2(#v_BANNERFILENAME#, #v_FILENAME#, #v_FILESIZE#)} -->
+<!-- 	</procedure> -->
 	<update id="EzCommunityDAO.commMAkeOkSet2Update"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -7567,7 +7567,7 @@
 			SELECT 
 				COUNT(replyID)
         	FROM 
-        		jmocha.tbl_comm_onelinereply 
+        		tbl_comm_onelinereply 
        		WHERE  
        			tenant_id = #tenantID#
        		AND
