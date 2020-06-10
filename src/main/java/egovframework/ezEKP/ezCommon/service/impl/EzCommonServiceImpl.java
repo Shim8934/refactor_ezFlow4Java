@@ -1906,4 +1906,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			}
 		}
 	}	
+	
+	@Override
+	public void insertMobileAttitudeColumn() throws Exception {
+		logger.debug("insertMobileAttitudeColumn started");
+		ezCommonDAO.insertMobileAttitudeColumn();
+		logger.debug("insertMobileAttitudeColumn ended");
+	}
 }

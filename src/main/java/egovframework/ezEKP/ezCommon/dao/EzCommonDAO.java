@@ -1468,4 +1468,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertBeforeOutComeAttitudeType",map);
 		}
 	}
+	
+	public void insertMobileAttitudeColumn() throws Exception {
+		try {
+			select("EzCommonDAO.checkMobileAttitudeColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_attitude attend_type column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.createMobileAttitudeColumn");
+		}
+	}
 }

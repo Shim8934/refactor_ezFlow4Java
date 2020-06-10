@@ -2835,4 +2835,24 @@
 			((SELECT NVL(MAX("ORDER"), 0) + 1 FROM TBL_ATTITUDE_TYPE WHERE TENANT_ID = #tenantId#), #typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #isUse#, #imgPath#, #formId#, #isAdd#, #isDel#) 
 	</insert>
 	
+	<select id="EzCommonDAO.checkMobileAttitudeColumn" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ATTEND_TYPE
+			FROM 
+				TBL_ATTITUDE
+			ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createMobileAttitudeColumn">
+		ALTER TABLE 
+			TBL_ATTITUDE
+		ADD (
+			ATTEND_TYPE char(1) DEFAULT '0',
+  			LATITUDE NUMBER(20,15) DEFAULT NULL,
+  			LONGITUDE NUMBER(20,15) DEFAULT NULL
+		)
+	</statement>
+	
 </sqlMap>
