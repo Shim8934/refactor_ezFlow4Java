@@ -1688,7 +1688,7 @@
 			AND
 				companyid = #companyID#
 			AND
-				formid != '9999999999';
+				formid != '9999999999'
 		]]>
 	</select>
 
@@ -1717,7 +1717,7 @@
 				#v_PURL#,
 				#v_PFORMCONNFLAG#,
 				#v_PREFORMFLAG#,
-				##v_formAprOption##,
+				#v_formAprOption#,
 				#tenantID#,
 				#companyID#)
 		]]>
