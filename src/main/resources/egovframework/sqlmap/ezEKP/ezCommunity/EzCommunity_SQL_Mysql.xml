@@ -488,7 +488,7 @@
              	c_cate_b,
              	c_cate_c,
              	c_clubconfirmtype,
-             	c_sysopid,
+             	RTRIM(c_sysopid) AS C_SYSOPID,
              	c_membercnt,
              	c_logo,
              	c_clubdesc,
