@@ -1168,13 +1168,13 @@
 	<statement id="EzCommonDAO.addFormVersionColumnOfExpaprdocinfo">
 		ALTER TABLE 
 			TBL_EXPAPRDOCINFO
-		ADD COLUMN 
+		ADD
 			FORMVERSION NUMBER(10,0) DEFAULT 0 
 	</statement>
 	<statement id="EzCommonDAO.addFormVersionColumnOfTmpexpaprdocinfo">
 		ALTER TABLE 
 			TBL_TMPEXPAPRDOCINFO
-		ADD COLUMN 
+		ADD
 			FORMVERSION NUMBER(10,0) DEFAULT 0 
 	</statement>
 	
