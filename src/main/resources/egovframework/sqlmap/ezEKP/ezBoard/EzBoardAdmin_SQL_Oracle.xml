@@ -84,7 +84,8 @@
 		<result property="write_FG" 				column="WRITE_FG" 					columnIndex="18"/>		
 		<result property="reply_FG" 				column="REPLY_FG" 					columnIndex="19"/>		
 		<result property="delete_FG" 				column="DELETE_FG" 					columnIndex="20"/>		
-		<result property="postNotice" 				column="POSTNOTICE" 				columnIndex="21"/>			
+		<result property="postNotice" 				column="POSTNOTICE" 				columnIndex="21"/>
+		<result property="type" 				column="TYPE" 				columnIndex="22"/>
 	</resultMap>
 	
 	<select id="EzBoardAdminDAO.getBoardTree_Get1" resultClass="String" parameterClass="Map" remapResults="true">
@@ -1467,7 +1468,8 @@
                 	B.Delete_FG ,
                 	B.inherit_FG ,
                 	B.PostNotice ,
-                	B.BoardGroupACL 
+                	B.BoardGroupACL,
+                	B.TYPE
            		FROM 
            			TBL_Board_BoardManage B
                 JOIN 
@@ -1565,7 +1567,8 @@
 	            delete_fg ,
 	            inherit_fg ,
 	            postnotice ,
-	            boardgroupacl  
+	            boardgroupacl,
+	            TYPE
 	       FROM 
 	        	TBL_BOARD_BOARDMANAGE 
 	       WHERE  
@@ -1669,36 +1672,6 @@
 			COLUMN_NAME = 'COMPANYID'
 	</select>
 	
-	<!-- 2018-10-17 홍승비 - 모든 회사의 ID와 이름을 가져오는 쿼리 -->
-	<select id="EzBoardAdminDAO.getCompanyList" parameterClass="Map" resultClass="BoardPropertyVO">
-		<![CDATA[
-			SELECT 
-				A.CN as ACCESSID,
-             	A.DISPLAYNAME as ACCESSNAME, 
-             	A.DISPLAYNAME2 as ACCESSNAME2 
-        	FROM 
-        		( SELECT 
-        			CN,
-        			CASE #v_LANG#
-        				WHEN '1' THEN DISPLAYNAME
-        				ELSE DISPLAYNAME2   
-        				END DISPLAYNAME,
-                    CASE #v_LANG#
-                    	WHEN '1' THEN DISPLAYNAME2
-                        ELSE DISPLAYNAME   
-                        END DISPLAYNAME2,
-                  SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15                    
-               	  FROM 
-               	  	TBL_DEPTMASTER 
-               	  WHERE
-               	  	TENANT_ID = #v_TENANTID#
-               	  AND  
-               	  	(DEPTLEVEL = 1
-               	  OR 
-               	  	CN = 'Top') ) A
-		]]>
-	</select>
-	
 	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl_I" parameterClass="Map">
 		INSERT INTO TBL_Board_BoardManage (
 			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID, COMPANYID , TYPE
@@ -1732,7 +1705,7 @@
                 BOARDGROUPACL,
                 TENANT_ID,
                 COMPANYID,
-                IFNULL(TYPE, '') AS TYPE
+                NVL(TYPE, '') AS TYPE
       	      FROM 
       	      	TBL_Board_BoardManage
               WHERE  
@@ -1774,7 +1747,7 @@
                 BOARDGROUPACL ,
                 TENANT_ID,
                 COMPANYID,
-                IFNULL(TYPE, '') AS TYPE
+                NVL(TYPE, '') AS TYPE
           	  FROM 
           	  	TBL_Board_BoardManage 
           	  WHERE  
@@ -2137,16 +2110,17 @@
 		</isNotEqual>
 	</insert>
 	
+	<!-- 2020-06-10 홍승비 - 신규 게시판그룹 생성 시 게시판 권한타입 추가 (그룹사게시판의 경우 회사(DEPT) / 일반 회사소속 게시판의 경우 생성자(PERSON)) -->
 	<insert id="EzBoardAdminDAO.createBoardGroup2" parameterClass="Map" >
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardManage( 
-				BOARDID, 		  ACCESSID, 	ACCESSNAME, 	ACCESSNAME2,     ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, TENANT_ID, COMPANYID
+				BOARDID, 		  ACCESSID, 	ACCESSNAME, 	ACCESSNAME2,     ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, TENANT_ID, COMPANYID, TYPE
 			)
 		]]>
 		<isEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 	   			SELECT
-	   				#v_BOARDGROUPID#, 'Top', DISPLAYNAME, DISPLAYNAME2, 1, 		  1, 	   'top', 		  'false', 	 #v_TENANTID#, 'Top'
+	   				#v_BOARDGROUPID#, 'Top', DISPLAYNAME, DISPLAYNAME2, 1, 		  1, 	   'top', 		  'false', 	 #v_TENANTID#, 'Top', 'DEPT'
 	   			FROM
 	   				TBL_DEPTMASTER
 	   			WHERE
@@ -2158,7 +2132,7 @@
 		<isNotEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 	     		VALUES ( 
-	     			#v_BOARDGROUPID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 		  1, 	   'top', 		  'true', 		 #v_TENANTID#, #v_COMPANYID#
+	     			#v_BOARDGROUPID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 		  1, 	   'top', 		  'true', 		 #v_TENANTID#, #v_COMPANYID#, 'PERSON'
 	     		)
 			]]>
 		</isNotEqual>
@@ -2193,13 +2167,13 @@
 	<insert id="EzBoardAdminDAO.createBoard_I2" parameterClass="Map" >
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardManage ( 
-				BOARDID, 	 ACCESSID, 	   ACCESSNAME, 	   ACCESSNAME2, 	ACCESSLEVEL, ACCESS_, PARENTBOARDID, 	 BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, TENANT_ID, COMPANYID 
+				BOARDID, 	 ACCESSID, 	   ACCESSNAME, 	   ACCESSNAME2, 	ACCESSLEVEL, ACCESS_, PARENTBOARDID, 	 BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, TENANT_ID, COMPANYID, TYPE 
 			)
 		]]>
 		<isEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 	     		SELECT
-					#v_BOARDID#,  'Top',  DISPLAYNAME,  DISPLAYNAME2,   1, 		 1, 	  #v_PARENTBOARDID#, 	'false', 	'true', 	 'true',	 'true', 	'true',   'true',    'true', 	 #v_TENANTID#,  'Top'
+					#v_BOARDID#,  'Top',  DISPLAYNAME,  DISPLAYNAME2,   1, 		 1, 	  #v_PARENTBOARDID#, 	'false', 	'true', 	 'true',	 'true', 	'true',   'true',    'true', 	 #v_TENANTID#,  'Top', 'DEPT'
 	   			FROM
 	   				TBL_DEPTMASTER
 	   			WHERE
@@ -2211,7 +2185,7 @@
 		<isNotEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 	     		VALUES ( 
-	     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 			 1, 	  #v_PARENTBOARDID#, 'true', 		'true', 	 'true', 'true', 	'true',   'true',    'true', 	 #v_TENANTID#, #v_COMPANYID# 
+	     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 			 1, 	  #v_PARENTBOARDID#, 'true', 		'true', 	 'true', 'true', 	'true',   'true',    'true', 	 #v_TENANTID#, #v_COMPANYID#, 'PERSON'
 	     		)
 			]]>
 		</isNotEqual>
@@ -2451,7 +2425,8 @@
 	            DELETE_FG = #v_PDELETE_FG#,
 	            INHERIT_FG = #v_PINHERIT_FG#,
 	            POSTNOTICE = #v_PPOSTNOTICE#,
-	            BOARDGROUPACL = #v_PBOARDGROUPACL#
+	            BOARDGROUPACL = #v_PBOARDGROUPACL#,
+	            TYPE = #v_TYPE#
 	        WHERE  
 	        	TENANT_ID = #v_TENANTID#
 			]]>
@@ -2687,7 +2662,8 @@
 					ACCESSNAME, 
 					ACCESSNAME2, 
 					TENANT_ID, 
-				    COMPANYID
+				    COMPANYID,
+				    TYPE
 				FROM
 					TBL_BOARD_BOARDMANAGE B
 				WHERE
@@ -2722,7 +2698,8 @@
 				    POSTNOTICE, 
 				    BOARDGROUPACL, 
 				    TENANT_ID, 
-				    COMPANYID
+				    COMPANYID,
+				    TYPE
 				)
 				VALUES (
 					#v_BOARDID#, 
@@ -2741,7 +2718,8 @@
 				    'false', 
 				    #v_BOARDGROUPACL#, 
 				    TMP.TENANT_ID, 
-				    TMP.COMPANYID)
+				    TMP.COMPANYID,
+				    TMP.TYPE)
 		]]>
 	</insert>
 	

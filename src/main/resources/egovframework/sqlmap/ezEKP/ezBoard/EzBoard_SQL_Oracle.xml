@@ -2564,7 +2564,7 @@
 	   					A.TENANT_ID = I.TENANT_ID
 	   				 AND 
 	   					A.BOARDID = I.BOARDID 
-	   				 AND
+	   				 WHERE
 	   					A.TENANT_ID = #v_TENANTID#
 					 AND
   						(A.WritercompanyID = #v_COMPANYID# OR TRIM(I.COMPANYID) = '' OR I.COMPANYID IS NULL)
@@ -5729,53 +5729,6 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardDAO.getAllSubBoardProperty" parameterClass="Map" resultClass="BoardPropertyVO">
-		<![CDATA[
-			SELECT 
-				*
-			FROM 
-				TBL_BOARD_BOARDINFO 
-			WHERE  
-				TENANT_ID = #v_TENANTID#
-			AND
-				(BOARDID = #v_BOARDID# OR BOARDTREEPATH LIKE '%' || #v_BOARDID# || '%')
-		]]>		
-	</select>
-	
-	<update id="EzBoardDAO.updateBoardItemRead" parameterClass="Map">
-		<![CDATA[
-			UPDATE
-				TBL_BOARD_ITEM_READ
-           	SET 
-           		ITEMID = #destItemID#,
-           		BOARDID = #destBoardID#
-           	WHERE  
-           		TENANT_ID = #tenantID#
-           	AND
-           		ITEMID = #itemID#
-           	AND
-           		BOARDID = #orgBoardID#
-		]]>
-	</update>
-	
-	<insert id="EzBoardDAO.insertBoardItemReadForCopy" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_BOARD_ITEM_READ ( 
-				BOARDID, ITEMID, USERID, USERNAME, USERNAME2, USERDEPTNAME, USERDEPTNAME2, USERCOMPANYNAME, USERCOMPANYNAME2, USERTITLE, USERTITLE2, READDATE, TENANT_ID, COMPANYID
-			)
-			SELECT
-				#destBoardID#, #destItemID#, USERID, USERNAME, USERNAME2, USERDEPTNAME, USERDEPTNAME2, USERCOMPANYNAME, USERCOMPANYNAME2, USERTITLE, USERTITLE2, READDATE, TENANT_ID, COMPANYID
-			FROM
-				TBL_BOARD_ITEM_READ
-			WHERE
-				BOARDID = #orgBoardID#
-			AND
-				ITEMID = #orgItemID#
-			AND
-				TENANT_ID = #tenantID#
-		]]>
-	</insert>
-	
 	<!-- 2019-09-18 홍승비 - 사용자의 직위와 직책 ID를 리턴하는 쿼리 -->
 	<select id="EzBoardDAO.getUserJJID" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -6132,5 +6085,52 @@
 			]]>
 		</isEqual>
 	</select>
+	
+		<select id="EzBoardDAO.getAllSubBoardProperty" parameterClass="Map" resultClass="BoardPropertyVO">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_BOARD_BOARDINFO 
+			WHERE  
+				TENANT_ID = #v_TENANTID#
+			AND
+				(BOARDID = #v_BOARDID# OR BOARDTREEPATH LIKE '%' || #v_BOARDID# || '%')
+		]]>		
+	</select>
+	
+	<update id="EzBoardDAO.updateBoardItemRead" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_BOARD_ITEM_READ
+           	SET 
+           		ITEMID = #destItemID#,
+           		BOARDID = #destBoardID#
+           	WHERE  
+           		TENANT_ID = #tenantID#
+           	AND
+           		ITEMID = #itemID#
+           	AND
+           		BOARDID = #orgBoardID#
+		]]>
+	</update>
+	
+	<insert id="EzBoardDAO.insertBoardItemReadForCopy" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_BOARD_ITEM_READ ( 
+				BOARDID, ITEMID, USERID, USERNAME, USERNAME2, USERDEPTNAME, USERDEPTNAME2, USERCOMPANYNAME, USERCOMPANYNAME2, USERTITLE, USERTITLE2, READDATE, TENANT_ID, COMPANYID
+			)
+			SELECT
+				#destBoardID#, #destItemID#, USERID, USERNAME, USERNAME2, USERDEPTNAME, USERDEPTNAME2, USERCOMPANYNAME, USERCOMPANYNAME2, USERTITLE, USERTITLE2, READDATE, TENANT_ID, COMPANYID
+			FROM
+				TBL_BOARD_ITEM_READ
+			WHERE
+				BOARDID = #orgBoardID#
+			AND
+				ITEMID = #orgItemID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</insert>
 	
 </sqlMap>
