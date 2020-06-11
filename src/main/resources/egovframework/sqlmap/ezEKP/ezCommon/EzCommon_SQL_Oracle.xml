@@ -2841,7 +2841,8 @@
 				ATTEND_TYPE
 			FROM 
 				TBL_ATTITUDE
-			ROWNUM <= 1
+			WHERE
+				ROWNUM <= 1
 		]]>
 	</select>
 	
