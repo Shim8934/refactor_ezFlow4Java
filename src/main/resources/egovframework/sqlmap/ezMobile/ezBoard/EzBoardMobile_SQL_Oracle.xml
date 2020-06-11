@@ -1139,7 +1139,7 @@
 		          		AND
 		          			A.PARENTBOARDID = #rootBoardID#
 		                AND 
-		                	A.BoardID <> #excludeBoardID#
+		                	A.BoardID <> NVL(#excludeBoardID#, ' ')
 		           		ORDER BY 
 		           			A.TreeViewOrder ASC
 					]]>
@@ -1270,7 +1270,7 @@
 		                      AND
 		                      	C.Access_ = 1
 		                      AND 
-		                      	C.BoardID <> #excludeBoardID#
+		                      	C.BoardID <> NVL(#excludeBoardID#, ' ')
 		                      AND 
 		                      	PGI.MEMBER_ID = #userID#
 		                      AND 
@@ -1519,7 +1519,7 @@
 		                      AND
 		                      	CG.Access_ = 1
 		                      AND 
-		                      	CG.BoardID <> #excludeBoardID#
+		                      	CG.BoardID <> NVL(#excludeBoardID#, ' ')
 		                      AND 
 		                      	PGI.MEMBER_ID = #userID#
 		                      AND 
