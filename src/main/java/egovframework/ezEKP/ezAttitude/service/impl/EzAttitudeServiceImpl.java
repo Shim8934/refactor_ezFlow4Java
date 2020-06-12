@@ -126,11 +126,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public void insertAttitude(String writerId, String deptId, String startDate,
 			String endDate, String region, String mobile, String bizsub, String content,
-			String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String mode, String adminId) throws Exception {
+			String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String mode, String adminId, String attendType, String latitude, String longitude) throws Exception {
 		LOGGER.debug("insertAttitude started");
 		
 		if (mode == null) {
 			mode = "";
+		}
+		
+		if (attendType == null) {
+			attendType = "0";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -181,6 +185,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("ipAddress", ip);
 		map.put("dateType", dateType);
 		map.put("modappl", mode.equals("admin") ? "3" : "0");
+		map.put("attendType", attendType);
+		if(attendType.equals("1")) {
+			map.put("latitude", latitude);
+			map.put("longitude", longitude);
+		}
 		
 		ezAttitudeDAO.insertAttitude(map);
 		

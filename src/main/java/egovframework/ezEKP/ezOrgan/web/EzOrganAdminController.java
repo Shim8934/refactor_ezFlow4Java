@@ -222,6 +222,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가	
 	    	ezCommonService.insertAlternateHolidayAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 대체휴무 추가
 	    	ezCommonService.insertBeforeOutComeAttitudeType(); // 2020-06-03  김정언 - 근태관리 휴가유형 전일퇴근 추가
+	    	ezCommonService.insertMobileAttitudeColumn();			// 2020-06-10 김민성 - 모바일 근태관리 기능 추가
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
@@ -4959,12 +4960,18 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String companyID = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String type = request.getParameter("type");
-		logger.debug("companyID = " + companyID + ", type = " + type);
+		String isAllGroupBoard = request.getParameter("isAllGroupBoard");
+		logger.debug("companyID = " + companyID + ", type = " + type + ", isAllGroupBoard = " + isAllGroupBoard);
 		
 		String result = "";
 		
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			/* 2020-06-08 홍승비 - 그룹사게시판의 권한을 설정하는 경우 쿼리에서 회사아이디 조건을 사용하지 않도록 수정 */
+			if (isAllGroupBoard.equals("Y")) {
+				companyID = "";
+			}
 
 			/* 2020-05-08 홍승비 - 직위, 직책 다국어 표출 시 기본 언어를 체크하도록 수정(현재 언어=기본 언어라면 1, 아니라면 2) */
 			result = ezOrganAdminService.getTitleListBoard(type, companyID, userInfo.getTenantId(), commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));

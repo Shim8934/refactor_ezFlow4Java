@@ -1262,9 +1262,10 @@
 		        
 		        m_selectedTree = ListViewJikwi;
 		        
+		        /* 2020-06-08 홍승비 - 직위, 직책 호출 시 그룹사게시판 여부 추가 */
 		        try {
 		        	var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("GET", "/admin/ezOrgan/getJikwiListBoard.do?companyId=" + topid + "&type=001", false);
+		            xmlHTTP.open("GET", "/admin/ezOrgan/getJikwiListBoard.do?companyId=" + topid + "&type=001&isAllGroupBoard=" + isAllGroupBoard, false);
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
@@ -1306,9 +1307,10 @@
 		        
 		        m_selectedTree = ListViewJikchek;
 		        
+		        /* 2020-06-08 홍승비 - 직위, 직책 호출 시 그룹사게시판 여부 추가 */
 		        try {
 		        	var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("GET", "/admin/ezOrgan/getJikwiListBoard.do?companyId=" + topid + "&type=002", false);
+		            xmlHTTP.open("GET", "/admin/ezOrgan/getJikwiListBoard.do?companyId=" + topid + "&type=002&isAllGroupBoard=" + isAllGroupBoard, false);
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {

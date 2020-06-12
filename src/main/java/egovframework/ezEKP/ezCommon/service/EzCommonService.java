@@ -242,4 +242,6 @@ public interface EzCommonService {
 	public void insertAlternateHolidayAttitudeType();
 
 	public void insertBeforeOutComeAttitudeType();	
+	
+	public void insertMobileAttitudeColumn() throws Exception;
 }

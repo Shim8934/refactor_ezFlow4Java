@@ -1643,7 +1643,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("regdate","2020-01-28 00:00:00");
 			put("description","메일 완료/완료취소 기능 사용 여부(default: NO)");
 			put("config_type","메일");
-			put("property","useMailConfirm"); // property_name
+			put("property","USEMAILCONFIRM"); // property_name
 		}});
 		
 		
@@ -1818,7 +1818,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				map.put("typeId", "A21");
 				map.put("companyId", company.getCompanyId());
 				map.put("tenantId", company.getTenantId());
-				map.put("tenantId", 0);
 				map.put("typeName", "반반차");
 				map.put("typeName2", "half off");
 				map.put("isUse", "1");
@@ -1871,7 +1870,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				map.put("typeId", "A24");
 				map.put("companyId", company.getCompanyId());
 				map.put("tenantId", company.getTenantId());
-				map.put("tenantId", 0);
 				map.put("typeName", "대체휴무");
 				map.put("typeName2", "alternate holiday");
 				map.put("isUse", "1");
@@ -1896,7 +1894,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				map.put("typeId", "A25");
 				map.put("companyId", company.getCompanyId());
 				map.put("tenantId", company.getTenantId());
-				map.put("tenantId", 0);
 				map.put("typeName", "퇴근");
 				map.put("typeName2", "outCom");
 				map.put("isUse", "1");
@@ -1909,4 +1906,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			}
 		}
 	}	
+	
+	@Override
+	public void insertMobileAttitudeColumn() throws Exception {
+		logger.debug("insertMobileAttitudeColumn started");
+		ezCommonDAO.insertMobileAttitudeColumn();
+		logger.debug("insertMobileAttitudeColumn ended");
+	}
 }

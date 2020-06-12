@@ -84,7 +84,8 @@
 		<result property="write_FG" 				column="WRITE_FG" 					columnIndex="18"/>		
 		<result property="reply_FG" 				column="REPLY_FG" 					columnIndex="19"/>		
 		<result property="delete_FG" 				column="DELETE_FG" 					columnIndex="20"/>		
-		<result property="postNotice" 				column="POSTNOTICE" 				columnIndex="21"/>			
+		<result property="postNotice" 				column="POSTNOTICE" 				columnIndex="21"/>
+		<result property="type" 				column="TYPE" 				columnIndex="22"/>
 	</resultMap>
 	
 	<select id="EzBoardAdminDAO.getBoardTree_Get1" resultClass="String" parameterClass="Map" remapResults="true">
@@ -621,9 +622,7 @@
 	          		AND
 	          			A.PARENTBOARDID = #v_pRootBoardID#
 	                AND 
-	                	A.BoardID <> #v_pExcludeBoardID#
-	           		ORDER BY 
-	           			A.TreeViewOrder ASC)
+	                	A.BoardID <> #v_pExcludeBoardID#)
 	           	]]>
 <!-- 그룹사게시판에 대해서 개별(개인, 직위직책, 부서 단독권한들) 권한 체크하여 UNION -->
 			<isEqual property="v_showAllGroupBoard" compareValue="Y">
@@ -707,109 +706,107 @@
 				]]>
 				</isEqual>
 				<![CDATA[
-		           		ORDER BY 
-		           			A.TreeViewOrder ASC)
+					)
 				]]>
 			</isEqual>
 <!-- 권한그룹(그룹사게시판) UNION -->
-		<isEqual property="v_showAllGroupBoard" compareValue="Y">
-			<![CDATA[
-          		UNION
-          		
-          			(SELECT 
-						DISTINCT AG.BoardID ,
-	                    AG.BoardName ,
-	                    CASE
-							WHEN (AG.Boardname2 = '' OR AG.Boardname2 IS NULL)
-							THEN AG.Boardname
-							ELSE AG.Boardname2
-						END BoardName2,
-	                    AG.TreeViewOrder ,
-	                    AG.BoardColor BoardColor,
-	                    AG.Gubun ,
-	                    AG.url ,
-	                    '' BoardGroupACL
-	           		FROM 
-	           			TBL_Board_BoardInfo AG
-				]]>
-	           	<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
-	           		<![CDATA[
-	           		 JOIN 
-	                	( SELECT 
-	                		CG.BoardID ,
-	                        CG.AccessID ,
-	                        CG.Access_ ,
-	                        CG.BoardGroupACL ,
-	                        CG.tenant_id,
-	                        CG.TYPE
-	                      FROM 
-	                      	TBL_Board_BoardManage CG
-	                      LEFT JOIN 
-	                      	TBL_Board_BoardInfo DG
-	                      ON
-	                      	CG.TENANT_ID = DG.TENANT_ID 
-	                      AND
-	                      	CG.BoardID = DG.BoardID
-	                      	
-						INNER JOIN
-							TBL_PERMISSIONGROUPLIST PGL
-						ON
-							CG.TENANT_ID = PGL.TENANT_ID 
-						AND
-							CG.ACCESSID = PGL.GROUP_ID
-						INNER JOIN
-							TBL_PERMISSIONGROUPINFO PGI
-						ON
-							PGL.TENANT_ID = PGI.TENANT_ID
-						AND
-							PGL.GROUP_ID = PGI.GROUP_ID
-	                      	
-	                      WHERE
-	                      	CG.TENANT_ID = #v_TENANTID#
-	                      AND
-	                      	CG.Access_ = 1
-	                      AND 
-	                      	CG.BoardID <> #v_pExcludeBoardID#
-	                      AND 
-	                      	PGI.MEMBER_ID = #v_pUserID#
-	                      AND 
-	                      	DG.ParentBoardID = #v_pRootBoardID#
-	                      AND
-	                      	CG.TYPE = 'GROUP'
+			<isEqual property="v_showAllGroupBoard" compareValue="Y">
+				<![CDATA[
+	          		UNION
+	          		
+	          			(SELECT 
+							DISTINCT AG.BoardID ,
+		                    AG.BoardName ,
+		                    CASE
+								WHEN (AG.Boardname2 = '' OR AG.Boardname2 IS NULL)
+								THEN AG.Boardname
+								ELSE AG.Boardname2
+							END BoardName2,
+		                    AG.TreeViewOrder ,
+		                    AG.BoardColor BoardColor,
+		                    AG.Gubun ,
+		                    AG.url ,
+		                    '' BoardGroupACL
+		           		FROM 
+		           			TBL_Board_BoardInfo AG
 					]]>
-					<isEqual property="v_ISDEPT" compareValue="1">
-						<isEqual property="v_ISEQUALDEPT" compareValue="0">
+		           	<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
+		           		<![CDATA[
+		           		 JOIN 
+		                	( SELECT 
+		                		CG.BoardID ,
+		                        CG.AccessID ,
+		                        CG.Access_ ,
+		                        CG.BoardGroupACL ,
+		                        CG.tenant_id,
+		                        CG.TYPE
+		                      FROM 
+		                      	TBL_Board_BoardManage CG
+		                      LEFT JOIN 
+		                      	TBL_Board_BoardInfo DG
+		                      ON
+		                      	CG.TENANT_ID = DG.TENANT_ID 
+		                      AND
+		                      	CG.BoardID = DG.BoardID
+		                      	
+							INNER JOIN
+								TBL_PERMISSIONGROUPLIST PGL
+							ON
+								CG.TENANT_ID = PGL.TENANT_ID 
 							AND
-								PGI.SUB_DEPT_YN = 'Y'
+								CG.ACCESSID = PGL.GROUP_ID
+							INNER JOIN
+								TBL_PERMISSIONGROUPINFO PGI
+							ON
+								PGL.TENANT_ID = PGI.TENANT_ID
+							AND
+								PGL.GROUP_ID = PGI.GROUP_ID
+		                      	
+		                      WHERE
+		                      	CG.TENANT_ID = #v_TENANTID#
+		                      AND
+		                      	CG.Access_ = 1
+		                      AND 
+		                      	CG.BoardID <> #v_pExcludeBoardID#
+		                      AND 
+		                      	PGI.MEMBER_ID = #v_pUserID#
+		                      AND 
+		                      	DG.ParentBoardID = #v_pRootBoardID#
+		                      AND
+		                      	CG.TYPE = 'GROUP'
+						]]>
+						<isEqual property="v_ISDEPT" compareValue="1">
+							<isEqual property="v_ISEQUALDEPT" compareValue="0">
+								AND
+									PGI.SUB_DEPT_YN = 'Y'
+							</isEqual>
 						</isEqual>
+						<![CDATA[
+			                      	) BG
+			                ON 
+			                	AG.TENANT_ID = BG.TENANT_ID
+			                AND
+			                	AG.BoardID = BG.BOARDID
+						]]>
 					</isEqual>
 					<![CDATA[
-		                      	) BG
-		                ON 
-		                	AG.TENANT_ID = BG.TENANT_ID
-		                AND
-		                	AG.BoardID = BG.BOARDID
+			          		WHERE
+			          			AG.TENANT_ID = #v_TENANTID#
+			          		AND
+				                (TRIM(AG.companyid) = ''	OR	AG.companyid IS NULL)
+			          		AND
+			          			AG.PARENTBOARDID = #v_pRootBoardID#
+			                AND 
+			                	AG.BoardID <> NVL(#v_pExcludeBoardID#, ' ')
 					]]>
+					<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
+			                AND
+								BG.TYPE = 'GROUP'
+					</isEqual>
+					)
 				</isEqual>
-				<![CDATA[
-		          		WHERE
-		          			AG.TENANT_ID = #v_TENANTID#
-		          		AND
-			                (TRIM(AG.companyid) = ''	OR	AG.companyid IS NULL)
-		          		AND
-		          			AG.PARENTBOARDID = #v_pRootBoardID#
-		                AND 
-		                	AG.BoardID <> #v_pExcludeBoardID#
-				]]>
-				<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
-		                AND
-							BG.TYPE = 'GROUP'
-				</isEqual>
-				<![CDATA[
-		           		ORDER BY 
-		           			AG.TreeViewOrder ASC)
-				]]>
-				</isEqual>
+				ORDER BY 
+					TreeViewOrder ASC
 			</isNotEqual>
 		</isNotEqual>
 	</select>
@@ -1467,7 +1464,8 @@
                 	B.Delete_FG ,
                 	B.inherit_FG ,
                 	B.PostNotice ,
-                	B.BoardGroupACL 
+                	B.BoardGroupACL,
+                	B.TYPE
            		FROM 
            			TBL_Board_BoardManage B
                 JOIN 
@@ -1565,7 +1563,8 @@
 	            delete_fg ,
 	            inherit_fg ,
 	            postnotice ,
-	            boardgroupacl  
+	            boardgroupacl,
+	            TYPE
 	       FROM 
 	        	TBL_BOARD_BOARDMANAGE 
 	       WHERE  
@@ -1669,36 +1668,6 @@
 			COLUMN_NAME = 'COMPANYID'
 	</select>
 	
-	<!-- 2018-10-17 홍승비 - 모든 회사의 ID와 이름을 가져오는 쿼리 -->
-	<select id="EzBoardAdminDAO.getCompanyList" parameterClass="Map" resultClass="BoardPropertyVO">
-		<![CDATA[
-			SELECT 
-				A.CN as ACCESSID,
-             	A.DISPLAYNAME as ACCESSNAME, 
-             	A.DISPLAYNAME2 as ACCESSNAME2 
-        	FROM 
-        		( SELECT 
-        			CN,
-        			CASE #v_LANG#
-        				WHEN '1' THEN DISPLAYNAME
-        				ELSE DISPLAYNAME2   
-        				END DISPLAYNAME,
-                    CASE #v_LANG#
-                    	WHEN '1' THEN DISPLAYNAME2
-                        ELSE DISPLAYNAME   
-                        END DISPLAYNAME2,
-                  SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15                    
-               	  FROM 
-               	  	TBL_DEPTMASTER 
-               	  WHERE
-               	  	TENANT_ID = #v_TENANTID#
-               	  AND  
-               	  	(DEPTLEVEL = 1
-               	  OR 
-               	  	CN = 'Top') ) A
-		]]>
-	</select>
-	
 	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl_I" parameterClass="Map">
 		INSERT INTO TBL_Board_BoardManage (
 			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID, COMPANYID , TYPE
@@ -1732,7 +1701,7 @@
                 BOARDGROUPACL,
                 TENANT_ID,
                 COMPANYID,
-                IFNULL(TYPE, '') AS TYPE
+                NVL(TYPE, '') AS TYPE
       	      FROM 
       	      	TBL_Board_BoardManage
               WHERE  
@@ -1774,7 +1743,7 @@
                 BOARDGROUPACL ,
                 TENANT_ID,
                 COMPANYID,
-                IFNULL(TYPE, '') AS TYPE
+                NVL(TYPE, '') AS TYPE
           	  FROM 
           	  	TBL_Board_BoardManage 
           	  WHERE  
@@ -2137,16 +2106,17 @@
 		</isNotEqual>
 	</insert>
 	
+	<!-- 2020-06-10 홍승비 - 신규 게시판그룹 생성 시 게시판 권한타입 추가 (그룹사게시판의 경우 회사(DEPT) / 일반 회사소속 게시판의 경우 생성자(PERSON)) -->
 	<insert id="EzBoardAdminDAO.createBoardGroup2" parameterClass="Map" >
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardManage( 
-				BOARDID, 		  ACCESSID, 	ACCESSNAME, 	ACCESSNAME2,     ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, TENANT_ID, COMPANYID
+				BOARDID, 		  ACCESSID, 	ACCESSNAME, 	ACCESSNAME2,     ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, TENANT_ID, COMPANYID, TYPE
 			)
 		]]>
 		<isEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 	   			SELECT
-	   				#v_BOARDGROUPID#, 'Top', DISPLAYNAME, DISPLAYNAME2, 1, 		  1, 	   'top', 		  'false', 	 #v_TENANTID#, 'Top'
+	   				#v_BOARDGROUPID#, 'Top', DISPLAYNAME, DISPLAYNAME2, 1, 		  1, 	   'top', 		  'false', 	 #v_TENANTID#, 'Top', 'DEPT'
 	   			FROM
 	   				TBL_DEPTMASTER
 	   			WHERE
@@ -2158,7 +2128,7 @@
 		<isNotEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 	     		VALUES ( 
-	     			#v_BOARDGROUPID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 		  1, 	   'top', 		  'true', 		 #v_TENANTID#, #v_COMPANYID#
+	     			#v_BOARDGROUPID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 		  1, 	   'top', 		  'true', 		 #v_TENANTID#, #v_COMPANYID#, 'PERSON'
 	     		)
 			]]>
 		</isNotEqual>
@@ -2193,13 +2163,13 @@
 	<insert id="EzBoardAdminDAO.createBoard_I2" parameterClass="Map" >
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardManage ( 
-				BOARDID, 	 ACCESSID, 	   ACCESSNAME, 	   ACCESSNAME2, 	ACCESSLEVEL, ACCESS_, PARENTBOARDID, 	 BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, TENANT_ID, COMPANYID 
+				BOARDID, 	 ACCESSID, 	   ACCESSNAME, 	   ACCESSNAME2, 	ACCESSLEVEL, ACCESS_, PARENTBOARDID, 	 BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, TENANT_ID, COMPANYID, TYPE 
 			)
 		]]>
 		<isEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 	     		SELECT
-					#v_BOARDID#,  'Top',  DISPLAYNAME,  DISPLAYNAME2,   1, 		 1, 	  #v_PARENTBOARDID#, 	'false', 	'true', 	 'true',	 'true', 	'true',   'true',    'true', 	 #v_TENANTID#,  'Top'
+					#v_BOARDID#,  'Top',  DISPLAYNAME,  DISPLAYNAME2,   1, 		 1, 	  #v_PARENTBOARDID#, 	'false', 	'true', 	 'true',	 'true', 	'true',   'true',    'true', 	 #v_TENANTID#,  'Top', 'DEPT'
 	   			FROM
 	   				TBL_DEPTMASTER
 	   			WHERE
@@ -2211,7 +2181,7 @@
 		<isNotEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 	     		VALUES ( 
-	     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 			 1, 	  #v_PARENTBOARDID#, 'true', 		'true', 	 'true', 'true', 	'true',   'true',    'true', 	 #v_TENANTID#, #v_COMPANYID# 
+	     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 			 1, 	  #v_PARENTBOARDID#, 'true', 		'true', 	 'true', 'true', 	'true',   'true',    'true', 	 #v_TENANTID#, #v_COMPANYID#, 'PERSON'
 	     		)
 			]]>
 		</isNotEqual>
@@ -2451,7 +2421,8 @@
 	            DELETE_FG = #v_PDELETE_FG#,
 	            INHERIT_FG = #v_PINHERIT_FG#,
 	            POSTNOTICE = #v_PPOSTNOTICE#,
-	            BOARDGROUPACL = #v_PBOARDGROUPACL#
+	            BOARDGROUPACL = #v_PBOARDGROUPACL#,
+	            TYPE = #v_TYPE#
 	        WHERE  
 	        	TENANT_ID = #v_TENANTID#
 			]]>
@@ -2687,7 +2658,8 @@
 					ACCESSNAME, 
 					ACCESSNAME2, 
 					TENANT_ID, 
-				    COMPANYID
+				    COMPANYID,
+				    TYPE
 				FROM
 					TBL_BOARD_BOARDMANAGE B
 				WHERE
@@ -2722,7 +2694,8 @@
 				    POSTNOTICE, 
 				    BOARDGROUPACL, 
 				    TENANT_ID, 
-				    COMPANYID
+				    COMPANYID,
+				    TYPE
 				)
 				VALUES (
 					#v_BOARDID#, 
@@ -2741,7 +2714,8 @@
 				    'false', 
 				    #v_BOARDGROUPACL#, 
 				    TMP.TENANT_ID, 
-				    TMP.COMPANYID)
+				    TMP.COMPANYID,
+				    TMP.TYPE)
 		]]>
 	</insert>
 	

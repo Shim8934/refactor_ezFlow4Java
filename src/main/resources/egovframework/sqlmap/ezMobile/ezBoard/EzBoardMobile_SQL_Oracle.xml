@@ -1139,7 +1139,7 @@
 		          		AND
 		          			A.PARENTBOARDID = #rootBoardID#
 		                AND 
-		                	A.BoardID <> #excludeBoardID#
+		                	A.BoardID <> NVL(#excludeBoardID#, ' ')
 		           		ORDER BY 
 		           			A.TreeViewOrder ASC
 					]]>
@@ -1172,7 +1172,8 @@
 		                        C.AccessID ,
 		                        C.Access_ ,
 		                        C.BoardGroupACL ,
-		                        C.tenant_id
+		                        C.tenant_id,
+		                        C.TYPE
 		                      FROM 
 		                      	TBL_Board_BoardManage C
 		                      LEFT JOIN 
@@ -1188,7 +1189,7 @@
 		                      AND 
 		                      	C.BoardID <> NVL(#excludeBoardID#, ' ')
 		                      AND 
-		                      	( C.AccessID = #userID# )
+								C.AccessID = #userID#
 		                      AND 
 		                      	D.ParentBoardID = #rootBoardID#
 		                      ]]>
@@ -1208,7 +1209,95 @@
 		                	A.TENANT_ID = #tenantID#
 		                AND
 		                	(A.companyid = #companyID# OR TRIM(A.companyid) = ''	OR	A.companyid IS NULL)
+						AND
+							(B.TYPE <> 'GROUP' OR B.TYPE IS NULL)
 		                )
+		                
+		                UNION
+		                
+		                (SELECT 
+							DISTINCT A.BoardID BoardID,
+	                        CASE #primary#
+	                            WHEN
+	                                '1'
+	                            THEN
+	                                A.boardname
+	                            ELSE
+	                                CASE
+	                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+	                                    THEN A.boardname
+	                                    ELSE A.boardname2
+	                                END
+	                        END BoardName,
+							A.TreeViewOrder TreeViewOrder  ,
+	                        A.BoardColor BoardColor  ,
+	                        A.Gubun ,
+	                        B.BOARDGROUPACL BOARDGROUPACL
+		                FROM 
+		                	TBL_Board_BoardInfo A
+		                JOIN 
+		                	( SELECT 
+		                		C.BoardID ,
+		                        C.AccessID ,
+		                        C.Access_ ,
+		                        C.BoardGroupACL ,
+		                        C.tenant_id,
+		                        C.TYPE
+		                      FROM 
+		                      	TBL_Board_BoardManage C
+		                      LEFT JOIN 
+		                      	TBL_Board_BoardInfo D   
+		                      ON
+		                      	C.TENANT_ID = D.TENANT_ID 
+		                      AND
+		                      	C.BoardID = D.BoardID
+		                      	
+							INNER JOIN
+								TBL_PERMISSIONGROUPLIST PGL
+							ON
+								C.TENANT_ID = PGL.TENANT_ID 
+							AND
+								C.ACCESSID = PGL.GROUP_ID
+							INNER JOIN
+								TBL_PERMISSIONGROUPINFO PGI
+							ON
+								PGL.TENANT_ID = PGI.TENANT_ID
+							AND
+								PGL.GROUP_ID = PGI.GROUP_ID
+		                      	
+		                      WHERE
+		                      	C.TENANT_ID = #tenantID#
+		                      AND
+		                      	C.Access_ = 1
+		                      AND 
+		                      	C.BoardID <> NVL(#excludeBoardID#, ' ')
+		                      AND 
+		                      	PGI.MEMBER_ID = #userID#
+		                      AND 
+		                      	D.ParentBoardID = #rootBoardID#
+		                      AND
+		                      	C.TYPE = 'GROUP'
+		                      ]]>
+							<isEqual property="v_ISDEPT" compareValue="1">
+								<isEqual property="v_ISEQUALDEPT" compareValue="0">
+									AND
+										PGI.SUB_DEPT_YN = 'Y'
+								</isEqual>
+							</isEqual>
+		                      <![CDATA[
+		                      	) B   
+		                ON 
+		                	A.TENANT_ID = B.TENANT_ID
+		                AND
+		                	A.BoardID = B.BOARDID
+		                WHERE
+		                	A.TENANT_ID = #tenantID#
+		                AND
+		                	(A.companyid = #companyID# OR TRIM(A.companyid) = ''	OR	A.companyid IS NULL)
+						AND
+							B.TYPE = 'GROUP'
+		                )
+		                
 		                ORDER BY 
 		                	TreeViewOrder ASC
 		        	]]>
@@ -1271,7 +1360,7 @@
 		                                    ELSE A.boardname2
 		                                END
 		                        END BoardName,
-		                        A.TreeViewOrder ,
+		                        A.TreeViewOrder,
 		                        A.BoardColor BoardColor,
 		                        A.Gubun ,
 		                        '' BoardGroupACL
@@ -1318,7 +1407,8 @@
 			                        C.AccessID ,
 			                        C.Access_ ,
 			                        C.BoardGroupACL ,
-			                        C.tenant_id
+			                        C.tenant_id,
+			                        C.TYPE
 			                      FROM 
 			                      	TBL_Board_BoardManage C
 			                      LEFT JOIN 
@@ -1361,9 +1451,115 @@
 				          			A.PARENTBOARDID = #rootBoardID#
 				                AND 
 				                	A.BoardID <> NVL(#excludeBoardID#, ' ')
-				             )
-			           		ORDER BY 
-			           			TreeViewOrder ASC)
+						]]>
+					<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
+					<![CDATA[
+		                AND
+							(B.TYPE <> 'GROUP' OR B.TYPE IS NULL)
+					]]>
+					</isEqual>
+						)
+			           			
+						UNION
+	          		
+	          			(SELECT 
+		                     DISTINCT AG.BoardID ,
+		                     CASE #primary#
+		                         WHEN
+		                             '1'
+		                         THEN
+		                             AG.boardname
+		                         ELSE
+		                             CASE
+		                                 WHEN (AG.boardname2 = '' OR AG.boardname2 IS NULL)
+		                                 THEN AG.boardname
+		                                 ELSE AG.boardname2
+		                             END
+		                     END BoardName,
+		                     AG.TreeViewOrder ,
+		                     AG.BoardColor BoardColor,
+		                     AG.Gubun ,
+		                     '' BoardGroupACL
+		           		FROM 
+		           			TBL_Board_BoardInfo AG
+		           	<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
+		           		<![CDATA[
+		           		 JOIN 
+		                	( SELECT 
+		                		CG.BoardID ,
+		                        CG.AccessID ,
+		                        CG.Access_ ,
+		                        CG.BoardGroupACL ,
+		                        CG.tenant_id,
+		                        CG.TYPE
+		                      FROM 
+		                      	TBL_Board_BoardManage CG
+		                      LEFT JOIN 
+		                      	TBL_Board_BoardInfo DG
+		                      ON
+		                      	CG.TENANT_ID = DG.TENANT_ID 
+		                      AND
+		                      	CG.BoardID = DG.BoardID
+		                      	
+							INNER JOIN
+								TBL_PERMISSIONGROUPLIST PGL
+							ON
+								CG.TENANT_ID = PGL.TENANT_ID 
+							AND
+								CG.ACCESSID = PGL.GROUP_ID
+							INNER JOIN
+								TBL_PERMISSIONGROUPINFO PGI
+							ON
+								PGL.TENANT_ID = PGI.TENANT_ID
+							AND
+								PGL.GROUP_ID = PGI.GROUP_ID
+		                      	
+		                      WHERE
+		                      	CG.TENANT_ID = #tenantID#
+		                      AND
+		                      	CG.Access_ = 1
+		                      AND 
+		                      	CG.BoardID <> NVL(#excludeBoardID#, ' ')
+		                      AND 
+		                      	PGI.MEMBER_ID = #userID#
+		                      AND 
+		                      	DG.ParentBoardID = #rootBoardID#
+		                      AND
+		                      	CG.TYPE = 'GROUP'
+						]]>
+						<isEqual property="v_ISDEPT" compareValue="1">
+							<isEqual property="v_ISEQUALDEPT" compareValue="0">
+								AND
+									PGI.SUB_DEPT_YN = 'Y'
+							</isEqual>
+						</isEqual>
+						<![CDATA[
+			                      	) BG
+			                ON 
+			                	AG.TENANT_ID = BG.TENANT_ID
+			                AND
+			                	AG.BoardID = BG.BOARDID
+						]]>
+					</isEqual>
+					<![CDATA[
+			          		WHERE
+			          			AG.TENANT_ID = #tenantID#
+			          		AND
+				                (TRIM(AG.companyid) = ''	OR	AG.companyid IS NULL)
+			          		AND
+			          			AG.PARENTBOARDID = #rootBoardID#
+			                AND 
+			                	AG.BoardID <> NVL(#excludeBoardID#, ' ')
+					]]>
+					<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
+			                AND
+								BG.TYPE = 'GROUP'
+					</isEqual>
+					<![CDATA[
+			           		)
+			           	)
+			           	ORDER BY 
+			           		TreeViewOrder ASC
 				]]>
 			</isNotEqual>
           </isNotEqual>
@@ -1869,6 +2065,93 @@
 		]]>
 	</select>
 	
+	<!-- 2020-06-11 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 권한정보를 리스트로 리턴하는 쿼리 -->
+	<!-- 리스트로 리턴된 권한은 서버단에서 '허용' 기준으로 취합됨(sumBoardACL) -->
+	<select id="MBoardDAO.getACLListNew"  parameterClass="Map" resultClass="MBoardInfoVO">
+		<![CDATA[
+			(SELECT 
+				accessid,
+				accesslevel,
+				access_,
+				parentboardid,
+				boardadmin_fg,
+				listview_fg,
+				read_fg,
+				write_fg,
+				reply_fg,
+				delete_fg,
+				inherit_fg,
+				postnotice,
+				boardgroupacl  
+	       FROM 
+	        	TBL_BOARD_BOARDMANAGE 
+	       WHERE  
+	       		TENANT_ID = #tenantID#
+	       AND
+	       		boardid = #boardID# 
+	       AND 
+	       		accessid = #userDeptPath#
+	       	AND
+				(TYPE <> 'GROUP' OR TYPE IS NULL)
+		]]>
+		<isEqual property="v_ISDEPT" compareValue="1">
+			<isEqual property="v_ISEQUALDEPT" compareValue="0">
+	 			AND
+	 				boardgroupacl = 'Y'
+			</isEqual>
+		</isEqual>
+			)
+		<![CDATA[
+			UNION
+			
+			(SELECT 
+				accessid,
+				accesslevel,
+				access_,
+				parentboardid,
+				boardadmin_fg,
+				listview_fg,
+				read_fg,
+				write_fg,
+				reply_fg,
+				delete_fg,
+				inherit_fg,
+				postnotice,
+	            PGI.SUB_DEPT_YN AS boardgroupacl
+			FROM 
+	        	TBL_BOARD_BOARDMANAGE TBB
+	        	
+			INNER JOIN
+				TBL_PERMISSIONGROUPLIST PGL
+			ON
+				TBB.TENANT_ID = PGL.TENANT_ID
+			AND
+				TBB.ACCESSID = PGL.GROUP_ID
+			INNER JOIN
+				TBL_PERMISSIONGROUPINFO PGI
+			ON
+				PGL.TENANT_ID = PGI.TENANT_ID
+			AND
+				PGL.GROUP_ID = PGI.GROUP_ID
+				
+			WHERE  
+	       		TBB.TENANT_ID = #tenantID#
+	       AND
+	       		boardid = #boardID# 
+	       AND 
+	       		PGI.MEMBER_ID = #userDeptPath#
+	       	AND
+				TBB.TYPE = 'GROUP'
+		]]>
+		<isEqual property="v_ISDEPT" compareValue="1">
+			<isEqual property="v_ISEQUALDEPT" compareValue="0">
+	 			AND
+	 				PGI.SUB_DEPT_YN = 'Y'
+			</isEqual>
+		</isEqual>
+			)
+	</select>
+	
 	<select id="MBoardDAO.getQNABoardItemListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
@@ -2017,6 +2300,14 @@
 	                    TO_CHAR(upperitemidtree) > #upperitemidtree#
 	            ]]>        
 	        </isNotEmpty>
+			<isEqual property="v_PADMINTYPE" compareValue="false">
+				<![CDATA[
+					AND
+						(TOPWRITERID = #userID#
+						OR
+						WRITERID = #userID#)
+				]]>
+			</isEqual>
 			
 			<![CDATA[
 	            UNION 
@@ -2118,6 +2409,14 @@
 	                        parentwritedate < #parentWriteDate# 
 	                ]]>
 	            </isNotEmpty>
+				<isEqual property="v_PADMINTYPE" compareValue="false">
+					<![CDATA[
+						AND
+							(TOPWRITERID = #userID#
+							OR
+							WRITERID = #userID#)
+					]]>
+				</isEqual>
 	             <![CDATA[             
 	                ORDER BY
 	                    orderparentwritedate DESC, UPPERITEMIDTREE)
@@ -2127,4 +2426,3 @@
 	</select>
 	
 </sqlMap>
-
