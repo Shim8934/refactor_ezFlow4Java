@@ -3158,7 +3158,8 @@ function chk_Passwd_Complete(chkpass) {
         //결재타입이 001(결재), 004(전결), 007(참조), 019(검토) 만 일괄결재 처리
         curAprType = curAprType.split("/")[0];
         if(!(curAprType == "001") && !(curAprType == "004") && !(curAprType == "007") && !(curAprType == "019"))
-            return false;
+            //jquery each 내부 return true: continue, false: break -> return false
+            return true;
 
         doc = createNodeAndAppandNode(xmlpara, list, doc, "DOC");
         $.ajax({
