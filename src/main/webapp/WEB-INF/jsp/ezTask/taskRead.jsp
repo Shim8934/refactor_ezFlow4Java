@@ -323,7 +323,7 @@
 							var doc = document.getElementById('message2').contentWindow.document;
 							doc.open();
 							if(html != null || html != ""){
-								doc.write(html);								
+								doc.write('<div>' + html + '</div>');
 								}else{
 									doc.write(" ");
 								}

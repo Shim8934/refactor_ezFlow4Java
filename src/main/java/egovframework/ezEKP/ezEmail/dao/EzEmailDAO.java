@@ -229,4 +229,20 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	public void setMailColor(Map<String, Object> map) throws Exception{
 		insert("EzEmailDAO.setMailColor", map);
 	}
+	
+	public void setBigAttachCountInfo(Map<String, Object> map) throws Exception{
+		insert("EzEmailDAO.setBigAttachCountInfo", map);
+	}
+	
+	public String checkBigAttachDownloadCount(Map<String, Object> map) throws Exception{
+		return (String)select("EzEmailDAO.checkBigAttachDownloadCount", map);
+	}
+	
+	public void updateBigAttachDownloadCount(Map<String, Object> map) throws Exception{
+		update("EzEmailDAO.updateBigAttachDownloadCount", map);
+	}
+
+	public void deleteBigAttachCountInfo(Map<String, Object> map) {
+		delete("EzEmailDAO.deleteBigAttachCountInfo", map);
+	}
 }

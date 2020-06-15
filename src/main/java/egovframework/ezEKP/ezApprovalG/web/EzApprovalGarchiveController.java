@@ -2507,6 +2507,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String path = mapPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "sendXML" + commonUtil.separator + xmlPath;
 		logger.debug("xmlPath=" + xmlPath);
 		
+		//pubdoc 의 컨텐츠가 있는지 확인하여 내용이 없으면 senderr/temp 폴더로 이동
+        String sendPath = "senderr" + commonUtil.separator + "temp";
+		
 		xmlDom.getElementsByTagName("send-gw").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-gw").item(0).getTextContent().getBytes("euc-kr")));
 		xmlDom.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-name").item(0).getTextContent().getBytes("euc-kr")));
 		xmlDom.getElementsByTagName("title").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("title").item(0).getTextContent().getBytes("euc-kr")));
@@ -2516,6 +2519,22 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		for (int i = 0; i < xmlDom.getElementsByTagName("content").getLength(); i++) {
 				switch (xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-role").getNodeValue()) {
 				case "pubdoc":
+					
+					//pubdoc xml String으로 추출
+                    String pubdocString = xmlDom.getElementsByTagName("content").item(i).getTextContent();
+                    System.out.println("pubdocString: " + pubdocString);
+
+                    int sIndex = pubdocString.indexOf("<content>") + 9;
+                    int eIndex = pubdocString.indexOf("</content>");
+                    
+                    String contentStr = pubdocString.substring(sIndex , eIndex).trim(); 
+
+                    if(contentStr.length() > 0) {
+                    	sendPath = "sendtemp";
+                    }
+                    
+                    System.out.println("sendPath: " + sendPath);
+					
 					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String("pubdoc.xml".getBytes("euc-kr")));
 					xmlDom.getElementsByTagName("content").item(i).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getTextContent().replace("&lt;", "<").replace("&gt;", ">").replace("\n", "").replace("\t", "").replace("&amp;", "&").getBytes("euc-kr")));
 					break;
@@ -2585,11 +2604,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         
         // 여러부서 보낼수 있게 수정 -> 문서유통센터에서 전화옴 19.12.18
         // 문서유통센터에서 전화옴 19.12.18 xml 파일 하나 떨구는 걸로 변경
+        logger.debug("####sendPath : " + sendPath);
         logger.debug("####mapPath : " + mapPath);
         logger.debug("####sendID : " + sendID);
         logger.debug("####recevID : " + arrReceiveID[0]);
         logger.debug("####strTime : " + strTime);
-        result = ezApprovalGService.getFileName(mapPath, sendID + arrReceiveID[0] + strTime, "sendtemp", strXML, userInfo.getTenantId());
+        result = ezApprovalGService.getFileName(mapPath, sendID + arrReceiveID[0] + strTime, sendPath, strXML, userInfo.getTenantId());
         
         if (result.equals("FALSE")) {
                logger.debug("sendMsg Fail : " + sendID + arrReceiveID[0] + strTime);

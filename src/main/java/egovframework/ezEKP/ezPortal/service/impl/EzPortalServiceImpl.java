@@ -3,22 +3,19 @@ package egovframework.ezEKP.ezPortal.service.impl;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +67,6 @@ import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPortalService")
@@ -98,9 +94,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties globals;
 	
 	@Autowired
 	private Properties config;
@@ -3102,10 +3095,10 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 			int portletCanRemove = vo.getCanRemove();
 			int portletCanResize = vo.getCanResize();
 			int portletCanReplace = vo.getCanRemove();
-			int portletPaddingLeft = vo.getLeftMargin();
+			/* int portletPaddingLeft = vo.getLeftMargin();
 			int portletPaddingRight = vo.getRightMargin();
 			int portletPaddingTop = vo.getTopMargin();
-			int portletPaddingBottom = vo.getBottomMargin();
+			int portletPaddingBottom = vo.getBottomMargin(); */
 			String portletOwnerPageUID = vo.getOwnerPageUID();
 			String portletMandatory = vo.getMandatory();
 			String portletMoveURL = "";
@@ -4242,5 +4235,55 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		String readFlag = ezPortalDAO.chkBoardReadAuthor(param) != null ? ezPortalDAO.chkBoardReadAuthor(param) : "";
 		
 		return readFlag;
+	}
+
+	/**
+	 *  통합검색 - 검색엔진 URL 만들기
+	 *  w : 검색영역
+	 *	q : 검색어
+	 *	csq : 제목, 내용, 첨부에서 찾을 내용
+	 *	outmax : 출력 갯수
+	 *	pg : page 번호
+	 *	view : 권한 aa|bb|cc 의 형태 생성
+	 *	d1 : 검색범위(날짜)
+	 *	dsort : 정렬
+	 * */
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject callSearchServerForResult2(LoginVO userInfo, Map<String, Object> param) throws Exception {
+		String type = Optional.ofNullable(param.get("type")).map(Object::toString).orElse("");
+		String keyword = Optional.ofNullable(param.get("keyword")).map(Object::toString).orElse("");
+		String searchRange = Optional.ofNullable(param.get("searchRange")).map(Object::toString).orElse("");
+		String startDate = Optional.ofNullable(param.get("startDate")).map(Object::toString).orElse("");
+		String endDate = Optional.ofNullable(param.get("endDate")).map(Object::toString).orElse("");
+		String automax = Optional.ofNullable(param.get("automax")).map(Object::toString).orElse("");
+		String userID = userInfo.getId();
+		String page = Optional.ofNullable(param.get("page")).map(Object::toString).orElse("");
+		int tenantID = userInfo.getTenantId() ;
+		String companyID = userInfo.getCompanyID();
+
+		logger.debug("[callSearchServerForResult2 Params] type : " + type + ", keyword : " + keyword + 
+				", searchRange : " + searchRange + ", startDate : " + startDate + ", endDate : " + endDate +
+				", automax : " + automax + ", userID : " + userID + ", page : " + page + ", companyID : " + companyID);
+		
+		JSONObject json = new JSONObject();
+		json.put("w", type);
+		json.put("outmax", automax);
+		json.put("page", page);
+		json.put("dsort", "11");
+		json.put("q", keyword);
+		json.put("searchRange", !searchRange.equalsIgnoreCase("all") ? searchRange.toLowerCase() : "title|contents|attach|writer");
+		json.put("view", userID);
+		json.put("tenant", tenantID);
+		json.put("company", companyID);
+		
+		if(startDate != "" && endDate != "" ) {
+			String dateRange = (startDate + "~" + endDate).replaceAll("-", "");
+			json.put("d1", dateRange);
+		}
+		
+		logger.debug("[JSON result] json = " + json.toJSONString());
+
+		return json;
 	}
 }

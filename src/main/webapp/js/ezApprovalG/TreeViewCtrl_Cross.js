@@ -19,7 +19,7 @@
         
         var xmlDom = createXmlDom();
 		xmlDom = loadXMLString(xmlHTTP.responseText);
-		
+
         if (mode == "circulation") {
         	document.getElementById('TreeViewCC').innerHTML = "";
             var treeView = new TreeView();

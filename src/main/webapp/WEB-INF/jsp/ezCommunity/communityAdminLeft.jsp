@@ -23,10 +23,19 @@
 				padding-left:20px;
 				margin-left:-40px;
 			}
-			.node_div {
-				overflow:hidden;
-				text-overflow:ellipsis;
-			}
+			/* ellipisis 추가 */
+			.node_normal {
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:135px;
+	    	}
+	    	.node_selected {
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:135px;
+	    	}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -110,6 +119,8 @@
 				var treeView = new TreeView();
 				treeView.LoadFromID(pTreeID);
 				treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+				
+				applyEllipsis();
 			}
 	
 			function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
@@ -120,6 +131,8 @@
 				chkPhotoBrd = treeNode.GetNodeData("DATA2");
 				SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
 	
+				applyEllipsis();
+				
 				OpenRightMenu(curMenuIndex);
 			}
 	
@@ -159,6 +172,9 @@
 				treeView.SetNodeClick("TreeCtrl_onNodeClick");
 				treeView.DataSource(GetSubBoard(ID, "1"));
 				treeView.DataBind(obj + "obj");
+				
+				/* 2020-05-25 홍승비 - 하위게시판명의 말줄임표 스타일 오류 수정 */
+				applyEllipsis();
 	
 				var idx = obj.substring(8, obj.length)
 	

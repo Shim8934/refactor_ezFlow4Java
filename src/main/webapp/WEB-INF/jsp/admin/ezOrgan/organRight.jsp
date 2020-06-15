@@ -1444,7 +1444,7 @@
 					var gyumInfo = tempLV.getAttribute('DATA3');
 					// 3 암호관리 4 사원이동 5 퇴직
 					if(tempLV.children[0].innerHTML != "") {
-						tempLV.children[0].innerHTML = "<span><img id='pwd" + userID +"' class='deptMaster' onclick='mod_pwd(event)' src='/images/admin/deptmaster.png'></span>";
+						tempLV.children[0].innerHTML = "<span><img id='pwd" + userID +"' class='deptMaster' src='/images/admin/deptmaster.png'></span>";
 					}
 					tempLV.children[6].innerHTML = "<span><img id='pwd" + userID +"' class='pwd' onclick='mod_pwd(event)' src='/images/admin/password.png'></span>";
 					tempLV.children[7].innerHTML = "<span><img id='move" + userID +"' class='move' onclick='move_user(event)' src='/images/admin/move_sawon.png'></span>";
@@ -1454,6 +1454,7 @@
 
 			// 암호관리 수정 팝업
 			var userID;
+			var userComId;
 			function mod_pwd(event) {
 				event.stopPropagation();
 				changePassLength = 1;
@@ -1462,14 +1463,23 @@
 				userID = userID.substring(indexCN);
 				inputpassword_dialogArguments[1] = mod_pwd_complete;
 
+				// 조직도 load
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+
+				var nodeIdx = treeView.GetSelectNode();
+				var treeNode = new TreeNode();
+				treeNode.LoadFromID(nodeIdx.NodeID);
+				userComId = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+				
 				/* 2020-01-02 홍승비 - 크롬과 IE의 창 크기 통일 */
 				//크롬일때 alert창 크기때문에 크롬일때 구별
 				var agent = navigator.userAgent.toLowerCase();
 				if (agent.indexOf("chrome") != -1) {
-					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 192));
+					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?companyId=" + userComId, "InputPassword", GetOpenWindowfeature(467, 192));
 				} else {
 					//var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 200));
-					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 192));
+					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?companyId=" + userComId, "InputPassword", GetOpenWindowfeature(467, 192));
 				}
 			}
 
@@ -1493,6 +1503,7 @@
 					});
 				}
 				userID = "";
+				userComId = "";
 			}
 
 			// 사원이동 호출

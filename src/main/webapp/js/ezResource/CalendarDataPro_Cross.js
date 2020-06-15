@@ -87,7 +87,23 @@ function getCalMonthViewSource_after() {
                 betweenDay = parseInt(betweenDay / day, 10);
                 var _tempData = "";
                 for (var j = 0; j <= betweenDay; j++) {
-
+                	if (betweenDay >= 1) {
+                        if (j == 0) {
+                            DataEDT.setHours(23);
+                            DataEDT.setMinutes(59);
+                        }
+                        else if (j < betweenDay) {
+                            DataSDT.setHours(0);
+                            DataSDT.setMinutes(0);
+                            DataEDT.setHours(23);
+                            DataEDT.setMinutes(59);
+                        }
+                        else {
+                            DataSDT.setHours(0);
+                            DataSDT.setMinutes(0);
+                            DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
+                        }
+                    }
                     tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                     if (betweenDay > 0 && j == 0)
                         _tempData = tempData[k];

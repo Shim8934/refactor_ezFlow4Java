@@ -61,6 +61,9 @@
 		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
 		<result  property="writerName"			column="WRITER_NAME"			columnIndex="18"/>
 		<result  property="writerDeptName"		column="WRITER_DEPT_NAME"		columnIndex="19"/>
+		<result  property="attendType"		column="ATTEND_TYPE"		columnIndex="20"/>
+		<result property="latitude" 				column="LATITUDE" 			columnIndex="21" nullValue="0"/>
+		<result property="longitude" 				column="LONGITUDE" 			columnIndex="22" nullValue="0"/>
 	</resultMap>
 	
 	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
@@ -332,7 +335,10 @@
 					B.TYPE_NAME$lang$ AS TYPE_NAME,
 					B.IMG_PATH,
 					C.DISPLAYNAME$lang$ AS WRITER_NAME,
-					C.DESCRIPTION$lang$ AS WRITER_DEPT_NAME
+					C.DESCRIPTION$lang$ AS WRITER_DEPT_NAME,
+					A.ATTEND_TYPE,
+					A.LATITUDE,
+					A.LONGITUDE
 				FROM   
 					tbl_attitude A 
 				INNER JOIN 
@@ -397,12 +403,12 @@
 						D.WRITER_ID,
 						D.DEPT_ID,
 						IF(
-							date_add(D.START_DATE, INTERVAL +#offsetMin# minute) < #startDate#, 
+							date_add(D.START_DATE, INTERVAL #offsetMin# minute) < #startDate#, 
 							CONCAT(substr(#startDate#,1,11), substr(date_add(D.START_DATE, INTERVAL #offsetMin# minute), 12)), 
 							date_format(date_add(D.START_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
 						  ) AS START_DATE,
 						IF(
-							date_add(D.END_DATE, INTERVAL +#offsetMin# minute) > #endDate#, 
+							date_add(D.END_DATE, INTERVAL #offsetMin# minute) > #endDate#, 
 							CONCAT(substr(#endDate#,1,11), substr(date_add(D.END_DATE, INTERVAL #offsetMin# minute), 12)), 
 							date_format(date_add(D.END_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
 						  ) AS END_DATE,
@@ -417,7 +423,10 @@
 						E.TYPE_NAME$lang$ AS TYPE_NAME,
 						E.IMG_PATH,
 						F.DISPLAYNAME$lang$ AS WRITER_NAME,
-						F.DESCRIPTION$lang$ AS WRITER_DEPT_NAME
+						F.DESCRIPTION$lang$ AS WRITER_DEPT_NAME,
+						D.ATTEND_TYPE,
+						D.LATITUDE,
+						D.LONGITUDE
 					FROM   
 						tbl_attitude D 
 					INNER JOIN 
@@ -479,7 +488,12 @@
 			IP,
 			DATE_TYPE,
 			TYPE_ID,
-			MODAPPL
+			MODAPPL,
+			ATTEND_TYPE
+			<isNotEmpty property="latitude">
+			,LATITUDE,
+			LONGITUDE
+			</isNotEmpty>
 		)
 		VALUES
 		(
@@ -496,7 +510,12 @@
 			IFNULL(#ipAddress#, ''),
 			#dateType#,
 			#typeId#,
-			#modappl#
+			#modappl#,
+			#attendType#
+			<isNotEmpty property="latitude">
+			,#latitude#,
+			#longitude#
+			</isNotEmpty>
 		)
 		<selectKey resultClass="int" keyProperty="attitudeId">
 		    SELECT LAST_INSERT_ID()
@@ -780,7 +799,7 @@
 			AND
 				WRITER_ID NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
-				TYPE_ID NOT IN ('A01', 'A03')
+				TYPE_ID NOT IN ('A01', 'A03', 'A25')
 			AND
 				MODAPPL <> '5'
 			AND    
@@ -2558,13 +2577,23 @@
                     A.MODAPPL <> '5'
 				]]>
 				AND
-					A.TYPE_ID NOT IN ('A01', 'A02', 'A03')
+					A.TYPE_ID NOT IN ('A01', 'A02', 'A03', 'A25')
 				AND
 					A.TENANT_ID = #v_TENANTID#
 				AND
 					c.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
-				AND
-					A.DEPT_ID = #v_DEPTID#
+				<isNotEmpty prepend="AND" property="useAnnualScheduleYN">
+					<isEqual property="useAnnualScheduleYN" compareValue="1">
+					<![CDATA[
+						A.DEPT_ID = #v_DEPTID#
+					]]>
+					</isEqual>
+					<isEqual property="useAnnualScheduleYN" compareValue="2">
+					<![CDATA[
+						A.COMPANY_ID = #v_COMPANYID#
+					]]>
+					</isEqual>
+				</isNotEmpty>
 				<![CDATA[
 				AND  
 					(

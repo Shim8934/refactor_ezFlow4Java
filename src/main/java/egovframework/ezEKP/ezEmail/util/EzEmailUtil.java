@@ -1658,7 +1658,7 @@ public class EzEmailUtil {
 				Part p = mp.getBodyPart(i);
 				
 				// text/html 파트가 나오거나 multipart/alternative 파트가 나올 수도 있다.
-				if (!p.isMimeType("text/plain") && !(p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
+				if (p.isMimeType("text/html") || !p.isMimeType("text/plain") && !(p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
 					isHtmlOrAlternativeFound = true;
 					
 					// 코린도에서 수신된 메일 중 multipart/related 안에 첨부파일이 있는 경우가 있어 패러메터값을 -1 대신 i로 변경함
@@ -2075,7 +2075,7 @@ public class EzEmailUtil {
     			}
     			
     		} else {
-    			if (!searchField.equals("") || startDate != null || endDate != null || searchSubFolder || isUnreadOnly || isImportantOnly) {
+    			if (!searchField[0].equals("") || startDate != null || endDate != null || searchSubFolder || isUnreadOnly || isImportantOnly) {
     				messages = searchFolder(folder, searchField[0], searchValue[0], startDate, endDate, searchSubFolder, null, isUnreadOnly, isImportantOnly, isFromMobile);
     			} else {
     				logger.debug("get all message.");
@@ -2166,6 +2166,7 @@ public class EzEmailUtil {
 	/**
 	 * searches an open folder for messages matching the specified criterion. 
 	 */
+	@SuppressWarnings("serial")
 	public Message[] searchFolder (
 			Folder folder, 
 			String searchField, 
@@ -2361,7 +2362,7 @@ public class EzEmailUtil {
 				    public boolean match(Message message) {
 				        try {
 				        	String subject = getSubject(message);				        	
-				        	String from = getFullFromAddressOfMessage(message);
+				        	// String from = getFullFromAddressOfMessage(message);
 				        	
 				        	boolean subjectFlag = subject != null && subject.toLowerCase().contains(searchValue.toLowerCase()); 
 				        	boolean toFlag = toSearch(message, searchValue);
@@ -2489,6 +2490,7 @@ public class EzEmailUtil {
 		return messages;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Message[] advancedSearchFolder(
 			IMAPAccess ia,
 			String userAccount,
@@ -2516,7 +2518,7 @@ public class EzEmailUtil {
 		Map<String, Object> resultMap = getMailListFromJGw(userAccount, folderPath, searchField, searchValue, startDate, endDate, 
 				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount);
 		
-		List<String> mailList = (List<String>)resultMap.get("mailList");
+		List<String> mailList = (List<String>) resultMap.get("mailList");
 		
 		if (extraMap != null) {
 			extraMap.put("totalCount", (int)resultMap.get("totalCount"));
@@ -2560,6 +2562,7 @@ public class EzEmailUtil {
 		return messageList.toArray(new Message[0]);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> getMailListFromJGw(
 			String userAccount,
 			String folderPath, 
@@ -2676,6 +2679,7 @@ public class EzEmailUtil {
 			newMessage.setContent(mp);
 			
 			//set header
+			@SuppressWarnings("unchecked")
 			Enumeration<Header> e = oldMessage.getAllHeaders();
 			while(e.hasMoreElements()){
 				Header header = e.nextElement();

@@ -1,6 +1,5 @@
 package egovframework.ezMobile.ezBoard.web;
 
-import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -383,6 +382,7 @@ public class MBoardController {
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		String type = request.getParameter("type");
 		String itemID = request.getParameter("itemID");
+		@SuppressWarnings("unused")
 		String url = "";
 		
 		//String boardID = request.getParameter("boardID");
@@ -390,8 +390,8 @@ public class MBoardController {
 		String boardID = "{c2a62f97-263c-d60a-2c2f-c20815843514}";
 		
 		//String mode = request.getParameter("mode");
-		String mode = "new";
-		String guBun = request.getParameter("guBun");
+		// String mode = "new";
+		// String guBun = request.getParameter("guBun");
 		
 		if (type != null && type.equals("modify")) {
 			url = gwServerUrl + "/mobile/ezboard/boards/"+boardID+"/contents"+itemID; 
@@ -410,8 +410,6 @@ public class MBoardController {
 		boardListVO.setItemID("{"+UUID.randomUUID().toString()+"}");
 		//Gson gson = new Gson();
 		//JSONObject jsonParam = gson.fromJson(gson.toJson(boardListVO), JSONObject.class);
-		
-		RestTemplate rest = new RestTemplate();
 		
 		//ResponseEntity<JSONObject> result = rest.postForEntity(url, entity, JSONObject.class);
 		//ResponseEntity<JSONObject> result = rest.exchange(url, HttpMethod.PUT, entity, JSONObject.class);
@@ -459,6 +457,7 @@ public class MBoardController {
 		
 		JSONObject resultBody = result.getBody();
 		
+		@SuppressWarnings("unused")
 		String status = resultBody.get("status").toString();
 		
 		LOGGER.debug("deleteBoardItem ended.");

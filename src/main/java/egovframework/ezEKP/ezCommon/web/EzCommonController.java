@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -56,12 +55,6 @@ public class EzCommonController extends EgovFileMngUtil{
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties config;
-	
-	@Autowired
-	private Properties globals;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;

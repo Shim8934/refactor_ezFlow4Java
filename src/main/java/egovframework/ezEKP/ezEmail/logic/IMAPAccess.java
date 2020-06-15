@@ -51,6 +51,7 @@ public class IMAPAccess {
 	private Store store;
 	private String userName;
 	private String password;
+	@SuppressWarnings("unused")
 	private EgovMessageSource egovMessageSource;
 	private Locale locale;
 	// 간혹 SocketTimeoutException이 발생하는 경우가 있어 시간을 짧게 설정하고 retry를 수행하도록 함.

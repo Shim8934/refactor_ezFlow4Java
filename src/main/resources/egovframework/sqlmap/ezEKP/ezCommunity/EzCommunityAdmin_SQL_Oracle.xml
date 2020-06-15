@@ -316,6 +316,8 @@
 					ON
 						RTRIM(A.c_sysopid) = RTRIM(B.userid)
 					AND
+						A.c_adminconfirm = 'N'
+					AND
 						A.tenant_id = B.tenant_id
 					LEFT OUTER JOIN
 						TBL_USERMASTER C
@@ -331,10 +333,6 @@
 						A.tenant_id = D.tenant_id	
 					WHERE
 						D.c_cat = 'a'
-					AND
-						c_clubname$v_USERINFO_LANG$ LIKE '%' || #v_KEYWORD# || '%'
-					AND
-						A.c_adminconfirm = 'N'
 					AND
 						A.companyid = #companyID#
 					AND

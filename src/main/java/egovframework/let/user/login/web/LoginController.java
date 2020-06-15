@@ -7,8 +7,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -111,7 +114,7 @@ public class LoginController {
 	 */
     
     @RequestMapping(value="/user/login/login.do", method={RequestMethod.GET, RequestMethod.POST})
-	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model) throws Exception {
+	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model, Locale locale) throws Exception {
         String serverName = request.getServerName();
         int tenantId = loginService.getTenantId(serverName);
         
@@ -179,9 +182,12 @@ public class LoginController {
     	logger.debug("logoUrl : " + logo);
     	//유은정 끝
     	
+    	String usePasswordReset = ezCommonService.getTenantConfig("usePasswordReset", tenantId);
+    	
 		model.addAttribute("publicModulus", pbm);
 		model.addAttribute("publicExponent", "10001");
 		model.addAttribute("logoUrl", logo);
+		model.addAttribute("usePasswordReset", usePasswordReset);
 		CommonUtil.addXUACompatibleHeaderToResponse(request, response);
 		
     	return "/user/login/login";
@@ -363,7 +369,9 @@ public class LoginController {
 		int numberOfLoginFailPermit = 0;
 		
 		// 로그인 실패 최대 허용 횟수를 구한다.
-		String maxAllowedCountOfLoginFail = ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId);
+		String maxAllowedCountOfLoginFail = ezCommonService.getCompanyConfig(tenantId, companyId, "MaxAllowedCountOfLoginFail");
+		logger.debug("companyId=" + companyId + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail);
+		// String maxAllowedCountOfLoginFail = ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId);
 				
 		if (!maxAllowedCountOfLoginFail.equals("")) {
 			try {
@@ -433,9 +441,16 @@ public class LoginController {
     	        	
     	        	if (resultVO.getLoginCnt() == 0) {
     	        		diff = 0;
+    	        		
+    	        		String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
     	        		model.addAttribute("isFirstLogin", "Y");
+    	        		model.addAttribute("companyId", companyId);
+    	        		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
     	        	} else {
-    		        	String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
+    	        		String expirePassPeriod = ezCommonService.getCompanyConfig(tenantId, companyId, "ExpirePassPeriod");
+    	        		expirePassPeriod = expirePassPeriod.trim().equals("") ? "0" : expirePassPeriod;
+    	        		logger.debug("companyId=" + companyId + ", ExpirePassPeriod=" + expirePassPeriod);
+    		        	// String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
     		        	
     		        	if (!expirePassPeriod.trim().equals("0")) {
     		        		int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
@@ -494,11 +509,15 @@ public class LoginController {
     	        	//패스워드 다음에 변경 기능 추가. 2019-09-17 홍대표
     	        	String passwordUpdateNextTime = request.getParameter("nextTime") != null ? request.getParameter("nextTime") : "";
     				if (diff <= 0 && !passwordUpdateNextTime.equals("YES")) {				
+    					String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
+    					
     					model.addAttribute("isExpireDate", "Y");
     					model.addAttribute("userId", _uid);
     					model.addAttribute("encryptID", loginVO.getEncryptID());
     					model.addAttribute("encryptPass", loginVO.getEncryptPass());
     					model.addAttribute("loginId", loginId);
+    					model.addAttribute("companyId", companyId);
+    	        		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
     					
     		        	return "forward:/user/login/login.do";
     				} else {			
@@ -1030,6 +1049,29 @@ public class LoginController {
 
 		return "/user/login/email";
 	}
+	
+	/*
+	 * 암호 정책 확인 (로그인 페이지)
+	 */
+ 	@RequestMapping(value = "/user/login/checkPasswordPolicy.do", method = RequestMethod.POST)
+ 	@ResponseBody
+ 	public String checkPasswordPolicy(HttpServletRequest request, Model model) throws Exception{
+ 		logger.debug("checkPasswordPolicy started.");
+ 		
+ 		String serverName = request.getServerName();        
+        int tenantId = loginService.getTenantId(serverName);
+
+ 		String chkPwPolicy = "";
+ 		
+ 		String pwStr = request.getParameter("pw");
+ 		String chkCompanyId = request.getParameter("chkCompanyId");
+ 		
+ 		Boolean test = commonUtil.checkPwPolicy(pwStr, chkCompanyId, tenantId);
+ 		chkPwPolicy = test ? "OK" : chkPwPolicy;
+ 		
+ 		logger.debug("checkPasswordPolicy ended. chkPwPolicy=" + chkPwPolicy);
+ 		return chkPwPolicy;
+ 	}
 
     private int checkState(int tenantID, String userId, int numberOfLoginFailPermit) throws Exception {        
         if (numberOfLoginFailPermit <= 0) {        	
@@ -1079,5 +1121,175 @@ public class LoginController {
 		}
 		
 		return returnChangeIp;
+    }
+    
+  //모바일 인증번호 발급
+    @RequestMapping(value = "/user/login/sendFindPwd.do", produces = "text/html; charset=utf-8", method=RequestMethod.POST)
+    @ResponseBody
+    public String sendFindPwd(Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
+    	logger.debug("=========================================== sendFindPwd ============================================");
+    	
+    	String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
+    	String encSabun = request.getParameter("sabun");
+    	
+		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+
+		String _uid = EgovFileScrty.decryptRsa(pk, encSabun);
+		if (_uid == null || _uid.equals("")) {
+		    logger.debug("invalid _uid=" + _uid);		    
+		    return "";
+		}
+		
+        String serverName = request.getServerName();
+        int tenantId = loginService.getTenantId(serverName);
+        
+        LoginVO loginVO = new LoginVO();
+    	
+    	loginVO.setId(_uid);
+		loginVO.setTenantId(tenantId);
+		loginVO.setDn("NOPASSWORD");
+		LoginVO resultVO = loginService.selectUserForChangePwd(loginVO);
+		String result = "";
+		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+			if(resultVO.getMobile() == null || resultVO.getMobile().equals("")){
+				result = egovMessageSource.getMessage("login.zno000", locale);
+			} else {
+				/* 	SMS 솔루션 사용하는 방법은 업체별로 다르겠지만 대체로 상대 DB에 내용을 밀어주는 방법과 API를 사용하는 방법이 있다.
+					가천대 길병원은 DB에 INSERT 해주는 방식을 사용하였다.
+					통합 DB인 경우는 ezFlow에서 직접 해주면 되겠지만, 통합 DB가 아닌 경우에는 따로 API를 생성하여야 된다.
+					
+					제주대학교병원도 동일하게 DB에 INSERT를 해주는 방식을 사용한다.
+					다만 웹메일이 DMZ존에 위치하여 내부망(SMS 솔루션은 내부망에 위치)에 직접 접근이 되지 않아, SMS 솔루션측에서 DMZ에서도 호출 할 수 있는 웹서비스 형태의 API를 제공하였다.
+					
+					두가지 방법 중 현재 본사에서 테스트 및 개발을 진행 할 수 있는 웹서비스 API 사용 방식을 우선적으로 표준에 적용
+				*/
+				 
+				result = loginService.sendFindPwd(resultVO, locale);
+				
+			}
+		} else {
+			result = egovMessageSource.getMessage("login.zno001", locale);;
+		}
+		
+    	logger.debug("=========================================== sendFindPwd ended ============================================");
+    	return result;
+    }
+    
+  //모바일 인증
+    @RequestMapping(value = "/user/login/checkCertification.do", produces = "application/json; charset=utf-8", method=RequestMethod.POST)
+    @ResponseBody
+    public Object checkCertification(Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
+    	logger.debug("=========================================== checkCertification ============================================");
+    	
+    	String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
+    	String encCertificationNum = request.getParameter("certificationNum");
+    	String encSabun = request.getParameter("sabun");
+    	
+    	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+    	
+    	String certificationNum = EgovFileScrty.decryptRsa(pk, encCertificationNum);
+    	String sabun = EgovFileScrty.decryptRsa(pk, encSabun);
+    	
+    	String serverName = request.getServerName();
+        int tenantId = loginService.getTenantId(serverName);
+    	
+    	LoginVO loginVO = new LoginVO();
+    	
+    	loginVO.setId(sabun);
+		loginVO.setTenantId(tenantId);
+		loginVO.setDn("NOPASSWORD");
+		LoginVO resultVO = loginService.selectUser(loginVO);
+    	
+		Map<String, Object> resultMap = loginService.setCertification(resultVO.getSabun(), certificationNum, resultVO.getLocale());
+		int resultKey = (Integer) resultMap.get("resultKey");
+		String pwPolicyExplain = "";
+		
+		if (resultKey == 1) {
+			String companyId = resultVO.getCompanyID();
+			String usePwPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy");
+			logger.debug("usePwPatternPolicy=" + usePwPatternPolicy);
+			
+			if (usePwPatternPolicy.equalsIgnoreCase("yes")) {
+				logger.debug("certification success. get PwPolicyExplain.");
+				pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
+			}
+		}
+		resultMap.put("pwPolicyExplain", pwPolicyExplain);
+
+		// String result = loginService.setCertification(resultVO.getSabun(), certificationNum, resultVO.getLocale());
+    	
+    	logger.debug("=========================================== checkCertification ended ============================================");
+    	return resultMap;
+    }
+    
+  //모바일 인증 후 비밀번호 재설정
+    @RequestMapping(value = "/user/login/changePasswordByCertification.do", produces = "text/html; charset=utf-8", method=RequestMethod.POST)
+    @ResponseBody
+    public String changePasswordByCertification(HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
+    	logger.debug("=========================================== changePasswordByCertification ============================================");
+    	
+    	String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
+    	String encCertificationNum = request.getParameter("certificationNum");
+    	String encSabun = request.getParameter("sabun");
+    	String encPwd = request.getParameter("certificationPwd");
+    	String encPwdRe = request.getParameter("certificationPwdRe");
+    	
+    	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+    	
+    	String certificationNum = EgovFileScrty.decryptRsa(pk, encCertificationNum);
+    	String sabun = EgovFileScrty.decryptRsa(pk, encSabun);
+    	String pwd = EgovFileScrty.decryptRsa(pk, encPwd);
+    	String pwdRe = EgovFileScrty.decryptRsa(pk, encPwdRe);
+    	
+    	logger.debug(sabun + "change password by certification");		    
+    	
+    	if (sabun == null || sabun.equals("")) {
+		    logger.debug("invalid _uid=" + sabun);		    
+		    return "";
+		}
+		
+        String serverName = request.getServerName();
+        int tenantId = loginService.getTenantId(serverName);
+        
+        LoginVO loginVO = new LoginVO();
+    	
+    	loginVO.setId(sabun);
+		loginVO.setTenantId(tenantId);
+		loginVO.setDn("NOPASSWORD");
+		LoginVO resultVO = loginService.selectUser(loginVO);
+    	
+    	String result = "";
+    	
+    	if(pwd.equals("")){
+    		result = "fail|비밀번호를 입력해주십시오";
+    	} else{
+    		String companyId = resultVO.getCompanyID();
+    		String usePwPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy");
+    		boolean chkPw = usePwPatternPolicy.equalsIgnoreCase("yes") ? commonUtil.checkPwPolicy(pwd, companyId, tenantId) : true;
+    		 if(chkPw) {
+    			 if(!pwd.equals(pwdRe)){
+    				 result = "fail|변경할 비밀번호/비밀번호 확인이 일치하지 않습니다.";
+    			 } else {
+    				 result = loginService.setPasswordByCertification(resultVO.getSabun(), certificationNum, pwd, resultVO);
+    			 }
+    		 } else {
+    			 String errMsg = egovMessageSource.getMessage("ezSystem.ksaPwPolicy35", locale);
+    			 result = "fail|" + errMsg;
+    		 }
+    	}
+    	
+    	logger.debug("=========================================== changePasswordByCertification ended ============================================");
+    	return result;
+    }
+    
+  //비밀번호 검증
+    public boolean CheckPassword(String pwd){
+    	String pwPattern = "^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-zA-Z]).{8,50}$";
+    	Matcher matcher = Pattern.compile(pwPattern).matcher(pwd);
+
+    	return matcher.matches();
     }
 }

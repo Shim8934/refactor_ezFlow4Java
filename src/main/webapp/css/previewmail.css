@@ -75,7 +75,8 @@ padding:0px 0px 0px 0px; height:36px; line-height:37px;}/* 20130416 수정 */
 .attachedfile_list .downList .downloadText{ margin:0px; padding:0px 0px 0px 20px; background:url(../images/ImgIcon/attach_download.png) no-repeat left center; cursor:pointer;}
 .attachedfile_list .downList .download_delete{ margin:9px 0px 0px 0px; padding:0px; float:right; cursor:pointer;}
 
-.attachFileName{display:inline-block; width:90%;  white-space:nowrap; overflow:hidden;text-overflow:ellipsis; font-family:Gulim;}
+/* 2020-05-28 홍승비 - 미리보기 첨부파일 영역 > 메세지 리소스의 기본 폰트를 상속받도록 수정 (다국어 대응) */
+.attachFileName{display:inline-block; width:90%;  white-space:nowrap; overflow:hidden;text-overflow:ellipsis;}
 .attachedfile_list .icon_rbtn{position:absolute; right:10px;cursor:pointer;}
 .attachedfile_list .icon_rbtn2{position:absolute; right:35px;cursor:pointer;}
 .imgSpan{ display:inline-block;}

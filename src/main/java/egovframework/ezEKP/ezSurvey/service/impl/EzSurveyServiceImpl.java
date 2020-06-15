@@ -13,14 +13,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
-import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,7 +28,6 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,7 +37,6 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
-import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSurvey.dao.EzSurveyDAO;
@@ -442,7 +438,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			for (int j = 0; j < options.size(); j++, maxOptionId++) {
 				JSONObject optionObj = (JSONObject)options.get(j);
 				JSONObject optionAtt = (JSONObject)optionObj.get("attach");
-				String optionContent = commonUtil.stripScriptTags(optionObj.get("content").toString());
+				String optionContent = "";
+				if(optionObj.get("content") != null) {
+					optionContent = commonUtil.stripScriptTags(optionObj.get("content").toString());
+				}
 				int optionLevel      = optionObj.get("level")     != null ? ((Long)optionObj.get("level")).intValue()     : 0;
 				int otherFlag        = optionObj.get("otherFlag") != null ? ((Long)optionObj.get("otherFlag")).intValue() : 0;
 				int logicNum         = optionObj.get("logic")     != null ? ((Long)optionObj.get("logic")).intValue()     : -1;
@@ -696,13 +695,13 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			switch(column) {
 				case "at" : sqlQuery = "attach_flag "                                              + order; break;
 				case "cd" : sqlQuery = "create_date "                                              + order; break;
-				case "tt" : sqlQuery = "title "                                                    + order; break;
+				case "tt" : sqlQuery = "CAST(SUBSTR(title, 1, 100) AS varchar(100)) "              + order; break;
 				case "ed" : sqlQuery = "end_date "                                                 + order; break;
 				case "ut" : sqlQuery = "participate_flag "                                         + order; break;
 				case "ct" : sqlQuery = primary.equals("1") ? "user_name1 " + order : "user_name2 " + order; break;
 				case "pl" : sqlQuery = "result_public_flag "                                       + order; break;
 				case "an" : sqlQuery = "anonymous_flag "                                           + order; break;
-				default   : sqlQuery = "title "                                                    + order; break;
+				default   : sqlQuery = "CAST(SUBSTR(title, 1, 100) AS varchar(100)) "              + order; break;
 			}
 		}
 		
@@ -891,6 +890,15 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			result.put("participation", "no");
 		} else {
 			result.put("participation", "yes");
+		}
+		
+		// 20.05.06 강승구 - 설문 열 때 답변했던 것인지 확인
+		int responseCnt = ezSurveyDAO.getUserResponseCntForSurvey(map);
+		
+		if (responseCnt > 0) {
+			result.put("resStatus", "true");
+		} else {
+			result.put("resStatus", "false");
 		}
 
 		result.put("status", "ok");
@@ -1268,9 +1276,16 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			int responseCnt = ezSurveyDAO.getUserResponseCntForSurvey(map);
 			
 			if (responseCnt > 0) {
-				result.put("status", "error");
-				result.put("code", 5);
-				return result;
+				// 삭제하는 코드 삽입
+				Map<String, Object> resMap = new HashMap<String, Object>();
+				resMap.put("surveyId", surveyId);
+				resMap.put("userId", userInfo.getId());
+				
+				ezSurveyDAO.deleteRespondents(resMap);
+				ezSurveyDAO.deleteResponseItems(resMap);
+//				result.put("status", "error");
+//				result.put("code", 5);
+//				return result;
 			}
 		}
 		
@@ -1457,7 +1472,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return result;
 	}
 	
-	@SuppressWarnings("unused")
 	private void setSurveyUserInfo(SurveyParticipantVO participant, String primary) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", participant.getCompanyId());
@@ -1476,7 +1490,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		participant.setUserName2(user.getUserName2());
 	}
 	
-	@SuppressWarnings("unused")
 	private void setSurveyDeptInfo(SurveyParticipantVO participant, String primary) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", participant.getTenantId());

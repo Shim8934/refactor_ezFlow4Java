@@ -602,7 +602,7 @@
 		list.forEach(function(item, index) {
 			if(item.scheduleType === '1') {
 				pScheduleList.push(item);	
-			} else if (item.scheduleType === '2' || item.scheduleType === '3') {
+			} else if (item.scheduleType === '2') {
 				dScheduleList.push(item);
 			}
 		});
@@ -988,7 +988,8 @@
 	    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
 	    var feedListCount = 10;
 	    var g_bRayful = false;
-	    var g_bVisible = true; // 문서탭 선택 시 원문에 포함된 첨부파일 포함 여부 (false: 포함)	    
+	    var g_bVisible = true; // 문서탭 선택 시 원문에 포함된 첨부파일 포함 여부 (false: 포함)
+	    var g_bEzWorkspaceJava = true; // 협업 자바버전 변경을 위한 변수
 	    
     	ezWorkspaceData(workspaceContextRootUrl);
     </script>		

@@ -1,6 +1,8 @@
 package egovframework.let.user.login.service;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginDeviceVO;
@@ -82,5 +84,13 @@ public interface LoginService {
 			String isPasswordChange, String extension1, String extension2) throws Exception;
 
 	public CountryVO getLoginIPCountry(long loginIP) throws Exception;
+	
+	public String sendFindPwd(LoginVO vo, Locale locale) throws Exception;
+	
+	public LoginVO selectUserForChangePwd(LoginVO vo) throws Exception;
+	
+	public Map<String, Object> setCertification(String sabun, String certificationNum, Locale locale) throws Exception;
+	
+	public String setPasswordByCertification(String sabun, String certificationNum, String password, LoginVO loginVO) throws Exception;
 
 }

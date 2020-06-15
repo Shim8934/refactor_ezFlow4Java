@@ -150,7 +150,8 @@
 	        var curDocNum = "";
 	        
 	        var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
-	        
+			var formAprOption = "<c:out value='${formAprOption}'/>";
+			
 		    function getNextDocList() {
 		        NextDocID = "";
 		        if (selectedDocID != "") {
@@ -548,7 +549,7 @@
 			        if (pDraftFlag == "HABYUI") {
 			            setMenuBar("btntotaldocinfo", false);
 			        }
-			    }
+				}
 			    //SignCheck();
 			}
 	
@@ -1362,6 +1363,10 @@
                                 reason = ret[30];
                                 limitDate = ret[31];
 							}
+
+							//2020-05-08 : 결재정보확인 시 문서정보 저장 후 문서 반영
+							setApprDocInfo();	
+							SaveFile();
 
 			                SummaryFlag = true;
 			                savexmlhttp = null;

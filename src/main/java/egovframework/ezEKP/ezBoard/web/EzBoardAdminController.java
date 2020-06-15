@@ -1512,9 +1512,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			isAllGroupBoard = "N";
 		}
 		
-		if (user.getRollInfo().indexOf("c=1") == -1) { // 전체관리자가 아님
+		if (user.getRollInfo().indexOf("c=1") == -1 || isAllGroupBoard.equals("N")) { // 전체관리자가 아니거나, 그룹사게시판이 아님(회사 소속 게시판)
 			topid = user.getCompanyID();
-		} else { // 전체관리자 (모든 회사를 조직도에서 표출)
+		} else { // 전체관리자이면서 그룹사게시판인 경우 (모든 회사를 조직도에서 표출)
 			topid = "Top";
 		}
 		

@@ -28,7 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
@@ -62,11 +61,8 @@ import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
-import egovframework.ezEKP.ezEmail.vo.*;
-import net.sf.cglib.core.Local;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.crypto.tls.ServerName;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -98,6 +94,13 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
+import egovframework.ezEKP.ezEmail.vo.MailColorVO;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
+import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezEmail.vo.MailReadVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.web.EzEmailMailReadController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -107,7 +110,6 @@ import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import net.htmlparser.jericho.Renderer;
@@ -480,7 +482,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
+			// String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
 			String sendName = ezEmailUtil.getSentFolderId(locale);
 			String tempName = ezEmailUtil.getDraftsFolderId(locale);
 			
@@ -801,6 +803,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String replyReadTime = "1";
 			String delaySendDate = "";
 			String unread = "";
+			@SuppressWarnings("unused")
 			String reSendFlag = "N";
 			String folderPath = "";
 						
@@ -2180,6 +2183,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String textBody = "";
 			String from = "";
 			String charset = "";
+			@SuppressWarnings("unused")
 			String htmlbody = "";
 			String displayName = "";
 			String stateName = "";
@@ -4020,6 +4024,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			folderId = URLDecoder.decode(folderId, "UTF-8");
 			
+			@SuppressWarnings("unused")
 			boolean permanentlyDelete = true;
 
 			String serverName = request.getHeader("x-user-host");
@@ -4374,7 +4379,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		LOGGER.debug("MOBILE G/W MAIL getAddressInfo started.");
 		LOGGER.debug("userId=" + userId + ",addressId=" + addressId);
 		
-        JSONObject data = new JSONObject();
         JSONObject result = new JSONObject();
 		
         try {
@@ -4409,7 +4413,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		LOGGER.debug("MOBILE G/W MAIL deleteAddressInfo started.");
 		LOGGER.debug("userId=" + userId + ",addressId=" + addressId);
 		
-        JSONObject data = new JSONObject();
         JSONObject result = new JSONObject();
 		
         try {
@@ -4443,6 +4446,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 								
+			@SuppressWarnings("unused")
 			String ownerId = "";
 			String folderType = "";
 			String sName = "";
@@ -4453,6 +4457,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String sCompanyPhone = "";
 			String sMobile = "";
 			String sMemo = "";
+			@SuppressWarnings("unused")
 			String folderId = "";
 			String sFurigana = "";
 			
@@ -5770,6 +5775,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezemail/recpCheck/{messageId}/users/{userId:.+}",
                     method = RequestMethod.POST,
                     produces = "application/json;charset=utf-8")

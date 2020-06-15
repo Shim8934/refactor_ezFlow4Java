@@ -37,6 +37,7 @@
 		var g_bRayful = false;
 		var g_bVisible = true; // 문서탭 선택 시 원문에 포함된 첨부파일 포함 여부 (false: 포함)		
 		var g_ParentHref = false; // location.href를 parent 윈도우의 경로를 이동시킬지 여부 (true: parent 윈도우를 통해 이동)
+		var g_bEzWorkspaceJava = true; // 협업 자바버전 변경을 위한 변수
 		
 		document.getElementById('ezWorkspacePlus').addEventListener('click', function() {
 			window.open("${workspaceContextRootUrl}/ezWorkspace/Account/SSO", "main", "");

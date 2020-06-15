@@ -143,4 +143,6 @@ public interface EzEmailUserAdminService {
 	
 	public String getCopyrightText(int tenantId, String companyId) throws Exception;
 
+	public int deleteAllUserDistributionForMember(String targetEmail, String domain) throws Exception;
+
 }

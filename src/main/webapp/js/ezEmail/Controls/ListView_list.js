@@ -95,6 +95,7 @@ function ListView() {
     this.SetDebugMode = SetDebugMode;
     this.toString = ListView_ToString;
     this.SetHeightFree = SetHeightFree;
+    this.SetEventSetFlag = SetEventSetFlag;
     var _dataSource = null;
     var _thisID = "";
     var _isMultiSelectable = false;
@@ -121,6 +122,7 @@ function ListView() {
     var _ListType = 0;
     var _SetHeightFree = false;
     var _HeaderNode = "NAME";
+    var _rowEventSetFlag = true;
     function SetID(pObjID) {
         if (pObjID != "")
             _thisID = pObjID;
@@ -204,6 +206,9 @@ function ListView() {
     function SetHeightFree(pSetHeightFree)
     {
         _SetHeightFree = pSetHeightFree;
+    }
+    function SetEventSetFlag(flag) {
+    	_rowEventSetFlag = flag;
     }
     function LoadFromID(pTableID) {
         var oList = document.getElementById(pTableID);
@@ -446,7 +451,8 @@ function ListView() {
         var strToday = GetTodayDate();
 
         // 2018-12-04 김민성 - 관리자 > 조직도/메일관리 > 공용배포그룹관리 > 데이터 없을 때 처리
-        if(_rowCount == 0 && ( _thisID == "lvUserList" || _thisID =="sharedMailbox")) {
+        // dl_body(사용자 정의 공용배포그룹)
+        if(_rowCount == 0 && ( _thisID == "lvUserList" || _thisID =="sharedMailbox" || _thisID =="DL_Body")) {
         	 var objTr = document.createElement("TR");
              objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
              oTbody.appendChild(objTr);
@@ -463,14 +469,17 @@ function ListView() {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + i);
             objTr.style.cursor = "pointer";
-
-            objTr.onmouseover = new Function("tr_mouseover(this)");
-            objTr.onmouseout = new Function("tr_mouseout(this)");
-            if (_rowonclick != null)
-                objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
-            else
-                objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\");");
-
+            
+            if (_rowEventSetFlag) {
+            	objTr.onmouseover = new Function("tr_mouseover(this)");
+            	objTr.onmouseout = new Function("tr_mouseout(this)");
+            
+	            if (_rowonclick != null)
+	                objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
+	            else
+	                objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\");");
+            }
+            
             if (_rowondblclick != null)
                 objTr.ondblclick = new Function(_rowondblclick + "(this.id);");
 

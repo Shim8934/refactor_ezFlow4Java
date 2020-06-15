@@ -876,7 +876,7 @@
 			AND
 				WRITER_ID NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
-				TYPE_ID NOT IN ('A01', 'A03')
+				TYPE_ID NOT IN ('A01', 'A03', 'A25')
 			AND
 				MODAPPL <> '5'
 			AND    
@@ -2869,13 +2869,23 @@
                     A.MODAPPL <> '5'
 				]]>
 				AND
-					A.TYPE_ID NOT IN ('A01', 'A02', 'A03')
+					A.TYPE_ID NOT IN ('A01', 'A02', 'A03', 'A25')
 				AND
 					A.TENANT_ID = #v_TENANTID#
 				AND
-					A.DEPT_ID = #v_DEPTID#
-				AND
 					c.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+				<isNotEmpty prepend="AND" property="useAnnualScheduleYN">
+					<isEqual property="useAnnualScheduleYN" compareValue="1">
+					<![CDATA[
+						A.DEPT_ID = #v_DEPTID#
+					]]>
+					</isEqual>
+					<isEqual property="useAnnualScheduleYN" compareValue="2">
+					<![CDATA[
+						A.COMPANY_ID = #v_COMPANYID#
+					]]>
+					</isEqual>
+				</isNotEmpty>
 				<![CDATA[
 				AND  
 					(

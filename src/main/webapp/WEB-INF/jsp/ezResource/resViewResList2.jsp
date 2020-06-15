@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
+		<link href="${util.addVer('/css/Calendar_cross.css')}" rel="stylesheet" type="text/css" />
 		<style>
 			#resourceDataTable tr td {
 				border : 1px solid #ccc;				
@@ -26,8 +27,6 @@
 				
 			}
 			
-			.icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
-			.icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -181,7 +180,11 @@
 	                	    title_name[i] = pChildBrd.split(",")[i];
 	                	}
 
-	                	setweek_onload("WEEK");
+	            	    if (Mod != null && Mod != ""){
+	                		setweek_onload(Mod);
+	    		        } else {
+		                	setweek_onload("WEEK");
+	    		        }
 	            	} else {
 	            		/* 2018-04-26 홍승비 - 자원 관리자의 자원등록, 자원관리 표시 수정 */
 	                	if(CheckAdmin()) {
@@ -229,6 +232,9 @@
 
 	    	function setweek_onload(type) {
 		        var date = new Date();
+		        if (weekStartDate != null && weekStartDate != ""){
+		        	date = new Date(weekStartDate);
+		        }
 		        if (pBrdCount != 0) {
 		            if (type == "WEEK") {
 	    	            document.getElementById("TR_Line2").style.display = "";

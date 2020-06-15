@@ -8,6 +8,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezSurvey.css', 'msg'                    )}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/jquery.mCustomScrollbar.css')}" type="text/css">
+		<script type="text/javascript">
+			var surveyId = -1;
+		</script>
 	</head>
 	
 	<body class="newLeft over-fl">
@@ -66,14 +69,78 @@
 					var mySurvey    = document.getElementById("mySurvey");
 					var createBttn  = document.getElementById("createBttn");
 					
-					if (draftSurvey) {draftSurvey.onclick = function(e) {getDraftSurveyPage()};}
-					if (mySurvey)    {mySurvey.onclick    = function(e) {getMySurveyPage()   };}
-					if (createBttn)  {createBttn.onclick  = function(e) {createNewSurvey()   };}
+					if (draftSurvey) {draftSurvey.onclick = function(e) {
+						// 2020.04.24 강승구 : 설문수정 도중 메뉴클릭시 modifyFlag수정 및 메시지처리 추가(모든 서브메뉴 적용)
+						if(surveyId != -1){
+							if(confirm(SurveyMessages.strCancelMsg)){
+								changeSurveyState();
+								getDraftSurveyPage();
+							}
+						} else {
+							getDraftSurveyPage();	
+						}
+					};}
+					if (mySurvey)    {mySurvey.onclick    = function(e) {
+						if(surveyId != -1){
+							if(confirm(SurveyMessages.strCancelMsg)){
+								changeSurveyState();	
+								getMySurveyPage();
+							}
+						} else {
+							getMySurveyPage();	
+						}
+					};}
+					if (createBttn)  {createBttn.onclick  = function(e) {
+						if(surveyId != -1){
+							if(confirm(SurveyMessages.strCancelMsg)){
+								changeSurveyState();
+								createNewSurvey();
+							}
+						} else {
+							createNewSurvey();	
+						}
+					};}
 					
-					document.getElementById("totalSurvey"     ).addEventListener("click", function(e) {getAllSurveyList()       ;});
-					document.getElementById("surveyConfig"    ).addEventListener("click", function(e) {getConfigPage()          ;});
-					document.getElementById("processingSurvey").addEventListener("click", function(e) {getProcessingSurveyList();});
-					document.getElementById("finishedSurvey"  ).addEventListener("click", function(e) {getFinishedSurveyPage()  ;});
+					document.getElementById("totalSurvey"     ).addEventListener("click", function(e) {
+						if(surveyId != -1){
+							if(confirm(SurveyMessages.strCancelMsg)){
+								changeSurveyState();	
+								getAllSurveyList();	
+							}
+						} else {
+							getAllSurveyList();	
+						}
+					});
+					document.getElementById("surveyConfig"    ).addEventListener("click", function(e) {
+						if(surveyId != -1){
+							if(confirm(SurveyMessages.strCancelMsg)){
+								changeSurveyState();	
+								getConfigPage();
+							}
+						} else {
+							getConfigPage();	
+						}
+					});
+					document.getElementById("processingSurvey").addEventListener("click", function(e) {
+						if(surveyId != -1){
+							if(confirm(SurveyMessages.strCancelMsg)){
+								changeSurveyState();		
+								getProcessingSurveyList();
+							}
+						} else {
+							getProcessingSurveyList();	
+						}
+					});
+					document.getElementById("finishedSurvey"  ).addEventListener("click", function(e) {
+						if(surveyId != -1){
+							if(confirm(SurveyMessages.strCancelMsg)){
+								changeSurveyState();		
+								getFinishedSurveyPage();
+							}
+						} else {
+							getFinishedSurveyPage();
+						}
+					});
 					window.addEventListener("resize", function(e) {windowResize();}, false);
 					//getAllSurveyList();
 					getProcessingSurveyList();
@@ -88,6 +155,21 @@
 				function getMySurveyPage()         {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=my";}
 				function getDraftSurveyPage()      {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=draft";}
 				function createNewSurvey()         {window.parent.frames["right"].location.href = "/ezSurvey/createSurvey.do";}
+				function changeSurveyState() {
+					$.ajax({
+						type: "GET",
+						url: "/ezSurvey/changeSurveyState.do",
+						data: {surveyId : surveyId},
+						contentType: "application/json; charset=utf-8",
+						dataType: "JSON",
+						async: false,
+						cache: false,
+						success : function(data) {
+							surveyId = -1;
+						},
+						error : function(error) {}
+					});
+				}
 				
 				function windowResize() {$(".surveyList").height(window.innerHeight - 105);}
 				

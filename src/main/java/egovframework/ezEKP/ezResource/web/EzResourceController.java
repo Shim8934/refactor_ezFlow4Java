@@ -21,7 +21,6 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -848,6 +847,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원정보 수정 화면 호출 함수
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezResource/modClsItem.do", method = RequestMethod.GET)
 	public String modClsItem(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1297,7 +1297,6 @@ public class EzResourceController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezResource/portletResourceInfo.do", method = RequestMethod.GET)
 	public String portletResourceInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		logger.debug("portletResourceInfo Start");
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String ownerID = req.getParameter("ownerID");
 		
 		model.addAttribute("ownerID", ownerID);
@@ -2508,6 +2507,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezResource/getResourcePortlet.do", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject getResoucePortlet(@CookieValue("loginCookie") String loginCookie, String date) throws Exception {
@@ -2527,12 +2527,12 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * @param request
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezResource/saveResourcePortlet.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject saveResoucePortlet(@CookieValue("loginCookie") String loginCookie, String resources) throws Exception {
 		logger.debug("============ saveResourcePortlet started ============");
 		
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String result = ezResourceService.saveResourcePortlet(loginCookie, resources);
 
 		JSONObject jObject = new JSONObject();

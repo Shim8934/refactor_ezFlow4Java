@@ -9,6 +9,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -26,6 +27,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -43,6 +45,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -60,6 +63,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -77,6 +81,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -95,6 +100,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "";
+                document.getElementById("ApvForm_content9").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -113,6 +119,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "";
@@ -130,6 +137,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -138,8 +146,26 @@ function ChangeTab(obj) {
                 
                 document.getElementById("TForm").style.height = "0px";
             }
-            break;
+            break;           
         // FormBuilder end
+        case "ApvForm_div9":  //양식 세부설정
+            if (document.getElementById("ApvForm_content9").style.display == "none") {
+                document.getElementById("ApvForm_content1").style.display = "none";
+                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
+                document.getElementById("ApvForm_content5").style.display = "none";
+                document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+                
+                document.getElementById("TForm").style.height = "0px";
+            }
+            break;            
     }
 }
 
@@ -415,6 +441,24 @@ function MakeFormInfoXML_Detail() {
     createNodeAndInsertText(xmlpara, objNode, "TBITEMCODE", document.getElementById("tbItemCode").value);
     createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME", document.getElementById("tbItemName").value);
     createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME2", document.getElementById("tbItemName2").value);
+    //양식 세부설정
+    var formOptArr = new Array();
+    var formOptTypeAtr = "";
+
+    for (var k = 0 ; k < document.getElementsByName("aprOption").length ; k++) {
+        var code = GetAttribute(document.getElementsByName("aprOption").item(k), "code");
+        var optionName = "aprOption_" + code;
+
+        for (var i = 0 ; i < document.getElementsByName(optionName).length ; i++) {
+            if (document.getElementsByName(optionName)[i].checked) {
+                formOptArr[formOptArr.length] = GetAttribute(document.getElementsByName(optionName)[i], "id");
+            }
+        }
+    }
+    formOptTypeAtr = formOptArr.join(",");
+
+    createNodeAndInsertText(xmlpara, objNode, "APPROPTION", formOptTypeAtr);    
+    //    
     
     return getXmlString(xmlpara.childNodes[0]);
 }

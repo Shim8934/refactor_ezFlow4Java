@@ -1,16 +1,15 @@
 package egovframework.ezEKP.ezAttitude.service.impl;
 
-import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -127,11 +126,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public void insertAttitude(String writerId, String deptId, String startDate,
 			String endDate, String region, String mobile, String bizsub, String content,
-			String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String mode, String adminId) throws Exception {
+			String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String mode, String adminId, String attendType, String latitude, String longitude) throws Exception {
 		LOGGER.debug("insertAttitude started");
 		
 		if (mode == null) {
 			mode = "";
+		}
+		
+		if (attendType == null) {
+			attendType = "0";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -140,7 +143,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		if (typeId.equals("A01") || typeId.equals("A03")) {
+		if (typeId.equals("A01") || typeId.equals("A03") || typeId.equals("A25")) {
 			if (!mode.equals("admin")) {
 				startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 				
@@ -182,6 +185,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("ipAddress", ip);
 		map.put("dateType", dateType);
 		map.put("modappl", mode.equals("admin") ? "3" : "0");
+		map.put("attendType", attendType);
+		if(attendType.equals("1")) {
+			map.put("latitude", latitude);
+			map.put("longitude", longitude);
+		}
 		
 		ezAttitudeDAO.insertAttitude(map);
 		
@@ -218,11 +226,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		} else if (!startDate.equals("") && endDate.equals("")) {
 			endDate = startDate + " 23:59:59"; 
 			startDate = startDate + " 00:00:00";
+		} else if (typeId.equals("A25")) {
+			String dayAfter = commonUtil.getDayAfter(startDate);
+			
+			//전날 퇴근한 경우
+			startDate = dayAfter + " 00:00:00";
+			endDate = dayAfter + " 23:59:59";
 		} else {
 			startDate = startDate + " 00:00:00";
 			endDate = endDate + " 23:59:59";
 		}
-		
+
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("tenantId", tenantId);
@@ -251,6 +265,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		
 		if(deptFlag.equals("true") && typeId.trim().equals("") && startDate.compareTo(commonUtil.getTodayUTCTime("")) <= 0) {
+			
 			map.put("companyId", companyId);
 			map.put("searchStartDate", startDate);
 			map.put("searchEndDate", endDate);
@@ -1090,6 +1105,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchDeptId, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String userLang, String offset, String companyId, int tenantId, List<String> deptIdList, String primary) throws Exception {
 		LOGGER.debug("getAttitudeAbsentedList started.");
@@ -1284,7 +1300,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			if (vo1.getIsSolar() == 0) {//음력일 경우
 				String lunarDate = vo1.getHolidayDate();
 				
-				koreaCalendar.setLunarDate(Integer.parseInt(lunarDate.substring(0, 4)), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), true);
+				koreaCalendar.setLunarDate(Integer.parseInt(lunarDate.substring(0, 4)), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), false);
+				if(!startYear.equals(String.valueOf(koreaCalendar.getSolarYear()))) {
+					koreaCalendar.setLunarDate(Integer.parseInt(startYear), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), false);
+				}
+				
 				vo1.setHolidayDate(koreaCalendar.getSolarYear() + "-" + df.format(koreaCalendar.getSolarMonth()) + "-" + df.format(koreaCalendar.getSolarDay()));
 			}
 			
@@ -2540,6 +2560,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     	LOGGER.debug("getIsAttitude started");
     	Map<String,Object> map = new HashMap<String, Object>();
     	
+    	if (startDate.equals("")) {
+			startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+    	}
+    	
     	if (typeId.equals("A01") || typeId.equals("A02")) {
     		typeId = "A01,A02";
     	} 
@@ -2554,11 +2578,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     	else if (typeId.equals("A08")) {
     		typeId = "A03,A08";
     	}
-    	
-    	if (startDate.equals("")) {
-			startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+    	//2020-06-03 김정언 : 새벽 퇴근 기능 추가
+    	else if(typeId.equals("A26")) { //전날 출근이 찍혀 있는지 확인한다.
+    		typeId = "A01,A02";
+    		startDate = commonUtil.getDayBefore(startDate.split(" ")[0]);
     	}
-    	
+    	else if(typeId.equals("A25")) { //전날 퇴근이 찍혀 있는지 확인한다.
+    		typeId = "A03,A08";
+    		startDate = commonUtil.getDayBefore(startDate.split(" ")[0]);
+    	}
+    	else if(typeId.equals("A27")) { //오늘 날짜로 전날 퇴근이 찍혀 있는지 확인한다.
+    		typeId = "A25";
+    	}
+
     	map.put("typeIdArr", typeId.split(","));
     	map.put("writerId", writerId);
     	map.put("offsetMin", commonUtil.getMinuteUTC(offset));
@@ -3196,6 +3228,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		// 결근일과 실제사용자 출근일과 출근해야하는 날을 비교하여 월차 생성
 		// 전달에 결근일이 하루라도 있으면 개근이 아니므로 월차가 생성되지 않는다.
 		if (userAbsentCnt == 0 && (userAttendanceCnt <= monthWorkingDayCnt)) {
+			@SuppressWarnings("unused")
 			int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
 			map.put("holidayCnt",  +1);
 			map.put("attendanceRateCondition","2");
@@ -3224,6 +3257,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		int workingMonthCnt = Integer.parseInt((String)map.get("workingMonthCnt"));
 		
 		if (userMonthlyHolidayCnt >= (double)(workingMonthCnt - (workingMonthCnt - 12.0 ) * 2.0)) { 
+			@SuppressWarnings("unused")
 			int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
 			map.put("holidayCnt", -1);
 			map.put("attendanceRateCondition","2");
@@ -3292,8 +3326,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String targetUserID = ids[i];
 			String targetUserName = "";
 			String targetUserEmail = "";
-			String targetUserDeptID = "";
-			String targetUserCompanyID = "";
+			// String targetUserDeptID = "";
+			// String targetUserCompanyID = "";
 			
 			targetUserEmail = ezOrganService.getPropertyValue(targetUserID, "mail", tenantID);
 			targetUserName = ezOrganService.getPropertyValue(targetUserID, "displayName", tenantID);
@@ -3730,9 +3764,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public List<String> getDisabledDays(String primary, String offset, String year, String month, String paramStartDate, String paramEndDate, String userId, String companyId, int tenantId) throws Exception {		
 		LOGGER.debug("getDisabledDays started");
 		
-		List<String> resultList = new ArrayList();
+		List<String> resultList = new ArrayList<>();
 		
 		//사용자 근태 리스트(disabled되어야할....datetype이 4인것과 결근인 근태) 가져오기
+		@SuppressWarnings("unused")
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		if (year != null && !year.equals("")) {
@@ -3832,7 +3867,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			if (vo1.getIsSolar() == 0) {//음력일 경우
 				String lunarDate = vo1.getHolidayDate();
 				
-				koreaCalendar.setLunarDate(Integer.parseInt(lunarDate.substring(0, 4)), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), true);
+				koreaCalendar.setLunarDate(Integer.parseInt(lunarDate.substring(0, 4)), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), false);
+				if(!startYear.equals(String.valueOf(koreaCalendar.getSolarYear()))) {
+					koreaCalendar.setLunarDate(Integer.parseInt(startYear), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), false);
+				}
+
 				vo1.setHolidayDate(koreaCalendar.getSolarYear() + "-" + df.format(koreaCalendar.getSolarMonth()) + "-" + df.format(koreaCalendar.getSolarDay()));
 			}
 			
@@ -3958,6 +3997,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		cal.setTime(startDate);
 		
 		String tempDate = "";
+		@SuppressWarnings("unused")
 		boolean isContained = true;
 		
 		List<String> result = new ArrayList<String>();
@@ -4097,6 +4137,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		String startDate = "";
 		String endDate = "";
 		
+		@SuppressWarnings("unused")
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		if (year != null && !year.equals("")) {

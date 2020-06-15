@@ -58,13 +58,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class EzPMSController {
@@ -77,9 +75,6 @@ public class EzPMSController {
 	private CommonUtil commonUtil;
 
 	@Autowired
-	private EgovFileScrty egovFileScrty;
-
-	@Autowired
 	private Properties config;
 
 	@Resource(name = "egovMessageSource")
@@ -88,9 +83,6 @@ public class EzPMSController {
 	@Resource(name = "EzEmailService")
 	private EzEmailService ezEmailService;
 
-	@Autowired
-	private EzOrganService ezOrganService;
-	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 
@@ -2834,7 +2826,6 @@ public class EzPMSController {
 
 			commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

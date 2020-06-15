@@ -345,7 +345,43 @@ function specialChk(val){
 	return rVal;
 }
 
-function CheckPassword(str){
+function loginCheckPassword(str, chkCompanyId) {
+	var test = "";
+	
+	$.ajax({
+		type:"post",
+		data:{"pw":str, "chkCompanyId":chkCompanyId},
+		async:false,
+		url : "/user/login/checkPasswordPolicy.do",
+		success : function(data) {
+			test = (data!="OK") ? "NON" : data;
+		}, error : function (err) {
+			test = "ERROR";
+		}
+	});
+	
+	return test;
+}
+
+function CheckPassword(str, chkCompanyId) {
+	var test = "";
+	
+	$.ajax({
+		type:"post",
+		data:{"pw":str, "chkCompanyId":chkCompanyId},
+		async:false,
+		url : "/ezOrgan/checkPasswordPolicy.do",
+		success : function(data) {
+			test = (data!="OK") ? "NON" : data;
+		}, error : function (err) {
+			test = "ERROR";
+		}
+	});
+	
+	return test;
+}
+
+function sharedMailCheckPassword(str) {
 	var pw = str;
 	var num = pw.search(/[0-9]/g);
 	var eng = pw.search(/[a-z]/ig);

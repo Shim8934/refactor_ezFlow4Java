@@ -26,8 +26,6 @@ import org.springframework.web.servlet.LocaleResolver;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -77,12 +75,6 @@ public class MLoginController {
     
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(MLoginController.class);
-    
-    @Autowired
-    private EzEmailUserAdminService ezEmailUserAdminService;
-    
-    @Autowired
-	private EzOrganAdminService ezOrganAdminService;
     
     @Autowired
     private LocaleResolver localeResolver;
@@ -155,6 +147,7 @@ public class MLoginController {
 		
     	//일반 로그인 처리
         LoginVO resultVO = loginService.selectUser(loginVO);
+        String companyId = resultVO.getCompanyID();
         
         if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {        	
         	//비밀번호 변경 팝업 상태 값 초기화
@@ -163,7 +156,8 @@ public class MLoginController {
         	if (resultVO.getLoginCnt() == 0) {        		
         		return "isFirstLogin";        		
         	} else {
-	        	String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
+        		String expirePassPeriod = ezCommonService.getCompanyConfig(tenantId, companyId, "ExpirePassPeriod");
+        		//String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
 	        	
 	        	if (!expirePassPeriod.trim().equals("0")) {
 	        		int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
