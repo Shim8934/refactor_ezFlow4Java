@@ -964,6 +964,13 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
+		// 현재 자신의 회사에서 즐겨찾기한 게시판 + 그룹사 게시판의 즐겨찾기 여부를 체크
+		String isMyBoard = "";
+		int isMyBoardExist = ezBoardService.getIsMyBoardExist(pBoardID, userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		if (isMyBoardExist > 0) {
+			isMyBoard = "YES";
+		}
+		
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardName", commonUtil.cleanValue(pBoardName));
 		model.addAttribute("boardID", commonUtil.stripScriptTags(pBoardID));
@@ -972,6 +979,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("use_ocs", use_ocs);
 		model.addAttribute("use_Editor", use_Editor);
 		model.addAttribute("use_oneLineCount", use_oneLineCount);
+		model.addAttribute("isMyBoard", isMyBoard);
 		
 		logger.debug("boardItemList ended");
 		logger.debug("requestURL : " + requestURL);
@@ -5936,6 +5944,13 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
+		// 현재 자신의 회사에서 즐겨찾기한 게시판 + 그룹사 게시판의 즐겨찾기 여부를 체크
+		String isMyBoard = "";
+		int isMyBoardExist = ezBoardService.getIsMyBoardExist(boardID, userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		if (isMyBoardExist > 0) {
+			isMyBoard = "YES";
+		}
+		
 		model.addAttribute("mode", mode);
 		model.addAttribute("apprFlag", apprFlag);
 		model.addAttribute("useOCS", useOCS);
@@ -5952,6 +5967,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardViewForm", boardViewForm);
+		model.addAttribute("isMyBoard", isMyBoard);
 
 		logger.debug("boardItemListThumbnail ended");
 		return "ezBoard/boardItemListThumbnail";
@@ -8822,6 +8838,13 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
+		// 현재 자신의 회사에서 즐겨찾기한 게시판 + 그룹사 게시판의 즐겨찾기 여부를 체크
+		String isMyBoard = "";
+		int isMyBoardExist = ezBoardService.getIsMyBoardExist(boardID, userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		if (isMyBoardExist > 0) {
+			isMyBoard = "YES";
+		}
+		
 		model.addAttribute("mode", mode);
 		model.addAttribute("apprFlag", apprFlag);
 		model.addAttribute("useOCS", useOCS);
@@ -8837,6 +8860,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardProperty", boardProperty);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("isMyBoard", isMyBoard);
 
 		logger.debug("boardItemListMovie ended");
 		return "ezBoard/boardItemListMovie";
@@ -9599,7 +9623,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 2019-07-02 홍승비 - 게시판의 승인 사용 여부를 리턴 (Y/N)
 	 * */
-	@RequestMapping(value = "/ezBoard/getBoardApprProperty.do")
+	@RequestMapping(value = "/ezBoard/getBoardApprProperty.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String getBoardApprProperty(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getBoardApprProperty started.");
@@ -9615,6 +9639,28 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		logger.debug("getBoardApprProperty ended.");
 		return useAppr;
+	}
+	
+	/**
+	 * 2019-07-02 홍승비 - 게시판의 승인 사용 여부를 리턴 (Y/N)
+	 * */
+	@RequestMapping(value = "/ezBoard/getIsMyBoard.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String getIsMyBoard(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getIsMyBoard started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String pBoardID = request.getParameter("boardID");
+		String result = "NO";
+		
+		// 현재 자신의 회사에서 즐겨찾기한 게시판 + 그룹사 게시판의 즐겨찾기 여부를 체크
+		int isMyBoardExist = ezBoardService.getIsMyBoardExist(pBoardID, userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		if (isMyBoardExist > 0) {
+			result = "YES";
+		}
+		
+		logger.debug("getIsMyBoard ended.");
+		return result;
 	}
 }
 
