@@ -331,6 +331,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         imgSrcs = imgSrcs.stream().distinct().collect(Collectors.toList());
 
+        elements = null;
+        document = null;
+
         logger.debug("extractImageSource ended.");
 
         return imgSrcs;
@@ -377,6 +380,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         }
 
         backgroundImgSrcs = backgroundImgSrcs.stream().distinct().collect(Collectors.toList());
+        
+        elements = null;
+        document = null;
 
         logger.debug("extractBackgroundSource ended.");
 
