@@ -9642,7 +9642,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 2019-07-02 홍승비 - 게시판의 승인 사용 여부를 리턴 (Y/N)
+	 * 2020-06-15 홍승비 - 즐겨찾기 게시판 여부 리턴(YES/NO)
 	 * */
 	@RequestMapping(value = "/ezBoard/getIsMyBoard.do", method = RequestMethod.GET)
 	@ResponseBody
