@@ -6133,4 +6133,21 @@
 		]]>
 	</insert>
 	
+	<select id="EzBoardDAO.getIsMyBoardExist" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(BOARDID)
+            FROM 
+            	TBL_BOARD_MYBOARDS
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				(TRIM(COMPANYID) = #v_COMPANYID# OR TRIM(COMPANYID) = '*')
+            AND
+            	USERID = #v_USERID#
+            AND
+            	BOARDID = #v_BOARDID#
+		]]>
+	</select>
+	
 </sqlMap>
