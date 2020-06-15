@@ -15,6 +15,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -323,10 +324,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         Elements elements = document.getElementsByTag("img");
         if (!elements.isEmpty()) {
-            List<String> finalImgSrcs = imgSrcs;
-            elements.forEach(element -> {
-                finalImgSrcs.add(element.attr("src"));
-            });
+            for (Element element : elements) {
+                imgSrcs.add(element.attr("src"));
+            }
         }
 
         imgSrcs = imgSrcs.stream().distinct().collect(Collectors.toList());
@@ -347,9 +347,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         List<String> backgroundImgSrcs = new ArrayList<String>();
 
         Elements elements = document.select("body[style*='background-image'], table[style*='background-image'], td[style*='background-image']");
+
         if (!elements.isEmpty()) {
-            List<String> finalBackgroundImgSrcs = backgroundImgSrcs;
-            elements.forEach(element -> {
+            for (Element element : elements) {
                 String[] firstSplit = element.attr("style").split(":");
                 String[] secondSplit;
                 int tempCount = 0;
@@ -360,20 +360,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                     if (i % 2 != 0) {
                         if (secondSplit.length == 1) break;
                         if (secondSplit[1].trim().equalsIgnoreCase("background-image")) {
-                            finalBackgroundImgSrcs.add(firstSplit[i + 1].split(";")[0].trim());
-                            logger.debug(finalBackgroundImgSrcs.get(tempCount));
+                            backgroundImgSrcs.add(firstSplit[i + 1].split(";")[0].trim());
+                            logger.debug(backgroundImgSrcs.get(tempCount));
                             tempCount++;
                         }
                     } else {
                         if (i + 1 == firstSplit.length) break;
                         if (firstSplit[i].split(";")[secondSplit.length - 1].trim().equalsIgnoreCase("background-image")) {
-                            finalBackgroundImgSrcs.add(firstSplit[i + 1].split(";")[0].trim());
-                            logger.debug(finalBackgroundImgSrcs.get(tempCount));
+                            backgroundImgSrcs.add(firstSplit[i + 1].split(";")[0].trim());
+                            logger.debug(backgroundImgSrcs.get(tempCount));
                             tempCount++;
                         }
                     }
                 }
-            });
+            }
         }
 
         backgroundImgSrcs = backgroundImgSrcs.stream().distinct().collect(Collectors.toList());
