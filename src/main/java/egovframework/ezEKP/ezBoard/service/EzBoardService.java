@@ -351,4 +351,8 @@ public interface EzBoardService {
 
 	/* 2020-06-15 홍승비 - 주어진 게시판ID에 대하여 즐겨찾기 여부를 판단하는 메서드 */
 	public int getIsMyBoardExist(String boardID, String userID, int tenantID, String companyID) throws Exception;
+
+	/* 2020-06-15 홍승비 - 즐겨찾기 게시판 단일 삭제 메서드 */
+	public void deleteMyBoards(String boardID, String userID, int tenantID, String companyID) throws Exception;
+	
 }

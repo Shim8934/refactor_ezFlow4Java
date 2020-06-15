@@ -948,11 +948,14 @@
 		        var xmlhttp = createXMLHttpRequest();
 		        xmlhttp.open("POST", "/ezBoard/addToMyBoards.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp.send();
-		
+		        
 		        if (xmlhttp.responseText.indexOf("OK") > -1) {
 		            alert("<spring:message code='ezBoard.t269' />");
 		        } else {
-		            alert("<spring:message code='ezBoard.t270' />");
+		            var ret = confirm("<spring:message code='ezBoard.t270' />\n<spring:message code='ezBoard.hsbFv01' />");
+		        	if (ret) { // 이미 즐겨찾기된 경우, 즐겨찾기 해제
+		        		deleteMyBoards();
+		        	}
 		        }
 		        xmlhttp = null;
 		        
@@ -1353,6 +1356,26 @@
 							document.getElementById("myBoardIconSpan").className = "icon16 icon16_star";
 						} else {
 							document.getElementById("myBoardIconSpan").className = "no_yellowStar";
+						}
+					}
+				});
+	    	}
+	    	
+	    	/* 2020-06-15 홍승비 - 즐겨찾기 아이콘 클릭으로 즐겨찾기 해제 가능 */
+	    	function deleteMyBoards() {
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/deleteMyBoards.do",
+					data : {
+						boardID : pBoardID
+					},
+					success: function(result){ // 리턴값 없음 (void)
+						// 즐겨찾기 탭에서 열린 경우, boardLeft의 favoriteList()를 다시 클릭하여 새롭게 즐겨찾기 메뉴로 진입(갱신)
+			            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
+							boardLeftFrame = window.parent.parent.frames["left"];
+							boardLeftFrame.favoriteList();
 						}
 					}
 				});

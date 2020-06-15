@@ -769,7 +769,10 @@
 		        if (xmlhttp.responseText.indexOf("OK") > -1) {
 		            alert("<spring:message code='ezBoard.t269'/>");
 				} else {
-					alert("<spring:message code='ezBoard.t270'/>");
+		            var ret = confirm("<spring:message code='ezBoard.t270' />\n<spring:message code='ezBoard.hsbFv01' />");
+		        	if (ret) { // 이미 즐겨찾기된 경우, 즐겨찾기 해제
+		        		deleteMyBoards();
+		        	}
 				}
 				xmlhttp = null;
 				
@@ -1145,7 +1148,26 @@
 					}
 				});
 	    	}
-		
+	    	
+	    	/* 2020-06-15 홍승비 - 즐겨찾기 아이콘 클릭으로 즐겨찾기 해제 가능 */
+	    	function deleteMyBoards() {
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/deleteMyBoards.do",
+					data : {
+						boardID : pBoardID
+					},
+					success: function(result){
+			            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
+							boardLeftFrame = window.parent.parent.frames["left"];
+							boardLeftFrame.favoriteList();
+						}
+					}
+				});
+	    	}
+	    	
 		</script>
 	</head>
 	<c:choose>

@@ -9662,5 +9662,21 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("getIsMyBoard ended.");
 		return result;
 	}
+	
+	/**
+	 * 2020-06-15 홍승비 - 즐겨찾기 게시판 단일 삭제 메서드 (ajax용)
+	 * */
+	@RequestMapping(value = "/ezBoard/deleteMyBoards.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void deleteMyBoards(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("deleteMyBoards started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String pBoardID = request.getParameter("boardID");
+		
+		ezBoardService.deleteMyBoards(pBoardID, userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		logger.debug("deleteMyBoards ended.");
+	}
 }
 
