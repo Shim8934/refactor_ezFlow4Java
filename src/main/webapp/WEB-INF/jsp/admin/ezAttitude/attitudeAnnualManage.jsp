@@ -43,6 +43,9 @@
 			.mainlist a.link:hover {
 				font-weight: bold;
 			}
+			.userAnnualH:hover{
+				cursor: pointer;
+			}
 	    </style>
 	    
 	    <script type="text/javascript">
@@ -244,11 +247,11 @@
 	    		var i = ((pageNum - 1) * listSize) + 1;
 	    		
 	    		result.forEach(function(vo, index) {
-	    			resultHtml += "<tr userid='" + vo.userId + "'>";
-	    			resultHtml += "<td style='padding-left: 15px;'>" + i + "</td>";
-	    			resultHtml += "<td>" + vo.userName + "</td>";
-	    			resultHtml += "<td>" + vo.userTitle + "</td>";
-	    			resultHtml += "<td>" + vo.userDeptName + "</td>";
+	    			resultHtml += "<tr userid='" + vo.userId + "' ondblclick=\"useAnnualHistory('" + vo.userId + "')\">";
+	    			resultHtml += "<td style='padding-left: 15px;' class='userAnnualH'>" + i + "</td>";
+	    			resultHtml += "<td class='userAnnualH'>" + vo.userName + "</td>";
+	    			resultHtml += "<td class='userAnnualH'>" + vo.userTitle + "</td>";
+	    			resultHtml += "<td class='userAnnualH'>" + vo.userDeptName + "</td>";
 	    			
 	    			if(vo.joinDate == "0") {
 		    			resultHtml += "<td><a class='imgbtn'><span onclick=\"setJoinDatePop('" + vo.userId + "', 'new', '0')\"><spring:message code='ezAttitude.t288'/></span></a></td>";
@@ -364,11 +367,10 @@
 	        }
 	    	
 			//사용연차 수 팝업
-			/* function useAnnualHistory (obj) {
-				var userId = $(obj).closest("tr").attr("userid");
-				var url = "/admin/ezAttitude/useAnnualHistoryPop.do?userId=" + userId + "&year=" + searchYear + "&companyId=" + pCompanyId;
-				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(665, 535));
-			} */
+			function useAnnualHistory (userId) {
+				var url = "/admin/ezAttitude/useAnnualHistoryPop.do?userId=" + userId + "&companyId=" + pCompanyId;
+				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(665, 560));
+			}
 	    	
 			//로우의 총 연차수 링크 클릭 시
 	    	function modifyPrsnAnnualPop(userId , userName, userTitle, userDeptName, additionalAnnualCnt) {

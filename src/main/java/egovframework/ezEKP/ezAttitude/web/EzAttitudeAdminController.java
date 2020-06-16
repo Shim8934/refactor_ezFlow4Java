@@ -2797,16 +2797,66 @@ public class EzAttitudeAdminController {
 		LOGGER.debug("useAnnualHistoryPop started.");
 		//해당 사원 정보 (사원이름 직위 부서), 지각 수, 연차 수, 반차들 수, 연차 리스트
 		String userId = request.getParameter("userId");
-		String year = request.getParameter("year");
 		String companyId = request.getParameter("companyId");
 				
 		model.addAttribute("userId", userId);
-		model.addAttribute("year", year);
 		model.addAttribute("companyId", companyId);
-
+		
+		if (userId != null) {
+			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+			String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/annualreg";
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("userId", userId);
+			
+			RestTemplate rest = new RestTemplate();
+			
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			String status = resultBody.get("status").toString();
+			
+			JSONObject dataObject = new JSONObject();
+			
+			if (status.equals("ok")) {
+				dataObject = (JSONObject) resultBody.get("data");
+				model.addAttribute("annualconfig", dataObject);
+			}
+			
+			gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+			url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/joindate";
+			
+			headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			entity = new HttpEntity<>(headers);
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId);
+			
+			rest = new RestTemplate();
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			jp = new JSONParser();
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			
+			if (status.equals("ok")) {
+				String joinDate = resultBody.get("data").toString();
+				model.addAttribute("joinDate", joinDate);
+			}
+		}
 		
 		LOGGER.debug("useAnnualHistoryPop ended.");
-
 		return "/admin/ezAttitude/useAnnualHistoryPop";
 	}
 	
@@ -2815,8 +2865,12 @@ public class EzAttitudeAdminController {
 		LOGGER.debug("useAnnualHistoryList started.");
 		//해당 사원 정보 (사원이름 직위 부서), 지각 수, 연차 수, 반차들 수, 연차 리스트
 		String userId = request.getParameter("userId");
-		String year = request.getParameter("year");
 		String companyId = request.getParameter("companyId");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		String secondYear = request.getParameter("secondYear");
 		
 		if (userId != null) {
 			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -2829,8 +2883,12 @@ public class EzAttitudeAdminController {
 			HttpEntity<?> entity = new HttpEntity<>(headers);
 			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", companyId)
-					.queryParam("year", year)
-					.queryParam("userId", userId);
+					.queryParam("userId", userId)
+					.queryParam("startDate", startDate)
+					.queryParam("endDate", endDate)
+					.queryParam("orderCell", orderCell)
+					.queryParam("orderOption", orderOption)
+					.queryParam("secondYear", secondYear);
 			
 			RestTemplate rest = new RestTemplate();
 			
