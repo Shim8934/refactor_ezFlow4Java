@@ -226,25 +226,40 @@
 		
 		//휴일 체크
 		function checkHoliday(obj) {
+			var useHolidayCheckYN;
+			
+			$.ajax({
+				type : "POST",
+				async : false,
+				url : "/ezAttitude/holidayCheck.do",
+				data : {},
+				success : function(result) {
+					useHolidayCheckYN = result;
+				}
+			});
+			
 			var todayLunar = lunarCalc(nowAttiTime.getFullYear(), nowAttiTime.getMonth() + 1, nowAttiTime.getDate(), 1);
 			var todayMemorialDayList = memorialDayCheck(nowAttiTime, todayLunar);
 			var todayYearMemorialDayList = yearmemorialDayCheck(nowAttiTime, todayLunar);
 			var addAttitude = true; // true 등록 가능
 			
-			if (closedDay[nowAttiTime.getDay()] == "1"){ //회사지정 휴일인지 체크
-				addAttitude = false;				
-			} else if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) { //기념일체크
-				if (todayMemorialDayList.length != 0 ) {
-					for (var i = 0; i < todayMemorialDayList.length; i++) {
-						if (todayMemorialDayList[i].holiday ==  true) { //휴무일인 기념일일때
-							addAttitude = false;
+			//휴일 체크 미사용
+			if(useHolidayCheckYN == "0"){
+				if (closedDay[nowAttiTime.getDay()] == "1"){ //회사지정 휴일인지 체크
+					addAttitude = false;				
+				} else if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) { //기념일체크
+					if (todayMemorialDayList.length != 0 ) {
+						for (var i = 0; i < todayMemorialDayList.length; i++) {
+							if (todayMemorialDayList[i].holiday ==  true) { //휴무일인 기념일일때
+								addAttitude = false;
+							}
 						}
-					}
-				} 
-				if (todayYearMemorialDayList.length != 0) {
-					for (var i = 0; i < todayYearMemorialDayList.length; i++) {
-						if (todayYearMemorialDayList[i].holiday == true) { //휴무일인 기념일일때
-							addAttitude = false;
+					} 
+					if (todayYearMemorialDayList.length != 0) {
+						for (var i = 0; i < todayYearMemorialDayList.length; i++) {
+							if (todayYearMemorialDayList[i].holiday == true) { //휴무일인 기념일일때
+								addAttitude = false;
+							}
 						}
 					}
 				}
@@ -293,10 +308,23 @@
 	    	var pTypeId = obj.getAttribute("type");
 	    	var pDateType = obj.getAttribute("datetype");
 	    	if (pTypeId == "A03") {
-	    		var returnValue = getIsAttitude("A01");
-	    		if (returnValue == 0) {
-	    			alert("<spring:message code='ezAttitude.t168'/>");
-		    		return;
+	    		var returnValue = getIsAttitude("A01"); //오늘 날짜의 출근이 있는지 체크
+	    		if (returnValue == 0) { //오늘 날짜의 출근이 없을 경우
+	    			var inAtt = getIsAttitude("A26"); //전날 출근이 있는지 확인한다.
+	    			if(inAtt != 0) { // 전날 출근이 있는 경우
+	    				var outAtt = getIsAttitude("A25"); //전날 퇴근이 있는지 확인한다.
+	    				var outAtt2 = getIsAttitude("A27"); //오늘 날짜로 전날 퇴근이 있는지 체크한다.
+	    				if(outAtt == 0 && outAtt2 == 0){ //전날 퇴근이 없고 오늘 날짜로 퇴근이 없는 경우
+	    					getAttitudeList();
+	    					pTypeId = "A25";
+	    				}else {
+	    					alert("<spring:message code='ezAttitude.kje21'/>");
+	    					return;
+	    				}
+	    			}else { //전날 출근이 없는 경우
+		    			alert("<spring:message code='ezAttitude.t168'/>");
+			    		return;
+	    			}
 	    		} else {
 	    			getAttitudeList();
 	    			try{
@@ -332,24 +360,28 @@
 	    			mode : "new"
 	    		},
 	    		success : function(result) {
-	    			getAttitudeList();
-	    			try{
-	    				var calType = "";
-	    				var btnOnNodes = parent.frames["right"].document.getElementsByClassName("on");
-	    				for (var i = 0; i < btnOnNodes.length; i++) {
-	    					if (btnOnNodes[i].getAttribute("id") != null && btnOnNodes[i].getAttribute("id") == "btnTableList") {
-	    						calType = btnOnNodes[i].getAttribute("id");
-	    						break;
-	    					}
-	    				}
-	    				
-	    				if (calType == "btnTableList") {
-	    					parent.frames["right"].getAttitudeTableList();
-	    				} else {
-		    				parent.frames["right"].getAttitudeMainList();
-	    				}
-	    				
-	    			}catch(e){}
+	    			if(result == "outAttError"){
+	    				alert("<spring:message code='ezAttitude.kje21'/>");
+	    			}else {
+		    			getAttitudeList();
+		    			try{
+		    				var calType = "";
+		    				var btnOnNodes = parent.frames["right"].document.getElementsByClassName("on");
+		    				for (var i = 0; i < btnOnNodes.length; i++) {
+		    					if (btnOnNodes[i].getAttribute("id") != null && btnOnNodes[i].getAttribute("id") == "btnTableList") {
+		    						calType = btnOnNodes[i].getAttribute("id");
+		    						break;
+		    					}
+		    				}
+		    				
+		    				if (calType == "btnTableList") {
+		    					parent.frames["right"].getAttitudeTableList();
+		    				} else {
+			    				parent.frames["right"].getAttitudeMainList();
+		    				}
+		    				
+		    			}catch(e){}
+	    			}
 	    		},
 	    		complete : function() {
 	    			afterAlertDate = new Date();

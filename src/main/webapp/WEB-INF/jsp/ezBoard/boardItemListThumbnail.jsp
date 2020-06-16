@@ -28,67 +28,81 @@
 		<link rel="stylesheet"  href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<style>
-		#layer_Viewpopup { 
-			z-index:1000; 
-			margin:0px; 
-			padding:0px;
-		}
-		
-		#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
-		
-		#layer_Viewpopup .popupwrap3 {
-			position:relative;
-			padding:10px;
-			background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
-		}
-		#layer_Viewpopup .popupwrap3 h1 {
-			font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
-		}
-		.boardAlbumDiv {
-			border: 1px solid #e2e3e6;
-			height: 150px;
-			width: 290px;
-			cursor: pointer;
-			display: inline-block;
-			margin-right: 10px;
-			margin-bottom: 10px;
-		}
-		.topInfoP {
-			height: 32px;
-		    line-height: 32px;
-		    margin: 0px 10px -5px 10px;
-			padding: 0px 10px;
-		    border-bottom: 2px solid #eaeaea;
-		    font-size: 13px;
-		    white-space: nowrap;
-		    overflow: hidden;
-		    text-overflow: ellipsis;
-			color: #5b5a5a;
-		}
-		.selectedP {
-			border-bottom: 2px solid #0470e4;
-			margin: 0px 0px -5px 0px;
-			padding: 0px 20px;
-			background-color: #3d8fea;
-			color:#ffffff;
-		}
-		.topInfoP input[type="checkbox"] {
-			margin: 11px 5px 0px 0px;
-			width: 13px;
-			height: 13px;
-			vertical-align: top;
-		}
-		.albumThumbImg {
-			height: 100%;
-			max-height: 100px;
-			min-height: 100px;
-			width: auto;
-			border-radius: 3px;
-		}
-		.selectedAlbumDiv {
-			background-color: rgb(241, 248, 255);
-			border: 1px solid #0470e4;
-		}
+			#layer_Viewpopup { 
+				z-index:1000; 
+				margin:0px; 
+				padding:0px;
+			}
+			
+			#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
+			
+			#layer_Viewpopup .popupwrap3 {
+				position:relative;
+				padding:10px;
+				background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
+			}
+			#layer_Viewpopup .popupwrap3 h1 {
+				font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
+			}
+			.boardAlbumDiv {
+				border: 1px solid #e2e3e6;
+				height: 150px;
+				width: 290px;
+				cursor: pointer;
+				display: inline-block;
+				margin-right: 10px;
+				margin-bottom: 10px;
+			}
+			.topInfoP {
+				height: 32px;
+			    line-height: 32px;
+			    margin: 0px 10px -5px 10px;
+				padding: 0px 10px;
+			    border-bottom: 2px solid #eaeaea;
+			    font-size: 13px;
+			    white-space: nowrap;
+			    overflow: hidden;
+			    text-overflow: ellipsis;
+				color: #5b5a5a;
+			}
+			.selectedP {
+				border-bottom: 2px solid #0470e4;
+				margin: 0px 0px -5px 0px;
+				padding: 0px 20px;
+				background-color: #3d8fea;
+				color:#ffffff;
+			}
+			.topInfoP input[type="checkbox"] {
+				margin: 11px 5px 0px 0px;
+				width: 13px;
+				height: 13px;
+				vertical-align: top;
+			}
+			.albumThumbImg {
+				height: 100%;
+				max-height: 100px;
+				min-height: 100px;
+				width: auto;
+				border-radius: 3px;
+			}
+			.selectedAlbumDiv {
+				background-color: rgb(241, 248, 255);
+				border: 1px solid #0470e4;
+			}
+			<%-- 2020-06-15 홍승비 - 즐겨찾기 아이콘 스타일 추가 --%>
+			.no_yellowStar {
+				background:url(../images/ImgIcon/view-flag.gif) no-repeat;
+				background-color: transparent;
+				vertical-align: top;
+				overflow: hidden;
+				width:18px;
+				height:16px;
+				display:inline-block;
+				margin: 6px 0px 0px 0px;
+				cursor:pointer;
+				margin-left: 3px;
+				margin-right: 3px;
+			}
 		</style>
 		<script type="text/javascript">
 		    var pBoardID = "${boardID}";
@@ -893,9 +907,15 @@
 		        if (xmlhttp.responseText.indexOf("OK") > -1) {
 		            alert("<spring:message code='ezBoard.t269'/>");
 		        } else {
-		            alert("<spring:message code='ezBoard.t270'/>");
+		            var ret = confirm("<spring:message code='ezBoard.t270' />\n<spring:message code='ezBoard.hsbFv01' />");
+		        	if (ret) { // 이미 즐겨찾기된 경우, 즐겨찾기 해제
+		        		deleteMyBoards();
+		        	}
 		        }
 		        xmlhttp = null;
+		        
+		        // 즐겨찾기 동작 이후 별모양 아이콘 갱신
+		        changeMyboardIcon();
 		    }
 /* 		
 		    function CopyItem_onclick() {
@@ -1289,6 +1309,46 @@
 					strListInfo += $(this).attr("id");
 				})
 		    }
+		    
+	    	/* 2020-06-15 홍승비 - 게시판 즐겨찾기 여부에 따라 별모양 아이콘 스타일 변경 */
+	    	function changeMyboardIcon() {
+				$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : true,
+					url : "/ezBoard/getIsMyBoard.do",
+					data : {
+						boardID : pBoardID
+					},
+					success: function(result){
+						if (result == "YES") { // 즐겨찾기된 게시판
+							document.getElementById("myBoardIconSpan").className = "icon16 icon16_star";
+						} else {
+							document.getElementById("myBoardIconSpan").className = "no_yellowStar";
+						}
+					}
+				});
+	    	}
+	    	
+	    	/* 2020-06-15 홍승비 - 즐겨찾기 아이콘 클릭으로 즐겨찾기 해제 가능 */
+	    	function deleteMyBoards() {
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/deleteMyBoards.do",
+					data : {
+						boardID : pBoardID
+					},
+					success: function(result){
+			            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
+							boardLeftFrame = window.parent.parent.frames["left"];
+							boardLeftFrame.favoriteList();
+						}
+					}
+				});
+	    	}
+	    	
 		</script>
 	</head>
 	<c:choose>
@@ -1342,7 +1402,17 @@
 		        </c:if>
 			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 			    <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-				<li onClick="AddToMyBoards()"><span class="icon16 icon16_star"></span></li>
+			    
+				<%-- 2020-06-15 홍승비 - 즐겨찾기 여부에 따라 별모양 아이콘 스타일 수정 --%>
+		        <c:choose>
+					<c:when test="${isMyBoard == 'YES'}">
+			        	<li><span class="icon16 icon16_star" id="myBoardIconSpan" onClick="AddToMyBoards()"></span></li>
+					</c:when>
+					<c:otherwise>
+			        	<li><span class="no_yellowStar" id="myBoardIconSpan" onClick="AddToMyBoards()"></span></li>
+			        </c:otherwise>
+		        </c:choose>
+		        
 		        <li onClick="doLayerPopup(this)"><span class="icon16 icon16_search" id="SearchOption" mode="off"></span></li>
 		        <li onClick="DeleteItem_onclick()"><span class="icon16 icon16_delete"></span></li>
 		        <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh"></span></li>

@@ -4733,4 +4733,36 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getNewBoardTreePath ended");
 		return addJobStr.toString();
 	}
+	
+	/* 2020-06-15 홍승비 - 주어진 게시판ID에 대하여 즐겨찾기 여부를 판단하는 메서드 */
+	@Override
+	public int getIsMyBoardExist(String boardID, String userID, int tenantID, String companyID) throws Exception {
+		logger.debug("getIsMyBoardExist started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BOARDID", boardID);
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+		
+		logger.debug("getIsMyBoardExist ended");
+		return ezBoardDAO.getIsMyBoardExist(map);
+	}
+	
+	/* 2020-06-15 홍승비 - 즐겨찾기 게시판 단일 삭제 메서드 */
+	@Override
+	public void deleteMyBoards(String boardID, String userID, int tenantID, String companyID) throws Exception {
+		logger.debug("deleteMyBoards started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("boardID", boardID);
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
+		
+		logger.debug("deleteMyBoards ended");
+		ezBoardDAO.setListOrder_D(map);
+	}
 }

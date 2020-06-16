@@ -2206,7 +2206,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TYPE", type);
-		map.put("v_COMPANYID", companyID); // 이 값이 없다면 모든 회사의 직위,직책을 가져온다. (그룹사게시판에서는 "top"으로 전달됨)
+		map.put("v_COMPANYID", companyID); // 이 값이 없다면 모든 회사의 직위,직책을 가져온다. (그룹사게시판이라면 ""으로 전달됨)
 		map.put("v_TENANTID", tenantID);
 		
 		List<OrganJobVO> jobList = ezOrganAdminDao.getTitleList_group(map);

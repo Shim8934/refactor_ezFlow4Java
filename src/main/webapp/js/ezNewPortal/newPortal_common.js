@@ -876,10 +876,23 @@ function addAttitude(obj, themeId) {
 	var pTypeId = obj.getAttribute("type");
 	var pDateType = obj.getAttribute("datetype");
 	if (pTypeId == "A03") {
-		var returnValue = getIsAttitude("A01");
-		if (returnValue == 0) {
-			alert(messages.strLang3);
-    		return;
+		var returnValue = getIsAttitude("A01"); //오늘 날짜의 출근이 있는지 체크
+		if (returnValue == 0) { //오늘 날짜의 출근이 없을 경우
+			var inAtt = getIsAttitude("A26"); //전날 출근이 있는지 확인한다.
+			if(inAtt != 0) { // 전날 출근이 있는 경우
+				var outAtt = getIsAttitude("A25"); //전날 퇴근이 있는지 확인한다.
+				var outAtt2 = getIsAttitude("A27"); //오늘 날짜로 전날 퇴근이 있는지 체크한다.
+				if(outAtt == 0 && outAtt2 == 0){ //전날 퇴근이 없고 오늘 날짜로 퇴근이 없는 경우
+					getAttitudeList(themeId);
+					pTypeId = "A25";
+				}else {
+					alert(messages.strLang33);
+					return;
+				}
+			}else { //전날 출근이 없는 경우
+				alert(messages.strLang3);
+				return;				
+			}
 		} else {
 			getAttitudeList(themeId);
 		}
@@ -904,7 +917,11 @@ function addAttitude(obj, themeId) {
 			mode : "new"
 		},
 		success : function(result) {
-			getAttitudeList(themeId);
+			if(result == "outAttError"){
+				alert(messages.strLang33);
+			}else {
+				getAttitudeList(themeId);				
+			}
 		},
 		complete : function() {
 			afterAlertDate = new Date();
@@ -986,6 +1003,7 @@ function checkHoliday(obj, themeId) {
 	var todayYearMemorialDayList = yearmemorialDayCheck(nowAttiTime, todayLunar);
 	var addAttitude = true; // true 등록 가능
 	
+	//휴일 체크 미사용
 	if(useHolidayCheckYN == "0"){	
 		if (closedDay[nowAttiTime.getDay()] == "1"){ //회사지정 휴일인지 체크
 			addAttitude = false;				
@@ -1025,7 +1043,7 @@ function checkAttitude(obj, themeId) {
 		getAttitudeList(themeId);
 		try{parent.frames["right"].getAttitudeMainList();}catch(e){}
 	}
-	}
+}
 
 function getIsAttitude(typeId) {
 	var isAttitudeReturn = "";

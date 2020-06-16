@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -125,11 +126,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public void insertAttitude(String writerId, String deptId, String startDate,
 			String endDate, String region, String mobile, String bizsub, String content,
-			String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String mode, String adminId) throws Exception {
+			String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String mode, String adminId, String attendType, String latitude, String longitude) throws Exception {
 		LOGGER.debug("insertAttitude started");
 		
 		if (mode == null) {
 			mode = "";
+		}
+		
+		if (attendType == null) {
+			attendType = "0";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -138,7 +143,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		if (typeId.equals("A01") || typeId.equals("A03")) {
+		if (typeId.equals("A01") || typeId.equals("A03") || typeId.equals("A25")) {
 			if (!mode.equals("admin")) {
 				startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 				
@@ -180,6 +185,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("ipAddress", ip);
 		map.put("dateType", dateType);
 		map.put("modappl", mode.equals("admin") ? "3" : "0");
+		map.put("attendType", attendType);
+		if(attendType.equals("1")) {
+			map.put("latitude", latitude);
+			map.put("longitude", longitude);
+		}
 		
 		ezAttitudeDAO.insertAttitude(map);
 		
@@ -216,11 +226,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		} else if (!startDate.equals("") && endDate.equals("")) {
 			endDate = startDate + " 23:59:59"; 
 			startDate = startDate + " 00:00:00";
+		} else if (typeId.equals("A25")) {
+			String dayAfter = commonUtil.getDayAfter(startDate);
+			
+			//전날 퇴근한 경우
+			startDate = dayAfter + " 00:00:00";
+			endDate = dayAfter + " 23:59:59";
 		} else {
 			startDate = startDate + " 00:00:00";
 			endDate = endDate + " 23:59:59";
 		}
-		
+
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("tenantId", tenantId);
@@ -249,6 +265,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		
 		if(deptFlag.equals("true") && typeId.trim().equals("") && startDate.compareTo(commonUtil.getTodayUTCTime("")) <= 0) {
+			
 			map.put("companyId", companyId);
 			map.put("searchStartDate", startDate);
 			map.put("searchEndDate", endDate);
@@ -2543,6 +2560,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     	LOGGER.debug("getIsAttitude started");
     	Map<String,Object> map = new HashMap<String, Object>();
     	
+    	if (startDate.equals("")) {
+			startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+    	}
+    	
     	if (typeId.equals("A01") || typeId.equals("A02")) {
     		typeId = "A01,A02";
     	} 
@@ -2557,11 +2578,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     	else if (typeId.equals("A08")) {
     		typeId = "A03,A08";
     	}
-    	
-    	if (startDate.equals("")) {
-			startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+    	//2020-06-03 김정언 : 새벽 퇴근 기능 추가
+    	else if(typeId.equals("A26")) { //전날 출근이 찍혀 있는지 확인한다.
+    		typeId = "A01,A02";
+    		startDate = commonUtil.getDayBefore(startDate.split(" ")[0]);
     	}
-    	
+    	else if(typeId.equals("A25")) { //전날 퇴근이 찍혀 있는지 확인한다.
+    		typeId = "A03,A08";
+    		startDate = commonUtil.getDayBefore(startDate.split(" ")[0]);
+    	}
+    	else if(typeId.equals("A27")) { //오늘 날짜로 전날 퇴근이 찍혀 있는지 확인한다.
+    		typeId = "A25";
+    	}
+
     	map.put("typeIdArr", typeId.split(","));
     	map.put("writerId", writerId);
     	map.put("offsetMin", commonUtil.getMinuteUTC(offset));

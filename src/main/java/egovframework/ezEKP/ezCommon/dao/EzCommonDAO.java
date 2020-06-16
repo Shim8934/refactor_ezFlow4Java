@@ -1173,9 +1173,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public void createUserDistributionTable() {
 		@SuppressWarnings("serial")
 		Map<String, String> map = new HashMap<String, String>(){{
-			put("EzCommonDAO.checkUserDlTable", "createUserDlTable");
-			put("EzCommonDAO.checkUserDlMemberTable", "createUserDlMemberTable");
-			put("EzCommonDAO.checkUserDlApplyTable", "createUserDlApplyTable");
+			put("EzCommonDAO.checkUserDlTable", "EzCommonDAO.createUserDlTable");
+			put("EzCommonDAO.checkUserDlMemberTable", "EzCommonDAO.createUserDlMemberTable");
+			put("EzCommonDAO.checkUserDlApplyTable", "EzCommonDAO.createUserDlApplyTable");
 		}};
 		
 		for (String key : map.keySet()) {
@@ -1183,8 +1183,8 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				select(key);
 			} catch (Exception e) {
 				String keyVal = map.get(key);
-				logger.debug(keyVal);
-				update("EzCommonDAO." + keyVal);
+				logger.debug(keyVal + " started.");
+				update(keyVal);
 			}
 
 		}
@@ -1423,9 +1423,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		try {
 			select("EzCommonDAO.checkDocStateIntoLastLines");
 		} catch (Exception e) {
-			logger.debug("TBL_LASTDEPTLINE docState column doesn't exist. creating the column...");
+			logger.debug("TBL_LASTAPRLINE docState column doesn't exist. creating the column...");
 
 			update("EzCommonDAO.updateDocStateIntoLastLines");
+			
+			// 오라클의 경우, 기존 프라이머리 키 제거하고 새로운 키 삽입하는 동작 추가
+			if (globals.getProperty("Globals.DbType").equals("oracle")) {
+				update("EzCommonDAO.deleteLastAprLinePrimaryKey");
+				update("EzCommonDAO.addLastAprLinePrimaryKey");
+			}
 		}
 	}
 
@@ -1436,6 +1442,12 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("TBL_LASTDEPTLINE docState column doesn't exist. creating the column...");
 
 			update("EzCommonDAO.updateDocStateIntoLastDeptLines");
+			
+			// 오라클의 경우, 기존 프라이머리 키 제거하고 새로운 키 삽입하는 동작 추가
+			if (globals.getProperty("Globals.DbType").equals("oracle")) {
+				update("EzCommonDAO.deleteLastDeptLinePrimaryKey");
+				update("EzCommonDAO.addLastDeptLinePrimaryKey");
+			}
 		}
 	}
 
@@ -1445,6 +1457,25 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		if (companyId == null) {
 			logger.debug("attitude_type 'alternate holiday' doesn't exist. insert data...");
 			insert("EzCommonDAO.insertAlternateHolidayAttitudeType",map);
+		}
+	}
+
+	public void insertBeforeOutComeAttitudeType(Map<String, Object> map) {
+		String companyId = (String) select("EzCommonDAO.checkBeforeOutComeAttitudeTypeForCompany", map);
+
+		if (companyId == null) {
+			logger.debug("attitude_type_id 'A25' doesn't exist. insert data...");
+			insert("EzCommonDAO.insertBeforeOutComeAttitudeType",map);
+		}
+	}
+	
+	public void insertMobileAttitudeColumn() throws Exception {
+		try {
+			select("EzCommonDAO.checkMobileAttitudeColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_attitude attend_type column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.createMobileAttitudeColumn");
 		}
 	}
 }

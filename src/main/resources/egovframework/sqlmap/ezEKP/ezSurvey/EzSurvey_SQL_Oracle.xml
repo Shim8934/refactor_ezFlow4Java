@@ -80,7 +80,8 @@
 		<result property="draftFlag"        column="draft_flag"          columnIndex="24"/>
 		<result property="responseFlag"     column="response_flag"       columnIndex="25"/>
 		<result property="totalUser"        column="total_user"          columnIndex="26"/>
-		
+		<result property="mailFlag"         column="mail_flag"           columnIndex="27"/>
+		<result property="popupFlag"        column="popup_flag"          columnIndex="28"/>
 	</resultMap>
 	
 	<!-- AttachVO resultMap -->
@@ -196,7 +197,9 @@
 			modify_flag,
 			draft_flag,
 			response_flag,
-			total_user
+			total_user,
+			mail_flag,
+			popup_flag
 		from tbl_survey
 	</sql>
 	
@@ -598,15 +601,67 @@
 	</select>
 	
 	<select id="EzSurveyDAO.getReceivedSurveyList" resultClass="Long">
-		select survey_id from tbl_survey_participant where
+		select distinct(survey_id) from tbl_survey_participant a
+			join tbl_usermaster b
+			on
+				a.tenant_id = b.tenant_id
+			and
+				a.company_id = b.PHYSICALDELIVERYOFFICENAME
+			and
+				b.cn = #userId#
+		where
 			(
 				(user_id = #userId# and user_type = 'user') or (user_id in 
 					<iterate property="deptList" open="(" close=")" conjunction=",">
 						#deptList[]#
 					</iterate> and (user_type = 'dept' or user_type = 'comp')
 				)
+				OR
+				(a.user_type = 'jikchek' and (b.extensionattribute8 = a.user_id
+				or a.user_id in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
+			OR
+			(a.user_type = 'jikwi' and (b.extensionattribute7 = a.user_id 
+				or a.user_id in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) )   )
+			OR
+			(a.user_type = 'group' and a.user_id  in 
+				(
+					select 
+						distinct c.group_id 
+					from
+						tbl_permissiongroupinfo c
+					join
+						tbl_usermaster d
+					on
+						d.tenant_id = c.tenant_id
+					and 
+						d.tenant_id = #tenantId#
+					AND 
+						c.company_id = #companyId#	
+					and 
+						d.cn = #userId#
+					where
+						c.group_id = a.user_id
+					and
+						(
+							(c.member_type = 'JIKCHEK' and (d.extensionattribute8 = c.member_id
+								or c.member_id in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
+						or
+							(c.member_type = 'JIKWI' and (d.extensionattribute7 = c.member_id 
+								or c.member_id in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
+						or
+							(c.member_type = 'ORGAN' and d.physicaldeliveryofficename = c.member_id)
+						or
+						
+							(c.member_type = 'USER' and d.CN = c.member_id)
+						or
+						
+							(c.member_type = 'DEPT' and (d.department = c.member_id
+								or c.member_id in (select deptid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
+						)
+				)
+            )
 			)
-			and tenant_id = #tenantId# and company_id = #companyId#
+			and a.tenant_id = #tenantId# and a.company_id = #companyId#
 			<isNotEmpty property="surveyId" prepend=" and ">survey_id = #surveyId#</isNotEmpty>
 	</select>
 	
@@ -619,12 +674,12 @@
 			insert into tbl_survey (
 				survey_id,     title,         purpose,            user_id,        create_date,       start_date,        end_date,    user_name1,  user_name2,
 				use_status,    open_days,     result_public_flag, anonymous_flag, multi_answer_flag, participate_flag,  attach_flag,  modify_flag, draft_flag,
-				response_flag, delete_user,   update_user,        update_date,    total_user,        company_id,        tenant_id
+				response_flag, delete_user,   update_user,        update_date,    total_user,        company_id,        tenant_id,	mail_flag,     popup_flag
 			)
 			values (
 				#surveyId#,     #title#,      #purpose#,          #creatorId#,     #createDate#,      #startDate#,      #endDate#,      #creatorName1#, #creatorName2#,
 				#useStatus#,    #openDays#,   #resultPublicFlag#, #anonymousFlag#, #multiAnswerFlag#, #paritipateFlag#, #attachFlag#,   #modifyFlag#,   #draftFlag#,
-				#responseFlag#, #deleteUser#, #updateUser#,       #updateDate#,    #totalUser#,       #companyId#,      #tenantId#
+				#responseFlag#, #deleteUser#, #updateUser#,       #updateDate#,    #totalUser#,       #companyId#,      #tenantId#,	#mailFlag#,     #popupFlag#
 			)
 		]]>
 	</insert>
@@ -653,7 +708,9 @@
 			total_user         = #totalUser#,
 			delete_user        = #deleteUser#,
 			update_user        = #updateUser#,
-			update_date        = #updateDate#
+			update_date        = #updateDate#,
+			mail_flag		   = #mailFlag#,
+			popup_flag		   = #popupFlag#
 		</isEqual>
 		<isEqual property="updateMode" compareValue="1">
 			use_status         = #useStatus#,
@@ -735,6 +792,167 @@
 			where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
 	</select>
 	
+	<select id="EzSurveyDAO.getTodaySurveyList" resultClass="SurveyVO">
+		<![CDATA[
+			select
+				survey_id as surveyId,
+				title,
+				user_id as creatorId,
+				user_name1 as creatorName1,
+				user_name2 as creatorName2,
+				date_add(start_date, interval #offset# minute)  as startDate,
+				date_add(end_date, interval #offset# minute)    as endDate,
+				tenant_id as tenantId,
+				company_id as companyId
+			from
+				tbl_survey
+			where
+				date_add(start_date, interval #offset# minute) <= current_date
+			and
+				date_add(end_date, interval #offset# minute) >= current_date
+		 	and
+		 		use_status = 1
+		 	and
+		 		mail_flag = 1
+		 	and
+		 		draft_flag = 0
+		 	and 
+		 		mail_sent_flag = 0
+ 		]]>
+	</select>
+	
+	<select id="EzSurveyDAO.getSurveyParticipantListForMail" resultClass="ParticipantVO">
+		<![CDATA[
+		select distinct	*
+		from 
+		(
+			select distinct
+				a.survey_id as surveyId,
+				b.cn as userId,
+				b.displayname as userName1,
+				b.displayname2 as userName2,
+				b.mail as email,
+				a.company_id as companyId,
+				a.tenant_id as tenantId
+			from
+				tbl_survey_participant a
+			join
+				tbl_usermaster b
+			on
+				a.tenant_Id = b.tenant_Id
+			and
+				a.tenant_Id = #tenantId#
+           	and
+           		b.cn not in (select cn from tbl_usermaster_retire where tenant_id = #tenantId#)
+			and
+				(
+					(a.user_type = 'jikchek' and b.extensionattribute8 = a.user_id)
+				or
+					(a.user_type = 'jikwi' and b.extensionattribute7 = a.user_id)
+				or
+					(a.user_type = 'comp' and b.physicaldeliveryofficename = a.user_id)
+				or
+					(a.user_type = 'user' and b.cn = a.user_id)
+				or
+					(a.user_type = 'dept' and b.department = a.user_id)
+					
+				or
+					(a.user_type = 'group' and b.cn in 
+						(
+							select distinct
+								d.cn
+							from
+								tbl_permissiongroupinfo c
+							join
+								tbl_usermaster d
+							on
+								d.tenant_id = c.tenant_id
+							AND
+								d.tenant_Id = #tenantId#
+							AND 
+								c.company_id = #companyId#	
+							where
+								c.group_id = a.user_id
+							and
+								(
+									(c.member_type = 'JIKCHEK' and d.extensionattribute8 = c.member_id)
+								or
+									(c.member_type = 'JIKWI' and d.extensionattribute7 = c.member_id)
+								or
+									(c.member_type = 'ORGAN' and d.physicaldeliveryofficename = c.member_id)
+								or
+									(c.member_type = 'USER' and d.CN = c.member_id)
+								or
+									(c.member_type = 'DEPT' and d.department = c.member_id)
+									
+								)
+						)
+					)
+				)
+			where
+				a.survey_id = #surveyId#
+			and
+				a.tenant_id = #tenantId#
+			and
+				a.company_id = #companyId#
+				
+			union  
+			select distinct
+				b.survey_id as surveyId,
+				cn as userId,
+				displayname as userName1,
+				displayname2 as userName2,
+				mail as email,
+				PHYSICALDELIVERYOFFICENAME as companyId,
+				tenant_id as tenantId 
+			from (
+				select distinct p.member_id as member_id ,
+			    p.member_type as member_type,
+			    s.survey_id as survey_id,
+			    s.user_type as user_type
+			    from tbl_permissiongroupinfo p 
+			    join tbl_survey_participant s on 
+			    		s.user_id = p.group_id 
+			    	and p.tenant_id = s.tenant_id 
+			    	and s.survey_id = #surveyId# 
+			    	and s.company_id = #companyId#
+			    ) b 
+			join tbl_usermaster a on cn in (
+				select ad.cn 
+				from tbl_addjobmaster ad 
+				where tenant_id = #tenantId# and 
+					(	(b.user_type = 'dept' 		and b.member_id = ad.deptid	) 
+					 or (b.user_type = 'jikwi' 		and b.member_id = ad.jobid	) 
+					 or (b.user_type = 'jikchek' 	and b.member_id = ad.jobid	) ))
+			where a.PHYSICALDELIVERYOFFICENAME = #companyId# and tenant_id = #tenantId#
+			union 
+			select distinct 
+				d.survey_id as surveyId,
+				a.cn as userId,
+				a.displayname as userName1,
+				a.displayname2 as userName2,
+				a.mail as email,
+				a.PHYSICALDELIVERYOFFICENAME as companyId,
+				a.tenant_id as tenantId 
+			 from tbl_usermaster a 
+			join (
+				select distinct ad.cn as cn, s.survey_id as survey_id
+				from tbl_addjobmaster ad 
+			    join tbl_survey_participant s 
+					on 		ad.tenant_id = s.tenant_id 
+						and s.survey_id = #surveyId# 
+						and s.tenant_id = #tenantId# 
+			    		and s.company_id = #companyId#
+				where  (s.user_type = 'dept' 	and s.user_id = ad.deptid )
+					or (s.user_type = 'jikwi' 	and s.user_id = ad.jobid )
+			        or (s.user_type = 'jikchek' and s.user_id = ad.jobid )
+			    ) d
+			 on d.cn = a.cn
+			 where a.PHYSICALDELIVERYOFFICENAME = #companyId# and tenant_id = #tenantId#
+		) as plusaddjob
+ 		]]>
+	</select>
+	
 	<!--***********************************************************************************
 	**                               Question item process                               **
 	************************************************************************************-->
@@ -792,6 +1010,32 @@
 	<delete id="EzSurveyDAO.deleteSurveyOptions" parameterClass="SurveyVO">
 		delete from tbl_survey_option where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
 	</delete>
+	
+	<select id="EzSurveyDAO.getMailSentFlag" parameterClass="SurveyVO" resultClass="Integer">
+		SELECT 
+			mail_sent_flag
+		FROM 
+			tbl_survey
+		WHERE 
+			survey_id = #surveyId#
+		AND 
+			company_id = #companyId#
+		AND 
+			tenant_id = #tenantId#
+	</select>
+	
+	<update id="EzSurveyDAO.updateMailSentFlag" parameterClass="Map">
+		UPDATE 
+			tbl_survey
+		SET 
+			mail_sent_flag = #mailSentFlag#
+		WHERE 
+			survey_id = #surveyId#
+		AND 
+			company_id = #companyId#
+		AND 
+			tenant_id = #tenantId#
+	</update>
 	
 	<!--***********************************************************************************
 	**                                Attach item process                                **
@@ -872,6 +1116,47 @@
 	<delete id="EzSurveyDAO.deleteSurveyUsers" parameterClass="SurveyVO">
 		delete from tbl_survey_participant where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
 	</delete>
+	
+	<select id="EzSurveyDAO.getSurveyUserInfo" parameterClass="Map" resultMap="deptMemberInfo">
+		SELECT 
+			cn																	as cn
+			, case when #primary# = '1'then title else title2 end           	as position
+			, case when #primary# = '1' then displayname else displayname2 end	as displayName
+			, displayname														as displayName1
+			, displayname2														as displayName2
+			, department														as department
+			, case when #primary# = '1' then description else description2 end 	as departmentName
+			, description														as departmentName1
+			, description2														as departmentName2
+			, telephonenumber                                               	as telephonenumber
+			, mail																as mail
+			, extensionattribute2                                            	as userimage
+		FROM 
+			tbl_usermaster
+		WHERE
+			cn = #userId#
+		AND
+			physicaldeliveryofficename = #companyId#
+		AND
+			tenant_id = #tenantId#
+	</select>
+	
+		<select id="EzSurveyDAO.getSurveyDeptInfo" parameterClass="Map" resultMap="simpleDeptVO">
+		select
+			a.cn                                                                                                                                        as dept_id,
+			case when '1' = '1' then a.displayname else a.displayname2 end                                                                        		as dept_name,
+			a.displayname                                                                                                                               as dept_name1,
+			a.displayname2                                                                                                                              as dept_name2,
+			a.mail                                                                                                                                      as mail, 
+		    a.deptlevel																																	as dept_level,
+			case when (select count(b.cn) from tbl_deptmaster b where a.cn = b.extensionattribute1 and a.tenant_id = b.tenant_id) = 0 then 0 else 1 end as has_sub
+		from
+			tbl_deptmaster a
+		where
+			a.cn = #deptId# 
+		and 
+			a.tenant_id = #tenantId#
+	</select>
 	
 	<!--***********************************************************************************
 	**                                Survey Response process                            **
@@ -976,6 +1261,49 @@
 		]]>
 	</delete>
 	
+	<!--***********************************************************************************
+	**                                Survey Permit Check process                          **
+	************************************************************************************-->
+	<select id="EzPersonalDAO.getSurveyPopupPermitYN" parameterClass="Map" resultClass="Integer">
+		SELECT 
+			COUNT(user_id)
+		FROM 
+			tbl_survey_participant
+		WHERE 
+			survey_id = #surveyId#
+		AND 
+			( 
+				(user_type = 'user' AND user_id = #userId#)
+		        OR
+		        (user_id IN <iterate property="deptList" open="(" close=")" conjunction=",">
+								#deptList[]#
+							</iterate> AND (user_type = 'dept' OR user_type = 'comp') )
+				OR
+				(user_type = 'JIKWI' AND user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND company_id = #companyId#))
+				OR
+				(user_type = 'JIKCHEK' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND company_id = #companyId#))
+			)
+		AND 
+			company_id = #companyId#
+		AND 
+			tenant_id = #tenantId#
+	</select>
+	
+	<select id="EzPersonalDAO.getSurveyGroupList" parameterClass="Map" resultClass="String">
+		SELECT 
+			user_id
+		FROM 
+			tbl_survey_participant
+		WHERE 
+			survey_id = #surveyId#
+		AND 
+			user_type = 'group'
+		AND 
+			company_id = #companyId#
+		AND 
+			tenant_id = #tenantId#
+	</select>
+	
 	<select id="EzSurveyDAO.checkRespondent" resultClass="Long">
 		select
 			count(*) 
@@ -1029,6 +1357,43 @@
 		and
 			S.start_date <= #today# and S.end_date >= #today#
 		]]>
+	</select>
+	
+	<select id="EzSurveyDAO.getTotalPopupSurveyItems" resultMap="surveyVO">
+		<include refid="surveySelect"/>
+		WHERE
+			use_status = 1
+		AND
+			tenant_id = #tenantId#
+		AND
+			modify_flag = 0
+		<isEqual property="mode" compareValue="popup" prepend=" AND ">
+			<![CDATA[(start_date <= #today# and end_date >= #today#)]]>
+			
+			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1 or user_id = #userId#)</isEmpty>
+			<isNotEmpty property="surveyIds" prepend=" AND ">
+				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
+			</isNotEmpty>
+			AND 
+				draft_flag = 0
+			AND
+				popup_flag = 1
+			AND
+				survey_id NOT IN (
+					SELECT
+						DISTINCT(SURV.survey_id)
+					FROM
+						tbl_survey SURV
+					INNER JOIN
+						tbl_survey_respondent RESP
+					ON
+						SURV.survey_id = RESP.survey_id
+					AND
+						RESP.user_id = #userId#
+			    )
+		</isEqual>	
+		ORDER BY
+			update_date DESC, survey_id DESC
 	</select>
 	
 </sqlMap>

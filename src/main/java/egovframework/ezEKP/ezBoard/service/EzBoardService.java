@@ -348,4 +348,11 @@ public interface EzBoardService {
 
 	/* 2019-09-24 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 읽기권한을 리스트로 리턴하는 메서드 */
 	public List<String> getCheckItemIDNew(String itemID, String boardType, String userDeptPath, int tenantID, int isDept, int isEqualDept) throws Exception;
+
+	/* 2020-06-15 홍승비 - 주어진 게시판ID에 대하여 즐겨찾기 여부를 판단하는 메서드 */
+	public int getIsMyBoardExist(String boardID, String userID, int tenantID, String companyID) throws Exception;
+
+	/* 2020-06-15 홍승비 - 즐겨찾기 게시판 단일 삭제 메서드 */
+	public void deleteMyBoards(String boardID, String userID, int tenantID, String companyID) throws Exception;
+	
 }

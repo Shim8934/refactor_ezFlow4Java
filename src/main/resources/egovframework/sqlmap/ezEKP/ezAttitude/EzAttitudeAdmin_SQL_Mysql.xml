@@ -315,7 +315,7 @@
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="statistics">
 			<![CDATA[
-				TYPE_ID NOT IN ('A01', 'A03', 'A05')
+				TYPE_ID NOT IN ('A01', 'A03', 'A05', 'A25')
 			]]>
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="typeIdArr">
@@ -846,11 +846,11 @@
 					C.company_id = #companyId#
 				AND
 					(
-						(C.start_date >= #searchStartDate# AND C.start_date <= #searchEndDate#)
+						( date_add(C.start_date, INTERVAL #offsetMin# minute) >= #searchStartDate# AND date_add(C.start_date, INTERVAL #offsetMin# minute) <= #searchEndDate#)
 					OR
-						(C.end_date >= #searchStartDate# AND C.end_date < #searchEndDate#)
+						( date_add(C.end_date, INTERVAL #offsetMin# minute) >= #searchStartDate# AND date_add(C.end_date, INTERVAL #offsetMin# minute) < #searchEndDate#)
 					OR
-						(C.start_date < #searchStartDate# AND C.end_date >= #searchEndDate#)
+						( date_add(C.start_date, INTERVAL #offsetMin# minute) < #searchStartDate# AND date_add(C.end_date, INTERVAL #offsetMin# minute) >= #searchEndDate#)
 					)) B
 			ON
 				A.cn = B.writer_id

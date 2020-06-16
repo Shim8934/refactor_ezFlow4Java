@@ -342,7 +342,7 @@ function dblClickBoard(boardID, itemID) {
 	/**
 		게시판 읽기 권한 체크
 	*/
-	$.ajax({
+	/* $.ajax({
 		method: "POST",
 		url: "/ezPortal/chkBoardReadAuthor.do",
 		type: "json",
@@ -355,13 +355,15 @@ function dblClickBoard(boardID, itemID) {
 		success: function (result) {
 			readAuthor = result;
 		}
-	});
+	}); */
+	
+	readAuthor = "true";
 	
 	//readAuthor = "true";
 	
 	if(readAuthor === "true") {
 		boardList.filter(function(e){
-			return e.BoardID === boardID && e.ItemID === itemID ? gubun = e.GUBUN : "";
+			return e.boardId === boardID && e.itemId === itemID ? gubun = e.gubun : "";
 		});
 	
 		//포토게시판:3, 썸네일게시판:4
@@ -393,10 +395,23 @@ function dblClickApproval(docID) {
 	}); */
 	
 	appList.filter(function(e){
-		e.DocID === docID ? docInfo = e : null;
+		e.docId === docID ? docInfo = e : null;
 	});
+	
+	var docHref = docInfo.href;
+	var formUrlExt = docHref.substr(docHref.length - 3, docHref.length).toLowerCase();
+	
+	if (formUrlExt === "hwp" || formUrlExt === "ezd") {
+		if (CrossYN() && isIE()) {
+			url = "/ezApprovalG/ezViewEnd_HWP.do";
+		} else {
+			var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+			alert(pAlertContent);
+			return;
+		}
+	}
 
-	url += "?docID=" + encodeURI(docInfo.DocID) + "&docHref=" + encodeURI(docInfo.Href);
+	url += "?docID=" + encodeURI(docInfo.docId) + "&docHref=" + encodeURI(docHref);
 	
 	openwindow(url, "", "", "");
 }
@@ -511,7 +526,7 @@ function btn_searchStart() {
 	var startDate = "";
 	var endDate = "";
 	var searchRange="";
-	var type =""; //전체검색 || 전자결재 || 게시판
+	var type = totalSearch.data.type == undefined? "all" : totalSearch.data.type; //전체검색 || 전자결재 || 게시판
 	/**
 		검색기간 확인
 	*/
@@ -534,7 +549,7 @@ function btn_searchStart() {
 	*/
 	var isAllChk = $("#chkAllRange").prop("checked");
 	if(isAllChk) {
-		searchRange = "ALL";	
+		searchRange = "ALL";
 	} else {
 		$("#chkRange input").each(function(i, elem){
 			$(elem).prop("checked") && i > 1 ? searchRange += "|" : "";
@@ -567,14 +582,17 @@ function btn_searchStart() {
 	
 	txtKeyword = changeToHenkaku + ' | ' + changeToZenkaku;
 	
+	var automax = totalSearch.data.automax;
+	var page = totalSearch.data.page;
+	
 	totalSearch.data = {
 		 keyword : txtKeyword
 		,startDate : startDate
 		,endDate : endDate
 		,searchRange : searchRange
-		,automax : "5"     //한페이지에 출력하는 양.
-		,page : "1"        //페이지정보도 받아서 처리하는 거로 변경해야함.
-		,type : "all"
+		,automax : automax     //한페이지에 출력하는 양.
+		,page : page       //페이지정보도 받아서 처리하는 거로 변경해야함.
+		,type : type
 		,btnStart : true  // 검색버튼으로 실행했을 경우.
 	}
 	
@@ -602,17 +620,45 @@ function callSearchController() {
 			data : JSON.stringify(data),
 			success : function (res) {
 				
-				var approvalList = res.approvalList;
-				var boardList = res.boardList;
+				console.log(res);
+				
+				if (res == null) {
+					alert("에러가 발생하였습니다.");
+					return;
+				}
+				
+				if (res.error != null) {
+					console.log(res.error);
+					alert("에러가 발생하였습니다.");
+					return;
+				}
+				
+				var approvalList;
+				var boardList;
+				
+				if (data.type == "all") {
+					for (var i = 0; i < res.result.length; i++) {
+						if (res.result[i].type == "board") {
+							boardList = res.result[i];
+						} else {
+							approvalList = res.result[i];
+						}
+					}
+				} else if (data.type == "board") {
+					boardList = res.result[0];
+				} else {
+					approvalList = res.result[0];
+				}
+				
 				var listCnt = 1;
 				
 				$("#approvalResult").empty();
 				$("#boardResult").empty();	
 				
 				//리스트에 출력하는 로직.
-				if(approvalList !== undefined && approvalList.list.length > 0) {
+				if(approvalList !== undefined && approvalList.doc.length > 0) {
 					$("#approvalResultCnt").empty().append(approvalList.totcnt);
- 					$(approvalList.list).each(function(i, e){
+ 					$(approvalList.doc).each(function(i, e){
 						$("#approvalResult").append(approvalDataAssembler(this));
 					});
 /* 					approvalList.list.map(function(e){
@@ -623,15 +669,15 @@ function callSearchController() {
 					listCnt = approvalList.totcnt*1;
 					
 					//결과 담아두기.
-					totalSearch.approval = approvalList.list;
+					totalSearch.approval = approvalList.doc;
 				} else {
 					$("#approvalResultCnt").empty().append("0");
 					$("#approvalResult").append(noData());
 				}
 				
-				if(boardList != undefined && boardList.list.length > 0) {
+				if(boardList != undefined && boardList.doc.length > 0) {
 					$("#boardResultCnt").empty().append(boardList.totcnt);
- 					$(boardList.list).each(function(i, e){
+ 					$(boardList.doc).each(function(i, e){
 						$("#boardResult").append(boardDataAssembler(this));
 					});
 					
@@ -643,14 +689,16 @@ function callSearchController() {
 					listCnt = boardList.totcnt*1;
 					
 					//결과 담아두기.
-					totalSearch.board = boardList.list;				
+					totalSearch.board = boardList.doc;				
 				} else {
 					$("#boardResultCnt").empty().append("0");
 					$("#boardResult").append(noData());
 				}
 				
-				// pagenation.
-				pagenation(pageObj(listCnt));
+				if (data.type !== "all") {
+					// pagenation.
+					pagenation(pageObj(listCnt));
+				}
 				
 				//전체 검색량
 				if(approvalList !== undefined && boardList !== undefined) {
@@ -695,14 +743,19 @@ function noData() {
 function boardDataAssembler(data) {
 	var str = "";	
 
-	str += "<tr boardid='"+ data.BoardID +"' itemid='"+ data.ItemID +"'>";
-	str += "<td>"+ data.BoardName + "</td>";
-	str += "<td>"+ data.Title + "</td>";
-	str += "<td>"+ data.WriterDeptName + "</td>";
-	str += "<td>"+ data.WriterName + "</td>";
-	str += "<td>"+ data.WriteDate + "</td>";
+	str += "<tr boardid='"+ data.boardId +"' itemid='"+ data.itemId +"'>";
+	str += "<td>"+ data.boardName + "</td>";
+	str += "<td>"+ data.title + "</td>";
+	str += "<td>"+ data.writerDeptName + "</td>";
+	str += "<td>"+ data.writerName + "</td>";
 	
-	if(data.Attachments !== '0') {
+	var writeDate = data.writerDate;
+	var writeDateStr = writeDate.substring(0,4); //년도
+	writeDateStr += "-" + writeDate.substring(4,6); //월
+	writeDateStr += "-" + writeDate.substring(6,8); //일
+	str += "<td>"+ writeDateStr + "</td>";
+	
+	if(data.attachments != 0) {
 		str += "<td><img src='/images/newAttach.gif'></td>";	
 	} else {
 		str += "<td></td>";
@@ -718,14 +771,20 @@ function boardDataAssembler(data) {
 function approvalDataAssembler(data) {
 	var str = "";
 
-	str += "<tr docid='"+ data.DocID +"'>";
-	str += "<td>"+ data.DocNo + "</td>";
-	str += "<td>"+ data.DocTitle + "</td>";
-	str += "<td>"+ data.WriterDeptName + "</td>";
-	str += "<td>"+ data.WriterName + "</td>";
-	str += "<td>"+ data.EndDate + "</td>";
+	str += "<tr docid='"+ data.docId +"'>";
+	str += "<td>"+ data.docNo + "</td>";
+	str += "<td>"+ data.docTitle + "</td>";
+	str += "<td>"+ data.writerDeptName + "</td>";
+	str += "<td>"+ data.writerName + "</td>";
 	
-	if(data.HasAttachYN === "Y") {
+	var endDate = data.endDate;
+	var endDateStr = endDate.substring(0,4); //년도
+	endDateStr += "-" + endDate.substring(4,6); //월
+	endDateStr += "-" + endDate.substring(6,8); //일
+	
+	str += "<td>"+ endDateStr + "</td>";
+	
+	if(data.hasAttachYN === "Y") {
 		str += "<td><img src='/images/newAttach.gif'></td>";
 	} else {
 		str += "<td></td>";

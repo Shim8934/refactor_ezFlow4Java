@@ -784,4 +784,9 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public void insertBoardItemReadForCopy(Map<String, Object> map) throws Exception {
 		insert("EzBoardDAO.insertBoardItemReadForCopy", map);
 	}
+
+	/* 2020-06-15 홍승비 - 주어진 게시판ID에 대하여 즐겨찾기 여부를 판단하는 쿼리 */
+	public int getIsMyBoardExist(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getIsMyBoardExist", map);
+	}
 }
