@@ -1689,8 +1689,7 @@ function mailExport_start(pwd){
 function HiddenContextMenu() {
     document.getElementById("mailPanel").style.display = "none";
     document.getElementById("ContextMenuDiv").style.display = "none";
-    if(mailsearchDetail == "Y" && !addSearch()){
-    }
+    
 }
 function ContextMenuHidden() {
     if (document.getElementById("ContextMenuDiv").style.display == "")
@@ -1702,6 +1701,13 @@ function ContextMenuHidden() {
     if (parent.frames["left"].document.getElementById("folderMenuDiv").style.display == "") {
     	parent.frames["left"].document.getElementById("folderPanel").style.display = "none";
     	parent.frames["left"].document.getElementById("folderMenuDiv").style.display = "none";
+    }
+    if(document.getElementById("moreSearch").style.display != "none"){
+	    $("#moreSearch").css("display", "none");   
+	    $("#searchButton").css("display", "none");   
+	    document.getElementsByName("keyword")[0].disabled = false;
+	    document.getElementById("searchCheck").disabled = false;
+	    document.getElementById("searchCheck").style.backgroundColor="white";
     }
 }
 function PopUpPreMail() {

@@ -1348,7 +1348,7 @@
 					<ul class="content_layout">
 						<li class="content_layout_left">
 		<%-- 					<p class="text_th"><spring:message code="ezEmail.pyy13" /></p> --%>
-							<p class="text_th">첨부파일</p>
+							<p class="text_th"><spring:message code="ezEmail.t557" /></p>
 						</li>
 						<li class="content_layout_center">
 							<ul class="content_layout">
@@ -1397,9 +1397,9 @@
 					</ul>
 					<div class="layerPopup_button">
 						<ul class="content_layout">
-							<li class="content_layout_right ml15" onclick="set_searchKey()"><span class="button_style01">검색</span></li>
-							<li class="content_layout_right ml15" style="display:none;"><span class="button_style02">취소</span></li> <!-- 확인/취소 시에 사용예정 -->
-							<li class="content_layout_right" onclick="initializationSearchData();"><span class="button_style03">입력내용 초기화</span></li>
+							<li class="content_layout_right ml15" onclick="set_searchKey()"><span class="button_style01"><spring:message code="ezEmail.t37" /></span></li>
+							<li class="content_layout_right ml15" style="display:none;"><span class="button_style02"><spring:message code="ezEmail.t39" /></span></li> <!-- 확인/취소 시에 사용예정 -->
+							<li class="content_layout_right" onclick="initializationSearchData();"><span class="button_style03"><spring:message code="ezEmail.pyy21" /></span></li>
 						</ul>
 					</div>
 				</div>
