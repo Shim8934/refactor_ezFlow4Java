@@ -162,6 +162,7 @@
 		        var NowDate = utcDate2(offsetMin);
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', NowDate);
+		        $(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
 		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Edatepicker").datepicker('setDate', NowDate);
 		    });
@@ -322,7 +323,7 @@
 		                document.getElementById("MailListRayer").style.width = "100%";
 		                document.getElementById("PreviewRayerW").style.width = "100%";
 		                document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
-		                document.getElementById("contentlist").style.height = (pMailListHeightW - 105) + "px";
+		                document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
 // 		                document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
 		                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 80) + "px";
 		                document.getElementById("PreW_subject").style.width = (CurrenWidth - 155) + "px";
@@ -340,7 +341,7 @@
 		                document.getElementById("PreviewRayerH").style.display = "inline-block";
 		
 		                CurrenWidth = document.documentElement.clientWidth - 20;
-		                CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		                CurrentHeight = document.documentElement.clientHeight - 92 - (document.getElementById("mainmenu").clientHeight - 28);
 		                pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
 		                pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;
 		                document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
@@ -348,7 +349,7 @@
 		                document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		                document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
 		                document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-		                document.getElementById("contentlist").style.height = (CurrentHeight - 111) + "px";
+						document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
 		                document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH) + "px";
 		                document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 2 + "px";
 		                document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
@@ -361,10 +362,10 @@
 		            }
 		            
 		        } else {
-		            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		            CurrentHeight = document.documentElement.clientHeight - 92 - (document.getElementById("mainmenu").clientHeight - 28);
 		            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		            document.getElementById("MailListRayer").style.width = "100%";
-		            document.getElementById("contentlist").style.height = (CurrentHeight - 111) + "px";
+		            document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
 
 	                listWidth = document.documentElement.clientWidth - 20;
 		        }
@@ -534,6 +535,7 @@
 		            alert(strLang254);
 		            return;
 		        }
+		        startDate = "", endDate = "";
 		        
 		        var searchField = document.getElementById("searchCheck");
 		        SearchKeyword = searchField.value + "=" + inputkeyword.value;
@@ -542,11 +544,13 @@
 		      		searchCArray.push(TrimText(searchField.value));
 		  			searchKArray.push(TrimText(inputkeyword.value));
 	    		}
+		        mailsearchDetail = "N";
 		        
 		        goToPageByNum("1");
 		    }
 		    
 		    function start_search() {
+		    	mailsearchDetail = "Y";
 		    	ContextMenuHidden();
 		    	searchMode = true;
 		        listContentArry = new Array();
@@ -1208,172 +1212,22 @@
 			        }
 			    }
 			}
-			function addSearch(){
-				doLayerPopup();
-			}
-			function addSearch2() {
+			function addSearch() {
 				if($("#moreSearch").css("display") == "none"){   
-					this.mailsearchDetail = "Y";
-				    $("#moreSearch").css("display", "");   
+					document.getElementById("mailPanel").style.display = "";
+				    $("#moreSearch").css("display", "block");   
 				    $("#searchButton").css("display", "");   
 				    document.getElementsByName("keyword")[0].disabled = true;
 				    document.getElementById("searchCheck").style.backgroundColor="rgb(235,235,228)";
 				    document.getElementById("searchCheck").disabled = true;
-					this.mailsearchDetailCheck = "N"
-				    change();
 				} else {  
-					this.mailsearchDetail = "N";
-					this.mailsearchDetailCheck = "Y";
+					document.getElementById("mailPanel").style.display == "none";
 				    $("#moreSearch").css("display", "none");   
 				    $("#searchButton").css("display", "none");   
 				    document.getElementsByName("keyword")[0].disabled = false;
 				    document.getElementById("searchCheck").disabled = false;
 				    document.getElementById("searchCheck").style.backgroundColor="white";
- 				    change();
 				} 
-			}
-			function change(){
-		        
-				if (pPreviewShow_HOW == "H") {
-		            
-					CurrenWidth = document.documentElement.clientWidth - 20;
-		            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
-		            var newPos_H = document.getElementById("MailListRayer").clientWidth;
-		            if (pMailListWidthH > newPos_H) {
-		                pMailPreWidthH = pMailPreWidthH + (pMailListWidthH - newPos_H);
-		                pMailListWidthH = newPos_H;
-		            } else {
-		                pMailPreWidthH = CurrenWidth - newPos_H;
-		                pMailListWidthH = newPos_H;
-		            }
-		            pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
-			        pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
-		            /*
-			        
-		            if(mailsearchDetail == "Y" ){
-		            	CurrentHeight = CurrentHeight -  (document.getElementById("moreSearch").offsetHeight +20);
-		            } 
-		            document.getElementById("ifrmPreViewH").style.display = "";
-		            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
-		            document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
-		            document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-		            document.getElementById("contentlist").style.height = (CurrentHeight - 120) + "px";
-		            document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 10) + "px";
-		            document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
-		            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
-		            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
-		            
-		            pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
-		            pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
-		            if($("#PreH_CCMain").css("display") != "none") {
-		            	$("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
-		            }
-		            */
-		            document.getElementById("ifrmPreViewH").style.display = "";
-		            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
-		            document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
-		            document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-		            if(mailsearchDetail == "Y" ){
-		            	document.getElementById("contentlist").style.height 
-		            		= (CurrentHeight - (document.getElementById("moreSearch").offsetHeight +126)) + "px";
-		            } else {
-		            	document.getElementById("contentlist").style.height = (CurrentHeight - 111) + "px";
-		            	
-		            }
-		            document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 10) + "px";
-		            document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
-		            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
-		            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
-		            
-		            pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
-		            pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
-		            if($("#PreH_CCMain").css("display") != "none") {
-		            	$("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
-		            }
-
-		            mailPrevIframeSize();
-		        }
-		        else if (pPreviewShow_HOW == "W") {
-		        	if (pMailListDiv == 0 || pMailPreVDiv == 0) {
-	                    pMailListDiv = 50; pMailPreVDiv = 50;
-	                }
-	                document.getElementById("MailListRayer").style.display = "inline-block";
-	                document.getElementById("PreviewRayerW").style.display = "block";
-	                document.getElementById("PreviewRayerH").style.display = "none";
-
-	                CurrenWidth = document.documentElement.clientWidth - 10;
-	                CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
-	                
-	                document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
-	                document.getElementById("ResizeBarW").style.width = (CurrenWidth + 10) + "px";
-	                pMailListHeightW = parseInt(CurrentHeight * (pMailListDiv / 100));
-	                pMailPreHeightW = parseInt(CurrentHeight * (pMailPreVDiv / 100));
-	                document.getElementById("MailListRayer").style.width = "100%";
-	                document.getElementById("PreviewRayerW").style.width = "100%";
-	                document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
-	                
-	                if (navigator.userAgent.indexOf('Firefox') != -1)
-	                    document.getElementById("contentlist").style.height = (pMailListHeightW - 110) + "px";
-	                else
-	                    document.getElementById("contentlist").style.height = (pMailListHeightW - 110) + "px";
-//	                document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
-	                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
-	                document.getElementById("PreW_subject").style.width = (CurrenWidth - 155) + "px";
-	                
-	                pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
-	                pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
-	                
-	                if($("#PreW_CCMain").css("display") != "none") {
-	                	$("#ifrmPreViewW").height($("#ifrmPreViewW").height()-20);
-	                }
-	                
-	                mailPrevIframeSize();
-	                
-
-	                CurrenWidth = document.documentElement.clientWidth - 20;
-	                if (!useReceivingChk) {
-		                if (CurrenWidth < 470) {
-		                    BasicViewHeaderChange(true, g_foldertype);
-		                } else {
-		                    BasicViewHeaderChange(false, g_foldertype);
-		                }
-	                }
-		        } else {
-		        	pPreviewShow_HOW = "OFF";
-		            document.getElementById("PreviewRayerW").style.display = "none";
-		            document.getElementById("PreviewRayerH").style.display = "none";
-		            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
-		            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
-		            document.getElementById("MailListRayer").style.width = "100%";
-		            if (navigator.userAgent.indexOf('Firefox') != -1) {
-			            if(mailsearchDetail == "Y" ){
-			            	document.getElementById("contentlist").style.height 
-			            		= (CurrentHeight - (document.getElementById("moreSearch").offsetHeight +126)) + "px";
-			            } else {
-			            	document.getElementById("contentlist").style.height = (CurrentHeight - 111) + "px";
-			            	
-			            }
-		            }
-		            else {
-		            	if(mailsearchDetail == "Y" ){
-			            	document.getElementById("contentlist").style.height 
-			            		= (CurrentHeight - (document.getElementById("moreSearch").offsetHeight +126)) + "px";
-			            } else {
-			            	document.getElementById("contentlist").style.height = (CurrentHeight - 111) + "px";
-			            	
-			            }
-		            }
-		            g_bPrevShow = false;
-		            
-		            CurrenWidth = document.documentElement.clientWidth - 20;
-		            if (!useReceivingChk) {
-			            if (CurrenWidth < 470) {
-			                BasicViewHeaderChange(true, g_foldertype);
-			            } else {
-			                BasicViewHeaderChange(false, g_foldertype);
-			            }
-		            }
-		        }
 			}
 			function doLayerPopup() {
 	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
@@ -1396,28 +1250,160 @@
 	        	
 	        	$("#srarchpopup").modal();
 	        }
+			function initializationSearchData(){
+				$("#selectDetail1").val("SUBJECT");
+				$("#selectDetail2").val("CONTENT");
+				$("#selectDetail3").val("FROM");
+				$("#all").val("FROM");
+				$('input:radio[name="attachment"][id="all"]').prop('checked', true);
+				$('input:radio[name="andor"][value="and"]').prop('checked', true);
+				$("#selectRange").val("All");
+				changeLangeEvent();
+				$("input:text[name='prekeyword']").val("");
+			}
 		</script>	
 	</head>
 	<body style="overflow:hidden;margin-bottom:0px;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<h1>${folderName}<span id="mailBoxInfo"></span><span id ="resultCount" style="display:none;"></span>
-	      <span class="searchForm" style="margin-right:53px;">
-              <select name="searchCheck" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
-                  <option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option>
-                  <c:if test="${isSentItems != true}">
-                  <option value="FROM"><spring:message code="ezEmail.t161" /></option>
-                  </c:if>
-                  <c:if test="${isSentItems == true}">
-                  <option value="RECEIVE"><spring:message code="ezEmail.t651" /></option>
-                  </c:if>
-                  <c:if test="${useSearchContent == 'YES'}">
-                  <option value="CONTENT"><spring:message code="ezEmail.t649" /></option>
-                  </c:if>
-              </select>
+			<span class="searchForm" style="margin-right:53px;">
+				<select name="searchCheck searchFilter" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
+					<option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option>
+					<c:if test="${isSentItems != true}">
+						<option value="FROM"><spring:message code="ezEmail.t161" /></option>
+					</c:if>
+					<c:if test="${isSentItems == true}">
+						<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option>
+					</c:if>
+					<c:if test="${useSearchContent == 'YES'}">
+						<option value="CONTENT"><spring:message code="ezEmail.t649" /></option>
+					</c:if>
+				</select>
 			  
-			  <input name="keyword" class="searchinputBox" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
-	          <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="start_search2()"></a>
-	          <a class="searchBtn" style="right:-52px;"><img src="/images/bsearch_new2.gif" border="0" onClick="addSearch2()"></a>
-	      </span>
+				<input name="keyword" class="searchinputBox" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
+				<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onclick="start_search2()"></a>
+				<a class="searchFilterBtn"><img src="/images/bsearch_new2_filter.gif" border="0" onclick="addSearch()"></a>
+				<div class="layerPopup_new" id="moreSearch" style="display:none;z-index:6000;" >
+		        	<ul class="content_layout">
+		        		<li class="content_layout_left">
+							<p class="text_th">검색어 <span class="point_red">*</span></p>
+						</li>
+						<li class="content_layout_center">
+							<ul class="content_layout">
+								<li class="content_layout_center">
+									<span class="radio_design">
+										<input type="radio" id="and" name="andor" checked="checked" value="and">
+										<label for="and">AND</label>
+									</span>
+									<span class="radio_design">
+										<input type="radio" id="or" name="andor" value="or">
+										<label for="or">OR</label>
+							        </span>
+							    </li>
+							</ul>
+							<ul class="content_layout">
+								<li class="content_layout_left mr10">
+									<select name="select" class="text" id="selectDetail1" style="height: 25px;margin-right: 3px;width: 86px;">
+										<option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
+										<option value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
+										<option value="FROM"><spring:message code="ezEmail.t161" /></option> 
+										<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+										<option value="FILE"><spring:message code="ezEmail.pyy12" /></option> 
+									</select>
+								</li>
+								<li class="content_layout_center">
+									<span class="textbox_design"><input type="text" name="prekeyword" id="prekeywordDetail1" style="vertical-align: top;height: 25px;" onKeyPress="onkeydown_start_search(event);"/></span>
+								</li>
+							</ul>
+							<ul class="content_layout">
+								<li class="content_layout_left mr10">
+									<select name="select" class="text" id="selectDetail2" style="height: 25px;margin-right: 3px;width: 86px;">
+										<option value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
+										<option selected value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
+										<option value="FROM"><spring:message code="ezEmail.t161" /></option> 
+										<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+										<option value="FILE"><spring:message code="ezEmail.pyy12" /></option> 
+									</select>
+								</li>
+								<li class="content_layout_center">
+									<span class="textbox_design"><input type="text" name="prekeyword" id="prekeywordDetail2" style="vertical-align: top;height: 25px;" onKeyPress="onkeydown_start_search(event);"/></span>
+								</li>
+							</ul>
+							<ul class="content_layout">
+								<li class="content_layout_left mr10">
+									<select name="select" class="text" id="selectDetail3" style="height: 25px;margin-right: 3px;width: 86px;">
+										<option value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
+										<option value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
+										<option selected value="FROM"><spring:message code="ezEmail.t161" /></option> 
+										<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+										<option value="FILE"><spring:message code="ezEmail.pyy12" /></option> 
+									</select>
+								</li>
+								<li class="content_layout_center">
+									<span class="textbox_design"><input type="text" name="prekeyword" id="prekeywordDetail3" style="vertical-align: top;height: 25px;" onKeyPress="onkeydown_start_search(event);"/></span>
+								</li>
+							</ul>
+						</li>
+					</ul>
+						
+					<ul class="content_layout">
+						<li class="content_layout_left">
+		<%-- 					<p class="text_th"><spring:message code="ezEmail.pyy13" /></p> --%>
+							<p class="text_th">첨부파일</p>
+						</li>
+						<li class="content_layout_center">
+							<ul class="content_layout">
+								<li class="content_layout_center">
+									<span class="radio_design">
+		                                 <input type="radio" id="all" name="attachment" checked="checked" value="all">
+		                                 <label for="all"><spring:message code="ezEmail.pyy14" /></label>
+		                             </span>
+		                             <span class="radio_design">
+		                                 <input type="radio" id="contain" name="attachment" value="contain">
+		                                 <label for="contain"><spring:message code="ezEmail.pyy15" /></label>
+		                             </span>
+		                             <span class="radio_design">
+		                                 <input type="radio" id="Ncontain" name="attachment" value="Ncontain">
+		                                 <label for="Ncontain"><spring:message code="ezEmail.pyy16" /></label>
+		                             </span>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="content_layout">
+						<li class="content_layout_left">
+							<p class="text_th"><spring:message code="ezEmail.t653" /></p>
+						</li>
+						<li class="content_layout_center">
+							<ul class="content_layout">
+								<li class="content_layout_left mr10">
+									<select name="select" class="text" id="selectRange" onchange="changeLangeEvent()" style="height: 25px;margin-right: 5px;width: 86px;">
+										<option selected value="All">ALL</option> 
+										<option value="oneWeek"><spring:message code="ezEmail.pyy17" /></option> 
+										<option value="oneMonth"><spring:message code="ezEmail.pyy18" /></option> 
+										<option value="threeMonth"><spring:message code="ezEmail.pyy19" /></option> 
+										<option value="direct"><spring:message code="ezEmail.pyy20" /></option> 
+									</select>
+								</li>
+							</ul>
+							<ul class="content_layout">
+								<li class="content_layout_center">
+									<span id="datepickerData">
+										<input type="text" id="Sdatepicker" style="height:30px;" disabled="" readonly size="10" > ~ 
+			    						<input type="text" id="Edatepicker" style="height:30px;" size="10" disabled=""></span>
+									</span>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<div class="layerPopup_button">
+						<ul class="content_layout">
+							<li class="content_layout_right ml15" onclick="set_searchKey()"><span class="button_style01">검색</span></li>
+							<li class="content_layout_right ml15" style="display:none;"><span class="button_style02">취소</span></li> <!-- 확인/취소 시에 사용예정 -->
+							<li class="content_layout_right" onclick="initializationSearchData();"><span class="button_style03">입력내용 초기화</span></li>
+						</ul>
+					</div>
+				</div>
+			</span>
 	    </h1>
 	    
         <div id="mainmenu">
@@ -1467,93 +1453,6 @@
 	        </ul>
         </div>
         
-        <div id="moreSearch" style="margin-bottom:15px;display:none;" >
-					<table class="content" style="min-width: 475px;"> 
-						<tbody>
-						<tr style="height:100%;"> 
-							<th nowrap><spring:message code="ezEmail.t642" /></th>
-							<td style="width:100%, padding:8px;" >
-								<div class="" style="margin-left: 1px;padding: 0px 3px 3px;margin-top: 3px;">
-									<label for="and"><input class="optRdo" type="radio" name="andor" id="and" value="and" checked><span class="optSpan">AND</span></label>
-									<label for="or"><input class="optRdo" type="radio" name="andor" id="or" value="or"><span class="optSpan">OR</span></label>
-								</div>
-								<div style="margin-bottom: 2px;margin-left: 5px; padding: 0px 3px 3px 3px;">
-									<div style="display: inline-block; margin-right: 5px; margin-top:2px;">
-										<select name="select" class="text" id="selectDetail1" style="height: 25px;margin-right: 3px;width: 86px;">
-											<option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
-											<option value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
-											<option value="FROM"><spring:message code="ezEmail.t161" /></option> 
-											<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
-											<option value="FILE"><spring:message code="ezEmail.pyy12" /></option> 
-										</select>
-										<input name="prekeyword" id="prekeywordDetail1" style="vertical-align: top;height: 25px;" onKeyPress="onkeydown_start_search(event);">
-									</div>
-									<div style="display: inline-block; margin-right: 5px; margin-top:2px;">
-										<select name="select" class="text" id="selectDetail2" style="height: 25px;margin-right: 3px;width: 86px;">
-											<option value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
-											<option selected value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
-											<option value="FROM"><spring:message code="ezEmail.t161" /></option> 
-											<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
-											<option value="FILE"><spring:message code="ezEmail.pyy12" /></option> 
-										</select>
-										<input name="prekeyword" id="prekeywordDetail2" style="vertical-align: top;height:25px" onKeyPress="onkeydown_start_search(event);">
-									</div>
-									<div style="display: inline-block;margin-right: 5px; margin-top:2px;">
-										<select name="select" class="text" id="selectDetail3" style="height: 25px;margin-right: 3px;width: 86px;">
-											<option value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
-											<option value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
-											<option selected value="FROM"><spring:message code="ezEmail.t161" /></option> 
-											<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
-											<option value="FILE"><spring:message code="ezEmail.pyy12" /></option>  
-										</select>
-										<input name="prekeyword" id="prekeywordDetail3" style="vertical-align: top;height:25px" onKeyPress="onkeydown_start_search(event);">
-									</div>
-								</div>
-							</td> 
-						</tr>
-						<!--  첨부파일 유무 -->
-						<tr id="moreSearch2" >
-							<th><spring:message code="ezEmail.pyy13" /></th>	
-							<td style="height: 40px;">
-								<div class="" style="/* margin-bottom: 2px; */margin-left: 1px;padding: 0px 3px 3px;margin-top: 3px;">
-									<label for="all"><input class="optRdo" type="radio" id="all" name="attachment" value="all" checked>
-										<span class="optSpan"><spring:message code="ezEmail.pyy14" /></span></label>
-									<label for="contain"><input class="optRdo" type="radio" id="contain" name="attachment" value="contain">
-										<span class="optSpan"><spring:message code="ezEmail.pyy15" /></span></label>
-									<label for="Ncontain"><input class="optRdo" type="radio" id="Ncontain" name="attachment" value="Ncontain">
-										<span class="optSpan"><spring:message code="ezEmail.pyy16" /></span></label>
-								</div>
-							</td>
-						</tr>
-						<!--  검색기간 -->
-						<tr>
-							<th><spring:message code="ezEmail.t653" /></th>	
-							<td style="height: 40px;">
-								<div style="margin: 0px 5px 0px 5px;padding: 3px;">
-									<select name="select" class="text" id="selectRange" onchange="changeLangeEvent()" style="height: 25px;margin-right: 5px;width: 86px;">
-										<option selected value="All">ALL</option> 
-										<option value="oneWeek"><spring:message code="ezEmail.pyy17" /></option> 
-										<option value="oneMonth"><spring:message code="ezEmail.pyy18" /></option> 
-										<option value="threeMonth"><spring:message code="ezEmail.pyy19" /></option> 
-										<option value="direct"><spring:message code="ezEmail.pyy20" /></option> 
-									</select>
-									<span id="datepickerData" style="display:none;"><input type="text" id="Sdatepicker" style="width:80px;text-align:center;margin-top:-5px;" readonly> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;margin-top:-5px;" readonly></span>
-								</div>
-							</td>
-						</tr>
-					</tbody></table>	
-					<div class="btnposition" id ="searchButton" >
-						<ul class="btnpositionUL" style="list-style: none;">
-							<li class="on">
-								<a class="imgbtn" style="height: 30px; vertical-align: middle;">
-									<span onclick="set_searchKey()" style="height: 30px; vertical-align: middle; line-height: 30px;" onkeyup="return search_keypress(event)">
-										<spring:message code="ezEmail.t37" />
-									</span>
-								</a>
-							</li>
-						</ul>
-					</div>
-				</div>
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
@@ -1863,33 +1762,25 @@
     		alert(strLang254);
             return;
    		} 
-  	
-    	
-		if( $("#moreSearch").css("display") != "none"){
-        	if (prekeywordDetail1.value) {
-        		searchCArray.push(TrimText(selectDetail1.value));
-    			searchKArray.push(TrimText(prekeywordDetail1.value));
-        	} 
-        	if (prekeywordDetail2.value) {
-        		searchCArray.push(TrimText(selectDetail2.value));
-    			searchKArray.push(TrimText(prekeywordDetail2.value));
-        	} 
-        	if (prekeywordDetail3.value) {
-        		searchCArray.push(TrimText(selectDetail3.value));
-    			searchKArray.push(TrimText(prekeywordDetail3.value));
-        	} 
-        	searchCArray.push("ATTACHSTATUS");
-        	searchKArray.push(document.querySelector("input[name=attachment]:checked").value);
-        	
-        	searchCArray.push("ANDOR");
-        	searchKArray.push(document.querySelector("input[name=andor]:checked").value);
-    	} else {
-    		if (prekeywordDetail1.value) {
-        		searchCArray.push(TrimText(selectDetail1.value));
-    			searchKArray.push(TrimText(prekeywordDetail1.value));
-        	} 
-    		
-    	}
+
+       	if (prekeywordDetail1.value) {
+       		searchCArray.push(TrimText(selectDetail1.value));
+   			searchKArray.push(TrimText(prekeywordDetail1.value));
+       	} 
+       	if (prekeywordDetail2.value) {
+       		searchCArray.push(TrimText(selectDetail2.value));
+   			searchKArray.push(TrimText(prekeywordDetail2.value));
+       	} 
+       	if (prekeywordDetail3.value) {
+       		searchCArray.push(TrimText(selectDetail3.value));
+   			searchKArray.push(TrimText(prekeywordDetail3.value));
+       	} 
+       	searchCArray.push("ATTACHSTATUS");
+       	searchKArray.push(document.querySelector("input[name=attachment]:checked").value);
+       	
+       	searchCArray.push("ANDOR");
+       	searchKArray.push(document.querySelector("input[name=andor]:checked").value);
+
     	start_search();
     }
 	function SearchOptionHidden() {
@@ -1901,11 +1792,14 @@
 			document.getElementById("datepickerData").style.display = "";
 		    $("#Sdatepicker").datepicker('enable');
 		    $("#Edatepicker").datepicker('enable');
+		    $(".ui-datepicker-trigger").style="margin-left:5px;margin-top:0px;margin-bottom:3px;vertical-align:middle;cursor:pointer";
 		} else if(usepostDate == "All"){
-			document.getElementById("datepickerData").style.display = "none";
-		} else {
-			document.getElementById("datepickerData").style.display = "";
 		    $("#Sdatepicker").datepicker('disable');
+		    $(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
+		    $("#Edatepicker").datepicker('disable');
+		} else {
+		    $("#Sdatepicker").datepicker('disable');
+		    $(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
 		    $("#Edatepicker").datepicker('disable');
 		}
 		

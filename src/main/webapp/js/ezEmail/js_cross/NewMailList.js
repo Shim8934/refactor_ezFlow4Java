@@ -900,8 +900,6 @@ function GetListInfo(HeaderObject, ContentObject) {
     var pOrderyOption = p_ListorderType + " ORDER BY \"" + p_ListOrderby + "\" " + p_ListOrderOption;
 
     createNodeInsert(xmlpara, objNode, "DATA");
-    createNodeAndInsertText(xmlpara, objNode, "STARTDATE", startDate);
-    createNodeAndInsertText(xmlpara, objNode, "ENDDATE", endDate);
     createNodeAndInsertText(xmlpara, objNode, "FOLDERID", g_moveUrl);
     createNodeAndInsertText(xmlpara, objNode, "SORTTYPE", pOrderyOption);
     pOldSearchKeyword = SearchKeyword;
@@ -921,14 +919,18 @@ function GetListInfo(HeaderObject, ContentObject) {
     createNodeAndInsertText(xmlpara, objNode, "START", pStart);
     var attachStatus = "all";
 	var andorStatus = "and";
-	if(document.querySelector("input[name=attachment]:checked").value != null ){
-		attachStatus = document.querySelector("input[name=attachment]:checked").value;
-	} 
-	
-	if(document.querySelector("input[name=andor]:checked").value != null ){
-		andorStatus = document.querySelector("input[name=andor]:checked").value;
+	if(mailsearchDetail == "Y"){
+		if(document.querySelector("input[name=attachment]:checked").value != null ){
+			attachStatus = document.querySelector("input[name=attachment]:checked").value;
+		} 
+		
+		if(document.querySelector("input[name=andor]:checked").value != null ){
+			andorStatus = document.querySelector("input[name=andor]:checked").value;
+		}
 	}
 	
+	createNodeAndInsertText(xmlpara, objNode, "STARTDATE", startDate);
+	createNodeAndInsertText(xmlpara, objNode, "ENDDATE", endDate);
 	createNodeAndInsertText(xmlpara, objNode, "ATTACHSTATUS", attachStatus);
 	createNodeAndInsertText(xmlpara, objNode, "ANDORSTATUS", andorStatus);
     
