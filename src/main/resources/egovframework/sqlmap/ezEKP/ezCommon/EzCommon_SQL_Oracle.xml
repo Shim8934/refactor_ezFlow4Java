@@ -2856,4 +2856,24 @@
 		)
 	</statement>
 	
+	<select id="EzCommonDAO.checkTblNoticeBoard">
+		<![CDATA[
+			SELECT 
+				BOARDID
+			FROM 
+				TBL_BOARD_NOTICEBOARD
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblNoticeBoard">
+		CREATE TABLE TBL_BOARD_NOTICEBOARD (
+			BOARDID NVARCHAR2(255) NOT NULL,
+			TENANT_ID NUMBER(5,0) NOT NULL,
+			COMPANYID VARCHAR2(80) NOT NULL,
+			CONSTRAINT "TBL_BOARD_NOTICEBOARD_PK" PRIMARY KEY (BOARDID, TENANT_ID, COMPANYID)
+		)
+	</statement>
+	
 </sqlMap>
