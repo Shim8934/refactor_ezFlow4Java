@@ -952,7 +952,7 @@
 	        	<td>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkApprBoard" onclick="checkApprBoard()"><spring:message code="ezBoard.t999020" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkBoardLike"><spring:message code="ezBoard.hsb10" />&nbsp;</span>
-	        		<span style="display:inline-block;"><input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" /><spring:message code="ezBoard.t5011" />&nbsp;</span>
+	        		<span style="display:inline-block;"><input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" /><spring:message code="ezBoard.t5011_1" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkform" onclick="checkboardtype()" /><spring:message code="ezBoard.t999027" />&nbsp;</span>
 	        		<c:if test="${model.replyNotify == '1'}">	            	
 	                	<span style="display:inline-block;"><input type="checkbox" id="chkNotify" onclick="checkboardtype()" checked /><spring:message code="ezBoard.t168" />&nbsp;</span>
@@ -1013,10 +1013,10 @@
 	        
 			<%-- 2019-10-11 홍승비 - 특정 게시판을 회사별 공지게시판으로 설정하는 기능 추가 --%>
 			<tr id="trNoticeBoard" style="${style}">
-	            <th>공지사항 게시판</th>
+	            <th><spring:message code="ezBoard.hsbNt01" /></th>
 	            <td>
 	                <input type="checkbox" id="chkNoticeBoard"/>
-	                <spring:message code="ezBoard.t162" /> (게시판 메뉴 접근 시 기본 게시판으로 표출)
+	                <spring:message code="ezBoard.t162" /><spring:message code="ezBoard.hsbNt02" />
 	            </td>
 	        </tr>
 	        
