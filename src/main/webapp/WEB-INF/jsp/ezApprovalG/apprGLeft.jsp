@@ -366,7 +366,7 @@
 		            }
 		            
 		            if($(pthis).hasClass('shareCont')){
-	                    cmdOK_onclick('', "<spring:message code='ezApproval.t990042'/>",'','',$(pthis).attr("shareUserId"));
+	                    cmdOK_onclick('', "<spring:message code='ezApproval.t990042'/>",'',$(pthis).attr("shareUserId"));
 		            }
 		            
 		            parent.frames["right"].$('#sel_year').val("ALL");
