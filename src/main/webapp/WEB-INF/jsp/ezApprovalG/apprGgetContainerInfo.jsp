@@ -1818,7 +1818,6 @@
 	            	<li id="tbtnExcelAll"><span id="btnExcelAll" onclick="return btnExcel_onclick(1)"><spring:message code='ezApprovalG.t1527'/></span></li>      
 			        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 			        <li id=tbtnRegUserCont><span id=btnRegUserCont onClick ="return btnRegUserCont_onclick()" ><spring:message code='ezApproval.t589'/></span></li>
-			        <c:if test ="${tmpValue !='' && contID !=''}">
 			        <c:if test ="${share != 'share'}">			<!-- 구문서함 아닐때만 나오도록 수정 -->
 			            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
 		            </c:if>

@@ -1217,10 +1217,10 @@
                        	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL8" onclick="setPresentValue('<spring:message code='ezApprovalG.t1275'/>');convMain('8','')"><spring:message code='ezApprovalG.t1275'/></span></li>
 					</c:if>
 		        </ul>
-		        <h2 class="on" id="compH2">
+		        <h2 class="off" id="compH2">
 		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('comp')"><spring:message code='ezApprovalG.lhj15'/></span>
 		        </h2>
-		        <ul class="lnbUL on" id="compUL">
+		        <ul class="lnbUL off" id="compUL">
                    	<li><span class="sub_iconLNB tree_appr_complete"></span><span class="list_text" id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span></li>
                    	<c:if test="${approvalFlag == 'S'}">
                            	<li><span class="sub_iconLNB tree_appr_turn"></span><span class="list_text" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj03'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></li>
@@ -1229,10 +1229,10 @@
                            	<li><span class="sub_iconLNB tree_appr_turn"></span><span class="list_text" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><spring:message code='ezApprovalG.t1787'/></span></li>
                    	</c:if>
 		        </ul>
-		        <h2 class="on" id="deptH2">
+		        <h2 class="off" id="deptH2">
 		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('dept')"><spring:message code='ezApprovalG.t1755'/></span>
 		        </h2>
-		        <ul class="lnbUL on" id="deptUL">
+		        <ul class="lnbUL off" id="deptUL">
                    	<c:choose>
 						<c:when test="${fn:length(apprGLeftVOList) > 0}">
 							<c:forEach var="apprGLeftVOList" items="${apprGLeftVOList}" varStatus="status">
@@ -1255,21 +1255,21 @@
 					</c:if>
 		        </ul>
 		        <c:if test="${approvalFlag == 'S'}">
-		        	<h2 class="on" id="ITEMCONTH2">
+		        	<h2 class="off" id="ITEMCONTH2">
 		        		<span class="sub_iconLNB tree_arrow_up"></span>
 		        		<span class="h2Title" onclick="openFolder('ITEMCONT');">양식별 문서함</span>
 		        	</h2>
-					<ul class="lnbUL on" id="ITEMCONTUL">
+					<ul class="lnbUL off" id="ITEMCONTUL">
 			          	<c:forEach var="form" items="${itemList}" varStatus="status">
 			          	    <li><span class="sub_iconLNB tree_appr_record1"></span><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${form.formName}'); goFormContainer('${form.formName}');"><c:out value="${form.formName}"></c:out></span></li>
 			          	</c:forEach>
 		          	</ul>
 		          	<c:if test="${fn:length(userShareList) > 0 }">
-			        	<h2 class="on" id="USERSHAREH2">
+			        	<h2 class="off" id="USERSHAREH2">
 			        		<span class="sub_iconLNB tree_arrow_up"></span>
 			        		<span class="h2Title" onclick="openFolder('USERSHARE');">개인공유함</span>
 			        	</h2>
-						<ul class="lnbUL on" id="USERSHAREUL">
+						<ul class="lnbUL off" id="USERSHAREUL">
 				          	<c:forEach var="userShare" items="${userShareList}" varStatus="status">				          	
 								<img id="imgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;">
 								<img id="subImgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded">
@@ -1292,11 +1292,11 @@
 			          	</ul>
 		          	</c:if>
 		          	<c:if test="${fn:length(deptShareList) > 0 }">
-			        	<h2 class="on" id="DEPTSHAREH2">
+			        	<h2 class="off" id="DEPTSHAREH2">
 			        		<span class="sub_iconLNB tree_arrow_up"></span>
 			        		<span class="h2Title" onclick="openFolder('DEPTSHARE');">부서공유함</span>
 			        	</h2>
-						<ul class="lnbUL on" id="DEPTSHAREUL">
+						<ul class="lnbUL off" id="DEPTSHAREUL">
 				          	<c:forEach var="deptShare" items="${deptShareList}" varStatus="status">				          	
 								<img id="imgNode_DeptShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('DeptShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_DeptShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;">
 								<img id="subImgNode_DeptShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded">
@@ -1329,11 +1329,11 @@
 <%-- 			          	    <li><span class="sub_iconLNB tree_appr_record1"></span><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})');">${itemList.taskName}(${itemList.keepingPeriod}) </span></li> --%>
 <%-- 			          	</c:forEach> --%>
 <!-- 		          	</ul> -->
-			        <h2 class="on" id="personH2">
+			        <h2 class="off" id="personH2">
 			        	<span class="sub_iconLNB tree_manage" onclick="MngUserOnclick()"></span>
 			            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('person')"><spring:message code='ezApproval.t848'/></span>			            
 			        </h2>
-			        <ul class="lnbUL on" id="personUL">
+			        <ul class="lnbUL off" id="personUL">
 			        	<div class="tree onlytree" id="divUserContTree"></div>
 			        </ul>
 		        </c:if>
