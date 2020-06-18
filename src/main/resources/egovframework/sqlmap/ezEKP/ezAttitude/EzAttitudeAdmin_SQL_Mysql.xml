@@ -719,6 +719,7 @@
 				OR
 					(A.start_date < #searchStartDate# AND A.end_date >= #searchEndDate#)
 				)
+			AND A.modappl <> 5
 		]]>
 			
 		<isNotEmpty property="searchAttitudeType">	
@@ -799,6 +800,7 @@
 				OR
 					(A.start_date < #searchStartDate# AND A.end_date >= #searchEndDate#)
 				)
+			AND A.modappl <> 5
 		]]>
 		<isNotEmpty property="searchAttitudeType">	
 			<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">

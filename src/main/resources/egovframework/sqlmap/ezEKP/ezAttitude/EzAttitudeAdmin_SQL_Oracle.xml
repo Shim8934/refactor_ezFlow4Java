@@ -771,6 +771,7 @@
 						OR
 							(A.start_date < to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.end_date >= to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 						)
+					AND A.modappl <> 5
 				]]>
 					
 				<isNotEmpty property="searchAttitudeType">	
@@ -853,6 +854,7 @@
 				OR
 					(A.start_date < to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.end_date >= to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				)
+			AND A.modappl <> 5
 		]]>
 		<isNotEmpty property="searchAttitudeType">	
 			<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
