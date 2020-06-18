@@ -254,7 +254,13 @@
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
 	    			
 	    			if (vo.endDate == null || vo.endDate == "") {
-	    				resultHtml += "<td>" + vo.startDate.substring(0,16) + "</td>";
+	    				if(vo.typeId == "A25") {
+	    					var date = new Date(vo.startDate.substring(0,4), Number(vo.startDate.substring(5,7))-1 , Number(vo.startDate.substring(8,10)));
+							date.setDate(date.getDate()+1);	    					
+		    				resultHtml += "<td style='width: 30%;'>" + date.format('yyyy-MM-dd') + " " + vo.startDate.substring(11,16) + "</td>";
+	    				} else {
+		    				resultHtml += "<td style='width: 30%;'>" + vo.startDate.substring(0,16) + "</td>";
+	    				}
 	    			} else {
 	    				if (vo.dateType == 4) {
 	    					resultHtml += "<td>" + vo.startDate.substring(0,11) + " ~ " + vo.endDate.substring(0,11) + "</td>";
@@ -412,6 +418,8 @@
 	            }
 			}
 	    </script>
+	    <!-- date Format -->		
+		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/DateFormat.js')}"></script>
 	</head>
 	<body class="mainbody">
 	    <h1>

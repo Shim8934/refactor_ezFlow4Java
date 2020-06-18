@@ -3064,17 +3064,171 @@ public class EzAttitudeController {
 			row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
 			row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
 			row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
-			row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t133", locale));
-			row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t134", locale));
+			row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t232", locale));
+			row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t233", locale));
+			row.createCell(6).setCellValue(egovMessageSource.getMessage("ezAttitude.t149", locale));
+			row.createCell(7).setCellValue(egovMessageSource.getMessage("ezAttitude.t134", locale));
 			row.getCell(0).setCellStyle(headerStyle);
 			row.getCell(1).setCellStyle(headerStyle);
 			row.getCell(2).setCellStyle(headerStyle);
 			row.getCell(3).setCellStyle(headerStyle);
 			row.getCell(4).setCellStyle(headerStyle);
 			row.getCell(5).setCellStyle(headerStyle);
+			row.getCell(6).setCellStyle(headerStyle);
+			row.getCell(7).setCellStyle(headerStyle);
+			
+			//2020-06-15 김정언 - 엑셀 출력 형식 변경
+			List<AdminAttitudeVO> attitudeList2 = new ArrayList<AdminAttitudeVO>();
+			AdminAttitudeVO avo = null;
+			boolean flag = true;
+			for (int i = 0; i < attitudeList.size() ; i++) {
+				if(flag == true){
+					avo = new AdminAttitudeVO();
+					flag = false;
+				}
+				
+				if(i + 1 < attitudeList.size()){
+					//다음 행과 비교하여 날짜가 같고 사용자의 이름이 같을 경우
+					if(attitudeList.get(i).getStartDate().split(" ")[0].equals(attitudeList.get(i + 1).getStartDate().split(" ")[0]) && attitudeList.get(i).getWriterId().equals(attitudeList.get(i + 1).getWriterId())){
+						avo.setWriterId(attitudeList.get(i).getWriterId());
+						avo.setUserName(attitudeList.get(i).getUserName());
+						avo.setUserTitle(attitudeList.get(i).getUserTitle());
+						avo.setDeptName(attitudeList.get(i).getDeptName());
+						//퇴근/조퇴일 경우
+						if(attitudeList.get(i).getTypeId().equals("A03") || attitudeList.get(i).getTypeId().equals("A25") || attitudeList.get(i).getTypeId().equals("A08")) {
+							//전일 퇴근일 경우 
+							if(attitudeList.get(i).getTypeId().equals("A25")){
+								String[] startDate = attitudeList.get(i).getStartDate().split(" ");
+								String dayAfter = commonUtil.getDayAfter(startDate[0]);
+								avo.setEndDate(dayAfter + " " + startDate[1]);
+							} else if(attitudeList.get(i).getTypeId().equals("A08")){
+								String type = avo.getTypeName() == null ? attitudeList.get(i).getTypeName() : attitudeList.get(i).getTypeName() + ", " + avo.getTypeName();
+								avo.setEndDate(attitudeList.get(i).getStartDate());
+								avo.setTypeName(type);
+							} else {
+								avo.setEndDate(attitudeList.get(i).getStartDate());
+							}
+						} else if(attitudeList.get(i).getTypeId().equals("A01") || attitudeList.get(i).getTypeId().equals("A02")) { //출근/지각일 경우
+							avo.setStartDate(attitudeList.get(i).getStartDate());
+							if(attitudeList.get(i).getTypeId().equals("A01")) {
+								String type = avo.getTypeName() == null ? "출/퇴근" : "출/퇴근, " + avo.getTypeName();
+								avo.setTypeName(type);
+							}else {
+								String type = avo.getTypeName() == null ? attitudeList.get(i).getTypeName() : attitudeList.get(i).getTypeName() + ", " + avo.getTypeName();
+								avo.setTypeName(type);
+							}
+						} else { //그 외
+							String type = avo.getTypeName() == null ? attitudeList.get(i).getTypeName() : avo.getTypeName() + ", " + attitudeList.get(i).getTypeName();
+							if(attitudeList.get(i).getTypeId().equals("A17")) {
+								String content = avo.getContent() == null ? attitudeList.get(i).getStartDate() : avo.getContent() + ", " + attitudeList.get(i).getStartDate();
+								avo.setContent(content);
+							}else {
+								String content = avo.getContent() == null ? attitudeList.get(i).getStartDate() + " ~ " + attitudeList.get(i).getEndDate() : avo.getContent() + ", " + attitudeList.get(i).getStartDate() + " ~ " + attitudeList.get(i).getEndDate();
+								avo.setContent(content);									
+							}
+							avo.setTypeName(type);																							
+						}
+					} else {						
+						//날짜와 사용자의 이름이 다를 경우
+						if((avo.getStartDate() == null || avo.getEndDate() == null || avo.getContent() == null) || (avo.getStartDate() == null && avo.getEndDate() == null || avo.getContent() == null) || (avo.getStartDate() == null && avo.getContent() == null || avo.getEndDate() == null) || (avo.getStartDate() == null || avo.getEndDate() == null && avo.getContent() == null) || (avo.getStartDate() == null && avo.getEndDate() == null && avo.getContent() == null)){							
+							avo.setWriterId(attitudeList.get(i).getWriterId());
+							avo.setUserName(attitudeList.get(i).getUserName());
+							avo.setUserTitle(attitudeList.get(i).getUserTitle());
+							avo.setDeptName(attitudeList.get(i).getDeptName());
+							if(attitudeList.get(i).getTypeId().equals("A01")) { //출근
+								avo.setStartDate(attitudeList.get(i).getStartDate());
+								String type = avo.getTypeName() == null ? "출/퇴근" : "출/퇴근, " + avo.getTypeName();
+								avo.setTypeName(type);
+							} else if(attitudeList.get(i).getTypeId().equals("A02")) { //지각
+								avo.setStartDate(attitudeList.get(i).getStartDate());
+								String type = avo.getTypeName() == null ? attitudeList.get(i).getTypeName() : attitudeList.get(i).getTypeName() + ", " + avo.getTypeName();
+								avo.setTypeName(type);						
+							} else if(attitudeList.get(i).getTypeId().equals("A17")) { //결근
+								avo.setContent(attitudeList.get(i).getStartDate());
+								String type = avo.getTypeName() == null ? attitudeList.get(i).getTypeName() : avo.getTypeName() + ", " + attitudeList.get(i).getTypeName();
+								avo.setTypeName(type);						
+							} else if(attitudeList.get(i).getTypeId().equals("A03") || attitudeList.get(i).getTypeId().equals("A08")){ //퇴근/조퇴
+								avo.setEndDate(attitudeList.get(i).getStartDate());
+								if(attitudeList.get(i).getTypeId().equals("A08")){
+									String type = avo.getTypeName() == null ? attitudeList.get(i).getTypeName() : avo.getTypeName() + ", " + attitudeList.get(i).getTypeName();
+									avo.setTypeName(type);									
+								}
+							} else if(attitudeList.get(i).getTypeId().equals("A25")) { //전일퇴근
+								String[] startDate = attitudeList.get(i).getStartDate().split(" ");
+								String dayAfter = commonUtil.getDayAfter(startDate[0]);
+								avo.setEndDate(dayAfter + " " + startDate[1]);
+							} else { //그 외
+								avo.setContent(attitudeList.get(i).getStartDate() + " ~ " + attitudeList.get(i).getEndDate());
+								String type = avo.getTypeName() == null ? attitudeList.get(i).getTypeName() : avo.getTypeName() + ", " + attitudeList.get(i).getTypeName();
+								avo.setTypeName(type);
+							}
+						}
+						
+						attitudeList2.add(avo);
+						flag = true;							
+					}
+				} else { //마지막 것은 비교하지 않는다.
+					avo.setWriterId(attitudeList.get(i).getWriterId());
+					avo.setUserName(attitudeList.get(i).getUserName());
+					avo.setUserTitle(attitudeList.get(i).getUserTitle());
+					avo.setDeptName(attitudeList.get(i).getDeptName());
+
+					if(attitudeList.get(i).getTypeId().equals("A01")) { //출근
+						avo.setStartDate(attitudeList.get(i).getStartDate());
+						String type = avo.getTypeName() == null ? "출/퇴근" : "출/퇴근, " + avo.getTypeName();
+						avo.setTypeName(type);
+					} else if(attitudeList.get(i).getTypeId().equals("A02")) { //지각
+						avo.setStartDate(attitudeList.get(i).getStartDate());
+						String type = avo.getTypeName() == null ? attitudeList.get(i).getTypeName() : attitudeList.get(i).getTypeName() + ", " + avo.getTypeName();
+						avo.setTypeName(type);						
+					} else if(attitudeList.get(i).getTypeId().equals("A17")) { //결근
+						avo.setContent(attitudeList.get(i).getStartDate());
+						String type = avo.getTypeName() == null ? attitudeList.get(i).getTypeName() : avo.getTypeName() + ", " + attitudeList.get(i).getTypeName();
+						avo.setTypeName(type);						
+					} else if(attitudeList.get(i).getTypeId().equals("A03") || attitudeList.get(i).getTypeId().equals("A08")){ //퇴근/조퇴
+						avo.setEndDate(attitudeList.get(i).getStartDate());
+						if(attitudeList.get(i).getTypeId().equals("A08")){
+							String type = avo.getTypeName() == null ? attitudeList.get(i).getTypeName() : avo.getTypeName() + ", " + attitudeList.get(i).getTypeName();
+							avo.setTypeName(type);									
+						}
+					} else if(attitudeList.get(i).getTypeId().equals("A25")) { //전일퇴근
+						String[] startDate = attitudeList.get(i).getStartDate().split(" ");
+						String dayAfter = commonUtil.getDayAfter(startDate[0]);
+						avo.setEndDate(dayAfter + " " + startDate[1]);
+					} else { //그 외
+						avo.setContent(attitudeList.get(i).getStartDate() + " ~ " + attitudeList.get(i).getEndDate());
+						String type = avo.getTypeName() == null ? attitudeList.get(i).getTypeName() : avo.getTypeName() + ", " + attitudeList.get(i).getTypeName();
+						avo.setTypeName(type);
+					}
+					
+					attitudeList2.add(avo);
+				}
+			}
+			
+			for (int i = 0 ; i < attitudeList2.size(); i++) { 
+				row = sheet.createRow(i + 1);
+				
+				row.createCell(0).setCellValue(i + 1);
+				row.createCell(1).setCellValue(attitudeList2.get(i).getUserName());
+				row.createCell(2).setCellValue(attitudeList2.get(i).getUserTitle());
+				row.createCell(3).setCellValue(attitudeList2.get(i).getDeptName());
+				row.createCell(4).setCellValue(attitudeList2.get(i).getStartDate());					
+				row.createCell(5).setCellValue(attitudeList2.get(i).getEndDate());					
+				row.createCell(6).setCellValue(attitudeList2.get(i).getContent());								
+				row.createCell(7).setCellValue(attitudeList2.get(i).getTypeName());
+				
+				row.getCell(0).setCellStyle(bodyStyle);
+				row.getCell(1).setCellStyle(bodyStyle);
+				row.getCell(2).setCellStyle(bodyStyle);
+				row.getCell(3).setCellStyle(bodyStyle);
+				row.getCell(4).setCellStyle(bodyStyle);
+				row.getCell(5).setCellStyle(bodyStyle);
+				row.getCell(6).setCellStyle(bodyStyle);
+				row.getCell(7).setCellStyle(bodyStyle);
+			}
 			
 			//body
-			for (int i = 0 ; i < attitudeList.size(); i++) { 
+			/*for (int i = 0 ; i < attitudeList.size(); i++) { 
 				AdminAttitudeVO vo = attitudeList.get(i);
 				row = sheet.createRow(i + 1);
 				
@@ -3097,7 +3251,8 @@ public class EzAttitudeController {
 				row.getCell(3).setCellStyle(bodyStyle);
 				row.getCell(4).setCellStyle(bodyStyle);
 				row.getCell(5).setCellStyle(bodyStyle);
-			}
+			}*/
+			
 			//width 조정
 			sheet.autoSizeColumn(0);
 			sheet.autoSizeColumn(1);
@@ -3105,12 +3260,16 @@ public class EzAttitudeController {
 			sheet.autoSizeColumn(3);
 			sheet.autoSizeColumn(4);
 			sheet.autoSizeColumn(5);
+			sheet.autoSizeColumn(6);
+			sheet.autoSizeColumn(7);
 			sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
 			sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
 			sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
 			sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
 			sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
 			sheet.setColumnWidth(5, (sheet.getColumnWidth(5)) + 512);
+			sheet.setColumnWidth(6, (sheet.getColumnWidth(6)) + 512);
+			sheet.setColumnWidth(7, (sheet.getColumnWidth(7)) + 512);
 			
 		} else if (reqType.equals("absent")){
 //			미입력자조회엑셀

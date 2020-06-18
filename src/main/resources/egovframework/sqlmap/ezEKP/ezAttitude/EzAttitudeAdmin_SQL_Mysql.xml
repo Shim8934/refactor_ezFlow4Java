@@ -677,7 +677,7 @@
 				A.tenant_id AS tenantid,
 				A.writer_id AS writerid,
 				A.dept_id AS deptid,
-				DATE_ADD(A.start_date, INTERVAL #offsetMin# minute) AS startdate,
+				if(A.type_id='A25', DATE_ADD(DATE_ADD(A.start_date, INTERVAL +540 minute), INTERVAL -1 day), DATE_ADD(A.start_date, INTERVAL +540 minute) ) as startdate,
                 SUBSTR(DATE_ADD(A.start_date, INTERVAL #offsetMin# minute), 12) AS starttime,
                 IFNULL(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute),'') AS enddate,
                 IFNULL(SUBSTR(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute), 12),'') AS endtime,
@@ -747,13 +747,15 @@
 		<isNotEmpty property="orderCell">
 			ORDER BY
 				$orderCell$ $orderOption$,
-				startdate DESC,
+				date_format(startdate, '%Y-%m-%d') DESC,
+				username,				
 				enddate DESC,
 				starttime DESC
 		</isNotEmpty>
 		<isEmpty property="orderCell">
 			ORDER BY
-				startdate DESC,
+				date_format(startdate, '%Y-%m-%d') DESC,
+				username,
 				enddate DESC,
 				starttime DESC
 		</isEmpty>

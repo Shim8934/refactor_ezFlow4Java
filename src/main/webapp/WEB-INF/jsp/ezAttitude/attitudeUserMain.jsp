@@ -2242,7 +2242,9 @@
 			Date.prototype.format = function(f) {
 			    if (!this.valueOf()) return " ";
 			 
-			    var weekName = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
+			    var weekName = ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+			                       "<spring:message code='main.t0627' />"];
 			    var d = this;
 			     
 			    return f.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function($1) {
@@ -2256,7 +2258,7 @@
 			            case "hh": return ((h = d.getHours() % 12) ? h : 12).zf(2);
 			            case "mm": return d.getMinutes().zf(2);
 			            case "ss": return d.getSeconds().zf(2);
-			            case "a/p": return d.getHours() < 12 ? "오전" : "오후";
+			            case "a/p": return d.getHours() < 12 ? "<spring:message code='ezTask.t67' />" : "<spring:message code='ezTask.t68' />";
 			            default: return $1;
 			        }
 			    });
@@ -2268,6 +2270,8 @@
 			/* 날짜 포맷 end */
 
 		</script>
+		<!-- date Format -->
+		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/DateFormat.js')}"></script>
 	</head>
 	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0" onselectstart="return false">
 		<c:if test="${deptFlag != 'true'}">
