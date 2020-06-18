@@ -439,7 +439,9 @@
 		    	mywindow.document.close();
 		    	mywindow.focus();
 		    	mywindow.print();
-		    	mywindow.close();
+		    	
+		    	/* 2020-06-18 홍승비 - 크롬 브라우저에서 close가 바로 동작하여 print하지 못하는 현상 발생, close부분 임시 주석처리(타 모듈에서도 인쇄창을 바로 close하지 않음) */
+		    	//mywindow.close();
 		    	return true;
 		    }
 		    

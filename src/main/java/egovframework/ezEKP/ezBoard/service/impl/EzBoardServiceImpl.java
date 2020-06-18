@@ -4749,4 +4749,34 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getIsMyBoardExist ended");
 		return ezBoardDAO.getIsMyBoardExist(map);
 	}
+	
+	/* 2020-06-15 홍승비 - 즐겨찾기 게시판 단일 삭제 메서드 */
+	@Override
+	public void deleteMyBoards(String boardID, String userID, int tenantID, String companyID) throws Exception {
+		logger.debug("deleteMyBoards started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("boardID", boardID);
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
+		
+		logger.debug("deleteMyBoards ended");
+		ezBoardDAO.setListOrder_D(map);
+	}
+	
+	/* 2019-10-11 홍승비 - 회사별 공지사항 게시판ID를 리턴하는 메서드 */
+	@Override
+	public String getCompanyNoticeBoardID(String companyID, int tenantID) throws Exception {
+		logger.debug("getCompanyNoticeBoardID started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("getCompanyNoticeBoardID ended");
+		return ezBoardDAO.getCompanyNoticeBoardID(map);
+	}
 }

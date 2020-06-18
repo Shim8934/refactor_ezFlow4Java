@@ -462,8 +462,10 @@
 		</div>
 		<div id="MailBigAttachRayer" class="previewmail_addfile">
 		</div>
+		<div style="display:inline-block; font-size: 12px; font-family: 'malgun gothic', 'arial', 'verdana';">
 		<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' onclick='Smaller()' style='cursor:pointer;' />
 		<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; margin-left: -4px;' />
+		</div>
 		<c:if test="${shareId == null or (shareId != '' and sendPermission == 'Y')}">
 			<span style="float:right;">
 				<img src="/images/ImgIcon/PrereplyAll.gif" title="<spring:message code='ezEmail.t512' />" style='cursor:pointer;' onclick="Mail_Acton('ALLRE');" /><img src="/images/ImgIcon/Prereply.gif" title="<spring:message code='ezEmail.t511' />"  style='cursor:pointer;' onclick="Mail_Acton('RE');"/><img src="/images/ImgIcon/Preforward.gif" title="<spring:message code='ezEmail.t513' />"  style='cursor:pointer;' onclick="Mail_Acton('FW');"/>

@@ -2806,4 +2806,22 @@
   			LONGITUDE float(20,15) DEFAULT NULL
 		)
 	</statement>
+	
+	<select id="EzCommonDAO.checkTblNoticeBoard">
+		SELECT 
+			BOARDID
+		FROM 
+			TBL_BOARD_NOTICEBOARD
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblNoticeBoard">
+		CREATE TABLE `tbl_board_noticeboard` (
+			`BOARDID` varchar(510) NOT NULL,
+			`TENANT_ID` mediumint(5) NOT NULL,
+			`COMPANYID` varchar(80) NOT NULL,
+			PRIMARY KEY (`BOARDID`,`TENANT_ID`, `COMPANYID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+	
 </sqlMap>

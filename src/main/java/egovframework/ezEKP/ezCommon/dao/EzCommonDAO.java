@@ -1478,4 +1478,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createMobileAttitudeColumn");
 		}
 	}
+	
+	public void createTblNoticeBoard() {
+		try {
+			select("EzCommonDAO.checkTblNoticeBoard");
+		} catch (Exception e) {
+			logger.debug("tbl_board_noticeboard doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblNoticeBoard");
+		}
+	}
 }

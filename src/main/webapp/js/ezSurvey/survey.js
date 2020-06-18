@@ -1204,7 +1204,7 @@ var SurveyCreate     = function() {
 		return elements;
 	}
 	
-	function showSelectPopUp() {selectPopup = window.open("/ezSurvey/selectUsers.do", "selectUser", getOpenWindowfeature(964, 700));}
+	function showSelectPopUp() {selectPopup = window.open("/ezSurvey/selectUsers.do", "selectUser", getOpenWindowfeature(964, 645));}
 	function getSurveyQuestions() {return surveyObj["questions"];}
 	function setSurveyQuestions(question) {surveyObj["questions"].push(question);}
 	function getSurveyUsers() {return surveyObj["infor"]["users"];}

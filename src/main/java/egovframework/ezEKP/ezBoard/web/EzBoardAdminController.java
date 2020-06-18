@@ -413,7 +413,13 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");
 		
 		ezBoardAdminService.deleteBoard(boardID, userInfo.getTenantId());
-
+		
+		/* 2019-10-14 홍승비 - 게시판 삭제 시 회사의 공지사항 게시판 레코드도 함께 삭제 */
+		String noticeBoardID = ezBoardService.getCompanyNoticeBoardID(userInfo.getCompanyID(), userInfo.getTenantId());
+		if (boardID.equals(noticeBoardID)) { // 삭제할 게시판과 현재 회사의 공지사항 게시판 ID가 동일하다면 함께 삭제 
+			ezBoardAdminService.deleteNoticeBoard(userInfo.getTenantId(), userInfo.getCompanyID());
+		}
+		
 		logger.debug("deleteBoard ended");
 	}
 
@@ -841,6 +847,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			style2 = "display:none";			
 		}
 		
+		/* 2019-10-11 홍승비 - 공지사항 게시판 여부 파라미터 추가 */
+		String noticeBoardID = ezBoardService.getCompanyNoticeBoardID(userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		/* 2018-07-26 홍승비 - 다국어 표출 시 lang 대신 primary 조건 사용하도록 수정 */
 		model.addAttribute("model", boardPropertyVO);
 		model.addAttribute("use_multiData", use_multiData);
@@ -852,6 +861,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("style2", style2);
 		model.addAttribute("adminType", adminType);
 		model.addAttribute("isAllGroupBoard", isAllGroupBoard);
+		model.addAttribute("noticeBoardID", noticeBoardID);
 
 		logger.debug("boardProperty ended");
 		return "admin/ezBoard/boardProperty";
@@ -861,15 +871,26 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 게시판그룹이름변경 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/saveBoardProperty.do", method = RequestMethod.POST)
-	public void saveBoardProperty(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response,	BoardPropertyVO boardPropertyVO) throws Exception {
+	public void saveBoardProperty(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response,	HttpServletRequest request, BoardPropertyVO boardPropertyVO) throws Exception {
 		logger.debug("saveBoardProperty started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		/* 2019-10-11 홍승비 - 공지사항 게시판 설정 기능 추가 */
+		String noticeBoardMod = request.getParameter("noticeBoardMod");
+		
 		boardPropertyVO.setTenantID(userInfo.getTenantId());
 		
 		ezBoardAdminService.saveBoardProperty(boardPropertyVO);
-
+		
+		if (!noticeBoardMod.equals("")) { // 공지사항 게시판 설정이 변경되었다면 추가 동작 진행
+			if (noticeBoardMod.equals("UPDATE")) {
+				ezBoardAdminService.updateNoticeBoard(boardPropertyVO.getBoardID(), userInfo.getTenantId(), userInfo.getCompanyID());
+			} else { // DELETE
+				ezBoardAdminService.deleteNoticeBoard(userInfo.getTenantId(), userInfo.getCompanyID());
+			}
+		}
+		
 		logger.debug("saveBoardProperty ended");
 	}
 	

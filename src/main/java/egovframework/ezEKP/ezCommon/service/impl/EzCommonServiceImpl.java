@@ -392,7 +392,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             }
         }
 
-        backgroundImgSrcs = backgroundImgSrcs.stream().distinct().collect(Collectors.toList());
+        backgroundImgSrcs = backgroundImgSrcs.stream().filter(backgroundImgSrc -> !backgroundImgSrc.equalsIgnoreCase("none")).distinct().collect(Collectors.toList());
 
         logger.debug("extractBackgroundSource ended.");
 
@@ -1578,6 +1578,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		logger.debug("getPermissionGroupMembers ended.");
 		return ezCommonDAO.getPermissionGroupMembers(map);
+	}	
+	
+	@Override
+	public void createTblNoticeBoard() throws Exception {
+		ezCommonDAO.createTblNoticeBoard();
 	}
 
 	@Override

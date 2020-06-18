@@ -9662,5 +9662,45 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("getIsMyBoard ended.");
 		return result;
 	}
+	
+	/**
+	 * 2020-06-15 홍승비 - 즐겨찾기 게시판 단일 삭제 메서드 (ajax용)
+	 * */
+	@RequestMapping(value = "/ezBoard/deleteMyBoards.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void deleteMyBoards(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("deleteMyBoards started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String pBoardID = request.getParameter("boardID");
+		
+		ezBoardService.deleteMyBoards(pBoardID, userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		logger.debug("deleteMyBoards ended.");
+	}
+	
+	/**
+	 * 2019-09-16 홍승비 - 기본 게시판으로 이동하기 위한 리다이렉트용 게시판 그룹ID와 게시판ID 리턴
+	 * */
+	@RequestMapping(value = "/ezBoard/getDefaultBoardID.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String getDefaultBoardID(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getDefaultBoardID started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String returnStr = "";
+		
+		/* 2019-10-11 홍승비 - 테넌트 컨피그가 아니라 회사별로 지정한 공지사항 게시판으로 이동하도록 수정 */
+		String defaultBoardID = ezBoardService.getCompanyNoticeBoardID(userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		BoardPropertyVO boardProp = ezBoardService.getBoardProperty(defaultBoardID, userInfo.getTenantId());
+		
+		if (boardProp != null && boardProp.getBoardGroupID() != null && defaultBoardID != null && !defaultBoardID.trim().equals("")) {
+			returnStr = boardProp.getBoardGroupID() + ";" + defaultBoardID;
+		}
+		
+		logger.debug("getDefaultBoardID ended.");
+		return returnStr;
+	}
 }
 
