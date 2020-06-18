@@ -669,7 +669,7 @@
 		    	}
 		    	PresentOpen = "CONTAINER";
                 var subCondition = "TBL_EXPENDAPRDOCINFO.FORMNAME = '" + ContainerID + "'";
-                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID + "&shareDeptId=" + shareDeptId;
+                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + encodeURIComponent(ContainerID) + "&shareDeptId=" + shareDeptId;
 		    }
 		
 		    function getAprCount() {
