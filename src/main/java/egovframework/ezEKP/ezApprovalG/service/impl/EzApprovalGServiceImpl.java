@@ -25252,6 +25252,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTDEPTNAME", draftDeptName);
 		map.put("v_FORMID", formID);
 		map.put("v_DOCSTATE", docState);
+		
+		if(deptId.split("/").length > 1){
+			deptId = deptId.split("/")[1];
+			map.put("v_APRFLAG" ,"INMYAPPRSEARCH");
+		}
 		map.put("deptId", deptId);
 		if (draftfrom != null && !draftfrom.equals("")) {
 			map.put("v_DRAFTFROM", commonUtil.getDateStringInUTC(draftfrom + " 00:00:01" , offSet, true));

@@ -3143,6 +3143,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String uFlag = request.getParameter("uFlag");
 		String admin = request.getParameter("admin");
 		String docState = request.getParameter("docState");
+		String share = request.getParameter("share");
 		String pass = "";
 		String formUrl = "";
 		String formDocType = "";
@@ -3156,6 +3157,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		} else {
+			pass = "<RESULT>TRUE</RESULT>";
+		}
+		if(share != null && share.equals("Y")){
 			pass = "<RESULT>TRUE</RESULT>";
 		}
 		
@@ -6732,7 +6736,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         String TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
         String shareDeptId = "";
         if(xmlDom.getDocumentElement().getChildNodes().getLength() >= 25 && xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent() !=null && !xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent().equals("")){
-        	shareDeptId = xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent();
+        	shareDeptId = "share/" + xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent();
         }
         
         if(TempQuery.indexOf("KAPR;") > -1) {
