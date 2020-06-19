@@ -1702,7 +1702,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		resultXML.append("</HEADERS>");
 		
-		String docList = getOpinionInfo(docID, mode, orderOption1, companyID, tenantID);
+		String docList = "";
+		if (docID != null && !docID.equals("")) {
+			docList = getOpinionInfo(docID, mode, orderOption1, companyID, tenantID);
+		} else {
+			docList = "<DATA></DATA>";
+		}
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
