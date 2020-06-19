@@ -1077,6 +1077,11 @@
 		        DivPopUpHidden();
 		        btnApprovalInfo(3);
 		    }
+		    /* 2020-06-19 홍승비 - 임시보관함에서 기안 > 결재선 지정 없이 임시저장하는 경우, 결재정보창 열릴때 결재선 탭이 열리도록 수정*/
+		    function check_btnSendDraft_temp() {
+		        DivPopUpHidden();
+		        btnApprovalInfo(1);
+		    }
 		    function check_btnSendDraft2(ans) {
 		        DivPopUpHidden();
 		        if (ans)
@@ -1102,6 +1107,7 @@
 		
 		        CheckPassWord();
 		    }
+		    
 		    function btnFileAttach_onclick() {
 		        try {
 		            var ret = openFileAttachUI();
@@ -1798,7 +1804,8 @@
 		            } else {
 			             if (typeof (LastSignSN) == "undefined") { // 임시보관함에서의 기안>임시저장은 결재선을 수동으로 지정해준다 2018-03-23 천성준
 			            	var pAlertContent = "<spring:message code='ezApprovalG.t1485'/>";
-			                OpenAlertUI(pAlertContent, check_btnSendDraft);
+			            	/* 2020-06-19 홍승비 - 결재선 지정 필요 메세지에 맞춰서 결재정보창 초기 탭을 결재선탭으로 변경 */
+			                OpenAlertUI(pAlertContent, check_btnSendDraft_temp);
 			                return;
 			            }
 		            }
