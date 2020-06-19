@@ -671,6 +671,15 @@
                 var subCondition = "TBL_EXPENDAPRDOCINFO.FORMNAME = '" + ContainerID + "'";
                 window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + encodeURIComponent(ContainerID) + "&shareDeptId=" + shareDeptId;
 		    }
+		    
+		    function setBoldText(elem) {
+		    	$(".node_selected").each(function (index) {
+	                $(this).removeClass('node_selected');
+	                $(this).addClass('node_normal');
+	            });
+		    	$(elem).removeClass('node_normal');
+                $(elem).addClass('node_selected');
+		    }
 		
 		    function getAprCount() {
 		        try {
@@ -1142,8 +1151,8 @@
 	        		$("#" + val01 + "H2").attr("class", "off");
 	        		$("#" + val01 + "UL").attr("class", "lnbUL off");
 	        	} else {
-// 	        		$(".lnb H2").attr("class", "off");
-// 	        		$(".lnb UL").attr("class", "lnbUL off");
+	        		$(".lnb H2").attr("class", "off");
+	        		$(".lnb UL").attr("class", "lnbUL off");
 	        		
 	        		$("#" + val01 + "H2").attr("class", "on")
 	        		$("#" + val01 + "UL").attr("class", "lnbUL");
@@ -1310,7 +1319,7 @@
 														<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
 														<img id="imgNode_DeptShare_${status.index}_${status2.index}" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
 														<img id="subImgNode_DeptShare_${status.index}_${status2.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;">
-														<span onclick="setPresentValue('${item.formName}'); goFormContainer('${item.formName}', '${deptShare.shareId}');" style="cursor: pointer; width: 135px;" title="${item.formName}" id="spn_DeptShare_${status.index}_${status2.index}" class="node_normal">${item.formName}</span>
+														<span onclick="setPresentValue('${item.formName}'); goFormContainer('${item.formName}', '${deptShare.shareId}'); setBoldText(this);" style="cursor: pointer; width: 135px;" title="${item.formName}" id="spn_DeptShare_${status.index}_${status2.index}" class="node_normal">${item.formName}</span>
 													</div>
 									    		</c:forEach>
 									    	</c:if>
