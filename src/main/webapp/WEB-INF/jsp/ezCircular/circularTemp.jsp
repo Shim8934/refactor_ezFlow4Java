@@ -609,7 +609,7 @@
 						type : "POST",
 						dataType : "json",
 						async : false,
-						url : "/ezCircular/deleteCircularList.do",
+						url : "/ezCircular/circularDeleteTemp.do",
 						data : {
 							circularIDList : strListInfo,
 							memberIDList : strMemberListInfo
