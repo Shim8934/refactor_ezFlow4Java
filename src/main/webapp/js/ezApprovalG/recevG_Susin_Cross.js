@@ -497,7 +497,7 @@ function SGetDraftAprLineInfo(ret) {
             DrawAutoAprLine(ret[1], pDraftFlag);
         }
         
-        FieldsAvailable();
+//        FieldsAvailable();
         xmlReDraft = "R";
 
         if (xmlReDraft == "C") {

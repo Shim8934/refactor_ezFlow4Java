@@ -1481,8 +1481,6 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 			}
 
 		}
-
-        SetAutoPropertyValue();
     } catch (e) {
 		alert("New_DrawAutoLine ERROR!!");
 	}
