@@ -1566,10 +1566,46 @@ s
 							}
 		                }
 		            }
+		            setInitOpinion();
 		        }
 		        catch (e) {
 		            OpenAlertUI("DocumentComplete : " + e.description);
 		        }
+		    }
+		    
+		    function setInitOpinion(){
+		    	var field = message.GetListItem(message.GetFieldsList(), "opinions");
+		    	if (field) {
+		            try {
+		            	var result = "";
+		                
+		                $.ajax({
+		            		type : "POST",
+		            		dataType : "text",
+		            		async : false,
+		            		url : "/ezApprovalG/opinionRequest.do",
+		            		data : {
+		            			docID : pDocID,
+		            			orgCompanyID : orgCompanyID
+		            		},
+		            		success: function(xml){
+		            			result = xml;
+		            		}        			
+		            	});
+	
+		                var OpinionXML = loadXMLString(result);
+		                var NodeList = SelectNodes(OpinionXML, "LISTVIEWDATA/ROWS/ROW");
+		                field.innerHTML = " ";
+		                if (NodeList.length > 0) {
+		                    for (i = NodeList.length - 1; i >= 0; i--) {
+		                		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[0].childNodes[11]) + ' - ' + getNodeText(NodeList[i].childNodes[0].childNodes[9]) + ' - ' + getNodeText(NodeList[i].childNodes[0].childNodes[7]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + getNodeText(NodeList[i].childNodes[0].childNodes[3]) + '</p>';
+		                		$(field).append(opinionsTable);
+		                    }
+		                }
+		            } catch (e) {
+		                alert("setInitOpinion ::" + e.description);
+		            }
+				}
 		    }
 		
 		    var ezapprovalinfo_dialogArguments = new Array();
