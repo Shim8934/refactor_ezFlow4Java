@@ -1513,6 +1513,7 @@ function getCurApproverAprLine(type) {
  * pApproveFlag 1 : 결재, 2 : 반송, 3 : 보류
  * */
 function SaveApproveInfo(pApproveFlag) {
+	var fields = message.GetFieldsList();
     var rtnVal = SaveFile();
 
     if(rtnVal.toUpperCase() != "TRUE") {

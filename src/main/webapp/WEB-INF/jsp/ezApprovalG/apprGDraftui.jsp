@@ -383,14 +383,14 @@ s
 		                    GetExchInfo();
 		                    getDocInfo();
 		                    
-		                    /* if (pHasOpinionYN == "Y") {
+		                    if (pHasOpinionYN == "Y") {
 		                        if (AprState == "<spring:message code='ezApprovalG.t49'/>")
 		                            pInformationContent = "<spring:message code='ezApprovalG.t124'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
 		                        else
 		                            pInformationContent = "<spring:message code='ezApprovalG.t126'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
 		
 		                        OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
-		                    } */
+		                    }
 		                }
 		                else if (pDraftFlag == "SUSIN" || pDraftFlag == "GONGRAM") {
 		                    var len;
@@ -402,13 +402,13 @@ s
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    GetExchInfo();
 		                    getDocInfo();
-		                    /* if (pHasOpinionYN == "Y") {
+		                    if (pHasOpinionYN == "Y") {
 		                        var pInformationContent;
 		                        var Ans;
 		
 		                        pInformationContent = "<spring:message code='ezApprovalG.t126'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
 		                        Ans = OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
-		                    } */
+		                    }
 		                }
 		                else if (pDraftFlag == "HAPYUI") {
 		                    var len;
@@ -421,12 +421,12 @@ s
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    GetExchInfo();
 		                    getDocInfo();
-		                    /* if (pHasOpinionYN == "Y") {
+		                    if (pHasOpinionYN == "Y") {
 		                        var pInformationContent;
 		                        var Ans;
 		                        pInformationContent = "<spring:message code='ezApprovalG.t126'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
 		                        OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
-		                    } */
+		                    }
 		                }
 		                else {
 		                    SetBtnStateTrue();

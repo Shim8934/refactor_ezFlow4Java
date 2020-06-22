@@ -16783,6 +16783,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						if (rtnVal) {
 							map.put("v_NEWID", newID);
 							map.put("companyID", companyID);
+							map.put("receiptCompanyID", receiptCompanyID);
 							map.put("v_orgDocID", orgDocID);
 							map.put("v_DocState", docState);
 							map.put("v_FunctionType", staASDoJak);
