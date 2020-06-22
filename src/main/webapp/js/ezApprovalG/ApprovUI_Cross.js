@@ -1515,11 +1515,7 @@ function SaveApproveInfo(pApproveFlag) {
         return rtnVal;
     }
 
-    SaveFile();
     SignSave();
-
-    var fields = message.GetFieldsList();
-    var field;
 
     var objNodes = GetChildNodes(GetChildNodes(document.getElementById('DOCINFO').dataSource.childNodes[0])[0]);
 
