@@ -38,6 +38,7 @@
 			var	selectedBoardGroupID = "";	
 			var SelectedBoardName = "";
 			var SelectedBoardType = "";
+			var SelectedBoardURL = "";
 			var ret = new Array();
 			
 			var xmlDom_treeview = createXmlDom();
@@ -62,6 +63,14 @@
 					DivPopUpShow(330, 205, pUrl);
 					return;
 				}
+				
+				/* 2020-06-23 홍승비 - URL게시판 선택 시 경고 메세지 추가 */
+				if (SelectedBoardURL != null && trim(SelectedBoardURL) != "") {
+					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.garm02' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.garm02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+					return;
+				}
+				
 			    var ret = new Array();
 			    ret[0] = SelectedBoardID;
 			    ret[1] = SelectedBoardName;
@@ -78,14 +87,17 @@
 		            window.returnValue = rtnVal;
 		    };
 			
-			function CheckIfAnonyBoard(pBoardID)
+		    // 미사용 함수 주석처리
+/* 			function CheckIfAnonyBoard(pBoardID)
 			{
 				xmlhttp.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + pBoardID, false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
-				if(ret.indexOf("anonyboard") != -1) return true;
+				if (ret.indexOf("anonyboard") != -1 || ret.indexOf("URLboard") != -1) {
+					return true;
+				}
 				return false;
-			}
+			} */
 			
 			function CheckIfCanWrite(pBoardID)
 			{
@@ -157,6 +169,7 @@
 		        }
 			}
 			
+			/* 2020-06-23 홍승비 - 게시 시 URL게시판 여부 체크에 쓰이는 변수 추가 */
 			function TreeCtrl_onNodeClick(pNodeID,pTreeID)  
 			{
 				var treeNode = new TreeNode();
@@ -164,6 +177,7 @@
 			    SelectedBoardID = treeNode.GetNodeData("DATA1");	
 			    SelectedBoardName = treeNode.GetNodeData("DATA2");
 			    SelectedBoardType = treeNode.GetNodeData("DATA5");
+			    SelectedBoardURL = treeNode.GetNodeData("DATA6");
 			}
 			
 			function DisplayTopBoard()
