@@ -548,7 +548,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		brdCount = list.size();
 		logger.debug("brdCount="+brdCount);
 		for (int i=0; i<brdCount; i++) {
-			childBrd += list.get(i).getBrd_ID() + "/" + list.get(i).getBrd_Nm() + "/" + list.get(i).getApproveFlag() + ",";
+			childBrd += list.get(i).getBrd_ID() + "/" + list.get(i).getBrd_Nm() + "/" + list.get(i).getApproveFlag() + "|";
 		}
 		
 		ScheduleConfigVO scheduleConfigVO = ezScheduleService.getScheduleConfig(userInfo.getId(), userInfo.getTenantId());
