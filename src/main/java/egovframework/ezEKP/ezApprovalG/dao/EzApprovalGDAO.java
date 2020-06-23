@@ -44,6 +44,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 import org.springframework.stereotype.Repository;
 
@@ -3460,4 +3461,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateBebuRelayDocSenderInfo(Map<String, Object> map) throws Exception {
 	        update("EzApprovalG.updateBebuRelayDocSenderInfo", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getLeftDocCountNew(Map<String, Object> map) throws Exception{
+		return (Map<String, Object>) select("EzApprovalG.getLeftDocCount_new", map);
+	}
+	
 }

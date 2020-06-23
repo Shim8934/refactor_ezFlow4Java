@@ -686,4 +686,5 @@ public interface EzApprovalGService {
     public String setApprDocInfo(Document xmlDom, String companyID, int tenantId) throws Exception;
 
     public String getFormAprOptionInfo(String key, String type, String companyID, int tenantID) throws Exception;
+
 }
