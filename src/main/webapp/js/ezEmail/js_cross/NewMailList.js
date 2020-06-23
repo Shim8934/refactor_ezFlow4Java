@@ -1639,7 +1639,7 @@ var PressShiftKey = false;
 var PressCtrlKey = false;
 function event_listOnkeyUp(event) {
 	
-	if (event.target.className == "Mail_Input") {
+	if (event.target.className == "Mail_Input" || event.target.name == "keyword" || event.target.name == "prekeyword") {
 		return;
 	}
 	
