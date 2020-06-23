@@ -102,13 +102,16 @@
 	        	window.close();
 			}
 
-			function CheckIfAnonyBoard(pBoardID) {
+		    // 미사용 함수 주석처리
+/* 			function CheckIfAnonyBoard(pBoardID) {
 				xmlhttp.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
-				if(ret.indexOf("anonyboard") != -1) return true;
+				if (ret.indexOf("anonyboard") != -1 || ret.indexOf("URLboard") != -1) {
+					return true;
+				}
 				return false;
-			}
+			} */
 			
 			function CheckIfCanWrite(pBoardID)
 			{

@@ -72,7 +72,9 @@
 				xmlhttp.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
-				if(ret.indexOf("anonyboard") != -1) return true;
+				if (ret.indexOf("anonyboard") != -1 || ret.indexOf("URLboard") != -1) { // 익명, 포토, 썸네일, URL게시판에는 게시불가
+					return true;
+				}
 				return false;
 			}
 			
