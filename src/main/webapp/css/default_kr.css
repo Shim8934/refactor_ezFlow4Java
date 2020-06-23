@@ -3657,11 +3657,12 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 
 /* input[type="text"] new design 20200608 */
 .textbox_design{display:inline-block; line-height:0px !important; vertical-align:top;}
-.textbox_design input[type="text"],
 .textbox_design input[type="password"],
 .textbox_design input[type="email"],
 .textbox_design input[type="number"],
 .textbox_design input[type="url"]{width:100%; height:30px; line-height:28px; padding:0px 10px; margin:0px; border:1px solid #cbcbcb; background-color:#ffffff; font-size:14px; color:#57606b; box-sizing:border-box; vertical-align:top;}
+.textbox_design input[type="text"]{width:100%; height:30px; line-height:28px; padding:1px 2px; margin:0px; border:1px solid #cbcbcb; background-color:#ffffff; font-size:14px; color:#57606b; box-sizing:border-box; vertical-align:top;}
+
 
 .textbox_design input[type="text"]:hover,
 .textbox_design input[type="password"]:hover,
@@ -3686,7 +3687,7 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .textbox_design.textbox_Error input[type="text"]::-webkit-input-placeholder{border-color:#ff4c49 !important; background-color:#feefef !important; color:#ff4c49 !important;}
 .textbox_design.textbox_Error input[type="text"]::-moz-placeholder {border-color:#ff4c49 !important; background-color:#feefef !important; color:#5dc560 !important;}
 /* Success 20200608 */
-.textbox_design.textbox_Success input[type="text"]{width:100%; height:34px; line-height:32px; padding:0px 10px; margin:0px; border:1px solid #5dc560; background-color:#f1fbf1; font-size:14px; color:#5dc560; border-radius:3px; box-sizing:border-box; vertical-align:top;}
+.textbox_design.textbox_Success input[type="text"]{width:100%; height:34px; line-height:32px; margin:0px; border:1px solid #5dc560; background-color:#f1fbf1; font-size:14px; color:#5dc560; border-radius:3px; box-sizing:border-box; vertical-align:top;}
 .textbox_design.textbox_Success input[type="text"]:-ms-input-placeholder[type="text"]{border-color:#5dc560 !important; background-color:#f1fbf1 !important;color:#5dc560 !important;}
 .textbox_design.textbox_Success input[type="text"]::-webkit-input-placeholder{border-color:#5dc560 !important; background-color:#f1fbf1 !important; color:#5dc560 !important;}
 .textbox_design.textbox_Success input[type="text"]::-moz-placeholder {border-color:#5dc560 !important; background-color:#f1fbf1 !important; color:#5dc560 !important;}

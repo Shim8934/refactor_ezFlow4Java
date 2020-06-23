@@ -3602,3 +3602,85 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 */
 #ContextMenuDiv > .popuplist{ width:150px; }
 
+
+/* 20200608 검색필터 추가 */
+.searchForm.searchFilter{position:relative; margin-right:48px;}
+.searchFilterBtn{position:absolute; right:-50px; top:-2px;}
+.layerPopup_new{display:none; position:absolute; right:-48px; top:39px; width:400px; height:395px; padding:20px; border:1px solid #999999; background:#ffffff; box-shadow:2px 3px 4px rgba(0,0,0,0.1); box-sizing:border-box;}
+.layerPopup_new select{width:75px; height:30px;}
+.content_layout{clear:both; margin:0px; padding:0px; list-style:none; overflow:hidden;}
+.content_layout_left{float:left;}
+.content_layout_right{float:right;}
+.content_layout_center{float:none; overflow:hidden;}
+.content_layout_center > .content_layout {margin-bottom:13px;}
+.content_layout_center > .content_layout > .content_layout_center > .textbox_design{width:100%;}
+.content_layout_center > .content_layout > .content_layout_center > .textbox_design > input{width:100%;}
+.hasDatepicker{height:30px;}
+.content_layout_center > .checkbox_design,
+.content_layout_center > .radio_design{margin-right:20px;}
+.text_th{width:90px; height:30px; line-height:28px; margin:0px; padding:0px; color:#383838; font-size:14px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.text_th > .point_red{color:#f92828; font-size:14px;}
+.layerPopup_button{position:absolute; left:0px; bottom:0px; width:100%; height:66px; background:#f1f3f5;}
+.layerPopup_button > .content_layout{padding:15px 20px 0px 20px; box-sizing:border-box;}
+.layerPopup_button .button_style01{display:block; min-width:113px; height:36px; line-height:34px; padding:0px 20px; background-color:#3d8fea; font-size:14px; color:#ffffff; text-align:center; box-sizing:border-box; cursor:pointer;}
+.layerPopup_button .button_style01:hover{background-color:#0470e4;}
+.layerPopup_button .button_style02{display:block; min-width:113px; height:36px; line-height:34px; padding:0px 20px; background-color:#e2e3e6; font-size:14px; color:#666666; text-align:center; box-sizing:border-box; cursor:pointer;}
+.layerPopup_button .button_style02:hover{color:#000000; background-color:#dedede;}
+.layerPopup_button .button_style03{display:block; min-width:113px; height:36px; line-height:34px; padding:0px 20px; font-size:14px; color:#333333; text-decoration:underline; text-align:center; box-sizing:border-box; cursor:pointer;}
+.layerPopup_button .button_style03:hover{color:#3d8fea;}
+
+/* input[type="checkbox"] new design 20200608 */
+.checkbox_design{display:inline-block; line-height:0px !important; margin-right:5px;}
+.checkbox_design > input[type="checkbox"]{width:1px; height:1px;  padding:0;  border:0 none;  margin:0;  position:absolute;  left:0;  top:0;  overflow:hidden; clip:rect(0 0 0 0);}
+.checkbox_design > label{display:inline-block; height:18px; line-height:16px;  padding-left:24px; background:url(../images/input_checkbox_radio.png) no-repeat -0px -0px;  font-size:14px;  vertical-align:middle;  cursor:pointer; user-select:none; -ms-user-select:none;-webkit-user-select:none;}
+.checkbox_design > input[type="checkbox"] + label{background-position: -0px -0px;}
+.checkbox_design > input[type="checkbox"]:checked + label{background-position: -0px -23px;}
+.checkbox_design > input[type="checkbox"]:disabled + label{background-position: -0px -46px;}
+.checkbox_design > input[type="checkbox"]:checked:disabled + label{background-position: -0px -69px;}
+
+/* input[type="radio"] new design 20200608 */
+.radio_design{display:inline-block; line-height:0px !important; margin-right:5px;}
+.radio_design > input[type="radio"]{width:1px; height:1px;  padding:0;  border:0 none;  margin:0;  position:absolute;  left:0;  top:0;  overflow:hidden; clip:rect(0 0 0 0);}
+.radio_design > label{display:inline-block; height:18px; line-height:16px;  padding-left:24px; background:url(../images/input_checkbox_radio.png) no-repeat -0px -92px;  font-size:14px;  vertical-align:middle;  cursor:pointer; user-select:none; -ms-user-select:none;-webkit-user-select:none;}
+.radio_design > input[type="radio"] + label{background-position: -0px -92px;}
+.radio_design > input[type="radio"]:checked + label{background-position: -0px -115px;}
+.radio_design > input[type="radio"]:disabled + label{background-position: -0px -138px;}
+.radio_design > input[type="radio"]:checked:disabled + label{background-position: -0px -161px;}
+
+/* input[type="text"] new design 20200608 */
+.textbox_design{display:inline-block; line-height:0px !important; vertical-align:top;}
+.textbox_design input[type="password"],
+.textbox_design input[type="email"],
+.textbox_design input[type="number"],
+.textbox_design input[type="url"]{width:100%; height:30px; line-height:28px; padding:0px 10px; margin:0px; border:1px solid #cbcbcb; background-color:#ffffff; font-size:14px; color:#57606b; box-sizing:border-box; vertical-align:top;}
+.textbox_design input[type="text"]{width:100%; height:30px; line-height:28px; padding:1px 2px; margin:0px; border:1px solid #cbcbcb; background-color:#ffffff; font-size:14px; color:#57606b; box-sizing:border-box; vertical-align:top;}
+
+
+.textbox_design input[type="text"]:hover,
+.textbox_design input[type="password"]:hover,
+.textbox_design input[type="email"]:hover,
+.textbox_design input[type="number"]:hover,
+.textbox_design input[type="url"]:hover{border-color:#bbbbbb;}
+
+.textbox_design input[type="text"]:focus,
+.textbox_design input[type="password"]:focus,
+.textbox_design input[type="email"]:focus,
+.textbox_design input[type="number"]:focus,
+.textbox_design input[type="url"]:focus{border-color:#bbbbbb; background-color:#f4f8fa;}
+
+.textbox_design input[type="text"]:disabled,
+.textbox_design input[type="password"]:disabled,
+.textbox_design input[type="email"]:disabled,
+.textbox_design input[type="number"]:disabled,
+.textbox_design input[type="url"]:disabled{border-color:#eaebec; background-color:#f8f9f9; user-select:none; -ms-user-select:none; -webkit-user-select:none;}
+/* Error 20200608 */
+.textbox_design.textbox_Error input[type="text"]{width:100%; height:34px; line-height:32px; padding:0px 10px; margin:0px; border:1px solid #ff4c49; background-color:#feefef; font-size:14px; color:#ff4c49; border-radius:3px; box-sizing:border-box; vertical-align:top;}
+.textbox_design.textbox_Error input[type="text"]:-ms-input-placeholder[type="text"]{border-color:#ff4c49 !important; background-color:#feefef !important;color:#ff4c49 !important;}
+.textbox_design.textbox_Error input[type="text"]::-webkit-input-placeholder{border-color:#ff4c49 !important; background-color:#feefef !important; color:#ff4c49 !important;}
+.textbox_design.textbox_Error input[type="text"]::-moz-placeholder {border-color:#ff4c49 !important; background-color:#feefef !important; color:#5dc560 !important;}
+/* Success 20200608 */
+.textbox_design.textbox_Success input[type="text"]{width:100%; height:34px; line-height:32px; margin:0px; border:1px solid #5dc560; background-color:#f1fbf1; font-size:14px; color:#5dc560; border-radius:3px; box-sizing:border-box; vertical-align:top;}
+.textbox_design.textbox_Success input[type="text"]:-ms-input-placeholder[type="text"]{border-color:#5dc560 !important; background-color:#f1fbf1 !important;color:#5dc560 !important;}
+.textbox_design.textbox_Success input[type="text"]::-webkit-input-placeholder{border-color:#5dc560 !important; background-color:#f1fbf1 !important; color:#5dc560 !important;}
+.textbox_design.textbox_Success input[type="text"]::-moz-placeholder {border-color:#5dc560 !important; background-color:#f1fbf1 !important; color:#5dc560 !important;}
+
