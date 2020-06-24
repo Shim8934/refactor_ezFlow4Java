@@ -138,10 +138,11 @@
 								var p = document.createElement("P");
 	                            p.className = "title";
 	                            
+	                            /* 2020-06-24 홍승비 - 커뮤니티 팝업홈 홈 메인 표출 게시판 특수문자 처리 */
 	                            if (primary == "1") {
-	                                p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='width:16px; height:16px; padding-right:5px; vertical-align:middle' />" + length_check(infoVO.boardName);
+	                                p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='width:16px; height:16px; padding-right:5px; vertical-align:middle' />" + MakeXMLString(length_check(infoVO.boardName));
 	                            } else {
-	                            	p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='width:16px; height:16px; padding-right:5px;vertical-align:middle' />" + length_check(infoVO.boardName2);
+	                            	p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='width:16px; height:16px; padding-right:5px;vertical-align:middle' />" + MakeXMLString(length_check(infoVO.boardName2));
 	                            }
 	                            
 	                            var span = document.createElement("span");

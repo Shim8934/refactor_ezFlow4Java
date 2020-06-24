@@ -408,7 +408,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		logger.debug("mode : " + mode);
-		String primary = userInfo.getPrimary();
+		String primary = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
 		String retXML = ezCommunityService.getBoardTree("top", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, primary, userInfo.getTenantId());
 		
 		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
@@ -551,9 +551,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
 		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
 		
-		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
-		if (userInfo.getPrimary().equals("1")) {
+		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
 			multiBoardName = boardInfo.getBoardName();
 		} else {
 			multiBoardName = boardInfo.getBoardName2();
@@ -813,6 +813,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
+		/* 2020-06-24 홍승비 - 게시판명 다국어, 기본언어("1")와 멀티언어("2") 처리 */
+		String multiBoardName = "";
+		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
+			multiBoardName = boardInfo.getBoardName();
+		} else {
+			multiBoardName = boardInfo.getBoardName2();
+		}
 		
 		ezCommunityService.newBoardItem(item, boardInfo, userInfo, pItemID, pBoardID, pUrl, pMode, expireDays, model);
 		
@@ -831,6 +838,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("endDate", item.getEndDate());
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
+		model.addAttribute("multiBoardName", multiBoardName);
 		
 		logger.debug("item.endDate: " + item.getEndDate());
 		
@@ -2815,9 +2823,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			style = "display:none";
 		}
 		
-		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
-		if (userInfo.getPrimary().equals("1")) {
+		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
 			multiBoardName = boardInfo.getBoardName();
 		} else {
 			multiBoardName = boardInfo.getBoardName2();
@@ -2910,9 +2918,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
-		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
-		if (userInfo.getPrimary().equals("1")) {
+		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
 			multiBoardName = boardInfo.getBoardName();
 		} else {
 			multiBoardName = boardInfo.getBoardName2();
@@ -2991,9 +2999,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
-		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
-		if (userInfo.getPrimary().equals("1")) {
+		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
 			multiBoardName = boardInfo.getBoardName();
 		} else {
 			multiBoardName = boardInfo.getBoardName2();
@@ -3044,9 +3052,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
-		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
-		if (userInfo.getPrimary().equals("1")) {
+		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
 			multiBoardName = boardInfo.getBoardName();
 		} else {
 			multiBoardName = boardInfo.getBoardName2();
@@ -3103,9 +3111,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
-		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
-		if (userInfo.getPrimary().equals("1")) {
+		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
 			multiBoardName = boardInfo.getBoardName();
 		} else {
 			multiBoardName = boardInfo.getBoardName2();
@@ -3182,9 +3190,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
-		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
-		if (userInfo.getPrimary().equals("1")) {
+		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
 			multiBoardName = boardInfo.getBoardName();
 		} else {
 			multiBoardName = boardInfo.getBoardName2();
@@ -3573,7 +3581,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("totalPage", totalPage);
-		model.addAttribute("primary", userInfo.getPrimary());
+		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("pastDate", pastDate);
 		
 		logger.debug("mainPage ended.");
@@ -4144,9 +4152,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityClubVO club = ezCommunityService.boardItemListPhotoGet1(userInfo.getId(), boardID, userInfo.getTenantId());
 		
-		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
-		if (userInfo.getPrimary().equals("1")) {
+		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
 			multiBoardName = boardInfo.getBoardName();
 		} else {
 			multiBoardName = boardInfo.getBoardName2();
@@ -4244,9 +4252,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
-		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
-		if (userInfo.getPrimary().equals("1")) {
+		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
 			multiBoardName = boardInfo.getBoardName();
 		} else {
 			multiBoardName = boardInfo.getBoardName2();
