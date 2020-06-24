@@ -162,9 +162,9 @@
 		        var NowDate = utcDate2(offsetMin);
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', NowDate);
-		        $(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
 		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Edatepicker").datepicker('setDate', NowDate);
+		        $(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
 		    });
 		    
 		    $(function () {
@@ -390,6 +390,9 @@
 		        PreviewMode_ChangeBtn();
 		        window_onunload_Event = true;
 		        document.getElementById("select2").value = "${folderName}";
+		        $("#Sdatepicker").datepicker('disable');
+			    $(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
+			    $("#Edatepicker").datepicker('disable');
 		    }
 		    
 		    $(document).ready(function() {
@@ -1258,12 +1261,15 @@
 				$('input:radio[name="attachment"][id="all"]').prop('checked', true);
 				$('input:radio[name="andor"][value="and"]').prop('checked', true);
 				$("#selectRange").val("All");
-				changeLangeEvent();
 				$("input:text[name='prekeyword']").val("");
+				var today = new Date();
+				$("#Sdatepicker").datepicker('setDate', today);
+				$("#Edatepicker").datepicker('setDate', today);
+				changeLangeEvent();
 			}
 		</script>	
 	</head>
-	<body style="overflow:hidden;margin-bottom:0px;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
+	<body style="overflow:hidden;margin-bottom:0px;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp_temp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<h1>${folderName}<span id="mailBoxInfo"></span><span id ="resultCount" style="display:none;"></span>
 			<span class="searchForm" style="margin-right:53px;">
 				<select name="searchCheck searchFilter" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
@@ -1285,7 +1291,7 @@
 				<div class="layerPopup_new" id="moreSearch" style="display:none;z-index:6000;" >
 		        	<ul class="content_layout">
 		        		<li class="content_layout_left">
-							<p class="text_th">검색어 <span class="point_red">*</span></p>
+							<p class="text_th"><spring:message code="ezEmail.pyy22" /><span class="point_red">*</span></p>
 						</li>
 						<li class="content_layout_center">
 							<ul class="content_layout">
