@@ -220,7 +220,9 @@ public interface EzCommonService {
 	public void addAprEndAttachViewOrder() throws Exception;
 	
 	public void addAprTmpAttachViewOrder() throws Exception;
-
+	
+	public void createTblNoticeBoard() throws Exception;
+	
 	public void createAprAttachLimit() throws Exception;
 	
 	public void addDocStateIntoLastLines() throws Exception;

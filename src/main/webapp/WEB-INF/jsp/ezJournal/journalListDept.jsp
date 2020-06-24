@@ -34,7 +34,7 @@
 				<th id="BoardList_TH_8" onclick="setListOrder(this)" order="7" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:17%;" class="h5_center">
 					<spring:message code='ezJournal.t22'/>
 				</th>
-				<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; cursor: pointer; text-align: center; width:35px;" class="h5_center">
+				<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; cursor: pointer; text-align: center; width:45px;" class="h5_center">
 					<spring:message code='ezJournal.t65'/>
 				</th>
 			</tr>
@@ -100,7 +100,7 @@
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:17%;">
 						<c:out value='${journal.formName}'/>
 					</td>
-					<td	onclick="selectedTR(this);" class="viewCount" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:35px;">
+					<td	onclick="selectedTR(this);" class="viewCount" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:45px;">
 						<c:out value='${journal.viewCount}'/>
 					</td>
 				</tr>

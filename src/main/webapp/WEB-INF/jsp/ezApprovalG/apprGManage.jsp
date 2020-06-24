@@ -383,6 +383,19 @@
                     }
                     document.title = $("#presentcell").html();
 		        }
+				
+				/* 2020-06-18 홍승비 - 임시보관함으로 진입한 경우, 우측 상단 간단검색메뉴에서 기안자 제거 (window_onload가 동작하는 S버전 기준) */
+				var selectWriter = $("#selectType").find("option[value='rad_Writer']");
+				if (pListTypeValue == "21") { // 임시보관함의 경우, 기안자 검색조건 제거
+					if (selectWriter.length > 0) {
+						selectWriter.remove();
+					}
+				} else { // 그 외의 경우, 다시 기안자 검색조건을 어팬드
+					if (selectWriter.length <= 0) {
+						$("#selectType").append('<option value="rad_Writer"><spring:message code="ezApprovalG.t445"/></option>');
+					}
+				}
+				
 		    }
 			
 		    function change_statusCell() {
@@ -1336,7 +1349,21 @@
 		            SendOutFlag = "S";
 		        else if (pListTypeValue == "9")
 		            SendOutFlag = "SS";
+		        
+				/* 2020-06-18 홍승비 - 임시보관함으로 진입한 경우, 우측 상단 간단검색메뉴에서 기안자 제거 (G버전은 window_onload 분기를 타지 않으므로, 검색조건 초기화 작업과 함께 적용) */
+				var selectWriter = $("#selectType").find("option[value='rad_Writer']");
+				if (pListTypeValue == "21") { // 임시보관함의 경우, 기안자 검색조건 제거
+					if (selectWriter.length > 0) {
+						selectWriter.remove();
+					}
+				} else { // 그 외의 경우, 다시 기안자 검색조건을 어팬드
+					if (selectWriter.length <= 0) {
+						$("#selectType").append('<option value="rad_Writer"><spring:message code="ezApprovalG.t445"/></option>');
+					}
+				}
+				
 		    }
+		    
 		    function Search_onclick() {
 		        window.open("./ReceivUI/Receive_Search.aspx", "_self", "");
 		    }

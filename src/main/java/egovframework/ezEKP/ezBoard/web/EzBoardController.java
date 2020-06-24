@@ -5055,9 +5055,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardPropertyVO boardInfo = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
 		/* 2020-02-13 홍승비 - 익명게시판이면서 확장칼럼을 가지는 경우도 체크하도록 수정 */
-		/* 2019-07-16 홍승비 - URL게시판 null 체크 위치 수정 */
-		if (boardInfo.getGuBun() != null && (boardInfo.getGuBun().equals("2") || (boardInfo.getUrl() != null && !boardInfo.getUrl().trim().equals("")) || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4") || boardInfo.getGuBun().equals("7"))) {
+		if (boardInfo.getGuBun() != null && (boardInfo.getGuBun().equals("2") || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4") || boardInfo.getGuBun().equals("7"))) {
 			result += "<RESULT>anonyboard</RESULT>";
+		}
+		/* 2020-06-23 홍승비 - URL 게시판 체크 분기 분리 */
+		if (boardInfo.getUrl() != null && !boardInfo.getUrl().trim().equals("")) {
+			result += "<RESULT>URLboard</RESULT>";
 		}
 		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
 			result += "<RESULT>attributeextension</RESULT>";
@@ -9677,6 +9680,30 @@ public class EzBoardController extends EgovFileMngUtil{
 		ezBoardService.deleteMyBoards(pBoardID, userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		logger.debug("deleteMyBoards ended.");
+	}
+	
+	/**
+	 * 2019-09-16 홍승비 - 기본 게시판으로 이동하기 위한 리다이렉트용 게시판 그룹ID와 게시판ID 리턴
+	 * */
+	@RequestMapping(value = "/ezBoard/getDefaultBoardID.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String getDefaultBoardID(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getDefaultBoardID started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String returnStr = "";
+		
+		/* 2019-10-11 홍승비 - 테넌트 컨피그가 아니라 회사별로 지정한 공지사항 게시판으로 이동하도록 수정 */
+		String defaultBoardID = ezBoardService.getCompanyNoticeBoardID(userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		BoardPropertyVO boardProp = ezBoardService.getBoardProperty(defaultBoardID, userInfo.getTenantId());
+		
+		if (boardProp != null && boardProp.getBoardGroupID() != null && defaultBoardID != null && !defaultBoardID.trim().equals("")) {
+			returnStr = boardProp.getBoardGroupID() + ";" + defaultBoardID;
+		}
+		
+		logger.debug("getDefaultBoardID ended.");
+		return returnStr;
 	}
 }
 

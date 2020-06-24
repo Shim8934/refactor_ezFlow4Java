@@ -1299,4 +1299,34 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		ezBoardAdminDAO.updateBoardGroupID(map);
 		logger.debug("updateBoardGroupID ended");
 	}
+	
+	/* 2019-10-11 홍승비 - 공지사항 게시판 레코드 삭제 */
+	@Override
+	public void deleteNoticeBoard(int tenantId, String companyID) throws Exception {
+		logger.debug("deleteNoticeBoard started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+		
+		ezBoardAdminDAO.deleteNoticeBoard(map);
+		
+		logger.debug("deleteNoticeBoard ended");
+	}
+
+	/* 2019-10-11 홍승비 - 공지사항 게시판 레코드 갱신 */
+	@Override
+	public void updateNoticeBoard(String boardID, int tenantId, String companyID) throws Exception {
+		logger.debug("updateNoticeBoard started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PBOARDID", boardID);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+		
+		ezBoardAdminDAO.deleteNoticeBoard(map); // 기존 공지사항 게시판 삭제 후 새로운 레코드 삽입
+		ezBoardAdminDAO.insertNoticeBoard(map);
+		
+		logger.debug("updateNoticeBoard ended");
+	}
 }

@@ -99,7 +99,7 @@
 				</ul>
 			</div>	        
 		</c:if>
-	<div style="text-align: left;">
+	<div style="text-align: left; font-size: 12px; font-family: 'malgun gothic', 'arial', 'verdana';">
 		<img onclick="parent.Smaller();" style="cursor: pointer; margin: 5px;" src="/images/minus.png"> 
 		<img onclick="parent.Bigger();" style="cursor: pointer; margin: 5px; margin-left: -9px;" src="/images/plus.png">
 	</div>

@@ -355,4 +355,7 @@ public interface EzBoardService {
 	/* 2020-06-15 홍승비 - 즐겨찾기 게시판 단일 삭제 메서드 */
 	public void deleteMyBoards(String boardID, String userID, int tenantID, String companyID) throws Exception;
 	
+	/* 2019-10-11 홍승비 - 회사별 공지사항 게시판ID를 리턴하는 메서드 */
+	public String getCompanyNoticeBoardID( String companyID, int tenantID) throws Exception;
+	
 }

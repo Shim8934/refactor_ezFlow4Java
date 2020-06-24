@@ -4213,7 +4213,7 @@ public class EzEmailUtil {
 	 * style 태그가 일정 개수 이상이면 style 태그와 그 사이의 콘텐츠를 삭제하는 기능을 수행하는 메소드
 	 */
 	private String stripTooManyStyleTags(String src) {
-		Pattern p = Pattern.compile("<style.*?>.*?</style>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Pattern p = Pattern.compile("<style(>|\\s.*?>).*?</style>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(src);
 		
 		int count = 0;

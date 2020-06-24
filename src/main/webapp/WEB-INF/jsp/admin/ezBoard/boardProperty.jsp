@@ -24,6 +24,7 @@
 	        var primary = "<c:out value='${primary}'/>";
 	        var isAllGroupBoard = "<c:out value='${isAllGroupBoard}'/>";
 	        var useBoardLike = "<c:out value='${model.likeFlag}'/>";
+	        var noticeBoardID = $.trim("<c:out value='${noticeBoardID}'/>"); // 공지사항 게시판ID(없다면 ""으로 전달됨)
 	        var xmlhttp = createXMLHttpRequest();
 	        var ApprUserList = "";
 	        var selectTargetListXML = "";
@@ -71,6 +72,11 @@
 	            }
 	            if (APPRFLAG.trim() == "") {
 	            	APPRFLAG = "N";
+	            }
+	            
+	            /* 2019-10-11 홍승비 - 공지사항 게시판 사용여부 추가 */
+	            if (noticeBoardID == BoardID) { // 공지사항 게시판과 현재 게시판의 ID가 동일
+	            	$("#chkNoticeBoard").prop("checked", true);
 	            }
 	            
 	            if ($("#chkQnABoard").is(":checked") || $("#chkAnonyBoard").is(":checked")) {
@@ -276,6 +282,15 @@
 	            }
 	            
 	            /* 2019-04-26 홍승비 - 쓰임이 없는 포틀릿 옵션의 사용 여부를 "N"으로 고정 */
+	            /* 2019-10-11 홍승비 - 공지사항 게시판 설정에 변경이 있는지 확인 */
+	            var pNoticeBoardMod = "";
+	            if (noticeBoardID != BoardID && $("#chkNoticeBoard").is(":checked") == true) {
+	            	pNoticeBoardMod = "UPDATE"; // 기존의 공지사항 게시판 레코드를 전부 삭제하고 새로운 레코드를 삽입한다.
+	            }
+	            else if (noticeBoardID == BoardID && $("#chkNoticeBoard").is(":checked") == false) {
+	            	pNoticeBoardMod = "DELETE"; // 기존의 공지사항 게시판 레코드를 전부 삭제한다.
+	            }
+	            
 	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
 	            	type : "POST",
@@ -289,7 +304,7 @@
 	            		boardColor:brd_color, portlet:"N", backGround:background,
 	            		formFlag:FormFlag, oneLineReply:oneLineReply, apprFlag:APPRFLAG, orgApprFlag:orgAPPRFLAG,
 	            		apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG, parentBoardID : parentBoardID,
-	            		likeFlag:useBoardLike
+	            		likeFlag:useBoardLike, noticeBoardMod:pNoticeBoardMod
 	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
@@ -937,7 +952,7 @@
 	        	<td>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkApprBoard" onclick="checkApprBoard()"><spring:message code="ezBoard.t999020" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkBoardLike"><spring:message code="ezBoard.hsb10" />&nbsp;</span>
-	        		<span style="display:inline-block;"><input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" /><spring:message code="ezBoard.t5011" />&nbsp;</span>
+	        		<span style="display:inline-block;"><input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" /><spring:message code="ezBoard.t5011_1" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkform" onclick="checkboardtype()" /><spring:message code="ezBoard.t999027" />&nbsp;</span>
 	        		<c:if test="${model.replyNotify == '1'}">	            	
 	                	<span style="display:inline-block;"><input type="checkbox" id="chkNotify" onclick="checkboardtype()" checked /><spring:message code="ezBoard.t168" />&nbsp;</span>
@@ -995,6 +1010,16 @@
 	                </c:if>
 	            </td>
 	        </tr>
+	        
+			<%-- 2019-10-11 홍승비 - 특정 게시판을 회사별 공지게시판으로 설정하는 기능 추가 --%>
+			<tr id="trNoticeBoard" style="${style}">
+	            <th><spring:message code="ezBoard.hsbNt01" /></th>
+	            <td>
+	                <input type="checkbox" id="chkNoticeBoard"/>
+	                <spring:message code="ezBoard.t162" /><spring:message code="ezBoard.hsbNt02" />
+	            </td>
+	        </tr>
+	        
 	        <%-- 첨부크기제한 --%>
 	        <tr id="attachLimitTr" style="${style}">
 	            <th><spring:message code="ezBoard.t167" /></th>

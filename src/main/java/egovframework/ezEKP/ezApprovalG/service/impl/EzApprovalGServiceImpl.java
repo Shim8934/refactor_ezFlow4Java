@@ -19,6 +19,7 @@ import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -1783,7 +1784,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			int totalCount = getWebPartListCount(listType, userID, deptID, userIDs, getDocManageDeptInfo(deptID, tenantID), userFlag.toLowerCase().trim(), companyID, tenantID, list);
 			result = "<RESULT>" + totalCount + "</RESULT>";
 		} else if (mode.equals("LEFT")) {
-			String leftCount = getLeftDocCount(userID, deptID, userIDs, getDocManageDeptInfo(deptID, tenantID), userFlag.toLowerCase(), companyID, tenantID, list);
+			String leftCount = getLeftDocCountNew(userID, deptID, userIDs, getDocManageDeptInfo(deptID, tenantID), userFlag.toLowerCase(), companyID, tenantID, list);
 			result = leftCount;
 		} else {
 			String webList = getWebPartList(listType, userID, deptID, userIDs, getDocManageDeptInfo(deptID, tenantID), userFlag.toLowerCase(), listCount, basicOrder, strMultiData, companyID, tenantID, list);
@@ -30836,4 +30837,55 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     	logger.debug("getFormAprOptionInfo started");
     	return aprOptionInfo;
     }
+    
+	public String getLeftDocCountNew(String userID, String deptID, String userIDs, String deptIDs, String userFlag, String companyID , int tenantID, List<ApprGProxyVO> list) throws Exception {
+		logger.debug("getLeftDocCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String[] userIDArr = userIDs.replace(" ", "").replace("\'", "").split(",");
+		String[] deptIDArr = deptIDs.replace(" ", "").replace("\'", "").split(",");
+		
+		map.put("v_USERID", userID);
+		map.put("v_DEPTID", deptID);
+		map.put("v_USERIDS", userIDArr);
+		map.put("v_DEPTIDS", deptIDArr);
+		map.put("v_USERFLAG", userFlag.trim().toLowerCase());
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+		map.put("v_STARTDATE", Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01"); 
+		map.put("v_ENDDATE", commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59"); 
+		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
+		map.put("proxyList", list);
+		
+		String ApprovalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		map.put("v_aprFlag", ApprovalFlag);
+		
+		String shareApprovalFlag = ezCommonService.getTenantConfig("useShareApproval", tenantID);
+		map.put("v_shareApprovalFlag", shareApprovalFlag);
+		
+		Map<String, Object> result = ezApprovalGDAO.getLeftDocCountNew(map); 
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+		
+		result.keySet().stream().sorted(new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return Integer.parseInt(o1) - Integer.parseInt(o2);
+			}
+			
+		}).forEach(elem -> {
+			sb.append("<ROW>");
+			sb.append("<COUNT>" + String.valueOf(result.get(elem)) + "</COUNT>");
+			sb.append("</ROW>");
+		});
+		
+		sb.append("</DATA>");
+		
+		logger.debug("getLeftDocCount ended");
+        
+		return sb.toString();
+	}
+    
 }

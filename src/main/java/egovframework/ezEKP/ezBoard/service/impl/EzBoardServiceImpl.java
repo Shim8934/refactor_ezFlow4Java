@@ -4765,4 +4765,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("deleteMyBoards ended");
 		ezBoardDAO.setListOrder_D(map);
 	}
+	
+	/* 2019-10-11 홍승비 - 회사별 공지사항 게시판ID를 리턴하는 메서드 */
+	@Override
+	public String getCompanyNoticeBoardID(String companyID, int tenantID) throws Exception {
+		logger.debug("getCompanyNoticeBoardID started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("getCompanyNoticeBoardID ended");
+		return ezBoardDAO.getCompanyNoticeBoardID(map);
+	}
 }

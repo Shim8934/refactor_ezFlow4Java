@@ -2724,4 +2724,24 @@
 		]]>
 	</update>
 	
+	<delete id="EzBoardAdminDAO.deleteNoticeBoard" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_BOARD_NOTICEBOARD
+            WHERE
+            	TENANT_ID = #v_TENANTID#
+            AND  
+            	COMPANYID = #v_COMPANYID#
+		]]>
+	</delete>
+	
+	<insert id="EzBoardAdminDAO.insertNoticeBoard" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_BOARD_NOTICEBOARD (BOARDID, TENANT_ID, COMPANYID)
+            VALUES
+            	(#v_PBOARDID#, #v_TENANTID#, #v_COMPANYID#)
+		]]>
+	</insert>
+	
 </sqlMap>
