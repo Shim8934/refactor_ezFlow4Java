@@ -181,56 +181,59 @@
 
 <!-- 공지사항 포틀릿 가져오기 -->
 <select id="ezNewPortal.getNoticePortletList" parameterClass="Map" resultMap="BoardListVO">
-<![CDATA[
-SELECT
-	GUBUN,
-	BOARDID,
-    ITEMID,
-    TITLE,
-    WRITEDATE
-FROM (
-	SELECT 
-		INFO.*, ROWNUM AS RNUM
-	FROM (
-		SELECT 
-			B.GUBUN,
-			A.BOARDID,
-		    A.ITEMID,
-		    A.TITLE,
-		    A.WRITEDATE
-		FROM 
-			TBL_BOARD_ITEM A
-		JOIN
-			TBL_BOARD_BOARDINFO B
-		ON
-			A.BOARDID = B.BOARDID
-		AND
-			A.TENANT_ID = B.TENANT_ID
-		WHERE 
-			A.BOARDID = (
-			            SELECT 
-			            	BOARD_ID
-			            FROM
-			            	TBL_PORTAL_PORTLET_COMP
-			            WHERE
-			            	COMPANY_ID = #companyId#
-			            AND
-			            	TENANT_ID = #tenantId#
-			            AND
-							PORTLET_ID = #portletId#	            
-			            )
-		AND 
-			A.TENANT_ID = #tenantId#
-		AND 
-			(A.WRITERCOMPANYID = B.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
-		ORDER BY 
-			TO_NUMBER(A.PARENTWRITEDATE) DESC, 
-			TO_CHAR(A.UPPERITEMIDTREE) ASC
-	) INFO
-) P
-WHERE
-	P.RNUM <= #limit#
-]]>
+	<![CDATA[
+		SELECT
+			GUBUN,
+			BOARDID,
+		    ITEMID,
+		    TITLE,
+		    WRITEDATE
+		FROM (
+			SELECT 
+				INFO.*, ROWNUM AS RNUM
+			FROM (
+				SELECT 
+					B.GUBUN,
+					A.BOARDID,
+				    A.ITEMID,
+				    A.TITLE,
+				    A.WRITEDATE
+				FROM 
+					TBL_BOARD_ITEM A
+				JOIN
+					TBL_BOARD_BOARDINFO B
+				ON
+					A.BOARDID = B.BOARDID
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE 
+					A.BOARDID = (
+					            SELECT 
+					            	BOARD_ID
+					            FROM
+					            	TBL_PORTAL_PORTLET_COMP
+					            WHERE
+					            	COMPANY_ID = #companyId#
+					            AND
+					            	TENANT_ID = #tenantId#
+					            AND
+									PORTLET_ID = #portletId#	            
+					            )
+				AND 
+					A.TENANT_ID = #tenantId#
+				AND 
+					(A.WRITERCOMPANYID = B.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
+				AND 
+					(A.APPRFLAG = 'Y'
+					OR A.APPRFLAG IS NULL)
+				ORDER BY 
+					TO_NUMBER(A.PARENTWRITEDATE) DESC, 
+					TO_CHAR(A.UPPERITEMIDTREE) ASC
+			) INFO
+		) P
+		WHERE
+			P.RNUM <= #limit#
+	]]>
 </select>
 
 <!-- 설문조사 리스트 출력 -->
@@ -810,44 +813,47 @@ AND
 </select>
 <!-- 포토게시판 게시물(대표사진 정보)불러오기 -->
 <select id="ezNewPortal.getPhotoBoardPortletInfo" parameterClass="Map" resultMap="BoardItemVO">
-<![CDATA[
-SELECT
-	BOARDID,
-	ITEMID,
-	TITLE,
-	FILEPATH
-FROM (
-		SELECT 
-			INFO.*, ROWNUM AS RNUM
+	<![CDATA[
+		SELECT
+			BOARDID,
+			ITEMID,
+			TITLE,
+			FILEPATH
 		FROM (
-			SELECT	
-				A.BOARDID,
-				A.ITEMID,
-				A.TITLE,
-				B.FILEPATH
-			FROM
-				TBL_BOARD_ITEM A
-			INNER JOIN
-				TBL_PHOTO_IMAGEITEM B
-			ON
-				A.TENANT_ID = B.TENANT_ID
-			AND
-				A.ITEMID = B.ITEMID
-			WHERE
-				A.TENANT_ID = #tenantId#
-			AND
-				A.BOARDID = #boardId#
-			AND
-				B.MAIN_FLAG = 'Y'
-			ORDER BY
-				A.WRITEDATE DESC
-		) INFO
-	) P
-WHERE
-	P.RNUM > #startRow#
-AND
-	P.RNUM <= #startRow# + #photoCount#
-]]>
+				SELECT 
+					INFO.*, ROWNUM AS RNUM
+				FROM (
+					SELECT	
+						A.BOARDID,
+						A.ITEMID,
+						A.TITLE,
+						B.FILEPATH
+					FROM
+						TBL_BOARD_ITEM A
+					INNER JOIN
+						TBL_PHOTO_IMAGEITEM B
+					ON
+						A.TENANT_ID = B.TENANT_ID
+					AND
+						A.ITEMID = B.ITEMID
+					WHERE
+						A.TENANT_ID = #tenantId#
+					AND
+						A.BOARDID = #boardId#
+					AND
+						B.MAIN_FLAG = 'Y'
+					AND
+						(A.APPRFLAG = 'Y' 
+						OR A.APPRFLAG IS NULL)
+					ORDER BY
+						A.WRITEDATE DESC
+				) INFO
+			) P
+		WHERE
+			P.RNUM > #startRow#
+		AND
+			P.RNUM <= #startRow# + #photoCount#
+	]]>
 </select>
 
 <!-- 게시판 권한 불러오기 -->
@@ -1525,60 +1531,63 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 </insert>
 
 <select id="ezNewPortal.getBoardPortletInfo" parameterClass="Map" resultClass="BoardListVO">
-<![CDATA[
-SELECT 
-	BOARDID,
-	ITEMID,
-	TITLE,
-	WRITERID,
-	WRITERNAME,
-	WRITERNAME2,
-	WRITERDEPTID,
-	WRITERDEPTNAME,
-	WRITERDEPTNAME2,
-	startdate,
-	GUBUN
-FROM (
-	SELECT 
-		INFO.*, ROWNUM AS RNUM
-	FROM (
-			SELECT	
-				A.BOARDID,
-				A.ITEMID,
-				A.TITLE,
-				A.WRITERID,
-				A.WRITERNAME,
-				A.WRITERNAME2,
-				A.WRITERDEPTID,
-				A.WRITERDEPTNAME,
-				A.WRITERDEPTNAME2,
-				A.startdate,
-				C.GUBUN
-			FROM
-				TBL_BOARD_ITEM A
-			JOIN 
-				TBL_BOARD_BOARDINFO C
-			ON 
-				A.BOARDID = C.BOARDID
-			AND 
-				A.TENANT_ID = C.TENANT_ID
-			AND 
-				(A.WRITERCOMPANYID = C.COMPANYID OR C.COMPANYID IS NULL)
-			WHERE
-				A.TENANT_ID = #tenantId#
-			AND
-				A.BOARDID = #boardId#
-			AND
-				(A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
-			ORDER BY
-				A.WRITEDATE DESC
-		) INFO
-	) P
-WHERE
-	P.RNUM >= 0
-AND
-	P.RNUM <= #itemCount#
-]]>
+	<![CDATA[
+		SELECT 
+			BOARDID,
+			ITEMID,
+			TITLE,
+			WRITERID,
+			WRITERNAME,
+			WRITERNAME2,
+			WRITERDEPTID,
+			WRITERDEPTNAME,
+			WRITERDEPTNAME2,
+			startdate,
+			GUBUN
+		FROM (
+			SELECT 
+				INFO.*, ROWNUM AS RNUM
+			FROM (
+					SELECT	
+						A.BOARDID,
+						A.ITEMID,
+						A.TITLE,
+						A.WRITERID,
+						A.WRITERNAME,
+						A.WRITERNAME2,
+						A.WRITERDEPTID,
+						A.WRITERDEPTNAME,
+						A.WRITERDEPTNAME2,
+						A.startdate,
+						C.GUBUN
+					FROM
+						TBL_BOARD_ITEM A
+					JOIN 
+						TBL_BOARD_BOARDINFO C
+					ON 
+						A.BOARDID = C.BOARDID
+					AND 
+						A.TENANT_ID = C.TENANT_ID
+					AND 
+						(A.WRITERCOMPANYID = C.COMPANYID OR C.COMPANYID IS NULL)
+					WHERE
+						A.TENANT_ID = #tenantId#
+					AND
+						A.BOARDID = #boardId#
+					AND
+						(A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
+					AND
+						(A.APPRFLAG = 'Y' 
+						OR A.APPRFLAG IS NULL)
+					ORDER BY
+						A.WRITEDATE DESC
+				) INFO
+			) P
+		WHERE
+			P.RNUM >= 0
+		AND
+			P.RNUM <= #itemCount#
+	]]>
 </select>
 
 
@@ -2442,101 +2451,141 @@ AND
 
 <!-- 즐겨찾기 포틀릿  새게시물 가져오기 -->
 <select id="ezNewPortal.getNewItemList" parameterClass="Map" resultMap="FavoriteBoardVO">
-<![CDATA[
-SELECT
-    BOARDID,
-    ITEMID,
-    WRITERNAME,
-    STARTDATE,
-    TITLE,
-    GUBUN
-FROM (
-    SELECT
-        INFO.*, ROWNUM AS RNUM
-    FROM (
-			SELECT A.BOARDID,
-				   A.ITEMID,
-				   A.WRITERNAME,
-				   TO_DATE(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS')+(#v_OFFSETMIN#/(60*24)) AS STARTDATE,
-				   A.TITLE,
-				   C.GUBUN
-			  FROM 
-			  	   TBL_BOARD_ITEM A 
-			  JOIN 
-				   ( 
-				   SELECT BOARDID, 
-				   		  BOARDNAME, 
-				   		  BOARDNAME2,
-				   		  TENANT_ID,
-				  		  COMPANYID 
-			 	     FROM TBL_BOARD_MYBOARDS 
-			  		WHERE TENANT_ID = #tenantId#
-			  		  AND (COMPANYID = #companyId# OR COMPANYID = '*')
-			 		  AND USERID = #userId#
-			 		) B 
-				 ON A.TENANT_ID = B.TENANT_ID
-				AND	A.BOARDID = B.BOARDID                
-				AND A.TENANT_ID = #tenantId#
-                AND A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS')
-                AND A.STARTDATE <= #nowDate#
-		      	AND A.ENDDATE > #nowDate#						
-				AND (
-					NOT EXISTS (
-					 		   SELECT USERID 
-								 FROM TBL_BOARD_ITEM_READ S 
-								WHERE S.TENANT_ID = A.TENANT_ID
-								  AND S.BOARDID = A.BOARDID 
-								  AND S.ITEMID = A.ITEMID 
-								  AND S.TENANT_ID = #tenantId#
-								  AND S.USERID = #userId# 
-								  AND S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5
-							   )
-				    )
-			  JOIN TBL_BOARD_BOARDINFO C
-			    ON A.BOARDID = C.BOARDID
-			   AND A.TENANT_ID = C.TENANT_ID
-			   AND (A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
-			  ORDER BY STARTDATE DESC
-        ) INFO
-    ) P
-  WHERE
-    P.RNUM <= #limit#
-]]>
+	<![CDATA[
+		SELECT
+			BOARDID,
+			ITEMID,
+			WRITERNAME,
+			STARTDATE,
+			TITLE,
+			GUBUN
+		FROM (
+			SELECT
+				INFO.*, ROWNUM AS RNUM
+			FROM (
+				SELECT
+					A.BOARDID,
+					A.ITEMID,
+					A.WRITERNAME,
+					TO_DATE(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS')+(#v_OFFSETMIN#/(60*24)) AS STARTDATE,
+					A.TITLE,
+					C.GUBUN
+				FROM 
+					TBL_BOARD_ITEM A 
+				JOIN ( 
+					SELECT
+						BOARDID, 
+						BOARDNAME, 
+						BOARDNAME2,
+						TENANT_ID,
+						COMPANYID 
+					FROM
+						TBL_BOARD_MYBOARDS 
+					WHERE
+						TENANT_ID = #tenantId#
+					AND
+						(COMPANYID = #companyId# OR COMPANYID = '*')
+					AND
+						USERID = #userId#
+					) B 
+					ON
+						A.TENANT_ID = B.TENANT_ID
+					AND
+						A.BOARDID = B.BOARDID
+					AND
+						A.TENANT_ID = #tenantId#
+					AND
+						A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS')
+					AND
+						A.STARTDATE <= #nowDate#
+					AND
+						A.ENDDATE > #nowDate#
+					AND (
+						NOT EXISTS (
+							SELECT
+								USERID 
+							FROM
+								TBL_BOARD_ITEM_READ S 
+							WHERE
+								S.TENANT_ID = A.TENANT_ID
+							AND
+								S.BOARDID = A.BOARDID 
+							AND
+								S.ITEMID = A.ITEMID 
+							AND
+								S.TENANT_ID = #tenantId#
+							AND
+								S.USERID = #userId# 
+							AND
+								S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5
+							)
+						)
+					JOIN
+						TBL_BOARD_BOARDINFO C
+					ON
+						A.BOARDID = C.BOARDID
+					AND
+						A.TENANT_ID = C.TENANT_ID
+					AND
+						(A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
+					AND
+						(A.APPRFLAG = 'Y' 
+						OR A.APPRFLAG IS NULL)
+					ORDER BY
+						STARTDATE DESC
+				) INFO
+			) P
+		WHERE
+			P.RNUM <= #limit#
+	]]>
 </select>
 
 <select id="ezNewPortal.getItemList" parameterClass="Map" resultMap="FavoriteBoardVO">
-<![CDATA[
-SELECT 
-	TITLE,
-	WRITERNAME,
-	STARTDATE,
-	ITEMID,
-	BOARDID,
-	GUBUN
-FROM (
-	SELECT
-		INFO.*, ROWNUM  AS RNUM
-	FROM (
-			SELECT A.TITLE,
-				   A.WRITERNAME,
-				   TO_DATE(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS')+(#v_OFFSETMIN#/(60*24)) AS STARTDATE,
-				   A.ITEMID,
-				   A.BOARDID,
-				   B.GUBUN
-			  FROM TBL_BOARD_ITEM A
-			  JOIN TBL_BOARD_BOARDINFO B
-			    ON A.BOARDID = B.BOARDID
-			   AND A.TENANT_ID = B.TENANT_ID
-			   AND (A.WRITERCOMPANYID = B.COMPANYID OR B.COMPANYID IS NULL)
-			 WHERE A.BOARDID = #boardId#
-			   AND (A.WRITERCOMPANYID = B.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
-			   AND A.TENANT_ID = #tenantId#
-			 ORDER BY STARTDATE DESC
-		) INFO
-	) P
- WHERE
- 	P.RNUM <= #limit#
- ]]>
+	<![CDATA[
+		SELECT 
+			TITLE,
+			WRITERNAME,
+			STARTDATE,
+			ITEMID,
+			BOARDID,
+			GUBUN
+		FROM (
+			SELECT
+				INFO.*, ROWNUM  AS RNUM
+			FROM (
+				SELECT
+					A.TITLE,
+					A.WRITERNAME,
+					TO_DATE(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS')+(#v_OFFSETMIN#/(60*24)) AS STARTDATE,
+					A.ITEMID,
+					A.BOARDID,
+					B.GUBUN
+				FROM
+					TBL_BOARD_ITEM A
+				JOIN
+					TBL_BOARD_BOARDINFO B
+				ON
+					A.BOARDID = B.BOARDID
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				AND
+					(A.WRITERCOMPANYID = B.COMPANYID OR B.COMPANYID IS NULL)
+				WHERE
+					A.BOARDID = #boardId#
+				AND
+					(A.WRITERCOMPANYID = B.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
+				AND 
+					(A.APPRFLAG = 'Y'
+					OR A.APPRFLAG IS NULL)
+				AND
+					A.TENANT_ID = #tenantId#
+				ORDER BY
+					STARTDATE DESC
+			) INFO
+		) P
+		WHERE
+			P.RNUM <= #limit#
+ 	]]>
 </select>
 
 <!-- 커뮤니티 포틀릿 -->

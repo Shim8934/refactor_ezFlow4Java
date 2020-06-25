@@ -25,7 +25,8 @@
 			#logoUrl {height:42px;}
 			/*-- top_totalSearch --*/
 			.top_totalSearch {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; font-size:12px;float:right; margin:9px 30px 0px 0px; padding:0px; width:243px; height:34px; background:url(../images/kr/cm/top_search_bg.gif) no-repeat;vertical-align:middle; }
-			#input_totalSearch { float:left; width:196px; height:31px; border:0px ;padding:1px 0px 0px 9px; margin:1px 0px 0px 1px;  color:#555555; font-size:12px;}
+			#input_totalSearch { float:left; width:196px; height:31px; border:0px ;padding:1px 0px 0px 9px; margin:1px 7px 0px 1px;  color:#555555; font-size:12px;}
+			.topsearch_btn {width:39px; height:34px; border:none;}
 		</style>
 	</head>
 	<body>
