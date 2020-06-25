@@ -31226,7 +31226,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String passAprLineFlag = formDoc.getElementsByTagName("PASSAPRLINEFLAG").item(0).getTextContent();
 		if (passAprLineFlag.equals("Y")) {
 			
-			String lineInfo = getAprLineInfoDB(docID, "1", userID, formID, companyID, tenantId, "", "", "APR");
+			String lineInfo = getAprLineInfoDB(docID, "1", userID, formID, companyID, tenantId, "", "", "APR","");
 			Document lineDoc = commonUtil.convertStringToDocument(lineInfo);
 			
 			int lineLength = lineDoc.getElementsByTagName("ROW").getLength();
