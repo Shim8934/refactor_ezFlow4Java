@@ -30,6 +30,7 @@
 			var pCompanyID;
 			var ReturnFunction;
 			var m_dialogArguments;
+			var pOwnerID;
 
 			window.onload = function () { 
 				try {
@@ -43,6 +44,7 @@
 			    pCompanyID = m_dialogArguments[1];
 			    pOrgUpperBrdID = m_dialogArguments[2];
 			    pOrgBrdID = m_dialogArguments[3];
+			    pOwnerID = m_dialogArguments[4];
 
 			    var TreeView = new organtreeview('TreeView', 'TreeView');
 			    TreeView.attachEvent('requestdata', TreeView_onNodeExpanded);
@@ -105,12 +107,15 @@
 		    		type : "POST",
 		    		async : false,
 		    		data : {
-		    			selectedResourceGroupId : p_TargetID
+		    			selectedResourceGroupId : p_TargetID,
+		    			ownerID : pOwnerID
 		    		},
 		    		url : "/ezResource/isResourceGroupManager.do",
 		    		success: function(text){
-		    			if (text != 1) {
+		    			if (text == "0") {
 							alert("<spring:message code="ezResource.gha02" />");
+						} else if (text == "2") {
+							alert("<spring:message code="ezResource.kmsr06" />");
 						} else {
 							moveResourceToOtherResourceGroup();
 						}
