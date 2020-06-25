@@ -148,8 +148,13 @@
 			    var xmldom = createXmlDom();
 			    var strHTML = "";
 			    xmldom = loadXMLString(strXML);
-			    strHTML = "<table id='TopBoards' width=100% border=0>"
+			    strHTML = "<table id='TopBoards' width=100% border=0>";
+			    
 			    var xmldomNodes = SelectNodes(xmldom, "TREEVIEWDATA/NODE");
+		        if (xmldomNodes == null || xmldomNodes == false) {
+		        	xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
+		        }
+			    
 			    var items = xmldomNodes.length;
 			    for (i = 0; i < xmldomNodes.length; i++) {
 			        var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");

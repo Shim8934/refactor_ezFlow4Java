@@ -2595,7 +2595,21 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		String selectedResourceGroupId = request.getParameter("selectedResourceGroupId");
 			
+		String[] ownerLists = request.getParameter("ownerID").split(",");			
 		String isManger = ezResourceService.isResourceGroupManager(selectedResourceGroupId, loginVO.getId(),loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getDeptID());
+		
+		// 2020-06-24 김민성 - 자원 이동시 자원관리자의 자원 권한도 체크하도록 추가
+		for(String owner : ownerLists) {
+			String propList = "department";
+			String infoXML = ezOrganService.getPropertyList(owner, propList, loginVO.getPrimary(), loginVO.getTenantId());
+			
+			Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
+			String ownerDeptID = xmlDom2.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
+			
+			String result = ezResourceService.userResPermissionCheck(owner, loginVO.getCompanyID(), loginVO.getTenantId(), selectedResourceGroupId, ownerDeptID);
+			if(result.equals("0"))
+				return "2";
+		}
 		
 		logger.debug("============ moveResourceToOtherResourceGroup ended ============");
 		return isManger;
