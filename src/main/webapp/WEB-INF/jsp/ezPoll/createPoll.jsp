@@ -582,7 +582,7 @@
 				$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n </li>');
 			} */					
 			$('#columnsbnk li').eq(currentOptionNumber - 2).addClass("myBorder");
-			$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n <img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)" /> \n </li>');
+			$('#columnsbnk').append('<li class="myBorder"> \n <span>' + currentOptionNumber + '</span> \n <input type="text" oninput="checkOptionsList();" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option' + currentOptionNumber + '" name="option' + currentOptionNumber + '" maxlength="200"> \n <img src="/images/sortIcon.png" class="drag_drop"> \n <img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)" style="cursor: pointer;""/> \n </li>');
 		}
 		
 		function menuQst_List() {
@@ -1228,19 +1228,19 @@
 								<span>1</span>
 								<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option1" name="option1" oninput="checkOptionsList();" maxlength="200">
 								<img src="/images/sortIcon.png" class="drag_drop">
-								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)">
+								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)" style="cursor: pointer;">
 							</li>
 							<li class="myBorder">
 								<span>2</span>
 								<input type="text" value="" placeholder="<spring:message code="ezPoll.t152"/>" id="option2" name="option2" oninput="checkOptionsList();" maxlength="200">
 								<img src="/images/sortIcon.png" class="drag_drop">
-								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)">
+								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)" style="cursor: pointer;">
 							</li>
 							<li class="myBorder">
 								<span>3</span>
 								<input type="text" value=""	placeholder="<spring:message code="ezPoll.t152"/>" id="option3" name="option3" oninput="checkOptionsList();" maxlength="200">
 								<img src="/images/sortIcon.png" class="drag_drop">
-								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)">
+								<img src="/images/poll/attach_file_vote.png" onclick="optUploadBtn(this)" style="cursor: pointer;">
 							</li>
 								<input id="optionfile" type="file" onchange="optImgUpload()" style="display:none" />
 						</ul>
