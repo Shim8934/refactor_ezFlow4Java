@@ -1133,7 +1133,6 @@
 						<input type="checkbox" id="setConnFlag" /><spring:message code = 'ezApprovalG.t1665' />
 					</td>
 					<td colspan="8" style="width:10%; text-align:center;">
-					<c:if test="${approvalFlag eq 'G'}">
 						<!-- FormBuilder -->
 						<c:if test="${useReform}">
 							<input type="checkbox" id="reform-checkbox" name="reform-checkbox" onchange="onReformCheckboxClickEvent()"/>
@@ -1143,7 +1142,6 @@
                         <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> 원문정보공개</span>
                         <%--<input type="checkbox" id="setDraftAllFlag" onclick="changePassAprFlag()" style="<c:if test="${useDraftAll != 'YES' && approvalFlag != 'G'}">display:none;</c:if>"/> 일괄기안
 						<input type="checkbox" id="setPassAprLineFlag" /> 기결재통과--%>
-					</c:if>
 					<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/> <spring:message code='ezApprovalG.garm09'/></span>
 					</td>
 				</tr>

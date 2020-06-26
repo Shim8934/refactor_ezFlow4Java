@@ -958,7 +958,7 @@
 		    		    
 			function btn_OK() {
 				if(document.getElementById('passAprLine').checked && pReDraftFlag === 'REDRAFT') {
-	        		OpenConfirmUI('기결재통과가 체크되어 있습니다.<br>계속 진행하시겠습니까?', btn_OK_Confirm);
+					OpenInformationUI('기결재통과가 체크되어 있습니다.<br>계속 진행하시겠습니까?', btn_OK_Confirm);
 	        		return;
 	        	} else {
 	        		btn_OK_Confirm();
