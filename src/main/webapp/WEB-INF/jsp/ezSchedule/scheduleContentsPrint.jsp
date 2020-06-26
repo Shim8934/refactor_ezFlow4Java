@@ -7,6 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">	 
 		<title><spring:message code='ezApprovalG.pjj03'/></title>
+		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>        
         <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
@@ -87,7 +88,7 @@
 		</script>
 	</head>	
 	<body scroll="auto">
-		<div id="printScreen" style="padding:10px 2px 0px 2px;">
+		<div id="printScreen" style="padding:10px 10px 10px 10px;">
 			<table class="printcontent" style="width:100%;">
 				<c:if test="${type == 'NEW'}">
 	          	<tr>
