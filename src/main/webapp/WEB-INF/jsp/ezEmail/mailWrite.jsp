@@ -188,7 +188,7 @@
         var preview_g_url_forRead = "";
         var previewChk = false;
         var ReadMailOpenNewWin;
-        var g_useAdditionalInfo = ${useAdditionalInfo};
+        var g_useAdditionalInfo = Boolean(${useAdditionalInfo});
         
 	    window.onload = function () {
 	        if (!CrossYN()) {
