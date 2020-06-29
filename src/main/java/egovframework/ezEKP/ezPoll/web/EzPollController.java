@@ -2639,6 +2639,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("useFromAddress", useFromAddress);
 		model.addAttribute("fromAddressHtml", fromAddressHtml);
 		model.addAttribute("moduleType", "poll");
+		model.addAttribute("useAdditionalInfo", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailWriteRecipientAdditional", loginInfo.getTenantId())));
 		
 		response.setHeader("X-XSS-Protection", "0");
 		
