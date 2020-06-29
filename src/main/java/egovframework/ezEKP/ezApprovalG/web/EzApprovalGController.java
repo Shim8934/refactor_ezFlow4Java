@@ -492,9 +492,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 returnQuery += " AND DocTitle LIKE '%" + domSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
             }
 
+			/* 2020-06-29 홍승비 - WRITERNAME, WRITERDEPTNAME칼럼은 2까지만 존재함(일본어인 경우 3이 전달되는 오류 수정) */
             if (commonUtil.getPrimaryData(userLang, userInfo.getTenantId()).equals("2")) {
                 if (tempQuery.indexOf("WRITERNAME;") != -1) {
-                    returnQuery += " AND WRITERNAME" + userLang + " LIKE '%" + domSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
+                    returnQuery += " AND WRITERNAME2 LIKE '%" + domSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
                 }
             } else {
                 if (tempQuery.indexOf("WRITERNAME;") != -1) {
@@ -504,7 +505,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
             if (commonUtil.getPrimaryData(userLang, userInfo.getTenantId()).equals("2")) {
                 if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                    returnQuery += " AND WriterDeptName" + userLang + " LIKE '%" + domSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
+                    returnQuery += " AND WriterDeptName2 LIKE '%" + domSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                 }
             } else {
                 if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
@@ -4967,9 +4968,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 returnQuery += " AND TBL_APRDOCINFO.DocTitle LIKE '%" + xmlDomSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
             }
 
+			/* 2020-06-29 홍승비 - WRITERNAME, WRITERDEPTNAME칼럼은 2까지만 존재함(일본어인 경우 3이 전달되는 오류 수정) */
             if (commonUtil.getPrimaryData(userLang, userInfo.getTenantId()).equals("2")) {
                 if (tempQuery.indexOf("WRITERNAME;") != -1) {
-                    returnQuery += " AND TBL_APRDOCINFO.WRITERNAME" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
+                    returnQuery += " AND TBL_APRDOCINFO.WRITERNAME2 LIKE '%" + xmlDomSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
                 }
             } else {
                 if (tempQuery.indexOf("WRITERNAME;") != -1) {
@@ -4979,7 +4981,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
             if (commonUtil.getPrimaryData(userLang, userInfo.getTenantId()).equals("2")) {
                 if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                    returnQuery += " AND TBL_APRDOCINFO.WriterDeptName" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
+                    returnQuery += " AND TBL_APRDOCINFO.WriterDeptName2 LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                 }
             } else {
                 if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
