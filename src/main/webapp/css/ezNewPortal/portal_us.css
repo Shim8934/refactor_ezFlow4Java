@@ -1262,3 +1262,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;
 	text-decoration: none;
 }
+
+/* 2020-06-29 홍승비 - 상단 통합검색 css 다국어 대응 분리 */
+#input_totalSearch { float:left; width:187px; height:31px; border:0px ;padding:1px 0px 0px 9px; margin:1px 7px 0px 1px;  color:#555555; font-size:12px;}
+.topsearch_btn {width:39px; height:34px; border:none;}
