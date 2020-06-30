@@ -3220,4 +3220,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public ApprGFormVO getFormPath(Map<String, Object> map) throws Exception {
 		return (ApprGFormVO) select("EzApprovalG.getFormPath", map);
 	}
+
+	public void updateEndAprDocOptionInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateEndAprDocOptionInfo", map);
+	}
 }

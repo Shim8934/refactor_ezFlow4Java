@@ -21804,6 +21804,19 @@
    			COMPANYID = #companyID#
    </update>
    
+	<update id="EzApprovalG.updateEndAprDocOptionInfo" parameterClass="map">
+   		UPDATE 
+   			TBL_ENDAPRDOCINFO 
+   		SET 
+   			HasOpinionYN = #v_OpinionYN# 
+   		WHERE 
+   			DocID = #v_DOCID#
+   		AND 
+   			TENANT_ID = #v_TENANTID#
+   		AND
+   			COMPANYID = #companyID#
+   </update>
+   
    <insert id="EzApprovalG.insertAprAttachInfo" parameterClass="map">
    		INSERT INTO 
    			   TBL_APRATTACHINFO 
