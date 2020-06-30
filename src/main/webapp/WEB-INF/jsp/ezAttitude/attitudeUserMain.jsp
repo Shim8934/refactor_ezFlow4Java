@@ -296,6 +296,7 @@
 			var pageInfo = "viewCalendar";
 			var week = "<spring:message code='ezAttitude.t140' />";
 			var weekArray;
+			var attitudeMapApiKey = "<c:out value='${attitudeMapApiKey}'/>";
 			
 			$(function(){
 				authBtn();
@@ -1300,7 +1301,7 @@
 		    			if (vo.typeId == "A01") { //출근리스트
 				    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
-			    			if(vo.attendType == "1" && vo.latitude != "") {
+			    			if(attitudeMapApiKey != "" && vo.latitude != "") {
 			    				objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span>" + vo.startDate.substring(11,16) + "</span><img style='cursor:pointer' onclick='geolocation(" + vo.latitude + "," + vo.longitude +")' src='/images/ezSurvey/survey_result.png'>")));
 			    			} else {
 			    				objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span>" + vo.startDate.substring(11,16) + "</span>")));
@@ -1314,7 +1315,7 @@
 		    			} else if (vo.typeId == "A02") { //지각
 				    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
-			    			if(vo.attendType == "1" && vo.latitude != "") {
+			    			if(attitudeMapApiKey != "" && vo.latitude != "") {
 			    				objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span><img style='cursor:pointer' onclick='geolocation(" + vo.latitude + "," + vo.longitude + ")' src='/images/ezSurvey/survey_result.png'>")));
 			    			} else {
 			    				objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span>")));
@@ -2621,7 +2622,8 @@
 			</div>
 		</div>
 	</body>
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2d49fd8e19455fef43b5ce77efe2cf80&libraries=services"></script>
+	<c:if test="${!empty attitudeMapApiKey}">
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${attitudeMapApiKey}&libraries=services"></script>
 	<script>
 		function geolocation(x, y) {
 			var geocoder = new kakao.maps.services.Geocoder();
@@ -2636,4 +2638,5 @@
 			geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
 		}
 	</script>
+	</c:if>
 </html>
