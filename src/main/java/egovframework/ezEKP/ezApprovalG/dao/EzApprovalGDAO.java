@@ -3296,7 +3296,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public ApprGFormVO getFormPath(Map<String, Object> map) throws Exception {
 		return (ApprGFormVO) select("EzApprovalG.getFormPath", map);
 	}
-
+	
 	public void insertOpenGovAttachInfo(Map<String, Object> map) throws Exception {
 		insert("EzApprovalG.insertOpenGovAttachInfo", map);
 	}
@@ -3467,4 +3467,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (Map<String, Object>) select("EzApprovalG.getLeftDocCount_new", map);
 	}
 	
+	public void updateEndAprDocOptionInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateEndAprDocOptionInfo", map);
+	}
 }
