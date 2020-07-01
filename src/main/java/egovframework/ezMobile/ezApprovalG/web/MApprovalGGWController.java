@@ -243,7 +243,7 @@ public class MApprovalGGWController {
 			//본문
 			String bodyHTML = mApprovalGService.getMHTBody(docId, realPath, domain, userInfo, locale, type, scheme, mode);
 			//결재문서정보
-			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, type, optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN, mode);
+			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, type, optionInfo.getLang(), userInfo.getOffSet(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN, mode);
 			//회수 가능여부
 			String callBackYN = ezApprovalGService.getCallBackYN(docId, userId, userInfo.getCompanyId(), userInfo.getTenantId());
 			
@@ -261,6 +261,7 @@ public class MApprovalGGWController {
 			result.put("code", "0");
 			result.put("data", totalData);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", "1");
 		}
@@ -793,7 +794,7 @@ public class MApprovalGGWController {
 			String rtnVal = "";
 			
 			//docId로만 정보 가져오기
-			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, "DO", optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN, mode);
+			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, "DO", optionInfo.getLang(), userInfo.getOffSet(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN, mode);
 			
 			LoginVO loginVO = new LoginVO();
 			
@@ -876,6 +877,10 @@ public class MApprovalGGWController {
 				result.put("status", "error");
 				result.put("code", "1");
 			}
+
+            if ("SUCCESS".equals(result.get("data"))) {
+                mApprovalGService.sendApproveNoticeMail(request, userInfo, optionInfo, approvalGDocInfoVO, docId, type);
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");

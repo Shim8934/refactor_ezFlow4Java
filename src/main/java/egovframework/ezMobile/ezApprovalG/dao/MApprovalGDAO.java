@@ -3,14 +3,9 @@ package egovframework.ezMobile.ezApprovalG.dao;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezMobile.ezApprovalG.vo.*;
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -95,5 +90,17 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 
 	public int getCheckAprState(Map<String, Object> map) throws Exception {
 		return (int) select("MApprovalG.getCheckAprState", map);
+	}
+
+	public List<MApprovalGReceiptInfoVO> getEndReceiptInfos(Map<String, Object> map) throws Exception {
+		return (List<MApprovalGReceiptInfoVO>) list("mApprovalGDAO.getEndReceiptInfos", map);
+	}
+
+	public List<MCommonVO> getReceiptInfosOfDept(Map<String, Object> map) throws Exception {
+		return (List<MCommonVO>) list("mApprovalGDAO.getReceiptInfosOfDept", map);
+	}
+
+	public List<MCommonVO> getReceiptInfosOfUser(Map<String, Object> map) throws Exception {
+		return (List<MCommonVO>) list("mApprovalGDAO.getReceiptInfosOfUser", map);
 	}
 }
