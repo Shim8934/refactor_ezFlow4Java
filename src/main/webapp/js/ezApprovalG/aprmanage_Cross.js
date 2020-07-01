@@ -180,8 +180,7 @@ function getDocList_after(xml) {
             var DocList = new ListView();
             DocList.LoadFromID("DocList");
             var oArrRows = DocList.GetSelectedRows();
-
-
+            
             if (oArrRows.length != "0") {
                 var tr = oArrRows[0];
 
@@ -197,6 +196,12 @@ function getDocList_after(xml) {
                 else if (pDocInfoValue == "5") {
                     getAprDocAproveInfo(tr);
                 }
+            } /* 2020-07-01 홍승비 - 하단 결재선 탭 이외의 탭을 선택한 상태에서 문서가 리스트에서 전부 사라진 경우, 탭에 정보가 남아있는 오류 수정 */
+            else {
+            	var headerCnt = $("table[id='AprLine']").find("th").length;
+            	if (headerCnt > 0) {
+            		$("#AprLine").find("tbody").html("<tr id='AprLine_TR_noItems'><td align='center' colspan='" + headerCnt + "'>" + strLang944 + "</td></tr>");
+            	}
             }
         }
     }
