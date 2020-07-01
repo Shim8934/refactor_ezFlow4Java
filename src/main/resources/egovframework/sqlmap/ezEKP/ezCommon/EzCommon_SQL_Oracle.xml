@@ -2876,4 +2876,26 @@
 		)
 	</statement>
 	
+	<select id="EzCommonDAO.checkMobileAttitudeConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'USE_MATTITUDE'
+		AND
+			tenant_id = #tenantId#
+	</select>
+	
+	<select id="EzCommonDAO.checkAttitudeGPSConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'attitudeMapApiKey'
+		AND
+			tenant_id = #tenantId#
+	</select>
+	
 </sqlMap>

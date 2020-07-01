@@ -1488,4 +1488,23 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblNoticeBoard");
 		}
 	}
+	
+	public void insertMobileAttitudeConfig(Map<String, Object> map) throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.checkMobileAttitudeConfig", map);
+		
+		if (propertyValue == null) {
+			logger.debug("USE_MATTITUDE tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertSurveyTenantConfig", map);
+		}
+	}
+	
+	public void insertAttitudeGPSConfig(Map<String, Object> map) throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.checkAttitudeGPSConfig", map);
+		
+		if (propertyValue == null) {
+			logger.debug("attitudeMapApiKey tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertSurveyTenantConfig", map);
+		}
+	}
+	
 }
