@@ -8603,15 +8603,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						map.put("v_ORGOPINIONSN", opinionCnt + 1);
 						ezApprovalGDAO.insertHesongOpinion(map);
 						
-						/* 2020-06-30 홍승비 - 회송의견 작성 후 회송 시 원문서에 대해 회송의견이 작성된 것이므로, 원문서의 의견 플래그를 Y로 설정 (한 번만 동작) */
-						if (k == 0) {
-							Map<String, Object> mapH = new HashMap<String, Object>();
-							mapH.put("v_DOCID", orgDocID);
-							mapH.put("v_OpinionYN", "Y");
-							mapH.put("v_TENANTID", tenantID);
-							mapH.put("companyID", companyID);
-							ezApprovalGDAO.updateEndAprDocOptionInfo(mapH);
-						}
+						/* 2020-06-30 홍승비 - 회송의견 작성 후 회송 시 원문서에 대해 회송의견이 작성된 것이므로, 원문서의 의견 플래그를 Y로 설정 */
+						Map<String, Object> mapH = new HashMap<String, Object>();
+						mapH.put("v_DOCID", orgDocID);
+						mapH.put("v_OpinionYN", "Y");
+						mapH.put("v_TENANTID", tenantID);
+						mapH.put("companyID", companyID);
+						ezApprovalGDAO.updateEndAprDocOptionInfo(mapH);
 					}
 				}
 			}
