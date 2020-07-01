@@ -4726,6 +4726,8 @@ public class EzEmailUtil {
 
 		/** 보낸 편지함 저장 여부, 기본값: false */
 		private boolean isSentSave = false;
+		/** SMTP 인증 사용, 기본값: true */
+		private boolean usingAuth = true;
 
 		private SimpleMailer(String userEmail, String password) {
 			this.userEmail = userEmail;
@@ -4874,13 +4876,28 @@ public class EzEmailUtil {
 			return this;
 		}
 
+		public SimpleMailer notUseAuth() {
+			this.usingAuth = false;
+			return this;
+		}
+
 		public void send() {
 			IMAPAccess ia = null;
 			boolean hasAttchment = attachmentList != null && !attachmentList.isEmpty();
 			logger.debug("send started");
 
 			try {
-				SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"), userEmail, password);
+				SMTPAccess sa;
+
+				if (usingAuth) {
+					sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"),
+							config.getProperty("config.SMTPPort"),
+							userEmail, password);
+				} else {
+					sa = SMTPAccess.getNotAuthInstance(config.getProperty("config.MailServerAddress"),
+							config.getProperty("config.SMTPPort"),
+							userEmail, password);
+				}
 
 				MimeMessage message = sa.createMimeMessage();
 
@@ -4941,7 +4958,9 @@ public class EzEmailUtil {
 						// Content-Type을 구할 수 없다면 application/octet-stream 를
 						// 기본값으로 함
 						if (contentType == null) {
-							contentType = Optional.ofNullable(URLConnection.guessContentTypeFromStream(attachInputStream)).orElse("application/octet-stream");
+							contentType = Optional
+									.ofNullable(URLConnection.guessContentTypeFromStream(attachInputStream))
+									.orElse("application/octet-stream");
 						}
 
 						attachPart.setDataHandler(new DataHandler(new ByteArrayDataSource(attachInputStream, contentType)));
@@ -4985,7 +5004,9 @@ public class EzEmailUtil {
 						locale = Locale.getDefault();
 					}
 					// 보낸편지함에 저장
-					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale,
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"),
+							config.getProperty("config.IMAPPort"),
+							userEmail, password, egovMessageSource, locale,
 							EzEmailUtil.this);
 
 					Folder sentFolder = ia.getFolder(getSentFolderId(locale));

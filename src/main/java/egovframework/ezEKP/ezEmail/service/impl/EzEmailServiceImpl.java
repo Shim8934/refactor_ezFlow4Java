@@ -1448,6 +1448,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			.content(content)
 			.importance(importance)
 			.saveSentMailbox(isSaved)
+			.notUseAuth()
 		.send();
 		
         logger.debug("sendMail ended.");
@@ -1539,6 +1540,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			.bcc(bccArr)
 			.subject(subject)
 			.content(content)
+			.notUseAuth()
 		.send();
 		
         logger.debug("sendMail ended.");
