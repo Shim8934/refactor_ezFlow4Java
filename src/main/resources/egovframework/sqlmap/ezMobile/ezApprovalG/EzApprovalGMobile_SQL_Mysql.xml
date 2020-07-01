@@ -10,6 +10,7 @@
 	<typeAlias  alias="MApprGAprLineInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO"/>
 	<typeAlias  alias="MApprGOpinionInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO"/>
 	<typeAlias  alias="MApprGAbsenteeInfoVO"				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO"/>
+	<typeAlias  alias="MApprovalGReceiptInfo"				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGReceiptInfoVO"/>
 	
 	<select id="MApprovalG.getDoApproveList" parameterClass="Map" resultClass="MApprGDocInfoVO" remapResults="true">
 		<isEqual property="type" compareValue="DO">
@@ -1111,6 +1112,7 @@
 	<select id="MApprovalG.getAprLineInfo" parameterClass="Map" resultClass="MApprGAprLineInfoVO">
 		<isNotEqual property="type" compareValue="END">
 			SELECT
+				A.APRMEMBERID,
 	          	A.APRSTATE,
 	          	A.APRTYPE,
 	          	CASE 
@@ -1170,6 +1172,7 @@
 		</isNotEqual>
 		<isEqual property="type" compareValue="END">
 			SELECT
+				A.APRMEMBERID,
 	          	A.APRSTATE,
 	          	A.APRTYPE,
 	          	CASE 
@@ -1576,7 +1579,8 @@
 		   				CASE 
 		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
 		   					ELSE WRITERJOBTITLE$lang$
-		   				END WRITERJOBTITLE
+		   				END WRITERJOBTITLE,
+		   				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE
 					FROM
 						VAPRDOINGDOCLIST
 					WHERE
@@ -1617,7 +1621,8 @@
 		   				CASE 
 		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
 		   					ELSE WRITERJOBTITLE$lang$
-		   				END WRITERJOBTITLE
+		   				END WRITERJOBTITLE,
+		   				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE
 					FROM
 						VENDCHAMJODOCINFO
 					WHERE
@@ -1659,7 +1664,8 @@
 	   				CASE 
 	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
 	   					ELSE WRITERJOBTITLE$lang$
-	   				END WRITERJOBTITLE
+	   				END WRITERJOBTITLE,
+	   				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE
 				FROM
 					VAPRWILLDOCLIST
 				WHERE
@@ -1697,7 +1703,8 @@
 	   				CASE 
 	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
 	   					ELSE WRITERJOBTITLE$lang$
-	   				END WRITERJOBTITLE
+	   				END WRITERJOBTITLE,
+	   				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE
 				FROM
 					VAPRWILLDOCLIST
 				WHERE
@@ -1734,7 +1741,8 @@
    				CASE 
    					WHEN (A.WRITERJOBTITLE$lang$ = '' OR A.WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
    					ELSE A.WRITERJOBTITLE$lang$
-   				END WRITERJOBTITLE
+   				END WRITERJOBTITLE,
+				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
@@ -1822,7 +1830,8 @@
 		   				CASE 
 		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
 		   					ELSE WRITERJOBTITLE$lang$
-		   				END WRITERJOBTITLE
+		   				END WRITERJOBTITLE,
+		   				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE
 					FROM
 						VAPRDOINGDOCLIST
 					WHERE
@@ -1863,7 +1872,8 @@
 		   				CASE 
 		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
 		   					ELSE WRITERJOBTITLE$lang$
-		   				END WRITERJOBTITLE
+		   				END WRITERJOBTITLE,
+		   				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE
 					FROM
 						VENDCHAMJODOCINFO
 					WHERE
@@ -2032,5 +2042,54 @@
 					APRSTATE IN ('002', '005', '000')
 			]]>
 		</isNotEqual>
+	</select>
+
+	<select id="mApprovalGDAO.getEndReceiptInfos" parameterClass="Map" resultClass="MApprovalGReceiptInfo">
+		<![CDATA[
+			SELECT
+				docId,
+				receiptmemberid AS userId,
+				receiptpointid AS deptId
+			FROM
+				TBL_ENDRECEIPTPOINTINFO
+			WHERE
+				docid = #docId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				companyid = #companyId#
+			]]>
+	</select>
+
+	<select id="mApprovalGDAO.getReceiptInfosOfDept" parameterClass="Map" resultClass="MCommonVO">
+		SELECT
+			cn AS userId,
+			displayname AS userName,
+			mail AS email
+		FROM
+			tbl_usermaster
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			cn NOT IN (SELECT cn FROM tbl_usermaster_retire WHERE tenant_id = #tenantId#)
+		AND
+			department = #deptId#
+		AND
+			extensionattribute1 LIKE '%a=1;%'
+   </select>
+
+	<select id="mApprovalGDAO.getReceiptInfosOfUser" parameterClass="Map" resultClass="MCommonVO">
+		SELECT
+			cn AS userId,
+			displayname AS userName,
+			mail AS email
+		FROM
+			tbl_usermaster
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			cn NOT IN (SELECT cn FROM tbl_usermaster_retire WHERE tenant_id = #tenantId#)
+		AND
+			cn = #userId#
 	</select>
 </sqlMap>

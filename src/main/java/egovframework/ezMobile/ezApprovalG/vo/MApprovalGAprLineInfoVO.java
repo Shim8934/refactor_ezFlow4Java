@@ -23,6 +23,8 @@ public class MApprovalGAprLineInfoVO {
 	private String proxyUserDeptName;
 	/** 결재자사진*/
 	private String aprMemberPhoto;
+	/** 결재자Id*/
+	private String aprMemberId;
 	
 	public String getAprState() {
 		return aprState;
@@ -90,4 +92,6 @@ public class MApprovalGAprLineInfoVO {
 	public void setAprType(String aprType) {
 		this.aprType = aprType;
 	}
+	public String getAprMemberId() { return aprMemberId; }
+	public void setAprMemberId(String aprMemberId) { this.aprMemberId = aprMemberId; }
 }
