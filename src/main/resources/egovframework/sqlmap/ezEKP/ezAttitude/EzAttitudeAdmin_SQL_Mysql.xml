@@ -1435,28 +1435,105 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeAnnualList" parameterClass="Map" resultClass="AttitudeAnnualVO">
 		<![CDATA[
 			SELECT 
-				A.CN AS userId,
-			    A.DISPLAYNAME$primary$ AS userName,
-			    A.TITLE$primary$ AS userTitle,
-			    A.DESCRIPTION$primary$ AS userDeptName,
-			    ifnull(B.MONTHLY_HOLIDAY_CNT, 0) + ifnull(B.ANNUAL_HOLIDAY_CNT, 0) AS basicAnnualCnt,
-			    ifnull(B.ADDITIONAL_HOLIDAY_CNT, 0) AS additionalAnnualCnt,
-			    ifnull(B.MONTHLY_HOLIDAY_CNT, 0) + ifnull(B.ANNUAL_HOLIDAY_CNT, 0) + ifnull(B.ADDITIONAL_HOLIDAY_CNT, 0) AS totalAnnualCnt,
-			    ifnull(DATE_FORMAT(B.JOIN_DATE, '%Y-%m-%d'), 0) AS joinDate
-			FROM 
-				TBL_USERMASTER A
-			LEFT OUTER JOIN 
-				TBL_ATTITUDE_ANNUAL B
-			ON
-				(A.TENANT_ID = B.TENANT_ID 
-				AND
-				 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
-				AND
-				 A.CN = B.USER_ID)
-			WHERE
-				A.TENANT_ID = #tenantId#
-			AND 
-				A.PHYSICALDELIVERYOFFICENAME = #companyId#			
+					A.CN AS userId,
+			    	A.DISPLAYNAME$primary$ AS userName,
+			    	A.TITLE$primary$ AS userTitle,
+			    	A.DESCRIPTION$primary$ AS userDeptName,
+			    	A.PHYSICALDELIVERYOFFICENAME AS companyId,
+				    ifnull(
+				    (
+						SELECT
+							CHANGE_ANNUAL_CNT
+						FROM
+							TBL_ATTITUDE_ANNUAL_HISTORY E
+						WHERE
+							E.TENANT_ID = #tenantId#
+								AND 
+							E.COMPANY_ID = #companyId#
+								AND 
+							E.USER_ID = A.CN
+								AND
+							(
+							date_add(E.CHANGE_DATE, INTERVAL #offsetMin# minute) >= #searchStartTime#
+							AND date_add(E.CHANGE_DATE, INTERVAL #offsetMin# minute) <= #searchEndTime#
+							)
+						ORDER BY
+							E.CHANGE_DATE DESC, E.ANNUAL_HISTORY_ID DESC
+						LIMIT 1
+					), 0) AS basicAnnualCnt,
+				    IFNULL((SUM(to_days(
+								IF(
+									date_add(C.END_DATE, INTERVAL +#offsetMin# minute) > #searchEndTime#, 
+			                        #searchEndTime#, 
+			                        date_add(IFNULL(C.END_DATE, C.START_DATE), INTERVAL +#offsetMin# minute)
+								   )
+							   ) 
+					   -
+					   to_days(
+								IF(
+									date_add(C.START_DATE, INTERVAL +#offsetMin# minute) < #searchStartTime#, 
+			                        #searchStartTime#, 
+			                        date_add(C.START_DATE, INTERVAL +#offsetMin# minute)
+								   )
+							   )
+						)
+						+
+						SUM(
+							CASE
+							   WHEN C.TYPE_ID = 'A11' THEN 1
+				               WHEN C.TYPE_ID = 'A12' THEN 0.5
+				               WHEN C.TYPE_ID = 'A13' THEN 0.5
+				               WHEN C.TYPE_ID = 'A21' THEN 0.25
+							   ELSE 0
+							END
+						)
+						), 0) as useAnnualCnt,
+						ifnull(B.ADDITIONAL_HOLIDAY_CNT, 0) as additionalAnnualCnt,
+						ifnull(DATE_FORMAT(B.JOIN_DATE, '%Y-%m-%d'), 0) AS joinDate
+				FROM 
+					TBL_USERMASTER A
+				LEFT OUTER JOIN 
+					TBL_ATTITUDE_ANNUAL B
+				ON
+					(A.TENANT_ID = B.TENANT_ID 
+					AND
+					 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
+					AND
+					 A.CN = B.USER_ID)
+ 				LEFT OUTER JOIN 
+ 					TBL_ATTITUDE C
+ 				ON
+ 					(A.TENANT_ID = C.TENANT_ID 
+ 					AND 
+ 					 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
+ 					AND
+ 					 A.CN = C.WRITER_ID
+ 					AND 
+ 					 C.TYPE_ID IN ('A11', 'A12', 'A13', 'A21')
+ 					AND 
+ 				 	 C.MODAPPL <> '5'
+ 					AND 
+ 					 (
+ 						   (
+ 							date_add(C.START_DATE, INTERVAL #offsetMin# minute) >= #searchStartTime#
+ 							AND date_add(C.START_DATE, INTERVAL #offsetMin# minute) <= #searchEndTime#
+ 							)
+ 						OR (
+ 							date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #searchStartTime#
+ 							AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) < #searchEndTime#
+ 							)
+ 						OR (
+ 							date_add(C.START_DATE, INTERVAL #offsetMin# minute) < #searchStartTime#
+ 							AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #searchEndTime#
+ 							)
+ 					  )
+ 					 )
+				WHERE
+					A.TENANT_ID = #tenantId#
+				AND 
+					A.PHYSICALDELIVERYOFFICENAME = #companyId#
+				AND			
+					A.CN IN (select CN FROM TBL_USERMASTER WHERE TENANT_ID = 0 AND PHYSICALDELIVERYOFFICENAME = #companyId#)
 		]]>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			A.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
@@ -1865,7 +1942,7 @@
  					AND
  					 A.CN = C.WRITER_ID
  					AND 
- 					 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+ 					 C.TYPE_ID IN ('A11', 'A12', 'A13', 'A21')
  					AND 
  				 	 C.MODAPPL <> '5'
  					AND 

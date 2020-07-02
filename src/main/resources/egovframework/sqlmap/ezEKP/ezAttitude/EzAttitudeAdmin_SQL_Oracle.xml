@@ -1528,13 +1528,40 @@
 					(
 				SELECT 
 					A.CN AS userId,
-				    A.DISPLAYNAME$primary$ AS userName,
-				    NVL(A.TITLE$primary$, ' ') AS userTitle,
-				    NVL(A.DESCRIPTION$primary$, ' ') AS userDeptName,
-				    RTRIM(TO_CHAR(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0),'fm9990D99'),'.') AS basicAnnualCnt,
-				    RTRIM(TO_CHAR(NVL(B.ADDITIONAL_HOLIDAY_CNT, 0),'fm9990D99'),'.') AS additionalAnnualCnt,
-				    RTRIM(TO_CHAR(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + nvl(B.ANNUAL_HOLIDAY_CNT, 0) + nvl(B.ADDITIONAL_HOLIDAY_CNT, 0),'fm9990D99'),'.') AS totalAnnualCnt,
-				    NVL(TO_CHAR(B.JOIN_DATE, 'YYYY-MM-DD'), 0) AS joinDate
+			    	A.DISPLAYNAME$primary$ AS userName,
+			    	A.TITLE$primary$ AS userTitle,
+			    	A.DESCRIPTION$primary$ AS userDeptName,
+			    	A.PHYSICALDELIVERYOFFICENAME AS companyId,
+			    	(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + NVL(B.ADDITIONAL_HOLIDAY_CNT, 0)) AS basicAnnualCnt,
+					NVL((SUM(
+				       TRUNC(
+				        TO_DATE( 
+				            CASE
+				                WHEN C.END_DATE + #offsetMin# / (24 * 60) > TO_DATE(#searchEndTime#, 'YYYY-MM-DD HH24:MI:SS')
+				                THEN #searchEndTime#
+				                ELSE TO_CHAR(NVL(C.END_DATE, C.START_DATE) + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+				            END
+				            , 'YYYY-MM-DD HH24:MI:SS')
+				           -
+				        TO_DATE(
+				            CASE
+				                WHEN C.START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#searchStartTime#, 'YYYY-MM-DD HH24:MI:SS')
+				                THEN #searchStartTime#
+				                ELSE TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+				            END
+				            , 'YYYY-MM-DD HH24:MI:SS'), 0))
+				    +
+		            SUM(
+						CASE
+						   WHEN TYPE_ID = 'A11' THEN 1
+			               WHEN TYPE_ID = 'A12' THEN 0.5
+			               WHEN TYPE_ID = 'A13' THEN 0.5
+			               WHEN TYPE_ID = 'A21' THEN 0.25
+						   ELSE 0
+						END
+					)), 0) AS useAnnualCnt,
+					Nvl(B.ADDITIONAL_HOLIDAY_CNT, 0) as additionalAnnualCnt,
+					NVL(TO_CHAR(B.JOIN_DATE, 'YYYY-MM-DD'), 0) AS joinDate
 				FROM 
 					TBL_USERMASTER A
 				LEFT OUTER JOIN 
@@ -1545,10 +1572,40 @@
 					 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
 					AND
 					 A.CN = B.USER_ID)
+				LEFT OUTER JOIN 
+					TBL_ATTITUDE C
+				ON
+					(A.TENANT_ID = C.TENANT_ID 
+					AND 
+					 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
+					AND
+					 A.CN = C.WRITER_ID
+					AND 
+					 C.TYPE_ID IN ('A11', 'A12', 'A13', 'A21')
+					AND 
+ 				 	 C.MODAPPL <> '5'
+					AND 
+					 (
+						   (
+							C.START_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#searchStartTime#, 'YYYY-MM-DD HH24:MI:SS')
+							AND C.START_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#searchEndTime#, 'YYYY-MM-DD HH24:MI:SS')
+							)
+						OR (
+							C.END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#searchStartTime#, 'YYYY-MM-DD HH24:MI:SS')
+							AND C.END_DATE + #offsetMin# / (24 * 60) <TO_DATE(#searchEndTime#, 'YYYY-MM-DD HH24:MI:SS')
+							)
+						OR (
+							C.START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#searchStartTime#, 'YYYY-MM-DD HH24:MI:SS')
+							AND C.END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#searchEndTime#, 'YYYY-MM-DD HH24:MI:SS')
+							)
+					  )
+					 )
 				WHERE
 					A.TENANT_ID = #tenantId#
 				AND 
-					A.PHYSICALDELIVERYOFFICENAME = #companyId#			
+					A.PHYSICALDELIVERYOFFICENAME = #companyId#
+				AND			
+					A.CN IN (select CN FROM TBL_USERMASTER WHERE TENANT_ID = 0 AND PHYSICALDELIVERYOFFICENAME = #companyId#)		
 			]]>
 			<isNotEmpty prepend="AND" property="searchDeptName">
 				<![CDATA[
@@ -1566,11 +1623,8 @@
 				]]>
 			</isNotEmpty>
 			
-			GROUP BY A.CN, A.DISPLAYNAME$primary$, A.TITLE$primary$, A.DESCRIPTION$primary$, 
-					NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0),
-				    NVL(B.ADDITIONAL_HOLIDAY_CNT, 0),
-				    NVL(B.MONTHLY_HOLIDAY_CNT, 0) + nvl(B.ANNUAL_HOLIDAY_CNT, 0) + nvl(B.ADDITIONAL_HOLIDAY_CNT, 0),
-				    NVL(TO_CHAR(B.JOIN_DATE, 'YYYY-MM-DD'), 0)
+			GROUP BY A.CN, A.DISPLAYNAME$primary$, A.TITLE$primary$, A.DESCRIPTION$primary$, A.PHYSICALDELIVERYOFFICENAME,
+			(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + NVL(B.ADDITIONAL_HOLIDAY_CNT, 0)), B.JOIN_DATE
 			
 			<isNotEmpty property="orderCell">
 				<![CDATA[

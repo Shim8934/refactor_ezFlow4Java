@@ -2114,33 +2114,64 @@ public class EzAttitudeAdminController {
 		LOGGER.debug("attitudeAnnualManage started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
 		
-		//회사 리스트
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/companies";
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/annualreg";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId());
+				.queryParam("userId", userId);
 		
 		RestTemplate rest = new RestTemplate();
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
 		JSONParser jp = new JSONParser();
-		
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
+		
+		JSONObject dataObject = new JSONObject();
+		
+		if (status.equals("ok")) {
+			dataObject = (JSONObject) resultBody.get("data");
+			model.addAttribute("annualconfig", dataObject);
+		}
+		
+		//회사 리스트
+		gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		url = gwServerUrl + "/rest/ezattitude/companies";
+		
+		headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		entity = new HttpEntity<>(headers);
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId);
+		
+		rest = new RestTemplate();
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		jp = new JSONParser();
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
 		
 		JSONArray list = new JSONArray();
 		JSONObject data = new JSONObject();
@@ -2154,6 +2185,10 @@ public class EzAttitudeAdminController {
 			model.addAttribute("list", list);
 			model.addAttribute("adminCompany", adminCompany);
 		}
+		
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("userTimeSet", offset);
+		model.addAttribute("offsetMin", offsetMin);
 		
 		LOGGER.debug("attitudeAnnualManage ended.");
 		
@@ -2465,6 +2500,8 @@ public class EzAttitudeAdminController {
 		String listSize = request.getParameter("listSize");
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
@@ -2490,7 +2527,9 @@ public class EzAttitudeAdminController {
 				.queryParam("listSize", listSize)
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
-				.queryParam("offsetMin", offsetMin);
+				.queryParam("offsetMin", offsetMin)
+				.queryParam("startDate", startDate)
+				.queryParam("endDate", endDate);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -2646,6 +2685,8 @@ public class EzAttitudeAdminController {
 		String listSize = request.getParameter("listSize");
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		Locale locale = userInfo.getLocale();
@@ -2672,7 +2713,9 @@ public class EzAttitudeAdminController {
 				.queryParam("listSize", listSize)
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
-				.queryParam("offsetMin", offsetMin);
+				.queryParam("offsetMin", offsetMin)
+				.queryParam("startDate", startDate)
+				.queryParam("endDate", endDate);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -2733,6 +2776,8 @@ public class EzAttitudeAdminController {
 		row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t289", locale));
 		row.createCell(6).setCellValue(egovMessageSource.getMessage("ezAttitude.t290", locale));
 		row.createCell(7).setCellValue(egovMessageSource.getMessage("ezAttitude.t291", locale));
+		row.createCell(8).setCellValue(egovMessageSource.getMessage("ezAttitude.t238", locale));
+		row.createCell(9).setCellValue(egovMessageSource.getMessage("ezAttitude.t253", locale));
 		row.getCell(0).setCellStyle(headerStyle);
 		row.getCell(1).setCellStyle(headerStyle);
 		row.getCell(2).setCellStyle(headerStyle);
@@ -2741,6 +2786,8 @@ public class EzAttitudeAdminController {
 		row.getCell(5).setCellStyle(headerStyle);
 		row.getCell(6).setCellStyle(headerStyle);
 		row.getCell(7).setCellStyle(headerStyle);
+		row.getCell(8).setCellStyle(headerStyle);
+		row.getCell(9).setCellStyle(headerStyle);
 		
 		//body
 		for (int i = 0 ; i < annualList.size(); i++) { 
@@ -2752,9 +2799,12 @@ public class EzAttitudeAdminController {
 			row.createCell(2).setCellValue(vo.getUserName());
 			row.createCell(3).setCellValue(vo.getUserTitle());
 			row.createCell(4).setCellValue(vo.getUserDeptName());
-			row.createCell(5).setCellValue(vo.getJoinDate());
+			String joinDate = vo.getJoinDate().equals("0") ? " " : vo.getJoinDate();
+			row.createCell(5).setCellValue(joinDate);
 			row.createCell(6).setCellValue(vo.getBasicAnnualCnt());
 			row.createCell(7).setCellValue(vo.getAdditionalAnnualCnt());
+			row.createCell(8).setCellValue(vo.getUseAnnualCnt());
+			row.createCell(9).setCellValue(Float.parseFloat(vo.getBasicAnnualCnt()) - Float.parseFloat(vo.getUseAnnualCnt()));
 			
 			row.getCell(0).setCellStyle(bodyStyle);
 			row.getCell(1).setCellStyle(bodyStyle);
@@ -2764,25 +2814,14 @@ public class EzAttitudeAdminController {
 			row.getCell(5).setCellStyle(bodyStyle);
 			row.getCell(6).setCellStyle(bodyStyle);
 			row.getCell(7).setCellStyle(bodyStyle);
+			row.getCell(8).setCellStyle(bodyStyle);
+			row.getCell(9).setCellStyle(bodyStyle);
 		}
 		//width 조정
-		sheet.autoSizeColumn(0);
-		sheet.autoSizeColumn(1);
-		sheet.autoSizeColumn(2);
-		sheet.autoSizeColumn(3);
-		sheet.autoSizeColumn(4);
-		sheet.autoSizeColumn(5);
-		sheet.autoSizeColumn(6);
-		sheet.autoSizeColumn(7);
-		sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
-		sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
-		sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
-		sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
-		sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
-		sheet.setColumnWidth(5, (sheet.getColumnWidth(5)) + 512);
-		sheet.setColumnWidth(6, (sheet.getColumnWidth(5)) + 512);
-		sheet.setColumnWidth(7, (sheet.getColumnWidth(5)) + 512);
-			
+		for(int i = 0, len = 10; i < len; i++) {
+			sheet.autoSizeColumn(i);
+			sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);			
+		}
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());

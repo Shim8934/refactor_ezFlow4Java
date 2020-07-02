@@ -8,8 +8,13 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css"/>
 	    <link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" > 
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/> 
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+    	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezAttitude/ListView_list.js')}"></script>
 	    <style>
 	    	body::-webkit-scrollbar {
@@ -49,6 +54,12 @@
 	    </style>
 	    
 	    <script type="text/javascript">
+		    var date = new Date()
+			var year = date.getFullYear(); //현재년도
+			var g_userLang = "${userLang}";
+			var g_timezone = "${userTimeSet}";
+			var offsetMin = "${offsetMin}";
+			var initialDate = "<c:out value="${annualconfig.initialDate}" />";
 	    	var pCompanyId = ""; //현재 선택된 회사의 아이디
 	    	//검색조건 저장 변수
 	    	//var searchYear = ""; //검색조건 (년도)
@@ -67,6 +78,73 @@
 			var isfirst = true;
             var maxyear = "";
 	    	
+            $(function () {
+		        $("#Sdatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
+		            buttonImageOnly: true
+		        });
+		        $("#Edatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
+		            buttonImageOnly: true
+		        });
+		        var NowDate = utcDate2(offsetMin);
+		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Sdatepicker").datepicker('setDate', NowDate);
+		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Edatepicker").datepicker('setDate', NowDate);
+				
+		        $("#Sdatepicker").val(year + initialDate.substring(4, 10));
+	    		$("#Edatepicker").val(caldate(new Date(year + 1, initialDate.substring(5, 7) - 1, initialDate.substring(8, 10)), 1));
+		        
+				// ie인 경우, 달력 이미지 위치 수정
+				if (navigator.userAgent.toLowerCase().indexOf("chrome") == -1) {
+					$('#sDateSpan').children('img.ui-datepicker-trigger').first().attr("style", "margin-top:2px;");
+					$('#eDateSpan').children('img.ui-datepicker-trigger').first().attr("style", "margin-bottom:2px;");
+	    	    }
+		    });
+		    
+		    $(function () {
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		            closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+		            currentText: "<spring:message code='main.t0606' />",
+		            monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+		                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+		                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+		                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+		            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+		                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+		                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+		                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+		            dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+		                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+		                       "<spring:message code='main.t0627' />"],
+		            dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+				                       "<spring:message code='main.t0627' />"],
+		            dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+			                       "<spring:message code='main.t0627' />"],
+		            weekHeader: "Wk",
+		            dateFormat: "yy-mm-dd",
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: "show",
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		    });
+		    
 	    	$(function(){	
 	    		windowResize();
 	    		
@@ -144,48 +222,28 @@
 	        	document.getElementById("contentlist").style.height = height + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
-		    
-		    //년도 생성
-	        /* function makeoptionyear() {
-	            var date = new Date()
-	            var year = date.getFullYear();
-		        var tempyear = "";
-                var selyear = "";
-                
-	            if (isfirst) {
-	            	searchYear = year;
-	                selyear = year;
-	                tempyear = year + 4;
-	                maxyear = year + 4;
-	                isfirst = false;
-	            }
-	            else {
-	                selyear = parseInt(document.getElementById("searchYear").value);
-                    tempyear = selyear + 4;
-	            }
-	            
-	            if (selyear <= maxyear) {
-	                document.getElementById("searchYear").innerHTML = "";
-	                for (var i = 0; i < 10; i++) {
-	                	if (tempyear > maxyear) {
-	                		tempyear--;
-	                		continue;
-	                	}
-	                
-	                    var option = document.createElement("OPTION");
-	                    option.value = tempyear;
-	                    option.innerHTML = tempyear;
-	
-	                    if (selyear == tempyear)
-	                        option.selected = true;
-	
-	                    document.getElementById("searchYear").appendChild(option);
-	                    tempyear--;
-	                }
-	                tempyear = selyear + 4;
-	            }
-	        } */
 			
+		    function caldate(date, day){
+		    	 
+ 				var caledmonth, caledday, caledYear;
+ 				var loadDt = date;
+ 				var v = new Date(Date.parse(loadDt) - day*1000*60*60*24);
+ 
+ 				caledYear = v.getFullYear();
+ 
+			 	if ( v.getMonth() < 9 ){
+			  		caledmonth = '0'+(v.getMonth()+1);
+			 	} else {
+			  		caledmonth = v.getMonth()+1;
+			 	}
+			 	if ( v.getDate() < 9 ){
+			  		caledday = '0'+v.getDate();
+			 	} else {
+			  		caledday = v.getDate();
+			 	}
+			 	return caledYear+'-'+caledmonth+'-'+caledday;
+			}
+		    
 		    //회사변경시
 	    	function company_change() {
 	    		pCompanyId = document.getElementById("ListCompany").value;
@@ -208,6 +266,9 @@
 	    	
 		    //리스트 가져오기
 	    	function getAnnualList() {
+		    	var startDate = $("#Sdatepicker").val();
+		    	var endDate = $("#Edatepicker").val();
+		    	
 	    		$.ajax({
 	    			data : "GET",
 	    			dataType : "json",
@@ -220,7 +281,9 @@
 	   					pageNum : pageNum,
 	   					listSize : listSize,
 	   					orderCell : orderCell,
-	   					orderOption : orderOption
+	   					orderOption : orderOption,
+	   					startDate : startDate,
+	   					endDate : endDate
     				},
     				beforeSend : function() {
     					ShowMailProgress();
@@ -238,6 +301,40 @@
 	    			}
 	    		});
 	    	}
+	    	
+	    	function date_reset() {
+		    	$("#Sdatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
+		            buttonImageOnly: true
+		        });
+		        $("#Edatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
+		            buttonImageOnly: true
+		        });
+		        var NowDate = utcDate2(offsetMin);
+		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        
+		        if (checkAdmin == 'true') {
+		        	$("#Sdatepicker").val("${startDate}");
+		    		$("#Edatepicker").val("${endDate}");
+		        } else {
+		        	$(usepostdate).prop('checked', false);
+			        usepostDate = false;
+			        $("#Sdatepicker").datepicker('setDate', NowDate);
+			        $("#Edatepicker").datepicker('setDate', NowDate);
+		            $("#Sdatepicker").datepicker('disable');
+		            $("#Edatepicker").datepicker('disable');
+		        }
+		    }
 	    	
 	    	function getAnnualList_after(result){
 	    		var resultHtml = "";
@@ -259,13 +356,6 @@
 		    			resultHtml += "<td><a class='link joinDate'>" + vo.joinDate + "</td>";
 	    			}
 	    			
-	    			/* resultHtml += "<td><a class='link useAnnualCnt'>";
-	    			if (Number(vo.useAnnualCnt.split(".")[1]) > 0) {
-	    				resultHtml += vo.useAnnualCnt;
-	    			} else {
-		    			resultHtml += vo.useAnnualCnt.split(".")[0];
-	    			}
-	    			resultHtml += "</a></td>"; */
 	    			
 	    			resultHtml += "<td>";
 	    			if (Number(vo.basicAnnualCnt.split(".")[1]) > 0) {
@@ -274,13 +364,32 @@
 		    			resultHtml += vo.basicAnnualCnt.split(".")[0];
 	    			}
 	    			resultHtml += "</td>";
+	    			
 	    			resultHtml += "<td><a class='link additionalAnnualCnt'>";
 	    			if (Number(vo.additionalAnnualCnt.split(".")[1]) > 0) {
 		    			resultHtml += vo.additionalAnnualCnt;
 	    			} else {
 		    			resultHtml += vo.additionalAnnualCnt.split(".")[0];
-	    			}
+ 	    			}
 	    			resultHtml += "</a></td>";
+	    			
+	    			resultHtml += "<td>";
+	    			if (Number(vo.useAnnualCnt.split(".")[1]) > 0) {
+	    				resultHtml += vo.useAnnualCnt;
+	    			} else {
+		    			resultHtml += vo.useAnnualCnt.split(".")[0];
+	    			}
+	    			resultHtml += "</td>";
+	    			
+	    			var remainCnt = (String)(vo.basicAnnualCnt - vo.useAnnualCnt);
+	    			resultHtml += "<td>";
+	    			if (Number(remainCnt.split(".")[1]) > 0) {
+	    				resultHtml += remainCnt;
+	    			} else {
+		    			resultHtml += remainCnt.split(".")[0];
+	    			}
+	    			resultHtml += "</td>";
+
 	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"annualHistoryPop('" + vo.userId + "')\"><spring:message code='ezAttitude.t241' /></span></a></td>";
 	    			
 	    			i++;
@@ -345,12 +454,15 @@
 			
 			//엑셀 다운로드
 			function exportExcel() {
+		    	var startDate = $("#Sdatepicker").val();
+		    	var endDate = $("#Edatepicker").val();
+		    	
 				if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
 					alert("<spring:message code='ezAttitude.t56'/>");
 					return;
 				}
 				
-		    	exportExcelframe.location.href="/admin/ezAttitude/excelAnnualListExport.do?companyId=" + encodeURIComponent(pCompanyId) + "&userName=" + encodeURIComponent(searchUserName) + "&deptName=" + encodeURIComponent(searchDeptName) + "&title=" + encodeURIComponent(searchTitle) + "&orderCell=" + encodeURIComponent(orderCell) + "&orderOption=" + encodeURIComponent(orderOption);
+		    	exportExcelframe.location.href="/admin/ezAttitude/excelAnnualListExport.do?companyId=" + encodeURIComponent(pCompanyId) + "&userName=" + encodeURIComponent(searchUserName) + "&deptName=" + encodeURIComponent(searchDeptName) + "&title=" + encodeURIComponent(searchTitle) + "&orderCell=" + encodeURIComponent(orderCell) + "&orderOption=" + encodeURIComponent(orderOption) + "&startDate=" + encodeURIComponent(startDate) + "&endDate=" + encodeURIComponent(endDate);
 		    	exportExcelframe.target="_blank";
 			}
 			
@@ -434,6 +546,10 @@
 					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
 					</td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t137'/></td>
+					<td style="width: 9%;">
+						<span id="sDateSpan"><input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/></span> <span style="vertical-align:middle;">~</span> <span id="eDateSpan"><input type="text" id="Edatepicker" style="width:80px;text-align:center;"/></span>
+					</td>
 					<td style="width: *;" colspan=2>
 						<a class="imgbtn"><span onclick="searchAnnualList('search');"><spring:message code='ezAttitude.t121' /></span></a>
 						<a class="imgbtn"><span onclick="searchAnnualList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
@@ -455,8 +571,10 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
 						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="joinDate"><spring:message code='ezAttitude.t289' /></th>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="basicAnnualCnt"><spring:message code='ezAttitude.t290' /></th>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="additionalAnnualCnt"><spring:message code='ezAttitude.t291' /></th>
+						<th style="width:8%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="basicAnnualCnt"><spring:message code='ezAttitude.t290' /></th>
+						<th style="width:8%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="additionalAnnualCnt"><spring:message code='ezAttitude.t291' /></th>
+						<th style="width:8%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname="useAnnualCnt"><spring:message code='ezAttitude.t238' /></th>
+						<th style="width:8%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname=""><spring:message code='ezAttitude.t253' /></th>
 						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t241' /></th>
 					</tr>
 				</thead>
