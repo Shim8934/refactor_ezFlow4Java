@@ -641,12 +641,15 @@ var strLang929 = "没有权限查看此文档。<br>或请联系发起。";
 // ApprovUI/doApprovAllSelect.aspx
 var strLang930 = "选定的文档.";
 var strLang931 = "<br>批量结算完毕.";
+var strLang931_1 = "批量结算完毕.";
 var strLang932 = "错误发生在批处理解决.<br>";
 var strLang933 = "总 : ";
 var strLang934 = " 枪 <br>";
+var strLang934_1 = " 枪";
 var strLang935 = "成功 : ";
 var strLang936 = "故障 : ";
 var strLang937 = "结果批量重新分配文件。";
+var strLang938 = "제외 : ";
 // ezViewHWP/ezDe
 var strLang940 = "上一页"
 var strLang941 = "下一页"

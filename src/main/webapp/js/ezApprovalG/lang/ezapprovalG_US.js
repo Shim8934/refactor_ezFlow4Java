@@ -641,12 +641,15 @@ var strLang929 = "Do not have permission to view this document. <br> Draft, plea
 // ApprovUI/doApprovAllSelect.aspx
 var strLang930 = "The selected article does not.";
 var strLang931 = "<br> Batch settlement is completed.";
+var strLang931_1 = "Batch settlement is completed.";
 var strLang932 = "An error has occurred in the batch settlement. <br>";
 var strLang933 = "Total:";
 var strLang934 = "Items <br>";
+var strLang934_1 = "Items";
 var strLang935 = "Success:";
 var strLang936 = "Failure:";
 var strLang937 = "Results bulk reassign document.";
+var strLang938 = "제외 : ";
 // ezViewHWP/ezDeptRecev_HWP.js
 var strLang940 = "Prev"
 var strLang941 = "Next"
