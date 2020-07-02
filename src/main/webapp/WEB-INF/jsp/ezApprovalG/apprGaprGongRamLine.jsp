@@ -85,7 +85,7 @@
 	        var linealt14 = "<spring:message code='ezApprovalG.t322'/>";
 	        var linealt15 = "<spring:message code='ezApprovalG.t323'/>";
 	        var linealt16 = "<spring:message code='ezApprovalG.t999933'/>";
-	        var linealt17 = "<spring:message code='ezApprovalG.t1178'/>";
+			var linealt17 = "<spring:message code='ezApprovalG.t1178'/>";
 	        var Cabinet1 = "<spring:message code='ezApprovalG.t379'/>";
 	        var Cabinet2 = "<spring:message code='ezApprovalG.t572'/>";
 	        var Cabinet3 = "<spring:message code='ezApprovalG.t573'/>";
@@ -96,6 +96,8 @@
 	        var Docalt2 = "<spring:message code='ezApprovalG.t288'/>";
 	        var Docalt3 = "<spring:message code='ezApprovalG.t289'/>";
 	        var Docalt4 = "<spring:message code='ezApprovalG.t10030'/>";
+			var linealt18S = "<spring:message code='ezApprovalG.kbh01'/>";
+			var linealt18G = "<spring:message code='ezApprovalG.kbh02'/>";
 	   		window.onload = function () {
 	        	try {
 		            var ua = navigator.userAgent;
@@ -558,7 +560,29 @@
 		        }
 		    }
 		    function btn_AprDeptTempletAdd_onclick() {
-		        try {
+		        try { 
+					var aprLineList = new ListView(); 
+					aprLineList.LoadFromID("pAPRLINE");
+
+					var allWaitFlag = aprLineList.GetDataRows()
+						.filter(function(row) {
+							return row.id.indexOf("noItems") === -1;
+						})
+						.every(function(row) {
+							return GetAttribute(row, "DATA12") === "001";
+						});
+
+					if(!allWaitFlag) {
+						if(approvalFlag === "S") {
+							var pAlertContent = linealt18S;
+						} else if(approvalFlag === "G") {
+							var pAlertContent = linealt18G;
+						}
+						OpenAlertUI(pAlertContent);
+
+						return;
+					}
+
 		            var p_CheckAprDeptTempletSN;
 		            var pAPRTemplist = new ListView();
 		            pAPRTemplist.LoadFromID("lvRecSaveList");
