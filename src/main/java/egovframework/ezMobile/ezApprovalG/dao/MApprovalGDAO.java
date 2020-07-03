@@ -96,4 +96,9 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 	public int getCheckAprState(Map<String, Object> map) throws Exception {
 		return (int) select("MApprovalG.getCheckAprState", map);
 	}
+	
+	public MApprovalGDocInfoVO getEndAprDocInfo(Map<String, Object> map) throws Exception {
+		return (MApprovalGDocInfoVO) select("MApprovalG.getEndAprDocInfo", map);
+	}
+	
 }
