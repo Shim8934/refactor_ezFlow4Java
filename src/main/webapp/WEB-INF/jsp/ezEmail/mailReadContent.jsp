@@ -205,9 +205,9 @@
 					    		tmpStr = strArr[2].split('=');
 					    		uid = tmpStr[1];
 					    		
-					    		params = strArr[3] + "&" + strArr[4]; 
+					    		params = strArr[3] + "&" + strArr[4] + "&" + strArr[5] + "&" + strArr[6]; 
 							} else {
-					    		params += "&" + strArr[3] + "&" + strArr[4]; 
+					    		params += "&" + strArr[3] + "&" + strArr[4] + "&" + strArr[5] + "&" + strArr[6]; 
 							}
 				    		
 			    		}
