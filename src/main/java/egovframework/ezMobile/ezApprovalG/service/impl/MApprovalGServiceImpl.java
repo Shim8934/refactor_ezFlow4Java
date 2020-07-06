@@ -16,6 +16,8 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +25,12 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import org.jsoup.Jsoup;
-import org.jsoup.select.Elements;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service("MApprovalGService")
 public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MApprovalGService {
@@ -62,11 +60,11 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	@Resource(name = "EzEmailService")
 	private EzEmailService ezEmailService;
 
-	@Resource(name = "jspw")
-	private String jspw;
-
 	@Resource(name = "EzApprovalGDAO")
 	private EzApprovalGDAO ezApprovalGDAO;
+
+	@Resource(name = "jspw")
+	private String jspw;
 
 	@Override
 	public List<MApprovalGDocInfoVO> getDoApproveList(MCommonVO userInfo, String type, String searchText, String listSize, String lastDate) throws Exception {
@@ -494,11 +492,15 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	 * @throws Exception
 	 */
 	@Override
-	public void sendApproveNoticeMail(HttpServletRequest request, MCommonVO userInfo, MOptionVO optionInfo, MApprovalGDocInfoVO approvalGDocInfoVO, String docId, String type) throws Exception {
+	public void sendApproveNoticeMail(MCommonVO userInfo, MOptionVO optionInfo, MApprovalGDocInfoVO approvalGDocInfoVO, String docId, String type) throws Exception {
 		LOGGER.debug("sendApproveNoticeMail started.");
 
 		String subject = null;
 		StringBuilder contentBuilder = null;
+
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getUserId() + "@" + domainName;
+		String password = jspw;
 
 		//to User
 		String targetUserId = null;
@@ -556,7 +558,8 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						contentBuilder.append("<span style='font-size:13pt;'>" + egovMessageSource.getMessage("ezEmail.csj18", locale) + ": " + approvalGDocInfoVO.getWriterName() + "</span><br>");
 						contentBuilder.append("<span style='font-size:13pt;'>" + egovMessageSource.getMessage("ezEmail.csj19", locale) + ": " + approvalGDocInfoVO.getStartDate() + "</span><br>");
 						contentBuilder.append("</td></tr></table>");
-						ezEmailService.sendMail(userInfo.getEmail(), jspw, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+
+						ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
 					} else {
 						approvalGAprLineInfoVOs = getAprLineInfo(docId, "END", userInfo);
 
@@ -583,7 +586,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						contentBuilder.append("<span style='font-size:13pt;'>" + egovMessageSource.getMessage("ezEmail.csj18", locale) + ": " + approvalGDocInfoVO.getWriterName() + "</span><br>");
 						contentBuilder.append("<span style='font-size:13pt;'>" + egovMessageSource.getMessage("ezEmail.csj19", locale) + ": " + approvalGDocInfoVO.getStartDate() + "</span><br>");
 						contentBuilder.append("</td></tr></table>");
-						ezEmailService.sendMail(userInfo.getEmail(), jspw, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+						ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
 					}
 
 					//[수신문서도착알림]
@@ -651,7 +654,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 						toList = toList.stream().distinct().collect(Collectors.toList());
 
-						ezEmailService.sendMail(userInfo.getEmail(), jspw, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+						ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
 					}
 				} else { //apr
 					for (MApprovalGAprLineInfoVO vo : approvalGAprLineInfoVOs) {
@@ -687,7 +690,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						contentBuilder.append("<span style='font-size:13pt;'>" + egovMessageSource.getMessage("ezEmail.csj19", locale) + ": " + approvalGDocInfoVO.getStartDate() + "</span><br>");
 						contentBuilder.append("</td></tr></table>");
 
-						ezEmailService.sendMail(userInfo.getEmail(), jspw, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+						ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
 					}
 				}
 
@@ -772,7 +775,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				}
 
 				contentBuilder.append("</td></tr></table>");
-				ezEmailService.sendMail(userInfo.getEmail(), jspw, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+				ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
 
 				break;
 
@@ -801,7 +804,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 					contentBuilder.append("<span style='font-size:13pt;'>" + egovMessageSource.getMessage("ezEmail.csj19", locale) + ": " + approvalGDocInfoVO.getStartDate() + "</span><br>");
 					contentBuilder.append("</td></tr></table>");
 
-					ezEmailService.sendMail(userInfo.getEmail(), jspw, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
+					ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), saveSendBoxFlag, EmailImportance.NORMAL);
 				}
 
 				break;

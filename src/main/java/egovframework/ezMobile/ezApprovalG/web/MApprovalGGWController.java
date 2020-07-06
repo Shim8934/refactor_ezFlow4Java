@@ -890,7 +890,7 @@ public class MApprovalGGWController {
 			}
 
             if ("SUCCESS".equals(result.get("data"))) {
-                mApprovalGService.sendApproveNoticeMail(request, userInfo, optionInfo, approvalGDocInfoVO, docId, type);
+                mApprovalGService.sendApproveNoticeMail(userInfo, optionInfo, approvalGDocInfoVO, docId, type);
             }
 		} catch (Exception e) {
 			e.printStackTrace();
