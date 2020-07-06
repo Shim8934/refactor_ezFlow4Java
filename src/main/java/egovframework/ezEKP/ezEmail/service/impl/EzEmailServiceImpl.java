@@ -4501,4 +4501,31 @@ public class EzEmailServiceImpl implements EzEmailService {
 		ezEmailDAO.deleteBigAttachCountInfo(map);
 		logger.debug("deleteBigAttachCountInfo ended.");
 	}
+	
+	@Override
+	public int deleteMailDeleteForUser(String pUserEmail) throws Exception {
+		logger.debug("deleteMailDeleteForUser started.");
+		logger.debug("pUserEmail=" + pUserEmail);
+		
+		int returnInt = -100;
+		
+		String inputParams = "userId=" + pUserEmail;
+		logger.debug("inputParams=" + inputParams);
+		try {
+			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/deleteMailDeleteForUser", inputParams);
+			logger.debug("strJson=" + strJson);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+	        
+	        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+	        	throw new Exception("JGwServer ERROR");
+	        }
+		} catch (Exception e) {
+			logger.debug("[JGW-SERVER ERROR] deleteMailDeleteForUser.");
+		}
+
+		logger.debug("deleteMailDeleteForUser ended.");
+        return returnInt;
+	}
 }
