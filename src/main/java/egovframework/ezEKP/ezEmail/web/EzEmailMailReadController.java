@@ -1058,21 +1058,29 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("params=" + params);
 		
 		String param[] = params.split("&");
-		String filename[] = new String[param.length / 2];
-		String strIndex[] = new String[param.length / 2];
+		String filename[] = new String[param.length / 4];
+		String strIndex[] = new String[param.length / 4];
+		String strOrder[] = new String[param.length / 4];
+		String strDepth[] = new String[param.length / 4];
 		
-		int j = 0, k = 0;
+		int j = 0, k = 0, l = 0, m = 0;
 
 		for (int i = 0; i < param.length; i++) {
 			
 			String tmpStr[] = param[i].split("=");
 			
-			if (i % 2 == 0) {
+			if (i % 4 == 0) {
 				filename[j] = URLDecoder.decode(tmpStr[1], "utf-8");
 				j++;
-			} else {
+			} else if (i % 4 == 1) {
 				strIndex[k] = tmpStr[1];
 				k++;
+			} else if (i % 4 == 2) {
+				strOrder[l] = tmpStr[1];
+				l++;
+			} else {
+				strDepth[m] = tmpStr[1];
+				m++;
 			}
 		}
 		
@@ -1086,11 +1094,20 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		Integer idx[] = new Integer[strIndex.length];
 		
-		if (strIndex != null) {
+		for (int i = 0; i < strIndex.length; i++) {
+			idx[i] = Integer.parseInt(strIndex[i]);
+		}
 
-			for (int i = 0; i < strIndex.length; i++) {
-				idx[i] = Integer.parseInt(strIndex[i]);
-			}
+		Integer order[] = new Integer[strOrder.length];
+		
+		for (int i = 0; i < strOrder.length; i++) {
+			order[i] = Integer.parseInt(strOrder[i]);
+		}
+
+		Integer depth[] = new Integer[strDepth.length];
+		
+		for (int i = 0; i < strDepth.length; i++) {
+			depth[i] = Integer.parseInt(strDepth[i]);
 		}
 		
 		String realPath = commonUtil.getRealPath(request);
@@ -1155,7 +1172,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					} else {
 						
 						for (int i = 0; i < idx.length; i++) {
-							part = ezEmailUtil.getAttachPart(message, idx[i]);
+							part = ezEmailUtil.getAttachPart(message, idx[i], order[i], depth[i]);
 
 							if (part == null) {
 								logger.debug("attachpart not found. AttachPartIndex=" + idx[i]);
@@ -1291,6 +1308,24 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			index = Integer.parseInt(strIndex);
 		}
 		logger.debug("index=" + index);
+
+		String strOrder = request.getParameter("order");
+		int order = 0;
+		
+		if (strOrder != null) {
+			order = Integer.parseInt(strOrder);
+		}
+		
+		logger.debug("order=" + order);
+		
+		String strDepth = request.getParameter("depth");
+		int depth = 0;
+		
+		if (strDepth != null) {
+			depth = Integer.parseInt(strDepth);
+		}
+		
+		logger.debug("depth=" + depth);
 		
 		IMAPAccess ia = null;
 		try {
@@ -1317,7 +1352,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						part = message;
 					}
 					else {
-						part = ezEmailUtil.getAttachPart(message, index);
+						part = ezEmailUtil.getAttachPart(message, index, order, depth);
 					}
 					
 					if (part == null) {
@@ -4482,6 +4517,24 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		}
 		logger.debug("index=" + index);
 		
+		String strOrder = request.getParameter("order");
+		int order = 0;
+		
+		if (strOrder != null) {
+			order = Integer.parseInt(strOrder);
+		}
+		
+		logger.debug("order=" + order);
+		
+		String strDepth = request.getParameter("depth");
+		int depth = 0;
+		
+		if (strDepth != null) {
+			depth = Integer.parseInt(strDepth);
+		}
+		
+		logger.debug("depth=" + depth);
+		
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -4507,7 +4560,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						part = message;
 					}
 					else {
-						part = ezEmailUtil.getAttachPart(message, index);
+						part = ezEmailUtil.getAttachPart(message, index, order, depth);
 					}
 					
 					if (part == null) {
