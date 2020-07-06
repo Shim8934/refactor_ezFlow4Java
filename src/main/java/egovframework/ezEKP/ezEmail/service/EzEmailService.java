@@ -171,4 +171,5 @@ public interface EzEmailService {
 	public void updateBigAttachDownloadCount(String fileId, int tenantId) throws Exception;
 	public void deleteBigAttachCountInfo(File[] fileList, int tenantId) throws Exception;
 	public void deleteBigAttachCountInfo(String[] fileIdArr, int tenantId) throws Exception;
+	public int deleteMailDeleteForUser(String pUserEmail) throws Exception;
 }

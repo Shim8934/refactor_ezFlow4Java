@@ -1618,6 +1618,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				// 해당 사용자의 개인주소록 및 주소록 관련 설정을 모두 제거한다.
 	    		rc = ezAddressService.removeUserAddress(mailAddr);
 	    		logger.debug("removeUserAddress rc=" + rc);
+
+				// 해당 사용자의 메일자동삭제 설정을 모두 제거한다. -1 = error
+	    		rc = ezEmailService.deleteMailDeleteForUser(mailAddr);
+	    		logger.debug("deleteMailDeleteForUser rc=" + rc);
 			}
 			// dhlee - end
 		}		
