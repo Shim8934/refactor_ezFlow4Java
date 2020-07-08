@@ -1256,13 +1256,25 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	/**
+	 * 오라클 11g에서는 30 글자를 넘어가는 테이블을 생성할 수 없는데, 30자를 넘어가던 해당 테이블을 30자 이내로 변경하는 코드가 들어간다.<br>
+	 * CREATE 또는 RENAME 으로 동작한다.
+	 */
 	public void createJmochaBigAttachDownloadLimit() throws Exception {
 		try {
-			select("EzCommonDAO.checkJmochaBigAttachDownloadLimit");
+			select("EzCommonDAO.checkJmochaBigAttachDownloadLimit_new");
 		} catch (Exception e) {
-			logger.debug("jmocha_bigattach_download_limit doesn't exist. creating the table...");
-			
-			update("EzCommonDAO.createJmochaBigAttachDownloadLimit");
+			try {
+				select("EzCommonDAO.checkJmochaBigAttachDownloadLimit_old");
+
+				logger.debug("jmocha_bigattach_download_limit already exist. table name has been changed to jmocha_bigattach_down_limit...");
+
+				update("EzCommonDAO.renameJmochaBigAttachDownloadLimitToNew");
+			} catch (Exception e2) {
+				logger.debug("jmocha_bigattach_down_limit doesn't exist. creating the table...");
+
+				update("EzCommonDAO.createJmochaBigAttachDownloadLimit");
+			}
 		}
 	}
 

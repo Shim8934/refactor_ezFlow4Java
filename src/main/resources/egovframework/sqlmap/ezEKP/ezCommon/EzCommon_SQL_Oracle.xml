@@ -2366,7 +2366,16 @@
 	]]>
 	</insert>
 	
-	<select id="EzCommonDAO.checkJmochaBigAttachDownloadLimit">
+	<select id="EzCommonDAO.checkJmochaBigAttachDownloadLimit_new">
+		SELECT 
+			FILE_ID
+		FROM 
+			JMOCHA_BIGATTACH_DOWN_LIMIT
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<select id="EzCommonDAO.checkJmochaBigAttachDownloadLimit_old">
 		SELECT 
 			FILE_ID
 		FROM 
@@ -2376,13 +2385,17 @@
 	</select>
 	
 	<statement id="EzCommonDAO.createJmochaBigAttachDownloadLimit">
-		CREATE TABLE JMOCHA_BIGATTACH_DOWNLOAD_LIMIT (
+		CREATE TABLE JMOCHA_BIGATTACH_DOWN_LIMIT (
 		  "FILE_ID" NVARCHAR2(100) NOT NULL,
 		  "DOWNLOAD_COUNT" NUMBER,
 		  "LIMIT_COUNT" NUMBER,
 		  "TENANT_ID" NUMBER  DEFAULT 0 NOT NULL,
-		  CONSTRAINT "JMOCHA_BIGATTACH_DOWNLOAD_LIMIT_PK" PRIMARY KEY ("FILE_ID")
+		  CONSTRAINT "JMOCHA_BIGATTACH_DOWN_LIMIT_PK" PRIMARY KEY ("FILE_ID")
 		)
+	</statement>
+	
+	<statement id="EzCommonDAO.renameJmochaBigAttachDownloadLimitToNew">
+		RENAME JMOCHA_BIGATTACH_DOWNLOAD_LIMIT TO JMOCHA_BIGATTACH_DOWN_LIMIT
 	</statement>
 	
 	<select id="EzCommonDAO.checkMailBigSizeAttachLimitTenantConfig" resultClass="String">
