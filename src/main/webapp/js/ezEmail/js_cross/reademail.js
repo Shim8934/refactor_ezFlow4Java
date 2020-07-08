@@ -1192,6 +1192,47 @@ function mail_link(){
 		}
 	}
 	
-	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(880, 900, true));
+	/* 2020-07-08 홍승비 - 메일 링크의 결재문서 열기 시 팝업창 크기 조정 (전자결재 > 결재할문서, 결재진행문서 팝업창과 동일하게) */
+	// window.open(real_href, 'apprmailLink', GetOpenWindowfeature(880, 900, true));
+    try {
+        var heigth = window.screen.availHeight;
+        var width = window.screen.availWidth;
+        var left = 0;
+        var top = 0;
 
+        if (window.screen.width > 800) {
+            var pleftpos;
+
+            pleftpos = parseInt(width) - 1150;
+            heigth = parseInt(heigth) - 30;
+
+            if (CrossYN()) {
+                heigth = parseInt(heigth) - 25;
+            }
+            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+                heigth = parseInt(heigth) - 40;
+            }
+            
+            width = parseInt(width) - pleftpos;
+            left = pleftpos / 2;
+        }
+        else {
+            heigth = parseInt(heigth) - 30;
+
+            if (CrossYN()) {
+                heigth = parseInt(heigth) - 25;
+            }
+            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+                heigth = parseInt(heigth) - 40;
+            }
+            
+            width = parseInt(width) - 10;
+        }
+
+        window.open(real_href, 'apprmailLink', "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+    }
+    catch (e) {
+        alert("openwindow :: " + e.description);
+    }
+    
 }
