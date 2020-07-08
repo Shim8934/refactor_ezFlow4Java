@@ -64,7 +64,7 @@
 				}
 				
 				/* 2020-06-23 홍승비 - URL게시판 선택 시 경고 메세지 추가 */
-				if (SelectedBoardUrl != null && trim(SelectedBoardUrl) != "") {
+				if (SelectedBoardUrl != null && SelectedBoardUrl != "null" && trim(SelectedBoardUrl) != "") {
 					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.garm02' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.garm02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 					return;
