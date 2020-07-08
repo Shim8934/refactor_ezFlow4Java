@@ -108,7 +108,7 @@
 		    }
 		</script>
 	</head>
-	<body class="popup" style="margin:0;">
+	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t1025'/></h1>
 		<div id="close">
             <ul>
