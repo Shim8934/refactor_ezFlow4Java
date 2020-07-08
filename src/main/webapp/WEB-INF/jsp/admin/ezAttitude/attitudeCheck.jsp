@@ -16,6 +16,8 @@
 	    <!-- data picker-->		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<!-- date Format -->		
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 	    <style>
 	    	#contentlist table.mainlist tr:not(.tr_noItems) td {
 	    		overflow : hidden;
@@ -257,7 +259,7 @@
 	    				if(vo.typeId == "A25") {
 	    					var date = new Date(vo.startDate.substring(0,4), Number(vo.startDate.substring(5,7))-1 , Number(vo.startDate.substring(8,10)));
 							date.setDate(date.getDate()+1);	    					
-		    				resultHtml += "<td style='width: 30%;'>" + date.format('yyyy-MM-dd') + " " + vo.startDate.substring(11,16) + "</td>";
+		    				resultHtml += "<td style='width: 30%;'>" + moment(date).format('YYYY-MM-DD') + " " + vo.startDate.substring(11,16) + "</td>";
 	    				} else {
 		    				resultHtml += "<td style='width: 30%;'>" + vo.startDate.substring(0,16) + "</td>";
 	    				}
@@ -418,8 +420,6 @@
 	            }
 			}
 	    </script>
-	    <!-- date Format -->		
-		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/DateFormat.js')}"></script>
 	</head>
 	<body class="mainbody">
 	    <h1>

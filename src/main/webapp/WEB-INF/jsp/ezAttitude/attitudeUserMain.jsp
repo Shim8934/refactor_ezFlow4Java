@@ -27,6 +27,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<!-- month picker-->		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/monthpicker.js')}"></script>
+		<!-- date Format -->		
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 		<style>
 			#attiStatis table td {
 				color : #777;
@@ -693,7 +695,7 @@
 								var date = new Date(startDate.substring(0,4), Number(startDate.substring(5,7))-1 , Number(startDate.substring(8,10)));
 								date.setDate(date.getDate()-1);
 								tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png' style='vertical-align:middle'/>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " (" + Number(startDate.substring(8,10)) + "일)" + iconStr + "</td></tr>";
-								calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>", calendarHTML.indexOf("TD_" + date.format('yyyy-MM-dd') + "_Value")), tdHTML);																
+								calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>", calendarHTML.indexOf("TD_" + moment(date).format('YYYY-MM-DD') + "_Value")), tdHTML);																
 							}else {
 								tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png' style='vertical-align:middle'/>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>";
 								calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>", calendarHTML.indexOf("TD_" + startDate + "_Value")), tdHTML);								
@@ -1953,7 +1955,7 @@
 			    		} else if(vo.typeId == "A25") { //전일 퇴근
 			    			var date = new Date(vo.startDate.substring(0,4), Number(vo.startDate.substring(5,7))-1 , Number(vo.startDate.substring(8,10)));
 							date.setDate(date.getDate()-1);
-			    			$("#contentlist .mainlist tr#" + date.format('yyyy-MM-dd') + " td:eq(2)").html("<span class='" + iconStrClass + "'>" + vo.startDate.substring(11,16) + " (" + Number(vo.startDate.substring(8,10)) + "일)" + "<span>" +  iconStr);
+			    			$("#contentlist .mainlist tr#" + moment(date).format('YYYY-MM-DD') + " td:eq(2)").html("<span class='" + iconStrClass + "'>" + vo.startDate.substring(11,16) + " (" + Number(vo.startDate.substring(8,10)) + "일)" + "<span>" +  iconStr);
 			    		} else if (vo.typeId == "A08") { //조퇴
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(2)").html("<span class='AttRedText " + iconStrClass + "'>" + vo.startDate.substring(11,16) + "</span>" + iconStr);
 			    			if (typeText != "" || typeText.indexOf("<spring:message code='ezAttitude.t113' />") > -1) {//지각이면 "지각,조퇴" 형태로 되게끔.
@@ -2237,41 +2239,7 @@
 			    
 			    return result;
 			}
-			
-			/* 2020-06-05 김정언 - 날짜 포맷 start */
-			Date.prototype.format = function(f) {
-			    if (!this.valueOf()) return " ";
-			 
-			    var weekName = ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-			                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-			                       "<spring:message code='main.t0627' />"];
-			    var d = this;
-			     
-			    return f.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function($1) {
-			        switch ($1) {
-			            case "yyyy": return d.getFullYear();
-			            case "yy": return (d.getFullYear() % 1000).zf(2);
-			            case "MM": return (d.getMonth() + 1).zf(2);
-			            case "dd": return d.getDate().zf(2);
-			            case "E": return weekName[d.getDay()];
-			            case "HH": return d.getHours().zf(2);
-			            case "hh": return ((h = d.getHours() % 12) ? h : 12).zf(2);
-			            case "mm": return d.getMinutes().zf(2);
-			            case "ss": return d.getSeconds().zf(2);
-			            case "a/p": return d.getHours() < 12 ? "<spring:message code='ezTask.t67' />" : "<spring:message code='ezTask.t68' />";
-			            default: return $1;
-			        }
-			    });
-			};
-			 
-			String.prototype.string = function(len){var s = '', i = 0; while (i++ < len) { s += this; } return s;};
-			String.prototype.zf = function(len){return "0".string(len - this.length) + this;};
-			Number.prototype.zf = function(len){return this.toString().zf(len);};
-			/* 날짜 포맷 end */
-
 		</script>
-		<!-- date Format -->
-		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/DateFormat.js')}"></script>
 	</head>
 	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0" onselectstart="return false">
 		<c:if test="${deptFlag != 'true'}">
