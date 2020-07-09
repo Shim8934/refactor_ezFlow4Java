@@ -466,11 +466,11 @@
             		<th rowspan="2"><spring:message code='ezPersonal.t180'/></th> 
             		<td colspan="3" class="onlyUseKo">
                 		<c:if test="${primaryLang == '1'}">
-                			<c:if test="${useZipCodeSearch == 'YES'}">
+                			<c:if test="${useZipCodeSearch == 'YES' && not useOnlyInnerMail}">
                 				<input type="text" id="txtZipcode" size="10" value="${txtZipCode}" readonly>
                 				<a class="imgbtn imgbck"><span onClick="zip_find();"><spring:message code='ezPersonal.t181'/></span></a>
                 			</c:if>
-                			<c:if test="${useZipCodeSearch == 'NO'}">
+                			<c:if test="${useZipCodeSearch == 'NO' || useOnlyInnerMail}">
                 				<input type="text" id="txtZipcode" size="10" value="${txtZipCode}">
                 				<span><spring:message code='ezPersonal.t181'/></span>
                 			</c:if>
