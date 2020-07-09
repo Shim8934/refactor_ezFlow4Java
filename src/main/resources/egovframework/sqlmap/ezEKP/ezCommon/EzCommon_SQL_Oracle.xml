@@ -559,9 +559,9 @@
 	
 	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
 		INSERT INTO tbl_tenant_config
-		(tenant_id, property_name, property_value, description, config_name, regdate)
+		(tenant_id, property_name, property_value, description, config_name, regdate, config_type)
 		VALUES
-		(#tenantID#, #confName#, #property_value#, #description#, #config_name#, sysdate)
+		(#tenantID#, #confName#, #property_value#, #description#, #config_name#, sysdate, #config_type#)
 	</insert>
 	
 	<select id="EzCommonDAO.checkAddJobMasterJobID" resultClass="String">
@@ -2493,7 +2493,7 @@
 		  "COMPANY_ID" NVARCHAR2(100) NOT NULL,
 		  "USE_PATTERN_COUNT" NUMBER(11) NOT NULL,
 		  "NUMBER_OF_CHAR" NUMBER(11) NOT NULL,
-		  CONSTRAINT "PK2_TBL_PASSWORD_POLICY_PATTERN" PRIMARY KEY ("TENANT_ID","COMPANY_ID","USE_PATTERN_COUNT")
+		  CONSTRAINT "PK2_TBL_PWD_POLICY_PATTERN" PRIMARY KEY ("TENANT_ID","COMPANY_ID","USE_PATTERN_COUNT")
 		) 
 	</statement>
 	<select id="EzCommonDAO.checkAprAttachViewOrder">

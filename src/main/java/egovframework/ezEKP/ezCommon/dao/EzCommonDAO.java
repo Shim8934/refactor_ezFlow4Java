@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.json.simple.JSONObject;
@@ -1171,20 +1172,29 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	}
 
 	public void createUserDistributionTable() {
-		@SuppressWarnings("serial")
-		Map<String, String> map = new HashMap<String, String>(){{
-			put("EzCommonDAO.checkUserDlTable", "EzCommonDAO.createUserDlTable");
-			put("EzCommonDAO.checkUserDlMemberTable", "EzCommonDAO.createUserDlMemberTable");
-			put("EzCommonDAO.checkUserDlApplyTable", "EzCommonDAO.createUserDlApplyTable");
-		}};
+		Map<String, String> map = new HashMap<>();
 		
-		for (String key : map.keySet()) {
+		map.put("EzCommonDAO.checkUserDlTable", "EzCommonDAO.createUserDlTable");
+		map.put("EzCommonDAO.checkUserDlMemberTable", "EzCommonDAO.createUserDlMemberTable");
+		map.put("EzCommonDAO.checkUserDlApplyTable", "EzCommonDAO.createUserDlApplyTable");
+		
+		for (Entry<String, String> entry : map.entrySet()) {
 			try {
-				select(key);
+				select(entry.getKey());
 			} catch (Exception e) {
-				String keyVal = map.get(key);
-				logger.debug(keyVal + " started.");
-				update(keyVal);
+				String keyVal = entry.getValue();
+				logger.debug("{} started.", keyVal);
+				
+				try {
+					update(keyVal);
+				} catch (Exception ex) {
+					// oracle 11g xe 오류
+					if (ex.getMessage().contains("ORA-00972")) {
+						logger.debug("{} skip, cause=oracle 11g xe error: {}", keyVal, ex.getMessage());
+					} else {
+						ex.printStackTrace();
+					}
+				}
 			}
 
 		}

@@ -1932,8 +1932,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			map.put("propertyValue", "NO");
 			map.put("description", "YES: 사용 NO: 사용안함 (default: NO)");
 			map.put("configName", "모바일 근태관리 모듈 사용여부");
-	
-			ezCommonDAO.insertMobileAttitudeConfig(map);
+
+			try {
+				ezCommonDAO.insertMobileAttitudeConfig(map);
+			} catch (Exception e) {
+				// ignore
+			}
 			
 			// 근태관리 GPS 테넌트 컨피그 추가
 			map.put("propertyName", "attitudeMapApiKey");
@@ -1941,7 +1945,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			map.put("description", "근태관리 지도 api key(미사용시 빈값)");
 			map.put("configName", "근태관리 지도 api key");
 			
-			ezCommonDAO.insertAttitudeGPSConfig(map);
+			try {
+				ezCommonDAO.insertAttitudeGPSConfig(map);
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 		
 		logger.debug("insertMobileAttitudeColumn ended");
