@@ -974,7 +974,7 @@ function ListView() {
                     }
                     else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TransferFlag") { // TransferFlag(이관여부) 하위 td 스타일 추가
                     	objTd.style.textAlign = "left";
-                    	objTd.style.align = "left";
+                    	objTd.align = "left";
                     	oText = document.createTextNode(strValue);
                     	objTd.appendChild(oText);
                     }
