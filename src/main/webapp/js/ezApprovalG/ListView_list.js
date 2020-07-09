@@ -504,8 +504,9 @@ function ListView() {
                 	objTd.style.display = "none";
                 }
                 
+                /* 2020-07-09 홍승비 - 리스트헤더의 반려 칼럼 정렬 중앙으로 수정 (하위 td의 정렬이 center이므로) */
                 if (strColName == "REJECTFLAG")
-                    objTd.style.textAlign = "left";
+                    objTd.style.textAlign = "center";
 
                 if (strColName == "HASATTACHYN")
                     objTd.style.textAlign = "center";
@@ -524,11 +525,12 @@ function ListView() {
                 }
                 
                 if (strColName == "RejectFlag") {
-                	objTd.style.textAlign = "left";
+                	objTd.style.textAlign = "center";
                 }
                 
+                /* 2020-07-09 홍승비 - 리스트헤더의 이관여부 칼럼 정렬 좌측으로 수정 (하위 td의 정렬 스타일이 존재하지 않음) */
                 if (strColName == "TransferFlag") {
-                	objTd.style.textAlign = "center";
+                	objTd.style.textAlign = "left";
                 }
                
                 if (strColName == "DelayFlag") {
