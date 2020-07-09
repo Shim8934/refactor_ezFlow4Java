@@ -579,7 +579,7 @@ function ListView() {
                 	objTd.style.textAlign = "center";
                 }
                 
-                /* 2020-07-09 홍승비 - 리스트헤더의 이관여부 칼럼 정렬 좌측으로 수정 (하위 td의 정렬 스타일이 존재하지 않음) */
+                /* 2020-07-09 홍승비 - 리스트헤더의 이관여부 칼럼 정렬 좌측으로 수정 (하위 td의 정렬 스타일도 left로 수정) */
                 if (strColName == "TransferFlag") {
 //                	objTd.style.textAlign = "center";
                 	objTd.style.textAlign = "left";
@@ -969,6 +969,12 @@ function ListView() {
                     }
                     else if (SelectSingleNodeValue(oHeaders[j], "NAME") == "비치" || SelectSingleNodeValue(oHeaders[j], "NAME") == "연기신청") {
                     	objTd.style.textAlign = "left";
+                    	oText = document.createTextNode(strValue);
+                    	objTd.appendChild(oText);
+                    }
+                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TransferFlag") { // TransferFlag(이관여부) 하위 td 스타일 추가
+                    	objTd.style.textAlign = "left";
+                    	objTd.style.align = "left";
                     	oText = document.createTextNode(strValue);
                     	objTd.appendChild(oText);
                     }
