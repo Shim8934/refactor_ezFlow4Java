@@ -225,20 +225,21 @@ function getdetail(DocID, pFlag) {
         return "close";
     var rtnVal = "";
     
+    /* 2020-07-09 홍승비 - 전자결재문서 인쇄 시, 하단 정보 영역의 폰트 스타일 수정 (다국어 css의 기본 폰트를 따라가도록 함) */
     if (ret[0] == "Y") {
-        rtnVal = rtnVal + "<table style='font-style:" + strLang9 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px; margin-left:11px'>";
+        rtnVal = rtnVal + "<table style='font-family:" + strLangHSBPR01 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px; margin-left:11px'>";
         rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='5'><P>" + "▶ " + strLan880 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + textOpi;
         rtnVal = rtnVal + "</table>";
     }
     if (ret[1] == "Y") {
-        rtnVal = rtnVal + "<table style='font-style:" + strLang9 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
+        rtnVal = rtnVal + "<table style='font-family:" + strLangHSBPR01 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
         rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='4'><P>" + "▶ " + strLang1148 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + textAttatch;
         rtnVal = rtnVal + "</table>";
     }
     if (ret[2] == "Y") {
-        rtnVal = rtnVal + "<table style='font-style:" + strLang9 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
+        rtnVal = rtnVal + "<table style='font-family:" + strLangHSBPR01 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
         rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='7'><P>" + "▶ " + strLang1149 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + addLineInfo(DocID, pFlag);
         rtnVal = rtnVal + "</table>";
@@ -279,19 +280,19 @@ function OpenQuestionUI_Complete(ret) {
         return;
     var rtnVal = "";
     if (ret[0] == "Y") {
-        rtnVal = rtnVal + "<table style='font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px; margin-left:11px'>";
+        rtnVal = rtnVal + "<table style='font-family:" + strLangHSBPR01 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px; margin-left:11px'>";
         rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='5'><P>" + "▶ " + strLang880 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + temptextOpi;
         rtnVal = rtnVal + "</table>";
     }
     if (ret[1] == "Y") {
-        rtnVal = rtnVal + "<table style='font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
+        rtnVal = rtnVal + "<table style='font-family:" + strLangHSBPR01 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
         rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='4'><P>" + "▶ " + strLang1148 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + temptextAttatch;
         rtnVal = rtnVal + "</table>";
     }
     if (ret[2] == "Y") {
-        rtnVal = rtnVal + "<table style='font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
+        rtnVal = rtnVal + "<table style='font-family:" + strLangHSBPR01 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
         rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='7'><P>" + "▶ " + strLang1149 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + addLineInfo(tempDocID, temppFlag);
         rtnVal = rtnVal + "</table>";
