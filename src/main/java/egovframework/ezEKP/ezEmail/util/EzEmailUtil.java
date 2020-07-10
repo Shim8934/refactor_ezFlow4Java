@@ -1157,6 +1157,51 @@ public class EzEmailUtil {
                         filename = decodeNonAsciiBytes(rawBytes);
                     } else {				    
                         filename = MimeUtility.decodeText(filename);
+                        
+                        if (originalFilename.startsWith("=?")) {
+                            int secondQuestionPos = originalFilename.indexOf("?", 2);
+                            int thirdQuestionPos = originalFilename.indexOf("?", secondQuestionPos + 1);
+                            String charSetAndEncoding = originalFilename.substring(0, thirdQuestionPos + 1);
+                            String encoding = originalFilename.substring(secondQuestionPos + 1, thirdQuestionPos);
+                            
+                            // 일부 Mailer에서 RFC 2047에서 정의된 encoded word를 2개 이상의 라인으로 구성할 때
+                            // 한글의 한 글자를 표현하는 Byte Array 중간에서 분리하는 경우가 있어(Base64 인코딩을 사용하면서)
+                            // 이 경우 JavaMail에서 디코딩할 때 글자가 깨지는 현상이 발생하여 한 줄로 합치는 작업을 직접 수행하도록 함
+                            // 글자가 깨지는 경우 Unicode의 Replacement Character인 �가 나타남.                            
+                            if (filename.contains("�")
+                                    && encoding.equalsIgnoreCase("B")) {
+                                String[] sequences = originalFilename.split(charSetAndEncoding.replaceAll("\\?", "\\\\?"));
+
+                                if (sequences.length > 2) {
+                                    logger.debug("broken multiple sequences. combining them...");
+                                    logger.debug("originalFilename:" + originalFilename);
+
+                                    StringBuilder combined = new StringBuilder();
+                                    combined.append(charSetAndEncoding);
+
+                                    ByteArrayOutputStream combinedBytes = new ByteArrayOutputStream();
+
+                                    for (int i = 1; i < sequences.length; i++) {
+                                        String sequence = sequences[i].trim();
+
+                                        logger.debug("sequence[" + i + "]:" + sequence);
+
+                                        sequence = sequence.substring(0, sequence.lastIndexOf("?"));
+                                        combinedBytes.write(Base64.decodeBase64(sequence));
+                                    }
+
+                                    combined.append(Base64.encodeBase64String(combinedBytes.toByteArray()));
+                                    combined.append("?=");
+                                    originalFilename = combined.toString();
+
+                                    logger.debug("combined originalFilename:" + originalFilename);
+
+                                    filename = MimeUtility.decodeText(originalFilename);
+
+                                    logger.debug("filename=" + filename);
+                                }
+                            }                            
+                        }                        
                     }
 			    // filename이 US-ASCII 로만 되어 있지 않은 경우는 위에서 part.getFileName 메소드에 의해 디코딩된
                 // 경우로 보고 원칙적으로 해당 값을 이용한다.
