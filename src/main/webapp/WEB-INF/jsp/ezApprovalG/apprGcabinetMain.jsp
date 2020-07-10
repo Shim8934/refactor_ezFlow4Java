@@ -1639,7 +1639,7 @@
 	            <li id="tdbtnViewRecList"><span id="btnViewRecList" onclick="return btnViewRecList_onclick()">
 	                <spring:message code='ezApprovalG.t526'/></span></li>
 	            <li id="tdViewCabInfo"><span id="ViewCabInfo" onclick="return btnViewCabInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
-	            <li id="tdViewCabHist" style="Display: None"><span id="ViewCabHist" onclick="return btnViewCabHistory_onclick()"><spring:message code='ezApprovalG.t529'/></span></li>
+	            <li id="tdViewCabHist" style="Display: None"><span id="ViewCabHist" onclick="return btnViewCabHistory_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
 	            <!-- <li id="tbar2" style="background: none; padding-right: 2px;">
 	                <img src="/images/i_bar.gif"></li> -->
 	            <li id="tdModifyCab" style="Display: None"><span id="ModifyCab" onclick="return btnChangeCabinetInfo_onclick()"><spring:message code='ezApprovalG.t269'/></span></li>
