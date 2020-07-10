@@ -22310,9 +22310,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		 
 		 if (xmlDom.getElementsByTagName("ISDOCPRINT").item(0) != null) {
 			 cabinetListVO.setIsDocPrint(xmlDom.getElementsByTagName("ISDOCPRINT").item(0).getTextContent());
-		 } 
+		 }
 		 
-		 List<ApprGCabinetVO> apprGCabinetList = ezApprovalGDAO.getCabinetList(cabinetListVO);
+		 /* 2020-07-10 홍승비 - 내려받을 목록(기록물, 기록물철)이 없는 경우 분기 처리 */
+		 List<ApprGCabinetVO> apprGCabinetList = new ArrayList<ApprGCabinetVO>();
+		 if (start - 1 >= 0) {
+			 apprGCabinetList = ezApprovalGDAO.getCabinetList(cabinetListVO);
+		 }
+		 
 		 StringBuffer sb = new StringBuffer();
 		 sb.append("<DATA>");
         
@@ -22323,7 +22328,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		 Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		
-		 int docCount = ezApprovalGDAO.getCabinetListCount(cabinetListVO);
+		 int docCount = 0;
+		 if (start - 1 >= 0) {
+			 docCount = ezApprovalGDAO.getCabinetListCount(cabinetListVO);
+		 }
 		
 		 resultXML.append("<DOCLIST>");
 		 resultXML.append("<TOTALDOCCOUNT>" + docCount + "</TOTALDOCCOUNT>");
