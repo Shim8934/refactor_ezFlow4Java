@@ -1657,7 +1657,7 @@
 	            <li class="important" id="tdRegCabinet" style="Display: None"><span id="RegCabinet" onclick="return btnRegCabinet_onclick()"><spring:message code='ezApprovalG.t2002'/></span></li>
 	            <li id="tdNewVol" style="Display: None"><span id="NewVol" onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></li>
 	            <li id="tdViewCabInfo"><span id="ViewCabInfo" onclick="return btnViewCabInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
-	            <li id="tdViewCabHist" style="Display: None"><span id="ViewCabHist" onclick="return btnViewCabHistory_onclick()"><spring:message code='ezApprovalG.t529'/></span></li>
+	            <li id="tdViewCabHist" style="Display: None"><span id="ViewCabHist" onclick="return btnViewCabHistory_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
 	            <li id="tdModifyCab" style="Display: None"><span id="ModifyCab" onclick="return btnChangeCabinetInfo_onclick()"><spring:message code='ezApprovalG.t269'/></span></li>
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li id="tdSetCharger" style="Display: None"><span id="SetCharger" onclick="return btnSetTaskCharger_onclick()"><spring:message code='ezApprovalG.t937'/></span></li>

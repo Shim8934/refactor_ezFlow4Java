@@ -159,7 +159,7 @@
 							html += "<div class='contentDiv'>" + result + "<div>";
 						}        			
 					});
-
+					
 					var doc = document.getElementById('message').contentWindow.document;
 					doc.open();
 					doc.write('<!doctype html>');
@@ -174,6 +174,12 @@
 						Bigger(doc);
 					}
 					
+					/* 2020-07-10 홍승비 - 게시물 본문 내부에도 기본적인 css가 적용되도록 수정 */
+					var cssLink = document.createElement("link");
+					cssLink.href = "${util.addVer('ezBoard.i1', 'msg')}";
+					cssLink.rel = "stylesheet";
+					cssLink.type = "text/css";
+					$("#message").contents().find("head").append(cssLink);
 					$("#message").contents().find("body").css("word-wrap", "break-word");
 					
 					rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
