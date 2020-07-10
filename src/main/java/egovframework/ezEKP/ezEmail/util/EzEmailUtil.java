@@ -2808,7 +2808,7 @@ public class EzEmailUtil {
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
-				if (p.isMimeType("multipart/related")) {
+				if (p.isMimeType("multipart/*")) {
 					if (copyInlineParts(p, dest, includeAttachment, convertInlineImageToAttachment)) {
 						return true;
 					}					
@@ -2846,6 +2846,11 @@ public class EzEmailUtil {
 					return true;
 				}
 			}
+		} else if (src instanceof BodyPart) {
+			if (src.getDisposition() != null && src.getDisposition().equalsIgnoreCase(Part.ATTACHMENT) 
+					|| src.isMimeType("application/*")) {
+				dest.addBodyPart((BodyPart)src);	
+			}			
 		}
 		
 		return false;
