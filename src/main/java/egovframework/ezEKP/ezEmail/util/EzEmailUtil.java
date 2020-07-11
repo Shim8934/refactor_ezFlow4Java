@@ -2853,6 +2853,9 @@ public class EzEmailUtil {
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
+				// related 파트안에 mixed 파트가 있고 mixed 파트 안에 첨부파일이 있는 경우 전달 시
+				// 첨부파일을 추가하기 위해 기존 multipart/related에서 multipart/*로 변경함
+				// related 파트안에 mixed 파트가 있고 첨부파일이 있는 메일.eml 참고
 				if (p.isMimeType("multipart/*")) {
 					if (copyInlineParts(p, dest, includeAttachment, convertInlineImageToAttachment)) {
 						return true;
@@ -2891,6 +2894,9 @@ public class EzEmailUtil {
 					return true;
 				}
 			}
+		// related 파트안에 mixed 파트가 있고 mixed 파트 안에 첨부파일이 있는 경우 전달 시
+		// 첨부파일을 추가하기 위해 다음 코드를 추가함
+		// related 파트안에 mixed 파트가 있고 첨부파일이 있는 메일.eml 참고
 		} else if (src instanceof BodyPart) {
 			if (src.getDisposition() != null && src.getDisposition().equalsIgnoreCase(Part.ATTACHMENT) 
 					|| src.isMimeType("application/*")) {
