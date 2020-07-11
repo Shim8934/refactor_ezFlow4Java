@@ -6904,6 +6904,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							multipart.addBodyPart(p);
 						} else if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
 							oldAttachPartArr[i - nonAttachCount] = p;
+						} else {
+							multipart.addBodyPart(p);
 						}
 					}
 					
