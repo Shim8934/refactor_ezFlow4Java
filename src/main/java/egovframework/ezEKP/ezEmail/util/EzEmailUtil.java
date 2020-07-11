@@ -3080,7 +3080,7 @@ public class EzEmailUtil {
 				// 코린도에서 수신된 메일 중 multipart/mixed 파트 안에 multipart/mixed 파트가
 				// 또 들어 있는 경우가 있어 추가함.
 				if (p.isMimeType("multipart/mixed")) {
-					copyAllPartsInMultipart(p, dest);
+					copyAllPartsInMultipart(p, dest, convertInlineImageToAttachment);
 				// text/html 파트가 없는 경우엔 multipart/related 파트 안에 있는 인라인 이미지 파트를
 				// 첨부파일 파트로 변환하여 복사하기 위해 재귀적 호출을 하고 마지막 else 절에서 해당 변환을 처리한다.
 				} else if (convertInlineImageToAttachment && p.isMimeType("multipart/related")) {
