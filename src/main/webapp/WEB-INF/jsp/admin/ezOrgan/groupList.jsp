@@ -93,14 +93,15 @@
 								+ ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	}
 
+	/* 2020-07-13 홍승비 - 권한그룹 삭제 시 다국어 추가, 잘못된 메세지 수정 */
 	function del_dl() {
 		funCheckBox('get');
 
 		if (CheckBoxArr.length == 0) {
-			alert("<spring:message code='ezOrgan.t28'/>");
+			alert("<spring:message code='ezOrgan.hsbPg01'/>");
 			return;
 		}
-		var ret = confirm(CheckBoxArr.length + "을 삭제하시겠습니까?");
+		var ret = confirm("<spring:message code='ezOrgan.hsbPg04' arguments='" + CheckBoxArr.length + "'/>");
 
 		if (ret) {
 			var data = "";
@@ -124,10 +125,9 @@
 				success : function(result) {
 					setTimeout(function() {
 						if (result == "OK") {
-							alert(CheckBoxArr.length
-									+ "<spring:message code='ezOrgan.t31' />");
+							alert(CheckBoxArr.length + "<spring:message code='ezOrgan.hsbPg03' />");
 						} else {
-							alert("<spring:message code='ezOrgan.t30' />")
+							alert("<spring:message code='ezOrgan.hsbPg02' />")
 						}
 
 						getPermissionGroupList();
@@ -135,7 +135,7 @@
 				},
 				error : function() {
 					setTimeout(function() {
-						alert("<spring:message code='ezOrgan.t30' />");
+						alert("<spring:message code='ezOrgan.hsbPg02' />");
 
 						getPermissionGroupList();
 					}, 100);
