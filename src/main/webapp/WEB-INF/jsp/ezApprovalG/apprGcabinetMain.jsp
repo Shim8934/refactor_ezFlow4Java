@@ -1659,6 +1659,8 @@
 	            <li id="tdViewCabInfo"><span id="ViewCabInfo" onclick="return btnViewCabInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 	            <li id="tdViewCabHist" style="Display: None"><span id="ViewCabHist" onclick="return btnViewCabHistory_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
 	            <li id="tdModifyCab" style="Display: None"><span id="ModifyCab" onclick="return btnChangeCabinetInfo_onclick()"><spring:message code='ezApprovalG.t269'/></span></li>
+	            <li id="tdBtnCabDel"><span id="btnCabDel" onclick="return DeleteCab();" style="Display: None"><spring:message code='ezApprovalG.t266'/></span> </li>
+	            <li id="tdSearchCab"><span id="SearchCab" onclick="return SearchCabinet('0')"><spring:message code='ezApprovalG.t111'/></span></li>
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li id="tdSetCharger" style="Display: None"><span id="SetCharger" onclick="return btnSetTaskCharger_onclick()"><spring:message code='ezApprovalG.t937'/></span></li>
 	            <li id="tdSearchCab"><span class="icon16 icon16_search" id="SearchCab" onclick="return SearchCabinet('0')"></span></li>
