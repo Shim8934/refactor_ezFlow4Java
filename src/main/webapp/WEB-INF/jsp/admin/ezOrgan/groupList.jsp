@@ -192,15 +192,16 @@
 			getPermissionGroupList();
 	}
 
+	/* 2020-07-13 홍승비 - 권한그룹 편집 시 다국어 추가, 잘못된 메세지 수정 */
 	function mod_dl(groupID, groupName) {
 		funCheckBox('get');
 		var length = CheckBoxArr.length;
 
 		if (length == 0) {
-			alert("<spring:message code='ezOrgan.t39' />");
+			alert("<spring:message code='ezOrgan.hsbPg05' />");
 			return;
 		} else if (length > 1) {
-			alert("한 그룹만 선택하시오.");
+			alert("<spring:message code='ezOrgan.hsbPg06' />");
 			return;
 		}
 		
