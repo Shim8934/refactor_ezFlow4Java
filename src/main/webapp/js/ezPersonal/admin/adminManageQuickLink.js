@@ -431,7 +431,7 @@ function btn_AttachAdd_onclick() {
 	guid = "{" + GetGUID() + "}";
 	
 	var frm = document.getElementById('form');
-	frm.action = "/admin/ezPersonal/typeImageUpload.do?QId=" + guid;
+	frm.action = "/admin/ezPersonal/typeImageUpload.do?QId=" + encodeURIComponent(guid);
 	frm.submit();
 	
 	//document.form.file1.value = "";
