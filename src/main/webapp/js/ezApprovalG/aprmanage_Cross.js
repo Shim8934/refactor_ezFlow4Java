@@ -2792,27 +2792,44 @@ function CheckFormConnFlag(pDocID) {
         return false;
 }
 
+/* 2020-07-13 홍승비 - 재기안 시 부서명 가져오는 부분의 오류 수정, 함수 내부의 지역변수 선언부분 if분기 바깥으로 이동 */
 function CheckAprLineInfo(tr) {
     var xmldom = createXmlDom();
     try {
+    	var pDeptID = "";
+    	var pDeptName = "";
+    	
         xmldom = getAprLineInfo(tr);
-
+        
         if (xmldom.getElementsByTagName("ROW").length > 0) {
             if (CrossYN()) {
-                var pDeptID = xmldom.getElementsByTagName("DATA6").item(xmldom.getElementsByTagName("ROW").length - 1).textContent;
+                pDeptID = xmldom.getElementsByTagName("DATA6").item(xmldom.getElementsByTagName("ROW").length - 1).textContent;
             }
             else {
-                var pDeptID = xmldom.getElementsByTagName("DATA6").item(xmldom.getElementsByTagName("ROW").length - 1).text;
+                pDeptID = xmldom.getElementsByTagName("DATA6").item(xmldom.getElementsByTagName("ROW").length - 1).text;
             }
-            if (pDeptID == arr_userinfo[4])
+            
+            if (pDeptID == arr_userinfo[4]) {
                 return "OK";
-            else {
+            }
+            else { // 부서명 가져올 때의 오류 수정, 다국어 처리
                 if (CrossYN()) {
-                    var pDeptName = xmldom.getElementsByTagName("ROW").item(xmldom.getElementsByTagName("ROW").length - 1).childNodes.item(7).textContent;
+                    // pDeptName = xmldom.getElementsByTagName("ROW").item(xmldom.getElementsByTagName("ROW").length - 1).childNodes.item(7).textContent;
+                	if (primary == "1") {
+                		pDeptName = xmldom.getElementsByTagName("DATA15").item(xmldom.getElementsByTagName("ROW").length - 1).textContent;
+                	} else {
+                		pDeptName = xmldom.getElementsByTagName("DATA16").item(xmldom.getElementsByTagName("ROW").length - 1).textContent;
+                	}
                 }
                 else {
-                    var pDeptName = xmldom.getElementsByTagName("ROW").item(xmldom.getElementsByTagName("ROW").length - 1).childNodes.item(7).text;
+                   // pDeptName = xmldom.getElementsByTagName("ROW").item(xmldom.getElementsByTagName("ROW").length - 1).childNodes.item(7).text;
+                	if (primary == "1") {
+                		pDeptName = xmldom.getElementsByTagName("DATA15").item(xmldom.getElementsByTagName("ROW").length - 1).text;
+                	} else {
+                		pDeptName = xmldom.getElementsByTagName("DATA16").item(xmldom.getElementsByTagName("ROW").length - 1).text;
+                	}
                 }
+                
                 pDeptName = pDeptName.replace("\"", "");
                 return pDeptName;
             }

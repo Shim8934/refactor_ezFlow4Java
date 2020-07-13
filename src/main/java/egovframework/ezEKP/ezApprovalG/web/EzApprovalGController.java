@@ -440,6 +440,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
 		model.addAttribute("useAdditionalRole", ezCommonService.getTenantConfig("USE_AdditionalROle", userInfo.getTenantId()));
 		model.addAttribute("userLang", userLang);
+		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
+		
 		logger.debug("aprManage ended.");
 		
 		return "ezApprovalG/apprGManage";

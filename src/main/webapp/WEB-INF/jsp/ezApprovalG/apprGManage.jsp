@@ -109,6 +109,7 @@
 			var userLang = "<c:out value = '${userLang}'/>";
 			var useAdditionalRole = "${useAdditionalRole}";
 			var userLang = "${userInfo.lang}";
+		    var primary = "${primary}"; // 재기안 시 부서명 다국어 분기처리를 위한 primary (1:기본어, 2:다국어)
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    
