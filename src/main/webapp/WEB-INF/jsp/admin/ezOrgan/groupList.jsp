@@ -545,8 +545,7 @@
 			<div id="userSearchRayer"
 				style="float: right; display: inline-block; margin-right: 2px;">
 				<select id="searchKeycode" style="height: 26px; width: 120px;">
-					<option value="GROUPNAME"><spring:message
-							code='ezEmail.t710' /></option>
+					<option value="GROUPNAME"><spring:message code='ezEmail.t710' /></option>
 					<!-- 그룹이름 -->
 					<option value="CREATEID"><spring:message code='ezOrgan.zNo007' /></option>
 					<!-- 그룹아이디 -->
@@ -576,8 +575,8 @@
 							<tr id="mainListHeaderTr">
 								<th style="width: 30px;"><input type='checkbox'
 									name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
-								<th style="width: 20%;"><spring:message code="main.t76" /></th>
-								<th style="width: 20%;"><spring:message code="ezOrgan.zNo008" /></th>
+								<th style="width: 20%;"><spring:message code="ezEmail.t710" /></th>
+								<th style="width: 20%;"><spring:message code="ezOrgan.zNo007" /></th>
 								<th style="width: 20%;"><spring:message code="ezOrgan.zNo009" /></th>
 								<th style="width: 20%;"><spring:message code="ezAttitude.t62" /></th>
 								<th style="width: 20%;"><spring:message code="ezAttitude.t63" /></th>
