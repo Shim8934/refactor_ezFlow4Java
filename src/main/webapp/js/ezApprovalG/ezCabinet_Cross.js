@@ -94,39 +94,55 @@ function ezCabMunuCtl(MenuType, selRow) {
                 document.getElementById("tdModifyCab").style.display = pMenuFlag;
             }
 
-            if (selRow.getAttribute("DATA6") == "0") {
-                if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
-					if ((GetCabChargerRight() == "true" || g_bDeptCharger) && g_sFlag != "m09") {                    	
-                        document.getElementById("tdbtnEndProduce").style.display = "";
-                        //SwapImage(btnEndProduce, "");
+            if (GetCabChargerRight() == "true") {
+                if (selRow.getAttribute("DATA6") == "0") {
+                    if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
+                        if (g_sFlag != "m09") {                    	
+                            document.getElementById("tdbtnEndProduce").style.display = "";
+                            //SwapImage(btnEndProduce, "");
+                        }
+                        else {
+                            document.getElementById("tdbtnEndProduce").style.display = "none";
+                            //SwapImage(btnEndProduce, "dis");
+                        }
                     }
-                    else {
-                        document.getElementById("tdbtnEndProduce").style.display = "none";
-                        //SwapImage(btnEndProduce, "dis");
-                    }
-                }
 
-                if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
-                    document.getElementById("tdbtnCancelEndProd").style.display = "none";
-                    //SwapImage(btnCancelEndProd, "dis");
-                }
-            }
-            else {
-                if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
-                    document.getElementById("tdbtnEndProduce").style.display = "none";
-                    //SwapImage(btnEndProduce, "dis");
-                }
-
-                if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
-					if (GetCabChargerRight() == "true" && g_sFlag != "m09") {                    	
-                        document.getElementById("tdbtnCancelEndProd").style.display = "";
-                        //SwapImage(btnCancelEndProd, "");
-                    }
-                    else {
+                    if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
                         document.getElementById("tdbtnCancelEndProd").style.display = "none";
                         //SwapImage(btnCancelEndProd, "dis");
                     }
                 }
+                else {
+                    if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
+                        document.getElementById("tdbtnEndProduce").style.display = "none";
+                        //SwapImage(btnEndProduce, "dis");
+                    }
+
+                    if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
+                        if (g_sFlag != "m09") {                    	
+                            document.getElementById("tdbtnCancelEndProd").style.display = "";
+                            //SwapImage(btnCancelEndProd, "");
+                        }
+                        else {
+                            document.getElementById("tdbtnCancelEndProd").style.display = "none";
+                            //SwapImage(btnCancelEndProd, "dis");
+                        }
+                    }
+                }
+
+                document.getElementById("tdBtnCabDel").style.display = "";
+            } else {
+                if (selRow.getAttribute("DATA6") == "0") {
+                    if (g_bDeptCharger && g_sFlag != "m09") {                    	
+                        document.getElementById("tdbtnEndProduce").style.display = "";
+                    }
+                    else {
+                        document.getElementById("tdbtnEndProduce").style.display = "none";
+                    }
+                }
+
+                document.getElementById("tdbtnCancelEndProd").style.display = "none";
+                document.getElementById("tdBtnCabDel").style.display = "none";
             }
 
             if (typeof (tdViewCabHist) != "undefined" && typeof (tdViewCabHist) != "unknown") {
