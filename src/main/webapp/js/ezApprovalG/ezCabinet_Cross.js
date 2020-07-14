@@ -94,10 +94,10 @@ function ezCabMunuCtl(MenuType, selRow) {
                 document.getElementById("tdModifyCab").style.display = pMenuFlag;
             }
 
-            if (GetCabChargerRight() == "true") {
+            if (GetAttribute(selRow, "DATA5") === arr_userinfo[4]) {
                 if (selRow.getAttribute("DATA6") == "0") {
                     if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
-                        if (g_sFlag != "m09") {                    	
+                        if ((GetCabChargerRight() == "true" || g_bDeptCharger) && g_sFlag != "m09") {                    	
                             document.getElementById("tdbtnEndProduce").style.display = "";
                             //SwapImage(btnEndProduce, "");
                         }
@@ -106,7 +106,7 @@ function ezCabMunuCtl(MenuType, selRow) {
                             //SwapImage(btnEndProduce, "dis");
                         }
                     }
-
+    
                     if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
                         document.getElementById("tdbtnCancelEndProd").style.display = "none";
                         //SwapImage(btnCancelEndProd, "dis");
@@ -117,9 +117,9 @@ function ezCabMunuCtl(MenuType, selRow) {
                         document.getElementById("tdbtnEndProduce").style.display = "none";
                         //SwapImage(btnEndProduce, "dis");
                     }
-
+    
                     if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
-                        if (g_sFlag != "m09") {                    	
+                        if (GetCabChargerRight() == "true" && g_sFlag != "m09") {                    	
                             document.getElementById("tdbtnCancelEndProd").style.display = "";
                             //SwapImage(btnCancelEndProd, "");
                         }
@@ -130,17 +130,11 @@ function ezCabMunuCtl(MenuType, selRow) {
                     }
                 }
 
-                document.getElementById("tdBtnCabDel").style.display = "";
-            } else {
-                if (selRow.getAttribute("DATA6") == "0") {
-                    if (g_bDeptCharger && g_sFlag != "m09") {                    	
-                        document.getElementById("tdbtnEndProduce").style.display = "";
-                    }
-                    else {
-                        document.getElementById("tdbtnEndProduce").style.display = "none";
-                    }
+                if (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") {
+                    document.getElementById("tdBtnCabDel").style.display = "";    
                 }
-
+            } else {
+                document.getElementById("tdbtnEndProduce").style.display = "none";
                 document.getElementById("tdbtnCancelEndProd").style.display = "none";
                 document.getElementById("tdBtnCabDel").style.display = "none";
             }
