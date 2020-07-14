@@ -4784,4 +4784,25 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getCompanyNoticeBoardID ended");
 		return ezBoardDAO.getCompanyNoticeBoardID(map);
 	}
+
+	/* 2020-07-14 홍승비 - 선택한 마이게시판 분류 하위에 해당 게시판이 존재하는지 리턴 */
+	@Override
+	public String isMyBoardExist(String treeID, String boardID, String userID, int tenantID, String companyID) throws Exception {
+		logger.debug("isMyBoardExist started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		String result = "";
+		
+		map.put("v_BOARDID", boardID);
+		map.put("v_TREEID", treeID);
+		int myBoardCnt = ezBoardDAO.getMyBoardCount(map);
+		if (myBoardCnt > 0) {
+			result = "Y";
+		} else {
+			result = "N";
+		}
+		
+		logger.debug("isMyBoardExist ended");
+		return result;
+	}
 }
