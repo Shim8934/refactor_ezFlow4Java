@@ -740,4 +740,9 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public void insertBoardItemReadForCopy(Map<String, Object> map) throws Exception {
 		insert("EzBoardDAO.insertBoardItemReadForCopy", map);
 	}
+
+	/* 2020-07-14 홍승비 - 선택한 마이게시판 분류 하위의 해당 게시판 카운트 리턴 */
+	public int getMyBoardCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getMyBoardCount", map);
+	}
 }
