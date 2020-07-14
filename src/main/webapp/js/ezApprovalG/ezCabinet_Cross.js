@@ -138,32 +138,35 @@ function ezCabMunuCtl(MenuType, selRow) {
                 if (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") {
                     document.getElementById("tdBtnCabDel").style.display = "";    
                 }
+                            
+                /**
+                 * 연기신청에 따른 버튼 활성화비활성화
+                 */
+                if (selRow.getAttribute("DATA8") == "Y") {
+                    if (typeof (tdReqDelayEndY) != "undefined" && typeof (tdReqDelayEndY) != "unknown") {
+                        document.getElementById("tdReqDelayEndY").style.display = "none";
+                    }
+                    
+                    if (typeof (tdCancelDelayEndY) != "undefined" && typeof (tdCancelDelayEndY) != "unknown") {
+                        document.getElementById("tdCancelDelayEndY").style.display = "";
+                    }
+                } else {
+                    if (typeof (tdReqDelayEndY) != "undefined" && typeof (tdReqDelayEndY) != "unknown") {
+                        document.getElementById("tdReqDelayEndY").style.display = "";
+                    }
+                    
+                    if (typeof (tdCancelDelayEndY) != "undefined" && typeof (tdCancelDelayEndY) != "unknown") {
+                        document.getElementById("tdCancelDelayEndY").style.display = "none";
+                    }
+                }
             } else {
                 document.getElementById("tdbtnEndProduce").style.display = "none";
                 document.getElementById("tdbtnCancelEndProd").style.display = "none";
+                document.getElementById("tdReqDelayEndY").style.display = "none";
+                document.getElementById("tdCancelDelayEndY").style.display = "none";
                 document.getElementById("tdBtnCabDel").style.display = "none";
             }
-            
-            /**
-             * 연기신청에 따른 버튼 활성화비활성화
-             */
-            if (selRow.getAttribute("DATA8") == "Y") {
-            	if (typeof (tdReqDelayEndY) != "undefined" && typeof (tdReqDelayEndY) != "unknown") {
-            		document.getElementById("tdReqDelayEndY").style.display = "none";
-            	}
-            	
-            	if (typeof (tdCancelDelayEndY) != "undefined" && typeof (tdCancelDelayEndY) != "unknown") {
-            		document.getElementById("tdCancelDelayEndY").style.display = "";
-            	}
-            } else {
-            	if (typeof (tdReqDelayEndY) != "undefined" && typeof (tdReqDelayEndY) != "unknown") {
-            		document.getElementById("tdReqDelayEndY").style.display = "";
-            	}
-            	
-            	if (typeof (tdCancelDelayEndY) != "undefined" && typeof (tdCancelDelayEndY) != "unknown") {
-            		document.getElementById("tdCancelDelayEndY").style.display = "none";
-            	}
-            }
+
 
             if (typeof (tdViewCabHist) != "undefined" && typeof (tdViewCabHist) != "unknown") {
                 if (IsUserDeptRec() == "true")
