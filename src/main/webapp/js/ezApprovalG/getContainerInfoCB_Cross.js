@@ -446,15 +446,5 @@ function processRowClick(tr) {
                 Recipent_onclick()
                 break;
         }
-    } else if (DocList_Flag === "CABINET") {
-        if (GetAttribute(tr, "data5") !== arr_userinfo[4]) {
-            if (typeof tdBtnCabDel !== "undefined") {
-                document.getElementById("tdBtnCabDel").style.display = "none";
-            }
-        } else {
-            if (typeof tdBtnCabDel !== "undefined") {
-                document.getElementById("tdBtnCabDel").style.display = "";
-            }
-        }
     }
 }
