@@ -33,7 +33,7 @@
 .popup_notice .popup_noticeTitle dd{margin:5px 48px; padding:0px; font-size:16px; color:#333; line-height:26px;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .popup_notice .popup_noticeTitle dd.name_type0{color:#FFF;}
 
-.popup_notice .popup_noticeLayout .popup_noticeList{overflow:auto; margin:0px; padding:20px; background:#FFF; height:calc(100% - 126px);}
+.popup_notice .popup_noticeLayout .popup_noticeList{overflow:auto; margin:0px; padding:20px; background:#FFF; height:calc(100% - 126px); font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .popup_notice .popup_noticeLayout .popup_noticeList p{margin:0px; padding:0px; line-height:18px; font-size:12px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;word-break:break-all; word-wrap: break-word;}
 .popup_notice .popup_noticeLayout .notice_btn{overflow:hidden; margin:14px 0px 0px 0px; padding:0px;height:24px;}
 .popup_notice .popup_noticeLayout .notice_btn p{display:inline-block; margin:0px; padding:0px; font-size:12px; color:#333; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
