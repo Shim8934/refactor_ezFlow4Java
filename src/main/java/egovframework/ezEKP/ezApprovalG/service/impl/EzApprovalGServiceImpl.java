@@ -14096,7 +14096,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 										k += 1;
 									}
 								} else {
-									if (!curAprType.equals(staATByungRyulHyubJo)) {
+									// 참조 이후에는 현재 결재타입이 병렬협조인 것의 여부와 상관없이 무조건 병렬협조 결재선들의 Aprstate가 진행으로 바뀌어야한다. 2020-07-15 임민석
+									/*if (!curAprType.equals(staATByungRyulHyubJo)) {*/
 										while (k < dlength && docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATByungRyulHyubJo)) {
 											map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent());
 											map3.put("v_APRSTATE", staASJinHang);
@@ -14106,9 +14107,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 											k += 1;
 										}
 										whileFlag = false;
-									} else {
+									/*} else {
 										k += 1;
-									}
+									}*/
 								}
 							} else if (docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATBuSeuByungRyulHyubJo)) {
 								if (!curAprType.equals(staATBuSeuByungRyulHyubJo)) {
