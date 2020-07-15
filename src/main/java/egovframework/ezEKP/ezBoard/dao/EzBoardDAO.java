@@ -784,7 +784,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public void insertBoardItemReadForCopy(Map<String, Object> map) throws Exception {
 		insert("EzBoardDAO.insertBoardItemReadForCopy", map);
 	}
-
+	
 	/* 2020-06-15 홍승비 - 주어진 게시판ID에 대하여 즐겨찾기 여부를 판단하는 쿼리 */
 	public int getIsMyBoardExist(Map<String, Object> map) throws Exception {
 		return (int) select("EzBoardDAO.getIsMyBoardExist", map);
@@ -793,5 +793,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	/* 2019-10-11 홍승비 - 회사별 공지사항 게시판ID를 리턴하는 쿼리 */
 	public String getCompanyNoticeBoardID(Map<String, Object> map) throws Exception {
 		return (String) select("EzBoardDAO.getCompanyNoticeBoardID", map);
+	}
+	
+	/* 2020-07-14 홍승비 - 선택한 마이게시판 분류 하위의 해당 게시판 카운트 리턴 */
+	public int getMyBoardCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getMyBoardCount", map);
 	}
 }

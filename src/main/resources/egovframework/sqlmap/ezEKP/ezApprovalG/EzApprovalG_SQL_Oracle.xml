@@ -19966,10 +19966,14 @@
    			 COMPANYID = #companyID#
         AND   
         	 DOCID = #v_DOCID#
-       	<isNotEqual property="v_curAprSN" compareValue="1">
+       	<!-- 기안자가 회수 시, 참조자의 결재할 문서에도 문서가 남아있고 참조자가 재기안도 할 수 있으며 심지어 삭제까지 가능한 오류가 있었음
+        	중간결재자가 회수 시에는 참조자는 굳이 대기상태로 바꿀 필요가 없지 않냐는 생각에서 이런 태그를 둔 것 같은데 v_curAprSN 값이 아예 넘어오지 않아 항상 이 조건이 참이 되서 버그 발생
+        	중간결재자가 결재문서의 내용까지 바꿀 수도 있다는 점에서 굳이 이 분기가 왜 필요한지 모르겠어서 아예 없애버림
+        	2020-07-14 임민석 -->
+       	<!-- <isNotEqual property="v_curAprSN" compareValue="1">
         AND
         	 APRTYPE != '007'
-       	</isNotEqual>
+       	</isNotEqual> -->
         AND 
         	 APRMEMBERSN >= #v_APRMEMBERSN#
 	</update>
