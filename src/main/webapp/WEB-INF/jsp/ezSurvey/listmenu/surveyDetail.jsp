@@ -661,11 +661,11 @@
 				}
 			}
 			
-			if ((periodResult != "fail" && requiredResult != "fail" && responseResult != "fail" && !resStatus) || survey.multiAnswerFlag != 0) {
+			/* 2020-07-16 홍승비 - 중복응답(multiAnswerFlag = 1)을 사용하는 경우, 필수응답 알러트와 답변 알러트가 같이 나타나는 오류 수정 */
+			if ((periodResult != "fail" && requiredResult != "fail" && responseResult != "fail" && !resStatus) || (survey.multiAnswerFlag != 0 && requiredResult != "fail")) {
 				saveResponse();
 			} else if (periodResult != "fail" && requiredResult != "fail" && responseResult != "fail" && survey.multiAnswerFlag == 0 && resStatus) {
 				console.log(resposeObj);
-				console.log("수정!");
 				updateResponse();
 			}
 		}
