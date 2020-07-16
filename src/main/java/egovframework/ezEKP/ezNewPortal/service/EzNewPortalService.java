@@ -35,7 +35,7 @@ public interface EzNewPortalService {
 	/**
 	 * 박종균
 	 * */
-	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit) throws Exception;
+	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit, String offset) throws Exception;
 	public PersonalLightPollVO getPollPortlet(String companyId, int tenantId, String userId, String offset) throws Exception;
 	public List<PersonalLightPollVO> getPollPortletResult(String companyId, int tenantId, int itemSeq) throws Exception;
 	public List<Map<String, Object>> getAssemblePollData(PersonalLightPollVO poll, List<PersonalLightPollVO> pollResult) throws Exception;
@@ -59,7 +59,7 @@ public interface EzNewPortalService {
 	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) throws Exception;
 	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId) throws Exception;
 	public List<PollAnswerVO> getVotePortletAnswer(int qstId, int tenantId) throws Exception;
-	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount) throws Exception;
+	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount, String offset) throws Exception;
 	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) throws Exception;
 	public String getBoardAuthCheck(String boardId, String accessId, int tenantId, String companyId) throws Exception;
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId, String deptPath, String portletLang) throws Exception;
@@ -72,7 +72,7 @@ public interface EzNewPortalService {
 	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId) throws Exception;
 	public void deleteUserThemeSetting(String userId, int tenantId, String companyId) throws Exception;
 	public void updateUserThemeSetting(int usedTheme, int usedFrame, String userId, int tenantId, String companyId) throws Exception;
-	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String compnyId) throws Exception;
+	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String compnyId, String offset) throws Exception;
 	//관리자부분
 	public List<PortalBoardTreeVO> getBoardTree(String parentBoardId, String companyId, int tenantId) throws Exception;
 	public void insertPortlet(JSONObject portletInfo, JSONArray portletNames,  String companyId, int tenantId) throws Exception;
@@ -167,7 +167,7 @@ public interface EzNewPortalService {
 	 */
 	
 	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit, String offset);
-	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit, String offset);
+	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit, String offset) throws Exception;
 	public List<CommunityMyCommunityVO> getCommunityList(String lang, String companyId, int tenantId) throws Exception;
 	public String getCommunityPermit(String clubNo, String userId, int tenantId);
 	/**

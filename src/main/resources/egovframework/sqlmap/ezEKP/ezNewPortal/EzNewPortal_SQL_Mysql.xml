@@ -213,6 +213,10 @@
 		AND 
 			(A.APPRFLAG = 'Y'
 			OR A.APPRFLAG IS NULL)
+		AND 
+		  	A.STARTDATE <= #nowDate#
+		AND 
+		  	A.ENDDATE > #nowDate#
 		ORDER BY 
 			A.PARENTWRITEDATE DESC, 
 			A.UPPERITEMIDTREE ASC
@@ -725,6 +729,10 @@ AND
 		AND
 			(A.APPRFLAG = 'Y' 
 			OR A.APPRFLAG IS NULL)
+		AND 
+		  	A.STARTDATE <= #nowDate#
+		AND 
+		  	A.ENDDATE > #nowDate#
 		ORDER BY
 			A.WRITEDATE DESC
 		LIMIT
@@ -1430,6 +1438,10 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		AND
 			(A.APPRFLAG = 'Y' 
 			OR A.APPRFLAG IS NULL)
+		AND 
+		  	A.STARTDATE <= #nowDate#
+		AND 
+		  	A.ENDDATE > #nowDate#
 		ORDER BY
 			A.WRITEDATE DESC
 		LIMIT
@@ -2338,6 +2350,10 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		AND 
 			(A.APPRFLAG = 'Y'
 			OR A.APPRFLAG IS NULL)
+		AND 
+		  	A.STARTDATE <= #nowDate#
+		AND 
+		  	A.ENDDATE > #nowDate#
 		AND
 			A.TENANT_ID = #tenantId#
 		ORDER BY
