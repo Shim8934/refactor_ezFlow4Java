@@ -3276,7 +3276,7 @@
 		        <WIDTH>60</WIDTH>
 		        </HEADER>
 		        <HEADER>
-		        <NAME><spring:message code='ezApprovalG.t231'/></NAME>
+		        <NAME><spring:message code='main.t79'/></NAME>
 		        <WIDTH>80</WIDTH>
 		        </HEADER>
 		    </HEADERS>
