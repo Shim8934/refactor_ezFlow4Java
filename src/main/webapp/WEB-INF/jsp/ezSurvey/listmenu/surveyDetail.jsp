@@ -107,7 +107,7 @@
 			</div>
 		</div>
 		
-		<div class="prevQsArea"></div>
+		<div class="prevQsArea" id="prevQsAreaDIV"></div>
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 	</div>
 </body>
@@ -157,6 +157,11 @@
 					alert(SurveyMessages.strError);
 				}
 			});
+			
+			/* 2020-07-16 홍승비 - IE 브라우저에서 하단 패딩 추가 */
+			if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
+				document.getElementById("prevQsAreaDIV").style.paddingBottom = "10px";
+			}
 		}
 		// 분기 노드 처리 함수
 		function processLogicNode(parentNode, nodeLevel) {
