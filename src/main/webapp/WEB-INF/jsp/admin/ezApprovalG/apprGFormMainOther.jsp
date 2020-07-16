@@ -1043,7 +1043,7 @@
                     </td>
                 </tr>
                 <tr>
-					<td colspan="8" style="width:10%; text-align:center; <c:if test="${approvalFlag == 'S' }">display:none;</c:if>">
+					<td colspan="8" style="width:10%; text-align:center;">
 						<input type="checkbox" id="setConnFlag" /><spring:message code = 'ezApprovalG.t1665' />
 					</td>
 				</tr>
