@@ -1158,6 +1158,7 @@
     		var labelElem = document.createElement("label");
     		labelElem.className = "name_type0";
     		labelElem.setAttribute("for", "inp_noticeCheck");
+    		labelElem.style.paddingLeft = "3px";
     		labelElem.textContent = "<spring:message code = 'ezPersonal.t267' />";
     		
     		var closePElem = document.createElement("p");
