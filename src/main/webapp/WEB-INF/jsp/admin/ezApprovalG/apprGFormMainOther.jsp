@@ -142,8 +142,13 @@
 		                    if (TagID != "" && TagID != undefined)
 		                        TagID = TagID.toUpperCase();
 		
+		                    /* 2020-07-17 홍승비 - 저장한 연동정보의 개행과 탭이 제대로 표출되지 않는 오류 수정 */
 		                    if (TagID == "CONN") {
-		                        ConnData = Doc_ContentHtml.children[i].innerHTML.replace('<CONNINFO>', '').replace('</CONNINFO>', '').replace('<conninfo>', '').replace('</conninfo>', '');
+		                        ConnData = Doc_ContentHtml.children[i].innerHTML.replace('<CONNINFO>', '').replace('</CONNINFO>', '').replace('<conninfo>', '').replace('</conninfo>', '')
+		                        .replace(/>\t/g, '>\n\t').replace(/<\/?conn[ |>]/g, function($1) {
+									return '\n' + $1;
+								});
+								
 		                        if (ConnData != "") {
 		                            setNodeText(txt_OpinionContent, ReplaceText(ConnData, "<BR>", "\n"));
 		                        }
@@ -1113,7 +1118,7 @@
                     </td>
                 </tr>
                 <tr>
-					<td colspan="8" style="width:10%; text-align:center; <c:if test="${approvalFlag == 'S' }">display:none;</c:if>">
+					<td colspan="8" style="width:10%; text-align:center;">
 						<input type="checkbox" id="setConnFlag" /><spring:message code = 'ezApprovalG.t1665' />
 						<!-- FormBuilder -->
 						<c:if test="${useReform && approvalFlag == 'G'}">
