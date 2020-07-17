@@ -260,18 +260,45 @@
 	
 	<select id="EzPersonalAdmin.EZSP_GETQUICKLINK_ACL" parameterClass="Map"		resultClass="PersonalQuickLinkVO">
 		<![CDATA[
-			SELECT
+			(SELECT
 				QUICKLINKID ,
              	ACCESSID ,
-             	ACCESSNAME ,
-             	ACCESSNAME2 ,
+             	CONCAT(U.DISPLAYNAME, CONCAT(CONCAT('(', DESCRIPTION), ')')) AS ACCESSNAME ,
+             	CONCAT(U.DISPLAYNAME2, CONCAT(CONCAT('(', DESCRIPTION2), ')')) AS ACCESSNAME2 ,
              	VIEW_FLAG 
         	FROM
-        		TBL_PS_QUICKLINK_ACL 
+        		TBL_PS_QUICKLINK_ACL P
+        	INNER JOIN
+        		TBL_USERMASTER U
+			ON
+				P.TENANT_ID = U.TENANT_ID
+			AND
+				P.ACCESSID = U.CN
        		WHERE
        			QUICKLINKID = #v_QUICKLINKID#
        		AND
-       			TENANT_ID = #tenantID#	
+       			P.TENANT_ID = #tenantID#)
+       			
+       		UNION
+       		
+			(SELECT
+				QUICKLINKID ,
+             	ACCESSID ,
+             	D.DISPLAYNAME AS ACCESSNAME ,
+             	D.DISPLAYNAME2 AS ACCESSNAME2 ,
+             	VIEW_FLAG 
+        	FROM
+        		TBL_PS_QUICKLINK_ACL P
+        	INNER JOIN
+        		TBL_DEPTMASTER D
+			ON
+				P.TENANT_ID = D.TENANT_ID
+			AND
+				P.ACCESSID = D.CN
+       		WHERE
+       			QUICKLINKID = #v_QUICKLINKID#
+       		AND
+       			P.TENANT_ID = #tenantID#)
 		]]>
 	</select>
 	

@@ -285,8 +285,8 @@
 		  <tr > 
 		    <th style="WIDTH:80px"> <spring:message code='ezApprovalG.t831'/></th>
 		    <td style=" WIDTH:270px">
-				<input type="text" id="Sdatepicker" style="width:80px;height:25px;text-align:center"> 
-		        <input type="text" id="Edatepicker" style="width:80px;height:25px;text-align:center">
+				<input type="text" id="Sdatepicker" style="width:80px;height:25px;text-align:center" readonly> 
+		        <input type="text" id="Edatepicker" style="width:80px;height:25px;text-align:center" readonly>
 		    </td>
 		  </tr>
 		  <tr > 

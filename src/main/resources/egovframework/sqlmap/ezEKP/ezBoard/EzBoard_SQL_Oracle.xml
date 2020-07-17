@@ -5621,4 +5621,23 @@
 		]]>
 	</insert>
 	
+	<select id="EzBoardDAO.getMyBoardCount" parameterClass="Map" resultClass="Integer">
+	  	<![CDATA[
+			SELECT  
+				COUNT(TREEBOARDID) 
+			FROM 
+				TBL_BOARD_MYTREE
+			WHERE
+				TREEUPPER = #v_TREEID#
+			AND
+				USERID = #v_USERID#
+			AND
+				TREEBOARDID = #v_BOARDID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+	  	]]>
+	</select>
+	
 </sqlMap>

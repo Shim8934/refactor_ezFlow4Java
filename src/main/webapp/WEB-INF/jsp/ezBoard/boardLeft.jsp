@@ -469,17 +469,7 @@
 		            alert(e.description);
 		        }
 		    }
-		    function DisplayTopBoard() {
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=top&subFlag=0", false);
-		        xmlhttp.send();
-		
-		        if (xmlhttp.responseText != "ERROR") {
-		            MakeTopBoardView(xmlhttp.responseText);
-		        }
-		        xmlhttp = null;
-		    }
-		
+		    
 		    function ShowMyBoardItem(val01) {		// 마이 게시판 선택
 		    	$(".on").attr("class", "off");
 		    	$(".myb h2").attr("class", "on");
@@ -583,25 +573,6 @@
 		        var ret = xmlhttp3.responseXML;
 		        xmlhttp3 = null;
 		        return ret;
-		    }
-		    function MakeTopBoardView(strXML) {
-		        var xmldom = createXmlDom();
-		        var strHTML = "";
-		        xmldom = loadXMLString(strXML);
-		        strHTML = "";
-		        var xmldomNodes = SelectNodes(xmldom, "TREEVIEWDATA/NODE");
-		        for (var i = 0; i < xmldomNodes.length; i++) {
-		            var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
-		            tid = tid.substring(1, 37);
-
-		            strHTML += "<h2><span id='TreeCtrl" + i.toString() + "' value='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ")'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2>";
-		            strHTML += "  <ul>";
-		            strHTML += "	  <div  class='tree' id='TreeCtrl" + i.toString() + "obj" + "' style='display:none;height:100%;width:auto;overflow-x:auto;overflow-y:auto;padding-left:10px' ></div>";
-		            strHTML += "  </ul>";
-		        }
-		        xmldomNodes = null;
-		        xmldom = null;
-		        document.getElementById("TopBoardsList").innerHTML = strHTML;
 		    }
 		    
 		    function DeleteMyBoard() {

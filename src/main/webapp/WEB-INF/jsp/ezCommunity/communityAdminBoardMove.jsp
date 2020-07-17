@@ -50,10 +50,15 @@
 				xmlhttp.open("POST", "/ezCommunity/moveBoard.do?orgBoardID=" + encodeURIComponent(OrgBoardID) + "&newParentBoardID=" + encodeURIComponent(SelectedBoardID) + "&newBoardGroupID=" + encodeURIComponent(selectedBoardGroupID) + "&code=" + encodeURIComponent(code), false);
 				xmlhttp.send();
 				
-				if(xmlhttp.responseText.indexOf("OK") > -1) {
+				/* 2020-06-29 홍승비 - 상위게시판을 자신의 하위게시판 아래로 이동하지 못하도록 수정 */
+				if (xmlhttp.responseText.indexOf("OK") > -1) {
 					alert("<spring:message code = 'ezCommunity.t343' />");
 					parent.window.location.reload();
-				}else {
+				} 
+				else if (xmlhttp.responseText.indexOf("CANCEL") > -1) {
+					alert("<spring:message code = 'ezBoard.hsbMv01' />");
+				}
+				else {
 					alert("<spring:message code = 'ezCommunity.t344' />");
 				}
 			}

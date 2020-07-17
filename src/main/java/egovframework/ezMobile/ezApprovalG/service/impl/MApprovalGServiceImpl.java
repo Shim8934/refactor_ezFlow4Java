@@ -30,6 +30,12 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+
 @Service("MApprovalGService")
 public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MApprovalGService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MApprovalGServiceImpl.class);
@@ -466,6 +472,86 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		return result;
 	}
-
 	
+	/* 2020-07-02 홍승비 - 모바일에서 최종결재 완료 시 서명에 결재날짜 삽입 동작 추가(결재날짜 필드가 없는 경우에만, 웹과 동일하게) */
+	public String insertSeumyungdateMobile(String docId, String realPath, String offset, Locale locale, String domain, String scheme, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("insertSeumyungdateMobile started");
+
+		String result = "SUCCESS";
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_DOCID", docId);
+			map.put("v_COMPANYID", companyId);
+			map.put("v_TENANTID", tenantId);
+			
+			MApprovalGDocInfoVO endDocInfo = mApprovalGDAO.getEndAprDocInfo(map);
+			
+			// 최종결재가 완료된 경우, 완료문서의 경로를 찾아서 서명을 업데이트한다.
+			if (endDocInfo != null && endDocInfo.getHref() != null) {
+				String docHref = endDocInfo.getHref();
+				LOGGER.debug("docHref in insertSeumyungdateMobile : " + docHref);
+				
+				String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", tenantId) + commonUtil.separator;
+				String filePath = realPath + uploadModule;
+		        
+		        File file = new File(filePath);
+		        if (!file.exists()) {
+		        	file.mkdirs();
+		        }
+		        
+		        String m_strMHT = "";
+		        
+		        try {
+		        	m_strMHT = ezCommonService.loadMHTFile(realPath + docHref);
+				} catch (Exception e) {
+					e.printStackTrace();
+					m_strMHT= "";
+				}
+		        
+		        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain, scheme);
+		        org.jsoup.nodes.Document doc = Jsoup.parse(strHTML); // 셀렉터를 사용하기 위한 파싱
+				
+		        Elements signField = doc.select("[id^='sign']");
+				Elements seumyungDateField = doc.select("[id^='seumyungdate" + signField.size() + "']"); // 최종결재자의 결재날짜
+				
+				// 모바일 결재 시 디폴트가 문자서명이므로, 이미지 서명 분기는 생략
+				if (seumyungDateField.size() == 0) {
+					String orgSignHtml = signField.get(signField.size() - 1).html();
+					String newSignHtml = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy/MM/dd"), offset, false).substring(5,10) + "<br>" + orgSignHtml;
+					LOGGER.debug("newSignHtml   ::   " + newSignHtml);
+					
+					signField.get(signField.size() - 1).html(newSignHtml);
+					
+					// 수정한 결재문서 html을 다시 mht로 저장한다.
+					OutputStream outputStream = null;
+	        		OutputStreamWriter output = null;
+					String tempHtml = doc.outerHtml();
+	        		String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
+	        		
+	        		try {
+	        			outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + docHref)));
+	        			output = new OutputStreamWriter(outputStream);
+	        			output.write(convertedMHT);
+	        		} catch (Exception e) {
+	        			e.printStackTrace();
+	        		} finally {
+	        			output.close();
+	        			outputStream.close();
+	        		}
+				}
+			} else { // 아직 결재 진행중인 경우, 바로 리턴시킨다. 에러는 아니다.
+				LOGGER.debug("insertSeumyungdateMobile ended(Not End Apr)");
+				return result;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = "ERROR";
+			
+			LOGGER.debug("insertSeumyungdateMobile ended(ERROR)");
+			return result;
+		}
+		
+		LOGGER.debug("insertSeumyungdateMobile ended");
+		return result;
+	}
 }

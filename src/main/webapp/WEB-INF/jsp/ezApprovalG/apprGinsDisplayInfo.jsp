@@ -60,12 +60,12 @@
 		        {
 		            alert("<spring:message code='ezApprovalG.t957'/>");
 		        }
-		        else if(! ValidateNumber(txtDisplayEndM.value))
-		        {
+		        else if(! ValidateNumber(txtDisplayEndM.value) || txtDisplayEndM.value > 12)
+		        { // 월의 범위를 12까지로 제한
 		            alert("<spring:message code='ezApprovalG.t958'/>");
 		        }
-		        else if(! ValidateNumber(txtDisplayEndD.value))
-		        {
+		        else if(! ValidateNumber(txtDisplayEndD.value) || txtDisplayEndD.value > 31)
+		        { // 일의 범위를 31까지로 제한
 		            alert("<spring:message code='ezApprovalG.t959'/>");
 		        }
 		        else if(! IsGreaterThanCurYear(txtDisplayEndY.value))
@@ -106,6 +106,17 @@
 		    {
 		        window.returnValue = rtnVal;
 		    }
+		    
+		    /* 2020-07-15 홍승비 - 숫자 이외의 값 입력 방지 함수 */
+		    function KeEventControl(obj) {
+	            if ((window.event.keyCode >= 48 && window.event.keyCode <= 57) || (window.event.keyCode >= 96 && window.event.keyCode <= 105)) {
+	                return true;
+	            }
+	            else {
+	            	obj.value = obj.value.replace(/[\a-zㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+	            }
+	        }
+		    
 		</script>
 	</head>
 	<body class="popup" style="margin:0;">
@@ -119,11 +130,11 @@
 		  <tr>   
 		    <th><spring:message code='ezApprovalG.t842'/></th>
 		    <td style="width:100%">
-		      <input type="text"  name="txtDisplayEndY" id="txtDisplayEndY" maxlength = "4" size="4" style="height:20px;"/>
+		      <input type="text"  name="txtDisplayEndY" id="txtDisplayEndY" maxlength = "4" size="4" style="height:20px;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);"/>
 						<spring:message code='ezApprovalG.t641'/>
-		      <input type="text"  name="txtDisplayEndM"  id="txtDisplayEndM" maxlength = "2" size="2" style="height:20px;"/>
+		      <input type="text"  name="txtDisplayEndM"  id="txtDisplayEndM" maxlength = "2" size="2" style="height:20px;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);"/>
 						<spring:message code='ezApprovalG.t642'/>
-		      <input type="text"  name="txtDisplayEndD"  id="txtDisplayEndD" maxlength = "2" size="2" style="height:20px;"/>
+		      <input type="text"  name="txtDisplayEndD"  id="txtDisplayEndD" maxlength = "2" size="2" style="height:20px;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);"/>
 						<spring:message code='ezApprovalG.t643'/>
 			  </td>
 		  </tr>	

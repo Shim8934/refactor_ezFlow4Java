@@ -65,7 +65,7 @@
 				}
 				
 				/* 2020-06-23 홍승비 - URL게시판 선택 시 경고 메세지 추가 */
-				if (SelectedBoardURL != null && trim(SelectedBoardURL) != "") {
+				if (SelectedBoardURL != null && SelectedBoardURL != "null" && trim(SelectedBoardURL) != "") {
 					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.garm02' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.garm02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 					return;
@@ -232,7 +232,12 @@
 				var strHTML = "";
 				xmldom = loadXMLString(strXML);
 				strHTML = "<table id='TopBoards' width=100% border=0>";
+				
 				var xmldomNodes = SelectNodes(xmldom, "TREEVIEWDATA/NODE");
+		        if (xmldomNodes == null || xmldomNodes == false) {
+		        	xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
+		        }
+		        
 				var items = xmldomNodes.length;	
 				for(var i=0;i<xmldomNodes.length;i++)
 				{

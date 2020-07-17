@@ -17,9 +17,12 @@
 	                window.focus();
 	            }
 	        }
+	        
+	        /* 2020-07-01 홍승비 - 문서기안 및 보기 시 div_Content 하위 테이블에 word-break속성이 공통적으로 존재하므로, 인쇄 시에도 해당 스타일을 적용함 */
 	        window.onload = function () {
 	            document.getElementById("printDocument").innerHTML = opener.PrtBodyContent;
 	            $('#printDocument #body').css('overflow', 'visible');
+	            $('#BodyContent table').css('word-break', 'break-word');
 	            
 	            myVar = setInterval(function () { DocumentComplate() }, 2000);
 	        }

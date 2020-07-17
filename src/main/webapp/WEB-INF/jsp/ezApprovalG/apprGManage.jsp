@@ -104,6 +104,7 @@
 		    var currentpage = 1;
 		    var selRowChangeFlag = false;
 		    var orgCompanyID = "";
+		    var primary = "${primary}"; // 재기안 시 부서명 다국어 분기처리를 위한 primary (1:기본어, 2:다국어)
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    
@@ -827,7 +828,7 @@
 		        if (pCurSelRow) {
 		            var ret = CheckAprLineInfo(pCurSelRow);
 		            if (ret != "OK") {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "<br>" +
+		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "\n" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
 		                //OpenAlertUI(pAlertContent);
 		                alert(pAlertContent);
@@ -1328,7 +1329,7 @@
 		        if (tr) {
 		            var ret = CheckAprLineInfo(tr);
 		            if (ret != "OK") {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "<br>" +
+		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "\n" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
 		                //OpenAlertUI(pAlertContent);
 		                alert(pAlertContent);
@@ -1423,7 +1424,7 @@
 		            
 		            var ret = CheckAprLineInfo(tr);
 		            if (ret != "OK") {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "<br>" +
+		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "\n" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
 		                //OpenAlertUI(pAlertContent);
 		                alert(pAlertContent);

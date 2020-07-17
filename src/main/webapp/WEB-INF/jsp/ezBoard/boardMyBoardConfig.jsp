@@ -320,6 +320,7 @@
                     selectedNodeID = "";
 	            }
 	        }
+	        
 	        function add_MyBoard() {
 	            if (SelectedBoardID == "") {
 	                alert("<spring:message code='ezBoard.t10040'/>");
@@ -330,8 +331,15 @@
 	                alert("<spring:message code='ezBoard.t10041'/>");
 	                return;
 	            }
-	
+	            
 	            if (pBoardID != "") {
+	            	
+		            /* 2020-07-14 홍승비 - 동일한 마이게시판 분류에 동일 게시판 중복등록 방지 */
+		            if (checkMyBoardExist(SelectedBoardID, pBoardID) == "Y") {
+		                alert("<spring:message code='ezBoard.hsbMB01'/>");
+		                return;
+		            }
+	            	
 	                var xmlhttp = createXMLHttpRequest();
 	                var xmlpara = createXmlDom();
 	                var objNode;
@@ -357,10 +365,12 @@
 	                        alert("<spring:message code='ezBoard.t10042'/>");
 	                        isChanged = "Y";
 	                        makeTreeList();
+	                        SelectedBoardID = ""; // 추가 이후 기존에 선택했던 트리(분류)ID 초기화
 	                    }
 	                }
 	            }
 	        }
+	        
 	        var myboard_movecopy_dialogArguments = new Array();
 	        function move_onclick() {
 	            if (SelectedBoardID == "") {
@@ -416,6 +426,31 @@
 					$(".imgbtn").css("padding-left" , "13px");
 					$(".imgbtn span").css("padding-right", "13px");
 				});
+			}
+			
+			/* 2020-07-14 홍승비 - 선택한 마이게시판 분류 하위에 해당 게시판이 존재하는지 확인하는 함수 */
+			function checkMyBoardExist(pTreeID, pBoardID) {
+				var pResult = "";
+				
+            	$.ajax({
+  					url : "/ezBoard/checkMyBoardExist.do",
+  					method : "GET",
+  					dataType : "text",
+  					async : false,
+  					data : {
+      					treeID : pTreeID ,
+      					boardID :  pBoardID
+  					},
+      				success : function(result) {
+      					pResult = result;
+  					},
+  					error : function(jqXHR, textStatus, errorThrown) {
+             	    	alert('Error : ' + jqXHR.status + ", " + textStatus);
+             	    	return;
+  					}
+  				});
+            	
+            	return pResult;
 			}
 			
 	    </script>

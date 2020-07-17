@@ -1289,8 +1289,8 @@
 				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdViewContent"><span onclick="return btnViewContent_onclick()"><spring:message code='ezApprovalG.t528'/></span></li>
-				            <li id="tdViewHistory"><span onclick="return btnViewHistory_onclick()"><spring:message code='ezApprovalG.t529'/></span></li>
-				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li>
+				            <li id="tdViewHistory"><span onclick="return btnViewHistory_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
+				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 				        </ul>
 				    </div>
 	    		</c:when>
@@ -1305,7 +1305,7 @@
 				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdSearch"><span onclick="return Search_Onclick('1')"><spring:message code='ezApprovalG.t111'/></span></li>
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
-				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li>
+				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 				        </ul>
 				    </div>
 	    		</c:when>
@@ -1324,7 +1324,7 @@
 				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdSearch"><span onclick="return Search_Onclick('1')"><spring:message code='ezApprovalG.t111'/></span></li>
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
-				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li>
+				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 				        </ul>
 				    </div>
 	    		</c:when>
@@ -1336,8 +1336,8 @@
 				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdViewContent"><span onclick="return btnViewContent_onclick()"><spring:message code='ezApprovalG.t528'/></span></li>
-				            <li id="tdViewHistory"><span onclick="return btnViewHistory_onclick()"><spring:message code='ezApprovalG.t529'/></span></li>
-				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li>
+				            <li id="tdViewHistory"><span onclick="return btnViewHistory_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
+				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 				        </ul>
 				    </div>
 	    		</c:when>
@@ -1355,7 +1355,7 @@
 				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdViewContent"><span onclick="return btnViewContent_onclick()"><spring:message code='ezApprovalG.t528'/></span></li>
-				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li>
+				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 				        </ul>
 				    </div>
 	    		</c:when>

@@ -326,5 +326,8 @@ public interface EzBoardService {
 
 	/* 2019-11-08 홍승비 - 주어진 게시판ID에 대하여, 새로운 BOARDTREEPATH를 생성해 리턴하는 메서드 */
 	public String getNewBoardTreePath(String subBoardID, int tenantId) throws Exception;
+
+	/* 2020-07-14 홍승비 - 선택한 마이게시판 분류 하위에 해당 게시판이 존재하는지 리턴 */
+	public String isMyBoardExist(String treeID, String boardID, String userID, int tenantID, String companyID) throws Exception;
 	
 }

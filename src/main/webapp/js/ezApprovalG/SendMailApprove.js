@@ -334,37 +334,7 @@ function continusendMail(nextMethod, aprlinelist, sn) {
         }
         
         if (nextMethod == "007") {
-            var isstop = false;
-            var isLastman = "N";
-
-            for (i = sn; i > -1; i--) {
-                sn = i;
-
-                if (objNodes.length != "0") {
-                    nextID = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4]));
-                    Method = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11]));
-
-                    if (Method == nextMethod) {
-                    	isstop = false;
-                    } else {
-                    	isstop = true;
-                    }
-
-                    if (isstop == true) {
-                        break;
-                    } else {  
-                        sendNextMail(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[5]), nextID, Method);
-                        if (i == 0) {  
-                            isLastman = "Y";
-                        }
-                    }
-                }
-                else { break; return; }
-            }
-
-            if (sn >= 0 && isLastman == "N")
-                continusendMail(Method, aprlinelist, sn);
-            return; 
+        	sendMailToChamJoUsers(sn, nextMethod, objNodes, aprlinelist, true);
         } else {
         	 nextID = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[4]));
              Method = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[11]));
@@ -373,11 +343,46 @@ function continusendMail(nextMethod, aprlinelist, sn) {
              if (sn < objNodes.length) {
             	 if(sn-1 >= 0) {
 	            	if (trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn-1])[0])[11])) == "007") {
-	            		continusendMail(trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn - 1])[0])[11])), aprlinelist, sn-1);
+	            		sendMailToChamJoUsers(sn - 1, nextMethod, objNodes, aprlinelist, false);
 	            	}
             	 }
              }
         }
+    }
+}
+
+// nextFlag는 참조자들에게 메일을 보낸 후 다음 결재자에게 메일을 보낼지의 여부이다
+function sendMailToChamJoUsers(sn, nextMethod, objNodes, aprlinelist, nextFlag) {
+	var isstop = false;
+    var isLastman = "N";
+
+    for (var i = sn; i > -1; i--) {
+        sn = i;
+
+        if (objNodes.length != "0") {
+            var nextID = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4]));
+            var Method = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11]));
+
+            if (Method == nextMethod) {
+            	isstop = false;
+            } else {
+            	isstop = true;
+            }
+
+            if (isstop == true) {
+                break;
+            } else {  
+                sendNextMail(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[5]), nextID, Method);
+                if (i == 0) {  
+                    isLastman = "Y";
+                }
+            }
+        }
+        else { break; return; }
+    }
+
+    if (nextFlag && sn >= 0 && isLastman == "N") {
+    	continusendMail(Method, aprlinelist, sn);
     }
 }
 

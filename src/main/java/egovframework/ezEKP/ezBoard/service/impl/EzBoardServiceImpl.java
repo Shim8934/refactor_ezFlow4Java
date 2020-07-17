@@ -2722,11 +2722,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		StringBuilder result = new StringBuilder();
 		
-		if (pSubFlag == 1) {
+/*		if (pSubFlag == 1) {
 			result.append("<NODES>");
 		} else {
 			result.append("<TREEVIEWDATA>");
-		}
+		}*/
+		/* 2020-06-25 홍승비 - 트리캐시 중복 생성 방지 */
+		result.append("<NODES>");
 		
 		/* 2018-07-13 홍승비 - o1=o2(0), o1>o2(1), o1<o2(-1) 분기 추가 */
 		Collections.sort(brdBoardTreeList, new Comparator<BoardTreeVO>() {
@@ -2786,6 +2788,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			result.append("<EXPANDED>FALSE</EXPANDED>");
 			result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId(), tenantID) + "</ISLEAF>");
 			
+			// 첫번째로 표출되는 게시판그룹을 자동 확장시키기 위한 코드 (현재 쓰이는 곳은 없으며, pSubFlag가 0으로 전달되어야 함)
 			if (count == 0 && pSubFlag != 1) {
 				result.append("<SELECT>TRUE</SELECT>");
 			}
@@ -2795,11 +2798,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			count++;
 		}
 		
-		if (pSubFlag == 1) {
+/*		if (pSubFlag == 1) {
 			result.append("</NODES>");
 		} else {
 			result.append("</TREEVIEWDATA>");
-		}
+		}*/
+		/* 2020-06-25 홍승비 - 트리캐시 중복 생성 방지 */
+		result.append("</NODES>");
 		
 		// 관리자단과 사용자단의 게시판 표출용 트리캐시를 다르게 생성한다. (isAdminLeft 플래그 추가)
 		ezBoardAdminService.getBoardTree_Set_D(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID + "," + isAdminLeft, tenantID);
@@ -4435,5 +4440,30 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		logger.debug("getNewBoardTreePath ended");
 		return addJobStr.toString();
+	}
+	
+	/* 2020-07-14 홍승비 - 선택한 마이게시판 분류 하위에 해당 게시판이 존재하는지 리턴 */
+	@Override
+	public String isMyBoardExist(String treeID, String boardID, String userID, int tenantID, String companyID) throws Exception {
+		logger.debug("isMyBoardExist started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		String result = "";
+		
+		map.put("v_BOARDID", boardID);
+		map.put("v_TREEID", treeID);
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+		
+		int myBoardCnt = ezBoardDAO.getMyBoardCount(map);
+		if (myBoardCnt > 0) {
+			result = "Y";
+		} else {
+			result = "N";
+		}
+		
+		logger.debug("isMyBoardExist ended");
+		return result;
 	}
 }
