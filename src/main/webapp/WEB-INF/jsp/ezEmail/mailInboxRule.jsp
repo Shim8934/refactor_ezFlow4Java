@@ -566,7 +566,11 @@
 		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
 		        }
 		        
-		        var OpenWin = window.open(requestUrl, "mail_NewInboxRule_cross", GetOpenWindowfeature(605, 580));
+		        var pHeight = 580;
+		        if (navigator.userAgent.indexOf("Chrome") != -1) {
+		        	pHeight = 584;
+		        }
+		        var OpenWin = window.open(requestUrl, "mail_NewInboxRule_cross", GetOpenWindowfeature(605, pHeight));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function Detail_InboxRule_Complete(newWin) {
