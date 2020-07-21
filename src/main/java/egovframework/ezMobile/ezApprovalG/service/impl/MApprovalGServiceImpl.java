@@ -511,11 +511,21 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain, scheme);
 		        org.jsoup.nodes.Document doc = Jsoup.parse(strHTML); // 셀렉터를 사용하기 위한 파싱
 				
-		        Elements signField = doc.select("[id^='sign']");
-				Elements seumyungDateField = doc.select("[id^='seumyungdate" + signField.size() + "']"); // 최종결재자의 결재날짜
+		        /* 2020-07-21 홍승비 - 내부결재, 수신결재 분기 추가 */
+		        Elements signField = new Elements();
+				Elements seumyungDateField = new Elements();
 				
+				LOGGER.debug("endDocInfo.getDocState() in insertSeumyungdateMobile   ::   " + endDocInfo.getDocState());
+		        if (endDocInfo.getDocState().equals("011")) { // 수신결재
+		        	signField = doc.select("[id^='1sign']");
+					seumyungDateField = doc.select("[id^='1seumyungdate" + signField.size() + "']"); // (수신)최종결재자의 결재날짜
+		        } else { // 내부결재
+		        	signField = doc.select("[id^='sign']");
+					seumyungDateField = doc.select("[id^='seumyungdate" + signField.size() + "']"); // (내부)최종결재자의 결재날짜
+		        }
+		        
 				// 모바일 결재 시 디폴트가 문자서명이므로, 이미지 서명 분기는 생략
-				if (seumyungDateField.size() == 0) {
+				if (signField.size() > 0 && seumyungDateField.size() == 0) { // 서명 필드가 존재하며, 결재날짜 필드가 없는 경우
 					String orgSignHtml = signField.get(signField.size() - 1).html();
 					String newSignHtml = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy/MM/dd"), offset, false).substring(5,10) + "<br>" + orgSignHtml;
 					LOGGER.debug("newSignHtml   ::   " + newSignHtml);
