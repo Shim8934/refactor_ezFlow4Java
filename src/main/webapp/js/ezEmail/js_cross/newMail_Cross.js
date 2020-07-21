@@ -718,6 +718,7 @@ function Send_onClick_Complete(ReturnValue) {
                     document.getElementById("MsgCCGot").childNodes[0].childNodes.length == 0 &&
                     document.getElementById("MsgBCCGot").childNodes[0].childNodes.length == 0) {
                     alert(strLang93);
+                    gInvalidAddressArr = null;
                     return;
                 }
             } catch (e) {
@@ -725,6 +726,7 @@ function Send_onClick_Complete(ReturnValue) {
                         document.getElementById("MsgCCGot").childNodes.length == 0 &&
                         document.getElementById("MsgBCCGot").childNodes.length == 0) {
                     alert(strLang93);
+                    gInvalidAddressArr = null;
                     return;
                 }
             }
@@ -738,6 +740,7 @@ function Send_onClick_Complete(ReturnValue) {
                     iseachMail = "false";
                 }
                 else {
+                    gInvalidAddressArr = null;
                     return;
                 }
             }
