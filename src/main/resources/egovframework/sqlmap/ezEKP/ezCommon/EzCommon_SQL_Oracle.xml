@@ -2546,6 +2546,34 @@
 		ADD 
 			VIEWORDER  NUMBER(10,0)
 	</statement>
+
+	<select id="EzCommonDAO.checkDocStateIntoLastLines">
+		SELECT
+			docState
+		FROM
+			tbl_lastaprline
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateDocStateIntoLastLines">
+		ALTER TABLE
+			TBL_LASTAPRLINE
+		ADD
+			docState VARCHAR2(12 CHAR) NOT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkDocStateIntoLastDeptLines">
+		SELECT
+			docState
+		FROM
+			TBL_LASTDEPTLINE
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateDocStateIntoLastDeptLines">
+		ALTER TABLE
+			TBL_LASTDEPTLINE
+		ADD
+			docState VARCHAR2(12 CHAR) NOT NULL
+	</statement>
 	
 	<select id="EzCommonDAO.checkDocStateIntoLastLines">
 		<![CDATA[
