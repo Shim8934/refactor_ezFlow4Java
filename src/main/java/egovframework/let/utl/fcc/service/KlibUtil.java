@@ -5,11 +5,14 @@ import java.nio.file.Paths;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
 import javax.xml.bind.DatatypeConverter;
 
 import org.bouncycastle.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,60 +24,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class KlibUtil {
 	// only aix, 2018.07.23
-	private static final String LIBRARY_PATH = "lib/libezKlib.so";
+	private static final String LIBRARY_PATH = "/WEB-INF/lib/libezKlib.so";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(KlibUtil.class);
 
-	private static final Cipher CIPHER;
-
 	private static final int DEBUG_BYTE_SIZE = 16;
 
-	static {
-		boolean loadSuccess = false;
+	private Cipher cipher = null;
 
-		try {
-			// WEB-INF/classes
-			Path classPath = Paths.get(KlibUtil.class.getClassLoader().getResource("").toURI());
-			// WEB-INF
-			Path parentPath = classPath.getParent();
-			// WEB-INF/lib/libezKlib.so
-			Path libraryPath = parentPath.resolve(LIBRARY_PATH).toRealPath();
 
-			LOGGER.debug("class path: {}", classPath);
-			LOGGER.debug("parent path: {}", parentPath);
-			LOGGER.debug("library path: {}", libraryPath);
-
-			// native library load
-			System.load(libraryPath.toString());
-			loadSuccess = true;
-		} catch (Throwable throwable) {
-			LOGGER.debug("Failed to load KLIB - {}", throwable.toString());
-			Stream.of(throwable.getStackTrace()).filter(obj -> obj.getClassName().contains(KlibUtil.class.getName())).map(Object::toString).forEach(LOGGER::debug);
-		}
-
-		// CIPHER 의 final 키워드를 유지하려면 try-catch 에서 초기화하면 안 됨
-		// 때문에 성공 플래그 값으로 판단하여 초기화 해야함
-		CIPHER = loadSuccess ? new KlibCipher() : new NonKlibCipher();
-		// CIPHER = loadSuccess ? new KlibCipher() : new LocalTestCipher();
-
-		// KLIB test
-		try {
-			String testString = "Hello klib!";
-
-			LOGGER.debug("=== KLIB Test ===");
-			LOGGER.debug("test string: \"{}\"", testString);
-
-			byte[] encryptBytes = CIPHER.encrypt(testString.getBytes());
-			LOGGER.debug("encrypt bytes: {}, to string: {}", DatatypeConverter.printHexBinary(encryptBytes), new String(encryptBytes));
-
-			byte[] decryptBytes = CIPHER.decrypt(encryptBytes);
-			LOGGER.debug("decrypt bytes: {}, to string: {}", DatatypeConverter.printHexBinary(decryptBytes), new String(decryptBytes));
-		} catch (Throwable throwable) {
-			LOGGER.debug("Failed to test for KLIB - {}", throwable.toString());
-		} finally {
-			LOGGER.debug("=== KLIB Test ===");
-		}
-	}
+	@Autowired
+	private ServletContext servletContext;
 
 	/**
 	 * KLIB 암/복호화를 위해서 암호화, 복호화 메소드가 있는 인터페이스
@@ -149,6 +109,45 @@ public class KlibUtil {
 		}
 	}
 
+	@PostConstruct
+	public void init() {
+		boolean loadSuccess = false;
+
+		try {
+			// WEB-INF/lib/libezKlib.so
+			Path libraryPath = Paths.get(servletContext.getResource(LIBRARY_PATH).toURI());
+
+			LOGGER.debug("library path: {}", libraryPath);
+
+			// native library load
+			System.load(libraryPath.toString());
+			loadSuccess = true;
+		} catch (Throwable throwable) {
+			LOGGER.debug("Failed to load KLIB - {}", throwable.toString());
+			Stream.of(throwable.getStackTrace()).filter(obj -> obj.getClassName().contains(KlibUtil.class.getName())).map(Object::toString).forEach(LOGGER::debug);
+		}
+
+		cipher = loadSuccess ? new KlibCipher() : new NonKlibCipher();
+		// CIPHER = loadSuccess ? new KlibCipher() : new LocalTestCipher();
+
+		try {
+			String testString = "Hello klib!";
+
+			LOGGER.debug("=== KLIB Test ===");
+			LOGGER.debug("test string: \"{}\"", testString);
+
+			byte[] encryptBytes = cipher.encrypt(testString.getBytes());
+			LOGGER.debug("encrypt bytes: {}, to string: {}", DatatypeConverter.printHexBinary(encryptBytes), new String(encryptBytes));
+
+			byte[] decryptBytes = cipher.decrypt(encryptBytes);
+			LOGGER.debug("decrypt bytes: {}, to string: {}", DatatypeConverter.printHexBinary(decryptBytes), new String(decryptBytes));
+		} catch (Throwable throwable) {
+			LOGGER.debug("Failed to test for KLIB - {}", throwable.toString());
+		} finally {
+			LOGGER.debug("=== KLIB Test ===");
+		}
+	}
+
 	/**
 	 * KLIB를 이용하여 바이트를 암호화
 	 * 
@@ -158,7 +157,7 @@ public class KlibUtil {
 	public byte[] encrypt(byte[] originBytes) throws Exception, UnsatisfiedLinkError {
 		LOGGER.debug("encrypt started.");
 
-		byte[] result = tryTransformationPolicy(originBytes, CIPHER::encrypt);
+		byte[] result = tryTransformationPolicy(originBytes, cipher::encrypt);
 
 		debugBytes("origin bytes", originBytes);
 		debugBytes("encrypted bytes", result);
@@ -181,7 +180,7 @@ public class KlibUtil {
 		byte[] result;
 
 		try {
-			result = tryTransformationPolicy(encryptedBytes, CIPHER::decrypt);
+			result = tryTransformationPolicy(encryptedBytes, cipher::decrypt);
 
 			debugBytes("encrypted bytes", encryptedBytes);
 			debugBytes("decrypted bytes", result);
