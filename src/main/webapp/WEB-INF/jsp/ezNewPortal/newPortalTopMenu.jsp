@@ -1052,7 +1052,7 @@
     		
     		var titleDd = document.createElement("dd");
     		titleDd.className = "name_type0";
-    		titleDd.textContent = "전자설문";
+    		titleDd.textContent = "<spring:message code='ezSurvey.t01' />"; // 전자설문
     		
     		titleDl.appendChild(titleDt);
     		titleDl.appendChild(titleDd);
@@ -1061,7 +1061,6 @@
     		contentDiv.className = "popup_noticeList";
     		
     		/* 테이블만들기 */
-    		
     		var oTable = document.createElement("TABLE");
     		oTable.className = "popuplist";
     		oTable.setAttribute("width" , "100%");
@@ -1071,19 +1070,19 @@
             var oTh1 = document.createElement("TH");
             oTh1.setAttribute("style", "white-space:nowrap")
             oTh1.setAttribute("width", "350px")
-            oTh1.innerHTML = '제목'
+            oTh1.innerHTML = "<spring:message code='ezSurvey.t23' />"; // 제목
             oTr.appendChild(oTh1);
             
             var oTh2 = document.createElement("TH");
             oTh2.setAttribute("style", "white-space:nowrap")
             oTh2.setAttribute("width", "60px")
-            oTh2.innerHTML = '작성자'
+            oTh2.innerHTML = "<spring:message code='ezSurvey.t24' />"; // 작성자
             oTr.appendChild(oTh2);
             
             var oTh3 = document.createElement("TH");
             oTh3.setAttribute("style", "white-space:nowrap")
             oTh3.setAttribute("width", "90px")
-            oTh3.innerHTML = '종료일'
+            oTh3.innerHTML = "<spring:message code='ezSurvey.t29' />"; // 종료일
             oTr.appendChild(oTh3);
             
             oTBody.appendChild(oTr);
