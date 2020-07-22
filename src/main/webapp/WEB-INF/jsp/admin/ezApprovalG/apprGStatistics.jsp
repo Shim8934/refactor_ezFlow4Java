@@ -146,23 +146,28 @@
 	            document.getElementsByName("condition")[1].checked = false;
 	            document.getElementsByName("Dept")[0].checked = false;
 	            document.getElementsByName("Dept")[1].checked = false;
+	            document.getElementsByName("Dept")[2].checked = false;
+	            document.getElementsByName("Dept")[0].disabled = false;
+	            document.getElementsByName("Dept")[1].disabled = false;
+	            document.getElementsByName("Dept")[2].disabled = false;
 	            document.getElementsByName("UserFlag")[0].checked = false;
 	            document.getElementsByName("UserFlag")[1].checked = false;
 	            document.getElementsByName("UserFlag")[2].checked = false;
 	            document.getElementsByName("UserFlag")[3].checked = false;
+	            document.getElementsByName("UserFlag")[0].disabled = false;
+	            document.getElementsByName("UserFlag")[1].disabled = false;
+	            document.getElementsByName("UserFlag")[2].disabled = false;
+	            document.getElementsByName("UserFlag")[3].disabled = false;
 	        }
 	        
 	        function UserFlag_Init() {
-	            document.getElementsByName("UserFlag")[0].checked = false;
-	            document.getElementsByName("UserFlag")[1].checked = false;
-	            document.getElementsByName("UserFlag")[2].checked = false;
-	            document.getElementsByName("UserFlag")[3].checked = false;
+	        	condition_Init("2");
+	            document.getElementsByName("condition")[1].checked = true;
 	        }
 	        
 	        function DeptRadio_Init() {
-	            document.getElementsByName("Dept")[0].checked = false;
-	            document.getElementsByName("Dept")[1].checked = false;
-	            document.getElementsByName("Dept")[2].checked = false;
+	        	condition_Init("1");
+	            document.getElementsByName("condition")[0].checked = true;
 	        }
 	        
 	        function lvtlist_onSel_Changed() {
