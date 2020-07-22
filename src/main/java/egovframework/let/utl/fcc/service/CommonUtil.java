@@ -2141,6 +2141,42 @@ public class CommonUtil {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				} else if (menuCode.equals("board")) {//게시판
+					try {
+						String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
+						
+						if (useBoard.equals("NO")) {
+							menuAccess = false;
+						} else {
+							menuAccess = true;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else if (menuCode.equals("schedule")) {//일정
+					try {
+						String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
+						
+						if (useSchedule.equals("NO")) {
+							menuAccess = false;
+						} else {
+							menuAccess = true;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else if (menuCode.equals("resource")) {//자원
+					try {
+						String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
+						
+						if (useResource.equals("NO")) {
+							menuAccess = false;
+						} else {
+							menuAccess = true;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				} else {
 					List<MenuInfoVO> menuFilter = menuList.stream().filter(menuInfo -> menuInfo.getMenuCode() != null && menuInfo.getMenuCode().equals(menuCode))
 												.collect(Collectors.toList());

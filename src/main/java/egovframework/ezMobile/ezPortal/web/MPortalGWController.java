@@ -271,7 +271,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				SimpleDateFormat shotDF = new SimpleDateFormat("yyyy-MM-dd");
 				SimpleDateFormat longDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				
-				if (scheduleAccess.equals("true")) {
+				if (resourceAccess.equals("true")) {
 					//자원관리 조인
 					Map<String, Object> resMap = mResourceService.getScheduleList("", info.getCompanyId(), nowDate.substring(0, 10), nowDate.substring(0, 10), info.getDeptId(), info.getTenantId(), info.getOffSet(), listCnt, "", "", "", "", primary);
 					List<ResGetScheduleVO> resList = (List<ResGetScheduleVO>) resMap.get("scheduleList");
