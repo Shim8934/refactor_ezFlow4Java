@@ -3470,4 +3470,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateEndAprDocOptionInfo(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateEndAprDocOptionInfo", map);
 	}
+
+	public void copyOpinionsFromOrgDoc(Map<String, Object> map) {
+		insert("EzApprovalG.copyOpinionsFromOrgDoc", map);
+	}
 }
