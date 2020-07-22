@@ -16779,11 +16779,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							map.put("v_DOCID", docID);
 							map.put("v_TENANTID", tenantID);
 							map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+							map.put("receiptCompanyID", receiptCompanyID);
 							
 							ezApprovalGDAO.insertDoSendAprDocInfo(map);
 							ezApprovalGDAO.insertDoSendExpAprDocInfo(map);
 							ezApprovalGDAO.insertDocSendAprAttachInfo(map);
 							ezApprovalGDAO.insertDocSendAprDocAttachInfo(map);
+
+                            ezApprovalGDAO.copyOpinionsFromOrgDoc(map);
 							
 							String susinSN = ezApprovalGDAO.getReceiptProcessInfoRecS(map3);
 							

@@ -1,4 +1,4 @@
-﻿﻿var lastKyulName, lastKyuljiwee, LastSignSN, pAprLineB4type;
+﻿var lastKyulName, lastKyuljiwee, LastSignSN, pAprLineB4type;
 var pOrgAttach;
 var bbtnApprove = "";
 var bbtnReject = "";
@@ -41,7 +41,7 @@ function putBansongSign() {
             phabyuidate = pSusinSN + "habyuidate";
             phabyuijikwee = pSusinSN + "habyuipositon";
             phabyuidept = pSusinSN + "habyui";
-        } else {
+        } else {1
             phabyuisign = "habyuisign";
             phabyuidate = "habyuidate";
             phabyuijikwee = "habyuipositon";
