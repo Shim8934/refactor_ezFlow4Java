@@ -7241,18 +7241,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			totalLineSN = docListNode.getLength();
 			
+			/* 2020-07-22 홍승비 - 모바일에서 최종결재하는 경우, 확인 결재유형의 서명과 날짜 필드가 양식 상에 표출되는 오류 수정 */
 			for (int k = totalLineSN - Integer.parseInt(signNum); k < totalLineSN; k++) {
 				String pType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent(); //APRTYPE
-				// 007(참조), 008(개인순차협조), 009(개인병렬협조), 011(부서순차협조), 012(부서병렬협조)
-				if (pType.equals("007") || pType.equals("008") || pType.equals("009") || pType.equals("011") || pType.equals("012")) {
+				// 002(확인), 007(참조), 008(개인순차협조), 009(개인병렬협조), 011(부서순차협조), 012(부서병렬협조)
+				if (pType.equals("002") || pType.equals("007") || pType.equals("008") || pType.equals("009") || pType.equals("011") || pType.equals("012")) {
 					signNum =  String.valueOf(Integer.parseInt(signNum) - 1);
 				}
 			}
 			
 			for (int k = 0; k < docListNode.getLength(); k++) {
 				String pType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
-				// 003(결재안함), 007(참조), 008(개인순차협조), 009(개인병렬협조), 011(부서순차협조), 012(부서병렬협조)
-				if (pType.equals("003") || pType.equals("007") || pType.equals("008") || pType.equals("009") || pType.equals("011") || pType.equals("012")) {
+				// 002(확인), 003(결재안함), 007(참조), 008(개인순차협조), 009(개인병렬협조), 011(부서순차협조), 012(부서병렬협조)
+				if (pType.equals("002") || pType.equals("003") || pType.equals("007") || pType.equals("008") || pType.equals("009") || pType.equals("011") || pType.equals("012")) {
 					totalLineSN = totalLineSN - 1;
 				}
 			}
