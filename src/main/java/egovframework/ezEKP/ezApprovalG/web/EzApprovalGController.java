@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -64,6 +65,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -4015,6 +4017,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 			}
 			
+			/* 2020-07-22 홍승비 - 메일링크 클릭 시 결재완료문서 보기 분기 추가 */
 			if (checkPermission) {
 				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId(), docState);
 				
@@ -4022,7 +4025,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					if(mailChk != null && mailChk.equals("Y")) {
 						model.addAttribute("chk", "no");
 					}
-					return "main/warning";
+					
+					ApprGDocListVO apprGEndDocVO = ezApprovalGService.getEndDocInfo(docID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
+					if (apprGEndDocVO != null && apprGEndDocVO.getHref() != null && !apprGEndDocVO.getHref().trim().equals("")) {
+						model.addAttribute("docID", docID.trim());
+						model.addAttribute("docHref", apprGEndDocVO.getHref().trim());
+						model.addAttribute("orgCompanyID", orgCompanyID); // 문서 재사용에 필요한 파라미터
+						
+						return "redirect:/ezApprovalG/contDocView.do";
+					} else {
+						return "main/warning";
+					}
 				}
 			}
 		}

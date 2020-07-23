@@ -28624,4 +28624,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return list2;
 	}
 	
+	/* 2020-07-23 홍승비 - 완료문서의 전체 정보를 가져오는 메서드 */
+	@Override
+	public ApprGDocListVO getEndDocInfo(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("getEndDocInfo started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+		
+		logger.debug("getEndDocInfo Param : v_DOCID = " + docID + " v_TENANTID = " + tenantID + " companyID = " + companyID);
+		ApprGDocListVO apprGEndDocVO = ezApprovalGDAO.getEndDocInfo(map);
+		
+		logger.debug("getEndDocInfo ended.");
+		
+		return apprGEndDocVO;
+	}
 }

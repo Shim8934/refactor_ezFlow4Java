@@ -6,10 +6,12 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
@@ -604,4 +606,7 @@ public interface EzApprovalGService {
 	public List<ApprGProxyVO> getProxyUserInfo(String userID, String userLang, int tenantID, String offSet) throws Exception;
 
 	ApprGFormVO getFormPath(String formId, String companyId, int tenantId) throws Exception;
+
+	/* 2020-07-23 홍승비 - 완료문서의 전체 정보를 가져오는 메서드 */
+	public ApprGDocListVO getEndDocInfo(String docID, String companyID, int tenantID) throws Exception;
 }
