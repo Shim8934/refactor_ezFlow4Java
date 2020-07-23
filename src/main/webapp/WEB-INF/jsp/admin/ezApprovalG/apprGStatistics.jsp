@@ -146,23 +146,28 @@
 	            document.getElementsByName("condition")[1].checked = false;
 	            document.getElementsByName("Dept")[0].checked = false;
 	            document.getElementsByName("Dept")[1].checked = false;
+	            document.getElementsByName("Dept")[2].checked = false;
+	            document.getElementsByName("Dept")[0].disabled = false;
+	            document.getElementsByName("Dept")[1].disabled = false;
+	            document.getElementsByName("Dept")[2].disabled = false;
 	            document.getElementsByName("UserFlag")[0].checked = false;
 	            document.getElementsByName("UserFlag")[1].checked = false;
 	            document.getElementsByName("UserFlag")[2].checked = false;
 	            document.getElementsByName("UserFlag")[3].checked = false;
+	            document.getElementsByName("UserFlag")[0].disabled = false;
+	            document.getElementsByName("UserFlag")[1].disabled = false;
+	            document.getElementsByName("UserFlag")[2].disabled = false;
+	            document.getElementsByName("UserFlag")[3].disabled = false;
 	        }
 	        
 	        function UserFlag_Init() {
-	            document.getElementsByName("UserFlag")[0].checked = false;
-	            document.getElementsByName("UserFlag")[1].checked = false;
-	            document.getElementsByName("UserFlag")[2].checked = false;
-	            document.getElementsByName("UserFlag")[3].checked = false;
+	        	condition_Init("2");
+	            document.getElementsByName("condition")[1].checked = true;
 	        }
 	        
 	        function DeptRadio_Init() {
-	            document.getElementsByName("Dept")[0].checked = false;
-	            document.getElementsByName("Dept")[1].checked = false;
-	            document.getElementsByName("Dept")[2].checked = false;
+	        	condition_Init("1");
+	            document.getElementsByName("condition")[0].checked = true;
 	        }
 	        
 	        function lvtlist_onSel_Changed() {
@@ -261,6 +266,17 @@
 	                pCompanyID = document.getElementById("SCompID").value;
 	            }
 	        }
+	        
+		    /* 2020-07-15 홍승비 - 숫자 이외의 값 입력 방지 함수 */
+		    function KeEventControl(obj) {
+	            if ((window.event.keyCode >= 48 && window.event.keyCode <= 57) || (window.event.keyCode >= 96 && window.event.keyCode <= 105)) {
+	                return true;
+	            }
+	            else {
+	            	obj.value = obj.value.replace(/[\a-zㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+	            }
+	        }
+		    
 		</script>
 	</head>
 	<body class="mainbody">
@@ -270,13 +286,13 @@
 	        <tr>
 	            <th><spring:message code = 'ezApprovalG.t1298' /></th>
 	            <td colspan="2">
-	                <input type="text" class="text" style="Width: 50px;" maxlength="4" id="SYear" name="SYear">
+	                <input type="text" class="text" style="Width: 50px;" maxlength="4" id="SYear" name="SYear" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);">
 	                <spring:message code = 'ezApprovalG.t456' />
-	                <input type="text" class="text" style="Width: 30px;" maxlength="2" id="SMonth" name="SMonth">
+	                <input type="text" class="text" style="Width: 30px;" maxlength="2" id="SMonth" name="SMonth" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);">
 	                <spring:message code = 'ezApprovalG.t1299' />
-	                <input type="text" class="text" style="Width: 50px;" maxlength="4" id="EYear" name="EYear">
+	                <input type="text" class="text" style="Width: 50px;" maxlength="4" id="EYear" name="EYear" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);">
 	                <spring:message code = 'ezApprovalG.t456' />
-	                <input type="text" class="text" style="Width: 30px;" maxlength="2" id="EMonth" name="EMonth">
+	                <input type="text" class="text" style="Width: 30px;" maxlength="2" id="EMonth" name="EMonth" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);">
 	                <spring:message code = 'ezApprovalG.t1300' />
 	                    <a class="imgbtn imgbck"><span onclick="return btnOK_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></a>
 	                    <a class="imgbtn imgbck"><span onclick="return btnInit_onclick()"><spring:message code = 'ezApprovalG.t1301' /></span></a>

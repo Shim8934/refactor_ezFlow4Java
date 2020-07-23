@@ -596,9 +596,9 @@
 						<table>
 							<tr>
 								<td>
-								<input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
 	           						~
-	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />								</td>
+	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />								</td>
 							</tr>
 						</table>
 					</td>
