@@ -7197,8 +7197,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
             String orderCell = request.getParameter("OC");
             String orderOption = request.getParameter("OO");
             String subQuery = request.getParameter("SQ");
-            
-            excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, allFG, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
+
+            if (approvalFlag.equalsIgnoreCase("G")) {
+                excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, allFG, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
+            } else {
+                excelValue = ezApprovalGService.getSearchDocListS(P12, userInfo.getId(), subQuery, P0, P1, P2, P9, P3, P4, P5, P6, P7, P8, P11, "", "", pageSize, pageNum, orderCell, orderOption,  "", userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
+            }
 		}
 		
 		Document objXML = commonUtil.convertStringToDocument(excelValue);
