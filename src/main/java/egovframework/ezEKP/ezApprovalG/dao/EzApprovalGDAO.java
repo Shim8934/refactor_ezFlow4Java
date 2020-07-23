@@ -3474,4 +3474,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void copyOpinionsFromOrgDoc(Map<String, Object> map) {
 		insert("EzApprovalG.copyOpinionsFromOrgDoc", map);
 	}
+	
+	/* 2020-07-23 홍승비 - 완료문서의 전체 정보를 가져오는 쿼리 */
+	public ApprGDocListVO getEndDocInfo(Map<String, Object> map) throws Exception {
+		return (ApprGDocListVO) select("EzApprovalG.getEndDocInfo", map);
+	}
 }

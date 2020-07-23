@@ -2546,34 +2546,6 @@
 		ADD 
 			VIEWORDER  NUMBER(10,0)
 	</statement>
-
-	<select id="EzCommonDAO.checkDocStateIntoLastLines">
-		SELECT
-			docState
-		FROM
-			tbl_lastaprline
-		LIMIT 1
-	</select>
-	<statement id="EzCommonDAO.updateDocStateIntoLastLines">
-		ALTER TABLE
-			TBL_LASTAPRLINE
-		ADD
-			docState VARCHAR2(12 CHAR) NOT NULL
-	</statement>
-
-	<select id="EzCommonDAO.checkDocStateIntoLastDeptLines">
-		SELECT
-			docState
-		FROM
-			TBL_LASTDEPTLINE
-		LIMIT 1
-	</select>
-	<statement id="EzCommonDAO.updateDocStateIntoLastDeptLines">
-		ALTER TABLE
-			TBL_LASTDEPTLINE
-		ADD
-			docState VARCHAR2(12 CHAR) NOT NULL
-	</statement>
 	
 	<select id="EzCommonDAO.checkDocStateIntoLastLines">
 		<![CDATA[
@@ -2910,7 +2882,7 @@
 	
 	<statement id="EzCommonDAO.createTblNoticeBoard">
 		CREATE TABLE TBL_BOARD_NOTICEBOARD (
-			BOARDID NVARCHAR2(255) NOT NULL,
+			BOARDID NVARCHAR2(40) NOT NULL,
 			TENANT_ID NUMBER(5,0) NOT NULL,
 			COMPANYID VARCHAR2(80) NOT NULL,
 			CONSTRAINT "TBL_BOARD_NOTICEBOARD_PK" PRIMARY KEY (BOARDID, TENANT_ID, COMPANYID)

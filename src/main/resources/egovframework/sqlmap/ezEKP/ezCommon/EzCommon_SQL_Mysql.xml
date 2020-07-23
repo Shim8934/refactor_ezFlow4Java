@@ -2829,7 +2829,7 @@
 	
 	<statement id="EzCommonDAO.createTblNoticeBoard">
 		CREATE TABLE `tbl_board_noticeboard` (
-			`BOARDID` varchar(510) NOT NULL,
+			`BOARDID` varchar(80) NOT NULL,
 			`TENANT_ID` mediumint(5) NOT NULL,
 			`COMPANYID` varchar(80) NOT NULL,
 			PRIMARY KEY (`BOARDID`,`TENANT_ID`, `COMPANYID`)
