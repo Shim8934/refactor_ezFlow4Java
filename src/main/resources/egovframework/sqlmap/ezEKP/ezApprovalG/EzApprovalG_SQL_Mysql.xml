@@ -32550,4 +32550,18 @@
 		AND
 			COMPANYID = #companyID#
 	</insert>
+	
+	<select id="EzApprovalG.getEndDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+		SELECT 
+			*
+	    FROM 
+	    	TBL_ENDAPRDOCINFO 
+	    WHERE  
+	    	DOCID = #v_DOCID#
+	    AND
+	    	TENANT_ID = #v_TENANTID#
+	   	AND
+	   		COMPANYID = #v_COMPANYID#
+	</select>
+	
 </sqlMap>
