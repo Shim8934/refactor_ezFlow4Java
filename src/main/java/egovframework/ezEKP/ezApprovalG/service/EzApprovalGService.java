@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezApprovalG.service;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
@@ -687,7 +688,7 @@ public interface EzApprovalGService {
     public String setApprDocInfo(Document xmlDom, String companyID, int tenantId) throws Exception;
 
     public String getFormAprOptionInfo(String key, String type, String companyID, int tenantID) throws Exception;
-
+    
 	public List<ApprGFormVO> getFormContainer(int tenantId, String companyId, String deptId);
 
 	public List<KEDSharedUserInfo> getShareList(String userId, String deptId, String shareType, int tenantId) throws Exception;
@@ -699,4 +700,11 @@ public interface EzApprovalGService {
 	public void sendMailToPassAprMember(String docID, HttpServletRequest request, String loginCookie, LoginVO userInfo, String orgCompanyID, int tenantID) throws Exception;
 	
 	public String isPassAprLineShow(String docID, String formID, String userID, String companyID, int tenantId) throws Exception;
+    
+	/* 2020-07-23 홍승비 - 완료문서의 전체 정보를 가져오는 메서드 */
+	public ApprGDocListVO getEndDocInfo(String docID, String companyID, int tenantID) throws Exception;
+	
+	/* 2020-07-23 홍승비 - 전달한 사용자ID에 대하여, 특정 진행문서의 전체 정보를 가져오는 메서드 */
+	public ApprGDocListVO getIngDocInfo(String userID, String docID, String companyID, int tenantID) throws Exception;
+	
 }

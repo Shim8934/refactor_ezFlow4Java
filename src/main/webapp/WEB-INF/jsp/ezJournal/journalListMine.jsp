@@ -37,7 +37,7 @@
 				<th id="BoardList_TH_9" onclick="setListOrder(this)" order="12" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:45px;" class="h5_center">
 					<spring:message code='ezJournal.t110'/>
 				</th>
-				<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; cursor: pointer; text-align: center; width:35px;" class="h5_center">
+				<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; cursor: pointer; text-align: center; width:45px;" class="h5_center">
 					<spring:message code='ezJournal.t65'/>
 				</th>
 			</tr>
@@ -116,7 +116,7 @@
 							</c:otherwise>
 						</c:choose>
 					</td>
-					<td	onclick="selectedTR(this);" class="viewCount" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:35px;">
+					<td	onclick="selectedTR(this);" class="viewCount" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:45px;">
 						<c:out value='${journal.viewCount}'/>
 					</td>
 				</tr>

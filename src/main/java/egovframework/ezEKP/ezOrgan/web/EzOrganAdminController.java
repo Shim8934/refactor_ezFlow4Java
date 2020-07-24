@@ -224,6 +224,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertMobileAttitudeColumn();			// 2020-06-10 김민성 - 모바일 근태관리 기능 추가
 	    	ezCommonService.createTblShareDocDir(); //2019-10-14 박성빈 - 문서함공유 테이블 추가
 	    	ezCommonService.alterTblPsApprovNotiMailConf(); //기결재통과 알림 컬럼 추가
+	    	ezCommonService.createTblNoticeBoard(); //2020-06-17 홍승비 - 회사별 공지사항 게시판 기능을 위한 NOTICEBOARD 테이블 추가
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
@@ -1617,6 +1618,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				// 해당 사용자의 개인주소록 및 주소록 관련 설정을 모두 제거한다.
 	    		rc = ezAddressService.removeUserAddress(mailAddr);
 	    		logger.debug("removeUserAddress rc=" + rc);
+
+				// 해당 사용자의 메일자동삭제 설정을 모두 제거한다. -1 = error
+	    		rc = ezEmailService.deleteMailDeleteForUser(mailAddr);
+	    		logger.debug("deleteMailDeleteForUser rc=" + rc);
 			}
 			// dhlee - end
 		}		

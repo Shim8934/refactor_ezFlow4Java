@@ -25,7 +25,6 @@
 			#logoUrl {height:42px;}
 			/*-- top_totalSearch --*/
 			.top_totalSearch {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; font-size:12px;float:right; margin:9px 30px 0px 0px; padding:0px; width:243px; height:34px; background:url(../images/kr/cm/top_search_bg.gif) no-repeat;vertical-align:middle; }
-			#input_totalSearch { float:left; width:196px; height:31px; border:0px ;padding:1px 0px 0px 9px; margin:1px 0px 0px 1px;  color:#555555; font-size:12px;}
 		</style>
 	</head>
 	<body>
@@ -1053,7 +1052,7 @@
     		
     		var titleDd = document.createElement("dd");
     		titleDd.className = "name_type0";
-    		titleDd.textContent = "전자설문";
+    		titleDd.textContent = "<spring:message code='ezSurvey.t01' />"; // 전자설문
     		
     		titleDl.appendChild(titleDt);
     		titleDl.appendChild(titleDd);
@@ -1062,7 +1061,6 @@
     		contentDiv.className = "popup_noticeList";
     		
     		/* 테이블만들기 */
-    		
     		var oTable = document.createElement("TABLE");
     		oTable.className = "popuplist";
     		oTable.setAttribute("width" , "100%");
@@ -1072,19 +1070,19 @@
             var oTh1 = document.createElement("TH");
             oTh1.setAttribute("style", "white-space:nowrap")
             oTh1.setAttribute("width", "350px")
-            oTh1.innerHTML = '제목'
+            oTh1.innerHTML = "<spring:message code='ezSurvey.t23' />"; // 제목
             oTr.appendChild(oTh1);
             
             var oTh2 = document.createElement("TH");
             oTh2.setAttribute("style", "white-space:nowrap")
             oTh2.setAttribute("width", "60px")
-            oTh2.innerHTML = '작성자'
+            oTh2.innerHTML = "<spring:message code='ezSurvey.t24' />"; // 작성자
             oTr.appendChild(oTh2);
             
             var oTh3 = document.createElement("TH");
             oTh3.setAttribute("style", "white-space:nowrap")
             oTh3.setAttribute("width", "90px")
-            oTh3.innerHTML = '종료일'
+            oTh3.innerHTML = "<spring:message code='ezSurvey.t29' />"; // 종료일
             oTr.appendChild(oTh3);
             
             oTBody.appendChild(oTr);
@@ -1159,6 +1157,7 @@
     		var labelElem = document.createElement("label");
     		labelElem.className = "name_type0";
     		labelElem.setAttribute("for", "inp_noticeCheck");
+    		labelElem.style.paddingLeft = "3px";
     		labelElem.textContent = "<spring:message code = 'ezPersonal.t267' />";
     		
     		var closePElem = document.createElement("p");

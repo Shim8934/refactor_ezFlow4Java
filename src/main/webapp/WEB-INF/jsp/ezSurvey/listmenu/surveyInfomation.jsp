@@ -66,8 +66,8 @@
 					<th class="left-Th"><spring:message code="ezSurvey.t49"/></th> <%-- multiple select setting --%>
 					<td class="right-Td">
 						<div>
-							<span class="inf-spanTxt"><input type="radio" name="multipleSpan" value="1" checked><spring:message code="ezSurvey.t51"/></span>
-							<span class="inf-spanTxt"><input type="radio" name="multipleSpan" value="0"><spring:message code="ezSurvey.t50"/></span>
+							<span class="inf-spanTxt"><input type="radio" name="multipleSpan" value="1"><spring:message code="ezSurvey.t51"/></span>
+							<span class="inf-spanTxt"><input type="radio" name="multipleSpan" value="0" checked><spring:message code="ezSurvey.t50"/></span>
 						</div>
 					</td>
 				</tr>

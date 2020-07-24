@@ -110,6 +110,7 @@
 			var useAdditionalRole = "${useAdditionalRole}";
 			var userLang = "${userInfo.lang}";
 		    var shareUser = "<c:out value = '${shareUser}'/>";
+		    var primary = "<c:out value = '${primary}'/>"; // 재기안 시 부서명 다국어 분기처리를 위한 primary (1:기본어, 2:다국어)
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    
@@ -384,6 +385,19 @@
                     }
                     document.title = $("#presentcell").html();
 		        }
+				
+				/* 2020-06-18 홍승비 - 임시보관함으로 진입한 경우, 우측 상단 간단검색메뉴에서 기안자 제거 (window_onload가 동작하는 S버전 기준) */
+				var selectWriter = $("#selectType").find("option[value='rad_Writer']");
+				if (pListTypeValue == "21") { // 임시보관함의 경우, 기안자 검색조건 제거
+					if (selectWriter.length > 0) {
+						selectWriter.remove();
+					}
+				} else { // 그 외의 경우, 다시 기안자 검색조건을 어팬드
+					if (selectWriter.length <= 0) {
+						$("#selectType").append('<option value="rad_Writer"><spring:message code="ezApprovalG.t445"/></option>');
+					}
+				}
+				
 		    }
 			
 		    function change_statusCell() {
@@ -832,7 +846,7 @@
 		        if (pCurSelRow) {
 		            var ret = CheckAprLineInfo(pCurSelRow);
 		            if (ret != "OK") {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "<br>" +
+		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "\n" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
 		                //OpenAlertUI(pAlertContent);
 		                alert(pAlertContent);
@@ -1337,7 +1351,21 @@
 		            SendOutFlag = "S";
 		        else if (pListTypeValue == "9")
 		            SendOutFlag = "SS";
+		        
+				/* 2020-06-18 홍승비 - 임시보관함으로 진입한 경우, 우측 상단 간단검색메뉴에서 기안자 제거 (G버전은 window_onload 분기를 타지 않으므로, 검색조건 초기화 작업과 함께 적용) */
+				var selectWriter = $("#selectType").find("option[value='rad_Writer']");
+				if (pListTypeValue == "21") { // 임시보관함의 경우, 기안자 검색조건 제거
+					if (selectWriter.length > 0) {
+						selectWriter.remove();
+					}
+				} else { // 그 외의 경우, 다시 기안자 검색조건을 어팬드
+					if (selectWriter.length <= 0) {
+						$("#selectType").append('<option value="rad_Writer"><spring:message code="ezApprovalG.t445"/></option>');
+					}
+				}
+				
 		    }
+		    
 		    function Search_onclick() {
 		        window.open("./ReceivUI/Receive_Search.aspx", "_self", "");
 		    }
@@ -1395,7 +1423,7 @@
 		        if (tr) {
 		            var ret = CheckAprLineInfo(tr);
 		            if (ret != "OK") {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "<br>" +
+		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "\n" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
 		                //OpenAlertUI(pAlertContent);
 		                alert(pAlertContent);
@@ -1489,7 +1517,7 @@
 		            
 		            var ret = CheckAprLineInfo(tr);
 		            if (ret != "OK") {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "<br>" +
+		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "\n" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
 		                //OpenAlertUI(pAlertContent);
 		                alert(pAlertContent);
@@ -1616,7 +1644,7 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 				}else{
-					OpenInformationUI("<spring:message code='ezApprovalG.t900002'/>", btnApproveALL_onclick_Complete);
+					OpenInformationUI("<spring:message code='ezApprovalG.t900002'/>" + "<br><spring:message code='ezApprovalG.kbh03'/>", btnApproveALL_onclick_Complete);
 				}
 			}
 

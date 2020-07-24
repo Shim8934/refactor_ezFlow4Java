@@ -1,15 +1,12 @@
 package egovframework.ezMobile.ezApprovalG.service;
 
+import egovframework.ezMobile.ezApprovalG.vo.*;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Locale;
-
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
-import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 public interface MApprovalGService {
 
@@ -35,7 +32,7 @@ public interface MApprovalGService {
 
 	public int checkPass(MCommonVO userInfo, String shaEncPassword) throws Exception;
 
-	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String lang, String companyId, int tenantId, String aprMemberSN, String mode) throws Exception;
+	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String lang, String offset, String companyId, int tenantId, String aprMemberSN, String mode) throws Exception;
 
 	public MApprovalGDocInfoVO getAprMemberSn(String docId, String type, String companyId, int tenantId) throws Exception;
 
@@ -46,5 +43,10 @@ public interface MApprovalGService {
 	public int delAbsenteeInfo(String userId, int tenantId) throws Exception;
 	
 	public int getCheckAprState(String docId, String userId, String aprMemberSN, String mode, String companyId, int tenantId) throws Exception;
-
+	
+	public void sendApproveNoticeMail(MCommonVO userInfo, MOptionVO optionInfo, MApprovalGDocInfoVO approvalGDocInfoVO, String docId, String type) throws Exception;
+	
+	/* 2020-07-02 홍승비 - 모바일에서 최종결재 완료 시 서명에 결재날짜 삽입 동작 추가(결재날짜 필드가 없는 경우에만, 웹과 동일하게) */
+	public String insertSeumyungdateMobile(String docId, String realPath, String offset, Locale locale, String domain, String scheme, String companyId, int tenantId) throws Exception;
+	
 }

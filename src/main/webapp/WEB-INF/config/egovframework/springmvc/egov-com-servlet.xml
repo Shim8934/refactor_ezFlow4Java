@@ -11,10 +11,8 @@
                 http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.1.xsd">
 
     <!-- 패키지 내 Controller, Service, Repository 클래스의 auto detect를 위한 mvc 설정 -->
-    <context:component-scan base-package="egovframework">
+    <context:component-scan base-package="egovframework" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
     </context:component-scan>
 
     <!-- 서블릿컨네이너상의 exception에 대한 오류 페이지를 연결하는 mvc 설정-->

@@ -462,10 +462,10 @@
 				        <input type="text" id="keyword" onKeyPress="search_press(event)" style="WIDTH:130px; height:22px;" maxLength="50">
 				        <a class="imgbtn" style="margin-right:5px;"><span onClick="search_click()"><spring:message code='ezPersonal.t77'/></span></a>
 			    	</c:if>			    	
-			    	</div>	    	
+			    	</div>
 			    </td>
 		  	</tr>
-		  	<tr>
+			<tr>
 		  		<td colspan="2" style="padding:2px;"/>
 		  	</tr>
 		  	<tr>

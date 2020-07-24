@@ -137,8 +137,9 @@
  		            
 					var node = $(".node_normal");
 					
+					/* 2020-06-29 홍승비 - 개인문서함 tile 특문처리 */
 					for(var i=0; i<node.length; i++) {
-						node[i].setAttribute("TITLE", node[i].innerHTML);
+						node[i].setAttribute("TITLE", node[i].innerText);
 					} 
 
 		        } 
@@ -291,7 +292,7 @@
 				var node = $(".node_normal");
 					
 				for(var i=0; i<node.length; i++) {
-					node[i].setAttribute("TITLE", node[i].innerHTML);
+					node[i].setAttribute("TITLE", node[i].innerText);
 				} 
 	        }
 	        

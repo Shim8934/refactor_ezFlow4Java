@@ -480,6 +480,7 @@
 				para[1] = pCompanyID;
 				para[2] = pBrdid;
 				para[3] = $(checkId[0]).attr("value");
+				para[4] = $(checkId[0]).attr("ownerId");
 				
 				if (CrossYN()) {
 				    organ_cross_dialogArguments[0] = para;

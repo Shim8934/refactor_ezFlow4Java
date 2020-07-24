@@ -243,7 +243,7 @@ public class MApprovalGGWController {
 			//본문
 			String bodyHTML = mApprovalGService.getMHTBody(docId, realPath, domain, userInfo, locale, type, scheme, mode);
 			//결재문서정보
-			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, type, optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN, mode);
+			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, type, optionInfo.getLang(), userInfo.getOffSet(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN, mode);
 			//회수 가능여부
 			String callBackYN = ezApprovalGService.getCallBackYN(docId, userId, userInfo.getCompanyId(), userInfo.getTenantId());
 			
@@ -261,6 +261,7 @@ public class MApprovalGGWController {
 			result.put("code", "0");
 			result.put("data", totalData);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", "1");
 		}
@@ -758,7 +759,7 @@ public class MApprovalGGWController {
 	}
 
 	/**
-	 * 모바일 G/W 전자결재 [PUT] 결재(APR), 반송(BAN), 보류(BO), 회수(HWE), 확인(CHECK)
+	 * 모바일 G/W 전자결재 [PUT] 결재(APR), 반송(BAN), 보류(BO), 회수(HWE), 참조(CHECK)
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/approve/{type}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
@@ -793,7 +794,7 @@ public class MApprovalGGWController {
 			String rtnVal = "";
 			
 			//docId로만 정보 가져오기
-			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, "DO", optionInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN, mode);
+			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, "DO", optionInfo.getLang(), userInfo.getOffSet(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN, mode);
 			
 			LoginVO loginVO = new LoginVO();
 			
@@ -811,6 +812,17 @@ public class MApprovalGGWController {
 				String lineMode = ezApprovalGService.getLineModeFlag(docId, userInfo.getUserId(), userInfo.getCompanyId(), userInfo.getTenantId());
 				
 				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, lineMode);
+				
+				/* 2020-07-02 홍승비 - 모바일에서 최종결재 완료 시 서명에 결재날짜 삽입 동작 추가(결재날짜 필드가 없는 경우에만, 웹과 동일하게) */
+				if (rtnVal != null && !rtnVal.equals("ERROR")) {
+					String domain = request.getServerName() + ":" + request.getServerPort();
+			        String scheme = "http://";
+					
+			    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+			    		scheme = "https://";
+			    	}
+					rtnVal = mApprovalGService.insertSeumyungdateMobile(docId, realPath, userInfo.getOffSet(), new Locale(locale), domain, scheme, userInfo.getCompanyId(), userInfo.getTenantId());
+				}
 				
 				if (rtnVal != null && !rtnVal.equals("ERROR")) {
 					result.put("status", "ok");
@@ -876,6 +888,10 @@ public class MApprovalGGWController {
 				result.put("status", "error");
 				result.put("code", "1");
 			}
+
+            if ("SUCCESS".equals(result.get("data"))) {
+                mApprovalGService.sendApproveNoticeMail(userInfo, optionInfo, approvalGDocInfoVO, docId, type);
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");

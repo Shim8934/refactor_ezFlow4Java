@@ -3041,6 +3041,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("type", type);
 		model.addAttribute("useEditApprDoc", useEditApprDoc);
+		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
+		model.addAttribute("openYear", ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId()));
 		
 		logger.debug("forAprDoc ended.");
 		
@@ -3245,6 +3247,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("list", resultList);
 		model.addAttribute("type", type);
+		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
+		model.addAttribute("openYear", ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId()));
 		
 		logger.debug("forDoc ended.");
 		

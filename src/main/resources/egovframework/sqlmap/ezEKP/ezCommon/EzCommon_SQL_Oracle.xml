@@ -559,9 +559,9 @@
 	
 	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
 		INSERT INTO tbl_tenant_config
-		(tenant_id, property_name, property_value, description, config_name, regdate)
+		(tenant_id, property_name, property_value, description, config_name, regdate, config_type)
 		VALUES
-		(#tenantID#, #confName#, #property_value#, #description#, #config_name#, sysdate)
+		(#tenantID#, #confName#, #property_value#, #description#, #config_name#, sysdate, #config_type#)
 	</insert>
 	
 	<select id="EzCommonDAO.checkAddJobMasterJobID" resultClass="String">
@@ -2366,7 +2366,16 @@
 	]]>
 	</insert>
 	
-	<select id="EzCommonDAO.checkJmochaBigAttachDownloadLimit">
+	<select id="EzCommonDAO.checkJmochaBigAttachDownloadLimit_new">
+		SELECT 
+			FILE_ID
+		FROM 
+			JMOCHA_BIGATTACH_DOWN_LIMIT
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<select id="EzCommonDAO.checkJmochaBigAttachDownloadLimit_old">
 		SELECT 
 			FILE_ID
 		FROM 
@@ -2376,13 +2385,17 @@
 	</select>
 	
 	<statement id="EzCommonDAO.createJmochaBigAttachDownloadLimit">
-		CREATE TABLE JMOCHA_BIGATTACH_DOWNLOAD_LIMIT (
+		CREATE TABLE JMOCHA_BIGATTACH_DOWN_LIMIT (
 		  "FILE_ID" NVARCHAR2(100) NOT NULL,
 		  "DOWNLOAD_COUNT" NUMBER,
 		  "LIMIT_COUNT" NUMBER,
 		  "TENANT_ID" NUMBER  DEFAULT 0 NOT NULL,
-		  CONSTRAINT "JMOCHA_BIGATTACH_DOWNLOAD_LIMIT_PK" PRIMARY KEY ("FILE_ID")
+		  CONSTRAINT "JMOCHA_BIGATTACH_DOWN_LIMIT_PK" PRIMARY KEY ("FILE_ID")
 		)
+	</statement>
+	
+	<statement id="EzCommonDAO.renameJmochaBigAttachDownloadLimitToNew">
+		RENAME JMOCHA_BIGATTACH_DOWNLOAD_LIMIT TO JMOCHA_BIGATTACH_DOWN_LIMIT
 	</statement>
 	
 	<select id="EzCommonDAO.checkMailBigSizeAttachLimitTenantConfig" resultClass="String">
@@ -2480,7 +2493,7 @@
 		  "COMPANY_ID" NVARCHAR2(100) NOT NULL,
 		  "USE_PATTERN_COUNT" NUMBER(11) NOT NULL,
 		  "NUMBER_OF_CHAR" NUMBER(11) NOT NULL,
-		  CONSTRAINT "PK2_TBL_PASSWORD_POLICY_PATTERN" PRIMARY KEY ("TENANT_ID","COMPANY_ID","USE_PATTERN_COUNT")
+		  CONSTRAINT "PK2_TBL_PWD_POLICY_PATTERN" PRIMARY KEY ("TENANT_ID","COMPANY_ID","USE_PATTERN_COUNT")
 		) 
 	</statement>
 	<select id="EzCommonDAO.checkAprAttachViewOrder">
@@ -2855,5 +2868,47 @@
   			LONGITUDE NUMBER(20,15) DEFAULT NULL
 		)
 	</statement>
+	
+	<select id="EzCommonDAO.checkTblNoticeBoard">
+		<![CDATA[
+			SELECT 
+				BOARDID
+			FROM 
+				TBL_BOARD_NOTICEBOARD
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblNoticeBoard">
+		CREATE TABLE TBL_BOARD_NOTICEBOARD (
+			BOARDID NVARCHAR2(40) NOT NULL,
+			TENANT_ID NUMBER(5,0) NOT NULL,
+			COMPANYID VARCHAR2(80) NOT NULL,
+			CONSTRAINT "TBL_BOARD_NOTICEBOARD_PK" PRIMARY KEY (BOARDID, TENANT_ID, COMPANYID)
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkMobileAttitudeConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'USE_MATTITUDE'
+		AND
+			tenant_id = #tenantId#
+	</select>
+	
+	<select id="EzCommonDAO.checkAttitudeGPSConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'attitudeMapApiKey'
+		AND
+			tenant_id = #tenantId#
+	</select>
 	
 </sqlMap>

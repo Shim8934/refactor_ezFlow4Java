@@ -361,7 +361,6 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} catch (UnsatisfiedLinkError linkErr) {
-			// TODO 라이브러리 링크 문제라면 뭔가 다른 작업을 해야할 수도 있어서 Throwable 객체로 익셉션 처리를 안 함
 			LOGGER.error(linkErr.toString());
 		}
 

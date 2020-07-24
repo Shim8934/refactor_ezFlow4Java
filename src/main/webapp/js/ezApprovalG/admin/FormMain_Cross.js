@@ -578,10 +578,11 @@ function MakeFormConnXML() {
     var pErrorMsg = "";
     var retValue = new Array();
 
-    if (getNodeText(txt_OpinionContent).replace(/\r\n/g, "").replace(/ /g, "") != "") {
+    /* 2020-07-16 홍승비 - 연동정보 > 연동 옵션 설정 시, 현재 연동정보가 아닌 양식 생성 시의 연동정보를 가져와 비교하는 오류 수정 */
+    if (txt_OpinionContent.value.replace(/\r\n/g, "").replace( /\n/g, "").replace(/\r/g, "").replace(/ /g, "") != "") {
         try {
             var xmldom = createXmlDom();
-            xmldom = loadXMLString("<conninfo>\n" + getNodeText(txt_OpinionContent) + "\n</conninfo>");
+            xmldom = loadXMLString("<conninfo>\n" + txt_OpinionContent.value.replace(/[\n|\t]/g, "") + "\n</conninfo>");
 
             if (xmldom.getElementsByTagName("conn").length == 0) {
                 pDataCheck = false;
@@ -653,8 +654,9 @@ function MakeFormConnXML() {
     return retValue;
 }
 
+/* 2020-07-17 홍승비 - 저장한 연동정보의 개행과 탭이 제대로 표출되지 않는 오류 수정 */
 function MakeFormConnXML_Detail() {
-    return "<CONNXML><conninfo>" + txt_OpinionContent.value + "</conninfo></CONNXML>"
+    return "<CONNXML><conninfo>" + txt_OpinionContent.value.replace(/[\n|\t]/g, "") + "</conninfo></CONNXML>"
 }
 
 function MakeFormWorkFlow() {

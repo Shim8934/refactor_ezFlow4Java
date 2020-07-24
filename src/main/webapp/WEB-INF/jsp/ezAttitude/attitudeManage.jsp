@@ -19,7 +19,8 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
-	    
+		<!-- date Format -->		
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 	    <style>
 	    	.portlet_tabpart01{position:relative; margin:15px 0px 0px 0px; clear: both; z-index: 0;}
 	    	.portlet_tabpart01_top p .tabover{position: relative; border:1px solid #999; border-bottom:1px solid #eee; background:white; color:#333; z-index: 0;}
@@ -407,7 +408,13 @@
 	    			resultHtml += "<td style='width: 24%;'>" + vo.deptName + "</td>";
 	    						
 	    			if (vo.endDate == null || vo.endDate == "") {
-	    				resultHtml += "<td style='width: 30%;'>" + vo.startDate.substring(0,16) + "</td>";
+	    				if(vo.typeId == "A25") {
+	    					var date = new Date(vo.startDate.substring(0,4), Number(vo.startDate.substring(5,7))-1 , Number(vo.startDate.substring(8,10)));
+							date.setDate(date.getDate()+1);	    					
+		    				resultHtml += "<td style='width: 30%;'>" + moment(date).format('YYYY-MM-DD') + " " + vo.startDate.substring(11,16) + "</td>";
+	    				} else {
+		    				resultHtml += "<td style='width: 30%;'>" + vo.startDate.substring(0,16) + "</td>";
+	    				}
 	    			} else {
 	    				if (vo.dateType == 4) {
 	    					resultHtml += "<td style='width: 30%;'>" + vo.startDate.substring(0,11) + " ~ " + vo.endDate.substring(0,11) + "</td>";

@@ -4698,6 +4698,29 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pNewBoardGroupID", newBoardGroupID);
 		map.put("tenantID", tenantID);
 		
+		/* 2020-06-29 홍승비 - 상위게시판을 자신의 하위게시판 아래로 이동하지 못하도록 수정 */
+		boolean canMove = true;
+		boolean breakflag = false;
+		String newParentBoardIDtemp = newParentBoardID;
+		
+		while (breakflag == false) {
+			CommunityBoardPropertyVO newParentBoardProperty = getBoardProperty(newParentBoardIDtemp, tenantID);
+			if (newParentBoardProperty != null) {
+				if (newParentBoardProperty.getParentBoardID().equals(orgBoardID)) {
+					canMove = false;
+					breakflag = true;
+				}
+				newParentBoardIDtemp = newParentBoardProperty.getParentBoardID();
+			} else {
+				breakflag = true;
+			}
+		}
+		
+		if (canMove == false) {
+			logger.debug("moveBoard canceled.");
+			return "CANCEL";
+		}
+		
 		try{
 			ezCommunityDAO.moveBoardUpdate1(map);
 			ezCommunityDAO.moveBoardUpdate2(map);

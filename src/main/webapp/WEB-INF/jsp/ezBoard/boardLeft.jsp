@@ -73,6 +73,23 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        
+		        /* 2019-09-16 홍승비 - 포탈 상단 게시판 메뉴로 게시판 접근 시, 기본으로 설정한 게시판을 보여주도록 수정 */
+		        if ((Func == null || Func == "") && (subFunc == null || subFunc == "") && (qstId == null || qstId == "") && (RedirectBoardID == null || RedirectBoardID == "") && (RedirectBoardGroupID == null || RedirectBoardGroupID == "")) {
+		        	var canRedirect = setDefaultBoard(); // 전역변수인 RedirectBoardID와 RedirectBoardGroupID 값을 임의로 설정
+		        	if (canRedirect == "OK") {
+		        		BoardRedirect(); // 설정한 게시판 값으로 리다이렉트를 진행
+                        
+                        document.getElementById('TreeCtrl_MyBoardTree').scrollTop = 0;
+                        leftResize();
+        		        $(".boardListBox").mCustomScrollbar({
+        	        		theme : "dark"
+        	        	});
+        		        
+		        		return;
+		        	}
+		        }
+		        
 		        if (Func == "1") {
 		            //WebPartToggle(level1El.item(level1El.length - 2));
 		            Open_Func(1);
@@ -138,7 +155,7 @@
 		                    }
 		                } */
 		                document.getElementById('TreeCtrl_MyBoardTree').scrollTop = 0;
-
+		                
 		                favoriteList();
 		            }
 		        }
@@ -535,16 +552,6 @@
 		            alert(e.description);
 		        }
 		    }
-		    function DisplayTopBoard() {
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=top&subFlag=0", false);
-		        xmlhttp.send();
-		
-		        if (xmlhttp.responseText != "ERROR") {
-		            MakeTopBoardView(xmlhttp.responseText);
-		        }
-		        xmlhttp = null;
-		    }
 		
 		    /* 2019-12-02 홍승비 - 게시판 좌측메뉴에서 마이게시판 설정 아이콘 표출, 의미없는 함수 파라미터 제거 */
 		    function ShowMyBoardItem() {		// 마이 게시판 선택
@@ -689,25 +696,6 @@
 		        var ret = xmlhttp3.responseXML;
 		        xmlhttp3 = null;
 		        return ret;
-		    }
-		    function MakeTopBoardView(strXML) {
-		        var xmldom = createXmlDom();
-		        var strHTML = "";
-		        xmldom = loadXMLString(strXML);
-		        strHTML = "";
-		        var xmldomNodes = SelectNodes(xmldom, "TREEVIEWDATA/NODE");
-		        for (var i = 0; i < xmldomNodes.length; i++) {
-		            var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
-		            tid = tid.substring(1, 37);
-
-		            strHTML += "<h2><span id='TreeCtrl" + i.toString() + "' value='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ")'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2>";
-		            strHTML += "  <ul>";
-		            strHTML += "	  <div  class='tree' id='TreeCtrl" + i.toString() + "obj" + "' style='display:none;height:100%;width:auto;overflow-x:auto;overflow-y:auto;padding-left:10px' ></div>";
-		            strHTML += "  </ul>";
-		        }
-		        xmldomNodes = null;
-		        xmldom = null;
-		        document.getElementById("TopBoardsList").innerHTML = strHTML;
 		    }
 		    
 		    function DeleteMyBoard() {
@@ -1039,6 +1027,33 @@
 						}
 					});
 		       	}
+		    }
+		    
+		    /* 2019-09-16 홍승비 - 기본 게시판으로 이동하기 위한 리다이렉트값 설정 함수 */
+		    function setDefaultBoard() {
+		    	var result = "";
+		    	
+		    	$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/getDefaultBoardID.do",
+					success: function(resultStr) {
+						if (resultStr != "") { // 기본 게시판ID가 테넌트 컨피그에 존재할때만 동작
+					        RedirectBoardGroupID = resultStr.split(";")[0];
+							RedirectBoardID = resultStr.split(";")[1];
+							
+							result = "OK";
+						} else {
+							result = "NO";
+						}
+					},
+					error: function() {
+						result = "NO";
+					}
+				});
+		    	
+		    	return result;
 		    }
 
 	    </script>

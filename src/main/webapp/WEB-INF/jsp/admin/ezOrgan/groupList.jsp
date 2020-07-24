@@ -93,14 +93,15 @@
 								+ ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	}
 
+	/* 2020-07-13 홍승비 - 권한그룹 삭제 시 다국어 추가, 잘못된 메세지 수정 */
 	function del_dl() {
 		funCheckBox('get');
 
 		if (CheckBoxArr.length == 0) {
-			alert("<spring:message code='ezOrgan.t28'/>");
+			alert("<spring:message code='ezOrgan.hsbPg01'/>");
 			return;
 		}
-		var ret = confirm(CheckBoxArr.length + "을 삭제하시겠습니까?");
+		var ret = confirm("<spring:message code='ezOrgan.hsbPg04' arguments='" + CheckBoxArr.length + "'/>");
 
 		if (ret) {
 			var data = "";
@@ -124,10 +125,9 @@
 				success : function(result) {
 					setTimeout(function() {
 						if (result == "OK") {
-							alert(CheckBoxArr.length
-									+ "<spring:message code='ezOrgan.t31' />");
+							alert(CheckBoxArr.length + "<spring:message code='ezOrgan.hsbPg03' />");
 						} else {
-							alert("<spring:message code='ezOrgan.t30' />")
+							alert("<spring:message code='ezOrgan.hsbPg02' />")
 						}
 
 						getPermissionGroupList();
@@ -135,7 +135,7 @@
 				},
 				error : function() {
 					setTimeout(function() {
-						alert("<spring:message code='ezOrgan.t30' />");
+						alert("<spring:message code='ezOrgan.hsbPg02' />");
 
 						getPermissionGroupList();
 					}, 100);
@@ -192,15 +192,16 @@
 			getPermissionGroupList();
 	}
 
+	/* 2020-07-13 홍승비 - 권한그룹 편집 시 다국어 추가, 잘못된 메세지 수정 */
 	function mod_dl(groupID, groupName) {
 		funCheckBox('get');
 		var length = CheckBoxArr.length;
 
 		if (length == 0) {
-			alert("<spring:message code='ezOrgan.t39' />");
+			alert("<spring:message code='ezOrgan.hsbPg05' />");
 			return;
 		} else if (length > 1) {
-			alert("한 그룹만 선택하시오.");
+			alert("<spring:message code='ezOrgan.hsbPg06' />");
 			return;
 		}
 		
@@ -544,8 +545,7 @@
 			<div id="userSearchRayer"
 				style="float: right; display: inline-block; margin-right: 2px;">
 				<select id="searchKeycode" style="height: 26px; width: 120px;">
-					<option value="GROUPNAME"><spring:message
-							code='ezEmail.t710' /></option>
+					<option value="GROUPNAME"><spring:message code='ezEmail.t710' /></option>
 					<!-- 그룹이름 -->
 					<option value="CREATEID"><spring:message code='ezOrgan.zNo007' /></option>
 					<!-- 그룹아이디 -->
@@ -575,8 +575,8 @@
 							<tr id="mainListHeaderTr">
 								<th style="width: 30px;"><input type='checkbox'
 									name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
-								<th style="width: 20%;"><spring:message code="main.t76" /></th>
-								<th style="width: 20%;"><spring:message code="ezOrgan.zNo008" /></th>
+								<th style="width: 20%;"><spring:message code="ezEmail.t710" /></th>
+								<th style="width: 20%;"><spring:message code="ezOrgan.zNo007" /></th>
 								<th style="width: 20%;"><spring:message code="ezOrgan.zNo009" /></th>
 								<th style="width: 20%;"><spring:message code="ezAttitude.t62" /></th>
 								<th style="width: 20%;"><spring:message code="ezAttitude.t63" /></th>

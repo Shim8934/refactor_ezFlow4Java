@@ -1093,9 +1093,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				        			replyMessage.setText("placeholder");
 				        		}	        					        		
 		        			} else if (orgMessage.isMimeType("multipart/*")) {
+				        		boolean isThereHtmlPart = ezEmailUtil.hasHtmlPart(orgMessage);
+				        		// text/html 파트가 없으면 인라인 이미지 파트를 첨부파일 파트로 변환한다.(이미지를 첨부로 대신 표시하기 위해)
+				        		boolean convertInlineImageToAttachment = isThereHtmlPart ? false : true;
+				        		
+				        		LOGGER.debug("convertInlineImageToAttachment=" + convertInlineImageToAttachment);
+		        						        				
 				                MimeMultipart mixedPart = new MimeMultipart();
 				                
-				                ezEmailUtil.copyAllPartsInMultipart(orgMessage, mixedPart);
+				                ezEmailUtil.copyAllPartsInMultipart(orgMessage, mixedPart, convertInlineImageToAttachment);
 				                
 				                replyMessage.setContent(mixedPart);	    
 		        			} else {
@@ -3533,6 +3539,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		LOGGER.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId + ",index=" + index);
 		
 		String filename = "";
+		String strOrder = "";
+		String strDepth = "";
 		
 		InputStream input = null;
 		IMAPAccess ia = null;
@@ -3556,8 +3564,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String strUid = messageId;
 			long uid = strUid != null ? Long.parseLong(strUid) : 0;
 			filename = request.getParameter("filename");
+			strOrder = request.getParameter("order");
+			strDepth = request.getParameter("depth");
 			
-			LOGGER.debug("folderPath=" + folderPath + ",uid=" + uid + ",filename=" + filename);
+			LOGGER.debug("folderPath=" + folderPath + ",uid=" + uid + ",filename=" + filename
+							+ ",strOrder=" + strOrder + ",strDepth=" + strDepth);
 			
 			if (folderPath == null || strUid == null || filename == null) {
 				LOGGER.debug("downloadAttach illegal arguments.");
@@ -3577,7 +3588,23 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			LOGGER.debug("index=" + intIndex);
-		
+
+			int order = 0;
+			
+			if (strOrder != null) {
+				order = Integer.parseInt(strOrder);
+			}
+			
+			LOGGER.debug("order=" + order);
+
+			int depth = 0;
+			
+			if (strDepth != null) {
+				depth = Integer.parseInt(strDepth);
+			}
+			
+			LOGGER.debug("depth=" + depth);
+			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
@@ -3605,7 +3632,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					if (intIndex == -1) {
 						part = message;
 					} else {
-						part = ezEmailUtil.getAttachPart(message, intIndex);
+						part = ezEmailUtil.getAttachPart(message, intIndex, order, depth);
 					}
 					
 					if (part == null) {

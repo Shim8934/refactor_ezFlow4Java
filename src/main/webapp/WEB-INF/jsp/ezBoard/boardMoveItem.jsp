@@ -83,6 +83,12 @@
 		            return;
 		        } */
 
+		        /* 2020-06-23 홍승비 - URL 게시판 체크 분기 분리 */
+				if (CheckIfAnonyBoard(selectedBoard).indexOf("URL") > -1) { // URL게시판
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb01'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+		            return;
+				}
 		        if (CheckIfAnonyBoard(selectedBoard).indexOf("2") > -1) {
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t999070' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t999070'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
@@ -164,6 +170,9 @@
 		        }
 		        if (xmlhttp2.responseText.indexOf("attributeextension") > -1) { // 확장칼럼
 		            retval += ";2";
+		        }
+		        if (xmlhttp2.responseText.indexOf("URLboard") > -1) { // URL게시판
+		            retval += ";URL";
 		        }
 		        
 		        xmlhttp2 = null;
@@ -264,7 +273,12 @@
 		        var strHTML = "";
 		        xmldom = loadXMLString(strXML);
 		        strHTML = "<table id='TopBoards' width=100% border=0>";
+		        
 		        var xmldomNodes = SelectNodes(xmldom, "TREEVIEWDATA/NODE");
+		        if (xmldomNodes == null || xmldomNodes == false) {
+		        	xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
+		        }
+		        
 		        var items = xmldomNodes.length;
 		        for (var i = 0; i < xmldomNodes.length; i++) {
 		            var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");

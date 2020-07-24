@@ -2076,4 +2076,18 @@
 			]]>
 		</isNotEqual>
 	</select>
+	
+	<select id="MApprovalG.getEndAprDocInfo" parameterClass="Map" resultClass="MApprGDocInfoVO">
+		SELECT 
+			*
+	    FROM 
+	    	TBL_ENDAPRDOCINFO 
+	    WHERE  
+	    	DOCID = #v_DOCID#
+	    AND
+	    	TENANT_ID = #v_TENANTID#
+	   	AND
+	   		COMPANYID = #v_COMPANYID#
+	</select>
+	
 </sqlMap>

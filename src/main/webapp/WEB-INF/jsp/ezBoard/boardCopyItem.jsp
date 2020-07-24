@@ -94,6 +94,12 @@
 		            return;
 		        } */
 		        
+		        /* 2020-06-23 홍승비 - URL 게시판 체크 분기 분리 */
+				if (CheckIfAnonyBoard(pDestBoardID).indexOf("URL") > -1) { // URL게시판
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+		            return;
+				}
 		        if (CheckIfAnonyBoard(pDestBoardID).indexOf("2") > -1) { // 확장칼럼
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t999069'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t999069'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
@@ -157,11 +163,14 @@
 		        xmlhttp2.send();
 		        
 		        var retval = "0";
-		        if (xmlhttp2.responseText.indexOf("anonyboard") > -1) { // 익명게시판
+		        if (xmlhttp2.responseText.indexOf("anonyboard") > -1) { // 익명, 포토, 썸네일게시판
 		            retval = "1";
 		        }
 		        if (xmlhttp2.responseText.indexOf("attributeextension") > -1) { // 확장칼럼
 		            retval += ";2";
+		        }
+		        if (xmlhttp2.responseText.indexOf("URLboard") > -1) { // URL게시판
+		            retval += ";URL";
 		        }
 		
 		        xmlhttp2 = null;
@@ -269,7 +278,12 @@
 		        var strHTML = "";
 		        xmldom = loadXMLString(strXML);
 		        strHTML = "<table id='TopBoards' width=100% border=0>";
+		        
 		        var xmldomNodes = SelectNodes(xmldom, "TREEVIEWDATA/NODE");
+		        if (xmldomNodes == null || xmldomNodes == false) {
+		        	xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
+		        }
+		        
 		        var items = xmldomNodes.length;
 		        for (var i = 0; i < xmldomNodes.length; i++) {
 		            var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");

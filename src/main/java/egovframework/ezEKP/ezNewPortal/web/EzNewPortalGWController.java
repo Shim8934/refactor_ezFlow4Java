@@ -3469,7 +3469,7 @@ public class EzNewPortalGWController {
 					data.put("access", "false");
 				} else {
 					// 권한이 true이면 boardList불러오기
-					List<BoardItemVO> photoBoardList = ezNewPortalService.getPhotoBoardPortletInfo(tenantId, boardId, startRow, photoCount);
+					List<BoardItemVO> photoBoardList = ezNewPortalService.getPhotoBoardPortletInfo(tenantId, boardId, startRow, photoCount, info.getOffset());
 
 					data.put("access", "true");
 					data.put("photoBoardList", photoBoardList);
@@ -3531,7 +3531,7 @@ public class EzNewPortalGWController {
 				} else {
 					// 권한이 true이면 boardList불러오기
 					List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
-					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, limit);
+					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, limit, info.getOffset());
 					int noticeCount = noticeList.size();
 					
 					for (int i = 0; i < noticeCount; i++) {
@@ -4475,7 +4475,7 @@ public class EzNewPortalGWController {
 				data.put("access", "false");
 			} else {
 				// 권한이 true이면 boardList불러오기
-				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(tenantId, boardId, itemCount, companyId);
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(tenantId, boardId, itemCount, companyId, info.getOffset());
 				
 				// 리스트 개수로 utc time 적용시키기
 				int boardListCount = boardList.size();

@@ -678,6 +678,8 @@
             AND
                 A.memberid = #memberID#
             AND
+            	A.memberid = B.memberid
+            AND
                 A.tenantid = #tenantID#
             AND
             	A.companyid = #companyID#
@@ -806,6 +808,8 @@
 		<![CDATA[
             AND
                 A.memberid = #memberID#
+            AND
+            	A.memberid = B.memberid
             AND
                 A.tenantid = #tenantID#
             GROUP BY
@@ -2433,19 +2437,24 @@
     		SET
     			deletestatus = 0,
     			updatestatus = (SELECT
-    								*
-    							FROM
-    								(SELECT
-    									if (COUNT(circularID) = 0, (SELECT
-   																		status
-   																	FROM
-   																		TBL_CIRCULAR_USER
-   																	WHERE
-   																		circularID = #circularID#
-   																	AND
-   																		memberid = #memberID#
-   																	AND
-   																		tenantid = #tenantID#), 3)
+											*
+										FROM
+											(SELECT
+												if (COUNT(circularID) = 0, 
+																			CASE	(SELECT
+																						status
+																					FROM
+																						TBL_CIRCULAR_USER
+																					WHERE
+																						circularID = #circularID#
+																					AND
+																						memberid = #memberID#
+																					AND
+																						tenantid = #tenantID#)
+																			WHEN 0 THEN 0
+																			WHEN 1 THEN 1
+					                                                        ELSE 0
+					                                                        END , 3 )
     								FROM
     									TBL_CIRCULAR_LINK
     								WHERE

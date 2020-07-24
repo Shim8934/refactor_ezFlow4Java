@@ -2647,7 +2647,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public List<AttitudeAnnualVO> getAttitudeAnnualList(String searchUserName,
 			String searchDeptName, String searchTitle, String orderCell, String orderOption, String offsetMin,
 			String pageNum, String listSize, String companyId, int tenantId,
-			String primary) throws Exception {
+			String primary, String startDate, String endDate) throws Exception {
 		LOGGER.debug("getAttitudeAnnualList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2674,6 +2674,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			primary = "";
 		}
 		map.put("primary", primary);
+		String searchStartTime = startDate + " 00:00:00";
+		String searchEndTime = endDate + " 23:59:59";
+		
+		map.put("searchStartTime", searchStartTime);
+		map.put("searchEndTime", searchEndTime);
 		
 		List<AttitudeAnnualVO> resultList = ezAttitudeDAO.getAttitudeAnnualList(map);
 		

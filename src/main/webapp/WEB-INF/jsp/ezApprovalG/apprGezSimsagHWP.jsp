@@ -525,21 +525,24 @@
         function SaveFile() {
 			var result = "";
 			
-	        $.ajax({
-	    		type : "POST",
-	    		dataType : "text",
-	    		async : false,
-	    		url : "/ezApprovalG/saveEndFileHwp.do",
-	    		data : {
+			var data = {
 	    			docID : pOrgDocID,
-                    // formId : pFormID,
+	    			// formId : pFormID,
 	    			html  : HwpCtrl.GetCloneData("", "HWP")
-	    		},
-	    		success: function(xml){
-	    			result = xml;
-	    		}        			
-	    	});
-	        
+				}
+				
+		    $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/saveEndFileHwp.do",
+		    		contentType : "application/json",
+		    		data : JSON.stringify(data),
+		    		success: function(xml){
+		    			result = xml;
+		    		}        			
+		    	});
+			
 	        var reqData = {
     			docID : pDocID,
                    // formId : pFormID,
@@ -641,6 +644,7 @@
                     SetDocumentElement(HwpCtrl, "swidth", SealWidth);
                     SetDocumentElement(HwpCtrl, "sheight", SealHeight);
                     stampFlag = true;
+                    NostampFlag = false;
                 }
             } else {
                 if (HwpCtrl.CheckFieldExist("sealsign")) {

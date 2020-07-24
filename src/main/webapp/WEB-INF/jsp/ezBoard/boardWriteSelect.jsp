@@ -102,13 +102,16 @@
 	        	window.close();
 			}
 
-			function CheckIfAnonyBoard(pBoardID) {
+		    // 미사용 함수 주석처리
+/* 			function CheckIfAnonyBoard(pBoardID) {
 				xmlhttp.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
-				if(ret.indexOf("anonyboard") != -1) return true;
+				if (ret.indexOf("anonyboard") != -1 || ret.indexOf("URLboard") != -1) {
+					return true;
+				}
 				return false;
-			}
+			} */
 			
 			function CheckIfCanWrite(pBoardID)
 			{
@@ -241,8 +244,13 @@
 				var xmldom = createXmlDom();
 				var strHTML = "";
 				xmldom = loadXMLString(strXML);
-				strHTML = "<table id='TopBoards' width=100% border=0>"
+				strHTML = "<table id='TopBoards' width=100% border=0>";
+				
 				var xmldomNodes = SelectNodes(xmldom, "TREEVIEWDATA/NODE");
+		        if (xmldomNodes == null || xmldomNodes == false) {
+		        	xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
+		        }
+				
 				var items = xmldomNodes.length;	
 				for(i=0;i<xmldomNodes.length;i++)
 				{

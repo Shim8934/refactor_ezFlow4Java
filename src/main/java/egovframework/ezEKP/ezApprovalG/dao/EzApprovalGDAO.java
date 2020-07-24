@@ -3296,7 +3296,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public ApprGFormVO getFormPath(Map<String, Object> map) throws Exception {
 		return (ApprGFormVO) select("EzApprovalG.getFormPath", map);
 	}
-
+	
 	public void insertOpenGovAttachInfo(Map<String, Object> map) throws Exception {
 		insert("EzApprovalG.insertOpenGovAttachInfo", map);
 	}
@@ -3461,7 +3461,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateBebuRelayDocSenderInfo(Map<String, Object> map) throws Exception {
 	        update("EzApprovalG.updateBebuRelayDocSenderInfo", map);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<ApprGFormVO> getFormContainer(Map<String, Object> map) {
 		return (List<ApprGFormVO>) list("EzApprovalG.getFormContainer", map);
@@ -3488,6 +3488,15 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		delete("EzApprovalG.delOpinionsExceptDrafters", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getLeftDocCountNew(Map<String, Object> map) throws Exception{
+		return (Map<String, Object>) select("EzApprovalG.getLeftDocCount_new", map);
+	}
+	
+	public void updateEndAprDocOptionInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateEndAprDocOptionInfo", map);
+	}
+	
 	public void copyOpinionsFromOrgDoc(Map<String, Object> map) {
 		insert("EzApprovalG.copyOpinionsFromOrgDoc", map);
 	}
@@ -3512,5 +3521,15 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public String getPassAprLineFlagByDocID(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getPassAprLineFlagByDocID", map);
+	}
+	
+	/* 2020-07-23 홍승비 - 완료문서의 전체 정보를 가져오는 쿼리 */
+	public ApprGDocListVO getEndDocInfo(Map<String, Object> map) throws Exception {
+		return (ApprGDocListVO) select("EzApprovalG.getEndDocInfo", map);
+	}
+	
+	/* 2020-07-23 홍승비 - 전달한 사용자ID에 대하여, 특정 진행문서의 전체 정보를 가져오는 쿼리 */
+	public ApprGDocListVO getIngDocInfo(Map<String, Object> map) throws Exception {
+		return (ApprGDocListVO) select("EzApprovalG.getIngDocInfo", map);
 	}
 }

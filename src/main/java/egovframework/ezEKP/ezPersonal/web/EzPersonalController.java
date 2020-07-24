@@ -1231,6 +1231,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		}
 		
 		String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyID, userInfo.getTenantId(), locale);
+		boolean useOnlyInnerMail = "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
 		
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("txtInfo", pInfo);
@@ -1264,6 +1265,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("useMailAliasSettingOnLogin", useMailAliasSettingOnLogin);
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
+		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		
 		logger.debug("changePersonInfo ended");
 		return "/ezPersonal/persChangePersonInfo";

@@ -11,7 +11,7 @@
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/memo.css')}">
-		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/popup.css')}">
+		<link rel="stylesheet" href="${util.addVer('ezNewPortal.e2', 'msg')}">
 		<!-- 컨텍스트 메뉴 관련 -->
 		<link rel="stylesheet" href="${util.addVer('/css/contextMenu.css')}">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">

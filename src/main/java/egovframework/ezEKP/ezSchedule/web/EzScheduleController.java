@@ -2261,7 +2261,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			description = "[" + msg.getMessage("ezSchedule.t278", locale) + " " + startDate + " ~ " + endDate;			
 		} else if (view.equals("0")) {
-			if(Calendar.DATE != 1){
+			if(!startDate.substring(8,10).equals("01")){
 				cal.add(Calendar.MONTH, 1);
 				cal.set(Calendar.DATE, 1);
 				startDate = sdf.format(cal.getTime());

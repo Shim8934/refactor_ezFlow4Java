@@ -98,8 +98,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 	@Autowired
 	private EzOrganDAO ezOrganDao;
 	
-	@Autowired
-	private EzEmailAsync ezEmailAsync;
 	
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
@@ -733,52 +731,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return cancelList;
 	}
 	
-	@Override
-	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses, Locale locale) throws Exception {
-		logger.debug("setMailCancelSend started.");
-		logger.debug("tenantId=" + tenantId + ",primary=" + primary + ",pMessageId=" + pMessageId + ",pUserId=" + pUserId + ",pSubject=" + pSubject);
-		
-		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
-		
-		String messageIdParam = "messageId=" + URLEncoder.encode(pMessageId, "UTF-8");
-		String senderEmailParam = "senderEmail=" + URLEncoder.encode(pUserId + "@" + domainName, "UTF-8");
-		String subjectParam = "subject=" + URLEncoder.encode(pSubject, "UTF-8");
-		String primaryParam = "primary=" + primary;
-		String tenantIdParam = "tenantId=" + tenantId;
-		
-		StringBuilder receiverEmailParam = new StringBuilder();
-		
-		for (String innerAddress : pInnerAddresses) {
-			receiverEmailParam.append("&re=" + URLEncoder.encode(innerAddress, "UTF-8"));
-		}
-		
-		String inputParams = messageIdParam + "&" + senderEmailParam + "&" + subjectParam + "&" + primaryParam + "&" + tenantIdParam;
-		inputParams += receiverEmailParam.toString();
-		logger.debug("inputParams=" + inputParams);
-		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailRecall2", inputParams);
-		logger.debug("strJson=" + strJson);
-		
-		//get recallIdx
-		String recallIdx = "";
-		
-		JSONParser parser = new JSONParser();
-		JSONObject object = (JSONObject)parser.parse(strJson);
-		
-		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-        	recallIdx = (String)object.get("result");
-		}
-		
-		//회수처리 함수 호출(비동기)
-		if (recallIdx != null && !recallIdx.equals("") && !recallIdx.equals("0")) {
-			ezEmailAsync.cancelMailDelete(recallIdx, tenantId, locale);
-		} else {
-			throw new Exception("Cannot get recallIdx. So, cannot call cancelMailDelete method(Async).");
-		}
-		
-		logger.debug("setMailCancelSend ended.");
-	}
-
 	@Override
 	public String getMailReceiveMessageId(String pNum) throws Exception {
 		logger.debug("getMailReceiveMessageId started. pNum=" + pNum);
@@ -1448,6 +1400,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			.content(content)
 			.importance(importance)
 			.saveSentMailbox(isSaved)
+			.notUseAuth()
 		.send();
 		
         logger.debug("sendMail ended.");
@@ -1539,6 +1492,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			.bcc(bccArr)
 			.subject(subject)
 			.content(content)
+			.notUseAuth()
 		.send();
 		
         logger.debug("sendMail ended.");
@@ -4498,5 +4452,32 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		ezEmailDAO.deleteBigAttachCountInfo(map);
 		logger.debug("deleteBigAttachCountInfo ended.");
+	}
+	
+	@Override
+	public int deleteMailDeleteForUser(String pUserEmail) throws Exception {
+		logger.debug("deleteMailDeleteForUser started.");
+		logger.debug("pUserEmail=" + pUserEmail);
+		
+		int returnInt = -100;
+		
+		String inputParams = "userId=" + pUserEmail;
+		logger.debug("inputParams=" + inputParams);
+		try {
+			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/deleteMailDeleteForUser", inputParams);
+			logger.debug("strJson=" + strJson);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+	        
+	        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+	        	throw new Exception("JGwServer ERROR");
+	        }
+		} catch (Exception e) {
+			logger.debug("[JGW-SERVER ERROR] deleteMailDeleteForUser.");
+		}
+
+		logger.debug("deleteMailDeleteForUser ended.");
+        return returnInt;
 	}
 }

@@ -28,9 +28,10 @@
 	        var stampFlag = false;
 	        var NostampFlag = false;
 	        var modeflag = false;
-	        var companyID = "<c:out value ='${userinfo.companyID}'/>"
+	        var companyID = "<c:out value ='${userInfo.companyID}'/>";
 			var arr_userinfo = new Array();
 			var maxwidth = 659;
+			var orgCompanyID = "<c:out value ='${userInfo.companyID}'/>";
 			
 			var arr_userinfo = new Array();
 		    arr_userinfo[0] = "user";

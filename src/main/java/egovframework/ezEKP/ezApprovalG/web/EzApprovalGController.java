@@ -7,6 +7,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
@@ -25,6 +26,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -137,6 +139,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+
 
 /** 
  * @Description [Controller] 사용자 - 전자결재G
@@ -513,6 +516,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
 		model.addAttribute("useAdditionalRole", ezCommonService.getTenantConfig("USE_AdditionalROle", userInfo.getTenantId()));
 		model.addAttribute("userLang", userLang);
+		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
+		
 		logger.debug("aprManage ended.");
 		
 		return "ezApprovalG/apprGManage";
@@ -565,9 +570,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 returnQuery += " AND DocTitle LIKE '%" + domSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
             }
 
+			/* 2020-06-29 홍승비 - WRITERNAME, WRITERDEPTNAME칼럼은 2까지만 존재함(일본어인 경우 3이 전달되는 오류 수정) */
             if (commonUtil.getPrimaryData(userLang, userInfo.getTenantId()).equals("2")) {
                 if (tempQuery.indexOf("WRITERNAME;") != -1) {
-                    returnQuery += " AND WRITERNAME" + userLang + " LIKE '%" + domSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
+                    returnQuery += " AND WRITERNAME2 LIKE '%" + domSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
                 }
             } else {
                 if (tempQuery.indexOf("WRITERNAME;") != -1) {
@@ -577,7 +583,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
             if (commonUtil.getPrimaryData(userLang, userInfo.getTenantId()).equals("2")) {
                 if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                    returnQuery += " AND WriterDeptName" + userLang + " LIKE '%" + domSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
+                    returnQuery += " AND WriterDeptName2 LIKE '%" + domSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                 }
             } else {
                 if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
@@ -4319,6 +4325,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 			}
 			
+			/* 2020-07-22 홍승비 - 메일링크 클릭 시 결재진행&완료문서 보기 분기 추가 */
 			if (checkPermission) {
 				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId(), docState);
 				
@@ -4326,7 +4333,29 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					if(mailChk != null && mailChk.equals("Y")) {
 						model.addAttribute("chk", "no");
 					}
-					return "main/warning";
+					
+					// 진행문서인 경우
+					ApprGDocListVO apprGIngDocVO = ezApprovalGService.getIngDocInfo(userInfo.getId(), docID.trim(), orgCompanyID, userInfo.getTenantId());
+					if (apprGIngDocVO != null && apprGIngDocVO.getHref() != null && !apprGIngDocVO.getHref().trim().equals("")) {
+						model.addAttribute("docID", docID.trim());
+						model.addAttribute("docHref", apprGIngDocVO.getHref().trim());
+						model.addAttribute("orgCompanyID", orgCompanyID); // 결재문서 기안 당시의 회사ID
+						model.addAttribute("listType", "3"); // 진행중문서 listType
+						
+						return "redirect:/ezApprovalG/aprDocView.do";
+					} else {
+						// 완료문서인 경우
+						ApprGDocListVO apprGEndDocVO = ezApprovalGService.getEndDocInfo(docID.trim(), orgCompanyID, userInfo.getTenantId());
+						if (apprGEndDocVO != null && apprGEndDocVO.getHref() != null && !apprGEndDocVO.getHref().trim().equals("")) {
+							model.addAttribute("docID", docID.trim());
+							model.addAttribute("docHref", apprGEndDocVO.getHref().trim());
+							model.addAttribute("orgCompanyID", orgCompanyID); // 결재문서 기안 당시의 회사ID(문서 재사용에 필요)
+							
+							return "redirect:/ezApprovalG/contDocView.do";
+						} else {
+							return "main/warning";
+						}
+					}
 				}
 			}
 		}
@@ -5058,9 +5087,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 returnQuery += " AND TBL_APRDOCINFO.DocTitle LIKE '%" + xmlDomSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
             }
 
+			/* 2020-06-29 홍승비 - WRITERNAME, WRITERDEPTNAME칼럼은 2까지만 존재함(일본어인 경우 3이 전달되는 오류 수정) */
             if (commonUtil.getPrimaryData(userLang, userInfo.getTenantId()).equals("2")) {
                 if (tempQuery.indexOf("WRITERNAME;") != -1) {
-                    returnQuery += " AND TBL_APRDOCINFO.WRITERNAME" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
+                    returnQuery += " AND TBL_APRDOCINFO.WRITERNAME2 LIKE '%" + xmlDomSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
                 }
             } else {
                 if (tempQuery.indexOf("WRITERNAME;") != -1) {
@@ -5070,7 +5100,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
             if (commonUtil.getPrimaryData(userLang, userInfo.getTenantId()).equals("2")) {
                 if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                    returnQuery += " AND TBL_APRDOCINFO.WriterDeptName" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
+                    returnQuery += " AND TBL_APRDOCINFO.WriterDeptName2 LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                 }
             } else {
                 if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
@@ -7335,8 +7365,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
             String orderCell = request.getParameter("OC");
             String orderOption = request.getParameter("OO");
             String subQuery = request.getParameter("SQ");
-            
-            excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, allFG, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
+
+            if (approvalFlag.equalsIgnoreCase("G")) {
+                excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, allFG, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
+            } else {
+                excelValue = ezApprovalGService.getSearchDocListS(P12, userInfo.getId(), subQuery, P0, P1, P2, P9, P3, P4, P5, P6, P7, P8, P11, "", "", pageSize, pageNum, orderCell, orderOption,  "", userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
+            }
 		}
 		
 		Document objXML = commonUtil.convertStringToDocument(excelValue);
@@ -8072,8 +8106,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
 		// String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		String langType = xmlDom.getElementsByTagName("LANGTYPE").item(0).getTextContent().trim();
-		String formID = xmlDom.getElementsByTagName("FORMID").item(0).getTextContent().trim();
-		String mode = xmlDom.getElementsByTagName("MODE").item(0).getTextContent().trim();
+//		String formID = xmlDom.getElementsByTagName("FORMID").item(0).getTextContent().trim();
 		String orgUID = "";
 		String realPath = commonUtil.getRealPath(request);
 		
@@ -8081,6 +8114,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		if (xmlDom.getElementsByTagName("DOCID").getLength() > 0) {
 			totCnt = xmlDom.getElementsByTagName("DOCID").getLength(); // 결재 체크된 문서 갯수 확인
+			String mode = xmlDom.getElementsByTagName("MODE").item(0).getTextContent().trim();
 			
 			for (int k = xmlDom.getElementsByTagName("DOCID").getLength() - 1; k > -1; k--) {
 				orgUID = xmlDom.getElementsByTagName("ORGAPRUSERID").item(k).getTextContent(); // 원결재자
@@ -8090,6 +8124,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				String orgCompanyID = xmlDom.getElementsByTagName("orgCompanyID").item(k).getTextContent().trim();
 				String approveRet = ezApprovalGService.getApproveDocInfo(userInfo, xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgCompanyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(),mode,docState);
 				String aprMemberSN = xmlDom.getElementsByTagName("APRMEMBERSN").item(k).getTextContent().trim();
+				String formID = xmlDom.getElementsByTagName("FORMID").item(k).getTextContent().trim();
 				
 				Document aprXML = commonUtil.convertStringToDocument(approveRet);
 				

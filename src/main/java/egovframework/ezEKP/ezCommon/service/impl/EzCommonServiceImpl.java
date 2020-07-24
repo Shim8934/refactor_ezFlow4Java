@@ -347,9 +347,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         imgSrcs = imgSrcs.stream().distinct().collect(Collectors.toList());
 
-        elements = null;
-        document = null;
-
         logger.debug("extractImageSource ended.");
 
         return imgSrcs;
@@ -395,10 +392,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             }
         }
 
-        backgroundImgSrcs = backgroundImgSrcs.stream().distinct().collect(Collectors.toList());
-        
-        elements = null;
-        document = null;
+        backgroundImgSrcs = backgroundImgSrcs.stream().filter(backgroundImgSrc -> !backgroundImgSrc.equalsIgnoreCase("none")).distinct().collect(Collectors.toList());
 
         logger.debug("extractBackgroundSource ended.");
 
@@ -1589,6 +1583,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		logger.debug("getPermissionGroupMembers ended.");
 		return ezCommonDAO.getPermissionGroupMembers(map);
+	}	
+	
+	@Override
+	public void createTblNoticeBoard() throws Exception {
+		ezCommonDAO.createTblNoticeBoard();
 	}
 
 	@Override
@@ -1921,7 +1920,43 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void insertMobileAttitudeColumn() throws Exception {
 		logger.debug("insertMobileAttitudeColumn started");
+		
+		// 모바일 출퇴근 기능 관련 컬럼 추가(tbl_attitude -> attend_type, latitude, longitude)
 		ezCommonDAO.insertMobileAttitudeColumn();
+		
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			// 모바일 근태관리 테넌트 컨피그 추가
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantId", tenantVo.getTenantId());
+			map.put("regdate", "2020-07-01 00:00:00");
+			map.put("configType", "기타모듈");
+
+			map.put("propertyName", "USE_MATTITUDE");
+			map.put("propertyValue", "NO");
+			map.put("description", "YES: 사용 NO: 사용안함 (default: NO)");
+			map.put("configName", "모바일 근태관리 모듈 사용여부");
+
+			try {
+				ezCommonDAO.insertMobileAttitudeConfig(map);
+			} catch (Exception e) {
+				// ignore
+			}
+			
+			// 근태관리 GPS 테넌트 컨피그 추가
+			map.put("propertyName", "attitudeMapApiKey");
+			map.put("propertyValue", "");
+			map.put("description", "근태관리 지도 api key(미사용시 빈값)");
+			map.put("configName", "근태관리 지도 api key");
+			
+			try {
+				ezCommonDAO.insertAttitudeGPSConfig(map);
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+		
 		logger.debug("insertMobileAttitudeColumn ended");
 	}
 	public void alterTblPsApprovNotiMailConf() throws Exception {

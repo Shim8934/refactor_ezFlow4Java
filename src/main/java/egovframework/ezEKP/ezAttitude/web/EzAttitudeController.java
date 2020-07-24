@@ -49,6 +49,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO2;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -3043,6 +3044,8 @@ public class EzAttitudeController {
 		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 		bodyStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+		bodyStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		bodyStyle.setWrapText(true);
 		
 		HSSFFont font = workbook.createFont();
 		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
@@ -3060,36 +3063,283 @@ public class EzAttitudeController {
 			pFileName = EgovDateUtil.getToday("-") +"_attitudeReport.xls";
 			
 			//header
-			row.createCell(0).setCellValue("NO");
+			row.createCell(0).setCellValue("NO.");
 			row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
 			row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
 			row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
-			row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t133", locale));
-			row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t134", locale));
+			row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t232", locale));
+			row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t233", locale));
+			row.createCell(6).setCellValue(egovMessageSource.getMessage("ezAttitude.kje22", locale));
+			row.createCell(7).setCellValue(egovMessageSource.getMessage("ezAttitude.t115", locale));
+			row.createCell(8).setCellValue(egovMessageSource.getMessage("ezPersonal.b3", locale));
+			row.createCell(9).setCellValue(egovMessageSource.getMessage("ezPersonal.b2", locale));
+			row.createCell(10).setCellValue(egovMessageSource.getMessage("ezAttitude.kje23", locale));
+			row.createCell(11).setCellValue(egovMessageSource.getMessage("ezPersonal.b10", locale));
+			row.createCell(12).setCellValue(egovMessageSource.getMessage("ezAttitude.t254", locale));
+			row.createCell(13).setCellValue(egovMessageSource.getMessage("ezAttitude.t255", locale));
+			row.createCell(14).setCellValue(egovMessageSource.getMessage("ezAttitude.t256", locale));
+			row.createCell(15).setCellValue(egovMessageSource.getMessage("ezAttitude.kje04", locale));
+			row.createCell(16).setCellValue(egovMessageSource.getMessage("ezAttitude.kje28", locale));
+			row.createCell(17).setCellValue(egovMessageSource.getMessage("ezPersonal.b8", locale));
+			row.createCell(18).setCellValue(egovMessageSource.getMessage("ezAttitude.kje24", locale));
+			row.createCell(19).setCellValue(egovMessageSource.getMessage("ezAttitude.kje25", locale));
+			row.createCell(20).setCellValue(egovMessageSource.getMessage("ezAttitude.kje26", locale));
+			row.createCell(21).setCellValue(egovMessageSource.getMessage("ezAttitude.kje27", locale));
+			row.createCell(22).setCellValue(egovMessageSource.getMessage("ezPersonal.b7", locale));
 			row.getCell(0).setCellStyle(headerStyle);
 			row.getCell(1).setCellStyle(headerStyle);
 			row.getCell(2).setCellStyle(headerStyle);
 			row.getCell(3).setCellStyle(headerStyle);
 			row.getCell(4).setCellStyle(headerStyle);
 			row.getCell(5).setCellStyle(headerStyle);
+			row.getCell(6).setCellStyle(headerStyle);
+			row.getCell(7).setCellStyle(headerStyle);
+			row.getCell(8).setCellStyle(headerStyle);
+			row.getCell(9).setCellStyle(headerStyle);
+			row.getCell(10).setCellStyle(headerStyle);
+			row.getCell(11).setCellStyle(headerStyle);
+			row.getCell(12).setCellStyle(headerStyle);
+			row.getCell(13).setCellStyle(headerStyle);
+			row.getCell(14).setCellStyle(headerStyle);
+			row.getCell(15).setCellStyle(headerStyle);
+			row.getCell(16).setCellStyle(headerStyle);
+			row.getCell(17).setCellStyle(headerStyle);
+			row.getCell(18).setCellStyle(headerStyle);
+			row.getCell(19).setCellStyle(headerStyle);
+			row.getCell(20).setCellStyle(headerStyle);
+			row.getCell(21).setCellStyle(headerStyle);
+			row.getCell(22).setCellStyle(headerStyle);
 			
-			//body
-			for (int i = 0 ; i < attitudeList.size(); i++) { 
-				AdminAttitudeVO vo = attitudeList.get(i);
+			//2020-06-15 김정언 - 엑셀 출력 형식 변경
+			List<AdminAttitudeVO2> attitudeList2 = new ArrayList<AdminAttitudeVO2>();
+			AdminAttitudeVO2 avo = null;
+			boolean flag = true;
+			for (int i = 0; i < attitudeList.size() ; i++) {
+				if(flag == true){
+					avo = new AdminAttitudeVO2();
+					flag = false;
+				}
+				
+				if(i + 1 < attitudeList.size()){
+					//다음 행과 비교하여 날짜가 같고 사용자의 이름이 같을 경우
+					if(attitudeList.get(i).getStartDate().split(" ")[0].equals(attitudeList.get(i + 1).getStartDate().split(" ")[0]) && attitudeList.get(i).getWriterId().equals(attitudeList.get(i + 1).getWriterId())){
+						avo.setWriterId(attitudeList.get(i).getWriterId());
+						avo.setUserName(attitudeList.get(i).getUserName());
+						avo.setUserTitle(attitudeList.get(i).getUserTitle());
+						avo.setDeptName(attitudeList.get(i).getDeptName());
+						
+						if(attitudeList.get(i).getTypeId().equals("A01")) { //출근
+							avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A02")) { //지각
+							avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113") + ")");
+						}else if(attitudeList.get(i).getTypeId().equals("A03")) { //퇴근
+							avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A25")) { //전일퇴근
+							String[] startDate = attitudeList.get(i).getStartDate().split(" ");
+							String dayAfter = commonUtil.getDayAfter(startDate[0]);
+							avo.setEndDate(dayAfter + " " + startDate[1].split("\\.")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A08")) { //조퇴
+							avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114") + ")");
+						}else if(attitudeList.get(i).getTypeId().equals("A07")) { //휴근
+							String date = avo.getWorkingHoliday() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getWorkingHoliday() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
+							avo.setWorkingHoliday(date);
+						}else if(attitudeList.get(i).getTypeId().equals("A04")) { //외근
+							if(attitudeList.get(i).getDateType().equals("4")) {
+								avo.setOutsideWork(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+							}else {
+								String date = avo.getOutsideWork() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getOutsideWork() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
+								avo.setOutsideWork(date);
+							}
+						}else if(attitudeList.get(i).getTypeId().equals("A06")) { //외출
+							String date = avo.getOuting() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndTime() : avo.getOuting() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndTime();
+							avo.setOuting(date);
+						}else if(attitudeList.get(i).getTypeId().equals("A09")) { //출장
+							avo.setBusinessTrip(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A10")) { //파견
+							avo.setDispatch(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A17")) { //결근
+							avo.setAbsenteeism(attitudeList.get(i).getStartDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A11")) { //연차
+							avo.setAnnualLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A12")) { //오전반차
+							avo.setMorningOff(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A13")) { //오후반차
+							avo.setAfternoonOff(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A14")) { //공가
+							avo.setOfficialLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A15")) { //오전공가
+							avo.setmOfficialLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A16")) { //오후공가
+							avo.setaOfficialLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A18")) { //산휴
+							avo.setMaternityLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A19")) { //경조
+							avo.setCongratulationLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A20")) { //병가
+							avo.setSickLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A21")) { //반반차
+							String date = avo.getHalfOff() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getHalfOff() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
+							avo.setHalfOff(date);
+						}else if(attitudeList.get(i).getTypeId().equals("A24")) { //대체휴무
+							avo.setAlternateHoliday(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}
+					} else {						
+						//날짜와 사용자의 이름이 다를 경우
+						avo.setWriterId(attitudeList.get(i).getWriterId());
+						avo.setUserName(attitudeList.get(i).getUserName());
+						avo.setUserTitle(attitudeList.get(i).getUserTitle());
+						avo.setDeptName(attitudeList.get(i).getDeptName());
+						if(attitudeList.get(i).getTypeId().equals("A01")) { //출근
+							avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A02")) { //지각
+							avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113") + ")");
+						}else if(attitudeList.get(i).getTypeId().equals("A03")) { //퇴근
+							avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A25")) { //전일퇴근
+							String[] startDate = attitudeList.get(i).getStartDate().split(" ");
+							String dayAfter = commonUtil.getDayAfter(startDate[0]);
+							avo.setEndDate(dayAfter + " " + startDate[1].split("\\.")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A08")) { //조퇴
+							avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114") + ")");
+						}else if(attitudeList.get(i).getTypeId().equals("A07")) { //휴근
+							String date = avo.getWorkingHoliday() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getWorkingHoliday() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
+							avo.setWorkingHoliday(date);
+						}else if(attitudeList.get(i).getTypeId().equals("A04")) { //외근
+							if(attitudeList.get(i).getDateType().equals("4")) {
+								avo.setOutsideWork(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+							}else {
+								String date = avo.getOutsideWork() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getOutsideWork() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
+								avo.setOutsideWork(date);
+							}
+						}else if(attitudeList.get(i).getTypeId().equals("A06")) { //외출
+							String date = avo.getOuting() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndTime() : avo.getOuting() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndTime();
+							avo.setOuting(date);
+						}else if(attitudeList.get(i).getTypeId().equals("A09")) { //출장
+							avo.setBusinessTrip(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A10")) { //파견
+							avo.setDispatch(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A17")) { //결근
+							avo.setAbsenteeism(attitudeList.get(i).getStartDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A11")) { //연차
+							avo.setAnnualLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A12")) { //오전반차
+							avo.setMorningOff(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A13")) { //오후반차
+							avo.setAfternoonOff(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A14")) { //공가
+							avo.setOfficialLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A15")) { //오전공가
+							avo.setmOfficialLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A16")) { //오후공가
+							avo.setaOfficialLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A18")) { //산휴
+							avo.setMaternityLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A19")) { //경조
+							avo.setCongratulationLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A20")) { //병가
+							avo.setSickLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else if(attitudeList.get(i).getTypeId().equals("A21")) { //반반차
+							String date = avo.getHalfOff() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getHalfOff() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
+							avo.setHalfOff(date);
+						}else if(attitudeList.get(i).getTypeId().equals("A24")) { //대체휴무
+							avo.setAlternateHoliday(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}
+						
+						attitudeList2.add(avo);
+						flag = true;					
+					}
+				} else { //마지막 것은 비교하지 않는다.
+					avo.setWriterId(attitudeList.get(i).getWriterId());
+					avo.setUserName(attitudeList.get(i).getUserName());
+					avo.setUserTitle(attitudeList.get(i).getUserTitle());
+					avo.setDeptName(attitudeList.get(i).getDeptName());
+
+					if(attitudeList.get(i).getTypeId().equals("A01")) { //출근
+						avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A02")) { //지각
+						avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113") + ")");
+					}else if(attitudeList.get(i).getTypeId().equals("A03")) { //퇴근
+						avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A25")) { //전일퇴근
+						String[] startDate = attitudeList.get(i).getStartDate().split(" ");
+						String dayAfter = commonUtil.getDayAfter(startDate[0]);
+						avo.setEndDate(dayAfter + " " + startDate[1].split("\\.")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A08")) { //조퇴
+						avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114") + ")");
+					}else if(attitudeList.get(i).getTypeId().equals("A07")) { //휴근
+						String date = avo.getWorkingHoliday() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getWorkingHoliday() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
+						avo.setWorkingHoliday(date);
+					}else if(attitudeList.get(i).getTypeId().equals("A04")) { //외근
+						if(attitudeList.get(i).getDateType().equals("4")) {
+							avo.setOutsideWork(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+						}else {
+							String date = avo.getOutsideWork() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getOutsideWork() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
+							avo.setOutsideWork(date);
+						}
+					}else if(attitudeList.get(i).getTypeId().equals("A06")) { //외출
+						String date = avo.getOuting() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndTime() : avo.getOuting() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndTime();
+						avo.setOuting(date);
+					}else if(attitudeList.get(i).getTypeId().equals("A09")) { //출장
+						avo.setBusinessTrip(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A10")) { //파견
+						avo.setDispatch(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A17")) { //결근
+						avo.setAbsenteeism(attitudeList.get(i).getStartDate().split(" ")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A11")) { //연차
+						avo.setAnnualLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A12")) { //오전반차
+						avo.setMorningOff(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A13")) { //오후반차
+						avo.setAfternoonOff(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A14")) { //공가
+						avo.setOfficialLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A15")) { //오전공가
+						avo.setmOfficialLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A16")) { //오후공가
+						avo.setaOfficialLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A18")) { //산휴
+						avo.setMaternityLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A19")) { //경조
+						avo.setCongratulationLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A20")) { //병가
+						avo.setSickLeave(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+					}else if(attitudeList.get(i).getTypeId().equals("A21")) { //반반차
+						String date = avo.getHalfOff() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getHalfOff() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
+						avo.setHalfOff(date);
+					}else if(attitudeList.get(i).getTypeId().equals("A24")) { //대체휴무
+						avo.setAlternateHoliday(attitudeList.get(i).getStartDate().split(" ")[0] + " ~ " + attitudeList.get(i).getEndDate().split(" ")[0]);
+					}
+					
+					attitudeList2.add(avo);
+				}
+			}
+			
+			for (int i = 0 ; i < attitudeList2.size(); i++) { 
 				row = sheet.createRow(i + 1);
 				
 				row.createCell(0).setCellValue(i + 1);
-				row.createCell(1).setCellValue(vo.getUserName());
-				row.createCell(2).setCellValue(vo.getUserTitle());
-				row.createCell(3).setCellValue(vo.getDeptName());
-				
-				if (vo.getEndDate() != null && !vo.getEndDate().equals("")) {
-					row.createCell(4).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
-				} else {
-					row.createCell(4).setCellValue(vo.getStartDate());
-				}
-				
-				row.createCell(5).setCellValue(vo.getTypeName());
+				row.createCell(1).setCellValue(attitudeList2.get(i).getUserName());
+				row.createCell(2).setCellValue(attitudeList2.get(i).getUserTitle());
+				row.createCell(3).setCellValue(attitudeList2.get(i).getDeptName());
+				row.createCell(4).setCellValue(attitudeList2.get(i).getStartDate());					
+				row.createCell(5).setCellValue(attitudeList2.get(i).getEndDate());					
+				row.createCell(6).setCellValue(attitudeList2.get(i).getWorkingHoliday());								
+				row.createCell(7).setCellValue(attitudeList2.get(i).getOutsideWork());
+				row.createCell(8).setCellValue(attitudeList2.get(i).getOuting());
+				row.createCell(9).setCellValue(attitudeList2.get(i).getBusinessTrip());
+				row.createCell(10).setCellValue(attitudeList2.get(i).getDispatch());
+				row.createCell(11).setCellValue(attitudeList2.get(i).getAbsenteeism());
+				row.createCell(12).setCellValue(attitudeList2.get(i).getAnnualLeave());
+				row.createCell(13).setCellValue(attitudeList2.get(i).getMorningOff());
+				row.createCell(14).setCellValue(attitudeList2.get(i).getAfternoonOff());
+				row.createCell(15).setCellValue(attitudeList2.get(i).getHalfOff());
+				row.createCell(16).setCellValue(attitudeList2.get(i).getAlternateHoliday());
+				row.createCell(17).setCellValue(attitudeList2.get(i).getOfficialLeave());
+				row.createCell(18).setCellValue(attitudeList2.get(i).getmOfficialLeave());
+				row.createCell(19).setCellValue(attitudeList2.get(i).getaOfficialLeave());
+				row.createCell(20).setCellValue(attitudeList2.get(i).getMaternityLeave());
+				row.createCell(21).setCellValue(attitudeList2.get(i).getCongratulationLeave());
+				row.createCell(22).setCellValue(attitudeList2.get(i).getSickLeave());
 				
 				row.getCell(0).setCellStyle(bodyStyle);
 				row.getCell(1).setCellStyle(bodyStyle);
@@ -3097,21 +3347,30 @@ public class EzAttitudeController {
 				row.getCell(3).setCellStyle(bodyStyle);
 				row.getCell(4).setCellStyle(bodyStyle);
 				row.getCell(5).setCellStyle(bodyStyle);
+				row.getCell(6).setCellStyle(bodyStyle);
+				row.getCell(7).setCellStyle(bodyStyle);
+				row.getCell(8).setCellStyle(bodyStyle);
+				row.getCell(9).setCellStyle(bodyStyle);
+				row.getCell(10).setCellStyle(bodyStyle);
+				row.getCell(11).setCellStyle(bodyStyle);
+				row.getCell(12).setCellStyle(bodyStyle);
+				row.getCell(13).setCellStyle(bodyStyle);
+				row.getCell(14).setCellStyle(bodyStyle);
+				row.getCell(15).setCellStyle(bodyStyle);
+				row.getCell(16).setCellStyle(bodyStyle);
+				row.getCell(17).setCellStyle(bodyStyle);
+				row.getCell(18).setCellStyle(bodyStyle);
+				row.getCell(19).setCellStyle(bodyStyle);
+				row.getCell(20).setCellStyle(bodyStyle);
+				row.getCell(21).setCellStyle(bodyStyle);
+				row.getCell(22).setCellStyle(bodyStyle);
 			}
-			//width 조정
-			sheet.autoSizeColumn(0);
-			sheet.autoSizeColumn(1);
-			sheet.autoSizeColumn(2);
-			sheet.autoSizeColumn(3);
-			sheet.autoSizeColumn(4);
-			sheet.autoSizeColumn(5);
-			sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
-			sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
-			sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
-			sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
-			sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
-			sheet.setColumnWidth(5, (sheet.getColumnWidth(5)) + 512);
 			
+			//width 조정
+			for(int i = 0, len = 23; i < len; i++) {
+				sheet.autoSizeColumn(i);
+				sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);
+			}			
 		} else if (reqType.equals("absent")){
 //			미입력자조회엑셀
 			pFileName = EgovDateUtil.getToday("-") +"_absentedReport.xls";

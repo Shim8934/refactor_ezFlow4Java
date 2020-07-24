@@ -177,7 +177,7 @@
 
 	        	    if (pBrdCount != 0) {
 	            	    for (var i = 0; i < pBrdCount; i++) {
-	                	    title_name[i] = pChildBrd.split(",")[i];
+	                	    title_name[i] = pChildBrd.split("|")[i];
 	                	}
 
 	            	    if (Mod != null && Mod != ""){

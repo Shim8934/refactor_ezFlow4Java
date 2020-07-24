@@ -282,7 +282,7 @@
 <body class="popup">
 <div id="menu">
 	<ul>
-		<li><span onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li> 
+		<li><span onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t530'/></span></li> 
 	</ul>
 </div>
 <div id="close"><ul><li id=btnClose ><span onClick="return btnClose_onclick()"></span></li></ul></div>

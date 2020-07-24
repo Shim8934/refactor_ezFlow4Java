@@ -600,7 +600,7 @@ function tableListControl_Week()
             if(k == 0) {
             	_mtd.style.borderTop = "0px";
             }
-            if(title_name[k].split("/")[2] == "1")
+            if(title_name[k].split("/")[2].substring(0,1) == "1")
                 //_mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
             	_mtd.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             else
