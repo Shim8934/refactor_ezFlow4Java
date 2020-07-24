@@ -1026,6 +1026,53 @@
 		        }
 		    }
 		    
+		    /* 2020-07-24 홍승비 - 연동양식, 기결재통과 옵션 사용 시 다른 옵션 disabled 처리 함수 추가 (NeoJavaRel 참고) */
+		    // 일괄기안의 경우, 2020-07-24 기준으로 표준 기능이 아니므로 주석처리
+		    function changeConnFlag() {
+		    	if ($("input:checkbox[id='setConnFlag']").is(":checked")) {
+			    	$("input:checkbox[id='setPassAprLineFlag']").attr("checked", false);
+			    	$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
+/* 			    	if(useDraftAll == "YES") {
+				    	$("input:checkbox[id='setDraftAllFlag']").attr("checked", false);
+				    	$("input:checkbox[id='setDraftAllFlag']").attr("disabled", true);
+			    	} */
+		    	} else {
+		    		$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", false);
+/* 		    		if(useDraftAll == "YES") {
+		    			$("input:checkbox[id='setDraftAllFlag']").attr("disabled", false);
+		    		} */
+		    	}
+		    }
+		    
+		    // 기존의 changePassAprFlag()함수와 관련있음
+		    function changeDraftAllFlag() {
+		    	if ($("input:checkbox[id='setDraftAllFlag']").is(":checked")) {
+			    	$("input:checkbox[id='setPassAprLineFlag']").attr("checked", false);
+			    	$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
+			    	$("input:checkbox[id='setConnFlag']").attr("checked", false);
+			    	$("input:checkbox[id='setConnFlag']").attr("disabled", true);
+		    	} else {
+		    		$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", false);
+		    		$("input:checkbox[id='setConnFlag']").attr("disabled", false);
+		    	}
+		    }
+		    
+		    function changePassAprLineFlag() {
+		    	if ($("input:checkbox[id='setPassAprLineFlag']").is(":checked")) {
+/* 		    		if(useDraftAll == "YES") {
+			    		$("input:checkbox[id='setDraftAllFlag']").attr("checked", false);
+				    	$("input:checkbox[id='setDraftAllFlag']").attr("disabled", true);
+		    		} */
+			    	$("input:checkbox[id='setConnFlag']").attr("checked", false);
+			    	$("input:checkbox[id='setConnFlag']").attr("disabled", true);
+		    	} else {
+/* 		    		if(useDraftAll == "YES") {
+			    		$("input:checkbox[id='setDraftAllFlag']").attr("disabled", false);
+		    		} */
+		    		$("input:checkbox[id='setConnFlag']").attr("disabled", false);
+		    	}
+		    }
+		    
 		    function changeSelFormKind(value) {
 		        if (!(value == "003" || value == "004")) {
 					$("#ApvForm_sub5").hide();		        
@@ -1135,9 +1182,7 @@
                 </tr>
                 <tr>
 					<td colspan="8" style="width:10%; text-align:center;">
-						<input type="checkbox" id="setConnFlag" /><spring:message code = 'ezApprovalG.t1665' />
-					</td>
-					<td colspan="8" style="width:10%; text-align:center;">
+						<input type="checkbox" id="setConnFlag" onclick="changeConnFlag()"/><spring:message code = 'ezApprovalG.t1665' />
 						<!-- FormBuilder -->
 						<c:if test="${useReform}">
 							<input type="checkbox" id="reform-checkbox" name="reform-checkbox" onchange="onReformCheckboxClickEvent()"/>
@@ -1145,9 +1190,8 @@
 						</c:if>
 						<!-- FormBuilder - end -->
                         <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> 원문정보공개</span>
-                        <%--<input type="checkbox" id="setDraftAllFlag" onclick="changePassAprFlag()" style="<c:if test="${useDraftAll != 'YES' && approvalFlag != 'G'}">display:none;</c:if>"/> 일괄기안
-						<input type="checkbox" id="setPassAprLineFlag" /> 기결재통과--%>
-					<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/> <spring:message code='ezApprovalG.garm09'/></span>
+<%--                         <span style="<c:if test="${useDraftAll != 'YES' && approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> 일괄기안</span> --%>
+						<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/> <spring:message code='ezApprovalG.garm09'/></span>
 					</td>
 				</tr>
 			</table>
@@ -1155,12 +1199,6 @@
             <div style="padding-bottom:5px; vertical-align:middle; <c:if test="${approvalFlag != 'S' }">display:none;</c:if>">
             	<input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" />
             	<span><spring:message code='ezApproval.t00004'/></span>
-                <!-- FormBuilder -->
-                <c:if test="${useReform && approvalFlag == 'S'}">
-                	<input type="checkbox" id="reform-checkbox" name="reform-checkbox" onclick="onReformCheckboxClickEvent()"/>
-                	<label for="reform-checkbox"><span><spring:message code='reform.using'/></span></label>
-                </c:if>
-                <!-- FormBuilder - end -->
             </div>
             <table class="content" style="width:100%;">
 				<tr id="tr_setAutoItemCode">
