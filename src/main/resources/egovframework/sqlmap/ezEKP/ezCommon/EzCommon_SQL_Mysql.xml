@@ -2880,5 +2880,4 @@
 			tenant_id = #tenantId#
 	</select>
 	
->>>>>>> origin/personalizedPortal
 </sqlMap>
