@@ -3229,4 +3229,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public ApprGDocListVO getEndDocInfo(Map<String, Object> map) throws Exception {
 		return (ApprGDocListVO) select("EzApprovalG.getEndDocInfo", map);
 	}
+	
+	/* 2020-07-23 홍승비 - 전달한 사용자ID에 대하여, 특정 진행문서의 전체 정보를 가져오는 쿼리 */
+	public ApprGDocListVO getIngDocInfo(Map<String, Object> map) throws Exception {
+		return (ApprGDocListVO) select("EzApprovalG.getIngDocInfo", map);
+	}
 }
