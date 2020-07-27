@@ -1158,7 +1158,7 @@ public class EzEmailUtil {
                     } else {				    
                         filename = MimeUtility.decodeText(filename);
                         
-                        if (originalFilename.startsWith("=?")) {
+                        if (originalFilename != null && originalFilename.startsWith("=?")) {
                             int secondQuestionPos = originalFilename.indexOf("?", 2);
                             int thirdQuestionPos = originalFilename.indexOf("?", secondQuestionPos + 1);
                             String charSetAndEncoding = originalFilename.substring(0, thirdQuestionPos + 1);
@@ -4402,7 +4402,7 @@ public class EzEmailUtil {
 	 * strip <object>,<applet>,<script> tags
 	 */	
 	private String stripScriptTags(String src) {
-		Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Pattern p = Pattern.compile("<(object|applet|script).*?>.*?</(object|applet|script).*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(src);
 		src = m.replaceAll("");
 				
