@@ -1316,15 +1316,25 @@ function SGetDraftAprLineInfo(ret) {
                 
                 fieldname = susinSN + "sign" + idx;
                 field = message.GetListItem(fields, fieldname);
-
+                
+                /* 2020-07-24 홍승비 - 서명필드만 존재하는 경우, 서명+결재자명 필드가 함께 존재하는 경우, 슬래시 이미지의 표출분기 수정 */
                 if (field) {
-                	if (draftJunGyulFlag == '1' && OrderType[i] == "004") {
+                	if (draftJunGyulFlag == '1' && OrderType[i] == "004") { // 전결 서명 부여
                 		field.innerHTML = strLang6 + "<br>" + OrderName[i];
-                        idx = idx + 1;
-                	} else {
-                		//setNodeText(field , OrderName[i]);
-                        idx = idx + 1;
                 	}
+                	// 서명필드만 존재
+                	else if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) == null) {
+                		setNodeText(field , OrderName[i]);
+                	}
+                	// 서명필드 + 결재자명 필드가 함께 존재
+                	else if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) != null) {
+                		field.innerHTML = "[NOSLASH]";
+                	}
+                	// 그 외의 경우, 아무런 값이 부여되지 않으므로 슬래시 이미지를 표출
+                	else {
+                		//setNodeText(field , OrderName[i]);
+                	}
+                	idx = idx + 1; // 서명칸이 존재하는 경우, idx를 1 증가시켜서 다음 칸을 찾는다.
                 }
             }
 

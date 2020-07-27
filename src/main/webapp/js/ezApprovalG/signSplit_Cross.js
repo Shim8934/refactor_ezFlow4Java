@@ -34,6 +34,10 @@ function setSignSlash(pSignKinds, pSusin) {
                 strimg = strimg + " height=" + signHeight + " imglock >";
                 field.innerHTML = strimg;
             }
+            /* 2020-07-24 홍승비 - 전자결재 일반버전의 경우, 서명과 결재자명 필드 구분하도록 수정 */
+            else if (trim(fieldvalue) == "[NOSLASH]") {
+            	field.innerHTML = " ";
+            }
         }
     }
 }
