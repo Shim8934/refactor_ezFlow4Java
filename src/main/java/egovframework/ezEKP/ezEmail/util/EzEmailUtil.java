@@ -1158,7 +1158,7 @@ public class EzEmailUtil {
                     } else {				    
                         filename = MimeUtility.decodeText(filename);
                         
-                        if (originalFilename.startsWith("=?")) {
+                        if (originalFilename != null && originalFilename.startsWith("=?")) {
                             int secondQuestionPos = originalFilename.indexOf("?", 2);
                             int thirdQuestionPos = originalFilename.indexOf("?", secondQuestionPos + 1);
                             String charSetAndEncoding = originalFilename.substring(0, thirdQuestionPos + 1);
