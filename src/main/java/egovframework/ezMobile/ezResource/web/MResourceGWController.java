@@ -321,7 +321,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [get] 자원예약 상세정보 조회 및 자원예약 권한 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceSchDetail(@PathVariable String resourceId, @PathVariable String scheduleId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}] started.");
 		JSONObject result = new JSONObject();
@@ -573,7 +573,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [put] 자원예약수정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject modResourceSch(@PathVariable String resourceId, @PathVariable String scheduleId, @RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [PUT /mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}] started.");
 			JSONObject result = new JSONObject();
@@ -641,7 +641,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [delete] 자원예약삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject delResourceSch(@PathVariable String resourceId, @PathVariable String scheduleId,  HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [DELETE /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}] started.");
 		JSONObject result = new JSONObject();

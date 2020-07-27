@@ -88,7 +88,7 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [GET] 새게시물 리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezboard/new-list/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezboard/new-list/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getBoardMainList(@PathVariable String userId, HttpServletRequest request, Model model) {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/new-list/{userId}] started.");
 		
@@ -221,7 +221,7 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [GET] 즐겨찾기에 등록된 게시판 폴더 리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezboard/favorite-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezboard/favorite-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getFavoriteList(@PathVariable String userId,HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/favorite-list/users/{userId}] started.");
 		
@@ -259,7 +259,7 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [GET] 게시물 상세정보
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezboard/{type}/boards/{boardId}/contents/{contentId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezboard/{type}/boards/{boardId}/contents/{contentId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object boardDetail(@PathVariable String type,@PathVariable String boardId, @PathVariable String contentId,HttpServletRequest request,Locale locale) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/contents/{contentId}] started.");
 		
@@ -349,7 +349,7 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [GET] 포토게시물 상세정보
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezboard/photo/boards/{boardId}/contents/{contentId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezboard/photo/boards/{boardId}/contents/{contentId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object photoBoardDetail(@PathVariable String boardId, @PathVariable String contentId,HttpServletRequest request,Locale locale) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/photo/boards/{boardId}/contents/{contentId}] started.");
 		
@@ -525,7 +525,7 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [PUT] 게시물 수정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject updateBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request, Locale locale) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] started.");
 		
@@ -572,7 +572,7 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [DELETE] 게시물 삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject deleteBoard(@PathVariable String boardId, @PathVariable String contentId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] started.");
 		
@@ -1146,7 +1146,7 @@ public class MBoardGWController {
 	 * 2019-05-14 홍승비 - 모바일 G/W 게시판 [GET] 동영상게시물 상세정보
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezboard/movie/boards/{boardId}/contents/{contentId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezboard/movie/boards/{boardId}/contents/{contentId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object movieBoardDetail(@PathVariable String boardId, @PathVariable String contentId,HttpServletRequest request,Locale locale) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/movie/boards/{boardId}/contents/{contentId}] started.");
 		

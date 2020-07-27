@@ -78,7 +78,7 @@ public class MApprovalGGWController {
 	 * 모바일 G/W 전자결재 [GET] 결재문서 메인 리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezapproval/main-list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
+	@RequestMapping(value = "/mobile/ezapproval/main-list/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
 	public JSONObject mApprovalMainList(@PathVariable String userId, HttpServletRequest request) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/main-list/users/" + userId + "] started.");
 
@@ -112,7 +112,7 @@ public class MApprovalGGWController {
 	 * 모바일 G/W 전자결재 [GET] 결재문서 리스트 (결재할(DO), 결재한(END), 결재진행(ING), 기안한(DRAFT), 공유결재(SHARE))
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezapproval/{type}/list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/{type}/list/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalList(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list/users/" + userId + "] started.");
 		
@@ -170,7 +170,7 @@ public class MApprovalGGWController {
 	 * 모바일 G/W 전자결재 [GET] 결재문서 카운트 (결재할(DO), 결재한(END), 결재진행(ING), 기안한(DRAFT), 공유결재(SHARE))
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezapproval/{type}/list-count/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/{type}/list-count/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalListCount(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list-count/users/" + userId + "] started.");
 		
@@ -206,7 +206,7 @@ public class MApprovalGGWController {
 	 * 모바일 G/W 전자결재 [GET] 문서보기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalDoc(@PathVariable String docId, HttpServletRequest request, Locale locale) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "] started.");
 
@@ -598,7 +598,7 @@ public class MApprovalGGWController {
 	 * 모바일 G/W 전자결재 [GET] 부재자설정 보기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezapproval/absentee/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/absentee/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalAbsenteeInfo(@PathVariable String userId, HttpServletRequest request) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/absentee/users/" + userId + "] started.");
 
@@ -637,7 +637,7 @@ public class MApprovalGGWController {
 	 * 모바일 G/W 전자결재 [PUT] 부재자설정 등록
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezapproval/absentee/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/absentee/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalSetAbsenteeInfo(@PathVariable String userId, HttpServletRequest request, MApprovalGAbsenteeInfoVO absenteeInfoVO) {
 		LOGGER.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/absentee/users/" + userId + "] started.");
 		
@@ -680,7 +680,7 @@ public class MApprovalGGWController {
 	 * 모바일 G/W 전자결재 [DELETE] 부재자설정 삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezapproval/absentee/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/absentee/users/{userId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalDelAbsenteeInfo(@PathVariable String userId, HttpServletRequest request) {
 		LOGGER.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/absentee/users/" + userId + "] started.");
 		
@@ -720,7 +720,7 @@ public class MApprovalGGWController {
 	 * 모바일 G/W 전자결재 [GET] 비밀번호 확인
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezapproval/pwd-check/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/pwd-check/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalCheckPassword(@PathVariable String userId, HttpServletRequest request) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/pwd-check/users/" + userId + "] started.");
 
@@ -762,7 +762,7 @@ public class MApprovalGGWController {
 	 * 모바일 G/W 전자결재 [PUT] 결재(APR), 반송(BAN), 보류(BO), 회수(HWE), 참조(CHECK)
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/approve/{type}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/approve/{type:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalDoApprove(@PathVariable String docId, @PathVariable String type, HttpServletRequest request) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/approve/" + type + "] started.");
 
@@ -904,7 +904,7 @@ public class MApprovalGGWController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezapproval/left-count/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/left-count/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalLeftCount(@PathVariable String userId, HttpServletRequest request) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/left-count/users/" + userId + "] started.");
 
@@ -935,7 +935,7 @@ public class MApprovalGGWController {
 	
 	//pAprMemberSN  가져오기 메일에서 전자결재
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezapproval/AprMemberSN/{docId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/AprMemberSN/{docId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAprMemberSN(@PathVariable String docId, HttpServletRequest request, Locale locale) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "] started.");
 

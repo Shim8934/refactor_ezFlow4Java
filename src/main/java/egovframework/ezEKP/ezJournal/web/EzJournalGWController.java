@@ -317,7 +317,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [PUT] 양식 수정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/forms/{formId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/types/{typeId}/forms/{formId:.+}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject updateForm(@PathVariable String typeId, @PathVariable String formId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W updateForm started.");
 		LOGGER.debug("typeId=" + typeId + ",formId=" + formId);
@@ -348,7 +348,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [DELETE] 양식 삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/forms/{formId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/types/{typeId}/forms/{formId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteForm(@PathVariable String typeId, @PathVariable String formId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W deleteForm started.");
 		LOGGER.debug("typeId=" + typeId + ",formId=" + formId);
@@ -380,7 +380,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 양식 상세 보기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/forms/{formId}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/types/{typeId}/forms/{formId:.+}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject viewForm(@PathVariable String typeId, @PathVariable String formId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W viewForm started.");
 		LOGGER.debug("typeId=" + typeId + ",formId=" + formId);
@@ -689,7 +689,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 업무일지 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/journals/{journalId}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId:.+}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject viewJournal(@PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W viewJournal started.");
 		LOGGER.debug("journalId=" + journalId);
@@ -751,7 +751,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [PUT] 업무일지 수정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId:.+}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject updateJournal(@PathVariable String typeId, @PathVariable String journalId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W updateJournal started.");
 		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
@@ -1455,7 +1455,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [PUT] 수신자 즐겨찾기 수정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites/{favoriteId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites/{favoriteId:.+}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject updateFavorite(@PathVariable String userId, @PathVariable String favoriteId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W updateFavorite started.");
 		LOGGER.debug("userId=" + userId + ",favoriteId=" + favoriteId);
@@ -1487,7 +1487,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [DELETE] 수신자 즐겨찾기 삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites/{favoriteId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites/{favoriteId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteFavorite(@PathVariable String userId, @PathVariable String favoriteId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W deleteFavorite started.");
 		LOGGER.debug("userId=" + userId + ",favoriteId=" + favoriteId);
@@ -1615,7 +1615,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [DELETE] 댓글 삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/replies/{replyId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/replies/{replyId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteReply(@PathVariable String journalId, @PathVariable String replyId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W deleteReply started.");
 		LOGGER.debug("journalId=" + journalId + ",replyId=" + replyId);
