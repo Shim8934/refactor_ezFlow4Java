@@ -652,16 +652,22 @@ function SGetDraftAprLineInfo(ret) {
                     }
                     break;
 
-                case strAprType8:
+                case strAprType8: // 개인순차합의
                     if (xmlReDraft == "R") {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
                         if (field) {
                             setNodeText(field , OrderDept[i]);
                         }
+                        
+                        /* 2020-07-27 홍승비 - 합의자명 필드가 존재하지 않는 경우, 합의자 사인 필드에 이름 표출하도록 수정(개인순차합의, 개인병렬합의) */
                         fieldname = "habyuisign" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
                         if (field) {
+                        	// 합의자 사인 필드만 존재, 합의자명 필드 없음
+                        	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+                        		setNodeText(field , OrderName[i]);
+                        	}
                             //setNodeText(field , OrderName[i]);
                         }
 
@@ -700,6 +706,9 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field && OrderStat[i] != strLangS26) {
+                        	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+                        		setNodeText(field , OrderName[i]);
+                        	}
                             //setNodeText(field , OrderName[i]);
                         }
 
@@ -741,6 +750,9 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field) {
+                        	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+                        		setNodeText(field , OrderName[i]);
+                        	}
                             //setNodeText(field , OrderName[i]);
                         }
 
@@ -773,7 +785,7 @@ function SGetDraftAprLineInfo(ret) {
                     hapyuiCnt = hapyuiCnt + 1;
                     break;
 
-                case strAprType9:
+                case strAprType9: // 개인병렬합의
                     if (xmlReDraft == "R") {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
@@ -783,6 +795,9 @@ function SGetDraftAprLineInfo(ret) {
                         fieldname = "habyuisign" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
                         if (field) {
+                        	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+                        		setNodeText(field , OrderName[i]);
+                        	}
                             //setNodeText(field , OrderName[i]);
                         }
 
@@ -822,6 +837,9 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field && OrderStat[i] != strLangS26) {
+                        	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+                        		setNodeText(field , OrderName[i]);
+                        	}
                             //setNodeText(field , OrderName[i]);
                         }
 
@@ -863,6 +881,9 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field) {
+                        	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+                        		setNodeText(field , OrderName[i]);
+                        	}
                             //setNodeText(field , OrderName[i]);
                         }
 
@@ -894,7 +915,7 @@ function SGetDraftAprLineInfo(ret) {
                     hapyuiCnt = hapyuiCnt + 1;
                     break;
 
-                case strAprType12:
+                case strAprType12: // 부서병렬합의
                     if (xmlReDraft == "R") {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
@@ -1018,7 +1039,7 @@ function SGetDraftAprLineInfo(ret) {
                     hapyuiCnt = hapyuiCnt + 1;
                     break;
 
-                case strAprType11:
+                case strAprType11: // 부서순차합의
                     if (xmlReDraft == "R") {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);

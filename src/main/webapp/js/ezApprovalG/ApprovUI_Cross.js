@@ -2373,10 +2373,22 @@ function SReAprLineSingMapping(ret) {
                     setNodeText(field , OrderJobtitle[i]);
             }
 
+            /* 2020-07-27 홍승비 - 서명필드만 존재하는 경우, 서명+결재자명 필드가 함께 존재하는 경우, 슬래시 이미지의 표출분기 수정 */
             fieldname = susinSN + "sign" + idx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
-                //field.innerHTML = OrderName[i];
+            	// 서명필드만 존재
+            	if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) == null) {
+            		setNodeText(field , OrderName[i]);
+            	}
+            	// 서명필드 + 결재자명 필드가 함께 존재
+            	else if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) != null) {
+            		field.innerHTML = "[NOSLASH]";
+            	}
+            	// 그 외의 경우, 아무런 값이 부여되지 않으므로 슬래시 이미지를 표출
+            	else {
+            		//field.innerHTML = OrderName[i];
+            	}
             }
             
             fieldname = susinSN + "seumyung" + idx;
@@ -2393,16 +2405,21 @@ function SReAprLineSingMapping(ret) {
             idx = idx + 1;
         }
 
-        if (OrderType[i] == strAprType8 || OrderType[i] == strAprType9) {
+        if (OrderType[i] == strAprType8 || OrderType[i] == strAprType9) { // 개인순차합의, 개인병렬합의
             fieldname = susinSN + "habyui" + hidx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
                 setNodeText(field , OrderDept[i]);
             }
 
+            /* 2020-07-27 홍승비 - 합의자명 필드가 존재하지 않는 경우, 합의자 사인 필드에 이름 표출하도록 수정 */
             fieldname = susinSN + "habyuisign" + hidx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
+            	// 합의자 사인 필드만 존재, 합의자명 필드 없음
+            	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+            		setNodeText(field , OrderName[i]);
+            	}
                 //setNodeText(field , OrderName[i]);
             }
             
@@ -2426,7 +2443,7 @@ function SReAprLineSingMapping(ret) {
             hidx = hidx + 1;
         }
         
-        if (OrderType[i] == strAprType11 || OrderType[i] == strAprType12) {
+        if (OrderType[i] == strAprType11 || OrderType[i] == strAprType12) { // 부서순차합의, 부서병렬합의
         	fieldname = susinSN + "habyui" + hidx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
