@@ -250,7 +250,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	
 	// 폴더 수정 
 	@SuppressWarnings("unchecked")
-	@RequestMapping (value = "/rest/ezwebfolder/folders/{folderId}", method = RequestMethod.PUT , produces = "application/json;charset=utf-8")
+	@RequestMapping (value = "/rest/ezwebfolder/folders/{folderId:.+}", method = RequestMethod.PUT , produces = "application/json;charset=utf-8")
 	public JSONObject folderUpdate (@PathVariable String folderId, HttpServletRequest request,@RequestBody JSONObject jsonObject)  {
 		LOGGER.debug("folderUpdate started");
 		JSONObject jsonObj = new JSONObject();
@@ -308,7 +308,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	
 	// 폴더 이동, 복사
 	@SuppressWarnings("unchecked")
-	@RequestMapping ( value = "/rest/ezwebfolder/folders/{folderId}/{mode}" , method = RequestMethod.PUT , produces ="application/json;charset=utf-8")
+	@RequestMapping ( value = "/rest/ezwebfolder/folders/{folderId}/{mode:.+}" , method = RequestMethod.PUT , produces ="application/json;charset=utf-8")
 	public JSONObject folderCopy (@PathVariable String folderId,@PathVariable String mode, HttpServletRequest request ,Locale locale ,@RequestBody JSONObject jsonObject ) {
 		LOGGER.debug("folderCopy started");
 		String serverName	= request.getHeader("x-user-host")      != null ?	request.getHeader("x-user-host") 		: "";
@@ -427,7 +427,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	
 	// 폴더 삭제 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value ="/rest/ezwebfolder/folders/{folderId}", method = RequestMethod.DELETE , produces = "application/json;charset=utf-8")
+	@RequestMapping(value ="/rest/ezwebfolder/folders/{folderId:.+}", method = RequestMethod.DELETE , produces = "application/json;charset=utf-8")
 	public JSONObject folderDelete (@PathVariable String folderId , HttpServletRequest request,@RequestBody JSONObject jsonObject) {
 		LOGGER.debug("folderDelete started");
 		JSONObject jsonObj = new JSONObject();
