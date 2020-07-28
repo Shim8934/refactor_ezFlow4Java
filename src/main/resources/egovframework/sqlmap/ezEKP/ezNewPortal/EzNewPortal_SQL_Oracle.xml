@@ -3291,4 +3291,15 @@ ORDER BY
 		)
 	]]>
 </insert>
+
+<select id="ezNewPortal.getMenuInfoByCode" parameterClass="map" resultClass="MenuInfoVO">
+	<![CDATA[
+		SELECT 
+			*
+		FROM 
+			TBL_PORTAL_MENU 
+		WHERE 
+			$p_FIELD$ = #p_VALUE#
+	]]>
+</select>
 </sqlMap>

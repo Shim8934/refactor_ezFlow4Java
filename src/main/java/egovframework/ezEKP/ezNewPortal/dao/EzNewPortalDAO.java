@@ -679,4 +679,9 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void addPortalTenantConfig(Map<String, Object> map) {
 		insert("ezNewPortal.addPortalTenantConfig", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<MenuInfoVO> getMenuInfoByCode(Map<String, Object> map) {
+		return (List<MenuInfoVO>) list("ezNewPortal.getMenuInfoByCode", map);
+	}
 }
