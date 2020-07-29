@@ -93,11 +93,11 @@
 				    			}
 				    			
 				    			//"\u00a0"
-					    		var objTr = $("<tr></tr>").append($("<td style='width:22%'></td>").append($("<div style='text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].originDate.substring(0,11))));
-					    		objTr.append($("<td style='width:12%'></td>").append($("<div style='text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].originDate.substring(11,16))));
-					    		objTr.append($("<td style='width:12%'></td>").append($("<div style='text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].changeDate.substring(11,16))));
-					    		objTr.append($("<td style='width:12%' title='" + json[i].description + " " + json[i].apprUserName + " " + json[i].title + "'></td>").append($("<div style='padding-left: 5px;padding-right: 5px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(name)));
-					    		objTr.append($("<td style='width:27%'></td>").append($("<div style='text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].apprDate)));
+					    		var objTr = $("<tr></tr>").append($("<td style='width:15%'></td>").append($("<div style='text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].originDate.substring(0,11))));
+					    		objTr.append($("<td style='width:15%'></td>").append($("<div style='text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].originDate.substring(11,16))));
+					    		objTr.append($("<td style='width:15%'></td>").append($("<div style='text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].changeDate.substring(11,16))));
+					    		objTr.append($("<td style='width:15%' title='" + json[i].description + " " + json[i].apprUserName + " " + json[i].title + "'></td>").append($("<div style='padding-left: 5px;padding-right: 5px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(name)));
+					    		objTr.append($("<td style='width:25%'></td>").append($("<div style='text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].apprDate)));
 					    		objTr.append($("<td style='width:15%'></td>").append($("<div style='text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].apprStatus)));
 					    		
 					    		$("#addpopup_list tbody").append(objTr);
@@ -124,11 +124,11 @@
 		<div style="width: 100%; height: 100%;">
             <table class="mainlist" style="width: 100%;">
                 <tr>
-					<th style="width:22%;text-align:center"><spring:message code='ezAttitude.t107'/></th>
-					<th style="width:12%;text-align:center"><spring:message code='ezAttitude.t206'/></th>
-					<th style="width:12%;text-align:center"><spring:message code='ezAttitude.t207'/></th>
-					<th style="width:12%;text-align:center"><spring:message code='ezAttitude.t104'/></th>
-					<th style="width:27%;text-align:center"><spring:message code='ezAttitude.t116'/></th>
+					<th style="width:15%;text-align:center"><spring:message code='ezAttitude.t107'/></th>
+					<th style="width:15%;text-align:center"><spring:message code='ezAttitude.t206'/></th>
+					<th style="width:15%;text-align:center"><spring:message code='ezAttitude.t207'/></th>
+					<th style="width:15%;text-align:center"><spring:message code='ezAttitude.t104'/></th>
+					<th style="width:25%;text-align:center"><spring:message code='ezAttitude.t116'/></th>
 					<th style="width:15%;text-align:center"><spring:message code='ezAttitude.t208'/></th>
                 </tr>
             </table>

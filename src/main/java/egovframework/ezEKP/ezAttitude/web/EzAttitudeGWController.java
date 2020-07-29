@@ -212,7 +212,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 근태 상세조회
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAttitudeInfo(@PathVariable String attitudeId, HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "] started.");
 		
@@ -242,7 +242,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [POST] 근태수정
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateAttitudeInfo(@PathVariable String attitudeId, HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "] started.");
 		
@@ -294,7 +294,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [DELETE] 근태삭제
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteAttitudeInfo(@PathVariable String attitudeId, HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/attitudes/" + attitudeId + "] started.");
 		
@@ -703,7 +703,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 근태유형 상세보기
 	 */
-	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAttitudeTypeInfo(@PathVariable String companyId, @PathVariable String attitudetypeId, HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId + "] started.");
 		
@@ -734,7 +734,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [PUT] 근태유형 수정
 	 */
-	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateAttitudeType(@PathVariable String companyId, @PathVariable String attitudetypeId, HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] started.");
 		
@@ -767,7 +767,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [DELETE] 근태유형 삭제
 	 */
-	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteAttitudeType(@PathVariable String companyId, @PathVariable String attitudetypeId, HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] started.");
 		
@@ -1307,7 +1307,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 근태 수정 신청 상세
 	 */
-	@RequestMapping(value = "/rest/ezattitude/modifyattitude/{attModId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/modifyattitude/{attModId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attModAppDetail(
 			@PathVariable String attModId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,
@@ -1340,7 +1340,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [POST] 근태수정현황 수정
 	 */
-	@RequestMapping(value = "/rest/ezattitude/modifyattitude/{attModId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/modifyattitude/{attModId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject attModAppModify(
 			@PathVariable String attModId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,
@@ -2704,7 +2704,7 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 근태 수정 신청 상세
 	 */
-	@RequestMapping(value = "/rest/ezattitude/cancelannual/{attModId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/cancelannual/{attModId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject annCanAppDetail(
 			@PathVariable String attModId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,

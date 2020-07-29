@@ -211,7 +211,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 특정 폴더 또는 파일에 대해 특정 사용자가 공유한 정보 조회
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType:.+}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserSharingInfo(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) {
 		logger.debug("getUserSharingInfo started.");
 		
@@ -364,7 +364,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유 추가
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType}", method=RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType:.+}", method=RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject addShare(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) throws Exception {
 		logger.debug("addShare started.");
 		
@@ -424,7 +424,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유 수정
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType}", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType:.+}", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject updateShare(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) throws Exception {
 		logger.debug("updateShare started.");
 		

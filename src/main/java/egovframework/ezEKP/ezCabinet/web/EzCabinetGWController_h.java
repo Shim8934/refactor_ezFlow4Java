@@ -62,7 +62,7 @@ public class EzCabinetGWController_h {
 	@Resource(name="loginService")
 	private LoginService loginService;
 	
-	@RequestMapping(value="/rest/ezCabinet/dept-member/{deptid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezCabinet/dept-member/{deptid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getDeptMembers(@PathVariable(value="deptid") String deptId, Locale locale, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
 		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
@@ -453,7 +453,7 @@ public class EzCabinetGWController_h {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezCabinet/file-info/itemId/{itemId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezCabinet/file-info/itemId/{itemId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject cabinetItemInfo(@PathVariable(value="itemId") String itemId, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";

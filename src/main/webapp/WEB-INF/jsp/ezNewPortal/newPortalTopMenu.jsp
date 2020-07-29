@@ -76,11 +76,19 @@
  			var str = '';
 			menuList.forEach(function (item, index) {
 				str += '<li id="menu_' + item.menuId + '">' + ConvertCharToEntityReference(item.menuName) + '</li>';
+				var _url = null;
+				if(item.menuCode) {
+					_url = item.menuCode;
+				} else if(item.menuUrl) {
+					_url = item.menuUrl;
+				} else {
+					_url = null;
+				}
 				
 				// 메뉴리스트 객체 생성
 				newPortalTopMenu.menuListObj['menu_'+ item.menuId] = {
 					menuId: item.menuId,
-					menuUrl: item.menuUrl,
+					menuUrl: "/ezNewPortal/newPortalMain.do?menucode=" + _url,
 					companyOrder: item.companyOrder,
 					iconUrl: item.iconUrl,
 					menuName: item.menuName,
@@ -349,6 +357,7 @@
 			}
 			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0');
 			setEvent('util_set', '/ezPortal/environmentMain.do', 'main' ,'');
+			setEvent('util_set', '/ezNewPortal/newPortalMain.do?menucode=/ezPortal/environmentMain.do', 'main' ,'');
 			//setEvent('util_help', '/ezPortal/help/help.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
 			//setEvent('util_help', '/ezNewPortal/help/index.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
 			setEvent('util_logout', '/user/login/actionLogout.do', 'top', '');
@@ -429,9 +438,10 @@
 					$(".full_menu_toggleDL").stop();
 					
 					if (menuUrl != null) {
-						window.open(menuUrl, 'main', '');
+						parent.replaceParentPageInChild(menuUrl);
 					}
 				});
+				
 				// 취소버튼과 같은 역할
 				var editMenuCancel = document.getElementById('editMenuCancel');
 				editMenuCancel.click();	

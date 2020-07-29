@@ -4402,7 +4402,7 @@ public class EzEmailUtil {
 	 * strip <object>,<applet>,<script> tags
 	 */	
 	private String stripScriptTags(String src) {
-		Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Pattern p = Pattern.compile("<(object|applet|script).*?>.*?</(object|applet|script).*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(src);
 		src = m.replaceAll("");
 				

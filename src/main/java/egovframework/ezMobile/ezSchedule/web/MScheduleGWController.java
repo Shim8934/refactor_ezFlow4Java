@@ -210,7 +210,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 상세데이터
 	 */
-	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleDetail(@PathVariable String scheduleId, HttpServletRequest request, Locale locale) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] started.");
 		
@@ -536,7 +536,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 수정
 	 */
-	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleUpdate(@PathVariable String scheduleId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] started.");
 		
@@ -620,7 +620,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 삭제
 	 */	
-	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleDelete(@PathVariable String scheduleId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [DELETE /ezschedule/schedules/{scheduleId}] started.");
 		
