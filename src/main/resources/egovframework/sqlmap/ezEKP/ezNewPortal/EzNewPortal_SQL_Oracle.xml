@@ -179,6 +179,15 @@
 <result property="tenantId" column="TENANT_ID" />
 </resultMap>
 
+<resultMap class="MenuInfoVO" id="MenuInfoVO">
+<result property="menuId" 					column="MENU_ID" />
+<result property="menuUrl" 					column="MENU_URL" />
+<result property="menuType" 				column="MENU_TYPE" />
+<result property="iconUrl" 					column="ICON_URL" />
+<result property="defaultOrder" 			column="DEFAULT_ORDER" />
+<result property="menuCode" 				column="MENUCODE" />
+</resultMap>
+
 <!-- 공지사항 포틀릿 가져오기 -->
 <select id="ezNewPortal.getNoticePortletList" parameterClass="Map" resultMap="BoardListVO">
 	<![CDATA[
@@ -3291,4 +3300,15 @@ ORDER BY
 		)
 	]]>
 </insert>
+
+<select id="ezNewPortal.getMenuInfoByCode" parameterClass="map" resultMap="MenuInfoVO">
+	<![CDATA[
+		SELECT 
+			*
+		FROM 
+			TBL_PORTAL_MENU 
+		WHERE 
+			$p_FIELD$ = #p_VALUE#
+	]]>
+</select>
 </sqlMap>

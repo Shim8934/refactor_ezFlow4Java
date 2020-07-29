@@ -69,7 +69,7 @@ public class EzCabinetGWController {
 	@Resource(name="loginService")
 	private LoginService loginService;
 	
-	@RequestMapping(value="/rest/ezcabinet/check-admin/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/check-admin/{userid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject checkCabinetAdmin(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
@@ -105,7 +105,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/company-list/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/company-list/{userid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyList(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
 		String mode       = request.getParameter("mode")     != null ? request.getParameter("mode")   : "";
@@ -198,7 +198,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/sub-tree/{deptid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/sub-tree/{deptid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSubTree(@PathVariable(value="deptid") String deptId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name")                  : "";
 		int level         = request.getParameter("level")  != null ? Integer.parseInt(request.getParameter("level")) : -1;
@@ -600,7 +600,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/capacity/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/capacity/{userid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserCapacity(@PathVariable(value="userid") String userId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
@@ -632,7 +632,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/config/id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/config/id/{userid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserPreviewConfig(@PathVariable(value="userid") String userId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
@@ -673,7 +673,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/config/id/{userid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/config/id/{userid:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveUserConfig(@PathVariable(value="userid") String userId, HttpServletRequest request) {
 		String serverName    = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		String prevMode      = request.getParameter("prevMode")  != null ? request.getParameter("prevMode")  : "";
@@ -712,7 +712,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/mycabinet/id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/mycabinet/id/{userid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getMyCabinet(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		String cabinetId  = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
@@ -756,7 +756,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/allcabinet/id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/allcabinet/id/{userid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getAllCabinetTree(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		String cabinetId  = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
@@ -790,7 +790,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/relatedcabinet/id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/relatedcabinet/id/{userid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getRelatedCabinetTree(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String mode       = request.getParameter("mode")   != null ? request.getParameter("mode")   : "";
@@ -832,7 +832,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/sharedcabinet/id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/sharedcabinet/id/{userid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSharedCabinetTree(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
@@ -872,7 +872,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/myshare/id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/myshare/id/{userid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getMyShareCabinetTree(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName  = request.getHeader("host-name")      != null ? request.getHeader("host-name")      : "";
 		String currentNode = request.getParameter("currentNode") != null ? request.getParameter("currentNode") : "";
@@ -919,7 +919,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/sharedcabinet/shareid/{shareid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/sharedcabinet/shareid/{shareid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserSharedCabinet(@PathVariable(value="shareid") String shareId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
@@ -1079,7 +1079,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/cabinet-move/mode/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/cabinet-move/mode/{mode:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject putCabinetMove(@PathVariable(value="mode") String mode, Locale locale, HttpServletRequest request) throws Exception {
 		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")                      : "";
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")                      : "";
@@ -1364,7 +1364,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/item-move/mode/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/item-move/mode/{mode:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject moveItems(@PathVariable(value="mode") String mode, @RequestParam(value = "itemList") List<String> itemList, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
 		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
@@ -1458,7 +1458,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/cabinet/id/{cabinetid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/cabinet/id/{cabinetid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCabinetInfo(@PathVariable(value="cabinetid") String cabinetId, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
 		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
@@ -1500,7 +1500,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/share-cabinet/id/{cabinetid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/share-cabinet/id/{cabinetid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getShareCabinetInfo(@PathVariable(value="cabinetid") String cabinetId, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
 		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
@@ -1668,7 +1668,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/relate-item/modify/id/{itemid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/relate-item/modify/id/{itemid:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject modifyEmailItem(@RequestBody JSONObject emailItemInf, @PathVariable(value="itemid") String itemId, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName  = request.getHeader("host-name") != null ? request.getHeader("host-name")        : "";
 		String title       = emailItemInf.get("title")      != null ? emailItemInf.get("title").toString()  : "";

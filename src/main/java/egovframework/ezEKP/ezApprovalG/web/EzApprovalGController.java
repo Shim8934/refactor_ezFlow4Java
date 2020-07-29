@@ -4234,7 +4234,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 			}
 			
-			/* 2020-07-22 홍승비 - 메일링크 클릭 시 결재완료문서 보기 분기 추가 */
+			/* 2020-07-22 홍승비 - 메일링크 클릭 시 결재진행&완료문서 보기 분기 추가 */
 			if (checkPermission) {
 				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId(), docState);
 				
@@ -4243,15 +4243,27 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						model.addAttribute("chk", "no");
 					}
 					
-					ApprGDocListVO apprGEndDocVO = ezApprovalGService.getEndDocInfo(docID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
-					if (apprGEndDocVO != null && apprGEndDocVO.getHref() != null && !apprGEndDocVO.getHref().trim().equals("")) {
+					// 진행문서인 경우
+					ApprGDocListVO apprGIngDocVO = ezApprovalGService.getIngDocInfo(userInfo.getId(), docID.trim(), orgCompanyID, userInfo.getTenantId());
+					if (apprGIngDocVO != null && apprGIngDocVO.getHref() != null && !apprGIngDocVO.getHref().trim().equals("")) {
 						model.addAttribute("docID", docID.trim());
-						model.addAttribute("docHref", apprGEndDocVO.getHref().trim());
-						model.addAttribute("orgCompanyID", orgCompanyID); // 문서 재사용에 필요한 파라미터
+						model.addAttribute("docHref", apprGIngDocVO.getHref().trim());
+						model.addAttribute("orgCompanyID", orgCompanyID); // 결재문서 기안 당시의 회사ID
+						model.addAttribute("listType", "3"); // 진행중문서 listType
 						
-						return "redirect:/ezApprovalG/contDocView.do";
+						return "redirect:/ezApprovalG/aprDocView.do";
 					} else {
-						return "main/warning";
+						// 완료문서인 경우
+						ApprGDocListVO apprGEndDocVO = ezApprovalGService.getEndDocInfo(docID.trim(), orgCompanyID, userInfo.getTenantId());
+						if (apprGEndDocVO != null && apprGEndDocVO.getHref() != null && !apprGEndDocVO.getHref().trim().equals("")) {
+							model.addAttribute("docID", docID.trim());
+							model.addAttribute("docHref", apprGEndDocVO.getHref().trim());
+							model.addAttribute("orgCompanyID", orgCompanyID); // 결재문서 기안 당시의 회사ID(문서 재사용에 필요)
+							
+							return "redirect:/ezApprovalG/contDocView.do";
+						} else {
+							return "main/warning";
+						}
 					}
 				}
 			}

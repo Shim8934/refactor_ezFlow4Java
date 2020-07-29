@@ -102,7 +102,7 @@ public class MLoginGWController {
 	 * 모바일 G/W 사용자 [GET] 로그인
 	 */
     @SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezUser/login/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")    
+	@RequestMapping(value="/mobile/ezUser/login/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")    
     public JSONObject login(@PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
     	LOGGER.debug("=========================================== G/W login ============================================");
     	

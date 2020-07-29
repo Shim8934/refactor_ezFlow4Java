@@ -32564,4 +32564,30 @@
 	   		COMPANYID = #v_COMPANYID#
 	</select>
 	
+	<select id="EzApprovalG.getIngDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+		SELECT 
+			*
+	    FROM 
+	    	TBL_APRDOCINFO D
+		INNER JOIN
+			TBL_APRLINEINFO L
+		ON
+			D.DOCID = L.DOCID
+		AND
+			D.TENANT_ID = L.TENANT_ID
+		AND
+			D.COMPANYID = L.COMPANYID
+		WHERE  
+	    	D.DOCID = #v_DOCID#
+	    AND
+	    	D.TENANT_ID = #v_TENANTID#
+	   	AND
+	   		D.COMPANYID = #v_COMPANYID#
+	   	AND
+	   		L.APRMEMBERID = #v_USERID#
+	   	AND
+	   		L.APRSTATE = '003'
+	   	LIMIT 1
+	</select>
+	
 </sqlMap>

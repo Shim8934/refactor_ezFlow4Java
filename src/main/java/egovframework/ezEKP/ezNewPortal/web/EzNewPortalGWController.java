@@ -553,7 +553,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 월별 생일 사원 목록 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/birthday/months/{month}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/birthday/months/{month:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getMonthlyBirthdayEmployees(HttpServletRequest request, @PathVariable int month) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getMonthlyBirthdayEmployees started.");
 		JSONObject result = new JSONObject();
@@ -608,7 +608,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 이달의 우수 사원 정보 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/bestEmployee/months/{month}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/bestEmployee/months/{month:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getMonthlyBestEmployee(HttpServletRequest request, @PathVariable int month) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getMonthlyBestEmployee started.");
 		JSONObject result = new JSONObject();
@@ -1222,7 +1222,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 퀵링크 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/quickLink/company/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/quickLink/company/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getQuickLinkList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getQuickLinkList started.");
 		JSONObject result = new JSONObject();
@@ -1732,7 +1732,7 @@ public class EzNewPortalGWController {
 		return result;
 	}
 	
-	//사용자 초기화면 정보 조회 + 메모 모듈 사용여부 
+	//사용자 초기화면 정보 조회 + 메모 모듈 사용여부 + 메뉴코드 정보 조회 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/startpage/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserStartPage(HttpServletRequest request, @PathVariable String userId) throws Exception {
@@ -1746,6 +1746,7 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
 			String deptId = info.getDeptId();
+			String menuCode = request.getParameter("menuCode");
 			
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
@@ -1775,9 +1776,14 @@ public class EzNewPortalGWController {
 			
 			LOGGER.debug("useMemo : " + useMemo + ", useExternalMailServer : " + useExternalMailServer);
 			
+			//2020-04-14 강승구 : 메뉴코드에서 메뉴URL로 변경하는 부분
+			MenuInfoVO convertMenu = ezNewPortalService.getMenuInfoByCode("menucode", menuCode);
+			LOGGER.debug("convertMenu(CODE -> URL) : {}", convertMenu);
+			
 			data.put("useMemo", useMemo);
 			data.put("startPage", startPage);
 			data.put("useExternalMailServer", useExternalMailServer);
+			data.put("convertMenu", convertMenu);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1899,7 +1905,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 회사별 테마 목록 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezportal/themes/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezportal/themes/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyThemes(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyThemes} started.");
 		JSONObject result = new JSONObject();
@@ -1929,7 +1935,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 회사별 테마 상세정보 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyThemeInfo(HttpServletRequest request, @PathVariable int themeId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyThemeInfo started.");
 		JSONObject result = new JSONObject();
@@ -1971,7 +1977,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PATCH] 회사별 테마 상세정보 수정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateCompanyThemeInfo(HttpServletRequest request, @PathVariable int themeId, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyThemeInfo started.");
 		JSONObject result = new JSONObject();
@@ -2008,7 +2014,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 회사별 기본 테마 설정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/default/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/default/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateCompanyDefaultTheme(HttpServletRequest request, @PathVariable int themeId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyDefaultTheme started.");
 		JSONObject result = new JSONObject();
@@ -2035,7 +2041,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 회사별 메뉴 목록 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/menus/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyMenus(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyMenus started.");
 		JSONObject result = new JSONObject();
@@ -2190,7 +2196,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PATCH] 회사별 메뉴 순서 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/menus/order/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/order/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateCompanyMenuOrder(HttpServletRequest request, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyMenuOrder started.");
 		JSONObject result = new JSONObject();
@@ -2223,7 +2229,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 회사별 메뉴 상세정보 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyMenuInfo(HttpServletRequest request, @PathVariable String companyId, @PathVariable int menuId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyMenuInfo started.");
 		JSONObject result = new JSONObject();
@@ -2290,7 +2296,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PATCH] 회사별 메뉴 상세정보 수정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateCompanyMenuInfo(HttpServletRequest request, @PathVariable String companyId, @PathVariable int menuId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyMenuInfo started.");
 		JSONObject result = new JSONObject();
@@ -2325,7 +2331,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 메뉴별 권한 정보 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/authorities/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/authorities/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyMenuAuth(HttpServletRequest request, @PathVariable int menuId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyMenuAuth started.");
 		JSONObject result = new JSONObject();
@@ -2360,7 +2366,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PATCH] 메뉴별 권한 정보 수정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/authorities/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/authorities/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateCompanyMenuAuth(HttpServletRequest request, @PathVariable int menuId, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyMenuAuth started.");
 		JSONObject result = new JSONObject();
@@ -2393,7 +2399,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [POST] 메뉴 추가
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/menus/companies/{companyId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/companies/{companyId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertCompanyMenu(HttpServletRequest request, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W insertCompanyMenu started.");
 		JSONObject result = new JSONObject();
@@ -2429,7 +2435,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [DELETE] 메뉴 삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/companies/{companyId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/companies/{companyId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteCompanyMenu(HttpServletRequest request, @PathVariable int menuId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W deleteCompanyMenu started.");
 		JSONObject result = new JSONObject();
@@ -2457,7 +2463,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 회사별 포틀릿 목록 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/portlets/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/portlets/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyPortletList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyPortletList started.");
 		JSONObject result = new JSONObject();
@@ -2650,7 +2656,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PATCH] 회사별 포틀릿 순서 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/portlets/order/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/portlets/order/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateCompanyPortletOrder(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyPortletOrder started.");
 		JSONObject result = new JSONObject();
@@ -2682,7 +2688,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 회사별 포틀릿 상세조회 ------ 사용 안함
 	 */
 	/*@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getPortletInfo(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyPortletInfo started.");
 		JSONObject result = new JSONObject();
@@ -2706,7 +2712,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [POST] 포틀릿 추가
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/portlets/companies/{companyId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/portlets/companies/{companyId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertPortlet(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W insertCompanyPortlet started.");
 		JSONObject result = new JSONObject();
@@ -2746,7 +2752,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [DELETE] 포틀릿 삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deletePortlet(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W deleteCompanyPortlet started.");
 		JSONObject result = new JSONObject();
@@ -2775,7 +2781,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PATCH] 포틀릿 상세정보 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updatePortletInfo(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updatePortletInfo started.");
 		JSONObject result = new JSONObject();
@@ -2816,7 +2822,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 게시판 트리 호출
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/boards/tree/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/boards/tree/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getBoardTree(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getBoardTree started.");
 		JSONObject result = new JSONObject();
@@ -2867,7 +2873,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 로고 불러오기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/logos/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/logos/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyLogo(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyLogo started.");
 		JSONObject result = new JSONObject();
@@ -2948,7 +2954,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [POST] 로고 등록하기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/logos/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/logos/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateCompanyLogo(HttpServletRequest request, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyLogo started.");
 		JSONObject result = new JSONObject();
@@ -2980,7 +2986,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [DELETE] 로고 삭제하기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/logos/{logoType}/companies/{companyId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/logos/{logoType}/companies/{companyId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteLogo(HttpServletRequest request, @PathVariable String logoType, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W deleteLogo started.");
 		JSONObject result = new JSONObject();
@@ -4507,7 +4513,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 회사별 슬라이드 이미지 목록 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezportal/slideimages/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezportal/slideimages/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getSlideImages(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getSlideImages started.");
 		JSONObject result = new JSONObject();
@@ -4537,7 +4543,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [POST] 슬라이드이미지 등록하기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezportal/slideimages/companies/{companyId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezportal/slideimages/companies/{companyId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertSlideImage(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W insertSlideImage started.");
 		JSONObject result = new JSONObject();
@@ -4567,7 +4573,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 슬라이드이미지 정보 가져오기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezportal/slideimages/{slideId}/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezportal/slideimages/{slideId}/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getSlideImageInfo(HttpServletRequest request, @PathVariable String companyId, @PathVariable String slideId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getSlideImageInfo started.");
 		JSONObject result = new JSONObject();
@@ -4594,7 +4600,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PUT] 슬라이드이미지 수정하기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezportal/slideimages/{slideId}/companies/{companyId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezportal/slideimages/{slideId}/companies/{companyId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateSlideImage(HttpServletRequest request, @PathVariable String slideId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateSlideImage started.");
 		JSONObject result = new JSONObject();
@@ -4625,7 +4631,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [DELETE] 슬라이드이미지 삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezportal/slideimages/{slideId}/companies/{companyId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezportal/slideimages/{slideId}/companies/{companyId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteSlideImage(HttpServletRequest request, @PathVariable String companyId, @PathVariable String slideId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W deleteSlideImage started.");
 		JSONObject result = new JSONObject();
@@ -4653,7 +4659,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PATCH] 슬라이드 이미지 순서 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/slideimages/order/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/slideimages/order/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateSlideOrder(HttpServletRequest request, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateSlideOrder started.");
 		JSONObject result = new JSONObject();
@@ -4686,7 +4692,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 테마별 포틀릿 사용 유무 리스트 불러오기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/portlets/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/portlets/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getThemePortletList(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getThemePortletList started.");
 		JSONObject result = new JSONObject();
@@ -4833,7 +4839,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PATCH] 테마별 포틀릿 사용 유무 설정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/portlets/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/portlets/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateThemePortletUsed(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateThemePortletUsed started.");
 		JSONObject result = new JSONObject();
@@ -4867,7 +4873,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 직위직책 리스트 불러오기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/menus/authorities/titles/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/authorities/titles/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getTitleList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getTitleList started.");
 		JSONObject result = new JSONObject();
@@ -4935,7 +4941,7 @@ public class EzNewPortalGWController {
 
 	//2019-06-18 테마별, 포틀릿별 권한 설정 개발
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getThemeAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getThemeAuth started.");
 		JSONObject result = new JSONObject();
@@ -4968,7 +4974,7 @@ public class EzNewPortalGWController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateThemeAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateThemeAuth started.");
 		JSONObject result = new JSONObject();
@@ -5003,7 +5009,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 권한그룹 리스트 불러오기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/menus/authorities/groups/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/menus/authorities/groups/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getGroupList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getGroupList started.");
 		JSONObject result = new JSONObject();
@@ -5031,7 +5037,7 @@ public class EzNewPortalGWController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/checks/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/checks/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject checkThemeAuthNoList(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W checkThemeAuthNoList started.");
 		JSONObject result = new JSONObject();
@@ -5090,7 +5096,7 @@ public class EzNewPortalGWController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/authorities/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/authorities/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getPortletAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int portletId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getPortletAuth started.");
 		JSONObject result = new JSONObject();
@@ -5124,7 +5130,7 @@ public class EzNewPortalGWController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/authorities/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/authorities/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updatePortletAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int portletId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updatePortletAuth started.");
 		JSONObject result = new JSONObject();

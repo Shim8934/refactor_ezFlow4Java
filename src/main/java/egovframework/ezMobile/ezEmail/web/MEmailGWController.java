@@ -4401,7 +4401,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook/{addressId}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook/{addressId:.+}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getAddressInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable String addressId) {		
 		LOGGER.debug("MOBILE G/W MAIL getAddressInfo started.");
 		LOGGER.debug("userId=" + userId + ",addressId=" + addressId);
@@ -4435,7 +4435,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook/{addressId}", method=RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook/{addressId:.+}", method=RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public Object deleteAddressInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable String addressId) {		
 		LOGGER.debug("MOBILE G/W MAIL deleteAddressInfo started.");
 		LOGGER.debug("userId=" + userId + ",addressId=" + addressId);
@@ -4463,7 +4463,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook/{addressId}", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook/{addressId:.+}", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public Object updateAddressInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable String addressId, @RequestBody JSONObject jsonObject) {		
 		LOGGER.debug("MOBILE G/W MAIL updateAddressInfo started.");
 		

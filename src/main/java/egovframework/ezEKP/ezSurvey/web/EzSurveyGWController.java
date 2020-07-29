@@ -106,7 +106,7 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezsurvey/sub-tree/{deptid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezsurvey/sub-tree/{deptid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSubTree(@PathVariable(value="deptid") String deptId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name")                  : "";
 		int level         = request.getParameter("level")  != null ? Integer.parseInt(request.getParameter("level")) : -1;
@@ -138,7 +138,7 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezsurvey/dept-member/{deptid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezsurvey/dept-member/{deptid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getDeptMembers(@PathVariable(value="deptid") String deptId, Locale locale, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
 		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";

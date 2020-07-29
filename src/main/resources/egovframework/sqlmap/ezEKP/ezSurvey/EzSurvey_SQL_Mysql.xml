@@ -1373,6 +1373,8 @@
 			P.company_id = #companyId#
 		and
 			S.draft_flag = 0
+		and
+			S.modify_flag = 0
 		<![CDATA[
 		and
 			S.start_date <= #today# and S.end_date >= #today#

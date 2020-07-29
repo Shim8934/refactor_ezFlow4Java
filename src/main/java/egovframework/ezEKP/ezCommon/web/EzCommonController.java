@@ -634,7 +634,17 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 		logger.debug("pImgUrl=" + pImgUrl + ",width=" + width + ",height=" + height);
 		
-		String realFilePath = pImgUrl.replace(request.getScheme() + ":" + commonUtil.separator + commonUtil.separator + request.getServerName() + ":" + request.getServerPort(), realPath);
+		StringBuilder sb = new StringBuilder();
+		sb.append(request.getScheme()).append("://").append(request.getServerName());
+		
+		int serverPort = request.getServerPort();
+		if(serverPort != 80 && serverPort != 443) {
+			sb.append(":").append(serverPort);
+		}
+		
+		String realFilePath = pImgUrl.replace(sb.toString(), realPath);
+		
+		logger.debug("realFilePath : {}", realFilePath);
 		
 		File file = new File(commonUtil.detectPathTraversal(realFilePath));
 		
@@ -647,11 +657,11 @@ public class EzCommonController extends EgovFileMngUtil{
 		int nWidth = 100, nHeight = 100;
 		
 		if (!width.equals("")) {
-			nWidth = Integer.parseInt(width);
+			nWidth = (int) Float.parseFloat(width); // width가 소수형태로 넘어올 때도 있음
 		}
 		
 		if (!height.equals("")) {
-			nHeight = Integer.parseInt(height);
+			nHeight = (int) Float.parseFloat(height);
 		}
 		
 		if (nWidth > 0 && nHeight > 0) {
