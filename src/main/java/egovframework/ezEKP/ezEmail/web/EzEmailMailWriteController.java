@@ -4867,7 +4867,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	        
 			} catch (Exception e) {
 				
-				if (e.getMessage().indexOf("OVERQUOTA") > -1 && e.getMessage().indexOf("OVERMESSAGESIZE") > -1) {
+				if (e.getMessage().indexOf("OVERQUOTA") > -1 || e.getMessage().indexOf("OVERMESSAGESIZE") > -1) {
 					logger.error("mailInterSend : " + e.getMessage());
 					pResult = e.getMessage();
 				} else if (e.getMessage().indexOf("Invalid Addresses") > -1) {
