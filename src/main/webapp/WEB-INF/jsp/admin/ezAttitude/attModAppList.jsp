@@ -1131,7 +1131,7 @@
 	    function getHistory(t) {
 		    var attModId = $(t).parent().parent().find('td input').attr("value");
 			var companyId = $("#ListCompany").val();
-			window.open("/ezAttitude/attitudeModHistory.do?attModId=" + attModId + "&companyId=" + companyId, "history", GetOpenWindowfeature(550, 260));
+			window.open("/ezAttitude/attitudeModHistory.do?attModId=" + attModId + "&companyId=" + companyId, "history", GetOpenWindowfeature(600, 300));
 	    }
 	    
 	    function layerHidden() {
