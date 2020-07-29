@@ -4579,6 +4579,17 @@ function SReAprLineSingMapping(ret) {
 		OrderJobtitle[tempSn] = getNodeText(dataNodes[2]);
 	}
 	
+	/* 2020-07-27 홍승비 - 반송 후 재기안 > 기결재통과 체크 > 결재선 정보 설정 시, 결재선 맵핑 오류 수정*/
+	var LastSignSN = OrderType.length;
+    for(var i = 1; i < OrderType.length; i++) { // 마지막 결재하는 사람 찾기
+		if (OrderType[i] == strAprType4 || OrderType[i] == strAprType16) { // 전결, 대결
+			LastSignSN = i;
+			break;
+		} else if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 ||  OrderType[i] == strAprType1 ||  OrderType[i] == strAprType3) { // 기안, 검토, 결재, 결재안함
+    		LastSignSN = i;
+        }
+    }
+    
 	var signMax = 0;
 	var habyMax = 0;
 	var startSignIdx = 1;
@@ -4613,41 +4624,102 @@ function SReAprLineSingMapping(ret) {
 		}
 	}
 	
+	// 가변결재선이 아니라면, 마지막 결재자의 서명 필드가 존재하는지 체크 (내부결재선, 수신결재선의 최종결재자는 가장 마지막 결재칸에 표출되어야 함)
+    var LastSignNo = 0;
+    var isAutoAprLineExit = false;
+    var autoAprLineField = $("#message").contents().find("td[id^='autoLine']");
+    var signFields = $("#message").contents().find("td[id^='" + SusinSN + "sign']");
+    
+    if (signFields.length > 0) {
+    	LastSignNo = signFields.length;
+    }
+    if (autoAprLineField.length > 0) {
+    	isAutoAprLineExit = true;
+    }
+    
 	var fields = message.GetFieldsList();
 	var field;
 	
-	for (var p = startSignIdx; p <= signMax; p++) {
-		field = message.GetListItem(fields, SusinSN + "jikwe" + p);
-		if (field) {
-			setNodeText(field , " ");
-			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
-				field.innerHTML = "<br type='_moz'>";
+	// 가변결재선의 초기화
+	if (isAutoAprLineExit == true) {
+		for (var p = startSignIdx; p <= signMax; p++) {
+			field = message.GetListItem(fields, SusinSN + "jikwe" + p);
+			if (field) {
+				setNodeText(field , " ");
+				if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+					field.innerHTML = "<br type='_moz'>";
+				}
+			}
+			
+			field = message.GetListItem(fields, SusinSN + "sign" + p);
+			if (field) {
+				setNodeText(field , " ");
+				if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+					field.innerHTML = "<br type='_moz'>";
+				}
+			}
+			
+			field = message.GetListItem(fields, SusinSN + "seumyung" + p);
+			if (field) {
+				setNodeText(field , " ");
+				if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+					field.innerHTML = "<br type='_moz'>";
+				}
+			}
+			
+			field = message.GetListItem(fields, SusinSN + "seumyungdate" + p);
+			if (field) {
+				setNodeText(field , " ");
+				if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+					field.innerHTML = "<br type='_moz'>";
+				}
 			}
 		}
-		
-		field = message.GetListItem(fields, SusinSN + "sign" + p);
-		if (field) {
-			setNodeText(field , " ");
-			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
-				field.innerHTML = "<br type='_moz'>";
-			}
-		}
-		
-		field = message.GetListItem(fields, SusinSN + "seumyung" + p);
-		if (field) {
-			setNodeText(field , " ");
-			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
-				field.innerHTML = "<br type='_moz'>";
-			}
-		}
-		
-		field = message.GetListItem(fields, SusinSN + "seumyungdate" + p);
-		if (field) {
-			setNodeText(field , " ");
-			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
-				field.innerHTML = "<br type='_moz'>";
-			}
-		}
+	}
+	else { // 일반적인 결재선의 초기화 (내부결재, 수신결재)
+	    if (signFields.length > 0) {
+	    	
+	    	var newAddSignCnt = signMax - startSignIdx; // 이 값이 0 이하라면, 기결재된 결재선 외에 새로 추가된 결재선은 없음
+	    	var signResetCnt = signFields.length - newAddSignCnt; // 양식 상의 전체 결재선 필드에서 새로 추가된 결재선 카운트를 뺀 횟수만큼 초기화를 진행
+	    	
+	    	if (newAddSignCnt >= 0 && signResetCnt > 0) {  // 새로 추가된 결재선이 존재하거나, 양식 상에서 초기화가 필요한 결재선 필드가 존재함
+	    		// startSignIdx 지점부터 양식 상의 마지막 결재서명필드(최종결재자 영역)까지 초기화를 진행
+				for (var r = startSignIdx; r <= signResetCnt; r++) {
+					field = message.GetListItem(fields, SusinSN + "jikwe" + r);
+					if (field) {
+						setNodeText(field , " ");
+						if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+							field.innerHTML = "<br type='_moz'>";
+						}
+					}
+					
+					field = message.GetListItem(fields, SusinSN + "sign" + r);
+					if (field) {
+						setNodeText(field , " ");
+						if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+							field.innerHTML = "<br type='_moz'>";
+						}
+					}
+					
+					field = message.GetListItem(fields, SusinSN + "seumyung" + r);
+					if (field) {
+						setNodeText(field , " ");
+						if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+							field.innerHTML = "<br type='_moz'>";
+						}
+					}
+					
+					field = message.GetListItem(fields, SusinSN + "seumyungdate" + r);
+					if (field) {
+						setNodeText(field , " ");
+						if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+							field.innerHTML = "<br type='_moz'>";
+						}
+					}
+				}
+	    	}
+	    }
+	    
 	}
 	
 	for (var p = startHabyIdx; p <= habyMax; p++) {
@@ -4687,10 +4759,31 @@ function SReAprLineSingMapping(ret) {
 	var sIdx = startSignIdx;
 	var hIdx = startHabyIdx;
 	for (var p = 0; p < reOrderSignName.length; p++) {
+		
+		// 가변결재선이 아닌 경우, 최종결재자는 가장 마지막 서명칸에 맵핑 (기안자=최종결재자인 경우도 동일하게 처리)
+		if (p == reOrderSignName.length - 1 && isAutoAprLineExit == false) {
+			sIdx = LastSignNo;
+		}
+		
 		field = message.GetListItem(fields, SusinSN + "jikwe" + sIdx);
 		if (field) {
 			setNodeText(field , reOrderSignTitle[p]);
 		}
+		
+		/* 2020-07-27 홍승비 - 서명필드만 존재하는 경우, 서명+결재자명 필드가 함께 존재하는 경우, 슬래시 이미지의 표출분기 수정 */
+		field = message.GetListItem(fields, SusinSN + "sign" + sIdx);
+		if (field) {
+			// 서명필드만 존재
+			if (message.GetListItem(fields, (SusinSN + "sign" + sIdx)) != null && message.GetListItem(fields, (SusinSN + "seumyung" + sIdx)) == null) {
+				setNodeText(field , reOrderSignName[p]);
+			}
+			// 서명필드 + 결재자명 필드가 함께 존재
+			else if (message.GetListItem(fields, (SusinSN + "sign" + sIdx)) != null && message.GetListItem(fields, (SusinSN + "seumyung" + sIdx)) != null) {
+				field.innerHTML = "[NOSLASH]";
+			}
+	     	// 그 외의 경우, 아무런 값이 부여되지 않으므로 슬래시 이미지를 표출
+		}
+         	
 		field = message.GetListItem(fields, SusinSN + "seumyung" + sIdx);
 		if (field) {
 			setNodeText(field , reOrderSignName[p]);
@@ -4699,6 +4792,10 @@ function SReAprLineSingMapping(ret) {
 		sIdx++;
 	}
 	
+    if (isSplit == "Y") { // 슬래시 이미지 삽입
+        setSignSlash("sign", SusinSN);
+    }
+    
 	for (var p = 0; p < reOrderHabyName.length; p++) {
 		field = message.GetListItem(fields, SusinSN + "habyuipositon" + hIdx);
 		if (field) {
