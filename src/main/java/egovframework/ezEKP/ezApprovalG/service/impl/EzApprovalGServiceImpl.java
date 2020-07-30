@@ -16971,7 +16971,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						if (rtnVal) {
 							map.put("v_NEWID", newID);
 							map.put("companyID", companyID);
-							map.put("receiptCompanyID", receiptCompanyID);
 							map.put("v_orgDocID", orgDocID);
 							map.put("v_DocState", docState);
 							map.put("v_FunctionType", staASDoJak);
@@ -16985,11 +16984,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							ezApprovalGDAO.insertDoSendExpAprDocInfo(map);
 							ezApprovalGDAO.insertDocSendAprAttachInfo(map);
 							ezApprovalGDAO.insertDocSendAprDocAttachInfo(map);
-
-                            ezApprovalGDAO.copyOpinionsFromOrgDoc(map);
 							
-							// 원기안부서의 의견을 수신문서로 복사 2019-10-29 임민석
-							ezApprovalGDAO.copyOpinionsFromOrgDoc(map);
+                            ezApprovalGDAO.copyOpinionsFromOrgDoc(map);
 							
 							String susinSN = ezApprovalGDAO.getReceiptProcessInfoRecS(map3);
 							
