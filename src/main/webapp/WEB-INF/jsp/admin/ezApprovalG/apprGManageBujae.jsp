@@ -121,13 +121,25 @@
 		        $("#Sdatepicker").datepicker('setDate', SDate);
 	    	   	$('#Stimepicker').timepicker();
 	        	$('#Stimepicker').timepicker('setTime', SDate);
-	        	$('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
-
+	        	$('#Stimepicker').timepicker({
+	        		'timeFormat': 'H:i',
+	        		'disableTextInput': true
+	        	});
+	        	$("#Stimepicker").on("focus", function(){
+					$(this).trigger("blur");
+				});
+	        	
 	        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        	$("#Edatepicker").datepicker('setDate', EDate);
 	        	$('#Etimepicker').timepicker();
 	        	$('#Etimepicker').timepicker('setTime', EDate);
-	        	$('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+	        	$('#Etimepicker').timepicker({
+	        		'timeFormat': 'H:i',
+	        		'disableTextInput': true
+	        	});
+	        	$("#Etimepicker").on("focus", function(){
+					$(this).trigger("blur");
+				});
 		    });
 		    
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
