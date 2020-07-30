@@ -2165,7 +2165,7 @@ function SReAprLineSingMapping(ret) {
     var startIdx = 0;
     var IngFlag = false;
     for (i = 1; i < OrderStat.length; i++) {
-        if (OrderStat[i] == strAprState1 && IngFlag) {
+        if ((OrderStat[i] == strAprState1 || OrderStat[i] == strAprState1 == "") && IngFlag) {
             startIdx = startIdx;
             break;
         }
