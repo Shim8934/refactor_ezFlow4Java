@@ -2,17 +2,9 @@ package egovframework.ezEKP.ezApprovalG.vo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-
-import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.let.utl.fcc.service.CommonUtil;
 
 public class ApprGRelayConfigVO {
 

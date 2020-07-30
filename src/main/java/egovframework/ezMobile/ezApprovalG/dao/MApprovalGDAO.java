@@ -92,14 +92,17 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 		return (int) select("MApprovalG.getCheckAprState", map);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<MApprovalGReceiptInfoVO> getEndReceiptInfos(Map<String, Object> map) throws Exception {
 		return (List<MApprovalGReceiptInfoVO>) list("mApprovalGDAO.getEndReceiptInfos", map);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<MCommonVO> getReceiptInfosOfDept(Map<String, Object> map) throws Exception {
 		return (List<MCommonVO>) list("mApprovalGDAO.getReceiptInfosOfDept", map);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<MCommonVO> getReceiptInfosOfUser(Map<String, Object> map) throws Exception {
 		return (List<MCommonVO>) list("mApprovalGDAO.getReceiptInfosOfUser", map);
 	}

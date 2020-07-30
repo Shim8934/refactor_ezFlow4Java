@@ -77,10 +77,10 @@ public class MAttitudeGWController extends EgovFileMngUtil {
 		try{
 			String userId = request.getParameter("userId");
 			//isRest = all(휴일모두), rest(휴무일만)
-			String isRest = request.getParameter("isRest");
+			// String isRest = request.getParameter("isRest");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			int tenantId = info.getTenantId();
+			// int tenantId = info.getTenantId();
 			String cID = "VIEW";
 			
 			List<ResScheGetHolidayVO> holiday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
