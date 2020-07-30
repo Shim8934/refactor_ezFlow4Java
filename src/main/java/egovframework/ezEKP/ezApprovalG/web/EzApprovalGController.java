@@ -1181,6 +1181,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
 		
+		/* 2020-07-30 홍승비 - 가변결재선 사용 여부 컨피그 추가 */
+		String useDynamicAprLine = ezCommonService.getTenantConfig("UseDynamicAprLine", userInfo.getTenantId()); //가변 결재선 사용여부 - 1(사용) / 0(사용안함)
+		
+		model.addAttribute("useDynamicAprLine", useDynamicAprLine);
+		
 		logger.debug("draftui ended.");
 
 		return "ezApprovalG/apprGDraftui";

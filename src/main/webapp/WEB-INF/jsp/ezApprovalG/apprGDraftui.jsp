@@ -169,6 +169,7 @@
 			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 			var formAprOption = "<c:out value='${formAprOption}'/>";
 			var passAprLine = "";
+	        var useDynamicAprLine = "<c:out value ='${useDynamicAprLine}'/>";
 			
 		    window.onload = function ()
 		    {

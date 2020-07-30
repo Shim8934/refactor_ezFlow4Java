@@ -4633,7 +4633,8 @@ function SReAprLineSingMapping(ret) {
     if (signFields.length > 0) {
     	LastSignNo = signFields.length;
     }
-    if (autoAprLineField.length > 0) {
+    // 테넌트 컨피그와 실제 양식 상의 가변결재선 필드 모두 확인
+    if (useDynamicAprLine == "1" && autoAprLineField.length > 0) {
     	isAutoAprLineExit = true;
     }
     
