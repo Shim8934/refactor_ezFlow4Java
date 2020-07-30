@@ -491,8 +491,11 @@
 		            }
 	            }
 	            
-	    	    // 가변결재양식 사용 시, 최대 사인칸 20개로 고정
-	    	    if (useDynamicAprLine == "1") {
+	            /* 2020-07-30 홍승비 - 실제 양식 상에 가변결재선이 없다면, 분기를 타지 않도록 수정 */
+				var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
+				
+				// 가변결재양식 사용 시, 최대 사인칸 20개로 고정
+	    	    if (useDynamicAprLine == "1" && autoAprLineField.length > 0) {
 	    	    	pSignCount = 20;
 	    	    	// (개인,부서)합의는 기안할때만 사용하도록
 	    	    	if (approvalType == "DRAFT") {
@@ -500,6 +503,7 @@
 	    	    	}
 	    	    }
 	        }
+	        
 	        function CheckGubunInit() {
 	            if (pIniGubun == "1") {
 	                document.getElementById("1tab1").onclick();
@@ -1227,7 +1231,10 @@
 							}
 		                }
 		                
-		                if (useDynamicAprLine == "1") {
+			            /* 2020-07-30 홍승비 - 실제 양식 상에 가변결재선이 없다면, 분기를 타지 않도록 수정 */
+						var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
+			            
+		                if (useDynamicAprLine == "1" && autoAprLineField.length > 0) {
 		                	if (approvalFlag == "G") {
 			                	ret[27] = SaveAprLineList();
 		                	} else {
