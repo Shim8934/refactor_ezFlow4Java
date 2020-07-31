@@ -3525,10 +3525,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
 		String strXML = "";
-		
 		String code = request.getParameter("code");
 		String reason = request.getParameter("reason");
-		reason = reason.replace("'", "''");
 		
 		CommunityCComCloseVO closeVO = ezCommunityService.adminCommCloseOkGet1(code, userInfo.getTenantId());
 		
@@ -3539,15 +3537,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			
 			if (clubVO != null) {
 				 String commName = clubVO.getC_ClubName().trim();
-                 commName = commName.replace("'", "''");
-                 // 20100108 : 폐쇄신청 \" -> "로 나오도록 수정
-                 //commName = commName.Replace("\"", "\\\"");
-
                  String commName2 = clubVO.getC_ClubName2().trim();
-                 commName2 = commName2.replace("'", "''");
-                 // 20100108 : 폐쇄신청 \" -> "로 나오도록 수정
-                 //commName2 = commName2.Replace("\"", "\\\"");
-
                  String sysopID = clubVO.getC_SysopID().trim();
                  String companyName = userInfo.getCompanyName1();
                  
