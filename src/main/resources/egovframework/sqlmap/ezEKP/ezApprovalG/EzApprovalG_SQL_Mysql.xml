@@ -11842,17 +11842,17 @@
 			UPDATE
 				TBL_LastDocID
 	      	SET 
-	      		lastDocID = (SELECT
-	      						*
-	      					FROM
-	      						(SELECT 
-	   								(max(lastDocID) +1)
-	  							FROM 
-	  								TBL_LastDocID
-	  							WHERE	
-	  								TENANT_ID = #v_TENANTID#
-	  							AND
-	  								COMPANYID = #companyID# ) A )
+	      		lastDocID = (
+	      		   SELECT 
+	      		       LASTDOCID + 1 
+	      		   FROM 
+	      		       TBL_LASTDOCID 
+	      		   WHERE 
+	      		       TENANT_ID = #v_TENANTID#
+	      		   AND 
+	      		       COMPANYID = #companyID# 
+	      		   FOR UPDATE
+	      		)
 			WHERE 
 				TENANT_ID = #v_TENANTID#
 			AND

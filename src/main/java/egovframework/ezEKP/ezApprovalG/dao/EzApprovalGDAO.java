@@ -2245,7 +2245,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 	
 	public void aprGetNewID(Map<String, Object> map) throws Exception{
-		update("EzApprovalG.aprGetNewID", map);
+		insert("EzApprovalG.aprGetNewID", map);
 	}
 	
 	public void updateSerialNo(Map<String, Object> map) throws Exception{
