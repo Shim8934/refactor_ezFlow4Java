@@ -959,18 +959,31 @@
 		        
 		        return true;
 		    }
-		    		    
+		    
+		    /* 2020-08-03 홍승비 - 결재자가 한 명인 경우(기안자 = 최종결재자), 수신처 회송 시 기결재기능 사용하지 못하도록 수정 */
 			function btn_OK() {
+		    	var aprLineCnt = $("#lvAPRLINE").find("tr[data11='001']");
+		    	
+		    	if (document.getElementById('passAprLine').checked && pReDraftFlag === 'REDRAFT' && aprLineCnt.length <= 1) {
+		    		OpenAlertUI("결재자가 한 명인 경우, 기결재통과 기능을 사용할 수 없습니다.");
+		    		return;
+		    	}
+		    	
 				if(document.getElementById('passAprLine').checked && pReDraftFlag === 'REDRAFT') {
 					OpenInformationUI('기결재통과가 체크되어 있습니다.<br>계속 진행하시겠습니까?', btn_OK_Confirm);
 	        		return;
 	        	} else {
-	        		btn_OK_Confirm();
+	        		btn_OK_Confirm(true);
 	        	}
 			}
 			
-			function btn_OK_Confirm() {
-		        try {		    		        	
+			function btn_OK_Confirm(Ans) {
+		        try {
+		        	if (Ans != true) { // 기결재통과 기능 사용 시 OpenInformationUI의 리턴값 체크
+		        		DivPopUpHidden();
+		        		return;
+		        	}
+		        	
 		            if (!onlydocinfiview) {
 		                var line = Checkline();
 		                if (line == false) {
@@ -2167,6 +2180,7 @@
 					return;
 				}
 				
+		    	// 2020-08-03 기준 반송, 회송 시 모두 기결재통과기능 사용가능
 		    	// 반송 시에는 기결재 통과를 막는다고 고객과 협의 2019-11-15 임민석
 				if(parent.pAprState !== '004') {
 					$.ajax({
