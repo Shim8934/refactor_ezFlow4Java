@@ -4312,9 +4312,7 @@ function SaveTMPDocInfo(AutoSave) {
         if (isUsed == "reuse") {
             createNodeAndInsertText(xmlpara, objNode, "beforeDocID", beforeDocID);
             createNodeAndInsertText(xmlpara, objNode, "isUsed", isUsed);
-        }
-        
-        if(Saveflag) {
+        } else if(Saveflag) {
         	createNodeAndInsertText(xmlpara, objNode, "saveFlag", Saveflag);
         	createNodeAndInsertText(xmlpara, objNode, "oldDocID", pDocID);
         }

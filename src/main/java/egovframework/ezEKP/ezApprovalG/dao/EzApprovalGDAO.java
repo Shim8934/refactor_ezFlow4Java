@@ -1,5 +1,12 @@
 package egovframework.ezEKP.ezApprovalG.dao;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
@@ -45,13 +52,6 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
-
-import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 @Repository("EzApprovalGDAO")
 public class EzApprovalGDAO extends EgovAbstractDAO {
@@ -2245,7 +2245,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 	
 	public void aprGetNewID(Map<String, Object> map) throws Exception{
-		update("EzApprovalG.aprGetNewID", map);
+		insert("EzApprovalG.aprGetNewID", map);
 	}
 	
 	public void updateSerialNo(Map<String, Object> map) throws Exception{

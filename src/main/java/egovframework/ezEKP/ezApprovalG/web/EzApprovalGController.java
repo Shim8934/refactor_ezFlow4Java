@@ -4337,28 +4337,28 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
 					if(mailChk != null && mailChk.equals("Y")) {
 						model.addAttribute("chk", "no");
-					}
 					
-					// 진행문서인 경우
-					ApprGDocListVO apprGIngDocVO = ezApprovalGService.getIngDocInfo(userInfo.getId(), docID.trim(), orgCompanyID, userInfo.getTenantId());
-					if (apprGIngDocVO != null && apprGIngDocVO.getHref() != null && !apprGIngDocVO.getHref().trim().equals("")) {
-						model.addAttribute("docID", docID.trim());
-						model.addAttribute("docHref", apprGIngDocVO.getHref().trim());
-						model.addAttribute("orgCompanyID", orgCompanyID); // 결재문서 기안 당시의 회사ID
-						model.addAttribute("listType", "3"); // 진행중문서 listType
-						
-						return "redirect:/ezApprovalG/aprDocView.do";
-					} else {
-						// 완료문서인 경우
-						ApprGDocListVO apprGEndDocVO = ezApprovalGService.getEndDocInfo(docID.trim(), orgCompanyID, userInfo.getTenantId());
-						if (apprGEndDocVO != null && apprGEndDocVO.getHref() != null && !apprGEndDocVO.getHref().trim().equals("")) {
+						// 진행문서인 경우
+						ApprGDocListVO apprGIngDocVO = ezApprovalGService.getIngDocInfo(userInfo.getId(), docID.trim(), orgCompanyID, userInfo.getTenantId());
+						if (apprGIngDocVO != null && apprGIngDocVO.getHref() != null && !apprGIngDocVO.getHref().trim().equals("")) {
 							model.addAttribute("docID", docID.trim());
-							model.addAttribute("docHref", apprGEndDocVO.getHref().trim());
-							model.addAttribute("orgCompanyID", orgCompanyID); // 결재문서 기안 당시의 회사ID(문서 재사용에 필요)
+							model.addAttribute("docHref", apprGIngDocVO.getHref().trim());
+							model.addAttribute("orgCompanyID", orgCompanyID); // 결재문서 기안 당시의 회사ID
+							model.addAttribute("listType", "3"); // 진행중문서 listType
 							
-							return "redirect:/ezApprovalG/contDocView.do";
+							return "redirect:/ezApprovalG/aprDocView.do";
 						} else {
-							return "main/warning";
+							// 완료문서인 경우
+							ApprGDocListVO apprGEndDocVO = ezApprovalGService.getEndDocInfo(docID.trim(), orgCompanyID, userInfo.getTenantId());
+							if (apprGEndDocVO != null && apprGEndDocVO.getHref() != null && !apprGEndDocVO.getHref().trim().equals("")) {
+								model.addAttribute("docID", docID.trim());
+								model.addAttribute("docHref", apprGEndDocVO.getHref().trim());
+								model.addAttribute("orgCompanyID", orgCompanyID); // 결재문서 기안 당시의 회사ID(문서 재사용에 필요)
+								
+								return "redirect:/ezApprovalG/contDocView.do";
+							} else {
+								return "main/warning";
+							}
 						}
 					}
 				}

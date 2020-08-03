@@ -11675,26 +11675,29 @@
 <!-- 	<procedure id="EzApprovalG.aprGetNewID" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL APRGETNEWID(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<update id="EzApprovalG.aprGetNewID" parameterClass="Map">
+	<insert id="EzApprovalG.aprGetNewID" parameterClass="Map">
+	   <selectKey type="pre" resultClass="String" keyProperty="v_LASTDOCID">
+	       SELECT 
+	           LASTDOCID + 1
+	       FROM 
+	           TBL_LASTDOCID 
+	       WHERE 
+	           TENANT_ID = #v_TENANTID#
+	       AND 
+	           COMPANYID = #companyID#
+	       FOR UPDATE
+	   </selectKey>
 	<![CDATA[
 		UPDATE 
 			TBL_LastDocID
       	SET 
-      		lastDocID = (
-   					        SELECT 
-   								(max(lastDocID) +1)
-  							FROM 
-  								TBL_LastDocID
-  							WHERE	
-  								TENANT_ID = #v_TENANTID#
-  							AND
-  								COMPANYID = #companyID# )
+      		lastDocID = #v_LASTDOCID#
 		WHERE 
 			TENANT_ID = #v_TENANTID#
 		AND
 			COMPANYID = #companyID#  								
      ]]>
-	</update>
+	</insert>
 	<select id="EzApprovalG.selectAprGetNewID" parameterClass="Map" resultClass="String">
 		SELECT 
 	      	max(lastDocID) lastDocID
