@@ -16781,6 +16781,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 							map.put("receiptCompanyID", receiptCompanyID);
 							
+							/* 2020-08-04 홍승비 - 수신문서의 의견존재여부를 원문서에서 가져오도록 수정(내부결재 완료시 수신처 의견유지) */
 							ezApprovalGDAO.insertDoSendAprDocInfo(map);
 							ezApprovalGDAO.insertDoSendExpAprDocInfo(map);
 							ezApprovalGDAO.insertDocSendAprAttachInfo(map);
