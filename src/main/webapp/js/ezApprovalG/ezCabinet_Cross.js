@@ -99,61 +99,74 @@ function ezCabMunuCtl(MenuType, selRow) {
                 document.getElementById("tdModifyCab").style.display = pMenuFlag;
             }
 
-            if (selRow.getAttribute("DATA6") == "0") {
-                if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
-					if ((GetCabChargerRight() == "true" || g_bDeptCharger) && g_sFlag != "m09") {                    	
-                        document.getElementById("tdbtnEndProduce").style.display = "";
-                        //SwapImage(btnEndProduce, "");
+            if (GetAttribute(selRow, "DATA5") === arr_userinfo[4]) {
+                if (selRow.getAttribute("DATA6") == "0") {
+                    if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
+                        if ((GetCabChargerRight() == "true" || g_bDeptCharger) && g_sFlag != "m09") {                    	
+                            document.getElementById("tdbtnEndProduce").style.display = "";
+                            //SwapImage(btnEndProduce, "");
+                        }
+                        else {
+                            document.getElementById("tdbtnEndProduce").style.display = "none";
+                            //SwapImage(btnEndProduce, "dis");
+                        }
                     }
-                    else {
-                        document.getElementById("tdbtnEndProduce").style.display = "none";
-                        //SwapImage(btnEndProduce, "dis");
-                    }
-                }
-
-                if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
-                    document.getElementById("tdbtnCancelEndProd").style.display = "none";
-                    //SwapImage(btnCancelEndProd, "dis");
-                }
-            }
-            else {
-                if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
-                    document.getElementById("tdbtnEndProduce").style.display = "none";
-                    //SwapImage(btnEndProduce, "dis");
-                }
-
-                if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
-					if (GetCabChargerRight() == "true" && g_sFlag != "m09") {                    	
-                        document.getElementById("tdbtnCancelEndProd").style.display = "";
-                        //SwapImage(btnCancelEndProd, "");
-                    }
-                    else {
+    
+                    if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
                         document.getElementById("tdbtnCancelEndProd").style.display = "none";
                         //SwapImage(btnCancelEndProd, "dis");
                     }
                 }
-            }
-            
-            /**
-             * 연기신청에 따른 버튼 활성화비활성화
-             */
-            if (selRow.getAttribute("DATA8") == "Y") {
-            	if (typeof (tdReqDelayEndY) != "undefined" && typeof (tdReqDelayEndY) != "unknown") {
-            		document.getElementById("tdReqDelayEndY").style.display = "none";
-            	}
-            	
-            	if (typeof (tdCancelDelayEndY) != "undefined" && typeof (tdCancelDelayEndY) != "unknown") {
-            		document.getElementById("tdCancelDelayEndY").style.display = "";
-            	}
+                else {
+                    if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
+                        document.getElementById("tdbtnEndProduce").style.display = "none";
+                        //SwapImage(btnEndProduce, "dis");
+                    }
+    
+                    if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
+                        if (GetCabChargerRight() == "true" && g_sFlag != "m09") {                    	
+                            document.getElementById("tdbtnCancelEndProd").style.display = "";
+                            //SwapImage(btnCancelEndProd, "");
+                        }
+                        else {
+                            document.getElementById("tdbtnCancelEndProd").style.display = "none";
+                            //SwapImage(btnCancelEndProd, "dis");
+                        }
+                    }
+                }
+
+                if (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") {
+                    document.getElementById("tdBtnCabDel").style.display = "";    
+                }
+                            
+                /**
+                 * 연기신청에 따른 버튼 활성화비활성화
+                 */
+                if (selRow.getAttribute("DATA8") == "Y") {
+                    if (typeof (tdReqDelayEndY) != "undefined" && typeof (tdReqDelayEndY) != "unknown") {
+                        document.getElementById("tdReqDelayEndY").style.display = "none";
+                    }
+                    
+                    if (typeof (tdCancelDelayEndY) != "undefined" && typeof (tdCancelDelayEndY) != "unknown") {
+                        document.getElementById("tdCancelDelayEndY").style.display = "";
+                    }
+                } else {
+                    if (typeof (tdReqDelayEndY) != "undefined" && typeof (tdReqDelayEndY) != "unknown") {
+                        document.getElementById("tdReqDelayEndY").style.display = "";
+                    }
+                    
+                    if (typeof (tdCancelDelayEndY) != "undefined" && typeof (tdCancelDelayEndY) != "unknown") {
+                        document.getElementById("tdCancelDelayEndY").style.display = "none";
+                    }
+                }
             } else {
-            	if (typeof (tdReqDelayEndY) != "undefined" && typeof (tdReqDelayEndY) != "unknown") {
-            		document.getElementById("tdReqDelayEndY").style.display = "";
-            	}
-            	
-            	if (typeof (tdCancelDelayEndY) != "undefined" && typeof (tdCancelDelayEndY) != "unknown") {
-            		document.getElementById("tdCancelDelayEndY").style.display = "none";
-            	}
+                document.getElementById("tdbtnEndProduce").style.display = "none";
+                document.getElementById("tdbtnCancelEndProd").style.display = "none";
+                document.getElementById("tdReqDelayEndY").style.display = "none";
+                document.getElementById("tdCancelDelayEndY").style.display = "none";
+                document.getElementById("tdBtnCabDel").style.display = "none";
             }
+
 
             if (typeof (tdViewCabHist) != "undefined" && typeof (tdViewCabHist) != "unknown") {
                 if (IsUserDeptRec() == "true")

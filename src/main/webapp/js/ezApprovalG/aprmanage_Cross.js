@@ -182,8 +182,7 @@ function getDocList_after(xml) {
             var DocList = new ListView();
             DocList.LoadFromID("DocList");
             var oArrRows = DocList.GetSelectedRows();
-
-
+            
             if (oArrRows.length != "0") {
                 var tr = oArrRows[0];
 
@@ -199,6 +198,12 @@ function getDocList_after(xml) {
                 else if (pDocInfoValue == "5") {
                     getAprDocAproveInfo(tr);
                 }
+            } /* 2020-07-01 홍승비 - 하단 결재선 탭 이외의 탭을 선택한 상태에서 문서가 리스트에서 전부 사라진 경우, 탭에 정보가 남아있는 오류 수정 */
+            else {
+            	var headerCnt = $("table[id='AprLine']").find("th").length;
+            	if (headerCnt > 0) {
+            		$("#AprLine").find("tbody").html("<tr id='AprLine_TR_noItems'><td align='center' colspan='" + headerCnt + "'>" + strLang944 + "</td></tr>");
+            	}
             }
         }
     }
@@ -2787,27 +2792,44 @@ function CheckFormConnFlag(pDocID) {
         return false;
 }
 
+/* 2020-07-13 홍승비 - 재기안 시 부서명 가져오는 부분의 오류 수정, 함수 내부의 지역변수 선언부분 if분기 바깥으로 이동 */
 function CheckAprLineInfo(tr) {
     var xmldom = createXmlDom();
     try {
+    	var pDeptID = "";
+    	var pDeptName = "";
+    	
         xmldom = getAprLineInfo(tr);
-
+        
         if (xmldom.getElementsByTagName("ROW").length > 0) {
             if (CrossYN()) {
-                var pDeptID = xmldom.getElementsByTagName("DATA6").item(xmldom.getElementsByTagName("ROW").length - 1).textContent;
+                pDeptID = xmldom.getElementsByTagName("DATA6").item(xmldom.getElementsByTagName("ROW").length - 1).textContent;
             }
             else {
-                var pDeptID = xmldom.getElementsByTagName("DATA6").item(xmldom.getElementsByTagName("ROW").length - 1).text;
+                pDeptID = xmldom.getElementsByTagName("DATA6").item(xmldom.getElementsByTagName("ROW").length - 1).text;
             }
-            if (pDeptID == arr_userinfo[4])
+            
+            if (pDeptID == arr_userinfo[4]) {
                 return "OK";
-            else {
+            }
+            else { // 부서명 가져올 때의 오류 수정, 다국어 처리
                 if (CrossYN()) {
-                    var pDeptName = xmldom.getElementsByTagName("ROW").item(xmldom.getElementsByTagName("ROW").length - 1).childNodes.item(7).textContent;
+                    // pDeptName = xmldom.getElementsByTagName("ROW").item(xmldom.getElementsByTagName("ROW").length - 1).childNodes.item(7).textContent;
+                	if (primary == "1") {
+                		pDeptName = xmldom.getElementsByTagName("DATA15").item(xmldom.getElementsByTagName("ROW").length - 1).textContent;
+                	} else {
+                		pDeptName = xmldom.getElementsByTagName("DATA16").item(xmldom.getElementsByTagName("ROW").length - 1).textContent;
+                	}
                 }
                 else {
-                    var pDeptName = xmldom.getElementsByTagName("ROW").item(xmldom.getElementsByTagName("ROW").length - 1).childNodes.item(7).text;
+                   // pDeptName = xmldom.getElementsByTagName("ROW").item(xmldom.getElementsByTagName("ROW").length - 1).childNodes.item(7).text;
+                	if (primary == "1") {
+                		pDeptName = xmldom.getElementsByTagName("DATA15").item(xmldom.getElementsByTagName("ROW").length - 1).text;
+                	} else {
+                		pDeptName = xmldom.getElementsByTagName("DATA16").item(xmldom.getElementsByTagName("ROW").length - 1).text;
+                	}
                 }
+                
                 pDeptName = pDeptName.replace("\"", "");
                 return pDeptName;
             }
@@ -3127,7 +3149,8 @@ function chk_Passwd_Complete(chkpass) {
     createNodeAndInsertText(xmlpara, objNode, "PASSWD", "");
     createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", userLang);
     var list = createNodeAndAppandNode(xmlpara, objRoot, list, "DOCIDS");
-    $(pCurSelRow).each(function(){
+    var passCnt = 0;
+    $(pCurSelRow).each(function(idx, curRow){
         //대결처리, docstate : 공람, aprState : 대기, 보류 제외
         var curDeptId = $(this).attr("DATA7");
         var curAprMemberSN = $(this).attr("APRMEMBERSN");
@@ -3154,12 +3177,23 @@ function chk_Passwd_Complete(chkpass) {
                 curAprType = xml;
             }        			
         });
+
+        if(GetAttribute(curRow, "DATA12") === "015") { //DATA12 - docstate
+            passCnt++;
+            return true;
+        }
+        if(GetAttribute(curRow, "DATA10") !== "002" && GetAttribute(curRow, "DATA10") !== "005") { //data10 - functiontype
+            passCnt++;
+            return true;
+        }
         
         //결재타입이 001(결재), 004(전결), 007(참조), 019(검토) 만 일괄결재 처리
         curAprType = curAprType.split("/")[0];
-        if(!(curAprType == "001") && !(curAprType == "004") && !(curAprType == "007") && !(curAprType == "019"))
+        if(!(curAprType == "001") && !(curAprType == "004") && !(curAprType == "007") && !(curAprType == "019")) {
             //jquery each 내부 return true: continue, false: break -> return false
+            passCnt++;
             return true;
+        }
 
         doc = createNodeAndAppandNode(xmlpara, list, doc, "DOC");
         $.ajax({
@@ -3199,12 +3233,15 @@ function chk_Passwd_Complete(chkpass) {
     arrRtnVal[3] = RtnVal.split("/")[3]; // falseCount
     if (arrRtnVal[0] == "OK") {
         hideProgress();
-        pAlertContent = strLang933 + arrRtnVal[1] + strLang934;
-        pAlertContent += strLang935 + arrRtnVal[2] + strLang934;
+        pAlertContent = strLang933 + (Number(arrRtnVal[1]) + passCnt) + strLang934_1 + "<br/>";
+        pAlertContent += strLang935 + arrRtnVal[2] + strLang934_1;
         if (arrRtnVal[3] != 0) {
-            pAlertContent += strLang936 + arrRtnVal[3] + strLang934;
+            pAlertContent += " / " + strLang936 + arrRtnVal[3] + strLang934_1;
         }
-        pAlertContent += strLang931;
+        if(passCnt > 0) {
+            pAlertContent += " / " + strLang938 + passCnt + strLang934_1;
+        }
+        pAlertContent += "<br/>" + strLang931_1;
         OpenAlertUI(pAlertContent, OpenAlertUI_Close);
     } else {
         hideProgress();

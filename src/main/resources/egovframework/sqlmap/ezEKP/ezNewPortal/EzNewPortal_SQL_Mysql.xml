@@ -176,45 +176,61 @@
 <result property="tenantId" column="TENANT_ID" />
 </resultMap>
 
+<resultMap class="MenuInfoVO" id="MenuInfoVO">
+<result property="menuId" 					column="MENU_ID" />
+<result property="menuUrl" 					column="MENU_URL" />
+<result property="menuType" 				column="MENU_TYPE" />
+<result property="iconUrl" 					column="ICON_URL" />
+<result property="defaultOrder" 			column="DEFAULT_ORDER" />
+<result property="menuCode" 				column="MENUCODE" />
+</resultMap>
+
 <!-- 공지사항 포틀릿 가져오기 -->
 <select id="ezNewPortal.getNoticePortletList" parameterClass="Map" resultMap="BoardListVO">
-<![CDATA[
-SELECT 
-	B.GUBUN,
-	A.BOARDID,
-    A.ITEMID,
-    A.TITLE,
-    A.WRITEDATE
-FROM 
-	TBL_BOARD_ITEM AS A
-JOIN
-	TBL_BOARD_BOARDINFO AS B
-ON
-	A.BOARDID = B.BOARDID
-AND
-	A.TENANT_ID = B.TENANT_ID
-WHERE 
-	A.BOARDID = (
-	            SELECT 
-	            	BOARD_ID
-	            FROM
-	            	TBL_PORTAL_PORTLET_COMP
-	            WHERE
-	            	COMPANY_ID = #companyId#
-	            AND
-	            	TENANT_ID = #tenantId#
-	            AND
-					PORTLET_ID = #portletId#	            
-	            )
-AND 
-	A.TENANT_ID = #tenantId#
-AND 
-	(A.WRITERCOMPANYID = B.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
-ORDER BY 
-	A.PARENTWRITEDATE DESC, 
-	A.UPPERITEMIDTREE ASC
-LIMIT #limit#
-]]>
+	<![CDATA[
+		SELECT 
+			B.GUBUN,
+			A.BOARDID,
+		    A.ITEMID,
+		    A.TITLE,
+		    A.WRITEDATE
+		FROM 
+			TBL_BOARD_ITEM AS A
+		JOIN
+			TBL_BOARD_BOARDINFO AS B
+		ON
+			A.BOARDID = B.BOARDID
+		AND
+			A.TENANT_ID = B.TENANT_ID
+		WHERE 
+			A.BOARDID = (
+			            SELECT 
+			            	BOARD_ID
+			            FROM
+			            	TBL_PORTAL_PORTLET_COMP
+			            WHERE
+			            	COMPANY_ID = #companyId#
+			            AND
+			            	TENANT_ID = #tenantId#
+			            AND
+							PORTLET_ID = #portletId#	            
+			            )
+		AND 
+			A.TENANT_ID = #tenantId#
+		AND 
+			(A.WRITERCOMPANYID = B.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
+		AND 
+			(A.APPRFLAG = 'Y'
+			OR A.APPRFLAG IS NULL)
+		AND 
+		  	A.STARTDATE <= #nowDate#
+		AND 
+		  	A.ENDDATE > #nowDate#
+		ORDER BY 
+			A.PARENTWRITEDATE DESC, 
+			A.UPPERITEMIDTREE ASC
+		LIMIT #limit#
+	]]>
 </select>
 
 <!-- 설문조사 리스트 출력 -->
@@ -699,31 +715,38 @@ AND
 </select>
 <!-- 포토게시판 게시물(대표사진 정보)불러오기 -->
 <select id="ezNewPortal.getPhotoBoardPortletInfo" parameterClass="Map" resultMap="BoardItemVO">
-<![CDATA[
-SELECT	
-	A.BOARDID,
-	A.ITEMID,
-	A.TITLE,
-	B.FILEPATH
-FROM
-	TBL_BOARD_ITEM A
-INNER JOIN
-	TBL_PHOTO_IMAGEITEM B
-ON
-	A.TENANT_ID = B.TENANT_ID
-AND
-	A.ITEMID = B.ITEMID
-WHERE
-	A.TENANT_ID = #tenantId#
-AND
-	A.BOARDID = #boardId#
-AND
-	B.MAIN_FLAG = 'y'
-ORDER BY
-	A.WRITEDATE DESC
-LIMIT
-	#startRow#, #photoCount#
-]]>
+	<![CDATA[
+		SELECT	
+			A.BOARDID,
+			A.ITEMID,
+			A.TITLE,
+			B.FILEPATH
+		FROM
+			TBL_BOARD_ITEM A
+		INNER JOIN
+			TBL_PHOTO_IMAGEITEM B
+		ON
+			A.TENANT_ID = B.TENANT_ID
+		AND
+			A.ITEMID = B.ITEMID
+		WHERE
+			A.TENANT_ID = #tenantId#
+		AND
+			A.BOARDID = #boardId#
+		AND
+			B.MAIN_FLAG = 'y'
+		AND
+			(A.APPRFLAG = 'Y' 
+			OR A.APPRFLAG IS NULL)
+		AND 
+		  	A.STARTDATE <= #nowDate#
+		AND 
+		  	A.ENDDATE > #nowDate#
+		ORDER BY
+			A.WRITEDATE DESC
+		LIMIT
+			#startRow#, #photoCount#
+	]]>
 </select>
 
 <!-- 게시판 권한 불러오기 -->
@@ -1392,40 +1415,47 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 </insert>
 
 <select id="ezNewPortal.getBoardPortletInfo" parameterClass="Map" resultClass="BoardListVO">
-<![CDATA[
-SELECT	
-	A.BOARDID,
-	A.ITEMID,
-	A.TITLE,
-	A.WRITERID,
-	A.WRITERNAME,
-	A.WRITERNAME2,
-	A.WRITERDEPTID,
-	A.WRITERDEPTNAME,
-	A.WRITERDEPTNAME2,
-	A.startdate,
-	C.GUBUN
-FROM
-	TBL_BOARD_ITEM A
-JOIN 
-	TBL_BOARD_BOARDINFO C
-ON 
-	A.BOARDID = C.BOARDID
-AND 
-	A.TENANT_ID = C.TENANT_ID
-AND 
-	(A.WRITERCOMPANYID = C.COMPANYID OR C.COMPANYID IS NULL)
-WHERE
-	A.TENANT_ID = #tenantId#
-AND
-	A.BOARDID = #boardId#
-AND
-	(A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
-ORDER BY
-	A.WRITEDATE DESC
-LIMIT
-	0, #itemCount#
-]]>
+	<![CDATA[
+		SELECT	
+			A.BOARDID,
+			A.ITEMID,
+			A.TITLE,
+			A.WRITERID,
+			A.WRITERNAME,
+			A.WRITERNAME2,
+			A.WRITERDEPTID,
+			A.WRITERDEPTNAME,
+			A.WRITERDEPTNAME2,
+			A.startdate,
+			C.GUBUN
+		FROM
+			TBL_BOARD_ITEM A
+		JOIN 
+			TBL_BOARD_BOARDINFO C
+		ON 
+			A.BOARDID = C.BOARDID
+		AND 
+			A.TENANT_ID = C.TENANT_ID
+		AND 
+			(A.WRITERCOMPANYID = C.COMPANYID OR C.COMPANYID IS NULL)
+		WHERE
+			A.TENANT_ID = #tenantId#
+		AND
+			A.BOARDID = #boardId#
+		AND
+			(A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
+		AND
+			(A.APPRFLAG = 'Y' 
+			OR A.APPRFLAG IS NULL)
+		AND 
+		  	A.STARTDATE <= #nowDate#
+		AND 
+		  	A.ENDDATE > #nowDate#
+		ORDER BY
+			A.WRITEDATE DESC
+		LIMIT
+			0, #itemCount#
+	]]>
 </select>
 
 
@@ -2228,72 +2258,117 @@ LIMIT
 
 <!-- 즐겨찾기 포틀릿  새게시물 가져오기 -->
 <select id="ezNewPortal.getNewItemList" parameterClass="Map" resultMap="FavoriteBoardVO">
-<![CDATA[
-SELECT A.BOARDID,
-	   A.ITEMID,
-	   A.WRITERNAME,
-	   DATE_ADD(A.STARTDATE, interval +#v_OFFSETMIN# minute) as STARTDATE,
-	   A.TITLE,
-	   C.GUBUN
-  FROM TBL_BOARD_ITEM A 
-  JOIN 
-	   ( 
-	   SELECT BOARDID, 
-	   		  BOARDNAME, 
-	   		  BOARDNAME2,
-	   		  TENANT_ID,
-	  		  COMPANYID 
- 	     FROM TBL_BOARD_MYBOARDS 
-  		WHERE TENANT_ID = #tenantId#
-  		  AND (COMPANYID = #companyId# OR COMPANYID = '*')
- 		  AND USERID = #userId#
- 		) B 
-	 ON A.TENANT_ID = B.TENANT_ID
-	AND	A.BOARDID = B.BOARDID                
-	AND A.TENANT_ID = #tenantId#
-	AND A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY) 
-	AND A.STARTDATE <= #nowDate#
-	AND A.ENDDATE > #nowDate#					
-	AND (
-		NOT EXISTS (
-		 		   SELECT USERID 
-					 FROM TBL_BOARD_ITEM_READ S 
-					WHERE S.TENANT_ID = A.TENANT_ID
-					  AND S.BOARDID = A.BOARDID 
-					  AND S.ITEMID = A.ITEMID 
-					  AND S.TENANT_ID = #tenantId#
-					  AND S.USERID = #userId# 
-					  AND S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
-				   )
-	    )
-  JOIN TBL_BOARD_BOARDINFO C
-    ON A.BOARDID = C.BOARDID
-   AND A.TENANT_ID = C.TENANT_ID
-   AND (A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
-  ORDER BY STARTDATE DESC
-  LIMIT #limit#
-]]>
+	<![CDATA[
+		SELECT
+			A.BOARDID,
+			A.ITEMID,
+			A.WRITERNAME,
+			DATE_ADD(A.STARTDATE, interval +#v_OFFSETMIN# minute) as STARTDATE,
+			A.TITLE,
+			C.GUBUN
+		FROM
+			TBL_BOARD_ITEM A 
+		JOIN (
+			SELECT
+				BOARDID, 
+				BOARDNAME, 
+				BOARDNAME2,
+				TENANT_ID,
+				COMPANYID 
+			FROM
+				TBL_BOARD_MYBOARDS 
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				(COMPANYID = #companyId# OR COMPANYID = '*')
+			AND
+				USERID = #userId#
+			) B 
+			ON
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BOARDID = B.BOARDID
+			AND
+				A.TENANT_ID = #tenantId#
+			AND
+				A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY) 
+			AND
+				A.STARTDATE <= #nowDate#
+			AND
+				A.ENDDATE > #nowDate#					
+			AND (
+				NOT EXISTS (
+					SELECT
+						USERID 
+					FROM
+						TBL_BOARD_ITEM_READ S 
+					WHERE
+						S.TENANT_ID = A.TENANT_ID
+					AND
+						S.BOARDID = A.BOARDID 
+					AND
+						S.ITEMID = A.ITEMID 
+					AND
+						S.TENANT_ID = #tenantId#
+					AND
+						S.USERID = #userId# 
+					AND
+						S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+					)
+			)
+			JOIN
+				TBL_BOARD_BOARDINFO C
+			ON
+		    	A.BOARDID = C.BOARDID
+			AND
+				A.TENANT_ID = C.TENANT_ID
+			AND
+				(A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
+			AND
+				(A.APPRFLAG = 'Y' 
+				OR A.APPRFLAG IS NULL)
+			ORDER BY
+				STARTDATE DESC
+		  LIMIT #limit#
+	]]>
 </select>
 
 <select id="ezNewPortal.getItemList" parameterClass="Map" resultMap="FavoriteBoardVO">
-<![CDATA[
-SELECT A.TITLE,
-	   A.WRITERNAME,
-	   DATE_ADD(A.STARTDATE, interval +#v_OFFSETMIN# minute) as STARTDATE,
-	   A.ITEMID,
-	   A.BOARDID,
-	   B.GUBUN
-  FROM TBL_BOARD_ITEM A
-  JOIN TBL_BOARD_BOARDINFO B
-    ON A.BOARDID = B.BOARDID
-   AND A.TENANT_ID = B.TENANT_ID
-   AND (A.WRITERCOMPANYID = B.COMPANYID OR B.COMPANYID IS NULL)
- WHERE A.BOARDID = #boardId#
-   AND (A.WRITERCOMPANYID = B.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
-   AND A.TENANT_ID = #tenantId#
- ORDER BY STARTDATE DESC
- LIMIT #limit#
- ]]>
+	<![CDATA[
+		SELECT
+			A.TITLE,
+			A.WRITERNAME,
+			DATE_ADD(A.STARTDATE, interval +#v_OFFSETMIN# minute) as STARTDATE,
+			A.ITEMID,
+			A.BOARDID,
+			B.GUBUN
+		FROM
+			TBL_BOARD_ITEM A
+		JOIN
+			TBL_BOARD_BOARDINFO B
+		ON
+			A.BOARDID = B.BOARDID
+		AND
+			A.TENANT_ID = B.TENANT_ID
+		AND
+			(A.WRITERCOMPANYID = B.COMPANYID OR B.COMPANYID IS NULL)
+		WHERE
+			A.BOARDID = #boardId#
+		AND
+			(A.WRITERCOMPANYID = B.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
+		AND 
+			(A.APPRFLAG = 'Y'
+			OR A.APPRFLAG IS NULL)
+		AND 
+		  	A.STARTDATE <= #nowDate#
+		AND 
+		  	A.ENDDATE > #nowDate#
+		AND
+			A.TENANT_ID = #tenantId#
+		ORDER BY
+			STARTDATE DESC
+		LIMIT #limit#
+	 ]]>
 </select>
 
 <!-- 커뮤니티 포틀릿 -->
@@ -2922,4 +2997,15 @@ ORDER BY
 		)
 	]]>
 </insert>
+
+<select id="ezNewPortal.getMenuInfoByCode" parameterClass="map" resultMap="MenuInfoVO">
+	<![CDATA[
+		SELECT 
+			*
+		FROM 
+			TBL_PORTAL_MENU 
+		WHERE 
+			$p_FIELD$ = #p_VALUE#
+	]]>
+</select>
 </sqlMap>

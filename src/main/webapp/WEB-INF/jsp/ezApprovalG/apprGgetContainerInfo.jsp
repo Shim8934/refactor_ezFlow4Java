@@ -586,9 +586,9 @@
 					if (returnvalue[i] == null) {
 						returnvalue[i] = "";
 					}
-					
-	    		    condition[i] = replaceCond(returnvalue[i]);
-		        }
+
+                    condition[i] = replaceCond(returnvalue[i]);
+               }
 	    	   
 				var nowyear = nowDate.substring(0,4);
 				var nowmonth = nowDate.substring(5,7);
@@ -1067,12 +1067,12 @@
 			                encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
 			                "&OO=" + encodeURI(OrderOption) + "&allFG=" + AllFG ;
 		        	} else {
-		        		var myApprFrom = condition[7];
+		        		/*var myApprFrom = condition[7];
 		        		var myApprTo = condition[8];
 		        		var apprFrom = condition[5];
 	        			var apprTo = condition[6];
 	        			var draftFrom = condition[3];
-	        			var draftTo = condition[4];
+	        			var draftTo = condition[4];*/
 	        			var searchStatus = $("#sel_status").val();
 	        			if(searchStatus && searchStatus != "ALL"){
 	        				searchStatus = "PROCESSYN = '" + searchStatus + "'";
@@ -1080,7 +1080,7 @@
 	        				searchStatus = "";
 	        			}
 	        			
-		        		if(condition[7] != "" && condition[6] == "") {
+		        		/*if(condition[7] != "" && condition[6] == "") {
 		        			condition[15] = condition[7].substring(0,4);
 		        			condition[16] = condition[7].substring(5,7);
 		        			condition[17] = condition[7].substring(8,10);
@@ -1108,7 +1108,7 @@
 		        			condition[6] = draftTo.substring(0,4);
 		        			condition[7] = draftTo.substring(5,7);
 		        			condition[8] = draftTo.substring(8,10);
-		        		} 
+		        		} */
 		        		
 		                url += "?listType=SEARCH&P0=" + encodeURI(condition[0]) + "&P1=" +
 		                encodeURI(condition[1]) + "&P2=" + encodeURI(condition[2]) + "&P3=" + encodeURI(condition[3]) +
@@ -1121,8 +1121,7 @@
 		                "&P22=" + encodeURI(condition[22]) + "&P23=" + encodeURI(condition[23]) + "&P24=" + encodeURI(ContainerID) +
 		                "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
 		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition + searchStatus)+ "&allFG=" + AllFG ;
-		            
-		               for(var i=3; i<=20; i++) {
+		               /*for(var i=3; i<=20; i++) {
 		                	condition[i] = "";
 		                }
 		                
@@ -1131,7 +1130,7 @@
 		        		condition[5] = apprFrom;
 	        			condition[6] = apprTo;
 	        			condition[3] = draftFrom;
-	        			condition[4] = draftTo;
+	        			condition[4] = draftTo;*/
 		        	}
 		        	window.frames["saveExcel"].location.href = url;
                 }

@@ -269,7 +269,7 @@
             </ul>
         </div>
 		<table class="content" >
-		<c:if test="${approvalFlag eq 'S'}"> 
+		<c:if test="${useDeptSearchCab eq 'YES'}">
 		    <tr id="trSelDept"> 
 		        <th><spring:message code='ezApprovalG.t827'/></th>
 		        <td style="vertical-align:middle">

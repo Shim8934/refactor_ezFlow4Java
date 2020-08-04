@@ -414,7 +414,7 @@
 		                        document.getElementById("tdNewVol").style.display = "none";
 		                    
 		                    // btnCabDel 업무관리자, 기록물관리자만 사용
-		                    document.getElementById("btnCabDel").style.display = "";
+		                    document.getElementById("tdBtnCabDel").style.display = "";
 		                }
 		                else {
 		                    document.getElementById("tdRegCabinet").style.display = "none";
@@ -489,7 +489,7 @@
 		                    document.getElementById("tdRegSepAtt").style.display = "";
 		                    
 		                    // btnCabDel 업무관리자, 기록물관리자만 사용
-		                    document.getElementById("btnCabDel").style.display = "";		                    
+		                    document.getElementById("tdBtnCabDel").style.display = "";		                    
 		                }
 		                else {
 		                    document.getElementById("tdMoveRec").style.display = "none";
@@ -1657,12 +1657,14 @@
 	            <li class="important" id="tdRegCabinet" style="Display: None"><span id="RegCabinet" onclick="return btnRegCabinet_onclick()"><spring:message code='ezApprovalG.t2002'/></span></li>
 	            <li id="tdNewVol" style="Display: None"><span id="NewVol" onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></li>
 	            <li id="tdViewCabInfo"><span id="ViewCabInfo" onclick="return btnViewCabInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
-	            <li id="tdViewCabHist" style="Display: None"><span id="ViewCabHist" onclick="return btnViewCabHistory_onclick()"><spring:message code='ezApprovalG.t529'/></span></li>
+	            <li id="tdViewCabHist" style="Display: None"><span id="ViewCabHist" onclick="return btnViewCabHistory_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
 	            <li id="tdModifyCab" style="Display: None"><span id="ModifyCab" onclick="return btnChangeCabinetInfo_onclick()"><spring:message code='ezApprovalG.t269'/></span></li>
+	            <%-- <li id="tdBtnCabDel"><span id="btnCabDel" onclick="return DeleteCab();" style="Display: None"><spring:message code='ezApprovalG.t266'/></span> </li> --%>
+	            <%-- <li id="tdSearchCab"><span id="SearchCab" onclick="return SearchCabinet('0')"><spring:message code='ezApprovalG.t111'/></span></li> --%>
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li id="tdSetCharger" style="Display: None"><span id="SetCharger" onclick="return btnSetTaskCharger_onclick()"><spring:message code='ezApprovalG.t937'/></span></li>
 	            <li id="tdSearchCab"><span class="icon16 icon16_search" id="SearchCab" onclick="return SearchCabinet('0')"></span></li>
-	            <li><span class="icon16 icon16_delete" id="btnCabDel" onclick="return DeleteCab();" style="Display: None"></span></li>
+	            <li id="tdBtnCabDel" style="display: none;"><span class="icon16 icon16_delete" id="btnCabDel" onclick="return DeleteCab();"></span></li>
 	            <li id="tdbtnViewRecList"><span id="btnViewRecList" onclick="return btnViewRecList_onclick()"><spring:message code='ezApprovalG.t526'/></span></li>
 	            <li style="vertical-align: middle; float:right"> <select id="cab_year" name="cab_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>

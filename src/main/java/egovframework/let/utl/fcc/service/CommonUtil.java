@@ -35,14 +35,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -2134,6 +2131,42 @@ public class CommonUtil {
 					try {
 						useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 						if (useExternalMailServer != null && useExternalMailServer.equals("YES")) {
+							menuAccess = false;
+						} else {
+							menuAccess = true;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else if (menuCode.equals("board")) {//게시판
+					try {
+						String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
+						
+						if (useBoard.equals("NO")) {
+							menuAccess = false;
+						} else {
+							menuAccess = true;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else if (menuCode.equals("schedule")) {//일정
+					try {
+						String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
+						
+						if (useSchedule.equals("NO")) {
+							menuAccess = false;
+						} else {
+							menuAccess = true;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else if (menuCode.equals("resource")) {//자원
+					try {
+						String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
+						
+						if (useResource.equals("NO")) {
 							menuAccess = false;
 						} else {
 							menuAccess = true;

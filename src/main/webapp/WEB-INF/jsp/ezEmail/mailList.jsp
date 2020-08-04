@@ -101,7 +101,8 @@
 		    var useSearchContent = "${useSearchContent}";
 		    var useMailNewWindow = "${useMailNewWindow}";
 		    var currentMoverId = '';
-		    var currentFixingId = '';
+		    var currentFixingId = null;
+		    var currentFixingIdTemp = null;
 		    var useReceivingChk = false;
 		    var reSendMsg = "<spring:message code='ezEmail.t569' />";
 		    var noReadMsg = "<spring:message code='ezPoll.t137'/>"; // 읽지 않음

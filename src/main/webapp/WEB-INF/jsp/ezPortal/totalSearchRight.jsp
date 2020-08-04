@@ -330,6 +330,8 @@ function dblClickBoard(boardID, itemID) {
 	var url = "";
 	var gubun = "";
 	var readAuthor = "";
+	var popupH = "";
+	var popupW = "";
 	
 /* 	$(boardList).each(function() {
 		if(this.BoardID === boardID && this.ItemID === itemID) {
@@ -367,14 +369,31 @@ function dblClickBoard(boardID, itemID) {
 		});
 	
 		//포토게시판:3, 썸네일게시판:4
-		if(gubun == "3" || gubun == "4") {
+		if (gubun == "3" || gubun == "4") {
 			url = "/ezBoard/boardItemViewPhoto.do";
-		} else {
+			pTop = (pheight - 789) / 2;
+			pLeft = (pwidth - 790) / 2;
+			popupH = 789;
+			popupW = 790;
+		}
+		else if (gubun == "7") { // 동영상게시판 : 7
+			url = "/ezBoard/boardItemViewMovie.do";
+			pTop = (pheight - 679) / 2;
+			pLeft = (pwidth - 765) / 2;
+			popupH = 679;
+			popupW = 765
+		}
+		else {
 			url = "/ezBoard/boardItemView.do";
+			pTop = (pheight - 720) / 2;
+			pLeft = (pwidth - 765) / 2;
+			popupH = 720;
+			popupW = 765;
 		}
 		
+		/* 2020-06-25 홍승비 - 동영상게시판 분기 추가, 게시판 팝업 보기 시의 창 크기 분리 */
 		url += "?itemID=" + itemID +"&boardID=" + boardID + "&location=GENERAL";
-		window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");		
+		window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + popupH + ",width=" + popupW + ",top=" + pTop + ",left=" + pLeft, "");		
 	} else {
 		alert("<spring:message code='ezBoard.t194' />");		
 	}

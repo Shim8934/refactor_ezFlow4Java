@@ -951,12 +951,17 @@ public class EzEmailUtil {
 		
 		return this.getBodyInfo(part, folderPath, uid, bodyPartIndex, attachedFileList, locale, extraMap);
 	}
+
+	public List<String> getBodyInfo(Part part, String folderPath, long uid, 
+			int bodyPartIndex, List<Map<String, String>> attachedFileList, Locale locale, Map<String, Object> extraMap) throws Exception {
+		return this.getBodyInfo(part, folderPath, uid, bodyPartIndex, attachedFileList, locale, extraMap, 0, 0);
+	}
 	
 	/**
 	 * 메일 Multipart 정보 반환 함수
 	 */
 	public List<String> getBodyInfo(Part part, String folderPath, long uid, 
-			int bodyPartIndex, List<Map<String, String>> attachedFileList, Locale locale, Map<String, Object> extraMap) throws Exception {
+			int bodyPartIndex, List<Map<String, String>> attachedFileList, Locale locale, Map<String, Object> extraMap, int depth, int order) throws Exception {
 		List<String> resultList = new ArrayList<String>();
 		
 		String htmlBody = "";
@@ -1032,13 +1037,12 @@ public class EzEmailUtil {
 		//
 		// pacific에서 보낸 메일 중에 multipart/related안에 text/plain 파트만 있고 인라인 이미지가 첨부된 
 		// 경우가 있어 이 경우엔 인라인 이미지를 첨부 파일 형태로 표시하기 위해 includeInlineAsAttachment를 조건에 추가함.
-		if ((part.getDisposition() != null
-				&& (part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
-						|| (part.getContentType() != null && part.getContentType().contains("x-apple-part-url")
-						|| includeInlineAsAttachment))
-		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null))
+		if (part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
+				|| part.getContentType() != null && part.getContentType().contains("x-apple-part-url")
+				|| includeInlineAsAttachment
 				|| part.isMimeType("application/*")
-				|| isInlinePartWithoutContentID) {
+				|| isInlinePartWithoutContentID
+		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null)) {
             double size = part.getSize();
             String[] encodingHeaders = part.getHeader("Content-Transfer-Encoding");
             
@@ -1085,7 +1089,7 @@ public class EzEmailUtil {
 		    // 디코딩된 경우 디코딩 이전 인코딩 예: filename*=euc-kr''%B7%E1%BA%F1%5F20160824%20%28002%29%5F%B0%CB%C5%E4%5Fdhlee.xlsx
 			String filename = part.getFileName();
 			
-			logger.debug("filename=" + filename);
+			logger.debug("filename=" + filename + ",index=" + bodyPartIndex + ",order=" + order + ",depth=" + depth);
 			
 			if (filename != null) {
 				// long filename이 줄바꿈없이 인코딩 경우가 있어 추가함.
@@ -1153,6 +1157,51 @@ public class EzEmailUtil {
                         filename = decodeNonAsciiBytes(rawBytes);
                     } else {				    
                         filename = MimeUtility.decodeText(filename);
+                        
+                        if (originalFilename != null && originalFilename.startsWith("=?")) {
+                            int secondQuestionPos = originalFilename.indexOf("?", 2);
+                            int thirdQuestionPos = originalFilename.indexOf("?", secondQuestionPos + 1);
+                            String charSetAndEncoding = originalFilename.substring(0, thirdQuestionPos + 1);
+                            String encoding = originalFilename.substring(secondQuestionPos + 1, thirdQuestionPos);
+                            
+                            // 일부 Mailer에서 RFC 2047에서 정의된 encoded word를 2개 이상의 라인으로 구성할 때
+                            // 한글의 한 글자를 표현하는 Byte Array 중간에서 분리하는 경우가 있어(Base64 인코딩을 사용하면서)
+                            // 이 경우 JavaMail에서 디코딩할 때 글자가 깨지는 현상이 발생하여 한 줄로 합치는 작업을 직접 수행하도록 함
+                            // 글자가 깨지는 경우 Unicode의 Replacement Character인 �가 나타남.                            
+                            if (filename.contains("�")
+                                    && encoding.equalsIgnoreCase("B")) {
+                                String[] sequences = originalFilename.split(charSetAndEncoding.replaceAll("\\?", "\\\\?"));
+
+                                if (sequences.length > 2) {
+                                    logger.debug("broken multiple sequences. combining them...");
+                                    logger.debug("originalFilename:" + originalFilename);
+
+                                    StringBuilder combined = new StringBuilder();
+                                    combined.append(charSetAndEncoding);
+
+                                    ByteArrayOutputStream combinedBytes = new ByteArrayOutputStream();
+
+                                    for (int i = 1; i < sequences.length; i++) {
+                                        String sequence = sequences[i].trim();
+
+                                        logger.debug("sequence[" + i + "]:" + sequence);
+
+                                        sequence = sequence.substring(0, sequence.lastIndexOf("?"));
+                                        combinedBytes.write(Base64.decodeBase64(sequence));
+                                    }
+
+                                    combined.append(Base64.encodeBase64String(combinedBytes.toByteArray()));
+                                    combined.append("?=");
+                                    originalFilename = combined.toString();
+
+                                    logger.debug("combined originalFilename:" + originalFilename);
+
+                                    filename = MimeUtility.decodeText(originalFilename);
+
+                                    logger.debug("filename=" + filename);
+                                }
+                            }                            
+                        }                        
                     }
 			    // filename이 US-ASCII 로만 되어 있지 않은 경우는 위에서 part.getFileName 메소드에 의해 디코딩된
                 // 경우로 보고 원칙적으로 해당 값을 이용한다.
@@ -1184,6 +1233,8 @@ public class EzEmailUtil {
 				attachedFileInfo.put("folderPath", folderPath);
 				attachedFileInfo.put("uid", String.valueOf(uid));
 				attachedFileInfo.put("index", String.valueOf(bodyPartIndex));
+				attachedFileInfo.put("order", String.valueOf(order));
+				attachedFileInfo.put("depth", String.valueOf(depth));
 				
 				attachedFileList.add(attachedFileInfo);
 			} 
@@ -1203,11 +1254,13 @@ public class EzEmailUtil {
 					aitem += "','" + URLEncoder.encode(shareId, "UTF-8");
 				}
 				
+				aitem += "','" + order + "','" + depth;
+				
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' \"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
 				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " </p>";
 			} else {
-				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
+				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;
 				
 				if (shareId != null) {
 					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
@@ -1222,7 +1275,7 @@ public class EzEmailUtil {
 			}
 			
 			if (part.getContentType().contains("IMAGE")) {
-				String aitem = "?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
+				String aitem = "?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;
 				previewImageListHtml += " <div><p class=imageArea><a target=_blank href='" + "/ezEmail/readAttachIamge.do" + aitem + "'>";
 				previewImageListHtml += " <img src='" + "/ezEmail/downloadAttach.do" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' style='cursor:pointer;'></a></p>";
 				previewImageListHtml += " <p onclick=\"DownloadAttach('" + "/ezEmail/downloadAttach.do" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachImageeName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</p></div>";
@@ -1592,7 +1645,14 @@ public class EzEmailUtil {
 					logger.debug("disposition=" + p.getDisposition());
 				// text/html 파트가 나오거나 multipart/related or mixed 파트가 나올 수도 있다.	
 				} else {
-					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, locale, extraMap);
+					List<String> tempList = null;
+					
+					if (p.isMimeType("multipart/*")) {							
+						tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, locale, extraMap, i, depth + 1);
+					} else {
+						tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, locale, extraMap, order, depth);
+					}
+					
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					previewImageListHtml += tempList.get(5);
@@ -1637,7 +1697,14 @@ public class EzEmailUtil {
 					logger.debug("contentType=" + p.getContentType());
 					logger.debug("disposition=" + p.getDisposition());	
 				} else {				
-					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
+					List<String> tempList = null;
+					
+					if (p.isMimeType("multipart/*")) {
+						tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, i, depth + 1);
+					} else {
+						tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, order, depth);						
+					}
+					
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					previewImageListHtml += tempList.get(5);
@@ -1652,17 +1719,21 @@ public class EzEmailUtil {
 		} else if (part.isMimeType("multipart/related")) {
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
-			boolean isHtmlOrAlternativeFound = false;
 			
 			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
 				
 				// text/html 파트가 나오거나 multipart/alternative 파트가 나올 수도 있다.
 				if (p.isMimeType("text/html") || !p.isMimeType("text/plain") && !(p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
-					isHtmlOrAlternativeFound = true;
-					
 					// 코린도에서 수신된 메일 중 multipart/related 안에 첨부파일이 있는 경우가 있어 패러메터값을 -1 대신 i로 변경함
-					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
+					List<String> tempList = null;
+					
+					if (p.isMimeType("multipart/*")) {
+						tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, i, depth + 1);
+					} else {
+						tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, order, depth);
+					}
+					
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					previewImageListHtml += tempList.get(5);
@@ -1675,7 +1746,7 @@ public class EzEmailUtil {
 				// 료비에서 온 메일 중에 related 파트안에 인라인으로 첨부파일이 있는 메일이 있어 추가함.
 				// ContentID가 있는 경우에는 내부에서 참조되는 인라인 이미지일 수 있으므로 제외함.
 				} else if (p.isMimeType("application/*") && ((MimePart)p).getContentID() == null) { 
-					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, order, depth);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -1695,25 +1766,34 @@ public class EzEmailUtil {
 			// 이를 확인함.
 			boolean htmlPartFound = (boolean) (extraMap.get("htmlPartFound") == null ? false : extraMap.get("htmlPartFound"));
 			
+			logger.debug("htmlPartFound=" + htmlPartFound);
 			
 			// text/html 파트 혹은 multipart/alternative 파트가 발견되지 않았을 경우엔 
 			// text/plain 파트를 찾는다.
 			// pacific에서 보낸 메일 중에 multipart/related안에 text/plain 파트만 있고 인라인 이미지가 첨부된 
 			// 경우가 있어 추가함.
-			if (!htmlPartFound && !isHtmlOrAlternativeFound) {
-				logger.debug("isHtmlOrAlternativeFound is false. Trying to find the text/plain part..");
+			if (!htmlPartFound) {
+				logger.debug("htmlPartFound is false. Trying to find the text/plain part..");
 				
 				for (int i = 0; i < count; i++) {
 					Part p = mp.getBodyPart(i);
 					
 					if (p.isMimeType("text/plain")) {
-						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
+						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, order, depth);
 						htmlBody += tempList.get(0);						
 					// 료비에서 온 메일 중에 related 파트안에 인라인으로 첨부파일이 있는 메일이 있음. 이 경우 위에서 MIME Type이 application인 경우
 					// 이미 첨부파일로 추가되었기 때문에 중복 추가되지 않도록 하기 위해 !p.isMimeType("application/*") 조건을 추가함.
-					} else if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE) && !(p.isMimeType("application/*") && ((MimePart)p).getContentID() == null)) {						
+					// Content-Disposition: inline 지정이 없이 Content-ID만 있는 경우도 있어 || ((MimePart)p).getContentID() != null
+					// 조건을 추가함.
+					//   예) Content-Type: image/png;
+					//	        name="00000000000000028784.png"
+					//		Content-Transfer-Encoding: base64
+					//		Content-ID: <00000000000000028784.png@12345678.87654321>
+					} else if ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE) || ((MimePart)p).getContentID() != null)
+							&& !(p.isMimeType("application/*") && ((MimePart)p).getContentID() == null)) {						
 						extraMap.put("includeInlineAsAttachment", true);
-						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
+						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, order, depth);
+						extraMap.put("includeInlineAsAttachment", false);
 						htmlBody += tempList.get(0);
 						pAttachListHtml += tempList.get(1);
 						previewImageListHtml += tempList.get(5);
@@ -1732,7 +1812,15 @@ public class EzEmailUtil {
 			
 			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
-				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
+				
+				List<String> tempList = null;
+				
+				if (p.isMimeType("multipart/*")) {
+					tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, i, depth + 1);
+				} else {
+					tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, order, depth);
+				}
+				
 				htmlBody += tempList.get(0);
 				pAttachListHtml += tempList.get(1);
 				previewImageListHtml += tempList.get(5);
@@ -2729,7 +2817,8 @@ public class EzEmailUtil {
 		
 		MimeBodyPart newBodyPart = (MimeBodyPart)p;
 			
-		if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)) {		
+		if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)
+				|| ((MimePart)p).getContentID() != null) {		
 			InternetHeaders newHeaders = new InternetHeaders();
 			
 			@SuppressWarnings("unchecked")
@@ -2776,7 +2865,10 @@ public class EzEmailUtil {
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
-				if (p.isMimeType("multipart/related")) {
+				// related 파트안에 mixed 파트가 있고 mixed 파트 안에 첨부파일이 있는 경우 전달 시
+				// 첨부파일을 추가하기 위해 기존 multipart/related에서 multipart/*로 변경함
+				// related 파트안에 mixed 파트가 있고 첨부파일이 있는 메일.eml 참고
+				if (p.isMimeType("multipart/*")) {
 					if (copyInlineParts(p, dest, includeAttachment, convertInlineImageToAttachment)) {
 						return true;
 					}					
@@ -2814,6 +2906,14 @@ public class EzEmailUtil {
 					return true;
 				}
 			}
+		// related 파트안에 mixed 파트가 있고 mixed 파트 안에 첨부파일이 있는 경우 전달 시
+		// 첨부파일을 추가하기 위해 다음 코드를 추가함
+		// related 파트안에 mixed 파트가 있고 첨부파일이 있는 메일.eml 참고
+		} else if (src instanceof BodyPart) {
+			if (src.getDisposition() != null && src.getDisposition().equalsIgnoreCase(Part.ATTACHMENT) 
+					|| src.isMimeType("application/*")) {
+				dest.addBodyPart((BodyPart)src);	
+			}			
 		}
 		
 		return false;
@@ -2981,11 +3081,49 @@ public class EzEmailUtil {
 		return false;
 	}
 	
+	public boolean copyAllPartsInMultipart(Part src, Multipart dest, boolean convertInlineImageToAttachment) throws MessagingException, IOException {
+		if (src.isMimeType("multipart/*")) {
+			Multipart mp = (Multipart)src.getContent();
+			int count = mp.getCount();
+			
+			for (int i = 0; i < count; i++) {
+				BodyPart p = mp.getBodyPart(i);
+				
+				// 코린도에서 수신된 메일 중 multipart/mixed 파트 안에 multipart/mixed 파트가
+				// 또 들어 있는 경우가 있어 추가함.
+				if (p.isMimeType("multipart/mixed")) {
+					copyAllPartsInMultipart(p, dest, convertInlineImageToAttachment);
+				// text/html 파트가 없는 경우엔 multipart/related 파트 안에 있는 인라인 이미지 파트를
+				// 첨부파일 파트로 변환하여 복사하기 위해 재귀적 호출을 하고 마지막 else 절에서 해당 변환을 처리한다.
+				} else if (convertInlineImageToAttachment && p.isMimeType("multipart/related")) {
+					copyAllPartsInMultipart(p, dest, convertInlineImageToAttachment);
+				} else {
+					if (p instanceof MimePart) {
+						// text/html 파트가 없으면 인라인 이미지 파트를 첨부파일 파트로 변환한다.(이미지를 첨부로 대신 표시하기 위해)
+						if (convertInlineImageToAttachment) {
+							if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)
+									|| ((MimePart)p).getContentID() != null) {
+								p = getConvertedBodyPartFromInlineToAttachment(p); 
+								p.setHeader("Content-Disposition", "attachment");
+							}
+						}				
+					}
+					
+					dest.addBodyPart(p);
+				}
+			}
+			
+			return true;
+		} 
+		
+		return false;
+	}
+	
 	/**
 	 * 메일 첨부파일 Part 반환 함수
 	 */
 	public Part getAttachPart(Part part, int index) throws MessagingException, IOException {
-		logger.debug("getAttachPart started.");
+		logger.debug("getAttachPart started. index=" + index);
 		
 		// multipart/related 안에 첨부파일이 들어 있는 메일이 코린도에서 수신되어
 		// multipart/related를 추가함
@@ -3045,6 +3183,48 @@ public class EzEmailUtil {
 		}
 		
 		logger.debug("getAttachPart ended.");
+		return null;
+	}
+	
+	public Part getAttachPart(Part part, int index, int order, int depth) throws MessagingException, IOException {
+		return getAttachPart(part, index, order, depth, 0, 0);
+	}
+	
+	/**
+	 * 메일 첨부파일 Part 반환 함수
+	 */
+	public Part getAttachPart(Part part, int index, int order, int depth, int currentOrder, int currentDepth) throws MessagingException, IOException {
+		logger.debug("getAttachPart started. index=" + index + ",order=" + order + ",depth=" + depth + ",currentOrder=" + currentOrder + ",currentDepth=" + currentDepth);
+
+		// 만약의 경우 계속해서 재귀적 호출이 되는 것을 방지하기 위해 currentDepth <= 10 조건을 추가함.
+		if (part.isMimeType("multipart/*") && currentDepth <= 10) {
+			Multipart mp = (Multipart)part.getContent();
+			
+			if (order == currentOrder && depth == currentDepth) {				
+				Part p = mp.getBodyPart(index);
+				String fileName = p.getFileName();
+								
+				logger.debug("fileName=" + fileName);
+				logger.debug("getAttachPart ended.");
+					
+				return p;				
+			} else {
+	            int count = mp.getCount();
+	            
+	            for (int i = 0; i < count; i++) {
+	                Part p = getAttachPart(mp.getBodyPart(i), index, order, depth, i, currentDepth + 1);
+	                
+	                if (p != null) {
+	                	logger.debug("getAttachPart ended.");
+	                	
+	                    return p;
+	                }
+	            }
+			}
+		}
+		
+		logger.debug("getAttachPart ended.");
+		
 		return null;
 	}
 	
@@ -4234,7 +4414,7 @@ public class EzEmailUtil {
 	 * strip <object>,<applet>,<script> tags
 	 */	
 	private String stripScriptTags(String src) {
-		Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Pattern p = Pattern.compile("<(object|applet|script).*?>.*?</(object|applet|script).*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(src);
 		src = m.replaceAll("");
 				
@@ -4738,6 +4918,8 @@ public class EzEmailUtil {
 
 		/** 보낸 편지함 저장 여부, 기본값: false */
 		private boolean isSentSave = false;
+		/** SMTP 인증 사용, 기본값: true */
+		private boolean usingAuth = true;
 
 		private SimpleMailer(String userEmail, String password) {
 			this.userEmail = userEmail;
@@ -4886,13 +5068,28 @@ public class EzEmailUtil {
 			return this;
 		}
 
+		public SimpleMailer notUseAuth() {
+			this.usingAuth = false;
+			return this;
+		}
+
 		public void send() {
 			IMAPAccess ia = null;
 			boolean hasAttchment = attachmentList != null && !attachmentList.isEmpty();
 			logger.debug("send started");
 
 			try {
-				SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"), userEmail, password);
+				SMTPAccess sa;
+
+				if (usingAuth) {
+					sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"),
+							config.getProperty("config.SMTPPort"),
+							userEmail, password);
+				} else {
+					sa = SMTPAccess.getNotAuthInstance(config.getProperty("config.MailServerAddress"),
+							config.getProperty("config.SMTPPort"),
+							userEmail, password);
+				}
 
 				MimeMessage message = sa.createMimeMessage();
 
@@ -4953,7 +5150,9 @@ public class EzEmailUtil {
 						// Content-Type을 구할 수 없다면 application/octet-stream 를
 						// 기본값으로 함
 						if (contentType == null) {
-							contentType = Optional.ofNullable(URLConnection.guessContentTypeFromStream(attachInputStream)).orElse("application/octet-stream");
+							contentType = Optional
+									.ofNullable(URLConnection.guessContentTypeFromStream(attachInputStream))
+									.orElse("application/octet-stream");
 						}
 
 						attachPart.setDataHandler(new DataHandler(new ByteArrayDataSource(attachInputStream, contentType)));
@@ -4997,7 +5196,9 @@ public class EzEmailUtil {
 						locale = Locale.getDefault();
 					}
 					// 보낸편지함에 저장
-					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale,
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"),
+							config.getProperty("config.IMAPPort"),
+							userEmail, password, egovMessageSource, locale,
 							EzEmailUtil.this);
 
 					Folder sentFolder = ia.getFolder(getSentFolderId(locale));

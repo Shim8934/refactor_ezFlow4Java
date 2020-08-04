@@ -454,10 +454,14 @@
 	            var conHeight = pheight * 0.8;
 	            var pwidth = window.screen.availWidth;
 	            var conWidth = pwidth * 0.8;
-	            if (conWidth > 890)
-	                conWidth = 890;
+	            if (conWidth > 790) {
+	                conWidth = 790;
+	            }
+	            if (conHeight > 670) {
+	            	conHeight = 670;
+	            }
 	            var pTop = (pheight - conHeight) / 2;
-	            var pLeft = (pwidth - 890) / 2;
+	            var pLeft = (pwidth - 790) / 2;
 
 	            var title = "Print";
 	            var status = "toolbar=no,directories=no,scrollbars=no,resizable=no,status=no,menubar=no,width=" + conWidth + "px, height=" + conHeight + "px, top=" + pTop.toString() + ",left=" + pLeft.toString();

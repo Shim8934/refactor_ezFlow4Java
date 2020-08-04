@@ -1158,6 +1158,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		StringBuilder yearOption = new StringBuilder("");
 		int curYear = Integer.parseInt(EgovDateUtil.getTodayTime().substring(0, 4));
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String useDeptSearchCab = ezCommonService.getTenantConfig("useDeptSearchCab", userInfo.getTenantId());
 
 		yearOption.append("<Option Value=\"\"></Option>");
 		
@@ -1168,6 +1169,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("yearOption", yearOption.toString());
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useDeptSearchCab", useDeptSearchCab);
 
 		logger.debug("searchCab ended");
 		

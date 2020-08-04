@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 import com.ibm.icu.util.ChineseCalendar;
 
@@ -81,12 +80,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@Autowired
 	private CommonUtil commonUtil;
 	
-	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit) throws Exception {
+	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit, String offset) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("limit", limit);
 		map.put("portletId", 2); // 공지사항 포틀릿 ID 는 2
+		map.put("nowDate", nowDate);
 		
 		return ezNewPortalDAO.getNoticePortletList(map);
 	}
@@ -632,13 +633,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 
 	@Override
-	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount) throws Exception {
+	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount, String offset) throws Exception {
 		LOGGER.debug("[Serivce] getPhotoBoardPortletInfo Started");
 		Map<String, Object> map = new HashMap<String, Object>();
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("tenantId", tenantId);
 		map.put("boardId", boardId);
 		map.put("startRow", startRow);
 		map.put("photoCount", photoCount);
+		map.put("nowDate", nowDate);
 
 		LOGGER.debug("[Serivce] getPhotoBoardPortletInfo Ended");
 		return ezNewPortalDAO.getphotoBoardPortletInfo(map);
@@ -1427,13 +1430,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String companyId) throws Exception {
+	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String companyId, String offset) throws Exception {
 		LOGGER.debug("deleteCompanyLogo started.");
 		Map<String, Object> map = new HashMap<String, Object>();
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("boardId", boardId);
 		map.put("itemCount", itemCount);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
+		map.put("nowDate", nowDate);
 		
 		LOGGER.debug("deleteCompanyLogo ended.");
 		return ezNewPortalDAO.getBoardPortletInfo(map);
@@ -2328,14 +2333,16 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit, String offset) {
+	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit, String offset) throws Exception {
 		LOGGER.debug("getFavItemList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("boardId", boardId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("limit", limit);
 		map.put("v_OFFSETMIN", offset);
+		map.put("nowDate", nowDate);
 		
 		List<FavoriteBoardVO> FavItemList = ezNewPortalDAO.getFavItemList(map);
 		
@@ -2905,5 +2912,24 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		ezNewPortalDAO.addPortalTenantConfig(map);
 		
 		LOGGER.debug("addPortalTenantConfig ended");
+	}
+
+	@Override
+	public MenuInfoVO getMenuInfoByCode(String pField, String pValue) {
+		LOGGER.debug("getMenuInfoByCode started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("p_FIELD", pField);
+		map.put("p_VALUE", pValue);
+		
+		List<MenuInfoVO> resultList = ezNewPortalDAO.getMenuInfoByCode(map);
+		
+		LOGGER.debug("p_field: " + pField + "/ p_value: " + pValue + "/ resultList check: " + resultList);
+		
+		MenuInfoVO result = null;
+		if(resultList.size() > 0) result = resultList.get(0);
+		
+		LOGGER.debug("getMenuInfoByCode ended");
+		return result;
 	}
 }

@@ -39,6 +39,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
@@ -92,6 +93,9 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	
 	@Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
+
+	@Resource(name="EzEmailUserAdminService")
+	private EzEmailUserAdminService ezEmailUserAdminService;
 	
 	/**
 	 * 메일 수신확인/회수 화면 호출 함수
@@ -547,7 +551,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			String messageId = ((MimeMessage)message).getMessageID();
 			String subject = message.getSubject();
 			
-			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), loginInfo.getPrimary(), messageId, mailId, subject, innerAddresses, locale);
+			ezEmailUserAdminService.setMailCancelSend(loginInfo.getTenantId(), loginInfo.getPrimary(), messageId, mailId, subject, innerAddresses, locale);
 			
 			folder.close(true);
 			

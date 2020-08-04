@@ -2495,6 +2495,8 @@
 	            	TENANT_ID = #v_TENANTID#
 	            AND
 	            	COMPANYID = #companyID#
+	            AND
+	            	docState = #docState#
 	            ORDER BY 
 	            	APRMEMBERSN DESC 
             ]]>
@@ -11673,26 +11675,29 @@
 <!-- 	<procedure id="EzApprovalG.aprGetNewID" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL APRGETNEWID(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<update id="EzApprovalG.aprGetNewID" parameterClass="Map">
+	<insert id="EzApprovalG.aprGetNewID" parameterClass="Map">
+	   <selectKey type="pre" resultClass="String" keyProperty="v_LASTDOCID">
+	       SELECT 
+	           LASTDOCID + 1
+	       FROM 
+	           TBL_LASTDOCID 
+	       WHERE 
+	           TENANT_ID = #v_TENANTID#
+	       AND 
+	           COMPANYID = #companyID#
+	       FOR UPDATE
+	   </selectKey>
 	<![CDATA[
 		UPDATE 
 			TBL_LastDocID
       	SET 
-      		lastDocID = (
-   					        SELECT 
-   								(max(lastDocID) +1)
-  							FROM 
-  								TBL_LastDocID
-  							WHERE	
-  								TENANT_ID = #v_TENANTID#
-  							AND
-  								COMPANYID = #companyID# )
+      		lastDocID = #v_LASTDOCID#
 		WHERE 
 			TENANT_ID = #v_TENANTID#
 		AND
 			COMPANYID = #companyID#  								
      ]]>
-	</update>
+	</insert>
 	<select id="EzApprovalG.selectAprGetNewID" parameterClass="Map" resultClass="String">
 		SELECT 
 	      	max(lastDocID) lastDocID
@@ -19966,10 +19971,14 @@
    			 COMPANYID = #companyID#
         AND   
         	 DOCID = #v_DOCID#
-       	<isNotEqual property="v_curAprSN" compareValue="1">
+       	<!-- 기안자가 회수 시, 참조자의 결재할 문서에도 문서가 남아있고 참조자가 재기안도 할 수 있으며 심지어 삭제까지 가능한 오류가 있었음
+        	중간결재자가 회수 시에는 참조자는 굳이 대기상태로 바꿀 필요가 없지 않냐는 생각에서 이런 태그를 둔 것 같은데 v_curAprSN 값이 아예 넘어오지 않아 항상 이 조건이 참이 되서 버그 발생
+        	중간결재자가 결재문서의 내용까지 바꿀 수도 있다는 점에서 굳이 이 분기가 왜 필요한지 모르겠어서 아예 없애버림
+        	2020-07-14 임민석 -->
+       	<!-- <isNotEqual property="v_curAprSN" compareValue="1">
         AND
         	 APRTYPE != '007'
-       	</isNotEqual>
+       	</isNotEqual> -->
         AND 
         	 APRMEMBERSN >= #v_APRMEMBERSN#
 	</update>
@@ -22703,6 +22712,19 @@
    		AND
    			COMPANYID = #companyID#
    </update>
+   
+	<update id="EzApprovalG.updateEndAprDocOptionInfo" parameterClass="map">
+   		UPDATE 
+   			TBL_ENDAPRDOCINFO 
+   		SET 
+   			HasOpinionYN = #v_OpinionYN# 
+   		WHERE 
+   			DocID = #v_DOCID#
+   		AND 
+   			TENANT_ID = #v_TENANTID#
+   		AND
+   			COMPANYID = #companyID#
+   </update>
 
    <insert id="EzApprovalG.insertAprAttachInfo" parameterClass="map">
    		INSERT INTO 
@@ -23151,14 +23173,16 @@
 			TENANT_ID= #v_TENANTID#
 		AND
 			COMPANYID = #companyID#
+		AND
+			docState = #docState#
    </delete>
       
    <insert id="EzApprovalG.insertLastDeptLine" parameterClass="Map">
    	    INSERT INTO 
    	    	TBL_LASTDEPTLINE 
-   	    (    UserID,       FormID,     ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID , COMPANYID)
+   	    (    UserID,       FormID,     ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID , COMPANYID, docState)
    	    (SELECT 
-   	    	#v_USERID# , #v_FORMID# , ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN,     'N',     ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, NULL,        ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID
+   	    	#v_USERID# , #v_FORMID# , ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN,     'N',     ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, NULL,        ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID, #docState#
 		 FROM 
 		 	TBL_RECEIPTPOINTINFO 
 		 WHERE 
@@ -23180,14 +23204,16 @@
         	TENANT_ID = #v_TENANTID#
         AND
         	COMPANYID = #companyID#
+        AND
+        	docstate = #docState#
    </delete>
  
    <insert id="EzApprovalG.insertLastAprLine" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_LASTAPRLINE 
-   		(     UserID,      FormID,    AprMemberSN, AprType, AprState, AprMemberID,   AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID) 
+   		(     UserID,      FormID,    AprMemberSN, AprType, AprState, AprMemberID,   AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID, docState)
    		(SELECT 
-   			#v_USERID# , #v_FORMID#, AprMemberSN, AprType,    '001',    AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath,     NULL,          NULL,    ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID 
+   			#v_USERID# , #v_FORMID#, AprMemberSN, AprType,    '001',    AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath,     NULL,          NULL,    ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID, #docState#
    		 FROM 
    		 	TBL_APRLINEINFO 
    		 WHERE 
@@ -31783,4 +31809,944 @@
 				createdate < curdate()
 		]]>
 	</update>
+	
+	<select id ="EzApprovalG.getLeftDocCount_new" parameterClass="Map" resultClass="egovMap" >
+		SELECT 
+			*
+		FROM
+		   (SELECT
+      		SUM((
+      		SELECT   
+			SUM(CASE WHEN 
+						(A.APR = 'TRUE' AND (A.APRSTATE = '002' OR A.APRSTATE = '005' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015')
+					OR
+						(A.APR = 'FALSE' AND A.APRTYPE = '007' AND (A.APRSTATE = '002' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015')
+					THEN A.COUNT ELSE 0 END)
+			FROM
+			(
+			SELECT
+				L.APRSTATE,
+				D.FUNCTIONTYPE,
+				L.APRTYPE,
+				D.DOCSTATE,
+				L.APRMEMBERSN,
+				L.APRMEMBERID,
+				'TRUE' AS APR,
+				COUNT(D.DOCID) AS COUNT
+			FROM
+				tbl_aprdocinfo D
+			JOIN 
+				tbl_aprlineinfo L 
+			ON
+				D.DOCID = L.DOCID
+			AND 
+				D.TENANT_ID = L.TENANT_ID
+			AND 
+				D.COMPANYID = L.COMPANYID
+			GROUP BY 
+					L.APRSTATE,
+					D.FUNCTIONTYPE,
+					L.APRTYPE,
+					D.DOCSTATE,
+					L.APRMEMBERSN,
+					L.APRMEMBERID,
+					D.STARTDATE,
+					D.TENANT_ID,
+					L.APRMEMBERDEPTID
+			HAVING
+				(
+					L.APRMEMBERID = #v_USERID#
+					<isNotEmpty property="proxyList">
+						OR 
+							(
+								L.APRMEMBERID IN 
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].id#
+								</iterate>
+							AND
+								L.aprmemberdeptid IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].dept#
+								</iterate>
+							)
+					</isNotEmpty>
+				)
+			<![CDATA[
+				AND 
+					D.STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS') 
+				AND 
+					D.STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			]]>
+				AND 
+					D.TENANT_ID = #v_TENANTID#
+		UNION ALL
+			SELECT
+				L.APRSTATE,
+				D.FUNCTIONTYPE,
+				L.APRTYPE,
+				D.DOCSTATE,
+				L.APRMEMBERSN,
+				L.APRMEMBERID,
+				'FALSE' AS APR,
+				COUNT(D.DOCID) AS COUNT
+			FROM
+				tbl_endaprdocinfo D
+			JOIN 
+				tbl_endaprlineinfo L 
+			ON
+				D.DOCID = L.DOCID
+			AND 
+				D.TENANT_ID = L.TENANT_ID
+			AND 
+				D.COMPANYID = L.COMPANYID
+			JOIN 
+				tbl_expendaprdocinfo E 
+			ON
+				D.DOCID = E.DOCID
+			AND
+				D.TENANT_ID = E.TENANT_ID
+			AND
+				D.COMPANYID = E.COMPANYID
+			GROUP BY
+					L.APRSTATE,
+					D.FUNCTIONTYPE,
+					L.APRTYPE,
+					D.DOCSTATE,
+					L.APRMEMBERSN,
+					L.APRMEMBERID,
+					D.STARTDATE,
+					D.TENANT_ID,
+					L.APRMEMBERDEPTID
+		   HAVING
+				(
+					L.APRMEMBERID = #v_USERID#
+					<isNotEmpty property="proxyList">
+						OR 
+							(
+								L.APRMEMBERID IN 
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].id#
+								</iterate>
+							AND
+								L.APRMEMBERDEPTID IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].dept#
+								</iterate>
+							)
+					</isNotEmpty>
+				)
+			<![CDATA[
+				AND 
+					D.STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS') 
+				AND 
+					D.STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			]]>
+				AND 
+					D.TENANT_ID = #v_TENANTID#		
+					
+					) A 
+			 )) AS "1" , <!-- 결재할 문서, 공람문서는 제외한다. AprType <> ''015'' -->
+	        SUM((
+	        SELECT
+	            COUNT(DISTINCT CONCAT(D.DOCID, D.COMPANYID))
+	        FROM
+	            tbl_aprdocinfo D
+	        JOIN 
+	            tbl_aprlineinfo L 
+	        ON
+	            D.DOCID = L.DOCID
+	        AND 
+	            D.TENANT_ID = L.TENANT_ID
+	        AND 
+	            D.COMPANYID = L.COMPANYID
+	        WHERE
+	          		L.APRTYPE != '015'
+	          	AND D.DOCSTATE != '017'
+	        <isEqual property="MineViewYN" compareValue="YES">
+	           	AND	L.APRSTATE != '001'
+	        </isEqual>
+	           	AND 
+			        (
+					L.APRMEMBERID = #v_USERID#
+					<isNotEmpty property="proxyList">
+						OR 
+							(
+								L.APRMEMBERID IN 
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].id#
+								</iterate>
+							AND
+								L.aprmemberdeptid IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].dept#
+								</iterate>
+							)
+					</isNotEmpty>
+					)    
+	        <![CDATA[
+	        	AND 
+	                D.STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS') 
+	            AND 
+	                D.STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+	        ]]>
+	            AND 
+	                D.TENANT_ID = #v_TENANTID#
+	            AND    
+	            	L.COMPANYID IN (
+										SELECT 
+											EXTENSIONATTRIBUTE2 
+										FROM 
+											TBL_DEPTMASTER 
+										INNER JOIN 
+											TBL_ADDJOBMASTER 
+										ON
+											(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+											AND 
+											TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+										WHERE 
+											TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+										AND 
+											TBL_ADDJOBMASTER.CN = #v_USERID#
+										UNION ALL
+										SELECT 
+											TO_NCHAR(PHYSICALDELIVERYOFFICENAME)
+										FROM
+											TBL_USERMASTER
+										WHERE
+											CN = #v_USERID#
+										AND
+											TENANT_ID = #v_TENANTID# 
+										)    
+	         ))  
+	         AS "2", <!-- 결재진행문서, 공람문서는 제외한다. AprType <> ''015'' -->
+	        SUM((  
+        	<![CDATA[
+	   		SELECT 
+	   			COUNT(D.DOCID) AS COUNT 
+	   		FROM 
+            	TBL_APRDOCINFO D
+	        LEFT JOIN 
+	            TBL_APRLINEINFO L 
+	        ON
+	            D.DOCID = L.DOCID
+	   		AND 
+	   			L.APRMEMBERSN = 1	    
+	        AND 
+	            D.TENANT_ID = L.TENANT_ID
+	        AND 
+	            D.COMPANYID = L.COMPANYID 
+	   		WHERE
+	   			D.STARTDATE IS NOT NULL
+	   		AND 
+	   			D.DOCSTATE <> '017' 	
+	   		AND 
+	   			L.APRTYPE <> '015' 
+	   		]]>		
+	   		AND	
+	   			(
+					L.APRMEMBERID = #v_USERID#
+					<isNotEmpty property="proxyList">
+						OR 
+							(
+								L.APRMEMBERID IN 
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].id#
+								</iterate>
+							AND
+								L.aprmemberdeptid IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].dept#
+								</iterate>
+							)
+					</isNotEmpty>
+				)
+			<![CDATA[		  
+	   		AND 
+	   			D.DocState <> '017'
+	   		AND 
+	   			D.STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+	   		AND 
+	   			D.STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS') 
+	   		AND	
+	   			D.TENANT_ID = #v_TENANTID#
+	   		AND
+				D.COMPANYID IN (
+						SELECT 
+							EXTENSIONATTRIBUTE2 
+						FROM 
+							TBL_DEPTMASTER 
+						INNER JOIN 
+							TBL_ADDJOBMASTER 
+						ON
+							(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+							AND 
+							TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+						WHERE 
+							TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+						AND 
+							TBL_ADDJOBMASTER.CN = #v_USERID#
+						UNION ALL
+						SELECT 
+							TO_NCHAR(PHYSICALDELIVERYOFFICENAME)
+						FROM
+							TBL_USERMASTER
+						WHERE
+							CN = #v_USERID#
+						AND
+							TENANT_ID = #v_TENANTID# 
+						)					
+        ]]>)) AS "3", <!--기안한 문서-->
+			SUM((
+		   		SELECT 
+		   			COUNT(TBL_APRRECEIPTPROCESSINFO.DOCID) AS COUNT
+		   		FROM 
+		   			TBL_APRRECEIPTPROCESSINFO 
+		   		INNER JOIN 
+		   			TBL_APRDOCINFO 
+		   		ON 
+		   			TBL_APRRECEIPTPROCESSINFO.DOCID = TBL_APRDOCINFO.DOCID
+		   		AND	
+		   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+		   		AND
+		   			TBL_APRRECEIPTPROCESSINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	   		<isEqual property="v_aprFlag" compareValue="G">
+	   			LEFT JOIN 
+	   				TBL_RECORD_TEMP
+	           	ON 
+	       			TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+	           	AND 
+	       			TBL_RECORD_TEMP.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+	           	AND 
+	       			TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	       		AND 
+	       			TBL_RECORD_TEMP.PROCESSDEPTCODE = TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID
+	   		</isEqual>
+		   		WHERE 
+		   			TBL_APRRECEIPTPROCESSINFO.PROCESSYN != 'Y'
+		   		AND 
+		   			(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
+		   		AND 
+		   			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+		   			
+	   		<isEqual property="v_USERFLAG" compareValue="admin">
+	   			OR 
+	   				(
+	   					TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID 
+	   					IN 
+	   					<iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+	   						#v_DEPTIDS[]#
+	   					</iterate>
+	   				AND 
+	   					(TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014') OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
+	   				)
+	   		</isEqual>
+	   		<isEqual property="v_aprFlag" compareValue="G">
+		     	OR
+		     		(
+		     			(TBL_APRDOCINFO.WRITERID = #v_USERID# AND TBL_APRDOCINFO.WRITERDEPTID = #v_DEPTID#) 
+	     			AND
+		     			TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID#
+		     		AND
+		     			(TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# OR TBL_APRRECEIPTPROCESSINFO.PROCESSORID = '')
+		     		AND
+			     		TBL_APRRECEIPTPROCESSINFO.APRSTATE != '013'
+			     	)
+		     </isEqual>
+	   		 	 )
+	  		 <![CDATA[
+	   		 	AND 
+	   		 		PROCESSDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+	   		 	AND 
+	   		 		PROCESSDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+	   		 	AND	
+		   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+	  		]]>
+			)) AS "4", <!---부서 수신함 -->
+			SUM((
+				<![CDATA[
+	   		 	SELECT 
+	   		 		COUNT(TBL_APRRECEIPTPROCESSINFO.DOCID) AS COUNT
+	   			FROM 
+	   				TBL_APRRECEIPTPROCESSINFO 
+	   			INNER JOIN 
+	   				TBL_APRDOCINFO
+	   			ON 
+	   				TBL_APRRECEIPTPROCESSINFO.DOCID = TBL_APRDOCINFO.DOCID
+	   			AND
+	   				TBL_APRRECEIPTPROCESSINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+	   			AND
+	   				TBL_APRRECEIPTPROCESSINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	   			WHERE 
+	   				(TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#)
+	   			AND 
+	   				(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '002' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '004')
+	   			AND 
+	   				TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'  
+	   			AND 
+	   		 		PROCESSDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+	   		 	AND 
+	   		 		PROCESSDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+	   		 	AND	
+		   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+	   		]]>
+			)) AS "5", <!-- 심사할 문서-->
+			SUM((
+			 <![CDATA[
+	   			SELECT 
+	   				COUNT(TBL_ENDAPRDOCINFO.DOCID) AS COUNT
+	   			FROM 
+	   				TBL_ENDAPRDOCINFO 
+	   			INNER JOIN 
+	   				TBL_EXPENDAPRDOCINFO 
+	   			ON 
+	   				TBL_EXPENDAPRDOCINFO.DOCID = TBL_ENDAPRDOCINFO.DOCID
+	   			AND
+	   				TBL_EXPENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+	   			AND
+	   				TBL_EXPENDAPRDOCINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+	   			INNER JOIN 
+	   				TBL_ENDRECEIPTPOINTINFO 
+	   			ON 
+	   				TBL_ENDAPRDOCINFO.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID
+	   			AND
+	   				TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID
+	   			AND
+	   			   	TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID
+	   			WHERE 
+	   				TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+	   			AND 
+	   				TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'ADDRESS%'
+	   			AND 
+	   				TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
+	   			AND 
+	   				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'O' 
+	   			AND 
+	   			 	STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+		   		AND 
+		   			STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+		   		AND	
+		   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
+		   		AND
+					TBL_ENDAPRDOCINFO.COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+							AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #v_USERID#
+							UNION ALL
+							SELECT TO_NCHAR(#companyID#) FROM DUAL
+							)
+	   		]]>			
+			)) AS "6", <!-- 직인 의뢰함 -->
+			SUM((
+	   		<![CDATA[
+	   			SELECT 
+	   				COUNT(TBL_ENDAPRDOCINFO.DOCID) AS COUNT
+	   			FROM 
+	   				TBL_ENDAPRDOCINFO 
+	   			INNER JOIN 
+	   				TBL_EXPENDAPRDOCINFO 
+	   			ON 
+	   				TBL_EXPENDAPRDOCINFO.DOCID = TBL_ENDAPRDOCINFO.DOCID
+	   			AND
+	   				TBL_EXPENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+	   			AND
+	   				TBL_EXPENDAPRDOCINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+	   			INNER JOIN 
+	   				TBL_ENDRECEIPTPOINTINFO 
+	   			ON 
+	   				TBL_ENDAPRDOCINFO.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID
+	   			AND
+	   				TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID
+	   			AND
+	   				TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID
+	   			WHERE 
+	   				TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+	   			AND 
+	   				TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'Address%'
+	   			AND 
+	   				TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
+	   			AND 
+	   				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'Y'
+	   			AND 
+	   			 	STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+		   		AND 
+		   			STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+		   		AND	
+		   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		   		AND
+					TBL_ENDAPRDOCINFO.COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+							AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #v_USERID#
+							UNION ALL
+							SELECT TO_NCHAR(#companyID#) FROM DUAL
+							)
+		   	]]>			
+			)) AS "7", <!-- 직인  대장 -->
+			SUM((
+			SELECT
+			SUM(CASE WHEN
+					A.APR = 'TRUE' AND A.APRSTATE = '002' AND A.DOCSTATE = '015' AND A.APRTYPE = '015' 
+					<isNotEmpty property="proxyList">
+						AND A.APRMEMBERID = #v_USERID#
+					</isNotEmpty>
+				THEN A.COUNT ELSE 0 END
+			) 
+			FROM
+			(
+			SELECT
+				L.APRSTATE,
+				D.FUNCTIONTYPE,
+				L.APRTYPE,
+				D.DOCSTATE,
+				L.APRMEMBERSN,
+				L.APRMEMBERID,
+				'TRUE' AS APR,
+				COUNT(D.DOCID) AS COUNT
+			FROM
+				tbl_aprdocinfo D
+			JOIN 
+				tbl_aprlineinfo L 
+			ON
+				D.DOCID = L.DOCID
+			AND 
+				D.TENANT_ID = L.TENANT_ID
+			AND 
+				D.COMPANYID = L.COMPANYID
+			GROUP BY 
+					L.APRSTATE,
+					D.FUNCTIONTYPE,
+					L.APRTYPE,
+					D.DOCSTATE,
+					L.APRMEMBERSN,
+					L.APRMEMBERID,
+					D.STARTDATE,
+					D.TENANT_ID,
+					L.APRMEMBERDEPTID
+			HAVING
+				(
+					L.APRMEMBERID = #v_USERID#
+					<isNotEmpty property="proxyList">
+						OR 
+							(
+								L.APRMEMBERID IN 
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].id#
+								</iterate>
+							AND
+								L.aprmemberdeptid IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].dept#
+								</iterate>
+							)
+					</isNotEmpty>
+				)
+			<![CDATA[
+				AND 
+					D.STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS') 
+				AND 
+					D.STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			]]>
+				AND 
+					D.TENANT_ID = #v_TENANTID#
+		UNION ALL
+			SELECT
+				L.APRSTATE,
+				D.FUNCTIONTYPE,
+				L.APRTYPE,
+				D.DOCSTATE,
+				L.APRMEMBERSN,
+				L.APRMEMBERID,
+				'FALSE' AS APR,
+				COUNT(D.DOCID) AS COUNT
+			FROM
+				tbl_endaprdocinfo D
+			JOIN 
+				tbl_endaprlineinfo L 
+			ON
+				D.DOCID = L.DOCID
+			AND 
+				D.TENANT_ID = L.TENANT_ID
+			AND 
+				D.COMPANYID = L.COMPANYID
+			JOIN 
+				tbl_expendaprdocinfo E 
+			ON
+				D.DOCID = E.DOCID
+			AND
+				D.TENANT_ID = E.TENANT_ID
+			AND
+				D.COMPANYID = E.COMPANYID
+			GROUP BY
+					L.APRSTATE,
+					D.FUNCTIONTYPE,
+					L.APRTYPE,
+					D.DOCSTATE,
+					L.APRMEMBERSN,
+					L.APRMEMBERID,
+					D.STARTDATE,
+					D.TENANT_ID,
+					L.APRMEMBERDEPTID
+		   HAVING
+				(
+					L.APRMEMBERID = #v_USERID#
+					<isNotEmpty property="proxyList">
+						OR 
+							(
+								L.APRMEMBERID IN 
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].id#
+								</iterate>
+							AND
+								L.APRMEMBERDEPTID IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].dept#
+								</iterate>
+							)
+					</isNotEmpty>
+				)
+			<![CDATA[
+				AND 
+					D.STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS') 
+				AND 
+					D.STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			]]>
+				AND 
+					D.TENANT_ID = #v_TENANTID#		
+					
+					) A
+			)) AS "8", <!-- 공람 문서 --><!-- 2018-04-30 천성준 (#12468) 대리 결재자여도 회람(공람)문서는 제외 -->
+			SUM((
+	             SELECT 
+	                COUNT(TBL_APRDOCINFO.DocID)
+	             FROM 
+	                TBL_APRDOCINFO 
+	             INNER JOIN 
+	                TBL_APRLINEINFO 
+	             ON 
+	                TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID
+	             AND
+	                TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID 
+	             AND
+	                TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID 
+	             WHERE 
+	                TBL_APRLINEINFO.APRMEMBERID 
+	                IN
+	                <iterate property="v_USERIDS" open="(" close=")" conjunction=",">
+   						#v_USERIDS[]#
+   					</iterate>
+	             AND 
+	                TBL_APRLINEINFO.AprType = '015' 
+	             AND 
+	                TBL_APRLINEINFO.AprState = '010'
+	             AND
+	                TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
+			)) AS "9", <!-- 공람한 문서 -->
+			SUM((
+			<![CDATA[
+	  			SELECT 
+	  				COUNT(SN) AS COUNT 
+	  			FROM 
+	  				TBL_TMPAPRDOCINFO 
+	   			WHERE 
+	   				OWNERID = #v_USERID# 
+	   			AND 
+	   				STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+		   		AND 
+		   			STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+		   		AND	
+		   			TENANT_ID = #v_TENANTID#
+		   		AND
+					COMPANYID = #companyID#
+		   	]]>
+			)) AS "10", <!-- 임시보관함 -->
+			SUM((
+			SELECT
+			SUM(CASE WHEN
+					A.APR = 'FALSE' AND A.APRTYPE = '040' AND A.APRSTATE = '002' 
+					<isNotEmpty property="proxyList">
+						AND A.APRMEMBERID = #v_USERID#
+					</isNotEmpty>
+				THEN A.COUNT ELSE 0 END
+			) 
+			FROM
+			(
+			SELECT
+				L.APRSTATE,
+				D.FUNCTIONTYPE,
+				L.APRTYPE,
+				D.DOCSTATE,
+				L.APRMEMBERSN,
+				L.APRMEMBERID,
+				'TRUE' AS APR,
+				COUNT(D.DOCID) AS COUNT
+			FROM
+				tbl_aprdocinfo D
+			JOIN 
+				tbl_aprlineinfo L 
+			ON
+				D.DOCID = L.DOCID
+			AND 
+				D.TENANT_ID = L.TENANT_ID
+			AND 
+				D.COMPANYID = L.COMPANYID
+			GROUP BY 
+					L.APRSTATE,
+					D.FUNCTIONTYPE,
+					L.APRTYPE,
+					D.DOCSTATE,
+					L.APRMEMBERSN,
+					L.APRMEMBERID,
+					D.STARTDATE,
+					D.TENANT_ID,
+					L.APRMEMBERDEPTID
+			HAVING
+				(
+					L.APRMEMBERID = #v_USERID#
+					<isNotEmpty property="proxyList">
+						OR 
+							(
+								L.APRMEMBERID IN 
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].id#
+								</iterate>
+							AND
+								L.aprmemberdeptid IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].dept#
+								</iterate>
+							)
+					</isNotEmpty>
+				)
+			<![CDATA[
+				AND 
+					D.STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS') 
+				AND 
+					D.STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			]]>
+				AND 
+					D.TENANT_ID = #v_TENANTID#
+		UNION ALL
+			SELECT
+				L.APRSTATE,
+				D.FUNCTIONTYPE,
+				L.APRTYPE,
+				D.DOCSTATE,
+				L.APRMEMBERSN,
+				L.APRMEMBERID,
+				'FALSE' AS APR,
+				COUNT(D.DOCID) AS COUNT
+			FROM
+				tbl_endaprdocinfo D
+			JOIN 
+				tbl_endaprlineinfo L 
+			ON
+				D.DOCID = L.DOCID
+			AND 
+				D.TENANT_ID = L.TENANT_ID
+			AND 
+				D.COMPANYID = L.COMPANYID
+			JOIN 
+				tbl_expendaprdocinfo E 
+			ON
+				D.DOCID = E.DOCID
+			AND
+				D.TENANT_ID = E.TENANT_ID
+			AND
+				D.COMPANYID = E.COMPANYID
+			GROUP BY
+					L.APRSTATE,
+					D.FUNCTIONTYPE,
+					L.APRTYPE,
+					D.DOCSTATE,
+					L.APRMEMBERSN,
+					L.APRMEMBERID,
+					D.STARTDATE,
+					D.TENANT_ID,
+					L.APRMEMBERDEPTID
+		   HAVING
+				(
+					L.APRMEMBERID = #v_USERID#
+					<isNotEmpty property="proxyList">
+						OR 
+							(
+								L.APRMEMBERID IN 
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].id#
+								</iterate>
+							AND
+								L.APRMEMBERDEPTID IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].dept#
+								</iterate>
+							)
+					</isNotEmpty>
+				)
+			<![CDATA[
+				AND 
+					D.STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS') 
+				AND 
+					D.STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			]]>
+				AND 
+					D.TENANT_ID = #v_TENANTID#		
+					
+					) A
+			))AS "11" <!-- 후결 -->
+		<isEqual property="v_shareApprovalFlag" compareValue="YES">
+			, SUM((
+				SELECT 
+					SUM(A.COUNT)
+				FROM (
+					SELECT
+						COUNT(D.DOCID) AS COUNT
+					FROM
+						tbl_aprdocinfo D
+					JOIN 
+						tbl_aprlineinfo L 
+					ON
+						D.DOCID = L.DOCID
+					AND 
+						D.TENANT_ID = L.TENANT_ID
+					AND 
+						D.COMPANYID = L.COMPANYID
+					WHERE
+						(L.APRSTATE = '002' OR L.APRSTATE = '005')
+		   			AND 
+		   				(D.FUNCTIONTYPE != '004' OR L.APRTYPE != '007')
+		    		AND 
+		    			D.STARTDATE IS NOT NULL
+					AND
+						L.APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)
+					AND 
+			   			L.APRTYPE != '015'
+			   	<![CDATA[ 
+			   		AND 
+			   			STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS') 
+			   		AND 
+			   			STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			   	]]>
+			   		AND	
+			   			D.TENANT_ID = #v_TENANTID#
+			   		UNION ALL
+			   		SELECT
+						COUNT(D.DOCID) AS COUNT
+					FROM
+						tbl_endaprdocinfo D
+					JOIN 
+						tbl_endaprlineinfo L 
+					ON
+						D.DOCID = L.DOCID
+					AND 
+						D.TENANT_ID = L.TENANT_ID
+					AND 
+						D.COMPANYID = L.COMPANYID
+					JOIN 
+						tbl_expendaprdocinfo E 
+					ON
+						D.DOCID = E.DOCID
+					AND
+						D.TENANT_ID = E.TENANT_ID
+					AND
+						D.COMPANYID = E.COMPANYID
+					WHERE
+						L.APRTYPE = '007'
+				    AND 
+				    	L.APRSTATE = '002'
+				    AND 
+				    	D.DOCSTATE != '031'
+				    AND
+						L.APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)
+					AND 
+			   			L.APRTYPE != '015'
+			   	<![CDATA[ 
+			   		AND 
+			   			STARTDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS') 
+			   		AND 
+			   			STARTDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			   	]]>
+			   		AND	
+			   			D.TENANT_ID = #v_TENANTID#
+		   		) A
+			)) AS "12"
+		</isEqual> <!-- 공유결재 -->
+		FROM DUAL ) B
+	</select>
+	
+	<insert id="EzApprovalG.copyOpinionsFromOrgDoc" parameterClass="map">
+		INSERT INTO tbl_apropinioninfo
+		(DOCID, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, COMPANYID)
+		SELECT #v_NEWID#, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, #receiptCompanyID#
+		FROM TBL_APROPINIONINFO
+		WHERE
+			DOCID = #v_orgDocID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</insert>
+	
+	<select id="EzApprovalG.getEndDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+		SELECT 
+			*
+	    FROM 
+	    	TBL_ENDAPRDOCINFO 
+	    WHERE  
+	    	DOCID = #v_DOCID#
+	    AND
+	    	TENANT_ID = #v_TENANTID#
+	   	AND
+	   		COMPANYID = #v_COMPANYID#
+	</select>
+	
+	<select id="EzApprovalG.getIngDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+		<![CDATA[
+			SELECT 
+				*
+		    FROM 
+		    	TBL_APRDOCINFO D
+			INNER JOIN
+				TBL_APRLINEINFO L
+			ON
+				D.DOCID = L.DOCID
+			AND
+				D.TENANT_ID = L.TENANT_ID
+			AND
+				D.COMPANYID = L.COMPANYID
+			WHERE  
+		    	D.DOCID = #v_DOCID#
+		    AND
+		    	D.TENANT_ID = #v_TENANTID#
+		   	AND
+		   		D.COMPANYID = #v_COMPANYID#
+		   	AND
+		   		L.APRMEMBERID = #v_USERID#
+		   	AND
+		   		L.APRSTATE = '003'
+		   	AND
+		   		ROWNUM <= 1
+		]]>
+	</select>
+	
 </sqlMap>

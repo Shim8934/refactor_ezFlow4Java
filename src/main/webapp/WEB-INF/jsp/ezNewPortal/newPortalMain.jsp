@@ -11,7 +11,7 @@
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/memo.css')}">
-		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/popup.css')}">
+		<link rel="stylesheet" href="${util.addVer('ezNewPortal.e2', 'msg')}">
 		<!-- 컨텍스트 메뉴 관련 -->
 		<link rel="stylesheet" href="${util.addVer('/css/contextMenu.css')}">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
@@ -124,6 +124,10 @@
 		    	document.body.appendChild(wrapper);
 		    	document.getElementById("reloadLogin").submit();
 		    }
+			
+			function replaceParentPageInChild(replaceUrl) {
+		    	location.href = replaceUrl;
+		    }
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
@@ -137,6 +141,7 @@
 		</div>
 		<div id="popupArea"><div id="noticePopupLayer"></div></div>
 		<div id="noticePopupArea"></div>
+
   		<div id="contextMenuBlock" class="contextMenuBlock">
 			<div id="contextMenuBtn" class="contextMenuBtn" style="display: block;visibility:hidden;">
 				<div class="contextMenu"></div>
@@ -150,7 +155,7 @@
 				</div>
 			</div>			
 		</div>
-
+		
  		<!-- memo note -->
 		<div id="noteBlock" class="noteBlock">
 			<!-- 메모 레이어 -->
@@ -215,8 +220,8 @@
 		        setContextMenuGadgetPosition();
 		    }, 750);	 		
 		    
-	 	});
-	 	
+	 	});	
+  	
 	 	$(function() {
 	    	if(memoFlag === "YES") {
 	    		

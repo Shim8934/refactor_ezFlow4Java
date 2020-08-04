@@ -9705,5 +9705,24 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("getDefaultBoardID ended.");
 		return returnStr;
 	}
+	
+	/**
+	 * 2020-07-14 홍승비 - 선택한 마이게시판 분류 하위에 해당 게시판이 존재하는지 리턴 (Y/N)
+	 * */
+	@RequestMapping(value = "/ezBoard/checkMyBoardExist.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String checkMyBoardExist(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("checkMyBoardExist started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String pTreeID = request.getParameter("treeID");
+		String pBoardID = request.getParameter("boardID");
+		String result = "";
+		
+		result = ezBoardService.isMyBoardExist(pTreeID, pBoardID, userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		logger.debug("checkMyBoardExist ended.");
+		return result;
+	}
 }
 

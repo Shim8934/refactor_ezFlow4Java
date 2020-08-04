@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.json.simple.JSONObject;
@@ -1171,20 +1172,29 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	}
 
 	public void createUserDistributionTable() {
-		@SuppressWarnings("serial")
-		Map<String, String> map = new HashMap<String, String>(){{
-			put("EzCommonDAO.checkUserDlTable", "EzCommonDAO.createUserDlTable");
-			put("EzCommonDAO.checkUserDlMemberTable", "EzCommonDAO.createUserDlMemberTable");
-			put("EzCommonDAO.checkUserDlApplyTable", "EzCommonDAO.createUserDlApplyTable");
-		}};
+		Map<String, String> map = new HashMap<>();
 		
-		for (String key : map.keySet()) {
+		map.put("EzCommonDAO.checkUserDlTable", "EzCommonDAO.createUserDlTable");
+		map.put("EzCommonDAO.checkUserDlMemberTable", "EzCommonDAO.createUserDlMemberTable");
+		map.put("EzCommonDAO.checkUserDlApplyTable", "EzCommonDAO.createUserDlApplyTable");
+		
+		for (Entry<String, String> entry : map.entrySet()) {
 			try {
-				select(key);
+				select(entry.getKey());
 			} catch (Exception e) {
-				String keyVal = map.get(key);
-				logger.debug(keyVal + " started.");
-				update(keyVal);
+				String keyVal = entry.getValue();
+				logger.debug("{} started.", keyVal);
+				
+				try {
+					update(keyVal);
+				} catch (Exception ex) {
+					// oracle 11g xe 오류
+					if (ex.getMessage().contains("ORA-00972")) {
+						logger.debug("{} skip, cause=oracle 11g xe error: {}", keyVal, ex.getMessage());
+					} else {
+						ex.printStackTrace();
+					}
+				}
 			}
 
 		}
@@ -1256,13 +1266,25 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	/**
+	 * 오라클 11g에서는 30 글자를 넘어가는 테이블을 생성할 수 없는데, 30자를 넘어가던 해당 테이블을 30자 이내로 변경하는 코드가 들어간다.<br>
+	 * CREATE 또는 RENAME 으로 동작한다.
+	 */
 	public void createJmochaBigAttachDownloadLimit() throws Exception {
 		try {
-			select("EzCommonDAO.checkJmochaBigAttachDownloadLimit");
+			select("EzCommonDAO.checkJmochaBigAttachDownloadLimit_new");
 		} catch (Exception e) {
-			logger.debug("jmocha_bigattach_download_limit doesn't exist. creating the table...");
-			
-			update("EzCommonDAO.createJmochaBigAttachDownloadLimit");
+			try {
+				select("EzCommonDAO.checkJmochaBigAttachDownloadLimit_old");
+
+				logger.debug("jmocha_bigattach_download_limit already exist. table name has been changed to jmocha_bigattach_down_limit...");
+
+				update("EzCommonDAO.renameJmochaBigAttachDownloadLimitToNew");
+			} catch (Exception e2) {
+				logger.debug("jmocha_bigattach_down_limit doesn't exist. creating the table...");
+
+				update("EzCommonDAO.createJmochaBigAttachDownloadLimit");
+			}
 		}
 	}
 
@@ -1488,4 +1510,23 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblNoticeBoard");
 		}
 	}
+	
+	public void insertMobileAttitudeConfig(Map<String, Object> map) throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.checkMobileAttitudeConfig", map);
+		
+		if (propertyValue == null) {
+			logger.debug("USE_MATTITUDE tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertSurveyTenantConfig", map);
+		}
+	}
+	
+	public void insertAttitudeGPSConfig(Map<String, Object> map) throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.checkAttitudeGPSConfig", map);
+		
+		if (propertyValue == null) {
+			logger.debug("attitudeMapApiKey tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertSurveyTenantConfig", map);
+		}
+	}
+	
 }

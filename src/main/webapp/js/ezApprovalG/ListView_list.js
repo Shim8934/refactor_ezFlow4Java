@@ -513,8 +513,9 @@ function ListView() {
                 var strClass = "h5_center";  // 현재는 header에 class가 없으므로 고정함. //SelectSingleNodeValue(oHeaders[i], "CLASSNAME");	
                 
                 var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
-                if(strColName == "DocTitle" || strColName === _title)
+                if(strColName == "DocTitle" || strColName === _title) {
                     _titleIdx = i;
+                }
                 
                 //2019-04-09 천성준 - (#15424) 공람정보 팝업에서 결재일시 잘려나오는것 때문에 width +20px해주는거 같은데 지금은 UI가 바뀌어서 필요없음 
                 /*if (strColName == "ProcessDate") {
@@ -535,6 +536,8 @@ function ListView() {
                         objTd.onclick = new Function(_headeronclick + "('" + strName + "');");
                 }
 
+                /* 2020-07-31 홍승비 - 리스트헤더 th에 colname 속성 부여 */
+                objTd.setAttribute("COLNAME", strColName.toUpperCase());
 
                 if (strStyle != "") {
                     if (_headeronclick != null && _headeronclick != ""  ) {
@@ -555,8 +558,9 @@ function ListView() {
                 	objTd.style.display = "none";
                 }
                 
+                /* 2020-07-09 홍승비 - 리스트헤더의 반려 칼럼 정렬 중앙으로 수정 (하위 td의 정렬이 center이므로) */
                 if (strColName == "REJECTFLAG")
-                    objTd.style.textAlign = "left";
+                    objTd.style.textAlign = "center";
 
                 if (strColName == "HASATTACHYN")
                     objTd.style.textAlign = "center";
@@ -578,16 +582,19 @@ function ListView() {
                 	objTd.style.textAlign = "center";
                 }
                 
+                /* 2020-07-09 홍승비 - 리스트헤더의 이관여부 칼럼 정렬 좌측으로 수정 (하위 td의 정렬 스타일도 left로 수정) */
                 if (strColName == "TransferFlag") {
 //                	objTd.style.textAlign = "center";
+                	objTd.style.textAlign = "left";
                 }
                
                 if (strColName == "DelayFlag") {
 //                	objTd.style.textAlign = "center";
                 }
                 
+                /* 2020-07-09 홍승비 - 리스트헤더의 비치 칼럼 중앙정렬 스타일 제거 (하위 td의 정렬 스타일이 left임) */
 //                if (strName == "비치" || strName == "특수목록" || strName == "연기신청" || strName == "수신") {
-            	if (strName == "비치" || strName == "특수목록" || strName == "수신") {
+            	if (strName == "특수목록" || strName == "수신") {
                 	objTd.style.textAlign = "center";
                 }
 
@@ -965,6 +972,12 @@ function ListView() {
                     }
                     else if (SelectSingleNodeValue(oHeaders[j], "NAME") == "비치" || SelectSingleNodeValue(oHeaders[j], "NAME") == "연기신청") {
                     	objTd.style.textAlign = "left";
+                    	oText = document.createTextNode(strValue);
+                    	objTd.appendChild(oText);
+                    }
+                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TransferFlag") { // TransferFlag(이관여부) 하위 td 스타일 추가
+                    	objTd.style.textAlign = "left";
+                    	objTd.align = "left";
                     	oText = document.createTextNode(strValue);
                     	objTd.appendChild(oText);
                     }

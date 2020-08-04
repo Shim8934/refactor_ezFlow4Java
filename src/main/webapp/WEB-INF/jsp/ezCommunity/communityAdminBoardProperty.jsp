@@ -426,7 +426,7 @@
 		<table class="content" style="margin-top:10px">
 			<tr>
 				<th><spring:message code = 'ezCommunity.t306' /></th>
-				<td>&nbsp;&nbsp;${multiBoardName}</td>
+				<td id="boardNameTD">&nbsp;&nbsp;<c:out value = "${multiBoardName}"/></td>
 			</tr>
 			<tr>
 				<th><spring:message code = 'ezCommunity.t381' /></th>
@@ -434,11 +434,11 @@
 					<table style="width:100%;">
 						<tr class="primary">
 							<th>${langPrimary}</th>
-							<td><input name="text" type=text id="txtBoardName" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${boardInfo.boardName}" maxlength=25></td>
+							<td><input name="text" type=text id="txtBoardName" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="<c:out value='${boardInfo.boardName}'/>" maxlength=25></td>
 						</tr>
 						<tr class="secondary">
 							<th>${langSecondary}</th>
-							<td><input name="text2" type="text" id="txtBoardName2" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${boardInfo.boardName2}" maxlength=25></td>
+							<td><input name="text2" type="text" id="txtBoardName2" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="<c:out value='${boardInfo.boardName2}'/>" maxlength=25></td>
 						</tr>
 					</table>
 				</td>
@@ -449,7 +449,7 @@
 		    </tr>
       		<tr style="${_style}">
 		    	<th><spring:message code = 'ezCommunity.t383' /></th>
-		        <td><input type=text id="txtBoardDescription" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${boardProp.boardDescription}" maxlength=99></td>
+		        <td><input type=text id="txtBoardDescription" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="<c:out value='${boardProp.boardDescription}'/>" maxlength=99></td>
 		    </tr>
       		<tr style="${_style}">
 		        <th><spring:message code = 'ezCommunity.t384' /></th>

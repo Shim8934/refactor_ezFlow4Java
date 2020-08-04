@@ -139,7 +139,7 @@
 			<li id=btnDisuseTaskReq style="display:none"><span onClick="return btnDisuseTaskReq_onclick()" ><spring:message code='ezApprovalG.t814'/></span></li>
 			<li id=btnUpdateTaskReq style="display:none"><span onClick="return btnUpdateTaskReq_onclick()" ><spring:message code='ezApprovalG.t815'/></span></li>
 			<li id=istat ><span onClick="return btnViewTaskInfo_onclick()" ><spring:message code='ezApprovalG.t527'/></span></li>
-			<li id=iViewHist ><span onClick="return btnViewTaskHistoryInfo_onclick()"><spring:message code='ezApprovalG.t529'/></span></li>
+			<li id=iViewHist ><span onClick="return btnViewTaskHistoryInfo_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
 			<li id=istat2 ><span class="icon16 icon16_search" onClick="return btnFindTaskFullList_onclick()"></span></li>
 		</ul>
 		</div>

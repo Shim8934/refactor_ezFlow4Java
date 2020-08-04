@@ -788,7 +788,7 @@
 						
             function InitializeSettings() {
             	
-                document.getElementById('tdBoardName').innerHTML = userInfo.primary == "1"? "${boardInfo.boardName}" : "${boardInfo.boardName2}";
+                document.getElementById('tdBoardName').innerHTML = "<c:out value='${multiBoardName}'/>";
                 
                 if (ExpireDays == "-1" && strEndDate.substring(0,4) == "9999" || ExpireDays == "-1" && pMode == "new") {
                     document.getElementById('ChkPermanence').checked = true;
@@ -943,7 +943,7 @@
 					<table class="content" style="width:100%">
 						<tr>
 							<th style="width:15%"><spring:message code='ezCommunity.t1168' /></th>
-							<td style="width:85%" id="tdBoardName">${boardInfo.boardName }</td>
+							<td style="width:85%" id="tdBoardName"><c:out value = "${multiBoardName}"/></td>
 						</tr>
 	
 						<c:choose>

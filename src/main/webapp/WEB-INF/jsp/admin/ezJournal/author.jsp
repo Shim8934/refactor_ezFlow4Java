@@ -36,10 +36,10 @@
 				var userId = selectedUser;
 				var url = "/admin/ezJournal/authorView.do";
 				var companyId = document.getElementById("companyId").value;
-				url+="?companyId="+companyId;
+				url += "?companyId=" + encodeURIComponent(companyId);
 				
 				if (userId) {
-					url+="&userId="+userId+"&userName="+selectedUserName;
+					url += "&userId=" + encodeURIComponent(userId) + "&userName=" + encodeURIComponent(selectedUserName);
 					
 					if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
 						window.open(url, "authorView", GetOpenWindowfeature(523, 203));

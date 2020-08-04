@@ -434,13 +434,13 @@ CREATE TABLE `jmocha_alias` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `jmocha_bigattach_download_limit`
+-- Table structure for table `jmocha_bigattach_down_limit`
 --
 
-DROP TABLE IF EXISTS `jmocha_bigattach_download_limit`;
+DROP TABLE IF EXISTS `jmocha_bigattach_down_limit`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `jmocha_bigattach_download_limit` (
+CREATE TABLE `jmocha_bigattach_down_limit` (
   `file_id` varchar(100) NOT NULL,
   `download_count` int(10) DEFAULT NULL,
   `limit_count` int(10) DEFAULT NULL,

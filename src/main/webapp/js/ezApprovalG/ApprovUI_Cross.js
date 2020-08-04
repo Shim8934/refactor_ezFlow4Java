@@ -1,4 +1,4 @@
-﻿﻿var lastKyulName, lastKyuljiwee, LastSignSN, pAprLineB4type;
+﻿var lastKyulName, lastKyuljiwee, LastSignSN, pAprLineB4type;
 var pOrgAttach;
 var bbtnApprove = "";
 var bbtnReject = "";
@@ -2165,7 +2165,7 @@ function SReAprLineSingMapping(ret) {
     var startIdx = 0;
     var IngFlag = false;
     for (i = 1; i < OrderStat.length; i++) {
-        if (OrderStat[i] == strAprState1 && IngFlag) {
+        if ((OrderStat[i] == strAprState1 || OrderStat[i] == strAprState1 == "") && IngFlag) {
             startIdx = startIdx;
             break;
         }
@@ -4020,6 +4020,7 @@ function setDocNumFormat(pPrefix) {
     var fieldValue = message.DocumentBodyGetAttribute("orgdocnum", 0);
 
     Arr_Header = fieldValue.split("-");
+    org_Header = field.split("-");
     
     Arr_Header.forEach(function(item, index) {
     	if (!item.indexOf('@')) {
@@ -4036,12 +4037,13 @@ function setDocNumFormat(pPrefix) {
                     break;
 
                 case "YY":
-                    numHeader += d.getFullYear();
+                    var tempYear = d.getFullYear();
+                    numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
                     break;
                     
                 case "yy":
-                    var yyear = d.getFullYear();
-                    numHeader += yyear.toString().substr(2);
+                    var tempYear = d.getFullYear().substr(2);
+                    numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
                     break;
 
                 case "MM":
@@ -4073,8 +4075,8 @@ function setDocNumFormat(pPrefix) {
                 	break;
                 	
                 case "YM":
-                	var yyear = d.getFullYear();
-                    numHeader += yyear.toString().substr(2);
+                    var tempYear = d.getFullYear().substr(2);
+                    numHeader += (org_Header[index] == tempYear ? tempYear : org_Header[index]);
                     
                 	var mmonth = d.getMonth() + 1;
                     if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;

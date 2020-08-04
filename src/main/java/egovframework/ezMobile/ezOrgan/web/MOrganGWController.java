@@ -146,7 +146,7 @@ public class MOrganGWController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezorgan/dept-info/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezorgan/dept-info/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mGetDeptInfo(HttpServletRequest request, @PathVariable String userId) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/dept-info/users/" + userId + "] started.");
 
@@ -179,7 +179,7 @@ public class MOrganGWController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezorgan/low-dept-info/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezorgan/low-dept-info/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mGetLowDeptInfo(HttpServletRequest request, @PathVariable String userId) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/low-dept-info/users/" + userId + "] started.");
 		
@@ -212,7 +212,7 @@ public class MOrganGWController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/mobile/ezorgan/high-dept-info/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezorgan/high-dept-info/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mGetHighDeptInfo(HttpServletRequest request, @PathVariable String userId) {
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/high-dept-info/users/" + userId + "] started.");
 		

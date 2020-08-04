@@ -146,7 +146,7 @@ public class MCommonGWController {
 	 * 2019-05-09 홍승비 - 모바일 G/W 테넌트 컨피그 받아오기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezcommon/tenantconfigs/{tenantconfig}", method= RequestMethod.GET, produces="application/json;charset=utf-8")    
+	@RequestMapping(value="/mobile/ezcommon/tenantconfigs/{tenantconfig:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")    
     public JSONObject getTenantConfigMobileGW(HttpServletRequest request) throws Exception {
     	LOGGER.debug("MOBILE G/W COMMON [GET /mobile/ezcommon/tenantconfigs/{tenantconfig}] getTenantConfigMobileGW started");
     	

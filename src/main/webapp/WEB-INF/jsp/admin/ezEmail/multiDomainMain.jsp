@@ -124,11 +124,11 @@
 		function btnAdd() {
 			var pheight = window.screen.availHeight;
 	        var pwidth = window.screen.availWidth;
-	        var pTop = (pheight - 450) / 2;
+	        var pTop = (pheight - 460) / 2;
 	        var pLeft = (pwidth - 420) / 2;
 			var url = "/admin/ezEmail/addMultiDomainPopUp.do?";
 			
-	        var popup = window.open(url, "popup", "height=90px,width=450px, top=" + pTop.toString() + ", left=" + pLeft.toString());
+	        var popup = window.open(url, "popup", "height=134px,width=460px, top=" + pTop.toString() + ", left=" + pLeft.toString());
 		}
 		
 		function btnDel() {

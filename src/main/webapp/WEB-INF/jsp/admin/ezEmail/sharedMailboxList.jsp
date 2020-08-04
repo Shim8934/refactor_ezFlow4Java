@@ -50,7 +50,7 @@
 		        
 		        var searchInput = $("#searchInputWrap input");
 		        var searchBtn = $("#searchInputWrap .imgbtn");
-		        var searchInputW = $("#searchInputWrap").width() - searchBtn.outerWidth() - 10;
+		        var searchInputW = $("#searchInputWrap").width() - searchBtn.outerWidth() - 11;
 		        searchInput.width(searchInputW + "px");
 		    }
 		    

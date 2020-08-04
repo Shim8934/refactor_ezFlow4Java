@@ -109,6 +109,7 @@
 			var userLang = "<c:out value = '${userLang}'/>";
 			var useAdditionalRole = "${useAdditionalRole}";
 			var userLang = "${userInfo.lang}";
+		    var primary = "<c:out value = '${primary}'/>"; // 재기안 시 부서명 다국어 분기처리를 위한 primary (1:기본어, 2:다국어)
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    
@@ -844,7 +845,7 @@
 		        if (pCurSelRow) {
 		            var ret = CheckAprLineInfo(pCurSelRow);
 		            if (ret != "OK") {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "<br>" +
+		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "\n" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
 		                //OpenAlertUI(pAlertContent);
 		                alert(pAlertContent);
@@ -1421,7 +1422,7 @@
 		        if (tr) {
 		            var ret = CheckAprLineInfo(tr);
 		            if (ret != "OK") {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "<br>" +
+		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "\n" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
 		                //OpenAlertUI(pAlertContent);
 		                alert(pAlertContent);
@@ -1515,7 +1516,7 @@
 		            
 		            var ret = CheckAprLineInfo(tr);
 		            if (ret != "OK") {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "<br>" +
+		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "\n" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
 		                //OpenAlertUI(pAlertContent);
 		                alert(pAlertContent);
@@ -1642,7 +1643,7 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 				}else{
-					OpenInformationUI("<spring:message code='ezApprovalG.t900002'/>", btnApproveALL_onclick_Complete);
+					OpenInformationUI("<spring:message code='ezApprovalG.t900002'/>" + "<br><spring:message code='ezApprovalG.kbh03'/>", btnApproveALL_onclick_Complete);
 				}
 			}
 

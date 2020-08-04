@@ -2436,7 +2436,15 @@
 	]]>
 	</insert>
 	
-	<select id="EzCommonDAO.checkJmochaBigAttachDownloadLimit">
+	<select id="EzCommonDAO.checkJmochaBigAttachDownloadLimit_new">
+		SELECT 
+			FILE_ID
+		FROM 
+			JMOCHA_BIGATTACH_DOWN_LIMIT
+		LIMIT 1
+	</select>
+	
+	<select id="EzCommonDAO.checkJmochaBigAttachDownloadLimit_old">
 		SELECT 
 			FILE_ID
 		FROM 
@@ -2445,13 +2453,17 @@
 	</select>
 	
 	<statement id="EzCommonDAO.createJmochaBigAttachDownloadLimit">
-		CREATE TABLE `jmocha_bigattach_download_limit` (
+		CREATE TABLE `jmocha_bigattach_down_limit` (
 		  `file_id` varchar(100) NOT NULL,
 		  `download_count` int(10) DEFAULT NULL,
 		  `limit_count` int(10) DEFAULT NULL,
 		  `tenant_id` mediumint(9) NOT NULL,
 		  PRIMARY KEY (`file_id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+	
+	<statement id="EzCommonDAO.renameJmochaBigAttachDownloadLimitToNew">
+		RENAME TABLE JMOCHA_BIGATTACH_DOWNLOAD_LIMIT TO JMOCHA_BIGATTACH_DOWN_LIMIT
 	</statement>
 	
 	<select id="EzCommonDAO.checkMailBigSizeAttachLimitTenantConfig" resultClass="String">
@@ -2817,11 +2829,33 @@
 	
 	<statement id="EzCommonDAO.createTblNoticeBoard">
 		CREATE TABLE `tbl_board_noticeboard` (
-			`BOARDID` varchar(510) NOT NULL,
+			`BOARDID` varchar(80) NOT NULL,
 			`TENANT_ID` mediumint(5) NOT NULL,
 			`COMPANYID` varchar(80) NOT NULL,
 			PRIMARY KEY (`BOARDID`,`TENANT_ID`, `COMPANYID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
+	
+	<select id="EzCommonDAO.checkMobileAttitudeConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'USE_MATTITUDE'
+		AND
+			tenant_id = #tenantId#
+	</select>
+	
+	<select id="EzCommonDAO.checkAttitudeGPSConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'attitudeMapApiKey'
+		AND
+			tenant_id = #tenantId#
+	</select>
 	
 </sqlMap>

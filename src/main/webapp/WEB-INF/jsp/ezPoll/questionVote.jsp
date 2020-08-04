@@ -3386,7 +3386,11 @@
 					<div class="pad1" style="vertical-align: top; padding-top:10px; width: 100%; border: none; display:inline-block; min-height: 150px;" id="messagetd">
 		               <iframe onload="resizeFrame()" id="message_test" style="border: none; overflow: hidden; width: 100%; background-color: #FFF;"></iframe>   	                                 
 		       	 	</div>				
-				</div>			
+				</div>
+
+				<c:if test="${question.status eq '1'}">
+				<span style="color: rgb(224, 67, 67); font-weight: bold;font-size: 15px; display: block; padding-bottom: 5px;">※ <spring:message code='ezPoll.kbh1' /></span>
+				</c:if>
 	
 		        <c:if test="${numOfFile != 0}">
 		        	<div id="attachedFile" class="vote_attachedFile" style="position:relative; overflow: hidden;display:inline-block; width: 100%; border-top:1px solid #e1ebf7; border-left:1px solid #e1ebf7; border-right:1px solid #e1ebf7; margin:0px 0px 20px 0px;">

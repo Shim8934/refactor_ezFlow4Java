@@ -334,37 +334,7 @@ function continusendMail(nextMethod, aprlinelist, sn) {
         }
         
         if (nextMethod == "007") {
-            var isstop = false;
-            var isLastman = "N";
-
-            for (i = sn; i > -1; i--) {
-                sn = i;
-
-                if (objNodes.length != "0") {
-                    nextID = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4]));
-                    Method = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11]));
-
-                    if (Method == nextMethod) {
-                    	isstop = false;
-                    } else {
-                    	isstop = true;
-                    }
-
-                    if (isstop == true) {
-                        break;
-                    } else {  
-                        sendNextMail(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[5]), nextID, Method);
-                        if (i == 0) {  
-                            isLastman = "Y";
-                        }
-                    }
-                }
-                else { break; return; }
-            }
-
-            if (sn >= 0 && isLastman == "N")
-                continusendMail(Method, aprlinelist, sn);
-            return; 
+        	sendMailToChamJoUsers(sn, nextMethod, objNodes, aprlinelist, true);
         } else {
         	 nextID = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[4]));
              Method = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[11]));
@@ -373,11 +343,46 @@ function continusendMail(nextMethod, aprlinelist, sn) {
              if (sn < objNodes.length) {
             	 if(sn-1 >= 0) {
 	            	if (trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn-1])[0])[11])) == "007") {
-	            		continusendMail(trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn - 1])[0])[11])), aprlinelist, sn-1);
+	            		sendMailToChamJoUsers(sn - 1, nextMethod, objNodes, aprlinelist, false);
 	            	}
             	 }
              }
         }
+    }
+}
+
+// nextFlag는 참조자들에게 메일을 보낸 후 다음 결재자에게 메일을 보낼지의 여부이다
+function sendMailToChamJoUsers(sn, nextMethod, objNodes, aprlinelist, nextFlag) {
+	var isstop = false;
+    var isLastman = "N";
+
+    for (var i = sn; i > -1; i--) {
+        sn = i;
+
+        if (objNodes.length != "0") {
+            var nextID = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4]));
+            var Method = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11]));
+
+            if (Method == nextMethod) {
+            	isstop = false;
+            } else {
+            	isstop = true;
+            }
+
+            if (isstop == true) {
+                break;
+            } else {  
+                sendNextMail(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[5]), nextID, Method);
+                if (i == 0) {  
+                    isLastman = "Y";
+                }
+            }
+        }
+        else { break; return; }
+    }
+
+    if (nextFlag && sn >= 0 && isLastman == "N") {
+    	continusendMail(Method, aprlinelist, sn);
     }
 }
 
@@ -786,8 +791,6 @@ function SendMailHesong(CurSelRow) {
 
 }
 
-
-
 function SendMailToCancel(DocID) {
     var linelist = getAprLinefor("APR", DocID);
     var MemberList = createXmlDom();
@@ -798,10 +801,10 @@ function SendMailToCancel(DocID) {
 
     for (i = 0; i < objNodes.length; i++) {
         var nowstate    = getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12]);
-
-        if (nowstate == "002")
+        
+        if (nowstate == "002") {
             break;
-
+        }
     }
 
     var nextID = getNodeText(GetChildNodes(GetChildNodes(objNodes[i - 1])[0])[4]);
@@ -810,11 +813,38 @@ function SendMailToCancel(DocID) {
     DocList.LoadFromID("DocList");
     var oArrRows = DocList.GetSelectedRows();
     var pCurSelRow = oArrRows[0]; 
-
+    
+    /* 2020-07-31 홍승비 - 의견여부 아이콘이 추가되어 발생한 사이드이펙트 수정 */
+    var doctitle = "";
+    var dratertname = "";
+    var startdate = "";
+    
+    // 제목, 기안자, 기안일 데이터를 리스트뷰의 셀에서 가져온다. (리스트헤더의 colname 속성 활용)
+    var docListHeader = $("#DocList").find("tr[id='DocList_TH']");
+    
+    if (docListHeader.length > 0) {
+	    var docTitleIdx = docListHeader.find("th[colname='DOCTITLE']").index();
+	    var drafterNameIdx = docListHeader.find("th[colname='WRITERNAME']").index();
+	    var startDateIdx = docListHeader.find("th[colname='STARTDATE']").index();
+	   
+		if (docTitleIdx >= 0) {
+			doctitle = pCurSelRow.cells[docTitleIdx].innerText;
+		}
+		if (drafterNameIdx >= 0) {
+			dratertname = pCurSelRow.cells[drafterNameIdx].innerText;
+		}
+		if (startDateIdx >= 0) {
+			startdate = pCurSelRow.cells[startDateIdx].innerText;
+		}
+    }
+   
+    // 기존 리스트뷰에서 하드하게 데이터 가져오는 부분 주석처리
+    /*
     var doctitle = pCurSelRow.cells[0].innerText; 
     var dratertname = pCurSelRow.cells[2].innerText;
     var startdate = pCurSelRow.cells[3].innerText;
-
+    */
+    
     sendmail(nextID, doctitle, dratertname, startdate, "callback", "");
 }
 

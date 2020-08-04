@@ -301,6 +301,7 @@ var SurveyCreate     = function() {
 		var code = data.code;
 		switch(code) {
 			case 0 : alert(SurveyMessages.strSaveDraft);
+					 window.parent.frames["left"].surveyId = -1;
 					 window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=draft";
 					 break;
 			case 1 : alert(SurveyMessages.strParamErr) ; break;

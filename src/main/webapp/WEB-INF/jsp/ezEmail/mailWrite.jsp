@@ -188,7 +188,7 @@
         var preview_g_url_forRead = "";
         var previewChk = false;
         var ReadMailOpenNewWin;
-        var g_useAdditionalInfo = ${useAdditionalInfo};
+        var g_useAdditionalInfo = Boolean(${useAdditionalInfo});
         
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -1069,6 +1069,11 @@
 	        
 	        g_originalHTML = message.GetEditorContent();
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
+	        
+	        return setTimeout(function () {
+	        	document.getElementById("spanT674").setAttribute("onclick", "Send_onClick()");
+	        	document.getElementById("spanT48").setAttribute("onclick", "Save_onClick('tempsave')");
+	        }, 20)
 	    }
 		
 	    function removeHTMLTag(html) {
@@ -2282,8 +2287,8 @@
 	            <td style="">
 	                <div id="menu">
 	                    <ul>
-	                        <li><span onclick="Send_onClick()"><spring:message code='ezEmail.t674' /></span></li>
-	                        <li><span onclick="Save_onClick('tempsave')"><spring:message code='ezEmail.t48' /></span></li>
+	                        <li><span id="spanT674"><spring:message code='ezEmail.t674' /></span></li>
+	                        <li><span id="spanT48"><spring:message code='ezEmail.t48' /></span></li>
 	                        <!-- 재은 수정(편지지) -->
 	                        <c:if test="${useLetter == 'YES'}">
 	                        <li><span onclick="Letter_onClick()"><spring:message code='ezEmail.t824' /></span></li>
