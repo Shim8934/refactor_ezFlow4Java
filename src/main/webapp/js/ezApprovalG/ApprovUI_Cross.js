@@ -41,7 +41,7 @@ function putBansongSign() {
             phabyuidate = pSusinSN + "habyuidate";
             phabyuijikwee = pSusinSN + "habyuipositon";
             phabyuidept = pSusinSN + "habyui";
-        } else {1
+        } else {
             phabyuisign = "habyuisign";
             phabyuidate = "habyuidate";
             phabyuijikwee = "habyuipositon";
