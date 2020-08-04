@@ -253,7 +253,7 @@
 	<div style="margin: 0px; height:65px; border:1px solid #ddd; padding:15px; margin-bottom:10px">
 		<div style="text-align:left; font-size:12px" id ="fileNamediv"><spring:message code='ezWebFolder.t119'/></div>
 		<div style="height: 40px; line-height: 40px; margin-top: 10px;">
-			<input id="nameInput" type="text" style="width: 380px; height: 35px; line-height: 35px; font-size: 12px; padding: 0px 10px; border-radius: 5px; border: 1px solid #ddd;">
+			<input id="nameInput" maxlength="50" type="text" style="width: 380px; height: 35px; line-height: 35px; font-size: 12px; padding: 0px 10px; border-radius: 5px; border: 1px solid #ddd;">
 		</div>
 	</div>	
 	<div class="btnpositionNew">
