@@ -44,6 +44,7 @@
 			var searchCArray = new Array();
 			var searchKArray = new Array();
 			var shareId = "${shareId}";
+			var listType = "searchList";
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -123,7 +124,8 @@
 		        var inputkeyword = document.getElementsByName('prekeyword').item(0);
 		        
 		        if (searchFromList) {
-		        	$("#moreSearch").css("display", "block"); 
+		        	$("#moreSearch").css("display", ""); 
+		        	$("#moreSearch2").css("display", ""); 
 	        		var keyCode = document.getElementById("selectDetail1");
 		       		if (searchCheck == 'SUBJECT') {
 		       			keyCode.children[0].setAttribute("selected", "selected");
@@ -144,15 +146,18 @@
 		        	}  
 
 		       		setTimeout(set_searchKey, 1000);
+		    	} else {
+		    		$("#moreSearch").css("display", "none"); 
+		    		$("#moreSearch2").css("display", "none"); 
 		    	}
 		        
-		        if($("#moreSearch").css("display") == "none"){   
-			    	document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 359) + "px";
+		        if($("#moreSearch2").css("display") == "none"){   
+			    	document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 361) + "px";
 				} else {
 				    if (document.documentElement.clientWidth < 837) {
-					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 418) + "px";
+					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 448) + "px";
 					} else {
-					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 391) + "px";
+					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight -  430) + "px";
 					}
 				}
 				
@@ -160,13 +165,13 @@
 		    }
 		    
 		    window.onresize = function () {
-		    	if($("#moreSearch").css("display") == "none"){   
-			    	document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 359) + "px";
+		    	if($("#moreSearch2").css("display") == "none"){   
+			    	document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 361) + "px";
 				} else {
 					if (document.documentElement.clientWidth < 837) {
-					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 418) + "px";
+					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 495) + "px";
 					} else {
-					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 391) + "px";
+					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 468) + "px";
 					}
 				}
 		    }
@@ -181,6 +186,12 @@
 		    function set_searchKey() {
 		    	searchCArray = [];
 		    	searchKArray = [];
+		    	var usepostDate = document.getElementById("selectRange").value;
+				if(usepostDate == "All"){
+					this.usepostDate = false;	
+				} else {
+					this.usepostDate = true;
+				}
 		    	if (!TrimText(ALL.value)) {
 		    		if( $("#moreSearch").css("display") != "none"){
 			    		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) ) {
@@ -210,6 +221,11 @@
 		        		searchCArray.push(TrimText(selectDetail3.value));
 		    			searchKArray.push(TrimText(prekeywordDetail3.value));
 		        	} 
+		        	searchCArray.push("ATTACHSTATUS");
+		        	searchKArray.push(document.querySelector("input[name=attachment]:checked").value);
+		        	
+		        	searchCArray.push("ANDOR");
+		        	searchKArray.push(document.querySelector("input[name=andor]:checked").value);
 	        	}
 	        	start_search();
 		    }
@@ -922,18 +938,50 @@
 		    
 		    function addSearch() {
 				if($("#moreSearch").css("display") == "none"){   
-				    $("#moreSearch").css("display", "block");   
+				    $("#moreSearch").css("display", "");   
+				    $("#moreSearch2").css("display", "");   
 				    if (document.documentElement.clientWidth < 837) {
-					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 418) + "px";
+					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 444) + "px";
 					} else {
-					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 391) + "px";
+					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 468) + "px";
 					}
 				} else {  
 				    $("#moreSearch").css("display", "none");   
-				    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 359) + "px";
+				    $("#moreSearch2").css("display", "none");   
+				    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 361) + "px";
 				} 
 		    }
 		    
+		    function changeLangeEvent(){
+		    	var usepostDate = document.getElementById("selectRange").value;
+				if(usepostDate == "direct"){
+					document.getElementById("datepickerData").style.display = "";
+				    $("#Sdatepicker").datepicker('enable');
+				    $("#Edatepicker").datepicker('enable');
+				} else if(usepostDate == "All"){
+					document.getElementById("datepickerData").style.display = "none";
+				} else {
+					document.getElementById("datepickerData").style.display = "";
+				    $("#Sdatepicker").datepicker('disable');
+				    $("#Edatepicker").datepicker('disable');
+				}
+				
+				var today = new Date();
+				switch(usepostDate) {
+					case "oneWeek":
+						$("#Sdatepicker").datepicker('setDate', '-7d');
+						$("#Edatepicker").datepicker('setDate', today);
+					break;
+					case "oneMonth":
+						$("#Sdatepicker").datepicker('setDate', '-1m');
+						$("#Edatepicker").datepicker('setDate', today);
+					break;
+					case "threeMonth":
+						$("#Sdatepicker").datepicker('setDate', '-3m');
+						$("#Edatepicker").datepicker('setDate', today);
+					break;
+				}
+		    }
 		</script>
 	</head>
 	
@@ -958,8 +1006,9 @@
 			</ul>
 		</div>  
 		<table class="content" style="min-width:632px"> 
-			<tbody><tr style="height:100%;"> 
-				<th nowrap><spring:message code="ezEmail.t642" /></th>
+			<tbody>
+			<tr style="height:100%;"> 
+				<th nowrap ><spring:message code="ezEmail.t642" /></th>
 				<td style="width:100%, padding:8px;">
 					<div style="margin: 5px 5px 0px 5px;padding: 3px;">
 					    <select id="select2" style="height: 25px;margin-right: 5px;">
@@ -995,7 +1044,16 @@
 					    	<span onclick="addSearch()" style="line-height: 25px; vertical-align: middle; height: 25px;"><spring:message code="ezEmail.pyy02" /></span>
 				    	</a>
 			    	</div>
-			    	<div style="margin-bottom: 2px;margin-left: 5px; display: none; padding: 0px 3px 3px 3px;" id="moreSearch">
+			    </td> 
+			</tr>
+			<tr style="height:100%;display:none;" id="moreSearch" > 
+				<th nowrap><spring:message code="ezEmail.t642" /></th>
+				<td style="width:100%, padding:8px;" >
+					<div class="" style="margin-left: 1px;padding: 0px 3px 3px;margin-top: 3px;">
+						<label for="and"><input class="optRdo" type="radio" name="andor" id="and" value="and" checked><span class="optSpan">AND</span></label>
+						<label for="or"><input class="optRdo" type="radio" name="andor" id="or" value="or"><span class="optSpan">OR</span></label>
+					</div>
+			    	<div style="margin-bottom: 2px;margin-left: 5px; padding: 0px 3px 3px 3px;">
 						<div style="display: inline-block; margin-right: 5px; margin-top:2px;">
 							<select name="select" class="text" id="selectDetail1" style="height: 25px;margin-right: 5px;width: 86px;">
 								<option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
@@ -1028,12 +1086,35 @@
 						</div>
 				    </div>
 			    </td> 
-			</tr> 
+			</tr>
+			<!--  첨부파일 유무 -->
+			<tr id="moreSearch2" style="display:none;">
+		     	<th><spring:message code="ezEmail.pyy13" /></th>	
+			    <td style="height: 40px;">
+			    	<div class="" style="/* margin-bottom: 2px; */margin-left: 1px;padding: 0px 3px 3px;margin-top: 3px;">
+						<label for="all"><input class="optRdo" type="radio" id="all" name="attachment" value="all" checked>
+							<span class="optSpan"><spring:message code="ezEmail.pyy14" /></span></label>
+						<label for="contain"><input class="optRdo" type="radio" id="contain" name="attachment" value="contain">
+							<span class="optSpan"><spring:message code="ezEmail.pyy15" /></span></label>
+						<label for="Ncontain"><input class="optRdo" type="radio" id="Ncontain" name="attachment" value="Ncontain">
+							<span class="optSpan"><spring:message code="ezEmail.pyy16" /></span></label>
+					</div>
+			    </td>
+			</tr>
+			<!--  검색기간 -->
 			<tr>
 		     	<th><spring:message code="ezEmail.t653" /></th>	
 			    <td style="height: 40px;">
-			    	<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code="ezEmail.t654" /></label>
-			    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;" readonly> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;" readonly>
+			    	<div style="margin: 0px 5px 0px 5px;padding: 3px;">
+						<select name="select" class="text" id="selectRange" onchange="changeLangeEvent()" style="height: 25px;margin-right: 5px;width: 86px;">
+							<option selected value="All">ALL</option> 
+							<option value="oneWeek"><spring:message code="ezEmail.pyy17" /></option> 
+							<option value="oneMonth"><spring:message code="ezEmail.pyy18" /></option> 
+							<option value="threeMonth"><spring:message code="ezEmail.pyy19" /></option> 
+							<option value="direct"><spring:message code="ezEmail.pyy20" /></option> 
+						</select>
+				    	<span id="datepickerData" style="display:none;"><input type="text" id="Sdatepicker" style="width:80px;text-align:center;margin-top:-5px;" readonly> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;margin-top:-5px;" readonly></span>
+			    	</div>
 			    </td>
 			</tr>
 		</tbody></table>
@@ -1051,7 +1132,7 @@
 		<h2 class="h2_dot"><spring:message code="ezEmail.t655" /><span id="resultCount"></span></h2>
 		    
 		<div id="printblock"> 
-			<table class="mainlist" style="width:100%;table-layout:fixed;" id="mainlist">
+			<table class="mainlist" style="width:100%;table-layout:fixed;" id="maillist">
 				<tr> 
 			        <th style="width: 26px; padding: 0px; color: black;padding-left:3px;" align="center" nowrap title><input type="checkbox" onClick="check_change(this)" id="Checkbox1"></th>
 			        <th style="width: 24px; padding: 0px; color: black;padding-left:3px;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="importance" orderoption="ASC" ><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
