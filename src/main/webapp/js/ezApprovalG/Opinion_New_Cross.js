@@ -509,19 +509,34 @@ function getAprOpinionXML(pOpContent) {
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA9",  ppUserTitle);
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA10", ppUserTitle2);
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA11", ppUserDeptName);
-        createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA12", ppUserDeptName);
+        createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA12", ppUserDeptName2);
         /* 2020-04-02 홍승비 - 신규 작성된 반송, 보류, 회송의견 판별용 데이터 추가 */
         if (typeof(isNewBBHOpinionFlag) != "undefined" && isNewBBHOpinionFlag != null) {
         	createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "ISNEWBBHOPINION", isNewBBHOpinionFlag);
         }
 
+        /* 2020-08-06 홍승비 - 전자결재 의견작성 후 저장 > 의견 리스트에 작성한 의견 표출 시 다국어 대응하도록 수정 */
         CELL = createNodeAndAppandNode(objXML, ROW, CELL, "CELL");
-        createNodeAndAppandNodeText(objXML, CELL, CELLVALUE, "VALUE", ppUserDisplayName);
+        if (primary == "1") {
+        	createNodeAndAppandNodeText(objXML, CELL, CELLVALUE, "VALUE", ppUserDisplayName);
+        } else {
+        	createNodeAndAppandNodeText(objXML, CELL, CELLVALUE, "VALUE", ppUserDisplayName2);
+        }
+        
         CELL = createNodeAndAppandNode(objXML, ROW, CELL, "CELL");
-        createNodeAndAppandNodeText(objXML, CELL, CELLVALUE, "VALUE", ppUserTitle);
+        if (primary == "1") {
+        	createNodeAndAppandNodeText(objXML, CELL, CELLVALUE, "VALUE", ppUserTitle);
+        } else {
+        	createNodeAndAppandNodeText(objXML, CELL, CELLVALUE, "VALUE", ppUserTitle2);
+        }
+        
         CELL = createNodeAndAppandNode(objXML, ROW, CELL, "CELL");
-        createNodeAndAppandNodeText(objXML, CELL, CELLVALUE, "VALUE", ppUserDeptName);
-
+        if (primary == "1") {
+        	createNodeAndAppandNodeText(objXML, CELL, CELLVALUE, "VALUE", ppUserDeptName);
+        } else {
+        	createNodeAndAppandNodeText(objXML, CELL, CELLVALUE, "VALUE", ppUserDeptName2);
+        }
+        
         return objXML;
 	} catch (e) {
 		alert("getAprOpinionXML_2 ::" + e.description);
