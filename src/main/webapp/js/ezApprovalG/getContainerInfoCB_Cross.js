@@ -383,10 +383,20 @@ function processRowClick(tr) {
             }
         }
 
+        /* 2020-08-06 홍승비 - 기록물등록대장 > 재발송 버튼 표출 시 리스트헤더의 칼럼 데이터를 colname 활용하여 가져오도록 수정 */
         if (WriterID == arr_userinfo[1]) {
             try {
-                if (typeof (tr.cells[12].innerHTML) == "string") {
-                    if (tr.cells[12].innerHTML == strLang597 && tr.cells[11].innerHTML == "") {
+            	var rejectFlagIdx = 0; // 반려칼럼 인덱스
+            	var resendFlagIdx = 0; // 수신칼럼 인덱스
+            	var docListHeader = $("#DocList").find("tr[id='DocList_TH']");
+            	
+            	if (docListHeader.length > 0) {
+            		rejectFlagIdx = docListHeader.find("th[colname='REJECTFLAG']").index();
+            		resendFlagIdx = docListHeader.find("th[colname='RESENDFLAG']").index();
+            	}
+            	
+                if (typeof (tr.cells[resendFlagIdx].innerHTML) == "string") {
+                    if (tr.cells[resendFlagIdx].innerHTML == strLang597 && tr.cells[rejectFlagIdx].innerHTML == "") { // 수신칼럼 = "발송", 반려칼럼 = ""인 경우 재발송 버튼 표출
                     
                         if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
                             document.getElementById("tdReSend").style.display = "";
