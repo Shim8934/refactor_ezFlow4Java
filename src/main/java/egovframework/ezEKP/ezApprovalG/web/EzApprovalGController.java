@@ -9826,6 +9826,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 		
 		logger.debug("aprOpinionNew ended.");
 		return "ezApprovalG/apprGaprOpinionNew";
@@ -9839,8 +9840,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		logger.debug("aprOpinionPopup ended.");
+		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 		
+		logger.debug("aprOpinionPopup ended.");
 		return "ezApprovalG/apprGaprOpinionPopup";
 	}
 	
