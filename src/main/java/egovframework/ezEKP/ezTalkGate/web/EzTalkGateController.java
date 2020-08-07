@@ -287,7 +287,7 @@ public class EzTalkGateController {
         
         logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 		
-		boolean isUserExists = checkIfUserExists(orgId, orgPw, tenantId);
+		boolean isUserExists = checkIfUserExists(orgId, tenantId);
 		
 		logger.debug("isUserExists=" + isUserExists);
 		
@@ -312,11 +312,10 @@ public class EzTalkGateController {
 			String compId = userVO.getPhysicalDeliveryOfficeName();
 			
 			// sso 접속시에도 로그인 이력 남도록 추가  
-			String encryptPw = EgovFileScrty.encryptPassword(orgPw, orgId);
 			LoginVO setVo = new LoginVO();
 			setVo.setId(orgId);
 			setVo.setTenantId(tenantId);
-			setVo.setPassword(encryptPw);
+			setVo.setDn("NOPASSWORD");
 			
 			LoginVO vo = loginService.selectUser(setVo);
 			
@@ -387,7 +386,7 @@ public class EzTalkGateController {
 			int tenantId = loginService.getTenantId(serverName);
 			logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 			
-			boolean isUserExists = checkIfUserExists(orgId, orgPw, tenantId);
+			boolean isUserExists = checkIfUserExists(orgId, tenantId);
 			logger.debug("isUserExists=" + isUserExists);
 			
 			if (isUserExists) {
@@ -396,7 +395,7 @@ public class EzTalkGateController {
 				LoginVO setVo = new LoginVO();
 				setVo.setId(orgId);
 				setVo.setTenantId(tenantId);
-				setVo.setPassword(encryptPw);
+				setVo.setDn("NOPASSWORD");
 				
 				LoginVO vo = loginService.selectUser(setVo);
 				logger.debug("id=" + orgId + ", pw=" + encryptPw + ", companyId=" + vo.getCompanyID());
@@ -680,20 +679,29 @@ public class EzTalkGateController {
 		return result;
 	}
 
+	private boolean checkIfUserExists(String id, int tenantId) throws Exception {
+		return checkIfUserExists(id, null, tenantId);
+	}
+
 	private boolean checkIfUserExists(String id, String pw, int tenantId) throws Exception {
 		logger.debug("checkIfUserExists started. id=" + id + ",tenantId=" + tenantId);
 		
 		boolean isUserExists = false;
 		
-		String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
-		
-		logger.debug("encryptedPw=" + encryptedPw);
-		
 		LoginVO loginVO = new LoginVO();	
 		tenantId = 0;
 		loginVO.setId(id);
-		loginVO.setPassword(encryptedPw);
 		loginVO.setTenantId(tenantId);
+
+		if (pw == null) {
+			loginVO.setDn("NOPASSWORD");
+		} else {
+			String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
+
+			logger.debug("encryptedPw=" + encryptedPw);
+
+			loginVO.setPassword(encryptedPw);
+		}
 		
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		

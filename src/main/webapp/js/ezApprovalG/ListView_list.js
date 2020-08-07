@@ -513,8 +513,9 @@ function ListView() {
                 var strClass = "h5_center";  // 현재는 header에 class가 없으므로 고정함. //SelectSingleNodeValue(oHeaders[i], "CLASSNAME");	
                 
                 var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
-                if(strColName == "DocTitle" || strColName === _title)
+                if(strColName == "DocTitle" || strColName === _title) {
                     _titleIdx = i;
+                }
                 
                 //2019-04-09 천성준 - (#15424) 공람정보 팝업에서 결재일시 잘려나오는것 때문에 width +20px해주는거 같은데 지금은 UI가 바뀌어서 필요없음 
                 /*if (strColName == "ProcessDate") {
@@ -535,6 +536,8 @@ function ListView() {
                         objTd.onclick = new Function(_headeronclick + "('" + strName + "');");
                 }
 
+                /* 2020-07-31 홍승비 - 리스트헤더 th에 colname 속성 부여 */
+                objTd.setAttribute("COLNAME", strColName.toUpperCase());
 
                 if (strStyle != "") {
                     if (_headeronclick != null && _headeronclick != ""  ) {
