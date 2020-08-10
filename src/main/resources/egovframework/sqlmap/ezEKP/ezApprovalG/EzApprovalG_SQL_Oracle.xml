@@ -2257,7 +2257,7 @@
                 TBOLD.CreateOrganName ,
                 TBOLD.RecordNo ,
                 TBOLD.KeepingPeriod RECKP  ,
-                SUBSTR(TBL_RECORD.RegisterNo, 8, 6) RECREGSN  
+                SUBSTR(TBL_RECORD.RegisterNo, -6) RECREGSN  
            FROM 
            		 TBL_RECORD 
            JOIN 
@@ -2328,7 +2328,7 @@
                 NVL(TBOLD.CreateOrganName2, TBOLD.CreateOrganName) CREATEORGANNAME  ,
                 TBOLD.RecordNo ,
                 TBOLD.KeepingPeriod RECKP  ,
-                SUBSTR(TBL_RECORD.RegisterNo, 8, 6) RECREGSN  
+                SUBSTR(TBL_RECORD.RegisterNo, -6) RECREGSN
            FROM 
            		TBL_RECORD 
            JOIN 
@@ -5815,7 +5815,10 @@
 						TBL_CABINET.OwnerTask, 
 						TBL_RECORD.RejectFlag, 
 						TBL_EXPENDAPRDOCINFO.PUBLICITYYN,
-						TBL_RECORD.ReceiptMemberName$multiLang$ as ReceiptName
+						TBL_RECORD.ReceiptMemberName$multiLang$ as ReceiptName,
+						TBL_RECORD.ProcessDeptCode RECDEPTCODE,
+						TBL_RECORD.ProcessDeptName RECDEPTNAME,
+						SUBSTR(TBL_RECORD.RegisterNo, -6) RECREGSN
 				  <isEqual property="usePublicFlag" compareValue="true">
 				  		, TBL_EXPENDAPRDOCINFO.SecurityApproval 
 				  </isEqual> 

@@ -6718,7 +6718,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 						
 						if (findHwpField("docnumber", hwpFile)) {
-							docNO = getRecRegSNToName(strDeptName, createDocNO(cabinetSN , docNumZeroCnt), strDeptID, userInfo.getTenantId());
+							docNO = getRecRegSNToName(strDeptName, createDocNO(cabinetSN , docNumZeroCnt), strDeptID, userInfo.getTenantId(), companyID);
 							setHwpText("docnumber", docNO, hwpFile);
 						}
 						
@@ -6758,7 +6758,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 						
 						if (findHwpField("receiptnumber", hwpFile)) {
-							docNO = getRecRegSNToName(strDeptName, createDocNO(cabinetSN , docNumZeroCnt), strDeptID, userInfo.getTenantId());
+							docNO = getRecRegSNToName(strDeptName, createDocNO(cabinetSN , docNumZeroCnt), strDeptID, userInfo.getTenantId(), companyID);
 							setHwpText("receiptnumber", docNO, hwpFile);
 						}
 						
@@ -9302,9 +9302,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				case "dtRegisterNo" :						// 기록물 등록번호
 					//기록물 등록번호(처리과기관코드+기록물등록연번)
 					resultXML.append(getRecRegSNToName(makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(k).getTextContent()),
-						makeListField(docXML.getElementsByTagName("RECREGSN").item(k).getTextContent()), makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(k).getTextContent()), tenantID));
+						makeListField(docXML.getElementsByTagName("RECREGSN").item(k).getTextContent()), makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(k).getTextContent()), tenantID, recordListVO.getCompanyID()));
 					break;
-
+				case "dtDocNoOrRegNo":
+				    String tempNo = makeListField(docXML.getElementsByTagName("DISPREGISTERNO").item(k).getTextContent());
+				    tempNo = tempNo.isEmpty() 
+				        ? getRecRegSNToName(
+				            makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(k).getTextContent()), 
+				            makeListField(docXML.getElementsByTagName("RECREGSN").item(k).getTextContent()), 
+				            makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(k).getTextContent()), 
+				            tenantID, recordListVO.getCompanyID()) 
+				        : tempNo;
+			                        
+				    resultXML.append(tempNo);
+				    break;
 				case "dtRegisterType" :						// 등록구분
 					resultXML.append(getRegTypeString(makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(k).getTextContent()), recordListVO.getCompanyID(), primaryData, tenantID));
 					break;
@@ -18329,14 +18340,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getRegTypeString(String pCode, String companyID, String lang, int tenantID) throws Exception{
 		return getCabinetCode2Name("003", pCode, companyID, lang, tenantID);
 	}
-
-	public String getRecRegSNToName(String deptName, String regNo, String deptID, int tenantID) throws Exception {
+	
+	public String getRecRegSNToName(String deptName, String regNo, String deptID, int tenantID, String companyID) throws Exception {
 		String symbolDeptName = getDeptSymbol(deptID, tenantID);
+		String docNumZeroCnt = getDocNumZeroCnt(companyID, tenantID);
+		
+		String regNoWithZero = String.format("%0" + docNumZeroCnt + "d", Integer.parseInt(regNo));
 
 		if (symbolDeptName != null && !symbolDeptName.equals("")) {
-			return symbolDeptName + "-" + regNo;
+			return symbolDeptName + "-" + regNoWithZero;
 		} else {
-			return deptName + "-" + regNo;
+			return deptName + "-" + regNoWithZero;
 		}
 	}
 
@@ -21239,7 +21253,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<DEPTCODE>" + makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()) + "</DEPTCODE>");
 		resultXML.append("<DEPTNAME>" + makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()) + "</DEPTNAME>");
 		
-		resultXML.append("<REGNO><![CDATA[" + getRecRegSNToName(makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()), makeListField(docXML.getElementsByTagName("RECREGSN").item(0).getTextContent()), makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()), tenantID) + "]]></REGNO>");
+		resultXML.append("<REGNO><![CDATA[" + getRecRegSNToName(makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()), makeListField(docXML.getElementsByTagName("RECREGSN").item(0).getTextContent()), makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()), tenantID, companyID) + "]]></REGNO>");
 		
 		resultXML.append("<APRMEMBER><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent()) + "]]></APRMEMBER>");
 		resultXML.append("<DRAFTER><![CDATA[" + makeListField(docXML.getElementsByTagName("DRAFTERNAME").item(0).getTextContent()) + "]]></DRAFTER>");
