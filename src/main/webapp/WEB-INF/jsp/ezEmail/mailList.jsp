@@ -9,19 +9,32 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/previewmail.css')}">
+		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/search_mail.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/Newemail.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component_utf8.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>		
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/date_component.js')}"></script>
+		<script  type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/datepicker.htc.js')}"></script>
+		<script  type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/composeappt.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<script type="text/javascript">
 		    var g_bdraft = false;
 		    var g_moveUrl = "${url}";
-		    var g_expath = "exchange";
+		    var g_servername = "${serverName}";	
+			var g_expath = "exchange";
+			var g_userID = "${userId}";
 		    var g_szRootFolderName = '${folderName}';
 		    var g_bPrevShow = false;
 		    var g_ViewID = null;
@@ -104,6 +117,14 @@
 		    var useShowSystemCountry = "${useShowSystemCountry}";
 		    var file 		 = new Array();
 		    var useMailConfirm = "${useMailConfirm}";
+		    var mailsearchDetail = "N";
+		    var mailSearchDetailCheck = "N";// 메일 검색을 위해 height를 200을 줄였는지 체크하는 config
+		    var offsetMin = "${offsetMin}";
+		    var searchCArray = new Array();
+			var searchKArray = new Array();
+			var startDate = "";
+			var endDate = "";
+			var listType = "mailList";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -122,6 +143,64 @@
 		    window.onresize = Window_resize;
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
+		    $(function () {
+		        $("#Sdatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
+		            buttonImageOnly: true
+		        });
+		        $("#Edatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
+		            buttonImageOnly: true
+		        });
+		        var NowDate = utcDate2(offsetMin);
+		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Sdatepicker").datepicker('setDate', NowDate);
+		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Edatepicker").datepicker('setDate', NowDate);
+		        $(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
+		    });
+		    
+		    $(function () {
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		            closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+		            currentText: "<spring:message code='main.t0606' />",
+		            monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+		                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+		                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+		                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+		            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+		                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+		                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+		                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+		            dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+		                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+		                       "<spring:message code='main.t0627' />"],
+		            dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+				                       "<spring:message code='main.t0627' />"],
+		            dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+			                       "<spring:message code='main.t0627' />"],
+		            weekHeader: "Wk",
+		            dateFormat: "yy-mm-dd",
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: "show",
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		    });
 		    window.onload = function () {
 		    	
 		    	var listWidth = 0;
@@ -271,7 +350,7 @@
 		                document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		                document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
 		                document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-		                document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+						document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
 		                document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH) + "px";
 		                document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 2 + "px";
 		                document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
@@ -311,6 +390,10 @@
 		        GetListInfo(HeaderObject, ContentObject);	        
 		        PreviewMode_ChangeBtn();
 		        window_onunload_Event = true;
+		        document.getElementById("select2").value = "${folderName}";
+		        $("#Sdatepicker").datepicker('disable');
+			    $(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
+			    $("#Edatepicker").datepicker('disable');
 		    }
 		    
 		    $(document).ready(function() {
@@ -430,12 +513,19 @@
 		    function onkeydown_start_search(evt) {
 		        var curevent = (typeof event == 'undefined' ? evt : event)
 		        if (curevent.keyCode == "13") {
-		            start_search();
+		        	if($("#moreSearch").css("display") == "none"){ 
+						start_search2();
+		        	} else {
+		        		set_searchKey();
+		        	}
+		            
 		        }
 		    }
 		    
 		    var searchFromList = false;
-		    function start_search() {
+		    function start_search2() {
+		    	searchCArray = [];
+		    	searchKArray = [];
 		        ContextMenuHidden();
 		    	searchMode = true;
 		        var inputkeyword = document.getElementsByName('keyword').item(0);
@@ -449,16 +539,70 @@
 		            alert(strLang254);
 		            return;
 		        }
+		        startDate = "", endDate = "";
 		        
 		        var searchField = document.getElementById("searchCheck");
 		        SearchKeyword = searchField.value + "=" + inputkeyword.value;
 		        
+		        if (inputkeyword.value != null){
+		      		searchCArray.push(TrimText(searchField.value));
+		  			searchKArray.push(TrimText(inputkeyword.value));
+	    		}
+		        mailsearchDetail = "N";
+		        
+		        goToPageByNum("1");
+		    }
+		    
+		    function start_search() {
+		    	mailsearchDetail = "Y";
+		    	ContextMenuHidden();
+		    	searchMode = true;
+		        listContentArry = new Array();
+		        listEventCheckbox = false;
+		        PressShiftKey = false;
+		        PressCtrlKey = false;
+		        
+		        if (!searchKArray) {
+		            alert(strLang254);
+		            return;
+		        }
+
+		        if (g_searchHttp != null)
+		            return;
+
+		        resultCount.innerHTML = "";
+		        recordCount = 0;
+
+		        var sYear, sMonth, sDay, eYear, eMonth, eDay, sTime, eTime;
+		        var i;
+		        var bError = false;
+		        startDate = "", endDate = "";
+
+		        if (usepostDate) {
+		            startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+		            endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+
+		            var sDate = new Date(startDate.split(' ')[0].split('-')[0], startDate.split(' ')[0].split('-')[1], startDate.split(' ')[0].split('-')[2]);
+		            var eDate = new Date(endDate.split(' ')[0].split('-')[0], endDate.split(' ')[0].split('-')[1], endDate.split(' ')[0].split('-')[2]);
+
+		            if (startDate > endDate) {
+		                alert(strLang312);
+		                return;
+		            }
+		        }
+
+		        var baseURL = document.location.protocol + "//" + g_servername + "/" + g_expath + "/" + g_userID + "/";
+
+		        var sMailFolder = TrimText(select2.value);
+		        ShowMailProgress();
 		        goToPageByNum("1");
 		    }
 		    
 		    function searchInThisBoxByName() {
 		    	searchMode = true;
 		        var keywordFromList = "";
+		        searchCArray = [];
+		    	searchKArray = [];
 		        if (isSentItems == "true") {
 		    		var receiver = currentFixingId.cells[5].getAttribute('data-name');
 		    		
@@ -494,6 +638,14 @@
 		    	var inputkeyword = document.getElementsByName('keyword').item(0);
 		    	inputkeyword.value = keywordFromList;
 		    	 
+		    	var searchField = document.getElementById("searchCheck");
+		        SearchKeyword = searchField.value + "=" + inputkeyword.value;
+		        
+		        if (inputkeyword.value != null){
+		      		searchCArray.push(TrimText(searchField.value));
+		  			searchKArray.push(TrimText(inputkeyword.value));
+	    		}
+		    	
 		    	SearchKeyword = searchField + "=" + inputkeyword.value;
 		        goToPageByNum("1");
 		    	
@@ -1064,29 +1216,203 @@
 			        }
 			    }
 			}
-			
+			function addSearch() {
+				if($("#moreSearch").css("display") == "none"){   
+					document.getElementById("mailPanel").style.display = "";
+				    $("#moreSearch").css("display", "block");   
+				    $("#searchButton").css("display", "");   
+				    document.getElementsByName("keyword")[0].disabled = true;
+				    document.getElementById("searchCheck").style.backgroundColor="rgb(235,235,228)";
+				    document.getElementById("searchCheck").disabled = true;
+				} else {  
+					document.getElementById("mailPanel").style.display == "none";
+				    $("#moreSearch").css("display", "none");   
+				    $("#searchButton").css("display", "none");   
+				    document.getElementsByName("keyword")[0].disabled = false;
+				    document.getElementById("searchCheck").disabled = false;
+				    document.getElementById("searchCheck").style.backgroundColor="white";
+				} 
+			}
+			function doLayerPopup() {
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	        	
+	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+	        	
+	        	$("#srarchpopup").css("left", popupX);
+	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	
+	        	// 검색 레이어 팝업 열기 전에 input 내용 지워주도록 처리. 2019-08-02 홍대표.
+	        	var inputElem = document.getElementById("srarchpopup").getElementsByTagName("input");
+	        	[].forEach.call(inputElem, function(elem){
+	        		if(elem.type == "checkbox") {
+	        			elem.checked = false;
+	        		}
+	        		
+	        		elem.value = "";
+	        	});
+	        	
+	        	$("#srarchpopup").modal();
+	        }
+			function initializationSearchData(){
+				$("#selectDetail1").val("SUBJECT");
+				$("#selectDetail2").val("CONTENT");
+				$("#selectDetail3").val("FROM");
+				$("#all").val("FROM");
+				$('input:radio[name="attachment"][id="all"]').prop('checked', true);
+				$('input:radio[name="andor"][value="and"]').prop('checked', true);
+				$("#selectRange").val("All");
+				$("input:text[name='prekeyword']").val("");
+				var today = new Date();
+				$("#Sdatepicker").datepicker('setDate', today);
+				$("#Edatepicker").datepicker('setDate', today);
+				changeLangeEvent();
+			}
 		</script>	
 	</head>
 	<body style="overflow:hidden;margin-bottom:0px;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
-		<h1>${folderName}<span id="mailBoxInfo"></span>
-	      <span class="searchForm">
-              <select name="searchCheck" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
-                  <option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option>
-                  <c:if test="${isSentItems != true}">
-                  <option value="FROM"><spring:message code="ezEmail.t161" /></option>
-                  </c:if>
-                  <c:if test="${isSentItems == true}">
-                  <option value="RECEIVE"><spring:message code="ezEmail.t651" /></option>
-                  </c:if>
-                  <c:if test="${useSearchContent == 'YES'}">
-                  <option value="CONTENT"><spring:message code="ezEmail.t649" /></option>
-                  </c:if>
-              </select>
+		<h1>${folderName}<span id="mailBoxInfo"></span><span id ="resultCount" style="display:none;"></span>
+			<span class="searchForm" style="margin-right:53px;">
+				<select name="searchCheck searchFilter" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
+					<option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option>
+					<c:if test="${isSentItems != true}">
+						<option value="FROM"><spring:message code="ezEmail.t161" /></option>
+					</c:if>
+					<c:if test="${isSentItems == true}">
+						<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option>
+					</c:if>
+					<c:if test="${useSearchContent == 'YES'}">
+						<option value="CONTENT"><spring:message code="ezEmail.t649" /></option>
+					</c:if>
+				</select>
 			  
-			  <input name="keyword" class="searchinputBox" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
-	          <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="start_search()"></a>
-	      </span>
-	    </h1>	
+				<input name="keyword" class="searchinputBox" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
+				<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onclick="start_search2()"></a>
+				<a class="searchFilterBtn"><img src="/images/bsearch_new2_filter.gif" border="0" onclick="addSearch()"></a>
+				<div class="layerPopup_new" id="moreSearch" style="display:none;z-index:6000;" >
+		        	<ul class="content_layout">
+		        		<li class="content_layout_left">
+							<p class="text_th"><spring:message code="ezEmail.pyy22" /><span class="point_red">*</span></p>
+						</li>
+						<li class="content_layout_center">
+							<ul class="content_layout">
+								<li class="content_layout_center">
+									<span class="radio_design">
+										<input type="radio" id="and" name="andor" checked="checked" value="and">
+										<label for="and">AND</label>
+									</span>
+									<span class="radio_design">
+										<input type="radio" id="or" name="andor" value="or">
+										<label for="or">OR</label>
+							        </span>
+							    </li>
+							</ul>
+							<ul class="content_layout">
+								<li class="content_layout_left mr10">
+									<select name="select" class="text" id="selectDetail1" style="height: 25px;margin-right: 3px;width: 86px;">
+										<option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
+										<option value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
+										<option value="FROM"><spring:message code="ezEmail.t161" /></option> 
+										<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+										<option value="FILE"><spring:message code="ezEmail.pyy12" /></option> 
+									</select>
+								</li>
+								<li class="content_layout_center">
+									<span class="textbox_design"><input type="text" name="prekeyword" id="prekeywordDetail1" style="vertical-align: top;height: 25px;" onKeyPress="onkeydown_start_search(event);"/></span>
+								</li>
+							</ul>
+							<ul class="content_layout">
+								<li class="content_layout_left mr10">
+									<select name="select" class="text" id="selectDetail2" style="height: 25px;margin-right: 3px;width: 86px;">
+										<option value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
+										<option selected value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
+										<option value="FROM"><spring:message code="ezEmail.t161" /></option> 
+										<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+										<option value="FILE"><spring:message code="ezEmail.pyy12" /></option> 
+									</select>
+								</li>
+								<li class="content_layout_center">
+									<span class="textbox_design"><input type="text" name="prekeyword" id="prekeywordDetail2" style="vertical-align: top;height: 25px;" onKeyPress="onkeydown_start_search(event);"/></span>
+								</li>
+							</ul>
+							<ul class="content_layout">
+								<li class="content_layout_left mr10">
+									<select name="select" class="text" id="selectDetail3" style="height: 25px;margin-right: 3px;width: 86px;">
+										<option value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
+										<option value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
+										<option selected value="FROM"><spring:message code="ezEmail.t161" /></option> 
+										<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+										<option value="FILE"><spring:message code="ezEmail.pyy12" /></option> 
+									</select>
+								</li>
+								<li class="content_layout_center">
+									<span class="textbox_design"><input type="text" name="prekeyword" id="prekeywordDetail3" style="vertical-align: top;height: 25px;" onKeyPress="onkeydown_start_search(event);"/></span>
+								</li>
+							</ul>
+						</li>
+					</ul>
+						
+					<ul class="content_layout">
+						<li class="content_layout_left">
+		<%-- 					<p class="text_th"><spring:message code="ezEmail.pyy13" /></p> --%>
+							<p class="text_th"><spring:message code="ezEmail.t557" /></p>
+						</li>
+						<li class="content_layout_center">
+							<ul class="content_layout">
+								<li class="content_layout_center">
+									<span class="radio_design">
+		                                 <input type="radio" id="all" name="attachment" checked="checked" value="all">
+		                                 <label for="all"><spring:message code="ezEmail.pyy14" /></label>
+		                             </span>
+		                             <span class="radio_design">
+		                                 <input type="radio" id="contain" name="attachment" value="contain">
+		                                 <label for="contain"><spring:message code="ezEmail.pyy15" /></label>
+		                             </span>
+		                             <span class="radio_design">
+		                                 <input type="radio" id="Ncontain" name="attachment" value="Ncontain">
+		                                 <label for="Ncontain"><spring:message code="ezEmail.pyy16" /></label>
+		                             </span>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="content_layout">
+						<li class="content_layout_left">
+							<p class="text_th"><spring:message code="ezEmail.t653" /></p>
+						</li>
+						<li class="content_layout_center">
+							<ul class="content_layout">
+								<li class="content_layout_left mr10">
+									<select name="select" class="text" id="selectRange" onchange="changeLangeEvent()" style="height: 25px;margin-right: 5px;width: 86px;">
+										<option selected value="All">ALL</option> 
+										<option value="oneWeek"><spring:message code="ezEmail.pyy17" /></option> 
+										<option value="oneMonth"><spring:message code="ezEmail.pyy18" /></option> 
+										<option value="threeMonth"><spring:message code="ezEmail.pyy19" /></option> 
+										<option value="direct"><spring:message code="ezEmail.pyy20" /></option> 
+									</select>
+								</li>
+							</ul>
+							<ul class="content_layout">
+								<li class="content_layout_center">
+									<span id="datepickerData">
+										<input type="text" id="Sdatepicker" style="height:30px;" disabled="" readonly size="10" > ~ 
+			    						<input type="text" id="Edatepicker" style="height:30px;" size="10" disabled=""></span>
+									</span>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<div class="layerPopup_button">
+						<ul class="content_layout">
+							<li class="content_layout_right ml15" onclick="set_searchKey()"><span class="button_style01"><spring:message code="ezEmail.t37" /></span></li>
+							<li class="content_layout_right ml15" style="display:none;"><span class="button_style02"><spring:message code="ezEmail.t39" /></span></li> <!-- 확인/취소 시에 사용예정 -->
+							<li class="content_layout_right" onclick="initializationSearchData();"><span class="button_style03"><spring:message code="ezEmail.pyy21" /></span></li>
+						</ul>
+					</div>
+				</div>
+			</span>
+	    </h1>
+	    
         <div id="mainmenu">
 	        <ul id="tb_Parent">
 	          <li id="newMailBtn" class="important"><span onClick="new_mail_onclick()"><spring:message code="ezEmail.t510" /></span></li>
@@ -1133,6 +1459,7 @@
 			 </div>
 	        </ul>
         </div>
+        
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
@@ -1394,5 +1721,110 @@
 	    <div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 		</div>
+		<input name="keyword" id="keyword" style="vertical-align: top; display: none;" onkeyup="return search_keypress(event)">
+		<input name="prekeyword" id="ALL" style="vertical-align: top;height:25px; margin-right:5px;display:none;" onkeyup="return search_keypress(event)" placeholder=<spring:message code="ezEmail.t641" />>
+		<span style="display:none;" value="${folderName}"/>
+		<select id="select2" style="height: 25px;margin-right: 5px; display:none;">
+			    	<option value="ALL"><spring:message code="ezEmail.t643" /></option>      
+				    <c:forEach var="folderName" items="${topLevelFolderNames}" varStatus="status">
+				    <option value="${folderName}">
+						<c:choose>
+							<c:when test="${folderName eq 'INBOX'}">
+								<spring:message code="ezEmail.t644" />
+							</c:when>
+							<c:when test="${folderName eq 'Sent'}">
+								<spring:message code="ezEmail.t645" />
+							</c:when>
+							<c:when test="${folderName eq 'Drafts'}">
+								<spring:message code="ezEmail.t646" />
+							</c:when>
+							<c:when test="${folderName eq 'Trash'}">
+								<spring:message code="ezEmail.t647" />
+							</c:when>
+							<c:when test="${folderName eq 'Personal folder'}">
+								<spring:message code="ezEmail.t648" />
+							</c:when>
+							<c:otherwise>
+								${folderName}
+							</c:otherwise>
+						</c:choose>      	
+				    </option>
+				    </c:forEach>
+			    </select>
+				
+		
 	</body>
+	<script>
+	function set_searchKey() {
+    	searchCArray = [];
+    	searchKArray = [];
+    	var usepostDate = document.getElementById("selectRange").value;
+		if(usepostDate == "All"){
+			this.usepostDate = false;	
+		} else {
+			this.usepostDate = true;
+		}
+    	
+   		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) ) {
+    		alert(strLang254);
+            return;
+   		} 
+
+       	if (prekeywordDetail1.value) {
+       		searchCArray.push(TrimText(selectDetail1.value));
+   			searchKArray.push(TrimText(prekeywordDetail1.value));
+       	} 
+       	if (prekeywordDetail2.value) {
+       		searchCArray.push(TrimText(selectDetail2.value));
+   			searchKArray.push(TrimText(prekeywordDetail2.value));
+       	} 
+       	if (prekeywordDetail3.value) {
+       		searchCArray.push(TrimText(selectDetail3.value));
+   			searchKArray.push(TrimText(prekeywordDetail3.value));
+       	} 
+       	searchCArray.push("ATTACHSTATUS");
+       	searchKArray.push(document.querySelector("input[name=attachment]:checked").value);
+       	
+       	searchCArray.push("ANDOR");
+       	searchKArray.push(document.querySelector("input[name=andor]:checked").value);
+
+    	start_search();
+    }
+	function SearchOptionHidden() {
+     	$.modal.close();
+     }
+	function changeLangeEvent(){
+    	var usepostDate = document.getElementById("selectRange").value;
+		if(usepostDate == "direct"){
+			document.getElementById("datepickerData").style.display = "";
+		    $("#Sdatepicker").datepicker('enable');
+		    $("#Edatepicker").datepicker('enable');
+		    $(".ui-datepicker-trigger").style="margin-left:5px;margin-top:0px;margin-bottom:3px;vertical-align:middle;cursor:pointer";
+		} else if(usepostDate == "All"){
+		    $("#Sdatepicker").datepicker('disable');
+		    $(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
+		    $("#Edatepicker").datepicker('disable');
+		} else {
+		    $("#Sdatepicker").datepicker('disable');
+		    $(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
+		    $("#Edatepicker").datepicker('disable');
+		}
+		
+		var today = new Date();
+		switch(usepostDate) {
+			case "oneWeek":
+				$("#Sdatepicker").datepicker('setDate', '-7d');
+				$("#Edatepicker").datepicker('setDate', today);
+			break;
+			case "oneMonth":
+				$("#Sdatepicker").datepicker('setDate', '-1m');
+				$("#Edatepicker").datepicker('setDate', today);
+			break;
+			case "threeMonth":
+				$("#Sdatepicker").datepicker('setDate', '-3m');
+				$("#Edatepicker").datepicker('setDate', today);
+			break;
+		}
+    }
+	</script>
 </html>

@@ -250,4 +250,6 @@ public interface EzCommonService {
 	public void insertBeforeOutComeAttitudeType();	
 	
 	public void insertMobileAttitudeColumn() throws Exception;
+	
+	public void createMenuTenantConfig() throws Exception;
 }

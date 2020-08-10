@@ -16822,11 +16822,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								map.put("v_DOCID", docID);
 								map.put("v_TENANTID", tenantID);
 								map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+								map.put("receiptCompanyID", receiptCompanyID);
 								
+								/* 2020-08-04 홍승비 - 수신문서의 의견존재여부를 원문서에서 가져오도록 수정(내부결재 완료시 수신처 의견유지) */
 								ezApprovalGDAO.insertDoSendAprDocInfo(map);
 								ezApprovalGDAO.insertDoSendExpAprDocInfo(map);
 								ezApprovalGDAO.insertDocSendAprAttachInfo(map);
 								ezApprovalGDAO.insertDocSendAprDocAttachInfo(map);
+								
+								ezApprovalGDAO.copyOpinionsFromOrgDoc(map);
 
 								if (config.getProperty("config.useOpenGov").equalsIgnoreCase("YES")) {
                                     ezApprovalGDAO.insertDocSendAprOpenGovDocInfo(map);
@@ -16980,6 +16984,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 							map.put("receiptCompanyID", receiptCompanyID);
 							
+							/* 2020-08-04 홍승비 - 수신문서의 의견존재여부를 원문서에서 가져오도록 수정(내부결재 완료시 수신처 의견유지) */
 							ezApprovalGDAO.insertDoSendAprDocInfo(map);
 							ezApprovalGDAO.insertDoSendExpAprDocInfo(map);
 							ezApprovalGDAO.insertDocSendAprAttachInfo(map);
@@ -18384,7 +18389,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("companyID", companyID);
 			map.put("v_TENANTID", tenantID);
 			map.put("docState", docState);
-
+			
+			/* 2020-08-04 홍승비 - 신규 양식 생성하여 처음 결재선 지정하고 기안하는 경우, 오라클에서 DOCSTATE값 NULL로 들어가서 터지는 오류 수정 */
+			if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle") && (docState == null || docState.trim().equals(""))) {
+				map.put("docState", " "); // 임의로 공백문자 삽입
+			}
+			
 			ezApprovalGDAO.deleteLastAprLine(map);
 			ezApprovalGDAO.insertLastAprLine(map);
 		}
@@ -25747,7 +25757,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_N", messageSource.getMessage("ezApprovalG.t1687", locale));
 		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));
 
-			
 		List <ApprGDocListVO> searchDocList = ezApprovalGDAO.getSearchDocList(map);
 		
 		StringBuffer sb = new StringBuffer();

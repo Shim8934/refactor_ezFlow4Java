@@ -25989,13 +25989,13 @@
    			TBL_APRDOCINFO 
    		(    DocID,     FormID, OrgDocID,     DocType, DocState,      FunctionType,    Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
    		(SELECT 
-   			#v_NEWID#, FormID, #v_orgDocID#, DocType, #v_DocState#, #v_FunctionType#, #v_URL#, DocTitle,   DocNo, HasAttachYN, 'N',            NULL,     NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
+   			#v_NEWID#, FormID, #v_orgDocID#, DocType, #v_DocState#, #v_FunctionType#, #v_URL#, DocTitle,   DocNo, HasAttachYN, HasOpinionYN,    NULL,     NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
    		 FROM 
    		 	TBL_APRDOCINFO 
    		 WHERE 
    		 	DOCID = #v_DOCID#
 		 AND 
-		 	TENANT_ID= #v_TENANTID#
+		 	TENANT_ID = #v_TENANTID#
 		 AND
 		 	COMPANYID = #companyID#)
    	</insert>
@@ -32697,14 +32697,14 @@
 	<insert id="EzApprovalG.copyOpinionsFromOrgDoc" parameterClass="map">
 		INSERT INTO tbl_apropinioninfo
 		(DOCID, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, COMPANYID)
-		SELECT #v_NEWID#, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, #receiptCompanyID#
+		(SELECT #v_NEWID#, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, #receiptCompanyID#
 		FROM TBL_APROPINIONINFO
 		WHERE
 			DOCID = #v_orgDocID#
 		AND
 			TENANT_ID = #v_TENANTID#
 		AND
-			COMPANYID = #companyID#
+			COMPANYID = #companyID#)
 	</insert>
 	
 	<select id="EzApprovalG.getEndDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">

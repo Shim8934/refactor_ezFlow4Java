@@ -3142,6 +3142,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			use_cabinet = cabinetAdminService.checkModuleActive("apprv", userInfo);
 		}
 		
+		String useBoard = ezCommonService.getTenantConfig("useBoard", userInfo.getTenantId());
+		if(useBoard == null || useBoard.equals("")) {
+			useBoard = "YES";
+		}
+		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
 		} else {
@@ -3259,6 +3264,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("formVersion", formVersion);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		model.addAttribute("useBoard", useBoard);
 		logger.debug("contDocView ended.");
 		
 		return "ezApprovalG/apprGcontDocView";
@@ -7374,7 +7380,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
             if (approvalFlag.equalsIgnoreCase("G")) {
                 excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, allFG, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
             } else {
-                excelValue = ezApprovalGService.getSearchDocListS(P12, userInfo.getId(), subQuery, P0, P1, P2, P9, P3, P4, P5, P6, P7, P8, P11, "", "", pageSize, pageNum, orderCell, orderOption,  "", userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
+                excelValue = ezApprovalGService.getSearchDocListS(P12, userInfo.getId(), subQuery, P0, P1, P2, P9, P3, P4, P5, P6, P7, P8, P11, "", allFG, pageSize, pageNum, orderCell, orderOption,  "", userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
             }
 		}
 		
@@ -9996,6 +10002,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 		
 		logger.debug("aprOpinionNew ended.");
 		return "ezApprovalG/apprGaprOpinionNew";
@@ -10009,8 +10016,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		logger.debug("aprOpinionPopup ended.");
+		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 		
+		logger.debug("aprOpinionPopup ended.");
 		return "ezApprovalG/apprGaprOpinionPopup";
 	}
 	

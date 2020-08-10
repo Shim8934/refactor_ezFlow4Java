@@ -41,7 +41,7 @@ function putBansongSign() {
             phabyuidate = pSusinSN + "habyuidate";
             phabyuijikwee = pSusinSN + "habyuipositon";
             phabyuidept = pSusinSN + "habyui";
-        } else {1
+        } else {
             phabyuisign = "habyuisign";
             phabyuidate = "habyuidate";
             phabyuijikwee = "habyuipositon";
@@ -2597,7 +2597,7 @@ function ReAprLineSingMapping(ret) {
                 startIdx = startIdx + 1;
             else if (OrderType[i] != strAprType2 && OrderType[i] != strAprType7 && OrderType[i] != strAprType9 & OrderType[i] != strAprType11 && OrderType[i] != strAprType12)
                 startIdx = startIdx + 1;
-            else if (OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)
+            else if (OrderType[i] == strAprType8 ||OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)
                 hapyuiCnt = hapyuiCnt + 1;
         }
     }
@@ -2780,7 +2780,7 @@ function ReAprLineSingMapping(ret) {
             idx = idx + 1;
         }
 
-        if (OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12) {
+        if (OrderType[i] == strAprType8 ||OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12) {
             fieldname = susinSN + "habyui" + hidx;
             field = message.GetListItem(fields, fieldname);
             if (field) {

@@ -142,11 +142,20 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		
 		List<PersonalApprovMailVO> approvMailVOList = new ArrayList<PersonalApprovMailVO>();
 		
-		if (temp != null && temp.equals("1")) {
-			// SAVEMAILFLAG는 메일 발신자 ID 값에서 가져올 것.
-			approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S2(map);
+		String useMailApprNoti = ezCommonService.getTenantConfig("useMailApprNoti", tenantID);
+		if(useMailApprNoti == null || useMailApprNoti.equals("")) {
+			useMailApprNoti = "YES";
+		}
+		
+		if (useMailApprNoti.equalsIgnoreCase("NO")){
+			approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S4(map);
 		} else {
-			approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S3(map);
+			if (temp != null && temp.equals("1")) {
+			// SAVEMAILFLAG는 메일 발신자 ID 값에서 가져올 것.
+				approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S2(map);
+			} else {
+				approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S3(map);
+			}
 		}
 		
 		StringBuffer sb = new StringBuffer();

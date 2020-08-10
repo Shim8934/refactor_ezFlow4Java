@@ -1548,4 +1548,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void createMenuTenantConfig(Map<String, Object> map) throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.checkTenantConfig", map);
+		
+		if (propertyValue == null) {
+			logger.debug("menu tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertSurveyTenantConfig", map);
+		}
+	}
+	
+	
 }

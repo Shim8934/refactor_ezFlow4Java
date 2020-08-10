@@ -64,6 +64,7 @@
 	    	var memoFlag = "<c:out value='${useMemo}' />";
 	    	var useMemoContextMenu = false;
 	    	var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
+	    	var useContextmenu = "<c:out value='${useContextmenu}'/>";
 	    	
 	    	var beforeMemoId;
 	    	var beforeMemo;
@@ -141,8 +142,7 @@
 		</div>
 		<div id="popupArea"><div id="noticePopupLayer"></div></div>
 		<div id="noticePopupArea"></div>
-
-  		<div id="contextMenuBlock" class="contextMenuBlock">
+  		<div id="contextMenuBlock" class="contextMenuBlock" <c:if test="${useContextmenu eq 'NO'}">style="display:none" </c:if>>
 			<div id="contextMenuBtn" class="contextMenuBtn" style="display: block;visibility:hidden;">
 				<div class="contextMenu"></div>
 				
