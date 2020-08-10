@@ -1535,6 +1535,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
+	public void createTblShareDocDir() throws Exception {
+		ezCommonDAO.createTblShareDocDir();
+	}
+	
+	@Override
 	public void addBoardManageTypeColumn() throws Exception {
 		ezCommonDAO.addBoardManageTypeColumn();
 	}
@@ -1953,6 +1958,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		}
 		
 		logger.debug("insertMobileAttitudeColumn ended");
+	}
+	
+	public void alterTblPsApprovNotiMailConf() throws Exception {
+		ezCommonDAO.alterTblPsApprovNotiMailConf();
 	}
 	
 	@Override

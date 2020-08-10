@@ -1738,7 +1738,15 @@
 		ADD 
 			sn INT DEFAULT 0
 	</statement>
-	
+
+	<select id="EzCommonDAO.checkTblShareDocDir">
+		SELECT 
+			OWNER_ID
+		FROM 
+			TBL_SHARE_DOC_DIR
+		LIMIT 1
+	</select>
+
 	<select id="EzCommonDAO.checkBoardManageTypeColumn">
 		SELECT
 			TYPE
@@ -2817,6 +2825,20 @@
   			LATITUDE float(20,15) DEFAULT NULL,
   			LONGITUDE float(20,15) DEFAULT NULL
 		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblPsApprovNotiMailConf" resultClass="String">
+		SELECT
+			LINEPASS
+		FROM
+			TBL_PS_APPROVNOTIMAILCONF
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.alterTblPsApprovNotiMailConf">
+		ALTER TABLE
+			TBL_PS_APPROVNOTIMAILCONF
+		ADD 
+			LINEPASS VARCHAR(4) DEFAULT '0'
 	</statement>
 	
 	<select id="EzCommonDAO.checkTblNoticeBoard">

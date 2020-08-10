@@ -168,6 +168,8 @@
 			var newpDocID = "";
 			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 			var formAprOption = "<c:out value='${formAprOption}'/>";
+			var passAprLine = "";
+	        var useDynamicAprLine = "<c:out value ='${useDynamicAprLine}'/>";
 			
 		    window.onload = function ()
 		    {
@@ -259,6 +261,11 @@
 					if (pDraftFlag != "REDRAFT") {
 						if(isUsed == "reuse" && apprReuseConfig != "1") {
 							setFirstDrafter(isUsed, beforeDocID);
+s
+							field = message.GetListItem(message.GetFieldsList(), "opinions");
+							if (field) {
+								field.innerHTML = " ";
+							}
 						}
 						setFirstDrafter("", "");
 					}
@@ -446,6 +453,10 @@
 				                	if( apprReuseConfig != '1' ){
 			                			getDocInfo();
 				                		setAttachInfo(pDocID, "APR", lstAttachLink);
+				                	}
+				                	
+				                	if ($("#message").contents().find("#autoLine") != null && $("#message").contents().find("#RecvautoAprLine") != null) {
+				                		$("#message").contents().find("#RecvautoAprLine").remove();
 				                	}
 			                	}
 		                    }
@@ -684,15 +695,26 @@
 			            if (DraftFlag == "REDRAFT") {
 			            	pDocType = DocType;
 			            }
-			            if (pDocType == "003" && pSuSinFlag == "Y" && !btnReceivLineEnable) {
-					        var fields = message.GetFieldsList();
-					        
-							if (getNodeText(message.GetListItem(fields, "recipient")) == "") {
-				                var pAlertContent = "<spring:message code='ezApprovalG.t141'/>" + "<br>" + "<spring:message code='ezApprovalG.t142'/>";
-				                OpenInformationUI(pAlertContent, check_btnSendDraft3);
-				                return;								
-							} 
-
+			            
+			            if (pDocType == "003" && pSuSinFlag == "Y") {
+			            	if (!btnReceivLineEnable) {
+						        var fields = message.GetFieldsList();
+								if (getNodeText(message.GetListItem(fields, "recipient")) == "") {
+					                var pAlertContent = "<spring:message code='ezApprovalG.t141'/>" + "<br>" + "<spring:message code='ezApprovalG.t142'/>";
+					                OpenInformationUI(pAlertContent, check_btnSendDraft3);
+					                return;								
+								}
+			            	}
+							
+							if ($("#message").contents().find("#autoLine") != null) {
+		                		if ($("#message").contents().find("#RecvautoAprLine").length <= 0) {
+									var oDIV = document.createElement("DIV");
+									oDIV.className = "FIELD";
+									oDIV.id = "RecvautoAprLine";
+									
+			                		$("#message").contents().find("#autoLine").append(oDIV);
+		                		}
+		                	}
 			            }
 			            
 			            if (isUsed ==  "reuse") {
@@ -752,11 +774,16 @@
 			            /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
 			            if (pDraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
 			                delOpinionInfo();
+			            	delOpinionsExceptDrafters();
 			            }
 
 			            if (nonElecRec != "Y" && (LastSignSN == 1 || DraftLastFlag)) {
-							var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
-							OpenInformationUI(pInformationContent, check_btnSendDraft4);
+				            if (LastSignSN == 1 || DraftLastFlag) {
+				                var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
+				                OpenInformationUI(pInformationContent, check_btnSendDraft4);
+				            }
+				            else
+				                CheckPassWord();
 			            } else {
 			                CheckPassWord();
 			            }
@@ -767,7 +794,23 @@
 		            alert("btnSendDraft_onclick()" + e.description);
 		        }
 		    }
-		
+			
+		    function delOpinionsExceptDrafters() {
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : false,
+		    		url : "/ezApprovalG/delOpinionsExceptDrafters.do",
+		    		data : {
+		    			docID : pDocID,
+		    			userID : pUserID
+		    		},
+		    		success: function(result) {
+		    			
+		    		}
+		    	});
+		    }
+		    
 		    function check_ReUsed(ans) {
 		    	DivPopUpHidden();
 		    	if (ans) {
@@ -938,7 +981,10 @@
 		                	Gyuljedate = GetDocInfoData("APR", "STARTDATE");
 	                        CurrentAprType = "001";
 	                        CurrentAprUserID = pUserID;
-	                        sendAlertMail("APR", 1, "DRAFT");
+	                        
+	                        if (passAprLine != "Y") { //기결재통과 알림메일은 자바단에서 구현
+		                        sendAlertMail("APR", 1, "DRAFT");
+	                        }
 		                }
 		                UpdateLineHistory();
 		
@@ -1531,10 +1577,46 @@
 							}
 		                }
 		            }
+		            setInitOpinion();
 		        }
 		        catch (e) {
 		            OpenAlertUI("DocumentComplete : " + e.description);
 		        }
+		    }
+		    
+		    function setInitOpinion(){
+		    	var field = message.GetListItem(message.GetFieldsList(), "opinions");
+		    	if (field) {
+		            try {
+		            	var result = "";
+		                
+		                $.ajax({
+		            		type : "POST",
+		            		dataType : "text",
+		            		async : false,
+		            		url : "/ezApprovalG/opinionRequest.do",
+		            		data : {
+		            			docID : pDocID,
+		            			orgCompanyID : orgCompanyID
+		            		},
+		            		success: function(xml){
+		            			result = xml;
+		            		}        			
+		            	});
+	
+		                var OpinionXML = loadXMLString(result);
+		                var NodeList = SelectNodes(OpinionXML, "LISTVIEWDATA/ROWS/ROW");
+		                field.innerHTML = " ";
+		                if (NodeList.length > 0) {
+		                    for (i = NodeList.length - 1; i >= 0; i--) {
+		                		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[0].childNodes[11]) + ' - ' + getNodeText(NodeList[i].childNodes[0].childNodes[9]) + ' - ' + getNodeText(NodeList[i].childNodes[0].childNodes[7]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + getNodeText(NodeList[i].childNodes[0].childNodes[3]) + '</p>';
+		                		$(field).append(opinionsTable);
+		                    }
+		                }
+		            } catch (e) {
+		                alert("setInitOpinion ::" + e.description);
+		            }
+				}
 		    }
 		
 		    var ezapprovalinfo_dialogArguments = new Array();
@@ -1608,6 +1690,8 @@
 
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
+		        
+		        parameter[60] = passAprLine;
 		
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
@@ -1650,7 +1734,11 @@
 		                    btnSendDraftEnable = "true";
 		                    
 		                    if (approvalFlag == "S") {
-			                    SGetDraftAprLineInfo(ret);
+		                    	if (ret[32] == "Y") {
+		                    		SReAprLineSingMapping(ret);
+		                    	} else {
+			                    	SGetDraftAprLineInfo(ret);
+		                    	}
 		                    } else {
 			                    GetDraftAprLineInfo(ret);
 		                    }
@@ -1659,6 +1747,22 @@
 		                }    
 		                
 		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "string" && pDocType != "002") {
+		                	if ($("#message").contents().find("#autoLine") != null) {
+								var oDIV = document.createElement("DIV");
+								oDIV.className = "FIELD";
+								oDIV.id = "RecvautoAprLine";
+		                		
+		                		if ($("#message").contents().find("#RecvautoAprLine").length <= 0) {
+			                		$("#message").contents().find("#autoLine").append(oDIV);
+		                		} else {
+		                			//수신문 회송받아서 재기안할 때, 수신사인칸 초기화작업 
+		                			if (pDraftFlag == "REDRAFT") {
+		                				$("#message").contents().find("#RecvautoAprLine").remove();
+				                		$("#message").contents().find("#autoLine").append(oDIV);
+		                			}
+		                		}
+		                	}
+		                	
 		                	$.ajax({
 	                    		type : "POST",
 	                    		dataType : "text",
@@ -1677,6 +1781,10 @@
 		                    btnReceivLineEnable = false;
 		                    setRecevInfo(ret[3]);
 		                } else if (pSuSinFlag == "Y" && ret[2] == "" && pDocType != "002") {
+		                	if ($("#message").contents().find("#autoLine") != null) {
+		                		$("#message").contents().find("#RecvautoAprLine").remove();
+		                	}
+		                	
 		                    DeleteDeptInfo();
 		                    setRecevInfo("");
 		                }
@@ -1766,6 +1874,8 @@
 		                	tempPublic = ret[11];
 		                	SetDocOption(ret[20]);
 		                }
+		                
+		                passAprLine = ret[32];
 		                
 		                SummaryFlag = true;
 		                isUsed = ""; // 재사용 여부 초기화

@@ -173,7 +173,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 
 	@Override
-	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID) throws Exception {
+	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID, String linePass) throws Exception {
 		logger.debug("setApprovNotiMail started");
 
 		String result = "";
@@ -188,6 +188,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		map.put("v_PHESONG", hesong);
 		map.put("v_PSAVEMAILFLAG", saveMailFlag);
 		map.put("tenantID", tenantID);
+		map.put("linePass", linePass);
 		
 		try {
 			String temp = ezPersonalDAO.setApprovNotiMail_S(map);

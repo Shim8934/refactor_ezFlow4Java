@@ -1336,7 +1336,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createPwPolicyPattern");
 		}
 	}
-			
+	
 	public void addAprAttachViewOrder() throws Exception {
 		try {
 			select("EzCommonDAO.checkAprAttachViewOrder");
@@ -1344,6 +1344,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_aprattachinfo VIEWORDER column doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.updateAprAttachViewOrder");
+		}
+	}
+	
+	public void createTblShareDocDir() {
+		try {
+			select("EzCommonDAO.checkTblShareDocDir");
+		} catch (Exception e) {
+			logger.debug("tbl_share_doc_dir doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblShareDocDir");
 		}
 	}
 	
@@ -1498,6 +1507,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_attitude attend_type column doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.createMobileAttitudeColumn");
+		}
+	}
+	
+	public void alterTblPsApprovNotiMailConf() {
+		try {
+			select("EzCommonDAO.checkTblPsApprovNotiMailConf");
+		} catch (Exception e) {
+			logger.debug("tbl_ps_approvnotimailconf linePass doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.alterTblPsApprovNotiMailConf");
 		}
 	}
 	

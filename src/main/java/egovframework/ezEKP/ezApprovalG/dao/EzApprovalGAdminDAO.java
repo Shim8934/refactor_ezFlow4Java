@@ -17,6 +17,8 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezApprovalG.vo.KEDAuthorUserInfo;
+import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 import org.springframework.stereotype.Repository;
 
@@ -517,6 +519,28 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	
 	public void insertDelDoc(Map<String, Object> map) throws Exception {
 		insert("EzApprovalGAdmin.insertDelDoc", map);
+	}
+	
+	public String insertShareDocDir(Map<String, Object> map) throws Exception {
+		String result = "NO";
+		if(insert("EzApprovalGAdmin.insertShareDocDir", map) == null){
+			result = "YES";
+		}
+		return result;
+	}
+	
+	public int deleteShareDocDir(Map<String, Object> map) throws Exception {
+		return delete("EzApprovalGAdmin.deleteShareDocDir", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<KEDSharedUserInfo> getShareDocDirShareList (Map<String, Object> map) throws Exception {
+		return (List<KEDSharedUserInfo>) list("EzApprovalGAdmin.getShareDocDirShareList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<KEDAuthorUserInfo> getShareDocDirOwnerList (Map<String, Object> map) throws Exception {
+		return (List<KEDAuthorUserInfo>) list("EzApprovalGAdmin.getShareDocDirOwnerList", map);
 	}
 
 	public void updateAutodoc(Map<String, Object> map) {

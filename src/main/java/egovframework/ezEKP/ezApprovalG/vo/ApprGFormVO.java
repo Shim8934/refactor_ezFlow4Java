@@ -66,6 +66,8 @@ public class ApprGFormVO {
 	private String reformFlag;
 	/** 폼버전 */
 	private String formVersion;
+	/** 기결재통과 */
+	private String passAprLineFlag;
 	
 	/** 원문정보공개 */
 	private String openGovFlag;
@@ -73,6 +75,14 @@ public class ApprGFormVO {
 	/**양식 세부설정**/
 	private String aprOption;
 	
+	public String getPassAprLineFlag() {
+		return passAprLineFlag;
+	}
+
+	public void setPassAprLineFlag(String passAprLineFlag) {
+		this.passAprLineFlag = passAprLineFlag;
+	}
+
 	public String getFormContID() {
 		return formContID;
 	}

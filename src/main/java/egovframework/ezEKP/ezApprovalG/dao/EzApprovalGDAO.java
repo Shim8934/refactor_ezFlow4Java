@@ -47,6 +47,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -3462,6 +3463,32 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getFormContainer(Map<String, Object> map) {
+		return (List<ApprGFormVO>) list("EzApprovalG.getFormContainer", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<KEDSharedUserInfo> getShareList(Map<String, Object> map) {
+		return (List<KEDSharedUserInfo>)list("EzApprovalG.getShareList", map);
+	}
+	
+	public ApprGAprLineVO selectHabyuiResultAprMemberInfoVO(Map<String, Object> map) throws Exception{
+		return (ApprGAprLineVO) select("EzApprovalG.selectHabyuiResultAprMemberInfoVO", map);
+	}
+
+	public void deleteRejectOrgDocOpinions(Map<String, Object> map) {
+		delete("EzApprovalG.deleteRejectOrgDocOpinions",map);
+	}
+
+	public void delOpinionsExceptHesong(Map<String, Object> map) {
+		delete("EzApprovalG.delOpinionsExceptHesong", map);
+	}
+	
+	public void delOpinionsExceptDrafters(Map<String, Object> map) {
+		delete("EzApprovalG.delOpinionsExceptDrafters", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> getLeftDocCountNew(Map<String, Object> map) throws Exception{
 		return (Map<String, Object>) select("EzApprovalG.getLeftDocCount_new", map);
 	}
@@ -3469,9 +3496,31 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateEndAprDocOptionInfo(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateEndAprDocOptionInfo", map);
 	}
-
+	
 	public void copyOpinionsFromOrgDoc(Map<String, Object> map) {
 		insert("EzApprovalG.copyOpinionsFromOrgDoc", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> doApproveLineInfoForPassAprLine(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.doApproveLineInfoForPassAprLine", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> doApproveLineInfoForCancelToPassAprLine(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.doApproveLineInfoForCancelToPassAprLine", map);
+	}
+	
+	public void updateDrafterToApproved(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateDrafterToApproved", map);
+	}
+	
+	public void setAprLineStateBanSongToStay(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.setAprLineStateBanSongToStay", map);
+	}
+	
+	public String getPassAprLineFlagByDocID(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getPassAprLineFlagByDocID", map);
 	}
 	
 	/* 2020-07-23 홍승비 - 완료문서의 전체 정보를 가져오는 쿼리 */

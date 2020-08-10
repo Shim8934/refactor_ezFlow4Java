@@ -500,7 +500,7 @@ function ApprovMappingSign(ret) {
     	//approvalFlag == "S" && pAprLineType == strAprType4인 경우는 없음(위에서 처리하였음)
     	if (approvalFlag == "S") {
     		if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
-    			for (i = 1; i < 20; i++) {
+    			for (i = 1; i <= 20; i++) {
     				if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N"))
     					signID = pSusinSN + "sign" + i
     					else
@@ -918,6 +918,11 @@ function openOpinionUI_New_Complete(ret) {
 		DivPopUpHidden();
 		if (ret == "Clear") {
 			pHasOpinionYN = "N";
+			var fields = message.GetFieldsList();
+		    var field = message.GetListItem(fields, "opinions");
+		    if (field) {
+		    	field.innerHTML = " ";
+		    }
 		} else if (ret == "cancel") {
 			//do_nothing
 		} else {
@@ -939,40 +944,31 @@ function openOpinionUI_New_Complete(ret) {
 }
 
 function makeOpinionList(OpinionXML) {
-
-    var fields = message.GetFieldsList();
+	var fields = message.GetFieldsList();
     var field = message.GetListItem(fields, "opinions");
     if (!field) return;
-    var firstFlag = true;
+
     var NodeList = SelectNodes(OpinionXML, "LISTVIEWDATA/ROWS/ROW");
+    field.innerHTML = " ";
     if (NodeList.length > 0) {
-        var strOpinion = " ";
         for (i = NodeList.length - 1; i >= 0; i--) {
-            if (getNodeText(GetChildNodes(NodeList[i])[9]) == "001") {
-                if (firstFlag) {
-                    strOpinion = "<P>[" + strLang27 + "</P>";
-                    firstFlag = false;
-                }
-                if (getNodeText(GetChildNodes(NodeList[i])[2]) != "")
-                    strOpinion = strOpinion + "<P>" + getNodeText(GetChildNodes(NodeList[i])[2]) + "&nbsp;&nbsp;&nbsp;";
-                else
-                    strOpinion = strOpinion + "<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-
-                strOpinion = strOpinion + getNodeText(GetChildNodes(NodeList[i])[1]) + "&nbsp;&nbsp;&nbsp;";
-                strOpinion = strOpinion + getNodeText(GetChildNodes(NodeList[i])[6]) + "</P>";
-            }
+    		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[3]) + ' - ' + getNodeText(NodeList[i].childNodes[2]) + ' - ' + getNodeText(NodeList[i].childNodes[1]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + getNodeText(NodeList[i].childNodes[6]) + '</p>';
+    		$(field).append(opinionsTable);
         }
-        field.innerHTML = strOpinion;
-
-        if (OpinionAction == "ADD" || OpinionAction == "DEL")
-            SaveFile();
-
-        OpinionAction = "";
     }
-    else {
-        field.innerHTML = " ";
-    }
+    SaveFile();
 }
+
+// 반송용으로 추가
+function makeOpinionList4Bansong(OpinionXML) { 
+	var fields = message.GetFieldsList();
+    var field = message.GetListItem(fields, "opinions");
+    if (!field) return;
+
+    field.innerHTML = " ";
+	SaveFile();   
+}
+
 var aprattach_cross_dialogArguments = new Array();
 function openFileAttachUI() {
     var parameter = pDocID;
@@ -1519,6 +1515,7 @@ function getCurApproverAprLine(type) {
  * pApproveFlag 1 : 결재, 2 : 반송, 3 : 보류
  * */
 function SaveApproveInfo(pApproveFlag) {
+	var fields = message.GetFieldsList();
     var rtnVal = SaveFile();
 
     if(rtnVal.toUpperCase() != "TRUE") {
@@ -1526,9 +1523,6 @@ function SaveApproveInfo(pApproveFlag) {
     }
 
     SignSave();
-
-    var fields = message.GetFieldsList();
-    var field;
 
     var objNodes = GetChildNodes(GetChildNodes(document.getElementById('DOCINFO').dataSource.childNodes[0])[0]);
 
@@ -1551,6 +1545,11 @@ function SaveApproveInfo(pApproveFlag) {
     // 경우에 따른 DOCNO 설정.
     
     if (pApproveFlag == "2") {
+        field = message.GetListItem(fields, "opinions");
+        if (field) {
+        	field.innerHTML = " ";
+        }
+        
     	if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
     		if (field) {
     			var forTest = getfieldValue(field).slice(-1);
@@ -2072,7 +2071,8 @@ function SReAprLineSingMapping(ret) {
     if (typeof ret == "object") {
     	xmlKuljea = ret[1];
     	xmlReDraft = ret[5];
-    	DrawAutoAprLine(ret[1], pDraftFlag);
+    	//DrawAutoAprLine(ret[1], pDraftFlag);
+    	New_DrawAutoLine(ret[1], pDraftFlag);
     } else {
     	reMappingSign = true;
     	xmlKuljea = ret;
@@ -2207,7 +2207,7 @@ function SReAprLineSingMapping(ret) {
         susinSN = pSusinSN
     }
 
-    for (i = startIdx; i < 20; i++) {
+    for (i = startIdx; i <= 20; i++) {
         fieldname = susinSN + "jikwe" + i
         field = message.GetListItem(fields, fieldname);
         if (field) {
@@ -2309,7 +2309,7 @@ function SReAprLineSingMapping(ret) {
                     cnt = OrderType.length;
 
 
-                for (k = 1; k < cnt; k++) {
+                for (k = 1; k <= cnt; k++) {
                     if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N"))
                         signID = pSusinSN + "sign" + k
                     else
@@ -2373,10 +2373,28 @@ function SReAprLineSingMapping(ret) {
                     setNodeText(field , OrderJobtitle[i]);
             }
 
+            /* 2020-07-27 홍승비 - 서명필드만 존재하는 경우, 서명+결재자명 필드가 함께 존재하는 경우, 슬래시 이미지의 표출분기 수정 */
             fieldname = susinSN + "sign" + idx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
-                field.innerHTML = OrderName[i];
+            	// 서명필드만 존재
+            	if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) == null) {
+            		setNodeText(field , OrderName[i]);
+            	}
+            	// 서명필드 + 결재자명 필드가 함께 존재
+            	else if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) != null) {
+            		field.innerHTML = "[NOSLASH]";
+            	}
+            	// 그 외의 경우, 아무런 값이 부여되지 않으므로 슬래시 이미지를 표출
+            	else {
+            		//field.innerHTML = OrderName[i];
+            	}
+            }
+            
+            fieldname = susinSN + "seumyung" + idx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	field.innerHTML = OrderName[i];
             }
             
             fieldname = susinSN + "approdept" + idx;
@@ -2387,8 +2405,46 @@ function SReAprLineSingMapping(ret) {
             idx = idx + 1;
         }
 
-        if (OrderType[i] == strAprType8 || OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12) {
+        if (OrderType[i] == strAprType8 || OrderType[i] == strAprType9) { // 개인순차합의, 개인병렬합의
             fieldname = susinSN + "habyui" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+                setNodeText(field , OrderDept[i]);
+            }
+
+            /* 2020-07-27 홍승비 - 합의자명 필드가 존재하지 않는 경우, 합의자 사인 필드에 이름 표출하도록 수정 */
+            fieldname = susinSN + "habyuisign" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	// 합의자 사인 필드만 존재, 합의자명 필드 없음
+            	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+            		setNodeText(field , OrderName[i]);
+            	}
+                //setNodeText(field , OrderName[i]);
+            }
+            
+            fieldname = susinSN + "habyuija" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	setNodeText(field , OrderName[i]);
+            }
+
+            fieldname = susinSN + "habyuipositon" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+                setNodeText(field , OrderJobtitle[i]);
+            }
+            
+            fieldname = susinSN + "habyuiapprodept" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	setNodeText(field , OrderDept[i]);
+            }
+            hidx = hidx + 1;
+        }
+        
+        if (OrderType[i] == strAprType11 || OrderType[i] == strAprType12) { // 부서순차합의, 부서병렬합의
+        	fieldname = susinSN + "habyui" + hidx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
                 setNodeText(field , OrderDept[i]);
@@ -2397,7 +2453,8 @@ function SReAprLineSingMapping(ret) {
             fieldname = susinSN + "habyuisign" + hidx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
-                setNodeText(field , OrderName[i]);
+                //setNodeText(field , OrderName[i]);
+            	setNodeText(field , OrderDept[i]);
             }
 
             fieldname = susinSN + "habyuipositon" + hidx;

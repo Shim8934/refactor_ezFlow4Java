@@ -1,5 +1,52 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -9,7 +56,10 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezApprovalG.vo.KEDAuthorUserInfo;
+import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezJournal.service.EzJournalService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -94,6 +144,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private EzJournalService ezJournalService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGAdminController.class);
 	
@@ -514,6 +567,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String reformflag = request.getParameter("reformflag");
 		String openGovFlag = request.getParameter("openGovFlag");
 		
+		String usePassAprLine = ezCommonService.getTenantConfig("usePassAprLine", userInfo.getTenantId());
+		String passAprLineFlag = request.getParameter("passAprLineFlag");
+		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
 		
 		if (approvalFlag.equals("S")) {
@@ -564,6 +620,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			model.addAttribute("openGovFlag", openGovFlag);
 		} else {
 			model.addAttribute("openGovFlag", "N");
+		}
+		if (usePassAprLine.equals("YES")) {
+			model.addAttribute("usePassAprLine", usePassAprLine);
+			model.addAttribute("passAprLineFlag", passAprLineFlag);
+		} else {
+			model.addAttribute("usePassAprLine", "NO");
+			model.addAttribute("passAprLineFlag", "N");
 		}
 		
 		/* FormBuilder */
@@ -3259,7 +3322,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String result = "";
         if (approvalFlag.equals("S")) {
         	result = ezApprovalGService.getSearchDocListS("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFrom, draftTo, aprFrom,
-        			aprTo, "", "", draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "ALL", companyID, userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
+        			aprTo, "", "", draftDeptName, docState, "", "", pageSize, pageNum, orderCell, orderOption, "ALL", companyID, userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
         } else {
         	result = ezApprovalGService.getSearchDocList("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay, 
     				draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
@@ -4448,5 +4511,118 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		ezApprovalGAdminService.deleteAttachLimit(companyID, userInfo.getTenantId());
 		
 		logger.debug("deleteAttachLimit ended");
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/docDirShareManage.do", method = RequestMethod.GET)
+	public String docDirShareManage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("docDirShareManage started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		List<KEDAuthorUserInfo> ownerList = ezApprovalGAdminService.getDocDirOwnerList(userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		model.addAttribute("ownerList", ownerList);
+		
+		logger.debug("docDirShareManage ended");
+		return "/admin/ezApprovalG/apprGDocDirShareManage";
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/getDocDirShareList.do", method = RequestMethod.POST)
+	public String getDocDirShareList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("docDirShareManage started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String ownerId = request.getParameter("ownerId");
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		List<KEDSharedUserInfo> shareList = ezApprovalGAdminService.getDocDirShareList(ownerId, userInfo.getTenantId());
+		
+		model.addAttribute("shareList", shareList);
+		
+		logger.debug("docDirShareManage ended");
+		return "/admin/ezApprovalG/apprGDocDirShareList";
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/docDirOwnerInsert.do")
+	public String docDirShareInsert(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("docDirOwnerInsert started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String ownerId = request.getParameter("ownerId");
+		String ownerName = request.getParameter("ownerName");
+		String ownerType = request.getParameter("ownerType");
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		
+		model.addAttribute("ownerId", ownerId);
+		model.addAttribute("ownerName", ownerName);
+		model.addAttribute("ownerType", ownerType);
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		model.addAttribute("deptId", userInfo.getDeptID());
+		model.addAttribute("primaryLang", primaryLang);
+		
+		logger.debug("docDirOwnerInsert ended");
+		return "/admin/ezApprovalG/apprGDocDirOwnerInsert";
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/selectDocDirOwner.do")
+	public String selectDocDirOwner(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("selectDocDirOwner started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		model.addAttribute("deptId", userInfo.getDeptID());
+		model.addAttribute("primaryLang", primaryLang);
+		
+		logger.debug("selectDocDirOwner ended");
+		return "/admin/ezApprovalG/apprGSelectDocDirOwner";
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/insertDocDirList.do")
+	@ResponseBody
+	public String insertDocDirList(@CookieValue("loginCookie") String loginCookie, @RequestParam String shareListStr, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("insertDocDirList started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String ownerId = request.getParameter("ownerId");
+		String ownerType = request.getParameter("ownerType");
+		Gson gson = new Gson();
+		List<KEDSharedUserInfo> shareList = gson.fromJson(shareListStr, new TypeToken<List<KEDSharedUserInfo>>(){}.getType());
+		
+		String result = ezApprovalGAdminService.insertShareDocDir(ownerId, ownerType, shareList, userInfo.getTenantId());
+
+		logger.debug("insertDocDirList ended");
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/deleteDocDirOwner.do")
+	@ResponseBody
+	public String deleteDocDirOwner(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("deleteDocDirOwner started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String ownerId = request.getParameter("ownerId");
+		
+		String result = ezApprovalGAdminService.deleteShareDocDir(ownerId, userInfo.getTenantId());
+		
+		logger.debug("deleteDocDirOwner ended");
+		return result;
 	}
 }
