@@ -500,7 +500,7 @@
 			
 			//2018-07-10 김보미 - title부분 길이를 비교해 2줄 이상이면 공백을 더 준다.
 			function titleSpace() {
-				var text = $("#titleTd").text();
+				var text = $("#titleTd").html();
 				var res;
 				var cont = $('<div>' + text + '</div>').css("display", "table")
 								.css("z-index", "-1").css("position", "absolute")
@@ -742,7 +742,7 @@
  							<th style="padding-left:10px"><spring:message code='ezCircular.t32' /></th> 
  							<td style="padding-left:4px; width:100%" colspan="3">
  								<div id="printTitle">
- 									${result.title}
+ 									<c:out value='${result.title}'/>
  								</div>
  							</td> 
 						</tr>
