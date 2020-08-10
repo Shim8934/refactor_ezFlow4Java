@@ -474,6 +474,7 @@ function resultView(xmlDoc) {
         tr.setAttribute("itemID", id);
         tr.setAttribute("targetURL", id);
         tr.setAttribute("securemail", securemail);
+        tr.setAttribute("read", read);
         tr.onmouseover = function () { event_listMover(this); };
         tr.onmouseout = function () { event_listMout(this); };
         tr.onclick = function () { event_listclick(this); };
@@ -799,6 +800,11 @@ function view_click() {
     	}
     	
     	window.open(requestUrl, "", feature);
+    }
+    
+    if (this.getAttribute("read") == "0") {
+    	this.childNodes.item(2).childNodes.item(0).src = "/images/ImgIcon/icon-msg-read.gif";
+    	this.setAttribute("read", "1");
     }
 }
 
