@@ -113,4 +113,14 @@ public class EzAttitudeScheduler {
 			logger.debug("autoSetAnnualHoliday scheduler ended.");
 		}
 	}
+	
+	/**
+	 * 근태관리 일근무, 반근무 자동 세팅
+	 */
+	@Scheduled(cron = "${config.cron.autoSetDailyWork}")
+	public void autoSetDailyWork() throws Exception {
+		logger.debug("autoSetDailyWork scheduler started.");
+		ezAttitudeService.autoSetDailyWork();
+		logger.debug("autoSetDailyWork scheduler ended.");
+	}
 }

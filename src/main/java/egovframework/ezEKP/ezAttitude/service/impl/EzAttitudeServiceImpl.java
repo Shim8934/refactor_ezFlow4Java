@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
-
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
@@ -42,6 +40,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeVO2;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
@@ -142,7 +141,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("writerId", writerId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		
+		String workStatus = null;
 		if (typeId.equals("A01") || typeId.equals("A03") || typeId.equals("A25")) {
 			if (!mode.equals("admin")) {
 				startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
@@ -165,7 +166,27 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (userInTime.after(userConfTime)) { //지각인 경우
 						typeId = "A02";
 					}
+				} else {
+					//2020-08-06 김정언 - 일근무/반근무 추가
+					String startDate2 = "";
+					if(typeId.equals("A25")) {
+						startDate2 = commonUtil.getDayBefore(startDate.split(" ")[0]);
+					} else {
+						startDate2 = startDate.split(" ")[0];
+					}
+					map.put("startDate2", startDate2);
+					//출근/지각 시간 체크
+					String attitudeTime = ezAttitudeDAO.getAttitudeTime(map);
+					
+					long minutes = commonUtil.getTimeDifference(attitudeTime.split("\\.")[0], startDate);
+					
+					if(minutes >= 480) {
+						workStatus = "D";
+					} else if (minutes >= 240) {
+						workStatus = "H";						
+					}
 				}
+				
 			} else {
 				startDate += ":00";
 			}
@@ -189,6 +210,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		if(attendType.equals("1")) {
 			map.put("latitude", latitude);
 			map.put("longitude", longitude);
+		}
+		if(typeId.equals("A03") || typeId.equals("A25")){
+			map.put("workStatus", workStatus);
 		}
 		
 		ezAttitudeDAO.insertAttitude(map);
@@ -379,6 +403,34 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		
 		ezAttitudeDAO.updateAttitude(map);
+		
+		if(startDate != null && !mode.equals("admin")) {	
+			if(typeId.equals("A03") || typeId.equals("A25")) {				
+				//2020-08-06 김정언 - 일근무/반근무 추가
+				map.put("writerId", adminId);
+				String workStatus = null;
+				String startDate2 = "";
+				if(typeId.equals("A25")) {
+					startDate2 = commonUtil.getDayBefore(startDate.split(" ")[0]);
+				} else {
+					startDate2 = startDate.split(" ")[0];
+				}
+				map.put("startDate2", startDate2);
+				//출근/지각 시간 체크
+				String attitudeTime = ezAttitudeDAO.getAttitudeTime(map);
+				
+				long minutes = commonUtil.getTimeDifference(attitudeTime.split("\\.")[0], startDate);
+				
+				if(minutes >= 480) {
+					workStatus = "D";
+				} else if (minutes >= 240) {
+					workStatus = "H";						
+				}
+				
+				map.put("workStatus", workStatus);
+				ezAttitudeDAO.updateWorkStatus(map);
+			}
+		}
 		
 		if (mode.equals("admin")) {
 			map.put("attVO", attVO);
@@ -4167,5 +4219,162 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
         
         LOGGER.debug("getHoliDays ended");
 		return resultList;
+	}
+
+	/**
+	 * 사용자 근태현황에 일근무, 반근무 자동 세팅
+	 * @throws Exception 
+	 */
+	@Override
+	public void autoSetDailyWork() throws Exception {
+		LOGGER.debug("autoSetDailyWork started");
+		/* 사용자들의 출근(지각)/퇴근(조퇴)을 가져와서 AttitudeVO2에 넣어주기 */
+		List<AttitudeVO> attitudeList = new ArrayList<AttitudeVO>();
+		attitudeList = ezAttitudeDAO.getAttitudeList3();
+		
+		LOGGER.info("######attitudeList=" + attitudeList.toString());
+		
+		List<AttitudeVO2> attitudeList2 = new ArrayList<AttitudeVO2>();
+		AttitudeVO2 avo = null;
+		boolean flag = true;
+		for (int i = 0; i < attitudeList.size() ; i++) {
+			if(flag == true){
+				avo = new AttitudeVO2();
+				flag = false;
+			}
+			
+			if(i + 1 < attitudeList.size()){
+				//다음 행과 비교하여 날짜가 같고 사용자의 이름이 같을 경우
+				if(attitudeList.get(i).getStartDate().split(" ")[0].equals(attitudeList.get(i + 1).getStartDate().split(" ")[0]) && attitudeList.get(i).getWriterId().equals(attitudeList.get(i + 1).getWriterId())){
+					avo.setWriterId(attitudeList.get(i).getWriterId());
+					avo.setCompanyId(attitudeList.get(i).getCompanyId());
+					avo.setTenantId(attitudeList.get(i).getTenantId());
+					
+					if(attitudeList.get(i).getTypeId().equals("A01")) { //출근
+						avo.setInAttitudeId(attitudeList.get(i).getAttitudeId());
+						avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+						avo.setInModAppl(attitudeList.get(i).getModAppl());
+					}else if(attitudeList.get(i).getTypeId().equals("A02")) { //지각
+						avo.setInAttitudeId(attitudeList.get(i).getAttitudeId());
+						avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+						avo.setInModAppl(attitudeList.get(i).getModAppl());
+					}else if(attitudeList.get(i).getTypeId().equals("A03")) { //퇴근
+						avo.setOutAttitudeId(attitudeList.get(i).getAttitudeId());
+						avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+						avo.setOutModAppl(attitudeList.get(i).getModAppl());
+						avo.setWorkStatus(attitudeList.get(i).getWorkStatus());
+					}else if(attitudeList.get(i).getTypeId().equals("A25")) { //전일퇴근
+						avo.setOutAttitudeId(attitudeList.get(i).getAttitudeId());
+						String[] startDate = attitudeList.get(i).getStartDate().split(" ");
+						String dayAfter = commonUtil.getDayAfter(startDate[0]);
+						avo.setEndDate(dayAfter + " " + startDate[1].split("\\.")[0]);
+						avo.setOutModAppl(attitudeList.get(i).getModAppl());
+						avo.setWorkStatus(attitudeList.get(i).getWorkStatus());
+					}else if(attitudeList.get(i).getTypeId().equals("A08")) { //조퇴
+						avo.setOutAttitudeId(attitudeList.get(i).getAttitudeId());
+						avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+						avo.setOutModAppl(attitudeList.get(i).getModAppl());
+						avo.setWorkStatus(attitudeList.get(i).getWorkStatus());
+					}
+				} else {						
+					//날짜와 사용자의 이름이 다를 경우
+					avo.setWriterId(attitudeList.get(i).getWriterId());
+					avo.setCompanyId(attitudeList.get(i).getCompanyId());
+					avo.setTenantId(attitudeList.get(i).getTenantId());
+					
+					if(attitudeList.get(i).getTypeId().equals("A01")) { //출근
+						avo.setInAttitudeId(attitudeList.get(i).getAttitudeId());
+						avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+						avo.setInModAppl(attitudeList.get(i).getModAppl());
+					}else if(attitudeList.get(i).getTypeId().equals("A02")) { //지각
+						avo.setInAttitudeId(attitudeList.get(i).getAttitudeId());
+						avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+						avo.setInModAppl(attitudeList.get(i).getModAppl());
+					}else if(attitudeList.get(i).getTypeId().equals("A03")) { //퇴근
+						avo.setOutAttitudeId(attitudeList.get(i).getAttitudeId());
+						avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+						avo.setOutModAppl(attitudeList.get(i).getModAppl());
+						avo.setWorkStatus(attitudeList.get(i).getWorkStatus());
+					}else if(attitudeList.get(i).getTypeId().equals("A25")) { //전일퇴근
+						avo.setOutAttitudeId(attitudeList.get(i).getAttitudeId());
+						String[] startDate = attitudeList.get(i).getStartDate().split(" ");
+						String dayAfter = commonUtil.getDayAfter(startDate[0]);
+						avo.setEndDate(dayAfter + " " + startDate[1].split("\\.")[0]);
+						avo.setOutModAppl(attitudeList.get(i).getModAppl());
+						avo.setWorkStatus(attitudeList.get(i).getWorkStatus());
+					}else if(attitudeList.get(i).getTypeId().equals("A08")) { //조퇴
+						avo.setOutAttitudeId(attitudeList.get(i).getAttitudeId());
+						avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+						avo.setOutModAppl(attitudeList.get(i).getModAppl());
+						avo.setWorkStatus(attitudeList.get(i).getWorkStatus());
+					}
+					
+					attitudeList2.add(avo);
+					flag = true;					
+				}
+			} else { //마지막 것은 비교하지 않는다.
+				avo.setWriterId(attitudeList.get(i).getWriterId());
+				avo.setCompanyId(attitudeList.get(i).getCompanyId());
+				avo.setTenantId(attitudeList.get(i).getTenantId());
+				
+				if(attitudeList.get(i).getTypeId().equals("A01")) { //출근
+					avo.setInAttitudeId(attitudeList.get(i).getAttitudeId());
+					avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+					avo.setInModAppl(attitudeList.get(i).getModAppl());
+				}else if(attitudeList.get(i).getTypeId().equals("A02")) { //지각
+					avo.setInAttitudeId(attitudeList.get(i).getAttitudeId());
+					avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+					avo.setInModAppl(attitudeList.get(i).getModAppl());
+				}else if(attitudeList.get(i).getTypeId().equals("A03")) { //퇴근
+					avo.setOutAttitudeId(attitudeList.get(i).getAttitudeId());
+					avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+					avo.setOutModAppl(attitudeList.get(i).getModAppl());
+					avo.setWorkStatus(attitudeList.get(i).getWorkStatus());
+				}else if(attitudeList.get(i).getTypeId().equals("A25")) { //전일퇴근
+					avo.setOutAttitudeId(attitudeList.get(i).getAttitudeId());
+					String[] startDate = attitudeList.get(i).getStartDate().split(" ");
+					String dayAfter = commonUtil.getDayAfter(startDate[0]);
+					avo.setEndDate(dayAfter + " " + startDate[1].split("\\.")[0]);
+					avo.setOutModAppl(attitudeList.get(i).getModAppl());
+					avo.setWorkStatus(attitudeList.get(i).getWorkStatus());
+				}else if(attitudeList.get(i).getTypeId().equals("A08")) { //조퇴
+					avo.setOutAttitudeId(attitudeList.get(i).getAttitudeId());
+					avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
+					avo.setOutModAppl(attitudeList.get(i).getModAppl());
+					avo.setWorkStatus(attitudeList.get(i).getWorkStatus());
+				}
+				
+				attitudeList2.add(avo);
+			}
+		}
+		LOGGER.info("######attitudeList2=" + attitudeList2.toString());
+		/* end */
+		
+		/* AttitudeVO2에 들어있는 출근(지각)/퇴근(조퇴) 시간을 비교하여 workstatus 변경해주기 */
+		for (int i = 0; i < attitudeList2.size() ; i++) {
+			if(attitudeList2.get(i).getStartDate() != null && attitudeList2.get(i).getEndDate() != null){				
+				
+				if(attitudeList2.get(i).getWorkStatus() == null || attitudeList2.get(i).getInModAppl().equals("3") || attitudeList2.get(i).getOutModAppl().equals("3")) { //workstatus가 null이거나 inModAppl이 3이거나 outModAppl이 3인 데이터의 workstatus 변경			
+					long minutes = commonUtil.getTimeDifference(attitudeList2.get(i).getStartDate(), attitudeList2.get(i).getEndDate());
+					
+					String workStatus = null;
+					if(minutes >= 480) {
+						workStatus = "D";
+					} else if (minutes >= 240) {
+						workStatus = "H";						
+					}
+
+					Map<String, Object> map = new HashMap<String, Object>();				
+					map.put("workStatus", workStatus);
+					map.put("attitudeId", attitudeList2.get(i).getOutAttitudeId());
+					map.put("companyId", attitudeList2.get(i).getCompanyId());
+					map.put("tenantId", attitudeList2.get(i).getTenantId());
+					ezAttitudeDAO.updateWorkStatus(map);
+				}
+				
+			}
+		}
+		/* end */
+		LOGGER.debug("autoSetDailyWork ended");
 	}
 }

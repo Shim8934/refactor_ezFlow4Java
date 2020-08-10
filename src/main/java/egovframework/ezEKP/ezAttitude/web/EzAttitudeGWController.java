@@ -184,14 +184,14 @@ public class EzAttitudeGWController {
 				checkAttitude = "dupl";
 			} else {
 				if (!checkAttitude.equals("") && !checkAttitude.equals("0") && typeId.equals("A03")) { //이미 퇴근이 있는 경우
-					result.put("status", "error");
+					/*result.put("status", "error");
 					result.put("message", "error");
-					return result;
-					/*AttitudeVO attVO = ezAttitudeService.getAttitudeInfo(checkAttitude, info.getOffSet(), info.getPrimary(), info.getCompanyId(), info.getTenantId());
+					return result;*/
+					AttitudeVO attVO = ezAttitudeService.getAttitudeInfo(checkAttitude, info.getOffSet(), info.getPrimary(), info.getCompanyId(), info.getTenantId());
 					if (startDate == null || startDate.equals("")) {
-						startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), info.getOffSet(), false);						
+						startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false);						
 					}
-					ezAttitudeService.updateAttitude(checkAttitude, startDate, null, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attVO, userId, info, info, info.getTenantId(), info.getCompanyId());*/
+					ezAttitudeService.updateAttitude(checkAttitude, startDate, null, region, mobile, bizSub, content, offSet, "", typeId, dateType, mode, attVO, userId, info, info, info.getTenantId(), info.getCompanyId());
 				} else {
 					ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, offSet, info.getCompanyId(), info.getTenantId(), mode, adminId, "0", "", "");					
 				}

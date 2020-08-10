@@ -1876,16 +1876,22 @@
 						iconStrClass = "iconStrClass";
 					}
 					
-					var typeText = $("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").text();
+					if(vo.typeId == "A25") {
+						var date = new Date(vo.startDate.substring(0,4), Number(vo.startDate.substring(5,7))-1 , Number(vo.startDate.substring(8,10)));
+						date.setDate(date.getDate()-1);						
+					}
+					
+					var typeText = (vo.typeId == "A25") ? $("#contentlist .mainlist tr#" + moment(date).format('YYYY-MM-DD') + " td:eq(3)").text() : $("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").text();
+					
 					//출근, 퇴근/전일퇴근, 지각, 휴근, 조퇴
 		    		if (vo.typeId == "A01" || vo.typeId == "A03" || vo.typeId == "A02" || vo.typeId == "A07" || vo.typeId == "A08" || vo.typeId == "A25") { 
 			    		// 출근, 퇴근/전일퇴근, 근태유형
 		    			if (vo.typeId == "A01") { //출근리스트
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").html("<span class='" + iconStrClass + "'>" + vo.startDate.substring(11,16) + "</span>" + iconStr);
-			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", "<spring:message code='ezAttitude.t231' />");
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", "<spring:message code='ezAttitude.t64' />");
 			    			var attitudeTypeText = $("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").text();
 			    			if (attitudeTypeText == "" || attitudeTypeText == "<spring:message code='ezAttitude.t113' />") {			    				
-				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html("<spring:message code='ezAttitude.t231' />");
+					    		$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html("<spring:message code='ezAttitude.t64' />");
 			    			}
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").attr({typeid : vo.typeId, attitudeid : vo.attitudeId, modappl : vo.modAppl, style : "cursor:pointer; width:12%"});
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").on('dblclick',function(){
@@ -1943,7 +1949,9 @@
 								}
 			    			});
 			    			
-			    			if (typeText != "" || typeText.indexOf("<spring:message code='ezAttitude.t114' />") > -1) {//조퇴면 "지각,조퇴" 형태로 되게끔.
+			    			if (typeText != "" || typeText.indexOf("<spring:message code='ezAttitude.t114' />") > -1
+			    							   || typeText.indexOf("<spring:message code='ezAttitude.kje29' />") > -1
+			    							   || typeText.indexOf("<spring:message code='ezAttitude.kje30' />") > -1) {//조퇴면 "지각,조퇴" 형태로 되게끔.
 			    				$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html(vo.typeName + ", " + typeText);
 				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", vo.typeName + ", " + typeText);
 			    			} else {
@@ -1952,19 +1960,66 @@
 			    			}
 		    			} else if (vo.typeId == "A03") { //퇴근
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(2)").html("<span class='" + iconStrClass + "'>" + vo.startDate.substring(11,16) + "<span>" +  iconStr);
+		    				
+			    			var typeName = "";
+			    			switch(vo.workStatus){
+			    				case "D": typeName = "<spring:message code='ezAttitude.kje29' />"; break;
+			    				case "H": typeName = "<spring:message code='ezAttitude.kje30' />"; break;
+			    				default : break;
+			    			}
+
+							if (typeText != "" || typeText.indexOf("<spring:message code='ezAttitude.t113' />") > -1) {
+								if (typeText.indexOf("<spring:message code='ezAttitude.t64' />") == -1) {
+									typeText = (typeName == "") ? typeText : typeText + ", " + typeName;
+				    			} else {				    				
+				    				typeText = (typeName == "") ? typeText : typeName;
+				    			}
+			    			} else {
+			    				typeText = (typeName == "") ? typeText : typeName;
+			    			}
+		    				$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html(typeText);
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", typeText);			    					
 			    		} else if(vo.typeId == "A25") { //전일 퇴근
-			    			var date = new Date(vo.startDate.substring(0,4), Number(vo.startDate.substring(5,7))-1 , Number(vo.startDate.substring(8,10)));
-							date.setDate(date.getDate()-1);
 			    			$("#contentlist .mainlist tr#" + moment(date).format('YYYY-MM-DD') + " td:eq(2)").html("<span class='" + iconStrClass + "'>" + vo.startDate.substring(11,16) + " (" + Number(vo.startDate.substring(8,10)) + "일)" + "<span>" +  iconStr);
+			    			var typeName = "";
+			    			switch(vo.workStatus){
+			    				case "D": typeName = "<spring:message code='ezAttitude.kje29' />"; break;
+			    				case "H": typeName = "<spring:message code='ezAttitude.kje30' />"; break;
+			    				default : break;
+			    			}
+
+			    			if (typeText != "" || typeText.indexOf("<spring:message code='ezAttitude.t113' />") > -1) {
+			    				if (typeText.indexOf("<spring:message code='ezAttitude.t64' />") == -1) {
+									typeText = (typeName == "") ? typeText : typeText + ", " + typeName;
+			    				} else {
+				    				typeText = (typeName == "") ? typeText : typeName;			    					
+			    				}
+			    			} else {
+			    				typeText = (typeName == "") ? typeText : typeName;
+			    			}
+			    			$("#contentlist .mainlist tr#" + moment(date).format('YYYY-MM-DD') + " td:eq(3)").html(typeText);
+				    		$("#contentlist .mainlist tr#" + moment(date).format('YYYY-MM-DD') + " td:eq(3)").attr("title", typeText);
 			    		} else if (vo.typeId == "A08") { //조퇴
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(2)").html("<span class='AttRedText " + iconStrClass + "'>" + vo.startDate.substring(11,16) + "</span>" + iconStr);
-			    			if (typeText != "" || typeText.indexOf("<spring:message code='ezAttitude.t113' />") > -1) {//지각이면 "지각,조퇴" 형태로 되게끔.
-			    				$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html(typeText + ", " + vo.typeName);
-				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", vo.typeName + ", " + typeText);
-			    			} else {
-			    				$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html(vo.typeName);
-				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", vo.typeName);
+			    			var typeName = "";
+			    			switch(vo.workStatus){
+			    				case "D": typeName = "<spring:message code='ezAttitude.kje29' />"; break;
+			    				case "H": typeName = "<spring:message code='ezAttitude.kje30' />"; break;
+			    				default : break;
 			    			}
+							
+			    			if (typeText != "" || typeText.indexOf("<spring:message code='ezAttitude.t113' />") > -1) { //지각이면 "지각,조퇴" 형태로 되게끔.
+				    			if (typeText.indexOf("<spring:message code='ezAttitude.t64' />") == -1) {
+			    					typeText = (typeName == "") ? typeText + ", " + vo.typeName : typeText + ", " + vo.typeName + ", " + typeName;				    				
+				    			} else {				    				
+				    				typeText = (typeName == "") ? vo.typeName : vo.typeName + ", " + typeName;
+				    			}
+			    			} else {
+			    				typeText = (typeName == "") ? vo.typeName : vo.typeName + ", " + typeName;
+			    			}
+		    				$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html(typeText);
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", typeText);
+			    			
 			    		} else { //휴근
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").html("<span class='AttBlueText " + iconStrClass + "'>" + vo.startDate.substring(11,16) + "</span>" + iconStr);
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(2)").html("<span class='AttBlueText " + iconStrClass + "'>" + vo.endDate.substring(11,16) + "</span>" + iconStr);
@@ -2033,7 +2088,9 @@
 					    			var typeText = $("#contentlist .mainlist tr#" + trDay + " td:eq(3)").text();
 					    			//지각이나 조퇴일 경우 "지각,외근" 혹은 "지각,조퇴,외근" 의 형태로 나오게끔
 					    			if (typeText.indexOf("<spring:message code='ezAttitude.t113' />") > -1
-					    					|| typeText.indexOf("<spring:message code='ezAttitude.t114' />") > -1) {
+					    					|| typeText.indexOf("<spring:message code='ezAttitude.t114' />") > -1
+					    					|| typeText.indexOf("<spring:message code='ezAttitude.kje29' />") > -1
+					    					|| typeText.indexOf("<spring:message code='ezAttitude.kje30' />") > -1) {
 						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(3)").text(typeText + ", " + vo.typeName);
 						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(3)").attr("title", typeText + ", " + vo.typeName);
 					    			} else {
@@ -2114,7 +2171,9 @@
 				    			var typeText = $("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").text();
 				    			//지각이나 조퇴일 경우 "지각,외근" 혹은 "지각,조퇴,외근" 의 형태로 나오게끔
 				    			if (typeText.indexOf("<spring:message code='ezAttitude.t113' />") > -1
-				    					|| typeText.indexOf("<spring:message code='ezAttitude.t114' />") > -1) {
+				    					|| typeText.indexOf("<spring:message code='ezAttitude.t114' />") > -1
+				    					|| typeText.indexOf("<spring:message code='ezAttitude.kje29' />") > -1
+				    					|| typeText.indexOf("<spring:message code='ezAttitude.kje30' />") > -1) {
 					    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").text(typeText + ", " + vo.typeName);
 					    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", typeText + ", " + vo.typeName);
 				    			} else {
