@@ -14,6 +14,7 @@
 		<script id="clientEventHandlersJS" type="text/javascript">
 		var RetValue, ReturnFunction;
 		var pOpinionMod, pOpinionContent;
+		var primary = "<c:out value='${primary}'/>"; // 의견 작성 시 다국어 대응을 위한 변수 (1:기본언어, 2:다국어)
 		
 		window.onload = function () {
 			if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {

@@ -264,7 +264,7 @@ function ReSend(pURL, pEmail) {
 }
 
 function reply_mail_onclick() {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
     }
     
@@ -276,9 +276,10 @@ function reply_mail_onclick() {
         var pSelectItem;
         if (listContentArry.length > 0) {
             pSelectItem = document.getElementById(listContentArry[listContentArry.length-1])
-        }
-        else {
+        } else if (listSubContentArry.length > 0) {
             pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+        } else {
+        	pSelectItem = currentFixingId;
         }
         var pheight = window.screen.availHeight;
         var conHeight = pheight * 0.8;
@@ -307,7 +308,7 @@ function GetNewGuid() {
 }
 
 function all_reply_mail_onclick() {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
     }
     
@@ -319,9 +320,10 @@ function all_reply_mail_onclick() {
         var pSelectItem;
         if (listContentArry.length > 0) {
             pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1])
-        }
-        else {
+		} else if (listSubContentArry.length > 0) {
             pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+        } else {
+        	pSelectItem = currentFixingId;
         }
         var pheight = window.screen.availHeight;
         var conHeight = pheight * 0.8;
@@ -343,8 +345,7 @@ function all_reply_mail_onclick() {
 }
 
 function reSend_onClick() {
-	
-	if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+	if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
     }
     
@@ -356,8 +357,10 @@ function reSend_onClick() {
         
         if (listContentArry.length > 0) {
             pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1])
-        } else {
+        } else if (listSubContentArry.length > 0) {
             pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+        } else {
+        	pSelectItem = currentFixingId;
         }
         
         var pURI = "/ezEmail/mailWrite.do?cmd=RESEND&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
@@ -373,7 +376,7 @@ function reSend_onClick() {
 }
 
 function transmission_mail_onclick() {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
     }
     
@@ -385,9 +388,10 @@ function transmission_mail_onclick() {
         var pSelectItem;
         if (listContentArry.length > 0) {
             pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1])
-        }
-        else {
+        } else if (listSubContentArry.length > 0) {
             pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+        } else {
+        	pSelectItem = currentFixingId;
         }
         var pheight = window.screen.availHeight;
         var conHeight = pheight * 0.8;
@@ -408,7 +412,7 @@ function transmission_mail_onclick() {
     }
 }
 function Read_StatusChange(pGubun) {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
         return;
     }
@@ -427,11 +431,12 @@ function Read_StatusChange(pGubun) {
         for (var i = 0; i < listContentArry.length; i++) {
             createNodeAndInsertText(xmlpara, objNode, "MESSAGEID", document.getElementById(listContentArry[i]).getAttribute("_href"));
         }
-    }
-    else {
+    } else if (listSubContentArry.length > 0) {
         for (var i = 0; i < listSubContentArry.length; i++) {
             createNodeAndInsertText(xmlpara, objNode, "MESSAGEID", document.getElementById(listSubContentArry[i]).getAttribute("_href"));
         }
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "MESSAGEID", currentFixingId.getAttribute("_href"));
     }
     
     var url = "/ezEmail/mailSetReadChange.do";
@@ -454,7 +459,7 @@ function Read_StatusChange(pGubun) {
 }
 var mail_movecopy_cross_dialogArguments = new Array();
 function move_mail_onclick() {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
         return;
     }
@@ -468,12 +473,18 @@ function move_mail_onclick() {
 		requestUrl += "?shareId=" + encodeURIComponent(shareId);
 	}
     
+	if (listContentArry.length + listSubContentArry.length == 0) {
+		currentFixingIdTemp = currentFixingId;
+	}
+	
     var OpenWin = window.open(requestUrl, "mail_movecopy_cross", GetOpenWindowfeature(322, 380));
     try { OpenWin.focus(); } catch (e) { }
 }
 function move_mail_onclick_Complete(moveUrl) {
     if (typeof (moveUrl) == "undefined")
         return;
+
+	var isOnlyFixingId = listContentArry.length + listSubContentArry.length == 0;
 
     if (moveUrl["cmd"] == "MOVE") {
     	var includeSecureMail = false;
@@ -484,7 +495,7 @@ function move_mail_onclick_Complete(moveUrl) {
     	    }
     	}
     	
-    	if (includeSecureMail) {
+    	if (includeSecureMail || isOnlyFixingId && currentFixingIdTemp.getAttribute("securemail") == "1") {
     		if (!confirm(strLangLHM20)) {
 	    		return;
 	    	}
@@ -497,6 +508,11 @@ function move_mail_onclick_Complete(moveUrl) {
         for (var i = 0; i < listSubContentArry.length; i++) {
             szItemID += document.getElementById(listSubContentArry[i]).getAttribute("_href") + ",";
         }
+        
+        if (isOnlyFixingId) {
+        	szItemID = currentFixingIdTemp.getAttribute("_href") + ",";
+        }
+        
         Mail_CopyPostSend(moveUrl["cmd"], moveUrl["url"], szItemID);
     }
     else if (moveUrl["cmd"] == "COPY") {
@@ -507,6 +523,11 @@ function move_mail_onclick_Complete(moveUrl) {
         for (var i = 0; i < listSubContentArry.length; i++) {
             szItemID += document.getElementById(listSubContentArry[i]).getAttribute("_href") + ",";
         }
+
+		if (isOnlyFixingId) {
+			szItemID = currentFixingIdTemp.getAttribute("_href") + ",";
+		}
+
         Mail_CopyPostSend(moveUrl["cmd"], moveUrl["url"], szItemID);
         
         // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
@@ -1275,7 +1296,7 @@ function PreviewRayerChange(pGubun) {
                             var HeaderObject = document.getElementById("MailHeader");
                             var ContentObject = document.getElementById("MailList");
                             HeaderIni(HeaderObject);
-                            GetListInfo(HeaderObject, ContentObject);
+                            s(HeaderObject, ContentObject);
                         }*/
                     }
                 //}
@@ -1689,6 +1710,9 @@ function mailExport_start(pwd){
 function HiddenContextMenu() {
     document.getElementById("mailPanel").style.display = "none";
     document.getElementById("ContextMenuDiv").style.display = "none";
+	if (window.currentFixingId) {
+		currentFixingId = null;
+	}
 }
 function ContextMenuHidden() {
     if (document.getElementById("ContextMenuDiv").style.display == "")
@@ -1700,6 +1724,13 @@ function ContextMenuHidden() {
     if (parent.frames["left"].document.getElementById("folderMenuDiv").style.display == "") {
     	parent.frames["left"].document.getElementById("folderPanel").style.display = "none";
     	parent.frames["left"].document.getElementById("folderMenuDiv").style.display = "none";
+    }
+    if(document.getElementById("moreSearch").style.display != "none"){
+	    $("#moreSearch").css("display", "none");   
+	    $("#searchButton").css("display", "none");   
+	    document.getElementsByName("keyword")[0].disabled = false;
+	    document.getElementById("searchCheck").disabled = false;
+	    document.getElementById("searchCheck").style.backgroundColor="white";
     }
 }
 function PopUpPreMail() {
@@ -1820,7 +1851,7 @@ function event_flag(obj) {
 
 var flagXmlHttp;
 function toggle_flag() {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
         return;
     }
@@ -1834,10 +1865,12 @@ function toggle_flag() {
         }
         else
             pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1]).getAttribute("_href") + ";";
-    }
-    else {
-        pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
-    }
+	} else if (listSubContentArry.length > 0) {
+		pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1]).getAttribute("_href") + ";";
+	} else {
+		pSelectItem = currentFixingId.getAttribute("_href") + ";";;
+	}
+
     var now = new Date();
     now.setDate(now.getDate() + 1);
 
@@ -2041,7 +2074,7 @@ function mailConfirm_flag_btn() {
 	var pSelectItem  = "";
 	var url = "/ezEmail/mailSetFlagForMailConfirm.do";
 	
-	if (listContentArrLen == 0 && listSubContentArrLen == 0) {
+	if (listContentArrLen == 0 && listSubContentArrLen == 0 && currentFixingId == null) {
         alert(strLang42);
         return;
     }
@@ -2050,8 +2083,10 @@ function mailConfirm_flag_btn() {
         for (var i = 0; i < listContentArry.length; i++) {
             pSelectItem += document.getElementById(listContentArry[i]).getAttribute("_href") + ";";
         }
-    } else {
+    } else if (listSubContentArry.length > 0) {
         pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+    } else {
+    	pSelectItem = currentFixingId;
     }
 
     flagXmlHttp = createXMLHttpRequest();

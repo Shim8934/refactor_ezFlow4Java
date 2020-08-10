@@ -28,15 +28,18 @@
 				<h2 class="on"><span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezPortal.jjh01' /></span></h2>
 				<ul class="lnbUL">
 				<c:if test="${packageType != 'mail'}">  
+				<c:if test="${usePortal eq 'YES' }">
 					<li><span class = "list_text leftMenu_btn" id = "themes"><spring:message code='ezNewPortal.t054' /></span></li>
 					<li><span class = "list_text leftMenu_btn" id = "menus"><spring:message code='ezNewPortal.t055' /></span></li>
 					<li><span class = "list_text leftMenu_btn" id = "portlets"><spring:message code='ezNewPortal.t056' /></span></li>
+				</c:if>
 					<li><span class = "list_text leftMenu_btn" id = "logos"><spring:message code='ezNewPortal.t057' /></span></li>
 				</c:if>
 				<c:if test="${packageType == 'mail'}">  
 					<li><span class = "list_text leftMenu_btn" id = "logos"><spring:message code='ezNewPortal.t057' /></span></li>
 				</c:if>
 				</ul>
+				<c:if test="${usePortal eq 'YES' }">
 				<h2 class="on"><span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezPortal.jjh02' /></span></h2>
 				<ul class="lnbUL">
 				<c:if test="${packageType != 'mail'}">  
@@ -50,6 +53,7 @@
 					<li><span  class = "list_text" onClick="goPage(4)"><spring:message code = 'main.t67' /></span></li>
 				</c:if>
 				</ul>
+				</c:if>
 			</div>
 		</div>
 	</body>

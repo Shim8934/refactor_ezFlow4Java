@@ -2858,4 +2858,15 @@
 			tenant_id = #tenantId#
 	</select>
 	
+	
+	<select id="EzCommonDAO.checkTenantConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = #propertyName#
+		AND
+			tenant_id = #tenantId#
+	</select>
 </sqlMap>

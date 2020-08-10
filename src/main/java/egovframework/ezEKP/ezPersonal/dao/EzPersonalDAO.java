@@ -42,6 +42,11 @@ public class EzPersonalDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<PersonalApprovMailVO> getApprovNotiConfig_S4(Map<String, Object> map) throws Exception{
+		return (List<PersonalApprovMailVO>) list("EzPersonalDAO.getApprovNotiConfig_S4", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<PersonalLightPollVO> getPollListUser(Map<String, Object> map) throws Exception{
 		return (List<PersonalLightPollVO>) list("EzPersonalDAO.getPollListUser", map);
 	}

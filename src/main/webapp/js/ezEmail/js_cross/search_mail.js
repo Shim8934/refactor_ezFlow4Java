@@ -188,7 +188,12 @@ function start_search() {
 
     var sMailFolder = TrimText(select2.value);
     ShowMailProgress();
-    searchRecurMail(sMailFolder, startDate, endDate);
+    if(listType == "mailList"){	
+    	searchRecurMail2(sMailFolder, startDate, endDate);
+    } else {
+    	searchRecurMail(sMailFolder, startDate, endDate);
+    }
+    
 }
 
 function searchRecurMail(sMailFolder, startDate, endDate) {
@@ -212,7 +217,21 @@ function searchRecurMail(sMailFolder, startDate, endDate) {
     }
     createNodeAndInsertText(xmlDOM, objNode, "STARTDATE", startDate);
     createNodeAndInsertText(xmlDOM, objNode, "ENDDATE", endDate);
-
+    // attach contain
+    var attachStatus = "";
+    var andorStatus = "";
+    if( $("#moreSearch").css("display") != "none"){
+    	if(document.querySelector("input[name=attachment]:checked").value != null ){
+    			attachStatus = document.querySelector("input[name=attachment]:checked").value;
+    	}
+    	
+    	if(document.querySelector("input[name=andor]:checked").value != null ){
+    		andorStatus = document.querySelector("input[name=andor]:checked").value;
+    	}
+    }
+    createNodeAndInsertText(xmlDOM, objNode, "ATTACHSTATUS", attachStatus);
+    createNodeAndInsertText(xmlDOM, objNode, "ANDORSTATUS", andorStatus);
+    	
     if (p_ListOrderObject == null) {
         event_HeaderClick(document.getElementById("tofromdate"));
     }
@@ -233,6 +252,62 @@ function searchRecurMail(sMailFolder, startDate, endDate) {
     g_searchHttp.send(xmlDOM);
 }
 
+function searchRecurMail2(sMailFolder, startDate, endDate) {
+	var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
+	var startIndex = listSize * (pageNum - 1);
+	
+	g_searchHttp = createXMLHttpRequest();
+	var xmlDOM = createXmlDom();
+	
+	var objNode;
+	createNodeInsert(xmlDOM, objNode, "DATA");
+	createNodeAndInsertText(xmlDOM, objNode, "MAILFOLDER", sMailFolder);
+	
+	for (var i = 0 ; i < searchCArray.length; i++ ){
+		searchKArray[i] = ReplaceText(searchKArray[i], "&", "&amp;");
+		searchKArray[i] = ReplaceText(searchKArray[i], "<", "&lt;");
+		searchKArray[i] = ReplaceText(searchKArray[i], ">", "&gt;");
+		searchKArray[i] = ReplaceText(searchKArray[i], "'", "''");
+		createNodeAndInsertText(xmlDOM, objNode, "KEYWORD", searchKArray[i]);
+		createNodeAndInsertText(xmlDOM, objNode, "CATEGORY", searchCArray[i]);
+	}
+	createNodeAndInsertText(xmlDOM, objNode, "STARTDATE", startDate);
+	createNodeAndInsertText(xmlDOM, objNode, "ENDDATE", endDate);
+	// attach contain
+	var attachStatus = "";
+	var andorStatus = "";
+	if( $("#moreSearch").css("display") != "none"){
+		if(document.querySelector("input[name=attachment]:checked").value != null ){
+			attachStatus = document.querySelector("input[name=attachment]:checked").value;
+		}
+		
+		if(document.querySelector("input[name=andor]:checked").value != null ){
+			andorStatus = document.querySelector("input[name=andor]:checked").value;
+		}
+	}
+	createNodeAndInsertText(xmlDOM, objNode, "ATTACHSTATUS", attachStatus);
+	createNodeAndInsertText(xmlDOM, objNode, "ANDORSTATUS", andorStatus);
+	
+	if (p_ListOrderObject == null) {
+		event_HeaderClick(document.getElementById("tofromdate"));
+	}
+	
+	createNodeAndInsertText(xmlDOM, objNode, "PORP", p_ListOrderObject.getAttribute("porp"));
+	createNodeAndInsertText(xmlDOM, objNode, "ORDERBY", p_ListOrderObject.getAttribute("orderoption"));
+	createNodeAndInsertText(xmlDOM, objNode, "STARTINDEX", startIndex);
+	createNodeAndInsertText(xmlDOM, objNode, "LISTCOUNT", listSize);
+	
+	var requestUrl = "/ezEmail/mailSearch.do";
+	
+	if (shareId != "") {
+		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	}
+	
+	g_searchHttp.open("POST", requestUrl, true);
+	g_searchHttp.onreadystatechange = event_searchRecurMail;
+	g_searchHttp.send(xmlDOM);
+}
+
 var resultTable = null;
 var recordCount = 0;
 
@@ -242,9 +317,16 @@ function event_searchRecurMail() {
     }
     	
     if (g_searchHttp.status > 199 && g_searchHttp.status < 300) {
-    	
-        if (document.getElementById("Checkbox1").checked) {
-            document.getElementById("Checkbox1").checked = false;
+    	var curPage = "";
+        if(listType == "mailList"){	
+        	var list = document.getElementById("MailList");
+        	if (list.childNodes.item(0).childNodes.item(0).checked) {
+        		list.childNodes.item(0).childNodes.item(0).checked = false;
+        	}
+        } else {
+        	if (document.getElementById("Checkbox1").checked) {
+         	   document.getElementById("Checkbox1").checked = false;
+        	}
         }
 
         var passXml = createXmlDom();
@@ -257,7 +339,12 @@ function event_searchRecurMail() {
         HiddenMailProgress();
         
         if (resultTable.rows.length == 0) {
-        	var curPage = document.getElementById("resultTD").getAttribute("curPage");
+        	var curPage = "";
+        	if(listType == "mailList"){
+        		curPage = document.getElementById("MailList").getAttribute("curPage");
+        	} else {
+	        	curPage = document.getElementById("resultTD").getAttribute("curPage");
+        	}
         	
         	if (Number(curPage) > 1) {
         		selbeforeBlock_one();

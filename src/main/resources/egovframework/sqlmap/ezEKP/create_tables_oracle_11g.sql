@@ -18054,3 +18054,184 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
 
   ALTER TABLE "TBL_WEBFOLDER_SHARE_SUB" ADD CONSTRAINT "TBL_WEBFOLDER_SHARE_SUB_FK1" FOREIGN KEY ("SHARE_ID", "TENANT_ID")
 	  REFERENCES "TBL_WEBFOLDER_SHARE" ("SHARE_ID", "TENANT_ID") ON DELETE CASCADE ENABLE;
+
+--------------------------------------------------------
+--  SEARCH_INDEX_APPROVAL_SEQ
+--------------------------------------------------------  
+
+CREATE SEQUENCE  "SEARCH_INDEX_APPROVAL_SEQ"  MINVALUE 0 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 0 NOCACHE  NOORDER  NOCYCLE;
+
+--------------------------------------------------------
+--  SEARCH_INDEX_BOARD_SEQ
+--------------------------------------------------------
+
+CREATE SEQUENCE "SEARCH_INDEX_BOARD_SEQ"  MINVALUE 0 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 0 CACHE 20 NOORDER  NOCYCLE;
+
+--------------------------------------------------------
+--  VIEW_EZAPPROVALG
+--------------------------------------------------------
+
+CREATE OR REPLACE VIEW "VIEW_EZAPPROVALG"
+(DOCID,DOCNO,DOCTITLE,WRITERDEPTNAME,WRITERDEPTNAME2,WRITERNAME,WRITERNAME2,STARTDATE,ENDDATE,HASATTACHYN,CONTENTSPATH,HREF,FORMID,FORMNAME,FORMNAME2,CONTAINERID,KEYWORD,WRITERDEPTID,TENANT_ID,COMPANYID)
+AS
+SELECT  
+        a.DOCID AS docid, 
+        a.DOCNO AS docno, 
+        a.DOCTITLE AS doctitle, 
+        a.WRITERDEPTNAME AS writerdeptname, 
+        a.WRITERDEPTNAME2 AS writerdeptname2, 
+        a.WRITERNAME AS writername, 
+        a.WRITERNAME2 AS writername2, 
+        a.STARTDATE AS StartDate, 
+        a.ENDDATE AS EndDate, 
+        a.HASATTACHYN AS hasattachyn, 
+        CONCAT('/volumes/shared/ezFlow', a.HREF) AS ContentsPath, 
+        a.HREF AS href, 
+        a.FORMID AS formid, 
+        d.FORMNAME AS formname, 
+        d.FORMNAME2 AS formname2, 
+        a.CONTAINERID AS containerid, 
+        NVL(x.KEYWORD, '') AS KeyWord, 
+        e.APRMEMBERDEPTID AS WriterDeptID, 
+        a.TENANT_ID AS TENANT_ID, 
+        a.COMPANYID AS COMPANYID 
+    FROM 
+        ((((tbl_endaprdocinfo a 
+        JOIN tbl_container c ON (a.CONTAINERID = c.CONTAINERID 
+            AND a.TENANT_ID = c.TENANT_ID 
+            AND a.COMPANYID = c.COMPANYID)) 
+        JOIN tbl_expendaprdocinfo x ON (a.DOCID = x.DOCID 
+            AND a.TENANT_ID = x.TENANT_ID 
+            AND a.COMPANYID = x.COMPANYID)) 
+        LEFT JOIN tbl_forminfo d ON (d.FORMID = a.FORMID 
+            AND d.TENANT_ID = a.TENANT_ID 
+            AND d.COMPANYID = a.COMPANYID)) 
+        JOIN tbl_endaprlineinfo e ON (a.DOCID = e.DOCID 
+            AND a.TENANT_ID = e.TENANT_ID 
+            AND a.COMPANYID = e.COMPANYID)) 
+    WHERE 
+        e.APRMEMBERSN = 1 
+            AND a.CONTAINERID <> '9999999999'  
+    UNION ALL SELECT  
+        a.DOCID AS docid, 
+        a.DOCNO AS docno, 
+        a.DOCTITLE AS doctitle, 
+        a.WRITERDEPTNAME AS writerdeptname, 
+        a.WRITERDEPTNAME2 AS writerdeptname2, 
+        a.WRITERNAME AS writername, 
+        a.WRITERNAME2 AS writername2, 
+        a.STARTDATE AS StartDate, 
+        a.ENDDATE AS EndDate, 
+        a.HASATTACHYN AS hasattachyn, 
+        CONCAT('/volumes/shared/ezFlow', a.HREF) AS ContentsPath, 
+        a.HREF AS href, 
+        a.FORMID AS formid, 
+        d.FORMNAME AS formname, 
+        d.FORMNAME2 AS formname2, 
+        '' AS containerid, 
+        NVL(x.KEYWORD, '') AS KeyWord, 
+        '' AS WriterDeptID, 
+        a.TENANT_ID AS TENANT_ID, 
+        a.COMPANYID AS COMPANYID 
+    FROM 
+        (((tbl_aprdocinfo a 
+        JOIN tbl_aprlineinfo b ON (a.DOCID = b.DOCID 
+            AND a.TENANT_ID = b.TENANT_ID 
+            AND a.COMPANYID = b.COMPANYID)) 
+        JOIN tbl_expaprdocinfo x ON (a.DOCID = x.DOCID 
+            AND a.TENANT_ID = x.TENANT_ID 
+            AND a.COMPANYID = x.COMPANYID)) 
+        LEFT JOIN tbl_forminfo d ON (d.FORMID = a.FORMID 
+            AND d.TENANT_ID = a.TENANT_ID 
+            AND d.COMPANYID = a.COMPANYID)) 
+    WHERE 
+        b.APRSTATE = '010' 
+            AND b.APRTYPE = '015'
+
+--------------------------------------------------------
+--  VIEW_EZBOARDSTD
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE VIEW "VIEW_EZBOARDSTD" ("ITEMID", "BOARDNAME", "BOARDNAME2", "GUBUN", "TITLE", "WRITERDEPTNAME", "WRITERNAME", "WRITEDATE", "ATTACHMENTS", "BOARDID", "WRITERID", "HERF", "CONTENTLOCATION", "WRITERDEPTID", "TENANT_ID", "COMPANYID") AS 
+  SELECT  
+        b.ITEMID AS ITEMID, 
+        a.BOARDNAME AS BOARDNAME, 
+        a.BOARDNAME2 AS BOARDNAME2, 
+        a.GUBUN AS GUBUN, 
+        b.TITLE AS title, 
+        b.WRITERDEPTNAME AS WRITERDEPTNAME, 
+        b.WRITERNAME AS WRITERNAME, 
+        b.WRITEDATE AS WRITEDATE, 
+        b.ATTACHMENTS AS ATTACHMENTS, 
+        b.BOARDID AS BOARDID, 
+        b.WRITERID AS WRITERID, 
+        b.CONTENTLOCATION AS Herf, 
+        CONCAT('/volumes/shared/ezFlow', 
+                b.CONTENTLOCATION) AS CONTENTLOCATION, 
+        b.WRITERDEPTID AS WRITERDEPTID, 
+        a.TENANT_ID AS TENANT_ID, 
+        a.COMPANYID AS COMPANYID 
+    FROM 
+        (tbl_board_boardinfo a 
+        JOIN tbl_board_item b ON (a.BOARDID = b.BOARDID 
+            AND a.TENANT_ID = b.TENANT_ID))
+    WHERE 
+        b.APPRFLAG <> 'C' 
+            AND b.APPRFLAG <> 'N' 
+            OR b.APPRFLAG IS NULL;
+
+--------------------------------------------------------
+--  SEARCH_INDEX_APPROVAL
+--------------------------------------------------------
+
+CREATE TABLE "SEARCH_INDEX_APPROVAL" 
+   (	"ID" NUMBER(22,0) DEFAULT "SEARCH_INDEX_APPROVAL_SEQ"."NEXTVAL" NOT NULL ENABLE, 
+	"DOCID" VARCHAR2(80) NOT NULL ENABLE, 
+	"GUBUN" VARCHAR2(4) NOT NULL ENABLE, 
+	"INSERTDATE" DATE NOT NULL ENABLE, 
+	"STATUS" VARCHAR2(4) NOT NULL ENABLE, 
+	"TENANT_ID" NUMBER(22,0) NOT NULL ENABLE, 
+	"COMPANYID" VARCHAR2(20) NOT NULL ENABLE
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  STORAGE(INITIAL 0 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
+  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
+
+--------------------------------------------------------
+--  SEARCH_INDEX_BOARD
+--------------------------------------------------------
+
+CREATE TABLE "SEARCH_INDEX_BOARD" 
+   (	"ID" NUMBER(22,0) DEFAULT "SEARCH_INDEX_BOARD_SEQ"."NEXTVAL" NOT NULL ENABLE, 
+	"ITEMID" VARCHAR2(80) NOT NULL ENABLE, 
+	"GUBUN" VARCHAR2(4) NOT NULL ENABLE, 
+	"INSERTDATE" DATE NOT NULL ENABLE, 
+	"STATUS" VARCHAR2(4) NOT NULL ENABLE, 
+	"TENANT_ID" NUMBER(22,0) NOT NULL ENABLE, 
+	 CONSTRAINT "SEARCH_INDEX_BOARD_PK" PRIMARY KEY ("ID", "TENANT_ID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
+  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS"  ENABLE
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  STORAGE(INITIAL 0 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
+  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;	  
+
+--------------------------------------------------------
+--  SERACH_INDEX_BOARD_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "SEARCH_INDEX_BOARD_PK" ON "SEARCH_INDEX_BOARD" ("ID", "TENANT_ID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 0 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
+  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;  

@@ -111,6 +111,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String returnUrl = "";
 		String useMemo = "";
 		String useExternalMailServer = "";
+		String useContextmenu = "";
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
@@ -119,6 +120,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			logger.debug("convertMenu check: " + convertMenu);
 			useMemo = data.get("useMemo").toString();
 			useExternalMailServer = data.get("useExternalMailServer").toString();
+			useContextmenu = data.get("useContextmenu").toString();
 			
 			if (startPage != null && menucode == null) {
 				String startUrl = startPage.get("menuUrl").toString();
@@ -149,6 +151,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			returnUrl = "/ezEmail/mailMain.do";
 		}
 		
+		// 우선 포탈 사용안하면 전자결재를 기본으로 나오도록 함. 수정 필요
+		String usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
+		if (usePortal != null && usePortal.equals("NO")) {
+			returnUrl = "/ezApprovalG/apprGMain.do";
+		}
+		
+		model.addAttribute("useContextmenu", useContextmenu);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("useMemo", useMemo);
 		model.addAttribute("mainUrl", returnUrl);
@@ -227,6 +236,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 				}
 				model.addAttribute("lastLogin", lastLogin);
 				model.addAttribute("loginIP", loginIP);
+			}
+			
+			String usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
+			if(usePortal.equalsIgnoreCase("NO")) {
+				JSONArray menuList = (JSONArray) data.get("menuList");
+				JSONObject firstMenu = (JSONObject) menuList.get(0);
+				logoMainUrl = (String) firstMenu.get("menuUrl");
+				//logoMainUrl = "/ezApprovalG/apprGMain.do";
 			}
 			
 			model.addAttribute("packageType", packageType.toLowerCase());

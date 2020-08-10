@@ -1392,7 +1392,7 @@
 		            	<li onclick="operatorSendMail()"><span class="sub_iconLNB left_admin_mail"></span><span class="list_text"><spring:message code="ezEmail.0hun01" /></span></li>
 		            </c:if>	
 		            <c:if test="${useSpamSniper ne null && useSpamSniper != '' && useSpamSniper != 'NO'}">
-		            	<li onclick="spamMailBox()"><span class="sub_iconLNB tree_junk"></span><span class="list_text">스팸편지함</span></li>
+		            	<li onclick="spamMailBox()"><span class="sub_iconLNB tree_junk"></span><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
 		            </c:if>
 		            <c:if test="${useSpamOut}">
 		            	<li onclick="oepnSpamOutBox()"><span class="sub_iconLNB tree_junk"></span><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>

@@ -61,6 +61,10 @@
 			        case 9:
 			            url = "/admin/ezPersonal/sliderImages.do";
 			            break;
+			            
+			        case 10:
+			            url = "/admin/ezNewPortal/portalLogos.do";
+			            break;
 			    }
 				parent.frames["right"].location.href = url;
 			}
@@ -90,12 +94,13 @@
 			</h2> --%>
 			
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-				<h2><span onClick="goPage(8)" style="display:inline-block;width:100%">빠른링크</span></h2>
-<%-- 			  	<h2 style="display: ${(pollFlag != 'YES') ? 'block' : 'none'};"><span onClick="goPage(3)" style="display:inline-block;width:100%">Quick Poll</span></h2> --%>
+				<h2><span onClick="goPage(10)" style="display:inline-block;width:100%"><spring:message code='ezNewPortal.t057' /></span></h2>
+				<%-- <h2><span onClick="goPage(8)" style="display:inline-block;width:100%">빠른링크</span></h2>
+			  	<h2 style="display: ${(pollFlag != 'YES') ? 'block' : 'none'};"><span onClick="goPage(3)" style="display:inline-block;width:100%">Quick Poll</span></h2>
 			  	<h2 style="display: 'block';"><span onClick="goPage(3)" style="display:inline-block;width:100%"><spring:message code = 'ezPersonal.hyh1' /></span></h2>
 			  	<h2><span onClick="goPage(4)" style="display:inline-block;width:100%"><spring:message code = 'main.t67' /></span></h2>
 			  	<h2><span onClick="goPage(7)" style="display:inline-block;width:100%;"><spring:message code = 'main.t68' /></span></h2>
-			  	<h2><span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code = 'main.t10000' /></span></h2>
+			  	<h2><span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code = 'main.t10000' /></span></h2> --%>
 		  	</div>
 		  	<%-- <c:if test="${useKMS == 'YES' }">
 				<h2><span onClick="goPage(5)" style="display:inline-block;width:100%"><spring:message code = 'main.t68' /></span>

@@ -98,9 +98,9 @@
 				<tr> 
 					<th><spring:message code = 'ezCommunity.t9991' /></th>
 					<td>
-		                <table style="table-layout:fixed;width:240px;">
+		                <table style="table-layout:fixed;width:410px;">
 		                    <tr>
-		                        <td style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden;max-width:240px;">
+		                        <td style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden;max-width:410px;">
 		                        	<c:choose>   
 			                            <c:when test="${userInfo.primary != '2' }">
 											<c:out value = '${clubVO.c_ClubName}' />
