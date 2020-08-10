@@ -3612,6 +3612,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
 		int totalPage = ezCommunityService.mainPage(userInfo);
 		String bName = "tbl_c_board";
+		String userName = userInfo.getDisplayName1();
+		
+		/* 2020-08-10 홍승비 - 커뮤니티 가입 승인대기 메세지에 필요한 이름 추가 */
+		if (!commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
+			userName = userInfo.getDisplayName2();
+		}
 		
 		/* 2018-05-17 홍승비 - 새 글에 new 표시 추가 */
 		String pastDate = commonUtil.getTodayUTCTime("");
@@ -3632,6 +3638,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("pastDate", pastDate);
 		model.addAttribute("cNoticeList", cNoticeList);
+		model.addAttribute("userName", userName);
 		
 		logger.debug("mainPage ended.");
 		
@@ -3915,11 +3922,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String cPermit = ezCommunityService.leftCommunityGet1(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		// 가입 또는 가입 신청된 상태로, 미승인 시의 permit 값은 0이다.
 		if (cPermit != null) {
 			logger.debug("getIsJoin ended. true");
 			
 			return "TRUE";
-		} else {
+		} else { // 미가입
 			logger.debug("getIsJoin ended. false");
 			
 			return "FALSE";
