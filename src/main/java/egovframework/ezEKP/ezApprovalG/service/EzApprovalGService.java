@@ -15,9 +15,11 @@ import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
+
 import org.w3c.dom.Document;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -448,7 +450,7 @@ public interface EzApprovalGService {
     public String deleteUserContDoc(String docID, String contID, String companyID, String lang, int tenantId) throws Exception;
 
     public String getSearchDocListS(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftfrom, String draftto, String apprfrom, String papprto, String mypapprfrom, String mypapprto,
-                                    String draftDeptName, String docState, String string, String pageSize, String pageNum, String orderCell, String orderOption, String searchStatus, String companyID, String lang, String string2, int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception;
+                                    String draftDeptName, String docState, String AprFlag, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String searchStatus, String companyID, String lang, String string2, int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception;
 
     public List<ApprGContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception;
 
