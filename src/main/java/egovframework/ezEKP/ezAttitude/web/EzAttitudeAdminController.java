@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -3206,5 +3207,39 @@ public class EzAttitudeAdminController {
 			
 			return contentLength == null || contentLength < 0 ? null : contentLength;
 		}
+	}
+	
+	/**
+	 * 관리자 근태입력관리 스케줄러동작
+	 * @throws ParseException 
+	 */
+	@RequestMapping(value="/admin/ezAttitude/setDailyWork.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String setDailyWork(HttpServletRequest request) throws ParseException {
+		LOGGER.debug("setDailyWork started.");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/daliyWork";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+
+		LOGGER.debug("###setDailyWork status=" + status);		
+		LOGGER.debug("setDailyWork ended.");
+		return status;
 	}
 }

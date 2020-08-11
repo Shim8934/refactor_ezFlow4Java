@@ -3256,5 +3256,25 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/holidays] ended.");
 		return result;
 	}
+	
+	/**
+	 * G/W 근태관리 [POST] 근태입력관리 스케줄러동작
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudes/daliyWork", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject setDailyWork() {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/daliyWork] started.");
 		
+		JSONObject result = new JSONObject();
+		
+		try{
+			ezAttitudeService.autoSetDailyWork();
+			result.put("status", "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/daliyWork] ended.");
+		return result;
+	}
 }

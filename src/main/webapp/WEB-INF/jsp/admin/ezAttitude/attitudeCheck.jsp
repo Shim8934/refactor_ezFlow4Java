@@ -419,6 +419,22 @@
 	                }
 	            }
 			}
+			
+			/**
+			* [근태입력관리] 일근무/반근무 세팅 스케줄러 동작
+			*/
+			function attScheduler() {
+				$.ajax({
+					type : "POST",
+					async : true,
+					url : "/admin/ezAttitude/setDailyWork.do",
+					success : function(result) {
+						if(result != "success"){
+							alert("<spring:message code='ezCommunity.t47'/>");
+						}
+					}
+				});
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -463,7 +479,7 @@
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
 						<a class="imgbtn"><span onclick="addAtt();"><spring:message code='ezAttitude.t51' /></span></a>
-						
+						<a class="imgbtn"><span onclick="attScheduler();"><spring:message code='ezAttitude.kje31' /></span></a>
 					</td>
 				</tr>
 			</tbody>
