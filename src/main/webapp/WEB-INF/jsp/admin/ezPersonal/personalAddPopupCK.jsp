@@ -499,6 +499,17 @@
 
 	        	request.send();
 	        }
+	        
+		    /* 2020-08-06 홍승비 - 숫자 이외의 값 입력 방지 함수 */
+		    function KeEventControl(obj) {
+	            if ((window.event.keyCode >= 48 && window.event.keyCode <= 57) || (window.event.keyCode >= 96 && window.event.keyCode <= 105)) {
+	                return true;
+	            }
+	            else {
+	            	obj.value = obj.value.replace(/[\a-zㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+	            }
+	        }
+		    
 		</script>
 		<style type="text/css">
 			.popup_setting {display : inline-block; margin-top:3px; margin-right:3px;}
@@ -526,8 +537,8 @@
 				<th><spring:message code = 'ezPersonal.t262' /></th>
 				<td>
 					<span class="popup_setting"><spring:message code = 'ezPersonal.t263' /></span>
-					<input type="text" id=wWidth value="<c:out value = '${personalPopupVO.width}' />"> <span class="popup_setting"><spring:message code = 'ezPersonal.t264' /></span>
-					<input type="text" id=wHeight value="<c:out value = '${personalPopupVO.height}' />"> <span class="popup_setting"><spring:message code = 'ezPersonal.tt9' /></span>
+					<input type="text" id=wWidth value="<c:out value = '${personalPopupVO.width}' />" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);"> <span class="popup_setting"><spring:message code = 'ezPersonal.t264' /></span>
+					<input type="text" id=wHeight value="<c:out value = '${personalPopupVO.height}' />" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);"> <span class="popup_setting"><spring:message code = 'ezPersonal.tt9' /></span>
 					<select id="selectPos"> 
 						<option value="0"><spring:message code = 'ezPersonal.tt2' /></option>
 						<option value="5"><spring:message code = 'ezPersonal.tt3' /></option>

@@ -52,6 +52,10 @@ public class EzMainAdminController {
 		// String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
 		
+		String useSchedule = ezCommonService.getTenantConfig("useSchedule", userInfo.getTenantId());
+		String useResource = ezCommonService.getTenantConfig("useResource", userInfo.getTenantId());
+		String useBoard = ezCommonService.getTenantConfig("useBoard", userInfo.getTenantId());
+		
 		// 2020-04-10 김민성 - 메일 컨피그 추가
 		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
 		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
@@ -96,6 +100,17 @@ public class EzMainAdminController {
 			model.addAttribute("admin", "admin");
 		} 
 		
+		if (useSchedule == null || useSchedule.equals("")) {
+			useSchedule = "YES";
+		} 
+		
+		if (useResource == null || useResource.equals("")) {
+			useResource = "YES";
+		} 
+		
+		if (useBoard == null || useBoard.equals("")) {
+			useBoard = "YES";
+		} 
 		//baonk added
 		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("wf=1") > -1) {
 			model.addAttribute("isWFAdmin", "YES");
@@ -115,6 +130,10 @@ public class EzMainAdminController {
         
         model.addAttribute("packageType", packageType);
         model.addAttribute("useCabinet", use_cabinet);
+        
+        model.addAttribute("useSchedule", useSchedule);
+        model.addAttribute("useResource", useResource);
+        model.addAttribute("useBoard", useBoard);
 		
 		return "admin/adminTop";
 	}	

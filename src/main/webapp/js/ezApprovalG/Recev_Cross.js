@@ -419,7 +419,7 @@ function SGetDraftAprLineInfo(ret) {
                     if ((OrderName[i] == arr_userinfo[2]) && (i == 1)) IsSkipDrafter = "TRUE";
                     break;
 
-                case strAprType11:
+                case strAprType11: // 부서순차합의
                     if (xmlReDraft == "R") {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
@@ -481,7 +481,7 @@ function SGetDraftAprLineInfo(ret) {
                     hapyuiCnt = hapyuiCnt + 1;
                     break;
 
-                case strAprType8:
+                case strAprType8: // 개인순차합의
                     if (xmlReDraft == "R") {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
@@ -640,13 +640,26 @@ function SGetDraftAprLineInfo(ret) {
                 }
                 fieldname = susinSN + "jikwe" + idx;
                 field = message.GetListItem(fields, fieldname);
-                if (field)
+                if (field) {
                     setNodeText(field , OrderJobtitle[i]);
-
+                }
+                
+                /* 2020-07-27 홍승비 - 서명필드만 존재하는 경우, 서명+결재자명 필드가 함께 존재하는 경우, 슬래시 이미지의 표출분기 수정 */
                 fieldname = susinSN + "sign" + idx;
                 field = message.GetListItem(fields, fieldname);
                 if (field) {
-                    setNodeText(field , OrderName[i]);
+                	// 서명필드만 존재
+                	if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) == null) {
+                		setNodeText(field , OrderName[i]);
+                	}
+                	// 서명필드 + 결재자명 필드가 함께 존재
+                	else if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) != null) {
+                		field.innerHTML = "[NOSLASH]";
+                	}
+                	// 그 외의 경우, 아무런 값이 부여되지 않으므로 슬래시 이미지를 표출
+                	else {
+                		//setNodeText(field , OrderName[i]);
+                	}
                 }
                 
                 fieldname = susinSN + "approdept" + idx;

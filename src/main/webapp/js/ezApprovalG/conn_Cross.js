@@ -1142,3 +1142,397 @@ function DrawAutoAprLine(ret, pDraftFlag) {
     }
   
 }
+
+function New_DrawAutoLine(ret, pDraftFlag) {
+	try {
+		var signCnt = 0;
+		var habyCnt = 0;
+		var reSignCnt = 0;
+		var reHabyCnt = 0;
+		
+		var xmlDom = createXmlDom();
+			xmlDom = loadXMLString(ret);
+			
+		var oRows = SelectNodes(xmlDom, "LISTVIEWDATA/ROWS/ROW");
+		for (var i = 0; i < oRows.length; i++) {
+			var tempAprSn = getNodeText(GetChildNodes(oRows[i])[0]);
+			var tempAprType = getNodeText(GetChildNodes(oRows[i])[16]);
+			var tempAprStat = getNodeText(GetChildNodes(oRows[i])[17]);
+			
+			if (tempAprType == "001" || tempAprType == "003" || tempAprType == "004" || tempAprType == "015" || tempAprType == "040") {
+				signCnt++;
+				
+				if (tempAprStat == "003") {
+					reSignCnt++;
+				}
+				//기결재통과 결재정보 세팅 시, 사인칸 다시 그릴때 기안자는 진행이라 추가
+				if (tempAprStat == "002" && tempAprSn == "1") {
+					reSignCnt++;
+				}
+			} else if (tempAprType == "008" || tempAprType == "009" || tempAprType == "011" || tempAprType == "012") {
+				habyCnt++;
+
+				if (tempAprStat == "003") {
+					reHabyCnt++;
+				}
+			}
+		}
+
+		var aprLineRowCnt = parseInt(signCnt / 10);
+		if (signCnt % 10 > 0) {
+			aprLineRowCnt++;
+		}
+		
+		var habyRowCnt = parseInt(habyCnt / 10);
+		if (habyCnt % 10 > 0) {
+			habyRowCnt++;
+		}
+		
+		var Recv = "";
+		var SusinSN = "";
+		if (pDraftFlag == "SUSIN") {
+			Recv = "Recv";
+			SusinSN = "1";
+		}
+
+        var reDrawSignFlag = false;
+        var arrayReSign = new Map();
+        var arrayReHaby = new Map();
+
+        if (reSignCnt > 0 || reHabyCnt > 0) {
+            fields = message.GetFieldsList();
+
+            for (var i = 1; i <= reSignCnt; i++) {
+                field = message.GetListItem(fields, SusinSN + "sign" + i);
+                if (field) {
+                    arrayReSign.set(SusinSN + "sign" + i, message.GetListItem(fields, SusinSN + "sign" + i).innerHTML);
+                }
+
+                field = message.GetListItem(fields, SusinSN + "jikwe" + i);
+                if (field) {
+                    arrayReSign.set(SusinSN + "jikwe" + i, getNodeText(message.GetListItem(fields, SusinSN + "jikwe" + i)));
+                }
+
+                field = message.GetListItem(fields, SusinSN + "seumyung" + i);
+                if (field) {
+                    arrayReSign.set(SusinSN + "seumyung" + i, getNodeText(message.GetListItem(fields, SusinSN + "seumyung" + i)));
+                }
+
+                field = message.GetListItem(fields, SusinSN + "seumyungdate" + i);
+                if (field) {
+                    arrayReSign.set(SusinSN + "seumyungdate" + i, getNodeText(message.GetListItem(fields, SusinSN + "seumyungdate" + i)));
+                }
+            }
+
+            for (var i = 1; i <= reHabyCnt; i++) {
+                field = message.GetListItem(fields, SusinSN + "habyuisign" + i);
+                if (field) {
+                    arrayReHaby.set(SusinSN + "habyuisign" + i, message.GetListItem(fields, SusinSN + "habyuisign" + i).innerHTML);
+                }
+
+                field = message.GetListItem(fields, SusinSN + "habyuipositon" + i);
+                if (field) {
+                    arrayReHaby.set(SusinSN + "habyuipositon" + i, getNodeText(message.GetListItem(fields, SusinSN + "habyuipositon" + i)));
+                }
+
+                field = message.GetListItem(fields, SusinSN + "habyuija" + i);
+                if (field) {
+                    arrayReHaby.set(SusinSN + "habyuija" + i, getNodeText(message.GetListItem(fields, SusinSN + "habyuija" + i)));
+                }
+
+                field = message.GetListItem(fields, SusinSN + "habyuidate" + i);
+                if (field) {
+                    arrayReHaby.set(SusinSN + "habyuidate" + i, getNodeText(message.GetListItem(fields, SusinSN + "habyuidate" + i)));
+                }
+            }
+
+            reDrawSignFlag = true;
+        }
+
+		var fields = message.GetFieldsList();
+		var field = message.GetListItem(fields, Recv + "autoAprLine");
+		if (field && signCnt > 0) {
+			field.innerHTML = "";
+			
+			var signIdx = 1;
+			var signMax = 0;
+			
+			for (var r = 0; r < aprLineRowCnt; r++) {
+				var oTable = document.createElement("TABLE");
+				oTable.style.width = "100%";
+				oTable.style.marginTop = "10px";
+				oTable.style.tableLayout = "fixed";
+				oTable.style.border = "1px solid black";
+				oTable.style.borderCollapse = "collapse";
+	
+				if (r == 0) {
+					if (signCnt > 10) {
+						signMax = 10;
+					} else {
+						signMax = signCnt;
+					}
+				} else {
+					signIdx++;
+					signMax = signCnt;
+				}
+				
+				for (var i = 0; i < 4; i++) {
+					var oTr = document.createElement("TR");
+					
+					switch (i) {
+						case 0 : 
+							oTr.style.height = "20px";
+							break;
+						case 1 : 
+							oTr.style.height = "60px";
+							break;
+						case 2 : 
+							oTr.style.height = "20px";
+							break;
+						case 3 : 
+							oTr.style.height = "20px";
+							oTr.style.display = "none";
+							break;
+					}
+					
+					if (i == 0) {
+						var oTd = document.createElement("TD");
+						oTd.style.width = "30px";
+						oTd.style.background = "#def7ff";
+						oTd.style.border = "1px solid black";
+						oTd.setAttribute("rowspan", 4);
+						
+						for (var p = 0; p < 3; p++) {
+							var oP = document.createElement("P");
+							oP.style.textAlign = "center";
+							oP.style.fontFamily = "굴림";
+							oP.style.fontSize = "9pt";
+							oP.style.marginTop = "0pt";
+							oP.style.marginBottom = "0pt";
+							
+							if (pDraftFlag == "SUSIN") {
+								switch (p) {
+								case 0 : 
+									oP.innerHTML = "수";
+									break;
+								case 1 : 
+									oP.innerHTML = "&nbsp;";
+									break;
+								case 2 : 
+									oP.innerHTML = "신";
+									break;
+								}
+							} else {
+								switch (p) {
+								case 0 : 
+									oP.innerHTML = "결";
+									break;
+								case 1 : 
+									oP.innerHTML = "&nbsp;";
+									break;
+								case 2 : 
+									oP.innerHTML = "재";
+									break;
+								}
+							}
+							oTd.appendChild(oP);
+						}
+						oTr.appendChild(oTd);
+					}
+					
+					for (var j = signIdx; j <= signMax; j++) {
+						var oTd = document.createElement("TD");
+						oTd.className = "FIELD";
+						oTd.style.textAlign = "center";
+						oTd.style.border = "1px solid black";
+						oTd.style.fontFamily = "굴림";
+						oTd.style.fontSize = "9pt";
+						
+						switch (i) {
+							case 0 : 
+								oTd.id = SusinSN + "jikwe" + j;
+								break;
+							case 1 : 
+								oTd.id = SusinSN + "sign" + j;
+								break;
+							case 2 : 
+								oTd.id = SusinSN + "seumyung" + j;
+								break;
+							case 3 : 
+								oTd.id = SusinSN + "seumyungdate" + j;
+								break;
+						}
+						oTr.appendChild(oTd);
+					}
+					oTable.appendChild(oTr);
+				}
+				
+				signIdx = signMax;
+				field.appendChild(oTable);
+			}
+		}
+		
+		field = message.GetListItem(fields, Recv + "autoHabyLine");
+		if (field && habyCnt > 0) {
+			field.innerHTML = "";
+			
+			var habyIdx = 1;
+			var habyMax = 0;
+			
+			for (var r = 0; r < habyRowCnt; r++) {
+				var oTable = document.createElement("TABLE");
+				oTable.style.width = "100%";
+				oTable.style.marginTop = "10px";
+				oTable.style.tableLayout = "fixed";
+				oTable.style.border = "1px solid black";
+				oTable.style.borderCollapse = "collapse";
+	
+				if (r == 0) {
+					if (habyCnt > 10) {
+						habyMax = 10;
+					} else {
+						habyMax = habyCnt;
+					}
+				} else {
+					habyIdx++;
+					habyMax = habyCnt;
+				}
+				
+				for (var i = 0; i < 4; i++) {
+					var oTr = document.createElement("TR");
+					
+					switch (i) {
+						case 0 : 
+							oTr.style.height = "20px";
+							break;
+						case 1 : 
+							oTr.style.height = "60px";
+							break;
+						case 2 : 
+							oTr.style.height = "20px";
+							break;
+						case 3 : 
+							oTr.style.height = "20px";
+							oTr.style.display = "none";
+							break;
+					}
+					
+					if (i == 0) {
+						var oTd = document.createElement("TD");
+						oTd.style.width = "30px";
+						oTd.style.background = "#def7ff";
+						oTd.style.border = "1px solid black";
+						oTd.setAttribute("rowspan", 4);
+						
+						for (var p = 0; p < 3; p++) {
+							var oP = document.createElement("P");
+							oP.style.textAlign = "center";
+							oP.style.fontFamily = "굴림";
+							oP.style.fontSize = "9pt";
+							oP.style.marginTop = "0pt";
+							oP.style.marginBottom = "0pt";
+							
+							switch (p) {
+								case 0 : 
+									oP.innerHTML = "협";
+									break;
+								case 1 : 
+									oP.innerHTML = "&nbsp;";
+									break;
+								case 2 : 
+									oP.innerHTML = "의";
+									break;
+							}
+							oTd.appendChild(oP);
+						}
+						oTr.appendChild(oTd);
+					}
+					
+					for (var j = habyIdx; j <= habyMax; j++) {
+						var oTd = document.createElement("TD");
+						oTd.className = "FIELD";
+						oTd.style.border = "1px solid black";
+						oTd.style.textAlign = "center";
+						oTd.style.fontFamily = "굴림";
+						oTd.style.fontSize = "9pt";
+						
+						switch (i) {
+							case 0 : 
+								oTd.id = SusinSN + "habyuipositon" + j;
+								break;
+							case 1 : 
+								oTd.id = SusinSN + "habyuisign" + j;
+								break;
+							case 2 : 
+								oTd.id = SusinSN + "habyuija" + j;
+								break;
+							case 3 : 
+								oTd.id = SusinSN + "habyuidate" + j;
+								break;
+						}
+						oTr.appendChild(oTd);
+					}
+					oTable.appendChild(oTr);
+				}
+				
+				habyIdx = habyMax;
+				field.appendChild(oTable);
+			}
+		} else {
+			if (field) {
+				field.innerHTML = "";
+			}
+		}
+		
+		if (reDrawSignFlag) {
+			var fields = message.GetFieldsList();
+			var field;
+
+			for (var i = 1; i <= reSignCnt; i++) {
+				field = message.GetListItem(fields, SusinSN + "sign" + i);
+				if (field) {
+					field.innerHTML = arrayReSign.get(SusinSN + "sign" + i);
+				}
+				
+				field = message.GetListItem(fields, SusinSN + "jikwe" + i);
+				if (field) {
+					setNodeText(field, arrayReSign.get(SusinSN + "jikwe" + i));
+				}
+				
+				field = message.GetListItem(fields, SusinSN + "seumyung" + i);
+				if (field) {
+					setNodeText(field, arrayReSign.get(SusinSN + "seumyung" + i));
+				}
+				
+				field = message.GetListItem(fields, SusinSN + "seumyungdate" + i);
+				if (field) {
+					setNodeText(field, arrayReSign.get(SusinSN + "seumyungdate" + i));
+				}
+			}
+			
+			for (var i = 1; i <= reHabyCnt; i++) {
+				field = message.GetListItem(fields, SusinSN + "habyuisign" + i);
+				if (field) {
+					field.innerHTML = arrayReHaby.get(SusinSN + "habyuisign" + i);
+				}
+				
+				field = message.GetListItem(fields, SusinSN + "habyuipositon" + i);
+				if (field) {
+					setNodeText(field, arrayReHaby.get(SusinSN + "habyuipositon" + i));
+				}
+				
+				field = message.GetListItem(fields, SusinSN + "habyuija" + i);
+				if (field) {
+					setNodeText(field, arrayReHaby.get(SusinSN + "habyuija" + i));
+				}
+				
+				field = message.GetListItem(fields, SusinSN + "habyuidate" + i);
+				if (field) {
+					setNodeText(field, arrayReHaby.get(SusinSN + "habyuidate" + i));
+				}
+			}
+		}
+    } catch (e) {
+		alert("New_DrawAutoLine ERROR!!");
+	}
+}

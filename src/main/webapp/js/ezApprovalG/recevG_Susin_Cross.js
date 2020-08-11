@@ -488,7 +488,10 @@ function SGetDraftAprLineInfo(ret) {
             TempsaveAprlineinfo = ret[0];
             xmlKuljea = ret[0];
             setAprLinesXML(xmlKuljea);
-            DrawAutoAprLine(ret[0], pDraftFlag);
+            //DrawAutoAprLine(ret[0], pDraftFlag);
+            if (ret[32] != "Y") {
+            	New_DrawAutoLine(ret[0], pDraftFlag);
+            }
         } else {
             TempsaveAprlineinfo = ret[1];
             xmlKuljea = ret[1];
@@ -496,13 +499,13 @@ function SGetDraftAprLineInfo(ret) {
             DrawAutoAprLine(ret[1], pDraftFlag);
         }
         
-        // FieldsAvailable(); 가온누리 살리려고 우선 주석 -> 가변결재선 체크해보고 수정필요
+//        FieldsAvailable();
         xmlReDraft = "R";
 
         if (xmlReDraft == "C") {
             ApplyDocCellInfo();
         } else if (xmlReDraft == "R") {
-            ClearDocCellInfo();
+            ClearDocCellInfo(ret);
         }
 
         xmldom = loadXMLString(xmlKuljea);
@@ -786,7 +789,7 @@ function SGetDraftAprLineInfo(ret) {
             Flag = susinSN + "Recv";
         }
 
-        for (i = 1; i < 20; i++) {
+        for (i = 1; i <= 20; i++) {
 
             fieldname = susinSN + "jikwe" + i
             field = message.GetListItem(fields, fieldname);
@@ -798,7 +801,7 @@ function SGetDraftAprLineInfo(ret) {
             }
         }
 
-        for (i = 1; i < 20; i++) {
+        for (i = 1; i <= 20; i++) {
 
             fieldname = "hjkwe" + i
             field = message.GetListItem(fields, fieldname);
@@ -810,7 +813,7 @@ function SGetDraftAprLineInfo(ret) {
             }
         }
 
-        for (i = 1; i < 20; i++) {
+        for (i = 1; i <= 20; i++) {
 
             fieldname = susinSN + "seumyungdate" + i
             field = message.GetListItem(fields, fieldname);
@@ -822,7 +825,7 @@ function SGetDraftAprLineInfo(ret) {
             }
         }
         
-        for (i = 1; i < 20; i++) {
+        for (i = 1; i <= 20; i++) {
         	fieldname = susinSN + "approdept" + i;
         	field = message.GetListItem(fields, fieldname);
         	
@@ -849,7 +852,7 @@ function SGetDraftAprLineInfo(ret) {
                     if (field)
                         cnt = OrderType.length;
 
-                    for (k = 1; k < cnt; k++) {
+                    for (k = 1; k <= cnt; k++) {
                         if (pDraftFlag == "SUSIN") signID = susinSN + "sign" + k
                         else signID = "sign" + k
 
@@ -907,10 +910,28 @@ function SGetDraftAprLineInfo(ret) {
                     setNodeText(field , OrderJobtitle[i]);
                 }
 
+                /* 2020-07-24 홍승비 - 서명필드만 존재하는 경우, 서명+결재자명 필드가 함께 존재하는 경우, 슬래시 이미지의 표출분기 수정 */
                 fieldname = susinSN + "sign" + idx;
                 field = message.GetListItem(fields, fieldname);
                 if (field) {
-                    setNodeText(field , OrderName[i]);
+                	// 서명필드만 존재
+                	if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) == null) {
+                		setNodeText(field , OrderName[i]);
+                	}
+                	// 서명필드 + 결재자명 필드가 함께 존재
+                	else if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) != null) {
+                		field.innerHTML = "[NOSLASH]";
+                	}
+                	// 그 외의 경우, 아무런 값이 부여되지 않으므로 슬래시 이미지를 표출
+                	else {
+                		//setNodeText(field , OrderName[i]);
+                	}
+                }
+                
+                fieldname = susinSN + "seumyung" + idx;
+                field = message.GetListItem(fields, fieldname);
+                if (field) {
+                	setNodeText(field , OrderName[i]);
                 }
                 
                 fieldname = susinSN + "approdept" + idx;
@@ -918,6 +939,7 @@ function SGetDraftAprLineInfo(ret) {
                 if (field) {
                 	setNodeText(field, OrderDept[i]);
                 }
+                
                 idx = idx + 1;
             }
 
@@ -940,7 +962,7 @@ function SGetDraftAprLineInfo(ret) {
     }
 }
 
-function ClearDocCellInfo() {
+function ClearDocCellInfo(ret) {
     try {
         var i;
         var j;
@@ -957,51 +979,51 @@ function ClearDocCellInfo() {
 	        for (i = 1; i <= SignCount ; i++) {
 	            fieldname = susunSN + "sign" + i;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	
 	            fieldname = susunSN + "seumyung" + i;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	
 	            fieldname = susunSN + "seumyungdate" + i;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	
 	            fieldname = susunSN + "jikwe" + i;
 	            field = message.GetListItem(fields, fieldname);
 	
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	            
 	            // 부서 출력
 	            fieldname = susunSN + "approdept" + i;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	            	field.textContent = " ";
 	        }
 	
 	        for (j = 1 ; j <= hapyuiCount ; j++) {
 	            fieldname = susunSN + "habyui" + j;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	
 	            fieldname = susunSN + "habyuipositon" + j;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	
 	            fieldname = susunSN + "habyuidate" + j;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	
 	            fieldname = susunSN + "habyuisign" + j;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	        }
         } else if (ext == "hwp") {
@@ -1905,6 +1927,7 @@ function openOpinionUI_New_Complete(ret) {
 	            pHasOpinionYN = "N";
 	            ret = "cancel";
 	        }
+	        makeOpinionList(objXML);
 		}
 	} catch (e) {
 		alert("openOpinionUI_New_Complete ::: " + e.description);
@@ -2045,6 +2068,8 @@ function SaveDraftDocInfo_susin() {
           } else {
           	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
           }
+        
+        createNodeAndInsertText(xmlpara, objNode, "PASSAPRLINE", passAprLine);
         
         if (nonElecRec == "Y") {
     		var NonElecXML = createXmlDom();

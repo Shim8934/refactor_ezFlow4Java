@@ -216,10 +216,14 @@ public interface EzCommonService {
 	public void createPwPolicyPatternTable() throws Exception;
 	
 	public void addAprAttachViewOrder() throws Exception;
+
+	public void createTblShareDocDir() throws Exception;
 	
 	public void addAprEndAttachViewOrder() throws Exception;
 	
 	public void addAprTmpAttachViewOrder() throws Exception;
+	
+	public void alterTblPsApprovNotiMailConf() throws Exception;
 	
 	public void createTblNoticeBoard() throws Exception;
 	
@@ -246,4 +250,6 @@ public interface EzCommonService {
 	public void insertBeforeOutComeAttitudeType();	
 	
 	public void insertMobileAttitudeColumn() throws Exception;
+	
+	public void createMenuTenantConfig() throws Exception;
 }

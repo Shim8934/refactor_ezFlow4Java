@@ -142,11 +142,20 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		
 		List<PersonalApprovMailVO> approvMailVOList = new ArrayList<PersonalApprovMailVO>();
 		
-		if (temp != null && temp.equals("1")) {
-			// SAVEMAILFLAG는 메일 발신자 ID 값에서 가져올 것.
-			approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S2(map);
+		String useMailApprNoti = ezCommonService.getTenantConfig("useMailApprNoti", tenantID);
+		if(useMailApprNoti == null || useMailApprNoti.equals("")) {
+			useMailApprNoti = "YES";
+		}
+		
+		if (useMailApprNoti.equalsIgnoreCase("NO")){
+			approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S4(map);
 		} else {
-			approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S3(map);
+			if (temp != null && temp.equals("1")) {
+			// SAVEMAILFLAG는 메일 발신자 ID 값에서 가져올 것.
+				approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S2(map);
+			} else {
+				approvMailVOList = ezPersonalDAO.getApprovNotiConfig_S3(map);
+			}
 		}
 		
 		StringBuffer sb = new StringBuffer();
@@ -164,7 +173,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 
 	@Override
-	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID) throws Exception {
+	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID, String linePass) throws Exception {
 		logger.debug("setApprovNotiMail started");
 
 		String result = "";
@@ -179,6 +188,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		map.put("v_PHESONG", hesong);
 		map.put("v_PSAVEMAILFLAG", saveMailFlag);
 		map.put("tenantID", tenantID);
+		map.put("linePass", linePass);
 		
 		try {
 			String temp = ezPersonalDAO.setApprovNotiMail_S(map);

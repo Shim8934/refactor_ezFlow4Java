@@ -1738,7 +1738,15 @@
 		ADD 
 			sn INT DEFAULT 0
 	</statement>
-	
+
+	<select id="EzCommonDAO.checkTblShareDocDir">
+		SELECT 
+			OWNER_ID
+		FROM 
+			TBL_SHARE_DOC_DIR
+		LIMIT 1
+	</select>
+
 	<select id="EzCommonDAO.checkBoardManageTypeColumn">
 		SELECT
 			TYPE
@@ -2819,6 +2827,20 @@
 		)
 	</statement>
 	
+	<select id="EzCommonDAO.checkTblPsApprovNotiMailConf" resultClass="String">
+		SELECT
+			LINEPASS
+		FROM
+			TBL_PS_APPROVNOTIMAILCONF
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.alterTblPsApprovNotiMailConf">
+		ALTER TABLE
+			TBL_PS_APPROVNOTIMAILCONF
+		ADD 
+			LINEPASS VARCHAR(4) DEFAULT '0'
+	</statement>
+	
 	<select id="EzCommonDAO.checkTblNoticeBoard">
 		SELECT 
 			BOARDID
@@ -2858,4 +2880,15 @@
 			tenant_id = #tenantId#
 	</select>
 	
+	
+	<select id="EzCommonDAO.checkTenantConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = #propertyName#
+		AND
+			tenant_id = #tenantId#
+	</select>
 </sqlMap>

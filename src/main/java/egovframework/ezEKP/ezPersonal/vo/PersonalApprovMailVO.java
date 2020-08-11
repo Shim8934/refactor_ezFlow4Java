@@ -13,6 +13,8 @@ public class PersonalApprovMailVO {
 	private String hesong;
 	/** 보낸편지함저장*/
 	private String saveMailFlag;
+	/** 기결재 통과 알림  */
+	private String linePass;
 	
 	public String getAlert() {
 		return alert;
@@ -50,5 +52,10 @@ public class PersonalApprovMailVO {
 	public void setSaveMailFlag(String saveMailFlag) {
 		this.saveMailFlag = saveMailFlag;
 	}
-
+	public String getLinePass() {
+		return linePass;
+	}
+	public void setLinePass(String linePass) {
+		this.linePass = linePass;
+	}
 }

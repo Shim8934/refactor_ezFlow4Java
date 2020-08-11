@@ -255,6 +255,11 @@ function LineAprTyepSetAll() {
 	            else {
 	                if (GetAttribute(pTotalRows[i], "DATA12") == "015")
 	                    p_StatusDis = "disabled";
+	                
+	                if ($("input:checkbox[id='passAprLine']").is(":checked") && (pTotalRows[i].getAttribute("DATA12") == "004" || pTotalRows[i].getAttribute("DATA12") == "003" || pTotalRows[i].getAttribute("DATA12") == "002")) {
+	                	p_StatusDis = "disabled";
+	                }
+	                
 	                AprTyepID = GetAttribute(pTotalRows[i], "id") + "select";
 	                AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style=\"width:100%;\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
 	                pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
@@ -274,6 +279,10 @@ function LineAprTyepSetAll() {
 	                
 	                if (GetAttribute(pTotalRows[i],"DATA8") == "Y")    
 	                     p_StatusDis = "disabled";
+	                
+	                if ($("input:checkbox[id='passAprLine']").is(":checked") && (pTotalRows[i].getAttribute("DATA12") == "004" || pTotalRows[i].getAttribute("DATA12") == "003" || pTotalRows[i].getAttribute("DATA12") == "002")) {
+	                	p_StatusDis = "disabled";
+	                }
 	            }
 	            if (GetAttribute(pTotalRows[i], "DATA11") != "003") {
 	                var AprTypeObj = SChangeAprlineType("user", GetAttribute(pTotalRows[i], "DATA11"));
@@ -310,6 +319,10 @@ function LineAprTyepSetAll() {
 			var p_StatusDis = (CurrentSn != 1 && (pTotalRows[i].getAttribute("DATA12") == "001" || p_RejectFlag)) ? "" : pTotalRows.length == 1 ? "" : "disabled";
 			if ((pTotalRows[i].getAttribute("DATA11") == "009" || pTotalRows[i].getAttribute("DATA11") == "012") && parseInt(CurrentSn) < parseInt(ProSn))
 				p_StatusDis = "disabled";
+			
+			if ($("input:checkbox[id='passAprLine']").is(":checked") && (pTotalRows[i].getAttribute("DATA12") == "004" || pTotalRows[i].getAttribute("DATA12") == "003" || pTotalRows[i].getAttribute("DATA12") == "002")) {
+            	p_StatusDis = "disabled";
+            }
 			
 			if (p_isDept == "Y") {
 				var AprTypeObj = ChangeAprlineType("group", pTotalRows[i].getAttribute("DATA11"));

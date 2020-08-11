@@ -203,6 +203,7 @@ function GetDocSearch() {
         createNodeAndInsertText(xmlpara, objNode, "pSubQuery", subCondition);
         
         createNodeAndInsertText(xmlpara, objNode, "SearchQuery", SQLPARADATA);
+        createNodeAndInsertText(xmlpara, objNode, "shareDeptId", shareDeptId);
         
 	    if (GamSaFlag){
 	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", false);
@@ -611,10 +612,6 @@ function selFirstRow(Resultxml) {
                 document.getElementById("tenforce").style.display = "none";
                 document.getElementById("tresend").style.display = "none";
             }
-            else {
-                document.getElementById("tenforce").style.display = "";
-                document.getElementById("tresend").style.display = "";
-            }
 
             if (DocState != strDocState1) {
 	        	document.getElementById("tsendCir").style.display = "none";
@@ -647,8 +644,13 @@ function selFirstRow(Resultxml) {
 
         document.getElementById("tSearchCondi").style.display = "";
         document.getElementById("tViewDoc").style.display = "";
-        document.getElementById("tbtnExcel").style.display = "";
-        document.getElementById("tbtnExcelAll").style.display = "";
+        if(share || share == 'share'){
+        	document.getElementById("tbtnExcel").style.display = "none";
+        	document.getElementById("tbtnExcelAll").style.display = "none";
+        	document.getElementById("tbtnRegUserCont").style.display = "none";
+        	document.getElementById("tenforce").style.display = "none";
+            document.getElementById("tresend").style.display = "none";
+        }
 
         if (approvalFlag == "G") {
 	        if (tr.getAttribute("DATA5").trim() != "")
