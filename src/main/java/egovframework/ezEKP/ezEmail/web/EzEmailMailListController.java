@@ -281,6 +281,10 @@ public class EzEmailMailListController {
 		String end = doc.getElementsByTagName("END").item(0).getTextContent();
 		String search = doc.getElementsByTagName("SEARCH").item(0).getTextContent();
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
+		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+		String andorStatus = doc.getElementsByTagName("ANDORSTATUS").item(0).getTextContent();
+		String attachStatus = doc.getElementsByTagName("ATTACHSTATUS").item(0).getTextContent();
 		
 		NodeList  nListCategory = doc.getElementsByTagName("CATEGORY");
 		NodeList  nListKeyword = doc.getElementsByTagName("KEYWORD");
@@ -298,12 +302,13 @@ public class EzEmailMailListController {
 		SimpleDateFormat sdfForParsing = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		sdfForParsing.setTimeZone(TimeZone.getTimeZone("GMT"));
 		
-		Date startDateObj = start.equals("") ? null : sdfForParsing.parse(start);
-		Date endDateObj = end.equals("") ? null : new Date(sdfForParsing.parse(end).getTime() + 60*60*24*1000);
+		Date startDateObj = startDate.equals("") ? null : sdfForParsing.parse(startDate);
+		Date endDateObj = endDate.equals("") ? null : new Date(sdfForParsing.parse(endDate).getTime() + 60*60*24*1000);
 		
 		logger.debug("userId=" + userInfo.getId() + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
 		            + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
-					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex);
+					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex 
+					+ ",startDate=" + startDate + ",endDate=" + endDate);
 		
 		String returnData = "";
 		
@@ -380,6 +385,9 @@ public class EzEmailMailListController {
 					+ ",isAscending=" + isAscending + ",startNo=" + startNo + ",endNo=" + endNo + ",listCount=" + listCount);
 			
 			Map<String, Object> extraMap = new HashMap<String, Object>();
+			extraMap.put("andorStatus", andorStatus);
+			extraMap.put("attachStatus", attachStatus);
+			
 			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, categoryArray, keywordArray, startDateObj, endDateObj, false, 
 					isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
 			
