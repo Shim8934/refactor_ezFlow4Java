@@ -26546,7 +26546,7 @@
    			TBL_APRATTACHINFO 
    		(DocID, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
    		(SELECT 
-            #v_gongRamDocID#, VIEWORDER, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+            #v_gongRamDocID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
          FROM 
          	TBL_APRATTACHINFO A 
          WHERE 
@@ -32028,7 +32028,7 @@
 		AND 
 			E.TENANT_ID = #tenantId#
 		AND
-			E.COMPANYID = #companyId#		
+			E.COMPANYID = #companyId#
 	</select>
 	
 	<select id="EzApprovalG.getShareList" parameterClass="Map" resultClass="KEDSharedUserInfo">

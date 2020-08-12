@@ -26049,8 +26049,51 @@
 		 	 TENANT_ID= #v_TENANTID#
 		  AND
 		  	 COMPANYID = #companyID#)
-                            
    	</insert>
+   	
+   	<insert id="EzApprovalG.insertDocSendAprOpenGovDocInfo" parameterClass="Map">
+		INSERT INTO
+	 		TBL_OPENGOVDOCINFO
+	 		(DOCID, OPENFLAG, BASIS, REASON, LISTOPENFLAG, CREATEDATE, OPENLIMITDATE, TENANT_ID, COMPANYID)
+	 	(SELECT
+	 		#v_NEWID#,
+	 		openflag,
+	 		basis,
+	 		reason,
+	 		listopenflag,
+	 		TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'),
+	 		openlimitdate,
+	 		tenant_id,
+	 		companyid
+	 	FROM
+	 		TBL_OPENGOVDOCINFO
+	 	WHERE
+	 		tenant_id = #v_TENANTID#
+		AND
+			companyid = #companyID#
+		AND
+			docid = #v_DOCID#)
+	</insert>
+
+	<insert id="EzApprovalG.insertDocSendAprOpenGovFileInfo" parameterClass="Map">
+		INSERT INTO
+			TBL_OPENGOVFILEINFO
+     	( SELECT
+     		  #v_NEWID# ,
+              SN,
+              FILEOPENFLAG,
+	          COMPANYID,
+	          TENANT_ID
+       	  FROM
+       	   	  TBL_OPENGOVFILEINFO
+          WHERE
+          	  TENANT_ID = #v_TENANTID#
+          AND
+          	  COMPANYID = #companyID#
+	      AND
+	      	  docid = #v_DOCID#
+          	)
+	</insert>
    	
    	<insert id="EzApprovalG.insertDocSendAprReceiptProcessInfo" parameterClass="Map">
    	     INSERT INTO 
@@ -27474,9 +27517,9 @@
    <insert id="EzApprovalG.insertReuseAttachFileInfo" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_APRATTACHINFO
-	     ( 	  	 DocID,      AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
+	     ( 	  	 DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
 	     ( SELECT 
-	     		#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+	     		#v_DOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
 	       FROM 
 	       		TBL_ENDATTACHINFO A 
 	       WHERE  
@@ -27518,6 +27561,19 @@
           AND
           	  COMPANYID = #companyID#)
    </insert>
+   
+   	<delete id="EzApprovalG.deleteRejectOrgDocOpinions" parameterClass="Map">
+		DELETE FROM
+   			TBL_APROPINIONINFO
+    	WHERE  
+        	DOCID = #v_DOCID#
+        AND
+        	TENANT_ID = #v_TENANTID#
+        AND
+        <![CDATA[
+        	OPINIONGB <> '002'
+		]]>
+	</delete>
          
    <insert id="EzApprovalG.insertRejectEndReceiptPointInfoS" parameterClass="Map">
    		INSERT INTO 
@@ -30701,6 +30757,57 @@
             DOCID = #v_DOCID#
     </update>
     
+    <select id="EzApprovalG.getFormContainer" parameterClass="Map" resultClass="ApprGFormVO">
+		SELECT 
+			DISTINCT FORMNAME
+		FROM 
+			TBL_ENDAPRDOCINFO E
+		INNER JOIN 
+			TBL_EXPENDAPRDOCINFO X 
+		ON 
+			E.DOCID = X.DOCID AND E.TENANT_ID = X.TENANT_ID
+		INNER JOIN 
+			TBL_CONTAINER C 
+		ON 
+			E.CONTAINERID = C.CONTAINERID AND E.TENANT_ID = C.TENANT_ID
+		WHERE 
+			C.CONTAINEROWNDEPID = #deptId#
+		AND 
+			E.TENANT_ID = #tenantId#
+		AND
+			E.COMPANYID = #companyId#
+	</select>
+	
+	<select id="EzApprovalG.getShareList" parameterClass="Map" resultClass="KEDSharedUserInfo">
+		SELECT DISTINCT
+			A.SHARE_ID as shareId, 
+			CASE 
+				WHEN A.SHARE_TYPE = 'U'
+		        THEN B.DISPLAYNAME
+		        WHEN A.SHARE_TYPE = 'D'
+		        THEN C.DISPLAYNAME
+		        END AS shareName,
+			A.SHARE_TYPE as shareType
+		FROM
+			TBL_SHARE_DOC_DIR A
+		LEFT JOIN
+			TBL_USERMASTER B
+		ON 
+			(A.SHARE_ID = B.CN AND A.TENANT_ID = B.TENANT_ID)
+		LEFT JOIN
+			TBL_DEPTMASTER C
+		ON 
+			(A.SHARE_ID = C.CN AND A.TENANT_ID = C.TENANT_ID)
+		WHERE	
+			(A.OWNER_ID = #userId# 
+				OR 
+			A.OWNER_ID = #deptId#)
+		AND
+			A.SHARE_TYPE = #shareType#
+		AND
+			A.TENANT_ID = #tenantId#
+	</select>
+    
 	<insert id="EzApprovalG.insertOpenGovAttachInfo" parameterClass="Map">
 	 	INSERT INTO                 
 	 		TBL_OPENGOVFILEINFO
@@ -30752,7 +30859,7 @@
 	 		TBL_OPENGOVDOCINFO
 	 		(DOCID, OPENFLAG,BASIS, REASON, LISTOPENFLAG, CREATEDATE, OPENLIMITDATE, TENANT_ID, COMPANYID) 
 	 	VALUES 
-	 		(#docID#, #openFlag#, #basis#, #reason#, #openGovListFlag#, now(), #limitDate#, #tenantID#, #companyID#)
+	 		(#docID#, #openFlag#, #basis#, #reason#, #openGovListFlag#, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'), #limitDate#, #tenantID#, #companyID#)
 		</insert>
 		<delete id="EzApprovalG.deleteOpenGovDocInfo" parameterClass="Map">
 		DELETE FROM
@@ -31043,21 +31150,21 @@
 					   					 TBL_ENDAPRDOCINFO.ENDDATE,
 								   		 TBL_ENDAPRDOCINFO.WRITERID, 
 								   		 TBL_ENDAPRDOCINFO.WRITERNAME, 
-								   		 IFNULL(TBL_ENDAPRDOCINFO.WRITERNAME2, TBL_ENDAPRDOCINFO.WRITERNAME) AS WRITERNAME2, 
+								   		 NVL(TBL_ENDAPRDOCINFO.WRITERNAME2, TBL_ENDAPRDOCINFO.WRITERNAME) AS WRITERNAME2, 
 								   		 TBL_ENDAPRDOCINFO.WRITERJOBTITLE, 
-								   		 IFNULL(TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, TBL_ENDAPRDOCINFO.WRITERJOBTITLE) AS WRITERJOBTITLE2,
+								   		 NVL(TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, TBL_ENDAPRDOCINFO.WRITERJOBTITLE) AS WRITERJOBTITLE2,
 								   		 TBL_ENDAPRDOCINFO.WRITERDEPTID, 
 								   		 TBL_ENDAPRDOCINFO.WRITERDEPTNAME, 
-								   		 IFNULL(TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, TBL_ENDAPRDOCINFO.WRITERDEPTNAME) AS WRITERDEPTNAME2, 
+								   		 NVL(TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, TBL_ENDAPRDOCINFO.WRITERDEPTNAME) AS WRITERDEPTNAME2, 
 								   		 TBL_ENDAPRDOCINFO.FORMID, 
 								   		 TBL_ENDAPRDOCINFO.CONTAINERID, 
 								   		 TBL_EXPENDAPRDOCINFO.FORMNAME, 
-								   		 IFNULL(TBL_EXPENDAPRDOCINFO.FORMNAME2, TBL_EXPENDAPRDOCINFO.FORMNAME) AS FORMNAME2, 
+								   		 NVL(TBL_EXPENDAPRDOCINFO.FORMNAME2, TBL_EXPENDAPRDOCINFO.FORMNAME) AS FORMNAME2, 
 								   		 TBL_EXPENDAPRDOCINFO.STATUS,
 								   		 TBL_ENDAPRDOCINFO.ORGDOCID, 
 								   		 TBL_ENDAPRDOCINFO.ISPUBLIC, 
 								   		 TBL_EXPENDAPRDOCINFO.EDMSYN,
-								   		 IFNULL(TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,'') AS SECURITYAPPROVAL,
+								   		 NVL(TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,'') AS SECURITYAPPROVAL,
 								   		 TBL_ENDAPRDOCINFO.COMPANYID,
 								   		 TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 companyName,
 										 TBL_DEPTMASTER.COMPNM2 companyName2,
@@ -31685,7 +31792,7 @@
 			REASON = #reason#,
 			OPENLIMITDATE = #limitDate#,
 			SENDFLAG = 'N',
-			UPDATEDATE = now()
+			UPDATEDATE = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
 		WHERE
 			DOCID = #docID#
 		AND
@@ -31780,7 +31887,7 @@
 	</insert>
 	<select id="EzApprovalG.getOpenGovLimitDate" parameterClass="Map" resultClass="String">
 		SELECT
-			IFNULL(OPENLIMITDATE, 'N') AS openlitdate
+			NVL(OPENLIMITDATE, 'N') AS openlitdate
 		FROM
 			TBL_OPENGOVDOCINFO
 		WHERE
@@ -31812,6 +31919,32 @@
 				createdate < curdate()
 		]]>
 	</update>
+	
+	<delete id="EzApprovalG.delOpinionsExceptHesong" parameterClass="map">
+		DELETE 
+			FROM tbl_apropinioninfo
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND 
+			OPINIONGB != '004'
+		AND 
+			OPINIONGB != '002'
+	</delete>
+	
+	<delete id="EzApprovalG.delOpinionsExceptDrafters" parameterClass="map">
+		DELETE 
+			FROM tbl_apropinioninfo
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND 
+			USERID != #userID#
+		AND 
+			OPINIONGB != '001'
+	</delete>
 	
 	<select id ="EzApprovalG.getLeftDocCount_new" parameterClass="Map" resultClass="egovMap" >
 		SELECT 
@@ -32709,6 +32842,104 @@
 		AND
 			COMPANYID = #companyID#)
 	</insert>
+	
+	<select id="EzApprovalG.doApproveLineInfoForPassAprLine" parameterClass="Map" resultClass="ApprGAprLineVO">
+		SELECT
+			APRMEMBERSN ,
+			APRTYPE ,
+			APRSTATE ,
+			PROCESSDATE ,
+			RECEIVEDDATE ,
+			APRMEMBERID
+		FROM
+			TBL_APRLINEINFO
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			APRSTATE = '004'
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</select>
+	<select id="EzApprovalG.doApproveLineInfoForCancelToPassAprLine" parameterClass="Map" resultClass="ApprGAprLineVO">
+		SELECT
+			APRMEMBERSN ,
+			APRTYPE ,
+			APRSTATE ,
+			PROCESSDATE ,
+			RECEIVEDDATE ,
+			APRMEMBERID
+		FROM
+			TBL_APRLINEINFO
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			APRSTATE = '001'
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</select>
+	<update id="EzApprovalG.updateDrafterToApproved" parameterClass="Map">
+        <![CDATA[
+		UPDATE
+			TBL_APRLINEINFO
+		SET
+			APRSTATE = '003'
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			APRSTATE = '002'
+		AND
+		    APRTYPE <> '007'
+		]]>
+	</update>
+	
+	<update id="EzApprovalG.setAprLineStateBanSongToStay" parameterClass="Map">
+		UPDATE
+			TBL_APRLINEINFO
+		SET
+			APRSTATE = '001'
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			APRSTATE = '004'
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</update>
+	
+	<select id="EzApprovalG.getPassAprLineFlagByDocID" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			NVL(PASSAPRLINEFLAG, 'N') AS PASSAPRLINEFLAG
+		FROM
+			TBL_FORMINFO
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			FORMID = (
+						SELECT
+							FORMID
+						FROM
+							TBL_APRDOCINFO
+						WHERE
+							DOCID = #v_DOCID#
+						AND
+							TENANT_ID = #v_TENANTID#
+						AND
+							COMPANYID = #companyID#
+					)
+	]]>
+	</select>
 	
 	<select id="EzApprovalG.getEndDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
 		SELECT 
