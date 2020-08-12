@@ -475,6 +475,13 @@
 		]]>
 	</select>
 	
+	<statement id="EzCommonDAO.addDeptMasterManualFlag"> 
+		ALTER TABLE 
+			TBL_DEPTMASTER
+		ADD 
+			MANUAL_FLAG VARCHAR(10) DEFAULT NULL
+	</statement>
+	
 	<select id="EzCommonDAO.checkAddJobMasterManualFlag" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -1746,6 +1753,17 @@
 			TBL_SHARE_DOC_DIR
 		LIMIT 1
 	</select>
+	
+	<statement id="EzCommonDAO.createTblShareDocDir">
+		CREATE TABLE `tbl_share_doc_dir` (
+			`OWNER_ID` varchar(45) NOT NULL,
+			`SHARE_ID` varchar(45) NOT NULL,
+			`SHARE_TYPE` varchar(45) DEFAULT NULL,
+			`TENANT_ID` mediumint(5) NOT NULL,
+			`OWNER_TYPE` varchar(45) DEFAULT NULL,
+		PRIMARY KEY (`OWNER_ID`,`SHARE_ID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
 
 	<select id="EzCommonDAO.checkBoardManageTypeColumn">
 		SELECT
