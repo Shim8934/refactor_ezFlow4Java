@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -81,6 +82,7 @@
 		    // 제목에 태그 입력 후 예약발송 > 예약발송관리에서 확인 시 태그 적용되어 나타나는 현상 수정
 		    function removeTag(subject, uid) {
 		    	document.getElementById(uid).innerHTML = subject;
+		    	document.getElementById(uid).parentNode.title = subject;
 		    }
 		    
 		</script>
@@ -106,7 +108,7 @@
 				</tr>
 				<c:forEach var="item" items="${list}">
 					<tr>
-						<td  title="<c:out value="${item.subject}" />" style="text-overflow:ellipsis; overflow:hidden;white-space:nowrap;"><span id="${item.messageId}" style="cursor:pointer;" onClick="View_ReservationMail('${item.messageId}', '${item.sendDate}')">
+						<td  title="" style="text-overflow:ellipsis; overflow:hidden;white-space:nowrap;"><span id="${item.messageId}" style="cursor:pointer;" onClick="View_ReservationMail('${item.messageId}', '${item.sendDate}')">
 							<script>removeTag('<c:out value="${item.subject}" />', '${item.messageId}')</script></span></td>
 						<td style="width:150px;white-space:nowrap;text-align:center;">${item.sendDate}</td>
 						<td style="text-align:center;width:100px;white-space:nowrap;"><a class="imgbtn imgbtn_h imgbck"><span  onClick="cancel_mail('${item.messageId}', this)"><spring:message code='ezEmail.t39' /></span></a></td>
