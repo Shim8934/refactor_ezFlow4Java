@@ -1393,7 +1393,7 @@ public class EzAttitudeAdminController {
 				JSONObject jo = (JSONObject) jArray.get(i);
 				String [] authDeptArr = jo.get("authDeptName").toString().split(",");
 				if (authDeptArr.length > 1) {
-					jo.replace("authDeptName", authDeptArr[0] + " 외 " + (authDeptArr.length - 1));
+					jo.replace("authDeptName", authDeptArr[0] + " " + egovMessageSource.getMessage("ezAttitude.kje32") + " " + (authDeptArr.length - 1));
 				}
 				jo.put("authDeptName2", authDeptArr);
 			}
