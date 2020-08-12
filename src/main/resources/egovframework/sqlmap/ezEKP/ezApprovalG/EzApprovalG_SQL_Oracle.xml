@@ -44,6 +44,7 @@
 	<typeAlias  alias="ApprGOpenGovAttachVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO"/>
 	<typeAlias  alias="ApprGDocListForOpenGovVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO"/>
 	<typeAlias  alias="ApprGOpenGovInfoVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO"/>
+	<typeAlias alias="KEDSharedUserInfo" 			type="egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo"/>
 	
 	<resultMap class="PortalTopOtherCompanyAddJobVO" 	id="PortalTopOtherCompanyAddJobMap">
 		<result property="companyID"					column="companyID"						/>
