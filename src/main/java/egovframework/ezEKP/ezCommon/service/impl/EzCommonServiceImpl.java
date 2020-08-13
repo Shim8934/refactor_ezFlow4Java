@@ -1535,6 +1535,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
+	public void createTblShareDocDir() throws Exception {
+		ezCommonDAO.createTblShareDocDir();
+	}
+	
+	@Override
 	public void addBoardManageTypeColumn() throws Exception {
 		ezCommonDAO.addBoardManageTypeColumn();
 	}
@@ -1959,5 +1964,66 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void insertDailyWorkAttitudeColumn() throws Exception {
 		// 일근무/반근무 기능 관련 컬럼 추가(tbl_attitude -> WORK_STATUS)
 		ezCommonDAO.insertDailyWorkAttitudeColumn();
+	}
+	
+	public void alterTblPsApprovNotiMailConf() throws Exception {
+		ezCommonDAO.alterTblPsApprovNotiMailConf();
+	}
+	
+	@Override
+	public void createMenuTenantConfig() throws Exception {
+		logger.debug("createMenuTenantConfig started");
+		
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantId", tenantVo.getTenantId());
+			map.put("regdate", "2020-08-01 00:00:00");
+			map.put("propertyValue", "YES");
+			map.put("description", "YES: 사용 NO: 사용안함");
+			
+			map.put("propertyName", "useSchedule");
+			map.put("configName", "일정 모듈 사용 여부");
+			map.put("configType", "일정관리");
+			
+			try {
+				ezCommonDAO.createMenuTenantConfig(map);
+			} catch (Exception e) {
+				// ignore
+			}
+			
+			map.put("propertyName", "useBoard");
+			map.put("configName", "게시판 모듈 사용 여부");
+			map.put("configType", "게시판");
+			
+			try {
+				ezCommonDAO.createMenuTenantConfig(map);
+			} catch (Exception e) {
+				// ignore
+			}
+			
+			map.put("propertyName", "useResource");
+			map.put("configName", "자원관리 모듈 사용 여부");
+			map.put("configType", "자원관리");
+			
+			try {
+				ezCommonDAO.createMenuTenantConfig(map);
+			} catch (Exception e) {
+				// ignore
+			}
+			
+			map.put("propertyName", "useToDo");
+			map.put("configName", "업무관리 모듈 사용 여부");
+			map.put("configType", "업무관리");
+			
+			try {
+				ezCommonDAO.createMenuTenantConfig(map);
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+		
+		logger.debug("createMenuTenantConfig ended");
 	}
 }

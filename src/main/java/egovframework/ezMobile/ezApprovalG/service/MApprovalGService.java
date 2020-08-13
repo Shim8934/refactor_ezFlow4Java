@@ -1,12 +1,16 @@
 package egovframework.ezMobile.ezApprovalG.service;
 
-import egovframework.ezMobile.ezApprovalG.vo.*;
-import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.ezMobile.ezOption.vo.MOptionVO;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Locale;
+
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
 
 public interface MApprovalGService {
 

@@ -212,6 +212,8 @@
 	        var useOpenGov = "<c:out value ='${useOpenGov}'/>";
 	        var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate = "";
 	        var OrgAprUserDeptID = "";
+	        var useDynamicAprLine = "<c:out value ='${useDynamicAprLine}'/>";
+	        var passAprLine = "";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -349,7 +351,6 @@
 	                     if (pHapYuiCount == 0) {
 	                         document.getElementById("deptaddbtn").style.display = "none";
 	                 }
-
 	            }
 	            
 	            if (approvalFlag != "G" || useOpenGov != "YES") {
@@ -454,6 +455,10 @@
 	            listOpenFlag = RetValue[54];
 	            fileOpenFlagList = RetValue[55];
 	            limitDate = RetValue[56];
+	            passAprLine = RetValue[60];
+	            
+				//기결재통과 버튼 표출 체크
+				showPassAprLineBtn();
 	            
 	            if (pSuSinFlag == "N" || pDocType == "002") {
 	                document.getElementById("showReceptinfo").style.display = "none";//.innerHTML = "";
@@ -485,7 +490,20 @@
 		            	document.getElementById("SaveAprLineTemplet").style.display = "none";
 		            }
 	            }
+	            
+	            /* 2020-07-30 홍승비 - 실제 양식 상에 가변결재선이 없다면, 분기를 타지 않도록 수정 */
+				var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
+				
+				// 가변결재양식 사용 시, 최대 사인칸 20개로 고정
+	    	    if (useDynamicAprLine == "1" && autoAprLineField.length > 0) {
+	    	    	pSignCount = 20;
+	    	    	// (개인,부서)합의는 기안할때만 사용하도록
+	    	    	if (approvalType == "DRAFT") {
+		    	    	pHapYuiCount = 20;
+	    	    	}
+	    	    }
 	        }
+	        
 	        function CheckGubunInit() {
 	            if (pIniGubun == "1") {
 	                document.getElementById("1tab1").onclick();
@@ -941,9 +959,31 @@
 		        
 		        return true;
 		    }
-		
-		    function btn_OK() {
+		    
+		    /* 2020-08-03 홍승비 - 결재자가 한 명인 경우(기안자 = 최종결재자), 수신처 회송 시 기결재기능 사용하지 못하도록 수정 */
+			function btn_OK() {
+		    	var aprLineCnt = $("#lvAPRLINE").find("tr[data11='001']");
+		    	
+		    	if (document.getElementById('passAprLine').checked && pReDraftFlag === 'REDRAFT' && aprLineCnt.length <= 1) {
+		    		OpenAlertUI("결재자가 한 명인 경우, 기결재통과 기능을 사용할 수 없습니다.");
+		    		return;
+		    	}
+		    	
+				if(document.getElementById('passAprLine').checked && pReDraftFlag === 'REDRAFT') {
+					OpenInformationUI('기결재통과가 체크되어 있습니다.<br>계속 진행하시겠습니까?', btn_OK_Confirm);
+	        		return;
+	        	} else {
+	        		btn_OK_Confirm(true);
+	        	}
+			}
+			
+			function btn_OK_Confirm(Ans) {
 		        try {
+		        	if (Ans != true) { // 기결재통과 기능 사용 시 OpenInformationUI의 리턴값 체크
+		        		DivPopUpHidden();
+		        		return;
+		        	}
+		        	
 		            if (!onlydocinfiview) {
 		                var line = Checkline();
 		                if (line == false) {
@@ -952,10 +992,12 @@
 
 		                if (approvalFlag == "G") {
 			                if (pIniGubun != 5 && pIniGubun != 7 && pIniGubun != 10 && pIniGubun != 12) {
-			                    var rtnVal = CheckSignCellValueLast();
-			
-			                    if (!rtnVal)
-			                        return;
+			                	if (!$("input:checkbox[id='passAprLine']").is(":checked")) {
+				                    var rtnVal = CheckSignCellValueLast();
+				
+				                    if (!rtnVal)
+				                        return;
+			                	}
 			                }
 			                
 			                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
@@ -1134,6 +1176,12 @@
 		                    ret[14] = document.getElementById("idDatepicker").value.substring(0, 10);
 		                else
 		                    ret[14] = "";
+		                
+		                if (document.getElementById("passAprLine").checked) {
+		                	ret[32] = "Y";
+		                } else {
+		                	ret[32] = "N";
+		                }
 		
 		                if (approvalFlag == "G") {
 			                if (document.getElementById("inputSummaryOuterReceiverList").value != "") {
@@ -1194,6 +1242,17 @@
                                     ret[31] = "";
                                 }
 							}
+		                }
+		                
+			            /* 2020-07-30 홍승비 - 실제 양식 상에 가변결재선이 없다면, 분기를 타지 않도록 수정 */
+						var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
+			            
+		                if (useDynamicAprLine == "1" && autoAprLineField.length > 0) {
+		                	if (approvalFlag == "G") {
+			                	ret[27] = SaveAprLineList();
+		                	} else {
+			                	ret[27] = SAPRLINETEMPLETXMLParsing();
+		                	}
 		                }
 		
 		                if (ReturnFunction != null) {
@@ -2104,6 +2163,51 @@
 		            document.getElementById("idDatepickerForOpenGov").disabled = "disabled";
 		        }
 		    }
+		    
+		    function passAprLine_onchange(chk) {
+				if (chk.checked == true) {
+					$("#APRLINE").empty();
+					Lineinfoini = false;
+					Lineinfo_ini();
+					$('tr[data12="004"] select,[data12="003"]  select').attr("disabled","disabled");
+				} else {
+					$('tr[data12="004"] select,[data12="003"]  select').attr("disabled", false);
+				}
+			}
+	    	function showPassAprLineBtn() {
+		    	if (pReDraftFlag != "REDRAFT") {
+					$("#passAprLineSpan").hide();
+					return;
+				}
+				
+		    	// 2020-08-03 기준 반송, 회송 시 모두 기결재통과기능 사용가능
+		    	// 반송 시에는 기결재 통과를 막는다고 고객과 협의 2019-11-15 임민석
+				if(parent.pAprState !== '004') {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezApprovalG/isPassAprLineShow.do",
+						data : {
+							docID : pDocID,
+							formID : pFormID
+						},
+						success: function(xml) {
+							if (xml == "Y") {
+								$("#passAprLineSpan").show();
+								document.getElementById('passAprLine').checked = true;
+							} else {
+								$("#passAprLineSpan").hide();
+							}
+						}
+					});
+				}
+				
+				if (passAprLine == "Y") {
+					$("#passAprLine").prop("checked", true);
+				}
+			}
+
 	    </script>
 	    <style>
 	    	/* .mainlist_free tr th {text-align:center} */
@@ -2333,10 +2437,12 @@
 	                            <tr>
 	                            	<c:if test ="${approvalFlag =='G'}">
 	                                <td style="text-align: right;">
+	                                	<span id="passAprLineSpan" style="float:left;display:none"><input id="passAprLine" type="checkbox" style="vertical-align: middle" onchange="passAprLine_onchange(this)"><span style="vertical-align: middle"> <spring:message code='ezApprovalG.garm09'/></span></span>
 	                                    <a style="margin-top: 8px;" class="imgbtn imgbck2">
 	                                 </c:if>
 	                                 <c:if test = "${approvalFlag=='S'}">
 	                                 <td style="padding-top: 10px; text-align: right; vertical-align: top;" id="SaveAprLineTemplet">
+	                                 	<span id="passAprLineSpan" style="float:left;display:none"><input id="passAprLine" type="checkbox" style="vertical-align: middle" onchange="passAprLine_onchange(this)"><span style="vertical-align: middle"> <spring:message code='ezApprovalG.garm09'/></span></span>
 	                                 <a class="imgbtn imgbck2">
 	                                 </c:if>
 	                                 <span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span></a>

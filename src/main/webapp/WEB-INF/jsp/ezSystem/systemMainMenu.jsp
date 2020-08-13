@@ -308,9 +308,9 @@
 		            	editorFontSize.addEventListener("change", function () {editorFontStyle = document.getElementById("editorFontFamily").value + "|" + document.getElementById("editorFontSize").value; document.getElementById("editorFontStyle").value = editorFontStyle; });
 		            </script>
 		    	</c:if>
-		    	<tr data-name="common"><th><spring:message code="ezSystem.x0003"/></th><td><input data-paramId="MailAttachLimit" id="MailAttachLimit" maxlength="3" type="text" value="<c:out value='${configMap.MailAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>)</td></tr>                              
 		    	
 	        	<!-- 포탈 -->
+	        	<c:if test="${usePortal == 'YES'}">
 		    	<tr class="menuTit" data-MenuName="portal"><th><spring:message code="ezSystem.x0042" /></th></tr>
 				<tr data-name="portal">
 					<th><spring:message code="ezSystem.yej01" /></th>
@@ -318,12 +318,24 @@
 						<input data-paramId="usePortalAutoRefreshInterval" Id="usePortalAutoRefreshInterval" maxlength="3" type="text" value="<c:out value='${usePortalAutoRefreshInterval}'/>"> (<spring:message code="ezSystem.yej02"/>)
 					</td>
 				</tr>
+				</c:if>
 				
 	        	<!-- 메일 -->
 	        	<c:if test="${useExternalMailServer != 'YES'}">
 		        	<tr class="menuTit" data-MenuName="mail"><th><spring:message code="ezSystem.x0043" /></th></tr>
-		            <tr data-name="mail"><th><spring:message code="ezSystem.x0001"/></th><td><input data-paramId="BigSizeMailAttachDelDay" id="BigSizeMailAttachDelDay" maxlength="3" type="text" value="<c:out value='${configMap.BigSizeMailAttachDelDay}'/>"> (<spring:message code="ezSystem.x0010"/>)</td></tr>          
+		        	<tr data-name="mail"><th><spring:message code="ezSystem.x0003"/></th><td><input data-paramId="MailAttachLimit" id="MailAttachLimit" maxlength="3" type="text" value="<c:out value='${configMap.MailAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>)</td></tr>          
 		            <tr data-name="mail"><th><spring:message code="ezSystem.x0002"/></th><td><input data-paramId="totBigSizeMailAttachLimit" id="totBigSizeMailAttachLimit" maxlength="4" type="text" value="<c:out value='${configMap.totBigSizeMailAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>, <spring:message code="ezSystem.x0019"/>)</td></tr>
+		            <tr data-name="mail"><th><spring:message code="ezSystem.x0001"/></th><td><input data-paramId="BigSizeMailAttachDelDay" id="BigSizeMailAttachDelDay" maxlength="3" type="text" value="<c:out value='${configMap.BigSizeMailAttachDelDay}'/>"> (<spring:message code="ezSystem.x0010"/>)</td></tr>          
+		            
+			    	<tr data-name="mail">
+			    		<th><spring:message code="ezEmail.hdp01"/></th>
+			    		<td><input data-paramId="MailBigSizeAttachLimitCount" id="MailBigSizeAttachLimitCount" maxlength="2" type="text" value="<c:out value='${configMap.MailBigSizeAttachLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td>
+			    	</tr>
+	            	<tr data-name="mail">
+	            		<th><spring:message code="ezEmail.hdp02"/></th>
+	            		<td><input data-paramId="MailBigSizeAttachDownloadLimitCount" id="MailBigSizeAttachDownloadLimitCount" maxlength="5" type="text" value="<c:out value='${configMap.MailBigSizeAttachDownloadLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td>
+	            	</tr>
+		            
 		            <tr data-name="mail"><th><spring:message code="ezSystem.x0006"/></th><td><input data-paramId="INDIVIDUALMAILUSER" id="INDIVIDUALMAILUSER" maxlength="3" type="text" value="<c:out value='${configMap.INDIVIDUALMAILUSER}'/>"> (<spring:message code="ezSystem.x0015"/>)</td></tr>
 		            <tr data-name="mail"><th><spring:message code="ezSystem.x0007"/></th><td><select data-paramId="IS_READ_DELETE" id="IS_READ_DELETE"><option <c:if test="${configMap.IS_READ_DELETE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezSystem.hsb01"/></option><option <c:if test="${configMap.IS_READ_DELETE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezSystem.hsb02"/></option></select></td></tr>
 		            <tr data-name="mail"><th><spring:message code="ezSystem.x0020"/></th><td><select data-paramId="Use_FromAddress" id="Use_FromAddress"><option <c:if test="${configMap.Use_FromAddress == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.Use_FromAddress == null or configMap.Use_FromAddress == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
@@ -346,14 +358,6 @@
 			    		<th><spring:message code="ezSystem.x0040"/></th>
 			    		<td><select data-paramId="useMailConfirm" id="use_MailConfirm"><option <c:if test="${configMap.useMailConfirm == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.useMailConfirm == null or configMap.useMailConfirm == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td>
 			    	</tr>
-			    	<tr data-name="mail">
-			    		<th><spring:message code="ezEmail.hdp01"/></th>
-			    		<td><input data-paramId="MailBigSizeAttachLimitCount" id="MailBigSizeAttachLimitCount" maxlength="2" type="text" value="<c:out value='${configMap.MailBigSizeAttachLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td>
-			    	</tr>
-	            	<tr data-name="mail">
-	            		<th><spring:message code="ezEmail.hdp02"/></th>
-	            		<td><input data-paramId="MailBigSizeAttachDownloadLimitCount" id="MailBigSizeAttachDownloadLimitCount" maxlength="5" type="text" value="<c:out value='${configMap.MailBigSizeAttachDownloadLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td>
-	            	</tr>
 		    	</c:if>
 	        </tbody>
 	    </table> 

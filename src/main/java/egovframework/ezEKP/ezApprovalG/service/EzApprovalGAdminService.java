@@ -6,6 +6,9 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezApprovalG.vo.KEDAuthorUserInfo;
+import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
 import org.w3c.dom.Document;
 
@@ -200,5 +203,12 @@ public interface EzApprovalGAdminService {
 	public void saveAttachLimit(String attachLimit, String companyID, int tenantId) throws Exception;
 	
 	public void deleteAttachLimit(String companyID, int tenantId) throws Exception;
+
+	public List<KEDSharedUserInfo> getDocDirShareList(String ownerId, int tenantId) throws Exception;
 	
+	public List<KEDAuthorUserInfo> getDocDirOwnerList(String companyId, int tenantId) throws Exception;
+
+	public String insertShareDocDir(String ownerId, String ownerType, List<KEDSharedUserInfo> shareList, int tenantId) throws Exception;
+
+	String deleteShareDocDir(String ownerId, int tenantId) throws Exception;
 }

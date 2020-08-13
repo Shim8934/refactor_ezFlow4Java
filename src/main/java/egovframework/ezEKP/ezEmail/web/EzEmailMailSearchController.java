@@ -248,6 +248,9 @@ public class EzEmailMailSearchController {
 		int startIndex = Integer.parseInt(doc.getElementsByTagName("STARTINDEX").item(0).getTextContent());
 		int listCount = Integer.parseInt(doc.getElementsByTagName("LISTCOUNT").item(0).getTextContent());
 		
+		String andorStatus = doc.getElementsByTagName("ANDORSTATUS").item(0).getTextContent();
+		String attachStatus = doc.getElementsByTagName("ATTACHSTATUS").item(0).getTextContent();
+		
 		startDate = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
 		endDate = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
 		
@@ -310,6 +313,9 @@ public class EzEmailMailSearchController {
 			}
 			
 			Map<String, Object> extraMap = new HashMap<String, Object>();
+			extraMap.put("andorStatus", andorStatus);
+			extraMap.put("attachStatus", attachStatus);
+			
 			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, categoryArray, keywordArray, startDateObj, endDateObj, true, 
 					false, false, sortTypeSpecifier, isAscending, startIndex, listCount, false, extraMap, userInfo.getTenantId());
 			

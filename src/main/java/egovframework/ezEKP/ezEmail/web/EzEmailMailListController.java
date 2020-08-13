@@ -61,6 +61,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovStringUtil;
 
 /** 
  * @Description [Controller] 메일 리스트
@@ -136,6 +137,10 @@ public class EzEmailMailListController {
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		String useMailConfirm = ezCommonService.getTenantConfig("useMailConfirm", userInfo.getTenantId());
 		String useHackingMailReport = ezCommonService.getTenantConfig("useHackingMailReport", userInfo.getTenantId());
+		String userTimeSet = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(userTimeSet);
+		String serverName = userInfo.getServerName();
+		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -235,11 +240,14 @@ public class EzEmailMailListController {
 		model.addAttribute("useShowSystemCountry", useShowSystemCountry);
 		model.addAttribute("useMailConfirm", useMailConfirm);
 		model.addAttribute("useHackingMailReport", useHackingMailReport);
+		model.addAttribute("offsetMin", offsetMin);
+		model.addAttribute("serverName", serverName);
 
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
 				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEmail=" + useEncryptZipForEmail
-				 + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useCountryIP=" + useCountryIP + ", useMailConfirm=" + useMailConfirm + ", useHackingMailReport=" + useHackingMailReport);
+				 + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useCountryIP=" + useCountryIP + ", useMailConfirm=" + useMailConfirm 
+				 + ", useHackingMailReport=" + useHackingMailReport + ",offsetMin=" + offsetMin);
 		logger.debug("mailGeneral=" + mailGeneral);
 		logger.debug("showMailList ended.");
 		
@@ -273,10 +281,34 @@ public class EzEmailMailListController {
 		String end = doc.getElementsByTagName("END").item(0).getTextContent();
 		String search = doc.getElementsByTagName("SEARCH").item(0).getTextContent();
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
+		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+		String andorStatus = doc.getElementsByTagName("ANDORSTATUS").item(0).getTextContent();
+		String attachStatus = doc.getElementsByTagName("ATTACHSTATUS").item(0).getTextContent();
+		
+		NodeList  nListCategory = doc.getElementsByTagName("CATEGORY");
+		NodeList  nListKeyword = doc.getElementsByTagName("KEYWORD");
+		String[] categoryArray = new String[nListCategory.getLength()] ;
+		String[] keywordArray = new String[nListKeyword.getLength()] ;
+		
+		for (int i = 0; i < nListCategory.getLength(); i++) {
+			categoryArray[i] = doc.getElementsByTagName("CATEGORY").item(i).getTextContent();
+		}
+		
+		for (int i = 0; i < nListKeyword.getLength(); i++) {
+			keywordArray[i] = EgovStringUtil.getHtmlStrCnvr(doc.getElementsByTagName("KEYWORD").item(i).getTextContent());
+		}
+		
+		SimpleDateFormat sdfForParsing = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdfForParsing.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
+		Date startDateObj = startDate.equals("") ? null : sdfForParsing.parse(startDate);
+		Date endDateObj = endDate.equals("") ? null : new Date(sdfForParsing.parse(endDate).getTime() + 60*60*24*1000);
 		
 		logger.debug("userId=" + userInfo.getId() + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
 		            + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
-					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex);
+					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex 
+					+ ",startDate=" + startDate + ",endDate=" + endDate);
 		
 		String returnData = "";
 		
@@ -353,7 +385,10 @@ public class EzEmailMailListController {
 					+ ",isAscending=" + isAscending + ",startNo=" + startNo + ",endNo=" + endNo + ",listCount=" + listCount);
 			
 			Map<String, Object> extraMap = new HashMap<String, Object>();
-			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, null, new Date(), false, 
+			extraMap.put("andorStatus", andorStatus);
+			extraMap.put("attachStatus", attachStatus);
+			
+			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, categoryArray, keywordArray, startDateObj, endDateObj, false, 
 					isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
 			
 			totalCount = (int)extraMap.get("totalCount");
@@ -668,6 +703,29 @@ public class EzEmailMailListController {
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
+		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+		String andorStatus = doc.getElementsByTagName("ANDORSTATUS").item(0).getTextContent();
+		String attachStatus = doc.getElementsByTagName("ATTACHSTATUS").item(0).getTextContent();
+		
+		NodeList  nListCategory = doc.getElementsByTagName("CATEGORY");
+		NodeList  nListKeyword = doc.getElementsByTagName("KEYWORD");
+		String[] categoryArray = new String[nListCategory.getLength()] ;
+		String[] keywordArray = new String[nListKeyword.getLength()] ;
+		
+		for (int i = 0; i < nListCategory.getLength(); i++) {
+			categoryArray[i] = doc.getElementsByTagName("CATEGORY").item(i).getTextContent();
+		}
+		
+		for (int i = 0; i < nListKeyword.getLength(); i++) {
+			keywordArray[i] = EgovStringUtil.getHtmlStrCnvr(doc.getElementsByTagName("KEYWORD").item(i).getTextContent());
+		}
+		
+		SimpleDateFormat sdfForParsing = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdfForParsing.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
+		Date startDateObj = startDate.equals("") ? null : sdfForParsing.parse(startDate);
+		Date endDateObj = endDate.equals("") ? null : new Date(sdfForParsing.parse(endDate).getTime() + 60*60*24*1000);
 		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -778,7 +836,10 @@ public class EzEmailMailListController {
 			}
 			
 			Map<String, Object> extraMap = new HashMap<String, Object>();
-			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, null, new Date(), false, 
+			extraMap.put("andorStatus", andorStatus);
+			extraMap.put("attachStatus", attachStatus);
+			
+			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, categoryArray, keywordArray, startDateObj, endDateObj, false, 
 					isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
 			
 			totalCount = (int)extraMap.get("totalCount");

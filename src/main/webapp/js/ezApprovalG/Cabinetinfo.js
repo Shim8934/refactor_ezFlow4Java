@@ -605,7 +605,7 @@ function Set_MyTask(type) {
         OpenAlertUI(Cabinet4);
         return;
     }
-    if (GetAttribute(selRows[0], "data1") == "") {
+    if (GetAttribute(selRows[0], "data1") == "" || GetAttribute(selRows[0], "data1") == "null") {
         OpenAlertUI(strLang1005);
         return;
     }

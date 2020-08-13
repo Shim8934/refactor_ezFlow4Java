@@ -1015,7 +1015,7 @@ function ReAprLineSingMapping(ret)
 		        startIdx = startIdx + 1;
 		    else if (OrderType[i] != strAprType2 && OrderType[i] != strAprType7 && OrderType[i] != strAprType9 & OrderType[i] != strAprType11 && OrderType[i] != strAprType12)
 		        startIdx = startIdx + 1;
-		    else if (OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)
+		    else if (OrderType[i] == strAprType8 ||OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)
 		        hapyuiCnt = hapyuiCnt + 1;
 		}
 	}
@@ -1073,7 +1073,7 @@ function ReAprLineSingMapping(ret)
 		name = susinSN + "habyuisign" + i;
 		if (HwpCtrl.CheckFieldExist(name))
 		{
-			if(trim(HwpCtrl.GetFieldText(name)) != "")
+			if(trim(HwpCtrl.GetFieldText(name)) == "")
 			{
 				name = susinSN + "habyui" + i
 				if (HwpCtrl.CheckFieldExist(name))
@@ -1179,7 +1179,7 @@ function ReAprLineSingMapping(ret)
 			idx = idx + 1;
 		}
 		
-		if (OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)		
+		if (OrderType[i] == strAprType8 ||OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)		
 		{
 			fieldname = susinSN + "habyui" + hidx;
 			if (HwpCtrl.CheckFieldExist(fieldname))

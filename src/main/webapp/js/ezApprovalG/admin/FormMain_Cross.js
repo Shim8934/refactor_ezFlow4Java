@@ -433,6 +433,11 @@ function MakeFormInfoXML_Detail() {
     } else {
     	createNodeAndInsertText(xmlpara, objNode, "openGovFlag", "N");
     }
+    if (document.getElementById("setPassAprLineFlag").checked) { //기결재통과 체크
+    	createNodeAndInsertText(xmlpara, objNode, "passAprLineFlag", "Y");
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "passAprLineFlag", "N");
+    }
 
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", getNodeText(document.getElementById("keepperiod").options[document.getElementById("keepperiod").selectedIndex]));
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIODCODE", document.getElementById("keepperiod").value);

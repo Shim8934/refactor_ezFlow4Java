@@ -11,12 +11,15 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
+import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
+
 import org.w3c.dom.Document;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -170,6 +173,8 @@ public interface EzApprovalGService {
     public String getDocInfo(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID, String isUsed, String beforeDocID) throws Exception;
 
     public void saveRecReadHist(String readRecXML, int tenantID) throws Exception;
+    
+	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState, String nonElecRecYN, String passAprLine) throws Exception;
 
     public String receiverChk(String deptID, String companyID, int tenantID) throws Exception;
 
@@ -445,7 +450,7 @@ public interface EzApprovalGService {
     public String deleteUserContDoc(String docID, String contID, String companyID, String lang, int tenantId) throws Exception;
 
     public String getSearchDocListS(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftfrom, String draftto, String apprfrom, String papprto, String mypapprfrom, String mypapprto,
-                                    String draftDeptName, String docState, String string, String pageSize, String pageNum, String orderCell, String orderOption, String searchStatus, String companyID, String lang, String string2, int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception;
+                                    String draftDeptName, String docState, String AprFlag, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String searchStatus, String companyID, String lang, String string2, int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception;
 
     public List<ApprGContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception;
 
@@ -482,8 +487,6 @@ public interface EzApprovalGService {
     public String doBansong(String docID, String childDocID, String userID, String aprState, String dirPath, String deptID, String companyID, String lang, LoginVO userInfo, String curDocNum) throws Exception;
 
     public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception;
-
-    public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState, String nonElecRecYN) throws Exception;
 
     public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
     
@@ -687,6 +690,18 @@ public interface EzApprovalGService {
     public String setApprDocInfo(Document xmlDom, String companyID, int tenantId) throws Exception;
 
     public String getFormAprOptionInfo(String key, String type, String companyID, int tenantID) throws Exception;
+    
+	public List<ApprGFormVO> getFormContainer(int tenantId, String companyId, String deptId);
+
+	public List<KEDSharedUserInfo> getShareList(String userId, String deptId, String shareType, int tenantId) throws Exception;
+	
+	public void delOpinionsExceptHesong(String docID, String companyID, int tenantId) throws Exception;
+
+	public void delOpinionsExceptDrafters(String docID, String userID, String companyID, int tenantId) throws Exception;
+	
+	public void sendMailToPassAprMember(String docID, HttpServletRequest request, String loginCookie, LoginVO userInfo, String orgCompanyID, int tenantID) throws Exception;
+	
+	public String isPassAprLineShow(String docID, String formID, String userID, String companyID, int tenantId) throws Exception;
     
 	/* 2020-07-23 홍승비 - 완료문서의 전체 정보를 가져오는 메서드 */
 	public ApprGDocListVO getEndDocInfo(String docID, String companyID, int tenantID) throws Exception;

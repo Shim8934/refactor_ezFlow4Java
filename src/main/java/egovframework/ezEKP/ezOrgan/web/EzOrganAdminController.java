@@ -134,7 +134,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     @PostConstruct
 	public void init() throws Exception {
     	logger.debug("init started.");
-    	
     	try {
 	    	ezCommonService.createTblCompanyConfig();
 	    	ezCommonService.createReformFlagColumn();
@@ -223,12 +222,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertAlternateHolidayAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 대체휴무 추가
 	    	ezCommonService.insertBeforeOutComeAttitudeType(); // 2020-06-03  김정언 - 근태관리 휴가유형 전일퇴근 추가
 	    	ezCommonService.insertMobileAttitudeColumn();			// 2020-06-10 김민성 - 모바일 근태관리 기능 추가
+	    	ezCommonService.createTblShareDocDir(); //2019-10-14 박성빈 - 문서함공유 테이블 추가
+	    	ezCommonService.alterTblPsApprovNotiMailConf(); //기결재통과 알림 컬럼 추가
 	    	ezCommonService.createTblNoticeBoard(); //2020-06-17 홍승비 - 회사별 공지사항 게시판 기능을 위한 NOTICEBOARD 테이블 추가
+	    	ezCommonService.createMenuTenantConfig();		// 2020-08-06 김민성 - 메뉴 숨김처리 관련 config 추가
 	    	ezCommonService.insertDailyWorkAttitudeColumn(); //2020-08-07 김정언 - 근태관리 WORK_STATUS (일근무/반근무) 컬럼 추가
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
-    	
     	logger.debug("init ended.");
     }
 
@@ -2578,6 +2579,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			useExternalMailServer = "NO";
 		}
 		
+		String useBoard = ezCommonService.getTenantConfig("useBoard", user.getTenantId());
+		if (useBoard == null || useBoard.equals("")) {
+			useBoard = "YES";
+		}
+		
+		String useSurvey = ezCommonService.getTenantConfig("useSurvey", user.getTenantId());
+		if (useSurvey == null || useSurvey.equals("")) {
+			useSurvey = "YES";
+		}
+		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
@@ -2603,6 +2614,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("useWebfolder", useWebfolder);
         model.addAttribute("packageType", packageType);
         model.addAttribute("useExternalMailServer", useExternalMailServer);
+        model.addAttribute("useBoard", useBoard);
+        model.addAttribute("useSurvey", useSurvey);
 		
 		logger.debug("permissionsList ended.");
 		

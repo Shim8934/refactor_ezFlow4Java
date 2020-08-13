@@ -52,7 +52,7 @@ function GetDraftAprLineInfo(ret) {
 	}
 	else if(xmlReDraft == "R")
 	{
-		ClearDocCellInfo();
+		ClearDocCellInfo(ret);
 	}
     
 	 
@@ -99,7 +99,7 @@ function GetDraftAprLineInfo(ret) {
             name = "habyuidate" + i;
 	  		field = message.GetListItem(fields, name);
 	  		
-            if(field) {
+            if(field && ret[32] != "Y") {
 	  	        field.textContent= "";
 	  	        if(new RegExp(/Firefox/).test(navigator.userAgent))
 	            field.innerHTML = "<br type='_moz'>";
@@ -209,7 +209,7 @@ function GetDraftAprLineInfo(ret) {
 			fieldname = "sign" + i;
 			field = message.GetListItem(fields, fieldname);
 			
-			if(field) {
+			if(field && ret[32] != "Y") {
 				field.textContent= " ";	
 				if(new RegExp(/Firefox/).test(navigator.userAgent))
 	                field.innerHTML = "<br type='_moz'>";
@@ -326,18 +326,20 @@ function SGetDraftAprLineInfo(ret) {
             TempsaveAprlineinfo = ret[0];
             xmlKuljea = ret[0];
             setAprLinesXML(xmlKuljea);
-            DrawAutoAprLine(ret[0], pDraftFlag);
+            //DrawAutoAprLine(ret[0], pDraftFlag);
+            New_DrawAutoLine(ret[0], pDraftFlag);
         } else {
 	        TempsaveAprlineinfo = ret[1];
 	        xmlKuljea = ret[1];
 	        setAprLinesXML(xmlKuljea);
-	        DrawAutoAprLine(ret[1], pDraftFlag);
+	        //DrawAutoAprLine(ret[1], pDraftFlag);
+	        New_DrawAutoLine(ret[1], pDraftFlag);
         }
-
+        
         if (xmlReDraft == "C") {
             ApplyDocCellInfo();
         } else if (xmlReDraft == "R") {
-            ClearDocCellInfo();
+            ClearDocCellInfo(ret);
         }
 
         xmldom = loadXMLString(xmlKuljea);
@@ -650,17 +652,23 @@ function SGetDraftAprLineInfo(ret) {
                     }
                     break;
 
-                case strAprType8:
+                case strAprType8: // 개인순차합의
                     if (xmlReDraft == "R") {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
                         if (field) {
                             setNodeText(field , OrderDept[i]);
                         }
+                        
+                        /* 2020-07-27 홍승비 - 합의자명 필드가 존재하지 않는 경우, 합의자 사인 필드에 이름 표출하도록 수정(개인순차합의, 개인병렬합의) */
                         fieldname = "habyuisign" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                        	// 합의자 사인 필드만 존재, 합의자명 필드 없음
+                        	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+                        		setNodeText(field , OrderName[i]);
+                        	}
+                            //setNodeText(field , OrderName[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -698,7 +706,10 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field && OrderStat[i] != strLangS26) {
-                            setNodeText(field , OrderName[i]);
+                        	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+                        		setNodeText(field , OrderName[i]);
+                        	}
+                            //setNodeText(field , OrderName[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -739,7 +750,10 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                        	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+                        		setNodeText(field , OrderName[i]);
+                        	}
+                            //setNodeText(field , OrderName[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -771,7 +785,7 @@ function SGetDraftAprLineInfo(ret) {
                     hapyuiCnt = hapyuiCnt + 1;
                     break;
 
-                case strAprType9:
+                case strAprType9: // 개인병렬합의
                     if (xmlReDraft == "R") {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
@@ -781,7 +795,10 @@ function SGetDraftAprLineInfo(ret) {
                         fieldname = "habyuisign" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                        	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+                        		setNodeText(field , OrderName[i]);
+                        	}
+                            //setNodeText(field , OrderName[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -820,7 +837,10 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field && OrderStat[i] != strLangS26) {
-                            setNodeText(field , OrderName[i]);
+                        	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+                        		setNodeText(field , OrderName[i]);
+                        	}
+                            //setNodeText(field , OrderName[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -861,7 +881,10 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                        	if (message.GetListItem(fields, ("habyuisign" + hapyuiCnt)) != null && message.GetListItem(fields, ("habyuija" + hapyuiCnt)) == null) {
+                        		setNodeText(field , OrderName[i]);
+                        	}
+                            //setNodeText(field , OrderName[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -892,7 +915,7 @@ function SGetDraftAprLineInfo(ret) {
                     hapyuiCnt = hapyuiCnt + 1;
                     break;
 
-                case strAprType12:
+                case strAprType12: // 부서병렬합의
                     if (xmlReDraft == "R") {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
@@ -902,7 +925,8 @@ function SGetDraftAprLineInfo(ret) {
                         fieldname = "habyuisign" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
+                        	setNodeText(field , OrderDept[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -941,7 +965,8 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field && OrderStat[i] != strLangS57) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
+                        	setNodeText(field , OrderDept[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -982,7 +1007,8 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
+                        	setNodeText(field , OrderDept[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -1013,7 +1039,7 @@ function SGetDraftAprLineInfo(ret) {
                     hapyuiCnt = hapyuiCnt + 1;
                     break;
 
-                case strAprType11:
+                case strAprType11: // 부서순차합의
                     if (xmlReDraft == "R") {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
@@ -1026,7 +1052,8 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
+                        	setNodeText(field , OrderDept[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -1066,7 +1093,8 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field && OrderStat[i] != strLangS26) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
+                        	setNodeText(field , OrderDept[i]);
                         }
 
 
@@ -1107,7 +1135,8 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
+                        	setNodeText(field , OrderDept[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -1197,7 +1226,7 @@ function SGetDraftAprLineInfo(ret) {
         if (field)
             cnt = OrderType.length;
 
-        for (i = 1; i < cnt; i++) {
+        for (i = 1; i <= cnt; i++) {
             fieldname = susinSN + "jikwe" + i
             field = message.GetListItem(fields, fieldname);
 
@@ -1216,6 +1245,15 @@ function SGetDraftAprLineInfo(ret) {
                 }
                 
                 fieldname = susinSN + "approdept" + i
+                field = message.GetListItem(fields, fieldname)
+                if (field) {
+                    field.innerHTML = "&nbsp;";
+                    if (new RegExp(/Firefox/).test(navigator.userAgent))
+                        field.innerHTML = "<br type='_moz'>";
+
+                }
+                
+                fieldname = susinSN + "seumyung" + i
                 field = message.GetListItem(fields, fieldname)
                 if (field) {
                     field.innerHTML = "&nbsp;";
@@ -1247,7 +1285,7 @@ function SGetDraftAprLineInfo(ret) {
         for (i = 1; i < OrderJobtitle.length; i++) {
             if (OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType40) {
                 if (LastSignSN == 1 || LastSignSN == i) {
-                    for (k = 1; k < cnt; k++) {
+                    for (k = 1; k <= cnt; k++) {
                         if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + k
                         else signID = "sign" + k
 
@@ -1287,17 +1325,37 @@ function SGetDraftAprLineInfo(ret) {
                         field.innerHTML = "<br type='_moz'>";
                 }
                 
+                fieldname = susinSN + "seumyung" + idx;
+                field = message.GetListItem(fields, fieldname);
+                
+                if (field) {
+                	setNodeText(field , OrderName[i]);
+                	
+                	if (new RegExp(/Firefox/).test(navigator.userAgent) && trim(getNodeText(field)) == "")
+                		field.innerHTML = "<br type='_moz'>";
+                }
+                
                 fieldname = susinSN + "sign" + idx;
                 field = message.GetListItem(fields, fieldname);
-
+                
+                /* 2020-07-24 홍승비 - 서명필드만 존재하는 경우, 서명+결재자명 필드가 함께 존재하는 경우, 슬래시 이미지의 표출분기 수정 */
                 if (field) {
-                	if (draftJunGyulFlag == '1' && OrderType[i] == "004") {
+                	if (draftJunGyulFlag == '1' && OrderType[i] == "004") { // 전결 서명 부여
                 		field.innerHTML = strLang6 + "<br>" + OrderName[i];
-                        idx = idx + 1;
-                	} else {
-                		setNodeText(field , OrderName[i]);
-                        idx = idx + 1;
                 	}
+                	// 서명필드만 존재
+                	else if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) == null) {
+                		setNodeText(field , OrderName[i]);
+                	}
+                	// 서명필드 + 결재자명 필드가 함께 존재
+                	else if (message.GetListItem(fields, (susinSN + "sign" + idx)) != null && message.GetListItem(fields, (susinSN + "seumyung" + idx)) != null) {
+                		field.innerHTML = "[NOSLASH]";
+                	}
+                	// 그 외의 경우, 아무런 값이 부여되지 않으므로 슬래시 이미지를 표출
+                	else {
+                		//setNodeText(field , OrderName[i]);
+                	}
+                	idx = idx + 1; // 서명칸이 존재하는 경우, idx를 1 증가시켜서 다음 칸을 찾는다.
                 }
             }
 
@@ -1503,7 +1561,7 @@ function setRecevInfo(ret) {
     }
 }
 
-function ClearDocCellInfo() {
+function ClearDocCellInfo(ret) {
     try {
         var i;
         var j;
@@ -1518,7 +1576,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "sign" + i;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1527,7 +1585,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "seumyung" + i;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1536,7 +1594,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "seumyungdate" + i;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1545,7 +1603,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "jikwe" + i;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1555,7 +1613,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "approdept" + i;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1565,7 +1623,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "habyui" + j;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1574,7 +1632,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "habyuipositon" + j;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1583,7 +1641,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "habyuidate" + j;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1592,7 +1650,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "habyuisign" + j;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1769,7 +1827,7 @@ function SendDraftMappingSign(ret) {
 
         if (approvalFlag == "S") {
             if (LastSignSN == 1) {
-                for (i = 1; i < 20; i++) {
+                for (i = 1; i <= 20; i++) {
                     if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
                     else signID = "sign" + i
 
@@ -1781,7 +1839,7 @@ function SendDraftMappingSign(ret) {
                 sn = LastSignNo;
             } else if (DraftLastFlag) {
                 putJunkyulSign("sign" + sn);
-                for (i = 1; i < 20; i++) {
+                for (i = 1; i <= 20; i++) {
                     if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
                     else signID = "sign" + i
 
@@ -2512,9 +2570,16 @@ function SetAutoPropertyValue() {
                 setMenuBar("btnSetReceivLine", true);
                 CheckGubun = "1";
             } else {
-                pSuSinFlag = "N";
-                setMenuBar("btnSetReceivLine", false);
-                CheckGubun = "11";
+            	//가변결재선 양식으로 수신문을 사용하는경우, 양식내에 수신처란이 없어도 수신문으로 인식되도록
+            	if ($("#message").contents().find("#autoLine").length > 0 && DocType == "003") {
+            		pSuSinFlag = "Y";
+            		setMenuBar("btnSetReceivLine", true); //사용하지도 않는 버튼 왜 살려두는지..
+            		CheckGubun = "1";
+            	} else {
+            		pSuSinFlag = "N";
+            		setMenuBar("btnSetReceivLine", false);
+            		CheckGubun = "11";
+            	}
             }
         }
         if (pSusinSN)
@@ -2643,6 +2708,11 @@ function openOpinionUI_New_Complete(ret) {
 		DivPopUpHidden();
 		if (ret == "Clear") {
 			pHasOpinionYN = "N";
+			var fields = message.GetFieldsList();
+		    var field = message.GetListItem(fields, "opinions");
+		    if (field) {
+		    	field.innerHTML = " ";
+		    }
 		} else if (ret == "cancel") {
 			//do_nothing
 		} else {
@@ -2664,32 +2734,17 @@ function openOpinionUI_New_Complete(ret) {
 }
 
 function makeOpinionList(OpinionXML) {
-    var fields = message.GetFieldsList();
+	var fields = message.GetFieldsList();
     var field = message.GetListItem(fields, "opinions");
     if (!field) return;
 
-    var firstFlag = true;
     var NodeList = SelectNodes(OpinionXML, "LISTVIEWDATA/ROWS/ROW");
+    field.innerHTML = " ";
     if (NodeList.length > 0) {
-        var strOpinion = " ";
         for (i = NodeList.length - 1; i >= 0; i--) {
-            if (getNodeText(NodeList[i].childNodes[9]) == "001") {
-                if (firstFlag) {
-                    strOpinion = "<P>[" + strLang27 + "</P>";
-                    firstFlag = false;
-                }
-                if (getNodeText(NodeList[i].childNodes[2]) != "")
-                    strOpinion = strOpinion + "<P>" + getNodeText(NodeList[i].childNodes[2]) + "&nbsp;&nbsp;&nbsp;";  
-                else
-                    strOpinion = strOpinion + "<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";  
-
-                strOpinion = strOpinion + getNodeText(NodeList[i].childNodes[1]) + "&nbsp;&nbsp;&nbsp;";
-                strOpinion = strOpinion + getNodeText(NodeList[i].childNodes[6]) + "</P>";
-            }
+    		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[3]) + ' - ' + getNodeText(NodeList[i].childNodes[2]) + ' - ' + getNodeText(NodeList[i].childNodes[1]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + getNodeText(NodeList[i].childNodes[6]) + '</p>';
+    		$(field).append(opinionsTable);
         }
-        field.innerHTML = strOpinion;
-    } else {
-        field.innerHTML = " ";
     }
 }
 
@@ -2891,6 +2946,8 @@ function SaveDraftDocInfo_ilban(pState) {
        } else {
        	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
        }
+        
+        createNodeAndInsertText(xmlpara, objNode, "PASSAPRLINE", passAprLine);
         
         /*
     	 * 2018-06-14 천성준
@@ -4255,9 +4312,7 @@ function SaveTMPDocInfo(AutoSave) {
         if (isUsed == "reuse") {
             createNodeAndInsertText(xmlpara, objNode, "beforeDocID", beforeDocID);
             createNodeAndInsertText(xmlpara, objNode, "isUsed", isUsed);
-        }
-        
-        if(Saveflag) {
+        } else if(Saveflag) {
         	createNodeAndInsertText(xmlpara, objNode, "saveFlag", Saveflag);
         	createNodeAndInsertText(xmlpara, objNode, "oldDocID", pDocID);
         }
@@ -4469,4 +4524,288 @@ function setFormAprOption(){
         setMenuBar("btnFileAttach", false);	
     if(formAprOption.indexOf("_a3_"))  //문서첨부
         setMenuBar("btnAprDocAttach", false);	
+}
+    
+//기결재통과 시, 기결재자 제외하고 사인칸 다시 그리고 정보 세팅해주는 메소드.. 급하게 만드느라 디버깅 거의 불가하게 만들어버림
+function SReAprLineSingMapping(ret) {
+	var lineXml = "";
+	
+	if (typeof(ret) == "object") {
+		lineXml = ret[1];
+		New_DrawAutoLine(lineXml, pDraftFlag);
+	} else {
+		return false;
+	}
+	
+	var SusinSN = "";
+	if (pDraftFlag == "SUSIN") {
+		SusinSN = "1";
+	}
+	
+	var reOrderSignName = new Array();
+	var reOrderSignTitle = new Array();
+	var reOrderHabyName = new Array();
+	var reOrderHabyTitle = new Array();
+	
+	var OrderName = new Array();
+	var OrderDept = new Array();
+	var OrderType = new Array();
+	var OrderTypeName = new Array();
+	var OrderStat = new Array();
+	var OrderStatName = new Array();
+	var OrderJobtitle = new Array();
+	var OrderReason = new Array();
+	
+	var xmlDom = createXmlDom();
+	xmlDom = loadXMLString(lineXml);
+	
+	var oRows = SelectNodes(xmlDom, "LISTVIEWDATA/ROWS/ROW");
+	var oCount = oRows.length;
+	
+	var dataNodes, tempSn;
+	for (var i = 0; i < oCount; i++) {
+		dataNodes = GetChildNodes(oRows[i]);
+		tempSn = getNodeText(dataNodes[0]);
+		
+		OrderName[tempSn] = getNodeText(dataNodes[1]);
+		OrderDept[tempSn] = getNodeText(dataNodes[3]);
+		OrderType[tempSn] = getNodeText(dataNodes[16]);
+		OrderStat[tempSn] = getNodeText(dataNodes[17]);
+		OrderReason[tempSn] = getNodeText(dataNodes[12]);
+		OrderTypeName[tempSn] = getNodeText(dataNodes[4]);
+		OrderStatName[tempSn] = getNodeText(dataNodes[5]);
+		OrderJobtitle[tempSn] = getNodeText(dataNodes[2]);
+	}
+	
+	/* 2020-07-27 홍승비 - 반송 후 재기안 > 기결재통과 체크 > 결재선 정보 설정 시, 결재선 맵핑 오류 수정*/
+	var LastSignSN = OrderType.length;
+    for(var i = 1; i < OrderType.length; i++) { // 마지막 결재하는 사람 찾기
+		if (OrderType[i] == strAprType4 || OrderType[i] == strAprType16) { // 전결, 대결
+			LastSignSN = i;
+			break;
+		} else if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 ||  OrderType[i] == strAprType1 ||  OrderType[i] == strAprType3) { // 기안, 검토, 결재, 결재안함
+    		LastSignSN = i;
+        }
+    }
+    
+	var signMax = 0;
+	var habyMax = 0;
+	var startSignIdx = 1;
+	var startHabyIdx = 1;
+	for (var j = 1; j <= oCount; j++) {
+		if (OrderType[j] == strAprType1 || OrderType[j] == strAprType3 || OrderType[j] == strAprType4 || OrderType[j] == strAprType15 || OrderType[j] == strAprType40) {
+			if (OrderStat[j] == strAprState3) {
+				startSignIdx++;
+			} else if (OrderStat[j] == strAprState2 && j == 1) {
+				startSignIdx++;
+			} else {
+				reOrderSignName.push(OrderName[j]);
+				reOrderSignTitle.push(OrderJobtitle[j]);
+			}
+			signMax++;
+		} else if (OrderType[j] == strAprType8 || OrderType[j] == strAprType11) {
+			if (OrderStat[j] == strAprState3) {
+				startHabyIdx++;
+			} else {
+				reOrderHabyName.push(OrderName[j]);
+				reOrderHabyTitle.push(OrderJobtitle[j]);
+			}
+			habyMax++;
+		} else if (OrderType[j] == strAprType9 || OrderType[j] == strAprType12) {
+			if (OrderStat[j] == strAprState3 || OrderStat[j] == strAprState4) {
+				startHabyIdx++;
+			} else {
+				reOrderHabyName.push(OrderName[j]);
+				reOrderHabyTitle.push(OrderJobtitle[j]);
+			}
+			habyMax++;
+		}
+	}
+	
+	// 가변결재선이 아니라면, 마지막 결재자의 서명 필드가 존재하는지 체크 (내부결재선, 수신결재선의 최종결재자는 가장 마지막 결재칸에 표출되어야 함)
+    var LastSignNo = 0;
+    var isAutoAprLineExit = false;
+    var autoAprLineField = $("#message").contents().find("td[id^='autoLine']");
+    var signFields = $("#message").contents().find("td[id^='" + SusinSN + "sign']");
+    
+    if (signFields.length > 0) {
+    	LastSignNo = signFields.length;
+    }
+    // 테넌트 컨피그와 실제 양식 상의 가변결재선 필드 모두 확인
+    if (useDynamicAprLine == "1" && autoAprLineField.length > 0) {
+    	isAutoAprLineExit = true;
+    }
+    
+	var fields = message.GetFieldsList();
+	var field;
+	
+	// 가변결재선의 초기화
+	if (isAutoAprLineExit == true) {
+		for (var p = startSignIdx; p <= signMax; p++) {
+			field = message.GetListItem(fields, SusinSN + "jikwe" + p);
+			if (field) {
+				setNodeText(field , " ");
+				if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+					field.innerHTML = "<br type='_moz'>";
+				}
+			}
+			
+			field = message.GetListItem(fields, SusinSN + "sign" + p);
+			if (field) {
+				setNodeText(field , " ");
+				if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+					field.innerHTML = "<br type='_moz'>";
+				}
+			}
+			
+			field = message.GetListItem(fields, SusinSN + "seumyung" + p);
+			if (field) {
+				setNodeText(field , " ");
+				if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+					field.innerHTML = "<br type='_moz'>";
+				}
+			}
+			
+			field = message.GetListItem(fields, SusinSN + "seumyungdate" + p);
+			if (field) {
+				setNodeText(field , " ");
+				if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+					field.innerHTML = "<br type='_moz'>";
+				}
+			}
+		}
+	}
+	else { // 일반적인 결재선의 초기화 (내부결재, 수신결재)
+	    if (signFields.length > 0) {
+	    	
+	    	var newAddSignCnt = signMax - startSignIdx; // 이 값이 0 이하라면, 기결재된 결재선 외에 새로 추가된 결재선은 없음
+	    	var signResetCnt = signFields.length - newAddSignCnt; // 양식 상의 전체 결재선 필드에서 새로 추가된 결재선 카운트를 뺀 횟수만큼 초기화를 진행
+	    	
+	    	if (newAddSignCnt >= 0 && signResetCnt > 0) {  // 새로 추가된 결재선이 존재하거나, 양식 상에서 초기화가 필요한 결재선 필드가 존재함
+	    		// startSignIdx 지점부터 양식 상의 마지막 결재서명필드(최종결재자 영역)까지 초기화를 진행
+				for (var r = startSignIdx; r <= signResetCnt; r++) {
+					field = message.GetListItem(fields, SusinSN + "jikwe" + r);
+					if (field) {
+						setNodeText(field , " ");
+						if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+							field.innerHTML = "<br type='_moz'>";
+						}
+					}
+					
+					field = message.GetListItem(fields, SusinSN + "sign" + r);
+					if (field) {
+						setNodeText(field , " ");
+						if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+							field.innerHTML = "<br type='_moz'>";
+						}
+					}
+					
+					field = message.GetListItem(fields, SusinSN + "seumyung" + r);
+					if (field) {
+						setNodeText(field , " ");
+						if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+							field.innerHTML = "<br type='_moz'>";
+						}
+					}
+					
+					field = message.GetListItem(fields, SusinSN + "seumyungdate" + r);
+					if (field) {
+						setNodeText(field , " ");
+						if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+							field.innerHTML = "<br type='_moz'>";
+						}
+					}
+				}
+	    	}
+	    }
+	    
+	}
+	
+	for (var p = startHabyIdx; p <= habyMax; p++) {
+		field = message.GetListItem(fields, SusinSN + "habyuipositon" + p);
+		if (field) {
+			setNodeText(field , " ");
+			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+				field.innerHTML = "<br type='_moz'>";
+			}
+		}
+		
+		field = message.GetListItem(fields, SusinSN + "habyuisign" + p);
+		if (field) {
+			setNodeText(field , " ");
+			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+				field.innerHTML = "<br type='_moz'>";
+			}
+		}
+		
+		field = message.GetListItem(fields, SusinSN + "habyuija" + p);
+		if (field) {
+			setNodeText(field , " ");
+			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+				field.innerHTML = "<br type='_moz'>";
+			}
+		}
+		
+		field = message.GetListItem(fields, SusinSN + "habyuidate" + p);
+		if (field) {
+			setNodeText(field , " ");
+			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+				field.innerHTML = "<br type='_moz'>";
+			}
+		}
+	}
+	
+	var sIdx = startSignIdx;
+	var hIdx = startHabyIdx;
+	for (var p = 0; p < reOrderSignName.length; p++) {
+		
+		// 가변결재선이 아닌 경우, 최종결재자는 가장 마지막 서명칸에 맵핑 (기안자=최종결재자인 경우도 동일하게 처리)
+		if (p == reOrderSignName.length - 1 && isAutoAprLineExit == false) {
+			sIdx = LastSignNo;
+		}
+		
+		field = message.GetListItem(fields, SusinSN + "jikwe" + sIdx);
+		if (field) {
+			setNodeText(field , reOrderSignTitle[p]);
+		}
+		
+		/* 2020-07-27 홍승비 - 서명필드만 존재하는 경우, 서명+결재자명 필드가 함께 존재하는 경우, 슬래시 이미지의 표출분기 수정 */
+		field = message.GetListItem(fields, SusinSN + "sign" + sIdx);
+		if (field) {
+			// 서명필드만 존재
+			if (message.GetListItem(fields, (SusinSN + "sign" + sIdx)) != null && message.GetListItem(fields, (SusinSN + "seumyung" + sIdx)) == null) {
+				setNodeText(field , reOrderSignName[p]);
+			}
+			// 서명필드 + 결재자명 필드가 함께 존재
+			else if (message.GetListItem(fields, (SusinSN + "sign" + sIdx)) != null && message.GetListItem(fields, (SusinSN + "seumyung" + sIdx)) != null) {
+				field.innerHTML = "[NOSLASH]";
+			}
+	     	// 그 외의 경우, 아무런 값이 부여되지 않으므로 슬래시 이미지를 표출
+		}
+         	
+		field = message.GetListItem(fields, SusinSN + "seumyung" + sIdx);
+		if (field) {
+			setNodeText(field , reOrderSignName[p]);
+		}
+		
+		sIdx++;
+	}
+	
+    if (isSplit == "Y") { // 슬래시 이미지 삽입
+        setSignSlash("sign", SusinSN);
+    }
+    
+	for (var p = 0; p < reOrderHabyName.length; p++) {
+		field = message.GetListItem(fields, SusinSN + "habyuipositon" + hIdx);
+		if (field) {
+			setNodeText(field , reOrderHabyTitle[p]);
+		}
+		field = message.GetListItem(fields, SusinSN + "habyuija" + hIdx);
+		if (field) {
+			setNodeText(field , reOrderHabyName[p]);
+		}
+		
+		hIdx++;
+	}
+	
 }

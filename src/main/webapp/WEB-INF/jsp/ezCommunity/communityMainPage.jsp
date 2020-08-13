@@ -55,7 +55,8 @@
 	        var strLang4 = "<spring:message code = 'ezCommunity.t504' />";
 	        var strLang5 = "<spring:message code = 'ezCommunity.t1474' />";
 	        var strLang6 = "<spring:message code = 'ezCommunity.t1079' />";
-	        var strLang7 = "<spring:message code = 'ezCommunity.t1102' />";
+//	        var strLang7 = "<spring:message code = 'ezCommunity.t1102' />";
+	        var strLang7 = "<spring:message code = 'ezCommunity.t1083' />";
 	        var strLang8 = "<spring:message code = 'ezCommunity.t2002' />";
 	        var strLang9 = "<spring:message code = 'ezSchedule.t267' />";
 	        
@@ -1674,7 +1675,7 @@
 							                            window.open("/ezCommunity/join2.do?no=" + idx, "", "location=0,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
 							                        }
 							                	} else {
-							                    	alert(strLang7);
+							                    	alert("<c:out value = '${userName}' />" + strLang7);
 							                	}
 											}
 										});
@@ -1720,7 +1721,7 @@
 		                            window.open("/ezCommunity/join2.do?no=" + idx, "", "location=0,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
 		                        }
 		                	} else {
-		                    	alert(strLang7);
+		                    	alert("<c:out value = '${userName}' />" + strLang7);
 		                	}
 						}
 					});

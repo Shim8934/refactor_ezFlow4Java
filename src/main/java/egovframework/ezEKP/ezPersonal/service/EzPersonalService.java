@@ -44,7 +44,7 @@ public interface EzPersonalService {
 
 	public String getApprovNotiConfig(String userID, String currentID, int tenantID) throws Exception;
 
-	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID) throws Exception;
+	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID, String linePass) throws Exception;
 	
 	public List<OrganUserVO> getBirthUserList(String companyId, int tenantId, int month, String lang) throws Exception;
 	

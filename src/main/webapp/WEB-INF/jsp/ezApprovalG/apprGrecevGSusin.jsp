@@ -133,6 +133,7 @@
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 			
 			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
+			var passAprLine = "";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -171,7 +172,7 @@
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    getDocInfo();
 		
-		                    if (pHasOpinionYN == "Y") {
+		                    /* if (pHasOpinionYN == "Y") {
 		                        if (pAprState == "006")
 		                            pInformationContent = "<spring:message code='ezApprovalG.t124'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
 		                        else
@@ -179,7 +180,7 @@
 		
 		                        Ans = OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
 		                        return;
-		                    }
+		                    } */
 		                }
 		                else if (pDraftFlag == "SUSIN" || pDraftFlag == "GONGRAM") {
 		                    var len;
@@ -198,14 +199,14 @@
 		                        btnReturn_onclick();
 		                    }
 		                    else {
-		                        if (pHasOpinionYN == "Y") {
+		                        /* if (pHasOpinionYN == "Y") {
 		                            var pInformationContent;
 		                            var Ans;
 		
 		                            pInformationContent = "<spring:message code='ezApprovalG.t126'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
 		                            Ans = OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
 		                            return;
-		                        }
+		                        } */
 		                    }
 		                }
 		                else if (pDraftFlag == "HAPYUI") {
@@ -220,14 +221,14 @@
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    getDocInfo();
 		
-		                    if (pHasOpinionYN == "Y") {
+		                    /* if (pHasOpinionYN == "Y") {
 		                        var pInformationContent;
 		                        var Ans;
 		
 		                        pInformationContent = "<spring:message code='ezApprovalG.t126'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
 		                        Ans = OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
 		                        return;
-		                    }
+		                    } */
 		                }
 		                else {
 		                    SetBtnStateTrue();
@@ -282,21 +283,40 @@
 		        setAutoProperty();
 		        process_AfterOpen();
 		        
-		        if (SignCount < 1) {
-		        	if (approvalFlag == "G") {
-			            pGubun = "12";
-			            if (CrossYN())
-			                document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.t1406'/>";
-			            else
-			                document.getElementById("btnRJunkyul").childNodes[0].innerText = "<spring:message code='ezApprovalG.t1406'/>";
-		        	} else {
-		        		document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.csj001'/>";
-		        	}
-		            document.getElementById("btnSetAprLine").style.display = "none";
-		            document.getElementById("btnSendDraft").style.display = "none";
-		            document.getElementById("btntotaldocinfo").style.display = "none";
+		        if ($("#message").contents().find("#RecvautoAprLine").length == 0) {
+		        	//가변결재선을 사용하는 수신문인데 수신결재선 필드를 그리지 못하고 수신된 문서일 경우, 접수 할 때 그려주도록. (voc #55612)
+		        	if ($("#message").contents().find("#autoLine").length > 0 && pDocType == "003" && pDraftFlag == "SUSIN") {
+						var oDIV = document.createElement("DIV");
+						oDIV.className = "FIELD";
+						oDIV.id = "RecvautoAprLine";
+							
+                		$("#message").contents().find("#autoLine").append(oDIV);
+                		setFirstDrafter();
+                	} else {
+				        if (SignCount < 1) {
+				        	if (approvalFlag == "G") {
+					            pGubun = "12";
+					            if (CrossYN())
+					                document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.t1406'/>";
+					            else
+					                document.getElementById("btnRJunkyul").childNodes[0].innerText = "<spring:message code='ezApprovalG.t1406'/>";
+				        	} else {
+				        		document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.csj001'/>";
+				        	}
+				            document.getElementById("btnSetAprLine").style.display = "none";
+				            document.getElementById("btnSendDraft").style.display = "none";
+				            document.getElementById("btntotaldocinfo").style.display = "none";
+				        } else {
+				        	setFirstDrafter();
+				        }
+                	}
 		        } else {
-		        	setFirstDrafter();
+		        	if (g_DraftFlag != "REDRAFT") {
+			        	setFirstDrafter();
+		        	} else {
+		        		LastSignSN = 1;
+		        	}
+		        	setAutoProperty();
 		        }
 		        getGongRamDocInfo();
 		        var g_SepAttachLVXml = "";
@@ -1051,7 +1071,13 @@
 		                return;
 		            }
 		        	
-		        	setButtonReceiveTrue();
+		            setButtonReceiveTrue();		            
+
+		        	var Rtnxml = createXmlDom();
+		            Rtnxml = loadXMLString(ret);
+		            makeOpinionList4Hesong(Rtnxml);
+		            // delOpinionsExceptHesong();
+		            // SaveFile();
 		
 		            if (temppDocSN != "")
 		                hesongok = setCabinetHeSong(temppDocSN);
@@ -1060,6 +1086,46 @@
 		            	 SendMailToDrafter_Hesong();
 		                hesongok = setHeSongDocInfo();
 		            }
+		        }
+		    }
+		    
+		    function delOpinionsExceptHesong() {
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : false,
+		    		url : "/ezApprovalG/delOpinionsExceptHesong.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success: function(result) {
+		    			
+		    		}
+		    	});
+		    }
+		    
+		    function makeOpinionList4Hesong(OpinionXML) {
+		    	var fields = message.GetFieldsList();
+		        var field = message.GetListItem(fields, "opinions");
+		        if (!field) return;
+
+		        field.innerHTML = " ";
+		    	SaveFile();
+		    }
+		 
+		    function makeOpinionList(OpinionXML) {
+		    	var fields = message.GetFieldsList();
+		        var field = message.GetListItem(fields, "opinions");
+		        if (!field) return;
+
+		        var NodeList = SelectNodes(OpinionXML, "LISTVIEWDATA/ROWS/ROW");
+		        field.innerHTML = " ";
+		        if (NodeList.length > 0) {
+		            for (i = NodeList.length - 1; i >= 0; i--) {
+		        		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[3]) + ' - ' + getNodeText(NodeList[i].childNodes[2]) + ' - ' + getNodeText(NodeList[i].childNodes[1]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + getNodeText(NodeList[i].childNodes[6]) + '</p>';
+		        		$(field).append(opinionsTable);
+		            }
+		        	SaveFile();
 		        }
 		    }
 		    function btnEdit_onclick() {
@@ -1205,6 +1271,7 @@
 	                        } else {
 	    	                    GetDraftAprLineInfo(retvalue);
 	                        }
+	    		            passAprLine = "N";
 	    		            btnSendDraftEnable = "true";
 	    		            CurAprType = "<spring:message code='ezApprovalG.t25'/>";
 	    		            LastSignSN = "1";
@@ -1501,6 +1568,8 @@
 			        parameter[56] = limitDate;
 		        }
 		        
+		        parameter[60] = passAprLine;
+		        
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		
@@ -1540,7 +1609,7 @@
 		                    btnSendDraftEnable = "true";
 
 		                    if (approvalFlag == "S") {
-			                    SGetDraftAprLineInfo(ret);
+		                    	SGetDraftAprLineInfo(ret);
 		                    } else {
 			                    GetDraftAprLineInfo(ret);
 		                    }
@@ -1637,7 +1706,7 @@
 		                	tempPublic = ret[11];
 		                	SetDocOption(ret[20]);
 		                }
-		                
+		                passAprLine = ret[32];
 		                SummaryFlag = true;
 		
 		            }
