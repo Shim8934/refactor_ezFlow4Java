@@ -7098,10 +7098,10 @@ CREATE TABLE `tbl_forminfo` (
   `FORMVERSION` int(11) DEFAULT 0,
   `OPENGOVFLAG` varchar(4) DEFAULT 'N',
   `DRAFTALLFLAG` varchar(4) DEFAULT 'N',
-  `formxslt` longtext DEFAULT NULL COMMENT '연동에서 XML을 HTML로 변환하기 위해 필요한 XSLT정보',
-  `passaprlineflag` varchar(4) DEFAULT 'N' COMMENT '기결재통과플래그',
+  `FORMXSLT` longtext DEFAULT NULL COMMENT '연동에서 XML을 HTML로 변환하기 위해 필요한 XSLT정보',
+  `PASSAPRLINEFLAG` varchar(4) DEFAULT 'N' COMMENT '기결재통과플래그',
   `FORMGUIDE` longtext DEFAULT NULL,
-  `aproption` varchar(300) DEFAULT NULL COMMENT '양식 세부설정',
+  `APROPTION` varchar(300) DEFAULT NULL COMMENT '양식 세부설정',
   PRIMARY KEY (`FORMID`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

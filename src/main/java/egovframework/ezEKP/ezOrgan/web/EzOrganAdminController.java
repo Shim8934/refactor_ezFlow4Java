@@ -186,7 +186,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addAddressFurigana(); // 2019-12-04 주소록 후리가나 추가 
 	    	ezCommonService.createJobMasterTable();
 	    	ezCommonService.createOpenGovTable(); // 2019-07-18 원문공개 테이블 추가
-	//    	ezCommonService.addPassAprLineFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
+	    	ezCommonService.addPassAprLineFlag(); // 2020-08-13 홍승비 - 양식옵션 > 기결재통과 플래그 추가
 	    	ezCommonService.addOpenGovFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
     		ezCommonService.createUserDistributionTable(); // 20200226 사용자 정의 공용배포그룹 테이블 생성
 	    	ezCommonService.insertTblTenantConfig("mailConfirm"); // 2020-01-28 useMailConfirm 컨피그 추가

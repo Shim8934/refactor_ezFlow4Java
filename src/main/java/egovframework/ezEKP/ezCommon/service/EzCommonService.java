@@ -252,4 +252,6 @@ public interface EzCommonService {
 	public void insertMobileAttitudeColumn() throws Exception;
 	
 	public void createMenuTenantConfig() throws Exception;
+
+	public void addPassAprLineFlag() throws Exception;
 }

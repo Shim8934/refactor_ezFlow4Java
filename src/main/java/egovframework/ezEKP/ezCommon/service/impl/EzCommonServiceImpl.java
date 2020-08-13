@@ -2020,4 +2020,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		logger.debug("createMenuTenantConfig ended");
 	}
+	
+	/* 2020-08-13 홍승비 - 양식옵션 > 기결재통과 플래그 추가 */
+	@Override
+	public void addPassAprLineFlag() throws Exception {
+		ezCommonDAO.addPassAprLineFlagColumn();
+	}
 }
+

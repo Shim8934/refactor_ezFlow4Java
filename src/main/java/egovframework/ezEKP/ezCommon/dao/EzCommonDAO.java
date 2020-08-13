@@ -1556,6 +1556,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertSurveyTenantConfig", map);
 		}
 	}
-	
+
+	public void addPassAprLineFlagColumn() throws Exception {
+		try {
+			select("EzCommonDAO.checkFormPassAprLineFlagColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_forminfo PASSAPRLINEFLAG column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateFormPassAprLineFlagColumn");
+		}
+	}
 	
 }

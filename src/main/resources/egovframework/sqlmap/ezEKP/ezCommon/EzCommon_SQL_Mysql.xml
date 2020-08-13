@@ -2898,7 +2898,6 @@
 			tenant_id = #tenantId#
 	</select>
 	
-	
 	<select id="EzCommonDAO.checkTenantConfig" resultClass="String">
 		SELECT
 			property_value
@@ -2909,4 +2908,19 @@
 		AND
 			tenant_id = #tenantId#
 	</select>
+	
+	<select id="EzCommonDAO.checkFormPassAprLineFlagColumn">
+		SELECT 
+			PASSAPRLINEFLAG
+		FROM 
+			TBL_FORMINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.updateFormPassAprLineFlagColumn">
+		ALTER TABLE 
+			TBL_FORMINFO
+		ADD COLUMN 
+			PASSAPRLINEFLAG  VARCHAR(4) DEFAULT 'N' COMMENT '기결재통과플래그'
+	</statement>
+	
 </sqlMap>

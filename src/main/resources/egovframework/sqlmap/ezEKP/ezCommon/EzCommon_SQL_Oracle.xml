@@ -2961,4 +2961,21 @@
 			tenant_id = #tenantId#
 	</select>
 	
+	<select id="EzCommonDAO.checkFormPassAprLineColumn">
+		<![CDATA[
+			SELECT 
+				PASSAPRLINEFLAG
+			FROM 
+				TBL_FORMINFO
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateFormPassAprLineColumn">
+		ALTER TABLE 
+			TBL_FORMINFO
+		ADD 
+			PASSAPRLINEFLAG  VARCHAR2(4) DEFAULT 'N'
+	</statement>
+	
 </sqlMap>
