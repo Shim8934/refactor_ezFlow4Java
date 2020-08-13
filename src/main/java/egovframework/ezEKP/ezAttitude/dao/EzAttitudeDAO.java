@@ -537,4 +537,17 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public List<AttitudeVO> getAnuualListSchedule(Map<String, Object> map) {
 		return (List<AttitudeVO>) list("ezAttitudeDAO.getAnuualListSchedule", map);
 	}
+
+	public String getAttitudeTime(Map<String, Object> map) {
+		return (String) select("ezAttitudeDAO.getAttitudeTime", map);
+	}
+
+	public void updateWorkStatus(Map<String, Object> map) {
+		update("ezAttitudeDAO.updateWorkStatus", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<AttitudeVO> getAttitudeList3() {
+		return (List<AttitudeVO>) list("ezAttitudeDAO.getAttitudeList3");
+	}
 }

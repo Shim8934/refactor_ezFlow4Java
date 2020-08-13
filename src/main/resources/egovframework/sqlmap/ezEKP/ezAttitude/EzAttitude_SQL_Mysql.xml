@@ -64,6 +64,7 @@
 		<result  property="attendType"		column="ATTEND_TYPE"		columnIndex="20"/>
 		<result property="latitude" 				column="LATITUDE" 			columnIndex="21" nullValue="0"/>
 		<result property="longitude" 				column="LONGITUDE" 			columnIndex="22" nullValue="0"/>
+		<result property="workStatus" 				column="WORK_STATUS" 			columnIndex="23"/>
 	</resultMap>
 	
 	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
@@ -338,7 +339,8 @@
 					C.DESCRIPTION$lang$ AS WRITER_DEPT_NAME,
 					A.ATTEND_TYPE,
 					A.LATITUDE,
-					A.LONGITUDE
+					A.LONGITUDE,
+					A.WORK_STATUS
 				FROM   
 					tbl_attitude A 
 				INNER JOIN 
@@ -494,6 +496,9 @@
 			,LATITUDE,
 			LONGITUDE
 			</isNotEmpty>
+			<isNotEmpty property="workStatus">
+			,WORK_STATUS
+			</isNotEmpty>
 		)
 		VALUES
 		(
@@ -515,6 +520,9 @@
 			<isNotEmpty property="latitude">
 			,#latitude#,
 			#longitude#
+			</isNotEmpty>
+			<isNotEmpty property="workStatus">
+			,#workStatus#
 			</isNotEmpty>
 		)
 		<selectKey resultClass="int" keyProperty="attitudeId">
@@ -2604,5 +2612,84 @@
 						(START_DATE < #v_PSTARTDATE# and END_DATE >= #v_PENDDATE#)
 					)
 				]]>
+	</select>
+	
+	<select id="ezAttitudeDAO.getAttitudeTime" parameterClass="Map" resultClass="String">
+		SELECT 
+			date_add(START_DATE, INTERVAL #offsetMin# minute)
+		FROM
+			TBL_ATTITUDE
+		WHERE
+			WRITER_ID = #writerId#
+		AND 
+			COMPANY_ID = #companyId#
+		AND 
+			TENANT_ID = #tenantId#
+		AND 
+			TYPE_ID IN ('A01', 'A02')
+		AND
+			date_add(START_DATE, INTERVAL #offsetMin# minute) LIKE CONCAT(#startDate2#,'%')
+	</select>
+	
+	<update id = "ezAttitudeDAO.updateWorkStatus" parameterClass="map">
+		UPDATE
+			TBL_ATTITUDE
+		SET
+			WORK_STATUS = #workStatus#
+		WHERE
+			ATTITUDE_ID = #attitudeId#
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
+	
+	<select id="ezAttitudeDAO.getAttitudeList3" resultClass="AttitudeVO">
+		<![CDATA[
+			SELECT 
+				A.attitude_id AS attitudeid,
+				A.company_id AS companyid,
+				A.tenant_id AS tenantid,
+				A.writer_id AS writerid,
+				A.dept_id AS deptid,
+				if(A.type_id='A25', DATE_ADD(DATE_ADD(A.start_date, INTERVAL cast(substring(d.TIMEZONE, 5) as unsigned) hour), INTERVAL -1 day), DATE_ADD(A.start_date, INTERVAL cast(substring(d.TIMEZONE, 5) as unsigned) hour)) as startdate,
+                SUBSTR(DATE_ADD(A.start_date, INTERVAL cast(substring(d.TIMEZONE, 5) as unsigned) hour), 12) AS starttime,
+				A.modappl,
+				A.type_id AS typeid,
+				B.type_name$primary$ AS typename,
+                A.work_status AS workstatus
+			FROM
+				TBL_ATTITUDE A
+			JOIN
+				TBL_ATTITUDE_TYPE B
+			ON
+				A.type_id = B.type_id
+			AND
+				A.company_id = B.company_id
+			AND
+				A.tenant_id = B.tenant_id
+			JOIN
+				TBL_USERMASTER C
+			ON
+				A.writer_id = C.cn
+			AND
+				A.tenant_id = C.tenant_id
+			JOIN
+				tbl_userlocalinfo D
+			ON
+				A.writer_id = D.USERID
+			AND
+				A.TENANT_ID = D.TENANT_ID
+			WHERE
+				A.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+			AND
+				A.type_id IN ("A01","A02","A03","A08","A25")
+			AND 
+				A.modappl <> 5
+			ORDER BY
+				date_format(startdate, '%Y-%m-%d') DESC,
+				writerid,
+				starttime DESC
+		]]>
 	</select>
 </sqlMap>

@@ -2898,6 +2898,23 @@
 			tenant_id = #tenantId#
 	</select>
 	
+	<select id="EzCommonDAO.checkDailyWorkAttitudeColumn" resultClass="String">
+		<![CDATA[
+			SELECT 
+				WORK_STATUS
+			FROM 
+				TBL_ATTITUDE
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createDailyWorkAttitudeColumn">
+		ALTER TABLE 
+			TBL_ATTITUDE
+		ADD COLUMN 
+			WORK_STATUS CHAR(1) NULL COMMENT 'D : 일근무	H : 반근무'
+	</statement>
+	
 	<select id="EzCommonDAO.checkTenantConfig" resultClass="String">
 		SELECT
 			property_value

@@ -1547,6 +1547,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertSurveyTenantConfig", map);
 		}
 	}
+
+	public void insertDailyWorkAttitudeColumn() {
+		try {
+			select("EzCommonDAO.checkDailyWorkAttitudeColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_attitude WORK_STATUS column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.createDailyWorkAttitudeColumn");
+		}
+	}
 	
 	public void createMenuTenantConfig(Map<String, Object> map) throws Exception {
 		String propertyValue = (String) select("EzCommonDAO.checkTenantConfig", map);

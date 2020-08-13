@@ -226,6 +226,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.alterTblPsApprovNotiMailConf(); //기결재통과 알림 컬럼 추가
 	    	ezCommonService.createTblNoticeBoard(); //2020-06-17 홍승비 - 회사별 공지사항 게시판 기능을 위한 NOTICEBOARD 테이블 추가
 	    	ezCommonService.createMenuTenantConfig();		// 2020-08-06 김민성 - 메뉴 숨김처리 관련 config 추가
+	    	ezCommonService.insertDailyWorkAttitudeColumn(); //2020-08-07 김정언 - 근태관리 WORK_STATUS (일근무/반근무) 컬럼 추가
     	} catch (Exception e) {
     		e.printStackTrace();
     	}

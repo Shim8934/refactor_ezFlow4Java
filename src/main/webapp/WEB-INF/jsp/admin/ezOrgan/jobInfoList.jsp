@@ -783,6 +783,11 @@
 	<LISTVIEWDATA>
 	   	<HEADERS>
 			<HEADER>
+			<NAME></NAME>
+			<WIDTH>20</WIDTH>
+			<COLNAME>CHECKBOX</COLNAME>
+			</HEADER>
+			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj17' />(${primary})</NAME>
 			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>

@@ -677,7 +677,7 @@
 				A.tenant_id AS tenantid,
 				A.writer_id AS writerid,
 				A.dept_id AS deptid,
-				if(A.type_id='A25', DATE_ADD(DATE_ADD(A.start_date, INTERVAL +540 minute), INTERVAL -1 day), DATE_ADD(A.start_date, INTERVAL +540 minute) ) as startdate,
+				if(A.type_id='A25', DATE_ADD(DATE_ADD(A.start_date, INTERVAL #offsetMin# minute), INTERVAL -1 day), DATE_ADD(A.start_date, INTERVAL #offsetMin# minute) ) as startdate,
                 SUBSTR(DATE_ADD(A.start_date, INTERVAL #offsetMin# minute), 12) AS starttime,
                 IFNULL(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute),'') AS enddate,
                 IFNULL(SUBSTR(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute), 12),'') AS endtime,
@@ -2146,6 +2146,4 @@
 		]]>
 		
 	</select>
-	
-	
 </sqlMap>

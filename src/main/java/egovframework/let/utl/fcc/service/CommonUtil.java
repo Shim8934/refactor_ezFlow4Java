@@ -38,6 +38,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -2197,7 +2198,6 @@ public class CommonUtil {
 		return menuAccessList;
 	}
 
-
 	public String getDayAfter(String date) throws Exception {
 		logger.debug("getDayAfter started");
 		
@@ -2227,5 +2227,18 @@ public class CommonUtil {
 			logger.debug("getDayBefore ended");
 			return dayBefore.toString();
 		}
+	}
+	
+	// 2020-07-23 김정언 - 두 날짜의 시간 차이 구하는 메소드
+	public long getTimeDifference(String startDate, String endDate) {
+		logger.debug("getTimeDifference started");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime sd = LocalDateTime.parse(startDate, formatter);
+		LocalDateTime ed = LocalDateTime.parse(endDate, formatter);
+		
+		long minutes = ChronoUnit.MINUTES.between(sd, ed);
+		logger.info("##minutes=" + minutes);
+		logger.debug("getTimeDifference ended");
+		return minutes;
 	}
 }

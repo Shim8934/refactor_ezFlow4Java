@@ -61,6 +61,7 @@
 		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
 		<result  property="writerName"			column="WRITER_NAME"			columnIndex="18"/>
 		<result  property="writerDeptName"		column="WRITER_DEPT_NAME"		columnIndex="19"/>
+		<result property="workStatus" 			column="WORK_STATUS" 			columnIndex="20"/>
 	</resultMap>
 	
 	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
@@ -345,7 +346,8 @@
 					B.TYPE_NAME$lang$ AS TYPE_NAME,
 					B.IMG_PATH,
 					C.DISPLAYNAME$lang$ AS WRITER_NAME,
-					C.DESCRIPTION$lang$ AS WRITER_DEPT_NAME
+					C.DESCRIPTION$lang$ AS WRITER_DEPT_NAME,
+					A.WORK_STATUS
 				FROM   
 					tbl_attitude A 
 				INNER JOIN 
@@ -493,6 +495,9 @@
 			DATE_TYPE,
 			TYPE_ID,
 			MODAPPL
+			<isNotEmpty property="workStatus">
+			,WORK_STATUS
+			</isNotEmpty>
 		)
 		VALUES
 		(
@@ -518,6 +523,9 @@
 			#dateType#,
 			#typeId#,
 			#modappl#
+			<isNotEmpty property="workStatus">
+			,#workStatus#
+			</isNotEmpty>
 		)
 		<selectKey resultClass="int" keyProperty="attitudeId">
 		    SELECT SEQ_TBL_ATTITUDE.currval FROM dual
@@ -2896,5 +2904,93 @@
 						(START_DATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND END_DATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
 					)
 				]]>
+	</select>
+	
+	<select id="ezAttitudeDAO.getAttitudeTime" parameterClass="Map" resultClass="String">
+		SELECT 
+			date_add(START_DATE, INTERVAL #offsetMin# minute)
+		FROM
+			TBL_ATTITUDE
+		WHERE
+			WRITER_ID = #writerId#
+		AND 
+			COMPANY_ID = #companyId#
+		AND 
+			TENANT_ID = #tenantId#
+		AND 
+			TYPE_ID IN ('A01', 'A02')
+		AND
+			date_add(START_DATE, INTERVAL #offsetMin# minute) LIKE CONCAT(#startDate2#,'%')
+	</select>
+	
+	<update id = "ezAttitudeDAO.updateWorkStatus" parameterClass="map">
+		UPDATE
+			TBL_ATTITUDE
+		SET
+			WORK_STATUS = #workStatus#
+		WHERE
+			ATTITUDE_ID = #attitudeId#
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
+	
+	<select id="ezAttitudeDAO.getAttitudeList3" resultClass="AttitudeVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+			(
+				SELECT
+					T1.*,
+					ROWNUM AS RN
+				FROM
+				(
+					SELECT 
+						A.attitude_id AS attitudeid,
+						A.company_id AS companyid,
+						A.tenant_id AS tenantid,
+						A.writer_id AS writerid,
+						A.dept_id AS deptid,
+						to_char(A.start_date, 'YYYY-MM-DD HH24:MI:SS') AS startdate,
+		                SUBSTR(TO_CHAR(A.start_date, 'YYYY-MM-DD HH24:MI:SS'), 12) AS starttime,
+						A.modappl,
+						A.type_id AS typeid,
+						B.type_name$primary$ AS typename,
+						A.work_status AS workstatus
+					FROM
+						TBL_ATTITUDE A
+					JOIN
+						TBL_ATTITUDE_TYPE B
+					ON
+						A.type_id = B.type_id
+					AND
+						A.company_id = B.company_id
+					AND
+						A.tenant_id = B.tenant_id
+					JOIN
+						TBL_USERMASTER C
+					ON
+						A.writer_id = C.cn
+					AND
+						A.tenant_id = C.tenant_id
+					JOIN
+						tbl_userlocalinfo D
+					ON
+						A.writer_id = D.USERID
+					AND
+						A.TENANT_ID = D.TENANT_ID
+					WHERE
+						A.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+					AND
+						A.modappl <> 5
+					ORDER BY
+						date_format(startdate, '%Y-%m-%d') DESC,
+						writerid,
+						starttime DESC
+				]]>
+				) T1
+			)
 	</select>
 </sqlMap>

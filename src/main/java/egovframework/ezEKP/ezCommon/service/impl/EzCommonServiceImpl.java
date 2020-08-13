@@ -1959,6 +1959,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		logger.debug("insertMobileAttitudeColumn ended");
 	}
+
+	@Override
+	public void insertDailyWorkAttitudeColumn() throws Exception {
+		// 일근무/반근무 기능 관련 컬럼 추가(tbl_attitude -> WORK_STATUS)
+		ezCommonDAO.insertDailyWorkAttitudeColumn();
+	}
 	
 	public void alterTblPsApprovNotiMailConf() throws Exception {
 		ezCommonDAO.alterTblPsApprovNotiMailConf();
@@ -2026,5 +2032,5 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addPassAprLineFlag() throws Exception {
 		ezCommonDAO.addPassAprLineFlagColumn();
 	}
+	
 }
-

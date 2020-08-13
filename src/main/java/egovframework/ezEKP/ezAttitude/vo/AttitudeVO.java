@@ -55,6 +55,8 @@ public class AttitudeVO {
 	private double latitude;
 	/** 경도*/
 	private double longitude;
+	/** 근무상태*/
+	private String workStatus;
 	
 	public String getWriterName() {
 		return writerName;
@@ -219,6 +221,20 @@ public class AttitudeVO {
 	}
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}	
+	public String getWorkStatus() {
+		return workStatus;
 	}
-	
+	public void setWorkStatus(String workStatus) {
+		this.workStatus = workStatus;
+	}
+	@Override
+	public String toString() {
+		return "AttitudeVO [attitudeId=" + attitudeId + ", companyId="
+				+ companyId + ", tenantId=" + tenantId + ", writerId="
+				+ writerId + ", deptId=" + deptId + ", startDate=" + startDate
+				+ ", startTime=" + startTime + ", modAppl=" + modAppl 
+				+ ", typeId=" + typeId + ", typeName=" + typeName
+				+ ", workStatus=" + workStatus + "]";
+	}
 }
