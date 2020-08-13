@@ -442,7 +442,7 @@
 	    <table class="content" style="width: 100%;">
 	        <tr>
 	            <td class="pos1" style="padding-right: 8px; width: 100%;">
-	                <div class="tree" style="border: 0; margin-left: 5px; width: 100%; height: 370px; overflow: auto" id="AddressTreeView"></div>
+	                <div class="tree" style="border: 0; margin-left: 5px; height: 370px; overflow: auto" id="AddressTreeView"></div>
 	            </td>
 	        </tr>
 	    </table>

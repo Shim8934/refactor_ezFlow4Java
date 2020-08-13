@@ -235,6 +235,9 @@
                 if (GetAttribute(toggleel, 'class').indexOf("tree_blank") >= 0){
                 	toggleel.setAttribute("class", "sub_iconLNB tree_minus");
                 }
+                if (childel.id.indexOf("AddressTreeView_child") != -1) {
+                	childel.style.width = "100%";
+                }
             }
 
             childXML = null;
