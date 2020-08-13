@@ -322,7 +322,13 @@
 		            }
 		            
 		            try {
-		                window.opener.Get_AddressList();
+		            	var windowOpen = window.opener;
+		            	var open_searchFlag = windowOpen.searchFlag;
+		            	if (open_searchFlag) {
+		            		windowOpen.search_start();            		
+		            	} else {
+		            		windowOpen.Get_AddressList();
+		            	}
 		            }
 		            catch (e) { }
 		

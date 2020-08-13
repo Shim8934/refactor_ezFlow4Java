@@ -71,7 +71,7 @@
 	            document.getElementById("search_text").value = "";
 	        }
 	        function search_start() {
-	        	
+	        	searchFlag = true;
 	        	var searchText = document.getElementById("search_text").value.trim();
 	        	
 	            if (searchText == "") {
