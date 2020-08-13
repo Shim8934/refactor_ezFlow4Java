@@ -20326,8 +20326,10 @@
        	AND
        		APRSTATE != '003'
        	</isNotEmpty>
+       	<![CDATA[
         AND 
         	 APRMEMBERSN >= #v_APRMEMBERSN#
+		]]>
 	</update>
 	
 <!-- 	<procedure id="EzApprovalG.moveRecord" parameterClass="Map"> -->

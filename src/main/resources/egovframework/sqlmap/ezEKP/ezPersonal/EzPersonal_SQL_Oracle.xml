@@ -121,7 +121,8 @@
                 (SELECT SAVEMAILFLAG 
                  FROM TBL_PS_APPROVNOTIMAILCONF
                  WHERE UserID = #currentID# 
-                 AND TENANT_ID = #tenantID#) AS SAVEMAILFLAG  
+                 AND TENANT_ID = #tenantID#) AS SAVEMAILFLAG,
+                 LINEPASS
            	FROM
 				TBL_PS_APPROVNOTIMAILCONF 
           	WHERE
@@ -139,7 +140,8 @@
                 '1' BANSONG  ,
                 '1' CALLBACK  ,
                 '1' HESONG  ,
-                'Y' SAVEMAILFLAG  
+                'Y' SAVEMAILFLAG ,
+                '0' LINEPASS
            FROM
            		DUAL
 		]]>
@@ -246,9 +248,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_APPROVNOTIMAILCONF
-        		( USERID, ALERT, COMPLETE, BANSONG, CALLBACK, HESONG, SAVEMAILFLAG, TENANT_ID )
+        		( USERID, ALERT, COMPLETE, BANSONG, CALLBACK, HESONG, SAVEMAILFLAG, TENANT_ID, LINEPASS )
         	VALUES
-        		( #v_PUSERID#, #v_PALERT#, #v_PCOMPLETE#, #v_PBANSONG#, #v_PCALLBACK#, #v_PHESONG#, #v_PSAVEMAILFLAG#, #tenantID# )
+        		( #v_PUSERID#, #v_PALERT#, #v_PCOMPLETE#, #v_PBANSONG#, #v_PCALLBACK#, #v_PHESONG#, #v_PSAVEMAILFLAG#, #tenantID#, #linePass# )
 		]]>
 	</insert>
 	
@@ -262,7 +264,8 @@
              	BANSONG = #v_PBANSONG#,
              	CALLBACK = #v_PCALLBACK#,
              	HESONG = #v_PHESONG#,
-             	SAVEMAILFLAG = #v_PSAVEMAILFLAG#
+             	SAVEMAILFLAG = #v_PSAVEMAILFLAG#,
+             	LINEPASS = #linePass#
        		WHERE
        			USERID = #v_PUSERID#
        		AND

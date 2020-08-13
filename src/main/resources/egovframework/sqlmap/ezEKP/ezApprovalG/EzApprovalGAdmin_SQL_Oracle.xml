@@ -937,6 +937,7 @@
 					formdescription,
 					formfilelocation,
 					formconnflag,
+					passaprlineflag,
 					TBL_AUTODOCNUM_ITEM.keepPeriod,
 					TBL_AUTODOCNUM_ITEM.securityLevel,
 					TBL_AUTODOCNUM_ITEM.isPublic,
@@ -944,7 +945,8 @@
 					TBL_AUTODOCNUM_ITEM.itemName,
 					TBL_AUTODOCNUM_ITEM.itemName2,
 					TBL_AUTODOCNUM_ITEM.useFlag,
-					TBL_AUTODOCNUM_ITEM.keepPeriodCode
+					TBL_AUTODOCNUM_ITEM.keepPeriodCode,
+					aproption
 				FROM
 					TBL_FORMINFO
 				JOIN 
@@ -973,7 +975,9 @@
 					formdoctype,
 					formdescription,
 					formfilelocation,
-					formconnflag 
+					formconnflag,
+					aproption ,
+					passaprlineflag
 				FROM
 					TBL_FORMINFO
 				WHERE
@@ -1704,6 +1708,7 @@
 				formfilelocation,
 				formconnflag,
 				reformflag,
+				passaprlineflag,
 				aprOption,
 				tenant_id,
 				companyid)
@@ -1717,6 +1722,7 @@
 				#v_PURL#,
 				#v_PFORMCONNFLAG#,
 				#v_PREFORMFLAG#,
+				#v_PPASSAPRLINEFLAG#,
 				#v_formAprOption#,
 				#tenantID#,
 				#companyID#)
@@ -1736,7 +1742,9 @@
 				formfilelocation = #v_PURL#,
 				formconnflag = #v_PFORMCONNFLAG#,
 				reformflag = #v_PREFORMFLAG#,
-				aprOption = #v_formAprOption#
+				formversion = formversion + 1
+				aprOption = #v_formAprOption#,
+				passaprlineflag = #v_PPASSAPRLINEFLAG#
 			WHERE
 				tenant_id = #tenantID#
 			AND
@@ -4611,7 +4619,7 @@
 	<select id="EzApprovalGAdminDAO.getAttachLimit" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT
-				IFNULL(ATTACHLIMITCNT, -1)  
+				NVL(ATTACHLIMITCNT, -1)  
 			FROM 
 				TBL_APRATTACHLIMIT 
 			WHERE

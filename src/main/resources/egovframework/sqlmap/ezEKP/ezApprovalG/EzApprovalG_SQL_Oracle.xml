@@ -19948,8 +19948,10 @@
 		 UPDATE 
 		 	TBL_APRLINEINFO
          SET 
-         	 APRSTATE = '002',
-             PROCESSDATE = NULL
+         	 APRSTATE = '002'
+		<isEmpty property="v_PASSAPRFLAG">
+         	 , PROCESSDATE = NULL
+		</isEmpty>
          WHERE 
          	 TENANT_ID = #v_TENANTID#
          AND
@@ -19983,8 +19985,14 @@
         AND
         	 APRTYPE != '007'
        	</isNotEqual> -->
+       	<isNotEmpty property="v_PASSAPRFLAG">
+       	AND
+       		APRSTATE != '003'
+       	</isNotEmpty>
+		<![CDATA[
         AND 
         	 APRMEMBERSN >= #v_APRMEMBERSN#
+		]]>
 	</update>
 	
 <!-- 	<procedure id="EzApprovalG.moveRecord" parameterClass="Map"> -->

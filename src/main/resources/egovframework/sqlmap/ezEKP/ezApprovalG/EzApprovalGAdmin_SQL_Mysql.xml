@@ -1737,8 +1737,7 @@
 				formversion = formversion + 1,
 				opengovflag = #v_POPENGOVFLAG#,
 				aprOption = #v_formAprOption#,
-				passaprlineflag = #v_PPASSAPRLINEFLAG#,
-				formversion = formversion + 1
+				passaprlineflag = #v_PPASSAPRLINEFLAG#
 			WHERE
 				tenant_id = #tenantID#
 			AND
