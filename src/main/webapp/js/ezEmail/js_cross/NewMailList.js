@@ -941,7 +941,7 @@ function GetListInfo(HeaderObject, ContentObject) {
     	createNodeAndInsertText(xmlpara, objNode, "END", pEnd);
     }
     
-    createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
+    createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", document.getElementById("select").selectedIndex);
     
     var _url = "/ezEmail/mailGetList.do";
     
@@ -1000,7 +1000,7 @@ function GetListInfo_SUB(HeaderObject, ContentObject) {
     createNodeAndInsertText(xmlpara, objNode, "START", pStart);
     createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
     
-    createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
+    createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", document.getElementById("select").selectedIndex);
     
     var url = "/ezEmail/mailGetList.do";
     
