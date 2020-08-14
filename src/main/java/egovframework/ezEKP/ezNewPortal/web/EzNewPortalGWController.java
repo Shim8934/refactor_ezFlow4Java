@@ -1825,7 +1825,7 @@ public class EzNewPortalGWController {
 		return result;
 	}
 	
-	//사용자 초기화면 정보 조회 + 메모 모듈 사용여부 + 메뉴코드 정보 조회 
+	//사용자 초기화면 정보 조회 + 메모 모듈 사용여부
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/startpage/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserStartPage(HttpServletRequest request, @PathVariable String userId) throws Exception {
@@ -1839,7 +1839,6 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
 			String deptId = info.getDeptId();
-			String menuCode = request.getParameter("menuCode");
 			
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
@@ -1874,14 +1873,9 @@ public class EzNewPortalGWController {
 			
 			LOGGER.debug("useMemo : " + useMemo + ", useExternalMailServer : " + useExternalMailServer);
 			
-			//2020-04-14 강승구 : 메뉴코드에서 메뉴URL로 변경하는 부분
-			MenuInfoVO convertMenu = ezNewPortalService.getMenuInfoByCode("menucode", menuCode);
-			LOGGER.debug("convertMenu(CODE -> URL) : {}", convertMenu);
-			
 			data.put("useMemo", useMemo);
 			data.put("startPage", startPage);
 			data.put("useExternalMailServer", useExternalMailServer);
-			data.put("convertMenu", convertMenu);
 			data.put("useContextmenu", useContextmenu);
 			
 			result.put("status", "ok");

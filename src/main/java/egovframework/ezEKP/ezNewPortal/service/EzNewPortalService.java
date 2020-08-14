@@ -213,9 +213,4 @@ public interface EzNewPortalService {
 
 	public void addPortalTenantConfig(int tenantId, String propertyName, String propertyValue, String description, String configName, String configType) throws Exception;
 
-	/**
-	 * 강승구
-	 */
-	// 메뉴코드로 메뉴조회
-	public MenuInfoVO getMenuInfoByCode(String pField, String pValue);
 }

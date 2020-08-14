@@ -2913,23 +2913,4 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		LOGGER.debug("addPortalTenantConfig ended");
 	}
-
-	@Override
-	public MenuInfoVO getMenuInfoByCode(String pField, String pValue) {
-		LOGGER.debug("getMenuInfoByCode started");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("p_FIELD", pField);
-		map.put("p_VALUE", pValue);
-		
-		List<MenuInfoVO> resultList = ezNewPortalDAO.getMenuInfoByCode(map);
-		
-		LOGGER.debug("p_field: " + pField + "/ p_value: " + pValue + "/ resultList check: " + resultList);
-		
-		MenuInfoVO result = null;
-		if(resultList.size() > 0) result = resultList.get(0);
-		
-		LOGGER.debug("getMenuInfoByCode ended");
-		return result;
-	}
 }

@@ -96,17 +96,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 포탈 호출 함수
 	 */
 	@RequestMapping(value = "/ezNewPortal/newPortalMain.do", method={RequestMethod.GET, RequestMethod.POST})
-	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp, String menucode) throws Exception {
+	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalMain Start");
 		//초기화면 설정 확인
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String url = "/rest/ezPortal/startpage/users/" + userId;
-
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("menuCode", menucode);
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
 		String returnUrl = "";
 		String useMemo = "";
@@ -122,7 +119,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			useExternalMailServer = data.get("useExternalMailServer").toString();
 			useContextmenu = data.get("useContextmenu").toString();
 			
-			if (startPage != null && menucode == null) {
+			if (startPage != null) {
 				String startUrl = startPage.get("menuUrl").toString();
 				
 				if (startUrl == null) {
@@ -131,16 +128,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 					returnUrl = startUrl;
 				}
 			} else {
-				//2020-04-14 강승구 : 메뉴코드로 iframe URL 설정하는 코드추가
-				if(convertMenu != null) {
-					returnUrl = convertMenu.get("menuUrl").toString();
-				} else {
-					if(menucode != null) {
-						returnUrl = menucode;
-					} else {
-						returnUrl = "/ezNewPortal/newPortalPortalPage.do";
-					}
-				}
+				returnUrl = "/ezNewPortal/newPortalPortalPage.do";
 			}
 		}
 		
@@ -217,7 +205,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			}
 			
 			// yy logo를 누르면 이동하는 url 수정 (라이센스가 standard가 아니면 mailMain.do를 호출하도록 수정)
-			String logoMainUrl = "/ezNewPortal/newPortalMain.do";
+			String logoMainUrl = "/ezNewPortal/newPortalPortalPage.do";
 			String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 		
 			if (packageType.equals(CommonUtil.PT_MAIL) || packageType.equals(CommonUtil.PT_BASIC)) {

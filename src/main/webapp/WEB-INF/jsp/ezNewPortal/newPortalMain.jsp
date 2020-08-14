@@ -126,9 +126,6 @@
 		    	document.getElementById("reloadLogin").submit();
 		    }
 			
-			function replaceParentPageInChild(replaceUrl) {
-		    	location.href = replaceUrl;
-		    }
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">

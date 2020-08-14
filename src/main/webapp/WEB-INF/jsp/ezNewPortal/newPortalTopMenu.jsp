@@ -76,19 +76,11 @@
  			var str = '';
 			menuList.forEach(function (item, index) {
 				str += '<li id="menu_' + item.menuId + '">' + ConvertCharToEntityReference(item.menuName) + '</li>';
-				var _url = null;
-				if(item.menuCode) {
-					_url = item.menuCode;
-				} else if(item.menuUrl) {
-					_url = item.menuUrl;
-				} else {
-					_url = null;
-				}
 				
 				// 메뉴리스트 객체 생성
 				newPortalTopMenu.menuListObj['menu_'+ item.menuId] = {
 					menuId: item.menuId,
-					menuUrl: "/ezNewPortal/newPortalMain.do?menucode=" + _url,
+					menuUrl: item.menuUrl,
 					companyOrder: item.companyOrder,
 					iconUrl: item.iconUrl,
 					menuName: item.menuName,
@@ -438,7 +430,7 @@
 					$(".full_menu_toggleDL").stop();
 					
 					if (menuUrl != null) {
-						parent.replaceParentPageInChild(menuUrl);
+						window.open(menuUrl, 'main', '');
 					}
 				});
 				
