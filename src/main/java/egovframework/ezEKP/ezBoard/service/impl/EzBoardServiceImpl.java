@@ -4795,6 +4795,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		map.put("v_BOARDID", boardID);
 		map.put("v_TREEID", treeID);
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+		
 		int myBoardCnt = ezBoardDAO.getMyBoardCount(map);
 		if (myBoardCnt > 0) {
 			result = "Y";
