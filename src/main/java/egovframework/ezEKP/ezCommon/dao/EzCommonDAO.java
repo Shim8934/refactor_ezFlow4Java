@@ -1347,7 +1347,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	public void createTblShareDocDir() {
+	public void createTblShareDocDir() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblShareDocDir");
 		} catch (Exception e) {
