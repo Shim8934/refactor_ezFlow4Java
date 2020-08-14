@@ -58,7 +58,7 @@
 		    	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
 		    	
 				if (listSize != 0) {
-		        	document.getElementById("title").value = "${result.title}";
+		        	document.getElementById("title").value = ConvMakeXMLString("<c:out value='${result.title}'/>");
 		        	document.getElementById("receiverlist").innerHTML = "<c:out value='${userName}'/>";
 		        	document.getElementById("receiverlist2").innerHTML = "<c:out value='${userName2}'/>";
 		        	document.getElementById("receiverID").innerHTML = "<c:out value='${userID}'/>";
@@ -377,6 +377,18 @@
 				evt.stopPropagation();
 				evt.preventDefault();
 			}
+			
+		    /* 2020-08-10 홍승비 - 회람판 수정 시 특수문자 처리 */
+		    function ConvMakeXMLString(str) {
+		        str = ReplaceText(str, "&lt;", "<");
+		        str = ReplaceText(str, "&gt;", ">");
+		        str = ReplaceText(str, "&#039;", "'");
+		        str = ReplaceText(str, "&#034;", "\"");
+		  	    str = ReplaceText(str, "&amp;", "&");	    
+		  		str = ReplaceText(str, "&#92;", "\\");
+		        return str;
+		    }
+		    
 		</script>
 	</head>
 	
