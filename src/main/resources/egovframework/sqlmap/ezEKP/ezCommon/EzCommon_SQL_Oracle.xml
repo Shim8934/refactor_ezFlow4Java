@@ -2979,7 +2979,7 @@
 			tenant_id = #tenantId#
 	</select>
 	
-	<select id="EzCommonDAO.checkFormPassAprLineColumn">
+	<select id="EzCommonDAO.checkFormPassAprLineFlagColumn">
 		<![CDATA[
 			SELECT 
 				PASSAPRLINEFLAG
@@ -2989,7 +2989,7 @@
 				ROWNUM <= 1
 		]]>
 	</select>
-	<statement id="EzCommonDAO.updateFormPassAprLineColumn">
+	<statement id="EzCommonDAO.updateFormPassAprLineFlagColumn">
 		ALTER TABLE 
 			TBL_FORMINFO
 		ADD 
