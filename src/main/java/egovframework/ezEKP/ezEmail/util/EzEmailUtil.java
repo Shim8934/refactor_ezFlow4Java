@@ -2103,6 +2103,9 @@ public class EzEmailUtil {
     			fp.add("Subject");
     			fp.add("From");
     			fp.add("To");
+    			fp.add("Importance");
+    			fp.add("X-Jmocha-Country-Code");
+    			fp.add("X-Jmocha-IP");    			
     			
     			fetchFolder.fetch(messages, fp);
     		}
