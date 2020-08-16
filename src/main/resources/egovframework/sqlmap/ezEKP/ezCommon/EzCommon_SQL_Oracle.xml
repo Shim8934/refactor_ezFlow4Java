@@ -2964,8 +2964,8 @@
 	<statement id="EzCommonDAO.createDailyWorkAttitudeColumn">
 		ALTER TABLE 
 			TBL_ATTITUDE
-		ADD COLUMN 
-			WORK_STATUS CHAR(1) NULL COMMENT 'D : 일근무	H : 반근무'
+		ADD 
+			WORK_STATUS CHAR(1) DEFAULT NULL
 	</statement>
 
 	<select id="EzCommonDAO.checkTenantConfig" resultClass="String">
