@@ -749,16 +749,10 @@ public class EzEmailMailListController {
 					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex + ",useCountryIP=" + useCountryIP);
 		
 		String returnData = "";
-		
+				
 		IMAPAccess ia = null;
 		
 		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, 40*1000, 20*1000, ezEmailUtil);
-					
-			Folder folder = ia.getFolder(folderId);		
-			folder.open(Folder.READ_ONLY);
-			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<maillist><contentrange>").append(start).append("-").append(end).append("</contentrange>");
 			
@@ -849,7 +843,7 @@ public class EzEmailMailListController {
 					includeContent = true;
 				}
 				
-				List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(ia, userEmail, folderId, categoryArray, keywordArray, startDateObj, endDateObj, false, 
+				List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, folderId, categoryArray, keywordArray, startDateObj, endDateObj, false, 
 						isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId(), includeContent);
 				
 				totalCount = (int)extraMap.get("totalCount");
@@ -1023,7 +1017,13 @@ public class EzEmailMailListController {
 				sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
 						start, end, totalCount, mailboxMailCount, mailboxUnreadMailCount));
 				sb.append("</maillist>");				
-			} else {			
+			} else {							
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, locale, 40*1000, 20*1000, ezEmailUtil);
+						
+				Folder folder = ia.getFolder(folderId);		
+				folder.open(Folder.READ_ONLY);
+								
 				messages = ezEmailUtil.searchFolder(ia, userEmail, folder, categoryArray, keywordArray, startDateObj, endDateObj, false, 
 						isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
 				
@@ -1035,17 +1035,9 @@ public class EzEmailMailListController {
 					
 					sb.append("<response>");
 					sb.append(String.format("<href><![CDATA[%s/%s]]></href>", folderId, uidFolder.getUID(message)));
-	
-					/*String fromEmail = ((InternetAddress)message.getFrom()[0]).getAddress();
-					if (fromEmail == null) {
-						sb.append("<fromemail><![CDATA[]]></fromemail>");
-					} else {
-						sb.append(String.format("<fromemail><![CDATA[%s]]></fromemail>", fromEmail));
-					}*/
-					
+						
 					// importance
 					String[] headers = message.getHeader("X-Priority");
-	//				String header = headers != null ? headers[0] : "normal";
 					String header = "";
 					
 					if (headers == null){

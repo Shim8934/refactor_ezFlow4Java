@@ -2311,7 +2311,7 @@ public class EzEmailUtil {
     	return messages;
     }
     
-    public List<Map<String, String>> searchFolderUsingRDBOnly(IMAPAccess ia, String userAccount, String folderPath, String[] searchField, String[] searchValue, 
+    public List<Map<String, String>> searchFolderUsingRDBOnly(String userAccount, String folderPath, String[] searchField, String[] searchValue, 
     		Date startDate, Date endDate, boolean searchSubFolder, boolean isUnreadOnly, boolean isImportantOnly, String sortType, boolean isAscending, 
     		int startIndex, int listCount, boolean isFromMobile, Map<String, Object> extraMap, int tenantId, boolean includeContent) throws Exception {    	
     	logger.debug("searchFolderUsingRDBOnly started. userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField + ",searchValue=" + searchValue
