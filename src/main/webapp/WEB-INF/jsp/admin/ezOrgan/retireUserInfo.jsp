@@ -61,6 +61,10 @@
 	    	    window.close();
 	    	}
 	    </script>
+	    <style>
+	    	.roleTable th {word-break: break-all; white-space: pre-wrap;}
+	    	.roleTable td {width: 20%; }
+	    </style>
 	</head>
 	<body class="popup">		
 		<h1 id="subtitle"><spring:message code='ezOrgan.t309'/></h1>
@@ -183,12 +187,12 @@
 		  	</tr> 
 		</table><br/>		
 		<h2><spring:message code='ezOrgan.t290'/></h2>
-		<table class="content">
+		<table class="content roleTable" style="width:100%;">
 			<tr>
 		    	<th><spring:message code='ezOrgan.t291'/></th>
-		    	<td nowrap style="padding-right:127px"><input type="checkbox" value="c" id="Check1" disabled=true /></td>
+		    	<td nowrap><input type="checkbox" value="c" id="Check1" disabled=true /></td>
 		    	<th><spring:message code='ezOrgan.t292'/></th>
-		    	<td style="padding-right:127px" ><input type="checkbox" value="a" id="Check2" disabled=true /></td>
+		    	<td><input type="checkbox" value="a" id="Check2" disabled=true /></td>
 		  	</tr>
 		  	<tr>
 		    	<th><spring:message code='ezOrgan.t293'/></th>
