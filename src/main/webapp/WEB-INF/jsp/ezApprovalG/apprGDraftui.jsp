@@ -514,7 +514,7 @@
 					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + "'" + strLanggarm05);
 					return;
 				} else if (deptCheckFlag == "2") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
@@ -1040,7 +1040,7 @@
 					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + "'" + strLanggarm05);
 					return;
 				}
 				
@@ -1337,7 +1337,7 @@
 					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + "'" + strLanggarm05);
 					return;
 				}
 				
@@ -1453,7 +1453,7 @@
 					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + "'" + strLanggarm05);
 					return;
 				}
 				
