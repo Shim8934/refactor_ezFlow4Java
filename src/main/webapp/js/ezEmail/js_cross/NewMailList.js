@@ -263,6 +263,10 @@ function MakeListInfoHTML(ConentObject) {
                 	_TR.setAttribute("draggable", true);
                 	_TR.ondragstart = function () { drag(event) };
                 }
+
+                // 2020-08-19 김은실 -우클릭 시 currentFixingId가 다르게 찍히는 현상: _TD에서=>_TR로 선택&마우스효과 변경
+                _TR.onmouseover = function () { event_listMover(this); };
+                _TR.onmouseout = function () { event_listMout(this); };
             
                 var _TDCheckBox = document.createElement("TD");
                 _TDCheckBox.style.width = "22px";
@@ -344,8 +348,6 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.setAttribute("data-name", p_Sender);
                             //_TDColum.onclick = function (event) { useMailWriteSenderClick == "NO" ? event_listclick(this, event) : new_mail_onclick(this); };
                             _TDColum.onclick = function (event) { event_listclick(this, event); };
-                            _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
-                            _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
                             _TDColum.onselectstart = function () { return false; };
                             break;
@@ -374,8 +376,6 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function (event) { event_listclick(this, event); };
-                            _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
-                            _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
                             _TDColum.onselectstart = function () { return false; };
                             break;
@@ -390,8 +390,6 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.innerHTML = p_ReceiveDT;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function (event) { event_listclick(this, event); };
-                            _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
-                            _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
                             _TDColum.onselectstart = function () { return false; };
                             break;
@@ -402,8 +400,6 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.innerHTML = FormatSize(p_Size);
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function (event) { event_listclick(this, event); };
-                            _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
-                            _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
                             _TDColum.onselectstart = function () { return false; };
                             break;
@@ -627,6 +623,8 @@ function makeReceiverList(parentId) {
         } else {
         	TR.style.backgroundColor = m_strColorOpened;
         }
+        // 2020-08-19 김은실 -우클릭 시 currentFixingId가 다르게 찍히는 현상: 세부목록에도 currentMoverId 적용
+        TR.onmouseover = function () { currentMoverId = parentId; };
         
         var TD1 = document.createElement("TD");
         TD1.style.width = "22px;";
@@ -1429,17 +1427,7 @@ function event_listContextMenu(event) {
 
     var listsizeheight = document.documentElement.clientHeight;
     var listsizewidth = document.documentElement.clientWidth;
-    var EventDivSize = EventMouseY + 400;
-    if (listsizeheight < EventDivSize) {
-        var Div_ = EventDivSize - listsizeheight;
-        EventMouseY = EventMouseY - Div_;
-    }
-
-    EventDivSize = EventMouseX + 140;
-    if (listsizewidth < EventDivSize) {
-        var Div_ = EventDivSize - listsizewidth;
-        EventMouseX = EventMouseX - Div_;
-    }
+//  var EventDivSize = EventMouseY + 400;   // 2020-08-19 김은실 -컨텍스트메뉴 밑 안보임 현상: 메뉴의 최종 길이를 기준으로, 맥시멈 사이즈를 정하기 위해 밑으로 이동
     if (g_foldertype == "draft") {
     	$("#ContextMenuDiv tbody #replyMenu").css("display","none");
     }
@@ -1452,6 +1440,24 @@ function event_listContextMenu(event) {
 	} else {
 		$("#ContextMenuDiv tbody #searchName, #searchInThisBoxByName, #searchAllBoxByName").css("display","none");
 	}
+
+	// 2020-08-19 김은실 -컨텍스트메뉴 밑 안보임 현상:
+	// 1) JQuery: $().height(): Chrome,IE 모두 테스트 완료.
+	var EventDivSize = EventMouseY + $("#ContextMenuDiv").height() + 70;
+	// 2) JQuery를 사용할 수 없다면, 이 방식으로 할수 있음.
+	// document.getElementById("ContextMenuDiv").style.display = "block";   
+	// var EventDivSize = EventMouseY + document.getElementById("ContextMenuDiv").offsetHeight + 70;   
+	// document.getElementById("ContextMenuDiv").style.display = "none";
+    if (listsizeheight < EventDivSize) {
+    	var Div_ = EventDivSize - listsizeheight;
+    	EventMouseY = EventMouseY - Div_;
+    }
+    
+    EventDivSize = EventMouseX + 140;
+    if (listsizewidth < EventDivSize) {
+    	var Div_ = EventDivSize - listsizewidth;
+    	EventMouseX = EventMouseX - Div_;
+    }
 //    document.getElementById("mailPanel").style.display = "";
     document.getElementById("ContextMenuDiv").style.left = EventMouseX + "px";
     document.getElementById("ContextMenuDiv").style.top = EventMouseY + "px";
