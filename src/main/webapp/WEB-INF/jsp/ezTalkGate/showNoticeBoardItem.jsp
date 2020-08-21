@@ -57,7 +57,11 @@ P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm }
 	            </tr>
 	            <tr height="*">
 	              <td colspan="4" bgcolor="#ffffff" width="100%" valign="top">             
-	                <iframe id=iframeWin SCROLLING=auto src="showNoticeBoardItemContent.do?itemId=${boardItem.itemID}&href=${boardItem.contentLocation}" 
+					<c:url value="showNoticeBoardItemContent.do" var="contentUri">
+						<c:param name="itemId" value="${boardItem.itemID}" />
+						<c:param name="href" value="${boardItem.contentLocation}" />
+					</c:url>
+	                <iframe id=iframeWin SCROLLING=auto src="${contentUri}"
 	                	width="100%" height="100%" FRAMEBORDER=0></iframe>
 	              </td>
 	            </tr>
