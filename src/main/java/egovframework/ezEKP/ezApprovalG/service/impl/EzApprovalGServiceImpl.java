@@ -7489,7 +7489,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					signInfo2 = habSem;
 					signText2 = commonUtil.getTodayUTCTime("");
 					
-					doc.getElementById(habSign).html(habSign);
+					doc.getElementById(habSign).html(signText);
 					doc.getElementById(habSem).html(tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10));
 				} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
 					int tmps = signCnt - refResult;
