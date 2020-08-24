@@ -712,6 +712,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_I9(map1);
 				ezOrganAdminDao.insertCompanyInfo_I10(map1);
 //				ezOrganAdminDao.insertCompanyInfo_I11(map1);
+				/* 2020-08-24 홍승비 - insert all 시, 오라클에서는 insert한 레코드 바로 select할수 없어 null이 삽입되는 오류 수정 */
+				if (globals.getProperty("Globals.DbType").equals("oracle")) {
+					ezOrganAdminDao.insertCompanyInfo_I12_separate(map1); // insertCompanyInfo_I12 오라클 쿼리에서 6개의 insert를 분리
+				}
 				ezOrganAdminDao.insertCompanyInfo_I12(map1);
 				ezOrganAdminDao.insertCompanyInfo_I13(map1);
 				ezOrganAdminDao.insertCompanyInfo_I14(map1);
