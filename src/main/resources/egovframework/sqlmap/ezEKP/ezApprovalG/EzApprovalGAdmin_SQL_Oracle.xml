@@ -1742,7 +1742,7 @@
 				formfilelocation = #v_PURL#,
 				formconnflag = #v_PFORMCONNFLAG#,
 				reformflag = #v_PREFORMFLAG#,
-				formversion = formversion + 1
+				formversion = formversion + 1,
 				aprOption = #v_formAprOption#,
 				passaprlineflag = #v_PPASSAPRLINEFLAG#
 			WHERE
