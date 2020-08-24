@@ -1149,6 +1149,11 @@ function DocListPrinter_onclick() {
 
     para[11] = NodeListLen;
 
+    if (!NodeListLen) {
+        OpenAlertUI("목록이 불러와진 후 시도해주세요.");
+        return;
+    }
+
     var url = "/ezApprovalG/docListView.do";
 
     doclistview_cross_dialogArguments[0] = para;
