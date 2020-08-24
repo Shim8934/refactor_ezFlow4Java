@@ -99,73 +99,55 @@ function ezCabMunuCtl(MenuType, selRow) {
                 document.getElementById("tdModifyCab").style.display = pMenuFlag;
             }
 
-            if (GetAttribute(selRow, "DATA5") === arr_userinfo[4]) {
+            // 20200824 김보혜 기록물철 관련 버튼들 전체적으로 수정 (한사대) 
+            var isAdmin = Boolean(g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE");
+
+            // if (GetAttribute(selRow, "DATA5") === arr_userinfo[4]) {
                 if (selRow.getAttribute("DATA6") == "0") {
-                    if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
-                        if ((GetCabChargerRight() == "true" || g_bDeptCharger) && g_sFlag != "m09") {                    	
-                            document.getElementById("tdbtnEndProduce").style.display = "";
-                            //SwapImage(btnEndProduce, "");
-                        }
-                        else {
-                            document.getElementById("tdbtnEndProduce").style.display = "none";
-                            //SwapImage(btnEndProduce, "dis");
-                        }
-                    }
-    
-                    if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
-                        document.getElementById("tdbtnCancelEndProd").style.display = "none";
-                        //SwapImage(btnCancelEndProd, "dis");
-                    }
-                }
-                else {
-                    if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
+                    if (ListTypeFlag == "8" && isAdmin && g_sFlag != "m09") {
+                        document.getElementById("tdbtnEndProduce").style.display = "";
+                    } else {
                         document.getElementById("tdbtnEndProduce").style.display = "none";
-                        //SwapImage(btnEndProduce, "dis");
                     }
-    
-                    if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
-                        if (GetCabChargerRight() == "true" && g_sFlag != "m09") {                    	
-                            document.getElementById("tdbtnCancelEndProd").style.display = "";
-                            //SwapImage(btnCancelEndProd, "");
-                        }
-                        else {
-                            document.getElementById("tdbtnCancelEndProd").style.display = "none";
-                            //SwapImage(btnCancelEndProd, "dis");
-                        }
+                    document.getElementById("tdbtnCancelEndProd").style.display = "none";
+                } else {
+                    document.getElementById("tdbtnEndProduce").style.display = "none";
+                    if (GetCabChargerRight() == "true" && g_sFlag != "m09") {                    	
+                        document.getElementById("tdbtnCancelEndProd").style.display = "";
+                    }
+                    else {
+                        document.getElementById("tdbtnCancelEndProd").style.display = "none";
                     }
                 }
 
-                if (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") {
+
+                if (isAdmin) {
                     document.getElementById("tdBtnCabDel").style.display = "";    
                 }
                             
                 /**
                  * 연기신청에 따른 버튼 활성화비활성화
                  */
-                if (selRow.getAttribute("DATA8") == "Y") {
-                    if (typeof (tdReqDelayEndY) != "undefined" && typeof (tdReqDelayEndY) != "unknown") {
+                if (ListTypeFlag == "10" && isAdmin) {
+                    if (selRow.getAttribute("DATA8") == "Y") {
                         document.getElementById("tdReqDelayEndY").style.display = "none";
-                    }
-                    
-                    if (typeof (tdCancelDelayEndY) != "undefined" && typeof (tdCancelDelayEndY) != "unknown") {
                         document.getElementById("tdCancelDelayEndY").style.display = "";
-                    }
-                } else {
-                    if (typeof (tdReqDelayEndY) != "undefined" && typeof (tdReqDelayEndY) != "unknown") {
+                    } else {
                         document.getElementById("tdReqDelayEndY").style.display = "";
-                    }
-                    
-                    if (typeof (tdCancelDelayEndY) != "undefined" && typeof (tdCancelDelayEndY) != "unknown") {
                         document.getElementById("tdCancelDelayEndY").style.display = "none";
                     }
                 }
-            } else {
-                document.getElementById("tdbtnEndProduce").style.display = "none";
-                document.getElementById("tdbtnCancelEndProd").style.display = "none";
-                document.getElementById("tdReqDelayEndY").style.display = "none";
-                document.getElementById("tdCancelDelayEndY").style.display = "none";
-                document.getElementById("tdBtnCabDel").style.display = "none";
-            }
+                if (!(ListTypeFlag == "8" && isAdmin && g_sFlag != "m09")) {
+                    document.getElementById("tdbtnEndProduce").style.display = "none";
+                    document.getElementById("tdbtnCancelEndProd").style.display = "none";
+                }
+            // } else {
+            //     document.getElementById("tdbtnEndProduce").style.display = "none";
+            //     document.getElementById("tdbtnCancelEndProd").style.display = "none";
+            //     document.getElementById("tdReqDelayEndY").style.display = "none";
+            //     document.getElementById("tdCancelDelayEndY").style.display = "none";
+            //     document.getElementById("tdBtnCabDel").style.display = "none";
+            // }
 
 
             if (typeof (tdViewCabHist) != "undefined" && typeof (tdViewCabHist) != "unknown") {
