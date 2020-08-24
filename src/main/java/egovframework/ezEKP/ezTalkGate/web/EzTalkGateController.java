@@ -332,9 +332,9 @@ public class EzTalkGateController {
 			logger.debug("ezTalkGateMain ended.");
 			
 			if (ezTalkSsoType.equals("mail")) {
-				return "redirect:/ezNewPortal/newPortalMain.do?menucode=mail";
+				return "redirect:/ezEmail/mailMain.do";
 			} else if (ezTalkSsoType.equals("approval")) { 
-				return "redirect:/ezNewPortal/newPortalMain.do?menucode=approval";
+				return "redirect:/ezApprovalG/aprManage.do?listType=1&subQuery=";
 			} else if (ezTalkSsoType.equals("portal")) { 
 				return "redirect:/ezPortal/portalMain.do";
 			} else if (ezTalkSsoType.equals("noticeBoard")) { 
