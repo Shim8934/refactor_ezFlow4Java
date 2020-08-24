@@ -1340,6 +1340,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I11", map);
     }
     
+    public void insertCompanyInfo_I12_separate(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I12_separate", map);
+    }
+    
     public void insertCompanyInfo_I12(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I12", map);
     }
@@ -2302,4 +2306,5 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public List<String> getNotUseMobileUserList(int tenantId) {
 		return (List<String>) list("EzOrganAdminDAO.getNotUseMobileUserList", tenantId);
 	}
+
 }
