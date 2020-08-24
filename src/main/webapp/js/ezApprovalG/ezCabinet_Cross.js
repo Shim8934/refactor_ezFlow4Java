@@ -100,55 +100,35 @@ function ezCabMunuCtl(MenuType, selRow) {
             }
 
             // 20200824 김보혜 기록물철 관련 버튼들 전체적으로 수정 (한사대) 
-            var isAdmin = Boolean(g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE");
+            if (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") {
+                document.getElementById("tdBtnCabDel").style.display = "";    
+            }
 
-            // if (GetAttribute(selRow, "DATA5") === arr_userinfo[4]) {
+            if (ListTypeFlag == "8" && GetCabChargerRight() === "true" && g_sFlag != "m09") {
                 if (selRow.getAttribute("DATA6") == "0") {
-                    if (ListTypeFlag == "8" && isAdmin && g_sFlag != "m09") {
-                        document.getElementById("tdbtnEndProduce").style.display = "";
-                    } else {
-                        document.getElementById("tdbtnEndProduce").style.display = "none";
-                    }
+                    document.getElementById("tdbtnEndProduce").style.display = "";
                     document.getElementById("tdbtnCancelEndProd").style.display = "none";
                 } else {
                     document.getElementById("tdbtnEndProduce").style.display = "none";
-                    if (GetCabChargerRight() == "true" && g_sFlag != "m09") {                    	
-                        document.getElementById("tdbtnCancelEndProd").style.display = "";
-                    }
-                    else {
-                        document.getElementById("tdbtnCancelEndProd").style.display = "none";
-                    }
+                    document.getElementById("tdbtnCancelEndProd").style.display = "";
                 }
+            } else {
+                document.getElementById("tdbtnEndProduce").style.display = "none";
+                document.getElementById("tdbtnCancelEndProd").style.display = "none";
+            }
 
-
-                if (isAdmin) {
-                    document.getElementById("tdBtnCabDel").style.display = "";    
+            /**
+             * 연기신청에 따른 버튼 활성화비활성화
+             */
+            if (ListTypeFlag == "10" && GetCabChargerRight() === "true") {
+                if (selRow.getAttribute("DATA8") == "Y") {
+                    document.getElementById("tdReqDelayEndY").style.display = "none";
+                    document.getElementById("tdCancelDelayEndY").style.display = "";
+                } else {
+                    document.getElementById("tdReqDelayEndY").style.display = "";
+                    document.getElementById("tdCancelDelayEndY").style.display = "none";
                 }
-                            
-                /**
-                 * 연기신청에 따른 버튼 활성화비활성화
-                 */
-                if (ListTypeFlag == "10" && isAdmin) {
-                    if (selRow.getAttribute("DATA8") == "Y") {
-                        document.getElementById("tdReqDelayEndY").style.display = "none";
-                        document.getElementById("tdCancelDelayEndY").style.display = "";
-                    } else {
-                        document.getElementById("tdReqDelayEndY").style.display = "";
-                        document.getElementById("tdCancelDelayEndY").style.display = "none";
-                    }
-                }
-                if (!(ListTypeFlag == "8" && isAdmin && g_sFlag != "m09")) {
-                    document.getElementById("tdbtnEndProduce").style.display = "none";
-                    document.getElementById("tdbtnCancelEndProd").style.display = "none";
-                }
-            // } else {
-            //     document.getElementById("tdbtnEndProduce").style.display = "none";
-            //     document.getElementById("tdbtnCancelEndProd").style.display = "none";
-            //     document.getElementById("tdReqDelayEndY").style.display = "none";
-            //     document.getElementById("tdCancelDelayEndY").style.display = "none";
-            //     document.getElementById("tdBtnCabDel").style.display = "none";
-            // }
-
+            }
 
             if (typeof (tdViewCabHist) != "undefined" && typeof (tdViewCabHist) != "unknown") {
                 if (IsUserDeptRec() == "true")
