@@ -745,7 +745,12 @@ public class EzEmailUtil {
 	                        charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1);
 	                                                
 	                        subject = MimeUtility.decodeText(rawHeader);
-	                    }                                                                                                
+	                    } else if (charSet.equals("iso-8859-8-i")){
+	                    	rawHeader = rawHeader.replace(charSet, "iso-8859-8");
+	                        charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1);
+	                        
+	                        subject = MimeUtility.decodeText(rawHeader);
+	                    }	
 	                    
 	                    // 일부 Mailer에서 RFC 2047에서 정의된 encoded word를 2개 이상의 라인으로 구성할 때
 	                    // 한글의 한 글자를 표현하는 Byte Array 중간에서 분리하는 경우가 있어(Base64 인코딩을 사용하면서) 
