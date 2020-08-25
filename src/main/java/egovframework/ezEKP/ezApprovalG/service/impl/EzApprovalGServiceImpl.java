@@ -31432,7 +31432,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 		}).forEach(elem -> {
 			sb.append("<ROW>");
-			sb.append("<COUNT>" + String.valueOf(result.get(elem)) + "</COUNT>");
+			sb.append("<COUNT>" + String.valueOf(result.get(elem) == null ? "0" : result.get(elem)) + "</COUNT>");
 			sb.append("</ROW>");
 		});
 		
