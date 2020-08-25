@@ -7421,6 +7421,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 				}
 			} else { // 전자결재 G
+			    String lastCnt = tempDate.substring(5, 7) + "." + tempDate.substring(8, 10);
+			    
 				if (aprType.equals("016")) { // 대결
 					int tmps = signCnt - refResult;
 					String tempSign = signAdd + "sign" + tmps;
@@ -7438,7 +7440,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					signInfo = tempSign;
 					signText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + "<BR/><P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
 				} else if (aprType.equals("001") || aprType.equals("019")) { // 결재 || 검토
-					String lastCnt = "";
 					String lastCnt2 = tempDate.substring(5, 7) + "." + tempDate.substring(8, 10);
 					
 					if (totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("001")) {
@@ -7490,7 +7491,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					signText2 = commonUtil.getTodayUTCTime("");
 					
 					doc.getElementById(habSign).html(signText);
-					doc.getElementById(habSem).html(tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10));
+					doc.getElementById(habSem).html(lastCnt);
 				} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
 					int tmps = signCnt - refResult;
 					String tempSign = signAdd + "sign" + tmps;
@@ -7571,6 +7572,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		} else if (result.equals("B")) { // 반송
 			docState = "004";
+			
+		    if ("008".equals(aprType) || "009".equals(aprType)) {
+		        String tempDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		        int tmps = signCnt - habResult;
+		        
+		        signInfo = signAdd + "habyuisign" + tmps;
+		        signText = "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">반송</P>";
+		        
+		        signInfo2 = signAdd + "habyuidate" + tmps;
+		        signText2 = tempDate.substring(5, 7) + "." + tempDate.substring(8, 10);
+		        
+		        if (doc.getElementById(signInfo) != null) {
+		            doc.getElementById(signInfo).html(signText);
+		        }
+		        if (doc.getElementById(signInfo2) != null) {
+		            doc.getElementById(signInfo2).html(signText2);
+		        }
+		        
+//		        String pBansongDeptID = getBansongDeptID(docID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo);
+//		        String resultBansong = doBansong(docID, "", orgUID, "004", realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator, pBansongDeptID, companyID, userInfo.getLang(), userInfo, "");
+//		        
+//		        linkCheck = "TRUE".equals(resultBansong);
+		    }
 		} else if (result.equals("BR")) { // 보류
 			docState = "005";
 		}
@@ -7687,28 +7711,31 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		resultXML.append("<SIGNINFOS>");
 		
-		if ((aprType.equals("008") || aprType.equals("009")) && result.equals("A")) {
-			resultXML.append("<SIGNINFO>");
-			resultXML.append("<DOCID>" + docID + "</DOCID>");
-			resultXML.append("<SIGNTYPE>" + "HTML" + "</SIGNTYPE>");
-			resultXML.append("<SIGNNAME>" + signInfo + "</SIGNNAME>");
-			resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText) + "</CONTENT>");
-			resultXML.append("</SIGNINFO>");
-			
-			resultXML.append("<SIGNINFO>");
-			resultXML.append("<DOCID>" + docID + "</DOCID>");
-			resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
-			resultXML.append("<SIGNNAME>" + signInfo2 + "</SIGNNAME>");
-			resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText2) + "</CONTENT>");
-			resultXML.append("</SIGNINFO>");
-		} else {
-			resultXML.append("<SIGNINFO>");
-			resultXML.append("<DOCID>" + docID + "</DOCID>");
-			resultXML.append("<SIGNTYPE>" + "HTML" + "</SIGNTYPE>");
-			resultXML.append("<SIGNNAME>" + signInfo + "</SIGNNAME>");
-			resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText) + "</CONTENT>");
-			resultXML.append("</SIGNINFO>");
+//		if ((aprType.equals("008") || aprType.equals("009")) && result.equals("A")) {
+		if (!signInfo.isEmpty()) {
+		    resultXML.append("<SIGNINFO>");
+		    resultXML.append("<DOCID>" + docID + "</DOCID>");
+		    resultXML.append("<SIGNTYPE>" + "HTML" + "</SIGNTYPE>");
+		    resultXML.append("<SIGNNAME>" + signInfo + "</SIGNNAME>");
+		    resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText) + "</CONTENT>");
+		    resultXML.append("</SIGNINFO>");
 		}
+		if (!signInfo2.isEmpty()) {
+		    resultXML.append("<SIGNINFO>");
+		    resultXML.append("<DOCID>" + docID + "</DOCID>");
+		    resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
+		    resultXML.append("<SIGNNAME>" + signInfo2 + "</SIGNNAME>");
+		    resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText2) + "</CONTENT>");
+		    resultXML.append("</SIGNINFO>");
+		}
+//		} else {
+//			resultXML.append("<SIGNINFO>");
+//			resultXML.append("<DOCID>" + docID + "</DOCID>");
+//			resultXML.append("<SIGNTYPE>" + "HTML" + "</SIGNTYPE>");
+//			resultXML.append("<SIGNNAME>" + signInfo + "</SIGNNAME>");
+//			resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText) + "</CONTENT>");
+//			resultXML.append("</SIGNINFO>");
+//		}
 		
 		resultXML.append("</SIGNINFOS>");
 		
@@ -7777,7 +7804,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			userInfo.setRealPath(realPath);
 			
-			String pDocResult = doProcess(docState, docID, orgUID, displayName, displayName2, realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), department, "", tempXmlDom, userID, companyID, strLang, userInfo);
+			String pDocResult = "";
+			
+			if (result.equals("A")) {
+			    pDocResult = doProcess(docState, docID, orgUID, displayName, displayName2, realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), department, "", tempXmlDom, userID, companyID, strLang, userInfo);
+			} else if (result.equals("B")) {
+			    String pBansongDeptID = getBansongDeptID(docID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo);
+			    pDocResult = doBansong(docID, "", orgUID, "004", realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator, pBansongDeptID, companyID, userInfo.getLang(), userInfo, "");
+			    pDocResult = "<RESULT>" + pDocResult + "</RESULT>";
+			}
 			
 			Document xmlResult2 = commonUtil.convertStringToDocument(pDocResult);
 			
