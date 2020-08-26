@@ -20,7 +20,7 @@
     var OrderCell = "";
 </script>
 </head>
-<body class="popup" onload = "return window_onload()">
+<body class="popup" onload = "return window_onload()" style="overflow-y:hidden;">
 <div id="menu">
 	<ul>
 		<li style="margin:2px 0px 19px 0px;"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li> 
