@@ -34,11 +34,11 @@ function checkLines() {
         xmlHTTP2.open("POST", "/ezApprovalG/checkDeptLines.do", false);
         xmlHTTP2.send(CheckDeptLinesXML);
 
-        var dataNodes = GetChildNodes(xmlHTTP2.responseXML, OpenAlertUILong_Complete2);
+        var dataNodes = GetChildNodes(xmlHTTP2.responseXML);
         var rtnVal = getNodeText(dataNodes[0]);
 
         if (rtnVal != "") {
-            OpenAlertUILong(rtnVal);
+            OpenAlertUI(rtnVal, OpenAlertUILong_Complete2);
             return false;
         }
     }
