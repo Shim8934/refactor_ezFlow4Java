@@ -393,7 +393,7 @@
         	dataType : "text",
         	url : "/ezOrgan/getSearchList.do",
         	async : false,
-        	data : {search : selSearchType.value+ "::" +txtKeyword.value, cell : "displayName;title;description;company", prop : "department", type : "user"},
+        	data : {search : selSearchType.value+ "::" +txtKeyword.value, cell : "displayName;title;description;company", prop : "Department;Description;DisplayName;Title", type : "user"},
         	success : function(result){	
         		xmlDOM = loadXMLString(result);
                 adCount = xmlDOM.getElementsByTagName("ROW").length;
