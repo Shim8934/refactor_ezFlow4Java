@@ -196,8 +196,8 @@
 	
 		    function selectCompanyID() {
 		        if (CompanyID != document.getElementById("ListCompany").value) {
-		            CompanyID = document.getElementById("ListCompany").value + "/other";
-		            TreeViewinitialize("", CompanyID, "", "<c:out value='${serverName}'/>");
+		            CompanyID = document.getElementById("ListCompany").value;
+		            TreeViewinitialize("", CompanyID + "/other", "", "<c:out value='${serverName}'/>");
 		        }
 		    }
 		</script>
