@@ -7578,7 +7578,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		        int tmps = signCnt - habResult;
 		        
 		        signInfo = signAdd + "habyuisign" + tmps;
-		        signText = "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">반송</P>";
+		        signText = "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt;\">반송</P>";
 		        
 		        signInfo2 = signAdd + "habyuidate" + tmps;
 		        signText2 = tempDate.substring(5, 7) + "." + tempDate.substring(8, 10);
@@ -11399,16 +11399,32 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
 		if (dlength >= 2) {
-			String aprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(0).getTextContent());
+			String currAprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(0).getTextContent());
+			String nextAprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(1).getTextContent());
 			
-			if (!(aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATByungRyulHyubJo) || aprType.equals(staATgian) || aprType.equals(staATgumto))) {
+			if (!(currAprType.equals(staATGyulJe) || currAprType.equals(staatwhoakin) || currAprType.equals(staATgian) || currAprType.equals(staATgumto))) {
 				rtnVal = false;
 			}
 			
-			aprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(1).getTextContent());
-			
-			if (!(aprType.equals(staATGamSaBu) || aprType.equals(staATDekyul) || aprType.equals(staATgumto) || aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATByungRyulHyubJo) || aprType.equals(staATJunGyul))) {
+			if (!(nextAprType.equals(staATGamSaBu) || nextAprType.equals(staATDekyul) || nextAprType.equals(staATgumto) || nextAprType.equals(staATGyulJe) || nextAprType.equals(staatwhoakin) || nextAprType.equals(staATJunGyul) || nextAprType.equals(staATSoonChaHyubJo) || nextAprType.equals(staATByungRyulHyubJo))) {
 				rtnVal = false;
+			}
+			
+			if (!staATByungRyulHyubJo.equals(currAprType) && staATByungRyulHyubJo.equals(nextAprType)) { 
+			    // 개인순차/병렬협조일때 협조자가 한명이라두 결재했으면 회수못하게 하는데 개인협조는 아래에서 걸러지므로 병렬협조만 처리
+			    map.put("v_APRMEMBERSN", apprGLineTempletVOList.get(0).getAprMemberSN());
+			    List<ApprGLineTempletVO> nextAprLineList = ezApprovalGDAO.getNextAprLineInfo(map);
+			    
+			    for (int i = 0, len = nextAprLineList.size(); i < len; i++) {
+			        if (!staATByungRyulHyubJo.equals(nextAprLineList.get(i).getAprType())) {
+			            break;
+			        }
+			        
+			        if (!staASJinHang.equals(nextAprLineList.get(i).getAprState())) {
+			            rtnVal = false;
+			            break;
+			        }
+			    }
 			}
 			
 			String aprState = makeListField(docXML.getElementsByTagName("APRSTATE").item(1).getTextContent());

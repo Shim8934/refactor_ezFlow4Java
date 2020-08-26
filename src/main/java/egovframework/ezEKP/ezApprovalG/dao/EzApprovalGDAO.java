@@ -3532,4 +3532,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public ApprGDocListVO getIngDocInfo(Map<String, Object> map) throws Exception {
 		return (ApprGDocListVO) select("EzApprovalG.getIngDocInfo", map);
 	}
+	
+	public List<ApprGLineTempletVO> getNextAprLineInfo(Map<String, Object> map) throws Exception {
+	    return (List<ApprGLineTempletVO>) list("EzApprovalG.getNextAprLineInfo", map);
+	}
 }

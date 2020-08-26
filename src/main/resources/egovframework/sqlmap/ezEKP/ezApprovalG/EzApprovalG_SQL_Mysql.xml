@@ -32857,5 +32857,23 @@
 	   		L.APRSTATE = '003'
 	   	LIMIT 1
 	</select>
+	<select id="EzApprovalG.getNextAprLineInfo" parameterClass="HashMap" resultClass="ApprGLineTempletVO">
+        SELECT 
+            APRMEMBERSN, 
+            APRTYPE, 
+            APRSTATE 
+        FROM 
+            TBL_APRLINEINFO
+        WHERE 
+            DOCID = #v_DOCID#
+        AND 
+            TENANT_ID = #v_TENANTID#
+        AND 
+            COMPANYID = #companyID#
+        AND 
+            APRMEMBERSN > #v_APRMEMBERSN#
+        ORDER BY 
+            APRMEMBERSN
+	</select>
 	
 </sqlMap>
