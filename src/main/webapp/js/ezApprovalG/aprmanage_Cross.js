@@ -2633,6 +2633,9 @@ function cancelYN_after(xml) {
     	if (forceCallBackYN == "YES") {
     		//강제회수는 기안자만 가능하도록 수정
     		if (!checkIsDrafter()) {
+                document.getElementById("tbtncallback").style.display = "none";
+                document.getElementById("tbtnforcecallback").style.display = "none";
+
     			return;
     		}
     		
