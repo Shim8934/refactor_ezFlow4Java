@@ -33,6 +33,7 @@
 		    var deletePermission = "${deletePermission}";
 		    var sendPermission = "${sendPermission}";
 		    var mouseTop;
+		    var sharer = "${sharer}";
 		    
 	        function window_onload() {
 	        	if (shareId != "" && deletePermission != "Y") {
@@ -181,6 +182,10 @@
 		    		url += "?shareId=" + encodeURIComponent(shareId);
 		    	}
 		    	
+		    	if (typeof(sharer) != "undefined" && sharer != "") {
+		    		url += "?sharer=" + encodeURIComponent(sharer);
+	        	}
+		    	
 		    	var fileLen = document.getElementsByName("MailAttachDownloadItems").length;
 		    	var params = "";
 		    	var folderPath = "";
@@ -274,6 +279,9 @@
 		        
 				if (typeof(shareId) != "undefined" && shareId != "") {
 					requestUrl += "?shareId=" + encodeURIComponent(shareId);
+				}
+				if (typeof(sharer) != "undefined" && sharer != "") {
+					requestUrl += "?sharer=" + encodeURIComponent(sharer);
 				}
 		        
 		        var xmlHTTP = new XMLHttpRequest();
@@ -384,6 +392,10 @@
 	            
 	            if (typeof(shareId) != "undefined" && shareId != "") {
 	            	pURI += "&shareId=" + encodeURIComponent(shareId);
+	        	}
+	            
+	            if (typeof(sharer) != "undefined" && sharer != "") {
+	            	pURI += "&sharer=" + encodeURIComponent(sharer);
 	        	}
 	            
 	            var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() 

@@ -76,6 +76,8 @@
 		    var useCountryIP = "${useCountryIP}";
 		    var useShowSystemCountry = "${useShowSystemCountry}";
 			var mailBox = "${mailBox}";
+		    var sharer = "${sharer}";
+
 		    
 		    window.onresize = window_onresize;
 		    
@@ -144,9 +146,13 @@
 		        	HolderSent.style.display = "none";
 		        }
 		        
-		        if (shareId != "" && deletePermission != "Y") {
+		        if ((shareId != "" && deletePermission != "Y") || sharer != "" ) {
 		        	btnMove.style.display = "none";
 		        	btnDelete.style.display = "none";
+		        	if(sharer != ""){
+		        		liReSend.style.display = 'none';
+		        		HolderSent.style.display = "none";
+		        	}
 		        }
 		        
 		        if (useCountryIP == "YES" && (mailWritePreview != "true" ||  mailWritePreviewSend == "false")) {
@@ -248,6 +254,10 @@
 		        
 				if (typeof(shareId) != "undefined" && shareId != "") {
 					url += "&shareId=" + encodeURIComponent(shareId);
+				}
+				
+				if (typeof(sharer) != "undefined" && sharer != "") {
+					url += "&sharer=" + encodeURIComponent(sharer);
 				}
 				
 		        window.open(url, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1, scrollbars=1");
@@ -512,6 +522,9 @@
 		                		requestUrl += "&mailShareId=" + encodeURIComponent(shareId);
 		    				}
 		                	
+		                	if (typeof(sharer) != "undefined" && sharer != "") {
+		                		requestUrl += "&sharer=" + encodeURIComponent(sharer);
+		                	}
 		                    window.open(requestUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		                }
 		            }
@@ -556,6 +569,10 @@
 	                	if (typeof(shareId) != "undefined" && shareId != "") {
 	                		requestUrl += "&mailShareId=" + encodeURIComponent(shareId);
 	    				}
+	                	
+	                	if (typeof(sharer) != "undefined" && sharer != "") {
+	                		requestUrl += "&sharer=" + encodeURIComponent(sharer);
+	                	}
 		            	
 	                	window.open(requestUrl, boardTarget, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + boardHeight + ",width=" + boardWidth + ",top=" + pTop + ",left=" + pLeft, "");
 		            }
@@ -678,6 +695,9 @@
                 	if (typeof(shareId) != "undefined" && shareId != "") {
                 		requestUrl += "&mailShareId=" + encodeURIComponent(shareId);
     				}
+    				if (typeof(sharer) != "undefined" && sharer != "") {
+                        requestUrl += "&mailSharer=" + encodeURIComponent(sharer);
+                    }
 	            	
                 	window.open(requestUrl, boardTarget, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + boardHeight + ",width=" + boardWidth + ",top=" + pTop + ",left=" + pLeft, "");
 		        }
@@ -927,6 +947,9 @@
 		    <input  type="hidden" id="fromAddr"  name="fromAddr" value="${fromEmail}">
 		    <c:if test="${shareId != null && shareId != ''}">
 		    	<input  type="hidden" id="shareId"  name="shareId" value="${shareId}">
+		    </c:if>
+		    <c:if test="${sharer != null && sharer != ''}">
+		    	<input  type="hidden" id="shareId"  name="sharer" value="${sharer}">
 		    </c:if>
 		</form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

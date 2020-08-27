@@ -201,6 +201,11 @@
     function ex_putcaption(nodeIdx, caption) {
         document.getElementById(g_nodeid + nodeIdx).innerHTML = caption;
     }
+    
+    this.putSharer = ex_putSharer;
+    function ex_putSharer(nodeIdx, caption) {
+    	document.getElementById(g_nodeid + nodeIdx).setAttribute = sharer;
+    }
 
     this.putstyle = ex_putstyle;
     function ex_putstyle(nodeIdx, style) {
@@ -396,6 +401,7 @@
 
             if (GetAttribute(childNode, "title") != null) {
                 SPAN_TAG.setAttribute("title", GetAttribute(childNode, "title"));
+                SPAN_TAG.setAttribute("title", GetAttribute(childNode, "caption") + '\n' + GetAttribute(childNode, "sharingfolder") )
             }
 
             SPAN_TAG.innerText = GetAttribute(childNode, "caption");
@@ -683,6 +689,7 @@
     var g_imageWidth = -1;
     var g_imageHeight = -1;
     var g_selectedNode = null;    
+    var g_sharer = "";    
 
     function make_childHtml(nodeIdx) {
 
@@ -800,6 +807,12 @@
                     spanId = "personalMail";
                     _tempStatus = "Y";
                     break;
+                case '_SHARE':
+                	_imgsrc = '/images/ImgIcon/share.gif';
+                	spanClass = "sub_iconLNB tree_mail_share";
+                	spanId = "spamMail";
+                	_tempStatus = "Y";
+                	break;
                 default:
                     spanClass = "sub_iconLNB";
                 	spanId = "defaultMail";
@@ -824,21 +837,39 @@
             SPAN_TAG.setAttribute("name", g_nodeid + g_nodeCount);
             SPAN_TAG.setAttribute("class", g_baseClass["normal"]);
             
-            if (GetAttribute(childNode, "title") != null) {
-            	if (mydepth != "1") {
-            		SPAN_TAG.setAttribute("title", GetAttribute(childNode, "caption"));
-            	} else if (typeof window !== "undefined" && window.location && window.location.href && window.location.href.includes("addressFolderManage.do")) {
-                    SPAN_TAG.setAttribute("title", GetAttribute(childNode, "caption"));
-                }
-            }
-            
-            
             var folderCount = GetAttribute(childNode, "foldercount");
             if (folderCount > 0) {
             	// 2023-06-23 황인경 - 디자인 개선 > 메일 > 좌측메뉴 > 카운트 괄호 추가
             	SPAN_TAG.innerHTML = GetAttribute(childNode, "caption") + "(" + folderCount + ")"; 
             } else {
             	SPAN_TAG.innerHTML = GetAttribute(childNode, "caption");
+            }
+            if (GetAttribute(childNode, "title") != null) {
+//            	if (mydepth != "1") {
+	            	if(GetAttribute(childNode, "sharingfolder") == "Y"){
+	            		SPAN_TAG.setAttribute("title", GetAttribute(childNode, "caption") + " (" + strLangPYY01 + ")");
+	            	} else if (typeof window !== "undefined" && window.location && window.location.href && window.location.href.includes("addressFolderManage.do")) {
+                        SPAN_TAG.setAttribute("title", GetAttribute(childNode, "caption"));
+                    } else {
+	            		SPAN_TAG.setAttribute("title", GetAttribute(childNode, "caption"));
+	            	}
+
+	            	/*if (mydepth != "1") {
+                        SPAN_TAG.setAttribute("title", GetAttribute(childNode, "caption"));
+                    } else if (typeof window !== "undefined" && window.location && window.location.href && window.location.href.includes("addressFolderManage.do")) {
+                        SPAN_TAG.setAttribute("title", GetAttribute(childNode, "caption"));
+                    }*/
+//            	}
+            }
+            
+            var href = GetAttribute(childNode, 'href');
+            if (href.indexOf("shared_mailFolder")== 0 && href != "shared_mailFolder") {
+            	SPAN_TAG.setAttribute("title", GetAttribute(childNode, "caption") + '\n' + 'shared by ' + GetAttribute(childNode, 'userName') 
+            			+ " (" + GetAttribute(childNode, 'deptName') + ")");
+            	SPAN_TAG.setAttribute("sharer", GetAttribute(childNode, 'sharer'));
+            }
+            if (href == "shared_mailFolder"){
+            	SPAN_TAG.innerHTML = strLangPYY02;
             }
             
             try {

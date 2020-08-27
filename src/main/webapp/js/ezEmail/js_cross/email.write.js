@@ -17,7 +17,7 @@
  *
  * @returns {boolean} false면 return;
  */
-function forward_mail_call(selectItems, shareId) {
+function forward_mail_call(selectItems, shareId, sharer) {
     if (selectItems.length == 0) {
         alert(strLang42); // 메일을 선택하세요.
         return false;
@@ -34,6 +34,10 @@ function forward_mail_call(selectItems, shareId) {
 
     if (shareId) {
         pURI += "&shareId=" + encodeURIComponent(shareId);
+    }
+
+    if (typeof(sharer) != "undefined" && sharer != "") {
+        pURI += "&sharer=" + encodeURIComponent(sharer);
     }
 
     // window open

@@ -64,7 +64,11 @@
                                     }<c:if test="${!status.last}">,</c:if>
                                 </c:forEach>
                                 ];
-	      	
+			var sharer = "";
+			var nodeIdx = "";
+			var folderRefreshForSharer = "";
+	      	var useSharedMailFolder = '<c:out value="${useSharedMailFolder}"/>';
+
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
 	        }
@@ -277,6 +281,7 @@
             // 환경설정에서 기존설정값과 신규설정값이 다르면 트리를 재호출하여 적용시킨다. 
             // 편지함 관리에서도 닫기버튼을 누르면 트리를 재호출하여 적용시킨다.
 	        function previewSubTreeCall(type){
+        		var shareMailBox = 0;
 				if (typeof type != "undefined") {
         			previewSubTree = type;
 
@@ -294,8 +299,18 @@
     		        	    		window[treeviewStr].toggle(idx[1]);
     		        	    	}
     		        	    }
+    		        	    var href = window[treeviewStr].getvalue(idx[1], "href"); 
+		        	    	if (href.indexOf("shared_mailFolder") == 0 || href == "shared_mailFolder"){
+		        	    		shareMailBox++;
+		        	    	}
     		          	}
-    		          	treeArrNum = $('.tree_plus').length;
+    		          	
+    		          	if (shareMailBox > 0) {
+    			          	treeArrNum = $('.tree_plus').length - 1;
+    		          	} else {
+    		          		treeArrNum = $('.tree_plus').length
+    		          	}
+    		          	
     		          	if(treeArrNum > 0){
     		          		previewSubTreeCall(type);
     		          	}
@@ -304,19 +319,31 @@
 	           
         		 if (usePreviewSubTree == "YES" && previewSubTree == "Y") {
 		            var treeArrNum = $('#' + treeviewStr + ' .tree_plus').length;
+		            shareMailBox = 0;
 
 		          	while(treeArrNum > 0) {
 		        	    var getSubtree = $('#' + treeviewStr + ' .tree_plus').eq(0).attr('name');
 		        	    var idx = getSubtree.split(treeviewStr + '_img_');
 		        	    
 		        	    if (typeof idx[1] != "undefined") {
-		        	    	var childxml = get_childXML(window[treeviewStr].getvalue(idx[1], "href"), false, true, false);
-		        	    	window[treeviewStr].putchildxml(idx[1], childxml);
-		        	    	$('#' + treeviewStr + '_img_' + idx[1]).attr("class", "sub_iconLNB tree_minus");
+		        	    	var href = window[treeviewStr].getvalue(idx[1], "href"); 
+		        	    	if (href.indexOf("shared_mailFolder") != 0 && href != "shared_mailFolder"){
+			        	    	var childxml = get_childXML(window[treeviewStr].getvalue(idx[1], "href"), false, true, false);
+			        	    	window[treeviewStr].putchildxml(idx[1], childxml);
+			        	    	$('#' + treeviewStr + '_img_' + idx[1]).attr("class", "sub_iconLNB tree_minus");
+		        	    	} else {
+			        	    	shareMailBox++;
+		        	    	}
 		        	    	treeArrNum--;
 		        	    }
 		          	}
-		          	treeArrNum = $('#' + treeviewStr + ' .tree_plus').length;
+
+		          	if (shareMailBox > 0) {
+			          	treeArrNum = $('#' + treeviewStr + ' .tree_plus').length - 1;
+		          	} else {
+		          		treeArrNum = $('#' + treeviewStr + ' .tree_plus').length;
+		          	}
+
 		          	if(treeArrNum > 0){
 		          		previewSubTreeCall();
 		          	}
@@ -367,10 +394,11 @@
 	        }
 	        function requestdata(event) {
 	            if (!event) event = window.event;
-	            var nodeIdx = event.nodeIdx;
+	            nodeIdx = event.nodeIdx;
 	            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
 	                nodeIdx = arguments[0].nodeIdx;
 	            }
+	            this.sharer = window[treeviewStr].getvalue(nodeIdx, "sharer");
 	            var childxml = get_childXML(window[treeviewStr].getvalue(nodeIdx, "href"), false, true, false);
 	            window[treeviewStr].putchildxml(nodeIdx, childxml);
 	            
@@ -382,13 +410,20 @@
 	        
 	        function selectnode(event) {
 	        	if (!event) event = window.event;
+
 				/* 2018-08-06 장진혁 스크립트 오류로 undefined 걸름 */
 	        	if (typeof(event) !== "undefined") {
 		        	if (event.which != 3) {
 					    var nodeIdx = window[treeviewStr].selectedIndex();
+					    var href = window[treeviewStr].getvalue(nodeIdx, "href");
+					    if(href=="shared_mailFolder"){
+                            return;
+                        }
+
 						openRightFrameDefault(window[treeviewStr].getvalue(nodeIdx, "foldername"),
-											  window[treeviewStr].getvalue(nodeIdx, "href"),
-											  shareId);
+											  href,
+											  shareId,
+											  encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "sharer")));
 		        	}
 	        	}
 
@@ -444,6 +479,10 @@
 		                createNodeAndInsertText(xmlpara, objNode, "SHAREID", shareId);
 	                }
 	                
+	                if (href.indexOf("shared_mailFolder")== 0 && href != "shared_mailFolder") {
+	        			createNodeAndInsertText(xmlpara, objNode, "SHARER", encodeURIComponent(window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "sharer")));
+	        		}
+	                
 	                xmlHTTP_Unread.open("POST", "/ezEmail/getFolderUnreadCount.do", true);
 	                xmlHTTP_Unread.onreadystatechange = get_unreadend_2010;
 	                get_unreadend_2010.href = href;
@@ -462,9 +501,12 @@
 	                var caption = window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "foldername");
 	                var href = window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "href");
 	
-	                if (get_unreadend_2010.href == window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "href")) {
+	                if (get_unreadend_2010.href == href) {
 	                    if (unreadcount == "0") {
 	                    	window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption);
+	                    	if (href == "shared_mailFolder"){
+	                    		window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), strLangPYY02);
+	                    	}
 	                        //window[treeviewStr].putstyle(window[treeviewStr].selectedIndex(), "font-weight : ''");
 	                    } else if ("allMail" != href) {
 	                        // 2023-06-23 황인경 - 디자인 개선 > 메일 > 좌측 메뉴 > 카운트 괄호 추가
@@ -485,8 +527,10 @@
 		                    }
 	                  	}
 	                }
-	                
-	                setTotalUnreadCount(shareId, parseInt(totalUnreadCount));
+	               
+	                if (window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "sharer") == ""){
+		                setTotalUnreadCount(shareId, parseInt(totalUnreadCount));
+	                }
 	            }
 	            
 	            xmlHTTP_Unread = null;
@@ -496,14 +540,19 @@
 	        function getUnreadCountAll(refreshRight) {
 	        	var refreshRightOff = refreshRight== 'no';
 	        	var mailboxList = [];
+	        	var sharerList = [];
 	        	var nodeCount = window[treeviewStr].nodecount();
 	        	
 	        	for (var i = 0; i < nodeCount; i++) {
 	        		mailboxList.push(window[treeviewStr].getvalue(i + 1, "href"));
+                    var nodeEl = document.getElementById(treeviewStr + "_node_" + (i+1));
+                    var sharer = nodeEl ? nodeEl.getAttribute("sharer") : null;
+	        		sharerList.push(sharer);
 	        	}
 	        	
 	        	var requestData = {
-        			"mailboxList" : mailboxList
+        			"mailboxList" : mailboxList,
+        			"sharerList"  : sharerList
 	        	}
 	        	
 	        	if (shareId != "") {
@@ -531,7 +580,12 @@
 	                    		if (shareId === result.shareId) {
 	                    			for (var i = 0; i < nodeCount; i++) {
 		                    			href = window[treeviewStr].getvalue(i + 1, "href");
-	                    				caption = window[treeviewStr].getvalue(i + 1, "foldername");
+		                    			if (href == "shared_mailFolder"){
+		    	                    		caption = strLangPYY02;
+		    	                    	} else {
+		    	                    		caption = window[treeviewStr].getvalue(i + 1, "foldername");
+		    	                    	}
+	                    				
 		                    			unreadCount = unreadCountMap[href];
 	                    				
 	                    				if (typeof(unreadCount) === 'undefined' || unreadCount === 0) {
@@ -602,10 +656,12 @@
 	            setTimeout(function() {
 		            if (RtnVal) {
 		            	var href = window[treeviewStr].getvalue(1, "href");
-		            	
+		            	if(useSharedMailFolder == "YES"){
+		            	    folderRefreshForSharer = "Y";
+		            	}
 		            	window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false, true) + "</nodes></tree>");
 		            	window[treeviewStr].update();
-		                
+		            	folderRefreshForSharer = "";
 		                if (window[treeviewStr].selectedIndex() == -1) {
 		                	window[treeviewStr].select(2);
 		                }
@@ -616,7 +672,12 @@
 		            	if (shareId != "") {
 		            		url += "&shareId=" + encodeURIComponent(shareId);
 			            }
-		                
+
+                        var href = window[treeviewStr].getvalue(nodeIdx, "href");
+                        if (href.indexOf("shared_mailFolder")== 0 && href != "shared_mailFolder") {
+                            url += "&sharer=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "sharer"));
+                        }
+
 		                parent.document.querySelector("iframe[name=right]").src = url;
 		                
 		                previewSubTreeCall();
@@ -892,15 +953,35 @@
                 if (scrollTop > 0) {
                 	EventMouseY += scrollTop;
                 }
+		        var nodeIdx = window[treeviewStr].selectedIndex();
+		        encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "href"));
+		         
+				var href = window[treeviewStr].getvalue(nodeIdx, "href");
+				if (href.indexOf("shared_mailFolder")== 0){
+				    if(useSharedMailFolder=="YES"){
+				        document.getElementById("mailbox_share").style.display = "none";
+				    }
+					document.getElementById("mailbox_delete").style.display = "none";
+					document.getElementById("mailbox_import").style.display = "none"; 
+				} else {
+				    if(useSharedMailFolder=="YES"){
+				        document.getElementById("mailbox_share").style.display =  "";
+				    }
+					document.getElementById("mailbox_delete").style.display = "";
+					document.getElementById("mailbox_import").style.display = ""; 
+				}
 
 		        //document.getElementById("folderPanel").style.display = "";
 		        document.getElementById("folderMenuDiv").style.left = EventMouseX + "px";
 		        document.getElementById("folderMenuDiv").style.top = EventMouseY + "px";
-		        document.getElementById("folderMenuDiv").style.display = "";
-		        
-		        if (parent.frames["right"].document.getElementById("mailPanel")) {
-			        if ( parent.frames["right"].document.getElementById("mailPanel").style.display == "none") {
-				        parent.frames["right"].document.getElementById("mailPanel").style.display = "";
+		        if (href == "shared_mailFolder"){
+			        document.getElementById("folderMenuDiv").style.display = "none";
+		        } else {
+			        document.getElementById("folderMenuDiv").style.display = "";
+					if (parent.frames["right"].document.getElementById("mailPanel")) {
+				        if ( parent.frames["right"].document.getElementById("mailPanel").style.display == "none") {
+					        parent.frames["right"].document.getElementById("mailPanel").style.display = "";
+				        }
 			        }
 		        }
 		    }
@@ -935,17 +1016,23 @@
 	            if (shareId != "") {
 	            	requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	            }
+
+	            var sharer = encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "sharer"));
+				if (href.indexOf("shared_mailFolder")== 0 && href != "shared_mailFolder") {
+	               	 requestUrl += "&sharer=" + sharer;
+	       		}
 	            
 	            xmlHTTP.open("POST",requestUrl, false);
 	            xmlHTTP.send();
-	            
-				openRightFrameDefault(foldername, href, shareId);
+
+				openRightFrameDefault(foldername, href, shareId, sharer);
 		    }
 		    
 		    function mailbox_export(){
 		    	try {
 		    		var nodeIdx = window[treeviewStr].selectedIndex();
 		    		var folderPath = window[treeviewStr].getvalue(nodeIdx, "href");
+		    		var sharer = window[treeviewStr].getvalue(nodeIdx, "sharer");
 		    		
 		    		if (typeof (parent.frames["right"].g_moveUrl) == "undefined" || parent.frames["right"].g_moveUrl != folderPath) {
 		            	var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(folderPath);
@@ -953,13 +1040,19 @@
 		            	if (shareId != "") {
 		            		url += "&shareId=" + encodeURIComponent(shareId);
 			            }
+
+			            var href = window[treeviewStr].getvalue(nodeIdx, "href");
+                        if (href.indexOf("shared_mailFolder")== 0 && href != "shared_mailFolder") {
+                            url += "&sharer=" + encodeURIComponent(sharer);
+                        }
+
 		            	
 		            	parent.document.querySelector("iframe[name=right]").src = url;
 		    		}
 	            	
             		setTimeout(function() {
 	            		parent.frames["right"].mailbox_export();
-		        	}, 1000);
+		        	}, 1500);
 	            	
 	            } catch (e) {
 	            	console.log("mailbox_export error!");
@@ -977,7 +1070,12 @@
 		            	if (shareId != "") {
 		            		url += "&shareId=" + encodeURIComponent(shareId);
 			            }
-		            	
+
+						var href = window[treeviewStr].getvalue(nodeIdx, "href");
+						if (href.indexOf("shared_mailFolder")== 0 && href != "shared_mailFolder") {
+		        			url += "&sharer=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "sharer"));
+		        		}
+
 		            	parent.document.querySelector("iframe[name=right]").src = url;
 		    		}
 		    		
@@ -1052,7 +1150,7 @@
 					var nodeIdx = window[treeviewStr].selectedIndex();
 					var foldername = window[treeviewStr].getvalue(nodeIdx, "foldername");
 					var href = window[treeviewStr].getvalue(nodeIdx, "href");
-					
+					var sharer = encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "sharer"));
 					HiddenMailProgressNew();
 					HiddenFolderMenu();
 		        	 
@@ -1062,7 +1160,7 @@
 							if (xmlHTTP2.responseText == "OK") {
 								alert("<spring:message code='ezEmail.t473' />");
 
-								openRightFrameDefault(foldername, href, shareId);
+								openRightFrameDefault(foldername, href, shareId, sharer);
 					    	} else {
 					    		alert("<spring:message code='ezEmail.t472' />");
 					    	}
@@ -1075,7 +1173,7 @@
 						if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
 							if (xmlHTTP2.responseText == "OK") {
 								alert("<spring:message code='ezEmail.t478' />");
-								openRightFrameDefault(foldername, href, shareId);
+								openRightFrameDefault(foldername, href, shareId, sharer);
 		            		} else if (xmlHTTP2.responseText.indexOf("NO COPY processing failed.") > -1) {
 		            			alert(strLang241);
 		            		} else if (xmlHTTP2.responseText.indexOf("MAIL_NOT_EXISTS") > -1) {
@@ -1154,10 +1252,14 @@
 			 * 원 함수(openRightFrame())는 : String과 extra를 받도록 하는데,
 			 * String에 encodeURIComponent() 기본적용하고, shareId인 것은 : default로 공통적용할 수 있도록 함.
 			 */
-			function openRightFrameDefault(foldername, href, shareId) {
+			function openRightFrameDefault(foldername, href, shareId, sharer) {
+			    var extra = (shareId != "")? "&shareId=" + encodeURIComponent(shareId) : "";
+			    if (href.indexOf("shared_mailFolder")== 0 && href != "shared_mailFolder") {
+                    extra += "&sharer=" + sharer;
+                }
 				openRightFrame(encodeURIComponent(foldername),
 							   encodeURIComponent(href),
-							   (shareId != "")? "&shareId=" + encodeURIComponent(shareId) : "");
+							   extra);
 			}
 
 			function operatorSendMail() {
@@ -1663,6 +1765,61 @@
 				liSelcted();
 			}
 			
+			var sharedMailboxDialogArguments = new Array();
+			var companyId = "${companyId}";
+			function addShareMailBoxMember() {
+		        var feature = "dialogHeight:670px; dialogWidth:1080px; scroll:no;status:no; help:no; edge:sunken";
+		        feature = feature + GetShowModalPosition(1080, 670);
+		        var sharerId = "";
+		        if (shareId != ""){
+		        	sharerId = shareId
+		        }
+		        var nodeIdx = window[treeviewStr].selectedIndex();
+        		
+	            sharedMailboxDialogArguments[1] = addSharedMailboxComplete;
+		        if (CrossYN()) {
+		            var OpenWin = window.open("/ezEmail/addSharedMailboxMember.do?compId=" + companyId 
+		            		+ "&sharer=" + sharerId +"&folderPath=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "href")), "sharedMailboxDialog", GetOpenWindowfeature(984, 600));
+		            try { OpenWin.focus(); } catch (e) { }
+
+		        } else {
+		            var rtnValue = window.showModalDialog("/ezEmail/addSharedMailboxMember.do?compId=" + companyId + "&sharer=" + sharerId
+		            		+ "&folderPath=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "href")) , feature);
+		            try { OpenWin.focus(); } catch (e) { }
+		        }
+		    }
+		    
+			function addSharedMailboxComplete() {
+	        	setTimeout(function() {
+	            	var href = window[treeviewStr].getvalue(1, "href");
+	            	
+	            	folderRefreshForSharer = "Y";
+	            	window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+	            	window[treeviewStr].update();
+	            	folderRefreshForSharer = "";
+	                if (window[treeviewStr].selectedIndex() == -1) {
+	                	window[treeviewStr].select(1);
+	                }
+	                
+	                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(1, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(1, "href"));
+	                
+	            	if (shareId != "") {
+	            		url += "&shareId=" + encodeURIComponent(shareId);
+		            }
+	                
+                    var href = window[treeviewStr].getvalue(nodeIdx, "href");
+                    if (href.indexOf("shared_mailFolder")== 0 && href != "shared_mailFolder") {
+                	    url += "&sharer=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "sharer"));
+                    }
+
+                    window.open(url, "right");
+	                
+	                previewSubTreeCall();
+	                applyEllipsisMailTree();
+	            	detailView();
+	            }, 10);
+		    }
+			
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1905,6 +2062,11 @@
 			    <tr id="mailbox_delete">
 			        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_delete();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/deleted.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.t483" /></span></td>
 			    </tr>
+			    <c:if test="${useSharedMailFolder eq 'YES'}">
+			        <tr id="mailbox_share">
+                        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="addShareMailBoxMember();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/share.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.sharedMailboxPYY05" /></td>
+                    </tr>
+			    </c:if>
 			    </table>
 			</div>
 			<script>

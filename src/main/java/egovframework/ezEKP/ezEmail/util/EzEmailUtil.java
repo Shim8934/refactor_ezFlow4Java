@@ -340,7 +340,17 @@ public class EzEmailUtil {
 			return egovMessageSource.getMessage("ezEmail.t99000029", locale);
 		}
 	}
-    
+
+	public String getShareFolderId(Locale locale) {
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {
+			return "Share E-Mail";
+		} else {
+			return egovMessageSource.getMessage("ezEmail.yja005", locale);
+		}
+	}
+
 	public String getDisplayNameFromFolderId(String folderId, Locale locale) {
 		String displayName = folderId;
 		
@@ -361,6 +371,8 @@ public class EzEmailUtil {
 				displayName = folderId.replaceFirst("Personal folder", egovMessageSource.getMessage("ezEmail.t648", locale));
 			} else if (folderId.equals("Junk E-Mail") || folderId.startsWith("Junk E-Mail.")) {
 				displayName = folderId.replaceFirst("Junk E-Mail", egovMessageSource.getMessage("ezEmail.t99000029", locale));
+			} else if (folderId.equals("Share E-Mail") || folderId.startsWith("Share E-Mail.")) {
+				displayName = folderId.replaceFirst("Share E-Mail", egovMessageSource.getMessage("ezEmail.yja005", locale));
 			}
 		} else {
 			if (folderId.equals("INBOX") || folderId.startsWith("INBOX.")) {
@@ -391,6 +403,8 @@ public class EzEmailUtil {
 				folderId = "Personal folder";
 			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t99000029", locale))) {
 				folderId = "Junk E-Mail";
+			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.yja005", locale))) {
+				folderId = "Share E-Mail";
 			}
 		} else {
 			if (displayName.equals(egovMessageSource.getMessage("ezEmail.t644", locale))) {
@@ -1150,7 +1164,8 @@ public class EzEmailUtil {
 		String secureKey = null;
 		String securePassword = null;
 		boolean includeInlineAsAttachment = false;
-		String shareId = null;
+		String shareId = null; 
+		String sharer = null; 
 		String useImageConvertServer = null;	// 20200312 조진호 - 메일 읽기 > 첨부파일 미리 보기 기능 옵션 처리 추가
 		boolean useWebfolder = false;			// 20230418 김은실 - 메일 읽기 > 첨부파일 웹폴더에 저장 기능 추가
 		boolean forPreviewMail = false;			// 20250213 김대현 - 메일 리스트 > 메일 미리보기 기능 추가
@@ -1181,6 +1196,7 @@ public class EzEmailUtil {
             if (extraMap.get("forPreviewMail") != null) forPreviewMail = (boolean)extraMap.get("forPreviewMail");
 			if (extraMap.get("userEmail") != null) userEmail = (String)extraMap.get("userEmail");
 			if (extraMap.get("icalStatus") != null) icalStatus = (String)extraMap.get("icalStatus");
+			if (extraMap.get("sharer") != null) sharer = (String)extraMap.get("sharer");
 		}
 		
 		// 첨부 파일이면서 Content-ID가 있는 경우 실제 HTML 본문에서 참조되고 있는 파트인지 확인하기 위해 추가함(Gmail에서 보낸 메일).
@@ -1549,6 +1565,9 @@ public class EzEmailUtil {
 				if (shareId != null) {
 					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
 				}
+				if (sharer != null) {
+					aitem += "&sharer=" + URLEncoder.encode(sharer, "UTF-8");
+				}
 				
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename=\"" + filename_spclStr + "\" id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' class='imgSpan' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align: top;'></span>";
 
@@ -1578,6 +1597,9 @@ public class EzEmailUtil {
 					}
 				}
 //				GetOpenWindow(pURI, "", 890, 840, "yes");
+				if (sharer != null) {
+					aitem += "&sharer=" + URLEncoder.encode(sharer, "UTF-8");
+				}
 				previewImageListHtml += " <div><p class='imageArea'><a onclick=\"GetOpenWindow('" + aitem + "&readStatus=Y', '', 890, 840, 'yes');\">";
 				previewImageListHtml += " <img src='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' style='cursor:pointer;'></a></p>";
 				previewImageListHtml += " <p onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachImageeName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</p></div>";
@@ -1749,6 +1771,8 @@ public class EzEmailUtil {
 					strContent = strContent.replace(orgSrc, "src=\"/ezEmail/downloadSecureInline.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&contentId=" + URLEncoder.encode(contentId, "UTF-8") + "\"");						
 				} else if (shareId != null) {
 					strContent = strContent.replace(orgSrc, "src=\"/ezEmail/downloadInline.do?mode=inlineimage&folderPath=" + URLEncoder.encode(folderPath, "UTF-8") + "&uid=" + uid + "&contentId=" + URLEncoder.encode(contentId, "UTF-8") + "&shareId=" + URLEncoder.encode(shareId, "UTF-8") + "\"");						
+				} else if (sharer != null){
+					strContent = strContent.replace(orgSrc, "src=\"/ezEmail/downloadInline.do?mode=inlineimage&folderPath=" + URLEncoder.encode(folderPath, "UTF-8") + "&uid=" + uid + "&contentId=" + URLEncoder.encode(contentId, "UTF-8") + "&sharer=" + URLEncoder.encode(sharer, "UTF-8") + "\"");
 				} else {
 					strContent = strContent.replace(orgSrc, "src=\"/ezEmail/downloadInline.do?mode=inlineimage&folderPath=" + URLEncoder.encode(folderPath, "UTF-8") + "&uid=" + uid + "&contentId=" + URLEncoder.encode(contentId, "UTF-8") + "\"");						
 				}

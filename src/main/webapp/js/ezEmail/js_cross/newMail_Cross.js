@@ -1,4 +1,4 @@
-﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
+﻿﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
 var emailFlag=false;
 function MailToMe_Onclick() {
     const checked = document.getElementById('toMe').checked;
@@ -1060,6 +1060,10 @@ function Save_onClick_Complete(ReturnValue) {
                 if (typeof(shareId) != "undefined" && shareId != "") {
             		requestUrl += "?shareId=" + encodeURIComponent(shareId);
 				}
+				
+                if (typeof(sharer) != "undefined" && sharer != "") {
+                	requestUrl += "?sharer=" + encodeURIComponent(sharer);
+                }
                 
                 if (!isClosedSave) {
                     g_saveHttp.open("POST", requestUrl, true);

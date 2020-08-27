@@ -195,6 +195,8 @@ public class EzEmailMailListController {
 		String allMailName = egovMessageSource.getMessage("email.allmail", locale);
 		String shareId = request.getParameter("shareId");
 		logger.debug("shareId=" + shareId);
+
+		String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함
 		
 		if (useSharedMailbox.equals("YES")) {
 			if (StringUtils.isNotBlank(shareId)) {
@@ -331,16 +333,17 @@ public class EzEmailMailListController {
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
 
+		model.addAttribute("sharer", sharer);
 
 		logger.debug("folderName={}, url={}, folderType={}, isSentItems={}, userLang={},"
 					+ " userId={}, domainName={}, useEditor={}, useOcs={}, importanceColor={},"
 					, folderName, url, folderType, isSentItems, userInfo.getLang()
 					, userInfo.getId(), domainName, useEditor, useOcs, importanceColor);
 		logger.debug("UseEncryptZipForEmail={}, useMailBoxBackUp={}, useCountryIP={}, useMailConfirm={}, useHackingMailReport={},"
-					+ " offsetMin={}, mailGeneral={}, useSecureMail={}, usePreviewMail={}"
+					+ " offsetMin={}, mailGeneral={}, useSecureMail={}, usePreviewMail={}, sharer={}"
 					, useEncryptZipForEmail, useMailBoxBackUp, useCountryIP, useMailConfirm, useHackingMailReport
-					, offsetMin, mailGeneral, useSecureMail, usePreviewMail);
-		
+					, offsetMin, mailGeneral, useSecureMail, usePreviewMail, sharer);
+
 		logger.debug("showMailList ended.");
 		
 		return "ezEmail/mailList";
@@ -1086,6 +1089,8 @@ public class EzEmailMailListController {
 		Date startDateObj = startDate.equals("") ? null : sdfForParsing.parse(startDate);
 		Date endDateObj = endDate.equals("") ? null : new Date(sdfForParsing.parse(endDate).getTime() + 60*60*24*1000);
 
+		String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함 
+
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -1106,7 +1111,22 @@ public class EzEmailMailListController {
 					,userInfo.getId(),userEmail,userInfo.getTenantId(),userInfo.getServerName(),folderId,sortType,start,end,search,viewSelectIndex,useCountryIP,useSecureMailFilter,useAttachFileFilter);
 		
 		String returnData = "";
-				
+
+		String folderName = folderId;
+		if(!sharer.equals("")){
+			try {
+				userEmail = sharer + "@" + domainName;
+				folderName = folderId.substring(18);
+				Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, userInfo.getId());
+				if (!checkSharer){
+					return "";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+		}
+
 		IMAPAccess ia = null;
 		
 		try {
@@ -1216,8 +1236,8 @@ public class EzEmailMailListController {
 				if (viewSelectIndex.equals("1")) {
 					includeContent = true;
 				}
-				
-				List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, folderId, categoryArray, keywordArray, startDateObj, endDateObj, isAllMail, 
+
+				List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, folderName, categoryArray, keywordArray, startDateObj, endDateObj, isAllMail,
 						isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId(), includeContent, tagName);
 				
 				totalCount = (int)extraMap.get("totalCount");
@@ -1228,7 +1248,14 @@ public class EzEmailMailListController {
 			
 				for (Map<String, String> mailInfo : mailList) {
 					sb.append("<response>");
-					sb.append(String.format("<href><![CDATA[%s]]></href>", mailInfo.get("MAIL_ID")));
+					
+					String maiUid = mailInfo.get("MAIL_ID").split("/")[1];
+					//sb.append(String.format("<href><![CDATA[%s/%s]]></href>", folderId, maiUid));;
+					if (!sharer.equals("")){
+						sb.append(String.format("<href><![CDATA[%s/%s]]></href>", folderId, maiUid));;
+					} else {
+						sb.append(String.format("<href><![CDATA[%s]]></href>", mailInfo.get("MAIL_ID")));;
+					}
 						
 					sb.append(String.format("<importance><![CDATA[%s]]></importance>", mailInfo.get("IMPORTANCE")));	
 					
@@ -1256,8 +1283,6 @@ public class EzEmailMailListController {
 					}
 
 					String msgto = "";
-					Address[] addresses = null;
-	
 					String name = "";
 					
 					if (!viewSelectIndex.equals("3")) {
@@ -1417,7 +1442,7 @@ public class EzEmailMailListController {
 				if (ia == null){
 					throw new Exception("Ia is null");
 				}
-				Folder folder = ia.getFolder(folderId != null ? folderId : "");
+				Folder folder = ia.getFolder(folderName != null ? folderName : "");
 				if (folder == null){
 					throw new Exception("folder is null");
 				}
@@ -2386,6 +2411,7 @@ public class EzEmailMailListController {
         String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
         String userEmail = userInfo.getId() + "@" + domainName;
         String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+        String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함 
 
         if (useSharedMailbox.equals("YES")) {
         	String shareId = request.getParameter("shareId");
@@ -2434,15 +2460,22 @@ public class EzEmailMailListController {
 			IMAPAccess ia = null;
 
 			try {
-				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userEmail, password, egovMessageSource, locale, ezEmailUtil);
-
-				if (ia != null) {
+				if(!sharer.equals("")){
 					// 2025-02-19 - 다중 편지함 지원을 위해 for문, long[] uids 추가
 					for (String folderId : folderIdUids.keySet()) {
 						long[] uids = folderIdUids.get(folderId);
-						
-						IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderId);
+						userEmail = sharer + "@" + domainName;
+						String folderName = folderId;
+						folderName = folderId.substring(18);
+
+						Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, userInfo.getId());
+						if (!checkSharer){
+							return "";
+						}
+
+						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+								userEmail, password, egovMessageSource, locale, ezEmailUtil);
+						IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderName);
 						if (sourceFolder == null) {
 							throw new Exception("SourceFolder is null");
 						}
@@ -2462,6 +2495,39 @@ public class EzEmailMailListController {
 						}
 
 						sourceFolder.close(true);
+					}
+
+
+				} else {
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+							userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+					if (ia != null) {
+						// 2025-02-19 - 다중 편지함 지원을 위해 for문, long[] uids 추가
+						for (String folderId : folderIdUids.keySet()) {
+							long[] uids = folderIdUids.get(folderId);
+
+							IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderId);
+							if (sourceFolder == null) {
+								throw new Exception("SourceFolder is null");
+							}
+							sourceFolder.open(Folder.READ_WRITE);
+
+							Message[] msgs = sourceFolder.getMessagesByUID(uids);
+
+							for (int i = 0; i < msgs.length; i++) {
+								Message msg = msgs[i];
+								if (msg.isSet(Flags.Flag.FLAGGED)) {
+									msg.setFlag(Flags.Flag.FLAGGED, false);
+									returnData = "DEL";
+								} else {
+									msg.setFlag(Flags.Flag.FLAGGED, true);
+									returnData = "NEW";
+								}
+							}
+
+							sourceFolder.close(true);
+						}
 					}
 				}
 			} catch (MessagingException e) {
@@ -2504,6 +2570,7 @@ public class EzEmailMailListController {
         String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
         String userEmail = userInfo.getId() + "@" + domainName;
         String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+        String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함 
 
         if (useSharedMailbox.equals("YES")) {
         	String shareId = request.getParameter("shareId");
@@ -2552,28 +2619,43 @@ public class EzEmailMailListController {
 		
 		IMAPAccess ia = null;
 		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+			// 2025-02-19 - 다중 편지함 지원을 위해 for문, long[] uids 추가
+			for (String folderId : folderIdUids.keySet()) {
+				long[] uids = folderIdUids.get(folderId);
+				String folderName = folderId;
+				if(!sharer.equals("")){
+					try {
+						userEmail = sharer + "@" + domainName;
+						folderName = folderId.substring(18);
+						Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, userInfo.getId());
+						if (!checkSharer){
+							return "";
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						return "";
+					}
+					logger.debug("sharer=" + sharer + ",folderName=" + folderName);
+				}
 
-			if (ia != null){
-				// 2025-02-19 - 다중 편지함 지원을 위해 for문, long[] uids 추가
-				for (String folderId : folderIdUids.keySet()) {
-					long[] uids = folderIdUids.get(folderId);
-					IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
+				if (ia != null){
+					IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderName);
 					if (sourceFolder == null){
 						throw new Exception("SourceFolder is null");
 					}
 					sourceFolder.open(Folder.READ_WRITE);
-	
+
 					Message[] msgs = sourceFolder.getMessagesByUID(uids);
-	
+
 					if (isRead.equals("TRUE")) {
 						sourceFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
 					}
 					else {
 						sourceFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), false);
 					}
-	
+
 					sourceFolder.close(true);
 				}
 			}
@@ -2635,6 +2717,7 @@ public class EzEmailMailListController {
 			String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 			String userEmail = loginInfo.getId() + "@" + domainName;
 			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+			String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함
 
 			if (useSharedMailbox.equals("YES")) {
 				String shareId = request.getParameter("shareId");
@@ -2653,13 +2736,29 @@ public class EzEmailMailListController {
 			}
 			
 			logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
-			
+
+			String folderName = folderPath;
+			if(!sharer.equals("")){
+				try {
+					userEmail = sharer + "@" + domainName;
+					folderName = folderPath.substring(18);
+					Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, loginInfo.getId());
+					if (!checkSharer){
+						return "";
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					return "";
+				}
+				logger.debug("sharer=" + sharer + ",folderName=" + folderName);
+			}
+
 			IMAPAccess ia = null;
 
 			try {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale, ezEmailUtil);
-				Folder folder = ia.getFolder(folderPath);
+				Folder folder = ia.getFolder(folderName);
 				folder.open(Folder.READ_ONLY);
 				Message message = ((IMAPFolder)folder).getMessageByUID(uid);
 				
@@ -2950,6 +3049,7 @@ public class EzEmailMailListController {
         String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
         String userEmail = userInfo.getId() + "@" + domainName;
         String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+        String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer");
 
         if (useSharedMailbox.equals("YES")) {
         	String shareId = request.getParameter("shareId");
@@ -2982,6 +3082,22 @@ public class EzEmailMailListController {
 		folderId = folderAndMsgIdArray[0].split("/")[0];			
 		uids = new long[folderAndMsgIdArray.length];
 		
+		String folderName = folderId;
+		if(!sharer.equals("")){
+			try {
+				userEmail = sharer + "@" + domainName;
+				folderName = folderId.substring(18);
+				Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, userInfo.getId());
+				if (!checkSharer){
+					return "";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+			logger.debug("sharer=" + sharer + ",folderName=" + folderName);
+		} 
+		
 		for (int i = 0; i < folderAndMsgIdArray.length; i++) {
 			String folderAndMsgId = folderAndMsgIdArray[folderAndMsgIdArray.length - i - 1];
 			String msgId = folderAndMsgId.split("/")[1];
@@ -2995,9 +3111,9 @@ public class EzEmailMailListController {
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-					
+
 			if (ia != null){
-				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);
+				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderName);
 				if (sourceFolder == null){
 					throw new Exception("SourceFolder is null");
 				}

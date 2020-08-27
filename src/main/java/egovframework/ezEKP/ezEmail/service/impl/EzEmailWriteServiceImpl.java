@@ -221,7 +221,7 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
                 writevo.setSharedMailboxInfoVO(sharedMailboxInfo);
 
                 mailId = shareId;
-                writevo.putIntoExtraMap(shareId);
+                writevo.putIntoExtraMapshareId(shareId);
             }
         }
 
@@ -233,7 +233,7 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
      * load from origin message
      */
     @Override
-    public void loadFromOrigin(MailWriteProcessVO writevo, LoginVO loginInfo, String userAccount, String password, Locale locale) {
+    public void loadFromOrigin(MailWriteProcessVO writevo, LoginVO loginInfo, String userAccount, String password, Locale locale, String orgAccount) {
         MailWriteMessageVO messagevo = writevo.getMailWriteMessageVO();
         WriteType writetype = writevo.getWriteType();
         File emlFile = writevo.getEmlFile();
@@ -279,7 +279,7 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
                         }
 
                         savedMessage.setFlag(Flags.Flag.SEEN, true);
-                        saveInDraft(ia, savedMessage, writevo);
+                        saveDraftWithProperAccount(savedMessage, writevo, userAccount, orgAccount, password, locale);
                     }
 
                     /*
@@ -370,6 +370,35 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
         };
 
         ezEmailUtil.useIMAPAccessWithCallback(callback, userAccount, password, locale);
+    }
+
+    private void saveDraftWithProperAccount(
+            Message savedMessage,
+            MailWriteProcessVO writevo,
+            String userAccount,
+            String orgAccount,
+            String password,
+            Locale locale) throws Exception {
+
+        String draftAccount =
+                (orgAccount != null && !orgAccount.isEmpty())
+                        ? orgAccount
+                        : userAccount;
+
+        try {
+            ezEmailUtil.useIMAPAccessWithCallback(draftIa -> {
+                try {
+                    saveInDraft(draftIa, savedMessage, writevo);
+                } catch (MessagingException e) {
+                    throw new RuntimeException(e);
+                }
+            }, draftAccount, password, locale);
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof MessagingException) {
+                throw (MessagingException) e.getCause();
+            }
+            throw e;
+        }
     }
 
     private Message getMessageToSave(WriteType writetype, Message orgMessage, String userAccount, String password, File emlFile) throws Exception {

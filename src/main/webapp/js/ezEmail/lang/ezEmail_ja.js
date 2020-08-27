@@ -418,6 +418,10 @@ const strPreviousTime = '時間の指定が正しくありません。 確認し
 const strUnLimit = "無制限";
 const strDownloadsCount = "회";
 
+/* 2020-08-27 박예연 - 공유편지함 */
+var strLangPYY01 = "Sharing";
+var strLangPYY02 = "Shared Mailbox";	
+	
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

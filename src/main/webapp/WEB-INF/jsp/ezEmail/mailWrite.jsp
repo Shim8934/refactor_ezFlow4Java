@@ -271,6 +271,7 @@
         + "<td style='max-width:45%; border:none; align:left'><spring:message code='ezEmail.t713' /></td>"
         + "</tr></thead></table></li></a>";
 
+        var sharer = '<c:out value="${sharer}"/>';
 
 	    window.onload = function () {
 	        // alias, 공용배포그룹 주소로 재전송 시 실제 sender 값 설정
@@ -1178,6 +1179,10 @@
 			                if (typeof(shareId) != "undefined" && shareId != "") {
 			                	aitem += "&shareId=" + encodeURIComponent(shareId);
 					    	}
+			                if (typeof(sharer) != "undefined" && sharer != "") {
+                    			aitem += "&sharer=" + encodeURIComponent(sharer);
+                    		}
+                    		
 		                }
 		                
 		                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");

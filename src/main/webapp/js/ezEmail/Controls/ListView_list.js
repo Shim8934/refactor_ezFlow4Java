@@ -1,4 +1,4 @@
-﻿var PressCtrlKey = false;
+﻿﻿var PressCtrlKey = false;
 var PressShiftKey = false;
 var m_strColorSelect = "#f1f8ff";
 var m_strColorDefault = "#FFFFFF";
@@ -499,6 +499,10 @@ function ListView() {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + i);
             objTr.style.cursor = "pointer";
+            
+            if(GetElementsByTagName(oRows[i],"TITLE").length != 0){
+            	objTr.setAttribute("title",GetElementsByTagName(oRows[i],"TITLE")[0].textContent);
+            }
             
             if (_rowEventSetFlag) {
             	objTr.onmouseover = new Function("tr_mouseover(this)");

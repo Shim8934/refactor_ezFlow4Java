@@ -418,6 +418,9 @@ const strPreviousTime = 'Reserve date should not be older than now.';
 const strUnLimit = "unlimited";
 const strDownloadsCount = "downloads";
 
+var strLangPYY01 = "Sharing";
+var strLangPYY02 = "Shared Mailbox";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

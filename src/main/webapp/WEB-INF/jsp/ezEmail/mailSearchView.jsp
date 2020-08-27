@@ -465,7 +465,8 @@
 					}
 			    }
 
-				forward_mail_call(selchecks, shareId); // 마지막 라인이라 return 필요없어서 생략.
+                //sharer - 검색에서 공유편지는 안나오니까 ""로 우선 넘김
+				forward_mail_call(selchecks, shareId, ""); // 마지막 라인이라 return 필요없어서 생략.
 			}
 		    var mail_movecopy_cross_dialogArguments = new Array();
 		    var selcheck;

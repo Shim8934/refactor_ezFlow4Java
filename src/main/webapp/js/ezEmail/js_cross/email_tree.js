@@ -1,4 +1,4 @@
-﻿function get_childXML_2010(url, broot, bcount, isFolderManager) {
+function get_childXML_2010(url, broot, bcount, isFolderManager) {
     get_childXML_2010(url, broot, bcount, isFolderManager, false);
 }
 
@@ -21,7 +21,18 @@ function get_childXML_2010(url, broot, bcount, isFolderManager, showAllMail) {
         objRoot.appendChild(objNode);
 
         var xmlHTTP = new XMLHttpRequest();
-        var requestUrl = "/ezEmail/getFolderList.do";
+        var requestUrl = "";
+        var href = url;
+        
+        if (href.indexOf("shared_mailFolder")== 0){
+        	requestUrl = "/ezEmail/getFolderListForShareMailBox.do";
+        } else {
+        	if(typeof(folderRefreshForSharer) != "undefined" && folderRefreshForSharer == "Y"){
+        		requestUrl = "/ezEmail/getFolderListForShareMailBox.do";
+        	} else {
+        		requestUrl = "/ezEmail/getFolderList.do";
+        	}
+        }
         
         if (isFolderManager) {
         	requestUrl += "?fm=1";
@@ -38,6 +49,12 @@ function get_childXML_2010(url, broot, bcount, isFolderManager, showAllMail) {
     	if (typeof(shareId) != "undefined" && shareId != "") {
     		requestUrl += "&shareId=" + encodeURIComponent(shareId);
     	}
+       
+        if (href.indexOf("shared_mailFolder")== 0 && href != "shared_mailFolder") {
+        	requestUrl += "&sharer=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "sharer"));
+        	requestUrl += "&userName=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "userName"));
+        	requestUrl += "&deptName=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "deptName"));
+        }
         
         xmlHTTP.open("POST", requestUrl, false);
 	    xmlHTTP.send(xmlDOM);
@@ -65,7 +82,14 @@ function get_childXML_2010(url, broot, bcount, isFolderManager, showAllMail) {
         objNode.text = bcount;
         objRoot.appendChild(objNode);
         
-        var requestUrl = "/ezEmail/getFolderList.do";
+        var requestUrl = "";
+        var href = url;
+        
+        if (href.indexOf("shared_mailFolder")== 0){
+        	requestUrl = "/ezEmail/getFolderListForShareMailBox.do";
+        } else {
+        	requestUrl = "/ezEmail/getFolderList.do";
+        }
         
         if (isFolderManager) {
         	requestUrl += "?fm=1";
@@ -82,7 +106,13 @@ function get_childXML_2010(url, broot, bcount, isFolderManager, showAllMail) {
     	if (typeof(shareId) != "undefined" && shareId != "") {
     		requestUrl += "&shareId=" + encodeURIComponent(shareId);
     	}
-        
+    	
+        if (href.indexOf("shared_mailFolder")== 0 && href != "shared_mailFolder") {
+        	requestUrl += "&sharer=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "sharer"));
+        	requestUrl += "&userName=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "userName"));
+        	requestUrl += "&deptName=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "deptName"));
+        }
+    	
         xmlHTTP.open("POST", requestUrl, false);
 	    xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	    xmlHTTP.send(xmlDOM.xml);

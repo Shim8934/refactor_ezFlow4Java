@@ -261,6 +261,9 @@ function AppendFileAttachInfo(ret, reuseAttach) {
                         		if (typeof(shareId) != "undefined" && shareId != "") {
                         			reqUrl += "&shareId=" + encodeURIComponent(shareId);
 						    	}
+                        		if (typeof(sharer) != "undefined" && sharer != "") {
+                        			reqUrl += "&sharer=" + encodeURIComponent(sharer);
+                        		}
                         		
                         		$(this).attr('_href', reqUrl);
 	                    	
@@ -378,6 +381,9 @@ function AppendFileAttachInfo(ret, reuseAttach) {
                             		if (typeof(shareId) != "undefined" && shareId != "") {
                             			reqUrl += "&shareId=" + encodeURIComponent(shareId);
     						    	}
+                            		if (typeof(sharer) != "undefined" && sharer != "") {
+                            			reqUrl += "&sharer=" + encodeURIComponent(sharer);
+                            		}
                             		
                             		$(this).attr('_href', reqUrl);
                             		

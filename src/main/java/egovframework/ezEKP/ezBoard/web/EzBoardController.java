@@ -4748,6 +4748,7 @@ public class EzBoardController extends EzFileMngUtil{
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		String companyID = userInfo.getCompanyID();
 		int tenantID = userInfo.getTenantId();
+		String sharer = request.getParameter("sharer") == null ? "" : (String) request.getParameter("sharer");
 		
 		requestURL = requestURL.substring(1, requestURL.length() - 3);
 		
@@ -5104,6 +5105,7 @@ public class EzBoardController extends EzFileMngUtil{
 		}
 		model.addAttribute("version", version);
 		model.addAttribute("boardNoticePeriod", ezCommonService.getTenantConfig("boardNoticePeriod", userInfo.getTenantId()));
+		model.addAttribute("sharer", sharer);
 		
 		logger.debug("newBoardItem ended");
 		return requestURL;

@@ -16,6 +16,7 @@
 	    <script>
 	    	var returnFunction;
 	    	var shareId = "${shareId}";
+	    	var sharer = "${sharer}";
 	    	
 	        window.onload = function () {
 	        	returnFunction = parent.address_selectAddress_dialogArguments[1];
@@ -35,6 +36,10 @@
 	        	
 	        	if (typeof(shareId) != "undefined" && shareId != "") {
 	        		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+				}
+	        	
+	        	if (typeof(sharer) != "undefined" && sharer != "") {
+	        		requestUrl += "?sharer=" + encodeURIComponent(sharer);
 				}
 	        	
 	        	$.ajax({

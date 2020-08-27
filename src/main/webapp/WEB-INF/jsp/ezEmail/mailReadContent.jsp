@@ -20,6 +20,7 @@
 			    var objLink = document.all("BigSizeFileLink");
 			    var memoFlag = "<c:out value='${memoFlag}' />";
 			    var shareId = "${shareId}";
+			    var sharer = "${sharer}";
 			    var deletePermission = "${deletePermission}";
 			    var sendPermission = "${sendPermission}";
 				var ReadCountCheck ="${pReadFlag}";		
@@ -203,6 +204,10 @@
 			    		url += "?shareId=" + encodeURIComponent(shareId);
 			    	}
 			    	
+			    	if (typeof(sharer) != "undefined" && sharer != "") {
+			    		url += "?sharer=" + encodeURIComponent(sharer);
+			    	}
+			    	
 			    	var fileLen = document.getElementsByName("MailAttachDownloadItems").length;
 			    	var params = "";
 			    	var folderPath = "";
@@ -296,6 +301,9 @@
 			        
 					if (typeof(shareId) != "undefined" && shareId != "") {
 						requestUrl += "?shareId=" + encodeURIComponent(shareId);
+					}
+					if (typeof(sharer) != "undefined" && sharer != "") {
+						requestUrl += "?sharer=" + encodeURIComponent(sharer);
 					}
 			        
 			        var xmlHTTP = new XMLHttpRequest();

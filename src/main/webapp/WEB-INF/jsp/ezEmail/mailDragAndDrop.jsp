@@ -398,10 +398,11 @@
 				if (!parent.writetype.isForwardAsAttach) return; // eml을 첨부하는 경우
 				toggleDimOnAttach(true);
 
+                const sharer = window.parent.sharer;
 				// 서버에 요청할 url
 				const sepLetter = (0 < parent.gg_url.indexOf("<sep>"))? "<sep>" : "&lt;sep&gt;";
 				const requestUrls = parent.gg_url.split(sepLetter)
-							.map(url => "/ezEmail/mailExport.do?url=" + url); // 이미 encodeURIComponent 되어 있음.
+							.map(url => "/ezEmail/mailExport.do?url=" + url + (sharer!="" ? "&sharer="+sharer : "")); // 이미 encodeURIComponent 되어 있음.
 
 				// DataTransfer를 사용하여 <input type="file">에 파일 설정
 				const dataTransfer = await getDataTransfer(requestUrls);

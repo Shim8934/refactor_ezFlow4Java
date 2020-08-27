@@ -1,5 +1,6 @@
-﻿var PreviewH_Move = false;
+var PreviewH_Move = false;
 var minimumWidth = 1200;
+
 function PreviewH_onMouserDown(e) {
     curevent = (typeof event == 'undefined' ? e : event)
 
@@ -321,6 +322,10 @@ function reply_mail_onclick() {
     	if (typeof(shareId) != "undefined" && shareId != "") {
     		pURI += "&shareId=" + encodeURIComponent(shareId);
     	}
+    	
+    	if (typeof(sharer) != "undefined" && sharer != "") {
+    		pURI += "&sharer=" + encodeURIComponent(sharer);
+    	}
         
         var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
         newwin.focus();
@@ -370,6 +375,10 @@ function all_reply_mail_onclick() {
         if (typeof(shareId) != "undefined" && shareId != "") {
         	pURI += "&shareId=" + encodeURIComponent(shareId);
     	}
+    	
+        if (typeof(sharer) != "undefined" && sharer != "") {
+        	pURI += "&sharer=" + encodeURIComponent(sharer);
+        }
         
         var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
         newwin.focus();
@@ -436,8 +445,13 @@ function rewrite_onClick() {
         if (typeof(shareId) != "undefined" && shareId != "") {
         	pURI += "&shareId=" + encodeURIComponent(shareId);
     	}
-        
+
+        if (typeof(sharer) != "undefined" && sharer != "") {
+            pURI += "&sharer=" + encodeURIComponent(sharer);
+        }
+
         var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
+
         newwin.focus();
     }
 
@@ -455,7 +469,7 @@ function transmission_mail_onclick() {
         pSelectItems = [currentFixingId.getAttribute('_href')]; // ["INBOX/4"]
     }
 
-    forward_mail_call(pSelectItems, shareId); // 마지막 라인이라 return 필요없어서 생략.
+    forward_mail_call(pSelectItems, shareId, sharer); // 마지막 라인이라 return 필요없어서 생략.
 }
 
 function Read_StatusChange(pGubun) {
@@ -490,6 +504,10 @@ function Read_StatusChange(pGubun) {
     
 	if (typeof(shareId) != "undefined" && shareId != "") {
 		url += "?shareId=" + encodeURIComponent(shareId);
+	}
+	
+	if (typeof(sharer) != "undefined" && sharer != "") {
+		url += "?sharer=" + encodeURIComponent(sharer);
 	}
     
     xmlHTTP.open("POST", url, false);
@@ -1143,6 +1161,11 @@ function reject_onclick_Complete(retVal)
     if (typeof(shareId) != "undefined" && shareId != "") {
     	 createNodeAndAppandNodeText(xmlpara, objRow, objRow2, "SHAREID", shareId);
     }
+    
+    if (typeof(sharer) != "undefined" && sharer != "") {
+    	createNodeAndAppandNodeText(xmlpara, objRow, objRow2, "SHARER", shareId);
+    }
+    
     for (var i = 0; i < retVal.length; i++) {
         objRow = createNodeAndAppandNode(xmlpara, objNode, objRow, "ROW");
         createNodeAndAppandNodeText(xmlpara, objRow, objRow2, "DENIAL", retVal[i]);
@@ -1208,7 +1231,11 @@ function prevShow() {
             if (typeof(shareId) != "undefined" && shareId != "") {
             	previewUrl += "&shareId=" + encodeURIComponent(shareId);
             }
-            
+
+            if (typeof(sharer) != "undefined" && sharer != "") {
+            	previewUrl += "&sharer=" + encodeURIComponent(sharer);
+            }
+
             xmlhttp_mailPreview.open("POST", previewUrl, true);
             xmlhttp_mailPreview.onreadystatechange = event_xmlhttp_mailPreview_Complete;
             xmlhttp_mailPreview.send(strQuery);
@@ -2040,6 +2067,10 @@ function callMsgDlg(szContentClass, Href) {
         if (typeof(shareId) != "undefined" && shareId != "") {
         	pURI += "&shareId=" + encodeURIComponent(shareId);
         }
+
+        if (typeof(sharer) != "undefined" && sharer != "") {
+        	pURI += "&sharer=" + encodeURIComponent(sharer);
+        }
         
         ReadMailOpenNewWin = window.open(pURI, "", feature);
         
@@ -2186,6 +2217,10 @@ function mailExport_start(pwd){
 		if (typeof(shareId) != "undefined" && shareId != "") {
 			fullpath += "&shareId=" + encodeURIComponent(shareId);
     	}
+
+		if (typeof(sharer) != "undefined" && sharer != "") {
+			fullpath += "&sharer=" + encodeURIComponent(sharer);
+		}
 		
 		AttachDownFrame.location.href = fullpath;
 		AttachDownFrame.target = "_blank";
@@ -2210,6 +2245,10 @@ function mailExport_start(pwd){
 			requestUrl += "?shareId=" + encodeURIComponent(shareId);
     	}
 		
+		if (typeof(sharer) != "undefined" && sharer != "") {
+			requestUrl += "?sharer=" + encodeURIComponent(sharer);
+		}
+		
 		$.ajax({
 			type : "POST",
 			dataType : "text",
@@ -2227,6 +2266,10 @@ function mailExport_start(pwd){
 					if (typeof(shareId) != "undefined" && shareId != "") {
 						fullpath += "&shareId=" + encodeURIComponent(shareId);
 			    	}
+					
+					if (typeof(sharer) != "undefined" && sharer != "") {
+						fullpath += "&sharer=" + encodeURIComponent(sharer);
+					}
 					
 					AttachDownFrame.location.href = fullpath;
 					AttachDownFrame.target = "_blank";
@@ -2514,6 +2557,10 @@ function toggle_flag(obj) {
 	if (typeof(shareId) != "undefined" && shareId != "") {
 		url += "?shareId=" + encodeURIComponent(shareId);
 	}
+	
+	if (typeof(sharer) != "undefined" && sharer != "") {
+		url += "?sharer=" + encodeURIComponent(sharer);
+	}
     
     try {
         flagXmlHttp.open("POST", url, true);
@@ -2756,6 +2803,10 @@ function mailConfirm_flag_btn() {
     
 	if (typeof(shareId) != "undefined" && shareId != "") {
 		url += "?shareId=" + encodeURIComponent(shareId);
+	}
+	
+	if (typeof(sharer) != "undefined" && sharer != "") {
+		url += "?sharer=" + encodeURIComponent(sharer);
 	}
     
     try {

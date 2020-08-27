@@ -916,6 +916,12 @@ public class EzCommunityController extends EzFileMngUtil{
 		if (useSharedMailbox.equals("YES")) {
 			model.addAttribute("mailShareId", request.getParameter("mailShareId"));
 		}
+
+		String useSharedMailFolder = ezCommonService.getTenantConfig("useSharedMailFolder", userInfo.getTenantId());
+
+		if ("YES".equalsIgnoreCase(useSharedMailFolder)) {
+			model.addAttribute("mailSharer", request.getParameter("mailSharer"));
+		}
 		
 		ezCommunityService.newBoardItem(item, boardInfo, userInfo, pItemID, pBoardID, pUrl, pMode, expireDays, model);
 		

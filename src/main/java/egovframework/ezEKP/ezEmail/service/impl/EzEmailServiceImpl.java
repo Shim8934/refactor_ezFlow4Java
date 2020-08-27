@@ -5052,6 +5052,57 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 		return resultObj;
 	}
 
+	public JSONObject getShareMailBoxMember(String compId, int tenantId, String sharer, String mailboxId, Locale locale) throws Exception {
+		logger.debug("getShareMailBoxMember started.");
+		JSONObject resultObj = new JSONObject();
+		
+		logger.debug("compId=" + compId + ",sharer=" + sharer);
+		String inputParams = "sharer=" + URLEncoder.encode(sharer, "UTF-8")
+				+ "&mailboxId=" + URLEncoder.encode(mailboxId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String result = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") 
+				+ "/jMochaEzEmail/getShareMailBoxMember", inputParams);
+		
+		JSONParser parser = new JSONParser();
+		resultObj = (JSONObject) parser.parse(result);
+
+		if(!resultObj.get("resultCode").equals("OK")){
+			throw new Exception("JGwServer ERROR");
+		}
+		
+		logger.debug("getShareMailBoxMember ended.");
+		return resultObj;
+	}
+
+	@Override
+	public JSONObject setShareMailBoxMember(String compId, int tenantId, String sharer, String mailboxId, JSONArray userList, Locale locale)
+			throws Exception {
+		JSONObject resultObj = new JSONObject();
+		logger.debug("getShareMailBoxMember start.");
+		
+		logger.debug("compId=" + compId + ",sharer=" + sharer);
+		String inputParams = "sharer=" + URLEncoder.encode(sharer, "UTF-8")
+				+ "&mailboxId=" + URLEncoder.encode(mailboxId, "UTF-8");
+		for(int i = 0; i <userList.size(); i++){
+			inputParams += "&userList=" + URLEncoder.encode(userList.get(i).toString(), "UTF-8");
+		}
+		
+		logger.debug("inputParams=" + inputParams);
+		String result = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") 
+				+ "/jMochaEzEmail/setShareMailBoxMember", inputParams);
+		
+		JSONParser parser = new JSONParser();
+		resultObj = (JSONObject) parser.parse(result);
+		
+		if(!resultObj.get("resultCode").equals("OK")){
+			throw new Exception("JGwServer ERROR");
+		}
+		
+		logger.debug("getShareMailBoxMember ended.");
+		return resultObj;
+	}
+
 	@Override
 	public int saveUserMailTemplate(String userEmail, String displayName, String content, String realPath, String editorType, int tenantId) throws Exception {
 		logger.debug("saveUserMailTemplate started.");
@@ -8152,6 +8203,120 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 		logger.debug("checkBigAttachDownloadCount ended.");
 
 		return ezEmailDAO.getBigAttachListCount(map);
+	}
+
+
+	public JSONObject getMailboxIdByFolderPath(String folderPath, String userAddress) throws Exception {
+		logger.debug("getMailboxIdByFolderPath ended.");
+		JSONObject resultObj = new JSONObject();
+		
+		logger.debug("folderPath=" + folderPath + ",userAddress=" + userAddress);
+		String inputParams = "folderPath=" + URLEncoder.encode(folderPath, "UTF-8")
+				+ "&userAddress=" + URLEncoder.encode(userAddress, "UTF-8");
+		
+		logger.debug("inputParams=" + inputParams);
+		String result = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") 
+				+ "/jMochaEzEmail/selectMailboxIdByFolderPath", inputParams);
+		
+		JSONParser parser = new JSONParser();
+		resultObj = (JSONObject) parser.parse(result);
+
+		if(!resultObj.get("resultCode").equals("OK")){
+			throw new Exception("JGwServer ERROR");
+		}
+		
+		logger.debug("getMailboxIdByFolderPath ended.");
+		return resultObj;
+	}
+
+	@Override
+	public List<JSONObject> getSharedMailBoxFolder(String id, String domainName) throws Exception {
+		logger.debug("existsCheckSharedMailBoxFolder ended.");
+		
+		JSONObject resultObj = new JSONObject();
+		List<JSONObject> resultList = new ArrayList<JSONObject>();
+		
+		logger.debug("id=" + id + ",domainName=" + domainName);
+		String inputParams = "shareMember=" + URLEncoder.encode(id, "UTF-8")
+				+ "&domainName=" + URLEncoder.encode(domainName, "UTF-8");
+		
+		String result = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") 
+				+ "/jMochaEzEmail/existsCheckSharedMailBoxFolder", inputParams);
+		
+		JSONParser parser = new JSONParser();
+		resultObj = (JSONObject) parser.parse(result);
+
+		if(!resultObj.get("resultCode").equals("OK")){
+			throw new Exception("JGwServer ERROR");
+		}
+		
+		resultList = (List<JSONObject>) resultObj.get("result");
+		logger.debug("result=" + resultObj.get("result"));
+		logger.debug("resultList=" + resultList);
+		logger.debug("existsCheckSharedMailBoxFolder ended.");
+		return resultList;
+	}
+	
+	@Override
+	public List<JSONObject> selectSharedFolderInfo(String userId) throws Exception {
+		logger.debug("selectSharedFolderInfo ended.");
+		
+		JSONObject resultObj = new JSONObject();
+		List<JSONObject> resultList = new ArrayList<JSONObject>();
+		logger.debug("userId" + userId );
+		
+		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String result = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") 
+				+ "/jMochaEzEmail/selectSharedFolderInfo", inputParams);
+		
+		JSONParser parser = new JSONParser();
+		resultObj = (JSONObject) parser.parse(result);
+		
+		if(!resultObj.get("resultCode").equals("OK")){
+			throw new Exception("JGwServer ERROR");
+		}
+		
+		resultList = (List<JSONObject>) resultObj.get("result");
+		logger.debug("result=" + resultObj.get("result"));
+		logger.debug("resultList=" + resultList);
+		logger.debug("selectSharedFolderInfo ended.");
+		return resultList;
+	}
+
+	@Override
+	public Boolean checkSharedMailbox(String userEmail, String folderName, String userId) throws Exception {
+		logger.debug("checkUserShareId started.");
+		logger.debug("userEmail=" + userEmail + ",folderName=" + folderName + ",userId=" + userId);
+		
+		boolean result = false;
+		
+		String userEmailParam = "sharerAddress=" + URLEncoder.encode(userEmail, "UTF-8");
+		String folderNameParam = "mailboxName=" + URLEncoder.encode(folderName, "UTF-8");
+		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		String inputParams = userEmailParam + "&" + folderNameParam + "&" + userIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/checkSharedMailbox";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (((String)object.get("resultCode")).equals("OK") && (Long)object.get("reasonCode") == 0) {
+        	
+        	
+        	if ( Integer.parseInt(object.get("result").toString()) > 0){
+        		result = true;
+        	} else {
+        		result = false;
+        	}
+        }
+		
+		logger.debug("checkUserShareId ended.");
+		return result;
 	}
 
 }

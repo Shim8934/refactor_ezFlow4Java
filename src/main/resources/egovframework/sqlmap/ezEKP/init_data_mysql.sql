@@ -7080,6 +7080,9 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIP
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
         VALUES (@tenant_id_value, 'PersonalHideSusin', 'Y', '개인수신함 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '개인수신함 기능 사용여부', '2024-11-26 00:00:00', '전자결재');
 
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (@tenant_id_value, 'useSharedMailFolder', 'NO', '공유편지함 기능 사용 여부 (default:NO)', '공유편지함 기능 사용 여부', '2026-01-06 00:00:00', '메일');
+
 -- tenant_id 없는 쿼리 하단으로 추가
 -- ezPMS fixed holiday
 INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('신정', 'New Year''s Day', '01-01', 1, 'kor');

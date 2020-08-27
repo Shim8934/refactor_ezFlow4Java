@@ -16585,3 +16585,10 @@ CREATE TABLE `TBL_APPROVE_ERROR_INFO` (
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`),
   KEY `tbl_approve_file_error_IDX` (`DOCID`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='백단에서 결재 시 본문 물리파일을 핸들링하다가 오류가 발생한 doc을 넣는 테이블';
+
+DROP TABLE IF EXISTS `jmocha_shared_mailfolder`;
+CREATE TABLE `jmocha_shared_mailfolder` (
+  `mailbox_id` varchar(100) DEFAULT NULL,
+  `sharer` varchar(100) DEFAULT NULL,
+  `share_member` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

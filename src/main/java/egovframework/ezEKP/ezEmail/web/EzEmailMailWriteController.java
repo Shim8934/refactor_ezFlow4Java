@@ -294,13 +294,37 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		// make mail top level folders: 사용자계정 생성 직후, mail top level folders가 없을 수도 있다. 에러방지.
 		ezEmailUtil.useIMAPAccessWithCallback(IMAPAccess::makeTopLevelFolders, userAccount, password, locale);
 
+		String sharer = request.getParameter("sharer") == null ? "" : request.getParameter("sharer");
+		String folderPath = writevo.getFolderPath();
+		String folderName = folderPath;
+		String orgAccount = "";
+
+		if(!sharer.equals("")){
+			try {
+				orgAccount = userAccount;
+				userAccount = sharer + "@" + domainName;
+				folderName = folderPath.substring(18);
+				Boolean checkSharer = ezEmailService.checkSharedMailbox(userAccount, folderName, loginInfo.getId());
+				//extraMap.put("sharer", sharer);
+				writevo.putIntoExtraMapSharer(sharer);
+				if (!checkSharer){
+					return "";
+				}
+				writevo.setFolderPath(folderName);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+			logger.debug("sharer=" + sharer + ",folderName=" + folderName + ",userAccount=" + userAccount);
+		}
+
 		// 3. set options: 추가적으로 테넌트나 회사의 옵션으로 강제 변경하는 정보가 있는 경우 반영
 		ezEmailWriteService.setOverwriteMailOptions(writevo, userInfo.getMail(), loginInfo.getTenantId(), userInfo.getPhysicalDeliveryOfficeName());
 
 		// 4. load from origin message : 임시저장메일, 회신, 전달, 재사용 등 기존 메일의 정보를 세팅함
 		if (writevo.hasOrigin()) {
 			writevo.setReciverName(request.getParameter("reciverName")); // for RESEND_IN_SENT
-			ezEmailWriteService.loadFromOrigin(writevo, loginInfo, userAccount, password, locale);
+			ezEmailWriteService.loadFromOrigin(writevo, loginInfo, userAccount, password, locale, orgAccount);
 		}
 
 	// PROCESS END
@@ -330,6 +354,8 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		model.addAttribute("sign", writevo.getMailSignatureVO());
 		model.addAttribute("color", writevo.getMailColorVO());
 		model.addAttribute("sharedBox", writevo.getSharedMailboxInfoVO());
+
+		model.addAttribute("sharer", sharer);
 
 		response.setHeader("X-XSS-Protection", "0");
 		
@@ -2356,7 +2382,8 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		String mailId = userId;
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", userInfo.getTenantId());
-		
+		String sharer = request.getParameter("sharer") == null ? "" : request.getParameter("sharer");
+
 		if (mailMaxReceiverCount.equals("")) {
 			mailMaxReceiverCount = "200";
 		}
@@ -3824,42 +3851,42 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			            }
 			            
 			            logger.debug("mailCmd=" + mailCmd + ",orgUrl=" + orgUrl); // orgUrl: "INBOX/4", "INBOX/4<sep>SENT/4<sep>INBOX/5"
-			            
-			            // set the ANSWERED flag of the original message to indicate it has been replied.
-			            if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL") || orgMailCmd.equals("FORWARD")) {
-							String sepLetter = (0 < orgUrl.indexOf("<sep>"))? "<sep>" : "&lt;sep&gt;";
-							String[] orgUrls = orgUrl.split(sepLetter);
+						if (sharer.equals("")) {
+							// set the ANSWERED flag of the original message to indicate it has been replied.
+							if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL") || orgMailCmd.equals("FORWARD")) {
+								String sepLetter = (0 < orgUrl.indexOf("<sep>")) ? "<sep>" : "&lt;sep&gt;";
+								String[] orgUrls = orgUrl.split(sepLetter);
 
-							for (String originUrl : orgUrls) {
-								int index = originUrl.lastIndexOf("/");
+								for (String originUrl : orgUrls) {
+									int index = originUrl.lastIndexOf("/");
 
-								if (index != -1) {
-									String orgMsgFolderPath = originUrl.substring(0, index);
-									long orgMsgUid = Long.parseLong(originUrl.substring(index + 1));
+									if (index != -1) {
+										String orgMsgFolderPath = originUrl.substring(0, index);
+										long orgMsgUid = Long.parseLong(originUrl.substring(index + 1));
 
-									logger.debug("orgMsgFolderPath=" + orgMsgFolderPath + ",orgMsgUid=" + orgMsgUid);
+										logger.debug("orgMsgFolderPath=" + orgMsgFolderPath + ",orgMsgUid=" + orgMsgUid);
 
-									Folder orgMsgFolder = ia.getFolder(orgMsgFolderPath);
-									orgMsgFolder.open(Folder.READ_WRITE);
+										Folder orgMsgFolder = ia.getFolder(orgMsgFolderPath);
+										orgMsgFolder.open(Folder.READ_WRITE);
 
-									Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
+										Message orgMessage = ((IMAPFolder) orgMsgFolder).getMessageByUID(orgMsgUid);
 
-									if (orgMessage != null) {
-										if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
-											orgMessage.setFlag(Flags.Flag.ANSWERED, true);
-											ezEmailUtil.setForwardedFlag(orgMessage, false);
+										if (orgMessage != null) {
+											if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
+												orgMessage.setFlag(Flags.Flag.ANSWERED, true);
+												ezEmailUtil.setForwardedFlag(orgMessage, false);
+											} else {
+												ezEmailUtil.setForwardedFlag(orgMessage, true);
+												orgMessage.setFlag(Flags.Flag.ANSWERED, false);
+											}
+											ezEmailUtil.setSentDateFlag(orgMessage, true);
 										}
-										else {
-											ezEmailUtil.setForwardedFlag(orgMessage, true);
-											orgMessage.setFlag(Flags.Flag.ANSWERED, false);
-										}
-										ezEmailUtil.setSentDateFlag(orgMessage, true);
+
+										orgMsgFolder.close(true);
 									}
-
-									orgMsgFolder.close(true);
 								}
-			    			}
-			            }
+							}
+						}
 			            
 			            // 보안메일 관련 임시파일 삭제
 				        if (encryptedFile != null) {
@@ -6017,6 +6044,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+		String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함
 
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -6047,7 +6075,25 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			logger.debug("downloadAttach illegal arguments");
 			return;
 		}
-		
+
+		String folderName = folderPath;
+		if(!sharer.equals("")){
+			try {
+				if (folderPath.indexOf("shared_mailFolder") > -1){ //전달시 첨부파일 다운 안됨(writer의 작성창이면 이 부분이 아예 필요없지 않나 의문..)
+					userEmail = sharer + "@" + domainName;
+					folderName = folderPath.substring(18);
+					Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, loginInfo.getId());
+					if (!checkSharer){
+						return;
+					}
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}
+		}
+
 		IMAPAccess ia = null;
 		
 		try {
@@ -6055,10 +6101,10 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), 
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
-			Folder folder = ia.getFolder(folderPath);
+			Folder folder = ia.getFolder(folderName);
 			
 			if (folder == null || !folder.exists()) {
-				logger.debug("folder not found. folderPath=" + folderPath);
+				logger.debug("folder not found. folderPath=" + folderName);
 			} else {
 				folder.open(Folder.READ_ONLY);
 				

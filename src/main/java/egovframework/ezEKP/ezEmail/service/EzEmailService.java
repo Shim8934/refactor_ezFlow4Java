@@ -212,6 +212,14 @@ public interface EzEmailService {
 	public String checkInnerDomain(String forwardAddress, int tenantId) throws Exception;
 
 	public JSONObject getDistributionMemberList(String domain, String cn) throws Exception;
+
+	public JSONObject getShareMailBoxMember(String compId, int tenantId, String sharerMailAddress, String mailboxId, Locale locale) throws Exception;
+	public JSONObject setShareMailBoxMember(String compId, int tenantId, String sharer, String mailboxId, 
+			JSONArray userList, Locale locale) throws Exception;
+	public JSONObject getMailboxIdByFolderPath(String folderPath, String userAddress) throws Exception;
+	public List<JSONObject> getSharedMailBoxFolder(String id, String domainName) throws Exception;
+	public List<JSONObject> selectSharedFolderInfo(String userId) throws Exception;
+	public Boolean checkSharedMailbox(String userEmail, String strFolderName, String id) throws Exception;
 	
 	/* 승인메일 */
 	JSONArray getAdminCompApprMailList(int tenantId, String companyId, String type, String id, String lang, int pageStartNum, int listCount) throws Exception;

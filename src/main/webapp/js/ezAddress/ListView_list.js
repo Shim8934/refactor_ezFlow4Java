@@ -1,4 +1,4 @@
-﻿//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
+//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
 var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
@@ -623,6 +623,10 @@ function ListView() {
             objTr.setAttribute("id", _thisID + "_TR_" + susinTo);
             objTr.style.cursor = "pointer";
 
+            if(GetElementsByTagName(oRows[i],"TITLE").length != 0){
+            	objTr.setAttribute("title",GetElementsByTagName(oRows[i],"TITLE")[0].textContent);
+            }
+            
             objTr.onmouseover = new Function("tr_mouseover(this)");
             objTr.onmouseout = new Function("tr_mouseout(this)");
 

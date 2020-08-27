@@ -180,6 +180,9 @@ function reply_onClick() {
 	if (typeof(shareId) != "undefined" && shareId != "") {
 		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	}
+	if (typeof(sharer) != "undefined" && sharer != "") {
+		requestUrl += "&sharer=" + encodeURIComponent(sharer);
+	}
     
     window.location.href = requestUrl;
 }
@@ -196,7 +199,11 @@ function allreply_onClick() {
 	if (typeof(shareId) != "undefined" && shareId != "") {
 		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	}
-    
+	
+	if (typeof(sharer) != "undefined" && sharer != "") {
+		requestUrl += "&sharer=" + encodeURIComponent(sharer);
+	}
+	
     window.location.href = requestUrl;
 }
 
@@ -211,6 +218,10 @@ function pass_onClick() {
     
 	if (typeof(shareId) != "undefined" && shareId != "") {
 		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	}
+	
+	if (typeof(sharer) != "undefined" && sharer != "") {
+		requestUrl += "&sharer=" + encodeURIComponent(sharer);
 	}
     
     window.location.href = requestUrl;
@@ -566,6 +577,10 @@ function func_addaddr() {
 		url += "&shareId=" + encodeURIComponent(shareId);
 	}
 	
+	if (typeof(sharer) != "undefined" && sharer != "") {
+		url += "&sharer=" + encodeURIComponent(sharer);
+	}
+	
 	DivPopUpShow(600, 500, url);
 }
 
@@ -826,6 +841,9 @@ function view_original() {
 	if (typeof(shareId) != "undefined" && shareId != "") {
 		url += "&shareId=" + encodeURIComponent(shareId);
 	}
+	if (typeof(sharer) != "undefined" && sharer != "") {
+		url += "&sharer=" + encodeURIComponent(sharer);
+	}
 	
 	MM_openBrWindow(url, 850, 650);
 }
@@ -864,6 +882,10 @@ function toggle_flag() {
     
 	if (typeof(shareId) != "undefined" && shareId != "") {
 		url += "?shareId=" + encodeURIComponent(shareId);
+	}
+	
+	if (typeof(sharer) != "undefined" && sharer != "") {
+		url += "?sharer=" + encodeURIComponent(sharer);
 	}
     
     try {
@@ -1490,6 +1512,9 @@ function download_Single_mail() {
     var parameters = "url=" + encodeURIComponent(g_paramURL);
     var fullpath = "/ezEmail/mailExport.do?" + parameters;
 
+    if (typeof(sharer) != "undefined" && sharer != "") {
+        fullpath += "&sharer=" + encodeURIComponent(sharer);
+    }
     AttachDownFrame.location.href = fullpath;
     AttachDownFrame.target = "_blank";
 
@@ -1505,6 +1530,10 @@ function view_OriginalEML() {
 
     if (typeof(shareId) != "undefined" && shareId != "") {
         requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    }
+
+    if (typeof(sharer) != "undefined" && sharer != "") {
+        requestUrl += "&sharer=" + encodeURIComponent(sharer);
     }
 
     DivPopUpShow(620, 600, requestUrl);

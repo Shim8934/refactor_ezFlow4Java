@@ -134,6 +134,7 @@
 			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 			var defaultFontAndSize  = "${defaultFontAndSize}";
 			var mailShareId = "<c:out value = '${mailShareId}'/>";
+			var mailSharer = "<c:out value = '${mailSharer}'/>";
 			var mailFG_Post = "<c:out value = '${boardInfo.mailFG_Post}'/>"; // 게시알림
 			var mailFG_Mod = "<c:out value = '${boardInfo.mailFG_Mod}'/>"; // 수정알림
 			var editor = "<c:out value = '${editor}'/>";
@@ -790,7 +791,11 @@
 		        if (typeof(mailShareId) != "undefined" && mailShareId != "") {
             		requestUrl += "&shareId=" + encodeURIComponent(mailShareId);
 				}
-		        
+
+		        if (typeof(mailSharer) != "undefined" && mailSharer != "") {
+                    requestUrl += "&sharer=" + encodeURIComponent(mailSharer);
+                }
+
 		        MailxmlHTTP.open("POST", requestUrl, false);
 		        MailxmlHTTP.send(strQuery);
 		        

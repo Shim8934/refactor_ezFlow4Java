@@ -144,6 +144,8 @@
 			let drawTagConsumeCallback;
 			var usePreviewMail = ${usePreviewMail};
 		    var url = "<c:out value='${url}'/>";
+		    var sharer = "${sharer}";
+
 		    function defineHost(protocol){
 	    		var host = "";
 
@@ -373,7 +375,7 @@
 		        	replyMenu.style.display = 'none';
 		        }
 		        
-		        if (shareId != "" && deletePermission != "Y") {
+		        if ((shareId != "" && deletePermission != "Y") || sharer != "") {
 		        	importBtn.style.display = 'none';
 		        	moveBtn.style.display = 'none';
 		        	trashBtn.style.display = 'none';
@@ -381,6 +383,14 @@
 		        	deleteone.style.display = 'none';
 		        	deleteall.style.display = 'none';
 		        	moveMenu.style.display = 'none';
+		        	if(sharer != ""){
+		        		liReSend.style.display = 'none';
+		        		trashBtn.style.display = 'none';
+		        		deleteone.style.display = 'none';
+		        		moveBtn.style.display = 'none';
+		        		receivecheck.style.display = 'none';
+		        		document.getElementById("searchAllBoxByName").style.display = 'none';
+		        	}
 		        	theBody.onkeyup = function(){};
 		        	theBody.onkeydown = function(){};
 		        }
@@ -703,6 +713,10 @@
 		        	requestUrl += "&shareId=" + encodeURIComponent(shareId);
 		        }
 		        
+		        if (sharer != "") {
+		        	requestUrl += "&sharer=" + encodeURIComponent(sharer);
+		        }
+		        
 		        window.open(requestUrl, "", feature);
 		    }
 
@@ -1021,6 +1035,7 @@
 
 		    // 메일박스 내보내기 config 확인
 			function mailbox_export() {
+				var folderTotalCount = pFolderTotalCount;
 
                 if (typeof folderTotalCount === "undefined" || folderTotalCount === "") {
                 	setTimeout (function() {
@@ -1073,6 +1088,10 @@
 	            if (typeof(shareId) != "undefined" && shareId != "") {
 	            	requestUrl += "?shareId=" + encodeURIComponent(shareId);
 		    	}
+
+		    	if (typeof(sharer) != "undefined" && sharer != "") {
+                    requestUrl += "?sharer=" + encodeURIComponent(sharer);
+                }
 	            
 	            ShowMailProgressNew();
 	            ShowPercent(0);
@@ -1257,6 +1276,10 @@
 			            if (typeof(shareId) != "undefined" && shareId != "") {
 			            	requestUrl += "?shareId=" + encodeURIComponent(shareId);
 				    	}
+				    	
+			            if (typeof(sharer) != "undefined" && sharer != "") {
+			            	requestUrl += "?sharer=" + encodeURIComponent(sharer);
+				    	}
 			            
 			            mailboxProgressFun(true, socketUserkey); // progress percent
 			            
@@ -1284,6 +1307,10 @@
 									
 									if (typeof(shareId) != "undefined" && shareId != "") {
 										fullpath += "&shareId=" + encodeURIComponent(shareId);
+							    	}
+							    	
+									if (typeof(sharer) != "undefined" && sharer != "") {
+										fullpath += "&sharer=" + encodeURIComponent(sharer);
 							    	}
 									
 									AttachDownFrame.location.href = fullpath;
@@ -2658,12 +2685,18 @@
 			<c:if test="${shareId != null and shareId != ''}">
 				<input  type="hidden" name="shareId" value="${shareId}">
 			</c:if>
+			<c:if test="${sharer != null and sharer != ''}">
+				<input  type="hidden" name="sharer" value="${sharer}">
+			</c:if>
 		</form>
 		<form name="PrevViewFormW" action="/ezEmail/mailPreviewContent.do" method="post" target="ifrmPreViewW">
 			<input  type="hidden"  name="iptURL" value="">
 			<input  type="hidden" name="iSecurity" value="">
 			<c:if test="${shareId != null and shareId != ''}">
 				<input  type="hidden" name="shareId" value="${shareId}">
+			</c:if>
+			<c:if test="${sharer != null and sharer != ''}">
+				<input  type="hidden" name="sharer" value="${sharer}">
 			</c:if>
 		</form>
 	    <input type="file" name="file" id="file" accept=".eml" onchange="onDrop()" style="display: none;" multiple />

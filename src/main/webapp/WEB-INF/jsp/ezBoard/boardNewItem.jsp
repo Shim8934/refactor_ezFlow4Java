@@ -135,6 +135,8 @@
 		    var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
 		    var keywordArr = []; // 키워드 배열
 
+		    var sharer = "${sharer}";
+
 		    
 		    /* 2023-05-16 김우철 - hwp결재문서를 배포용 문서로 저장하기 위한 변수 */
 		    var HwpCtrl;
@@ -1598,6 +1600,10 @@
 		        
 		        if (typeof(mailShareId) != "undefined" && mailShareId != "") {
             		requestUrl += "&shareId=" + encodeURIComponent(mailShareId);
+				}
+				
+		        if (typeof(sharer) != "undefined" && sharer != "") {
+            		requestUrl += "&sharer=" + encodeURIComponent(sharer);
 				}
 		        
 		        MailxmlHTTP.open("POST", requestUrl, false);

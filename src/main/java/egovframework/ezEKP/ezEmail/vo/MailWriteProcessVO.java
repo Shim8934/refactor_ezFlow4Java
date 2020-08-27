@@ -298,8 +298,11 @@ public class MailWriteProcessVO {
 	public String getReciverName() {
 		return reciverName;
 	}
-	public void putIntoExtraMap(String shareId) {
+	public void putIntoExtraMapshareId(String shareId) {
 		extraMap.put("shareId", shareId);
+	}
+	public void putIntoExtraMapSharer(String sharer) {
+		extraMap.put("sharer", sharer);
 	}
 	public HashMap<String, Object> getExtraMap() {
 		return extraMap;

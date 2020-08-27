@@ -1,4 +1,4 @@
-﻿var XmlHeader;
+var XmlHeader;
 var XmlHeader_SUB;
 var BlockSize = 10;
 var p_ListOrderObject = null;
@@ -819,6 +819,10 @@ function viewReceivers(obj) {
     	if (typeof(shareId) != "undefined" && shareId != "") {
     		requestUrl += "?shareId=" + encodeURIComponent(shareId);
     	}
+    	
+    	if (typeof(sharer) != "undefined" && sharer != "") {
+    		requestUrl += "?sharer=" + encodeURIComponent(sharer);
+    	}
         
         xmlhttp_MailReceiverList = createXMLHttpRequest();
         xmlhttp_MailReceiverList.open("POST", requestUrl, true);
@@ -1088,6 +1092,10 @@ function GetListInfo(HeaderObject, ContentObject) {
         _url += "?shareId=" + encodeURIComponent(shareId);
     }
 
+    if (sharer != null && sharer != ""){
+    	_url += "?sharer=" + encodeURIComponent(sharer);
+    }   
+
     if (useReceivingChk) {
         _url = "/ezEmail/getReceiverMailList.do";
     }
@@ -1183,6 +1191,10 @@ function GetListInfo_SUB(HeaderObject, ContentObject) {
     
     if (typeof(shareId) != "undefined" && shareId != "") {
     	url += "?shareId=" + encodeURIComponent(shareId);
+    }
+    
+    if (sharer != null && sharer != ""){
+    	url += "?sharer=" + encodeURIComponent(sharer);
     }
     
     GetList_HTTP_SUB = createXMLHttpRequest();
@@ -1663,7 +1675,11 @@ function event_listContextMenu(event) {
     var targetTag = target.tagName;
 
     if (targetTag == 'SPAN'){ 
-		$("#ContextMenuDiv tbody #searchName, #searchInThisBoxByName, #searchAllBoxByName").css("display","");
+    	if (sharer == ""){
+    		$("#ContextMenuDiv tbody #searchName, #searchInThisBoxByName, #searchAllBoxByName").css("display","");
+    	} else {
+    		$("#ContextMenuDiv tbody #searchName, #searchInThisBoxByName").css("display","");
+    	}
 	} else {
 		$("#ContextMenuDiv tbody #searchName, #searchInThisBoxByName, #searchAllBoxByName").css("display","none");
 	}

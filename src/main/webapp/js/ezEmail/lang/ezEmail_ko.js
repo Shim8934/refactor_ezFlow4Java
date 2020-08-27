@@ -342,6 +342,10 @@ var strLangKSA03 = "그룹웨어 개인일정에 등록하시겠습니까?";
 var strLangKSA04 = "일정을 저장하였습니다.";
 var strLangKSA05 = "일정을 저장하는 도중 오류 발생.";
 
+/* 2020-08-27 박예연 - 공유편지함 */
+var strLangPYY01 = "공유중";
+var strLangPYY02 = "공유 편지함";
+
 var strLangTagAlreadyUse = "이미 사용 중인 다른 태그의 이름입니다.";
 
 /* 2023-05-16 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */

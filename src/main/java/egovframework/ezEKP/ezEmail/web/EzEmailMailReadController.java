@@ -238,6 +238,23 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 				uid = Long.parseLong(url.substring(index + 1));
 			}
 		}
+		String sharer = request.getParameter("sharer") == null ? "" : request.getParameter("sharer"); // 공유편지함
+		String folderName = folderPath;
+        if(!sharer.equals("")){
+			try {
+				userEmail = sharer + "@" + domainName;
+				folderName = folderPath.substring(18);
+				Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, loginInfo.getId());
+				if (!checkSharer){
+					return "";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+			logger.debug("sharer=" + sharer + ",folderName=" + folderName);		
+			model.addAttribute("sharer", sharer);
+		}
 		
 		String pnFlag = "N";
 		if (request.getParameter("PNFlag") != null) {
@@ -288,7 +305,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			boolean recipientHasAllRecipientTypes = false;
 			
 			if (useRDBOnlyMailList.equals("YES")) {
-				mailInfo = ezEmailUtil.getMailInfo(userEmail, folderPath, uid);
+				mailInfo = ezEmailUtil.getMailInfo(userEmail, folderName, uid);
 				
 				if (mailInfo == null) {
 					logger.error("Message not found. uid=" + uid);
@@ -317,9 +334,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
 			if (ia != null) {
-				f = ia.getFolder(folderPath != null ? folderPath : "");
+				f = ia.getFolder(folderName != null ? folderName : "");
 				if (f == null || !f.exists()) {
-					logger.error("Folder not found. folderPath=" + folderPath);
+					logger.error("Folder not found. folderPath=" + folderName);
 					model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
 					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
 					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
@@ -1817,6 +1834,8 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());		
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
 		String shareId = StringUtils.defaultString(request.getParameter("shareId"), "");
+
+		String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함
 		
 		// 20200311 조진호 - 메일 읽기 > 첨부 파일 미리보기 활성화 여부 확인
 		if (!useImageConvertServer.equalsIgnoreCase("0")) {
@@ -1872,6 +1891,23 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		String url = folderPath + "/" + request.getParameter("iptURL");
 		logger.debug("url=" + url);
 		
+		String folderName = folderPath;
+        if(!sharer.equals("")){
+			try {
+				userEmail = sharer + "@" + domainName;
+				folderName = folderPath.substring(18);
+				Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, userInfo.getId());
+				extraMap.put("sharer", sharer);
+				if (!checkSharer){
+					return "";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+			logger.debug("sharer=" + sharer + ",folderName=" + folderName);		
+		}
+		
 		IMAPAccess ia = null;
 		List<String> bodyInfoList = null;
 		String pAttachListHtmlSub = null;
@@ -1890,10 +1926,10 @@ public class EzEmailMailReadController extends EzFileMngUtil {
                 }
 
     			if (ia != null){
-					Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+					Folder f = ia.getFolder(folderName != null ? folderName : "");
 
 					if (f == null || !f.exists()) {
-						logger.error("Folder not found. folderPath=" + folderPath);
+						logger.error("Folder not found. folderPath=" + folderName);
 					} else {
 						f.open(Folder.READ_ONLY);
 						Message message = null;
@@ -2075,6 +2111,8 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간		
 		model.addAttribute("fromAddr", request.getParameter("fromAddr"));
 
+		model.addAttribute("sharer", sharer);
+
 		logger.debug("readMailContent ended.");
 		
 		return "ezEmail/mailReadContent";
@@ -2096,6 +2134,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		Map<String, Object> extraMap = new HashMap<String, Object>();
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+		String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함 
 
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -2134,6 +2173,23 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			}
 		}
 		
+		String folderName = folderPath;
+        if(!sharer.equals("")){
+			try {
+				userEmail = sharer + "@" + domainName;
+				folderName = folderPath.substring(18);
+				Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, loginInfo.getId());
+				extraMap.put("sharer", sharer);
+				if (!checkSharer){
+					return "";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+			logger.debug("sharer=" + sharer + ",folderName=" + folderName);		
+		}
+		
 		IMAPAccess ia = null;
 		List<String> bodyInfoList = null;
 		
@@ -2141,11 +2197,11 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			if (ia != null){
-				Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+				Folder f = ia.getFolder(folderName != null ? folderName : "");
 
 				if (f == null || !f.exists()) {
-					logger.error("Folder not found. folderPath=" + folderPath);
-					throw new Exception("Folder not found. folderPath=" + folderPath);
+					logger.error("Folder not found. folderPath=" + folderName);
+					throw new Exception("Folder not found. folderPath=" + folderName);
 			} else {
 					f.open(Folder.READ_ONLY);
 					Message message = null;
@@ -2197,6 +2253,8 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userInfo.getId() + "@" + domainName;
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함
+
 		String shareId = StringUtils.defaultString(request.getParameter("shareId"), "");
 		
 		if (useSharedMailbox.equals("YES") && !Globals.APPR_MAIL_SHARED_ID.equalsIgnoreCase(shareId)) {
@@ -2266,6 +2324,22 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			return;
 		}
 		
+		String folderName = folderPath;
+        if(!sharer.equals("")){
+			try {
+				userEmail = sharer + "@" + domainName;
+				folderName = folderPath.substring(18);
+				Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, userInfo.getId());
+				if (!checkSharer){
+					return;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}
+			logger.debug("sharer=" + sharer + ",folderName=" + folderName);		
+		}
+		
 		Integer idx[] = new Integer[strIndex.length];
 		
 		for (int i = 0; i < strIndex.length; i++) {
@@ -2322,11 +2396,11 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName(charSet));
 
 			if (ia != null){
-				Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+				Folder f = ia.getFolder(folderName != null ? folderName : "");
 
 				if (f == null || !f.exists()) {
-					logger.debug("folder not found. folderPath=" + folderPath);
-					throw new Exception("folder not found. folderPath=" + folderPath);
+					logger.debug("folder not found. folderPath=" + folderName);
+					throw new Exception("folder not found. folderPath=" + folderName);
 			} else {
 
 					f.open(Folder.READ_ONLY);
@@ -2526,6 +2600,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		String shareId = StringUtils.defaultString(request.getParameter("shareId"), "");
 		
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+		String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함
 
 		if (useSharedMailbox.equals("YES") && !Globals.APPR_MAIL_SHARED_ID.equalsIgnoreCase(shareId)) {
 			//String shareId = request.getParameter("shareId");
@@ -2562,6 +2637,22 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			return;
 		}
 		
+		String folderName = folderPath;
+        if(!sharer.equals("")){
+			try {
+				userEmail = sharer + "@" + domainName;
+				folderName = folderPath.substring(18);
+				Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, loginInfo.getId());
+				if (!checkSharer){
+					return;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}
+			logger.debug("sharer=" + sharer + ",folderName=" + folderName);		
+		}
+        
 		String strIndex = request.getParameter("index");
 		int index = -1;
 		
@@ -2593,10 +2684,10 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 	
-			Folder f = ia.getFolder(folderPath);
+			Folder f = ia.getFolder(folderName);
 			
 			if (f == null || !f.exists()) {
-				logger.error("Folder not found. folderPath=" + folderPath);
+				logger.error("Folder not found. folderPath=" + folderName);
 			} else {
 				f.open(Folder.READ_ONLY);
 				Message message = null;
@@ -3174,6 +3265,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+		String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함 
 
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -3214,6 +3306,22 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			}
 		}
 		
+		String folderName = folderPath;
+        if(!sharer.equals("")){
+			try {
+				userEmail = sharer + "@" + domainName;
+				folderName = folderPath.substring(18);
+				Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, loginInfo.getId());
+				if (!checkSharer){
+					return;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}
+			logger.debug("sharer=" + sharer + ",folderName=" + folderName);		
+		}
+		
 		Address[] arrFroms = null;
 		Address[] arrRecipientsTo = null;
 		Address[] arrRecipientsCC = null;
@@ -3250,7 +3358,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			boolean recipientHasAllRecipientTypes = false;
 			
 			if (useRDBOnlyMailList.equals("YES")) {
-				mailInfo = ezEmailUtil.getMailInfo(userEmail, folderPath, uid);
+				mailInfo = ezEmailUtil.getMailInfo(userEmail, folderName, uid);
 				
 				if (mailInfo == null) {
 					logger.error("Message not found. uid=" + uid);
@@ -3276,9 +3384,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 
 			if (ia != null){
 
-				Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+				Folder f = ia.getFolder(folderName != null ? folderName : "");
 				if (f == null || !f.exists()) {
-					logger.error("Folder not found. folderPath=" + folderPath);
+					logger.error("Folder not found. folderPath=" + folderName);
 					emptyFlag = true;
 				} else {
 					f.open(Folder.READ_WRITE);
@@ -3822,6 +3930,8 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
 		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
+
+		String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함
 		
 		// 20200311 조진호 - 메일 읽기 > 첨부 파일 미리보기 활성화 여부 확인
 		if (!useImageConvertServer.equalsIgnoreCase("0")) {
@@ -3876,6 +3986,22 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 				uid = Long.parseLong(url.substring(index+1));
 			}
 		}
+		String folderName = folderPath;
+		if(!sharer.equals("")){
+			try {
+				userEmail = sharer + "@" + domainName;
+				folderName = folderPath.substring(18);
+				Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, userInfo.getId());
+				extraMap.put("sharer", sharer);
+				if (!checkSharer){
+					return "";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+			logger.debug("sharer=" + sharer + ",folderName=" + folderName);		
+		}
 		
 		List<String> bodyInfoList = null;
 		String pAttachListHtmlSub = "";
@@ -3896,9 +4022,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
     			}
 
     			if (ia != null){
-					Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+					Folder f = ia.getFolder(folderName != null ? folderName : "");
 					if (f == null || !f.exists()) {
-						logger.error("Folder not found. folderPath=" + folderPath);
+						logger.error("Folder not found. folderPath=" + folderName);
 						model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
 						model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
 						model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
@@ -3991,7 +4117,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 
 			} catch (MessagingException e) {
     			logger.error(e.getMessage(), e);
-    			
+
                 retryFlag = true;
                 --retryCount;
                 
@@ -4081,6 +4207,8 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		model.addAttribute("previewMailImage", previewMailImage);
 		model.addAttribute("unread", unread);
 		model.addAttribute("isIcalMail", isIcalMail); // "" or "Y"
+
+		model.addAttribute("sharer", sharer);
 		
 		logger.debug("previewContent ended.");
 		
@@ -4113,6 +4241,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		Map<String, Object> extraMap = new HashMap<String, Object>();
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+		String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함
 
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -4157,14 +4286,31 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			}
 		}
 		
+		String folderName = folderPath;
+        if(!sharer.equals("")){
+			try {
+				userEmail = sharer + "@" + domainName;
+				folderName = folderPath.substring(18);
+				Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, loginInfo.getId());
+				extraMap.put("sharer", sharer);
+				if (!checkSharer){
+					return "";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+			logger.debug("sharer=" + sharer + ",folderName=" + folderName);		
+		}
+		
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
-			Folder f = ia.getFolder(folderPath);
+			Folder f = ia.getFolder(folderName);
 			if (f == null || !f.exists()) {
-				logger.error("Folder not found. folderPath=" + folderPath);
+				logger.error("Folder not found. folderPath=" + folderName);
 			} else {
 				f.open(Folder.READ_ONLY);
 				Message message = ((IMAPFolder)f).getMessageByUID(uid);
@@ -4325,6 +4471,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		model.addAttribute("pAttachListHtml", pAttachListHtml);
 		model.addAttribute("pBody", pBody);
 		model.addAttribute("userLang", userLang);
+		model.addAttribute("sharer", sharer);
 		
 		logger.debug("mailPrint ended.");
 		
@@ -4346,6 +4493,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+		String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함 
 
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -4383,6 +4531,22 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 					uid = Long.parseLong(url.substring(index + 1));
 				}
 			}
+
+			String folderName = folderPath;
+			if(!sharer.equals("")){
+				try {
+					userEmail = sharer + "@" + domainName;
+					folderName = folderPath.substring(18);
+					Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, loginInfo.getId());
+					if (!checkSharer){
+						return "";
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					return "";
+				}
+			}
+
 			returnValue = "<DATA><![CDATA[";
 
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
@@ -4399,10 +4563,10 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 						userEmail, password, egovMessageSource, locale, ezEmailUtil);
 
 				if (ia != null){
-					Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+					Folder f = ia.getFolder(folderName != null ? folderName : "");
 
 					if (f == null || !f.exists()) {
-						logger.error("Folder not found. folderPath=" + folderPath);
+						logger.error("Folder not found. folderPath=" + folderName);
 					} else {
 						f.open(Folder.READ_WRITE);
 						Message oldMessage = ((IMAPFolder)f).getMessageByUID(uid);
@@ -4475,6 +4639,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		String attachLimit = xmldom.getElementsByTagName("ATTACHLIMIT").item(0).getTextContent();
 		/* 2020-09-24 홍승비 - 메일게시 시 게시판과 커뮤니티 모듈을 구분  */
 		String itemType = request.getParameter("itemType") == null ? "" : (String) request.getParameter("itemType");
+
+		String sharer = request.getParameter("sharer") == null ? "" : (String) request.getParameter("sharer");
+
 		logger.debug("url=" + url + ",attachLimit=" + attachLimit);
 		
 		String folderPath = url.split("/")[0];
@@ -4506,6 +4673,23 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 				extraMap.put("shareId", shareId);
 			}
 		}
+		
+		String folderName = folderPath;
+        if(!sharer.equals("")){
+			try {
+				userAccount = sharer + "@" + domainName;
+				folderName = folderPath.substring(18);
+				Boolean checkSharer = ezEmailService.checkSharedMailbox(userAccount, folderName, loginInfo.getId());
+				extraMap.put("sharer", sharer);
+				if (!checkSharer){
+					return "";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+			logger.debug("sharer=" + sharer + ",folderName=" + folderName);		
+		}
 
 		logger.debug("userId=" + loginInfo.getId() + ",userAccount=" + userAccount);
 		
@@ -4516,9 +4700,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userAccount, password, egovMessageSource, locale, ezEmailUtil);
-			
+
 			if (ia != null){
-				Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+				Folder f = ia.getFolder(folderName != null ? folderName : "");
 
 				if (f != null && f.exists()) {
 					f.open(Folder.READ_ONLY);
@@ -6018,6 +6202,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		String folderId = request.getParameter("url");
 		String isRead = request.getParameter("isRead");
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함 
 
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -6037,6 +6222,21 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		
 		logger.debug("userId=" + userInfo.getId() + ",url=" + folderId + ",userAccount=" + userAccount);
 		
+		String folderName = folderId;
+		if(!sharer.equals("")){
+			try {
+				userAccount = sharer + "@" + domainName;
+				folderName = folderId.substring(18);
+				Boolean checkSharer = ezEmailService.checkSharedMailbox(userAccount, folderName, userInfo.getId());
+				if (!checkSharer){
+					return "";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+			logger.debug("sharer=" + sharer + ",folderName=" + folderName);		
+		}
 		String returnData = "<DATA>OK</DATA>";
 		
 		IMAPAccess ia = null;
@@ -6046,7 +6246,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 								password, egovMessageSource, locale, ezEmailUtil);
 
 			if (ia != null){
-				IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderId);
+				IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderName);
 				if (sourceFolder == null){
 					throw new Exception("SourceFolder is null");
 				}
@@ -6093,6 +6293,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		String url = request.getParameter("url");
 		String myEmail = userInfo.getEmail();
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함 
 
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -6114,6 +6315,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		
 		model.addAttribute("url", url);
 		model.addAttribute("myEmail", myEmail);
+		model.addAttribute("sharer", sharer);
 		
 		logger.debug("mailSelectAddress ended.");
 		return "ezEmail/mailSelectAddress";
@@ -6145,6 +6347,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 			String userAccount = userInfo.getId() + "@" + domainName;
 			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+			String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함 
 
 			if (useSharedMailbox.equals("YES")) {
 				String shareId = request.getParameter("shareId");
@@ -6166,6 +6369,20 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			
 			logger.debug("userId=" + userInfo.getId() + ",userAccount=" + userAccount);
 			
+			String folderName = folderPath;
+	        if(!sharer.equals("")){
+				try {
+					userAccount = sharer + "@" + domainName;
+					folderName = folderPath.substring(18);
+					Boolean checkSharer = ezEmailService.checkSharedMailbox(userAccount, folderName, userInfo.getId());
+					if (!checkSharer){
+						return new JSONObject(result);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					return new JSONObject(result);
+				}
+	        }
 			List<Map<String, String>> fromList = new ArrayList<Map<String, String>>();
 			List<Map<String, String>> toList = new ArrayList<Map<String, String>>();
 			List<Map<String, String>> ccList = new ArrayList<Map<String, String>>();
@@ -6178,10 +6395,10 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userAccount, password, egovMessageSource, locale, ezEmailUtil);
 				if (ia != null){
-					Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+					Folder f = ia.getFolder(folderName != null ? folderName : "");
 
 					if (f == null || !f.exists()) {
-						throw new Exception("Folder not found. folderPath=" + folderPath);
+						throw new Exception("Folder not found. folderPath=" + folderName);
 					}
 
 					f.open(Folder.READ_WRITE);
@@ -6364,7 +6581,8 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
 		String shareId = StringUtils.defaultString(request.getParameter("shareId"), "");
-		
+		String sharer = request.getParameter("sharer") == null ? "" :  request.getParameter("sharer"); // 공유편지함
+
 		if (useSharedMailbox.equals("YES") && !Globals.APPR_MAIL_SHARED_ID.equalsIgnoreCase(shareId)) {
 			//String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -6399,6 +6617,21 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			return;
 		}
 		
+		String folderName = folderPath;
+        if(!sharer.equals("")){
+			try {
+				userEmail = sharer + "@" + domainName;
+				folderName = folderPath.substring(18);
+				Boolean checkSharer = ezEmailService.checkSharedMailbox(userEmail, folderName, loginInfo.getId());
+				if (!checkSharer){
+					return;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}
+        }
+		
 		String strIndex = request.getParameter("index");
 		int index = -1;
 		
@@ -6430,10 +6663,10 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 	
-			Folder f = ia.getFolder(folderPath);
+			Folder f = ia.getFolder(folderName);
 			
 			if (f == null || !f.exists()) {
-				logger.error("Folder not found. folderPath=" + folderPath);
+				logger.error("Folder not found. folderPath=" + folderName);
 			} else {
 				f.open(Folder.READ_ONLY);
 				Message message = null;
