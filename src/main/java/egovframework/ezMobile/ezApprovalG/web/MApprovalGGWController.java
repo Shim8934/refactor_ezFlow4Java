@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -470,15 +471,15 @@ public class MApprovalGGWController {
 	 * 모바일 G/W 전자결재 [POST] 의견쓰기
 	 */
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/opinion", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject mApprovalInsertOpinionInfo(@PathVariable String docId, HttpServletRequest request) {
+	public JSONObject mApprovalInsertOpinionInfo(@RequestBody JSONObject jsonParam, @PathVariable String docId, HttpServletRequest request) {
 		LOGGER.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/docs/" + docId + "/opinion] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
-			String userId = request.getParameter("userId");
-			String content = request.getParameter("content");
-			String opinionGB = request.getParameter("opinionGB");
+			String userId = jsonParam.get("userId").toString();
+			String content = jsonParam.get("content").toString();
+			String opinionGB = jsonParam.get("opinionGB").toString();
 			String serverName = request.getHeader("x-user-host");
 			
 			LOGGER.debug("serverName : " + serverName);
@@ -488,7 +489,7 @@ public class MApprovalGGWController {
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			String companyID = request.getParameter("companyID");
+			String companyID = jsonParam.get("companyID").toString();
 			if (companyID != null && !companyID.equals("") && !companyID.equals(userInfo.getCompanyId())) {
 				userInfo.setCompanyId(companyID);
 			}
@@ -519,15 +520,15 @@ public class MApprovalGGWController {
 	 * 모바일 G/W 전자결재 [PUT] 의견수정
 	 */
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/opinion", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject mApprovalUpdateOpinionInfo(@PathVariable String docId, HttpServletRequest request) {
+	public JSONObject mApprovalUpdateOpinionInfo(@RequestBody JSONObject jsonParam, @PathVariable String docId, HttpServletRequest request) {
 		LOGGER.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/docs/" + docId + "/opinion] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
-			String userId = request.getParameter("userId");
-			String content = request.getParameter("content");
-			String opinionGB = request.getParameter("opinionGB");
+			String userId = jsonParam.get("userId").toString();
+			String content = jsonParam.get("content").toString();
+			String opinionGB = jsonParam.get("opinionGB").toString();
 			String serverName = request.getHeader("x-user-host");
 			
 			LOGGER.debug("serverName : " + serverName);
@@ -537,7 +538,7 @@ public class MApprovalGGWController {
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			String companyID = request.getParameter("companyID");
+			String companyID = jsonParam.get("companyID").toString();
 			if (companyID != null && !companyID.equals("") && !companyID.equals(userInfo.getCompanyId())) {
 				userInfo.setCompanyId(companyID);
 			}
