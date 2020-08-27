@@ -1798,6 +1798,8 @@ function SetAllSelect(pTableID, _this) {
         } else {
             tr_unselectedAll(pTableID);
         }
+        
+        checkboxBtnShowCtl();
     } catch (e) {
 
     }
@@ -1822,6 +1824,46 @@ function SelectCheckBox(pTableID, pRowSN, event) {
     } else {
         oSourceTr.setAttribute("selected", "false");
         oSourceTr.style.backgroundColor = m_strColorDefault;
+    }
+    
+	checkboxBtnShowCtl();
+}
+
+/* 2020-08-27 홍승비 - 체크박스 선택 또는 해제 시, 문서들의 상태를 체크하여 일부 버튼의 표출을 제어 (재기안, 삭제, 회송) */
+function checkboxBtnShowCtl() {
+	var DocList = new ListView();
+    DocList.LoadFromID("DocList");
+    var oArrRows = DocList.GetSelectedRows();
+    
+    var isDelShow = false;
+    var isRedraftShow = false;
+    var pFunctionType = "";
+    var pDocState = "";
+    if (oArrRows.length > 0) {
+    	for (var i = 0; i < oArrRows.length; i++) {
+    		pFunctionType = GetAttribute(oArrRows[i], "DATA10"); // DATA10 = APRSTATE(FUNCTIONTYPE)
+    		pDocState = GetAttribute(oArrRows[i], "DATA12"); // DATA9 = 수신문 관련 플래그, DATA12 = DOCSTATE
+    		
+    		// 반송, 회수, 회송 타입이 하나라도 선택된 상태라면 재기안/삭제버튼을 표출
+    		if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
+    			// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안 가능
+    			if (GetAttribute(oArrRows[i], "DATA9") == "0" && pDocState != "011" && pDocState != "012") {
+    				isDelShow = true;
+    			}
+    			isRedraftShow = true;
+    		}
+    	}
+    	
+    	if (isDelShow == true) {
+    		document.getElementById("tbtnRemoveDoc").style.display = "";
+    	} else {
+    		document.getElementById("tbtnRemoveDoc").style.display = "none";
+    	}
+    	if (isRedraftShow == true) {
+    		document.getElementById("tbtnRedraft").style.display = "";
+    	} else {
+    		document.getElementById("tbtnRedraft").style.display = "none";
+    	}
     }
 }
 

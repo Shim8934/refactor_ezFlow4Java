@@ -818,6 +818,7 @@
 		            openwindow(openLocation, "", 880, 570);
 		        }
 		    }
+		    
 		    function btnRedraft_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
@@ -830,7 +831,17 @@
 		            return;
 		        }
 		        
+		        /* 2020-08-27 홍승비 -  체크박스로 다중선택된 문서 재기안 시, 가장 상단에 존재하는 반송(004), 회송(015), 회수(006)문서를 선택하도록 수정 */
+		        var pFunctionType = "";
 		        var pCurSelRow = oArrRows[0];
+		        for (var i = 0; i < oArrRows.length; i++) {
+		        	pFunctionType = GetAttribute(oArrRows[i], "DATA10");
+		        	if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
+		        		pCurSelRow = oArrRows[i];
+		        		break;
+		        	}
+		        }
+		        
 		        if (pCurSelRow.getAttribute("orgcompanyid") != "" && pCurSelRow.getAttribute("orgcompanyid") != companyID) {
 		        	var pAlertContent = "<spring:message code='ezApprovalG.csj01'/>";
 		        	alert(pAlertContent);
@@ -891,6 +902,7 @@
 		            }
 		        }
 		    }
+		    
 		    function btnRemoveDoc_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
@@ -903,26 +915,44 @@
 		            return;
 		        }
 		        
+		        /* 2020-08-27 홍승비 - 체크박스로 다중선택된 반송(004), 회송(015), 회수(006)문서의 다중삭제가 가능하도록 수정 */
 		        var Ans = confirm("<spring:message code='ezApprovalG.t1728'/>");
 		        if (Ans) {
-			        var pCurSelRow = oArrRows[0];
-			        if (pListTypeValue == "1" || pListTypeValue == "11" || pListTypeValue == "2") {
-						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
-							alert("<spring:message code='ezApprovalG.bhs23'/>");
-							getDocList();
-							return;
-						}
-					}
-		            if (pListTypeValue == "21")  //[한양대] 추가 사항 (서버 임시저장하기)
-		                RemoveTmpDoc(pCurSelRow.getAttribute("DATA1"));
-		            else
-		                RemoveDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("orgcompanyid"));
-		            if (pListTypeValue == "4")
+		        	var pCurSelRow = "";
+		        	var pFunctionType = "";
+					var pDocState = "";
+		        	 
+		        	for (var i = 0; i < oArrRows.length; i++) {
+		        		pCurSelRow = oArrRows[i];
+		        		pFunctionType = GetAttribute(pCurSelRow, "DATA10"); // DATA10 = APRSTATE(FUNCTIONTYPE)
+		        		pDocState = GetAttribute(pCurSelRow, "DATA12"); // DATA9 = 수신문 관련 플래그, DATA12 = DOCSTATE
+		        		
+		        		// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안만 가능함
+				        if ((pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") && GetAttribute(pCurSelRow, "DATA9") == "0" && pDocState != "011" && pDocState != "012") {
+					        if (pListTypeValue == "1" || pListTypeValue == "11" || pListTypeValue == "2") {
+								if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
+									alert("<spring:message code='ezApprovalG.bhs23'/>");
+									getDocList();
+									return;
+								}
+							}
+					        
+				            if (pListTypeValue == "21") {  //[한양대] 추가 사항 (서버 임시저장하기)
+				                RemoveTmpDoc(pCurSelRow.getAttribute("DATA1"));
+				            } else {
+				                RemoveDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("orgcompanyid"));
+				            }
+				        }
+		        	}
+		            
+		            if (pListTypeValue == "4") {
 		                getReceivedDocList();
-		            else if (pListTypeValue == "6")
+		            } else if (pListTypeValue == "6") {
 		                getSimsaDocList();
-		            else
+		            } else {
 		                getDocList();
+		            }
+		            
 		            parent.frames["left"].getAprCount();
 		        }
 		    }
