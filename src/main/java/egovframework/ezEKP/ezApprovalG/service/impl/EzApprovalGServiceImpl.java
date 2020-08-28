@@ -21664,7 +21664,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String changeRecordInfo(Document xmlDom, String lang, int tenantID) throws Exception {
+	public String changeRecordInfo(Document xmlDom, String lang, String offset, int tenantID) throws Exception {
 		String pChangeType = xmlDom.getElementsByTagName("MODIFYFLAG").item(0).getTextContent().trim();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		if(pChangeType.equals("0")){
@@ -21696,7 +21696,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_RECTYPE", RecType);
 				map.put("v_NUMOFPAGE", NumOfPage);
 				map.put("v_TITLE", Title);
-				map.put("v_REGDATE", RegDate);
+				map.put("v_REGDATE", commonUtil.getDateStringInUTC(RegDate, offset, true)); // 등록일자 TimeZone Date -> UTC타임 Date로 수정
 				map.put("v_APRMEMTITLE", AprMember);
 				map.put("v_APRMEMTITLE2", AprMember2);
 				map.put("v_DRAFTER", Drafter);

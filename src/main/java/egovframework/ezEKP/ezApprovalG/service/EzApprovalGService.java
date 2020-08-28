@@ -353,7 +353,7 @@ public interface EzApprovalGService {
 
 	public String getRecordSimpleInfo(Document xmlDom, String lang, int tenantID, String offset) throws Exception;
 
-	public String changeRecordInfo(Document xmlDom, String lang, int tenantID) throws Exception;
+	public String changeRecordInfo(Document xmlDom, String lang, String offset, int tenantID) throws Exception;
 
 	public String getDeliveryList(String p_DeptID, String pPageSize, String pPageNum, String pOrderCell, String pOrderOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate,	String debenturer, String isdocprint, int tenantID, String offset) throws Exception;
 
