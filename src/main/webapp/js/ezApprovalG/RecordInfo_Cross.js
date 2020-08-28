@@ -121,9 +121,10 @@ function GetRegisterYear() {
         return "";
 }
 
+/* 2020-08-28 홍승비 - 시행일자에 등록일자 정보가 들어가는 오류 수정 */
 function GetExecuteDate() {
     if (txtExeY.value != "" && txtExeM.value != "" && txtExeD.value != "") {
-        return txtRegY.value + "-" + GetTwoDigitNumber(txtRegM.value) + "-" + GetTwoDigitNumber(txtRegD.value);
+        return txtExeY.value + "-" + GetTwoDigitNumber(txtExeM.value) + "-" + GetTwoDigitNumber(txtExeD.value);
     }
     else {
         return "";

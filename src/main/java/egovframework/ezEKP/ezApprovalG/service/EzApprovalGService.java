@@ -64,7 +64,7 @@ public interface EzApprovalGService {
     public String getOpinionInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 
     public String getWebPartList(String listType, String userID, String deptID, String listCount, String mode, String userFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
-
+    
     public String getDocType(String selected, String companyID, String lang, int tenantID, Locale locale, String approvalFlag) throws Exception;
 
     public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang, int tenantID) throws Exception;
@@ -367,7 +367,7 @@ public interface EzApprovalGService {
 
     public String getRecordSimpleInfo(Document xmlDom, String lang, int tenantID, String offset) throws Exception;
 
-    public String changeRecordInfo(Document xmlDom, String lang, int tenantID) throws Exception;
+    public String changeRecordInfo(Document xmlDom, String lang, String offset, int tenantID) throws Exception;
 
     public String getDeliveryList(String p_DeptID, String pPageSize, String pPageNum, String pOrderCell, String pOrderOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, int tenantID, String offset) throws Exception;
 
