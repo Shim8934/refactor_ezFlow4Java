@@ -261,7 +261,7 @@
 					if (pDraftFlag != "REDRAFT") {
 						if(isUsed == "reuse" && apprReuseConfig != "1") {
 							setFirstDrafter(isUsed, beforeDocID);
-s
+
 							field = message.GetListItem(message.GetFieldsList(), "opinions");
 							if (field) {
 								field.innerHTML = " ";
