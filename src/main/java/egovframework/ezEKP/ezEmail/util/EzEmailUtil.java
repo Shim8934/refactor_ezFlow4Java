@@ -455,23 +455,6 @@ public class EzEmailUtil {
 		return addressStr;
 	}
 	
-	public Address[] getRecipientsFromStr(String recipients) {
-		try {
-			String[] recipientStrArr = recipients.split("; ");		
-			Address[] recipientAddrArr = new Address[recipientStrArr.length];		
-			
-			for (int i = 0; i < recipientStrArr.length; i++) {
-				recipientAddrArr[i] = new InternetAddress(recipientStrArr[i].trim());
-			}
-			
-			return recipientAddrArr;
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-			return null;
-		}
-	}
-	
 	public String getNameOrAddress(String internetAddressStr) {
 		String name = "";
 				

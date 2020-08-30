@@ -879,33 +879,31 @@ public class EzEmailMailListController {
 					else {
 						// To, Cc, Bcc를 모두 포함한다.
 						String recipientsStr = mailInfo.get("RECIPIENT");
-						// To, Cc, Bcc를 분리한다.(||로 구분됨.)
-						String[] recipientsArr = recipientsStr.split("\\|\\|", 3);										
-						addresses = ezEmailUtil.getRecipientsFromStr(recipientsArr[0]);
 						
-						if (addresses != null) {
-							String recipientName = "";
+						if (!recipientsStr.isEmpty()) {
+							// To, Cc, Bcc를 분리한다.(||로 구분됨.)
+							String[] recipientsArr = recipientsStr.split("\\|\\|", 3);		
 							
-							StringBuilder msgtoBuilder = new StringBuilder();
-							
-							for (Address address : addresses) {
-								recipientName = ((InternetAddress) address).getPersonal(); // name part
-								String receiverUserEmail = ((InternetAddress) address).getAddress(); // email address part
+							if (!recipientsArr[0].isEmpty()) {
+								String[] toStrArr = recipientsArr[0].split("; ");
+								StringBuilder msgtoBuilder = new StringBuilder();
 								
-								if (recipientName == null) {
-									recipientName = receiverUserEmail;
+								for (String toStr : toStrArr) {
+									toStr = toStr.trim();
+									String[] tokens = toStr.split(" <");
+									String toName = tokens[0]; 
+									
+									msgtoBuilder.append(toStr);
+									msgtoBuilder.append(",");
+									
+									name += toName;
+									name += "; ";									
 								}
-																
-								msgtoBuilder.append(String.format("%s <%s>", recipientName, receiverUserEmail));
-								msgtoBuilder.append(",");
 								
-								name += recipientName;
-								name += "; ";
+								msgto = msgtoBuilder.toString();
+								msgto = msgto.substring(0, msgto.length() - 1);
+								name = name.substring(0, name.length() - 2);								
 							}
-							
-							msgto = msgtoBuilder.toString();
-							msgto = msgto.substring(0, msgto.length() - 1);
-							name = name.substring(0, name.length() - 2);
 						}
 					}
 					

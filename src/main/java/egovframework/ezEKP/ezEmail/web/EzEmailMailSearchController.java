@@ -331,12 +331,32 @@ public class EzEmailMailSearchController {
 					String name = ezEmailUtil.getNameOrAddress(mailInfo.get("SENDER"));			
 					sb.append(String.format("<FROMNAME><![CDATA[%s]]></FROMNAME>", name));
 					
+					String displayTo = "";
 					// To, Cc, Bcc를 모두 포함한다.
 					String recipientsStr = mailInfo.get("RECIPIENT");
-					// To, Cc, Bcc를 분리한다.(||로 구분됨.)
-					String[] recipientsArr = recipientsStr.split("\\|\\|", 3);														
-					Address[] addresses = ezEmailUtil.getRecipientsFromStr(recipientsArr[0]);
-					String displayTo = ezEmailUtil.getStringListOfNameOrAddressOfAddresses(addresses);
+					
+					if (!recipientsStr.isEmpty()) {
+						// To, Cc, Bcc를 분리한다.(||로 구분됨.)
+						String[] recipientsArr = recipientsStr.split("\\|\\|", 3);		
+						
+						if (!recipientsArr[0].isEmpty()) {
+							String[] toStrArr = recipientsArr[0].split("; ");
+							StringBuilder msgtoBuilder = new StringBuilder();
+							
+							for (String toStr : toStrArr) {
+								toStr = toStr.trim();
+								String[] tokens = toStr.split(" <");
+								String toName = tokens[0]; 
+								
+								msgtoBuilder.append(toName);
+								msgtoBuilder.append("; ");								
+							}
+							
+							displayTo = msgtoBuilder.toString();
+							displayTo = displayTo.substring(0, displayTo.length() - 2);								
+						}
+					}
+					
 					sb.append(String.format("<DISPLAYTO><![CDATA[%s]]></DISPLAYTO>", displayTo));
 								
 					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");				
