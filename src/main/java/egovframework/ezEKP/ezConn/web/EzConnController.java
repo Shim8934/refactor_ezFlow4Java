@@ -351,12 +351,16 @@ public class EzConnController {
 		if (useSharedMailbox.equals("YES")) {
 			if (resultVO != null && resultVO.getDeptID() != null && resultVO.getDeptID().startsWith("shared_mailbox_")) {
 				logger.debug("Cannot login with shared mailbox account.");
+				
 				resultVO = null;
 			}
 		}
 		
-		logger.debug("resultVO=" + resultVO);
-		logger.debug("getUserInfoById ended.");
+		if (resultVO.getId() != null) {
+			logger.debug("getUserInfoById ended. resultVO.id=" + resultVO.getId());
+		} else {
+			logger.debug("getUserInfoById ended. resultVO.id=null");			
+		}		
 		
 		return resultVO;
 	}	
@@ -386,6 +390,129 @@ public class EzConnController {
 		
 		logger.debug("changePassword ended. result=" + result);
 		return result;
+	}
+	
+	/**
+	 * 자체 방식 SSO를 위한 암호화된 인증 스트링을 반환한다. 암호화된 인증 스트링을 전달 받은
+	 * 타시스템에서는 복호화한 뒤 사용자 아이디가 존재하는 경우 로그인 과정을 수행한다.(인사연동 및 키공유 필요)
+	 * 인증 스트링 구성 = 부서아이디:사용자아이디:타임스탬프:사용자종류
+	 * 타임스탬프 형식 = yyyyMMddHHmmss
+	 * 사용자종류 형식 = admin(관리자) or user(일반사용자)
+	 * @param userId
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/ezConn/getSSOAuthString.do", method=RequestMethod.GET)
+	@ResponseBody
+	public String getSSOAuthString(@RequestParam String userId, HttpServletRequest request, HttpServletResponse response) {
+		logger.debug("getSSOAuthString started. userId=" + userId);
+		
+		boolean isUserExists = false;
+		String result = "ERROR";
+		
+		try {			
+			String serverName = request.getServerName();
+	        int tenantId = loginService.getTenantId(serverName);
+	        
+	        logger.debug("serverName=" + serverName + ",tenantId=" + tenantId);
+
+			LoginVO user = getUserInfoById(userId, tenantId);
+			
+			if (user != null && user.getId() != null && !user.getId().equals("")) { 
+				isUserExists = true;
+			} 
+			
+			logger.debug("isUserExists=" + isUserExists);
+			
+			if (isUserExists) {			
+			    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		        String nowDate = sdf.format(new Date()); 
+		        String roleInfo = user.getRollInfo();
+		        String userType = "user";
+				
+		        if (roleInfo.indexOf("c=1") != -1 || roleInfo.indexOf("k=1") != -1) {
+		        	userType = "admin";
+		        }
+		        
+				String authString = user.getDeptID() + ":" + userId + ":" + nowDate + ":" + userType;
+				
+				logger.debug("authString=" + authString);
+				
+				result = ezConnUtil.encryptAES(authString);
+			}						
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("getSSOAuthString ended. result=" + result);
+		
+		return result;
+	}
+	
+	/**
+	 * 암호화된 자체 방식 SSO 인증 스트링을 전달 받아 복화화해 사용자를 확인한 후 로그인 처리를 수행한다.
+	 * 로그인 처리 후 지정된 URL로 이동한다.
+	 * @param id 암호화된 자체 SSO 인증 스트링
+	 * @param redirectUrl 로그인 처리 후 이동할 URL
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/ezConn/loginWithSSOAuthString.do", method = RequestMethod.GET)
+	public String loginWithSSOAuthString(@RequestParam String id, @RequestParam String redirectUrl, HttpServletRequest request, HttpServletResponse response) {
+		logger.debug("loginWithSSOAuthString started. id=" + id + ",redirectUrl=" + redirectUrl);		
+		
+		String resultPage = "";
+		
+		try {
+			if (id != null && !id.isEmpty() && redirectUrl != null && !redirectUrl.isEmpty()) {
+				id = ezConnUtil.decryptAES(id);
+				
+				logger.debug("decryptedId=" + id);
+				
+				String[] params = id.split(":");
+				
+				if (params.length >= 4) {
+					String userId = params[1];
+					String timeStamp = params[2];
+					String userType = params[3];
+					
+					String serverName = request.getServerName();
+					int tenantId = loginService.getTenantId(serverName);
+					
+					logger.debug("userId=" + userId + ",timeStamp=" + timeStamp + ",userType=" + userType + ",tenantId=" + tenantId + ",serverName=" + serverName);
+					
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+					Date creationTime = sdf.parse(timeStamp);
+					Date currentTime = new Date();
+					long timeDiff = currentTime.getTime() - creationTime.getTime();
+					
+					logger.debug("timeDiff=" + timeDiff);
+					
+					// 인증 스트링이 생성된지 60초이내일 때만 유효한 것으로 처리한다.
+					if (timeDiff <= 60*1000) {		
+						logger.debug("timeStamp is valid");
+						
+						LoginVO user = getUserInfoById(userId, tenantId);
+						
+						if (user != null && user.getId() != null && !user.getId().equals("")) { 
+							loginController.createLoginCookie(user.getId(), "", "", tenantId, request, response, user.getDeptID(), user.getCompanyID());
+						
+							resultPage = "redirect:" + redirectUrl;
+						}
+					} else {
+						logger.debug("timeStamp expired");
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("loginWithSSOAuthString ended.");
+		
+		return resultPage;
 	}
 	
 	@RequestMapping(value="/ezConn/oms/moduleMonitor.do", method = RequestMethod.GET)
