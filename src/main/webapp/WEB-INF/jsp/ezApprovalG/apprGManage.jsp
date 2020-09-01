@@ -930,8 +930,8 @@
 		        		pFunctionType = GetAttribute(pCurSelRow, "DATA10"); // DATA10 = APRSTATE(FUNCTIONTYPE)
 		        		pDocState = GetAttribute(pCurSelRow, "DATA12"); // DATA9 = 수신문 관련 플래그, DATA12 = DOCSTATE
 		        		
-		        		// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안만 가능함
-				        if ((pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") && GetAttribute(pCurSelRow, "DATA9") == "0" && pDocState != "011" && pDocState != "012") {
+		        		// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안만 가능함 + 임시보관함의 경우 전부 삭제 가능
+				        if ((pListTypeValue == "21") || ((pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") && GetAttribute(pCurSelRow, "DATA9") == "0" && pDocState != "011" && pDocState != "012")) {
 					        if (pListTypeValue == "1" || pListTypeValue == "11" || pListTypeValue == "2") {
 								if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
 									alert("<spring:message code='ezApprovalG.bhs23'/>");
