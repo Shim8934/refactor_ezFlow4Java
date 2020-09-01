@@ -481,7 +481,7 @@
 			//사용연차 수 팝업
 			function useAnnualHistory (userId) {
 				var url = "/admin/ezAttitude/useAnnualHistoryPop.do?userId=" + userId + "&companyId=" + pCompanyId;
-				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(680, 560));
+				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(755, 560));
 			}
 	    	
 			//로우의 총 연차수 링크 클릭 시
