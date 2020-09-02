@@ -319,7 +319,7 @@
             }
 		</script>
 	</head>
-	<body class="popup">
+	<body class="popup" style="overflow:hidden;">
 		<h1>
 			<c:choose>
 				<c:when test="${docState == '015'}">

@@ -273,7 +273,8 @@
 		    		search : searchList,
 		    		cell : "displayname;title;description;telephonenumber",
 		    		prop : "Department;extensionAttribute4;displayname;title;description",
-		    		type : "user"
+					type : "user",
+					noAddJob : "Y"
 		    	},
 		    	success : function(result){	
 		    		event_displayUserList(loadXMLString(result));

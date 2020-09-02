@@ -26368,6 +26368,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String strErrorMsg = "";
 		try {
+			//2020.09.01. 한사대 외부공문 한글 표 붙이기할때 발생하는 주석 제거
+			content = content.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>","");
+			
  			content = beforeXmlConverter(content);
 
  		    // 전체 태그 처리시 순서에 따라 꼬이는 부분이 존재하기 때문에 선처리가 필요한 태그들에 대해 먼저 처리한다.

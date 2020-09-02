@@ -790,16 +790,10 @@
 		
 		        if (tr.getAttribute("DATA10") != "" && tr.getAttribute("DATA10") >= GetTodayDate()) {
 		            if (CheckAprLine(tr.getAttribute("DATA1")) == "TRUE") {
-		                if (CheckUsePassword()) {
 		                    chk_Passwd(UserID);
-		                }
-		                else {
-		                    chk_Passwd_Complete("TRUE");
-		                }
-		            }
-		            else {
-		                OpenAlertUI("<spring:message code='ezApprovalG.t1518'/>","OPEN","");
-		                return "";
+		            } else {
+		                OpenAlertUI(strLang580,"OPEN","");
+		                return;
 		            }
 		        }
 		        else {
