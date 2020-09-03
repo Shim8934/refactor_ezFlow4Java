@@ -956,9 +956,9 @@
 			    if(docAccess > 0)
 			   {		
 			        if(docAccess > 1)	        
-				        rollbackDocNumber(arr_userinfo[4],"");
+				        rollbackDocNumber(arr_userinfo[4],"receipt");
 				    else
-				        rollbackDocNumber(arr_userinfo[4],"be"); 
+				        rollbackDocNumber(arr_userinfo[4],"bedoc"); 
 				        
 				    docAccess = 0;
 				    if(fractionsymbol == "")

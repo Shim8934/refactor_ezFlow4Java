@@ -702,6 +702,7 @@
 		                    UndoSignInfo(rtnSignInfo);
 		
 		                    if (LastSignSN == 1) {
+								rollbackDocNumber(arr_userinfo[4], pDocID);
 		                        RtnVal = ExcuteInfo("END_FAIL", "");
 		                        if (!RtnVal) {
 		                            pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";

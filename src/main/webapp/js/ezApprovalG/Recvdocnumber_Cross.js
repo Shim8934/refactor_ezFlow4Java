@@ -325,50 +325,49 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
 }
 function rollbackDocNumber(pDeptID, pDocID) {
     try {
-        var fields = message.GetFieldsList();
         var name, docnumber;
-        var rtnval;
-
-        name = "receiptnumber";
-        var field = message.GetListItem(fields, name);
-        if (!field) return true;
-
-        docnumber = field.textContent;
-        if (fractionsymbol == "") {
-            var tempList = docnumber.split("-");
-            fractionsymbol = tempList[0] + "-";
-        }
+		var rtnval;
+		name = "receiptnumber";
+        
+		var fields = message.GetFieldsList();
+		var field = message.GetListItem(fields, name);
+		if (!field) return true;
+		
+		docnumber = field.textContent;
         docnumber = docnumber.replace(fractionsymbol, "");
 
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DATA", pDeptID);
-        createNodeAndInsertText(xmlpara, objNode, "DATA", docnumber);
-        createNodeAndInsertText(xmlpara, objNode, "DATA", pDocID);
-
-        xmlhttp.open("Post", "../docnum/aspx/rollbackCabinetSN.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        rtnval = getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
-        field.textContent = "";
+    	var result = "";
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/rollbackCabinetSN.do",
+    		data : {
+    			docID : pDocID,
+    			deptID : pDeptID,
+    			docNumber : docnumber
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}
+    	});
+    	
+        var dataNodes = GetChildNodes(loadXMLString(result));
+        rtnval = getNodeText(dataNodes[0]);
+        
+		field.textContent = fractionsymbol;
 
         if (rtnval == "FALSE") {
-            pDocNumCode = "";
-            pDocNo = "";
-        }
-        else {
-            SaveFile();
-            pDocNumCode = "";
-            pDocNo = "";
+            DocNumCode = "";
+        } else {
+            DocNumCode = "";
         }
     } catch (e) {
-        field.textContent = "";
-        pDocNumCode = "";
-        pDocNo = "";
+		field.textContent = fractionsymbol;
     }
 }
+
 function SaveFile() {
     try {
     	var result = "";

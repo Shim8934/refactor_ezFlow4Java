@@ -391,8 +391,11 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
 function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     try {
         var name, docnumber;
-        var rtnval;
-        name = pPrefix + "docnumber";
+		var rtnval;
+		if (!pPrefix) {
+			pPrefix = "doc";
+		}
+        name = pPrefix + "number";
         
         if (isHWP == "Y") {
             if (!HwpCtrl.CheckFieldExist(name))

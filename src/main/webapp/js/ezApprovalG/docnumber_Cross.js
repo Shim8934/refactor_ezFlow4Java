@@ -41,8 +41,11 @@ function rollbackDocNumber(pDeptID, pPrefix) {
     var name, docnumber
     var fractionsymbol
     var rtnval
+    if (!pPrefix) {
+        pPrefix = "doc";
+    }
 
-    name = pPrefix + "docnumber"
+    name = pPrefix + "number"
 
     var field = message.GetListItem(fields, name);
     if (!field) return true;

@@ -930,13 +930,13 @@
 		        		if (approvalFlag == "S") {
 		        			if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7  && habYuiAprStateFlag) || pAprLineType == strAprType4 || totalMemSN > 0) {
 		        				if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
-		        					rollbackDocNumber(drafterDeptid, "", pDocID);
+		        					rollbackDocNumber(drafterDeptid, "doc", pDocID);
 		        				}
 		        			}
 		        		} else {
 		        			if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		        				if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-		        					rollbackDocNumber(drafterDeptid, "", pDocID);
+		        					rollbackDocNumber(drafterDeptid, "doc", pDocID);
 		        				}
 		        			}
 		        		}
@@ -945,7 +945,7 @@
 		        			if (approvalFlag == "G") {
 		        				if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		        					if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-		        						rollbackDocNumber(drafterDeptid, "", pDocID);
+		        						rollbackDocNumber(drafterDeptid, "receipt", pDocID);
 		        					}
 		        				}
 		        			}
