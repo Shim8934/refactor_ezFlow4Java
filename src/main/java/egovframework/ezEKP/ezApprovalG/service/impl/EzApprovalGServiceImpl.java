@@ -9415,7 +9415,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						//Document docXML1 = commonUtil.convertStringToDocument(docList);
 						//int doclength = docXML1.getElementsByTagName("ROW").getLength();
 						resultXML.append("<DATA19><![CDATA[" + makeListField(docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent()) + "]]></DATA19>");
-						resultXML.append("<DATA20><![CDATA[" + makeListField(docXML.getElementsByTagName("RECEIVEDDEPTID").item(k).getTextContent()) + "]]></DATA20>");
+						resultXML.append("<DATA20></DATA20>");
 						
 					}
 				}
