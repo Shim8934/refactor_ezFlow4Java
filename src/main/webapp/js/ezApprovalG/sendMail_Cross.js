@@ -65,7 +65,7 @@ function addOpinion(DocID, pFlag) {
         rtnString = rtnString + "<TR style='height:25px'>";
         for (colidx = 0; colidx < GetChildNodes(Rows[rowidx]).length; colidx++) {
             if (colidx == 0)
-                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px; word-break: break-word; word-wrap: break-word;' bgColor=#d2e2fd align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
+                rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px; word-break: break-word; word-wrap: break-word;' bgColor=#f8f8fa align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
             else if (colidx == 1)
                 rtnString = rtnString + "<TD style='BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px; word-break: break-word; word-wrap: break-word;' align=center>" + getNodeText(GetChildNodes(GetChildNodes(Rows[rowidx])[colidx])[0]) + "</TD>";
             else if (colidx == 3)
@@ -110,7 +110,7 @@ function getdetails(DocID, pFlag) {
     /* 2020-07-09 홍승비 - 전자결재문서 인쇄 시, 하단 정보 영역의 폰트 스타일 수정 (다국어 css의 기본 폰트를 따라가도록 함) */
     if (ret[0] == "Y") {
         rtnVal = rtnVal + "<table style='font-family:" + strLangHSBPR01 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px; margin-left:11px'>";
-        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='5'><P>" + "▶ " + strLan880 + " ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='5'><P>" + "▶ " + strLang880 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + textOpi;
         rtnVal = rtnVal + "</table>";
     }
