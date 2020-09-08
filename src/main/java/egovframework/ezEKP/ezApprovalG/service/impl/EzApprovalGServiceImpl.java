@@ -9410,12 +9410,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(k).getTextContent()).trim() + "]]></DATA16>");
 					
 					if (docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent().equals("011") ) {
-						docID = makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent());
-						docList = getLineInfo(docID, "END", "", recordListVO.getCompanyID(), tenantID);
-						Document docXML1 = commonUtil.convertStringToDocument(docList);
-						int doclength = docXML1.getElementsByTagName("ROW").getLength();
-						resultXML.append("<DATA19><![CDATA[" + makeListField(docXML1.getElementsByTagName("ORGUSERID").item(doclength-1).getTextContent()) + "]]></DATA19>");
-						resultXML.append("<DATA20><![CDATA[" + makeListField(docXML1.getElementsByTagName("RECEIVEDDEPTID").item(doclength-1).getTextContent()) + "]]></DATA20>");
+						//docID = makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent());
+						//docList = getLineInfo(docID, "END", "", recordListVO.getCompanyID(), tenantID);
+						//Document docXML1 = commonUtil.convertStringToDocument(docList);
+						//int doclength = docXML1.getElementsByTagName("ROW").getLength();
+						resultXML.append("<DATA19><![CDATA[" + makeListField(docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent()) + "]]></DATA19>");
+						resultXML.append("<DATA20><![CDATA[" + makeListField(docXML.getElementsByTagName("RECEIVEDDEPTID").item(k).getTextContent()) + "]]></DATA20>");
 						
 					}
 				}

@@ -5819,7 +5819,8 @@
 						TBL_RECORD.ReceiptMemberName$multiLang$ as ReceiptName,
 						TBL_RECORD.ProcessDeptCode RECDEPTCODE,
 						TBL_RECORD.ProcessDeptName RECDEPTNAME,
-						SUBSTR(TBL_RECORD.RegisterNo, -6) RECREGSN
+						SUBSTR(TBL_RECORD.RegisterNo, -6) RECREGSN,
+		                M.AprmemberId as ORGUSERID
 				  <isEqual property="usePublicFlag" compareValue="true">
 				  		, TBL_EXPENDAPRDOCINFO.SecurityApproval 
 				  </isEqual> 
@@ -5860,6 +5861,16 @@
 			     		TBL_ENDAPRLINEINFO.DOCID = TBL_RECORD.DOCID
 			    	 AND 
 			     		TBL_ENDAPRLINEINFO.COMPANYID = TBL_RECORD.COMPANYID
+			     	LEFT JOIN 
+			     		TBL_ENDAPRLINEINFO M
+			    	 ON 
+			     		M.TENANT_ID = TBL_RECORD.TENANT_ID
+			     	 AND 
+			     		M.DOCID = TBL_RECORD.DOCID
+			    	 AND 
+			     		M.COMPANYID = TBL_RECORD.COMPANYID
+			     	 AND
+			     	 	M.APRMEMBERSN = 1	
 				   Inner Join 
 				   		( Select 
 				   				ProcessDeptCode, 
