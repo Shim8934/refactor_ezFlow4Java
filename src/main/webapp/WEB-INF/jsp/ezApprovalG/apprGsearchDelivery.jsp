@@ -126,8 +126,9 @@
         document.getElementById("txtDeptName").value = "";
         document.getElementById("txtDeptName2").value = "";
         document.getElementById("txtTitle").value = "";
-        document.getElementById("idDatepicker").value = "";
-        document.getElementById("Post_D2").value = "";
+        document.getElementById("Sdatepicker").value = "";
+        document.getElementById("Edatepicker").value = "";
+        document.getElementById("txtdebenturer").value = "";
         g_SelChargerID = "";
     }
     function initdatepicker() {
