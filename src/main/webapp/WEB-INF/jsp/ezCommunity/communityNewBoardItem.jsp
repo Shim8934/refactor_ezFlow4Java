@@ -106,6 +106,7 @@
 			var clickFlag = false;
 			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 			var defaultFontAndSize  = "${defaultFontAndSize}";
+			var mailShareId = "<c:out value = '${mailShareId}'/>";
 			
 			<c:if test="${isCrossBrowser != true}">
 			    var objMHT = new ActiveXObject("MhtFormat.Convert");
@@ -131,7 +132,7 @@
 		            AppendFileAttachInfo(pAttachListXml);
 		        }
 					
-		        if(pMode == "new") {
+		        if(pMode == "new" || pMode == "new1") {
 		            btn_PostDate_Clear();
 		        } else {
 		            if (pReservedItem != "true") {
@@ -468,7 +469,7 @@
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ABSTRACT",  encodeURIComponent(document.getElementById("txtAbstract").value));
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", encodeURIComponent(AttachFileList()));
 	
-		        if(pMode == "new" || pUrl != "") {
+		        if(pMode == "new" || pMode == "new1" || pUrl != "") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", newID);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMLEVEL", "1");
@@ -577,7 +578,10 @@
 		                alert("<spring:message code='ezCommunity.t1150'/>" + pStartDate.substr(0, 16) + "<spring:message code='ezCommunity.t1151'/>");
 		            }
 		            
-					window.opener.location.reload(true);
+		            /* 2020-09-08 홍승비 - 메일 읽기 창에서 커뮤니티에 게시하는 경우, 새로고침 하지 않도록 수정 */
+		            if (window.opener.location.href.indexOf("ezEmail") == -1) {
+		            	window.opener.location.reload(true);
+		            }
 					saveFlag = false;
 					
 		            window.close();
@@ -693,83 +697,67 @@
 		        
 		        return ret;			
 		    }
-						
+		    
+		    /* 2020-09-08 홍승비 - 커뮤니티 게시판에 메일 게시 기능 활성화 */
+			var MailxmlHTTP = createXMLHttpRequest();
 		    function InsertMailInfo() {
-		        var strQuery = "<URL>" + pUrl + "</URL>";
-						 	
-		        var xmlHTTP = createXMLHttpRequest();
-		        xmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_interread.aspx", false);
-		        xmlHTTP.send(strQuery);
-	
-		        if (xmlHTTP.status == 200) {
-		            document.getElementById('txtTitle').value = "<spring:message code='ezCommunity.t1152'/>" + getNodeText(loadXMLString(xmlHTTP.responseText).getElementsByTagName("SUBJECT").item(0));
-	
-		            var Content = "<P>&nbsp;<br></P><br><DIV><br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1153'/></B>-----</DIV><DIV><B><spring:message code='ezCommunity.t411'/></B>" + getNodeText(loadXMLString(xmlHTTP.responseText).getElementsByTagName("DATE").item(0)) + "</DIV>";
+		        var _newGuid = "{" + GetGUID().toUpperCase() + "}";
+		        var strQuery = "<DATA><URL>" + pUrl + "</URL><NEWGUID>" + _newGuid + "</NEWGUID><ATTACHLIMIT>" + AttachLimit + "</ATTACHLIMIT></DATA>";
+		        var FileName = "";
+		        var FileURL = "";
+		        var ItemID = "";
+		        var requestUrl = "/ezEmail/mailReadBoard.do";
+		        
+		        if (typeof(mailShareId) != "undefined" && mailShareId != "") {
+            		requestUrl += "?shareId=" + encodeURIComponent(mailShareId);
+				}
+		        
+		        MailxmlHTTP.open("POST", requestUrl, false);
+		        MailxmlHTTP.send(strQuery);
+		        
+		        if (MailxmlHTTP.status == 200) {
+		            var mailXml = loadXMLString(MailxmlHTTP.responseText);
+		            document.getElementById('txtTitle').value = "<spring:message code='ezBoard.t409' />" + getNodeText(mailXml.getElementsByTagName("SUBJECT").item(0));
+		            var Content = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		            Content += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t410' /></B>-----</p>";
+		            Content += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t411' /></B>" + getNodeText(mailXml.getElementsByTagName("DATE").item(0)) + "</p>";
 		            
-		            if (getNodeText(loadXMLString(xmlHTTP.responseText).getElementsByTagName("COMMENT").item(0)) != "") {
-		                Content = Content + "<DIV><B><spring:message code='ezCommunity.t1155'/></B>" + ReplaceText(getNodeText(loadXMLString(xmlHTTP.responseText).getElementsByTagName("FROMNAME").item(0)), "\\\"", "");
-		                Content = Content + "  (" + getNodeText(loadXMLString(xmlHTTP.responseText).getElementsByTagName("COMMENT").item(0)) + ") </DIV>";
-					} else {
-						Content = Content + "<DIV><B><spring:message code='ezCommunity.t1155'/></B>" + ReplaceText(ReplaceText(getNodeText(loadXMLString(xmlHTTP.responseText).getElementsByTagName("FROMNAME").item(0)), "<", "&lt"), ">", "&gt;") + "</DIV>";
-					}
-		            
-		            Content = Content + "<DIV><B><spring:message code='ezCommunity.t885'/></B>" + getNodeText(loadXMLString(xmlHTTP.responseText).getElementsByTagName("SUBJECT").item(0)) + "</DIV><P><br><br>" + getNodeText(loadXMLString(xmlHTTP.responseText).getElementsByTagName("HTMLDESCRIPTION").item(0)) + "</P>";
+		            if (getNodeText(mailXml.getElementsByTagName("COMMENT").item(0)) != "") {
+		                Content += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t412' /></B>" + ReplaceText(getNodeText(mailXml.getElementsByTagName("FROMNAME").item(0)), "\\\"", "");
+		                Content += "  (" + getNodeText(mailXml.getElementsByTagName("COMMENT").item(0)) + ") </p>";
+		            } else {
+		                Content += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t412' /></B>" + ReplaceText(ReplaceText(getNodeText(mailXml.getElementsByTagName("FROMNAME").item(0)), "<", "&lt"), ">", "&gt;") + "</p>";
+		            }
+		
+		            Content += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B>" + getNodeText(mailXml.getElementsByTagName("SUBJECT").item(0)) + "</p>";
+		            Content += "<p " + defaultFontAndSize + "></p><p " + defaultFontAndSize + "></p>";
+		            Content += "<p " + defaultFontAndSize + ">" + getNodeText(mailXml.getElementsByTagName("HTMLDESCRIPTION").item(0)) + "</p>";
 		            Content = ReplaceText(Content, "id=doctitle", "");
 		            Content = ReplaceText(Content, "id=\"doctitle\"", "");
 		            Content = ReplaceText(Content, "id=\'doctitle\'", "");
+			            
+		            if (Content.indexOf("id=\"_BigAttachListHtml\"") != -1) {
+		            	Content = ReplaceText(Content, "<td width=\"75%\"", "<td width=\"65%\"");
+		            	Content = ReplaceText(Content, "<td width=\"30%\"", "<td width=\"35%\"");
+		            }
+		            
+		            Content = '<div '+defaultFontAndSize+'>' + Content + '</div>';
+			
 		            message.SetEditorContent(Content);
-	
-		            var ret = "";
-								
-		            while (ret == "") {
-		                ret = SelectBoard();
-		                
-		                while (ret == "") {
-		                    if (confirm("<spring:message code='ezCommunity.t1156'/>")) {
-								return -1;
-							}
-		                    
-							ret = SelectBoard();
-						}
-					}
-
-                    pBoardID = ret;
-                    GetBoardInfo();
-                    InitializeSettings();
-                    
-                    if (loadXMLString(xmlHTTP.responseText).getElementsByTagName("ATTACHMENT").length > 0) {
-						var attachHTTP = createXMLHttpRequest();
-						var filefullpath = "";
-						var fileList = "";
-						
-						for (var i = 0; i < loadXMLString(xmlHTTP.responseText).getElementsByTagName("ATTACHMENT").length; i++) {
-						    FileName = getNodeText(loadXMLString(xmlHTTP.responseText).getElementsByTagName("ATTACHMENT").item(i));
-						    FileURL = getNodeText(loadXMLString(xmlHTTP.responseText).getElementsByTagName("ATTACHMENTURL").item(i));
-						    ItemID = getNodeText(loadXMLString(xmlHTTP.responseText).getElementsByTagName("ITEMID").item(0));
-						    attachHTTP.open("POST", document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_downloadattachfile.aspx?mode=Attach&ID=" + encodeURIComponent(ItemID) + "&ATTID=" + encodeURIComponent(FileURL) + "&filepath=" + pUploadFilePath + "\\" + pBoardID + "\\uploadFile" + "&NewGuid=" + NewGuid, false);
-						    attachHTTP.send();
-						    
-						    filefullpath = pUploadFilePath + "\\" + pBoardID + "\\uploadFile\\" + NewGuid + "_" + FileName;
-						    var fileHTTP = createXMLHttpRequest();
-						    fileHTTP.open("POST", "interASP/getFileSize.aspx?filepath=" + encodeURIComponent(filefullpath), false);
-						    fileHTTP.send();
-						    
-						    var size = fileHTTP.responseText;
-						    
-						    strXML += "<NODE>";
-						    strXML += "<PUPLOADSN><![CDATA[" + NewGuid + "_" + FileName + "]]></PUPLOADSN>";
-						    strXML += "<RESULTUPLOADA><![CDATA[" + "true" + "]]></RESULTUPLOADA>";
-						    strXML += "<PFILENAME><![CDATA[" + FileName + "]]></PFILENAME>";
-						    strXML += "<FILESIZE><![CDATA[" + size + "]]></FILESIZE>";
-						    strXML += "<FILELOCATION><![CDATA[" + filefullpath + "]]></FILELOCATION>";
-						    strXML += "</NODE>";
-						}
-						
-						strXML += "</NODES></ROOT>";
-						returnvalue(strXML);
-					}
-				}
-			}
+		            
+		            if (mailXml.getElementsByTagName("OVERSIZE").length > 0) {
+	            		alert(strLang8 + AttachLimit + "MB" + strLang9);
+	            	} else {
+			            if (mailXml.getElementsByTagName("ROOT").length) {
+		            		mgubun = "M";
+			                
+			                attachxml = getNodeText(mailXml.getElementsByTagName("ATTACH").item(0));
+			                var strXML = getXmlString(mailXml.getElementsByTagName("ROOT").item(0));
+			                returnvalue(strXML);
+			            }
+	            	}
+		        }
+		    }
 						
 			function GetBoardInfo() {
 			    var xmlhttp_boardinfo = createXMLHttpRequest();
@@ -790,7 +778,7 @@
             	
                 document.getElementById('tdBoardName').innerHTML = "<c:out value='${multiBoardName}'/>";
                 
-                if (ExpireDays == "-1" && strEndDate.substring(0,4) == "9999" || ExpireDays == "-1" && pMode == "new") {
+                if (ExpireDays == "-1" && strEndDate.substring(0,4) == "9999" || ExpireDays == "-1" && (pMode == "new" || pMode == "new1")) {
                     document.getElementById('ChkPermanence').checked = true;
                     document.getElementById('Makedate').style.display = "none";
                 } else {

@@ -538,6 +538,45 @@
 				window.opener.parent.delDrafts(g_uid);
 				window.parent.opener.parent.previewChk = false;
 		    }
+		    
+		    /* 2020-08-31 홍승비 - 메일 커뮤니티 게시판에 게시 기능 추가 */
+		    // 메일읽기창에서 '커뮤니티 게시' 버튼을 누를 때 호출됨
+		    var writeCommboardselect_modal_dialogArguments = new Array();
+		    function NewItemCommu_onclick() {
+				writeCommboardselect_modal_dialogArguments[1] = NewItemCommu_onclick_Complete; // 커뮤니티 게시판 선택 완료 시의 동작
+	           
+				var OpenWin = window.open("/ezCommunity/communityBoardSelectForMail.do", "communityBoardSelectForMail", GetOpenWindowfeature(355, 600));
+				try { OpenWin.focus(); } catch (e) { }
+		    }
+		    
+		    function NewItemCommu_onclick_Complete(ret) {
+		        if (typeof (ret) != "undefined") {
+		            pBoardID = ret[0];
+		            
+		            if (pBoardID == "" || typeof (pBoardID) == "undefined") {
+		                return;
+		            }
+		            
+					var boardWidth = 765;
+					var boardHeight = 720;
+					var boardTarget = "";
+		            var pheight = window.screen.availHeight;
+		            var pwidth = window.screen.availWidth;
+		            var pTop = (pheight - boardWidth) / 2;
+		            var pLeft = (pwidth - boardHeight) / 2;
+		            	
+	            	// 커뮤니티 신규 게시물 작성창으로 연결
+	            	var requestUrl; 
+	            	requestUrl = "/ezCommunity/newBoardItem.do?mode=new1&boardID=" + encodeURIComponent(pBoardID) + "&url=" + encodeURIComponent(g_paramURL);
+                	
+                	if (typeof(shareId) != "undefined" && shareId != "") {
+                		requestUrl += "&mailShareId=" + encodeURIComponent(shareId);
+    				}
+	            	
+                	window.open(requestUrl, boardTarget, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + boardHeight + ",width=" + boardWidth + ",top=" + pTop + ",left=" + pLeft, "");
+		        }
+		    }
+		    
 		</script>
 	</head>
 
@@ -555,7 +594,10 @@
 		                    <li><span id="btnMove" onClick="move_onClick()"><spring:message code="ezEmail.t482" /></span></li>
 		                    <li id="PcSave"><span id="btnSave" onClick="download_mail()">PC <spring:message code="ezEmail.t48" /></span></li>
 		                    <c:if test="${packageType != 'mail'}">
-		                    <li id="BoardItem"><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
+		                    	<li id="BoardItem"><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
+		                    	<c:if test="${useMailToCommunity == 'YES'}">
+		                    	<li id="CommunityItem"><span id="btnCommunity" onClick="NewItemCommu_onclick()"><spring:message code="ezEmail.hsbCM01" /></span></li>
+		                    	</c:if>
 		                    </c:if>
 		                    <li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
 		                    <li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          

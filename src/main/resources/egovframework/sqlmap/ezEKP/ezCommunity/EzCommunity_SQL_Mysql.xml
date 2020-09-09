@@ -46,6 +46,7 @@
 		<result property="boardColor"					column="BoardColor"					columnIndex="5"/>
 		<result property="c_ClubNo"						column="C_ClubNo"					columnIndex="6"/>
 		<result property="gubun"						column="Gubun"						columnIndex="7"		nullValue="0"/>
+		<result property="url"						column="URL"						columnIndex="8"		nullValue=""/>
 	</resultMap>
 	
 	<resultMap class="CommunityBoardItemVO" id="CommunityBoardItem">
@@ -123,7 +124,8 @@
  					    A.treevieworder TreeViewOrder,
  					    A.boardcolor BoardColor,
  					    A.c_clubno C_ClubNo,
- 					    A.gubun 
+ 					    A.gubun,
+ 					    A.URL as url
  					FROM
  						TBL_COMM_BOARDINFO A
  					JOIN 
@@ -172,7 +174,8 @@
  						A.treevieworder TreeViewOrder,
  	                    A.boardcolor BoardColor,
  	                    A.c_clubno C_ClubNo,
- 	                    A.gubun 
+ 	                    A.gubun,
+ 	                    A.URL as url
  					FROM
  						TBL_COMM_BOARDINFO A
  					JOIN
@@ -220,7 +223,8 @@
  	                A.treevieworder,
  	                A.boardcolor BoardColor,
  	                A.c_clubno C_ClubNo,
- 	            	A.gubun
+ 	            	A.gubun,
+ 	            	A.URL as url
  				FROM
  					TBL_COMM_BOARDINFO A
  	            WHERE
@@ -2625,6 +2629,7 @@
 		]]>
 	</select>
 	
+<!-- 2020-08-31 홍승비 - 사용자가 가입한 커뮤니티 가져올 때 소팅 여부 추가 -->
 <!-- 	<procedure id="EzCommunityDAO.leftCommunityGet3"			parameterClass="String"		resultClass="CommunityClubVO"> -->
 <!-- 		{CALL EZSP_LEFT_COMMUNITY_GET3(#USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -2659,10 +2664,19 @@
 				TBL_C_CLUB.companyid = #companyID#
 			AND
 				TBL_C_CLUBUSER.tenant_id = #tenantID#
-			ORDER BY
-				TBL_C_CLUBUSER.c_visited DESC
-		]]>
-
+			]]>
+			<isNotEmpty property="v_SORTBYCLUBNO">
+				<![CDATA[
+					ORDER BY
+						CAST(SUBSTR(TBL_C_CLUB.C_CLUBNO, 3) as unsigned) DESC
+				]]>
+			</isNotEmpty>
+			<isEmpty property="v_SORTBYCLUBNO">
+				<![CDATA[
+					ORDER BY
+						TBL_C_CLUBUSER.c_visited DESC
+				]]>
+			</isEmpty>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.bbsViewNewGet2"				parameterClass="String"		resultClass="CommunityCBoardVO"				remapResults="true"> -->
