@@ -11880,7 +11880,7 @@
 	      		   SELECT 
 	      		       LASTDOCID + 1 
 	      		   FROM 
-	      		       TBL_LASTDOCID 
+	      		       TBL_LASTDOCID AS A
 	      		   WHERE 
 	      		       TENANT_ID = #v_TENANTID#
 	      		   AND 
