@@ -68,7 +68,7 @@
 		<table style="margin-top:5px;width:100%;height:500px;">
 			<tr>
 		    	<td style="width:50%; vertical-align:top; padding-left: 5px;">
-		    		<div class="listview" style="border-left: none; border-bottom: none;">
+		    		<div class="listview">
 						<div style="vertical-align:top; height:600px; border: none; width:100%; overflow-x:auto;overflow-y:auto;/* BORDER:#b6b6b6 1px solid; */ BACKGROUND-COLOR:#ffffff" >
 							<table id="ownerList" class="mainlist ownerList" style="width: 100%; border-width: 0px 0px 1px 0px;">
 								<tr>
@@ -93,7 +93,7 @@
 					</div>
 				</td>
 		    	<td style="width:50%; padding-left:5px; padding-right:5px;vertical-align:top">
-		    		<div class="listview" style="border-right: none; border-bottom: none;">
+		    		<div class="listview">
 			        	<div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 600px;overflow-x:auto;overflow-y:auto; padding:0px;" >
 			        		<table class="mainlist" style="width: 100%;">
 			        			<thead>
