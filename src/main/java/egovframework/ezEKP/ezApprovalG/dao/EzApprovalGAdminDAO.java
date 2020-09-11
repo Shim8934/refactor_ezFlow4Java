@@ -594,4 +594,13 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void updateAttachLimit(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdminDAO.updateAttachLimit", map);
 	}
+	
+	public int getSendOutDocListCount(Map<String, Object> map) throws Exception{
+		return (int)select("EzApprovalGAdminDAO.getSendOutDocListCount", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getSendOutDocList(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalGAdminDAO.getSendOutDocList", map);
+	}
 }
