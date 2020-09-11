@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.KEDAuthorUserInfo;
 import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -89,6 +90,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	
 	@Resource(name = "crypto")
 	private EgovFileScrty egovFileScrty;
+	
+	@Resource(name = "EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGAdminServiceImpl.class);
 
@@ -4424,5 +4428,328 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		logger.debug("deleteShareDocDir end");
 		return result;
+	}
+	
+	@Override
+	public String getSendOutDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang, int tenantID, String offset, String searchQuery) throws Exception {
+		logger.debug("getSendOutDocList started");
+
+		StringBuilder resultXML = new StringBuilder();
+		String orderOption1 = "";
+		String orderOption2 = "";
+		String basicOrder = getCode2Name("A18", "001", companyID, userLang, tenantID);
+		
+		
+		String basicOrderReverse = "desc";
+		
+		if (basicOrder.toLowerCase().equals("desc")) {
+			basicOrderReverse = "";
+		} else {
+			basicOrder = "";
+		}
+		
+		String listString = "";
+		
+		listString = getListHeader("007", companyID, userLang, tenantID);
+		
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+		int totalCount = getSendOutDocListCount(mode, companyID, tenantID, searchQuery);///////////////////////////////searchQuery넣을것!
+		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
+		int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
+		
+		if (querySize2 >= Integer.parseInt(pageSize)) {
+			querySize2 = Integer.parseInt(pageSize);
+		}
+		
+		resultXML.append("<DOCLIST>");
+		resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < hlength; k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "</COLNAME>");
+			
+			if (!sortHeader.equals("") && sortHeader.equals(listXML.getElementsByTagName("NAME").item(k).getTextContent())) {
+				if (sortOption.equals("")) {
+					orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+					orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
+				} else {
+					orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
+					orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+				}
+			}
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		
+//		String docList = getSendOutDocList(mode, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, companyID, tenantID);
+		String docList = getSendOutDocList(mode, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, companyID, tenantID, searchQuery);
+		
+		Document docXML = commonUtil.convertStringToDocument(docList);
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		String fieldName = "";
+		String fieldValue = "";
+		String langData = commonUtil.getMultiData(userLang, tenantID);
+		resultXML.append("<ROWS>");
+		
+		for (int k = dlength - 1; k >= 0; k--) {
+			resultXML.append("<ROW>");
+			for (int p = 0; p < hlength; p++) {
+				resultXML.append("<CELL>");
+				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
+				
+				if (fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERNAME") || fieldName.equals("FORMNAME")) {
+					fieldName = fieldName + langData;
+				}
+				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset)) + "</VALUE>");
+				
+				if (p == 0) {
+					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
+					resultXML.append("<DATA2>" + "" + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA3>");
+					resultXML.append("<DATA4>" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "</DATA4>");
+					resultXML.append("<DATA5>" + docXML.getElementsByTagName("PROCESSYN").item(k).getTextContent() + "</DATA5>");
+					resultXML.append("<DATA6>" + "" + "</DATA6>");
+					resultXML.append("<DATA7>" + "" + "</DATA7>");
+					resultXML.append("<DATA8>" + "" + "</DATA8>");
+					resultXML.append("<DATA9>" + "" + "</DATA9>");
+					resultXML.append("<DATA10>" + "" + "</DATA10>");
+					resultXML.append("<DATA11>" + "" + "</DATA11>");
+					resultXML.append("<DATA12>" + "" + "</DATA12>");
+					resultXML.append("<DATA13>" + "" + "</DATA13>");
+					resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("URGENTAPPROVAL").item(k).getTextContent()) + "</DATA14>");
+				}
+				resultXML.append("</CELL>");
+			}
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+		
+
+		logger.debug("getSendOutDocList ended");
+		
+		return resultXML.toString();
+	}
+	
+	public String getListHeader(String listCode, String companyID, String lang, int tenantID) throws Exception{
+		logger.debug("getListHeader started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LISTTYPE", listCode);
+		map.put("v_LANGTYPE", lang);
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getListHeader Param : v_LISTTYPE="+ listCode + " v_LANGTYPE = " +lang +" companyID = " + companyID + " v_TENANTID =" + tenantID);
+		List<ApprGListHeaderVO> apprGListHeaderVOList = ezApprovalGDAO.getListHeader(map);
+		
+        StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGListHeaderVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGListHeaderVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		logger.debug("getListHeader ended.");
+
+		return sb.toString();
+	}
+	
+	public String getCode2Name(String code1, String code2, String companyID, String lang, int tenantID) throws Exception{
+		logger.debug("getCode2Name started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CODE1", code1);
+		map.put("v_CODE2", code2);
+		map.put("companyID", companyID);
+		map.put("v_LANGTYPE", lang);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getOptionInfo Param : v_CODE1=" + code1 + " v_CODE2=" + code2 + " v_LANGTYPE=" + lang +" companyID = " + companyID +  " v_TENANTID= " + tenantID);
+
+		String rtnValue = ezApprovalGDAO.getCode2Name(map);
+		
+		logger.debug("getCode2Name ended.");
+		
+		return rtnValue;
+	}
+	
+	private String getSendOutDocList(String mode, int querySize, int querySize2, String orderOption1, String orderOption2, String basicOrder, String basicOrderReverse, String companyID, int tenantID, String subQuery) throws Exception {
+		logger.debug("getSendOutDocList started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyID", companyID);
+		map.put("v_MODE", mode);
+		map.put("v_PAGESIZE", querySize);
+		map.put("v_PAGESIZE2", querySize2);
+		map.put("v_ORDEROPTION", orderOption1);
+		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
+		
+		if(orderOption1.length() > 0) {
+			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0,orderOption1.trim().length()).toLowerCase());
+		}
+		
+		map.put("v_ORDEROPTION2", orderOption2);
+		map.put("v_ORDEROPTION2LENGTH", orderOption2.length());
+		
+		if(orderOption2.length() > 0) {
+			map.put("v_ORDEROPTION2VALUE", orderOption2.substring(0,orderOption2.trim().length()).toLowerCase());
+		}
+		
+		map.put("v_BASICORDER", basicOrder);
+		map.put("v_BASICORDER2", basicOrderReverse);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_MODELENGTH", mode.trim().length());
+		
+		//2018-09-28 김보미 - 검색 추가
+		map.put("v_SPSUBQUERY", subQuery.trim());
+		map.put("v_SPSUBQUERYLENGTH", subQuery.trim().length());
+		
+		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGAdminDAO.getSendOutDocList(map);
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+		
+		for (int i = 0; i < apprGDocListVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGDocListVOList.get(i)));
+		}
+		
+		sb.append("</DATA>");
+
+		logger.debug("getSendOutDocList ended");
+		
+		return sb.toString();
+	}
+
+	private int getSendOutDocListCount(String mode, String companyID, int tenantID, String subQuery) throws Exception {
+		logger.debug("getSendOutDocListCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyID", companyID);
+		map.put("v_MODE", mode);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_MODELENGTH", mode.trim().length());
+		
+		map.put("v_SPSUBQUERY", subQuery.trim());
+		map.put("v_SPSUBQUERYLENGTH", subQuery.trim().length());
+		
+		int totalCount = ezApprovalGAdminDAO.getSendOutDocListCount(map);
+
+		logger.debug("getSendOutDocListCount ended");
+		
+		return totalCount;
+	}
+	
+	public String getListField(String fieldName, String fieldValue, String companyID, String userLang, int tenantID, String offSet) throws Exception {
+		logger.debug("getListField started");
+
+		String rtnVal = "";
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		
+		switch (fieldName) {
+		case "DOCTYPE" : 
+			rtnVal = getCode2Name("A01", fieldValue, companyID, userLang, tenantID);
+			
+			break;
+			
+		case "DOCSTATE" :
+			rtnVal = getCode2Name("A02", fieldValue, companyID, userLang, tenantID);
+			
+			break;
+			
+		case "APRTYPE" :
+			
+			if (approvalFlag.equals("G")) {
+				rtnVal = getCode2Name("A03", fieldValue, companyID, userLang, tenantID);
+			} else {
+				rtnVal = getCode2Name("SA03", fieldValue, companyID, userLang, tenantID);
+			}
+			
+			break;
+			
+		case "APRSTATE" :
+			if (approvalFlag.equals("G")) {
+				rtnVal = getCode2Name("A04", fieldValue, companyID, userLang, tenantID);
+			} else {
+				rtnVal = getCode2Name("SA04", fieldValue, companyID, userLang, tenantID);
+			}
+			
+			break;
+			
+		case "FUNCTIONTYPE" :
+			if (approvalFlag.equals("G")) {
+				rtnVal = getCode2Name("A04", fieldValue, companyID, userLang, tenantID);
+			} else {
+				rtnVal = getCode2Name("SA04", fieldValue, companyID, userLang, tenantID);
+			}
+			
+			break;
+			
+		case "PROCESSYN" :
+			rtnVal = getStatusName(fieldValue, companyID, userLang, tenantID);
+			
+			break;
+			
+		case "OPINIONGB" :
+			rtnVal = getCode2Name("A17", fieldValue, companyID, userLang, tenantID);
+			
+			break;
+			
+		case "ATTACHFILESIZE" :
+			/**
+			 * log를 이용한 첨부파일 단위 변환.
+			 * cnt값이 0인경우 바이트, 1인경우 KB...
+			 * Math.pow를 통해 1024의 cnt승을 구한 뒤 최초 fieldValue를 나누는데 사용.
+			 * */
+			int cnt = (int) (Math.log10(Double.parseDouble(fieldValue)) / Math.log10(1024));
+			String[] unit = {" bytes", " KB", " MB", " GB"};
+			
+			double filesize = Double.parseDouble(fieldValue) / Math.pow(1024, cnt);
+			fieldValue = String.format("%.1f",filesize);
+			//rtnVal = fieldValue + " bytes";
+			rtnVal = fieldValue + unit[cnt];
+			break;
+			
+		default : 
+			if(fieldName.indexOf("DATE") > -1) {
+				fieldValue = commonUtil.getDateStringInUTC(convertDate(fieldValue), offSet, false);
+			}
+			rtnVal = fieldValue;
+			break;
+		}
+
+		logger.debug("getListField ended");
+
+		return makeListField(rtnVal);
+	}
+	
+	public String makeListField(String orgStr) {
+		if (orgStr == null || orgStr.equals("NULL")) {
+			return "";
+		} else {
+			return orgStr;
+		}
+	}
+	
+	public String convertDate(String date) {
+		   if (date.trim().equals("")) {
+			   return date;
+		   }
+		
+		   return date.substring(0, 19);
+	}
+	
+	public String getStatusName(String fieldValue, String companyID, String userLang, int tenantID) throws Exception{
+		return getCode2Name("A60", fieldValue.toUpperCase(), companyID, userLang, tenantID);
 	}
 }

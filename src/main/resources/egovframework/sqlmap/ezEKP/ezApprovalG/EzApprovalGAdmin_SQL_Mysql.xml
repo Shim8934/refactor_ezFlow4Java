@@ -12,6 +12,7 @@
 	<typeAlias alias="ApprGOpenGovModifyHistoryVO"  type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovModifyHistoryVO"/>
 	<typeAlias alias="KEDAuthorUserInfo" 			type="egovframework.ezEKP.ezApprovalG.vo.KEDAuthorUserInfo"/>
 	<typeAlias alias="KEDSharedUserInfo" 			type="egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo"/>
+	<typeAlias  alias="ApprGDocListVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO"/>
 
 	<!-- <procedure id="EzApprovalGAdmin.getContainerInfoManage" parameterClass="Map" 
 		resultClass="ApprGLeftVO"> -->
@@ -4945,4 +4946,183 @@
 		]]>
 	</delete>
 	
+	<select id="EzApprovalGAdminDAO.getSendOutDocListCount" parameterClass="Map" resultClass="int">
+		SELECT 
+			COUNT(TBL_ENDAPRDOCINFO.DOCID)
+	   	FROM 
+	   		TBL_ENDAPRDOCINFO 
+	   	INNER JOIN 
+	   		TBL_EXPENDAPRDOCINFO 
+	   	ON 
+	   		TBL_EXPENDAPRDOCINFO.DOCID = TBL_ENDAPRDOCINFO.DOCID
+	   	AND
+	   		TBL_EXPENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+	   	AND	
+	   		TBL_EXPENDAPRDOCINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+	   	INNER JOIN 
+	   		TBL_ENDRECEIPTPOINTINFO 
+	   	ON 
+	   		TBL_ENDAPRDOCINFO.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID
+	   	AND
+	   		TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID
+	   	AND
+	   		TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID
+	   	WHERE 
+	   		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 
+	   	AND 
+	   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID
+	   	<isEqual property="v_MODELENGTH" compareValue="2">
+	   	NOT
+	   	</isEqual>
+	   	LIKE 'ADDRESS%' AND TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
+	   	<isEqual property="v_MODELENGTH" compareValue="2">
+	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
+	   	</isEqual>
+	   	<isNotEqual  property="v_MODELENGTH" compareValue="2">
+	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
+	   	</isNotEqual>
+	   	 AND
+	   		TBL_EXPENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+	   	 AND
+	   	 	TBL_EXPENDAPRDOCINFO.COMPANYID = #companyID#	
+	   	 <isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
+			AND
+				$v_SPSUBQUERY$
+		</isGreaterThan>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getSendOutDocList" parameterClass="Map" resultClass="ApprGDocListVO">
+		<![CDATA[
+		SELECT 
+			* 
+		FROM (
+		SELECT 
+			* 
+		FROM (
+			SELECT 
+				TBL_ENDAPRDOCINFO.DOCID,
+		   		TBL_ENDAPRDOCINFO.ORGDOCID, 
+		   		TBL_ENDAPRDOCINFO.DOCTYPE,
+		   		TBL_ENDAPRDOCINFO.DOCSTATE, 
+		   		TBL_ENDAPRDOCINFO.FUNCTIONTYPE,
+		   		TBL_ENDAPRDOCINFO.HREF, 
+		   		TBL_ENDAPRDOCINFO.DOCTITLE, 
+		   		TBL_ENDAPRDOCINFO.DOCNO,
+		   		TBL_ENDAPRDOCINFO.HASATTACHYN, 
+		   		TBL_ENDAPRDOCINFO.HASOPINIONYN,
+		   		TBL_ENDAPRDOCINFO.STARTDATE, 
+		   		TBL_ENDAPRDOCINFO.ENDDATE,
+		   		TBL_ENDAPRDOCINFO.WRITERID, 
+		   		TBL_ENDAPRDOCINFO.WRITERNAME, 
+		   		TBL_ENDAPRDOCINFO.WRITERNAME2,     
+		   		TBL_ENDAPRDOCINFO.WRITERJOBTITLE, 
+		   		TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, 
+		   		TBL_ENDAPRDOCINFO.WRITERDEPTID,    
+		   		TBL_ENDAPRDOCINFO.WRITERDEPTNAME, 
+		   		TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, 
+		   		TBL_ENDAPRDOCINFO.FORMID,    
+		   		TBL_ENDAPRDOCINFO.CONTAINERID, 
+		   		TBL_ENDAPRDOCINFO.ISPUBLIC,    
+		   		TBL_EXPENDAPRDOCINFO.FORMNAME, 
+		   		TBL_EXPENDAPRDOCINFO.FORMNAME2, 
+		   		TBL_EXPENDAPRDOCINFO.URGENTAPPROVAL,    
+		   		TBL_EXPENDAPRDOCINFO.EDMSYN, 
+		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTNAME,  
+		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTNAME2,  
+		   		TBL_ENDRECEIPTPOINTINFO.PROCESSYN
+		   	FROM 
+		   		TBL_ENDAPRDOCINFO 
+		   	INNER JOIN 
+		   		TBL_EXPENDAPRDOCINFO 
+		   	ON 
+		   		TBL_EXPENDAPRDOCINFO.DOCID = TBL_ENDAPRDOCINFO.DOCID
+		   	AND
+		   		TBL_EXPENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+		   	AND
+		   		TBL_EXPENDAPRDOCINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+		   	INNER JOIN 
+		   		TBL_ENDRECEIPTPOINTINFO 
+		   	ON 
+		   		TBL_ENDAPRDOCINFO.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID
+		   	AND
+		   		TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID
+		   	AND
+		   		TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID
+		   	WHERE 
+		   		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 
+		   	AND
+		   		TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		   	AND
+		   		TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+		   	]]>
+<!-- 		   	AND  -->
+<!-- 		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID -->
+		   
+<!-- 		   	<isEqual property="v_MODELENGTH" compareValue="2"> -->
+<!-- 		   	NOT -->
+<!-- 		   	</isEqual> -->
+<!-- 		   	 LIKE  -->
+<!-- 		   	 	'ADDRESS%'  -->
+		   	 AND 
+		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
+		   	<isEqual property="v_MODELENGTH" compareValue="2">
+		   	 AND 
+		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
+		   	</isEqual>
+<!-- 		   	<isNotEqual property="v_MODELENGTH" compareValue="2"> -->
+<!-- 		   	 AND  -->
+<!-- 		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#) -->
+<!-- 		   	</isNotEqual>  -->
+		   	<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
+			AND
+				$v_SPSUBQUERY$
+			</isGreaterThan>		   	
+		   	<isNotEmpty property="v_ORDEROPTION">
+		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
+		   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+		   		ORDER BY 
+		   			$v_ORDEROPTION$ 
+		   		</isEqual>
+		   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+		   		ORDER BY 
+		   			$v_ORDEROPTION$, ENDDATE $v_BASICORDER$
+		   		</isNotEqual>
+		   		</isGreaterEqual>
+		   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="7">
+		   		ORDER BY 
+		   			$v_ORDEROPTION$, ENDDATE $v_BASICORDER$
+		   		</isLessThan>
+		   	</isNotEmpty>
+		   	<isEmpty property="v_ORDEROPTION">
+		   		ORDER BY 
+		   				ENDDATE $v_BASICORDER$
+		   	</isEmpty>
+		   	<![CDATA[
+		   	LIMIT #v_PAGESIZE# )A 
+		   	]]>
+		   	<isNotEmpty property="v_ORDEROPTION">
+		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
+		   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+		   			ORDER BY 
+		   				$v_ORDEROPTION2$
+		   		</isEqual>
+		   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+		   			ORDER BY 
+		   				$v_ORDEROPTION2$, ENDDATE $v_BASICORDER2$
+		   		</isNotEqual>
+		   		</isGreaterEqual>
+		   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="7">
+		   			ORDER BY 
+		   				$v_ORDEROPTION2$, ENDDATE $v_BASICORDER2$
+		   		</isLessThan>
+		   	</isNotEmpty>
+		   	<isEmpty property="v_ORDEROPTION">
+		   	 ORDER BY 
+		   	 	ENDDATE $v_BASICORDER2$ 
+		   	</isEmpty>
+		   	LIMIT #v_PAGESIZE2# )B
+		   	
+		   	
+	</select>
+
 </sqlMap>

@@ -211,4 +211,6 @@ public interface EzApprovalGAdminService {
 	public String insertShareDocDir(String ownerId, String ownerType, List<KEDSharedUserInfo> shareList, int tenantId) throws Exception;
 
 	String deleteShareDocDir(String ownerId, int tenantId) throws Exception;
+	
+	public String getSendOutDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang, int tenantID, String offset, String searchQuery) throws Exception;
 }

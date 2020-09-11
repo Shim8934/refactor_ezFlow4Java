@@ -107,6 +107,10 @@
 						//문서함공유
 						url = "/admin/ezApprovalG/docDirShareManage.do";
 						break;
+					case "sendout":
+						//문서유통 발송현황
+						url = "/admin/ezApprovalG/sendOut.do";
+						break;	
 				}
 				
 				window.open(url,"right");
@@ -178,6 +182,7 @@
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(11)"><spring:message code='main.t42'/></span></h2>	
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(12)"><spring:message code='main.t50'/></span></h2>	
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(13)"><spring:message code='main.t51'/></span></h2>	
+				<h2 style="display:none;"><span style="display:inline-block;width:100%;" onClick="goPage('sendout')">발송현황</span></h2>	
 				<c:if test="${useOpenGov == 'YES'}">
 					<h2><span style="display:inline-block;width:100%;" onClick="goPage(16)">원문공개문서함</span></h2>				
 				</c:if>
