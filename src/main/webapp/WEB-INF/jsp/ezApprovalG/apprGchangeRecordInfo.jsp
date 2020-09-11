@@ -416,6 +416,17 @@
             OpenAlertUI("<spring:message code='ezApprovalG.t960'/>");
             return;
         }
+        
+        /* 2020-09-11 홍승비 - 월과 일의 최대 입력 가능 숫자를 제한 */
+        if (txtExeM.value > 12) {
+        	OpenAlertUI("<spring:message code='ezApprovalG.hsbRG01'/>");
+            return;
+        }
+        
+        if (txtExeD.value > 31) {
+        	OpenAlertUI("<spring:message code='ezApprovalG.hsbRG02'/>");
+            return;
+        }
 
         if (ChangeCabinetInfo()) {
             rtnVal[0] = "TRUE";
@@ -623,6 +634,17 @@
     	
     	return publicCode2;
     }
+    
+    /* 2020-09-11 홍승비 - 숫자 이외의 값 입력 방지 함수 */
+    function KeEventControl2(obj) {
+        if ((window.event.keyCode >= 48 && window.event.keyCode <= 57) || (window.event.keyCode >= 96 && window.event.keyCode <= 105)) {
+            return true;
+        }
+        else {
+        	obj.value = obj.value.replace(/[\a-zㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+        }
+    }
+    
 </script>
 </head>
 <body class="popup">
@@ -651,20 +673,20 @@
     </tr>
     <tr>
       <th><spring:message code='ezApprovalG.t831'/></th>
-      <td><input type="text" style="height:25px;" name="txtRegY" id="txtRegY" maxlength = "4" size="4">
+      <td><input type="text" style="height:25px;" name="txtRegY" id="txtRegY" maxlength = "4" size="4" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
         <spring:message code='ezApprovalG.t456'/>
-        <input type="text" style="height:25px;" name="txtRegM"  id="txtRegM" maxlength = "2" size="2">
+        <input type="text" style="height:25px;" name="txtRegM"  id="txtRegM" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
         <spring:message code='ezApprovalG.t968'/>
-        <input type="text" style="height:25px;" name="txtRegD"  id="txtRegD" maxlength = "2" size="2">
+        <input type="text" style="height:25px;" name="txtRegD"  id="txtRegD" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
         <spring:message code='ezApprovalG.t662'/>
-        <input type="text" style="height:25px;" name="txtRegH"  id="txtRegH" maxlength = "2" size="2">
+        <input type="text" style="height:25px;" name="txtRegH"  id="txtRegH" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
         <spring:message code='ezApprovalG.t977'/>
-        <input type="text" style="height:25px;" name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2">
+        <input type="text" style="height:25px;" name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
         <spring:message code='ezApprovalG.t978'/></td>
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t979'/></th>
-      <td ><input type="text" name="txtTotalPage" id="txtTotalPage" style="Width:60px; height: 25px;">
+      <td ><input type="text" name="txtTotalPage" id="txtTotalPage" style="Width:60px; height: 25px;" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
         &nbsp;<spring:message code='ezApprovalG.t980'/></td>
     </tr>
     <tr>
@@ -679,11 +701,11 @@
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t863'/></th>
-      <td ><input type="text" style="height:25px;" name="txtExeY" id="txtExeY" maxlength = "4" size="4">
+      <td ><input type="text" style="height:25px;" name="txtExeY" id="txtExeY" maxlength = "4" size="4" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
         <spring:message code='ezApprovalG.t456'/>
-        <input type="text" style="height:25px;" name="txtExeM"  id="txtExeM" maxlength = "2" size="2">
+        <input type="text" style="height:25px;" name="txtExeM"  id="txtExeM" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
         <spring:message code='ezApprovalG.t968'/>
-        <input type="text" style="height:25px;" name="txtExeD"  id="txtExeD" maxlength = "2" size="2">
+        <input type="text" style="height:25px;" name="txtExeD"  id="txtExeD" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
         <spring:message code='ezApprovalG.t643'/></td>
     </tr>
     <tr>
