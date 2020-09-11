@@ -1041,23 +1041,28 @@
 	            //업무일지면...
 	            else if (Org_cmd == "journal") {
 	            	getJournalToMail();
+	            	setOnclickFunction();
 	            	return;
 	            }
 	            // ezPMS 게시판
 	            else if (Org_cmd == "ezPMSBoard") {
 	            	getEzPMSBoardToMail();
+	            	setOnclickFunction();
 	            	return;
 	            }
 	            else if (Org_cmd == "ezPMS") {
 	            	getPMSMemberList(ezPMSType);
+	            	setOnclickFunction();
 	            	return;
 	            }
 	            else if (Org_cmd == "attitude") {
 	            	getAttitudeToMail();
+	            	setOnclickFunction();
 	            	return;
 	            }
 	            else if (Org_cmd == "attitudeAbsented") {
 	            	getAttitudeAbsentedList("duplicated");
+	            	setOnclickFunction();
 	            	return;
 	            }
 	            
@@ -1070,10 +1075,15 @@
 	        g_originalHTML = message.GetEditorContent();
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
 	        
+	        setOnclickFunction();
+	    }
+	    
+	    /* 2020-09-11 홍승비 - 버튼에서 온클릭 이벤트를 분리하여 업무일지, ezPMS 등의 발송버튼 활성화되지 않는 오류 수정 */
+	    function setOnclickFunction() {
 	        return setTimeout(function () {
 	        	document.getElementById("spanT674").setAttribute("onclick", "Send_onClick()");
 	        	document.getElementById("spanT48").setAttribute("onclick", "Save_onClick('tempsave')");
-	        }, 20)
+	        }, 20);
 	    }
 		
 	    function removeHTMLTag(html) {
