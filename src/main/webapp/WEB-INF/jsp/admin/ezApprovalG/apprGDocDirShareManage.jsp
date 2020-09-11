@@ -161,8 +161,15 @@
 		    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=660,width=980,top=" + pTop + ",left=" + pLeft, "");
 			}
 		    
-		    function deleteOwner(){
-		    	if(!confirm("삭제하시겠습니까?")){
+		    function deleteOwner() {
+		    	
+		    	/* 2020-09-11 홍승비 - 선택된 공유자 없는 경우 알러트 메세지 추가 (다국어 미적용) */
+		    	if ($("tr[class='active']").length <= 0) {
+		    		alert("삭제할 공유자를 선택해주세요.");
+		    		return;
+		    	}
+		    	
+		    	if (!confirm("삭제하시겠습니까?")) {
 		    		return;
 		    	}
 		    	
