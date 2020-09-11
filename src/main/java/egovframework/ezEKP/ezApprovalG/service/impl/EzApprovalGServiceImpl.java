@@ -7330,10 +7330,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						//분석해야함
 						int tmps = signCnt - refResult;
 						if (totalLineSN == tmps) {
-							doc.getElementById(signAdd + "sign" + lastSignNum).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
+                            strSign = signAdd + "sign" + lastSignNum;
+                            strSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
+                            
+							doc.getElementById(strSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 							
-							if (doc.getElementById(signAdd + "seumyungdate" + lastSignNum) != null) {
-								doc.getElementById(signAdd + "seumyungdate" + lastSignNum).html(lastCnt);
+							if (doc.getElementById(strSeumyungDate) != null) {
+								doc.getElementById(strSeumyungDate).html(lastCnt);
 							}
 						} else {
 							strSign = signAdd + "sign" + tmps;
@@ -7728,14 +7731,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		    resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText2) + "</CONTENT>");
 		    resultXML.append("</SIGNINFO>");
 		}
-//		} else {
-//			resultXML.append("<SIGNINFO>");
-//			resultXML.append("<DOCID>" + docID + "</DOCID>");
-//			resultXML.append("<SIGNTYPE>" + "HTML" + "</SIGNTYPE>");
-//			resultXML.append("<SIGNNAME>" + signInfo + "</SIGNNAME>");
-//			resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText) + "</CONTENT>");
-//			resultXML.append("</SIGNINFO>");
-//		}
 		
 		resultXML.append("</SIGNINFOS>");
 		
@@ -17408,25 +17403,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("updateSignInfo started");
 
 		Document docXML = commonUtil.convertStringToDocument(resultXML.toString());
-		String strDocID = docXML.getElementsByTagName("DOCID").item(0).getTextContent();
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyID", companyID);
-		map.put("v_DOCID", strDocID);
-		map.put("v_TENANTID", tenantID);
-		
-		int aprSN = ezApprovalGDAO.updateSignInfoAprSN(map);
-		int signLength = docXML.getElementsByTagName("SIGNINFO").getLength();
-		int maxAprSN = 0;
-		
-		for (int k = 0; k < signLength; k++) {
-			maxAprSN = aprSN + k + 1;
-			
-			map.put("v_MAXAPRSN", maxAprSN);
-			map.put("v_SIGNTYPE", docXML.getElementsByTagName("SIGNTYPE").item(k).getTextContent());
-			map.put("v_SIGNNAME", docXML.getElementsByTagName("SIGNNAME").item(k).getTextContent());
-			map.put("v_CONTENT", docXML.getElementsByTagName("CONTENT").item(k).getTextContent());
-			ezApprovalGDAO.insertSignInfo(map);
+		NodeList signInfos = docXML.getElementsByTagName("SIGNINFOS").item(0).getChildNodes();
+		if (signInfos.getLength() > 0) {
+		    String strDocID = docXML.getElementsByTagName("DOCID").item(0).getTextContent();
+		    
+		    Map<String, Object> map = new HashMap<String, Object>();
+		    map.put("companyID", companyID);
+		    map.put("v_DOCID", strDocID);
+		    map.put("v_TENANTID", tenantID);
+		    
+		    int aprSN = ezApprovalGDAO.updateSignInfoAprSN(map);
+		    int signLength = docXML.getElementsByTagName("SIGNINFO").getLength();
+		    int maxAprSN = 0;
+		    
+		    for (int k = 0; k < signLength; k++) {
+		        maxAprSN = aprSN + k + 1;
+		        
+		        map.put("v_MAXAPRSN", maxAprSN);
+		        map.put("v_SIGNTYPE", docXML.getElementsByTagName("SIGNTYPE").item(k).getTextContent());
+		        map.put("v_SIGNNAME", docXML.getElementsByTagName("SIGNNAME").item(k).getTextContent());
+		        map.put("v_CONTENT", docXML.getElementsByTagName("CONTENT").item(k).getTextContent());
+		        ezApprovalGDAO.insertSignInfo(map);
+		    }
 		}
 
 		logger.debug("updateSignInfo ended");
