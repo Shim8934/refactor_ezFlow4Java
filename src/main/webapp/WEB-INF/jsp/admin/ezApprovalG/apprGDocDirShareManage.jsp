@@ -156,7 +156,7 @@
 		    function insertShare(flag) {
 				var url = "/admin/ezApprovalG/docDirOwnerInsert.do";
 				if(flag == 'M'){
-					url += "?ownerId=" + ownerId + "&ownerName=" + ownerName + "&ownerType=" + ownerType;
+					url += "?ownerId=" + ownerId + "&ownerName=" + encodeURIComponent(ownerName) + "&ownerType=" + encodeURIComponent(ownerType);
 				}
 		    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=660,width=980,top=" + pTop + ",left=" + pLeft, "");
 			}
