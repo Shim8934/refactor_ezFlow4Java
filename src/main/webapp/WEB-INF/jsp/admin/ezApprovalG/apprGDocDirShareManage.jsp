@@ -57,8 +57,8 @@
 		</h1>
 		<div id="mainmenu" style="padding-left: 5px;">
             <ul>
-            	<li class="important" id="btnInsertForm"><span onclick="insertShare('I');">추가</span></li>
-            	<li id="btnModForm"><span onclick="insertShare('M')">변경</span></li>
+            	<li class="important" id="btnInsertForm"><span onclick="insertShare('I');"><spring:message code='ezApprovalG.t268'/></span></li>
+            	<li id="btnModForm"><span onclick="insertShare('M')"><spring:message code='ezApprovalG.t269'/></span></li>
             	<li id="btnDeleteForm"><span class="icon16 icon16_delete" onclick="return deleteOwner();"></span></li>
             </ul>
 		</div>
