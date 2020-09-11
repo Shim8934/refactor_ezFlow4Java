@@ -1161,7 +1161,8 @@ public class EzCircularController extends EgovFileMngUtil {
 			}
 			
 			result.setTitle(result.getTitle().replaceAll("\\\\", "\\\\\\\\"));
-			result.setTitle(commonUtil.stripScriptTags(result.getTitle()));
+			/* 2020-09-11 홍승비 - 회람판 제목의 XSS 처리를 jsp단에서 진행하므로, 하단 시큐어코딩 코드 주석처리  */
+			//result.setTitle(commonUtil.stripScriptTags(result.getTitle()));
 			result.setContent(commonUtil.stripScriptTags(result.getContent()));
 			
 			List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", "", userInfo.getTenantId(), userInfo.getOffset());
