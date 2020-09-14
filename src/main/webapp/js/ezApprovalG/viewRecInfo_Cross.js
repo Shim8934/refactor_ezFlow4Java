@@ -123,7 +123,7 @@ function InitializeTab(strTabNum) {
                 break;
 
             case "2":
-                if (g_SCFlag == "1") {
+                if (g_SCFlag == "2") {
                     InitSCInfo();	
                 } else {
                     tdSCInfo.innerHTML = strLang711;

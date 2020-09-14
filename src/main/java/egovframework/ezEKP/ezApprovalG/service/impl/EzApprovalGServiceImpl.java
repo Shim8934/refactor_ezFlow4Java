@@ -22804,7 +22804,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	        }
 		}
 		// '특수목록 정보 저장
-		if (specialCatalogFlag.equals("1") && nodeSL != null) {
+		if (specialCatalogFlag.equals("2") && nodeSL != null) {
 			subSQL = saveSpecialInfoRec(recordID, cabID, xmlDom, tenantID, companyID);
 			if (subSQL.equals("FALSE")) {
 				return "<RESULT>FALSE</RESULT>";

@@ -25,7 +25,7 @@ function InitCabinetInfo(g_CabListXml) {
 
 function InitCabClassInfo(objCabInfoXml) {
 	bSpecialFlag = objCabInfoXml.getElementsByTagName("SCFLAG")[0].textContent;
-    if (bSpecialFlag == "1")
+    if (bSpecialFlag == "2")
     {
         tdSpecialFlag.innerHTML = "Y";
 //        InitSCInfo_Mod(SelectSingleNodeNew(objCabInfoXml, "RESULT/SCINFO"));
@@ -109,7 +109,7 @@ function InitRegisterType() {
 }
 
 function InitSCInputBox() {
-    if (bSpecialFlag == "1")
+    if (bSpecialFlag == "2")
     {
         btnAddSC.style.display = "";
         tdSpecialFlag.innerHTML = strLang652;
@@ -214,7 +214,7 @@ function RegisterRecord() {
 
     var objSI, objSC, objData,cataloginfo;
     objSI = createNodeAndAppandNode(xmlpara, objRoot, objSI, "SPECIALCATALOGINFO");
-    if (bSpecialFlag == "1")
+    if (bSpecialFlag == "2")
     {
     	cataloginfo = createNodeAndAppandNode(xmlpara, objSI, objSC, "SCNAME");
         objData = createNodeAndAppandNodeText(xmlpara, cataloginfo, objData, "LIST1", g_arrSCName[0]);
