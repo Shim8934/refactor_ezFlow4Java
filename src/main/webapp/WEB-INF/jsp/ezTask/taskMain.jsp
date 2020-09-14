@@ -171,9 +171,9 @@
 		        	repeatcount = 1;
 		        }
 		        
-	        	feature = GetOpenPosition(790, 810);
+	        	feature = GetOpenPosition(790, 820);
 	        	
-                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 820px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 822px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 		    }
 	
 		    function WriteTask(flag) {

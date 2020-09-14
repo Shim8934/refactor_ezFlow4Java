@@ -475,12 +475,12 @@
 				var feature = "";
 				var startD = obj.parentElement.getAttribute("startdate");				
 
- 				feature = GetOpenPosition(750, 740);
+				feature = GetOpenPosition(790, 820);
 	        	
 	        	if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+		            window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 822px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 		        } else {
-	                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 822px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 		        }
 			}
 
