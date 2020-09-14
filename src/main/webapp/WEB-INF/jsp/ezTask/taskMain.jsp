@@ -448,12 +448,12 @@
 			            var commentCount = SelectSingleNodeValue(node, "HASCOMMENT");
 				        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
 				           // tr.cells[4].innerHTML = "<div id='titleid" + i + "' style='float:left; max-width: 500px; overflow: hidden; text-overflow: ellipsis; display: block;'>" + SelectSingleNodeValue(node, "TITLE") + "</div>" + "<div style='display: block;'><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></div>"; 
-				            tr.cells[4].innerHTML = "<div id='titleid" + i + "' style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>" + SelectSingleNodeValue(node, "TITLE") + "</div><font color = '#c64200'>&nbsp;[" + commentCount + "]</font>";
-				            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")) + " [" + commentCount + "]");
+				            tr.cells[4].innerHTML = "<div id='titleid" + i + "' style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>" + MakeXMLString(SelectSingleNodeValue(node, "TITLE")) + "</div><font color = '#c64200'>&nbsp;[" + commentCount + "]</font>";
+				            tr.cells[4].setAttribute("title", SelectSingleNodeValue(node, "TITLE") + " [" + commentCount + "]");
 				        } else {
 				        	// tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
-				        	tr.cells[4].innerHTML = "<div id='titleid" + i + "' style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>" + SelectSingleNodeValue(node, "TITLE") + "</div>";
-				            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")));
+				        	tr.cells[4].innerHTML = "<div id='titleid" + i + "' style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>" + MakeXMLString(SelectSingleNodeValue(node, "TITLE")) + "</div>";
+				            tr.cells[4].setAttribute("title", SelectSingleNodeValue(node, "TITLE"));
 	
 				            //tr.cells[4].style.overflow = "hidden";
 				            //tr.cells[4].style.textOverflow = "ellipsis";
