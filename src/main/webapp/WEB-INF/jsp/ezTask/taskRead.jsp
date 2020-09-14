@@ -1752,7 +1752,7 @@
 		</script>
 		
 		<div class="wrap_progress" style="height:245px;">
-			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;" title="${taskInfoVO.title }">${taskInfoVO.title }</h4>
+			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;" title="<c:out value='${taskInfoVO.title}'/>"><c:out value='${taskInfoVO.title}'/></h4>
 			<div style="">
 				<div class="circle progress_graph" style="width:30%; margin: 10px 20px; top:15px;">
 					<strong></strong>

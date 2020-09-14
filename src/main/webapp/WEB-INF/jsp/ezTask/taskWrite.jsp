@@ -756,7 +756,7 @@
 							<table class="content" id="tableInformation">
 								<tr>
 									<th><spring:message code='ezTask.t118' /></th>
-									<td colspan="3"><input type="text" id="TextTitle" style="width:100%;" value = "${taskInfoVO.title }"></td>
+									<td colspan="3"><input type="text" id="TextTitle" style="width:100%;" value = "<c:out value='${taskInfoVO.title}'/>"></td>
 								</tr>
 								<tr>
 									<th><spring:message code='ezTask.t2003' /></th>
@@ -913,7 +913,7 @@
 								<table class="content" id="tableInformation">
 									<tr>
 										<th><spring:message code='ezTask.t118' /></th>
-										<td colspan="3"><input type="text" id="TextTitle" style="width:100%;" value = "${taskInfoVO.title }"></td>
+										<td colspan="3"><input type="text" id="TextTitle" style="width:100%;" value = "<c:out value='${taskInfoVO.title}'/>"></td>
 									</tr>
 									<tr>
 										<th><spring:message code='ezTask.t2003' /></th>

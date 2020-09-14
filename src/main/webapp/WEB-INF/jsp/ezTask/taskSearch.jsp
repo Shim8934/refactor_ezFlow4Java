@@ -333,11 +333,11 @@
 
 		            var commentCount = SelectSingleNodeValue(node, "HASCOMMENT");
 			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
-			            tr.cells[4].innerHTML = "<span id='titleid" + i + "'>" + SelectSingleNodeValue(node, "TITLE") + "</span>" + "<span><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></span>";
-			            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")) + " [" + commentCount + "]");
+			            tr.cells[4].innerHTML = "<span id='titleid" + i + "'>" + MakeXMLString(SelectSingleNodeValue(node, "TITLE")) + "</span>" + "<span><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></span>";
+			            tr.cells[4].setAttribute("title", SelectSingleNodeValue(node, "TITLE") + " [" + commentCount + "]");
 			        } else {
-						tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
-			            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")));
+						tr.cells[4].innerHTML = MakeXMLString(SelectSingleNodeValue(node, "TITLE"));
+			            tr.cells[4].setAttribute("title", SelectSingleNodeValue(node, "TITLE"));
 			        }
 			        tr.cells[4].style.overflow = "hidden";
 		            tr.cells[4].style.textOverflow = "ellipsis";
