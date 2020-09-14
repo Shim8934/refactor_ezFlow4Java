@@ -11877,15 +11877,18 @@
 				TBL_LastDocID
 	      	SET 
 	      		lastDocID = (
-	      		   SELECT 
+	      		   (SELECT 
 	      		       LASTDOCID + 1 
-	      		   FROM 
-	      		       TBL_LASTDOCID AS A
-	      		   WHERE 
-	      		       TENANT_ID = #v_TENANTID#
-	      		   AND 
-	      		       COMPANYID = #companyID# 
-	      		   FOR UPDATE
+	      		    FROM
+	      		       (SELECT
+	      		       		LASTDOCID
+	      		        FROM
+	      		       		TBL_LASTDOCID
+	      		   		WHERE 
+	      		       		TENANT_ID = #v_TENANTID#
+	      		   		AND 
+	      		       		COMPANYID = #companyID# 
+	      		   		FOR UPDATE) ldi)
 	      		)
 			WHERE 
 				TENANT_ID = #v_TENANTID#
