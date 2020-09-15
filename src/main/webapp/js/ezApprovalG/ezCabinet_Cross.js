@@ -112,6 +112,11 @@ function ezCabMunuCtl(MenuType, selRow) {
                     document.getElementById("tdbtnEndProduce").style.display = "none";
                     document.getElementById("tdbtnCancelEndProd").style.display = "";
                 }
+                document.getElementById("tdNewVol").style.display = "";
+            } else if(ListTypeFlag == "10" && GetCabChargerRight() === "true" && g_sFlag == "m07"){			// 2020-09-14 김민성 - 종료연기신청, 정리대상목록 권호수추가 버튼 추가
+                document.getElementById("tdbtnEndProduce").style.display = "";
+                document.getElementById("tdbtnCancelEndProd").style.display = "none";
+                document.getElementById("tdNewVol").style.display = "";
             } else {
                 document.getElementById("tdbtnEndProduce").style.display = "none";
                 document.getElementById("tdbtnCancelEndProd").style.display = "none";

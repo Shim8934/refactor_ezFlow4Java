@@ -46,6 +46,7 @@
 		<result property="boardColor"					column="BoardColor"					columnIndex="5"/>
 		<result property="c_ClubNo"						column="C_ClubNo"					columnIndex="6"/>
 		<result property="gubun"						column="Gubun"						columnIndex="7"		nullValue="0"/>
+		<result property="url"						column="URL"						columnIndex="8"		nullValue=""/>
 	</resultMap>
 	
 	<resultMap class="CommunityBoardItemVO" id="CommunityBoardItem">
@@ -123,7 +124,8 @@
  					    A.treevieworder TreeViewOrder,
  					    A.boardcolor BoardColor,
  					    A.c_clubno C_ClubNo,
- 					    A.gubun 
+ 					    A.gubun,
+ 					    A.URL as url
  					FROM
  						TBL_COMM_BOARDINFO A
  					JOIN 
@@ -135,7 +137,7 @@
 						FROM
 							TBL_COMM_BOARDMANAGE
 						WHERE
-							RTRIM(parentboardid) = UPPER(#v_pRootBoardID#)
+							RTRIM(UPPER(parentboardid)) = UPPER(#v_pRootBoardID#)
 						AND
 							access_ = 1
 						AND
@@ -172,7 +174,8 @@
  						A.treevieworder TreeViewOrder,
  	                    A.boardcolor BoardColor,
  	                    A.c_clubno C_ClubNo,
- 	                    A.gubun 
+ 	                    A.gubun,
+ 	                    A.URL as url
  					FROM
  						TBL_COMM_BOARDINFO A
  					JOIN
@@ -184,7 +187,7 @@
 	                    FROM
 	                    	TBL_COMM_BOARDMANAGE 
 	                    WHERE
-	                    	RTRIM(parentboardid) = #v_pRootBoardID#
+	                    	RTRIM(UPPER(parentboardid)) = UPPER(#v_pRootBoardID#)
 						AND
 							access_ = 1
 						AND
@@ -220,11 +223,12 @@
  	                A.treevieworder,
  	                A.boardcolor BoardColor,
  	                A.c_clubno C_ClubNo,
- 	            	A.gubun
+ 	            	A.gubun,
+ 	            	A.URL as url
  				FROM
  					TBL_COMM_BOARDINFO A
  	            WHERE
- 	            	RTRIM(parentboardid) = #v_pRootBoardID#
+ 	            	RTRIM(UPPER(parentboardid)) = UPPER(#v_pRootBoardID#)
  	            AND
  	            	A.boardid <> #v_pExcludeBoardID#
  	            AND
@@ -2761,10 +2765,19 @@
 				TBL_C_CLUB.companyid = #companyID#
 			AND
 				TBL_C_CLUBUSER.tenant_id = #tenantID#
-			ORDER BY
-				TBL_C_CLUBUSER.c_visited DESC
-		]]>
-
+			]]>
+			<isNotEmpty property="v_SORTBYCLUBNO">
+				<![CDATA[
+					ORDER BY
+						TO_NUMBER(SUBSTR(TBL_C_CLUB.C_CLUBNO, 3)) DESC
+				]]>
+			</isNotEmpty>
+			<isEmpty property="v_SORTBYCLUBNO">
+				<![CDATA[
+					ORDER BY
+						TBL_C_CLUBUSER.c_visited DESC
+				]]>
+			</isEmpty>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.bbsViewNewGet2"				parameterClass="String"		resultClass="CommunityCBoardVO"				remapResults="true"> -->
@@ -3565,7 +3578,7 @@
       		FROM
       			TBL_COMM_TREECACHE 
 			WHERE
-				query = LOWER(#v_pRootBoardID#) ||','|| #v_pUserID# ||','|| #v_pDeptID# ||','|| #v_pCompanyID# ||','|| #v_pMode# ||','|| #v_pSubFlag# ||','|| #v_pSelectBy# ||','|| #v_pExcludeBoardID# ||','|| #v_pClubNo# ||','|| #primary#
+				query = UPPER(#v_pRootBoardID#) ||','|| #v_pUserID# ||','|| #v_pDeptID# ||','|| #v_pCompanyID# ||','|| #v_pMode# ||','|| #v_pSubFlag# ||','|| #v_pSelectBy# ||','|| #v_pExcludeBoardID# ||','|| #v_pClubNo# ||','|| #primary#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -5186,7 +5199,7 @@
 			DELETE FROM
 				TBL_COMM_TREECACHE
   			WHERE
-  				QUERY = #v_pRootBoardID# || ',' || #v_pUserID# || ',' || #v_pDeptID# || ',' || #v_pCompanyID# || ',' || #v_pMode# || ',' || #v_pSubFlag# || ',' || #v_pSelectBy# || ',' || #v_pExcludeBoardID# || ',' || #v_pClubNo# || ',' || #primary#
+  				QUERY = UPPER(#v_pRootBoardID#) || ',' || #v_pUserID# || ',' || #v_pDeptID# || ',' || #v_pCompanyID# || ',' || #v_pMode# || ',' || #v_pSubFlag# || ',' || #v_pSelectBy# || ',' || #v_pExcludeBoardID# || ',' || #v_pClubNo# || ',' || #primary#
   			AND
   				tenant_id = #tenantID#
 		]]>
@@ -5199,7 +5212,7 @@
 				result,
 				tenant_id)
 			VALUES
-				(#v_pRootBoardID# || ',' || #v_pUserID# || ',' || #v_pDeptID# || ',' || #v_pCompanyID# || ',' || #v_pMode# || ',' || #v_pSubFlag# || ',' || #v_pSelectBy# || ',' || #v_pExcludeBoardID# || ',' || #v_pClubNo# || ',' || #primary#,
+				(UPPER(#v_pRootBoardID#) || ',' || #v_pUserID# || ',' || #v_pDeptID# || ',' || #v_pCompanyID# || ',' || #v_pMode# || ',' || #v_pSubFlag# || ',' || #v_pSelectBy# || ',' || #v_pExcludeBoardID# || ',' || #v_pClubNo# || ',' || #primary#,
 				#v_result#,
 				#tenantID#)
 		]]>

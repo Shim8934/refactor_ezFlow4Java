@@ -333,11 +333,11 @@
 
 		            var commentCount = SelectSingleNodeValue(node, "HASCOMMENT");
 			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
-			            tr.cells[4].innerHTML = "<span id='titleid" + i + "'>" + SelectSingleNodeValue(node, "TITLE") + "</span>" + "<span><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></span>";
-			            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")) + " [" + commentCount + "]");
+			            tr.cells[4].innerHTML = "<span id='titleid" + i + "'>" + MakeXMLString(SelectSingleNodeValue(node, "TITLE")) + "</span>" + "<span><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></span>";
+			            tr.cells[4].setAttribute("title", SelectSingleNodeValue(node, "TITLE") + " [" + commentCount + "]");
 			        } else {
-						tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
-			            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")));
+						tr.cells[4].innerHTML = MakeXMLString(SelectSingleNodeValue(node, "TITLE"));
+			            tr.cells[4].setAttribute("title", SelectSingleNodeValue(node, "TITLE"));
 			        }
 			        tr.cells[4].style.overflow = "hidden";
 		            tr.cells[4].style.textOverflow = "ellipsis";
@@ -475,12 +475,12 @@
 				var feature = "";
 				var startD = obj.parentElement.getAttribute("startdate");				
 
- 				feature = GetOpenPosition(750, 740);
+				feature = GetOpenPosition(790, 820);
 	        	
 	        	if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+		            window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 822px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 		        } else {
-	                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 740px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&date=" + startD + "&mode=search", "", "height = 822px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 		        }
 			}
 

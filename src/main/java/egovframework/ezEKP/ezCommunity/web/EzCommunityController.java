@@ -180,7 +180,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		/* 2018-06-21 홍승비 - 자신이 가입한 커뮤니티 리스트 좌측표출 companyID 조건 추가 */
-		List<CommunityClubVO> list = ezCommunityService.getLeftCommunity(userInfo);
+		List<CommunityClubVO> list = ezCommunityService.getLeftCommunity(userInfo, "");
 		
 		model.addAttribute("list", list);
 		
@@ -824,6 +824,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 			multiBoardName = boardInfo.getBoardName();
 		} else {
 			multiBoardName = boardInfo.getBoardName2();
+		}
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			model.addAttribute("mailShareId", request.getParameter("mailShareId"));
 		}
 		
 		ezCommunityService.newBoardItem(item, boardInfo, userInfo, pItemID, pBoardID, pUrl, pMode, expireDays, model);
@@ -1499,7 +1505,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			model.addAttribute("WRITE", strACLXML);
 		} else if (request.getParameter("boardID") != null) {
 			String pBoardID = request.getParameter("boardID");
-			String userDeptPath = userInfo.getDeptPathCode();
+			String userDeptPath = userInfo.getDeptPathCode() + ",everyone"; // everyone 권한 포함하여 체크하도록 수정
 			
 			logger.debug("pBoardID = " + pBoardID);
 			logger.debug("userDeptPath = " + userDeptPath);
@@ -4838,5 +4844,25 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		return result;
 	}
+	
+	/**
+	 * 2020-08-31 홍승비 - 자신이 가입한 커뮤니티의 게시판을 표출하는 UI 호출 메서드
+	 * */
+    @RequestMapping(value = "/ezCommunity/communityBoardSelectForMail.do", method = RequestMethod.GET)
+    public String communityBoardSelectForMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+    	logger.debug("communityBoardSelectForMail started.");
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	List<CommunityClubVO> clubList = ezCommunityService.getLeftCommunity(userInfo, "Y");
+		
+		model.addAttribute("clubList", clubList);
+		model.addAttribute("clubListSize", clubList.size());
+		model.addAttribute("lang", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId())); // 기본언어 1, 다국어 설정이라면 2
+    	model.addAttribute("userInfo", userInfo);
+    	
+    	logger.debug("communityBoardSelectForMail ended.");
+    	return "/ezCommunity/communityBoardSelectForMail";
+    }
+    
 }
 

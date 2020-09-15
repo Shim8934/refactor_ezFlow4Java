@@ -154,13 +154,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	/* 2018-06-21 홍승비 - 자신이 가입한 커뮤니티 리스트 좌측표출 companyID 조건 추가 */
 	@Override
-	public List<CommunityClubVO> getLeftCommunity(LoginVO userInfo) throws Exception {
+	public List<CommunityClubVO> getLeftCommunity(LoginVO userInfo, String sortByClubno) throws Exception {
 		logger.debug("getLeftCommunity started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userInfo.getId());
 		map.put("companyID", userInfo.getCompanyID());
 		map.put("tenantID", userInfo.getTenantId());
+		map.put("v_SORTBYCLUBNO", sortByClubno); // clubno 칼럼으로 정렬하는지 여부
 		
 		logger.debug("leftCommunityGet3 started.");
 		List<CommunityClubVO> list = ezCommunityDAO.leftCommunityGet3(map);
@@ -2616,6 +2617,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             
             result.append("<DATA5>" + brdBoardTreeList.get(i).getC_ClubNo() + "</DATA5>");
             result.append("<DATA6>" + brdBoardTreeList.get(i).getGubun() + "</DATA6>");
+            
+            /* 2020-09-08 홍승비 - URL게시판 구분용 파라미터 추가 */
+            result.append("<URL>" + brdBoardTreeList.get(i).getUrl() + "</URL>");
+            
             result.append("<EXPANDED>FALSE</EXPANDED>");
             result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardID(), tenantID) + "</ISLEAF>");
 

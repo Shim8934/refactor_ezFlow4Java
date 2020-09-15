@@ -51,7 +51,8 @@ public interface EzCommunityService {
 	/* 2018-06-21 홍승비 - 커뮤니티 메인홈 하단 카테고리별 커뮤니티 검색 companyID 조건 추가 */
 	public List<CommunityClubVO> searchCop(String search, String keyword, int startRow, int endRow, String mode, String companyID, int tenantID) throws Exception ;
 	
-	public List<CommunityClubVO> getLeftCommunity(LoginVO userInfo) throws Exception;
+	/* 2020-08-31 홍승비 - 자신이 가입한 커뮤니티 표출 시 소팅 여부 조건 추가 */
+	public List<CommunityClubVO> getLeftCommunity(LoginVO userInfo, String sortByClubno) throws Exception;
 	
 	public List<CommunityBoardInfoVO> commHomeBoardInfo(String code, int tenantID) throws Exception;
 	

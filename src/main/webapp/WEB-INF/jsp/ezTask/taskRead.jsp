@@ -157,7 +157,7 @@
 		    	
 		        setTimeout(scrollTop, 1000);
 		        
-	    		$("#message").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 421 + "PX");
 		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#taskCommentList").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#new_div_body").height(document.documentElement.clientHeight - 360 + "PX");
@@ -197,7 +197,7 @@
 		    });
 		    
 		    window.onresize = function () {
-	    		$("#message").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 421 + "PX");
 		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#taskCommentList").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#new_div_body").height(document.documentElement.clientHeight - 360 + "PX");
@@ -1670,7 +1670,7 @@
 		    	
 		        setTimeout(scrollTop, 1000);
 		        
-	    		$("#message").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
+	    		$("#message").closest("td").height(document.documentElement.clientHeight - 421 + "PX");
 		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#taskComment").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#new_div_body").height(document.documentElement.clientHeight - 360 + "PX");
@@ -1756,7 +1756,7 @@
 		</script>
 		
 		<div class="wrap_progress" style="height:245px;margin-top:14px">
-			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;" title="${taskInfoVO.title }">${taskInfoVO.title }</h4>
+			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;" title="<c:out value='${taskInfoVO.title }'/>"><c:out value='${taskInfoVO.title}'/></h4>
 			<div style="">
 				<div class="circle progress_graph" style="width:30%; margin: 10px 20px; top:15px;">
 					<strong></strong>

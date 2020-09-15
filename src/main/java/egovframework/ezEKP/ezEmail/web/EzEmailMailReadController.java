@@ -700,6 +700,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", loginInfo.getTenantId());
 		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
 		
+		/* 2020-08-31 홍승비 - 메일을 커뮤니티 게시판에 게시하는 기능의 사용여부 전달 */
+		String useMailToCommunity = ezCommonService.getTenantConfig("useMailToCommunity", loginInfo.getTenantId());
+		
 		// 20200508 조진호 - 패키지 타입이 메일인 경우 메일 게시가 보이지 않도록 처리하기 위해 추가
 		String packageType = commonUtil.getPackageType(loginInfo.getTenantId());
 		model.addAttribute("packageType", packageType);
@@ -735,6 +738,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("systemCountryCode", systemCountryCode.toLowerCase()); 
 		model.addAttribute("useCountryIP", useCountryIP); 
 		model.addAttribute("useShowSystemCountry", useShowSystemCountry); 
+		model.addAttribute("useMailToCommunity", useMailToCommunity); 
 		
 		logger.debug("readMail ended.");
 		

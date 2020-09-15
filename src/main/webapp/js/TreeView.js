@@ -242,8 +242,9 @@ function TreeNode() {
         
         spnNode.style.paddingLeft = "1px";*/
         
+        /* 2020-09-08 홍승비 - 커뮤니티 게시판에도 툴팁 추가 */
         /* 2019-11-25 홍승비 - 게시판과 게시판그룹(폴더) 부분에 title 툴팁 속성 추가 */
-        if (window.location.href.indexOf("/ezBoard/") > -1) {
+        if (window.location.href.indexOf("/ezBoard/") > -1 || window.location.href.indexOf("/ezCommunity/") > -1) {
         	spnNode.setAttribute("title", spanNodeName);
         }
         
