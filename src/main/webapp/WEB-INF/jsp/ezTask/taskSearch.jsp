@@ -218,10 +218,11 @@
 		            return;
 				}
 
+				/* 2020-09-15 홍승비 - 제목과 메모는 특수문자를 그대로 저장하도록 수정되어 주석처리 */
 				/* 2018-05-30 김민성 - 업무 검색 특수문자 태그 검색 수정 */
 				if (document.getElementById("keyword").value != "") {
 					filter = document.getElementById("keyword").value;			
-					filter = MakeXMLString(filter);
+					//filter = MakeXMLString(filter);
 				}
 
 				if (filter.indexOf("%") != -1) {

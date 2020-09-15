@@ -55,9 +55,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
 		
+		/* 2020-09-15 홍승비 - 업무관리 제목의 특수문자를 jsp단에서 처리하므로, 하단 XSS 코드 주석처리 */
 		String title = vo.getTitle();
 		title = commonUtil.detectPathTraversal(title);
-		title = commonUtil.stripScriptTags(title);
+		//title = commonUtil.stripScriptTags(title);
 		vo.setTitle(title);
 		
 		logger.debug("getTaskInfo ended.");
@@ -182,9 +183,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("contentPath = " + taskInfoVO.getContentPath());
 		
 		String taskID = taskInfoVO.getTaskID();
-		String taskTitle = taskInfoVO.getTitle();
+		
+		/* 2020-09-15 홍승비 - 업무관리 제목의 특수문자를 jsp단에서 처리하므로, 하단 XSS 코드 주석처리 */
+/*		String taskTitle = taskInfoVO.getTitle();
 		taskTitle = commonUtil.stripScriptTags(taskTitle);
-		taskInfoVO.setTitle(taskTitle);
+		taskInfoVO.setTitle(taskTitle);*/
 		
 		/* mht Save*/
 		String mhtFilePath = "";
@@ -562,12 +565,13 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		List<TaskInfoVO> list = ezTaskDAO.getTaskList(map);
 		logger.debug("--------------------------------------------------------------");
 		
-		for(TaskInfoVO v: list) {
+		/* 2020-09-15 홍승비 - 업무관리 제목의 특수문자를 jsp단에서 처리하므로, 하단 XSS 코드 주석처리 */
+/*		for(TaskInfoVO v: list) {
 			logger.debug("Task ID: " + v.getTaskID() + " || Task type: " + v.getTaskType());
 			String taskTitle = v.getTitle();
 			taskTitle = commonUtil.stripScriptTags(taskTitle);
 			v.setTitle(taskTitle);
-		}
+		}*/
 		
 		logger.debug("--------------------------------------------------------------");
 		
@@ -1061,9 +1065,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				continue;
 			}
 			
-			String taskTitle = vo.getTitle();
+			/* 2020-09-15 홍승비 - 업무관리 제목의 특수문자를 jsp단에서 처리하므로, 하단 XSS 코드 주석처리 */
+/*			String taskTitle = vo.getTitle();
 			taskTitle = commonUtil.stripScriptTags(taskTitle);
-			vo.setTitle(taskTitle);
+			vo.setTitle(taskTitle);*/
 			
 			//baonk added
 			if (vo.getTaskType().equals("4")) {
@@ -1106,9 +1111,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("insertTask started.");
 		
 		String nowDate = commonUtil.getTodayUTCTime("");
-		String taskTitle = vo.getTitle();
+		
+		/* 2020-09-15 홍승비 - 업무관리 제목의 특수문자를 jsp단에서 처리하므로, 하단 XSS 코드 주석처리 */
+/*		String taskTitle = vo.getTitle();
 		taskTitle = commonUtil.stripScriptTags(taskTitle);
-		vo.setTitle(taskTitle);
+		vo.setTitle(taskTitle);*/
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("parentID", 0);
@@ -1161,9 +1168,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		String taskID = vo.getTaskID();
 		String nowDate = commonUtil.getTodayUTCTime("");
-		String taskTitle = vo.getTitle();
+		
+		/* 2020-09-15 홍승비 - 업무관리 제목의 특수문자를 jsp단에서 처리하므로, 하단 XSS 코드 주석처리 */
+/*		String taskTitle = vo.getTitle();
 		taskTitle = commonUtil.stripScriptTags(taskTitle);
-		vo.setTitle(taskTitle);
+		vo.setTitle(taskTitle);*/
 		
 		logger.debug("taskID = " + taskID + " || Repetition: " + vo.getRepetition());
 		
