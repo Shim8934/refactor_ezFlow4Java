@@ -27316,25 +27316,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		  Pattern pattern = Pattern.compile("[^(0-9\\-\\.)]");
 			Matcher matcher = pattern.matcher(pSize);
 			
-          double pSizeNum = Integer.parseInt(matcher.replaceAll(""));
-          if (pSize.toUpperCase().indexOf("PX") > -1)
-          {
-              strRtnVal = String.format("%.4f", pSizeNum * 0.264583) + "mm";
-          }
-          else if (pSize.toUpperCase().indexOf("PT") > -1)
-          {
-              strRtnVal = String.format("%.4f", pSizeNum * 0.352777) + "mm";
-          }
-          else if (pSize.toUpperCase().indexOf("MM") > -1)
-          {
-              strRtnVal = pSizeNum + "mm";
-          }
-          else
-          {
-              strRtnVal = pSize;
-          }
+        double pSizeNum = Double.parseDouble(matcher.replaceAll(""));
+        if (pSize.toUpperCase().indexOf("PX") > -1)
+        {
+            strRtnVal = Math.round(pSizeNum * 0.264583) + "mm";
+        }
+        else if (pSize.toUpperCase().indexOf("PT") > -1)
+        {
+            strRtnVal = Math.round(pSizeNum * 0.352777) + "mm";
+        }
+        else if (pSize.toUpperCase().indexOf("MM") > -1)
+        {
+            strRtnVal = pSizeNum + "mm";
+        }
+        else
+        {
+            strRtnVal = pSize;
+        }
 
-          return strRtnVal;
+        return strRtnVal;
 	}
 
 	private org.jsoup.nodes.Node MakeHTagHTML(Element element, String tagType) {
