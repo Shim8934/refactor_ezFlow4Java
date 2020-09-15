@@ -955,8 +955,9 @@
 		    		$(".row_body").css("background", "");
 		    	}
 		    	
+		    	/* 2020-09-15 홍승비 - 제목과 메모는 특수문자를 그대로 저장하도록 수정되어 주석처리 */
 		    	/* 18-05-07 김민성 - 특수문자 검색 수정 */
-		    	filter = MakeXMLString(filter);
+		    	//filter = MakeXMLString(filter);
 		    	
 		    	$.ajax({
 					type : "GET",
