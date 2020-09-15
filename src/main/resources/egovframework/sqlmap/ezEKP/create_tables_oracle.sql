@@ -5142,6 +5142,34 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"TENANT_ID" NUMBER(5,0)
    ) ;
 --------------------------------------------------------
+--  DDL for Table TBL_PERMISSIONGROUPINFO
+--------------------------------------------------------
+
+  CREATE TABLE "TBL_PERMISSIONGROUPINFO" 
+   (	"GROUP_ID" VARCHAR2(80 BYTE), 
+	"MEMBER_ID" VARCHAR2(80 BYTE), 
+	"MEMBER_TYPE" VARCHAR2(10 BYTE), 
+	"MEMBER_COMPANYID" VARCHAR2(80 BYTE) DEFAULT NULL, 
+	"ADDED_DATE" DATE, 
+	"SUB_DEPT_YN" NVARCHAR2(10), 
+	"COMPANY_ID" VARCHAR2(80 BYTE), 
+	"TENANT_ID" NUMBER(5,0)
+   ) ;
+--------------------------------------------------------
+--  DDL for Table TBL_PERMISSIONGROUPLIST
+--------------------------------------------------------
+
+  CREATE TABLE "TBL_PERMISSIONGROUPLIST" 
+   (	"GROUP_ID" VARCHAR2(80 BYTE), 
+	"GROUP_NAME" NVARCHAR2(100), 
+	"CREATE_ID" VARCHAR2(80 BYTE), 
+	"CREATE_DATE" DATE, 
+	"UPDATE_ID" VARCHAR2(80 BYTE) DEFAULT NULL, 
+	"UPDATE_DATE" DATE DEFAULT NULL, 
+	"COMPANY_ID" VARCHAR2(80 BYTE), 
+	"TENANT_ID" NUMBER(5,0)
+   ) ;
+--------------------------------------------------------
 --  DDL for Table TBL_PHOTO_IMAGEITEM
 --------------------------------------------------------
 
@@ -10823,6 +10851,18 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
   CREATE UNIQUE INDEX "SYS_C0035238" ON "TBL_WEBFOLDER_USER" ("CN", "TENANT_ID", "TYPE") 
   ;
 --------------------------------------------------------
+--  DDL for Index SYS_C0056132
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "SYS_C0056132" ON "TBL_PERMISSIONGROUPLIST" ("GROUP_ID", "TENANT_ID") 
+  ;
+--------------------------------------------------------
+--  DDL for Index SYS_C0056140
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "SYS_C0056140" ON "TBL_PERMISSIONGROUPINFO" ("GROUP_ID", "MEMBER_ID", "TENANT_ID") 
+  ;
+--------------------------------------------------------
 --  DDL for Index TABLE1_PK
 --------------------------------------------------------
 
@@ -15490,6 +15530,31 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "TBL_OPENGOVFILEINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "TBL_OPENGOVFILEINFO" MODIFY ("SN" NOT NULL ENABLE);
   ALTER TABLE "TBL_OPENGOVFILEINFO" MODIFY ("DOCID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table TBL_PERMISSIONGROUPINFO
+--------------------------------------------------------
+
+  ALTER TABLE "TBL_PERMISSIONGROUPINFO" MODIFY ("GROUP_ID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSIONGROUPINFO" MODIFY ("MEMBER_ID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSIONGROUPINFO" MODIFY ("MEMBER_TYPE" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSIONGROUPINFO" MODIFY ("ADDED_DATE" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSIONGROUPINFO" MODIFY ("SUB_DEPT_YN" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSIONGROUPINFO" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSIONGROUPINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSIONGROUPINFO" ADD PRIMARY KEY ("GROUP_ID", "MEMBER_ID", "TENANT_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table TBL_PERMISSIONGROUPLIST
+--------------------------------------------------------
+
+  ALTER TABLE "TBL_PERMISSIONGROUPLIST" MODIFY ("GROUP_ID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSIONGROUPLIST" MODIFY ("GROUP_NAME" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSIONGROUPLIST" MODIFY ("CREATE_ID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSIONGROUPLIST" MODIFY ("CREATE_DATE" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSIONGROUPLIST" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSIONGROUPLIST" MODIFY ("TENANT_ID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_PERMISSIONGROUPLIST" ADD PRIMARY KEY ("GROUP_ID", "TENANT_ID")
+  USING INDEX  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PHOTO_IMAGEITEM
 --------------------------------------------------------
