@@ -86,6 +86,7 @@ import org.xml.sax.SAXParseException;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
@@ -194,6 +195,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Autowired
 	private EzAttitudeService ezAttitudeService;
+	
+	@Resource(name = "EzApprovalGAdminDAO")
+	private EzApprovalGAdminDAO ezApprovalGAdminDao;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGServiceImpl.class);
 	
@@ -27868,11 +27872,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getFileName(String realPath, String strFileName, String strFolderName, String strXML, int tenantID) throws Exception {
+	public String getFileName(Map<String, Object> sendOutMap, String realPath, String strFileName, String strFolderName, String strXML, int tenantID) throws Exception {
 		String strPath = commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator +"files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator +"data" + commonUtil.separator + strFolderName + commonUtil.separator;
 		String strResult = "";
 		boolean exist;
 		String result = "";
+		
+		int checkSendOutTable = 0;
+		int insertSendOutTable = 0;
+		
+		String fileName = "";
+		String folderName = "";
+		String fileState = "fail";
+		String sendState = "error";
 		
 		for (int i = 1; i <= 99; i++) {
 			strResult = strFileName + getNDigitNum(Integer.toString(i), 2) + ".xml";
@@ -27908,10 +27920,33 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			fop.close();
 			
 			result = "OK";
+			fileState = "success";
+			sendState = "sendtemp";
+			fileName = strResult;
+			folderName = ">" + strFolderName;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			result = "FALSE";
 		} 
+		
+		sendOutMap.put("V_FILENAME", fileName);
+		sendOutMap.put("V_FOLDERNAME", folderName);
+		sendOutMap.put("V_FILESTATE", fileState);
+		sendOutMap.put("V_SENDSTATE", sendState);
+		
+		sendOutMap.put("V_DATABASE", "jmocha");
+		sendOutMap.put("V_TABLE", "tbl_sendoutinfo");
+		
+		checkSendOutTable = ezApprovalGAdminDao.checkSendOutInfoTable(sendOutMap);
+		
+		if(checkSendOutTable > 0) {
+			insertSendOutTable = ezApprovalGAdminDao.insertSendOutInfo(sendOutMap);
+		}
+		
+		logger.debug("checkSendOutTable" + checkSendOutTable);
+		logger.debug("insertSendOutTable" + insertSendOutTable);
+		
 		return result;
 	}
 

@@ -55,6 +55,7 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -4450,7 +4451,95 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		String listString = "";
 		
-		listString = getListHeader("007", companyID, userLang, tenantID);
+		listString = "<DATA>"
+				+ "<ROW>"
+				+ "<NAME>제목</NAME>"
+				+ "<NAME2></NAME2>"
+				+ "<NAME3></NAME3>"
+				+ "<NAME4></NAME4>"
+				+ "<WIDTH>100</WIDTH>"
+				+ "<COLNAME>DocTitle</COLNAME>"
+				+ "<TABLENAME></TABLENAME>"
+				+ "</ROW>"
+				+ "<ROW>"
+				+ "<NAME>발신의뢰부서</NAME>"
+				+ "<NAME2></NAME2>"
+				+ "<NAME3></NAME3>"
+				+ "<NAME4></NAME4>"
+				+ "<WIDTH>100</WIDTH>"
+				+ "<COLNAME>WriterDeptName</COLNAME>"
+				+ "<TABLENAME></TABLENAME>"
+				+ "</ROW>"
+				+ "<ROW>"
+				+ "<NAME>발신의뢰자</NAME>"
+				+ "<NAME2></NAME2>"
+				+ "<NAME3></NAME3>"
+				+ "<NAME4></NAME4>"
+				+ "<WIDTH>100</WIDTH>"
+				+ "<COLNAME>WriterName</COLNAME>"
+				+ "<TABLENAME></TABLENAME>"
+				+ "</ROW><ROW>"
+				+ "<NAME>발신의뢰일자</NAME>"
+				+ "<NAME2></NAME2>"
+				+ "<NAME3></NAME3>"
+				+ "<NAME4></NAME4>"
+				+ "<WIDTH>100</WIDTH>"
+				+ "<COLNAME>EndDate</COLNAME>"
+				+ "<TABLENAME></TABLENAME>"
+				+ "</ROW>"
+				+ "<ROW>"
+				+ "<NAME>상태</NAME>"
+				+ "<NAME2></NAME2>"
+				+ "<NAME3></NAME3>"
+				+ "<NAME4></NAME4>"
+				+ "<WIDTH>100</WIDTH>"
+				+ "<COLNAME>ProcessYN</COLNAME>"
+				+ "<TABLENAME></TABLENAME>"
+				+ "</ROW>"
+				+ "<ROW>"
+				+ "<NAME>양식명</NAME>"
+				+ "<NAME2></NAME2>"
+				+ "<NAME3></NAME3>"
+				+ "<NAME4></NAME4>"
+				+ "<WIDTH>100</WIDTH>"
+				+ "<COLNAME>FormName</COLNAME>"
+				+ "<TABLENAME></TABLENAME>"
+				+ "</ROW>"
+				+ "<ROW>"
+				+ "<NAME>파일명</NAME>"
+				+ "<NAME2></NAME2>"
+				+ "<NAME3></NAME3>"
+				+ "<NAME4></NAME4>"
+				+ "<WIDTH>100</WIDTH>"
+				+ "<COLNAME>FileName</COLNAME>"
+				+ "<TABLENAME></TABLENAME>"
+				+ "</ROW>"
+				+ "<ROW>"
+				+ "<NAME>파일경로</NAME>"
+				+ "<NAME2></NAME2>"
+				+ "<NAME3></NAME3>"
+				+ "<NAME4></NAME4>"
+				+ "<WIDTH>100</WIDTH>"
+				+ "<COLNAME>FolderName</COLNAME>"
+				+ "<TABLENAME></TABLENAME>"
+				+ "</ROW>"
+				+ "<NAME>처리상태</NAME>"
+				+ "<NAME2></NAME2>"
+				+ "<NAME3></NAME3>"
+				+ "<NAME4></NAME4>"
+				+ "<WIDTH>100</WIDTH>"
+				+ "<COLNAME>SendState</COLNAME>"
+				+ "<TABLENAME></TABLENAME>"
+				+ "</ROW>"
+				+ "<NAME>파일상태</NAME>"
+				+ "<NAME2></NAME2>"
+				+ "<NAME3></NAME3>"
+				+ "<NAME4></NAME4>"
+				+ "<WIDTH>100</WIDTH>"
+				+ "<COLNAME>FileState</COLNAME>"
+				+ "<TABLENAME></TABLENAME>"
+				+ "</ROW>"
+				+ "</DATA>";
 		
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
@@ -4585,6 +4674,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	private String getSendOutDocList(String mode, int querySize, int querySize2, String orderOption1, String orderOption2, String basicOrder, String basicOrderReverse, String companyID, int tenantID, String subQuery) throws Exception {
 		logger.debug("getSendOutDocList started");
 
+		List<ApprGDocListVO> apprGDocListVOList = new ArrayList<ApprGDocListVO>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("companyID", companyID);
@@ -4614,7 +4704,16 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_SPSUBQUERY", subQuery.trim());
 		map.put("v_SPSUBQUERYLENGTH", subQuery.trim().length());
 		
-		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGAdminDAO.getSendOutDocList(map);
+		map.put("V_DATABASE", "jmocha");
+		map.put("V_TABLE", "tbl_sendoutinfo");
+		
+		int checkSendOutTable = ezApprovalGAdminDAO.checkSendOutInfoTable(map);
+		
+		if(checkSendOutTable > 0) {
+			apprGDocListVOList = ezApprovalGAdminDAO.getSendOutDocList_file(map);
+		} else {
+			apprGDocListVOList = ezApprovalGAdminDAO.getSendOutDocList(map);
+		}
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("<DATA>");
@@ -4643,8 +4742,19 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_SPSUBQUERY", subQuery.trim());
 		map.put("v_SPSUBQUERYLENGTH", subQuery.trim().length());
 		
-		int totalCount = ezApprovalGAdminDAO.getSendOutDocListCount(map);
-
+		int totalCount = 0; 
+		
+		map.put("V_DATABASE", "jmocha");
+		map.put("V_TABLE", "tbl_sendoutinfo");
+		
+		int checkSendOutTable = ezApprovalGAdminDAO.checkSendOutInfoTable(map);
+		
+		if(checkSendOutTable > 0) {
+			totalCount = ezApprovalGAdminDAO.getSendOutDocListCount_file(map);
+		} else {
+			totalCount = ezApprovalGAdminDAO.getSendOutDocListCount(map);
+		}
+		
 		logger.debug("getSendOutDocListCount ended");
 		
 		return totalCount;

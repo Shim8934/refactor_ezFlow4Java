@@ -270,7 +270,7 @@
 		        }
 		        else if (pListTypeValue == "9") {
 		            SendOutFlag = "SS";
-		            getSendOutDocList();
+		            getAdminSendOutDocList();
 		        }
 		        else if (pListTypeValue == "10") {
 		            getDocList();

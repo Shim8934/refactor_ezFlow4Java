@@ -603,4 +603,35 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public List<ApprGDocListVO> getSendOutDocList(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalGAdminDAO.getSendOutDocList", map);
 	}
+	
+	public int checkSendOutInfoTable(Map<String, Object> map) throws Exception{
+		return (int)select("EzApprovalGAdminDAO.checkSendOutInfoTable", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> selectSendOutInfo(Map<String, Object> map) throws Exception{
+		return (Map<String, Object>) select("EzApprovalGAdminDAO.selectSendOutInfo", map);
+	}
+	
+	public int insertSendOutInfo(Map<String, Object> map) throws Exception{
+		return update("EzApprovalGAdminDAO.insertSendOutInfo", map);
+	}
+	
+	public int updateSendOutInfo(Map<String, Object> map) throws Exception{
+		return update("EzApprovalGAdminDAO.updateSendOutInfo", map);
+	}
+	
+	public int getSendOutDocListCount_file(Map<String, Object> map) throws Exception{
+		return (int)select("EzApprovalGAdminDAO.getSendOutDocListCount_file", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getSendOutDocList_file(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalGAdminDAO.getSendOutDocList_file", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> selectSendOutInfoList(Map<String, Object> map) throws Exception{
+		return (List<Map<String, Object>>) list("EzApprovalGAdminDAO.selectSendOutInfoList", map);
+	}
 }

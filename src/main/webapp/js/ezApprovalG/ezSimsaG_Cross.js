@@ -995,7 +995,8 @@ function sendExtDoc(ExtXML) {
 			url : "/ezApprovalG/sendMsg.do",
 			data : {
 				extXML : getXmlString(ExtXML),
-				xmlPath : pDocID + i + "pack.xml"
+				xmlPath : pDocID + i + "pack.xml",
+				docID : pDocID
 			},
 			success: function(xml){
 				result = xml;

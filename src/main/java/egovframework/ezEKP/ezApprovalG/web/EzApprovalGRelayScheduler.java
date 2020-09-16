@@ -12,7 +12,9 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,6 +46,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 import org.xml.sax.InputSource;
 
+import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRelayConfigVO;
@@ -87,6 +90,9 @@ public class EzApprovalGRelayScheduler {
 	
 	@Autowired
 	private EzEmailScheduler ezEmailScheduler;
+	
+	@Resource(name = "EzApprovalGAdminDAO")
+	private EzApprovalGAdminDAO ezApprovalGAdminDao;
 	
 //	@RequestMapping(value = "/ezApprovalG/relay.do")
 //	@Scheduled(cron = "0 0/1 * * * *")
@@ -1857,7 +1863,7 @@ public class EzApprovalGRelayScheduler {
 			}
 		}
 
-		// receiveerr 폴더에 쌓인 XML 파일들을 접수 처리 한다.
+		// senderr 폴더에 쌓인 XML 파일들을 접수 처리 한다.
 		File senderr = new File(commonUtil.detectPathTraversal(configVO.getSenderrPath()));
 		File[] fileList = senderr.listFiles();
 
@@ -1915,7 +1921,164 @@ public class EzApprovalGRelayScheduler {
 
 		System.out.println("configVO: " + configVO.toString());
 
+		//발송현황 업데이트
+		Map<String, Object> sendOutMap = new HashMap<String, Object>();
+		sendOutMap.put("V_DATABASE", "jmocha");
+		sendOutMap.put("V_TABLE", "tbl_sendoutinfo");
+		int checkSendOutTable = ezApprovalGAdminDao.checkSendOutInfoTable(sendOutMap);
+		
+		if(checkSendOutTable > 0) {
+			updateSendOutState();
+		}
+		
 		 logger.debug("receiverSchedulerMain ended");
 	}
     
+	public void updateSendOutState() throws Exception {
+		 logger.debug("updateSendOutState started");
+		
+			boolean sendExist;
+			boolean sendtempExist;
+			boolean senderrExist;
+			boolean senderrtempExist;
+			
+			Map<String, Object> sendOutMap = new HashMap<String, Object>();
+			sendOutMap.put("V_FILESTATE", "success");
+			
+			//발송 대상 중에서 정상적으로 파일이 생성된 대상의 리스트를 조회
+			List<Map<String, Object>> sendOutInfoList = ezApprovalGAdminDao.selectSendOutInfoList(sendOutMap);
+			
+			logger.debug(sendOutInfoList.toString());
+			
+			//그룹웨에서 문서유통 모듈의 data 폴더에 접근하는 경로 생성
+			String configRelayRoot = config.getProperty("relay_root").trim();
+			int configRelaySchedulerTenant = 1;
+			String configUloadRelayRoot = config.getProperty("upload_relay.ROOT").trim();
+			String strRelayFolderPath = configRelayRoot + commonUtil.separator + "fileroot" + commonUtil.separator + configRelaySchedulerTenant + commonUtil.separator + "files" + configUloadRelayRoot;
+			 
+			logger.debug("relay config path: " + configRelayRoot + " " + configRelaySchedulerTenant + " " + configUloadRelayRoot + " " + strRelayFolderPath);
+		
+		    String sendPath = strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "send" + commonUtil.separator;
+		    String sendtempPath = strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "sendtemp" + commonUtil.separator;
+		    String senderrtempPath = strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "senderrtemp" + commonUtil.separator;
+		    String senderrPath = strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "senderr" + commonUtil.separator;
+			
+		    logger.debug("sendPathList: " + sendPath + " " + sendtempPath + " " + senderrtempPath + " " + senderrPath );
+		
+		    //발송된 문서의 파일 상태를 확인하여 업데이트: 최종 저장된 위치에서 변경 사항이 있을 때에는 해당 위치로 상태값을 변경
+		    //발송 관련 대상 폴더에서 조회가 되지 않을 때에는 문서유통 모듈에서 15일이 지나서 삭제한 것으로 보고 대상의 파일 상태값을 삭제됨으로 변경
+		    for (Map<String, Object> map : sendOutInfoList) {
+				
+			      File sendfile = new File(commonUtil.detectPathTraversal(sendPath + map.get("FILENAME")));
+			      File sendtempfile = new File(commonUtil.detectPathTraversal(sendPath + map.get("FILENAME")));
+			      File senderrfile = new File(commonUtil.detectPathTraversal(sendPath + map.get("FILENAME")));
+			      File senderrtempfile = new File(commonUtil.detectPathTraversal(sendPath + map.get("FILENAME")));
+			      
+			      
+			      sendExist = sendfile.exists();
+			      sendtempExist = sendtempfile.exists();
+			      senderrExist = senderrfile.exists();
+			      senderrtempExist = senderrtempfile.exists();
+			      
+			      logger.debug("sendExist: " + sendExist);
+			      logger.debug("sendtempExist: " + sendtempExist);
+			      logger.debug("senderrExist: " + senderrExist);
+			      logger.debug("senderrtempExist: " + senderrtempExist);
+			      
+			      Map<String, Object> paramMap = new HashMap<String, Object>();
+			      
+//					UPDATE TBL_SENDOUTINFO
+//					SET 
+//					FOLDERNAME = #V_FOLDERNAME#,
+//					FILESTATE = #V_FILESTATE#,
+//					SENDSTATE = #V_SENDSTATE#,
+//					UPDATEDATE = NOW()
+//				WHERE 
+//					IDEX = (SELECT max(IDEX) from TBL_SENDOUTINFO where DOCID = #V_FILENAME#)
+			      
+			      String folderName = (String) map.get("FOLDERNAME");
+			      
+			      if(sendExist) {
+			    	  
+			    	  folderName = folderName + ">" + "send";
+			    	  
+			    	  paramMap.put("V_FOLDERNAME", folderName);
+			    	  paramMap.put("V_FILESTATE", "success");
+			    	  paramMap.put("V_SENDSTATE", "send");
+			    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
+			    	  paramMap.put("V_DOCID", map.get("DOCID"));
+			    	  
+			    	  logger.debug("send: " + paramMap);
+			    	  
+			    	  if(!map.get("V_SENDSTATE").equals("send")) {
+			    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
+			    	  }
+			    	  
+			      } else if(sendtempExist) {
+			    	  
+			    	  folderName = folderName + ">" + "sendtemp";
+			    	  
+			    	  paramMap.put("V_FOLDERNAME", folderName);
+			    	  paramMap.put("V_FILESTATE", "success");
+			    	  paramMap.put("V_SENDSTATE", "sendtemp");
+			    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
+			    	  paramMap.put("V_DOCID", map.get("DOCID"));
+			    	  
+			    	  logger.debug("sendtemp: " + paramMap);
+			    	  
+			    	  if(!map.get("V_SENDSTATE").equals("sendtemp")) {
+			    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
+			    	  }
+			    	  
+			      } else if(senderrExist) {
+			    	  
+			    	  folderName = folderName + ">" + "senderr";
+			    	  
+			    	  paramMap.put("V_FOLDERNAME", folderName);
+			    	  paramMap.put("V_FILESTATE", "success");
+			    	  paramMap.put("V_SENDSTATE", "senderr");
+			    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
+			    	  paramMap.put("V_DOCID", map.get("DOCID"));
+			    	  
+			    	  logger.debug("senderr: " + paramMap);
+			    	  
+			    	  if(!map.get("V_SENDSTATE").equals("senderr")) {
+			    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
+			    	  }
+			    	  
+			      } else if(senderrtempExist) {
+			    	  
+			    	  folderName = folderName + ">" + "senderrtemp";
+			    	  
+			    	  paramMap.put("V_FOLDERNAME", folderName);
+			    	  paramMap.put("V_FILESTATE", "success");
+			    	  paramMap.put("V_SENDSTATE", "senderrtemp");
+			    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
+			    	  paramMap.put("V_DOCID", map.get("DOCID"));
+			    	  
+			    	  logger.debug("senderrtemp: " + paramMap);
+			    	  
+			    	  if(!map.get("V_SENDSTATE").equals("senderrtemp")) {
+			    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
+			    	  }
+			    	  
+			      } else {
+			    	  
+			    	  paramMap.put("V_FOLDERNAME", map.get("FOLDERNAME"));
+			    	  paramMap.put("V_FILESTATE", "removed");
+			    	  paramMap.put("V_SENDSTATE", map.get("SENDSTATE"));
+			    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
+			    	  paramMap.put("V_DOCID", map.get("DOCID"));
+			    	  
+			    	  logger.debug("removed: " + paramMap);
+			    	  
+			    	  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
+	 
+			      }
+			      
+			}
+		 
+		 logger.debug("updateSendOutState ended");
+	}
+	
 }

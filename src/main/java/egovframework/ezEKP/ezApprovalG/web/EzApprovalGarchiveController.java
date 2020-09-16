@@ -6,7 +6,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.StringReader;
 import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -2507,6 +2509,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String mapPath = commonUtil.getRealPath(request);
 		String xmlPath = request.getParameter("xmlPath");
 		String path = mapPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "sendXML" + commonUtil.separator + xmlPath;
+		
+		String docID = request.getParameter("docID");
+		
 		logger.debug("xmlPath=" + xmlPath);
 		
 		//pubdoc 의 컨텐츠가 있는지 확인하여 내용이 없으면 senderr/temp 폴더로 이동
@@ -2611,13 +2616,24 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         logger.debug("####sendID : " + sendID);
         logger.debug("####recevID : " + arrReceiveID[0]);
         logger.debug("####strTime : " + strTime);
-        result = ezApprovalGService.getFileName(mapPath, sendID + arrReceiveID[0] + strTime, sendPath, strXML, userInfo.getTenantId());
+        
+        Map<String, Object> sendOutMap = new HashMap<String, Object>();
+        
+        sendOutMap.put("V_DOCID", docID);
+        sendOutMap.put("V_WRITERID", userInfo.getId());
+        sendOutMap.put("V_WRITERNAME", userInfo.getDisplayName());
+        sendOutMap.put("V_WRITERDEPTID", userInfo.getDeptID());
+        sendOutMap.put("V_WRITERDEPTNAME", userInfo.getDeptName());
+        sendOutMap.put("V_TENANT_ID", userInfo.getTenantId());
+        sendOutMap.put("V_COMPANYID", userInfo.getCompanyID());
+        
+        result = ezApprovalGService.getFileName(sendOutMap, mapPath, sendID + arrReceiveID[0] + strTime, sendPath, strXML, userInfo.getTenantId());
         
         if (result.equals("FALSE")) {
                logger.debug("sendMsg Fail : " + sendID + arrReceiveID[0] + strTime);
                return result;
         }
-        
+
         logger.debug("sendMsg ended");
         return result;
 	}

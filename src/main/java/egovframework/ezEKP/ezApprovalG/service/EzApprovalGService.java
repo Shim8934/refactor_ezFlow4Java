@@ -508,7 +508,7 @@ public interface EzApprovalGService {
 
     public String createSendMsgXML(Document xmlDom, String mapPath, LoginVO userInfo) throws Exception;
 
-    public String getFileName(String realPath, String strFileName, String strFolderName, String strXML, int tenantID) throws Exception;
+    public String getFileName(Map<String, Object> sendOutMap, String realPath, String strFileName, String strFolderName, String strXML, int tenantID) throws Exception;
 
     public boolean insertRelayDB(String strDocID, String strXDocID, String strRecDate, String strFrom, String strTo, String strSubject, String strXMailType, String strXFromCode, String strXToCode,
                                  String strXGW, String strXDocType, String strXDTDVersion, String strXXSLVersion, String strContentType, String strSealURL, String strXmlURL, String strLastDate, String strCompanyID, int tenantID) throws Exception;

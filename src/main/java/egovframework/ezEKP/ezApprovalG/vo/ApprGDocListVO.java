@@ -153,6 +153,22 @@ public class ApprGDocListVO {
 	/** 현재문서 폼버전 */
 	private String formVersion;
 	
+	/** 문서유통 현황 조회*/
+	private String fileName;
+	private String sendState;
+	
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	public String getSendState() {
+		return sendState;
+	}
+	public void setSendState(String sendState) {
+		this.sendState = sendState;
+	}
 	public String getDocID() {
 		return docID;
 	}
