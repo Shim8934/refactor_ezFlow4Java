@@ -156,7 +156,23 @@ public class ApprGDocListVO {
 	/** 문서유통 현황 조회*/
 	private String fileName;
 	private String sendState;
+	private String folderName;
+	private String fileState;
 	
+	
+	
+	public String getFolderName() {
+		return folderName;
+	}
+	public void setFolderName(String folderName) {
+		this.folderName = folderName;
+	}
+	public String getFileState() {
+		return fileState;
+	}
+	public void setFileState(String fileState) {
+		this.fileState = fileState;
+	}
 	public String getFileName() {
 		return fileName;
 	}
