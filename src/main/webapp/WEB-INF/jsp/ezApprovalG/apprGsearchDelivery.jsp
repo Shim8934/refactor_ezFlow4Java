@@ -236,7 +236,7 @@
         </ul>
     </div>
     <table class="content" style="width: 440px; margin-top:15px;">
-        <tr>
+        <tr id="trBabuDept" style="display:none">	<!-- 2020-09-16 김민성 - 배부대장 상세검색시 배부과 탭 기본 안나타나게 수정  -->
             <th style="WIDTH: 50px"><spring:message code='ezApprovalG.t99993'/></th>
             <td style="WIDTH: 270px">
                 <input class="text" style="WIDTH: 200px" name="txtDeptName2" id="txtDeptName2" disabled>
