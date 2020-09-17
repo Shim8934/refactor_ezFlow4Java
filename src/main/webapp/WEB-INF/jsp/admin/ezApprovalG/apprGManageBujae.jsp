@@ -190,7 +190,7 @@
 			var type_Complete;
 			var NoneActiveX = "YES";
 			function select_person(type) {
-				if (document.getElementById("deptList") != null && document.getElementById("deptList") != "undefined") {
+				if (document.getElementById("deptList") != null && document.getElementById("deptList") != "undefined" && document.getElementById("deptList").value != "") {
 					buJaedeptid = document.getElementById("deptList").value;
 				}
 				
@@ -290,6 +290,8 @@
 								$("#deptList").append("<option value='" + result.AddJobList[i].department + "'>" +
 										result.AddJobList[i].description);
 							}
+			            } else {
+			            	buJaedeptid = result.AddJobList[0].department;
 			            }
 		    			
 				        document.getElementById("TextName").value = result.textName;

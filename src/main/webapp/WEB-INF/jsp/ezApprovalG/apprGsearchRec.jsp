@@ -262,7 +262,7 @@
             </ul>
         </div>
 		<table class="content" style="width:100%" >
-		  <tr  id="trDept"> 
+		  <tr  id="trDept" style="display:none"> 		<!-- 2020-09-16 김민성 - 등록대장, 접수목록, 발송목록의 상세검색에서 처리과 탭 기본 안나타나게 수정 -->
 		    <th style="WIDTH:80px;" > <spring:message code='ezApprovalG.t1105'/></th>
 		    <td style=" WIDTH:270px" > 
 		      <input class="text" name="txtDeptName" id=txtDeptName disabled>
