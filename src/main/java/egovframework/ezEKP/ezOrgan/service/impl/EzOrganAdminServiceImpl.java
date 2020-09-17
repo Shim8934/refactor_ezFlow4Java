@@ -2311,4 +2311,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("getNotUseMobileUserList ended.");
 		return result;
 	}
+	
+	@Override
+	public List<String> getAutoDeleteOfRetireUserList(int tenantId, int days) throws Exception {
+		logger.debug("getAutoDeleteOfRetireUserList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("v_days", days);
+
+		List<String> result = ezOrganAdminDao.getAutoDeleteOfRetireUserList(map);
+
+		logger.debug("getAutoDeleteOfRetireUserList ended.");
+		return result;
+	}
 }

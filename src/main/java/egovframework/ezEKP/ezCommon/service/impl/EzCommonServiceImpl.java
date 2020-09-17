@@ -1655,9 +1655,33 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("config_type","메일");
 			put("property","USEMAILCONFIRM"); // property_name
 		}});
+		test.put("UseAutoDeleteOfRetireUser", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","UseAutoDeleteOfRetireUser"); // property_name
+			put("property_value","NO");
+			put("config_name","퇴직자 자동삭제");
+			put("regdate","2020-09-14 00:00:00");
+			put("description","n일 이후 퇴직자 자동삭제 사용여부(default: NO)");
+			put("config_type","조직도");
+			put("property","USEAUTODELETEOFRETIREUSER"); // property_name
+		}});
+		test.put("autoDeleteOfRetireUserLimit", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","autoDeleteOfRetireUserLimit"); // property_name
+			put("property_value","0");
+			put("config_name","퇴직자 자동삭제 ");
+			put("regdate","2020-09-14 00:00:00");
+			put("description","n일 이후 퇴직자 자동삭제 : n일 설정(default: 0, 0=사용안함)");
+			put("config_type","조직도");
+			put("property","autoDeleteOfRetireUserLimit"); // property_name
+		}});
 		
 		
-		ezCommonDAO.insertTblTenantConfig(test.get(configName));
+		Iterator<String> keys = test.keySet().iterator();
+        while( keys.hasNext() ){
+            String key = keys.next();
+            ezCommonDAO.insertTblTenantConfig(test.get(key));
+        }
 	}
 
 	@Override
