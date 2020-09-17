@@ -1998,82 +1998,89 @@ public class EzApprovalGRelayScheduler {
 			      
 			      String folderName = (String) map.get("FOLDERNAME");
 			      
-			      if(sendExist) {
-			    	  
-			    	  folderName = folderName + ">" + "send";
-			    	  
-			    	  paramMap.put("V_FOLDERNAME", folderName);
-			    	  paramMap.put("V_FILESTATE", "success");
-			    	  paramMap.put("V_SENDSTATE", "send");
-			    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
-			    	  paramMap.put("V_DOCID", map.get("DOCID"));
-			    	  
-			    	  logger.debug("send: " + paramMap);
-			    	  
-			    	  if(!map.get("V_SENDSTATE").equals("send")) {
-			    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
-			    	  }
-			    	  
-			      } else if(sendtempExist) {
-			    	  
-			    	  folderName = folderName + ">" + "sendtemp";
-			    	  
-			    	  paramMap.put("V_FOLDERNAME", folderName);
-			    	  paramMap.put("V_FILESTATE", "success");
-			    	  paramMap.put("V_SENDSTATE", "sendtemp");
-			    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
-			    	  paramMap.put("V_DOCID", map.get("DOCID"));
-			    	  
-			    	  logger.debug("sendtemp: " + paramMap);
-			    	  
-			    	  if(!map.get("V_SENDSTATE").equals("sendtemp")) {
-			    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
-			    	  }
-			    	  
-			      } else if(senderrExist) {
-			    	  
-			    	  folderName = folderName + ">" + "senderr";
-			    	  
-			    	  paramMap.put("V_FOLDERNAME", folderName);
-			    	  paramMap.put("V_FILESTATE", "success");
-			    	  paramMap.put("V_SENDSTATE", "senderr");
-			    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
-			    	  paramMap.put("V_DOCID", map.get("DOCID"));
-			    	  
-			    	  logger.debug("senderr: " + paramMap);
-			    	  
-			    	  if(!map.get("V_SENDSTATE").equals("senderr")) {
-			    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
-			    	  }
-			    	  
-			      } else if(senderrtempExist) {
-			    	  
-			    	  folderName = folderName + ">" + "senderrtemp";
-			    	  
-			    	  paramMap.put("V_FOLDERNAME", folderName);
-			    	  paramMap.put("V_FILESTATE", "success");
-			    	  paramMap.put("V_SENDSTATE", "senderrtemp");
-			    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
-			    	  paramMap.put("V_DOCID", map.get("DOCID"));
-			    	  
-			    	  logger.debug("senderrtemp: " + paramMap);
-			    	  
-			    	  if(!map.get("V_SENDSTATE").equals("senderrtemp")) {
-			    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
-			    	  }
-			    	  
-			      } else {
-			    	  
-			    	  paramMap.put("V_FOLDERNAME", map.get("FOLDERNAME"));
-			    	  paramMap.put("V_FILESTATE", "removed");
-			    	  paramMap.put("V_SENDSTATE", map.get("SENDSTATE"));
-			    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
-			    	  paramMap.put("V_DOCID", map.get("DOCID"));
-			    	  
-			    	  logger.debug("removed: " + paramMap);
-			    	  
-			    	  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
-	 
+			      String fileState = "success";
+			      
+			      if(!sendExist && !sendtempExist && !senderrExist && !senderrtempExist) {
+				    	  
+				    	  paramMap.put("V_FOLDERNAME", map.get("FOLDERNAME"));
+				    	  paramMap.put("V_FILESTATE", "removed");
+				    	  paramMap.put("V_SENDSTATE", map.get("SENDSTATE"));
+				    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
+				    	  paramMap.put("V_DOCID", map.get("DOCID"));
+				    	  
+				    	  logger.debug("removed: " + paramMap);
+				    	  
+				    	  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
+
+				    	  fileState = "removed";
+			      }
+			      
+			      if(fileState.equals("success")) {
+				      if(sendExist) {
+				    	  
+				    	  folderName = folderName + ">" + "send";
+				    	  
+				    	  paramMap.put("V_FOLDERNAME", folderName);
+				    	  paramMap.put("V_FILESTATE", "success");
+				    	  paramMap.put("V_SENDSTATE", "send");
+				    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
+				    	  paramMap.put("V_DOCID", map.get("DOCID"));
+				    	  
+				    	  logger.debug("send: " + paramMap);
+				    	  
+				    	  if(!map.get("V_SENDSTATE").equals("send")) {
+				    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
+				    	  }
+				    	  
+				      } else if(sendtempExist) {
+				    	  
+				    	  folderName = folderName + ">" + "sendtemp";
+				    	  
+				    	  paramMap.put("V_FOLDERNAME", folderName);
+				    	  paramMap.put("V_FILESTATE", "success");
+				    	  paramMap.put("V_SENDSTATE", "sendtemp");
+				    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
+				    	  paramMap.put("V_DOCID", map.get("DOCID"));
+				    	  
+				    	  logger.debug("sendtemp: " + paramMap);
+				    	  
+				    	  if(!map.get("V_SENDSTATE").equals("sendtemp")) {
+				    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
+				    	  }
+				    	  
+				      } else if(senderrExist) {
+				    	  
+				    	  folderName = folderName + ">" + "senderr";
+				    	  
+				    	  paramMap.put("V_FOLDERNAME", folderName);
+				    	  paramMap.put("V_FILESTATE", "success");
+				    	  paramMap.put("V_SENDSTATE", "senderr");
+				    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
+				    	  paramMap.put("V_DOCID", map.get("DOCID"));
+				    	  
+				    	  logger.debug("senderr: " + paramMap);
+				    	  
+				    	  if(!map.get("V_SENDSTATE").equals("senderr")) {
+				    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
+				    	  }
+				    	  
+				      } else if(senderrtempExist) {
+				    	  
+				    	  folderName = folderName + ">" + "senderrtemp";
+				    	  
+				    	  paramMap.put("V_FOLDERNAME", folderName);
+				    	  paramMap.put("V_FILESTATE", "success");
+				    	  paramMap.put("V_SENDSTATE", "senderrtemp");
+				    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
+				    	  paramMap.put("V_DOCID", map.get("DOCID"));
+				    	  
+				    	  logger.debug("senderrtemp: " + paramMap);
+				    	  
+				    	  if(!map.get("V_SENDSTATE").equals("senderrtemp")) {
+				    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
+				    	  }
+				    	  
+				      }
 			      }
 			      
 			}

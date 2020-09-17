@@ -150,4 +150,6 @@ public interface EzOrganAdminService {
 	public int checkStopUser(String userID, int tenantID) throws Exception;
 
 	List<String> getNotUseMobileUserList(int tenantId) throws Exception;
+	
+	public List<String> getAutoDeleteOfRetireUserList(int tenantId, int days) throws Exception;
 }

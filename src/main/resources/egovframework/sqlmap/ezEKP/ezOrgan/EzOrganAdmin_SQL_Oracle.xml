@@ -7294,4 +7294,17 @@
 			( #v_GROUP_ID#, #v_MEMBER_ID#, #v_MEMBER_TYPE#, #v_MEMBER_COMPANYID#, TO_DATE(#v_ADDED_DATE#, 'yyyy-MM-dd HH24:MI:SS'), #v_SUB_DEPT_YN#, #v_COMPANY_ID#, #v_TENANT_ID#)
 		]]>
 	</insert>
+	
+	<select id="EzOrganAdminDAO.getAutoDeleteOfRetireUserList" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				CN
+			FROM 
+				TBL_USERMASTER_RETIRE
+			WHERE 
+				UPDATEDT <= (SYSDATE - #v_days#)
+			AND 
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
 </sqlMap>

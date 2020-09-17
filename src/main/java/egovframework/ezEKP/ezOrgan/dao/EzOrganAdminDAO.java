@@ -2306,5 +2306,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public List<String> getNotUseMobileUserList(int tenantId) {
 		return (List<String>) list("EzOrganAdminDAO.getNotUseMobileUserList", tenantId);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getAutoDeleteOfRetireUserList(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzOrganAdminDAO.getAutoDeleteOfRetireUserList", map);
+	}
 
 }

@@ -996,7 +996,7 @@ function sendExtDoc(ExtXML) {
 			data : {
 				extXML : getXmlString(ExtXML),
 				xmlPath : pDocID + i + "pack.xml",
-				docID : pDocID
+				docID : pOrgDocID
 			},
 			success: function(xml){
 				result = xml;

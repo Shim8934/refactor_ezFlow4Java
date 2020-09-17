@@ -1,10 +1,15 @@
 package egovframework.ezEKP.ezEmail.task;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
@@ -1291,6 +1296,53 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		logger.debug("useDistributionoDelete scheduler ended.");
 	}
 	
+
+	/** 
+	 * 퇴직일로부터 n일 지난 퇴직자 자동 삭제
+	 */
+	@Scheduled(cron = "${config.cron.autoDeleteOfRetireUser}")
+	public void autoDeleteOfRetireUser() throws Exception{
+		logger.debug("AutoDeleteOfRetireUser scheduler started.");
+
+		//choose scheduler running server
+		if (!preScheduler("AutoDeleteOfRetireUser")) {
+			logger.debug("AutoDeleteOfRetireUser scheduler ended.");
+			return;
+		}
+
+		int tenantID = 0;
+		
+		String useAutoDeleteOfRetireUser = ezCommonService.getTenantConfig("useAutoDeleteOfRetireUser", tenantID); // 사용여부 컨피그
+		String autoDeleteOfRetireUserLimit = ezCommonService.getTenantConfig("autoDeleteOfRetireUserLimit", tenantID); // n일 설정 컨피그
+		logger.debug("useAutoDeleteOfRetireUser=" + useAutoDeleteOfRetireUser + ", autoDeleteOfRetireUserLimit=" + autoDeleteOfRetireUserLimit);
+		
+		if (useAutoDeleteOfRetireUser.equalsIgnoreCase("YES") && !autoDeleteOfRetireUserLimit.equals("")) {
+			int autoRemoveUserLimitNum = Integer.parseInt(autoDeleteOfRetireUserLimit);
+			
+			if (autoRemoveUserLimitNum > 0) {
+				List<String> deleteUserCnList = ezOrganAdminService.getAutoDeleteOfRetireUserList(tenantID, autoRemoveUserLimitNum);
+				logger.debug("deleteUserCnList size=" + deleteUserCnList.size());
+				
+				if (deleteUserCnList.size() <= 0) {
+					logger.debug("There are no users to delete. AutoDeleteOfRetireUser scheduler ended.");
+					return; 
+				}
+
+				String urlStr = config.getProperty("config.scheduleGwServerURL") + "/admin/ezOrgan/delUser.do";
+				
+				String deleteUserCnStr = String.join(",", deleteUserCnList);
+				String inputParams = "cn="+deleteUserCnStr;
+				logger.debug("inputParams=" + inputParams);
+				
+				String result = getWebServiceResultForGw(urlStr, inputParams);
+				logger.debug("result=" + result);
+			}
+		}
+		
+		logger.debug("AutoDeleteOfRetireUser scheduler ended.");
+	}
+	
+	
 	/**
 	 * org.apache.james.transport.mailets.JMochaQuotaWarning humanReadableByteCount(long bytes) 복사
 	 * 
@@ -1440,5 +1492,63 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			}
 			return false;
 		}
+	}
+	
+	public String getWebServiceResultForGw(String urlString, String inputParams) throws Exception {
+		logger.debug("getWebServiceResultForGw Started.");
+
+		String result = null;
+		
+		URL url = new URL(urlString);
+		HttpURLConnection conn = null;
+				
+		try {
+			conn = (HttpURLConnection) url.openConnection();
+			
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+			//테넌트 0 번 
+			conn.setRequestProperty("Cookie", "loginCookie=hfH144YiWCggw53Wkj4WXmhb0rhoI1B/DeoAXRh0t13Q2Lhpiu2cfZxpGhaoRn5VGFc0scMdIv6w/TXttsWK+JzNnK345dM+ex3sizp9pXwdl7edNQKS8ydC51Aa6GINBE5qSRsW8cV7E7GpPJ5qiEqKq8asuFkHy2ZDT26lofk=;");
+			
+			if (inputParams != null) {
+				OutputStream os = conn.getOutputStream();
+				// UTF-8로 인코딩한다.
+				os.write(inputParams.getBytes("UTF-8"));
+				os.flush();
+			}
+			
+			if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				// Response Body를 UTF-8로서 디코딩한다.			
+				BufferedReader br = new BufferedReader(
+							new InputStreamReader(conn.getInputStream(),"UTF-8")
+							);
+	
+				StringBuilder sb = new StringBuilder();
+				String output;
+	
+				while ((output = br.readLine()) != null) {
+					sb.append(output);
+				}
+				
+				result = sb.toString();
+				
+				conn.disconnect();		
+				conn = null;
+			}
+			else {
+				Exception e = new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());			
+				
+				throw e;
+			} 
+		} finally {
+			if (conn != null) {
+				conn.disconnect();
+				conn = null;
+			}
+		}
+		
+		logger.debug("getWebServiceResultForGw ended.");
+		return result;
 	}
 }
