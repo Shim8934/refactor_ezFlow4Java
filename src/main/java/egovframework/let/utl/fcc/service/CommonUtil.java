@@ -449,7 +449,7 @@ public class CommonUtil {
 			// in case of IE & Edge
 			// the filename needs to be UTF-8 and URL-encoded.
 			// URI class is more appropriate than URLEncoder class for this purpose.
-			if (userAgentValue.contains("Trident") || userAgentValue.contains("Edge")) {
+			if (userAgentValue.contains("Trident") || userAgentValue.contains("Edge") || userAgentValue.contains("Chrome")) {
 			    // "자동회신:"과 같이 :이 제목에 포함되어 있는 경우 메일 저장하기 시, 한글파일명 깨지는 문제가 있어
 			    // :를 %3A로 변경한 후 URI 인코딩을 수행함. 
 				filename = filename.replaceAll(":", "%3A");
@@ -457,6 +457,10 @@ public class CommonUtil {
 				filename = uri.toASCIIString();
 				// %3A에서 %가 %25로 인코딩되므로 다시 %3A로 변경함.
 				filename = filename.replaceAll("%253A", "%3A");
+				
+                if (userAgentValue.contains("Chrome")) {
+                    filename = filename + "\"" + "; filename*=UTF-8''\"" + filename;
+                }				
 			}
 			// in case of Chrome, Safari
 			// the filename consists of UTF-8 encoded bytes.
