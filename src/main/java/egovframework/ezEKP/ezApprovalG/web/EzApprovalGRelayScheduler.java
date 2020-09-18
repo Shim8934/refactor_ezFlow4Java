@@ -1952,7 +1952,7 @@ public class EzApprovalGRelayScheduler {
 			
 			//그룹웨에서 문서유통 모듈의 data 폴더에 접근하는 경로 생성
 			String configRelayRoot = config.getProperty("relay_root").trim();
-			int configRelaySchedulerTenant = 1;
+			int configRelaySchedulerTenant = 0;
 			String configUloadRelayRoot = config.getProperty("upload_relay.ROOT").trim();
 			String strRelayFolderPath = configRelayRoot + commonUtil.separator + "fileroot" + commonUtil.separator + configRelaySchedulerTenant + commonUtil.separator + "files" + configUloadRelayRoot;
 			 
