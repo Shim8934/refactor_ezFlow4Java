@@ -3422,6 +3422,7 @@
 				</div>
 		        </c:if>	
 				<table class="content" style="width:100%; min-width:800px; table-layout:fixed; height:32px; line-height:30px; border:1px solid #DDD; margin-bottom:20px" id="_content1">
+                    <c:set var="fileFlag" value="false" />
 	                <c:forEach var="optList" items="${listOptions}" varStatus="loop">
 	                	<c:if test="${optList.filePath ne null }">
 		               	 	<c:set var="fileFlag" value="true" />
