@@ -14648,6 +14648,26 @@ SET character_set_client = utf8;
  1 AS `DELFLAG`*/;
 SET character_set_client = @saved_cs_client;
 
+DROP TABLE IF EXISTS `tbl_sendoutinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_sendoutinfo` (
+  `IDEX` int(80) NOT null auto_increment primary KEY,
+  `DOCID` varchar(80) NOT NULL,
+  `FILENAME` varchar(400) NOT NULL,
+  `FOLDERNAME` varchar(400) DEFAULT NULL,
+  `FILESTATE` varchar(400) DEFAULT NULL,
+  `SENDSTATE` varchar(400) DEFAULT NULL,
+  `WRITERID` varchar(400) DEFAULT NULL,
+  `WRITERNAME` varchar(200) DEFAULT NULL,
+  `WRITERDEPTID` varchar(400) DEFAULT NULL,
+  `WRITERDEPTNAME` varchar(200) DEFAULT NULL,
+  `CREATEDATE` datetime DEFAULT NULL,
+  `UPDATEDATE` datetime DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `COMPANYID` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;R
+
 --
 -- Final view structure for view `svtaskclass`
 --
