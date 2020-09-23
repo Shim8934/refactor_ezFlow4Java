@@ -4845,4 +4845,17 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "admin/ezApprovalG/cabTransfer.do", method = RequestMethod.GET)
+	public String cabTransfer(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+	              logger.debug("cabTransfer started");
+
+	              userInfo = commonUtil.aprUserInfo(loginCookie);
+	              model.addAttribute("userInfo", userInfo);
+
+	              logger.debug("cabTransfer ended");
+
+	              return "admin/ezApprovalG/apprGcabTransfer";
+	}
+
 }

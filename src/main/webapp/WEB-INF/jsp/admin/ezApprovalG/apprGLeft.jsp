@@ -95,6 +95,10 @@
                         //원문공개문서함
                         url = "/admin/ezApprovalG/openGovForDoc.do?type=admin";
                         break;
+                    case 17:
+                    	// 기록물철 인계 2019-06-18 임민석
+                    	url = "/admin/ezApprovalG/cabTransfer.do";
+                    	break;
 					case "enforce":
 						//시행문변환 - 관인등록
 						url = "/admin/ezApprovalG/enforceSihangSeal.do";
@@ -182,6 +186,9 @@
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(11)"><spring:message code='main.t42'/></span></h2>	
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(12)"><spring:message code='main.t50'/></span></h2>	
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(13)"><spring:message code='main.t51'/></span></h2>	
+				<c:if test="${approvalFlag == 'G'}">
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(17)"><spring:message code='ezApprovalG.t560'/></span></h2>
+				</c:if>
 				<h2 style="display:none;"><span style="display:inline-block;width:100%;" onClick="goPage('sendout')">발송현황</span></h2>	
 				<c:if test="${useOpenGov == 'YES'}">
 					<h2><span style="display:inline-block;width:100%;" onClick="goPage(16)">원문공개문서함</span></h2>				
