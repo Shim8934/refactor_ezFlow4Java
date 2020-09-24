@@ -2773,6 +2773,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
 		String attachLimit = xmldom.getElementsByTagName("ATTACHLIMIT").item(0).getTextContent();
+		/* 2020-09-24 홍승비 - 메일게시 시 게시판과 커뮤니티 모듈을 구분  */
+		String itemType = request.getParameter("itemType") == null ? "" : (String) request.getParameter("itemType");
 		logger.debug("url=" + url + ",attachLimit=" + attachLimit);
 		
 		String folderPath = url.split("/")[0];
@@ -2899,8 +2901,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 
 							sb.append("<ROOT><NODES>");
 
+							/* 2020-09-24 홍승비 - 게시판과 커뮤니티 메일게시 시 첨부파일 업로드 경로 분리 */
+							String uploadTempPath = "";
+							if (itemType.equals("board")) {
+								uploadTempPath = "upload_board.TEMPUPLOADFILE";
+							} else if (itemType.equals("community")) {
+								uploadTempPath = "upload_community.TEMPUPLOADFILE";
+							}
+							
 							String realPath = commonUtil.getRealPath(request);
-							String path = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", loginInfo.getTenantId());
+							String path = commonUtil.getUploadPath(uploadTempPath, loginInfo.getTenantId());
 
 							String attach = ""; 
 

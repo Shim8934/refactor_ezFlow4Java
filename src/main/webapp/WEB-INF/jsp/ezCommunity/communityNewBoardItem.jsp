@@ -706,10 +706,10 @@
 		        var FileName = "";
 		        var FileURL = "";
 		        var ItemID = "";
-		        var requestUrl = "/ezEmail/mailReadBoard.do";
+		        var requestUrl = "/ezEmail/mailReadBoard.do?itemType=community";
 		        
 		        if (typeof(mailShareId) != "undefined" && mailShareId != "") {
-            		requestUrl += "?shareId=" + encodeURIComponent(mailShareId);
+            		requestUrl += "&shareId=" + encodeURIComponent(mailShareId);
 				}
 		        
 		        MailxmlHTTP.open("POST", requestUrl, false);
