@@ -1958,7 +1958,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ROOT><NODES>");
 		
-		if (totalFileSize > changeSize) { // 대용량첨부의 경우
+		if (totalFileSize > changeSize || isBigYN.equals("Y")) { // 대용량첨부의 경우
 			logger.debug("In case of big attachment.");
 			
 			// 현재 날짜의 폴더가 없으면 생성한다.
@@ -2312,7 +2312,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ROOT><NODES>");
 		
-		if (totalFileSize > changeSize) { // 대용량첨부의 경우
+		if (totalFileSize > changeSize || isBigYN.equals("Y")) { // 대용량첨부의 경우
 			logger.debug("In case of big attachment.");
 			
 			// 현재 날짜의 폴더가 없으면 생성한다.
@@ -2661,7 +2661,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ROOT><NODES>");
 		
-		if (totalFileSize > changeSize) { // 대용량첨부의 경우
+		if (totalFileSize > changeSize || isBigYN.equals("Y")) { // 대용량첨부의 경우
 			logger.debug("In case of big attachment.");
 			
 			// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
