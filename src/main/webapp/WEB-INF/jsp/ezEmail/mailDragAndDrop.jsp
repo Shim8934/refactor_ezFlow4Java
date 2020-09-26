@@ -751,7 +751,13 @@
 					return fileNode.getAttribute("_fileindex");
 				});
 				
-				saveAttachFileOrder(fileIdxArr);
+				for (var i = 0; i < fileIdxArr.length; i++) {
+				    // 첨부파일 순서가 변경된 경우에는 순서 변경하기 위한 컨트롤러 URL을 호출한다.
+				    if (i != fileIdxArr[i]) {
+						saveAttachFileOrder(fileIdxArr);
+						break;
+				    }
+				}
 			}
 			
 			function saveAttachFileOrder(fileIdxArr){

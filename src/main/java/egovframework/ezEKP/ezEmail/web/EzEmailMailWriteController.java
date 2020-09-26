@@ -6889,10 +6889,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					for (int i = 0; i < count; i++) {
 						p = mp.getBodyPart(i);
 						
-						if (p.getDisposition() == null) {
-							nonAttachCount++;
-						} else {
+						if (p.getDisposition() != null
+								&& p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
+								&& ((MimePart)p).getContentID() == null) {
 							break;
+						} else {
+							nonAttachCount++;
 						}
 					}
 					

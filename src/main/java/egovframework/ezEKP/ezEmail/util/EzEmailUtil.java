@@ -1042,10 +1042,11 @@ public class EzEmailUtil {
 		//
 		// pacific에서 보낸 메일 중에 multipart/related안에 text/plain 파트만 있고 인라인 이미지가 첨부된 
 		// 경우가 있어 이 경우엔 인라인 이미지를 첨부 파일 형태로 표시하기 위해 includeInlineAsAttachment를 조건에 추가함.
-		if (part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
+		// ATTACHMENT라도 ContentID가 있는 경우에는 내부에서 참조되는 인라인 이미지일 수 있으므로 제외함.
+		if ((part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT) && ((MimePart)part).getContentID() == null)
 				|| part.getContentType() != null && part.getContentType().contains("x-apple-part-url")
 				|| includeInlineAsAttachment
-				|| part.isMimeType("application/*")
+				|| (part.isMimeType("application/*") && ((MimePart)part).getContentID() == null)
 				|| isInlinePartWithoutContentID
 		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null)) {
             double size = part.getSize();
@@ -1729,7 +1730,12 @@ public class EzEmailUtil {
 				Part p = mp.getBodyPart(i);
 				
 				// text/html 파트가 나오거나 multipart/alternative 파트가 나올 수도 있다.
-				if (p.isMimeType("text/html") || !p.isMimeType("text/plain") && !(p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
+				// ContentID가 있는 경우에는 내부에서 참조되는 인라인 이미지일 수 있으므로 제외함.
+				if (p.isMimeType("text/html") 
+						|| !p.isMimeType("text/plain") 
+						&& !(p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE))
+						&& ((MimePart)p).getContentID() == null
+						) {
 					// 코린도에서 수신된 메일 중 multipart/related 안에 첨부파일이 있는 경우가 있어 패러메터값을 -1 대신 i로 변경함
 					List<String> tempList = null;
 					
