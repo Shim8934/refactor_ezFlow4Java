@@ -455,6 +455,62 @@ public class EzEmailUtil {
 		return addressStr;
 	}
 	
+	public String getNameOrAddress(String internetAddressStr) {
+		String name = "";
+				
+		if (!internetAddressStr.isEmpty()) {
+			try {
+				InternetAddress ia = new InternetAddress(internetAddressStr);
+				name = ia.getPersonal();
+				
+				if (name == null) {
+					name = ia.getAddress();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				// 현대오일뱅크" <HyundaiOilbank@oilbankcard.com> 와 같이 "가 하나만 있는 경우
+				// 예외가 발생하는데 이와 같은 경우에 대한 부가적인 처리를 수행한다.
+	            Pattern pattern = Pattern.compile("(.*)<(.*)>");
+	            Matcher matcher = pattern.matcher(internetAddressStr);
+	            
+	            if (matcher.find()) {
+	            	name = matcher.group(1).trim();
+	            	
+	            	logger.debug("getNameOrAddress exception happened. new name=" + name);
+	            }
+			}
+		}		
+		
+		return name;
+	}
+
+	public String getAddress(String internetAddressStr) {
+		String address = "";
+				
+		if (!internetAddressStr.isEmpty()) {
+			try {
+				InternetAddress ia = new InternetAddress(internetAddressStr);
+				address = ia.getAddress();
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				// 현대오일뱅크" <HyundaiOilbank@oilbankcard.com> 와 같이 "가 하나만 있는 경우
+				// 예외가 발생하는데 이와 같은 경우에 대한 부가적인 처리를 수행한다.
+	            Pattern pattern = Pattern.compile("(.*)<(.*)>");
+	            Matcher matcher = pattern.matcher(internetAddressStr);
+	            
+	            if (matcher.find()) {
+	            	address = matcher.group(2).trim();
+	            	
+	            	logger.debug("getAddress exception happened. new address=" + address);	            	
+	            }				
+			}
+		}		
+		
+		return address;
+	}
+	
 	public String getFromEmailAddressOfMessage(Message message) {
 		String addressStr = "";
 		
@@ -2254,6 +2310,30 @@ public class EzEmailUtil {
     	return messages;
     }
     
+    public List<Map<String, String>> searchFolderUsingRDBOnly(String userAccount, String folderPath, String[] searchField, String[] searchValue, 
+    		Date startDate, Date endDate, boolean searchSubFolder, boolean isUnreadOnly, boolean isImportantOnly, String sortType, boolean isAscending, 
+    		int startIndex, int listCount, boolean isFromMobile, Map<String, Object> extraMap, int tenantId, boolean includeContent) throws Exception {    	
+    	logger.debug("searchFolderUsingRDBOnly started. userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField + ",searchValue=" + searchValue
+    			+ ",startDate=" + startDate + ",endDate=" + endDate + ",searchSubFolder=" + searchSubFolder + ",isUnreadOnly=" + isUnreadOnly
+    			+ ",isImportantOnly=" + isImportantOnly + ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex
+    			+ ",listCount=" + listCount + ",isFromMobile=" + isFromMobile + ",extraMap=" + extraMap + ",tenantId=" + tenantId + ",includeContent=" + includeContent);
+    	    	
+		Map<String, Object> resultMap = getMailListUsingRDBOnlyFromJGw(userAccount, folderPath, searchField, searchValue, startDate, endDate, 
+				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount, extraMap, includeContent);
+		
+		List<Map<String, String>> mailList = (List<Map<String, String>>)resultMap.get("mailList");
+		
+		if (extraMap != null) {
+			extraMap.put("totalCount", (int)resultMap.get("totalCount"));
+			extraMap.put("mailboxMailCount", (int)resultMap.get("mailboxMailCount"));
+			extraMap.put("mailboxUnreadMailCount", (int)resultMap.get("mailboxUnreadMailCount"));
+		}
+    	
+    	logger.debug("searchFolderUsingRDBOnly ended. mailList.size=" + mailList.size());
+    	
+    	return mailList;
+    }
+    
 	public Message[] searchFolder (
 			Folder folder, 
 			String searchField, 
@@ -2766,6 +2846,112 @@ public class EzEmailUtil {
 		}
 		
 		logger.debug("getMailUidListFromJGw ended.");
+		return resultMap;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getMailListUsingRDBOnlyFromJGw(
+			String userAccount,
+			String folderPath, 
+			String searchField[], 
+			String searchValue[], 
+			Date startDate, 
+			Date endDate, 
+			boolean isUnreadOnly, 
+			boolean isImportantOnly,
+			boolean searchSubFolder,
+			String sortType,
+			boolean isAscending,
+			int startIndex,
+			int listCount,
+			Map<String, Object> extraMap,
+			boolean includeContent
+			) throws Exception {
+		logger.debug("getMailListUsingRDBOnlyFromJGw started.");
+		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField 
+				+ ",searchValue=" + searchValue + ",startDate=" + startDate + ",endDate=" + endDate 
+				+ ",isUnreadOnly=" + isUnreadOnly + ",isImportantOnly=" + isImportantOnly + ",searchSubFolder=" + searchSubFolder
+				+ ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex + ",listCount=" + listCount
+				+ ",extraMap=" + extraMap + ",includeContent=" + includeContent);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		String userAccountParam = "userAccount=" + URLEncoder.encode(userAccount, "UTF-8");
+		String folderPathParam = "folderPath=" + URLEncoder.encode(folderPath, "UTF-8");
+		String startDateParam = "startDate=" + URLEncoder.encode(startDate == null ? "" : sdf.format(startDate), "UTF-8");
+		String endDateParam = "endDate=" + URLEncoder.encode(endDate == null ? "" : sdf.format(endDate), "UTF-8");
+		String isUnreadOnlyParam = "isUnreadOnly=" + isUnreadOnly;
+		String isImportantOnlyParam = "isImportantOnly=" + isImportantOnly;
+		
+		String searchSubFolderParam = "searchSubFolder=" + searchSubFolder;
+		String sortTypeParam = "sortType=" + URLEncoder.encode(sortType == null ? "" : sortType, "UTF-8");
+		String isAscendingParam = "isAscending=" + isAscending;
+		String startIndexParam = "startIndex=" + startIndex;
+		String listCountParam = "listCount=" + listCount;
+		
+		String andorStatus = "andorStatus=";
+		String attachStatus = "attachStatus=";
+		
+		if(extraMap != null){
+			logger.debug("extraMAP is not null.extraMap:" + extraMap);
+			andorStatus += extraMap.get("andorStatus") == "" ? "and" : extraMap.get("andorStatus");
+			attachStatus += extraMap.get("attachStatus") == "" ? "all" :  extraMap.get("attachStatus");
+		}
+		
+		String includeContentParam = "includeContent=" + includeContent;
+		
+		String searchFieldParam = "";
+		String searchValueParam = "";
+		if (searchField != null && searchField.length > 0 ) {
+			for ( int i= 0 ; i < searchField.length ; i++ ) {
+				searchFieldParam += "&searchField=" + URLEncoder.encode(searchField[i], "UTF-8");
+			}
+		} else {
+			searchFieldParam += "&searchField=" + URLEncoder.encode("", "UTF-8");
+		}
+		
+		if (searchValue != null && searchValue.length > 0) {
+			for ( int i= 0 ; i < searchValue.length ; i++ ) {
+				searchValueParam += "&searchValue=" + URLEncoder.encode(searchValue[i], "UTF-8");
+			}
+		} else {
+			searchValueParam = "&searchValue=" + URLEncoder.encode("", "UTF-8");
+		}
+		
+		String inputParams = userAccountParam + "&" + folderPathParam + searchFieldParam // searchFieldParam , searchValueParam 여러개 보낸다는 가정에 위에서 처리
+				+ searchValueParam + "&" + startDateParam + "&" + endDateParam 
+				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
+				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam
+				+ "&" + attachStatus + "&" + andorStatus + "&" + includeContentParam;
+		
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/searchMailUsingRDBOnly";
+		String response = getWebServiceResult(requestURL, inputParams);
+//		logger.debug("response=" + response);
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				List<Map<String, String>> mailList = (List<Map<String, String>>)responseObj.get("mailList");
+				int totalCount = (int)(long)responseObj.get("totalCount");
+				int mailboxMailCount = (int)(long)responseObj.get("mailboxMailCount");
+				int mailboxUnreadMailCount = (int)(long)responseObj.get("mailboxUnreadMailCount");
+				
+				resultMap.put("mailList", mailList);
+				resultMap.put("totalCount", totalCount);
+				resultMap.put("mailboxMailCount", mailboxMailCount);
+				resultMap.put("mailboxUnreadMailCount", mailboxUnreadMailCount);
+			} else {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("getMailListUsingRDBOnlyFromJGw ended.");
 		return resultMap;
 	}
 	
