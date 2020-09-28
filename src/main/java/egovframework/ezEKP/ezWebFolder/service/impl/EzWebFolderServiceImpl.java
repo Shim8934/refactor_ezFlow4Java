@@ -1345,16 +1345,17 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			FileVO newFile = getFileByFileId(info.getNewId(), offset, tenantId);
 			FileVO oldFile = getFileByFileId(info.getOldId(), offset, tenantId);
 			
-			// update_date 업데이트
+			// file_size, update_date 업데이트
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String currentTimeUTC = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
-			
-			oldFile.setUpdateDate(currentTimeUTC);
+			String createTimeUTC = commonUtil.getDateStringInUTC(formatter.format(formatter.parse(oldFile.getCreateDate())), offset, true);
 
-			// db 부터 업데이트
-			updateFileName(oldFile.getFileId(), oldFile.getFileName(), currentTimeUTC, tenantId);
+			oldFile.setCreateDate(createTimeUTC);
+			oldFile.setUpdateDate(currentTimeUTC);
+			oldFile.setFileSize(newFile.getFileSize());
+
+			insertFile(oldFile);
 			
-			// nio gazuaaaaa!!!!!
 			Path sourcePath = Paths.get(servletContext.getRealPath(commonUtil.detectPathTraversal(newFile.getFilePath())));
 			Path destPath = Paths.get(servletContext.getRealPath(commonUtil.detectPathTraversal(oldFile.getFilePath())));
 
