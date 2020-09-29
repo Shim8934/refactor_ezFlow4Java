@@ -458,7 +458,8 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				String lang = ezCommonService.selectUserGetLang(userId, tenantId);
 				locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
 				offset = ezCommonService.selectUserGetTimeZone(userId, tenantId);
-				logger.debug("locale=" + locale + ",offset=" + offset);
+				String sentMailStoredInSentBox = config.getProperty("SentMailStoredInSentbox", "YES");
+				logger.debug("locale=" + locale + ",offset=" + offset + ",sentMailStoredInSentBox=" + sentMailStoredInSentBox);
 				
 				String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
 				pDirPath = realPath + commonUtil.separator + pDirPath;
@@ -672,7 +673,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				        fis = null;
 			            
 					} else {
-						if (!retryFlag) {
+						if (!retryFlag && sentMailStoredInSentBox.equalsIgnoreCase("YES")) {
 							//보낸편지함에 저장
 							ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 									userAccount, password, egovMessageSource, locale, ezEmailUtil);

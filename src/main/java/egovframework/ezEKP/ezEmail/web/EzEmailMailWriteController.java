@@ -4510,6 +4510,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						}
 						
 						File encryptedFile = null; // 보안메일 관련 파일 변수
+
+		            	String sentMailStoredInSentBox = config.getProperty("config.SentMailStoredInSentbox", "YES");
 			        	
 			            // mailSendCompleted가 true인 경우는 메일 전송까지 완료된 이후에 Exception이 발생하여 Retry하는 경우이다.
 			            // 이 경우에는 이미 보낸편지함에 저장된 메일이 있으므로 보낸편지함에 다시 저장하지 않는다.
@@ -4678,13 +4680,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    			            message = secureMessage;
 	    			            
 			            	} else {
-			            		// 편지함 용량 초과 메세지 확인을 위해 임시저장
-	    	                    // 본래는 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 복사하였으나
-	    			            // 보낸메일함에 바로 저장하는 것으로 변경함.
-	    	                    AppendUID[] uids = ((IMAPFolder)sentFolder).appendUIDMessages(new Message[]{message});
-	    	                    if (uids != null && uids[0] != null) {
-	    	                        sentFolderMessageUID = uids[0].uid;
-	    	                    }
+			            		if (sentMailStoredInSentBox.equalsIgnoreCase("YES")) {
+				            		// 편지함 용량 초과 메세지 확인을 위해 임시저장
+		    	                    // 본래는 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 복사하였으나
+		    			            // 보낸메일함에 바로 저장하는 것으로 변경함.
+		    	                    AppendUID[] uids = ((IMAPFolder)sentFolder).appendUIDMessages(new Message[]{message});
+		    	                    if (uids != null && uids[0] != null) {
+		    	                        sentFolderMessageUID = uids[0].uid;
+		    	                    }
+			            		}
 			            	}
 			            }
 			            
