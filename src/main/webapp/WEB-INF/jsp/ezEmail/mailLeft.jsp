@@ -584,28 +584,30 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function folder_manager_after(RtnVal) {
-	            if (RtnVal) {
-	            	var href = window[treeviewStr].getvalue(1, "href");
-	            	
-	            	window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
-	            	window[treeviewStr].update();
-	                
-	                if (window[treeviewStr].selectedIndex() == -1) {
-	                	window[treeviewStr].select(1);
-	                }
-	                
-	                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(1, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(1, "href"));
-	                
-	            	if (shareId != "") {
-	            		url += "&shareId=" + encodeURIComponent(shareId);
+	            setTimeout(function() {
+		            if (RtnVal) {
+		            	var href = window[treeviewStr].getvalue(1, "href");
+		            	
+		            	window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+		            	window[treeviewStr].update();
+		                
+		                if (window[treeviewStr].selectedIndex() == -1) {
+		                	window[treeviewStr].select(1);
+		                }
+		                
+		                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(1, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(1, "href"));
+		                
+		            	if (shareId != "") {
+		            		url += "&shareId=" + encodeURIComponent(shareId);
+			            }
+		                
+		                window.open(url, "right");
+		                
+		                previewSubTreeCall();
+		                applyEllipsisMailTree();
+		            	detailView();
 		            }
-	                
-	                window.open(url, "right");
-	                
-	                previewSubTreeCall();
-	                applyEllipsisMailTree();
-	            	detailView();
-	            }
+	            }, 10);
 	        }
 	        
 	        /**
