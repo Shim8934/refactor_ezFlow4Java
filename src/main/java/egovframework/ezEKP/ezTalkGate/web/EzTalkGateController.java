@@ -344,14 +344,35 @@ public class EzTalkGateController {
 			} else if (ezTalkSsoType.equals("mailWrite")) { 
 				String emailAddress = request.getParameter("emailAddress") == null ? "" : request.getParameter("emailAddress");
 				String name = request.getParameter("name") == null ? "" : request.getParameter("name");
+				String to = request.getParameter("to") == null ? "" : request.getParameter("to");
 				
+				// 단일 수신자의 경우
 				if (!emailAddress.equals("")) {
 					name = name.equals("") ? emailAddress : name;
 					String msgTo = String.format("%s <%s>", name, emailAddress);
 					
 					logger.debug("msgTo=" + msgTo);
 					
-					return "redirect:/ezEmail/mailWrite.do?cmd=NEW&msgto=" + URLEncoder.encode(msgTo, "UTF-8");
+					// 자기 자신이 수신자인 경우
+					if (emailAddress.equalsIgnoreCase(vo.getEmail())) {
+						logger.debug("isMailToMe=YES");
+						
+						return "redirect:/ezEmail/mailWrite.do?cmd=NEW&msgto=" + URLEncoder.encode(msgTo, "UTF-8") + "&isMailToMe=YES";
+					} else {					
+						return "redirect:/ezEmail/mailWrite.do?cmd=NEW&msgto=" + URLEncoder.encode(msgTo, "UTF-8");
+					}
+				// 다중 수신자의 경우
+				} else if (!to.equals("")) { 
+					logger.debug("to=" + to);
+					
+					// 수신자에 자기 자신이 포함되어 있는 경우
+					if (to.contains("<" + vo.getEmail() + ">")) {
+						logger.debug("isMailToMe=YES");
+						
+						return "redirect:/ezEmail/mailWrite.do?cmd=NEW&msgto=" + URLEncoder.encode(to, "UTF-8") + "&isMailToMe=YES";
+					} else {
+						return "redirect:/ezEmail/mailWrite.do?cmd=NEW&msgto=" + URLEncoder.encode(to, "UTF-8");
+					}
 				} else {
 					return "redirect:/ezEmail/mailWrite.do?cmd=NEW";
 				}
