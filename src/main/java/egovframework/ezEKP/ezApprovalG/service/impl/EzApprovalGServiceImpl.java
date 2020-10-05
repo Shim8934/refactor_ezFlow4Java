@@ -26579,17 +26579,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                                 
 		                             //쿠쿠닥스 에디터에서 문장안에 br 태그가 들어가는 경우는 없어 <p><br></p>는 비어있는 라인으로 처리함. 2020-05-20 홍대표.
 		                             brParentEl.html("&nbsp;");
-//                                    for (int m = 0; m < result.length; m++) {
-//                                        if (!bAllEmpty) {
-//                                            if (result[m] == null && result[m].equals("")) {
-//                                            	brParentEl.append("<p>&nbsp;</p>");
-//                                            } else {
-//                                            	brParentEl.append("<p>" + result[m] + "</p>");
-//                                            }
-//                                        } else {
-//                                            bAllEmpty = false;
-//                                        }
-//                                    }
+                                    for (int m = 0; m < result.length; m++) {
+                                        if (!bAllEmpty) {
+                                            if (result[m] == null && result[m].equals("")) {
+                                            	brParentEl.append("<p>&nbsp;</p>");
+                                            } else {
+                                            	brParentEl.append("<p>" + result[m] + "</p>");
+                                            }
+                                        } else {
+                                            bAllEmpty = false;
+                                        }
+                                    }
                                 }
 							}
 						}
@@ -26783,16 +26783,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 				}
 				
+				tdStyle = " " + tdStyle;
+				
 				if (!tdElement.hasAttr("width")) {
-					if (tdStyle.indexOf("width") > 0) {
-						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width")))));
-						tdStyle.replace(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width"))), "");
+					if (tdStyle.indexOf(" width") > 0) {
+						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf(" width"), tdStyle.indexOf(";", tdStyle.indexOf(" width")))));
+						tdStyle.replace(tdStyle.substring(tdStyle.indexOf(" width"), tdStyle.indexOf(";", tdStyle.indexOf(" width"))), "");
 						tdElement.attr("style", tdStyle);
 					} 
 				} else {
-					if (tdStyle.indexOf("width") > 0) {
-						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width")))));
-						tdStyle.replace(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width"))), "");
+					if (tdStyle.indexOf(" width") > 0) {
+						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf(" width"), tdStyle.indexOf(";", tdStyle.indexOf(" width")))));
+						tdStyle.replace(tdStyle.substring(tdStyle.indexOf(" width"), tdStyle.indexOf(";", tdStyle.indexOf(" width"))), "");
 						tdElement.attr("style", tdStyle);
 					} else {
 						tdElement.attr("width_kaoni", SizeConvertToMM(tdElement.attr("width").trim()));

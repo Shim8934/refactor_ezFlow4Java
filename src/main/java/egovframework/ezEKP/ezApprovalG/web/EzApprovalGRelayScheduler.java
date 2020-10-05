@@ -2022,13 +2022,13 @@ public class EzApprovalGRelayScheduler {
 				    	  
 				    	  paramMap.put("V_FOLDERNAME", folderName);
 				    	  paramMap.put("V_FILESTATE", "success");
-				    	  paramMap.put("V_SENDSTATE", "send");
 				    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
 				    	  paramMap.put("V_DOCID", map.get("DOCID"));
 				    	  
 				    	  logger.debug("send: " + paramMap);
 				    	  
 				    	  if(!map.get("V_SENDSTATE").equals("send")) {
+				    		  paramMap.put("V_SENDSTATE", "send");
 				    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
 				    	  }
 				    	  
@@ -2038,13 +2038,13 @@ public class EzApprovalGRelayScheduler {
 				    	  
 				    	  paramMap.put("V_FOLDERNAME", folderName);
 				    	  paramMap.put("V_FILESTATE", "success");
-				    	  paramMap.put("V_SENDSTATE", "sendtemp");
 				    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
 				    	  paramMap.put("V_DOCID", map.get("DOCID"));
 				    	  
 				    	  logger.debug("sendtemp: " + paramMap);
 				    	  
 				    	  if(!map.get("V_SENDSTATE").equals("sendtemp")) {
+				    		  paramMap.put("V_SENDSTATE", "sendtemp");
 				    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
 				    	  }
 				    	  
@@ -2053,14 +2053,14 @@ public class EzApprovalGRelayScheduler {
 				    	  folderName = folderName + ">" + "senderr";
 				    	  
 				    	  paramMap.put("V_FOLDERNAME", folderName);
-				    	  paramMap.put("V_FILESTATE", "success");
-				    	  paramMap.put("V_SENDSTATE", "senderr");
+				    	  paramMap.put("V_FILESTATE", "success");				    	  
 				    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
 				    	  paramMap.put("V_DOCID", map.get("DOCID"));
 				    	  
 				    	  logger.debug("senderr: " + paramMap);
 				    	  
 				    	  if(!map.get("V_SENDSTATE").equals("senderr")) {
+				    		  paramMap.put("V_SENDSTATE", "senderr");
 				    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
 				    	  }
 				    	  
@@ -2069,14 +2069,14 @@ public class EzApprovalGRelayScheduler {
 				    	  folderName = folderName + ">" + "senderrtemp";
 				    	  
 				    	  paramMap.put("V_FOLDERNAME", folderName);
-				    	  paramMap.put("V_FILESTATE", "success");
-				    	  paramMap.put("V_SENDSTATE", "senderrtemp");
+				    	  paramMap.put("V_FILESTATE", "success");				    	  
 				    	  paramMap.put("V_FILENAME", map.get("FILENAME"));
 				    	  paramMap.put("V_DOCID", map.get("DOCID"));
 				    	  
 				    	  logger.debug("senderrtemp: " + paramMap);
 				    	  
 				    	  if(!map.get("V_SENDSTATE").equals("senderrtemp")) {
+				    		  paramMap.put("V_SENDSTATE", "senderrtemp");
 				    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
 				    	  }
 				    	  
