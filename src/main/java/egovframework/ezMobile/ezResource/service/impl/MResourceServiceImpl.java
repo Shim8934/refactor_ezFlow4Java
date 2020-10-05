@@ -490,7 +490,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	public List<Date[]> getRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception {
 		LOGGER.debug("getRepDeteTimes started");
 		
-		int maxTemp = 100;
+		int maxTemp = 1000;
 		
 		List<Date[]> returnList = new ArrayList<Date[]>();
 			
