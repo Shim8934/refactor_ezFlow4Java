@@ -643,6 +643,13 @@
 							OpenInformationUI(pAlertContent, check_btnSendDraft2);
 			                return;
 			            }
+			            /* 2020-10-05 홍승비 - 임시보관함에서 결재선 지정 없이 기안하는 경우 예외처리 추가 */
+			            if (ListType == "21" && !checkTmpLines(DocSN)) {
+			            	var pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
+							OpenInformationUI(pAlertContent, check_btnSendDraft2);
+			                return;
+			            }
+			            
 			            if (!checkLines()) {
 			                return;
 			            }

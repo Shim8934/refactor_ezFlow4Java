@@ -98,3 +98,25 @@ function getFormInfo(pCode1, pCode2) {
 
     return Result;
 }
+
+/* 2020-10-05 홍승비 - 재사용문서 결재선 지정 없이 바로 임시저장 > 기안하는 경우, 결재선 체크하도록 수정 */
+function checkTmpLines(pDocSN) {
+	var lineChk = true;
+	
+	$.ajax({
+		type : "GET",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getTmpDocAprStateIsOK.do",
+		data : {
+			pDocSN : pDocSN.split("@")[1]
+		},
+		success: function(result) {
+            if (result == "NO") { // 결재상태가 비어있는 결재선이 존재하는 경우
+            	lineChk = false;
+            }
+		}        	
+	});
+	
+	return lineChk;
+}

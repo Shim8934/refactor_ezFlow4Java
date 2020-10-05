@@ -28659,4 +28659,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return apprGIngDocVO;
 	}
+	
+	/* 2020-10-05 홍승비 - 임시저장문서의 결재선이 정상적인지 체크하는 메서드 */
+	public String isTmpDocAprStateOK(String pDocSN, String userID, int tenantID, String companyID) throws Exception {
+		logger.debug("isTmpDocAprStateOK started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_DOCSN", pDocSN);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+		
+		logger.debug("isTmpDocAprStateOK Param : " + map.toString());
+		int nullLineCnt = ezApprovalGDAO.getNullTmpDocAprStateCnt(map);
+		String result = "OK";
+		
+		if (nullLineCnt > 0) {
+			result = "NO";
+		}
+		
+		logger.debug("isTmpDocAprStateOK ended.");
+		
+		return result;
+	}
 }

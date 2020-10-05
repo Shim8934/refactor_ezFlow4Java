@@ -29419,4 +29419,23 @@
 	   	LIMIT 1
 	</select>
 	
+	<select id="EzApprovalG.getNullTmpDocAprStateCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+		    FROM 
+		    	TBL_TMPAPRLINEINFO
+			WHERE  
+		    	OWNERID = #v_USERID#
+		    AND
+		    	TENANT_ID = #v_TENANTID#
+		   	AND
+		   		COMPANYID = #v_COMPANYID#
+		   	AND
+		   		SN = #v_DOCSN#
+		   	AND
+		   		(TRIM(APRSTATE) = ''  OR  TRIM(APRSTATE) IS NULL  OR  APRSTATE IS NULL)
+		]]>
+	</select>
+	
 </sqlMap>
