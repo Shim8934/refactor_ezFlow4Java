@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -759,12 +759,11 @@
 			
 			function mail_export() {
 				var exportType = "MAIL";
-				if (document.getElementById("maillist") == null 
-					|| document.getElementById("maillist").childNodes[0].childNodes[0].childNodes[1] == null ){
+				if (document.getElementById("maillist") == null && listContentArry.length == 0){
 					alert(strLang42);
 					return;
 				}
-				var mailcount = document.getElementById("maillist").childNodes[0].childNodes.length;
+				var mailcount = listContentArry.length;
 				var count = 0;
 	
 				for (var i = 0; i < mailcount; i++) {
