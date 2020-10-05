@@ -43,7 +43,7 @@
 		function moreView() {
 			var openUrl = "/ezTalkGate/noticeBoardDetailList.do?boardType=" + gubun 
 						+ "&ezTalkId=" + encodeURIComponent(ezTalkId) + "&ezTalkPw=" + encodeURIComponent(ezTalkPw); 
-			window.open(openUrl, "_blank", "width=1152, height=790, resizable=yes, toolbar=yes");
+			window.open(openUrl, "_blank", "width=1200, height=790, resizable=yes, toolbar=yes");
 		}
 			
 		</script>

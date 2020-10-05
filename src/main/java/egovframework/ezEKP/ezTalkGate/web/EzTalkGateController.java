@@ -431,8 +431,8 @@ public class EzTalkGateController {
 				loginController.createLoginCookie(orgId, orgPw, encryptPw, tenantId, request, response, deptId, compId);
 								
 	        	if (ezTalkGateNoticeBoardId != null) {
-					redirectUrl = "redirect:/ezBoard/boardItemList.do?boardID=" 
-									+ URLEncoder.encode(ezTalkGateNoticeBoardId, "UTF-8") + "&boardType=" + boardType;
+					redirectUrl = "redirect:/ezBoard/boardMainRedirect.do?boardID="
+									+ URLEncoder.encode(ezTalkGateNoticeBoardId, "UTF-8");
 	        	}
 
 	        	logger.debug("redirectUrl=" + redirectUrl);
