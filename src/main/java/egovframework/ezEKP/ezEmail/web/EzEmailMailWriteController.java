@@ -3686,8 +3686,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 //      string eSimpleMIME = xmlDoc.GetElementsByTagName("SIMPLE-MIME").Item(0).InnerText;
 //      string eSimpleMIMEContentTransferEncoding = xmlDoc.GetElementsByTagName("SIMPLE-MIME-CONTENT-TRANSFER-ENCODING").Item(0).InnerText;
 		
-		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-				userAccount, password);
+		/*SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+				userAccount, password);*/
+		SMTPAccess sa = ezEmailUtil.getSMTPServer(userAccount, password, userInfo.getTenantId());
 		
 		String pResult = null;
 		IMAPAccess ia = null;

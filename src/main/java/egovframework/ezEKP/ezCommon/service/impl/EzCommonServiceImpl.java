@@ -1675,6 +1675,46 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("config_type","조직도");
 			put("property","autoDeleteOfRetireUserLimit"); // property_name
 		}});
+		test.put("useExternalMailServerAddress", new HashMap<String, Object>(){{
+			put("tenantID", 99);
+			put("confName","useExternalMailServerAddress"); // property_name
+			put("property_value","0.0.0.0");
+			put("config_name","외부메일 서버 주소 ");
+			put("regdate","2020-09-29 00:00:00");
+			put("description","외부메일 서버 주소 (default:0.0.0.0)");
+			put("config_type","메일");
+			put("property","USEEXTERNALMAILSERVERADDRESS"); // property_name
+		}});
+		test.put("useExternalMailServerAuth", new HashMap<String, Object>(){{
+			put("tenantID", 99);
+			put("confName","useExternalMailServerAuth"); // property_name
+			put("property_value","NO");
+			put("config_name","외부메일 서버 인증 사용여부");
+			put("regdate","2020-09-29 00:00:00");
+			put("description","외부메일 서버 인증 사용여부(default: NO)");
+			put("config_type","메일");
+			put("property","USEEXTERNALMAILSERVERAUTH"); // property_name
+		}});
+		test.put("useExternalMailServerUserId", new HashMap<String, Object>(){{
+			put("tenantID", 99);
+			put("confName","useExternalMailServerUserId"); // property_name
+			put("property_value","authId");
+			put("config_name","외부메일 서버 인증 id (ex: test@test.com)");
+			put("regdate","2020-09-29 00:00:00");
+			put("description","외부메일 서버 인증 id");
+			put("config_type","메일");
+			put("property","USEEXTERNALMAILSERVERUSERID"); // property_name
+		}});
+		test.put("useExternalMailServerUserPw", new HashMap<String, Object>(){{
+			put("tenantID", 99);
+			put("confName","useExternalMailServerUserPw"); // property_name
+			put("property_value","authPw");
+			put("config_name","외부메일 서버 인증 pass");
+			put("regdate","2020-09-29 00:00:00");
+			put("description","외부메일 서버 인증 pass (ex: password123)");
+			put("config_type","메일");
+			put("property","USEEXTERNALMAILSERVERUSERPW"); // property_name
+		}});
 		
 		
 		Iterator<String> keys = test.keySet().iterator();

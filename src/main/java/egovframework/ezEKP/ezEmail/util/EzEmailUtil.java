@@ -5281,9 +5281,13 @@ public class EzEmailUtil {
 			logger.debug("send started");
 
 			try {
+				String domainName = userEmail.split("@")[1];
+				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
+				tenantId = tenantId < 0 ? 0 : tenantId;
+				
 				SMTPAccess sa;
-
-				if (usingAuth) {
+				sa = getSMTPServer(userEmail, password, tenantId, usingAuth);
+				/*if (usingAuth) {
 					sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"),
 							config.getProperty("config.SMTPPort"),
 							userEmail, password);
@@ -5291,7 +5295,7 @@ public class EzEmailUtil {
 					sa = SMTPAccess.getNotAuthInstance(config.getProperty("config.MailServerAddress"),
 							config.getProperty("config.SMTPPort"),
 							userEmail, password);
-				}
+				}*/
 
 				MimeMessage message = sa.createMimeMessage();
 
@@ -5536,6 +5540,69 @@ public class EzEmailUtil {
 		
     	logger.debug("mailAddrNameParse ended.");
     	return returnList;
+    }
+   
+    /**
+     * smtp server info
+     */
+    public SMTPAccess getSMTPServer(String userAccount, String userPw, int tenantId) {
+    	return getSMTPServer(userAccount, userPw, tenantId, true);
+    }
+    
+    /**
+     * smtp server info
+     */
+    public SMTPAccess getSMTPServer(String userAccount, String userPw, int tenantId, boolean usingAuth) {
+    	logger.debug("getSMTPServer started.");
+    	
+    	String smtpMailServer = "";
+    	String smtpMailServerPort = "";
+    	
+    	SMTPAccess reSMTPAccess = null;
+    	try {
+    		smtpMailServer = config.getProperty("config.MailServerAddress");
+    		smtpMailServerPort = config.getProperty("config.SMTPPort");
+    		String smtpUserId = userAccount;
+    		String smtpUserPw = userPw;
+    		
+    		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId); // 외부메일 사용 여부
+			if (useExternalMailServer.equalsIgnoreCase("YES")) { // 외부메일 사용 시 
+				String externalMailServerAddr = ezCommonService.getTenantConfig("useExternalMailServerAddress", tenantId);
+				String externalMailServerAuth = ezCommonService.getTenantConfig("useExternalMailServerAuth", tenantId);
+				logger.debug("externalMailServerAddr=" + externalMailServerAddr + ", externalMailServerAuth=" + externalMailServerAuth);
+				
+				if (!externalMailServerAddr.equals("") && !externalMailServerAddr.equals("0.0.0.0")) {
+					smtpMailServer = externalMailServerAddr;
+					
+					if (externalMailServerAuth.equalsIgnoreCase("YES")) { // 인증여부
+						String externalMailServerUserId = ezCommonService.getTenantConfig("useExternalMailServerUserId", tenantId);
+						String externalMailServerUserPw = ezCommonService.getTenantConfig("useExternalMailServerUserPw", tenantId);
+
+						if (!externalMailServerUserId.equals("") && !externalMailServerUserPw.equals("")) {
+							smtpUserId = externalMailServerUserId;
+							smtpUserPw = externalMailServerUserPw;
+						}
+						
+						usingAuth = true;
+					} else {
+						usingAuth = false;
+					}
+				} // externalMailServerAddr if end
+			}
+			
+			logger.debug("smtpMailServer=" + smtpMailServer + ", smtpMailServerPort=" + smtpMailServerPort + ", usingAuth=" + usingAuth);
+			if (usingAuth) {
+				reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, smtpUserId, smtpUserPw);
+			} else {
+				reSMTPAccess = SMTPAccess.getNotAuthInstance(smtpMailServer, smtpMailServerPort, smtpUserId, smtpUserPw);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, userAccount, userPw);
+		}
+    	logger.debug("getSMTPServer ended.");
+    	return reSMTPAccess;
     }
 }
 
