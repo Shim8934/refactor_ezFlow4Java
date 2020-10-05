@@ -1,4 +1,4 @@
-﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -764,16 +764,16 @@
 					return;
 				}
 				var mailcount = listContentArry.length;
-				var count = 0;
-	
-				for (var i = 0; i < mailcount; i++) {
-				    
-					if (document.getElementById("checklol" + i + "").checked == true) {
-				        selcheck[count++] = document.getElementById("checklol" + i + "");
-						checkMailCnt = count;
-				    }
-				    
-				}
+			    var count = 0;
+				var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
+				
+			    for (var i = 0; i < Rows.length; i++) {
+			        if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
+			            selcheck[count] = Rows.item(i);
+			            count++;
+			            checkMailCnt = count;
+			        }
+			    }
 				
 				if (checkMailCnt == 0 || checkMailCnt == null) {
 					alert(strLang42);
@@ -799,7 +799,7 @@
 				}
 				
 				if (checkMailCnt == 1 && encryptPw == "") {
-					var parameters = "url=" + encodeURIComponent(selcheck[0].parentElement.parentElement.getAttribute("targetURL"));
+					var parameters = "url=" + encodeURIComponent(selcheck[0].getAttribute("targetURL"));
 					
 				    if (shareId != "") {
 				    	parameters += "&shareId=" + encodeURIComponent(shareId);
@@ -812,7 +812,7 @@
 				} else {
 
 					for (var i = 0; i < checkMailCnt; i++) {
-			    		var folderIdAndMessageId = selcheck[i].parentElement.parentElement.getAttribute("targetURL").split("/");
+			    		var folderIdAndMessageId = selcheck[i].getAttribute("targetURL").split("/");
 			    		
 			    		if (folderIdAndMessageIdList[folderIdAndMessageId[0]] == undefined) {
 			    			folderIdAndMessageIdList[folderIdAndMessageId[0]] = folderIdAndMessageId[1];
