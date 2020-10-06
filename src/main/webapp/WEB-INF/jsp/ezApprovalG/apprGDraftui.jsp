@@ -170,6 +170,7 @@
 			var formAprOption = "<c:out value='${formAprOption}'/>";
 			var passAprLine = "";
 	        var useDynamicAprLine = "<c:out value ='${useDynamicAprLine}'/>";
+			var isTmpDocCanApprov = false;
 			
 		    window.onload = function ()
 		    {
@@ -688,6 +689,13 @@
 							OpenInformationUI(pAlertContent, check_btnSendDraft2);
 			                return;
 			            }
+			            /* 2020-10-05 홍승비 - 임시보관함에서 결재선 지정 없이 기안하는 경우 예외처리 추가 (지정된 결재선이 존재한다면, 결재정보 확인 없이도 기안 가능) */
+			            if (ListType == "21" && !checkTmpLines(DocSN) && isTmpDocCanApprov == false) {
+			            	var pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
+							OpenInformationUI(pAlertContent, check_btnSendDraft2);
+			                return;
+			            }
+			            
 			            if (!checkLines()) {
 			                return;
 			            }
@@ -1715,6 +1723,7 @@
 		
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
+		        	
 		            try {
 		                if (ret[1] != false) {
 							var result = "";
@@ -1732,6 +1741,7 @@
 	                    	});
 		                	
 		                    btnSendDraftEnable = "true";
+		                    isTmpDocCanApprov = true;
 		                    
 		                    if (approvalFlag == "S") {
 		                    	if (ret[32] == "Y") {

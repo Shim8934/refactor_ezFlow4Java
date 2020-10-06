@@ -3536,4 +3536,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGLineTempletVO> getNextAprLineInfo(Map<String, Object> map) throws Exception {
 	    return (List<ApprGLineTempletVO>) list("EzApprovalG.getNextAprLineInfo", map);
 	}
+
+	/* 2020-10-05 홍승비 - 임시저장문서의 결재선 중에서 결재상태 값이 없는 데이터 카운트 리턴 쿼리 */
+	public int getNullTmpDocAprStateCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getNullTmpDocAprStateCnt", map);
+	}
 }

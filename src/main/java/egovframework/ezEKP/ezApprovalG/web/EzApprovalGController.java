@@ -10319,7 +10319,22 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 		logger.debug("isPassAprLineShow result =" + result );
 		logger.debug("isPassAprLineShow ended.");
-
+		
+		return result;
+	}
+	
+	/* 2020-10-05 홍승비 - 임시저장문서의 결재선이 정상적인지 체크하는 메서드 */
+	@RequestMapping(value = "/ezApprovalG/getTmpDocAprStateIsOK.do", method = RequestMethod.GET, produces = "text/xml;charset=utf8")
+	@ResponseBody
+	public String getTmpDocAprStateIsOK(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getTmpDocAprStateIsOK started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String pDocSN = request.getParameter("pDocSN");
+		
+		String result = ezApprovalGService.isTmpDocAprStateOK(pDocSN, userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		logger.debug("getTmpDocAprStateIsOK ended");
 		return result;
 	}
 }
