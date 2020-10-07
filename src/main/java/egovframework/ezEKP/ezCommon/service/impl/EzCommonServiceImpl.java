@@ -1673,7 +1673,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("regdate","2020-09-14 00:00:00");
 			put("description","n일 이후 퇴직자 자동삭제 : n일 설정(default: 0, 0=사용안함)");
 			put("config_type","조직도");
-			put("property","autoDeleteOfRetireUserLimit"); // property_name
+			put("property","AUTODELETEOFRETIREUSERLIMIT"); // property_name
 		}});
 		test.put("useExternalMailServerAddress", new HashMap<String, Object>(){{
 			put("tenantID", 0);
@@ -1719,8 +1719,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		Iterator<String> keys = test.keySet().iterator();
         while( keys.hasNext() ){
-            String key = keys.next();
-            ezCommonDAO.insertTblTenantConfig(test.get(key));
+        	try {
+				String key = keys.next();
+				ezCommonDAO.insertTblTenantConfig(test.get(key));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+           
         }
 	}
 
