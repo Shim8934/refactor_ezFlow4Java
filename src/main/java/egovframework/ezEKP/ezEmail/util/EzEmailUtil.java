@@ -1101,6 +1101,14 @@ public class EzEmailUtil {
 		// ATTACHMENT라도 ContentID가 있는 경우에는 내부에서 참조되는 인라인 이미지일 수 있으므로 제외함.
 		if ((part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT) && ((MimePart)part).getContentID() == null)
 				|| part.getContentType() != null && part.getContentType().contains("x-apple-part-url")
+				// office 문서이면서 Content-ID가 있는 경우가 있어 추가함(Gmail에서 보낸 메일).
+				// 예) Content-Type: application/vnd.openxmlformats-officedocument.presentationml.presentation; 
+				//        name="=?UTF-8?B?7Iuc7JWIIOyalOyyreyCrO2VrV8yMDIwMTAwNS5wcHR4?="
+			    //    Content-Disposition: attachment; 
+				//        filename="=?UTF-8?B?7Iuc7JWIIOyalOyyreyCrO2VrV8yMDIwMTAwNS5wcHR4?="
+			    //    Content-Transfer-Encoding: base64
+			    //    Content-ID: <f_kfxpw01d0>				
+				|| part.getContentType() != null && part.getContentType().toUpperCase().contains("OFFICEDOCUMENT")
 				|| includeInlineAsAttachment
 				|| (part.isMimeType("application/*") && ((MimePart)part).getContentID() == null)
 				|| isInlinePartWithoutContentID
