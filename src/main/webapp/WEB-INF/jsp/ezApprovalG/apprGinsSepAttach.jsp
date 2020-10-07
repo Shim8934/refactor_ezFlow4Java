@@ -292,7 +292,7 @@
 		        
 		        var Data = SelectSingleNodeValue(InfoXml.documentElement, "NUMOFPAGE");
 		        if (Data == "")
-		            objRow.cells[4].innerHTML = " ";
+		            objRow.cells[4].innerHTML = "";
 		        else
 		            objRow.cells[4].innerHTML = Data;
 		
