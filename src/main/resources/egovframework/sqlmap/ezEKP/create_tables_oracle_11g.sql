@@ -7296,7 +7296,7 @@
 	"TENANT_ID" NUMBER(5,0), 
 	"MAIL_FLAG" NUMBER(4,0), 
 	"POPUP_FLAG" NUMBER(4,0), 
-	"MAIL_SENT_FLAG" NUMBER(4,0)
+	"MAIL_SENT_FLAG" NUMBER(4,0) DEFAULT 0
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_SURVEY_ATTACHFILE
