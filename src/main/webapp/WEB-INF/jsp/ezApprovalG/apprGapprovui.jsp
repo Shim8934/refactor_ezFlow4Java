@@ -177,6 +177,9 @@
 			
 			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
 			var formAprOption = "<c:out value='${formAprOption}'/>";
+			
+			var isReform = "<c:out value='${isReform}'/>";
+			var formId = "<c:out value='${formId}'/>";
 
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -194,6 +197,12 @@
 		    	
 		    	if(useExternalMailServer == "NO") {
 		    		$("#btnMail").css("display","");
+		    	}
+		    	
+		    	if(isReform) {
+		    		document.getElementById("message").src = "approvUIcontent.do?isReform=" + isReform + "&formId=" + formId;
+		    	} else {
+		    		document.getElementById("message").src = "approvUIcontent.do";
 		    	}
 		    };
 		    
@@ -2267,7 +2276,7 @@
 		  </tr>
 		  <tr>
 		      <td style="vertical-align:top;height:90%;">
-		        <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="approvUIcontent.do<c:if test="${isReform}">?isReform=${isReform}&formId=${formId}</c:if>" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+		        <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		          
 		    </td>
 		  </tr>
