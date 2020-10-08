@@ -7484,9 +7484,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}//body
 		
 		/* 2019-11-18 홍승비 - 전자결재문서 엑셀 저장 시 부서ID 대신 부서명을 파일명에 사용하도록 수정 */
+		// 2020-10-08 김민성- 크롬에서 다운로드시 확장자 사라지는 오류 수정
+		String pFileName = EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptName() + "_" + messageSource.getMessage("ezApprovalG.kms01", locale).replace(" ", "_") + ".xls";
 		response.setContentType("application/ms-excel");
 		response.setCharacterEncoding("utf-8");
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + EgovDateUtil.getTodayTime().substring(0, 10) + "_" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), userInfo.getDeptName()) + "_" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), messageSource.getMessage("ezApprovalG.kms01", locale)) + ".xls\"");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), pFileName) + "\"");
 		
 		workbook.write(response.getOutputStream());
 		  
