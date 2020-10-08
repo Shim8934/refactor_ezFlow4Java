@@ -1347,6 +1347,7 @@
 					type : "GET",
 					dataType : "text",
 					async : true,
+					cache : false,
 					url : "/ezBoard/getIsMyBoard.do",
 					data : {
 						boardID : pBoardID
