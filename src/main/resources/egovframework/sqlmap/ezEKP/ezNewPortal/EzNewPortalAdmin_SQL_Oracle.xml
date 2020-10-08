@@ -8,6 +8,22 @@
 	<typeAlias alias="PortletInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO"/>
 	<typeAlias alias="ThemeAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.ThemeAuthVO"/>
 	<typeAlias alias="PortletAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletAuthVO"/>
+	<resultMap class="java.util.HashMap" id="ThemeAuthMap">
+		<result property="themeId" column="THEMEID" />
+		<result property="userId" column="USERID" />
+		<result property="userName" column="USERNAME" />
+		<result property="userDeptName" column="USERDEPTNAME" />
+		<result property="userType" column="USERTYPE" />
+		<result property="accessYN" column="ACCESSYN" javaType="boolean"/>
+	</resultMap>
+	<resultMap class="java.util.HashMap" id="PortletAuthMap">
+		<result property="portletId" column="PORTLETID" />
+		<result property="userId" column="USERID" />
+		<result property="userName" column="USERNAME" />
+		<result property="userDeptName" column="USERDEPTNAME" />
+		<result property="userType" column="USERTYPE" />
+		<result property="accessYN" column="ACCESSYN" javaType="boolean"/>
+	</resultMap>
 	
 	<select id="ezNewPortal.getThemeInfo" parameterClass="Map" resultClass="ThemeInfoVO">
 		<![CDATA[
@@ -1094,7 +1110,7 @@
 
 	<!-- 18.12.03 테마별 포틀릿 사용여부 설정 관련 개발 ===== 끝-->
 	<!-- 테마별, 포틀릿별 권한 설정 관련 개발 -->
-	<select id="ezNewPortal.getThemeAuth" parameterClass="Map" resultClass="ThemeAuthVO">
+	<select id="ezNewPortal.getThemeAuth" parameterClass="Map" resultMap="ThemeAuthMap" remapResults="true">
 	<![CDATA[
 		SELECT
 			theme_id AS themeid,
@@ -1195,7 +1211,7 @@
 	</isNotEqual>
 	</select>
 	
-	<select id="ezNewPortal.getPortletAuth" parameterClass="Map" resultClass="PortletAuthVO">
+	<select id="ezNewPortal.getPortletAuth" parameterClass="Map" resultMap="PortletAuthMap">
 	<![CDATA[
 		SELECT
 			portlet_id AS portletid,
