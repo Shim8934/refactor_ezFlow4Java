@@ -999,6 +999,7 @@
 						type : "GET",
 						dataType : "text",
 						async : false,
+						cache : false,
 						url : "/ezBoard/getItemCount.do",
 						data : {
 							boardID : SelectedBoardID
