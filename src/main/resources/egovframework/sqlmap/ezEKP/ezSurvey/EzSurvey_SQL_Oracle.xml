@@ -829,10 +829,10 @@
 			select distinct
 				a.survey_id as surveyId,
 				b.cn as userId,
-				b.displayname as userName1,
-				b.displayname2 as userName2,
+				TO_NCHAR(b.displayname) as userName1,
+				TO_NCHAR(b.displayname2) as userName2,
 				b.mail as email,
-				a.company_id as companyId,
+				TO_NCHAR(a.company_id) as companyId,
 				a.tenant_id as tenantId
 			from
 				tbl_survey_participant a
@@ -949,7 +949,7 @@
 			    ) d
 			 on d.cn = a.cn
 			 where a.PHYSICALDELIVERYOFFICENAME = #companyId# and tenant_id = #tenantId#
-		) as plusaddjob
+		)
  		]]>
 	</select>
 	
