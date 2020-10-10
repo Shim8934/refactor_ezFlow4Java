@@ -1817,7 +1817,7 @@
 				(
 					(member_type = 'USER' AND member_id = #userId#)
 				  OR
-					(member_type = 'DEPT' AND sub_dept_yn = 'N' AND (member_id = #deptId# or member_id IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)))
+					(member_type = 'DEPT' AND (member_id = #deptId# or member_id IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)))
 				  OR 
 					(member_type = 'JIKWI' AND member_id IN 
 						(
@@ -1829,12 +1829,6 @@
 				  OR
 					(member_type = 'JIKCHEK' AND member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
 			]]>
-			<isNotEqual property="applySubDeptYN" compareValue="true">
-			<![CDATA[
-				OR
-				  (member_type = 'DEPT' AND sub_dept_yn = 'Y' AND (member_id = #deptId# or member_id IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#))
-			]]>
-			</isNotEqual>
 			<![CDATA[
 				)
      	]]>

@@ -1552,7 +1552,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public boolean getPermissionGroupAccessYN(String groupId, String companyId, int tenantId, String userId,
 			String deptId, boolean applySubDeptYN) throws Exception {
-		logger.debug("getPermissionGroupAccessYN started.");
+		logger.debug("getPermissionGroupAccessYN started. groupId=" + groupId + ",userId=" + userId + ",deptId=" + deptId
+				+ ",applySubDeptYN=" + applySubDeptYN);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("groupId", groupId);
 		map.put("companyId", companyId);
@@ -1563,7 +1565,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		boolean accessYN = ezCommonDAO.getPermissionGroupAccessYN(map);
 		
-		logger.debug("getPermissionGroupAccessYN ended.");
+		logger.debug("getPermissionGroupAccessYN ended. accessYN=" + accessYN);
+		
 		return accessYN;
 	}
 
