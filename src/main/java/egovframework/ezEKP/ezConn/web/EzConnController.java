@@ -26,6 +26,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.web.LoginController;
+import egovframework.let.utl.fcc.service.ClientUtil;
 
 /**
  * 
@@ -497,6 +498,15 @@ public class EzConnController {
 						LoginVO user = getUserInfoById(userId, tenantId);
 						
 						if (user != null && user.getId() != null && !user.getId().equals("")) { 
+							user.setIp(ClientUtil.getClientIP(request));
+							user.setAgent(ClientUtil.getClientInfo(request, "agent"));
+							user.setOs(ClientUtil.getClientInfo(request, "os"));
+							user.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+							user.setTenantId(tenantId);
+							
+							// sso 접속시에도 로그인 이력 남도록 추가 
+							loginService.insertLog(user);
+														
 							loginController.createLoginCookie(user.getId(), "", "", tenantId, request, response, user.getDeptID(), user.getCompanyID());
 						
 							resultPage = "redirect:" + redirectUrl;
