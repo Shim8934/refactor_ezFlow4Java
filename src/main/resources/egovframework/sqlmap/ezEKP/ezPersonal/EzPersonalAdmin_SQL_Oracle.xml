@@ -775,6 +775,12 @@
 			VALUES 
 				( SEQ_TBL_PS_POPUP_ITEMSEQ.NEXTVAL, #v_pCompanyID#, TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS'), #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #tenantID#, 1, #skinValue# )
 		]]>
+        <selectKey keyProperty="menuId" resultClass="Integer">
+            SELECT
+                SEQ_TBL_PS_POPUP_ITEMSEQ.CURRVAL
+            FROM
+                DUAL
+        </selectKey>		
 	</insert>
 	
 	<update id="EzPersonalAdmin.EZSP_UPDATEPOPUP" parameterClass="Map">
