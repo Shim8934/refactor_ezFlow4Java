@@ -19444,6 +19444,32 @@
           AND
           			COMPANYID = #companyID#)
 	</insert>
+	
+	<insert id="EzApprovalG.updateHistoryForLine2" parameterClass="Map">
+		 INSERT INTO 
+		 			TBL_HISTORYLINEINFO
+        			( DOCID,   APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, MODIFYDATE, MODIFYSN, MODIFYUSERID, MODIFYUSERNAME, MODIFYUSERNAME2, MODIFYUSERJOBTITLE, MODIFYUSERJOBTITLE2, MODIFYUSERDEPTID, MODIFYUSERDEPTNAME, MODIFYUSERDEPTNAME2, CHKFLAG , TENANT_ID, COMPANYID)
+        ( SELECT 
+        			#v_DOCID#, APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), (
+        																																																																				SELECT 
+        																																																																					NVL(MAX(MODIFYSN),0) + 1 
+																																																																					    FROM 
+																																																																					    	TBL_HISTORYLINEINFO 
+																																																																					    WHERE  
+																																																																					    	DOCID = #v_DOCID#
+																																																																					    AND
+																																																																					    	TENANT_ID = #v_TENANTID#
+																																																																					    AND
+																																																																					    	COMPANYID = #companyID#), #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, ' ' , TENANT_ID, COMPANYID
+          FROM 
+        			TBL_ENDAPRLINEINFO 
+          WHERE  
+          			DOCID = #v_DOCID#
+          AND
+          			TENANT_ID = #v_TENANTID#
+          AND
+          			COMPANYID = #companyID#)
+	</insert>
 
 <!-- 	<procedure id="EzApprovalG.setJijung" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_SETJIJUNG(#v_DOCID#, #v_RECEIVESN#, #v_DOCSTATE#, #v_PROCESSORID#, #v_PROCESSORNAME#, #v_PROCESSORNAME2#, #v_PROCESSORJOBTITLE#, #v_PROCESSORJOBTITLE2#, #v_RECEIVEDDEPTID#, #v_RECEIVEDDEPTNAME#, #v_RECEIVEDDEPTNAME2#, #v_CHARGEID#, #v_CHARGENAME#, #v_CHARGENAME2#, #v_MANAGEDEPTID#, #v_GFLAG#)} -->
