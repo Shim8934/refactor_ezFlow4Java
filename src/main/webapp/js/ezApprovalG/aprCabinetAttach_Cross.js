@@ -538,6 +538,11 @@ function selbeforeBlockCA() {
     pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
     goToPageByNumCA(pageNum);
 }
+function selafterBlockCA() {
+	var pageNum = curpage;
+    pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+    goToPageByNumCA(pageNum);
+}
 function selafterBlock() {
 	var pageNum = curpage;
     pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
