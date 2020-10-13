@@ -2645,4 +2645,32 @@
 			group by d.EXTENSIONATTRIBUTE2, d.EXTENSIONATTRIBUTE3, d.cn, d.displayname
 		]]>
 	</select>
+
+	<select id="EzPortalDAO.getEzTalkGateNoticeBoardId" parameterClass="map" resultClass="String">
+		SELECT
+			board_id
+		FROM
+			tbl_portal_portlet_comp
+		WHERE
+			portlet_id = 2
+		AND
+			menu_id = 4
+		AND
+			company_id = #v_companyID#
+		AND
+			tenant_id = #v_tenantID#
+	</select>
+
+	<select id="EzPortalDAO.chkBoardReadAuthor" parameterClass="Map" resultClass="String">
+		SELECT
+			read_fg
+		FROM
+			tbl_board_boardmanage
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			boardid = #boardID#
+		AND
+			ACCESSID = #accessID#
+	</select>
 </sqlMap>
