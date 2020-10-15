@@ -1067,6 +1067,39 @@ public class EzEmailUtil {
 			if (extraMap.get("useImageConvertServer") != null) useImageConvertServer = (String)extraMap.get("useImageConvertServer");
 		}
 		
+		// 첨부 파일이면서 Content-ID가 있는 경우 실제 HTML 본문에서 참조되고 있는 파트인지 확인하기 위해 추가함(Gmail에서 보낸 메일).
+		// 실제 참조되지 않는 경우엔 Content-ID가 있어도 첨부 파일로 처리하기 위한 조치임.
+		// 예) Content-Type: application/vnd.openxmlformats-officedocument.presentationml.presentation; 
+		//        name="=?UTF-8?B?7Iuc7JWIIOyalOyyreyCrO2VrV8yMDIwMTAwNS5wcHR4?="
+	    //    Content-Disposition: attachment; 
+		//        filename="=?UTF-8?B?7Iuc7JWIIOyalOyyreyCrO2VrV8yMDIwMTAwNS5wcHR4?="
+	    //    Content-Transfer-Encoding: base64
+	    //    Content-ID: <f_kfxpw01d0>				 
+		boolean isAttachmentWithUnreferencedContentID = false;
+		
+		if (part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
+				&& ((MimePart)part).getContentID() != null) {
+			String htmlBodyContent = (String)extraMap.get("htmlBody");
+			
+			if (htmlBodyContent != null) {
+				String contentID = ((MimePart)part).getContentID();
+				
+				if (contentID.startsWith("<")) {
+					contentID = contentID.substring(1);
+				}
+
+				if (contentID.endsWith(">")) {
+					contentID = contentID.substring(0, contentID.length() - 1);
+				}
+				
+				if (!htmlBodyContent.contains("cid:" + contentID)) {
+					isAttachmentWithUnreferencedContentID = true;
+				}				
+				
+				logger.debug("attachment with contentID=" + contentID + ",isAttachmentWithUnreferencedContentID=" + isAttachmentWithUnreferencedContentID);				
+			}
+		}
+		
 		// 아래 if문 조건에 disposition이 attachment인지 체크했는데
 		// iphone에서 inline-image를 보냈을 때 inline-image가 mulitpart/related에 들어있지 않고 mulitpart/mixed에 들어있어서
 		// 이럴 경우 inline-image가 아닌 attachment로 취급하기로 하여
@@ -1101,14 +1134,7 @@ public class EzEmailUtil {
 		// ATTACHMENT라도 ContentID가 있는 경우에는 내부에서 참조되는 인라인 이미지일 수 있으므로 제외함.
 		if ((part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT) && ((MimePart)part).getContentID() == null)
 				|| part.getContentType() != null && part.getContentType().contains("x-apple-part-url")
-				// office 문서이면서 Content-ID가 있는 경우가 있어 추가함(Gmail에서 보낸 메일).
-				// 예) Content-Type: application/vnd.openxmlformats-officedocument.presentationml.presentation; 
-				//        name="=?UTF-8?B?7Iuc7JWIIOyalOyyreyCrO2VrV8yMDIwMTAwNS5wcHR4?="
-			    //    Content-Disposition: attachment; 
-				//        filename="=?UTF-8?B?7Iuc7JWIIOyalOyyreyCrO2VrV8yMDIwMTAwNS5wcHR4?="
-			    //    Content-Transfer-Encoding: base64
-			    //    Content-ID: <f_kfxpw01d0>				
-				|| part.getContentType() != null && part.getContentType().toUpperCase().contains("OFFICEDOCUMENT")
+				|| isAttachmentWithUnreferencedContentID
 				|| includeInlineAsAttachment
 				|| (part.isMimeType("application/*") && ((MimePart)part).getContentID() == null)
 				|| isInlinePartWithoutContentID
@@ -1520,7 +1546,11 @@ public class EzEmailUtil {
 			htmlBody = stripScriptTags(htmlBody);
 			
 			// 메일 본문의 링크를 누르면 별도의 창으로 표시되도록 하는 처리
-			htmlBody = addTargetBlank(htmlBody);				
+			htmlBody = addTargetBlank(htmlBody);		
+			
+			// 이후 다른 파트를 처리할 때 HTML 본문을 참조할 필요가 있는 경우를 위해
+			// 추가함. Content-ID가 있는 파트가 실제 HTML 본문에서 참조되고 있는 지를 확인하기 위한 용도임.
+			extraMap.put("htmlBody", htmlBody);
 		} else if(part.isMimeType("text/plain")) {			
 			boolean isRealTextPlain = true;
 			
