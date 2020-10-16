@@ -777,6 +777,7 @@ function APRLINESNDownFunction() {
                 // 기안자를 선택 후 아래로 이동시킬 때, 오류 발생하여 수정. 2020-10-16 홍대표.
                 if (!p_NextSelRow) {
                 	OpenAlertUI(strLangS575);
+					return;
                 }
 
                 if (p_NextSelRow.getAttribute("data12") != null && (p_NextSelRow.getAttribute("data12") == "003" || p_NextSelRow.getAttribute("data12") == "004")) {
