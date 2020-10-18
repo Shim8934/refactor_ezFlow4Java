@@ -93,8 +93,8 @@
 				}
 				
 				function sizeBtnAppend() {
-					var minusBtn = "<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' onclick='Smaller()' style='cursor: pointer; display:inline;'/>";
-					var plusBtn = "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; display:inline;'/>";
+					var minusBtn = "<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' onclick='Smaller()' style='cursor: pointer; display:inline; width:29px; height:29px;'/>";
+					var plusBtn = "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; display:inline; width:28px; height:29px;'/>";
 					
 					$("body").prepend(plusBtn);
 					$("body").prepend(minusBtn);
