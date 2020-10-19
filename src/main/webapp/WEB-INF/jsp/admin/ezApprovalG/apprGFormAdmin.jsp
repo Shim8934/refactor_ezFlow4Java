@@ -33,6 +33,8 @@
 		    var pEditor = "<c:out value = '${useEditor}' />";
 		    var ua = navigator.userAgent;
 		    var isIE = false;
+		    var useHWP = "<c:out value = '${useHWP}' />";
+		    var useWebHWP = "<c:out value = '${useWebHWP}' />";
 
             if (/msie 10/i.test(ua)) {
                 isIE = true;	
@@ -64,8 +66,13 @@
 					$('#btnFormListView').hide();
 				}
 				
-				if (!isIE) {
-					$('#btnInsForm2').hide();
+				if (useHWP == "YES") {
+					if(useWebHWP == "NO" && isIE) {		// 한글 기안기 -> ie에서만 사용가능
+						$('#btnInsForm2').show();
+					}
+					if(useWebHWP == "YES") {			// 웹 한글 기안기 -> 모든 브라우저 사용가능
+						$('#btnInsForm3').show();
+					}
 				}
 		    	
 				companyID = document.getElementById("ListCompany").value;
@@ -314,9 +321,9 @@
 						var HWP = "&type=HWP";
 						var parameter = "?tCheck=fIns&contID=" + encodeURIComponent(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + encodeURIComponent(companyID);
 						
-						if (type == "HWP") {
+						if (type == "HWP" || type == "WebHWP") {
 							url = "/admin/ezApprovalG/formMainOther.do";
-							parameter = parameter + HWP;
+							parameter = parameter + "&type=" + type;
 						} else {
 							//일반일때 ck
 							if (approvalFlag =='S') {
@@ -374,13 +381,18 @@
 		            var parameter = "?tCheck=fUpdate&contID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA8")) + "&formID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURIComponent(companyID);
 		            
 		            if ((GetAttribute(selRow[0], "DATA4") != null ? GetAttribute(selRow[0], "DATA4").toLowerCase().indexOf(".hwp") : -1) > 0) {
-		                if (isIE) {
-							url = "/admin/ezApprovalG/formMainOther.do";
-		                } else {
-	                		var pAlertContent = "한글양식은 IE에서만 수정할 수 있습니다.";
-	                        alert(pAlertContent);
-							return;
-		                }
+		            	if(useWebHWP == "NO") {
+			                if (isIE) {
+								url = "/admin/ezApprovalG/formMainOther.do";
+			                } else {
+		                		var pAlertContent = "한글양식은 IE에서만 수정할 수 있습니다.";
+		                        alert(pAlertContent);
+								return;
+			                }
+		            	} else {
+		            		HWP = "&type=WebHWP";
+		            		url = "/admin/ezApprovalG/formMainOther.do";
+		            	}
 		                parameter = parameter + HWP;
 		            }
 		            else {
@@ -694,7 +706,8 @@
 		        <li id="btnDelFcont"><span onclick="return btnDelFcont_onclick()"><spring:message code = 'ezApprovalG.t1628' /></span></li>
 		        <!-- <li style="background: none;"><img src="/images/i_bar.gif" style="vertical-align: middle"></li> -->
 		        <li class="important" id="btnInsForm1"><span onclick="return btnInsForm_onclick('MHT')"><spring:message code = 'ezApprovalG.t1667' /></span></li>
-            	<li class="important" id="btnInsForm2" <c:if test="${useHWP != 'YES'}">style = 'display:none;'</c:if>><span onclick="return btnInsForm_onclick('HWP')">HWP <spring:message code = 'ezApprovalG.t1667' /></span></li>
+            	<li class="important" id="btnInsForm2" style = 'display:none;'><span onclick="return btnInsForm_onclick('HWP')">HWP <spring:message code = 'ezApprovalG.t1667' /></span></li>
+            	<li class="important" id="btnInsForm3" style = 'display:none;'><span onclick="return btnInsForm_onclick('WebHWP')">HWP <spring:message code = 'ezApprovalG.t1667' /></span></li>
 		        <li id="btnUpForm"><span onclick="return UpdateForm()"><spring:message code = 'ezApprovalG.t1668' /></span></li>
 		        <li id="btnDelForm"><span onclick="return DelForm()"><spring:message code = 'ezApprovalG.t1619' /></span></li>
 				<li id="btnModeForm"><span onclick="return MoveForm()"><spring:message code = 'ezApprovalG.t25000' /></span></li>

@@ -220,6 +220,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 //		폼프로세서 사용하려면 useEditor "" 으로 세팅
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
+		String useWebHWP = ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId());
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -239,6 +240,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useHWP", useHWP);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useWebHWP", useWebHWP);
 		
 		logger.debug("formAdmin ended.");
 		
@@ -608,8 +610,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("formID", formID);
 		model.addAttribute("docType", docType);
 		model.addAttribute("companyID", companyID);
-		if (type != null && type.equals("HWP")) {
-			model.addAttribute("useEditor", "HWP");
+		if (type != null && (type.equals("HWP") || type.equals("WebHWP"))) {
+			model.addAttribute("useEditor", type);
 			model.addAttribute("ext", "hwp");
 			model.addAttribute("realPath", commonUtil.getRealPath(request).replace("\\","/"));
 		} else {
@@ -638,7 +640,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		boolean isReform = "y".equalsIgnoreCase(reformflag);
 		
 		// 폼빌더 사용 여부 (폼빌더 양식이어도 true, 한글 에디터라면 무조건 false)
-		model.addAttribute("useReform", !"HWP".equals(type) && (useReform.equalsIgnoreCase("yes") || isReform));
+		model.addAttribute("useReform", (!("HWP".equals(type) || "WebHWP".equals(type))) && (useReform.equalsIgnoreCase("yes") || isReform));
 		// 폼빌더 양식 여부
 		model.addAttribute("isReform", isReform);
 		
@@ -761,6 +763,17 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("HWPEditor ended.");
 		
 		return "admin/ezApprovalG/apprGHWPEditor";
+	}
+	
+	/**
+	 * 전자결재G 관리자 > 한글 웹 기안기 양식작성기 화면 호출
+	 */
+	@RequestMapping(value="/admin/ezApprovalG/WHWPEditor.do", method = RequestMethod.GET)
+	public String WHWPEditor() throws Exception {
+		logger.debug("WHWPEditor started.");
+		
+		logger.debug("WHWPEditor ended.");
+		return "admin/ezApprovalG/apprGWHWPEditor";
 	}
 
 	/**

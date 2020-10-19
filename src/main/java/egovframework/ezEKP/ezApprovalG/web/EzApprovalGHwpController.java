@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -1084,5 +1087,90 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String fullFilePath = realPath + filePath;
 
 		downFile(request, response, fullFilePath, fileName);	
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/downloadAttachForHwp.do", method = RequestMethod.GET)
+	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LOGGER.debug("downloadAttachForHwp started");
+		
+		String filePath = request.getParameter("filePath");
+		
+		downImage(filePath, request, response);
+		
+		LOGGER.debug("downloadAttachForHwp ended");
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/uploadAttachForHwp.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String uploadAttachForHwp(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LOGGER.debug("uploadAttachForHwp started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		MultipartFile multiFile = request.getFile("fileToUpload"); 
+		
+		String realPath = request.getServletContext().getRealPath("");
+		String pFileName = "";
+        String sGUID = "";
+        String pUploadSN = "";
+        
+        sGUID = UUID.randomUUID().toString();
+        pUploadSN = "{" + sGUID + "}";
+        
+        if (StringUtils.isNotEmpty(multiFile.getOriginalFilename()) && StringUtils.isNotBlank(multiFile.getOriginalFilename())) {   
+        	String _pFileName = multiFile.getOriginalFilename();
+            if (_pFileName.indexOf(commonUtil.separator) > 0) {
+                _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
+            }
+            pFileName = _pFileName;
+        }
+        
+        pFileName = pFileName.replace("%2b", "+");
+        pFileName = pFileName.replace("%3b", ";");
+        
+        String pDirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+        pDirPath = realPath + pDirPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator;
+        LOGGER.debug("pDirPath : " + pDirPath);
+        
+        File tempFile = new File(pDirPath + "tempUploadFile");
+        
+        if (!tempFile.exists()) {
+        	tempFile.mkdir();
+        }
+
+        StringBuffer strXML = new StringBuffer();
+        strXML.append("<ROOT><NODES>");
+        
+        String newFileName = pUploadSN;
+        
+        writeUploadedFile(multiFile, newFileName + pFileName, pDirPath + "tempUploadFile");            		
+        	
+		strXML.append("<DATA1><![CDATA[" + pFileName + "]]></DATA1>");
+		strXML.append("<DATA2><![CDATA[" + newFileName + pFileName + "]]></DATA2>");
+		strXML.append("<DATA3><![CDATA[OK]]></DATA3>");
+        
+        strXML.append("</NODES></ROOT>");
+        
+		LOGGER.debug("uploadAttachForHwp ended");
+		return strXML.toString();
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/tempUploadFileDelete.do", method = RequestMethod.POST)
+	public String tempUploadFileDelete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LOGGER.debug("tempUploadFileDelete started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String fileName = request.getParameter("fileName");
+		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile";
+		
+		LOGGER.debug("filePath : " + (pDirPath + commonUtil.separator + fileName));
+		
+		File file = new File(pDirPath + commonUtil.separator + fileName);
+		file.delete();
+
+		LOGGER.debug("tempUploadFileDelete ended");
+        
+        return "json";
 	}
 }

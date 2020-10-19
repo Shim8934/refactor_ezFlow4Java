@@ -341,7 +341,7 @@ function SaveFormInfo() {
 		formRecevGroup: formRecevGroup
 	}
     
-    if(useEditor == "HWP") {
+    if(useEditor == "HWP" || useEditor == "WebHWP") {
     	url = "/admin/ezApprovalG/formSaveHWP.do";
     } else {
     	url = "/admin/ezApprovalG/formSave.do";
@@ -463,7 +463,9 @@ function MakeFormInfoXML_Detail() {
     formOptTypeAtr = formOptArr.join(",");
 
     createNodeAndInsertText(xmlpara, objNode, "APPROPTION", formOptTypeAtr);    
-    //    
+
+    if(document.getElementById("hidfileNM").value != "")
+    	createNodeAndInsertText(xmlpara, objNode, "HWPFILEPATH", document.getElementById("hidfileNM").value);
     
     return getXmlString(xmlpara.childNodes[0]);
 }
@@ -473,6 +475,11 @@ function MakeFormMHTXML() {
     if (useEditor == "HWP") {
         retValue[0] = "TRUE";
         retValue[1] = message.HWP_GetCloneData();
+        retValue[2] = "";
+        return retValue;
+    } else if(useEditor == "WebHWP") {
+    	retValue[0] = "TRUE";
+        retValue[1] = ""
         retValue[2] = "";
         return retValue;
     }

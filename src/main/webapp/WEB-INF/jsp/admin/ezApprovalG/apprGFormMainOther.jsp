@@ -123,7 +123,7 @@
 		        
 		        if (formID != "") {
 		            get_FormInfo();
-		            if (useEditor != "HWP") {
+		            if (!(useEditor == "HWP" || useEditor == "WebHWP")) {
 		                var tempXML = createXmlDom();
 // 		                var XmlBodyATT = createXmlDom();
 		                var XmlBodyDATA = createXmlDom();
@@ -178,6 +178,13 @@
 							Editor_Complete();
 						}, 200);
 		            }
+		        } else {
+		        	// 웹 한글 기안기 최초 작성시 한글 파일 추가 기능으로 사용함
+		        	if(useEditor == "WebHWP") {
+		        		document.getElementById("ApvForm_sub2").style.display = "none";
+		        		document.getElementById("ApvForm_sub3").style.display = "none";
+		        		document.getElementById("ApvForm_sub4").style.display = "none";
+		        	}
 		        }
 		        
 		        <c:if test="${useReform}">
@@ -190,6 +197,14 @@
 		        </c:if>
 		    });
 		
+		        
+		    window.onload = function () {
+		    	<c:if test="${useEditor eq 'WebHWP'}">
+		            var mHeight = document.documentElement.clientHeight - 200 - document.getElementById("message").offsetTop + "px";
+		            message.Resize(mHeight);            
+		        </c:if>
+		    }
+		        
 		    function Editor_Complete() {
 	            if (formURL != "") {
 	                if (useEditor == "HWP") {
@@ -212,6 +227,10 @@
 	                            }
 	                        }
 	                    }
+	                } else if (useEditor == "WebHWP") {
+	                	var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(formURL);
+	                	//var URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(formURL);
+	                	message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
 	                } else {
 	                    document.getElementById("ApvForm_sub4").style.display = "";
 	                    //위임전결
@@ -220,7 +239,7 @@
 	                    message.SetEditorContent(htmlData);
 	                }
 	            } else {
-	                if (useEditor != "HWP") {
+	                if (useEditor != "HWP" && useEditor != "WebHWP") {
 	                    document.getElementById("ApvForm_sub4").style.display = "";
 	                    //위임전결
 // 		                    document.getElementById("ApvForm_sub6").style.display = "";
@@ -237,6 +256,19 @@
 		        	document.getElementById("ApvForm_sub3").style.display = "none";
 		        	document.getElementById("ApvForm_sub4").style.display = "none";
 		        }
+		    }
+		    
+		    function FieldsAvailable(isTrue) {
+		    	 try {                
+		             if (isTrue) {
+		                 message.EditMode(2);
+		                 if (document.getElementById("setConnFlag").checked) {
+		                     //ConnInfoXmlRead();
+		                 }
+		              }
+		         } catch (e) {
+		             alert("FieldsAvailable() :: " + e);
+		         }
 		    }
 		
 		    function Attribute_Write(value) {
@@ -900,6 +932,7 @@
 		    }
 		
 		    function btnClose_onclick() {
+		    	btnfiledel();
 		    	window.opener.GetFormInfo(contID, "000", "", "");
 		        window.close();
 		    }
@@ -1102,6 +1135,63 @@
 					$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", false);
 				}
 			} */
+			
+			function btnfileup() { document.getElementById("hwpFile").click(); }
+			
+	        var xhr = new XMLHttpRequest();
+			function btn_AttachAdd_onclick() {
+				var extension = document.getElementById("hwpFile").value;
+	            extension = extension.substring(extension.lastIndexOf(".") + 1, extension.length);
+		        
+		        // 첨부파일 확장자 체크(hwp만 가능)
+		        if (extension.toLowerCase() != "hwp") {
+		        	document.getElementById("hwpFile").files[0] = "";
+		        	alert("한글 파일만 가능합니다.");
+		        	return;
+		        }
+		        
+		        var filelist = document.getElementById("hwpFile").files;
+		       
+	            var fd = new FormData();
+	            
+	            if(document.getElementById("hidfileNM").value != "") {
+					btnfiledel();
+				}
+		        
+	            fd.append("fileToUpload", filelist[0]);
+	            
+	            xhr.addEventListener("load", uploadComplete, false);
+	            xhr.open("POST", "/ezApprovalG/uploadAttachForHwp.do");
+	            xhr.send(fd); 
+			}
+			
+			function uploadComplete() {
+                document.getElementById("hwpFile").type = "text";
+                document.getElementById("hwpFile").type = "file";
+	            var xml = loadXMLString(xhr.responseText);
+
+	            document.getElementById("tbFilename").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA1")[0]);
+	            document.getElementById("hidfileNM").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
+			}
+			
+			function btnfiledel() {
+				var file = document.getElementById("hidfileNM").value;
+				
+				if(file !=  "") {
+					$.ajax({
+						async : false,
+						url : '/ezApprovalG/tempUploadFileDelete.do',
+		                type : 'POST',
+		                dataType : 'text',
+		                data : {
+							fileName : file
+		                },
+		                success: function() {
+		                	document.getElementById("hidfileNM").value = "";
+		                }
+					});
+				}
+			}
 		</script>
 		<!-- FormBuilder -->
 		<c:if test="${useReform}">
@@ -1180,6 +1270,18 @@
                         <select id="selFormKind" name="selFormKind" style="width: 100%;" onchange="changeSelFormKind(this.value)">${docType}</select>
                     </td>
                 </tr>
+                <c:if test="${useEditor == 'WebHWP' && formID eq null}">
+                <tr>
+                    <th style="width:100px; text-align:center">한글파일</th>
+                    <td style="width:40%;" colspan="7">
+                    	<input type="text" readonly="" id="tbFilename" name="tbFilename" style="width: 350px;">
+                    	<a class="imgbtn imgbck" style="margin-top:1px;">
+        					<span onclick="btnfileup()">본문첨부</span>
+        				</a>
+                    </td>
+                </tr>
+                <input type="file" id="fileBtn" multiple="multiple" class="hiddenBttn">
+                </c:if>
                 <tr>
 					<td colspan="8" style="width:10%; text-align:center;">
 						<input type="checkbox" id="setConnFlag" onclick="changeConnFlag()"/><spring:message code = 'ezApprovalG.t1665' />
@@ -1271,6 +1373,9 @@
                         	<c:choose>
                         		<c:when test="${useEditor == 'HWP'}">
 	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/HWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
+                        		</c:when>
+                        		<c:when test="${useEditor == 'WebHWP'}">
+	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/WHWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
                         		</c:when>
                         		<c:otherwise>
 	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectApprovalEditor.do?type=ADMIN&height=770&formID=${formID}" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
@@ -1547,6 +1652,10 @@
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
+	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/uploadHwpForm.do" style="display:none">
+			<input type="file" name="file" id="hwpFile" onchange="btn_AttachAdd_onclick()" style="display:none" accept=".hwp"/>
+  		</form>
+        <input type="hidden" id="hidfileNM" name="hidfileNM" value="">
         <form id="bodyForm">
         	<input type="hidden" id="hidCompanyID" value="${companyID}">
         	<input type="hidden" id="hidFormID" value="${formID}">
