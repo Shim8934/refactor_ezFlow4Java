@@ -341,7 +341,7 @@ function SaveFormInfo() {
 		formRecevGroup: formRecevGroup
 	}
     
-    if(useEditor == "HWP" || useEditor == "WebHWP") {
+    if(useEditor == "HWP") {
     	url = "/admin/ezApprovalG/formSaveHWP.do";
     } else {
     	url = "/admin/ezApprovalG/formSave.do";
@@ -366,6 +366,94 @@ function SaveFormInfo() {
 		dataType : "text",
 		async : false,
 		url : url,
+		data : params,
+		success: function(text){
+			SaveFormInfo_after(text);
+		}
+	});
+}
+
+function SaveHWPFormInfo(hwpData) {
+    var xmlRtn = createXmlDom();
+    var formMHT = "";
+    
+    //양식 정보 XML
+    var arrFormInfo = MakeFormInfoXML();
+    if (arrFormInfo[0] == "TRUE") {
+        formInfo = arrFormInfo[1];
+    } else {
+        OpenAlertUI(arrFormInfo[2]);
+        document.getElementById("1tab1").click();
+        return;
+    }
+    
+    //작성양식 XML
+    if(formID != "")
+    	formMHT = hwpData;
+    
+    //연동정보 XML
+    var arrFormConn = "";
+    arrFormConn = MakeFormConnXML();
+    if (arrFormConn[0] == "TRUE") {
+        if (arrFormConn[1] != "") { 
+            formConn = arrFormConn[1];
+        }
+    } else {
+        OpenAlertUI(arrFormConn[2]);
+        document.getElementById("1tab3").click();
+        return;
+    }
+
+    //WorkFlow XML
+    var arrFormWorkFlow = "";
+    arrFormWorkFlow = MakeFormWorkFlow();
+    if (arrFormWorkFlow[0] == "TRUE") {
+        if (arrFormWorkFlow[1] != "") {
+            formWorkFlow = arrFormWorkFlow[1];
+        }
+    } else {
+        OpenAlertUI(arrFormWorkFlow[2]);
+        document.getElementById("1tab4").click();
+        return;
+    }
+    
+    //자동분류 XML
+    var arrFormAutoRule = MakeFormAutoRuleXML();
+    if (arrFormAutoRule[0] == "TRUE") {
+        formAutoRule = arrFormAutoRule[1];
+        formAutoRuleLine = arrFormAutoRule[2];
+    } else {
+        formAutoRule = "";
+        formAutoRuleLine = "";
+    }
+    
+    //고정수신처정보 XML
+    var arrFormRecevGroup = MakeFormRecevGroupXML();
+    if (arrFormRecevGroup[0] == "TRUE") {
+        formRecevGroup = arrFormRecevGroup[1];
+    } else {
+        OpenAlertUI(strLangCSJ02);
+        document.getElementById("1tab5").click();
+        return;
+    }
+    
+    var params = {
+		companyID: companyID,
+		formContID: contID,
+		formID: formID,
+		formInfo: formInfo,
+		formMHT: formMHT,
+		formConn: formConn,
+		formAutoRule: formAutoRule,
+		formAutoRuleLine: formAutoRuleLine,
+		formRecevGroup: formRecevGroup
+	}
+    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/admin/ezApprovalG/formSaveHWP.do",
 		data : params,
 		success: function(text){
 			SaveFormInfo_after(text);
@@ -477,11 +565,6 @@ function MakeFormMHTXML() {
         retValue[1] = message.HWP_GetCloneData();
         retValue[2] = "";
         return retValue;
-    } else if(useEditor == "WebHWP") {
-    	retValue[0] = "TRUE";
-        retValue[1] = ""
-        retValue[2] = "";
-        return retValue;
     }
   
     if (message.FormInfoCheck("null"))
@@ -578,6 +661,10 @@ function MakeFormMHTXML_Detail() {
         
         HTML.appendChild(BODY);
         return ConvertHTMLtoMHT("<HTML>" + HTML.innerHTML + "</HTML>");
+}
+
+function GetHTML(callback) {
+    message.GetTextFile("HWP", "", function (data) { callback(data) });
 }
 
 function MakeFormConnXML() {
@@ -762,7 +849,15 @@ function btnClose_onclick() {
 }
 
 function btnSave_onclick() {
-    SaveFormInfo();
+    if(useEditor == "WebHWP") {
+    	if(formID != "") {
+    		GetHTML(SaveHWPFormInfo);
+    	} else {
+    		SaveHWPFormInfo();
+    	}
+    } else {
+    	SaveFormInfo();
+    }
 }
 //고정수신처 부서 등록 시, 수발신담당자 유/무 체크
 function isReceiverChk(DeptID)

@@ -173,7 +173,7 @@
 		                        htmlData += GetChildNodes(Doc_ContentHtml)[i].outerHTML;
 		                    }
 		                }
-		            } else {
+		            } else if(useEditor == "HWP"){
 						setTimeout(function() {
 							Editor_Complete();
 						}, 200);
@@ -261,7 +261,7 @@
 		    function FieldsAvailable(isTrue) {
 		    	 try {                
 		             if (isTrue) {
-		                 message.EditMode(2);
+		                 message.EditMode(1);	// 0:읽기 전용, 1:일반 편집모드, 2:양식 모드, 16:배포용 문서
 		                 if (document.getElementById("setConnFlag").checked) {
 		                     //ConnInfoXmlRead();
 		                 }
