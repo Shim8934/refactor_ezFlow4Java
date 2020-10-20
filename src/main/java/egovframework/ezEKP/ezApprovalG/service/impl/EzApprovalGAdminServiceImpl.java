@@ -2339,8 +2339,14 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String result = deleteForm(formID, companyID, tenantID);
 		
 		if (result.equals("TRUE")) {
-			deleteFile(realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht");
+			String filePath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID;
+			File formFile = new File(commonUtil.detectPathTraversal(filePath + ".mht"));
 			
+			if(formFile.exists()) {
+				deleteFile(filePath + ".mht");
+			} else {
+				deleteFile(filePath + ".hwp");
+			}
 			result = "TRUE";
 		} else {
 			result = "FALSE";
