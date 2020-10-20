@@ -1920,6 +1920,70 @@
 		)
 	</statement>
 	
+    <select id="EzCommonDAO.getPermissionGroupAccessYN" parameterClass="Map" resultClass="Integer">
+     	<![CDATA[
+			SELECT
+				COUNT(member_id)
+			FROM
+				tbl_permissiongroupinfo
+			WHERE
+				group_id = #groupId#
+			AND
+				company_id = #companyId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				(
+					(member_type = 'USER' AND member_id = #userId#)
+				  OR
+					(member_type = 'DEPT' AND (member_id = #deptId# or member_id IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)))
+				  OR 
+					(member_type = 'JIKWI' AND member_id IN 
+						(
+							SELECT TO_CHAR(extensionattribute7) FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+							UNION
+							SELECT jobid FROM tbl_addjobmaster WHERE cn = #userId# AND tenant_id = #tenantId#
+						)
+					)
+				  OR
+					(member_type = 'JIKCHEK' AND member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
+			]]>
+			<![CDATA[
+				)
+     	]]>
+     </select>
+     
+     <select id="EzCommonDAO.getPermissionGroupAccessSubDeptY" parameterClass="Map" resultClass="int">
+     	<![CDATA[
+			SELECT
+				COUNT(CN)
+			FROM
+				tbl_deptmaster
+			WHERE
+				REGEXP_LIKE (dept_cd_path,
+						(SELECT LISTAGG(dept_cd_path, '|') WITHIN GROUP(ORDER BY dept_cd_path)
+                              FROM tbl_deptmaster
+                              WHERE cn IN (
+										SELECT member_id
+                                              FROM tbl_permissiongroupinfo
+                                              WHERE 
+											group_id = #groupId#
+										AND
+											member_type = 'DEPT'
+										AND
+											sub_dept_yn = 'Y'
+									)
+						)
+				)
+			AND
+				(
+					cn = #deptId#
+				OR
+					cn IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)
+				)
+     	]]>
+     </select>
+     	
 	<select id="EzCommonDAO.checkSurveyMailSentFlagColumn">
 		SELECT
 			MAIL_SENT_FLAG

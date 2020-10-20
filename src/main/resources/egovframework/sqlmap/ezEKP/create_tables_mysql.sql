@@ -14666,7 +14666,7 @@ CREATE TABLE `tbl_sendoutinfo` (
   `UPDATEDATE` datetime DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;R
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Final view structure for view `svtaskclass`

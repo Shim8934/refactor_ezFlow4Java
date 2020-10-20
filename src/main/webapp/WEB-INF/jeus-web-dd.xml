@@ -8,4 +8,7 @@
         </specification-version>
     </library-ref>
     <websocket/>
+    <webinf-first>
+    	<enabled>true</enabled>
+    </webinf-first>    
 </jeus-web-dd>

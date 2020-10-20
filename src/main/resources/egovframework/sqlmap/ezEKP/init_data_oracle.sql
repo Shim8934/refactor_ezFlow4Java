@@ -91,7 +91,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useEzTalkNotification', '전자결재 톡알림', 'NO', '전자결재 관련 알림을 ezTalk으로 보낸다. YES:사용, NO:사용안함 (default: NO)', TO_DATE('2019-10-19 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useAdvancedEachMail', '개별발신 성능 향상 방식 적용', 'YES', '개별발신 성능 향상 방식 적용 YES:사용, NO:사용안함 (default: NO)', TO_DATE('2019-12-08 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useShowAllCompanies', '조직도 그룹사 전체 표시', 'NO', '메일쓰기 수신자지정창 조직도, 직원조회 조직도 등에서 그룹사 전체 표시 여부. YES: 표시, NO:미표시 (default: NO)', TO_DATE('2019-10-21 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useMailDeletedId', 'james_mail_deleted_id 테이블 사용여부', 'YES', 'james_mail_deleted_id 테이블 사용여부 (default: NO)', TO_DATE('2019-12-29 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useMailDeletedId', 'james_mail_deleted_id 테이블 사용여부', 'NO', 'james_mail_deleted_id 테이블 사용여부 (default: NO)', TO_DATE('2019-12-29 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'USE_SECUREMAIL', '보안메일 사용여부', 'NO', 'YES: 사용NO: 사용안함 (default: NO)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'Use_Portal', '포탈 모듈 사용여부', 'YES', 'YES: 사용NO: 사용안함 (default: YES)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '포탈');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'USE_OCS', 'MS OCS 사용여부', 'NO', 'ms ocs 2007 사용여부YES: 사용NO: 사용안함 (default: NO)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '연동');
@@ -2959,30 +2959,30 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
 ,'ezJournal.t10',SYS_EXTRACT_UTC(SYSTIMESTAMP),'기본연간업무일지','Top','basic');
 
 -- webfolder fileType 
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('1','document','doc','/images/webfolder/msWord.png',0,'문서');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('2','document','docx','/images/webfolder/msWord.png',0,'문서');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('3','document','xls','/images/webfolder/msExcel.png',0,'문서');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('4','document','xlsx','/images/webfolder/msExcel.png',0,'문서');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('5','document','ppt','/images/webfolder/msPowerpoint.png',0,'문서');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('6','document','pptx','/images/webfolder/msPowerpoint.png',0,'문서');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('7','music','mp3','/images/webfolder/mp3.png',0,'음악');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('8','image','gif','/images/webfolder/gif.png',0,'그림');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('9','image','jpeg','/images/webfolder/jpeg.png',0,'그림');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('10','image','jpg','/images/webfolder/jpg.png',0,'그림');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('11','zip','zip','/images/webfolder/zip.png',0,'압축파일');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('12','zip','rar','/images/webfolder/rar.png',0,'압축파일');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('13','zip','iso','/images/webfolder/iso.png',0,'압축파일');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('14','document','pdf','/images/webfolder/pdf.png',0,'문서');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('15','document','hwp','/images/webfolder/hwp.png',0,'문서');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('16','image','png','/images/webfolder/png.png',0,'그림');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('17','folder','folder','/images/webfolder/fldr.png',0,'폴더');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('18','video','mp4','/images/webfolder/mp4.png',0,'영상');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('19','video','mkv','/images/webfolder/mkv.png',0,'영상');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('20','video','flv','/images/webfolder/flv.png',0,'영상');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('21','unknown','unknown','/images/webfolder/unknown.png',0,'기타');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('22','document','txt','/images/webfolder/txt.png',0,'문서');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('23','video','avi','/images/webfolder/video.png',0,'영상');
-Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('24','video','wmv','/images/webfolder/video.png',0,'영상');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('1','document','doc','/images/webfolder/msWord.png',0,'문서');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('2','document','docx','/images/webfolder/msWord.png',0,'문서');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('3','document','xls','/images/webfolder/msExcel.png',0,'문서');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('4','document','xlsx','/images/webfolder/msExcel.png',0,'문서');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('5','document','ppt','/images/webfolder/msPowerpoint.png',0,'문서');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('6','document','pptx','/images/webfolder/msPowerpoint.png',0,'문서');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('7','music','mp3','/images/webfolder/mp3.png',0,'음악');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('8','image','gif','/images/webfolder/gif.png',0,'그림');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('9','image','jpeg','/images/webfolder/jpeg.png',0,'그림');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('10','image','jpg','/images/webfolder/jpg.png',0,'그림');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('11','zip','zip','/images/webfolder/zip.png',0,'압축파일');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('12','zip','rar','/images/webfolder/rar.png',0,'압축파일');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('13','zip','iso','/images/webfolder/iso.png',0,'압축파일');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('14','document','pdf','/images/webfolder/pdf.png',0,'문서');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('15','document','hwp','/images/webfolder/hwp.png',0,'문서');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('16','image','png','/images/webfolder/png.png',0,'그림');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('17','folder','folder','/images/webfolder/fldr.png',0,'폴더');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('18','video','mp4','/images/webfolder/mp4.png',0,'영상');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('19','video','mkv','/images/webfolder/mkv.png',0,'영상');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('20','video','flv','/images/webfolder/flv.png',0,'영상');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('21','unknown','unknown','/images/webfolder/unknown.png',0,'기타');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('22','document','txt','/images/webfolder/txt.png',0,'문서');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('23','video','avi','/images/webfolder/video.png',0,'영상');
+Insert into TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('24','video','wmv','/images/webfolder/video.png',0,'영상');
 
 --webfolder config
 INSERT INTO TBL_WEBFOLDER_CONFIG VALUES(0,'*',1,1,1,1);
