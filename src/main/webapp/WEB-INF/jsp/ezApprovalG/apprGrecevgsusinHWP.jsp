@@ -1527,114 +1527,122 @@
 			        tempdocnumcode = tempItemCode;
 			    }
 			    
+		        ezapprovalinfo_dialogArguments[0] = parameter;
+		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+			    
 			    if (chkReceivedDoc != 0) {
 		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
 		        	window.close();
 		        } else {
-		        	  url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType + "&ext=" + "hwp";
-				      feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
-					  ret = window.showModalDialog(url, parameter, feature);
+		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+		        	try { OpenWin.focus(); } catch (e) { }
+					  
 		        }
-			        if (ret != undefined && ret[0] == "OK") {
-			            try {
-			            	HwpCtrl.ChangeMode(2);
-			                if (pGubun != "5" && pGubun != "7" && pGubun != "10" && pGubun != "12") {
-			                    if (ret[1] != false) {
-			                    	$.ajax({
-			                    		type : "POST",
-			                    		dataType : "text",
-			                    		async : false,
-			                    		url : "/ezApprovalG/aprLineSave.do",
-			                    		data : {
-			                    				ret    : ret[1]
-			                    				},
-			                    		success : function(result){
-			                    		}
-			                    	});
-			                    }
-			
-			                }
-			                if (ret[1] != false) {
-			                    btnSendDraftEnable = "true";
-
-			                    if (approvalFlag == "S") {
-				                    SGetDraftAprLineInfo(ret);
-			                    } else {
-				                    GetDraftAprLineInfo(ret);
-			                    }
-			                    
-			                    IsSkipDrafter = "FALSE";
-			                }
-			
-			                if (pGubun != "11" && pGubun != "12") {
-			                	$.ajax({
-			                		type : "POST",
-			                		dataType : "text",
-			                		async : false,
-			                		url : "/ezApprovalG/aprDeptSave.do",
-			                		data : {
-			                				aprDeptInfo : ret[2]
-			                				},
-			                		success : function(result){
-			                			
-			                		}
-			                	});
-			                	
-			                    btnReceivLineEnable = false;
-			                    setRecevInfo(ret[3]);
-			                }
-			
-			                if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {
-				                var g_SelCabXml = ret[4];
-				                var xmlCab = createXmlDom();
-				                xmlCab = loadXMLString(g_SelCabXml);
-				                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
-				                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
-				            }
-			
-			                tempSecurity = ret[7];
-			                tempUrgent = ret[8];
-			                pSummery = ret[9];
-			                pPublicityCode = ret[11];
-			                tempSecurityDate = ret[14];
-			                
-			                if (approvalFlag == "G") {
-				                pSpecialRecordCode = ret[10];
-				                pLimitRange = ret[12];
-				                pPageNum = ret[13];
-				                pPublicityYN = ret[21];
-				                tempPublic = ret[21];
-				                /*2018-04-05 김은석 수정 건설공사 공개여부*/
-//	 			                setPublicFlag();
-				                setPublicFlag2();
-				                
-				                if (nonElecRec == "Y") {
-					            	nonElecRecInfoXml = ret[23];
-					            	nonSepAttachLVXml = ret[24];
-					            	g_szSCListXml =  ret[25];
-					            	sepAttachCheckYN = ret[26];
-					            	setNonElecRecInfo(nonElecRecInfoXml);
-					            }
-			                } else {
-			                	tempKeep = ret[16];
-			                	tempItemName = ret[17];
-			                	tempItemName2 = ret[18];
-			                	pPageNum = "1";
-			                	pLimitRange = "1";
-			                	pSpecialRecordCode = "1";
-			                	tempPublic = ret[11];
-			                	SetDocOption(ret[20]);
-			                }
-			                
-			                
-			                SummaryFlag = true;
-			                HwpCtrl.ChangeMode(3);
-			            } catch (e) {
-			                alert("<spring:message code='ezApprovalG.pjj02'/>");
-			            }
-			        }
+			        
+			        
 			    }
 			 
+		    function btnApprovalInfo_Complete(ret) {
+		    
+		    	if (ret != undefined && ret[0] == "OK") {
+		            try {
+		            	HwpCtrl.ChangeMode(2);
+		                if (pGubun != "5" && pGubun != "7" && pGubun != "10" && pGubun != "12") {
+		                    if (ret[1] != false) {
+		                    	$.ajax({
+		                    		type : "POST",
+		                    		dataType : "text",
+		                    		async : false,
+		                    		url : "/ezApprovalG/aprLineSave.do",
+		                    		data : {
+		                    				ret    : ret[1]
+		                    				},
+		                    		success : function(result){
+		                    		}
+		                    	});
+		                    }
+		
+		                }
+		                if (ret[1] != false) {
+		                    btnSendDraftEnable = "true";
+
+		                    if (approvalFlag == "S") {
+			                    SGetDraftAprLineInfo(ret);
+		                    } else {
+			                    GetDraftAprLineInfo(ret);
+		                    }
+		                    
+		                    IsSkipDrafter = "FALSE";
+		                }
+		
+		                if (pGubun != "11" && pGubun != "12") {
+		                	$.ajax({
+		                		type : "POST",
+		                		dataType : "text",
+		                		async : false,
+		                		url : "/ezApprovalG/aprDeptSave.do",
+		                		data : {
+		                				aprDeptInfo : ret[2]
+		                				},
+		                		success : function(result){
+		                			
+		                		}
+		                	});
+		                	
+		                    btnReceivLineEnable = false;
+		                    setRecevInfo(ret[3]);
+		                }
+		
+		                if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {
+			                var g_SelCabXml = ret[4];
+			                var xmlCab = createXmlDom();
+			                xmlCab = loadXMLString(g_SelCabXml);
+			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+			            }
+		
+		                tempSecurity = ret[7];
+		                tempUrgent = ret[8];
+		                pSummery = ret[9];
+		                pPublicityCode = ret[11];
+		                tempSecurityDate = ret[14];
+		                
+		                if (approvalFlag == "G") {
+			                pSpecialRecordCode = ret[10];
+			                pLimitRange = ret[12];
+			                pPageNum = ret[13];
+			                pPublicityYN = ret[21];
+			                tempPublic = ret[21];
+			                /*2018-04-05 김은석 수정 건설공사 공개여부*/
+// 			                setPublicFlag();
+			                setPublicFlag2();
+			                
+			                if (nonElecRec == "Y") {
+				            	nonElecRecInfoXml = ret[23];
+				            	nonSepAttachLVXml = ret[24];
+				            	g_szSCListXml =  ret[25];
+				            	sepAttachCheckYN = ret[26];
+				            	setNonElecRecInfo(nonElecRecInfoXml);
+				            }
+		                } else {
+		                	tempKeep = ret[16];
+		                	tempItemName = ret[17];
+		                	tempItemName2 = ret[18];
+		                	pPageNum = "1";
+		                	pLimitRange = "1";
+		                	pSpecialRecordCode = "1";
+		                	tempPublic = ret[11];
+		                	SetDocOption(ret[20]);
+		                }
+		                
+		                
+		                SummaryFlag = true;
+		                HwpCtrl.ChangeMode(3);
+		            } catch (e) {
+		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+		            }    
+		    	}
+		    }
 			 
 			function ReplaceString(Origin, Source, Target) {
 			    return Origin.split(Source).join(Target);
