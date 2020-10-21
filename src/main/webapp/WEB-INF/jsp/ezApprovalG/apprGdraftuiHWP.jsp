@@ -172,7 +172,9 @@
 			var newpDocID = "";
 	        var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 	        var formAprOption = "<c:out value='${formAprOption}'/>";
+	        var passAprLine = "";
 	        
+	        var gpGubun;
 	        window.onload = function () {
 	            try {
 	                window.onresize();
@@ -1239,7 +1241,12 @@
 			function btnhistory_onclick() {
 			    getHistory();
 			}
+			
+			var ezapprovalinfo_dialogArguments = new Array();
 			function btnApprovalInfo(pGubun) {
+				
+				gpGubun = pGubun;
+				
 				var deptCheckFlag = checkDeptAndCabinetId();
 				
 				if (deptCheckFlag == "3") {
@@ -1305,43 +1312,65 @@
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
 			
-			        if (pGubun == undefined)
-			            pGubun = CheckGubun;
-			
-			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "hwp";
-			        var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
-			        var ret = window.showModalDialog(url, parameter, feature);
+			        parameter[60] = passAprLine;
+					
+			        ezapprovalinfo_dialogArguments[0] = parameter;
+			        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+			        
+					if(DraftFlag == "REDRAFT" && SusinSN == "1" && DocState == "011" && AprState == "004") {
+						gpGubun = "11";
+					}
+					
+			        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + gpGubun +"&docType=" + pDocType + "&ext=" + "hwp";
+			        
+			        if (ListType == "21") {
+			            OpenUrl += "&docSN=" + DocSN;
+					}
+			        if (isUsed == "reuse") {
+			        	OpenUrl +=  "&isUsed=" + isUsed + "&beforeDocID=" +beforeDocID
+			        }
+			        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+			        
+			        try { OpenWin.focus(); } catch (e) { }
+			        
+			        
+			    } catch (e) {
+			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e.description);
+			    } 
+			}
+	
+			    function btnApprovalInfo_Complete(ret) {
 
 			        if (ret != undefined && ret[0] == "OK") {
 			            if (ret[1] != false) {
-			            	$.ajax({
-	                    		type : "POST",
-	                    		dataType : "text",
-	                    		async : false,
-	                    		url : "/ezApprovalG/aprLineSave.do",
-	                    		data : {
-	                    				ret : ret[1]
-	                    				},
-	                    		success : function(text){
-	                    		}
-	                    	});
-			
+			                $.ajax({
+			                    type : "POST",
+			                    dataType : "text",
+			                    async : false,
+			                    url : "/ezApprovalG/aprLineSave.do",
+			                    data : {
+			                            ret : ret[1]
+			                            },
+			                    success : function(text){
+			                    }
+			                });
+
 			                IsSkipDrafter = "FALSE";
 			                btnSendDraftEnable = "true";
 			                GetDraftAprLineInfo(ret);
 			            }
 			            
 			            if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
-			            	$.ajax({
-	                    		type : "POST",
-	                    		dataType : "text",
-	                    		async : false,
-	                    		url : "/ezApprovalG/aprDeptSave.do",
-	                    		data : {
-	                    				aprDeptInfo : ret[2]
-	                    		}
-	                    	});
-			            	
+			                $.ajax({
+			                    type : "POST",
+			                    dataType : "text",
+			                    async : false,
+			                    url : "/ezApprovalG/aprDeptSave.do",
+			                    data : {
+			                            aprDeptInfo : ret[2]
+			                    }
+			                });
+			                
 			                btnReceivLineEnable = false;
 			                SummaryOuterReceiverList = ret[15];
 			                setRecevInfo(ret[3]);
@@ -1349,8 +1378,8 @@
 			                DeleteDeptInfo();
 			                setRecevInfo("");
 			            }
-			
-			            if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {
+
+			            if (gpGubun != "5" && gpGubun != "6" && gpGubun != "7" && gpGubun != "8" && gpGubun != "9" && gpGubun != "10") {
 			                var g_SelCabXml = ret[4];
 			                var xmlCab = new ActiveXObject("Microsoft.XMLDOM");
 			                xmlCab = loadXMLString(g_SelCabXml);
@@ -1368,48 +1397,46 @@
 			            pPageNum = ret[13];
 			            tempSecurityDate = ret[14];
 			            if (ret[21].substring(0,1) == "N") {
-		                	tempPublic = "N";
-		                }
+			                tempPublic = "N";
+			            }
 			            setPublicFlag();
 			            SummaryFlag = true;
 			            
 			            if (nonElecRec == "Y") {
-			            	nonElecRecInfoXml = ret[23];
-			            	nonSepAttachLVXml = ret[24];
-			            	sepAttachCheckYN = ret[26];
-			            	setNonElecRecInfo(nonElecRecInfoXml);
+			                nonElecRecInfoXml = ret[23];
+			                nonSepAttachLVXml = ret[24];
+			                sepAttachCheckYN = ret[26];
+			                setNonElecRecInfo(nonElecRecInfoXml);
 			            }
 
 			            if (useOpenGov == "YES") {
-                            $.ajax({
-                                type : "POST",
-                                dataType : "text",
-                                async : false,
-                                url : "/ezApprovalG/openGovInfoSave.do",
-                                data : {
-                                    openGovListFlag : ret[27],
-                                    fileOpenFlagList : ret[28],
-                                    basis : ret[29],
-                                    reason : ret[30],
-                                    publicity : ret[11],
-                                    docID : pDocID,
-                                    limitDate : ret[31]
-                                }
-                            });
+			                $.ajax({
+			                    type : "POST",
+			                    dataType : "text",
+			                    async : false,
+			                    url : "/ezApprovalG/openGovInfoSave.do",
+			                    data : {
+			                        openGovListFlag : ret[27],
+			                        fileOpenFlagList : ret[28],
+			                        basis : ret[29],
+			                        reason : ret[30],
+			                        publicity : ret[11],
+			                        docID : pDocID,
+			                        limitDate : ret[31]
+			                    }
+			                });
 
-                            listOpenFlag = ret[27];
-                            fileOpenFlagList = ret[28];
-                            basis = ret[29];
-                            reason = ret[30];
-                            limitDate = ret[31];
-                            // passAprLine = ret[32];
-						}
+			                listOpenFlag = ret[27];
+			                fileOpenFlagList = ret[28];
+			                basis = ret[29];
+			                reason = ret[30];
+			                limitDate = ret[31];
+			                // passAprLine = ret[32];
+			            }
 			        }
-			    } catch (e) {
-			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e.description);
+			  
 			    }
-			}
-	
+			    
 			function btnSaveServer_onclick(AutoSave) {
 			    try {
 			        if (pDraftFlag == "REDRAFT") {
