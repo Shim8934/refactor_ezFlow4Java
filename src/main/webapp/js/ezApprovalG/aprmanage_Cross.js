@@ -824,14 +824,20 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
 //            openLocation += "&reformflag=" + encodeURI(reformflag);
 //    	}
     } else {
-    	if (!isIE()) {
-            alert("한글양식은 IE에서만 기안 할 수 있습니다.");
-            return;
-        } else {
-        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    	if(useWebHWP == "NO") {
+	    	if (!isIE()) {
+	            alert("한글양식은 IE에서만 기안 할 수 있습니다.");
+	            return;
+	        } else {
+	        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+	            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+	            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
+	        }
+    	} else {
+    		openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
             openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
             openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
-        }
+    	}
     }
 
     openwindow(openLocation, windowName, 890, 560);
@@ -2987,15 +2993,21 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
             openLocation += "&reformflag=" + encodeURI(reformflag);
     	}
     } else {
-    	if (!isIE()) {
-    		//노티문구가 잘못되었음. 아무래도 한글양식은 IE에서만 지원가능합니다 라고 바꿔야할듯
-            alert(strLang1103);
-            return;
-        } else {
-        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    	if(useWebHWP == "NO") {
+	    	if (!isIE()) {
+	    		//노티문구가 잘못되었음. 아무래도 한글양식은 IE에서만 지원가능합니다 라고 바꿔야할듯
+	            alert(strLang1103);
+	            return;
+	        } else {
+	        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+	            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+	            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);;
+	        }
+    	} else {
+    		openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
             openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);;
-        }
+            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
+    	}
     }
     
     openwindow(openLocation, windowName, 890, 560);

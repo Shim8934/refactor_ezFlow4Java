@@ -232,7 +232,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String hideSusin =  ezCommonService.getTenantConfig("hideSusin", userInfo.getTenantId());
 		//공유결재문서 추가개발
 		String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", userInfo.getTenantId());
-		
+		// 한글 웹기안기 사용여부
+		String useWebHWP = ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId());
 		//원문공개사용여부
 		String useOpenGov = config.getProperty("config.useOpenGov"); 
 		
@@ -324,6 +325,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("hideSusin", hideSusin);
 		model.addAttribute("whoKyulYN", whoKyulYN);
 		model.addAttribute("useShareApproval", useShareApproval);
+		model.addAttribute("useWebHWP", useWebHWP);
 		
         logger.debug("apprGLeft Value : listType= " + listType + "containers= " + containers.toString() + "viewLeftCount= " + viewLeftCount);       
         logger.debug("apprGLeft Ended");       
@@ -514,6 +516,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("companyList", companyList);
 		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		model.addAttribute("useAdditionalRole", ezCommonService.getTenantConfig("USE_AdditionalROle", userInfo.getTenantId()));
 		model.addAttribute("userLang", userLang);
 		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));

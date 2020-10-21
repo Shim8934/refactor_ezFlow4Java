@@ -1,0 +1,698 @@
+
+function GetDocumentElement(HwpCtrl, CharName, gubun)
+{
+	var fChar = CharName.substring(0,1);
+	
+	if( !isNaN(fChar) )
+		CharName = "r" + CharName;
+	
+	var DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
+	
+	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
+		if (DocumentInfo.getElementsByTagName("KEYWORD")[0].childNodes.length == 0) {
+			var objNode;
+			objNode = document.createElement("CONNROOT");
+			setNodeText(objNode , "");
+			DocumentInfo.getElementsByTagName("KEYWORD")[0].appendChild(objNode);
+		}
+		
+		var DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
+		
+		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
+			//gubun = ture:tag포함, false:value값만
+			if (gubun == true) {
+				return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
+			} else {
+				return getNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
+			}
+		} else {
+			return "";
+		}
+	} else {
+		return "";
+	}
+}
+
+function SetDocumentElement(HwpCtrl, CharName, value)
+{
+	var fChar = CharName.substring(0,1);
+	
+	if( !isNaN(fChar) )
+		CharName = "r" + CharName;
+	
+	var DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
+	
+	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
+		if (DocumentInfo.getElementsByTagName("KEYWORD")[0].childNodes.length == 0) {
+			var objNode;
+			objNode = document.createElement("CONNROOT");
+			setNodeText(objNode , "");
+			DocumentInfo.getElementsByTagName("KEYWORD")[0].appendChild(objNode);
+	    }
+		
+		var DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
+		
+		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
+			var objNode = DocumentKeywordInfo.getElementsByTagName(CharName)[0];
+			setNodeText(objNode , value);
+			DocumentKeywordInfo.documentElement.appendChild(objNode);
+			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo).replace(/<KEYWORD>/gi, "").replace(/<\/KEYWORD>/gi, ""));
+			
+			return true;
+		} else {
+			var objNode = document.createElement(CharName);
+			setNodeText(objNode , value);
+			DocumentKeywordInfo.documentElement.appendChild(objNode);
+			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo).replace(/<KEYWORD>/gi, "").replace(/<\/KEYWORD>/gi, ""));
+			
+			return true;
+		}
+	} else {
+		return true;
+	}
+}
+
+var g_progresswin = null;
+function showProgress(inforstring) {
+	g_progresswin = window.showModelessDialog("/ezApprovalG/showProgress.do?fileInfo=" + encodeURI(inforstring) , "", "dialogWidth=390px; dialogHeight:185px; center:yes; status:no; help:no; edge:sunken;");
+}
+
+function hideProgress() {
+  try {
+	if (g_progresswin)
+		g_progresswin.close();
+  } catch(e) {}
+}
+
+var color1, color2
+var bgFlag = true;
+function ExcuteInfo(pprocessIdx, currTD) {
+    var connString, connFlag, queryString, queryType;
+    var connNodes, connNode, keyNodes;
+    var i, findFlag;
+    var processIdx;
+    var rtnVal;
+
+    rtnVal = true;
+
+    var ConnRootText = GetDocumentElement(message, "CONNROOT");
+    if (ConnRootText == "") {
+        return true;
+    }
+    
+    xmlData = loadXMLString(ConnRootText);
+    findFlag = false;
+    connNodes = GetChildNodes(xmlData.documentElement);
+    
+    for (i = 0; i < connNodes.length; i++) {
+        processIdx = GetAttribute(connNodes[i],"processidx");
+        processTime = GetAttribute(connNodes[i],"processtime");
+
+        if (processIdx == pprocessIdx && processTime == pDraftFlag) {
+            findFlag = true;
+            connNode = connNodes[i];
+            break;
+        }
+    }
+    
+    if (findFlag) {
+        connFlag = GetAttribute(connNode.childNodes[0],"flag");
+        connString = getNodeText(connNode.childNodes[0]);
+        queryType = GetAttribute(connNode.childNodes[1],"qtype");
+        queryString = getNodeText(connNode.childNodes[1]);
+        
+//        var strItemNames = "SA_DocID";
+        var strItemNames = "SA_DocID,SA_AprType";
+        var arrItemNames = strItemNames.split(",");
+        var objNewItem;
+        
+        for (i = 0; i < arrItemNames.length; i++) {
+            objNewItem = xmlData.createElement("key");
+            objNewItem.setAttribute("kind", "single");
+            setNodeText(objNewItem, arrItemNames[i]);
+            connNode.childNodes[2].appendChild(objNewItem);
+        }
+        
+        keyNodes = connNode.childNodes[2].childNodes;
+//alert(getXmlString(connNode.childNodes[2]));
+
+        switch (queryType) {
+            case "Q":
+                xmlData = callQuery(connFlag, connString, queryString, keyNodes);
+                break;
+
+            case "NA":
+                xmlData = callNoneUIASP(queryString, keyNodes);
+                break;
+
+            case "UA":
+                xmlData = callUIASP(connString, queryString, keyNodes);
+                break;
+
+            case "UA_EX":
+                xmlData = callUIASP_EX(connString, queryString, keyNodes);
+                break;
+        }
+        rtnVal = setData(xmlData, currTD);
+    }
+//    setMenuBar("btnHelper", true);
+    return rtnVal;
+}
+function callQuery(pconnFlag, pconnString, pqueryString, pkeyNodes) {
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
+    var i;
+    for (i = 0; i < pkeyNodes.length; i++) {
+        arr_key[i] = getKeyValue(getNodeText(pkeyNodes(i)), prowNum)
+    }
+
+    var arr_key = new Array();
+    var objRoot;
+    var objNode;
+    objRoot = createNodeInsert(xmlpara, objRoot, "PARAMETER");
+    objRoot = createNodeInsert(xmlpara, objNode, "ROW");
+    createNodeAndInsertText(xmlpara, objNode, "DATA1", pconnFlag);
+    createNodeAndInsertText(xmlpara, objNode, "DATA2", pconnString);
+    createNodeAndInsertText(xmlpara, objNode, "DATA3", pqueryString);
+
+    var objRow = makeKeyValue(pkeyNodes, "Q");
+    objRoot.appendChild(objRow);
+
+    xmlhttp.open("POST", "/myoffice/ezApprovalG/conn/aspx/getQueryData.aspx", false);
+    xmlhttp.send(xmlpara);
+
+    return loadXMLString(xmlhttp.responseText);
+}
+/*function callNoneUIASP(pqueryString, pkeyNodes) {
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
+
+    var objRoot = makeKeyValue(pkeyNodes, "A")
+    xmlpara.appendChild(objRoot);
+
+    xmlhttp.open("POST", pqueryString, false);
+    xmlhttp.send(xmlpara);
+
+    return loadXMLString(xmlhttp.responseText);
+}*/
+function callNoneUIASP(pqueryString, pkeyNodes) {
+	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
+	var objRoot = makeKeyValue(pkeyNodes, "A");
+//alert(getXmlString(objRoot));
+	var resResult = "";
+	
+	/*var linkageField = $('#message').contents().find(".linkageValue");
+	var linkageValue = linkageField.val();
+	
+	if(!linkageValue) {
+		linkageValue = linkageField.text();
+	}
+	
+    $.ajax({
+		type : "POST",
+		dataType : "json",
+		async : false,
+		url : pqueryString,
+		data : {
+			docID : pDocID,
+			linkageValue : linkageValue
+		},
+		success: function(result){
+		},
+		error: function() {
+		}
+	});*/
+
+	return objRoot;
+}
+function callUIASP(pconnString, pqueryString, pkeyNodes) {
+    var xmlsend = new ActiveXObject("Microsoft.XMLDOM");
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
+
+    var objRoot = makeKeyValue(pkeyNodes, "A")
+    xmlsend.appendChild(objRoot);
+
+    var url = pqueryString;
+    var parameter = xmlsend.xml;
+
+    var feature = pconnString;
+    parameter = window.showModalDialog(url, parameter, feature);
+
+    xmlpara = loadXMLString(parameter);
+    
+    return xmlpara;
+}
+function callUIASP_EX(pconnString, pqueryString, pkeyNodes) {
+    var xmlsend = new ActiveXObject("Microsoft.XMLDOM");
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
+
+    var objRoot = makeKeyValue(pkeyNodes, "A")
+    xmlsend.appendChild(objRoot);
+
+    var url = pqueryString;
+    var feature = pconnString
+    parameter = window.showModalDialog(url, xmlsend, feature);
+
+    xmlpara = loadXMLString(parameter);
+
+    return xmlpara;
+}
+function getKeyValue(fieldID, num) {
+    var rtnVal = "";
+    if (num != "")
+        fieldID = num + fieldID;
+
+    if (fieldID == "SA_DocID") {
+        try {
+            return pDocID;
+        }
+        catch (e) { }
+    } else if (fieldID == "SA_AprType") {
+        try {
+            return pAprLineType;
+        }
+        catch (e) { }
+    }
+
+    if (message.FieldExist(fieldID)) {
+        rtnVal = trim(message.GetFieldText(fieldID));
+    }
+    else {
+        rtnVal = trim(GetDocumentElement(message, fieldID));
+    }
+    return rtnVal;
+}
+function HwpCtrl_FieldClickNotify(name, fieldtype, access) {
+    rtnVal = ExcuteInfo(name, "");
+}
+function checkValidation(xmlPath) {
+    var XMLURL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(xmlPath);
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
+    xmlpara.async = false;
+    xmlpara.load(XMLURL);
+
+    var chkflag = true;
+    var objNodes = xmlpara.selectNodes("WORKFLOW/VALIDATIONS/VALIDATION");
+    if (objNodes.length > 0) {
+        for (i = 0; i < objNodes.length; i++) {
+            if (chkflag) {
+                var pField = getNodeText(objNodes.item(i).selectSingleNode("FIELD"))
+                var pValue = getNodeText(objNodes.item(i).selectSingleNode("CLASS"))
+                var pDesc = getNodeText(objNodes.item(i).selectSingleNode("DESC"))
+                chkflag = checkValid(pField, pValue, pDesc);
+            }
+        }
+    }
+
+    if (!chkflag)
+        return "FALSE";
+
+    var objNodes = xmlpara.selectNodes("WORKFLOW/STATUS/CHECK");
+    if (objNodes.length > 0) {
+        for (i = 0; i < objNodes.length; i++) {
+            var objCASES = objNodes.item(i).selectNodes("CASES");
+            var caseflag = true;
+            for (j = 0; j < objCASES.length; j++) {
+                var objCASE = objCASES.item(j).selectNodes("CASE");
+                for (k = 0; k < objCASE.length; k++) {
+                    var pField = getNodeText(objCASE.item(k).selectSingleNode("FIELD"))
+                    var pValue = getNodeText(objCASE.item(k).selectSingleNode("VALUE"))
+                    var pType = getNodeText(objCASE.item(k).selectSingleNode("TYPE"))
+
+                    if (message.FieldExist(pField)) {
+                        switch (pType) {
+                            case "BIGGER":
+                                var tempValue = message.GetFieldText(pField);
+                                for (p = 0; p < 10; p++)
+                                    tempValue = tempValue.replace(",", "");
+                                tempValue = parseInt(tempValue);
+                                if (tempValue <= pValue)
+                                    caseflag = false;
+                                break;
+
+                            case "SMALLER":
+                                var tempValue = message.GetFieldText(pField);
+                                for (p = 0; p < 10; p++)
+                                    tempValue = tempValue.replace(",", "");
+                                tempValue = parseInt(tempValue);
+                                if (tempValue > pValue)
+                                    caseflag = false;
+                                break;
+                        }
+                    }
+                }
+            }
+            if (caseflag) {
+                var rtnVal = chkAprLine(objNodes.item(i));
+
+                if (rtnVal == "") {
+                    chkflag = true;
+                    return "TRUE";
+                }
+                else {
+                    chkflag = false;
+                    return rtnVal;
+                }
+            }
+        }
+    }
+    if (chkFlag)
+        return "TRUE"
+    else
+        return "FALSE";
+}
+function chkAprLine(objNodes) {
+    var xmldom = new ActiveXObject("Microsoft.XMLDOM");
+    xmldom.async = false;
+    xmldom = loadXMLString(TempsaveAprlineinfo);
+
+    var objLines = xmldom.selectNodes("LISTVIEWDATA/ROWS/ROW");
+    var objCheck = objNodes.selectNodes("APRLINES/APRLINE");
+
+    var rtnMessage = "";
+
+    for (m = 0; m < objCheck.length; m++) {
+        var pAprType = getNodeText(objCheck.item(m).selectSingleNode("APRTYPE"))
+        var pClass = getNodeText(objCheck.item(m).selectSingleNode("CLASS"))
+        var pValue = getNodeText(objCheck.item(m).selectSingleNode("VALUE"))
+        var pDesc = getNodeText(objCheck.item(m).selectSingleNode("DESC"))
+
+        var chkflag;
+        var tempValue = "";
+
+        chkflag = false;
+        for (n = 0; n < objLines.length; n++) {
+            switch (pClass) {
+                case "JOBTITLE":
+                    tempValue = getNodeText(objLines.item(n).childNodes(2));
+                    break;
+
+                case "USERID":
+                    tempValue = getNodeText(objLines.item(n).childNodes(9));
+                    break;
+
+            }
+            if (tempValue == pValue && getNodeText(objLines.item(n).childNodes(4)) == pAprType)
+                chkflag = true;
+        }
+
+        if (!chkflag) {
+            rtnMessage = rtnMessage + pDesc + "<br>";
+        }
+    }
+
+    return rtnMessage;
+}
+function checkValid(pField, pValue, pDesc) {
+    var chkFlag = true;
+    if (message.FieldExist(pField)) {
+        switch (pValue) {
+            case "NUM":
+                var tempValue = message.GetFieldText(pField);
+                for (i = 0; i < 10; i++)
+                    tempValue = tempValue.replace(",", "");
+
+                if (tempValue == "")
+                    chkFlag = false;
+                else if (tempValue == parseInt(tempValue))
+                    chkFlag = true;
+                else
+                    chkFlag = false;
+                break;
+
+            case "NOTNULL":
+                if (message.GetFieldText(pField) != "")
+                    chkFlag = true;
+                else
+                    chkFlag = false;
+                break;
+
+            case "NULL":
+                if (message.GetFieldText(pField) == "")
+                    chkFlag = true;
+                else
+                    chkFlag = false;
+                break;
+
+            case "DATE":
+                chkFlag = true;
+                break;
+        }
+        if (!chkFlag) {
+            OpenAlertUI(pDesc);
+            return false;
+        }
+    }
+    return true;
+}
+function makeKeyValue(pkeyNodes, flag) {
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
+    var xmlTbl = new ActiveXObject("Microsoft.XMLDOM");
+    var i, j, k, customData, listCol, fieldVal, tblid, listKeyRow, tabObject
+    var fieldName, colidx, tblinfoRow, cellValue, listnode
+
+    var prowNum = "";
+    if (flag == "A") {
+        var objRow = xmlpara.createNode(1, "PARAMETER", "");
+    } else {
+        var objRow = xmlpara.createNode(1, "ROW", "");
+    }
+    
+    for (i = 0; i < pkeyNodes.length; i++) {
+        if (GetAttribute(pkeyNodes[i],"kind") == "single") {
+            customData = xmlpara.createNode(1, getNodeText(pkeyNodes[i]), "");
+            objRow.appendChild(customData);
+            fieldVal = getKeyValue(getNodeText(pkeyNodes[i]), prowNum);
+            customData.text = fieldVal;
+        } else {
+            if (GetDocumentElement(HwpCtrl, "tblinfo") != "") {
+                xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo"))
+
+                tblid = GetAttribute(pkeyNodes[i],"tableid")
+
+                tblObject = fields.item(tblid).TagObject
+
+                listKeyRow = pkeyNodes[i].childNodes
+                customData = xmlpara.createNode(1, "RECORDROOT", "");
+                objRow.appendChild(customData);
+
+                var TagIdx = 0;
+                for (j = 0; j < tblObject.rows.length; j++) {
+                    if (GetAttribute(tblObject.rows[j],"header") || GetAttribute(tblObject.rows[j],"tail"))
+                        continue;
+
+                    listnode = xmlpara.createNode(1, "R" + TagIdx, "");
+                    customData.appendChild(listnode);
+
+                    for (k = 0; k < listKeyRow.length; k++) {
+                        fieldName = getNodeText(listKeyRow[k])
+                        tblinfoRow = xmlTbl.documentElement.selectSingleNode("/TableInfo/" + tblid)
+                        var rowCnt;
+                        var offset = tblinfoRow.childNodes.length;
+                        for (rowCnt = 0; rowCnt < offset; rowCnt++) {
+                            if (GetAttribute(tblinfoRow.childNodes[rowCnt],fieldName)) {
+                                colidx = GetAttribute(tblinfoRow.childNodes[rowCnt],fieldName);
+                                break;
+                            }
+                        }
+
+                        if (!colidx) cellValue = getKeyValue(fieldName, "")
+                        else cellValue = getNodeText(tblObject.rows[j + rowCnt].cells(parseInt(colidx)));
+
+                        listnode.setAttribute(fieldName, cellValue);
+                    }
+                    j = j + (offset - 1);
+                    TagIdx = TagIdx + 1;
+                }
+            }
+        }
+    }
+    return objRow;
+}
+function setData(pobjXml, currTD) {
+    var flag, i, j, k, field;
+    var offset = 1;
+    var rows, row, rowBefore, nfield, fieldName, tblid, tblObject, tblRow;
+    var tblinfoNodes, currTR, currTRidx, cellnode, cellidx, isinsTR;
+    flag = "false";
+
+    var xmlTbl = new ActiveXObject("Microsoft.XMLDOM");
+    if (pobjXml.documentElement)
+        flag = GetAttribute(pobjXml.documentElement,"RESULT")
+
+    if (flag == "false" || flag == "FALSE") {
+        if (pobjXml.documentElement) {
+            if (GetAttribute(pobjXml.documentElement,"STAGE") == "socket" || GetAttribute(pobjXml.documentElement,"STAGE") == "db") {
+                var pAlertContent = strLang99;
+                if (getNodeText(pobjXml.documentElement) != "")
+                    pAlertContent = pAlertContent + "<BR>" + strLang100 + getNodeText(pobjXml.documentElement);
+                OpenAlertUI(pAlertContent);
+            }
+        }
+        return false;
+    }
+
+    var tblRowIdx = 0
+    rows = pobjXml.documentElement.childNodes
+    if (rows.length > 0) {
+        for (i = 0; i < rows.length; i++) {
+            row = rows[i].childNodes;
+
+            if (i > 0) {
+                rowBefore = rows[i - 1].childNodes;
+                if (GetAttribute(row[0],"name") != GetAttribute(rowBefore[0],"name"))
+                    tblRowIdx = 0;
+            }
+            if (GetDocumentElement(HwpCtrl, "tblinfo", true) != "") {
+                xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo", true));
+                tblinfoNodes = xmlTbl.documentElement.childNodes
+
+                fieldName = GetAttribute(row[0],"name")
+                if (!fieldName)
+                    fieldName = GetAttribute(row[0],"fname")
+
+                var breakFlag = false;
+                for (j = 0; j < tblinfoNodes.length; j++) {
+                    offset = tblinfoNodes[j].childNodes.length;
+
+                    for (k = 0; k < offset; k++) {
+                        tblid = GetAttribute(tblinfoNodes[j].childNodes[k],fieldName)
+                        if (tblid) {
+                            tblid = tblinfoNodes[j];
+                            breakFlag = true;
+                            break;
+                        }
+                    }
+                    if (breakFlag) break;
+                }
+            }
+
+            if (tblid) {
+                tblObject = fields.item(tblid.tagName).TagObject
+
+                if (currTD && rows.length == 1) {
+                    currTR = currTD.parentElement
+                    currTRidx = currTR.rowIndex;
+
+                    for (k = 0; k < row.length; k++) {
+                        fieldName = GetAttribute(row[k],"name")
+                        if (!fieldName) fieldName = GetAttribute(row[k],"fname")
+
+                        cellidx = parseInt(GetAttribute(tblid,fieldName))
+                        cellnode = currTR.cells(cellidx)
+                        if (cellnode) {
+                        	cellnode.text = getNodeText(row[k]);
+                        }
+                    }
+                }
+                else {
+
+                    if (GetAttribute(tblid,"color1"))
+                        color1 = GetAttribute(tblid,"color1")
+                    else
+                        color1 = "white"
+
+                    if (GetAttribute(tblid,"color2"))
+                        color2 = GetAttribute(tblid,"color2")
+                    else
+                        color2 = "white"
+
+                    isinsTR = false;
+                    pzFormProc.specialTableObject = tblObject
+                    currTR = tblObject.rows[tblRowIdx]
+                    if (currTR) {
+                        if (GetAttribute(currTR,"header")) {
+                            currTR = tblObject.rows[tblRowIdx + offset]
+                            if (currTR) {
+                                var k;
+                                for (k = tblObject.rows.length; k > (tblRowIdx + offset) ; k--) {
+                                    pzFormProc.tableFlexibleRemoveRow(k, 1);
+                                }
+                                isinsTR = true;
+                            }
+                            else {
+                                isinsTR = true;
+                            }
+                        }
+                        else {
+                        }
+                    }
+                    else {
+                        isinsTR = true;
+                        tblRowIdx = tblRowIdx - offset;
+                    }
+
+                    if (isinsTR) {
+                        currTR = pzFormProc.tableFlexibleAddRow(tblRowIdx + 1, 1, offset);
+                        if (currTR) {
+                            var idx
+                            for (j = 0; j < offset; j++) {
+                                var newRow = tblObject.rows[tblRowIdx + offset + j];
+                                if (bgFlag)
+                                    newRow.bgColor = color1;
+                                else
+                                    newRow.bgColor = color2;
+
+                                for (idx = 0; idx < currTR.cells.length; idx++) {
+
+                                    attVal = GetAttribute(currTR.cells(idx),"processkey")
+                                    if (attVal) newRow.cells(idx).setAttribute("processkey", attVal)
+
+                                    attVal = GetAttribute(currTR.cells(idx),"processchange")
+                                    if (attVal) newRow.cells(idx).setAttribute("processchange", attVal)
+
+                                    attVal = GetAttribute(currTR.cells(idx),"lastnext")
+                                    if (attVal) newRow.cells(idx).setAttribute("lastnext", attVal)
+                                }
+                            }
+                            if (bgFlag) bgFlag = false;
+                            else bgFlag = true;
+                        }
+                        tblRowIdx = tblRowIdx + offset;
+                    }
+
+                    for (k = 0; k < row.length; k++) {
+                        fieldName = GetAttribute(row[k],"name")
+                        if (!fieldName) fieldName = GetAttribute(row[k],"fname")
+
+                        for (j = 0; j < offset; j++) {
+                            if (GetAttribute(tblid.childNodes[j],fieldName)) {
+                                cellidx = parseInt(GetAttribute(tblid.childNodes[j],fieldName))
+                                break;
+                            }
+                        }
+
+                        currTR = tblObject.rows(tblRowIdx + j);
+                        cellnode = currTR.cells(cellidx)
+                        if (cellnode) {
+                        	cellnode.text = getNodeText(row[k]);
+                        }
+                    }
+                    tblRowIdx = tblRowIdx + offset;
+                }
+            }
+            else {
+
+                for (j = 0; j < row.length; j++) {
+                    nfield = row(j)
+                    fieldName = GetAttribute(nfield, "name")
+                    if (!fieldName)
+                        fieldName = GetAttribute(nfield, "fname")
+
+                    var fieldHTML = GetAttribute(nfield, "HTML");
+
+                    if (message.FieldExist(fieldName)) {
+                        if (fieldHTML == "Y") {
+                        	message.PutFieldText(fieldName, "");
+                            message.AppendFieldText(fieldName, getNodeText(nfield), true, true);
+                        }
+                        else {
+                        	message.PutFieldText(fieldName, getNodeText(nfield));
+                        }
+                    }
+                    //else
+                    //    SetDocumentElement(HwpCtrl, fieldname, getNodeText(nfield));
+                }
+            }
+        }
+    }
+    return true;
+}

@@ -82,6 +82,7 @@
 		    var localValue = "";
 		    var hideSusin = "<c:out value = '${hideSusin}'/>";
 		    var whoKyulYN = "<c:out value = '${whoKyulYN}'/>";
+		    var useWebHWP = "<c:out value = '${useWebHWP}'/>";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -558,12 +559,16 @@
 
 	            var openLocation = "";
 	            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	                if (!isIE()) {
-	                    alert("한글양식은 Cross Browser 를 지원하지 않습니다.");
-	                    return;
-	                } else {
-	                   var openLocation = "/ezApprovalG/draftuiHWP.do";
-	                }
+	            	if(useWebHWP == "NO") {
+		                if (!isIE()) {
+		                    alert("한글양식은 Cross Browser 를 지원하지 않습니다.");
+		                    return;
+		                } else {
+		                   var openLocation = "/ezApprovalG/draftuiHWP.do";
+		                }
+	            	} else {
+	            		var openLocation = "/ezApprovalG/draftuiWHWP.do";
+	            	}
 	            } else {
 	                var openLocation = "/ezApprovalG/draftui.do";
 	            }

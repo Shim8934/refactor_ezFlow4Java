@@ -1089,6 +1089,98 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		downFile(request, response, fullFilePath, fileName);	
 	}
 	
+	
+	/**
+	 * 전자결재 웹한글기안기
+	 */
+	@RequestMapping(value = "/ezApprovalG/draftuiWHWP.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	public String draftuiWHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("draftuiHWP started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String susinAdmin = "";
+		String formURL = request.getParameter("formURL");
+		String draftFlag = request.getParameter("draftFlag");
+		String formDocType = request.getParameter("formDocType");
+		String susinSN = request.getParameter("susinSN");
+		String docState = request.getParameter("docState");
+		String listType = request.getParameter("listType");
+		String aprState = request.getParameter("aprState");
+		String isTmpDoc = request.getParameter("isTmpDoc");
+		String connkey = request.getParameter("connkey");
+		String nonElecRec = request.getParameter("nonElecRec");
+		String docSN = "";
+		
+		if (nonElecRec == null) {
+			nonElecRec = "";
+		}
+		
+		if (listType.equals("21")) {
+			if (request.getParameter("docSN") != null) {
+				docSN = request.getParameter("docSN");
+			}
+		}
+		
+		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+		
+		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0,4) + commonUtil.separator;
+		
+		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
+		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
+		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
+		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
+		/* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+		String useRedraftOpinionKeep = ezCommonService.getTenantConfig("useRedraftOpinionKeep", userInfo.getTenantId());
+		
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("hwpToolbar", hwpToolbar);
+		model.addAttribute("approvalPWD", approvalPWD);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("dirPath", dirPath);
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("formURL", formURL);
+		model.addAttribute("draftFlag", draftFlag);
+		model.addAttribute("formDocType", formDocType);
+		model.addAttribute("susinSN", susinSN);
+		model.addAttribute("docState", docState);
+		model.addAttribute("listType", listType);
+		model.addAttribute("aprState", aprState);
+		model.addAttribute("isTmpDoc", isTmpDoc);
+		model.addAttribute("optSignDateFormat", optSignDateFormat);
+		model.addAttribute("optIsSplit", optIsSplit);
+		model.addAttribute("optSplitKind", optSplitKind);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("sihangURL", sihangURL);
+		model.addAttribute("connkey", connkey);
+		model.addAttribute("docSN", docSN);
+		model.addAttribute("isHWP", "Y");
+		model.addAttribute("nonElecRec", nonElecRec);
+		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
+		model.addAttribute("useOpenGov", config.getProperty("config.useOpenGov"));
+		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
+		//결재 세부정보
+		String formId = ezApprovalGService.getFormId(formURL);
+		String formAprOption = ezApprovalGService.getFormAprOptionInfo(formId, "FORM", userInfo.getCompanyID(), userInfo.getTenantId());
+		model.addAttribute("formAprOption", formAprOption);
+		//		
+		
+		LOGGER.debug("draftuiWHWP ended");
+		
+		return "ezApprovalG/apprGdraftuiWHWP";
+	}
+	
 	@RequestMapping(value = "/ezApprovalG/downloadAttachForHwp.do", method = RequestMethod.GET)
 	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LOGGER.debug("downloadAttachForHwp started");
@@ -1172,5 +1264,16 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		LOGGER.debug("tempUploadFileDelete ended");
         
         return "json";
+	}
+	
+	/**
+	 * 전자결재G 한글 웹 기안기 양식작성기 화면 호출
+	 */
+	@RequestMapping(value="/ezApprovalG/WHWPEditor.do", method = RequestMethod.GET)
+	public String WHWPEditor() throws Exception {
+		LOGGER.debug("WHWPEditor started.");
+		
+		LOGGER.debug("WHWPEditor ended.");
+		return "ezApprovalG/apprGWHWPEditor";
 	}
 }
