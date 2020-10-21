@@ -1248,15 +1248,15 @@
 		                }
 		                
 			            /* 2020-07-30 홍승비 - 실제 양식 상에 가변결재선이 없다면, 분기를 타지 않도록 수정 */
-						var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
-			            
-		                if (useDynamicAprLine == "1" && autoAprLineField.length > 0) {
-		                	if (approvalFlag == "G") {
-			                	ret[27] = SaveAprLineList();
-		                	} else {
-			                	ret[27] = SAPRLINETEMPLETXMLParsing();
-		                	}
-		                }
+			            /* 2020-10-19 한글버전은 opener 호출시 오류발생, G버전은 가변 결재선을 사용하지 않음 */
+			            if (approvalFlag == "S") {
+							var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
+				            
+			                if (useDynamicAprLine == "1" && autoAprLineField.length > 0) {
+								ret[27] = SAPRLINETEMPLETXMLParsing();
+			                }  
+			            } 
+
 		
 		                if (ReturnFunction != null) {
 		                    ReturnFunction(ret);
