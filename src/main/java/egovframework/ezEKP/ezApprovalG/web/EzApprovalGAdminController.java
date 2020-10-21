@@ -3695,10 +3695,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String strMoveListIDInfo = request.getParameter("strMoveListIDInfo");
 		String SourceContID = request.getParameter("SourceContID");
 		String TargetContID = request.getParameter("TargetContID");
+		String SourceCompanyID = request.getParameter("SourceCompanyID");
 		String chkAll = request.getParameter("chkAll");
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 
-		String result = ezApprovalGAdminService.moveDocList(strMoveListIDInfo, SourceContID, TargetContID, chkAll, userInfo.getCompanyID(), userInfo.getTenantId());
+		String result = ezApprovalGAdminService.moveDocList(strMoveListIDInfo, SourceContID, TargetContID, chkAll, SourceCompanyID, userInfo.getTenantId());
 		
 		logger.debug("moveContainer ended");
 		

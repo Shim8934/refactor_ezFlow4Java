@@ -22,7 +22,7 @@
     		url : "/admin/ezApprovalG/apprGMgetContInfo.do",
     		data : {
     			deptID     : deptID,
-    			comID  : P_CompanyID
+    			comID  : pSourceCompanyID
     		},
     		success: function(text){
     			result = text;
@@ -491,7 +491,7 @@ function getDocListjson(pageNum) {
 				data : {
 					contID     : ScontID,
 					pageNum    : pageNum,
-					companyID  : $('#ListCompany').val(),
+					companyID  : pSourceCompanyID, // 실제로 선택한 보낼부서의 회사ID
 					docNO  	   : docnumber,//문서번호
 					docTitle   : doctitle,//문서제목
 					drafter    : drafter,//기안자
@@ -673,7 +673,8 @@ function ContMove() {
 			strMoveListIDInfo : strMoveListIDInfo,
 			SourceContID      : selSContName,
 			TargetContID  	  : selTContName,
-			chkAll			  : check
+			chkAll			  : check,
+			SourceCompanyID : pSourceCompanyID
 		},
 		success: function(text){
 			result = text;
