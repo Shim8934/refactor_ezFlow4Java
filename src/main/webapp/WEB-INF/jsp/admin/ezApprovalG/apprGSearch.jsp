@@ -60,6 +60,9 @@
 	            }
 	            
 	            setAutoCompleteOff(); //#15157 자동완성 방지 메소드 추가
+	            
+	          	//엔터키 눌렀을때도 검색 실행
+		        $("input[type=text]").attr("onkeyup", "enterkey(event)");
 	        });
 	
 	        function initdatepicker() {
@@ -714,6 +717,19 @@
 		    		inputAry[i].setAttribute("autocomplete", "off");
 		    	}
 		    }
+		  	
+		    function enterkey(e) {
+		        if (window.event) {
+		            if (window.event.keyCode == 13) {
+		            	btnSearch_onclick();
+		            }
+		        }
+		        else {
+		            if (e.which == 13) {
+		            	btnSearch_onclick();
+		            }
+		        }
+			}
 		</script>
 	</head>
 	<body class="popup">

@@ -328,13 +328,13 @@
 	  <tr>
 	    <th><spring:message code='ezEmail.t209' /></th>
 	    <td>
-	        <input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" readonly="readonly"/>
 	     </td>
 	  </tr>
 	  <tr>
 	    <th><spring:message code='ezEmail.t217' /></th>
 	    <td>
-	        <input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" readonly="readonly"/>
 	    </td>
 	  </tr>
 	</table>
