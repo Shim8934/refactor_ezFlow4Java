@@ -656,7 +656,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		if (searchCompanyID != null && !searchCompanyID.equals("")) {
 			if (listType.equals("10")) {
-				searchQuery += " AND TBL_APRDOCINFO.COMPANYID = '" + searchCompanyID + "' ";
+				searchQuery += " AND TBL_APRDOCINFO.COMPANYID = '" + searchCompanyID + "'";
 			} else {
 				searchQuery += " AND COMPANYID = '" + searchCompanyID + "' ";
 			}
@@ -704,7 +704,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-        int tenantID = userInfo.getTenantId();        
+        int tenantID = userInfo.getTenantId(); 
         
         //2018-09-04 강민수92 비공개문서일때 결재라인 안보이게 하기 위해 추가
         if (publicityYN != null && publicityYN.equals("N") && userInfo.getRollInfo().indexOf("c=1") == -1) {
@@ -3730,28 +3730,22 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String doDraft(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		logger.debug("doDraft started.");
-		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String extension = ".mht";
-		
 		if (requestURL.indexOf("HWP") > -1) {
 			extension = ".hwp";
 		}
-		
 		logger.debug("requestURL = " + requestURL);
 		logger.debug("xmlPara = " + xmlPara);
-		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-		
 		// <HERF></HERF>에 저장된 .htm 파일의 위치를 .mht 파일이 저장될 위치로 변경해준다.
 		xmlDom.getDocumentElement().getChildNodes().item(6).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + 
 				commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent() + extension);
 		String aprState = "003"; // 003 승인
-		
 		if (xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent().equals("000")) {
 			aprState = "000"; // 000 미결
 		} else if (xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent().equals("001")) {
@@ -3759,7 +3753,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			xmlDom.getDocumentElement().getChildNodes().item(6).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + 
 				commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + "TMP" + commonUtil.separator + xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent() + extension);
 		}
-		
 		userInfo.setRealPath(commonUtil.getRealPath(request));
 		
 		String result = ezApprovalGService.doProcess(aprState, xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
@@ -4159,7 +4152,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String dUserID = EgovFileScrty.decryptRsa(pk, eUserID);
 		String password = EgovFileScrty.encryptPassword(dPassWd, dUserID);
 		String flag = ezApprovalGService.getApprovalPWD(dUserID, userInfo.getTenantId(), userInfo.getCompanyID());
-
+		
 		if (flag != null) {
 			if (flag.equals("Y")) {
 				String pType = ezApprovalGService.getApprovalPWD2(dUserID, userInfo.getTenantId(), userInfo.getCompanyID());
@@ -4210,7 +4203,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-        int tenantID = userInfo.getTenantId();        
+        int tenantID = userInfo.getTenantId();
         
 		String crossEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);

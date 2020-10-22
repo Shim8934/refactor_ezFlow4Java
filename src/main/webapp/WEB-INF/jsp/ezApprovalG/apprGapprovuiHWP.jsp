@@ -1201,182 +1201,195 @@
 			        getHistory();
 			    }
 			    
+			    var ezapprovalinfo_dialogArguments = new Array();
 			    function btnApprovalInfo() {
-			        CheckDocCellInfo();
-			        var onlydocinfiview = false;
-			        var parameter = new Array();
-			        parameter[0] = pDocID;
-			        parameter[1] = pFormID;
-			        parameter[2] = SignCount;
-			        parameter[3] = SignInfo;
-			        parameter[4] = hapyuiCount;
-			        parameter[5] = pDraftFlag;
-			        parameter[6] = pSuSinFlag;
-			        parameter[7] = pChamJoFlag;
-			        parameter[8] = gongramCount;
-			        parameter[9] = true;
-			        parameter[10] = pDocType;
-			        parameter[11] = gamsaCount;
-			        parameter[12] = "DRAFT";
-			        parameter[28] = onlydocinfiview;
-			        parameter[30] = cabinetID;
-			        parameter[31] = tempSecurity;
-			        parameter[32] = tempUrgent;
-			        parameter[33] = pSummery;
-			        parameter[34] = pSpecialRecordCode;
-			        parameter[35] = pPublicityCode;
-			        parameter[36] = pLimitRange;
-			        parameter[37] = pPageNum;
-			        parameter[38] = tempSecurityDate;
-			        parameter[39] = SummaryFlag;
-			        parameter[40] = "";
-			        parameter[45] = pPublicityYN;
-			        parameter[46] = nonElecRec;
-				    
-				    if (nonElecRec == "Y") {
-				    	if (pGubun != "1") {
-				        	parameter[47] = cabinetID;
-			        	} else {
-				        	parameter[47] = "nonElecRecTempCabinet";
-			        	}
-				        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
-				        parameter[49] = nonSepAttachLVXml; // 분첨
-				        parameter[50] = g_szSCListXml;
-				        parameter[51] = sepAttachCheckYN; // 분첨
-			        }
+			    			        CheckDocCellInfo();
+			    			        var onlydocinfiview = false;
+			    			        var parameter = new Array();
+			    			        parameter[0] = pDocID;
+			    			        parameter[1] = pFormID;
+			    			        parameter[2] = SignCount;
+			    			        parameter[3] = SignInfo;
+			    			        parameter[4] = hapyuiCount;
+			    			        parameter[5] = pDraftFlag;
+			    			        parameter[6] = pSuSinFlag;
+			    			        parameter[7] = pChamJoFlag;
+			    			        parameter[8] = gongramCount;
+			    			        parameter[9] = true;
+			    			        parameter[10] = pDocType;
+			    			        parameter[11] = gamsaCount;
+			    			        parameter[12] = "DRAFT";
+			    			        parameter[28] = onlydocinfiview;
+			    			        parameter[30] = cabinetID;
+			    			        parameter[31] = tempSecurity;
+			    			        parameter[32] = tempUrgent;
+			    			        parameter[33] = pSummery;
+			    			        parameter[34] = pSpecialRecordCode;
+			    			        parameter[35] = pPublicityCode;
+			    			        parameter[36] = pLimitRange;
+			    			        parameter[37] = pPageNum;
+			    			        parameter[38] = tempSecurityDate;
+			    			        parameter[39] = SummaryFlag;
+			    			        parameter[40] = "";
+			    			        parameter[45] = pPublicityYN;
+			    			        parameter[46] = nonElecRec;
+			    				    
+			    				    if (nonElecRec == "Y") {
+			    				    	if (pGubun != "1") {
+			    				        	parameter[47] = cabinetID;
+			    			        	} else {
+			    				        	parameter[47] = "nonElecRecTempCabinet";
+			    			        	}
+			    				        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+			    				        parameter[49] = nonSepAttachLVXml; // 분첨
+			    				        parameter[50] = g_szSCListXml;
+			    				        parameter[51] = sepAttachCheckYN; // 분첨
+			    			        }
 
-			        if (useOpenGov == "YES") {
-                        parameter[52] = basis;
-                        parameter[53] = reason;
-                        parameter[54] = listOpenFlag;
-                        parameter[55] = fileOpenFlagList;
-					}
+			    			        if (useOpenGov == "YES") {
+			                            parameter[52] = basis;
+			                            parameter[53] = reason;
+			                            parameter[54] = listOpenFlag;
+			                            parameter[55] = fileOpenFlagList;
+			    					}
 
-			        if (tempItemCode != "")
-			            tempdocnumcode = tempItemCode;
-			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType + "&ext=" + "hwp";
-			        var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
-			        var ret = window.showModalDialog(url, parameter, feature);
-			
-			        if (ret != undefined && ret[0] == "OK") {
-			            try {
-			                HwpCtrl.ChangeMode(2);
-			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
-			
-			                    if (ret[1] != false) {
-			                    	$.ajax({
-			                    		type : "POST",
-			                    		dataType : "json",
-			                    		async : false,
-			                    		url : "/ezApprovalG/aprLineSave.do",
-			                    		data : {
-			                    				ret    : ret[1]
-			                    				},
-			                    		success : function(result){
-			                    			
-			                    		}
-			                    	});
-			
-			                        IsSkipDrafter = "FALSE";
-			                        btnSendDraftEnable = "true";
-			                        ReAprLineSingMapping(ret);
-			                        SaveFile();
-			                        getCurApproverAprLine();
+			    			        if (tempItemCode != "")
+			    			            tempdocnumcode = tempItemCode;
+			                        
+			                        ezapprovalinfo_dialogArguments[0] = parameter;
+			    		            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+
+			    		            var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+			    		            try { OpenWin.focus(); } catch (e) { }
+
+			    			        
 			                    }
-			                    savexmlhttp = null;
-			                    savexmlhttp = createXMLHttpRequest();
-			                }
-			
-			                if (pGubun != "6" && pGubun != "7" && pGubun != "9" && pGubun != "11" && pGubun != "12" && pGubun != "13") {
-			                	$.ajax({
-		                    		type : "POST",
-		                    		dataType : "text",
-		                    		async : false,
-		                    		url : "/ezApprovalG/aprDeptSave.do",
-		                    		data : {
-		                    				aprDeptInfo : ret[2]
-		                    				},
-		                    		success : function(result){
-		                    			if (result == 'TRUE') {
-		                    				
-		                    			} else {
-		                    				alert(strLang163);
-		                    			}
-		                    		}
-		                    	});
-			                	
-			                    btnReceivLineEnable = false;
-			                    setRecevInfo(ret[3]);
-			                }
-			
-			                if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {
-			                    var g_SelCabXml = ret[4];
-			                    var xmlCab = createXmlDom();
-			                    xmlCab = loadXMLString(g_SelCabXml);
-			                    cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
-			                    TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
-			                }
-			                
-			                tempSecurity = ret[7];                // 보안등급 관련
-			                tempUrgent = ret[8];                  // 긴급 결재 여부
-			                pSummery = ret[9];                    // 요약 내용 관련
-			                tempSecurityDate = ret[14];           // 보안 결재 체크 관련
-			                pPublicityCode = ret[11];             // 대민공개여부 및 공개등급 관련 
-			                pPublicityYN = ret[21];             // 공개여부 및 공개등급 관련 
-			                pSpecialRecordCode = ret[10];
-			                pLimitRange = ret[12];
-			                pPageNum = ret[13];
-			                // 문서 공개 범위 설정 (대민 공개 여부)
-			                // setPublicFlag2();
-			                setPublicFlag();
-			                
-			                if (nonElecRec == "Y") {
-				            	nonElecRecInfoXml = ret[23];
-				            	nonSepAttachLVXml = ret[24];
-				            	g_szSCListXml = ret[25];
-						        sepAttachCheckYN = ret[26];
-				            	if (ext == "hwp") {
-					            	setNonElecRecInfo(nonElecRecInfoXml);
-				            	}
-				            }
 
-				            if (useOpenGov == "YES") {
-                                $.ajax({
-                                    type : "POST",
-                                    dataType : "text",
-                                    async : false,
-                                    url : "/ezApprovalG/openGovInfoSave.do",
-                                    data : {
-                                        openGovListFlag : ret[27],
-                                        fileOpenFlagList : ret[28],
-                                        basis : ret[29],
-                                        reason : ret[30],
-                                        publicity : ret[11],
-                                        docID : pDocID,
-                                        limitDate : ret[31]
-                                    }
-                                });
+			    function btnApprovalInfo_Complete(ret) {
 
-                                listOpenFlag = ret[27];
-                                fileOpenFlagList = ret[28];
-                                basis = ret[29];
-                                reason = ret[30];
-                                limitDate = ret[31];
-							}
+			    			        if (ret != undefined && ret[0] == "OK") {
+			    			            try {
+			    			                HwpCtrl.ChangeMode(2);
+			    			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
+			    			
+			    			                    if (ret[1] != false) {
+			    			                    	$.ajax({
+			    			                    		type : "POST",
+			    			                    		dataType : "json",
+			    			                    		async : false,
+			    			                    		url : "/ezApprovalG/aprLineSave.do",
+			    			                    		data : {
+			    			                    				ret    : ret[1]
+			    			                    				},
+			    			                    		success : function(result){
+			    			                    			
+			    			                    		}
+			    			                    	});
+			    			
+			    			                        IsSkipDrafter = "FALSE";
+			    			                        btnSendDraftEnable = "true";
+			    			                        ReAprLineSingMapping(ret);
+			    			                        SaveFile();
+			    			                        getCurApproverAprLine();
+			    			                    }
+			    			                    savexmlhttp = null;
+			    			                    savexmlhttp = createXMLHttpRequest();
+			    			                }
+			    			
+			    			                if (pGubun != "6" && pGubun != "7" && pGubun != "9" && pGubun != "11" && pGubun != "12" && pGubun != "13") {
+			    			                	$.ajax({
+			    		                    		type : "POST",
+			    		                    		dataType : "text",
+			    		                    		async : false,
+			    		                    		url : "/ezApprovalG/aprDeptSave.do",
+			    		                    		data : {
+			    		                    				aprDeptInfo : ret[2]
+			    		                    				},
+			    		                    		success : function(result){
+			    		                    			if (result == 'TRUE') {
+			    		                    				
+			    		                    			} else {
+			    		                    				alert(strLang163);
+			    		                    			}
+			    		                    		}
+			    		                    	});
+			    			                	
+			    			                    btnReceivLineEnable = false;
+			    			                    setRecevInfo(ret[3]);
+			    			                }
+			    			
+			    			                if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {
+			    			                    var g_SelCabXml = ret[4];
+			    			                    var xmlCab = createXmlDom();
+			    			                    xmlCab = loadXMLString(g_SelCabXml);
+			    			                    cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+			    			                    TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+			    			                }
+			    			                
+			    			                tempSecurity = ret[7];                // 보안등급 관련
+			    			                tempUrgent = ret[8];                  // 긴급 결재 여부
+			    			                pSummery = ret[9];                    // 요약 내용 관련
+			    			                tempSecurityDate = ret[14];           // 보안 결재 체크 관련
+			    			                pPublicityCode = ret[11];             // 대민공개여부 및 공개등급 관련 
+			    			                pPublicityYN = ret[21];             // 공개여부 및 공개등급 관련 
+			    			                pSpecialRecordCode = ret[10];
+			    			                pLimitRange = ret[12];
+			    			                pPageNum = ret[13];
+			    			                // 문서 공개 범위 설정 (대민 공개 여부)
+			    			                // setPublicFlag2();
+			    			                setPublicFlag();
+			    			                
+			    			                if (nonElecRec == "Y") {
+			    				            	nonElecRecInfoXml = ret[23];
+			    				            	nonSepAttachLVXml = ret[24];
+			    				            	g_szSCListXml = ret[25];
+			    						        sepAttachCheckYN = ret[26];
+			    				            	if (ext == "hwp") {
+			    					            	setNonElecRecInfo(nonElecRecInfoXml);
+			    				            	}
+			    				            }
 
-							//2020-05-08 : 결재정보확인 시 문서정보 저장 후 문서 반영
-							setApprDocInfo();	
-							SaveFile();
+			    				            if (useOpenGov == "YES") {
+			                                    $.ajax({
+			                                        type : "POST",
+			                                        dataType : "text",
+			                                        async : false,
+			                                        url : "/ezApprovalG/openGovInfoSave.do",
+			                                        data : {
+			                                            openGovListFlag : ret[27],
+			                                            fileOpenFlagList : ret[28],
+			                                            basis : ret[29],
+			                                            reason : ret[30],
+			                                            publicity : ret[11],
+			                                            docID : pDocID,
+			                                            limitDate : ret[31]
+			                                        }
+			                                    });
 
-			                SummaryFlag = true;
-			                savexmlhttp = null;
-			                HwpCtrl.ChangeMode(3);
-			            }
-			            catch (e) {
-			                alert("저장시 오류 발생");
-			            }
-			        }
+			                                    listOpenFlag = ret[27];
+			                                    fileOpenFlagList = ret[28];
+			                                    basis = ret[29];
+			                                    reason = ret[30];
+			                                    limitDate = ret[31];
+			    							}
+
+			    							//2020-05-08 : 결재정보확인 시 문서정보 저장 후 문서 반영
+			    							setApprDocInfo();	
+			    							SaveFile();
+
+			    			                SummaryFlag = true;
+			    			                savexmlhttp = null;
+			    			                HwpCtrl.ChangeMode(3);
+			    			            }
+			    			            catch (e) {
+			    			                alert("저장시 오류 발생");
+			    			            }
+			    			        }
+
 			    }
+
+
+
 			    
 			    function btnHelper_onclick() {
 			        var rtnVal = ExcuteInfo("MIDDLE_SIGN_INIT", "");

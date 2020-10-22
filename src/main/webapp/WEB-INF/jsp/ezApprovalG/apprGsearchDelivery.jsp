@@ -114,7 +114,9 @@
         opnOption = RetValue[3];
         rtnVal[0] = "FALSE";
 
-
+      	//엔터키 눌렀을때도 검색 실행
+        $(".text").attr("onkeyup", "enterkey(event)");
+      	
         //document.getElementById("txtDeptName2").value = g_DeptName;
         //initdatepicker();
         //document.getElementById("idDatepicker").value = "";
@@ -220,6 +222,20 @@
         rtnVal[0] = "FALSE";
         window.close();
     }
+    
+    function enterkey(e) {
+        if (window.event) {
+            if (window.event.keyCode == 13) {
+            	btnSearch_onclick();
+            }
+        }
+        else {
+            if (e.which == 13) {
+            	btnSearch_onclick();
+            }
+        }
+	}
+    
     window.onunload = function () {
         if (ReturnFunction != null)
             ReturnFunction(rtnVal);

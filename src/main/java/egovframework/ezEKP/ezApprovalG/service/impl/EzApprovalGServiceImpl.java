@@ -8742,7 +8742,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 				}
 			}
-			
 			map.put("v_DOCID", docID);
 			map.put("v_OpinionYN", "Y");
 			map.put("v_TENANTID", tenantID);
@@ -25882,7 +25881,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					firstFlag = false;
 				}
 				
-				if (listXML.getElementsByTagName("COLNAME").item(i  ).getTextContent().equals("HASATTACHYN")) {
+				if (listXML.getElementsByTagName("COLNAME").item(i).getTextContent().equals("HASATTACHYN")) {
 					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
 				}
 				
