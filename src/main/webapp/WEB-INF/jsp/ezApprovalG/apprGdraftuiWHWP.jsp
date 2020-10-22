@@ -24,7 +24,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/draft_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/draftG_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_WHWP.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/docnumberG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/docnumberG_WHWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/AutoAprLine_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG_Cross.js')}"></script>
@@ -505,6 +505,7 @@
 	            }
 	        }
 	
+	        var sendDraftResult = "";
 	        function btnSendDraft_onclick() {
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
@@ -519,403 +520,416 @@
 					return;
 				}	
 	        
-// 	            try {
-	            	var result = "";
-		        	
-			    	$.ajax({
-			    		type : "POST",
-			    		dataType : "text",
-			    		async : false,
-			    		url : "/ezApprovalG/getExtTotalAttachSize.do",
-			    		data : {
-			    			docID : pDocID
-			    			////////
-			    		},
-			    		success: function(text){
-			    			result = text;
-			    		}        			
-			    	});
-			    	
-			    	// 본문의 용량을 구하기 위함 2018-07-13
-			    	var strClone = HwpCtrl.GetCloneData("", "HWPML2X");
-			    	var strBytes = parseInt(getByteLength(strClone));
-								    	
-			    	console.log(strBytes);
-			    	
-	                var rtnAttachXML = new ActiveXObject("Microsoft.XMLDOM");
-	                rtnAttachXML.loadXML(result);
-					
-	                var attachTotalSize = getNodeText(rtnAttachXML.getElementsByTagName("TOTALSIZE").item(0));
-	                
-	                
-	                if (getNodeText(rtnAttachXML.getElementsByTagName("FLAG").item(0)) == "Y") {
-	                    OpenAlertUI("외부발송문서 총 첨부용량은 최대 6MB 입니다" + "<br>" + "첨부용량을 줄여주시기 바랍니다.");
-	                    return;
-	                    
-	                }
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getExtTotalAttachSize.do",
+		    		data : {
+		    			docID : pDocID
+		    			////////
+		    		},
+		    		success: function(text){
+		    			sendDraftResult = text;
+		    		}        			
+		    	});
+		    	
+		    	// 본문의 용량을 구하기 위함 2018-07-13
+		    	GetHTML2(sendDraft);
+	        }
+	        
+	        // sendDraft 시작
+	        function sendDraft(strClone) {
+	        	var strBytes = parseInt(getByteLength(strClone));
+		    	console.log(strBytes);
+		    	
+		    	var rtnAttachXML = loadXMLString(sendDraftResult);
+				
+                var attachTotalSize = getNodeText(rtnAttachXML.getElementsByTagName("TOTALSIZE").item(0));
+                
+                
+                if (getNodeText(rtnAttachXML.getElementsByTagName("FLAG").item(0)) == "Y") {
+                    OpenAlertUI("외부발송문서 총 첨부용량은 최대 6MB 입니다" + "<br>" + "첨부용량을 줄여주시기 바랍니다.");
+                    return;
+                    
+                }
 
-	                // 본문과 첨부파일의 총합이 7.4mb가 초과시 알러트 2018-07-13 강민수92
-                    if (getNodeText(rtnAttachXML.getElementsByTagName("EXTFLAG").item(0)) == "Y" && strBytes + parseInt(attachTotalSize) > 7400000) {
-                    	OpenAlertUI("외부발송문서 총 용량은 최대 7.4MB 입니다" + "<br>" + "첨부파일이나 본문용량을 줄여주시기 바랍니다.");
-	                    return;
+                // 본문과 첨부파일의 총합이 7.4mb가 초과시 알러트 2018-07-13 강민수92
+                if (getNodeText(rtnAttachXML.getElementsByTagName("EXTFLAG").item(0)) == "Y" && strBytes + parseInt(attachTotalSize) > 7400000) {
+                	OpenAlertUI("외부발송문서 총 용량은 최대 7.4MB 입니다" + "<br>" + "첨부파일이나 본문용량을 줄여주시기 바랍니다.");
+                    return;
+                }
+
+                bAttachProcess = false;
+
+                var rtnSignInfo;
+                if (GetDocumentElement(message, "WORKFLOWXML") != "") {
+                    var rtn = checkValidation(GetDocumentElement(message, "WORKFLOWXML"))
+                    if (rtn == "FALSE")
+                        return;
+                    else if (rtn != "TRUE") {
+                        var pInformationContent = rtn + "<spring:message code='ezApprovalG.t130'/>";
+                        var Ans = OpenInformationUI(pInformationContent);
+
+                        if (Ans) {
+                            var Ans = btnSetAprLine_onclick();
+                            return;
+                        } else {
+                            return;
+                        }
                     }
+	            }
+
+				var Fields = message.GetFieldList(0, 1);
+				var tempFields = message.GetFieldList(0, 1);
+
+				tempFields = Fields.reduce(function(tempArr,curr,index) {
+					tempArr.indexOf(curr) > -1 ? tempArr : tempArr.push(curr);
+					return tempArr;
+				},[]);
+
+				if (Fields.length !== tempFields.length) {
+					OpenAlertUI("동일한 Field가 존재합니다. 문서를 다시 확인해주세요.");
+					return;
+				}
 	
-	                bAttachProcess = false;
+	            if (message.FieldExist("doctitle"))
+	                pDocTitle = trim(message.GetFieldText("doctitle"));
+	            else
+	                pDocTitle = "<spring:message code='ezApprovalG.t1394'/>";
+
+                if (pDocTitle == "") {
+                    var pAlertContent = "<spring:message code='ezApprovalG.t1395'/>";
+                    OpenAlertUI(pAlertContent);
+                    return;
+                }
+
+                if (pDocTitle.length > 127) {
+                    var pAlertContent = "<spring:message code='ezApprovalG.t132'/>";
+                    OpenAlertUI(pAlertContent);
+                    return;
+                }
+                
+                if (nonElecRec == "Y" && nonElecRecInfoXml == "") {
+                	var pAlertContent = "기록물 정보를 입력해 주세요.";
+                    OpenAlertUI(pAlertContent);
+                    btnApprovalInfo(1);
+                    return;
+                }
+
+                if (btnSendDraftEnable == "false") {
+                	var pAlertContent = "";
+	            	//재기안의 경우 결재선 확인하라는 메세지 출력
+	            	if (pDraftFlag == "REDRAFT") {
+						pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
+	            	} else {
+	                    pAlertContent = "<spring:message code='ezApprovalG.t1398'/>" + "<br>" + "<spring:message code='ezApprovalG.t1399'/>";
+	            	}
+	            	
+                    OpenAlertUI(pAlertContent);
+                    btnApprovalInfo(1);
+                    return;
+                }
+                
+                if (!checkLines())
+                    return;
+
+                if (pSuSinFlag == "Y" && !btnReceivLineEnable) {
+                    var pAlertContent = "<spring:message code='ezApprovalG.t141'/>" + "<br>" + "<spring:message code='ezApprovalG.t142'/>";
+                    if (OpenInformationUI(pAlertContent)) {
+                    	btnApprovalInfo(2);
+                    }
+                    return;
+                }
+
+                
+                if (cabinetID == "")
+                    btnApprovalInfo(3);
+                
+                if (cabinetID == "") {
+                    var pAlertContent = "<spring:message code='ezApprovalG.t1397'/>";
+                    OpenAlertUI(pAlertContent);
+                    return;
+                }
+
+                if (!SummaryFlag)
+                    btnApprovalInfo(4);
+
+                if (!SummaryFlag)
+                    return;
+
+                setDrafterAddress();
+
+                /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+                if (pDraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
+                    delOpinionInfo();
+                }
+
+                if (nonElecRec != "Y") {
+	                if (LastSignSN == 1 || DraftLastFlag) {
+	                    var pInformationContent = "<spring:message code='ezApprovalG.t143'/><br> <spring:message code='ezApprovalG.t144'/>";
+	                    var Ans = OpenInformationUI(pInformationContent);
 	
-	                var rtnSignInfo;
-	                if (GetDocumentElement(HwpCtrl, "WORKFLOWXML") != "") {
-	                    var rtn = checkValidation(GetDocumentElement(HwpCtrl, "WORKFLOWXML"))
-	                    if (rtn == "FALSE")
-	                        return;
-	                    else if (rtn != "TRUE") {
-	                        var pInformationContent = rtn + "<spring:message code='ezApprovalG.t130'/>";
-	                        var Ans = OpenInformationUI(pInformationContent);
+	                    if (!Ans) return;
 	
-	                        if (Ans) {
-	                            var Ans = btnSetAprLine_onclick();
-	                            return;
-	                        } else {
-	                            return;
-	                        }
+	                    if (pDraftFlag == "HABYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
+	                        getLastOpinon();
 	                    }
-		            }
+	
+	                    if (message.FieldExist("lastdraftdate"))
+	                        message.SetFieldText("lastdraftdate", getGyulJeDate());
+	                }
+                }
 
-					var FieldLists = HwpCtrl.GetFieldList();
-					var Fields = FieldLists.split(";");
-					var tempFields = FieldLists.split(";");
+                //if ("${approvalPWD}" != "N") {
+                if (CheckUsePassword()) {
+                    var chkpass = chk_Passwd();
+                    if (chkpass == "False") {
+                        var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+                        OpenAlertUI(pAlertContent);
+                        return;
+                    } else if (chkpass == "cancel" || chkpass == undefined) {
+                        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+                        OpenAlertUI(pAlertContent);
+                        return;
+                    }
+                }
 
-					tempFields = Fields.reduce(function(tempArr,curr,index) {
-						tempArr.indexOf(curr) > -1 ? tempArr : tempArr.push(curr);
-						return tempArr;
-					},[]);
-
-					if (Fields.length !== tempFields.length) {
-						OpenAlertUI("동일한 Field가 존재합니다. 문서를 다시 확인해주세요.");
-						return;
-					}
-		
-		            if (HwpCtrl.CheckFieldExist("doctitle"))
-		                pDocTitle = trim(HwpCtrl.GetFieldText("doctitle"));
-		            else
-		                pDocTitle = "<spring:message code='ezApprovalG.t1394'/>";
+                if (IsSkipDrafter == "FALSE") {
+                	if (nonElecRec != "Y") {
+	                    //var ret;
+	                    var parameter = new Array();
 	
-	                if (pDocTitle == "") {
-	                    var pAlertContent = "<spring:message code='ezApprovalG.t1395'/>";
-	                    OpenAlertUI(pAlertContent);
-	                    return;
-	                }
+	                    parameter[0] = pDocID;
+	                    ret = openSignUI(parameter);
 	
-	                if (pDocTitle.length > 127) {
-	                    var pAlertContent = "<spring:message code='ezApprovalG.t132'/>";
-	                    OpenAlertUI(pAlertContent);
-	                    return;
-	                }
-	                
-	                if (nonElecRec == "Y" && nonElecRecInfoXml == "") {
-	                	var pAlertContent = "기록물 정보를 입력해 주세요.";
-	                    OpenAlertUI(pAlertContent);
-	                    btnApprovalInfo(1);
-	                    return;
-	                }
-	
-	                if (btnSendDraftEnable == "false") {
-	                	var pAlertContent = "";
-		            	//재기안의 경우 결재선 확인하라는 메세지 출력
-		            	if (pDraftFlag == "REDRAFT") {
-							pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
-		            	} else {
-		                    pAlertContent = "<spring:message code='ezApprovalG.t1398'/>" + "<br>" + "<spring:message code='ezApprovalG.t1399'/>";
-		            	}
-		            	
-	                    OpenAlertUI(pAlertContent);
-	                    btnApprovalInfo(1);
-	                    return;
-	                }
-	                
-	                if (!checkLines())
-	                    return;
-	
-	                if (pSuSinFlag == "Y" && !btnReceivLineEnable) {
-	                    var pAlertContent = "<spring:message code='ezApprovalG.t141'/>" + "<br>" + "<spring:message code='ezApprovalG.t142'/>";
-	                    if (OpenInformationUI(pAlertContent)) {
-	                    	btnApprovalInfo(2);
-	                    }
-	                    return;
-	                }
-	
-	                
-	                if (cabinetID == "")
-	                    btnApprovalInfo(3);
-	                
-	                if (cabinetID == "") {
-	                    var pAlertContent = "<spring:message code='ezApprovalG.t1397'/>";
-	                    OpenAlertUI(pAlertContent);
-	                    return;
-	                }
-	
-	                if (!SummaryFlag)
-	                    btnApprovalInfo(4);
-	
-	                if (!SummaryFlag)
-	                    return;
-	
-	                setDrafterAddress();
-	
-	                /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
-	                if (pDraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
-	                    delOpinionInfo();
-	                }
-	
-	                if (nonElecRec != "Y") {
-		                if (LastSignSN == 1 || DraftLastFlag) {
-		                    var pInformationContent = "<spring:message code='ezApprovalG.t143'/><br> <spring:message code='ezApprovalG.t144'/>";
-		                    var Ans = OpenInformationUI(pInformationContent);
-		
-		                    if (!Ans) return;
-		
-		                    if (pDraftFlag == "HABYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
-		                        getLastOpinon();
-		                    }
-		
-		                    if (HwpCtrl.CheckFieldExist("lastdraftdate"))
-		                        HwpCtrl.SetFieldText("lastdraftdate", getGyulJeDate());
-		                }
-	                }
-	
-	                //if ("${approvalPWD}" != "N") {
-	                if (CheckUsePassword()) {
-	                    var chkpass = chk_Passwd();
-	                    if (chkpass == "False") {
-	                        var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+	                    if (ret == "cancel" || ret == undefined) {
+	                        var pAlertContent = "<spring:message code='ezApprovalG.t145'/>";
 	                        OpenAlertUI(pAlertContent);
 	                        return;
-	                    } else if (chkpass == "cancel" || chkpass == undefined) {
-	                        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+	                    }
+                	}
+
+                	GetHTML(sendDraft2);
+                    //pOrgHtml = HwpCtrl.GetCloneData("", "HWP");
+                }
+	        }
+	        // sendDraft 끝
+	        
+	        // sendDraft2 시작
+	        function sendDraft2(cloneHWP) {
+	        	pOrgHtml = cloneHWP;
+	        	
+				// IsSkipDrafter == "FALSE" 에 대한 분기 시작	        	
+	        	if (LastSignSN == 1 || DraftLastFlag) {
+                    var rtnVal;
+                    rtnVal = ExcuteInfo("DOCNUM_BEFORE", "");
+                    if (!rtnVal) {
+                        var pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
+                        OpenAlertUI(pAlertContent);
+                        return;
+                    }
+                }
+
+                var rtnval;
+                if (LastSignSN == 1 || DraftLastFlag) {
+                    //rtnval = getDocNumber(arr_userinfo[4], "", docNumZeroCnt);
+                    rtnval = getDocNumberNew(arr_userinfo[4], "", docNumZeroCnt);
+                }
+                else {
+                    //rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);
+                    rtnval = getDocNumberNew(arr_userinfo[4], "be", docNumZeroCnt);
+                }
+
+                if (!rtnval) {
+                    var pAlertContent = "[<spring:message code='ezApprovalG.t1384'/>";
+                    OpenAlertUI(pAlertContent);
+                    return;
+                }
+
+                if (LastSignSN == 1 || DraftLastFlag) {
+                    var rtnVal;
+                    rtnVal = ExcuteInfo("DOCNUM_AFTER", "");
+                    if (!rtnVal) {
+                        var pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
+                        OpenAlertUI(pAlertContent);
+                        return;
+                    }
+                }
+                rtnSignInfo = SendDraftMappingSign(ret);
+                // IsSkipDrafter == "FALSE" 에 대한 분기 끝
+            	 
+            	 if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI" || pSusinSN != "0") {
+                    var RtnVal;
+                    var pAlertContent;
+                    RtnVal = setSusinUpdataDocID();
+                    if (RtnVal == "true") {
+                        RtnVal = ExcuteInfo("SUSIN_DRAFTSAVE_BEFORE", "");
+                        if (!RtnVal) {
+                            pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
                             OpenAlertUI(pAlertContent);
                             return;
                         }
-	                }
-	
-	                if (IsSkipDrafter == "FALSE") {
-	                	if (nonElecRec != "Y") {
-		                    var ret;
-		                    var parameter = new Array();
-		
-		                    parameter[0] = pDocID;
-		                    ret = openSignUI(parameter);
-		
-		                    if (ret == "cancel" || ret == undefined) {
-		                        var pAlertContent = "<spring:message code='ezApprovalG.t145'/>";
-		                        OpenAlertUI(pAlertContent);
-		                        return;
-		                    }
-	                	}
-	
-	                    pOrgHtml = HwpCtrl.GetCloneData("", "HWP");
-	
-	                    if (LastSignSN == 1 || DraftLastFlag) {
-	                        var rtnVal;
-	                        rtnVal = ExcuteInfo("DOCNUM_BEFORE", "");
-	                        if (!rtnVal) {
-	                            var pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
-	                            OpenAlertUI(pAlertContent);
-	                            return;
-	                        }
-	                    }
-	
-	                    var rtnval;
-	                    if (LastSignSN == 1 || DraftLastFlag) {
-	                        //rtnval = getDocNumber(arr_userinfo[4], "", docNumZeroCnt);
-	                        rtnval = getDocNumberNew(arr_userinfo[4], "", docNumZeroCnt);
-	                    }
-	                    else {
-	                        //rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);
-	                        rtnval = getDocNumberNew(arr_userinfo[4], "be", docNumZeroCnt);
-	                    }
-	
-	                    if (!rtnval) {
-	                        var pAlertContent = "[<spring:message code='ezApprovalG.t1384'/>";
-	                        OpenAlertUI(pAlertContent);
-	                        return;
-	                    }
-	
-	                    if (LastSignSN == 1 || DraftLastFlag) {
-	                        var rtnVal;
-	                        rtnVal = ExcuteInfo("DOCNUM_AFTER", "");
-	                        if (!rtnVal) {
-	                            var pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
-	                            OpenAlertUI(pAlertContent);
-	                            return;
-	                        }
-	                    }
-	                    rtnSignInfo = SendDraftMappingSign(ret);
-	                }
-	
-	                if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI" || pSusinSN != "0") {
-	                    var RtnVal;
-	                    var pAlertContent;
-	                    RtnVal = setSusinUpdataDocID();
-	                    if (RtnVal == "true") {
-	                        RtnVal = ExcuteInfo("SUSIN_DRAFTSAVE_BEFORE", "");
-	                        if (!RtnVal) {
-	                            pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
-	                            OpenAlertUI(pAlertContent);
-	                            return;
-	                        }
-	
-	                        if (RtnVal)
-	                            RtnVal = SaveDraftDocInfo();
-	                        if (RtnVal == "TRUE") {
-	                            RtnVal = ExcuteInfo("SUSIN_DRAFTSAVE_AFTER", "");
-	                            if (!RtnVal) {
-	                                pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
-	                                OpenAlertUI(pAlertContent);
-	                                return;
-	                            }
-	
-	                            if (LastSignSN == 1 || DraftLastFlag) {
-	                                RtnVal = ExcuteInfo("SUSIN_DOCNUM_END", "");
-	                                if (!RtnVal) {
-	                                    pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
-	                                    OpenAlertUI(pAlertContent);
-	                                    return;
-	                                }
-	                            }
-	
-	                            UpdateLineHistory();
-	                            
-	                            pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
-	                            OpenAlertUI(pAlertContent);
-	                            draftFlag = true;
-	                          
-	              		        //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
-	              		        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
-	              		        	parent.opener.getApprovalList("reject");
-	              		        }
-	                            
-	                            window.close();
-	                        } else {
-	                            UndoSignInfo(rtnSignInfo);
-	
-	                            if (LastSignSN == 1 || DraftLastFlag) {
-	                                RtnVal = ExcuteInfo("END_FAIL", "");
-	                                if (!RtnVal) {
-	                                    pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
-	                                    OpenAlertUI(pAlertContent);
-	                                    return;
-	                                }
-	                            }
-	
-	                            pAlertContent = "[<spring:message code='ezApprovalG.t1400'/>";
-	                            OpenAlertUI(pAlertContent);
-	                            return;
-	                        }
-	                    } else {
-	                        UndoSignInfo(rtnSignInfo);
-	
-	                        if (LastSignSN == 1 || DraftLastFlag) {
-	                            RtnVal = ExcuteInfo("END_FAIL", "")
-	
-	                            if (!RtnVal) {
-	                                pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
-	                                OpenAlertUI(pAlertContent);
-	                                return;
-	                            }
-	                        }
-	
-	                        SetBtnStateTrue();
-	                        btnSendDraftEnable = "true";
-	                        pAlertContent = "[<spring:message code='ezApprovalG.t1400'/>";
-	                        OpenAlertUI(pAlertContent);
-	                        return;
-	                    }
-	                } else {
-	                    var RtnVal = ExcuteInfo("DRAFTSAVE_BEFORE", "");
-	                    var pAlertContent;
-	                    if (!RtnVal) {
-	                        pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
-	                        OpenAlertUI(pAlertContent);
-	                        return;
-	                    }
-	
-	                    if (LastSignSN == 1 || DraftLastFlag)
-	                        SetAutoPropFinal();
-	
-	                    if (LastSignSN == 1 || DraftLastFlag) {
-	                        var rtnVal = ExcuteInfo("LAST_SEND_BEFORE", "");
-	                        if (!rtnVal) {
-	                            return;
-	                        }
-	                    }
-	
-	                    RtnVal = SaveDraftDocInfo();
-	                    if (RtnVal == "TRUE") {
-	                        RtnVal = ExcuteInfo("DRAFTSAVE_AFTER", "");
-	                        if (!RtnVal) {
-	                            pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
-	                            OpenAlertUI(pAlertContent);
-	                            return;
-	                        }
-	
-	                        if (LastSignSN == 1 || DraftLastFlag) {
-	                            RtnVal = ExcuteInfo("DOCNUM_END", "");
-	                            if (!RtnVal) {
-	                                pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
-	                                OpenAlertUI(pAlertContent);
-	                                return;
-	                            }
-	                            Gyuljedate = GetDocInfoData("END", "STARTDATE");
-	                            SendMailToReceiveDept(pDocTitle, arr_userinfo[2], Gyuljedate, pDocID);
-	                        }
-	                        else {
-	                            Gyuljedate = GetDocInfoData("APR", "STARTDATE");
-	                            sendAlertMail("APR", 1, "DRAFT");
-	                        }
-	
-	                        UpdateLineHistory();
-	                        
-	                        if (nonElecRec == "Y") {
-                            	pAlertContent = "문서를 [등록]하였습니다.";
-                            } else {
-		                        pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
+
+                        if (RtnVal)
+                            RtnVal = SaveDraftDocInfo();
+                        if (RtnVal == "TRUE") {
+                            RtnVal = ExcuteInfo("SUSIN_DRAFTSAVE_AFTER", "");
+                            if (!RtnVal) {
+                                pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
+                                OpenAlertUI(pAlertContent);
+                                return;
                             }
-	                        
-	                        OpenAlertUI(pAlertContent);
-	                        draftFlag = true;
-	
-	                        if (ListType == "21" && DraftFlag == "REDRAFT") {
-	                            RemoveTmpDoc(DocSN);
-	                        }
-	                        
-	                        if (nonElecRec == "Y") {
-	                        	RemoveEndNonElecRecDoc(pDocID);
-	                        }
-	
-	                        window.close();
-	                    } else {
-	                        UndoSignInfo(rtnSignInfo);
-	                        if (LastSignSN == 1)
-	                            rollbackDocNumber(arr_userinfo[4], "", pDocID);
-	
-	                        if (LastSignSN == 1 || DraftLastFlag) {
-	                            RtnVal = ExcuteInfo("END_FAIL", "")
-	
-	                            if (!RtnVal) {
-	                                pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
-	                                OpenAlertUI(pAlertContent);
-	                                return;
-	                            }
-	                        }
-	
-	                        SetBtnStateTrue();
-	                        pAlertContent = "[<spring:message code='ezApprovalG.t1400'/>";
-	                        OpenAlertUI(pAlertContent);
-	                        return;
-	                    }
-	                }
-// 	            } catch (e) {
-// 	                alert("ezdraftui_hwp.btnSendDraft_onclick()::" + e.description);
-// 	            }
+
+                            if (LastSignSN == 1 || DraftLastFlag) {
+                                RtnVal = ExcuteInfo("SUSIN_DOCNUM_END", "");
+                                if (!RtnVal) {
+                                    pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
+                                    OpenAlertUI(pAlertContent);
+                                    return;
+                                }
+                            }
+
+                            UpdateLineHistory();
+                            
+                            pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
+                            OpenAlertUI(pAlertContent);
+                            draftFlag = true;
+                          
+              		        //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+              		        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
+              		        	parent.opener.getApprovalList("reject");
+              		        }
+                            
+                            window.close();
+                        } else {
+                            UndoSignInfo(rtnSignInfo);
+
+                            if (LastSignSN == 1 || DraftLastFlag) {
+                                RtnVal = ExcuteInfo("END_FAIL", "");
+                                if (!RtnVal) {
+                                    pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
+                                    OpenAlertUI(pAlertContent);
+                                    return;
+                                }
+                            }
+
+                            pAlertContent = "[<spring:message code='ezApprovalG.t1400'/>";
+                            OpenAlertUI(pAlertContent);
+                            return;
+                        }
+                    } else {
+                        UndoSignInfo(rtnSignInfo);
+
+                        if (LastSignSN == 1 || DraftLastFlag) {
+                            RtnVal = ExcuteInfo("END_FAIL", "")
+
+                            if (!RtnVal) {
+                                pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
+                                OpenAlertUI(pAlertContent);
+                                return;
+                            }
+                        }
+
+                        SetBtnStateTrue();
+                        btnSendDraftEnable = "true";
+                        pAlertContent = "[<spring:message code='ezApprovalG.t1400'/>";
+                        OpenAlertUI(pAlertContent);
+                        return;
+                    }
+                } else {
+                    var RtnVal = ExcuteInfo("DRAFTSAVE_BEFORE", "");
+                    var pAlertContent;
+                    if (!RtnVal) {
+                        pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
+                        OpenAlertUI(pAlertContent);
+                        return;
+                    }
+
+                    if (LastSignSN == 1 || DraftLastFlag)
+                        SetAutoPropFinal();
+
+                    if (LastSignSN == 1 || DraftLastFlag) {
+                        var rtnVal = ExcuteInfo("LAST_SEND_BEFORE", "");
+                        if (!rtnVal) {
+                            return;
+                        }
+                    }
+
+                    RtnVal = SaveDraftDocInfo();
+                    if (RtnVal == "TRUE") {
+                        RtnVal = ExcuteInfo("DRAFTSAVE_AFTER", "");
+                        if (!RtnVal) {
+                            pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
+                            OpenAlertUI(pAlertContent);
+                            return;
+                        }
+
+                        if (LastSignSN == 1 || DraftLastFlag) {
+                            RtnVal = ExcuteInfo("DOCNUM_END", "");
+                            if (!RtnVal) {
+                                pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
+                                OpenAlertUI(pAlertContent);
+                                return;
+                            }
+                            Gyuljedate = GetDocInfoData("END", "STARTDATE");
+                            SendMailToReceiveDept(pDocTitle, arr_userinfo[2], Gyuljedate, pDocID);
+                        }
+                        else {
+                            Gyuljedate = GetDocInfoData("APR", "STARTDATE");
+                            sendAlertMail("APR", 1, "DRAFT");
+                        }
+
+                        UpdateLineHistory();
+                        
+                        if (nonElecRec == "Y") {
+                        	pAlertContent = "문서를 [등록]하였습니다.";
+                        } else {
+	                        pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
+                        }
+                        
+                        OpenAlertUI(pAlertContent);
+                        draftFlag = true;
+
+                        if (ListType == "21" && DraftFlag == "REDRAFT") {
+                            RemoveTmpDoc(DocSN);
+                        }
+                        
+                        if (nonElecRec == "Y") {
+                        	RemoveEndNonElecRecDoc(pDocID);
+                        }
+
+                        window.close();
+                    } else {
+                        UndoSignInfo(rtnSignInfo);
+                        if (LastSignSN == 1)
+                            rollbackDocNumber(arr_userinfo[4], "", pDocID);
+
+                        if (LastSignSN == 1 || DraftLastFlag) {
+                            RtnVal = ExcuteInfo("END_FAIL", "")
+
+                            if (!RtnVal) {
+                                pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
+                                OpenAlertUI(pAlertContent);
+                                return;
+                            }
+                        }
+
+                        SetBtnStateTrue();
+                        pAlertContent = "[<spring:message code='ezApprovalG.t1400'/>";
+                        OpenAlertUI(pAlertContent);
+                        return;
+                    }
+                }
+	        }
+	        // sendDraft2 끝
+	        
+	        function GetHTML(callback) {
+	            message.GetTextFile("HWP", "", function (data) { callback(data) });
+	        }
+	        
+	        function GetHTML2(callback) {
+	            message.GetTextFile("HWPML2X", "", function (data) { callback(data) });
 	        }
 	
 	        function btnFileAttach_onclick() {
@@ -1546,14 +1560,14 @@
 	    	function Editor_Complete() {
 	        	if (pFormHref != "") {
                     var URL;
-                    URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(FormHref);
-                  //URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(FormHref);
+                  //URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(FormHref);
+                  URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(FormHref);
                     message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
 	        	} else {
                     DraftFlag = "DRAFT";
                     pDraftFlag = "DRAFT";
-                    var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(sihangURL.replace(".mht", ".hwp"));
-                  //var URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(sihangURL.replace(".mht", ".hwp"));
+                  //var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(sihangURL.replace(".mht", ".hwp"));
+                  var URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(sihangURL.replace(".mht", ".hwp"));
 		        	message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
                 }
 	    	}

@@ -618,25 +618,73 @@ function setDrafterAddress() {
 	SetDocumentElement(message, "lastKyuljikwee", lastKyuljiwee);
 }
 
+var getformcont_cross_dialogArguments = new Array();
 function openFormUI() {
 	try {
 		var parameter = new Array();
 		parameter[0] = arr_userinfo[4];
 		parameter[1] = "000";				
+		
+		getformcont_cross_dialogArguments[0] = parameter;
+		getformcont_cross_dialogArguments[1] = openFormUI_complete;
 
 		var url = "/ezApprovalG/getFormCont.do?fileType=hwp";
-		var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no"
-		var ret = window.showModalDialog(url,parameter,feature);
+		//var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no"
+		//var ret = window.showModalDialog(url,parameter,feature);
+		var ret = window.open(url, '', 'height=570,width=713,scrollbars=no' + GetOpenPosition(713, 570));
+	} catch(e) {
+		alert("openFormUI() :: " + e);
+	}
+}
 
-		pFormHref = ret[0];
-		pDocType  = ret[1];
+function openFormUI_complete(ret) {
+	pFormHref = ret[0];
+	pDocType  = ret[1];
+	
+	if(pFormHref == "PC") {
+		pReadPC = true;
 		
-		if(pFormHref == "PC") {
-			pReadPC = true;
+		//var rtnval = HwpCtrl.LoadFile("", false);
+		
+		lstAttachLink.innerHTML = "";
+		AppendFileAttach = "";
+		AppenAprDocAttachList = "";
+		window_onbeforeunload();
+		pFormID = ""
+		pDocID = ""
+		pDraftFlag = "DRAFT";
+
+		pSummery = "";
+		pSpecialRecordCode = "";
+		pPublicityCode = "";
+		pLimitRange = "";
+		pPageNum = "1";
+		cabinetID = "";
+		TaskCode = "";
+		DocNumCode = "";	  		
+		
+		tempSecurity = "";
+		tempKeep = "";
+		tempUrgent = "N";
+		tempPublic = "Y";
+		tempKeyword = "";
+		tempItemCode = "";
+		tempItemName = "";
+		tempdocnumcode = strLang107;
+		
+		tempSecurityDate = "";
 			
-			var rtnval = HwpCtrl.LoadFile("", false);
-			
-			lstAttachLink.innerHTML = "";
+		//FieldsAvailable(rtnval);
+		FieldsAvailable(false);
+	} else {
+  		if(pFormHref != "cancel") {
+  			pReadPC = false;
+	  		
+  			pFormID = ""
+  			pDocID = ""
+  			SetBtnStateTrue();
+	  		
+  			lstAttachLink.innerHTML = "";
 			AppendFileAttach = "";
 			AppenAprDocAttachList = "";
   			window_onbeforeunload();
@@ -663,79 +711,35 @@ function openFormUI() {
 			tempdocnumcode = strLang107;
 			
 			tempSecurityDate = "";
-				
-			FieldsAvailable(rtnval);
-		}
-		else
-		{
-	  		if(pFormHref != "cancel")
-	  		{
-	  			HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
-	  			
-	  			var isTrue = HwpCtrl.LoadFile(document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(pFormHref), false);
-	  			
-	  			pReadPC = false;
-		  		
-	  			pFormID = ""
-	  			pDocID = ""
-	  			SetBtnStateTrue();
-		  		
-	  			lstAttachLink.innerHTML = "";
-				AppendFileAttach = "";
-				AppenAprDocAttachList = "";
-	  			window_onbeforeunload();
-	  			pFormID = ""
-	  			pDocID = ""
-	  			pDraftFlag = "DRAFT";
-
-				pSummery = "";
-				pSpecialRecordCode = "";
-				pPublicityCode = "";
-				pLimitRange = "";
-				pPageNum = "1";
-				cabinetID = "";
-				TaskCode = "";
-				DocNumCode = "";
-				
-				tempSecurity = "";
-				tempKeep = "";
-				tempUrgent = "N";
-				tempPublic = "Y";
-				tempKeyword = "";
-				tempItemCode = "";
-				tempItemName = "";
-				tempdocnumcode = strLang107;
-				
-				tempSecurityDate = "";
-				
-				FieldsAvailable(isTrue);
-	  		}
-		}	
-	}
-	catch(e)
-	{
-		alert("openFormUI()" + e.description);
+			
+			//var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pFormHref);
+            var URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pFormHref);
+            message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null); 
+  		}
 	}
 }
 
-function Form_check()
-{
-  try{
-    var url = "/ezApprovalG/formCheckUI.do";
-	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
-	var ret = window.showModalDialog(url, "", feature);
-	var pCheck = ret;
-	
-	if(pCheck == "ok")
-		return "OK";
-  }catch(e){
-	alert("openFormUI()" + e.description);
-  }
+var form_check_ui_cross_dialogArguments = new Array();
+function Form_check() {
+	try {
+		form_check_ui_cross_dialogArguments[0] = "";
+		form_check_ui_cross_dialogArguments[1] = Form_check_complete;
+		
+		var url = "/ezApprovalG/formCheckUI.do";
+		var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
+		var ret = window.open(url, "", 'height=200,width=330,scrollbars=no'+GetOpenPosition(330,200));
+	} catch(e) {
+		alert("Form_check() :: " + e) ;
+	}
 }
 
-function SetBtnStateFalse()
-{
-	try{
+function Form_check_complete(ret) {
+	if(ret == "ok")
+		openForm();
+}
+
+function SetBtnStateFalse() {
+	try {
 		setMenuBar("btnSetAprLine",false);
 		setMenuBar("btnSetReceivLine",false);
 		setMenuBar("btnSendDraft",false);
@@ -1211,7 +1215,8 @@ function openAaprDocAttachUI()
 function SaveDraftDocInfo() {
 	var rtnVal;
 
-	rtnVal = SaveFile();
+	//rtnVal = SaveFile();
+	rtnVal = SaveOrgFile();
 	if (rtnVal.toUpperCase() != "TRUE") {
         return "rtnVal";
     }
@@ -1383,7 +1388,7 @@ function SaveDraftDocInfo_ilban(pState)
 		}
 	}
 	
-	xmlhttp.open("POST","/ezApprovalG/doDraftWHWP.do",false);
+	xmlhttp.open("POST","/ezApprovalG/doDraftHWP.do",false);
 	xmlhttp.send(xmlpara);
 	
 	if(pState != "000")		
