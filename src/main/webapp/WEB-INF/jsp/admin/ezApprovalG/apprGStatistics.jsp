@@ -30,7 +30,8 @@
 			var searchInfo = null;
 	        
 	        $(document).ready(function(){
-	            document.getElementById("SCompID").value = pCompanyID;
+//	            document.getElementById("SCompID").value = pCompanyID;
+				pCompanyID = document.getElementById("ListCompany").value;
 	            document.getElementById("SYear").value = "<c:out value = '${tempPYear}' />";
 	            document.getElementById("SMonth").value = "<c:out value = '${tempPMonth}' />";
 	            document.getElementById("EYear").value = "<c:out value = '${tempYear}' />";
@@ -249,8 +250,8 @@
 	        }
 	        
 	        function selectCompanyID() {
-	            if (pCompanyID != document.getElementById("SCompID").value) {
-	                pCompanyID = document.getElementById("SCompID").value;
+	            if (pCompanyID != document.getElementById("ListCompany").value) {
+	                pCompanyID = document.getElementById("ListCompany").value;
 	            }
 	        }
 	        
@@ -267,8 +268,16 @@
 		</script>
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code = 'ezApprovalG.t1297' /></h1>
-	    <input type="hidden" id="SCompID" value="${userInfo.companyID }" >
+	    <h1><spring:message code = 'ezApprovalG.t1297' />
+			<%-- 2020-10-22 홍승비 - 회사선택 셀렉트박스 추가 --%>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+			</select>
+	    </h1>
+	    <%--<input type="hidden" id="SCompID" value="${userInfo.companyID }" >--%>
 	    <table class="content" style="margin-bottom: 10px; width: 770px;">
 	        <tr>
 	            <th><spring:message code = 'ezApprovalG.t1298' /></th>
