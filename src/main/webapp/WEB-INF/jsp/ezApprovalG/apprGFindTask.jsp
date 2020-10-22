@@ -68,6 +68,20 @@
 	            window.close();
 	        }
 	    }
+	    
+	    function enterkey(e) {
+	        if (window.event) {
+	            if (window.event.keyCode == 13) {
+	            	btnOK_onclick();
+	            }
+	        }
+	        else {
+	            if (e.which == 13) {
+	            	btnOK_onclick();
+	            }
+	        }
+		}
+	    
 	    function window_onunload() {
 	        if (!CrossYN())
 	            window.returnValue = rtnVal;
@@ -85,12 +99,12 @@
 		<table class="content">
 		  <tr>
 		    <th><spring:message code='ezApprovalG.t649'/></th>
-		    <td><input type="text" class="text" style="Width:100%; " name="txtTitle" id="txtTitle">
+		    <td><input type="text" class="text" style="Width:100%; " name="txtTitle" id="txtTitle" onkeyup="enterkey(event)">
 		    </td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code='ezApprovalG.t1024'/></th>
-		    <td><input type="text" class="text" style="Width:100%; " name="txtCode" id="txtCode">
+		    <td><input type="text" class="text" style="Width:100%; " name="txtCode" id="txtCode" onkeyup="enterkey(event)">
 		    </td>
 		  </tr>
 		</table>
