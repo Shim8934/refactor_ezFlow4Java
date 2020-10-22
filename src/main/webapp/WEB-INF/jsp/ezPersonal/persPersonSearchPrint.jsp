@@ -52,7 +52,8 @@
 		            }
 		        }
 	
-		        for (var i = 0; i < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+		        var selectNodeList = SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW");
+		        for (var i = 0; i < selectNodeList.length; i++) {
 		            if (pListType == "IMG") {
 	
 		                var MainTable = document.createElement("TABLE");
@@ -80,8 +81,9 @@
 		                    }
 		                }  */
 		                
-		                 for (var NodeCount = 0; NodeCount < GetChildNodes(GetChildNodes(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i))[0]).length; NodeCount++) {
-		                    var Nodes = GetChildNodes(GetChildNodes(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i))[0]);
+		                var nodeList = GetChildNodes(GetChildNodes(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i))[0]);
+		                 for (var NodeCount = 0; NodeCount < nodeList.length; NodeCount++) {
+		                    var Nodes = nodeList;
 		                    M_TR.setAttribute("_" + Nodes[NodeCount].nodeName, trim_Cross(getNodeText(Nodes[NodeCount])));
 		                } 
 	
@@ -168,8 +170,9 @@
 		                    }
 		                }  */
 		                
-		                 for (var NodeCount = 0; NodeCount < GetChildNodes(GetChildNodes(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i))[0]).length; NodeCount++) {
-		                    var Nodes = GetChildNodes(GetChildNodes(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i))[0]);
+		                var NodeList = GetChildNodes(GetChildNodes(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i))[0]);
+		                 for (var NodeCount = 0; NodeCount < NodeList.length; NodeCount++) {
+		                    var Nodes = NodeList;
 		                    M_TR.setAttribute("_" + Nodes[NodeCount].nodeName, trim_Cross(getNodeText(Nodes[NodeCount])));
 		                } 
 	
