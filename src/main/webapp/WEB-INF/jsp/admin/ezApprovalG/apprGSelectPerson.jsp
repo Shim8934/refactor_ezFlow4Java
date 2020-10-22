@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/ListView_list.js')}"></script>
 		<script type="text/javascript">
 		    var type = "<c:out value='${type}'/>";
+		    var selectedCompanyID = "<c:out value='${selectedCompanyID}'/>";
 		    var ReturnFunction;
 		    var userID = "<c:out value='${userInfo.id}'/>";
 		    window.onload = function () {
@@ -50,16 +51,21 @@
 		            var xmlHTTP = createXMLHttpRequest();
 		            var objNode;
 		
+		            /* 2020-10-22 홍승비 - 현재 선택한 회사의 조직도를 표출하도록 수정 */
 		            if (type == "Proxy") {
 		                createNodeInsert(xmlpara, objNode, "DATA");
-		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${userInfo.deptID}'/>");
-		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${userInfo.deptID}'/>");
+		                //createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${userInfo.deptID}'/>");
+		              //  createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${userInfo.deptID}'/>");
+						createNodeAndInsertText(xmlpara, objNode, "DEPTID", "");
+		                createNodeAndInsertText(xmlpara, objNode, "TOPID", selectedCompanyID + "/organ");
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
 		            else {
 		                createNodeInsert(xmlpara, objNode, "DATA");
-		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${userInfo.deptID}'/>");
-		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${userInfo.companyID}'/>");
+		                //createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${userInfo.deptID}'/>");
+		              //  createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${userInfo.companyID}'/>");
+						createNodeAndInsertText(xmlpara, objNode, "DEPTID", "");
+		                createNodeAndInsertText(xmlpara, objNode, "TOPID", selectedCompanyID + "/organ");
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
 		            

@@ -38,6 +38,7 @@
 		    var buJaedeptid = "";
 		    var proxybuJaeId = "";
 		    var proxybuJaedeptid = "";
+		    var P_CompanyID = "";
 		
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -73,6 +74,9 @@
 		        }
 		
 		        Sel_Change();
+		        
+		        // 초기 회사ID 설정
+		        P_CompanyID = document.getElementById("ListCompany").value;
 		    };
 			
 		    $(function () {
@@ -225,11 +229,11 @@
 			    type_Complete = type;
 			    if (CrossYN() || NoneActiveX == "YES") {
 			        selectperson_cross_dialogArguments1[1] = select_person_Complete1;
-			        var OpenWin = window.open("/admin/ezApprovalG/selectPerson.do?type=" + type, "SelectPerson_cross", GetOpenWindowfeature(760, 535));
+			        var OpenWin = window.open("/admin/ezApprovalG/selectPerson.do?type=" + type + "&selectedCompanyID=" + P_CompanyID, "SelectPerson_cross", GetOpenWindowfeature(760, 535));
 			        try { OpenWin.focus(); } catch (e) { }
 			    }
 			    else {
-			        var rtnValue = window.showModalDialog("/admin/ezApprovalG/selectPerson.do?type=" + type, "",
+			        var rtnValue = window.showModalDialog("/admin/ezApprovalG/selectPerson.do?type=" + type + "&selectedCompanyID=" + P_CompanyID, "",
 		                "dialogHeight:535px;dialogwidth:760px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(760, 535));
 		
 			        if (typeof (rtnValue) != "undefined" && type == "") {
@@ -574,10 +578,37 @@
 		    		}
 		        });
 		    }
+		    
+		    // 회사선택 후 부재자 정보 등 초기화 진행
+			function selectCompanyID() {
+				if (P_CompanyID != document.getElementById("ListCompany").value) {
+					P_CompanyID = document.getElementById("ListCompany").value;
+					
+					 var nowDate = new Date();
+					$("#Sdatepicker").datepicker('setDate', nowDate);
+					$("#Edatepicker").datepicker('setDate', nowDate);
+					
+					document.getElementById("TextName1").value = "";
+					document.getElementById("deptList").value = "";
+					document.getElementById("TextName").value = "";
+					
+					$("select#deptList option").remove();
+	    			$("#AddJobDept").hide();
+				}
+			}
+			
 		</script>
 	</head>
 	<body class="mainbody" marginwidth="0" marginheight="0">
-		<h1><spring:message code='main.t0628'/></h1>
+		<h1><spring:message code='main.t0628'/>
+			<%-- 2020-10-20 홍승비 - 회사선택 셀렉트박스 추가 --%>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+			</select>
+		</h1>
 		<form id="ManageBujae" method="post">
 			<br/>
 			<div class="txt">
