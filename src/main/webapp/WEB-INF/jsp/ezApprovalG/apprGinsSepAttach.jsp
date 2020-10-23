@@ -155,7 +155,7 @@
 		        var url = "/ezApprovalG/regSepAttach.do";
 		
 				// 한글기안이 아닌 경우, 추가/변경 > 철변경 시의 레이어 팝업 UI가 깨지지 않도록 높이 조절
-		        if (CrossYN() && ext != "hwp") {
+		        if (CrossYN()) {
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		            
@@ -327,7 +327,7 @@
 		            var url = "/ezApprovalG/regSepAttach.do";
 		
 		            // 한글기안이 아닌 경우, 추가/변경 > 철변경 시의 레이어 팝업 UI가 깨지지 않도록 높이 조절
-		            if (CrossYN() && ext != "hwp") {
+		            if (CrossYN()) {
 		                regsepattach_cross_dialogArguments[0] = para;
 		                regsepattach_cross_dialogArguments[1] = btnModList_onclick_Complete;
 		

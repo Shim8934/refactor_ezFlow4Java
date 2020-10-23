@@ -793,15 +793,15 @@
                             UpdateLineHistory();
                             
                             pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
-                            OpenAlertUI(pAlertContent);
-                            draftFlag = true;
+                            OpenAlertUI(pAlertContent, Complete_Draft);
+                            /* draftFlag = true;
                           
               		        //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
               		        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
               		        	parent.opener.getApprovalList("reject");
               		        }
                             
-                            window.close();
+                            window.close(); */
                         } else {
                             UndoSignInfo(rtnSignInfo);
 
@@ -888,8 +888,8 @@
 	                        pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
                         }
                         
-                        OpenAlertUI(pAlertContent);
-                        draftFlag = true;
+                        OpenAlertUI(pAlertContent, Complete_Draft2);
+                        /* draftFlag = true;
 
                         if (ListType == "21" && DraftFlag == "REDRAFT") {
                             RemoveTmpDoc(DocSN);
@@ -899,7 +899,7 @@
                         	RemoveEndNonElecRecDoc(pDocID);
                         }
 
-                        window.close();
+                        window.close(); */
                     } else {
                         UndoSignInfo(rtnSignInfo);
                         if (LastSignSN == 1)
@@ -931,6 +931,37 @@
 	        function GetHTML2(callback) {
 	            message.GetTextFile("HWPML2X", "", function (data) { callback(data) });
 	        }
+	        
+		    function Complete_Draft() {
+		        draftFlag = true;
+		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) { 
+		        	parent.opener.getApprovalList("reject");
+		        }
+		        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가
+		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+		        	document.getElementById('message').contentWindow.document.getElementById('iframe_content').contentWindow.attitude_annual_conn("annual", "0");
+		        }	        
+		        
+		        window.close();
+		    }
+		
+		    function Complete_Draft2() {
+		        draftFlag = true;
+		        if (ListType == "21") {
+		            RemoveTmpDoc(DocSN);
+		        }
+		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) {
+		        	parent.opener.getApprovalList("reject");
+		        }
+		        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가--아직 개발중
+		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+		        	document.getElementById('message').contentWindow.document.getElementById('iframe_content').contentWindow.attitude_annual_conn("annual", "0");
+		        }
+		        
+		        window.close();
+		    }
 	
 	        function btnFileAttach_onclick() {
 	            try {
@@ -960,13 +991,21 @@
 	        }
 	
 	        function btnSave_onclick() {
-	            HwpCtrl.SetDocumentInfo(pFormID);
-	            HwpCtrl.SaveFile("", HwpCtrl.GetFieldText("doctitle").replace(/\r\n/g, " "));
-// 	            HwpCtrl.SaveFile("");
+	        	var hwpDoctitle = message.GetFieldText("doctitle").replace(/\r\n/g, " ");
+	        	
+	        	if (hwpDoctitle == "") {
+	        		var pAlertContent = "<spring:message code='ezApprovalG.t1395'/>";
+                    OpenAlertUI(pAlertContent);
+	        		message.MoveToField("doctitle");
+	        		return;
+	        	}
+	        	
+	        	hwpDoctitle += ".hwp";
+	            message.SaveFile(hwpDoctitle, "HWP", "");
 	        }
 	
 	        function btnPrint_onclick() {
-	            HwpCtrl.PrintDocument("", true);
+	        	message.PrintDocument();
 	        }
 	
 	        function btnClose_onclick() {
@@ -1135,6 +1174,7 @@
 			    }
 			}
 	
+			var inssepattach_cross_dialogArguments = new Array();
 			function btnAddSepAttach_onclick() {
 				var deptCheckFlag = checkDeptAndCabinetId();
 				
@@ -1154,7 +1194,7 @@
 					}
 				
 				    var g_SepAttachLVXml = "";
-				    g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
+				    g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
 				    if (!g_SepAttachLVXml)
 				        g_SepAttachLVXml = "";
 				
@@ -1164,17 +1204,30 @@
 					para[3] = ext;
 					
 				    var url = "/ezApprovalG/insSepAttach.do";
-				    var feature = "dialogWidth:930px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
-			        var rtn = window.showModalDialog(url, para, feature);
+				    //var feature = "dialogWidth:930px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
+			        //var rtn = window.showModalDialog(url, para, feature);
+			        inssepattach_cross_dialogArguments[0] = para;
+		        	inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
+		        	
+		        	DivPopUpShow(920, 630, url);
 
-				    if (rtn[0] == "TRUE") {
+				    /* if (rtn[0] == "TRUE") {
 				        g_SepAttachLVXml = rtn[1];
 				        SetDocumentElement(HwpCtrl, "SepAttachLVXml", g_SepAttachLVXml);
-				    }
+				    } */
 				} catch (e) {
-				    alert("ezdraftui_hwp.btnAddSepAttach_onclick()::" + e.description);
+				    alert("ezdraftui_hwp.btnAddSepAttach_onclick()::" + e);
 				}
 			}
+			
+			function btnAddSepAttach_onclick_Complete(rtn) {
+				DivPopUpHidden();
+		        if (rtn[0] == "TRUE") {
+		            g_SepAttachLVXml = rtn[1];
+		            SetDocumentElement(message, "sepattachlvxml", g_SepAttachLVXml);
+		        }
+			}
+			
 			//2019-01-18 천성준 - 새 HWP 분리첨부 XML파싱 소스 생성
 			function GetSepAttParamXml(g_SepAttachLVXml) {
 				try {
@@ -1414,8 +1467,8 @@
 			        }
 			
 			        if (AutoSave != "save") {
-			            if (HwpCtrl.CheckFieldExist("doctitle"))
-			                pDocTitle = trim(HwpCtrl.GetFieldText("doctitle"));
+			            if (message.FieldExist("doctitle"))
+			                pDocTitle = trim(message.GetFieldText("doctitle"));
 			            else
 			                pDocTitle = "<spring:message code='ezApprovalG.t1394'/>";
 			
@@ -1431,8 +1484,8 @@
 			                return;
 			            }
 			        } else {
-			            if (HwpCtrl.CheckFieldExist("doctitle"))
-			                pDocTitle = trim(HwpCtrl.GetFieldText("doctitle"));
+			            if (message.FieldExist("doctitle"))
+			                pDocTitle = trim(message.GetFieldText("doctitle"));
 			            if (pDocTitle == "")
 			                return;
 			        }
@@ -1450,32 +1503,36 @@
 		        		newpDocID = createNewDoc();
 		        	}
 			
-			        var rtnVal = SaveTMPFile();
-			        if (rtnVal == "TRUE") {
-			            rtnVal = SaveTMPDocInfo(AutoSave, Saveflag);
-			            if (rtnVal == "TRUE") {
-			                if (AutoSave != "save") {
-			                    var pAlertContent = "<spring:message code='ezApprovalG.t1581'/>";
-			                    OpenAlertUI(pAlertContent);
-			                    Saveflag = true;
-			                    //window.close();
-			                } else {
-			                    Saveflag = true;
-			                }
-			            } else {
-			                var pAlertContent = strLang217;
-			                OpenAlertUI(pAlertContent);
-			                return false;
-			            }
-			
-			        } else {
-			            var pAlertContent = strLang217;
-			            OpenAlertUI(pAlertContent);
-			            return false;
-			        }
+			        message.GetTextFile("HWP", "", function (data) { exSaveTMPFile(data) }); 
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnSaveServer_onclick()::" + e.description);
 			    }
+			}
+			
+			function exSaveTMPFile(html, AutoSave) {
+				var rtnVal = SaveTMPFile(html);
+		        if (rtnVal == "TRUE") {
+		            rtnVal = SaveTMPDocInfo(AutoSave, Saveflag);
+		            if (rtnVal == "TRUE") {
+		                if (AutoSave != "save") {
+		                    var pAlertContent = "<spring:message code='ezApprovalG.t1581'/>";
+		                    OpenAlertUI(pAlertContent);
+		                    Saveflag = true;
+		                    //window.close();
+		                } else {
+		                    Saveflag = true;
+		                }
+		            } else {
+		                var pAlertContent = strLang217;
+		                OpenAlertUI(pAlertContent);
+		                return false;
+		            }
+		
+		        } else {
+		            var pAlertContent = strLang217;
+		            OpenAlertUI(pAlertContent);
+		            return false;
+		        }
 			}
 	
 	        function btnHelper_onclick() {
@@ -1649,5 +1706,9 @@
 	        </tr>
 	    </table>
 	    <xml id="SA_coredata"></xml>
+	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

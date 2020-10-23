@@ -233,22 +233,24 @@ function setRecevInfo(ret) {
 		message.PutFieldText("recipients", "");
 	
     for (var i = rows.length - 1; i >= 0; i--) {
-		var row = rows(i)
+		var row = rows[i];
+		var dataNodes = GetChildNodes(row);
+		
         if (recipflag) {
-            if (getNodeText(rows(i).childNodes(3)) == "Y") {
-					precipent = getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0)) 
-					precipents = getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
+            if (getNodeText(dataNodes[3]) == "Y") {
+					precipent = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+					precipents = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
 					recipflag = false;	
 				}
             else {
                 if (isExtDoc == "Y") {
-						precipent = getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
-						precipents = getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))				
+						precipent = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+						precipents = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);				
 						recipflag = false;	
 					}
                 else {
-						precipent = getNodeText(rows(i).childNodes(0))
-						precipents = getNodeText(rows(i).childNodes(0))				
+						precipent = getNodeText(dataNodes[0]);
+						precipents = getNodeText(dataNodes[0]);			
 						recipflag = false;	
 					}
 				}
@@ -257,13 +259,13 @@ function setRecevInfo(ret) {
         else {
 			precipent = strLang92;
 			
-			if(getNodeText(rows(i).childNodes(3)) == "Y")
-				precipents = precipents + "," + getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
+			if(getNodeText(dataNodes[3]) == "Y")
+				precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
             else {
 				if(isExtDoc == "Y")
-					precipents = precipents + "," + getNodeText(rows(i).childNodes(7)) + " " +  getNodeText(rows(i).childNodes(0)); 
+					precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]); 
 				else
-					precipents = precipents + "," + getNodeText(rows(i).childNodes(0)); 
+					precipents = precipents + "," + getNodeText(dataNodes[0]);
 			}
 		}		
 	}
@@ -721,21 +723,20 @@ function openFormUI_complete(ret) {
 
 var form_check_ui_cross_dialogArguments = new Array();
 function Form_check() {
-	try {
-		form_check_ui_cross_dialogArguments[0] = "";
-		form_check_ui_cross_dialogArguments[1] = Form_check_complete;
-		
-		var url = "/ezApprovalG/formCheckUI.do";
-		var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
-		var ret = window.open(url, "", 'height=200,width=330,scrollbars=no'+GetOpenPosition(330,200));
-	} catch(e) {
-		alert("Form_check() :: " + e) ;
-	}
+  try {
+      form_check_ui_cross_dialogArguments[0] = "";
+      form_check_ui_cross_dialogArguments[1] = Form_check_Complete;
+      
+      DivPopUpShow(330, 205, "/ezApprovalG/formCheckUI.do");
+  } catch(e) {
+	  alert("openFormUI()" + e.description);
+  }
 }
 
-function Form_check_complete(ret) {
-	if(ret == "ok")
-		openForm();
+function Form_check_Complete(pCheck) {
+    DivPopUpHidden();
+    if (pCheck.toUpperCase() == "OK")
+        openForm();
 }
 
 function SetBtnStateFalse() {
@@ -1100,6 +1101,7 @@ function openOpinionUI(pOpinionFlag)
   }
 }
 
+var apropinion_cross_dialogArguments = new Array();
 function openOpinionUI_New(pOpinionType) {
 	try {
 		var parameter = new Array();
@@ -1111,105 +1113,116 @@ function openOpinionUI_New(pOpinionType) {
 		parameter[99] = ext;		//EXT
 		
 		var url = "/ezApprovalG/aprOpinionNew.do";
-		var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
-		var ret = window.showModalDialog(url,parameter,feature);
+		//var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
+		//var ret = window.showModalDialog(url,parameter,feature);
 		
-		if (ret != "cancel" && ret != undefined) {
-		    var objXML = new ActiveXObject("Microsoft.XMLDOM");
-		    objXML.loadXML(ret);
-		    
-		    var NodeList = objXML.selectNodes("LISTVIEWDATA/ROWS/ROW");
-		    if (NodeList.length != 0) {
-				pHasOpinionYN = "Y";
-		    } else {
-				pHasOpinionYN = "N";
-				ret = "cancel";
-		    }
-		    makeOpinionList(objXML);
-	    }
-		
-	    return ret;
+		apropinion_cross_dialogArguments[0] = parameter;
+		if (typeof(CompleteFunction) != "undefined") {
+			apropinion_cross_dialogArguments[1] = CompleteFunction; 
+		} else {
+			apropinion_cross_dialogArguments[1] = openOpinionUI_New_Complete;
+		}
+		DivPopUpShow(530, 520, url);
 	} catch (e) {
 		alert("openOpinionUI_New ::: " + e.description);
 	}
 }
 
+function openOpinionUI_New_Complete(ret) {
+	DivPopUpHidden();
+	if (ret != "cancel" && ret != undefined) {
+	    var objXML = loadXMLString(ret);
+	    
+	    var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+	    if (NodeList.length != 0) {
+			pHasOpinionYN = "Y";
+	    } else {
+			pHasOpinionYN = "N";
+			ret = "cancel";
+	    }
+	    makeOpinionList(objXML);
+    }
+	
+    return ret;
+}
 
-function makeOpinionList(OpinionXML)
-{
+function makeOpinionList(OpinionXML) {
 	if (!message.FieldExist("opinions"))
 		return;
 
 	var firstFlag = true;
-	var NodeList = OpinionXML.selectNodes("LISTVIEWDATA/ROWS/ROW");
-	if (NodeList.length > 0)
-	{
+	var NodeList = SelectNodes(OpinionXML, "LISTVIEWDATA/ROWS/ROW");
+	if (NodeList.length > 0) {
 		var strOpinion = " ";
-		for (i=NodeList.length - 1; i>=0; i--)
-		{
-		    if (getNodeText(NodeList.item(i).childNodes(9)) == "001")
-			{
-				if (firstFlag)
-				{
+		for (i=NodeList.length - 1; i>=0; i--) {
+			var childNode = GetChildNodes(NodeList[i]);
+		    if (getNodeText(childNode[9]) == "001") {
+				if (firstFlag) {
 					strOpinion = "[" + strLang27 + "";
 					firstFlag = false;
 				}
 				
 				
-				if (getNodeText(NodeList.item(i).childNodes(2)) != "")
-				    strOpinion = strOpinion + getNodeText(NodeList.item(i).childNodes(2)) + "\11";  
+				if (getNodeText(childNode[2]) != "")
+				    strOpinion = strOpinion + getNodeText(childNode[2]) + "\11";  
 				else
 					strOpinion = strOpinion + "   \11";  
 					
-				strOpinion = strOpinion + getNodeText(NodeList.item(i).childNodes(1)) + "\11";  
-				strOpinion = strOpinion + getNodeText(NodeList.item(i).childNodes(6)) + "\15";  
+				strOpinion = strOpinion + getNodeText(childNode[1]) + "\11";  
+				strOpinion = strOpinion + getNodeText(childNode[6]) + "\15";  
 			}
 				
 		}		
 		message.PutFieldText("opinions", strOpinion);
 	}
-	else
-	{
+	else {
 		message.PutFieldText("opinions", " ");
 	}
 }
 
 
-function openFileAttachUI()
-{
-  try{
-	var parameter = pDocID;
+function openFileAttachUI() {
+  try {
+	/*var parameter = pDocID;
 	var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + "hwp";
 	var feature	= "status:no;dialogWidth:540px;dialogHeight:390px;edge:sunken;scroll:no"; 
 	var ret = window.showModalDialog(url, parameter, feature);
-
+	
 	if (ret != "cancel") {
 		setAttachInfo(pDocID, "APR", lstAttachLink);
 	}
 	
-	return ret;
-  }catch(e){
-	alert("openFileAttachUI()" + e.description);
+	return ret;*/
+	  
+	  var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + "hwp";
+	  DivPopUpShow(540, 390, url);
+  } catch(e) {
+	  alert("openFileAttachUI() :: " + e);
   }
 }
 
-
-function openAaprDocAttachUI()
-{
+var aprcabinetattach_cross_dialogArguments = new Array();
+function openAaprDocAttachUI() {
   try{
-	var parameter = pDocID;
-	var url = "/ezApprovalG/aprCabinetAttach.do?draftFlag=" + pDraftFlag;
-	var feature	= "status:no;dialogWidth:1050px;dialogHeight:520px;edge:sunken;scroll:no;help:no"; 
-	var ret = window.showModalDialog(url,parameter,feature);
+	  var parameter = pDocID;
+	  var url = "/ezApprovalG/aprCabinetAttach.do?draftFlag=" + pDraftFlag;
+	  /* var feature	= "status:no;dialogWidth:1050px;dialogHeight:520px;edge:sunken;scroll:no;help:no"; 
+	  var ret = window.showModalDialog(url,parameter,feature); */
+	
+	  aprcabinetattach_cross_dialogArguments[0] = parameter;
+      aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_complete;
+      
+	  DivPopUpShow(1050, 520, url);
+  } catch(e) {
+	  alert("openAaprDocAttachUI() :: " + e);
+  }
+}
 
-	if(ret != "cancel")
-	{
+function openAaprDocAttachUI_complete(ret){
+	DivPopUpHidden();
+	if(ret != "cancel") {
 		setAttachInfo(pDocID, "APR", lstAttachLink);	
 	}
-	return ret;
-  }catch(e){
-	alert("openAaprDocAttachUI()" + e.description);
-  }
 }
 
 function SaveDraftDocInfo() {
@@ -1652,7 +1665,7 @@ function putSignXML(SignXML)
 }
 
 
-function SaveTMPFile() {
+function SaveTMPFile(html) {
     var result = "";
 
     var docID = "";
@@ -1666,7 +1679,7 @@ function SaveTMPFile() {
 	var data = {
 		docID : docID,
 		formId : pFormID,
-		html  : message.GetCloneData("", "HWP")
+		html  : html
 	}
     
     $.ajax({
