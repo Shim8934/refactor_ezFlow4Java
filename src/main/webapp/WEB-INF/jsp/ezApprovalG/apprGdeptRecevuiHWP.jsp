@@ -111,6 +111,8 @@
 			
 			var strLang12 = "";
 			
+			var gpGubun = "";
+			
 			function process_AfterOpen() {
 			    try {
 			        if (pFormHref == "")
@@ -733,93 +735,102 @@
 			    }
 			}
 	
+			var ezapprovalinfo_dialogArguments = new Array();
 			function btnApprovalInfo(pGubun) {
-			    var onlydocinfiview = false;
-			    var parameter = new Array();
-			    parameter[0] = pDocID;
-			    parameter[1] = "9999999999";;
-			    parameter[2] = SignCount;
-			    parameter[3] = SignInfo;
-			    parameter[4] = hapyuiCount;
-			    parameter[5] = DraftFlag;
-			    parameter[6] = pSuSinFlag;
-			    parameter[7] = pChamJoFlag;
-			    parameter[8] = gongramCount;
-			    parameter[9] = false;
-			    parameter[10] = pDocType;
-			    parameter[11] = "";
-			    parameter[12] = "";
-			    parameter[13] = DraftFlag;
-			    parameter[28] = onlydocinfiview
-			    parameter[30] = cabinetID;
-			    parameter[31] = tempSecurity;
-			    parameter[32] = tempUrgent;
-			    parameter[33] = pSummery;
-			    parameter[34] = pSpecialRecordCode;
-			    parameter[35] = pPublicityCode;
-			    parameter[36] = pLimitRange;
-			    parameter[37] = pPageNum;
-			    parameter[38] = tempSecurityDate;
-		        parameter[39] = SummaryFlag;
-		        parameter[41] = tempItemName;
-		        parameter[42] = tempItemName2;
-		        
-		        if(pDocState == "012") {
-		        	parameter[45] = "";
-		        	parameter[46] = "";
-		        }
-			
-			    if (tempItemCode != "")
-			        tempdocnumcode = tempItemCode;
-			    
-			    var url =  "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType + "&ext=" + "hwp";
-		        var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
-			    var ret = window.showModalDialog(url, parameter, feature);
-			
-			    if (ret != undefined && ret[0] == "OK") {
-			        try {
-			            var savexmlhttp = createXMLHttpRequest();
-			
-			            if (ret[1] != false) {
-			            	$.ajax({
-	                    		type : "POST",
-	                    		dataType : "text",
-	                    		async : false,
-	                    		url : "/ezApprovalG/aprLineSave.do",
-	                    		data : {
-	                    				ret    : ret[1]
-	                    				},
-	                    		success : function(result){
-	                    		}
-	                    	});
-			
-			                IsSkipDrafter = "FALSE";
-			                btnSendDraftEnable = "true";
-			                GetDraftAprLineInfo(ret);
-			
-			                if (ret[4] != undefined) {
-				                var g_SelCabXml = ret[4];
-				                var xmlCab = createXmlDom();
-				                xmlCab = loadXMLString(g_SelCabXml);
-				                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
-				                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
-			                }
-			            	
-				            tempSecurity = ret[7];
-			                tempUrgent = ret[8];
-			                pSummery = ret[9];
-			                tempSecurityDate = ret[14];
-			                pPublicityCode = ret[11];
-			                pPublicityYN = ret[21];
-		                	pPageNum = ret[13];
-		                	pLimitRange = ret[12];
-		                	pSpecialRecordCode = ret[10];
+			                gpGubun = pGubun; 
+			                var onlydocinfiview = false;
+						    var parameter = new Array();
+						    parameter[0] = pDocID;
+						    parameter[1] = "9999999999";;
+						    parameter[2] = SignCount;
+						    parameter[3] = SignInfo;
+						    parameter[4] = hapyuiCount;
+						    parameter[5] = DraftFlag;
+						    parameter[6] = pSuSinFlag;
+						    parameter[7] = pChamJoFlag;
+						    parameter[8] = gongramCount;
+						    parameter[9] = false;
+						    parameter[10] = pDocType;
+						    parameter[11] = "";
+						    parameter[12] = "";
+						    parameter[13] = DraftFlag;
+						    parameter[28] = onlydocinfiview
+						    parameter[30] = cabinetID;
+						    parameter[31] = tempSecurity;
+						    parameter[32] = tempUrgent;
+						    parameter[33] = pSummery;
+						    parameter[34] = pSpecialRecordCode;
+						    parameter[35] = pPublicityCode;
+						    parameter[36] = pLimitRange;
+						    parameter[37] = pPageNum;
+						    parameter[38] = tempSecurityDate;
+					        parameter[39] = SummaryFlag;
+					        parameter[41] = tempItemName;
+					        parameter[42] = tempItemName2;
+					        
+					        if(pDocState == "012") {
+					        	parameter[45] = "";
+					        	parameter[46] = "";
+					        }
+						
+						    if (tempItemCode != "")
+						        tempdocnumcode = tempItemCode;
+						    
+					        ezapprovalinfo_dialogArguments[0] = parameter;
+					        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+						    
+					       	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + gpGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+					       	try { OpenWin.focus(); } catch (e) { }
+
 			            }
-			        } catch (e) {
-			            alert("저장시 오류 발생");
-			        }
-			    }
-			}
+
+					    function btnApprovalInfo_Complete(ret) {
+			 			    if (ret != undefined && ret[0] == "OK") {
+						        try {
+						            var savexmlhttp = createXMLHttpRequest();
+						
+						            if (ret[1] != false) {
+						            	$.ajax({
+				                    		type : "POST",
+				                    		dataType : "text",
+				                    		async : false,
+				                    		url : "/ezApprovalG/aprLineSave.do",
+				                    		data : {
+				                    				ret    : ret[1]
+				                    				},
+				                    		success : function(result){
+				                    		}
+				                    	});
+						
+						                IsSkipDrafter = "FALSE";
+						                btnSendDraftEnable = "true";
+						                GetDraftAprLineInfo(ret);
+						
+						                if (ret[4] != undefined) {
+							                var g_SelCabXml = ret[4];
+							                var xmlCab = createXmlDom();
+							                xmlCab = loadXMLString(g_SelCabXml);
+							                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+							                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+						                }
+						            	
+							            tempSecurity = ret[7];
+						                tempUrgent = ret[8];
+						                pSummery = ret[9];
+						                tempSecurityDate = ret[14];
+						                pPublicityCode = ret[11];
+						                pPublicityYN = ret[21];
+					                	pPageNum = ret[13];
+					                	pLimitRange = ret[12];
+					                	pSpecialRecordCode = ret[10];
+						            }
+						        } catch (e) {
+						            alert("저장시 오류 발생");
+						        }
+						    }           
+			            }
+
+
 			
 		    function getDocRecevState() {
 		        try {
