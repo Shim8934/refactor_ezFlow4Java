@@ -566,6 +566,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			}
 			
 			model.addAttribute("fileId", fileId);
+			model.addAttribute("isUploading", false);			
 		} else {
 			logger.debug("Uploading");
 			
