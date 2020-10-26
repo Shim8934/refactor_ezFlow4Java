@@ -829,7 +829,13 @@
 		                strRows += "</CELL><CELL>";
 		                strRows += "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
 		                strRows += "</CELL><CELL>";
-		                strRows += "<VALUE>" + strLangAprType17 + "</VALUE>";
+		                
+		                if(approvalFlag == "G"){
+		                	strRows += "<VALUE>" + strLangDocState15 + "</VALUE>";
+		                } else {
+		                	strRows += "<VALUE>" + strLangAprType17 + "</VALUE>";
+		                }
+		                
 		                strRows += "</CELL><CELL>";
 		                strRows += "<VALUE>" + strLang72 + "</VALUE>";
 		                strRows += "</CELL><CELL><VALUE></VALUE></CELL></ROW>";
