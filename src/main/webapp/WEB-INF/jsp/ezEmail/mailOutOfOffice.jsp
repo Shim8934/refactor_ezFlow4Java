@@ -54,10 +54,16 @@
 		        $("#Edatepicker").datepicker('setDate', NowDate2);
 		        $('#Stimepicker').timepicker();
 		        $('#Stimepicker').timepicker('setTime', NowDate);
-		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+		        $('#Stimepicker').timepicker({
+		            'timeFormat': 'H:i',
+		            'disableTextInput': true
+		        });
 		        $('#Etimepicker').timepicker();
 		        $('#Etimepicker').timepicker('setTime', NowDate2);
-		        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+		        $('#Etimepicker').timepicker({
+		            'timeFormat': 'H:i',
+		            'disableTextInput': true
+		        });
 		    });
 		    
 		    $(function () {
@@ -127,11 +133,17 @@
 		                $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		                $("#Sdatepicker").datepicker('setDate', StarDate);
 		                $('#Stimepicker').timepicker('setTime', StarDate);
-		                $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+		                $('#Stimepicker').timepicker({
+		                    'timeFormat': 'H:i',
+		                    'disableTextInput': true
+		                });
 		                $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		                $("#Edatepicker").datepicker('setDate', EndDate);
 		                $('#Etimepicker').timepicker('setTime', EndDate);
-		                $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+		                $('#Etimepicker').timepicker({
+		                    'timeFormat': 'H:i',
+		                    'disableTextInput': true
+		                });
 		            } catch (e) { }
 		          
 		            if (g_oofstate == "disabled") {

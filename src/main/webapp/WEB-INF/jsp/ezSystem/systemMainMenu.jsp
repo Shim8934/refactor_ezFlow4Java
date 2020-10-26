@@ -145,9 +145,11 @@
 						}
 					}
 					
-					if(document.getElementById("MailBigSizeAttachLimitCount").value > 20) {
-						alert("<spring:message code='ezEmail.hdp01'/>: <spring:message code='ezEmail.hdp06'/>");
-						return false;
+					if(name == "MailBigSizeAttachLimitCount") { 
+						if (value > 20) {
+							alert("<spring:message code='ezEmail.hdp01'/>: <spring:message code='ezEmail.hdp06'/>");
+							return false;
+						}
 					}
 				}
 				return true;

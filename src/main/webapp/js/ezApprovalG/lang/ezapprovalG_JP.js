@@ -131,7 +131,7 @@ var strLang236 = "番号"
 var strLang237 = "수 신 자"
 // ezAPRDEPT\AprDeptG.js
 var strLang239 = "외부 LDAP 서버와의 연결이 없습니다. 외부 수신자를 지정할 수 없습니다."
-var strLang240 = "검색할 부서명을 입력해주십시오."
+var strLang240 = "部署名を入力してください。"
 var strLang241 = "エラーが発生しました。 -"
 var strLang242 = "検索結果がありません"
 var strLang243 = "部署名を3文字以上入力してください。"
