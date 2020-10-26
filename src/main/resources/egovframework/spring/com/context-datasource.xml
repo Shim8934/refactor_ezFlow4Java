@@ -26,11 +26,15 @@
     </bean>
     
     <!-- datasource 설정(propertyConfigurer 활용) -->
-    <alias name="dataSource-${Globals.DbType}" alias="dataSource" />
-    <alias name="dataSource-${Globals.DbType}" alias="egov.dataSource" />
+    <alias name="dataSource-${Globals.DbType}${Globals.jndi}" alias="dataSource" />
+    <alias name="dataSource-${Globals.DbType}${Globals.jndi}" alias="egov.dataSource" />
     
 	<!-- mysql -->
-    <bean id="dataSource-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <bean id="dataSource-mysql-jndi" class="org.springframework.jndi.JndiObjectFactoryBean" lazy-init="true">
+        <property name="jndiName" value="${Globals.jndiName}"/>
+    </bean>
+    	
+    <bean id="dataSource-mysql" class="org.apache.commons.dbcp.BasicDataSource" lazy-init="true" destroy-method="close">
         <property name="driverClassName" value="${Globals.DriverClassName}"/>
         <property name="url" value="${Globals.Url}" />
         <property name="username" value="${Globals.UserName}"/>
@@ -45,7 +49,11 @@
     </bean>
     
     <!-- Oracle -->
-    <bean id="dataSource-oracle" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <bean id="dataSource-oracle-jndi" class="org.springframework.jndi.JndiObjectFactoryBean" lazy-init="true">
+        <property name="jndiName" value="${Globals.jndiName}"/>
+    </bean>
+    
+    <bean id="dataSource-oracle" class="org.apache.commons.dbcp.BasicDataSource" lazy-init="true" destroy-method="close">
         <property name="driverClassName" value="${Globals.DriverClassName}"/>
         <property name="url" value="${Globals.Url}" />
         <property name="username" value="${Globals.UserName}"/>
