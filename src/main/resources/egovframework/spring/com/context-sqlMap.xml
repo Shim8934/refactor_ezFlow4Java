@@ -12,7 +12,7 @@
                 <value>classpath:/egovframework/sqlmap/config/${Globals.DbType}/*.xml</value>
             </list>
         </property>
-		<property name="dataSource" ref="dataSource-${Globals.DbType}"/>
+		<property name="dataSource" ref="dataSource-${Globals.DbType}${Globals.jndi}"/>
 		<property name="lobHandler" ref="lobHandler"/>	
 		<property name="sqlMapClientProperties">
         	<props>
@@ -28,7 +28,7 @@
                 <value>classpath:/egovframework/sqlmap/config/${Globals.DbType}/*.xml</value>
             </list>
         </property>
-        <property name="dataSource" ref="dataSource-${Globals.DbType}"/>
+        <property name="dataSource" ref="dataSource-${Globals.DbType}${Globals.jndi}"/>
         <property name="lobHandler" ref="lobHandler"/>
     </bean>
 			
