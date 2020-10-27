@@ -806,7 +806,7 @@ function displayUserList(DeptID) {
 		url : "/ezOrgan/getDeptMemberList.do",
 		data : {
 				deptID   : DeptID, 
-				cell 	 : "displayName;description;title;telephoneNumber",
+				cell 	 : "displayName;description;title;telephoneNumber;extensionattribute5",
 				prop     : "department;displayName;description;title",
 				type 	 : "user"
 		},

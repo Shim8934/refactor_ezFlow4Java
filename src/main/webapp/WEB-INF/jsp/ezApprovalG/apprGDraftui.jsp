@@ -1716,7 +1716,7 @@
 		        if (isUsed == "reuse") {
 		        	OpenUrl +=  "&isUsed=" + isUsed + "&beforeDocID=" +beforeDocID
 		        }
-		        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+		        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
 		        
 		        try { OpenWin.focus(); } catch (e) { }
 		    }

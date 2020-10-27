@@ -682,7 +682,9 @@ public class EzOrganServiceImpl implements EzOrganService {
                     }
                 }
             }
-            
+            if(celllist[i].toUpperCase().equals("EXTENSIONATTRIBUTE5")) {
+            	nodeInfo.append("<ABSENCE>" + doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent() + "</ABSENCE>");
+            }
             nodeInfo.append("</CELL>");
         }
         

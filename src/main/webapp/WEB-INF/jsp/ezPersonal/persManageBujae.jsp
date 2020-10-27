@@ -194,12 +194,12 @@
 			    type_Complete = type;
 			    if (CrossYN() || NoneActiveX == "YES") {
 			        selectperson_cross_dialogArguments[1] = select_person_Complete;
-			        var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept, "SelectPerson_cross", GetOpenWindowfeature(760, 535));
+			        var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept, "SelectPerson_cross", GetOpenWindowfeature(860, 535));
 			        try { OpenWin.focus(); } catch (e) { }
 			    }
 			    else {
 			        var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept, "",
-		                "dialogHeight:535px;dialogwidth:760px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(760, 535));
+		                "dialogHeight:535px;dialogwidth:860px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(860, 535));
 		
 			        if (typeof (rtnValue) != "undefined" && type == "") {
 			            userid = rtnValue.split(":")[0];

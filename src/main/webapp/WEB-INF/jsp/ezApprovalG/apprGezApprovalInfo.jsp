@@ -2282,15 +2282,15 @@
 	                                <p><span divname="Temp" id="2tab2"><spring:message code='ezApprovalG.G0001'/></span></p>
 	                            </div>
 	                        </div>
-	                        <div id="OrganLineTab" style="width:390px">
+	                        <div id="OrganLineTab" style="width:440px">
 	                            <table style="width:99.5%;table-layout: fixed">
 	                            <c:if test="${approvalFlag == 'G'}">
 									 <tr>
 	                                    <td style="vertical-align: top;">	                                    	
 	                                        <span>	                                        	
-	                                            <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 247px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 1px;"></div>
-	                                            <div class="border_gray" style="Width: 388px; Height: 273px;">
-	                                                <div id="UserList" style="margin: 0px 1px 1px 1px; Width: 386px; Height: 100%; overflow: auto;"></div>
+	                                            <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 247px; width: 437px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 1px;"></div>
+	                                            <div class="border_gray" style="Width: 438px; Height: 273px;">
+	                                                <div id="UserList" style="margin: 0px 1px 1px 1px; Width: 436px; Height: 100%; overflow: auto;"></div>
 	                                            </div>
 	                                        </span>
 	                                    </td>
@@ -2306,7 +2306,7 @@
                                 	<tr>
                                     <td style="border: 1px solid #ddd;">
                                         <div class="border_gray" style="border: 0px;">
-                                            <div id="UserList" style="border: 0px; margin: 0px 1px 1px 1px; Width: 386px; Height: 223px; overflow: auto;">
+                                            <div id="UserList" style="border: 0px; margin: 0px 1px 1px 1px; Width: 436px; Height: 223px; overflow: auto;">
                                             </div>
                                         </div>
                                     </td>
@@ -2338,7 +2338,7 @@
 	                                    <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                        <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezApprovalG.G0003'/></h2>
 	                                        <div class="border_gray">
-	                                            <div id="APRTEMPLIST" style="border: 0px; Width: 386px; Height: 182px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                            <div id="APRTEMPLIST" style="border: 0px; Width: 436px; Height: 182px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                            </div>
 	                                        </div>
 	                                    </td>
@@ -2360,12 +2360,12 @@
 	                                    <td style="vertical-align: top;">
 	                                        <c:if test="${approvalFlag == 'G' }">
 	                                        <div class="border_gray">
-	                                            <div id="APRTEMP" style="Width: 386px; Height: 266px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                            <div id="APRTEMP" style="Width: 436px; Height: 266px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                            </div>
 	                                        </c:if>
 	                                        <c:if test="${approvalFlag == 'S' }">
 	                                        <div class="border_gray">
-	                                            <div id="APRTEMP" style="Width: 386px; Height: 260px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                            <div id="APRTEMP" style="Width: 436px; Height: 260px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
                                             	</div>
                                             </c:if>
 	                                        </div>
@@ -2517,7 +2517,7 @@
 	                            <tr>
                                     <td>
                                         <div class="border_gray" style="margin-right: 1px;">
-                                            <div id="UserList2" style="border: 0px; margin: 0px 1px 1px 1px; Width: 386px; Height: 223px; overflow: auto;">
+                                            <div id="UserList2" style="border: 0px; margin: 0px 1px 1px 1px; Width: 436px; Height: 223px; overflow: auto;">
                                             </div>
                                         </div>
                                     </td>
@@ -2564,7 +2564,7 @@
 	                                <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                    <h2 class="h2_dot" style="padding-top:2px;"><spring:message code='ezApprovalG.G0003'/></h2>
 	                                    <div class="border_gray">
-	                                        <div id="RecSaveList" style="border: 0px; Width: 386px; Height: 182px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                        <div id="RecSaveList" style="border: 0px; Width: 436px; Height: 182px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                        </div>
 	                                    </div>
 	                                </td>
@@ -2585,7 +2585,7 @@
 	                            <tr>
 	                                <td style="vertical-align: top;">
 	                                    <div class="border_gray">
-	                                        <div id="RecSaveDetail" style="Width: 386px; Height: 262px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                        <div id="RecSaveDetail" style="Width: 436px; Height: 262px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                        </div>
 	                                    </div>
 	                                </td>
@@ -2598,7 +2598,7 @@
 	                                <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                    <h2 class="h2_dot" style="padding-top:2px;"><spring:message code='ezApprovalG.G0007'/></h2>
 	                                    <div class="border_gray">
-	                                        <div id="RecGroupList" style="border: 0px; Width: 386px; Height: 182px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                        <div id="RecGroupList" style="border: 0px; Width: 436px; Height: 182px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                        </div>
 	                                    </div>
 	                                </td>
@@ -2617,7 +2617,7 @@
 	                            <tr>
 	                                <td style="vertical-align: top;">
 	                                    <div class="border_gray">
-	                                        <div id="RecGroupDetail" style="Width: 386px; Height: 262px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                        <div id="RecGroupDetail" style="Width: 436px; Height: 262px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                        </div>
 	                                    </div>
 	                                </td>
@@ -3092,7 +3092,7 @@
                                 	<tr>
 	                                    <td style="border: 1px solid #ddd;">
                                         <div class="border_gray" style="border: 0px;">
-                                            <div id="UserListCC" style="border: 0px; margin: 0px 1px 1px 1px; Width: 386px; Height: 223px; overflow: auto;">
+                                            <div id="UserListCC" style="border: 0px; margin: 0px 1px 1px 1px; Width: 436px; Height: 223px; overflow: auto;">
                                             </div>
                                         </div>
                                     </td>
@@ -3114,7 +3114,7 @@
 			                            <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 			                                <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezApprovalG.G0003'/></h2>
 			                                <div class="border_gray">
-			                                    <div id="RecSaveListCC" style="border: 0px; Width: 386px; Height: 237px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
+			                                    <div id="RecSaveListCC" style="border: 0px; Width: 436px; Height: 237px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
 			                                    </div>
 			                                </div>
 			                            </td>
@@ -3135,7 +3135,7 @@
 			                        <tr>
 			                            <td style="vertical-align: top;">
 			                                <div class="border_gray">
-			                                    <div id="RecSaveDetailCC" style="Width: 386px; Height: 208px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
+			                                    <div id="RecSaveDetailCC" style="Width: 436px; Height: 208px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
 			                                    </div>
 			                                </div>
 			                        	</td>
@@ -3387,6 +3387,10 @@
 		        <HEADER>
 		        <NAME><spring:message code='main.t79'/></NAME>
 		        <WIDTH>80</WIDTH>
+		        </HEADER>
+		        <HEADER>
+		        <NAME><spring:message code='ezApprovalG.b12'/></NAME>
+		        <WIDTH>50</WIDTH>
 		        </HEADER>
 		    </HEADERS>
 		    <ROWS></ROWS>
