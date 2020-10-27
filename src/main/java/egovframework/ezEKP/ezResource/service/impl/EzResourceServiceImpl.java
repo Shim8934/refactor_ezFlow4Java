@@ -3974,7 +3974,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						loopFlag = false;
 						break;
 					} else if (tsdDate.compareTo(oStartDate) >= 0 && tsdDate.compareTo(oEndDate) <= 0) {
-						instances--;
 						tempEndCal.setTime(tsd);
 						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
@@ -3983,6 +3982,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 								tempEndCal.getTime()
 						});
 					}
+					instances--;
 				}
 			}
 			
