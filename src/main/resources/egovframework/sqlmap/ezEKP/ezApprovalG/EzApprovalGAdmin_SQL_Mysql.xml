@@ -4342,13 +4342,6 @@
 											#v_USERSECCODE# <= TBL_EXPENDAPRDOCINFO.SECURITYCODE
 										]]>
 									</isNotEqual>
-									<isEqual property="v_PUBFLAG" compareValue="Y">
-										<isNotEmpty property="v_CONTID">
-											<![CDATA[
-											AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
-									      	]]>
-										</isNotEmpty>
-									</isEqual>
 									<isNotEmpty property="v_SUBQUERY">
 										AND 
 											$v_SUBQUERY$
@@ -4488,13 +4481,6 @@
 				#v_USERSECCODE# <= TBL_EXPENDAPRDOCINFO.SECURITYCODE
 			]]>
 		</isNotEqual>
-		<isEqual property="v_PUBFLAG" compareValue="Y">
-			<isNotEmpty property="v_CONTID">
-				<![CDATA[
-				AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
-		      	]]>
-			</isNotEmpty>
-		</isEqual>
 		<isNotEmpty property="v_SUBQUERY">
 			AND 
 				$v_SUBQUERY$

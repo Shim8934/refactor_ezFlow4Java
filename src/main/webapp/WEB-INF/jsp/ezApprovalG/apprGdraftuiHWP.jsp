@@ -33,7 +33,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/showModalDialog.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraft_HWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 	    <script type="text/javascript">
@@ -351,35 +350,29 @@
 	        }
 	
 			function GetFormType(pFormID) {
-			    try {
-			        var Result = "";
-			        var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
-			        var xmlhttp = createXMLHttpRequest();
-			        var objNode;
-			        createNodeInsert(xmlpara, objNode, "PARAMETER");
-			        createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
-			        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", pCompanyID);
-			
-			        xmlhttp.open("Post", "aspx/GetFormDetail.aspx", false);
-			        xmlhttp.send(xmlpara);
-			
-			        if (xmlhttp.statusText == "OK") {
-			            if (loadXMLString(xmlhttp.responseText).getElementsByTagName("FORMDOCTYPE").length > 0) {
-			                Result = getNodeText(loadXMLString(xmlhttp.responseText).getElementsByTagName("FORMDOCTYPE").item(0));
+		        var Result = "";
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		data : {
+		    			formID : pFormID,
+		    			companyID : pCompanyID
+		    		},
+		    		url : "/ezApprovalG/getFormDetail.do",
+		    		success: function(xml){
+		    			xml = loadXMLString(xml);
+			            if (xml.getElementsByTagName("FORMDOCTYPE").length > 0) {
+			                Result = xml.getElementsByTagName("FORMDOCTYPE").item(0).text;
 			            }
-			        }
-			
-			        xmlpara = null;
-			        xmlhttp = null;
-			        return Result;
-			
-			    } catch (e) {
-			        alert("ezdraftui_hwp.GetFormType()::" + e.description);
-			    }
+		    		}        			
+		    	});
+
+		        return Result;
 			}
 	
 			function openForm() {
-			    openFormUI();
+			    openFormUIHwp();
 			}
 	
 			function process_AfterOpen() {
@@ -495,7 +488,7 @@
 			}
 	
 			function btnSelForm_onclick() {
-			    var check = Form_check();
+			    var check = Form_checkHwp();
 			    if (check == "OK")
 			        openForm();
 			}
@@ -1029,38 +1022,7 @@
 			function btnMail_onclick() {
 			    window.open("/ezEmail/mailWrite.do?cmd=docsend&docID=" + pDocID + "&docHref=" + pFormHref, '', 'height=700,width=690,resizable=yes,scrollbars=no' + GetOpenPosition(690, 700));
 			}
-	
-			function btnDocInfo_onclick() {
-			    try {
-			        var parameter = new Array();
-			        parameter[0] = tempSecurity;
-			        parameter[1] = tempUrgent;
-			        parameter[2] = pSummery;
-			        parameter[3] = pSpecialRecordCode;
-			        parameter[4] = pPublicityCode;
-			        parameter[5] = pLimitRange;
-			        parameter[6] = pPageNum;
-			        parameter[7] = tempSecurityDate;
-			
-			        var url = "/myoffice/ezApprovalG/ezDocInfo/ezDocInfoG.aspx";
-			        var feature = "status:no;dialogWidth:430px;dialogHeight:605px;help:no;scroll:no;edge:sunken;";
-			        var RtnVal = window.showModalDialog(url, parameter, feature);
-			
-			        tempSecurity = RtnVal[0];
-			        tempUrgent = RtnVal[1];
-			        pSummery = RtnVal[2];
-			        pSpecialRecordCode = RtnVal[3];
-			        pPublicityCode = RtnVal[4];
-			        pLimitRange = RtnVal[5];
-			        pPageNum = RtnVal[6];
-			        tempSecurityDate = RtnVal[7];
-			        setPublicFlag();
-			        SummaryFlag = true;
-			    } catch (e) {
-			        alert("ezdraftui_hwp.btnDocInfo_onclick()::" + e.description);
-			    }
-			}
-			
+				
 			/*PublicType, PublicLevel 기존의 공개여부 2018-04-04 김은석 수정*/
 			function setPublicFlag() {
 			    try {
@@ -1131,28 +1093,6 @@
 			        return strRtn;
 			    } catch (e) {
 			        alert("ezdraftui_hwp.getPublicLevel()::" + e.description);
-			    }
-			}
-	
-			function btnSetTaskCode_onclick() {
-			    try {
-			        var para = new Array();
-			        para[0] = cabinetID;
-			        var url = "/myoffice/ezApprovalG/ezCabinet/SelectCabinet.aspx?initFlag=1";
-			        var feature = "dialogWidth:850px;dialogHeight:455px;scroll:no;resizable:no;status:no;help:no;edge:sunken";
-			
-			        if (url != "")
-			            var rtn = window.showModalDialog(url, para, feature);
-			
-			        if (rtn[0] == "TRUE") {
-			            var g_SelCabXml = rtn[1];
-			            var xmlCab = new ActiveXObject("Microsoft.XMLDOM");
-			            xmlCab.loadXML(g_SelCabXml);
-			            cabinetID = getNodeText(xmlCab.selectSingleNode("CABINETINFO/CABINET/CABINETID"));
-			            TaskCode = getNodeText(xmlCab.selectSingleNode("CABINETINFO/CABINET/TASKCODE"));
-			        }
-			    } catch (e) {
-			        alert("ezdraftui_hwp.btnSetTaskCode_onclick()::" + e.description);
 			    }
 			}
 	
@@ -1627,8 +1567,8 @@
 	                        <li id="btnHelper" style="display: none"><span onclick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t157'/></span></li>
 	                    </ul>
 	                    <ul style="display: none;">
-	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
-	                        <li id="btnSetTaskCode"><span onclick="btnSetTaskCode_onclick()"><spring:message code='ezApprovalG.t9994'/></span></li>
+	                    <li id="btnDocInfo"><span><spring:message code='ezApprovalG.t54'/></span></li>
+	                        <li id="btnSetTaskCode"><span><spring:message code='ezApprovalG.t9994'/></span></li>
 	                        <li id="btnSetReceivLine"><span onclick="return btnSetReceivLine_onclick()"><spring:message code='ezApprovalG.t154'/></span></li>
 	                        <li id="btnSetAprLine"><span onclick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li>
 	                    </ul>
@@ -1646,7 +1586,7 @@
 	        </tr>
 	        <tr>
 	            <td style="padding-bottom: 10px">
-	                <div style="height: 100%">
+	                <div style="height: 100%;">
 	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "2", "1", "<c:out value ='${hwpToolbar}'/>", "1");</script>
 	                </div>
 	            </td>
