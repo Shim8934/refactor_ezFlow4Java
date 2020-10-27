@@ -31,7 +31,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/showModalDialog.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraft_WHWP.js')}"></script>
@@ -758,8 +757,16 @@
                 }
                 rtnSignInfo = SendDraftMappingSign(ret);
                 // IsSkipDrafter == "FALSE" 에 대한 분기 끝
-            	 
-            	 if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI" || pSusinSN != "0") {
+                
+                GetHTML(saveDraftInfo);
+	        }
+	        // sendDraft2 끝
+	        
+	        // saveDraftInfo 시작
+	        function saveDraftInfo(html) {
+	        	pSaveHtml = html;
+	        	
+	        	if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI" || pSusinSN != "0") {
                     var RtnVal;
                     var pAlertContent;
                     RtnVal = setSusinUpdataDocID();
@@ -922,7 +929,7 @@
                     }
                 }
 	        }
-	        // sendDraft2 끝
+	        // saveDraftInfo 끝
 	        
 	        function GetHTML(callback) {
 	            message.GetTextFile("HWP", "", function (data) { callback(data) });

@@ -1228,11 +1228,8 @@ function openAaprDocAttachUI_complete(ret){
 function SaveDraftDocInfo() {
 	var rtnVal;
 
-	//rtnVal = SaveFile();
-	rtnVal = SaveOrgFile();
-	if (rtnVal.toUpperCase() != "TRUE") {
-        return "rtnVal";
-    }
+	if (SaveFile() != "TRUE")
+		return "FALSE";
 		
     SignSave();
 	rtnVal = SaveDraftDocInfo_ilban("002");
@@ -1518,7 +1515,7 @@ function SaveFile() {
 	var data = {
 		docID : pDocID,
 		formId : pFormID,
-		html  : message.GetCloneData("", "HWP")
+		html  : pSaveHtml
 	}
 	
     $.ajax({

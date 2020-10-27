@@ -360,7 +360,7 @@
 		    }
 		
 		    function close_Click() {
-		        if (CrossYN() && ext != "hwp" && ext != "ezd") {
+		        if (CrossYN() && ext != "ezd") {
 		            parent.DivPopUpHidden();
 		        } else {
 		            window.close();
