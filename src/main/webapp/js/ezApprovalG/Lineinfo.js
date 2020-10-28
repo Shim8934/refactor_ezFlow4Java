@@ -1458,6 +1458,7 @@ var temppSelectedRow;
 var tempMode;
 var AprLineAddUser_pSelectedRow;
 var AprLineAddUser_Mode;
+var chkDuplflag;
 function AprLineAddUser(Mode, tr, pSelectedRow) {
 	if (approvalFlag == "S") {
 		AprLineAddUser_pSelectedRow = pSelectedRow;
@@ -1523,7 +1524,7 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
 		{
 			var pparsingXML;
 			var i
-			var chkDuplflag = false;
+			chkDuplflag = false;
 			
 			var treeView = new TreeView(); //treeview 선언 
 			treeView.LoadFromID("FromTreeView"); //treeview 로드
@@ -1592,20 +1593,47 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
 					}
 				}
 			}
+			
 			temppSelectedRow = pSelectedRow;
 			tempMode = Mode;
-			if (chkDuplflag) {
-				var pInformationContent = "" + strLang296 + "<br>" + strLang297 + "";
-				var ans = OpenInformationUI(pInformationContent, AprLineAddUser_Complete);
-				
-				if(ans) {
+			if($(pSelectedRow).attr('ABSENCE') != '' && $(pSelectedRow).attr('ABSENCE') != undefined) {
+				var pInformationContent = "" + strLang1039 + "";
+				OpenInformationUI(pInformationContent, OpenInformationUI_Result);
+			} else {
+				if (chkDuplflag) {
+					var pInformationContent = "" + strLang296 + "<br>" + strLang297 + "";
+					var ans = OpenInformationUI(pInformationContent, AprLineAddUser_Complete);
+					
+					if(ans) {
+						AprLineAddUser_Complete(true);
+					}
+				}
+				else {
 					AprLineAddUser_Complete(true);
 				}
 			}
-			else {
-				AprLineAddUser_Complete(true);
-			}
 		}
+	}
+}
+
+function OpenInformationUI_Result(Ans) {
+	DivPopUpHidden();
+	if (Ans) {
+    }
+    else {
+        return;
+    }
+	
+	if (chkDuplflag) {
+		var pInformationContent = "" + strLang296 + "<br>" + strLang297 + "";
+		var ans = OpenInformationUI(pInformationContent, AprLineAddUser_Complete);
+		
+		if(ans) {
+			AprLineAddUser_Complete(true);
+		}
+	}
+	else {
+		AprLineAddUser_Complete(true);
 	}
 }
 

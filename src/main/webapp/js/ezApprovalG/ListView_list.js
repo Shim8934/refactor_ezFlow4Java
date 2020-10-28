@@ -777,6 +777,7 @@ function ListView() {
             
             //DATA1, DATA2, DATA3... 등의 값 세팅
             var oDatas = GetDataElements(oCells[0]);
+            var oDatasLast = GetDataElements(oCells[oCells.length-1]);
             for (var j = 0; j < oDatas.length; j++) {
                 var strData = oDatas[j].tagName;
                 var strValue = "";
@@ -792,6 +793,14 @@ function ListView() {
                 		}
                 	}
                 }
+            }
+            for (var j = 0; j < oDatasLast.length; j++) {
+                var strData = oDatasLast[j].tagName;
+                var strValue = "";
+                if (oDatasLast[j].firstChild != null && oDatasLast[j].firstChild.nodeValue != null)
+                    strValue = oDatasLast[j].firstChild.nodeValue;
+
+                objTr.setAttribute(strData, strValue);
             }
 
             oTbody.appendChild(objTr);

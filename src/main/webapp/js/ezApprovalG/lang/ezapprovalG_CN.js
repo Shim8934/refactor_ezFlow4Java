@@ -685,6 +685,7 @@ var strLang1028 = "年";
 var strLang1029 = "本月";
 var strLang1030 = "日";
 var strLang1031 = "不能??件和?批文件?布到匿名/相片/?址布告板。";
+var strLang1039 = "所选用户不在办公室。</br>您要添加吗？";
 
 // DocType : 문서형태 A01
 var strDocType4 = "004";

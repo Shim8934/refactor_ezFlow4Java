@@ -156,7 +156,7 @@
 		    		url : "/ezOrgan/getDeptMemberList.do",
 		    		data : {
 		    				deptID   : DeptID, 
-		    				cell 	 : "company;description;displayName;title;telephoneNumber",
+		    				cell 	 : "company;description;displayName;title;telephoneNumber;extensionattribute5",
 		    				prop     : "department",
 		    				type 	 : "user"
 		    				},
@@ -455,6 +455,10 @@
 		        <NAME><spring:message code='ezPersonal.t70'/></NAME>
 		        <WIDTH>70</WIDTH>
 		      </HEADER>
+		      <HEADER>
+		        <NAME><spring:message code='ezPersonal.b12'/></NAME>
+		        <WIDTH>50</WIDTH>
+		      </HEADER>
 		    </HEADERS>
 		  </LISTVIEWDATA>
 		</xml>
@@ -519,7 +523,7 @@
 		  	<tr>
 			    <td class="box" style="padding-right:4px"><div style="overflow: auto; WIDTH:235px; HEIGHT:380px; margin-bottom:-1px;" id="TreeView" ></div></td>
 			    <td class="listview">
-			        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 495px; HEIGHT: 380px; BACKGROUND-COLOR: white"></div>
+			        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 595px; HEIGHT: 380px; BACKGROUND-COLOR: white"></div>
 				</td>
 		  	</tr>
 		</table>
