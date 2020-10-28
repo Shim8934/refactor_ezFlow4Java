@@ -1,0 +1,282 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
+<html>
+	<head>
+	    <title><spring:message code='ezApprovalG.t367'/></title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<%-- <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezViewApr_HWP.js')}"></script> --%>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/AprDocView_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_WHWP.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
+		<script type="text/javascript" src="http://10.0.100.175:8080/webhwpctrl/js/hwpctrlapp/utils/util.js"></script>
+    	<script type="text/javascript" src="http://10.0.100.175:8080/webhwpctrl/js/webhwpctrl.js"></script>
+	    <script type="text/javascript">
+	        var docID = "<c:out value='${docID}'/>";
+	        var docHref = "<c:out value='${docHref}'/>";
+	        var opinionFlag = "<c:out value='${opinionFlag}'/>";
+	        var listTypeValue = "<c:out value='${listTypeValue}'/>";
+	        var listSusin = "<c:out value='${listSusin}'/>";
+	        var pDocState = "<c:out value='${docState}'/>";
+	        var pOrgDocID = "<c:out value='${orgDocID}'/>";
+	        var isOpinion = "<c:out value='${showOpinion}'/>";
+	        var pDocID;
+	        var pDocHref;
+	        var pOpinionFlag;
+	        var pUserID;
+	        var pListTypeValue;
+	        var arrPrevDoc = new Array();
+	        var arrNextDoc = new Array();
+	        var flag = false;
+	        var pOrgDocHref;
+	        var pDocTitle;
+	        var AppendFileAttach = "";
+	        var AppenAprDocAttachList = "";
+	        var ext = "hwp";
+	
+	        var arr_userinfo = new Array();
+	        arr_userinfo[0]  = "user";
+		    arr_userinfo[1]  = "<c:out value='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value='${userInfo.jikChek}'/>";
+		    arr_userinfo[7]  = "N";
+		    arr_userinfo[8]  = "<c:out value='${userInfo.email}'/>";
+		    arr_userinfo[9]  = "";
+		    arr_userinfo[10] = "<c:out value='${susinAdmin}'/>";
+		    var pCompanyID = "<c:out value='${userInfo.companyID}'/>";
+		    arr_userinfo[11]  = "<c:out value='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value='${userInfo.deptName2}'/>";
+		    
+	        pUserID = arr_userinfo[1];
+	
+	        var pHasOpinion = "<c:out value='${hasOpinionYN}'/>";
+			var pOpinionType = "Show";
+			var pUse_Editor = "<c:out value='${useEditor}'/>";
+			var approvalFlag = "<c:out value='${approvalFlag}'/>";
+			var orgCompanyID = "<c:out value='${orgCompanyID}'/>";
+			
+			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
+			
+			function btnOpinion_onclick() {
+			    //openOpinionViewUI();
+				openOpinionUI_New("Show");
+			}
+	
+			window.onresize = function () {
+	        	var mHeight = document.documentElement.clientHeight - 152 - document.getElementById("message").offsetTop + "px";
+	       		message.Resize(mHeight);
+	        }
+	
+			function window_onload() {
+			    if (docHref == "") {
+			        var pAlertContent = "<spring:message code='ezApprovalG.t1439'/><br><spring:message code='ezApprovalG.t1440'/>";
+				    OpenAlertUI(pAlertContent);
+				    btnClose_onclick();
+				    return;
+				}
+			
+			    if (pDocState == "015" && pOrgDocID.length >= 20 && "<c:out value='${listTypeValue}'/>" == "99") {
+			        btnGongRam.style.display = "";
+			        pOpinionType = "";
+			    }
+			    pDocID = docID;
+			    pDocHref = docHref;
+			    pOpinionFlag = opinionFlag;
+			    pListTypeValue = listTypeValue;
+			    if (pListTypeValue == "4")
+			        pListSusin = listSusin;
+			}
+	
+			// 웹 한글 기안기용
+	    	function Editor_Complete() {
+	    		if (pDocHref != "") {
+				    //var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pDocHref);
+				    var URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pDocHref);
+				    message.Open(URL, "", "", function (res) { 
+					    if (res.result) {
+					    	if (listTypeValue == "21") {
+					    		setAttachInfo(pDocID, "TMP", lstAttachLink);
+					    	} else {
+						        setAttachInfo(pDocID, "APR", lstAttachLink);
+					    	}
+					        GetExchInfo();
+					        //SignCheck();
+					        //hideProgress();
+				
+					        if (pHasOpinion == "Y") {
+					            var pInformationContent = "<spring:message code='ezApprovalG.t9'/><br> <spring:message code='ezApprovalG.t170'/>";
+							    OpenInformationUI(pInformationContent, btnOpinion_onclick);
+							}
+				        }
+				        else {
+				            //hideProgress();
+				            var pAlertContent = "<spring:message code='ezApprovalG.t369'/>";
+							OpenAlertUI(pAlertContent);
+							message.Clear();
+				        }
+					    message.EditMode(0);
+					    message.ScrollPosInfo(0, 0);
+					    
+					    window.onresize();
+					    
+					    if(useExternalMailServer == "NO") {
+					    	$("#btnMail").css("display","");
+					    }
+				    }, null);
+			    }
+			}
+	
+			function btnPrint_onclick() {
+				message.PrintDocument();
+			}
+			
+			function btnClose_onclick() {
+				//2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+		        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+		        	parent.opener.getApprovalList("draft");
+		        }
+			
+			    window.close();
+			}
+	
+			function btnSave_onclick() {
+			    HwpCtrl.SetDocumentInfo(pFormID);
+			    HwpCtrl.SaveFile("");
+			}
+			
+			function btnMail_onclick() {
+			    window.open("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + docID + "&target=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+			}	
+	
+			function btnhistory_onclick() {
+			    getHistory();
+			}
+	
+			function btnGongRam_onclick() {
+				var result = "";
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/gongRamUpdate.do",
+		    		data : {
+		    			docID : docID,
+		    			userID: listSusin
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		},error: function() {
+		    			
+		    		}	
+		    	});
+		        
+		        var dataNodes = GetChildNodes(result);
+		        var tempValue = getNodeText(dataNodes[0]);
+		
+		        if (tempValue == "TRUE") {
+		        	var pAlertContent = "";
+		        	
+		        	if (approvalFlag == "G") {
+			            pAlertContent = "<spring:message code='ezApprovalG.t1441'/>";
+		        	} else {
+		        		pAlertContent = "<spring:message code='ezApprovalG.hyj23'/>";
+		        	}
+		        	 OpenAlertUI(pAlertContent);
+					    window.close();
+		        }
+			}
+	
+			function window_onbeforeunload() {
+			    try {
+			        window.opener.openergetDocInfo();
+			    }
+			    catch (e) { }
+			    try {
+			        window.opener.Refresh_Window();
+			    } catch (e) { }
+			}
+	
+			var ezdocinfog_view_cross_dialogArguments = new Array();
+			function btnDocInfo_onclick() {
+				ezdocinfog_view_cross_dialogArguments[0] = "";
+			    ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
+			    var url = "/ezApprovalG/ezDocInfoView.do?docID=" + docID + "&ingFlag=APR";
+			    //var feature = "status:no;dialogWidth:420px;dialogHeight:495px;help:no;scroll:no;edge:sunken;";
+			    //var RtnVal = window.showModalDialog(url, "", feature);
+			    DivPopUpShow(420, 500, url);
+			}
+			
+			function btnDocInfo_onclick_Complete() {
+		        DivPopUpHidden();
+		    }
+	    </script>
+	</head>
+	<body class="popup" onload="return window_onload()" onbeforeunload="return window_onbeforeunload()">
+	    <table class="layout">
+	        <tr>
+	            <td height="20">
+	                <div id="menu">
+	                    <ul>
+	                        <li id="btnGongRam" style="display: none"><span onclick="btnGongRam_onclick()"><spring:message code='ezApprovalG.t1442'/></span></li>
+	                        <li id="btnMail" style="display:none"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
+	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
+	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
+	                    </ul>
+	                </div>
+	                <div id="close">
+	                    <ul>
+	                        <li id="btnClose"><span onclick="return btnClose_onclick()"></span></li>
+	                    </ul>
+	                </div>
+	                <script type="text/javascript">
+	                    selToggleList(document.getElementById("menu"), "ul", "li", "0");
+	                    selToggleList(document.getElementById("close"), "ul", "li", "0");
+	                </script>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td style="padding-bottom:10px;height:820px;" >
+		    		<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td height="20">
+	                <table class="file" style="height: 70px;">
+	                    <tr>
+	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
+	                        <td>
+	                            <div id="lstAttachLink" style="height: 65px;"></div>
+	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
+	                        </td>
+	                    </tr>
+	                </table>
+	            </td>
+	        </tr>
+	    </table>
+	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
+	</body>
+</html>

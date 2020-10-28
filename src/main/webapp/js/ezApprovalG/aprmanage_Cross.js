@@ -1059,14 +1059,18 @@ function openViewDocInfo(type) {
 
     if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
         if (formUrlExt === "hwp") {
-            if (CrossYN() && isIE()) {
-            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
-            } else {
-            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-            	alert(pAlertContent);
-                
-                return;
-            }
+        	if(useWebHWP == "NO") {
+	            if (CrossYN() && isIE()) {
+	            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+	            } else {
+	            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	            	alert(pAlertContent);
+	                
+	                return;
+	            }
+        	} else {
+        		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
+        	}
         }
         else {
             openLocation = "/ezApprovalG/contDocView.do";
@@ -1076,14 +1080,18 @@ function openViewDocInfo(type) {
     else {
     	// 2018.07.06 (KLIB) - ezd 확장자 처리
         if (formUrlExt === "hwp") {
-            if (CrossYN() && isIE()) {
-            	openLocation = "/ezApprovalG/ezviewAprHWP.do";
-            } else {
-            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-            	alert(pAlertContent);
-                
-                return;
-            }
+        	if(useWebHWP == "NO") {
+	            if (CrossYN() && isIE()) {
+	            	openLocation = "/ezApprovalG/ezviewAprHWP.do";
+	            } else {
+	            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	            	alert(pAlertContent);
+	                
+	                return;
+	            }
+        	} else {
+        		openLocation = "/ezApprovalG/ezviewAprWHWP.do";
+        	}
         }
         else {
         	openLocation = "/ezApprovalG/aprDocView.do";
@@ -1133,14 +1141,18 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                 openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
                 openLocation = openLocation + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
             } else {
-                if (/chrome/i.test(navigator.userAgent)) {
-                     alert(strLang1103);
-                     return;
-            	 } else {
-            		if (docHref == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
-            			openLocation = "/ezApprovalG/ezRecevGSusinHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag) + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
-                    }
-            	 }
+            	if(useWebHWP == "NO") {
+	                if (/chrome/i.test(navigator.userAgent)) {
+	                     alert(strLang1103);
+	                     return;
+	            	 } else {
+	            		if (docHref == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
+	            			openLocation = "/ezApprovalG/ezRecevGSusinHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag) + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
+	                    }
+	            	 }
+            	} else {
+            		openLocation = "/ezApprovalG/ezRecevGSusinWHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag) + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
+            	}
             }
             openwindow(openLocation, "receive", 880, 550);
         } else {
@@ -1149,11 +1161,15 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             var orgCompanyID = GetAttribute(pCurSelRow, "orgCompanyID");
             
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-            	if (/chrome/i.test(navigator.userAgent)) {
-            		alert(strLang1103);
-            		return;
+            	if(useWebHWP == "NO") {
+	            	if (/chrome/i.test(navigator.userAgent)) {
+	            		alert(strLang1103);
+	            		return;
+	            	} else {
+	            		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do";
+	            	}
             	} else {
-            		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do";
+            		openLocation = "/ezApprovalG/ezDeptRecevUI_WHWP.do";
             	}
             } else if (pDraftFlag == "HAPYUI" && approvalFlag == "G") {
             	openLocation = "/ezApprovalG/recevGDeptHapyui.do";

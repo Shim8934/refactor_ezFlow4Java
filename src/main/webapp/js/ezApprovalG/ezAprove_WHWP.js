@@ -1351,7 +1351,7 @@ function setRecevInfo(ret) {
     var precipent = "";
     var precipents = "";
     var recipflag = true;
-    var xmldom = new ActiveXObject("Microsoft.XMLDOM");
+    var xmldom = createXmlDom();
     xmldom.async = false;
     xmldom = loadXMLString(ret);
 

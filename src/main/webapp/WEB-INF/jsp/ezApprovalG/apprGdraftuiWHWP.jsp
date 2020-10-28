@@ -172,6 +172,7 @@
 			var newpDocID = "";
 	        var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 	        var formAprOption = "<c:out value='${formAprOption}'/>";
+	        var rtnSignInfo;
 	        
 	        window.onload = function () {
 	            try {
@@ -197,7 +198,7 @@
 	                	document.getElementById("btnOpinion").style.display = "none"; <%-- 의견 --%>
 	                	document.getElementById("btnAprDocAttach").style.display = "none"; <%-- 문서첨부 --%>
 	                	document.getElementById("btnPrint").style.display = "none"; <%-- 인쇄 --%>
-	                	HwpCtrl.SetFieldText("docnumber","");
+	                	message.PutFieldText("docnumber","");
 	                }
 	                
 	                /**
@@ -285,8 +286,8 @@
 	
 	                    if (_connkey_ != "") {
 	                        try {
-	                            if (HwpCtrl.CheckFieldExist("_connkey_"))
-	                                HwpCtrl.SetFieldText("_connkey_", _connkey_);
+	                            if (message.FieldExist("_connkey_"))
+	                                message.PutFieldText("_connkey_", _connkey_);
 	                        } catch (e) { }
 	                    }
 	                    
@@ -371,17 +372,14 @@
 			                getDocInfo();
 			
 			                if (pHasOpinionYN == "Y") {
-			                    if (AprState == "<spring:message code='ezApprovalG.t49'/>")
-			                                pInformationContent = "<spring:message code='ezApprovalG.t124'/><br> <spring:message code='ezApprovalG.t10'/>";
-				  		    else
-				  		        pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t10'/>";
-			
-			                  Ans = OpenInformationUI(pInformationContent);
-			                  if (Ans) {
-			                      //openOpinionUI("Display");
-			                	  openOpinionUI_New("");
-			                  }
-			              }
+			                    if (AprState == "<spring:message code='ezApprovalG.t49'/>") {
+			                    	pInformationContent = "<spring:message code='ezApprovalG.t124'/><br> <spring:message code='ezApprovalG.t10'/>";
+			                    } else {
+				  		        	pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t10'/>";
+			                    }
+			                  
+			                    OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
+			                }
 			          } else if (pDraftFlag == "SUSIN" || pDraftFlag == "GONGRAM") {
 			              var len;
 			
@@ -397,12 +395,7 @@
 			                  var pInformationContent;
 			                  var Ans;
 			                  pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t10'/>";
-					  	  	  Ans = OpenInformationUI(pInformationContent);
-				
-					  	  	  if (Ans) {
-					  	  		  //openOpinionUI("Display");
-					  	  		  openOpinionUI_New("");
-					  	  	  }
+					  	  	  OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
 			              }
 			            } else if (pDraftFlag == "HAPYUI") {
 			                var len;
@@ -421,12 +414,7 @@
 			                    var Ans;
 			
 			                    pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t10'/>";
-					  	  		Ans = OpenInformationUI(pInformationContent);
-				
-					  	  		if (Ans) {
-					  	  		    //openOpinionUI("Display");
-					  	  			openOpinionUI_New("");
-					  	  		}
+					  	  		OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
 			                }
 			            } else {
 			                SetBtnStateTrue();
@@ -451,6 +439,14 @@
 				} catch (e) {
 				    alert("ezdraftui_hwp.process_AfterOpen()::" + e.description);
 				}
+			}
+			
+			function process_AfterOpen_Complete(Ans) {
+				DivPopUpHidden();
+		        if (Ans) {
+		            //openOpinionUI("Display");
+		        	openOpinionUI_New("");
+		        }
 			}
 	
 			function setAutoProperty() {
@@ -561,7 +557,6 @@
 
                 bAttachProcess = false;
 
-                var rtnSignInfo;
                 if (GetDocumentElement(message, "WORKFLOWXML") != "") {
                     var rtn = checkValidation(GetDocumentElement(message, "WORKFLOWXML"))
                     if (rtn == "FALSE")
@@ -625,8 +620,7 @@
 	                    pAlertContent = "<spring:message code='ezApprovalG.t1398'/>" + "<br>" + "<spring:message code='ezApprovalG.t1399'/>";
 	            	}
 	            	
-                    OpenAlertUI(pAlertContent);
-                    btnApprovalInfo(1);
+	            	OpenInformationUI(pAlertContent, check_btnSendDraft2);
                     return;
                 }
                 
@@ -664,54 +658,16 @@
                     delOpinionInfo();
                 }
 
-                if (nonElecRec != "Y") {
+              	if (nonElecRec != "Y") {
 	                if (LastSignSN == 1 || DraftLastFlag) {
 	                    var pInformationContent = "<spring:message code='ezApprovalG.t143'/><br> <spring:message code='ezApprovalG.t144'/>";
-	                    var Ans = OpenInformationUI(pInformationContent);
-	
-	                    if (!Ans) return;
-	
-	                    if (pDraftFlag == "HABYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
-	                        getLastOpinon();
-	                    }
-	
-	                    if (message.FieldExist("lastdraftdate"))
-	                        message.SetFieldText("lastdraftdate", getGyulJeDate());
+	                    OpenInformationUI(pInformationContent, check_btnSendDraft4);
+	                } else {
+	                	CheckUsePassword();
 	                }
-                }
-
-                //if ("${approvalPWD}" != "N") {
-                if (CheckUsePassword()) {
-                    var chkpass = chk_Passwd();
-                    if (chkpass == "False") {
-                        var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
-                        OpenAlertUI(pAlertContent);
-                        return;
-                    } else if (chkpass == "cancel" || chkpass == undefined) {
-                        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-                        OpenAlertUI(pAlertContent);
-                        return;
-                    }
-                }
-
-                if (IsSkipDrafter == "FALSE") {
-                	if (nonElecRec != "Y") {
-	                    //var ret;
-	                    var parameter = new Array();
-	
-	                    parameter[0] = pDocID;
-	                    ret = openSignUI(parameter);
-	
-	                    if (ret == "cancel" || ret == undefined) {
-	                        var pAlertContent = "<spring:message code='ezApprovalG.t145'/>";
-	                        OpenAlertUI(pAlertContent);
-	                        return;
-	                    }
-                	}
-
-                	GetHTML(sendDraft2);
-                    //pOrgHtml = HwpCtrl.GetCloneData("", "HWP");
-                }
+               	} else {
+               		CheckUsePassword();
+               	}
 	        }
 	        // sendDraft 끝
 	        
@@ -1123,7 +1079,7 @@
 	
 		    /*기존의 공개여부 함수 2018-04-04 김은석 수정*/
 		    function setPublicFlag2() {
-		        if (!HwpCtrl.CheckFieldExist("publication")) return;
+		        if (!message.FieldExist("publication")) return;
 		        var PublicType = pPublicityYN.substring(0, 1);
 
 		        if (PublicType == "Y")
@@ -1133,7 +1089,7 @@
 		        else
 		            PublicText = " ";
 		        
-		        HwpCtrl.SetFieldText("publication", PublicText);
+		        message.PutFieldText("publication", PublicText);
 		    }
 			function getPublicLevel(PublicLevel) {
 			    try {
@@ -1596,9 +1552,17 @@
 		    	});
 		    	
 		    	if (result != "N") {
-		    		return true;
+		    		chk_Passwd();
 		    	} else {
-		    		return false;
+		    		 if (IsSkipDrafter == "FALSE") {
+	                    //var ret;
+	                    var parameter = new Array();
+	
+	                    parameter[0] = pDocID;
+	                    openSignUI(parameter);
+	                } else {
+	                	GetHTML(saveDraftInfo);
+	                }
 		    	}
 		    }
 	    	
@@ -1635,6 +1599,110 @@
 		        	message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
                 }
 	    	}
+	    	
+	    	
+	    	// OpenInformationUI 팝업용 메서드
+	    	
+	    	// 결재정보 없을때 팝업
+	    	function check_btnSendDraft2(ans) {
+		        DivPopUpHidden();
+		        if (ans)
+		            btnApprovalInfo(1);
+		    }
+	    	
+	    	// 기안자 == 최종 결재자
+	    	function check_btnSendDraft4(Ans) {
+	    		DivPopUpHidden();
+	    		
+	    		if (!Ans) return;
+	    		
+                if (pDraftFlag == "HABYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
+                    getLastOpinon();
+                }
+
+                if (message.FieldExist("lastdraftdate"))
+                    message.PutFieldText("lastdraftdate", getGyulJeDate());
+                
+                CheckUsePassword();
+	    	}
+	    	
+	    	function chk_Passwd_Complete(chkpass) {
+	    		DivPopUpHidden();
+	    	
+	    		if (chkpass == "False") {
+                    var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+                    OpenAlertUI(pAlertContent);
+                    return;
+                } else if (chkpass == "cancel" || chkpass == undefined) {
+                    var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+                    OpenAlertUI(pAlertContent);
+                    return;
+                }
+	    		
+	    		if (IsSkipDrafter == "FALSE") {
+                	if (nonElecRec != "Y") {
+	                    //var ret;
+	                    var parameter = new Array();
+	
+	                    parameter[0] = pDocID;
+	                    openSignUI(parameter);
+                	}
+                } else {
+                	GetHTML(saveDraftInfo);
+                }
+	    	}
+	    	
+	    	function openSignUI_Complete(ret) {
+	    		DivPopUpHidden();
+	    		
+	    		if (ret == "cancel" || ret == undefined) {
+                    var pAlertContent = "<spring:message code='ezApprovalG.t145'/>";
+                    OpenAlertUI(pAlertContent);
+                    return;
+                }
+	    		
+	    		// IsSkipDrafter == "FALSE" 에 대한 분기 시작	        	
+	        	if (LastSignSN == 1 || DraftLastFlag) {
+                    var rtnVal;
+                    rtnVal = ExcuteInfo("DOCNUM_BEFORE", "");
+                    if (!rtnVal) {
+                        var pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
+                        OpenAlertUI(pAlertContent);
+                        return;
+                    }
+                }
+
+                var rtnval;
+                if (LastSignSN == 1 || DraftLastFlag) {
+                    //rtnval = getDocNumber(arr_userinfo[4], "", docNumZeroCnt);
+                    rtnval = getDocNumberNew(arr_userinfo[4], "", docNumZeroCnt);
+                }
+                else {
+                    //rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);
+                    rtnval = getDocNumberNew(arr_userinfo[4], "be", docNumZeroCnt);
+                }
+
+                if (!rtnval) {
+                    var pAlertContent = "[<spring:message code='ezApprovalG.t1384'/>";
+                    OpenAlertUI(pAlertContent);
+                    return;
+                }
+
+                if (LastSignSN == 1 || DraftLastFlag) {
+                    var rtnVal;
+                    rtnVal = ExcuteInfo("DOCNUM_AFTER", "");
+                    if (!rtnVal) {
+                        var pAlertContent = "[<spring:message code='ezApprovalG.t69'/>";
+                        OpenAlertUI(pAlertContent);
+                        return;
+                    }
+                }
+                rtnSignInfo = SendDraftMappingSign(ret);
+                // IsSkipDrafter == "FALSE" 에 대한 분기 끝
+                
+                GetHTML(saveDraftInfo);
+	    	}
+	    	
 	    	
 	    </script>
 	</head>

@@ -1353,6 +1353,396 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		return "/ezApprovalG/apprGapprovuiWHWP";
 	}
 	
+	/**
+	 * 전자결재 한글양식 결재완료 문서 보기
+	 */	
+	@RequestMapping(value = "/ezApprovalG/ezViewEnd_WHWP.do", method = RequestMethod.GET)
+	public String ezViewEnd_WHWP(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezViewEnd_WHWP started");
+
+		String docID = request.getParameter("docID");
+		String docHref = request.getParameter("docHref");
+		String listSusin = request.getParameter("listSusin");
+		String orgDocID = request.getParameter("orgDocID");
+		String formID = request.getParameter("formID");
+		String sendType = request.getParameter("sendType");
+		String endDir = "";
+		String docTitle = request.getParameter("title");
+		String susinAdmin = "";
+        String pass = "";
+        String orgCompanyID = request.getParameter("orgCompanyID");
+        
+        userInfo = commonUtil.aprUserInfo(loginCookie);
+
+        String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+        String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+ 
+		if (orgDocID != null  && !orgDocID.equals("")) {
+			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
+		}
+
+		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
+		
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
+			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
+		} else {
+			pass = "<RESULT>TRUE</RESULT>";
+		}
+		
+		if (pass.equals("<RESULT>TRUE</RESULT>")) {
+           if (docHref.trim().equals("") || docHref.indexOf("/1000/") >= 0) {
+                String strXML = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+
+        		Document xmlDom = commonUtil.convertStringToDocument(strXML);
+
+                if (xmlDom.getElementsByTagName("HREF").getLength() > 0) {
+                	if (!xmlDom.getElementsByTagName("HREF").item(0).getTextContent().trim().equals("")) {
+                		docHref = xmlDom.getElementsByTagName("HREF").item(0).getTextContent().trim();
+                	}
+                }
+            }
+
+            String readRecXML = "<PARAMETER><DOCID>" + makeXMLString(docID) +
+                    "</DOCID><USERID>" + makeXMLString(userInfo.getId()) +
+                    "</USERID><USERNAME>" + makeXMLString(userInfo.getDisplayName1()) +
+                    "</USERNAME><USERTITLE>" + makeXMLString((userInfo.getTitle1() == null ? "" : userInfo.getTitle1())) +
+                    "</USERTITLE><DEPTCODE>" + makeXMLString(userInfo.getDeptID()) +
+                    "</DEPTCODE><DEPTNAME>" + makeXMLString(userInfo.getDeptName1()) +
+                    "</DEPTNAME><COMPANYID>" + makeXMLString(userInfo.getCompanyID()) +
+                    "</COMPANYID><USERNAME2>" + makeXMLString(userInfo.getDisplayName2()) +
+                    "</USERNAME2><USERTITLE2>" + makeXMLString((userInfo.getTitle2() == null ? "" : userInfo.getTitle2())) +
+                    "</USERTITLE2><DEPTNAME2>" + makeXMLString(userInfo.getDeptName2()) +
+                    "</DEPTNAME2></PARAMETER>";
+
+            ezApprovalGService.saveRecReadHist(readRecXML, userInfo.getTenantId());
+        }
+		
+		if (sendType == null || sendType.equals("")) {
+			sendType = ezApprovalGService.getDocSendType(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		}
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
+		model.addAttribute("docID", docID);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("listSusin", listSusin);
+		model.addAttribute("orgDocID", orgDocID);
+		model.addAttribute("formID", formID);
+		model.addAttribute("endDir", endDir);
+		model.addAttribute("docTitle", docTitle);
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("hwpToolbar", hwpToolbar);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("sendType", sendType);
+		model.addAttribute("pass", pass);
+		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		
+		LOGGER.debug("ezViewEnd_WHWP ended");
+		
+		return "ezApprovalG/apprGviewEndWHWP";
+	}
+	
+	/**
+	 * 
+	 */	
+	@RequestMapping(value = "/ezApprovalG/ezviewAprWHWP.do", method = RequestMethod.GET)
+	public String ezviewAprWHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezviewAprWHWP started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String susinAdmin = "";
+		String docID = request.getParameter("docID");
+		String docHref = request.getParameter("docHref");
+		String opinionFlag = request.getParameter("opinionFlag");
+		String docState = request.getParameter("docState");
+		String listSusin = request.getParameter("listSusin");
+		String orgDocID = request.getParameter("oDoc");
+		String showOpinion = request.getParameter("isOpinion");
+		String listTypeValue = request.getParameter("listType");
+		String hasOpinionYN = "";
+		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+
+		if (userInfo.getRollInfo().indexOf("a=1") > -1 ) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+
+		String strXML = ezApprovalGService.getDocInfo(docID, "APR", "HasOpinionYN", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+		
+		Document resultXML = commonUtil.convertStringToDocument(strXML);
+		
+		if (resultXML.getElementsByTagName("HASOPINIONYN").getLength() > 0) {
+			if (resultXML.getElementsByTagName("HASOPINIONYN").item(0) != null && !resultXML.getElementsByTagName("HASOPINIONYN").item(0).getTextContent().trim().equals("")) {
+				hasOpinionYN = resultXML.getDocumentElement().getTextContent();
+			}
+		}
+		
+		//2018-08-29 천성준 - 부서수신함에 들어온 접수문서를 최초 접수창으로 열지않고 문서보기로 열었을경우 문서파일이 생성되지 않아서 에러터지는것 수정 
+		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String dirPath = commonUtil.getRealPath(request) + approvalRoot;
+		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+        
+		Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
+		
+		if (xmlDom.getElementsByTagName("ORGHREF").getLength() > 0) {
+			String orgDocFile = xmlDom.getElementsByTagName("ORGHREF").item(0).getTextContent();
+			String docFile = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
+			
+			orgDocFile = dirPath + orgDocFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			
+			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
+			File file = new File(commonUtil.detectPathTraversal(dir));
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			File newFile = new File(commonUtil.detectPathTraversal(docFile));
+			
+			if (!newFile.exists()) {
+				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
+				
+				// KLIB 복호화
+				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+					byte[] orgBytes = Files.readAllBytes(orgFile.toPath());
+					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
+				} else {
+					FileUtils.copyFile(orgFile, newFile);
+				}
+			}
+		}
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("docID", docID);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("opinionFlag", opinionFlag);
+		model.addAttribute("docState", docState);
+		model.addAttribute("listSusin", listSusin);
+		model.addAttribute("orgDocID", orgDocID);
+		model.addAttribute("showOpinion", showOpinion);
+		model.addAttribute("listTypeValue", listTypeValue);
+		model.addAttribute("hasOpinionYN", hasOpinionYN);
+		model.addAttribute("hwpToolbar", hwpToolbar);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		
+		LOGGER.debug("ezviewAprWHWP ended");
+		
+		return "ezApprovalG/apprGviewAprWHWP";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/ezRecevGSusinWHWP.do", method = RequestMethod.GET)
+	public String ezRecevGSusinWHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezRecevGSusinWHWP started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
+		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
+
+		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
+
+		String docID = request.getParameter("docID");
+		String orgDocID = request.getParameter("uOrgID");
+		String isReDraft = request.getParameter("isReDraft");
+		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		String draftFlag = request.getParameter("draftFlag");
+		String retFlag = request.getParameter("retFlag");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String dirPath = commonUtil.getRealPath(request) + approvalRoot;
+
+		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String pSusinAdmin = "";
+        if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+        	pSusinAdmin = "YES";
+        } else {
+        	pSusinAdmin = "NO";
+        }
+        
+		Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
+		
+		if (xmlDom.getElementsByTagName("ORGHREF").getLength() > 0) {
+			String orgDocFile = xmlDom.getElementsByTagName("ORGHREF").item(0).getTextContent();
+			String docFile = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
+			
+			orgDocFile = dirPath + orgDocFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			
+			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
+			File file = new File(commonUtil.detectPathTraversal(dir));
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			File newFile = new File(commonUtil.detectPathTraversal(docFile));
+			
+			if (!newFile.exists()) {
+				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
+				InputStream orgFileInputStream;
+
+				// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
+				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+					byte[] encryptedBytes = Files.readAllBytes(orgFile.toPath());
+					orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
+				} else {
+					orgFileInputStream = new FileInputStream(orgFile);
+				}
+				
+				Files.copy(orgFileInputStream, newFile.toPath());
+				orgFileInputStream.close();
+				//FileUtils.copyFile(orgFile, newFile);
+			}
+		}
+		
+		// 비전자문서 구분 값  (return >> "Y" = TRUE, "" = FALSE)
+		String isNonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
+		/* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
+		String useRedraftOpinionKeep = ezCommonService.getTenantConfig("useRedraftOpinionKeep", userInfo.getTenantId());
+		
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+		
+		model.addAttribute("optSignDateFormat", optSignDateFormat);
+		model.addAttribute("optIsSplit", optIsSplit);
+		model.addAttribute("optSplitKind", optSplitKind);
+		model.addAttribute("sihangURL", sihangURL);
+		model.addAttribute("docID", docID);
+		model.addAttribute("orgDocID", orgDocID);
+		model.addAttribute("isReDraft", isReDraft);
+		model.addAttribute("hwpToolbar", hwpToolbar);
+		model.addAttribute("draftFlag", draftFlag);
+		model.addAttribute("retFlag", retFlag);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalPWD", approvalPWD);
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("isNonElecRec", isNonElecRec);
+		model.addAttribute("approvalRoot", approvalRoot);
+		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
+		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		model.addAttribute("pSusinAdmin", pSusinAdmin);
+		
+		LOGGER.debug("ezRecevGSusinWHWP ended");
+		
+		return "ezApprovalG/apprGrecevgsusinWHWP";
+	}	
+	
+	@RequestMapping(value = "/ezApprovalG/ezDeptRecevUI_WHWP.do", method = RequestMethod.GET)
+	public String ezDeptRecevUI_WHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezDeptRecevUI_WHWP started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
+		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
+
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
+		String docID = request.getParameter("docID");
+		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		String draftFlag = request.getParameter("draftFlag");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+        String opinionYN = "N";
+        String opinionGamsaYN = "N";
+        String usePassword = "N";
+		String pSusinAdmin = "";
+		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "form" + commonUtil.separator;
+		
+		String userDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
+		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
+		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
+		if (approvalFlag.equals("G")) {
+			String nonElecRec = ezApprovalGService.checkNonElecRec(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+			if (!nonElecRec.equals("")) {
+				model.addAttribute("nonElecRec", nonElecRec);
+			}
+		}
+		
+		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
+		
+        if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+        	pSusinAdmin = "YES";
+        } else {
+        	pSusinAdmin = "NO";
+        }
+        
+		model.addAttribute("optSignDateFormat", optSignDateFormat);
+		model.addAttribute("optIsSplit", optIsSplit);
+		model.addAttribute("optSplitKind", optSplitKind);
+		model.addAttribute("docID", docID);
+		model.addAttribute("hwpToolbar", hwpToolbar);
+		model.addAttribute("draftFlag", draftFlag);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("pSusinAdmin", pSusinAdmin);
+		model.addAttribute("opinionYN", opinionYN);
+		model.addAttribute("opinionGamsaYN", opinionGamsaYN);
+		model.addAttribute("usePassword", usePassword);
+		model.addAttribute("isHWP", "Y");
+		model.addAttribute("dirPath", dirPath);
+		model.addAttribute("useDirectSign", userDirectSign);
+		
+		model.addAttribute("draftDeptID", draftDeptID);
+		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+		model.addAttribute("docNumZeroCnt", docNumZeroCnt);
+		model.addAttribute("signImageSize", signImageSize);
+		
+		LOGGER.debug("ezDeptRecevUI_WHWP ended");
+		return "ezApprovalG/apprGdeptRecevuiWHWP";
+	}
+	
 	@RequestMapping(value = "/ezApprovalG/downloadAttachForHwp.do", method = RequestMethod.GET)
 	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LOGGER.debug("downloadAttachForHwp started");

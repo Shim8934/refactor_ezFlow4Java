@@ -175,18 +175,30 @@
 		        }
 		    }
 	
+		    var ezaprallalert_cross_dialogArguments = new Array();
 		    function OpenAllApproveFlag() {
 		        var window_left = window.screen.availWidth / 2 - 160;
 		        var window_top = window.screen.availHeight / 2 - 90;
+		        
+		        ezaprallalert_cross_dialogArguments[0] = "";
+		        ezaprallalert_cross_dialogArguments[1] = OpenAllApproveFlag_Complete;
 		
 		        AllApprove.style.display = "none";
 		        var parameter = "";
 		        var url = "/ezApprovalG/ezAprAllAlert.do";
-		        var feature = "status:no;dialogWidth:326px;dialogHeight:205px;help:no;scroll:no;dialogLeft:" + window_left + ";dialogTop:" + window_top + "";
-		        var RtnVal = window.showModalDialog(url, parameter, feature);
+		        //var feature = "status:no;dialogWidth:326px;dialogHeight:205px;help:no;scroll:no;dialogLeft:" + window_left + ";dialogTop:" + window_top + "";
+		        //var RtnVal = window.showModalDialog(url, parameter, feature);
 		
-		        AllApprove.style.display = "";
-		
+		        DivPopUpShow(326, 205, url);
+			}
+		    
+		    /**
+		    * RtnVal -> 0 : 결재, 1 : 다음문서, 2 : 문서보기, 3 : 취소
+		    */
+		    function OpenAllApproveFlag_Complete(RtnVal) {
+		    	DivPopUpHidden();
+		    	AllApprove.style.display = "";
+				
 		        if (RtnVal == "0") {
 		            btnApprove_onclick();
 		        }
@@ -258,10 +270,10 @@
 		            GetExchInfo();
 		
 		            if (pDocHref != "") {
-		                var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref) + "&tempTime=" + aprDocTimeStamp;
-		                var isTrue = HwpCtrl.LoadFile(URL, false);
-		
-		                FieldsAvailable(isTrue);
+		            	var URL;
+		            	//URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pDocHref);
+	                    URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pDocHref);
+	                    message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
 		            }
 		        }
 		    }

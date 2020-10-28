@@ -516,10 +516,7 @@ function SendDraftMappingSign(ret) {
 			if(ret != "NAME") {
 				message.PutFieldText(psigncell, "");	
 				//HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
-				//message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
-				message.InsertPicture(psigncell, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
 
-				
 				if (message.FieldExist(pseumyungdatecell)) {
 				    OpinionText = "";
 				}
@@ -528,6 +525,9 @@ function SendDraftMappingSign(ret) {
                     OpinionText = strLangAprType4 + OpinionText;
 
                 message.AppendFieldText(psigncell, OpinionText);
+                
+                //message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
+                message.InsertPicture(psigncell, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
 			  	
 			  	signInfo[signCnt] = psigncell;
 			  	
@@ -603,14 +603,14 @@ function ConvertDocType(pDocType) {
     return SelectSingleNodeValue(loadXMLString(result), "RESULT");
 }
 
-function chk_Passwd() {
+/*function chk_Passwd() {
 	var parameter = pUserID;
 	var url = "/ezApprovalG/ezchkPasswd.do";
 	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
 	var ret = window.showModalDialog(url,parameter,feature);
 	
 	return ret;
-}
+}*/
 
 function setDrafterAddress() {
 	SetDocumentElement(message, "drafter", arr_userinfo[2]);
@@ -1045,8 +1045,7 @@ function SetAutoPropFinal()
     var CurrentDate;
     CurrentDate = getGyulJeDate();
     
-	var FieldLists = message.GetFieldList(0, 1);
-	var Fields = FieldLists.split(";");
+	var Fields = message.GetFieldList(0, 1);
   
 	for (i = 0; i < Fields.length; i ++) {
 		if(pDraftFlag == "DRAFT") {
@@ -1578,15 +1577,15 @@ function openSignUI() {
 	  	SignNodeList = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
 	    
 	    if (SignNodeList.length != 0) { 
-	  		var parameter	= pUserID;
-	  		var url = "/ezApprovalG/aprSign.do";
-	  		var feature	= "status:no;dialogWidth:350px;dialogHeight:310px;help:no;scroll:no;edge:sunken";
-	  	    var ret = window.showModalDialog(url, parameter, feature);
+	    	var parameter = pUserID;
+
+            aprsign1_cross_dialogArguments[0] = parameter;
+            aprsign1_cross_dialogArguments[1] = openSignUI_Complete;
+
+            DivPopUpShow(350, 310, "/ezApprovalG/aprSign.do");
 	    } else {
-	  		var ret = "NAME";
+	    	openSignUI_Complete("NAME");
 	    }
-	      
-	  	return ret;
     } catch(e) {
       alert("openSignUI()" + e.description);
     }
@@ -1820,13 +1819,13 @@ function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
     }
 }
 
-function OpenInformationUI(pInformationContent) {
+/*function OpenInformationUI(pInformationContent) {
 	var parameter = pInformationContent;
 	var url = "/ezApprovalG/ezAprOpinion.do";
 	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 	var RtnVal = window.showModalDialog(url,parameter,feature);
 	return RtnVal;
-}
+}*/
 
 //결재 세부옵션처리
 function setFormAprOption(){  
