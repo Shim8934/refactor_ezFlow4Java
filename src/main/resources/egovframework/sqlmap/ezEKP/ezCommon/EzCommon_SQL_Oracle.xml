@@ -843,11 +843,14 @@
 	</statement>
 
 	<select id="EzCommonDAO.checkDocStateIntoLastLines">
-		SELECT
-			docState
-		FROM
-			tbl_lastaprline
-		LIMIT 1
+		<![CDATA[
+			SELECT
+				docState
+			FROM
+				tbl_lastaprline
+			WHERE
+				ROWNUM <= 1
+		]]>
 	</select>
 	<statement id="EzCommonDAO.updateDocStateIntoLastLines">
 		ALTER TABLE
@@ -857,11 +860,14 @@
 	</statement>
 
 	<select id="EzCommonDAO.checkDocStateIntoLastDeptLines">
-		SELECT
-			docState
-		FROM
-			TBL_LASTDEPTLINE
-		LIMIT 1
+		<![CDATA[
+			SELECT
+				docState
+			FROM
+				TBL_LASTDEPTLINE
+			WHERE
+				ROWNUM <= 1
+		]]>
 	</select>
 	<statement id="EzCommonDAO.updateDocStateIntoLastDeptLines">
 		ALTER TABLE
