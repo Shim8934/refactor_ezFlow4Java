@@ -1092,7 +1092,7 @@ public class EzEmailUtil {
 					contentID = contentID.substring(0, contentID.length() - 1);
 				}
 				
-				if (!htmlBodyContent.contains("cid:" + contentID)) {
+				if (!htmlBodyContent.contains("contentId=%3C" + contentID + "%3E")) {
 					isAttachmentWithUnreferencedContentID = true;
 				}				
 				
