@@ -876,7 +876,8 @@
 				ATTACHLIMITCNT
 			FROM 
 				TBL_APRATTACHLIMIT
-			ROWNUM <= 1
+			WHERE
+				ROWNUM <= 1
 		]]>
 	</select>
 	<statement id="EzCommonDAO.createAprAttachLimit">
