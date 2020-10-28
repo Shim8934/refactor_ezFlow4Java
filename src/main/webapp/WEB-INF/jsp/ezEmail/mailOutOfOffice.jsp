@@ -54,10 +54,16 @@
 		        $("#Edatepicker").datepicker('setDate', NowDate2);
 		        $('#Stimepicker').timepicker();
 		        $('#Stimepicker').timepicker('setTime', NowDate);
-		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i', 'disableTextInput': true});
+		        $("#Stimepicker").on("focus", function(){
+					$(this).trigger("blur");
+				});
 		        $('#Etimepicker').timepicker();
 		        $('#Etimepicker').timepicker('setTime', NowDate2);
-		        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+		        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i', 'disableTextInput': true});
+		        $("#Etimepicker").on("focus", function(){
+					$(this).trigger("blur");
+				});
 		    });
 		    
 		    $(function () {
@@ -127,11 +133,17 @@
 		                $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		                $("#Sdatepicker").datepicker('setDate', StarDate);
 		                $('#Stimepicker').timepicker('setTime', StarDate);
-		                $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+		                $('#Stimepicker').timepicker({ 'timeFormat': 'H:i', 'disableTextInput': true});
+		                $("#Stimepicker").on("focus", function(){
+							$(this).trigger("blur");
+						});
 		                $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		                $("#Edatepicker").datepicker('setDate', EndDate);
 		                $('#Etimepicker').timepicker('setTime', EndDate);
-		                $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+		                $('#Etimepicker').timepicker({ 'timeFormat': 'H:i', 'disableTextInput': true});
+		                $("#Etimepicker").on("focus", function(){
+							$(this).trigger("blur");
+						});
 		            } catch (e) { }
 		          
 		            if (g_oofstate == "disabled") {
@@ -328,13 +340,13 @@
 	  <tr>
 	    <th><spring:message code='ezEmail.t209' /></th>
 	    <td>
-	        <input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	     </td>
 	  </tr>
 	  <tr>
 	    <th><spring:message code='ezEmail.t217' /></th>
 	    <td>
-	        <input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	        <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	    </td>
 	  </tr>
 	</table>
