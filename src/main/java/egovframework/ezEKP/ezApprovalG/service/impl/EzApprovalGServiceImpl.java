@@ -9145,9 +9145,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	recordListVO.setIsDocPrint(doc.getElementsByTagName("ISDOCPRINT").item(0).getTextContent());
         } 
         
-        // resultXML 안에 XML 데이터 생성
-        List<ApprGRecordVO> apprGRecordVOList = ezApprovalGDAO.getRecordList(recordListVO);
+        /* 2020-10-28 홍승비 - 내려받을 목록(기록물, 기록물철)이 없는 경우 분기 처리 */
+        List<ApprGRecordVO> apprGRecordVOList = new ArrayList<ApprGRecordVO>();
+        if (start - 1 >= 0) {
+        	apprGRecordVOList = ezApprovalGDAO.getRecordList(recordListVO);
+        }
         
+        // resultXML 안에 XML 데이터 생성
         StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
         
