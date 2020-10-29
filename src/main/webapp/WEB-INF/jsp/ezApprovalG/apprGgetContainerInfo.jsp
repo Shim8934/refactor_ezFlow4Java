@@ -1109,6 +1109,15 @@
 		        			condition[8] = draftTo.substring(8,10);
 		        		} */
 		        		
+		        		/* 2020-10-29 홍승비 - 양식별 문서함 엑셀로 내보내기 시, P12/P24에 양식함 ID 전달 */
+		        		if (LoadSquery.indexOf("FORMNAME") > -1) {
+		        			if (approvalFlag == "S") {
+		        				condition[12] = ContainerID;
+		        			} else {
+		        				condition[24] = ContainerID;
+		        			}
+		        		}
+		        		
 		                url += "?listType=SEARCH&P0=" + encodeURI(condition[0]) + "&P1=" +
 		                encodeURI(condition[1]) + "&P2=" + encodeURI(condition[2]) + "&P3=" + encodeURI(condition[3]) +
 		                "&P4=" + encodeURI(condition[4]) + "&P5=" + encodeURI(condition[5]) + "&P6=" + encodeURI(condition[6]) +
@@ -1131,6 +1140,7 @@
 	        			condition[3] = draftFrom;
 	        			condition[4] = draftTo;*/
 		        	}
+			        
 		        	window.frames["saveExcel"].location.href = url;
                 }
 		    }
