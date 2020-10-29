@@ -220,6 +220,9 @@
 		
 		            obj.className = "tabon";
 		            Tab1_SelectID = obj.id;
+		            
+		            $("#signatureSelect").val("none");
+		            
 		            ChangeTab(obj);
 		        }
 		    }
