@@ -200,9 +200,16 @@
 		        	} else {
 		        		pAlertContent = "<spring:message code='ezApprovalG.hyj23'/>";
 		        	}
-		        	 OpenAlertUI(pAlertContent);
-					    window.close();
+		        	 OpenAlertUI(pAlertContent, OpenAlertUI_Close);
 		        }
+			}
+			
+			function OpenAlertUI_Close() {
+				if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+				    parent.opener.getApprovalList("draft");
+				}
+		    
+		        window.close();
 			}
 	
 			function window_onbeforeunload() {

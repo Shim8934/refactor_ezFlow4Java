@@ -64,7 +64,7 @@
 	       		message.Resize(mHeight);
 	        }
 	
-			var apropinion_dialogArguments = new Array();
+			var aprendopinion_dialogArgument = new Array();
 	        function btnOpinion_onclick() {
 	            var parameter = new Array();
 	            parameter[0] = pDocID;
@@ -75,9 +75,9 @@
 	            //var feature = "status:no;dialogWidth:530px;dialogHeight:520px;scroll:no;edge:sunken"
 	            //var ret = window.showModalDialog(url, parameter, feature);
 	            
-	            apropinion_dialogArguments[0] = parameter;
-	            apropinion_dialogArguments[1] = openOpinionUI_Complete;
-	            DivPopUpShow(530, 520, "/ezApprovalG/aprEndOpinion.do");
+	            aprendopinion_dialogArgument[0] = parameter;
+	            aprendopinion_dialogArgument[1] = openOpinionUI_Complete;
+	            DivPopUpShow(530, 520, url);
 	        }
 	        
 	        function openOpinionUI_Complete() {
@@ -327,10 +327,10 @@
 			}
 			
 	    	function Editor_Complete() {
-	        	if (pDocHref != "") {
+	        	if (docHref != "") {
                     var URL;
-                  //URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pDocHref);
-                    URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pDocHref);
+                  //URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(docHref);
+                    URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(docHref);
                     message.Open(URL, "", "", function (res) { 
                     	if (res.result) {
     	                    if (pFormID == "") {
@@ -357,10 +357,6 @@
     	                    message.Clear();
     	                }
                     	message.EditMode(0);
-    	                
-    	                if(useExternalMailServer == "NO") {
-    				    	$("#btnMail").css("display","");
-    				    }
                     }, null);
 	        	}
 	    	}
@@ -372,8 +368,12 @@
 	            <td height="20">
 	                <div id="menu">
 	                    <ul>
-	                        <li id="btnMail" style="display:none"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
+	                    	<c:if test="${useExternalMailServer == 'YES' }">
+	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
+	                        </c:if>
+	                        <c:if test="${useBoard == 'YES' }">
 	                        <li id="btnBoard"><span onclick="return btnBoard_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
+	                        </c:if>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 	                        <li id="btnSave"><span onclick="return btnSave_onclick()">PC<spring:message code='ezApprovalG.t59'/></span></li>
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
@@ -415,5 +415,9 @@
 	            </td>
 	        </tr>
 	    </table>
+	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

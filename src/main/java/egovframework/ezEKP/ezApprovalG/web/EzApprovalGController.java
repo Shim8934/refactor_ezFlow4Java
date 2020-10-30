@@ -6729,6 +6729,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//2019-02-19 김보미 - 개인문서함의 경우 파일다운로드 방식이 틀려, 파일명을 javascript에서 지정하기 때문에 가져간다.
 		model.addAttribute("excelFileName", EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + "_" + messageSource.getMessage("ezApprovalG.t1750", userInfo.getLocale()));
 		model.addAttribute("shareDeptId", shareDeptId);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
  		logger.debug("getContainerInfo ended");
 		

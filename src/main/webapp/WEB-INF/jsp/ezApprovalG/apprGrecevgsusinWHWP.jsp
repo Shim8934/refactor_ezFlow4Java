@@ -1483,13 +1483,13 @@
 		
 			function SetReceiptNumber() {
 			    if (pSusinSN > 1) {
-			        if (HwpCtrl.CheckFieldExist("receiptnumber")) {
-			            var ReceiptNumber = trim(HwpCtrl.GetFieldText("receiptnumber"));
+			        if (message.FieldExist("receiptnumber")) {
+			            var ReceiptNumber = trim(message.GetFieldText("receiptnumber"));
 			
 			            if (ReceiptNumber != "") {
 			
 			                if (g_DraftFlag == "SUSIN") {
-			                    HwpCtrl.SetFieldText("receiptnumber", "");
+			                	message.PutFieldText("receiptnumber", "");
 			                }
 			            }
 			        }

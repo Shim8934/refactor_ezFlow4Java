@@ -1448,6 +1448,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("pass", pass);
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		model.addAttribute("useBoard", ezCommonService.getTenantConfig("useBoard", userInfo.getTenantId()));
 		
 		LOGGER.debug("ezViewEnd_WHWP ended");
 		
@@ -1742,6 +1743,44 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		LOGGER.debug("ezDeptRecevUI_WHWP ended");
 		return "ezApprovalG/apprGdeptRecevuiWHWP";
 	}
+	
+	@RequestMapping(value = "/ezApprovalG/ezSimsaG_WHWP.do", method = RequestMethod.GET)
+	public String ezSimsaG_WHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("ezSimsaG_WHWP started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+	    String docID = request.getParameter("docID");
+	    String docHref = request.getParameter("docHref");
+	    String orgDocID = request.getParameter("orgDocID");
+	    String docTitle = request.getParameter("docTitle");
+	    String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+	    String Use_ImgTagTOAttah_body = "N";
+	    String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+	    String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator;
+	    String orgCompanyID = request.getParameter("orgCompanyID");
+
+	    //회사아이디가 기관코드로 안돼있기때문에 지정해줘야됨
+	    String companyID = config.getProperty("config.companyNum");
+	    userInfo.setCompanyID(companyID);
+
+	    model.addAttribute("userInfo", userInfo);
+	    model.addAttribute("docID", docID);
+	    model.addAttribute("docHref", docHref);
+	    model.addAttribute("orgDocID", orgDocID);
+	    model.addAttribute("hwpToolbar", hwpToolbar);
+	    model.addAttribute("useEditor", useEditor);
+	    model.addAttribute("approvalRoot", approvalRoot);
+	    model.addAttribute("approvalPWD", approvalPWD);
+	    model.addAttribute("Use_ImgTagTOAttah_body", Use_ImgTagTOAttah_body);
+	    model.addAttribute("orgCompanyID", orgCompanyID);
+	    model.addAttribute("docTitle", docTitle);
+		
+		LOGGER.debug("ezSimsaG_WHWP ended");
+		
+		return "ezApprovalG/apprGezSimsagWHWP";
+	}	
 	
 	@RequestMapping(value = "/ezApprovalG/downloadAttachForHwp.do", method = RequestMethod.GET)
 	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception {

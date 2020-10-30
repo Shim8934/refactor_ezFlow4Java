@@ -93,6 +93,7 @@
 			    var pOpenYaer = "<c:out value ='${openYear}'/>";
 		        var vWriterID;
 		        var ext= "";
+		        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
 		        document.onselectstart = function () { return false; };
 		
 		        window.onload = function () {

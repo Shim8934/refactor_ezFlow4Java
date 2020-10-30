@@ -138,6 +138,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("openYear", openYear);
 		model.addAttribute("contType", contType);
 		model.addAttribute("sFlag", sFlag);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		logger.debug("cabinetMain ended");
 		

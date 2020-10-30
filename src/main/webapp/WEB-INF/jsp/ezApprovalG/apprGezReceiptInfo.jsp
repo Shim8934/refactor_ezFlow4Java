@@ -49,7 +49,7 @@
 		        var RtnVal = window.showModalDialog(url, parameter, feature);
 		    }
 		    function window_close() {
-		        if (CrossYN() && ext != "hwp") {
+		        if (CrossYN()) {
 		            parent.DivPopUpHidden();
 		        } else {
 		            window.close();
