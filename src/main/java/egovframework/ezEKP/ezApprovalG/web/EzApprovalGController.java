@@ -4451,10 +4451,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useAllowTextSelection = ezCommonService.getTenantConfig("useAllowTextSelection", userInfo.getTenantId());
+		boolean isReform = false;
+		String reformFunctionUrl = "";
 		
 		// FormBuilder
 		if (Boolean.valueOf(request.getParameter("isReform"))) {
-			model.addAttribute("isReform", true);
+		    isReform = true;
 			
 			String formId = request.getParameter("formId");
 			String approvalUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
@@ -4463,12 +4465,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			Path realPath = Paths.get(request.getServletContext().getRealPath(""));
 			
 			if (Files.exists(realPath.resolve("." + reformFunctionRelativePath))) {
-				model.addAttribute("reformFunctionUrl", reformFunctionRelativePath);
+			    reformFunctionUrl = reformFunctionRelativePath;
 			}
 		}
 		
 		model.addAttribute("editor", editor);
 		model.addAttribute("useAllowTextSelection", useAllowTextSelection);
+        model.addAttribute("isReform", isReform);
+        model.addAttribute("reformFunctionUrl", reformFunctionUrl);
 		
 		logger.debug("approvUIcontent ended");
 		

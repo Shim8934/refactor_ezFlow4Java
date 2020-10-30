@@ -41,7 +41,7 @@
 		</script>
 	
 	</head>
-	<body style="height:100%;">
+	<body style="height:100%; margin:0;">
 		<iframe class="signPreViewIframe" name="signPreViewIframe" style="border:none; width:100%; height:650px;" ></iframe>
 	</body>
 </html>
