@@ -965,11 +965,24 @@
 		    
 		    /* 2020-08-03 홍승비 - 결재자가 한 명인 경우(기안자 = 최종결재자), 수신처 회송 시 기결재기능 사용하지 못하도록 수정 */
 			function btn_OK() {
-		    	var aprLineCnt = $("#lvAPRLINE").find("tr[data11='001']");
+		    	var aprLineCnt = $("#lvAPRLINE").find("tr[data11='001']"); // 결재
+		    	var draftLineCnt = $("#lvAPRLINE").find("tr[data11='018']"); // 기안
+		    	var aprJLineCnt = $("#lvAPRLINE").find("tr[data11='004']"); // 전결
+		    	var aprDLineCnt = $("#lvAPRLINE").find("tr[data11='016']"); // 대결
 		    	
-		    	if (document.getElementById('passAprLine').checked && pReDraftFlag === 'REDRAFT' && aprLineCnt.length <= 1) {
-		    		OpenAlertUI("결재자가 한 명인 경우, 기결재통과 기능을 사용할 수 없습니다.");
-		    		return;
+		    	/* 2020-10-30 홍승비 - 일반버전과 G버전의 기결재통과 조건 분리 */
+		    	if (approvalFlag == "S") {
+			    	if (document.getElementById('passAprLine').checked && pReDraftFlag === 'REDRAFT' && aprLineCnt.length <= 1) {
+			    		OpenAlertUI("결재자가 한 명인 경우, 기결재통과 기능을 사용할 수 없습니다.");
+			    		return;
+			    	}
+		    	} else { // 기안자 = 최종결재자인 경우 기안자의 유형은 "결재" / 기안자 != 최종결재자인 경우 기안자의 유형은 "기안" 
+		    		// G버전의 경우, 최종결재자는 결재/전결/대결 타입이 가능함
+		    		var aprLineCntSum = (aprLineCnt.length + aprJLineCnt.lenght + aprDLineCnt.length);
+			    	if (document.getElementById('passAprLine').checked && pReDraftFlag === 'REDRAFT' && (draftLineCnt.length <= 0 && aprLineCntSum <= 1)) {
+			    		OpenAlertUI("결재자가 한 명인 경우, 기결재통과 기능을 사용할 수 없습니다.");
+			    		return;
+			    	}
 		    	}
 		    	
 				if(document.getElementById('passAprLine').checked && pReDraftFlag === 'REDRAFT') {

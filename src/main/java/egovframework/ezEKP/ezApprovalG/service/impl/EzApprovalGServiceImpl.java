@@ -22625,20 +22625,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				//2018-09-05 강민수92 배부부서컬럼에 배부자 괄호로 추가
 				if (fieldName.equals("ORGAN")) {
-					fieldValue = docXML.getElementsByTagName(fieldName).item(j).getTextContent() + "(" + docXML.getElementsByTagName("ORGANUSERNAME").item(j).getTextContent() + ")";
+					fieldValue = makeXMLString(docXML.getElementsByTagName(fieldName).item(j).getTextContent() + "(" + docXML.getElementsByTagName("ORGANUSERNAME").item(j).getTextContent() + ")");
 				} else {
-					fieldValue = docXML.getElementsByTagName(fieldName).item(j).getTextContent();
+					fieldValue = makeXMLString(docXML.getElementsByTagName(fieldName).item(j).getTextContent());
 				}
 				resultXML.append(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset) + "</VALUE>");
 				
 				if (i == 0) {
-					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(j).getTextContent().trim()+ "</DATA1>");
-					resultXML.append("<DATA2>" + docXML.getElementsByTagName("HREF").item(j).getTextContent().trim()+ "</DATA2>");
-					resultXML.append("<DATA3>" + docXML.getElementsByTagName("SN").item(j).getTextContent().trim()+ "</DATA3>");
-					resultXML.append("<DATA4>" + docXML.getElementsByTagName("MANAGEDEPTID").item(j).getTextContent().trim()+ "</DATA4>");
-					resultXML.append("<DATA5>" + docXML.getElementsByTagName("CHARGEID").item(j).getTextContent().trim()+ "</DATA5>");
-					resultXML.append("<DATA6>" + docXML.getElementsByTagName("DEPTID").item(j).getTextContent().trim()+ "</DATA6>");
-					resultXML.append("<DATA7>" + docXML.getElementsByTagName("ORGDOCNUMCODE").item(j).getTextContent().trim()+ "</DATA7>");
+                    resultXML.append("<DATA1>" + makeXMLString(docXML.getElementsByTagName("DOCID").item(j).getTextContent().trim()) + "</DATA1>");
+                    resultXML.append("<DATA2>" + makeXMLString(docXML.getElementsByTagName("HREF").item(j).getTextContent().trim()) + "</DATA2>");
+                    resultXML.append("<DATA3>" + makeXMLString(docXML.getElementsByTagName("SN").item(j).getTextContent().trim()) + "</DATA3>");
+                    resultXML.append("<DATA4>" + makeXMLString(docXML.getElementsByTagName("MANAGEDEPTID").item(j).getTextContent().trim()) + "</DATA4>");
+                    resultXML.append("<DATA5>" + makeXMLString(docXML.getElementsByTagName("CHARGEID").item(j).getTextContent().trim()) + "</DATA5>");
+                    resultXML.append("<DATA6>" + makeXMLString(docXML.getElementsByTagName("DEPTID").item(j).getTextContent().trim()) + "</DATA6>");
+                    resultXML.append("<DATA7>" + makeXMLString(docXML.getElementsByTagName("ORGDOCNUMCODE").item(j).getTextContent().trim()) + "</DATA7>");
 				}
 				resultXML.append("</CELL>");
 			}
