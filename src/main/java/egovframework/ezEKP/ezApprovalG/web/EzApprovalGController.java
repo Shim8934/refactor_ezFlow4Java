@@ -4413,6 +4413,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("functionType", functionType);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		// FormBuilder
 		if (isReform) {

@@ -147,14 +147,20 @@
 			    window.close();
 			}
 	
-			/* function OpenInformationUI(pInformationContent) {
+			var ezapropinion_cross_dialogArguments = new Array();
+			function OpenInformationUI(pInformationContent, CompleteFunction) {
 				var parameter = pInformationContent;
 				var url = "/ezApprovalG/ezAprOpinion.do";
-				var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+				//var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 				
-				var RtnVal = window.showModalDialog(url,parameter,feature);	
-				return RtnVal;
-			} */
+				ezapropinion_cross_dialogArguments[0] = parameter;
+	            if (CompleteFunction != undefined)
+	                ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+	            else
+	                ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+	            
+	            DivPopUpShow(330, 205, url);				
+			}
 			
 			//한글 pc저장이 안돼서 저장방식 변경
 			 function FileDown(docTitle) {
@@ -342,11 +348,7 @@
     	                    var Rtnval = CheckOpinionInfo();
     	                    if (Rtnval) {
     	                        var pInformationContent = "<spring:message code='ezApprovalG.t9'/><br> <spring:message code='ezApprovalG.t170'/>";
-    	                        var Ans = OpenInformationUI(pInformationContent);
-    	
-    	                        if (Ans) {
-    	                            btnOpinion_onclick();
-    	                        }
+    	                        OpenInformationUI(pInformationContent, CheckOpinionYN_complete);
     	                    }
     	
     	                    //HwpCtrl.SetImgReg();
@@ -359,6 +361,14 @@
                     	message.EditMode(0);
                     }, null);
 	        	}
+	    	}
+	    	
+	    	function CheckOpinionYN_complete(Ans) {
+	    		DivPopUpHidden();
+	    		
+	    		if (Ans) {
+                    btnOpinion_onclick();
+                }
 	    	}
 	    </script>
 	</head>

@@ -95,27 +95,24 @@ function AprrovMappingSign(ret)
 	
 	var OpinionText = "";
 	var PositionText = "";
-	
-	if( LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16)   
-	{
+	// 4 : 전결, 16 : 대결
+	if( LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		OpinionText = getSignDate() + "\15";
 	}
 	
-	
-	if(pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)
-	{ 
+	// 8 : 개인순차협조, 9 : 개인병렬협조, 11 : 부서순차협조, 12 : 부서병렬협조
+	if(pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) { 
   		var phabyuisign;
   		var phabyuidate;
   		var phabyuijikwee;
   		var phabyuidept;
   	
-  		if(pDraftFlag == "SUSIN")
-  		{
+  		if(pDraftFlag == "SUSIN") {
   			phabyuisign = pSusinSN + "habyuisign";
   			phabyuidate = pSusinSN + "habyuidate";
   			phabyuijikwee = pSusinSN + "habyuipositon";
   			phabyuidept = pSusinSN + "habyui";
-  		}else{ 
+  		} else { 
   			phabyuisign   = "habyuisign";
   			phabyuidate   = "habyuidate";
   			phabyuijikwee = "habyuipositon";
@@ -123,10 +120,8 @@ function AprrovMappingSign(ret)
   		}
   	
 		var habyui = phabyuisign + pAprMemberSN;
-		if (message.FieldExist(habyui))
-		{
-			if(ret != "NAME" && ret != "")
-			{
+		if (message.FieldExist(habyui)) {
+			if(ret != "NAME" && ret != "") { // 서명이 이미지인 경우 
 				message.PutFieldText(habyui, "");
 				//message.InsertPicture(habyui, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
 				message.InsertPicture(habyui, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
@@ -189,15 +184,12 @@ function AprrovMappingSign(ret)
 			message.PutFieldText(phabyuijikweeID, message.GetFieldText(phabyuijikweeID) + PositionText);
 		}
 	}
-	else if(pAprLineType == strAprType2 || pAprLineType == strAprType7)
-	{
+	else if(pAprLineType == strAprType2 || pAprLineType == strAprType7) {   // 2 : 확인, 7 : 참조
 	
 	}
-	else if(pAprLineType == strAprType15)
-	{
+	else if(pAprLineType == strAprType15) { // 15 : 후열
 		signID = "gamsasign1" 
-		if (message.FieldExist(signID))		
-		{
+		if (message.FieldExist(signID)) {
 			message.PutFieldText(signID, arr_userinfo[2] + "\15" + s);
 			signInfo[signCnt] = signID;
 			SignName[signCnt] = signID;
@@ -207,8 +199,7 @@ function AprrovMappingSign(ret)
 			signCnt = signCnt + 1;
 		}
 	}
-	else
-	{ 
+	else { 
 		var pAprMemberSignSN = pAprMemberSN;
 		var signID;
 		var seumyungID;
@@ -229,17 +220,13 @@ function AprrovMappingSign(ret)
 			message.PutFieldText(seumyungdateID, s);
 		}
 
-		if (message.FieldExist(seumyungID))		
-		{
+		if (message.FieldExist(seumyungID)) {
 			message.PutFieldText(seumyungID, message.GetFieldText(seumyungID) + PositionText);
 		}
 				
-		if(pAprLineType == strAprType16)  
-		{			
-			if (message.FieldExist(signID))
-	  		{
-	  			if(ret != "NAME")
-	  			{
+		if(pAprLineType == strAprType16) {			// 대결
+			if (message.FieldExist(signID)) {
+	  			if(ret != "NAME") {
 	  				message.PutFieldText(signID, "");
 	  				//message.InsertPicture(signID, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
 	  				message.InsertPicture(signID, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
@@ -262,8 +249,7 @@ function AprrovMappingSign(ret)
 	  				signCnt = signCnt + 1
 	  				SingFlag = true;
 	  			}
-	  			else
-	  			{
+	  			else {
 	  			    var content ="";
 					if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
 						message.PutFieldText(signID, strLang8 + arr_userinfo[2]);
@@ -274,12 +260,12 @@ function AprrovMappingSign(ret)
 					}
 					
 					if (!message.FieldExist(seumyungdateID)) {
-						message.PutFieldText(signID, OpinionText);
-						content = content + OpinionText;
+						message.PrependFieldText(signID, OpinionText);
+						content = OpinionText + content;
 					}
 					
-					//HwpCtrl.AppendFieldText(signID, strLang7 + "\15", true);
-					content = content + strLang7;
+					message.PrependFieldText(signID, strLang7);
+					content = strLang7 + content ;
 					
 	  				signInfo[signCnt] = signID;
 			        SignName[signCnt] = signID;
@@ -291,14 +277,11 @@ function AprrovMappingSign(ret)
 	  		
 	  			DekyulFlag = true;
 	  			pAprMemberSignSN = pAprMemberSignSN + 1;
-				if(pDraftFlag == "SUSIN")
-				{
+				if(pDraftFlag == "SUSIN") {
 					signID = pSusinSN + "sign" + pAprMemberSignSN;
 					seumyungID = pSusinSN + "jikwe" + pAprMemberSignSN;
 					seumyungdateID = pSusinSN + "seumyungdate" + pAprMemberSignSN;
-				}
-				else
-				{
+				} else {
 					signID = "sign" + pAprMemberSignSN;
 					seumyungID = "jikwe" + pAprMemberSignSN;
    					seumyungdateID = "seumyungdate" + pAprMemberSignSN;
@@ -306,10 +289,8 @@ function AprrovMappingSign(ret)
 			}
 		}		
 		
-		if (message.FieldExist(signID))
-		{  	
-			if (DekyulFlag && pAprLineB4type == strAprType4)
-			{
+		if (message.FieldExist(signID)) {  	
+			if (DekyulFlag && pAprLineB4type == strAprType4) { // 4: 전결
 				message.PutFieldText(signID, strLang6);
 	  			signInfo[signCnt] = signID;
 		        SignName[signCnt] = signID;
@@ -317,41 +298,35 @@ function AprrovMappingSign(ret)
 		        SignContent[signCnt] = strLang6;
 			        
 	  			signCnt = signCnt + 1
+			} else if (DekyulFlag) {
+				
 			}
-			else if (DekyulFlag)
-			{
-			}
-			else
-			{
+			else {
 			    var contents = "";
-	  			if(ret != "NAME")
-	  			{
+	  			if(ret != "NAME") {
 	  				var strimg;
 	  				message.PutFieldText(signID, "");
 	  				//message.InsertPicture(signID, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
 	  				message.InsertPicture(signID, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
 	  				
-					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-					{
+					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
 						message.AppendFieldText(signID, strLang17);
 						contents = strLang17;
 					}
 
 					if (!message.FieldExist(seumyungdateID)) {
-						message.AppendFieldText(signID, OpinionText);
+						message.PrependFieldText(signID, OpinionText);
 					    contents = contents + OpinionText;
 					}
 
-					if(pAprLineType == strAprType4)
-					{
-						message.AppendFieldText(signID, strLang6);
-	  					contents = contents + strLang6;
+					if(pAprLineType == strAprType4) {
+						message.PrependFieldText(signID, strLang6);
+	  					contents = strLang6 + contents;
 	  				}
 
-					if(pAprLineType == strAprType16)  
-					{
-						message.AppendFieldText(signID, strLang7);
-	  					contents = contents + strLang7;
+					if(pAprLineType == strAprType16) {
+						message.PrependFieldText(signID, strLang7);
+	  					contents = strLang7 + contents;
 	  				}
 	      
 	  				signInfo[signCnt] = signID;
@@ -363,34 +338,29 @@ function AprrovMappingSign(ret)
 	  				signCnt = signCnt + 1
 	  				SingFlag = true;
 	  			}
-	  			else
-	  			{
-					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-					{
-						message.PutFieldText(signID, strLang8 + arr_userinfo[2]);
-						contents = strLang8 + arr_userinfo[2];	
+	  			else {
+					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+						message.PutFieldText(signID, strLang8 + "\15" + arr_userinfo[2]);
+						contents = strLang8 + "\15" + arr_userinfo[2];	
 					}
-					else
-					{
+					else {
 						message.PutFieldText(signID, arr_userinfo[2]);
 						contents = arr_userinfo[2];		
 					}
 
 					if (!message.FieldExist(seumyungdateID)) {
-						message.AppendFieldText(signID, OpinionText);
-					    contents = contents + OpinionText;
+						message.PrependFieldText(signID, OpinionText);
+					    contents = OpinionText + contents;
 					}
 
-					if(pAprLineType == strAprType4)
-					{
-						message.AppendFieldText(signID, strLang6 + "\15", true);
-						contents = contents + strLang6;
+					if(pAprLineType == strAprType4) {
+						message.PrependFieldText(signID, strLang6);
+						contents = strLang6 + contents;
 	  				}
 
-					if(pAprLineType == strAprType16)  
-					{
-						message.AppendFieldText(signID, strLang7 + "\15", true);
-						contents = contents + strLang7;
+					if(pAprLineType == strAprType16) {
+						message.PrependFieldText(signID, strLang7);
+						contents = strLang7 + contents;
 	  				}
 
 	  				signInfo[signCnt] = signID;
@@ -406,10 +376,8 @@ function AprrovMappingSign(ret)
 	return signInfo;   
 }
 
-function putJunkyulSign(signID)
-{
-	if (message.FieldExist(signID))
-	{
+function putJunkyulSign(signID) {
+	if (message.FieldExist(signID)) {
 		message.PutFieldText(signID, strLang6);	
 	}
 }
@@ -461,6 +429,32 @@ function openOpinionUI(ret)
 	}
 	
 	return ret;
+}
+
+function openOpinionUI_New(pOpinionType, CompleteFunction) {
+	try {
+		var parameter = new Array();
+		parameter[0] = pDocID;		//DOCID
+		parameter[1] = pOpinionType;//OPINIONTYPE NAME
+		parameter[2] = "";			//DRAFTFLAG 결재는 공백 고정 
+		parameter[3] = docState;	//DOCSTATE
+		parameter[4] = orgCompanyID;//ORGCOMPANYID
+		parameter[99] = ext;		//EXT
+		
+		var url = "/ezApprovalG/aprOpinionNew.do";
+		//var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
+		//var ret = window.showModalDialog(url,parameter,feature);
+		
+		apropinion_cross_dialogArguments[0] = parameter;
+	    if (CompleteFunction != undefined)
+	        apropinion_cross_dialogArguments[1] = CompleteFunction;
+	    else
+	        apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
+	    
+	    DivPopUpShow(530, 520, url);
+	} catch (e) {
+		alert("openOpinionUI_New ::: " + e);
+	}
 }
 
 function makeOpinionList(OpinionXML) {
@@ -1180,8 +1174,8 @@ function ReAprLineSingMapping(ret)
 }
 
 
-function openSingUI(parameter)
-{
+var aprsign1_cross_dialogArguments = new Array();
+function openSingUI(parameter) {
 	var result = "";
 	// 결재 서명 존재유무 확인
 	$.ajax({
@@ -1201,13 +1195,16 @@ function openSingUI(parameter)
   
 	if (SignNodeList.length != 0) { 
 		var parameter = pingUserID;
-		var url = "/ezApprovalG/aprSign.do";
+		/*var url = "/ezApprovalG/aprSign.do";
 		var feature	= "status:no;dialogWidth:350px;dialogHeight:310px;help:no;scroll:no;edge:sunken";
-		var ret = window.showModalDialog(url,parameter,feature);
-	} else
+		var ret = window.showModalDialog(url,parameter,feature);*/
+		aprsign1_cross_dialogArguments[0] = parameter;
+        aprsign1_cross_dialogArguments[1] = openSingUI_Complete;
+        DivPopUpShow(350, 310, "/ezApprovalG/aprSign.do");
+	} else {
 		var ret = "NAME";
-    
-	return ret;
+		GetHTML(Approve_complete);
+	}
 }
 
 function SetAutoPropFinal()

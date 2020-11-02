@@ -180,6 +180,8 @@
 			
 			var isReform = "<c:out value='${isReform}'/>";
 			var formId = "<c:out value='${formId}'/>";
+			
+			var useWebHWP = "<c:out value='${useWebHWP}'/>";
 
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -321,8 +323,12 @@
 		            var openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?DocID="+escape(pArgument[0]);
 		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
 		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
-		        } else if (NextDocExtended.toLowerCase() == "hwp") {
+		        } else if (NextDocExtended.toLowerCase() == "hwp" && useWebHWP == "NO") {
 		            var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
+		            openLocation = openLocation + "&ID=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
+		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
+		        } else if (NextDocExtended.toLowerCase() == "hwp" && useWebHWP == "YES") {
+		            var openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + escape(pArgument[0]);
 		            openLocation = openLocation + "&ID=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
 		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
 		        } else {

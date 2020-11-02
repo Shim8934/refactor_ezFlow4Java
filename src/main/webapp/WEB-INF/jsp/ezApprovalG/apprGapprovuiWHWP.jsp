@@ -155,6 +155,8 @@
 	        var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
 			var formAprOption = "<c:out value='${formAprOption}'/>";
 			
+			var useWebHWP = "<c:out value='${useWebHWP}'/>";
+			
 		    function getNextDocList() {
 		        NextDocID = "";
 		        if (selectedDocID != "") {
@@ -292,8 +294,12 @@
 		
 		            openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]) + "&uName2=" + escape(pArgument[4]);
 		            openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
-		        } else if (NextDocExtended.substring(NextDocExtended.lastIndexOf(".") + 1).toLowerCase() == "hwp") {
+		        } else if (NextDocExtended.substring(NextDocExtended.lastIndexOf(".") + 1).toLowerCase() == "hwp" && useWebHWP == "NO") {
 		            var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
+		            openLocation = openLocation + "&ID=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
+		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
+		        } else if (NextDocExtended.substring(NextDocExtended.lastIndexOf(".") + 1).toLowerCase() == "hwp" && useWebHWP == "YES") {
+		            var openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + escape(pArgument[0]);
 		            openLocation = openLocation + "&ID=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
 		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
 		        } else {
@@ -646,37 +652,51 @@
 			        //if ("${approvalPWD}" != "N") {
 			        if (CheckUsePassword()) {
 			            chk_Passwd(pingUserID, btnApprove_chkpassword_Complete);
+		            } else {
+		            	check_openSingUI();
 		            }
 			    } else {
-			    	isjunkyul = false;
-			    } 
-			
-		        var ret = "NAME";
-		
-		        if ((pAprLineType != strAprType2) && (pAprLineType != strAprType7) && (pAprLineType != strAprType15) && (pAprLineType != strAprType17))
-		            ret = openSingUI(parameter);
-		        if (ret == "NAME") {
+			    	check_openSingUI();
+			    }
+			 }
+			 // Approve 끝
+			 
+			 function check_openSingUI() {
+	            var ret = "NAME"
+	            
+	            if ((pAprLineType != strAprType2) && (pAprLineType != strAprType7) && (pAprLineType != strAprType15) && (pAprLineType != strAprType17)) {
+	                var parameter = new Array();
+	                parameter[0] = pDocID;
+	                openSingUI(parameter);
+	            } else {
+					UpdateLineHistory();
+			        
+		        	setMenuDisable("btnApprove", false);
+			        GetHTML(Approve_complete);
+	            }
+	        }
+			 
+			 function openSingUI_Complete(ret) {
+				 if (ret == "NAME") {
 		            var Rtnval;
 		            var Ans = true
 		            if (!Ans) ret = "cancel";
-		        }
-			
-		        if (ret == "cancel" || ret == undefined) {
+		         }
+				
+		         if (ret == "cancel" || ret == undefined) {
 		            var pAlertContent = "[<spring:message code='ezApprovalG.t29'/>";
 			        OpenAlertUI(pAlertContent);
 			        setMenuDisable("btnApprove", false);
 			        return;
-			    } else {
+			     } else { 
 			        UpdateLineHistory();
 			        
+		        	setMenuDisable("btnApprove", false);
 			        GetHTML(Approve_complete);
-		        }
-			
-			        setMenuDisable("btnApprove", false);
-			   }
-			   // Approve 끝
+			 	 }
+			 }
 
-			   // Approve -> Approve_complete 시작
+			   // Approve -> (openSingUI_Complete) -> Approve_complete 시작
 			   function Approve_complete(html) {
 				   var ret = "NAME";
 				   OrgHtml = html;
@@ -925,8 +945,20 @@
 					        OpenAlertUI(pAlertContent, OpenAlertUI_Complete);
 					        return;
 					    }
+			            
+			            var objXML = createXmlDom();
+				        objXML = loadXMLString(ret);
+				        
+				        var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+				        if (NodeList.length != 0) {
+				            pHasOpinionYN = "Y";
+				        } else {
+				            pHasOpinionYN = "N";
+				            ret = "cancel";
+				        }
+				        makeOpinionList(objXML);
 			
-			            GetHTML2(btnReject_option_Complete2);
+			            GetHTML(btnReject_option_Complete2);
 			        } else if (ret == "cancel" || ret == undefined) {
 			        	var pAlertContent = "<spring:message code='ezApprovalG.t38'/>";
 			        	OpenAlertUI(pAlertContent, null);
@@ -1022,24 +1054,35 @@
 			    }
 			 	// 보류관련 로직 끝
 	
+			 	// 전결관련 로직 시작
 			    function btnJunKyul_onclick() {
 			    	//if ("${approvalPWD}" != "N") {
 			    	if (CheckUsePassword()) {
-				        var checkpass = chk_Passwd(pingUserID);
-				
-				        if (checkpass == "False") {
-				            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
-					        OpenAlertUI(pAlertContent);
-					        return;
-				        } else if (checkpass == "cancel" || checkpass == undefined) {
-					        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-				            OpenAlertUI(pAlertContent);
-				            return;
-				        }
+				        chk_Passwd(pingUserID, btnJunKyul_onclick_complete);
+			    	} else {			    		
+			    		btnJunKyul_onclick_complete2();
 			    	}
+			    }
 			    	
-			        isjunkyul = true;
-			
+			    function btnJunKyul_onclick_complete(checkpass) {
+			    	DivPopUpHidden();
+			    
+			    	if (checkpass == "False") {
+			            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+				        OpenAlertUI(pAlertContent);
+				        return;
+			        } else if (checkpass == "cancel" || checkpass == undefined) {
+				        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+			            OpenAlertUI(pAlertContent);
+			            return;
+			        }
+			    	
+			    	btnJunKyul_onclick_complete2();
+			    }
+			    	
+			    function btnJunKyul_onclick_complete2() {
+			    	isjunkyul = true;
+					
 			        var rtnVal = upDateAprLine();
 			        if (rtnVal == "TRUE") {
 			            getCurApproverAprLine();

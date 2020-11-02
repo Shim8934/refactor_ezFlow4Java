@@ -330,7 +330,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		//결재 세부정보
 		String formAprOption = ezApprovalGService.getFormAprOptionInfo(docID, "DOC", userInfo.getCompanyID(), userInfo.getTenantId());
 		model.addAttribute("formAprOption", formAprOption);
-		//		
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 
 		LOGGER.debug("approvuiHWP ended");
 		
@@ -1347,6 +1347,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		//결재 세부정보
 		String formAprOption = ezApprovalGService.getFormAprOptionInfo(docID, "DOC", userInfo.getCompanyID(), userInfo.getTenantId());
 		model.addAttribute("formAprOption", formAprOption);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 
 		LOGGER.debug("approvuiWHWP ended");
 		

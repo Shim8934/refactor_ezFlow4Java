@@ -143,12 +143,38 @@
             DivPopUpHidden();
         }
 
-        function chk_Passwd(pPwd) {
+        var ezchkpasswd_cross_dialogArguments = new Array();
+        function chk_Passwd(pUserID, CompleteFunction) {
             var parameter = pUserID
+            ezchkpasswd_cross_dialogArguments[0] = parameter;
+            
             var url = "/ezApprovalG/ezchkPasswd.do";
-            var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
+            //var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
             //var ret = window.showModalDialog(url, parameter, feature);
             //return ret
+            
+            if (CompleteFunction != undefined)
+            	ezchkpasswd_cross_dialogArguments[1] = CompleteFunction;
+            else
+            	ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
+            DivPopUpShow(330, 200, url);
+        }
+        
+        function chk_Passwd_Complete(ret) {
+        	DivPopUpHidden();
+        	
+        	var chkpass = ret;
+        	if (chkpass == "False") {
+                var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+                OpenAlertUI(pAlertContent);
+                return;
+            } else if (chkpass == "cancel" || chkpass == undefined) {
+                var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+                OpenAlertUI(pAlertContent);
+                return;
+            }
+        	
+        	GetHTML(Send_OpenUI2);
         }
 
         function window_onload() {
@@ -291,28 +317,19 @@
         }
             
         function Send_OpenUI(Ans) {
-        	if (!Ans) return;
-
         	DivPopUpHidden();
         	
-        	if (CheckUsePassword()) {
-                var chkpass = chk_Passwd(pUserID);
-                if (chkpass == "False") {
-                    var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
-                    OpenAlertUI(pAlertContent);
-                    return;
-                } else if (chkpass == "cancel" || chkpass == undefined) {
-                    var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-                    OpenAlertUI(pAlertContent);
-                    return;
-                }
-            }
+        	if (!Ans) return;
         	
-        	GetHTML(Send_OpenUI2);
+        	if (CheckUsePassword()) {
+                chk_Passwd(pUserID, chk_Passwd_Complete);
+            } else {
+        		GetHTML(Send_OpenUI2);
+            }
         }
         
         function Send_OpenUI2(html) {
-        	Savehtml = html;
+        	SaveHtml = html;
             SaveFile();
 
             var rtnVal = "FALSE";
@@ -480,7 +497,7 @@
         }
         
         function openOpinionUI_Complete2(html) {
-        	Savehtml = html;
+        	SaveHtml = html;
         	SaveFile();
 
           	var result = "";

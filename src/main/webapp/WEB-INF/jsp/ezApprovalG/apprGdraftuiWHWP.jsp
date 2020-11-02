@@ -973,9 +973,14 @@
 	
 	        function btnClose_onclick() {
 	            bAttachProcess = false;
-	            if (OpenInformationUI("<spring:message code='ezApprovalG.t148'/><br><spring:message code='ezApprovalG.t149'/>"))
-		    		window.close();
+	            OpenInformationUI("<spring:message code='ezApprovalG.t148'/><br><spring:message code='ezApprovalG.t149'/>", btnClose_onclick_Complete);
 			}
+	        
+	        function btnClose_onclick_Complete(rtn) {
+	        	DivPopUpHidden();
+		        if (rtn)
+		            window.close();
+	        }
 	
 			window.onbeforeunload = function () {
 			    if (bAttachProcess == false) {
