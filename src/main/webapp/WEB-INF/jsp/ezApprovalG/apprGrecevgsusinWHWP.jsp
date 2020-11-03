@@ -344,20 +344,6 @@
 			}
 		
 			function FieldsAvailable(isTrue) {
-				message.EditMode(0);
-				
-		        //2018-10-15 반송 후 배부된 문서의 접수번호 초기화
-		        if (pDraftFlag == "REDRAFT" || pDraftFlag == "SUSIN") {
-		        	message.PutFieldText("receiptnumber", "@dp-@nn");
-		        }
-		        
-		        message.MoveToField("doctitle");
-		        message.ScrollPosInfo(0, 0);
-		        
-		        if(useExternalMailServer == "NO") {
-			    	$("#btnMail").css("display","");
-			    }
-		        
 			    if (needDoubleFormFlag) {
 			        var tempFlag = getExtInfo();
 			        if (tempFlag) {
@@ -537,6 +523,20 @@
 			        message.Clear();
 			    }
 			    //HwpCtrl.SetImgReg();
+			    
+			    message.EditMode(0);
+				
+		        //2018-10-15 반송 후 배부된 문서의 접수번호 초기화
+		        if (pDraftFlag == "REDRAFT" || pDraftFlag == "SUSIN") {
+		        	message.PutFieldText("receiptnumber", "@dp-@nn");
+		        }
+		        
+		        message.MoveToField("doctitle");
+		        message.ScrollPosInfo(0, 0);
+		        
+		        if(useExternalMailServer == "NO") {
+			    	$("#btnMail").css("display","");
+			    }
 			}
 		
 			function btnSetAprLine_onclick() {
