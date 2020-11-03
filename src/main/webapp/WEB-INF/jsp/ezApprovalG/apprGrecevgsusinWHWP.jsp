@@ -24,9 +24,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/AutoAprLine_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
-		<script type="text/javascript" src="http://10.0.100.175:8080/webhwpctrl/js/hwpctrlapp/utils/util.js"></script>
-    	<script type="text/javascript" src="http://10.0.100.175:8080/webhwpctrl/js/webhwpctrl.js"></script>
 		<script type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = "<c:out value = '${docID}'/>";

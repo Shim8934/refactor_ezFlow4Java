@@ -16,9 +16,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
-		<script type="text/javascript" src="http://10.0.100.175:8080/webhwpctrl/js/hwpctrlapp/utils/util.js"></script>
-    	<script type="text/javascript" src="http://10.0.100.175:8080/webhwpctrl/js/webhwpctrl.js"></script>
 	    <script type="text/javascript">
 	        var pDocID = "<c:out value='${docID}'/>";
 	        var docHref = "<c:out value='${docHref}'/>";

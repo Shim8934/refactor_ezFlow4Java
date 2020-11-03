@@ -35,9 +35,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/showModalDialog.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraft_WHWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
-		<script type="text/javascript" src="http://10.0.100.175:8080/webhwpctrl/js/hwpctrlapp/utils/util.js"></script>
-    	<script type="text/javascript" src="http://10.0.100.175:8080/webhwpctrl/js/webhwpctrl.js"></script>
 	    <script type="text/javascript">
 	        var FormHref = "<c:out value ='${formURL}'/>";
 	        var DraftFlag = "<c:out value ='${draftFlag}'/>";

@@ -769,8 +769,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G 관리자 > 한글 웹 기안기 양식작성기 화면 호출
 	 */
 	@RequestMapping(value="/admin/ezApprovalG/WHWPEditor.do", method = RequestMethod.GET)
-	public String WHWPEditor() throws Exception {
+	public String WHWPEditor(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("WHWPEditor started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		model.addAttribute("webHWPUrl", ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId()));
 		
 		logger.debug("WHWPEditor ended.");
 		return "admin/ezApprovalG/apprGWHWPEditor";
@@ -3061,6 +3064,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("useEditApprDoc", useEditApprDoc);
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("openYear", ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId()));
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		logger.debug("forAprDoc ended.");
 		
@@ -3267,6 +3271,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("type", type);
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("openYear", ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId()));
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		logger.debug("forDoc ended.");
 		

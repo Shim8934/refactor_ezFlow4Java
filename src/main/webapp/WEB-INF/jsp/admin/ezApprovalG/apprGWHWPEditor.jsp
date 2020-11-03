@@ -7,10 +7,9 @@
 		<title><spring:message code='ezApprovalG.t518' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
-		<script type="text/javascript" src="http://10.0.100.175:8080/webhwpctrl/js/hwpctrlapp/utils/util.js"></script>
+		<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
-    	<!-- <script type="text/javascript" src="http://10.0.100.175:8080/webhwpctrl/js/hwpctrlapp/hwpCtrlApp.js"></script> -->
-    	<script type="text/javascript" src="http://10.0.100.175:8080/webhwpctrl/js/webhwpctrl.js"></script>
+    	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_WHWP.js')}"></script>
 		<script type="text/javascript">
 		    var HwpCtrl;
@@ -22,7 +21,7 @@
 	        }
 	
 		    window.onload = function () {
-		    	HwpCtrl = BuildWebHwpCtrl("hwpctrl", "http://10.0.100.175:8080/webhwpctrl/", function () { Editor_Complete(); });
+		    	HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Complete(); });
 		    }
 		    
 	        function Editor_Complete() {

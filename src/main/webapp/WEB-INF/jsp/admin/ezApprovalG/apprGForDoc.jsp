@@ -37,6 +37,7 @@
 			var type = "<c:out value = '${type}' />";
 			var nowDate = "<c:out value = '${nowDateUTC}'/>";
 			var pOpenYear = "<c:out value = '${openYear}'/>";
+			var useWebHWP = "<c:out value = '${useWebHWP}'/>";
 			
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -501,14 +502,18 @@
 			        
 			        // 2018.08.01 (KLIB) - ezd 확장자 처리
 			        if (ext == "hwp" || ext == "ezd") { //한글기안
-			        	if (isIE()) {
-				            openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
-		                } else {
-		                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-		                	alert(pAlertContent);
-		                    
-		                    return;
-		                }
+			        	if(useWebHWP == "NO") {
+				        	if (isIE()) {
+					            openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+			                } else {
+			                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+			                	alert(pAlertContent);
+			                    
+			                    return;
+			                }
+			        	} else {
+			        		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
+			        	}
 			        } else {
 		                openLocation = "/ezApprovalG/contDocView.do";
 			        }
@@ -640,12 +645,16 @@
 	                                    var openLocation;
 	                                    
 	                                    if (AttachUrlA2 == ".hwp" || AttachUrlA2 == ".ezd") {
-	                                    	if (isIE()) {
-	                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+	                                    	if(useWebHWP == "NO") {
+		                                    	if (isIE()) {
+		                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+		                                    	} else {
+		                                    		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+		                		                	alert(pAlertContent);
+		                		                	return;
+		                                    	}
 	                                    	} else {
-	                                    		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	                		                	alert(pAlertContent);
-	                		                	return;
+	                                    		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
 	                                    	}
 	                                    } else {
 	                                    	openLocation = "/ezApprovalG/contDocView.do";
