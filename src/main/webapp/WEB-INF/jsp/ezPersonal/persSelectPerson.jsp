@@ -25,6 +25,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/ListView_list.js')}"></script>
 		<script type="text/javascript">
 		    var type = "${type}";
+		    var tagName = "${tagName}";
 		    var ReturnFunction;
 		    var userID = "${userInfo.id}";
 		    window.onload = function () {
@@ -412,7 +413,7 @@
 		            } else if (type == "selDeptMaster") {
 		                ReturnFunction(selRow.getAttribute("DATA2"));
 		            } else {
-		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3"));
+		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3"), tagName);
 		            }
 		        }
 		        else {

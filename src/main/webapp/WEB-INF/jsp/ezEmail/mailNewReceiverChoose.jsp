@@ -2237,6 +2237,8 @@
 	            else {
 	                usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
 	            }
+	            // 2020-11-03 김은실 - [가천대길병원 voc(#66552)] 메일 수신자 설정시 선택 오류 : 검색 시 PressShiftKey = true 되는 현상 발생.
+	            PressShiftKey = false;
 	            
 	        }
 

@@ -64,6 +64,11 @@
 		            'timeFormat': 'H:i',
 		            'disableTextInput': true
 		        });
+		        
+		        //timepicker input 요소에 키보드 입력할 수 없도록 수정.
+				$("#Etimepicker, #Stimepicker").on("focus", function(){
+					$(this).trigger("blur");
+				});
 		    });
 		    
 		    $(function () {

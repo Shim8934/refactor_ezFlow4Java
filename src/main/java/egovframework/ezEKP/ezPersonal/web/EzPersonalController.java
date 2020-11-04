@@ -237,6 +237,41 @@ public class EzPersonalController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 전자결재 부재자설정
+	 */	
+	@RequestMapping(value = "/ezPersonal/saveBujaeUser.do", method = RequestMethod.POST, produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public Object saveBujaeUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("saveBujaeUser started");
+		
+		JSONArray ja = new JSONArray();
+		JSONParser parser = new JSONParser();
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = "";
+		//TODO: 원래는 user를 ad에서 정보 가져오는데 임시로 하드코딩함 전자결재외에 다른 부분 발견하면 수정요망(전자결재만 존재하면 그냥 박아도됨)
+		String pClass = "user";
+		String strFormArray = request.getParameter("formArray");
+		
+		ja = (JSONArray)parser.parse(strFormArray);
+		
+		for(int i=0; i<ja.size(); i++) {
+			JSONObject jo = new JSONObject();
+			if(i == 0) {
+				jo = (JSONObject)ja.get(i);
+				result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", jo.get("proxy").toString(), pClass, userInfo.getTenantId());
+			} else {
+				jo = (JSONObject)ja.get(i);
+				result = ezOrganService.updateAddJobProxy(userInfo.getId(), jo.get("proxy").toString(), userInfo.getTenantId(), jo.get("deptId").toString());
+			}
+		}
+		
+		logger.debug("saveBujaeUser ended");
+		return result;
+	}
+	
+	/**
 	 * 전자결재 결재환경설정 호출 Method
 	 */
 	@RequestMapping(value = "/ezPersonal/ezApprovalConfig.do", method = RequestMethod.GET)
@@ -459,6 +494,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String type = request.getParameter("type");
 		String dept = request.getParameter("dept"); 
+		String tagName = request.getParameter("tagName");
 		
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
@@ -466,6 +502,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		model.addAttribute("dept", dept);
 		model.addAttribute("type", type);
+		model.addAttribute("tagName", tagName);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 

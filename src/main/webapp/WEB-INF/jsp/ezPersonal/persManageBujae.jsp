@@ -34,6 +34,7 @@
 		    var proxyenddate = "";
 		    var Roll = "${userInfo.rollInfo}";
 		    var approvalFlag = "${approvalFlag}";
+		    var addJobList = "${addJobList}";
 		
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -60,14 +61,49 @@
 		            nowDate2.setMonth(nowDate2.getMonth());
 		            $("#Sdatepicker").datepicker('setDate', nowDate);
 		            $("#Edatepicker").datepicker('setDate', nowDate2);
-		            document.getElementById("absentreason").value = BReason;            
+		            document.getElementById("absentreason_1").value = BReason;
+		            $('#TextName_1').attr('deptId', deptid);
+		            $('#TextName_1').attr('userId', userid);
+		            $.each($('select[id^=absentreason]:not(select[id=absentreason_1])'), function(i, item) {
+		            	var proxy = $(this).attr('proxy');
+		            	var proxySplit = '';
+		            	var proxySpAbUsrId = '';
+		            	var proxySpAbUsrNm = '';
+		            	var proxySpAbDptId = '';
+		            	var proxySpAbCd = '';
+		            	var isSelected = false;
+		            	
+		            	if(proxy != undefined) {
+		            		proxySplit = proxy.split(':');
+		            		proxySpAbUsrId = proxySplit[0];
+		            		proxySpAbUsrNm = proxySplit[1];
+		            		proxySpAbDptId = proxySplit[3];
+		            		proxySpAbCd = proxySplit[proxySplit.length-1];
+		            		
+		            		if(proxySpAbUsrId != '') {
+		            			$.each($(this).parent().parent().prev().find('input[id^=TextName_'+(i+2)+']'), function(j, jtem) {
+			            			$(this).val(proxySpAbUsrNm);
+			            			$(this).attr('userId', proxySpAbUsrId);
+			            			$(this).attr('deptId', proxySpAbDptId);
+			            		});
+		            		} else {
+		            			$.each($(this).context.options, function(j, jtem) {
+			            			if($(this).val() == proxySpAbCd) {
+			            				isSelected = true;
+			            			}
+			            		});
+			            		if(isSelected) {
+			            			$(this).val(proxySpAbCd).trigger('change');
+			            		}
+		            		}
+		            	}
+		            });
 		            gIsAppoint = "1";
 		        }
 		        if (proxystartdate != "") {
 		            gIsProxyUser = true;
 		        }
-		
-		        Sel_Change();
+		        Sel_Change('1');
 		    };
 			
 		    $(function () {
@@ -185,7 +221,7 @@
 			var selectperson_cross_dialogArguments = new Array();
 			var type_Complete;
 			var NoneActiveX = "YES";
-			function select_person(type) {
+			function select_person(type, tagName) {
 				var selectedDept = deptid;
 				if (document.getElementById("deptList") != null && document.getElementById("deptList") != "undefined") {
 					selectedDept = document.getElementById("deptList").value;
@@ -194,16 +230,16 @@
 			    type_Complete = type;
 			    if (CrossYN() || NoneActiveX == "YES") {
 			        selectperson_cross_dialogArguments[1] = select_person_Complete;
-			        var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept, "SelectPerson_cross", GetOpenWindowfeature(860, 535));
+			        var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept + "&tagName=" + tagName, "SelectPerson_cross", GetOpenWindowfeature(860, 535));
 			        try { OpenWin.focus(); } catch (e) { }
 			    }
 			    else {
-			        var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept, "",
+			        var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept + "&tagName=" + tagName, "",
 		                "dialogHeight:535px;dialogwidth:860px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(860, 535));
 		
 			        if (typeof (rtnValue) != "undefined" && type == "") {
 			            userid = rtnValue.split(":")[0];
-			            document.getElementById("TextName").value = rtnValue.split(":")[1];
+			            document.getElementById(tagName).value = rtnValue.split(":")[1];
 			            deptid = rtnValue.split(":")[2];
 			        }
 			        if (typeof (rtnValue) != "undefined" && type == "Proxy") {
@@ -213,11 +249,13 @@
 			        }
 			    }
 			}
-			function select_person_Complete(rtnValue) {
-			    if (typeof (rtnValue) != "undefined" && type_Complete == "") {
+			function select_person_Complete(rtnValue, tagName) {
+				if (typeof (rtnValue) != "undefined" && type_Complete == "") {
 			        userid = rtnValue.split(":")[0];
-			        document.getElementById("TextName").value = rtnValue.split(":")[1];
+			        document.getElementById(tagName).value = rtnValue.split(":")[1];
 			        deptid = rtnValue.split(":")[2];
+			        $('#'+tagName).attr('userId', userid);
+		            $('#'+tagName).attr('deptId', deptid);
 			    }
 			    if (typeof (rtnValue) != "undefined" && type_Complete == "Proxy") {
 			        proxyuserid = rtnValue.split(":")[0];
@@ -272,16 +310,19 @@
 		        if (check_enddate()) {
 		            return;
 		        }
-		
+				/*
 		        if (gIsAppoint != '2') {
-		            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
+		            
+		        	if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
 		                alert("<spring:message code='ezPersonal.t36'/>");
 		                return;
 		            }
 		        }
+				*/
 				var pProxy = "";
 				var pBujae = "";
 		        // 대리 결재자 지정
+		        /*
 		        if (document.getElementById("TextName").value != "") {
 		            if (orguserid.toLowerCase() == userid.toLowerCase()) {
 		                alert("<spring:message code='ezPersonal.t16'/>");
@@ -298,7 +339,7 @@
 		            pBujae = "";
 		            gIsAppoint = "4";
 		        }
-		
+				*/
 		        // 대리 수신 담당자 지정
 		        /* if (Roll.toLowerCase().indexOf("a=1;") > -1) {
 		            if (document.getElementById("TextProxyName").value != "") {
@@ -311,23 +352,52 @@
 		        }
 		        else
 		            pProxy = ""; */
+		        var formArray = new Array();
 		        var dept = "";
+		        pProxy = $('#Sdatepicker').val() + " " + $('#Stimepicker').val() + ":" + $('#Edatepicker').val() + " " + $('#Etimepicker').val();
+		        
+		        try {
+			        $.each($('tr[id^=TR_Appoint_]'), function(i, item) {
+			        	var jo = new Object();
+						var proxy = '';
+						var abUserId = $(this).find('input[id^=TextName_'+(i+1)+']').attr('userId');
+						var abUserNm = $(this).find('input[id^=TextName_'+(i+1)+']').val();
+						var abDeptId = $(this).find('input[id^=TextName_'+(i+1)+']').attr('deptId');
+						var abSelect = $(this).next().find('select[id^=absentreason_'+(i+1)+']').val();
+			        	
+						if(abUserId == '' && abSelect == "<spring:message code='ezPersonal.t35'/>") {
+							proxy = '';
+						} else if(abUserId == '' && abSelect != "<spring:message code='ezPersonal.t35'/>") {
+							proxy = abUserId +':' + abUserNm + ':' + abDeptId + ':' + pProxy + ':' + abSelect;
+						} else {
+							proxy = abUserId +':' + abUserNm + ':' + abDeptId + ':' + pProxy;
+						}
+			        	//proxy = 아이디 + ':' + 이름 + ':' + 부서 + pProxy;
+			        	jo.count = i;
+			        	jo.deptId = $(this).attr('deptId');	// 본부서,겸직부서
+			        	jo.proxy = proxy;
+			        	
+			        	formArray.push(jo);
+			        });
+		        } catch(e) {
+		        	alert('<spring:message code="ezPersonal.tt16"/>');
+		        }
+		        
 		        try {
 			        dept = document.getElementById("deptList").value;
 		        } catch(e) {}    
-		            
+		        
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
-		    		url : "/ezPersonal/saveBujae.do",
+		    		url : "/ezPersonal/saveBujaeUser.do",
 		    		data : {
-		    				buJae  : pBujae,
-		    				proxy  : pProxy,
-		    				dept   : dept
+		    				formArray : JSON.stringify(formArray)
 		    				},
 		    		success: function(text){
-			            if (gIsAppoint == "1") {
+			            /*
+		    			if (gIsAppoint == "1") {
 			                alert("<spring:message code='ezPersonal.t00002'/>"); // 대리 결재자 지정
 // 			                window.location.reload(false);
 			            }
@@ -342,10 +412,12 @@
 			            else if (gIsAppoint == "4") {
 			            	alert("<spring:message code='ezPersonal.t65'/>");// 아무것도 지정 않았을 때
 			            }
-			            
+			            */
+			            alert("<spring:message code='ezPersonal.tt16'/>");
 		    		},
 		    		error: function(){
-			            if (gIsAppoint == "1") {
+			            /*
+		    			if (gIsAppoint == "1") {
 			                alert("<spring:message code='ezPersonal.t37'/>");
 			            }
 			            else if (gIsAppoint == "2") {
@@ -357,18 +429,23 @@
 			            else if (gIsAppoint == "4") {
 			            	alert("<spring:message code='ezEmail.t133'/>");
 			            }
+			            */
+			            alert("<spring:message code='ezPersonal.tt14'/>");
 		    		}
 		    	});
+		        document.location.reload(true);
 		    }
 		
-		    function Sel_Change()
+		    function Sel_Change(no)
 		    {
-		        if (document.getElementById("absentreason").value == "<spring:message code='ezPersonal.t35'/>") {
-		            document.getElementById("TR_Appoint").style.display = "";
+		        if (document.getElementById("absentreason_"+no).value == "<spring:message code='ezPersonal.t35'/>") {
+		            document.getElementById("TR_Appoint_"+no).style.display = "";
 		        }
 		        else {
-		            document.getElementById("TR_Appoint").style.display = "none";
-		            document.getElementById("TextName").value = "";
+		            document.getElementById("TR_Appoint_"+no).style.display = "none";
+		            document.getElementById("TextName_"+no).value = "";
+		            $('#TextName_'+no).attr('userId', '');
+		            $('#TextName_'+no).attr('deptId', '');
 		        }
 		    }
 		    
@@ -456,7 +533,7 @@
 			</div> 
 			--%>
 			<table class="content" style="width:520px;margin-top:10px">
-				<c:if test="${not empty addJobList}">
+				<%-- <c:if test="${not empty addJobList}">
 					<tr>
 						<th><spring:message code='ezPersonal.t305'/></th>
 						<td>
@@ -470,7 +547,7 @@
 							</select>
 						</td>
 					</tr>
-				</c:if>
+				</c:if> --%>
 				<tr> 
 					<th><spring:message code='ezPersonal.t22'/></th>
 					<td>
@@ -484,12 +561,13 @@
 						</table>
 					</td>
 				</tr>
-				<tr id="TR_Appoint">
+				<tr id="TR_Appoint_1" deptId="${userInfo.deptID}">
 					<th><spring:message code='ezPersonal.t31'/></th>
 					<td>
-						<input type="text" name="TextName" id="TextName" Width="120" value="${textName}" ReadOnly />
-						<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person('')"><spring:message code='ezPersonal.t32'/></span></a> 
-		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName').value=''; $('#TextName').attr('check','clear')"><spring:message code='ezPersonal.t33'/></span></a>
+						<input type="text" name="TextName_1" id="TextName_1" Width="120" value="${textName}" deptId="" userId="" ReadOnly />
+						<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person('', 'TextName_1')"><spring:message code='ezPersonal.t32'/></span></a> 
+		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName_1').value=''; $('#TextName_1').attr('check','clear'); $('#TextName_${status.count+1}').attr('deptId', ''); $('#TextName_${status.count+1}').attr('userId', '');"><spring:message code='ezPersonal.t33'/></span></a>
+		                ${userInfo.deptName}
 					</td>
 				</tr>
 				<%-- <c:if test="${fn:indexOf(fn:toLowerCase(userInfo.rollInfo), 'a=1;') > -1}">
@@ -513,10 +591,10 @@
 				    </tr>
 				</c:if> --%>
 				<c:if test="${approvalFlag eq 'G'}">
-					<tr>
+					<tr id="TR_Select_1">
 						<th><spring:message code='ezPersonal.t42'/></th>
 						<td>
-							<SELECT id="absentreason" onchange="return Sel_Change();"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
+							<SELECT id="absentreason_1" onchange="return Sel_Change('1');"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
 								<OPTION selected value="<spring:message code='ezPersonal.t35'/>"></OPTION>
 								<OPTION value="b1"><spring:message code='ezPersonal.b1'/></OPTION>
 								<OPTION value="b2"><spring:message code='ezPersonal.b2'/></OPTION>
@@ -531,14 +609,15 @@
 								<OPTION value="b11"><spring:message code='ezPersonal.b11'/></OPTION>
 								<OPTION value="b12"><spring:message code='ezPersonal.b12'/></OPTION>
 							</SELECT>
+							${userInfo.deptName}
 						</td>
 					</tr>
 				</c:if>
 				<c:if test="${approvalFlag eq 'S'}">
-					<tr style="display: none;">
+					<tr id="TR_Select_1" style="display: none;">
 						<th><spring:message code='ezPersonal.t42'/></th>
 						<td>
-							<SELECT id="absentreason" onchange="return Sel_Change();"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
+							<SELECT id="absentreason_1" onchange="return Sel_Change('1');"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
 								<OPTION selected value="<spring:message code='ezPersonal.t35'/>"></OPTION>
 								<OPTION value="b1"><spring:message code='ezPersonal.b1'/></OPTION>
 								<OPTION value="b2"><spring:message code='ezPersonal.b2'/></OPTION>
@@ -556,6 +635,83 @@
 						</td>
 					</tr>
 				</c:if>
+				<c:forEach var="addJob" items="${addJobList}" varStatus="status">
+					<tr id="TR_Appoint_${status.count+1}" deptId="${addJob.department}">
+						<th><spring:message code='ezPersonal.t31'/></th>
+						<td>
+							<input type="text" name="TextName_${status.count+1}" id="TextName_${status.count+1}" Width="120" value="" deptId="" userId="" ReadOnly />
+							<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person('', 'TextName_${status.count+1}');"><spring:message code='ezPersonal.t32'/></span></a> 
+			                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName_${status.count+1}').value=''; $('#TextName_${status.count+1}').attr('check','clear'); $('#TextName_${status.count+1}').attr('deptId', ''); $('#TextName_${status.count+1}').attr('userId', '');"><spring:message code='ezPersonal.t33'/></span></a>
+			                ${addJob.description}
+						</td>
+					</tr>
+					<%-- <c:if test="${fn:indexOf(fn:toLowerCase(userInfo.rollInfo), 'a=1;') > -1}">
+						<c:if test="${approvalFlag eq 'S'}">
+							<tr>
+					            <th><spring:message code='ezPersonal.t399'/></th>
+							    <td>
+							    	<input type="text" name="TextProxyName" id="TextProxyName" value="${textProxyName}" Width="120" ReadOnly />
+								    <a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsProxyUser = true;select_person('Proxy')"><spring:message code='ezPersonal.t32'/></span></a> 
+					                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsProxyUser = false;document.getElementById('TextProxyName').value=''"><spring:message code='ezPersonal.t33'/></span></a>
+							    </td>
+						    </tr>
+						</c:if>
+					    <tr>
+				            <th><spring:message code='ezPersonal.t399'/></th>
+						    <td>
+						    	<input type="text" name="TextProxyName" id="TextProxyName" value="${textProxyName}" Width="120" ReadOnly />
+							    <a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsProxyUser = true;select_person('Proxy')"><spring:message code='ezPersonal.t32'/></span></a> 
+				                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsProxyUser = false;document.getElementById('TextProxyName').value=''"><spring:message code='ezPersonal.t33'/></span></a>
+						    </td>
+					    </tr>
+					</c:if> --%>
+					<c:if test="${approvalFlag eq 'G'}">
+						<tr id="TR_Select_${status.count+1}">
+							<th><spring:message code='ezPersonal.t42'/></th>
+							<td>
+								<SELECT id="absentreason_${status.count+1}" onchange="return Sel_Change('${status.count+1}');" proxy="${addJob.extensionAttribute5}"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
+									<OPTION selected value="<spring:message code='ezPersonal.t35'/>"></OPTION>
+									<OPTION value="b1"><spring:message code='ezPersonal.b1'/></OPTION>
+									<OPTION value="b2"><spring:message code='ezPersonal.b2'/></OPTION>
+									<OPTION value="b3"><spring:message code='ezPersonal.b3'/></OPTION>
+									<OPTION value="b4"><spring:message code='ezPersonal.b4'/></OPTION>
+									<OPTION value="b5"><spring:message code='ezPersonal.b5'/></OPTION>
+									<OPTION value="b6"><spring:message code='ezPersonal.b6'/></OPTION>
+									<OPTION value="b7"><spring:message code='ezPersonal.b7'/></OPTION>
+									<OPTION value="b8"><spring:message code='ezPersonal.b8'/></OPTION>
+									<OPTION value="b9"><spring:message code='ezPersonal.b9'/></OPTION>
+									<OPTION value="b10"><spring:message code='ezPersonal.b10'/></OPTION>
+									<OPTION value="b11"><spring:message code='ezPersonal.b11'/></OPTION>
+									<OPTION value="b12"><spring:message code='ezPersonal.b12'/></OPTION>
+								</SELECT>
+								${addJob.description}
+							</td>
+						</tr>
+					</c:if>
+					<c:if test="${approvalFlag eq 'S'}">
+						<tr id="TR_Select_${status.count+1}" style="display: none;">
+							<th><spring:message code='ezPersonal.t42'/></th>
+							<td>
+								<SELECT id="absentreason_${status.count+1}" onchange="return Sel_Change('${status.count+1}');" proxy="${addJob.extensionAttribute5}"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
+									<OPTION selected value="<spring:message code='ezPersonal.t35'/>"></OPTION>
+									<OPTION value="b1"><spring:message code='ezPersonal.b1'/></OPTION>
+									<OPTION value="b2"><spring:message code='ezPersonal.b2'/></OPTION>
+									<OPTION value="b3"><spring:message code='ezPersonal.b3'/></OPTION>
+									<OPTION value="b4"><spring:message code='ezPersonal.b4'/></OPTION>
+									<OPTION value="b5"><spring:message code='ezPersonal.b5'/></OPTION>
+									<OPTION value="b6"><spring:message code='ezPersonal.b6'/></OPTION>
+									<OPTION value="b7"><spring:message code='ezPersonal.b7'/></OPTION>
+									<OPTION value="b8"><spring:message code='ezPersonal.b8'/></OPTION>
+									<OPTION value="b9"><spring:message code='ezPersonal.b9'/></OPTION>
+									<OPTION value="b10"><spring:message code='ezPersonal.b10'/></OPTION>
+									<OPTION value="b11"><spring:message code='ezPersonal.b11'/></OPTION>
+									<OPTION value="b12"><spring:message code='ezPersonal.b12'/></OPTION>
+								</SELECT>
+								${addJob.description}
+							</td>
+						</tr>
+					</c:if>
+				</c:forEach>
 			</table>            
 			<div style="width:520px;text-align:center;">
 				<div class="btnpositionJsp">
