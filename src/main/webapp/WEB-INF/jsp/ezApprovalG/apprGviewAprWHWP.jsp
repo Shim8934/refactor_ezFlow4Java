@@ -76,6 +76,14 @@
 			    //openOpinionViewUI();
 				openOpinionUI_New("Show");
 			}
+			
+			function btnOpinion_onclick_complete(Ans) {
+			    //openOpinionViewUI();
+			    DivPopUpHidden();
+    			if (Ans) {
+					openOpinionUI_New("Show");
+			    }
+			}
 	
 			window.onresize = function () {
 	        	var mHeight = document.documentElement.clientHeight - 152 - document.getElementById("message").offsetTop + "px";
@@ -120,7 +128,7 @@
 				
 					        if (pHasOpinion == "Y") {
 					            var pInformationContent = "<spring:message code='ezApprovalG.t9'/><br> <spring:message code='ezApprovalG.t170'/>";
-							    OpenInformationUI(pInformationContent, btnOpinion_onclick);
+							    OpenInformationUI(pInformationContent, btnOpinion_onclick_complete);
 							}
 				        }
 				        else {
@@ -232,6 +240,45 @@
 			function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();
 		    }
+			
+			var totalsavefileinfo_dialogArguments = new Array();
+		    function TotalSave_onclick() {
+		        totalsavefileinfo_dialogArguments[0] = "";
+		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
+				
+		        if (listTypeValue == "21") { //2019-02-08 천성준 - #14965 임시보관함문서 > 문서보기 > 통합PC저장 시, 첨부 및 문서파일을 내려받을수 없던 문제해결
+			        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=TMP&orgCompanyID=" + orgCompanyID);
+		        } else {
+		        	var mode = getDocMode();
+			        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=" + mode + "&orgCompanyID=" + orgCompanyID);
+		        }
+		    }
+		    function TotalSave_onclick_Complete() {
+		        DivPopUpHidden();
+		    }
+		    function getDocMode() {
+		    	var rtnVal = "APR";
+		    	
+		    	try {
+		    		$.ajax({
+		     			type : "POST",
+		     			dataType : "text",
+		     			async : false,
+		     			url : "/ezApprovalG/getLineMode.do",
+		     			data : {
+		     					docID : pDocID,
+		     					orgCompanyID : orgCompanyID
+		     					},
+		     			success: function(result) {
+		     				rtnVal = result;
+		     			}        			
+		            });
+		    	} catch (e) {
+		    		alert("getDocMode() :: " + e.description);
+		    	}
+		    	
+		    	return rtnVal;
+		    }
 	    </script>
 	</head>
 	<body class="popup" onload="return window_onload()" onbeforeunload="return window_onbeforeunload()">
@@ -241,11 +288,14 @@
 	                <div id="menu">
 	                    <ul>
 	                        <li id="btnGongRam" style="display: none"><span onclick="btnGongRam_onclick()"><spring:message code='ezApprovalG.t1442'/></span></li>
-	                        <li id="btnMail" style="display:none"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
-	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
+	                        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
+	                        <c:if test="${useExternalMailServer == 'NO'}">
+	                        	<li id="btnMail" style="display:none"><span class="icon16 popup_icon16_mail_gray" onclick="return btnMail_onclick()"></span></li>
+	                        </c:if>
 	                    </ul>
 	                </div>
 	                <div id="close">

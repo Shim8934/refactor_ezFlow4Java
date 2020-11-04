@@ -170,6 +170,7 @@
 	        var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 	        var formAprOption = "<c:out value='${formAprOption}'/>";
 	        var rtnSignInfo;
+	        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
 	        
 	        window.onload = function () {
 	            try {
@@ -184,27 +185,6 @@
 	                SetBtnStateFalse();
 	                
 	                window.onresize();
-
-	                if (nonElecRec == "Y") {
-	                	document.getElementById("btnSelForm").style.display = "none"; <%-- 양식선택 --%>
-	                	document.getElementById("btnAddSepAttach").style.display = "none"; <%-- 분리첨부 --%>
-	                	document.getElementById("btnSaveServer").style.display = "none"; <%-- 임시저장 --%>
-	                	document.getElementById("btnHelper").style.display = "none"; <%-- 연동 --%>
-	                	document.getElementById("btnhistory").style.display = "none"; <%-- 변경내역 --%>
-	                	document.getElementById("btnSave").style.display = "none"; <%-- 저장 --%>
-	                	document.getElementById("btnOpinion").style.display = "none"; <%-- 의견 --%>
-	                	document.getElementById("btnAprDocAttach").style.display = "none"; <%-- 문서첨부 --%>
-	                	document.getElementById("btnPrint").style.display = "none"; <%-- 인쇄 --%>
-	                	message.PutFieldText("docnumber","");
-	                }
-	                
-	                /**
-	                	기안인 경우에는 hwp파일이 실존하지 않아 로컬로 저장하는 것이 불가능하므로 저장버튼 display:none처리
-	                	또한, 일반 mht쪽에서도 기안을 올릴 때 저장 기능이 없음.
-	                */
-	                if(DraftFlag === 'DRAFT') {
-	                	$("#btnSave").css('display', 'none');
-	                }
 	            } catch (e) {
 	                alert("ezdraftui_hwp.window.onload::" + e);
 	            }
@@ -306,6 +286,27 @@
 	                    var pAlertContent = "<spring:message code='ezApprovalG.t369'/>";
 	                    OpenAlertUI(pAlertContent);
 	                    message.Clear();
+	                }
+	                
+	                if (nonElecRec == "Y") {
+	                	document.getElementById("btnSelForm").style.display = "none"; <%-- 양식선택 --%>
+	                	document.getElementById("btnAddSepAttach").style.display = "none"; <%-- 분리첨부 --%>
+	                	document.getElementById("btnSaveServer").style.display = "none"; <%-- 임시저장 --%>
+	                	document.getElementById("btnHelper").style.display = "none"; <%-- 연동 --%>
+	                	document.getElementById("btnhistory").style.display = "none"; <%-- 변경내역 --%>
+	                	document.getElementById("btnSave").style.display = "none"; <%-- 저장 --%>
+	                	document.getElementById("btnOpinion").style.display = "none"; <%-- 의견 --%>
+	                	document.getElementById("btnAprDocAttach").style.display = "none"; <%-- 문서첨부 --%>
+	                	document.getElementById("btnPrint").style.display = "none"; <%-- 인쇄 --%>
+	                	message.PutFieldText("docnumber","");
+	                }
+	                
+	                /**
+	                	기안인 경우에는 hwp파일이 실존하지 않아 로컬로 저장하는 것이 불가능하므로 저장버튼 display:none처리
+	                	또한, 일반 mht쪽에서도 기안을 올릴 때 저장 기능이 없음.
+	                */
+	                if(DraftFlag === 'DRAFT') {
+	                	$("#btnSave").css('display', 'none');
 	                }
 	            } catch (e) {
 	                alert("ezdraftui_whwp.FieldsAvailable()::" + e);
@@ -1316,7 +1317,7 @@
 			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "hwp";
 			        //var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 			        //var ret = window.showModalDialog(url, parameter, feature);
-			        var ret = window.open(url, '', 'height=750,width=1140,scrollbars=no' + GetOpenPosition(1140, 750));
+			        var ret = window.open(url, '', 'height=750,width=1194,scrollbars=no' + GetOpenPosition(1194, 750));
 
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e);
@@ -1388,7 +1389,7 @@
 		            	nonElecRecInfoXml = ret[23];
 		            	nonSepAttachLVXml = ret[24];
 		            	sepAttachCheckYN = ret[26];
-		            	setNonElecRecInfo(nonElecRecInfoXml);
+		            	setNonElecRecInfo_whwp(nonElecRecInfoXml);
 		            }
 
 		            if (useOpenGov == "YES") {
@@ -1733,12 +1734,12 @@
 	                        <li id="btnFileAttach"><span onclick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 	                        <li id="btnAprDocAttach"><span onclick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t57'/></span></li>
 	                        <li id="btnAddSepAttach"><span onclick="btnAddSepAttach_onclick()"><spring:message code='ezApprovalG.t58'/></span></li>
-	                        <li id="btnSave"><span onclick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
-	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
-	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
+	                        <li id="btnSave" style="display:none"><span onclick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
 	                        <li id="btnConn" style="display: none"><span onclick="return btnConn_onclick()"><spring:message code='ezApprovalG.t157'/></span></li>
-	                        <li id="btnSaveServer"><span onclick="return btnSaveServer_onclick()"><spring:message code='ezApprovalG.t4000'/></span></li>
+	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 	                        <li id="btnHelper" style="display: none"><span onclick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t157'/></span></li>
+	                        <li id="btnSaveServer"><span onclick="return btnSaveServer_onclick()"><spring:message code='ezApprovalG.t4000'/></span></li>
+	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
 	                    </ul>
 	                    <ul style="display: none;">
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>

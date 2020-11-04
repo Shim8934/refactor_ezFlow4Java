@@ -367,6 +367,53 @@
                     btnOpinion_onclick();
                 }
 	    	}
+	    	
+	    	// 통합 PC 저장 시작
+	    	var totalsavefileinfo_dialogArguments = new Array();
+		    
+	    	function TotalSave_onclick() {
+		        totalsavefileinfo_dialogArguments[0] = "";
+		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
+		
+		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID=" + orgCompanyID);
+		    }
+		    
+	    	function TotalSave_onclick_Complete() {
+		        DivPopUpHidden();
+		    }
+	    	// 통합 PC 저장 끝
+	    	
+	    	// 게시판 게시 시작
+	    	var writeboardselect_modal_dialogArguments = new Array();
+		    function NewItem_onclick() {
+		    	writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
+		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+		        try { OpenWin.focus(); } catch (e) { }
+		    }
+		    
+		    function NewItem_onclick_Complete(ret) {
+		        if (typeof (ret) != "undefined") {
+		            pBoardID = ret[0];
+		
+		            if (pBoardID == "" || typeof (pBoardID) == "undefined") {
+		                return;
+		            }
+		
+		            var pheight = window.screen.availHeight;
+		            var pwidth = window.screen.availWidth;
+		            var pTop = (pheight - 720) / 2;
+		            var pLeft = (pwidth - 765) / 2;
+		            
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
+		                alert(strLang1031);
+		            }
+		            else {
+		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + docHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+		            }
+		        }
+		    }
+		 // 게시판 게시 끝
+		    
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden" onload="javascript:window_onload()">
@@ -375,17 +422,17 @@
 	            <td height="20">
 	                <div id="menu">
 	                    <ul>
-	                    	<c:if test="${useExternalMailServer == 'YES' }">
-	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
-	                        </c:if>
-	                        <c:if test="${useBoard == 'YES' }">
-	                        <li id="btnBoard"><span onclick="return btnBoard_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
-	                        </c:if>
-	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
-	                        <li id="btnSave"><span onclick="return btnSave_onclick()">PC<spring:message code='ezApprovalG.t59'/></span></li>
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 	                        <li id="btnOpinion"><span onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
+	                        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+	                        <c:if test="${useBoard == 'YES' }">
+	                        <li id="btnBoard"><span onclick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
+	                        </c:if>
+	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
+	                    	<c:if test="${useExternalMailServer == 'NO' }">
+	                        <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onclick="return btnMail_onclick()"></span></li>
+	                        </c:if>
 	                        <c:if test="${sendType eq 'T'}">
 		                        <li id="btnReqOpinion"><span onclick="btnReqOpinion_onclick()">재발송의견</span></li>
 	                        </c:if>

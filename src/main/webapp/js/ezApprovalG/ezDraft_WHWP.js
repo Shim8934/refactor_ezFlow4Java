@@ -772,7 +772,7 @@ function SetBtnStateTrue()
 		setMenuBar("btnAprDocAttach",true);
 		setMenuBar("btnOpinion",true);	
 		btnClose.style.diplay = ""	
-		setMenuBar("btnSave",true);
+		//setMenuBar("btnSave",true);
 		setMenuBar("btnPrint",true);
 		
 		if(pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")

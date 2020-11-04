@@ -1174,7 +1174,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String formId = ezApprovalGService.getFormId(formURL);
 		String formAprOption = ezApprovalGService.getFormAprOptionInfo(formId, "FORM", userInfo.getCompanyID(), userInfo.getTenantId());
 		model.addAttribute("formAprOption", formAprOption);
-		//		
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		LOGGER.debug("draftuiWHWP ended");
 		
@@ -1794,7 +1794,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		LOGGER.debug("downloadAttachForHwp ended");
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/uploadAttachForHwp.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezApprovalG/uploadAttachForHwp.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String uploadAttachForHwp(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LOGGER.debug("uploadAttachForHwp started");

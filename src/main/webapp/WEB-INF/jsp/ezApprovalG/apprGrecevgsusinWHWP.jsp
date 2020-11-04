@@ -1670,7 +1670,7 @@
 				            	nonSepAttachLVXml = ret[24];
 				            	g_szSCListXml =  ret[25];
 				            	sepAttachCheckYN = ret[26];
-				            	setNonElecRecInfo(nonElecRecInfoXml);
+				            	setNonElecRecInfo_whwp(nonElecRecInfoXml);
 				            }
 		                } else {
 		                	tempKeep = ret[16];
@@ -1850,8 +1850,10 @@
 	                        </c:choose>
 	                        <li id="btnReqReSend" style="display: none"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
 	                        <li id="btnEdit"><span onclick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
-	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
-	                        <li id="btnMail" style="display:none"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
+	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
+	                        <c:if test="${useExternalMailServer == 'NO'}">
+	                        	<li id="btnMail" style="display:none"><span class="icon16 popup_icon16_mail_gray" onclick="return btnMail_onclick()"></span></li>
+	                        </c:if>
 	                        <li id="btnHelper" style="display: none"><span onclick="return btnHelper_onclick()" style="display: none;"><spring:message code='ezApprovalG.t157'/></span></li>
 	                        <li id="btnRefresh" style="display: none"><span onclick="return RefreshRecvDoc()"><spring:message code='ezApprovalG.t00013'/></span></li>
 	                    </ul>

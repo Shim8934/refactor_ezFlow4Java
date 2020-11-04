@@ -610,7 +610,7 @@
 			 }
 			 
 			 function SetHTML(data, callback) {
-			    message.SetTextFile(data, "HWP", function (data) { callback(data) });
+			    message.SetTextFile(data, "HWP", "", function (result) { callback(result) });
 			 }
 			 
 			 // btnApprove_onclick -> Approve 시작
@@ -1027,6 +1027,17 @@
 			    	DivPopUpHidden();
 			    	
 			    	if (ret != "cancel" && ret != undefined) {
+			    		var objXML = createXmlDom();
+				        objXML = loadXMLString(ret);
+				        
+				        var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+				        if (NodeList.length != 0) {
+				            pHasOpinionYN = "Y";
+				        } else {
+				            pHasOpinionYN = "N";
+				        }
+				        makeOpinionList(objXML);
+			    	
 			            UpdateLineHistory();
 			            GetHTML(btnStay_option_Complete2);
 			        } else if (ret == "cancel" || ret == undefined) {
@@ -1123,12 +1134,12 @@
 				        if (FirstHtml == "") {
 				            FirstHtml = beforeHwp;
 				        }
+				        message.EditMode(0);
+				    	modeflag = true;
+				    	chkBtnConfirm("2");
 				    } else {
 		                SetHTML(beforeHwp, btnEdit_Cancel_Complete)
 		            } 
-		
-				    modeflag = true;
-				    chkBtnConfirm("2");
 			    }
 			    
 			    function btnEdit_Cancel_Complete(result) {
@@ -1218,10 +1229,9 @@
 			    }
 			
 			    function btnMail_onclick() {
-			        SaveFile();
-			        window.open("/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			    	window.open("/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			    }
-	
+			    
 			    var tempSecurity = "";
 			    var tempKeep = "";
 			    var tempUrgent = "N";
@@ -1482,7 +1492,7 @@
 			    				            	g_szSCListXml = ret[25];
 			    						        sepAttachCheckYN = ret[26];
 			    				            	if (ext == "hwp") {
-			    					            	setNonElecRecInfo(nonElecRecInfoXml);
+			    					            	setNonElecRecInfo_whwp(nonElecRecInfoXml);
 			    				            	}
 			    				            }
 
@@ -1580,6 +1590,43 @@
 			        	message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
 	                }
 		    	}
+		    	
+		    	// 통합 PC 저장 시작
+		    	var totalsavefileinfo_dialogArguments = new Array();
+			    function TotalSave_onclick() {
+			        totalsavefileinfo_dialogArguments[0] = "";
+			        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
+			
+			        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=" + getDocMode() + "&orgCompanyID=" + orgCompanyID);
+			    }
+			    
+			    function TotalSave_onclick_Complete() {
+			        DivPopUpHidden();
+			    }
+			    
+			    function getDocMode() {
+			    	var rtnVal = "APR";
+			    	try {
+			    		$.ajax({
+			     			type : "POST",
+			     			dataType : "text",
+			     			async : false,
+			     			url : "/ezApprovalG/getLineMode.do",
+			     			data : {
+			     					docID : pDocID,
+			     					orgCompanyID : orgCompanyID
+			     					},
+			     			success: function(result) {
+			     				rtnVal = result;
+			     			}
+			            });
+			    	} catch (e) {
+			    		alert("getDocMode() :: " + e.description);
+			    	}
+			    	
+			    	return rtnVal;
+			    }
+			 // 통합 PC 저장 끝
 	    </script>
 	</head>
 	<body class="popup" onbeforeunload="return window_onbeforeunload()" onload="javascript:window_onload()">
@@ -1610,12 +1657,12 @@
 	                        <li id="btnFileAttach"><span onclick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 	                        <li id="btnAprDocAttach"><span onclick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t57'/></span></li>
 	                        <li id="btnAddSepAttach"><span onclick="btnAddSepAttach_onclick()"><spring:message code='ezApprovalG.t58'/></span></li>
-	                        <li id="btnSave"><span onclick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
-	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
+	                        <li id="btnSave" style="display:none"><span onclick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
-	                        <li id="btnMail" style="display:none"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
 	                        <li id="btnHelper" style="display: none"><span onclick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t157'/></span></li>
-	                        <li id="tbtnTotalSave" style="display: none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+	                        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
+	                        <li id="btnMail" style="display:none"><span class="icon16 popup_icon16_mail_gray" onclick="return btnMail_onclick()"></span></li>
 	                    </ul>
 	                </div>
 	                <div id="close">
