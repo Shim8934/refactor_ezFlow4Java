@@ -242,25 +242,17 @@ public class EzPersonalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPersonal/saveBujaeUser.do", method = RequestMethod.POST, produces = "text/plain;charset=utf-8")
 	@ResponseBody
 	public Object saveBujaeUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
-		logger.debug("saveBujae started");
+		logger.debug("saveBujaeUser started");
 		
-		JSONObject resultJo = new JSONObject();
 		JSONArray ja = new JSONArray();
 		JSONParser parser = new JSONParser();
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String result = "";
-		String buJaeInfo = request.getParameter("buJae");
-		String buJaeInfo2 = "";
-		String proxyInfo = request.getParameter("proxy");
-		String dept = request.getParameter("dept");
-		String buJaeId = request.getParameter("buJaeId");
-//		String proxyInfo2 = "";
 		//TODO: 원래는 user를 ad에서 정보 가져오는데 임시로 하드코딩함 전자결재외에 다른 부분 발견하면 수정요망(전자결재만 존재하면 그냥 박아도됨)
 		String pClass = "user";
 		String strFormArray = request.getParameter("formArray");
-		
 		
 		ja = (JSONArray)parser.parse(strFormArray);
 		
@@ -275,14 +267,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			}
 		}
 		
-		System.out.println("result => " + result);
-		
-		// TBL_USERMASTER
-		//result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", buJaeInfo2, pClass, userInfo.getTenantId());
-		// TBL_ADDJOBMASTER
-		//result = ezOrganService.updateAddJobProxy(userInfo.getId(), buJaeInfo2, userInfo.getTenantId(), dept);
-		
-		logger.debug("saveBujae ended");
+		logger.debug("saveBujaeUser ended");
 		return result;
 	}
 	
