@@ -110,9 +110,9 @@
 			<isNotEmpty property="startDate" >
 				<![CDATA[
 	              AND
-	              		WRITE_DATE >= TO_CHAR(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+	              		WRITE_DATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
 	              AND 
-	              		WRITE_DATE <= TO_CHAR(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
+	              		WRITE_DATE <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
 	             ]]> 
             </isNotEmpty>
 			<isNotEqual property="folder_id" compareValue="0">
