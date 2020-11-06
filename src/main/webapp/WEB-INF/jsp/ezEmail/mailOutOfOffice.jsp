@@ -142,6 +142,10 @@
 		                    'timeFormat': 'H:i',
 		                    'disableTextInput': true
 		                });
+		                 $("#Stimepicker").on("focus", function(){
+							$(this).trigger("blur");
+						});
+						
 		                $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		                $("#Edatepicker").datepicker('setDate', EndDate);
 		                $('#Etimepicker').timepicker('setTime', EndDate);
@@ -149,6 +153,9 @@
 		                    'timeFormat': 'H:i',
 		                    'disableTextInput': true
 		                });
+		                 $("#Etimepicker").on("focus", function(){
+							$(this).trigger("blur");
+						});
 		            } catch (e) { }
 		          
 		            if (g_oofstate == "disabled") {
