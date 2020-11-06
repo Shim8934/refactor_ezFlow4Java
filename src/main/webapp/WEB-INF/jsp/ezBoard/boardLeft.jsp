@@ -475,7 +475,7 @@
 		    	$(".myb h2").attr("class", "on");
 		    	$(".myb").next().attr("class", "on");
 		    	
-		        SetTreeConfig();
+		    	SetTreeConfig();
 		        document.getElementById('TreeCtrl_MyBoardTree').innerHTML = "";
 		        var treeView = new TreeView();
 		        treeView.SetID("FromTreeView");
@@ -732,8 +732,9 @@
 		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
 		            var treeView = new TreeView();
 		            treeView.SetConfig(xmlHTTP.responseXML);
-		        }
 		    }
+		    }
+		    
 		    function favoriteList() {
 		    	$(".on").attr("class", "off");
 		    	$(".fList h2").attr("class", "on");
@@ -745,10 +746,27 @@
 		       		window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
 				}
 		    }
+		    
+		    /* 2020-11-05 홍승비 - 크롬 브라우저에서 부모창의 XMLHTTPRequest를 호출한 자식창이 닫히는 경우, send() 이후가 동작하지 않는 오류 수정(지원종료) */
+		    var configmyboard_dialogArguments = new Array();
 		    function ConfigMyBoard() {
+		    	configmyboard_dialogArguments[0] = "";
+		    	
 		        var OpenWin = window.open("/ezBoard/myBoardConfig.do?type=CONFIG", "MyBoardConfig", GetOpenWindowfeature(525, 418));
-		        try { OpenWin.focus(); } catch (e) { }
+		        try {
+		        	OpenWin.focus();
+		        	
+			        var winTimer = window.setInterval(function() {
+			            if (OpenWin.closed !== false) {
+			                window.clearInterval(winTimer);
+			                if (configmyboard_dialogArguments[0] == "Y") {
+					    		ShowMyBoardItem();
+					    	}
+			            }
+			        }, 500);
+		        } catch (e) { }
 		    }
+		    
 		    function MyBoard() {
 		    	if (typeof window.parent.frames["right"] == "undefined") {
 					rightFrame.src = "/ezBoard/boardItemListMyList.do";

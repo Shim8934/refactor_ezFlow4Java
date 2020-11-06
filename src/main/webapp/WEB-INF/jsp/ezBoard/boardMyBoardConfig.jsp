@@ -19,17 +19,19 @@
 	        var isChanged = "";
 	
 	        /* 2018-11-28 홍승비 - 마이게시판 관리 시 변화가 없다면 좌측 마이게시판 확장하지 않음 */
-			window.onunload = function () {
+			window.onbeforeunload = function () {
 				if (isChanged == "Y") {
-	            	try {window.opener.parent.frames["left"].ShowMyBoardItem();} catch (e) {}
-				} else {}
+	            	try {
+	            		window.opener.configmyboard_dialogArguments[0] = "Y";
+	            	} catch (e) {}
+				}
 	        };
 	
 	        window.onload = function () {
 	            SetTreeConfig();
 	            makeTreeList();
 	        };
-	        
+	            
 	        /* 2019-01-31 홍승비 - 세로방향 리사이즈 시 내부 테이블 높이도 리사이즈 */
 	        window.onresize = function () {    	
 	        	document.getElementById("TreeCtrl_MyBoardTree").style.height = (document.documentElement.clientHeight - 141) + "px";
