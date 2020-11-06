@@ -1313,10 +1313,10 @@
 				                window.clearInterval(winTimer);
 				                if (configmyboard_dialogArguments[0] == "Y") {
 				                	if (parentHref.indexOf("admin/ezBoard") < 0 && parentHref.indexOf("boardItemList_favorite") < 0) { // 일반 게시판에서 접근
-				                		window.parent.frames["left"].ShowMyBoardItem();
+				                		window.parent.frames["left"].ShowMyBoardItemNew();
 				                	}
 				                	else if (parentHref.indexOf("admin/ezBoard") < 0 && parentHref.indexOf("boardItemList_favorite") > -1) { // 새게시물 탭에서 접근
-				                		window.parent.parent.frames["left"].ShowMyBoardItem();
+				                		window.parent.parent.frames["left"].ShowMyBoardItemNew();
 				                	}
 						    	}
 				            }

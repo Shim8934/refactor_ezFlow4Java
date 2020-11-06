@@ -590,6 +590,26 @@
 					node[i].style.overflow = 'hidden';
 				}  */
 		    }
+		    
+		    /* 2020-11-06 홍승비 - personalizedPortal용 중복 클릭해도 닫히지 않고 마이게시판을 갱신하는 함수 */
+		    function ShowMyBoardItemNew() {
+		    	SetTreeConfig();
+		        document.getElementById('TreeCtrl_MyBoardTree').innerHTML = "";
+		        var treeView = new TreeView();
+		        treeView.SetID("FromTreeView");
+		
+		        treeView.SetNodeClick("TreeCtrl_onNodeClickNew");
+		        treeView.SetRequestData("TreeCtrl_onNodeExpandedNew");
+		        treeView.DataSource(GetMyBoardItem("0"));
+		        treeView.DataBind("TreeCtrl_MyBoardTree");
+		        first++;
+	            
+	            $("h2.on").not($("#myBoardList")).attr("class","off");
+	            $("#TopBoardsList .lnbUL").attr("class","off");
+            	$("#myBoardList").attr("class","on");
+            	$("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL");
+		    }
+		    
 		    function GetMyBoardItem(pRootTreeID) {
 		    	var returnXML = "";
 		    	
@@ -885,7 +905,7 @@
 			            if (OpenWin.closed !== false) {
 			                window.clearInterval(winTimer);
 			                if (configmyboard_dialogArguments[0] == "Y") {
-					    		ShowMyBoardItem();
+			                	ShowMyBoardItemNew();
 					    	}
 			            }
 			        }, 500);
