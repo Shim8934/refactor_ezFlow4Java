@@ -723,7 +723,6 @@ function openFormUI_complete(ret) {
 			tempSecurityDate = "";
 			
 			var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pFormHref);
-            //var URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pFormHref);
             message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null); 
   		}
 	}

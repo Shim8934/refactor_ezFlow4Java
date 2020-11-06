@@ -330,7 +330,6 @@
 		                //showProgress("<spring:message code='ezApprovalG.t368'/>");
 					    var URL;
 		                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pSusinDocURL);
-		                //URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pSusinDocURL);
 		                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
 					}
 		        }
@@ -338,7 +337,6 @@
 		        else {
 				    var URL;
 	                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pRelayURL);
-	                //URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pRelayURL);
 	                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
 				}
 			}

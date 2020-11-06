@@ -1579,14 +1579,12 @@
 	    	function Editor_Complete() {
 	        	if (pFormHref != "") {
                     var URL;
-                  	URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(FormHref);
-                  	//URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(FormHref);
+                    URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(FormHref);
                     message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
 	        	} else {
                     DraftFlag = "DRAFT";
                     pDraftFlag = "DRAFT";
-                  	var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(sihangURL.replace(".mht", ".hwp"));
-                  	//var URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(sihangURL.replace(".mht", ".hwp"));
+                    var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(sihangURL.replace(".mht", ".hwp"));
 		        	message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
                 }
 	    	}
