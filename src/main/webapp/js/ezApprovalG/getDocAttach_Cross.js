@@ -160,11 +160,22 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                         
                         return;
                     }*/ 
-                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escapenew(FileDocID) +
-                	"&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
+                	if(useWebHWP == "NO") {
+	                	if(isIE()) {
+		                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
+	                	} else {
+	                    	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                    	alert(pAlertContent);
+	                        
+	                        return;
+	                    }
+                	} else {
+                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
+                	}
                 	strAttach = strAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
                 	strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
                 	strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
+                	
                 } else {
                     openLocation = "/ezApprovalG/contDocView.do";
                     openLocation = openLocation + "?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocID=";
@@ -225,12 +236,16 @@ function openAttachView(wfileLocation, wName, wWeigth, wHeigth) {
         }
         //2018-09-12 천성준 - 결재문서 문서보기 시, 첨부파일 중 hwp문서첨부를 열때 IE인지 검사하는 로직 추가
         if (wfileLocation.toLowerCase().indexOf(".hwp") > -1) {
-        	if (isIE()) {
-        		window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+        	if(useWebHWP == "NO") {
+	        	if (isIE()) {
+	        		window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+	        	} else {
+	        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	            	alert(pAlertContent);
+	                return;
+	        	}
         	} else {
-        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-            	alert(pAlertContent);
-                return;
+        		window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
         	}
         } else {
         	window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);

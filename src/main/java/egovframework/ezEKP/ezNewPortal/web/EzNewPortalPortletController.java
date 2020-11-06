@@ -327,6 +327,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		logger.debug("portalApprovalListPortlet ended.");
 		
@@ -394,6 +395,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 //		model.addAttribute("approvalGFlag", ezCommonService.getTenantConfig("approvalGFlag", userInfo.getTenantId()));
 		model.addAttribute("buJaeInfo", buJaeInfo);
 		model.addAttribute("now", commonUtil.getTodayUTCTime(""));
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		logger.debug("favoriteFormsPortlet ended.");
 		

@@ -462,40 +462,43 @@ function makeOpinionList(OpinionXML) {
 		return;
 
 	var firstFlag = true;
-	var NodeList = OpinionXML.selectNodes("LISTVIEWDATA/ROWS/ROW");
-	if (NodeList.length > 0)
-	{
+	var NodeList = SelectNodes(OpinionXML, "LISTVIEWDATA/ROWS/ROW");
+	if (NodeList.length > 0) {
 		var strOpinion = " ";
-		for (i=NodeList.length - 1; i>=0; i--)
-		{
-		    if (getNodeText(NodeList.item(i).childNodes(9)) == "001")
-			{
-				if (firstFlag)
-				{
+		for (i=NodeList.length - 1; i>=0; i--) {
+			if (getNodeText(GetChildNodes(NodeList[i])[9]) == "001") {
+				if (firstFlag) {
 					strOpinion = "[" + strLang27;
 					firstFlag = false;
 				}
 			
-				if (getNodeText(NodeList.item(i).childNodes(2)) != "")
-				    strOpinion = strOpinion + getNodeText(NodeList.item(i).childNodes(2)) + "\11";  
+				if (getNodeText(GetChildNodes(NodeList[i])[2]) != "")
+				    strOpinion = strOpinion + getNodeText(GetChildNodes(NodeList[i])[2]) + "\11";  
 				else
 					strOpinion = strOpinion + "   \11";  
 						
-				strOpinion = strOpinion + getNodeText(NodeList.item(i).childNodes(1)) + "\11";
-				strOpinion = strOpinion + getNodeText(NodeList.item(i).childNodes(6)) + "\15";
+				strOpinion = strOpinion + getNodeText(GetChildNodes(NodeList[i])[1]) + "\11";
+				strOpinion = strOpinion + getNodeText(GetChildNodes(NodeList[i])[6]) + "\15";
 			}
 		}		
 		message.PutFieldText("opinions", strOpinion);
 		
-		if (OpinionAction == "ADD" || OpinionAction == "DEL")
-			SaveFile();
+		/*if (OpinionAction == "ADD" || OpinionAction == "DEL") {
+			GetHTML(before_SaveFile);
+		}*/
 			
 		OpinionAction = "";
 	}
-	else
-	{
+	else {
 		message.PutFieldText("opinions", "");
 	}
+	GetHTML(before_SaveFile);
+}
+
+function before_SaveFile(html) {
+	SaveHtml = html;
+	
+	SaveFile();
 }
 
 var aprattach_dialogArguments = new Array();

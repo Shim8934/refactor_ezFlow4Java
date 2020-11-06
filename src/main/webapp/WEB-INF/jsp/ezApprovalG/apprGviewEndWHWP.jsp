@@ -55,6 +55,7 @@
 			var ext = "hwp";
 			var orgCompanyID = "<c:out value='${orgCompanyID}' />";
 			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
+			var useWebHWP = "<c:out value='${useWebHWP}'/>";
 			
 			window.onresize = function () {
 	        	var mHeight = document.documentElement.clientHeight - 152 - document.getElementById("message").offsetTop + "px";
