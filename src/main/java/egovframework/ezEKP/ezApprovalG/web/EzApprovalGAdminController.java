@@ -3986,7 +3986,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String type = request.getParameter("type");
+		String type = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("type")));
 		
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
