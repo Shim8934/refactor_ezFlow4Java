@@ -306,7 +306,7 @@ public class EzMemoController {
 			JSONObject memo = (JSONObject) resultBody.get("memo");
 			model.addAttribute("memo", memo);
 			if (layerFlag != null) {
-				model.addAttribute("layerFlag", layerFlag);
+				model.addAttribute("layerFlag", commonUtil.stripScriptTagsAndFunctions(layerFlag));
 			}
 			return "json";
 		}
