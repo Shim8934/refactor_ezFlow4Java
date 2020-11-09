@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -92,6 +93,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -116,6 +118,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -591,7 +594,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 }
             }
 
+            String dateReg = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"; //sql injection 처리 
             if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
+                String aprStartDate = domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent();
+                if (!Pattern.matches(dateReg, aprStartDate)) {
+                    return "";
+                }
                 if (listType.equals("10")) {
                 	if (!dbType.equals("mysql")) {
                     	returnQuery += " AND RECEIVEDDATE >= TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true ) + " ','YYYY-MM-DD HH24:MI:SS') ";
@@ -609,6 +617,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
             }
             
             if (tempQuery.indexOf("APRENDDATE;") != -1) {
+                String aprEndDate = domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent();
+                if (!Pattern.matches(dateReg, aprEndDate)) {
+                    return "";
+                }
                 if (listType.equals("10")){
                 	if (!dbType.equals("mysql")) {
                 		returnQuery += " AND RECEIVEDDATE <= TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true ) + " ','YYYY-MM-DD HH24:MI:SS') ";
