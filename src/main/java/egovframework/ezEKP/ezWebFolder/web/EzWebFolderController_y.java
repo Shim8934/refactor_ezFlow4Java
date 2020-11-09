@@ -135,7 +135,15 @@ public class EzWebFolderController_y {
 		param.put("searchCreateName", orElse(request.getParameter("searchCreateName")	, ""));
 		param.put("searchFileType"	, orElse(request.getParameter("searchFileType")		, ""));
 		param.put("searchPageCount"	, orElse(request.getParameter("searchPageCount")	, ""));
-		param.put("sortType"		, orElse(request.getParameter("sortType")			, ""));
+		
+		String sortType = orElse(request.getParameter("sortType"), "");
+		
+		// SQL Injection 방지를 위해 유효한 값을 체크
+		if (!sortType.isEmpty() && !sortType.equalsIgnoreCase("DESC") && !sortType.equalsIgnoreCase("ASC")) {
+			return "";
+		}
+			
+		param.put("sortType"		, sortType);
 		param.put("sortColumn"		, orElse(request.getParameter("sortColumn")			, ""));
 		
 		LOGGER.debug("folderId : " + folderId);
