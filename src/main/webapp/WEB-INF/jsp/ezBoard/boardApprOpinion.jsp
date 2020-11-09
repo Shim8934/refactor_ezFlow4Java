@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,8 +10,8 @@
     <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script type="text/javascript">
-        var pMod = "${mode}";
-        var ItemList = "${itemList}";
+        var pMod = "<c:out value='${mode}'/>";
+        var ItemList = "<c:out value='${itemList}'/>";
         
         function btn_OK() {
             if (trim_Cross(txt_OpinionContent.value) == "") {

@@ -37,17 +37,14 @@
 	        var SSCompanyName = "${userInfo.companyName}";
 	        var SelectedBoardID = "";
 	        var SelectedBoardParentBoardID = "";
-	        var RedirectBoardGroupID = "${redirectBoardGroupID}";
-	        var RedirectBoardID = "${redirectBoardID}";
+	        var RedirectBoardGroupID = "<c:out value='${redirectBoardGroupID}'/>";
+	        var RedirectBoardID = "<c:out value='${redirectBoardID}'/>";
 	        var Func = '<c:out value="${func}"/>';
 	        var subFunc = '<c:out value="${subFunc}"/>';
 	        var qstId = '<c:out value="${qstId}"/>';
-	        var PhotoType = "${photoType}";
-	        var g_ReadyState = "";
-	        var first = 1;
-	        var items = "${resultCount}";
+	        var items = "<c:out value='${resultCount}'/>";
 	        var rightFrame = "";
-	        var useLeftCnt = "${useLeftCnt}";
+	        var useLeftCnt = "<c:out value='${useLeftCnt}'/>";
 	        
 		    window.onresize = function () {
 		        var menuSize = (parseInt(items) + 2) * 30;
@@ -122,7 +119,7 @@
 		            else {
 		            	/* 2019-09-16 홍승비 - 게시판 리다이렉트로 이동하는 경우, 게시판 좌측메뉴 스크롤 미생성 오류 수정 */
 		                if (RedirectBoardID != "") {
-		                    if (RedirectBoardGroupID != "" && RedirectBoardGroupID != "null" && g_ReadyState == "") {
+		                    if (RedirectBoardGroupID != "" && RedirectBoardGroupID != "null") {
 		                        BoardRedirect();
 		                        
 		                        document.getElementById('TreeCtrl_MyBoardTree').scrollTop = 0;
@@ -568,7 +565,6 @@
 		        treeView.SetRequestData("TreeCtrl_onNodeExpandedNew");
 		        treeView.DataSource(GetMyBoardItem("0"));
 		        treeView.DataBind("TreeCtrl_MyBoardTree");
-		        first++;
 	            
 	            $("h2.on").not($("#myBoardList")).attr("class","off");
 	            $("#TopBoardsList .lnbUL").attr("class","off");
@@ -602,7 +598,6 @@
 		        treeView.SetRequestData("TreeCtrl_onNodeExpandedNew");
 		        treeView.DataSource(GetMyBoardItem("0"));
 		        treeView.DataBind("TreeCtrl_MyBoardTree");
-		        first++;
 	            
 	            $("h2.on").not($("#myBoardList")).attr("class","off");
 	            $("#TopBoardsList .lnbUL").attr("class","off");

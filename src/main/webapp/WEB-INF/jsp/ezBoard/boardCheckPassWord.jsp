@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 	<head>
 		<title><spring:message code='ezBoard.t242'/></title>
@@ -35,8 +36,8 @@
 					async : false,
 					url : "/ezBoard/confirmPassword.do",
 					data : { newPassword   : rsa.encrypt(document.getElementById("inpPassword").value),
-							 replyID : "${replyID}",
-							 itemID  : "${itemID}"
+							 replyID : "<c:out value='${replyID}'/>",
+							 itemID  : "<c:out value='${itemID}'/>"
 							},
 					success: function(result){
 						rtnVal = result;

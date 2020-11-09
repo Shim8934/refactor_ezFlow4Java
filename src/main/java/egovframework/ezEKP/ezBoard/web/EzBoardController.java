@@ -192,21 +192,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("boardMainRedirect started");
 
 		String boardID = "";
-		String photoType = "";
 		
 		if (req.getParameter("boardID") != null && !req.getParameter("boardID").equals("")) {
 			boardID = req.getParameter("boardID");	
 		}
 		
-		if (req.getParameter("photoType") != null && !req.getParameter("photoType").equals("")) {
-			photoType = req.getParameter("photoType");	
-		}
-
 		boardID = boardID.replace("{", "%7B").replace("}", "%7D");
 		
 		model.addAttribute("boardID", boardID);
-		model.addAttribute("photoType", photoType);
-
+		
 		logger.debug("boardMainRedirect ended");
 		return "ezBoard/boardMainRedirect";
 	}
@@ -223,7 +217,6 @@ public class EzBoardController extends EgovFileMngUtil{
         String qstId = "";
         String func = "";
         String subFunc = "";
-        String photoType = "";
         String applyFlag = "";
         String isAdminLeft = "";
         boolean isCompanyAdmin = false;
@@ -268,10 +261,6 @@ public class EzBoardController extends EgovFileMngUtil{
         if (ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", tenantID) != null) {
         	useLeftCnt = ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", tenantID);
         }
-        
-		if (request.getParameter("photoType") != null && !request.getParameter("photoType").equals("")) {
-			photoType  = request.getParameter("photoType");
-		}
 		
 		if (request.getParameter("boardID") != null && !request.getParameter("boardID").equals("")) {
 			redirectBoardID  = request.getParameter("boardID");
@@ -359,7 +348,6 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("func", commonUtil.stripScriptTags(func));
         modelMap.addAttribute("subFunc", commonUtil.stripScriptTags(subFunc));
         modelMap.addAttribute("qstId", commonUtil.stripScriptTags(qstId));        
-        modelMap.addAttribute("photoType",photoType);
         modelMap.addAttribute("redirectBoardID",redirectBoardID);
         modelMap.addAttribute("redirectBoardGroupID", redirectBoardGroupID.toString());
         modelMap.addAttribute("applyFlag",applyFlag);
