@@ -25,17 +25,17 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script>
-			var pOrgBoardParameters = "${orgBoardParameters}";
+			var pOrgBoardParameters = "<c:out value='${orgBoardParameters}'/>";
 			var SSUserID = "${userInfo.id}";
 			var SSUserName = "${userInfo.displayName}";
-			var CurPage = "${page}";
-			var totalPage = "${totalPage}";
+			var CurPage = "<c:out value='${page}'/>";
+			var totalPage = "<c:out value='${totalPage}'/>";
 			var strListInfo = "";
-			var pSortBy = "${sortBy}";
-		    var pTotalCnt = "${totalCount}";
-		    var pUse_Editor = "${seEditor}";
-		    var pAdminType = "${adminType}";
-		    var useRunTime = "${useRunTime}";
+			var pSortBy = "<c:out value='${sortBy}'/>";
+		    var pTotalCnt = "<c:out value='${totalCount}'/>";
+		    var pUse_Editor = "<c:out value='${useEditor}'/>";
+		    var pAdminType = "<c:out value='${adminType}'/>";
+		    var useRunTime = "<c:out value='${useRunTime}'/>";
 		    window.onload = function ()
 		    {
 		    	if (useRunTime != "YES") {
