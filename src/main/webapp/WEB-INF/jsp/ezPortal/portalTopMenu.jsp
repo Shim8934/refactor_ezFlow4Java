@@ -132,10 +132,10 @@
 			var previousCell = null;
 			var count = 1000;
 			var pageid = '<c:out value="${pageID}"/>';
-			var parentpageid = "${parentPageID}";
+			var parentpageid = "<c:out value='${parentPageID}'/>";
 			var mode = '<c:out value="${mode}"/>';
 			var editmode = "${editMode}";
-			var viewmode = "${viewMode}";
+			var viewmode = "<c:out value='${viewMode}'/>";
 			var bInherit = false;
 			var pressCount = 0;
 			var selObjClass = "";

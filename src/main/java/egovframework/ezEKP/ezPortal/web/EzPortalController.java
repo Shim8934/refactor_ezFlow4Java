@@ -912,13 +912,13 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pUserThemeUID = "";	
 		
 		if (req.getParameter("mode") != null &&  !(req.getParameter("mode")).equals("")) {
-			mode = req.getParameter("mode");
+			mode = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("mode")));
 		}
 		if (req.getParameter("gubunFlag") != null && !(req.getParameter("gubunFlag")).equals("")) {
 			gubunFlag = req.getParameter("gubunFlag");
 		}
 		if (req.getParameter("resetMyParentPageID") != null && !req.getParameter("resetMyParentPageID").equals("")) {
-			resetMyParentPageID = req.getParameter("resetMyParentPageID");
+			resetMyParentPageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("resetMyParentPageID")));
 		}
 		
 		logger.debug("mode="+mode + ", gubunFlag=" + gubunFlag + ", resetMyParentPageID=" + resetMyParentPageID);
