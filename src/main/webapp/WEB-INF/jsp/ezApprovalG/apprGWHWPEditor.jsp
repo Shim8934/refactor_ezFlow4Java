@@ -14,6 +14,7 @@
 		<script type="text/javascript">
 		    var HwpCtrl;
 	        var splitChar = "\x02";
+	        var type = "<c:out value='${type}'/>";
 
 	        function Resize(pHeight) {
 	            document.getElementById("hwpctrl_frame").style.width = "100%";
@@ -21,8 +22,12 @@
 	        }
 	
 		    window.onload = function () {
-		    	HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Complete(); });
-		    }
+		    	if(type == "") {
+		    		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Complete(); });
+		    	} else {
+		    		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { parent.Editor_Complete2(); });
+	    		}
+	    	}
 		    
 	        function Editor_Complete() {
 	           // 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용

@@ -1873,11 +1873,14 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 * 전자결재G 한글 웹 기안기 양식작성기 화면 호출
 	 */
 	@RequestMapping(value="/ezApprovalG/WHWPEditor.do", method = RequestMethod.GET)
-	public String WHWPEditor(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String WHWPEditor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LOGGER.debug("WHWPEditor started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String type = request.getParameter("type");
+		
 		model.addAttribute("webHWPUrl", ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId()));
+		model.addAttribute("type", type);
 		
 		LOGGER.debug("WHWPEditor ended.");
 		return "ezApprovalG/apprGWHWPEditor";
