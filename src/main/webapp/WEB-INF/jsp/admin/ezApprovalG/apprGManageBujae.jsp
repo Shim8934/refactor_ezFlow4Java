@@ -335,15 +335,17 @@
 	    					proxydeptid = result.proxyDeptID;
     					} */
     					
-						if(!result.bReasonFlag){
-							document.getElementById("absentreason").style.display = "";
-							document.getElementById("TR_Appoint").style.display = "";
-							document.getElementById("absentreason").value = "";
-	    				}else{
-	    					document.getElementById("absentreason").style.display = "";
-	    					document.getElementById("absentreason").value = result.bReason;
-	    					document.getElementById("TR_Appoint").style.display = "none";
-    					}
+						if (approvalFlag == "G") {
+							if(!result.bReasonFlag){
+								document.getElementById("absentreason").style.display = "";
+								document.getElementById("TR_Appoint").style.display = "";
+								document.getElementById("absentreason").value = "";
+							}else{
+								document.getElementById("absentreason").style.display = "";
+								document.getElementById("absentreason").value = result.bReason;
+								document.getElementById("TR_Appoint").style.display = "none";
+							}
+						}
 		    		}		    		
 		    	});
 			}

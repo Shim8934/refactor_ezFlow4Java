@@ -9175,7 +9175,7 @@
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_FORMID">
 							   	 	 AND 
-							   	 	      FORMID = $v_FORMID$
+							   	 	      FORMID = #v_FORMID#
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 

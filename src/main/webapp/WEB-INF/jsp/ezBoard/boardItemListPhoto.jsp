@@ -1104,10 +1104,31 @@
 		            search("quick");
 		    }
 		
+		    /* 2020-11-05 홍승비 - 크롬 브라우저에서 부모창의 XMLHTTPRequest를 호출한 자식창이 닫히는 경우, send() 이후가 동작하지 않는 오류 수정(지원종료) */
+		    var configmyboard_dialogArguments = new Array();
 		    function SaveMyBoard() {
+		    	configmyboard_dialogArguments[0] = "";
+		    	
 		        if (CrossYN()) {
 		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), "MyBoardConfig", 525, 418);
-		            try { OpenWin.focus(); } catch (e) { }
+		            try { 
+		            	OpenWin.focus();
+		            	
+			            var parentHref = window.parent.location.href;
+						var winTimer = window.setInterval(function() {
+				            if (OpenWin.closed !== false) {
+				                window.clearInterval(winTimer);
+				                if (configmyboard_dialogArguments[0] == "Y") {
+				                	if (parentHref.indexOf("admin/ezBoard") < 0 && parentHref.indexOf("boardItemList_favorite") < 0) { // 일반 게시판에서 접근
+				                		window.parent.frames["left"].ShowMyBoardItemNew();
+				                	}
+				                	else if (parentHref.indexOf("admin/ezBoard") < 0 && parentHref.indexOf("boardItemList_favorite") > -1) { // 새게시물 탭에서 접근
+				                		window.parent.parent.frames["left"].ShowMyBoardItemNew();
+				                	}
+						    	}
+				            }
+				        }, 500);
+					} catch (e) { }
 		        }
 		        else
 		            showModalDialog("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), null, "dialogHeight:418px; dialogWidth:525px; status:no; help:no; scroll:no; edge:sunken");

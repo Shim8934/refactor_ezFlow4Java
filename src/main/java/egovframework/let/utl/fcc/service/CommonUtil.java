@@ -221,6 +221,14 @@ public class CommonUtil {
         return src;
     }
 
+	public String stripTagSymbols(String src) {
+		if (src != null && !src.isEmpty()) {
+			src = src.replaceAll("<", "").replaceAll(">", "");
+		}
+
+		return src;
+	}
+    
 	public LoginVO userInfo(String loginCookie){
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
