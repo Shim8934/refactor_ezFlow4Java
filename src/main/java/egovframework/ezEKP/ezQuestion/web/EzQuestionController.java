@@ -964,8 +964,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 	public String qstStep1(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req,Model model)  {
 		logger.debug("qstStep1 started.");
 		
-		String brdID = req.getParameter("brdID");
-		String brdNm = req.getParameter("brdNm");
+		String brdID = commonUtil.stripScriptTagsAndFunctions(req.getParameter("brdID"));
+		String brdNm = commonUtil.stripScriptTagsAndFunctions(req.getParameter("brdNm"));
 
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("brdNm", brdNm);
@@ -984,25 +984,25 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 		StringBuilder pStep1DataXML = new StringBuilder();
 		
-		String content = commonUtil.cleanValue(req.getParameter("txtContent"));
+		String content = commonUtil.cleanValue(commonUtil.stripScriptTagsAndFunctions(req.getParameter("txtContent")));
 		
 		//목적에 줄바꿈있으면 스크립트에러나서, 애초에 줄바꿈이 필요없기때문에 띄워쓰기로 변경
 		content = content.replaceAll("\r\n", " ");
 		
 		pStep1DataXML.append("<PARAMETER>");
-		pStep1DataXML.append("<SUBJECT>" + commonUtil.cleanValue(req.getParameter("txtSubject")) + "</SUBJECT>");
+		pStep1DataXML.append("<SUBJECT>" + commonUtil.cleanValue(commonUtil.stripScriptTagsAndFunctions(req.getParameter("txtSubject"))) + "</SUBJECT>");
 		pStep1DataXML.append("<CONTENT>" + content + "</CONTENT>");
-		pStep1DataXML.append("<STARTDATE>" + req.getParameter("hidStartDate")+"</STARTDATE>");
-		pStep1DataXML.append("<ENDDATE>" + req.getParameter("hidEndDate")+"</ENDDATE>");
-		pStep1DataXML.append("<EXPIREDATE>" + req.getParameter("txtExpiredate")+"</EXPIREDATE>");
-		pStep1DataXML.append("<ANONYMITY>" + req.getParameter("hidAnonymity")+"</ANONYMITY>");
-		pStep1DataXML.append("<OPENRESULT>" + req.getParameter("hidOpenResult")+"</OPENRESULT>");
-		pStep1DataXML.append("<MULTIRESPONSE>" + req.getParameter("hidMultiResponse")+"</MULTIRESPONSE>");
-		pStep1DataXML.append("<IMPORTANT>" + req.getParameter("importance")+"</IMPORTANT>");
-		pStep1DataXML.append("<TARGET>" + req.getParameter("hidTarget")+"</TARGET>");
+		pStep1DataXML.append("<STARTDATE>" + commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidStartDate"))+"</STARTDATE>");
+		pStep1DataXML.append("<ENDDATE>" + commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidEndDate"))+"</ENDDATE>");
+		pStep1DataXML.append("<EXPIREDATE>" + commonUtil.stripScriptTagsAndFunctions(req.getParameter("txtExpiredate"))+"</EXPIREDATE>");
+		pStep1DataXML.append("<ANONYMITY>" + commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidAnonymity"))+"</ANONYMITY>");
+		pStep1DataXML.append("<OPENRESULT>" + commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidOpenResult"))+"</OPENRESULT>");
+		pStep1DataXML.append("<MULTIRESPONSE>" + commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidMultiResponse"))+"</MULTIRESPONSE>");
+		pStep1DataXML.append("<IMPORTANT>" + commonUtil.stripScriptTagsAndFunctions(req.getParameter("importance"))+"</IMPORTANT>");
+		pStep1DataXML.append("<TARGET>" + commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidTarget"))+"</TARGET>");
 		
 		if(req.getParameter("RangeXMLStr") != null) {
-			pStep1DataXML.append(req.getParameter("RangeXMLStr").trim().replace("&quot;", "\"").replace("\"", "\'"));
+			pStep1DataXML.append(commonUtil.stripScriptTagsAndFunctions(req.getParameter("RangeXMLStr")).trim().replace("&quot;", "\"").replace("\"", "\'"));
 		}
 		
 		pStep1DataXML.append("</PARAMETER>");
