@@ -1013,7 +1013,7 @@
 		    		data : {
 		    			fontFamily : pDefaultFontFamily,
 		    			fontSize : pDefaultFontSize,
-		    			content : text
+		    			content : text.replace(/"/g,'\\\"')
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
