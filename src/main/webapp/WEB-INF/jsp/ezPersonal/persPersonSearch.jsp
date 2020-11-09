@@ -41,7 +41,9 @@
 	    	var strLang2 = "<spring:message code='ezPersonal.t1003'/>";
 	    	var strLang39 = "<spring:message code='ezPersonal.t10000'/>";
 	    	var strLang40 = "<spring:message code='ezPersonal.t10001'/>";
-	    	var strSearch = "${searchString}";
+	    	
+	    	/* 2020-11-09 홍승비 - XSS 처리를 위한 c:out과 역 인코딩 추가 */
+	    	var strSearch = ConvMakeXMLString("<c:out value='${searchString}'/>");
 
 	    	var CurPage = "1";
 
@@ -995,6 +997,18 @@
 				
 				$("#spn_deptName").css("width", deptNameWidth);
 			}
+	        
+			/* 2020-11-09 홍승비 - 검색어 역 인코딩 처리 */
+			function ConvMakeXMLString(str) {
+			    str = ReplaceText(str, "&lt;", "<");
+			    str = ReplaceText(str, "&gt;", ">");
+			    str = ReplaceText(str, "&#039;", "'");
+			    str = ReplaceText(str, "&#034;", "\"");
+			    str = ReplaceText(str, "&amp;", "&");	    
+				str = ReplaceText(str, "&#92;", "\\");
+			    return str;
+			}
+			
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">

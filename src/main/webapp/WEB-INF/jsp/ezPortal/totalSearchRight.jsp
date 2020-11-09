@@ -519,7 +519,9 @@ function selectOtherTab(tabId) {
  *	true or false 리턴
  */
 function chkTopSearch() {
-	var initKeyword = "${keyword}";
+	/* 2020-11-09 홍승비 - XSS 처리를 위한 c:out과 역 인코딩 추가 */
+	var initKeyword = ConvMakeXMLString("<c:out value='${keyword}'/>");
+	
 	if(initKeyword !== null && initKeyword !== "") {
 		$("#txtKeyword").val(initKeyword.trim());
 		$("#chkTitleRange").prop("checked", true);
@@ -594,10 +596,12 @@ function btn_searchStart() {
 	/*
 		전각 반각 둘다 반환해서 한꺼번에 처리하기
 	*/
-	var changeToHenkaku = mbConvertKana(txtKeyword, 'rnask');;
+	var changeToHenkaku = mbConvertKana(txtKeyword, 'rnask');
 	var changeToZenkaku = mbConvertKana(txtKeyword, 'RNASKV');
 	
-	$("#resultKeyword").html(txtKeyword);
+	/* 2020-11-09 홍승비 - 화면에 표시되는 검색어 text로 변경 */
+	//$("#resultKeyword").html(txtKeyword);
+	$("#resultKeyword").text($("#txtKeyword").val());
 	
 	txtKeyword = changeToHenkaku + ' | ' + changeToZenkaku;
 	
@@ -925,6 +929,18 @@ function totalSearchEnterEevnt() {
 		btn_searchStart();	
 	}
 }
+
+/* 2020-11-09 홍승비 - 검색어 역 인코딩 처리 */
+function ConvMakeXMLString(str) {
+    str = ReplaceText(str, "&lt;", "<");
+    str = ReplaceText(str, "&gt;", ">");
+    str = ReplaceText(str, "&#039;", "'");
+    str = ReplaceText(str, "&#034;", "\"");
+    str = ReplaceText(str, "&amp;", "&");	    
+	str = ReplaceText(str, "&#92;", "\\");
+    return str;
+}
+
 </script>
 <body class="mainbody">
     <h1><spring:message code="ezTotalSearch.t0001" /></h1>
