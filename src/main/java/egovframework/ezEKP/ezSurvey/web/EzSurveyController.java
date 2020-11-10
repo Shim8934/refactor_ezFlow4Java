@@ -485,6 +485,16 @@ public class EzSurveyController extends EgovFileMngUtil {
 		JSONObject userObj = surveyRestService.getUserInformation(request, user.getId());
 		int userMode = 0;
 		
+		if(!commonUtil.isIntNumber(currentPage)) {
+			logger.debug("This number is invalid.");	
+			currentPage = "1";
+		}
+		
+		if(!commonUtil.isIntNumber(listCntSize)) {
+			logger.debug("This number is invalid.");	
+			listCntSize = "5";
+		}
+		
 		if (userObj.get("status").toString().equals("ok")) {
 			userMode = ((Long)userObj.get("mode")).intValue();
 		}

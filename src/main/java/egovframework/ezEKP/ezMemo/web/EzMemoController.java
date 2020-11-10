@@ -290,6 +290,12 @@ public class EzMemoController {
 		
 		folderId = request.getParameter("folderId");
 		
+		// 2020-11-10 김민성 - folderId 오버플로우 처리
+		if(!commonUtil.isIntNumber(folderId)) {
+			logger.debug("This foloderId is invalid.");	
+			folderId = "0";
+		}
+		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("tenant_id", userInfo.getTenantId());
 		param.put("folder_id", folderId);
@@ -847,6 +853,12 @@ public class EzMemoController {
 	@RequestMapping(value = "/ezMemo/setMemoLayerMode.do", method = RequestMethod.POST)
 	public String setMemoLayerMode(@CookieValue("loginCookie") String loginCookie, String full_mode, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("setMemoLayerMode started");
+		
+		// 2020-11-10 김민성 - folderId 오버플로우 처리
+		if(!commonUtil.isIntNumber(full_mode)) {
+			logger.debug("This number is invalid.");	
+			full_mode = "0";
+		}
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		HashMap<String, Object> param = new HashMap<String, Object>();
