@@ -27,6 +27,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
@@ -69,6 +70,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -2252,5 +2254,25 @@ public class CommonUtil {
 		logger.info("##minutes=" + minutes);
 		logger.debug("getTimeDifference ended");
 		return minutes;
+	}
+	
+	public boolean isIntNumber(String number) {
+	    if (!NumberUtils.isNumber(number)) {
+	        return false;
+	    }
+	    
+	    BigInteger minNum = BigInteger.valueOf(Integer.MIN_VALUE);
+	    BigInteger maxNum = BigInteger.valueOf(Integer.MAX_VALUE);
+	    BigInteger num = new BigInteger(number);
+	    
+	    if (num.compareTo(minNum) > 0 && num.compareTo(maxNum) < 0) {
+	        return true;
+	    } else {
+	        return false;
+	    }
+	}
+	
+	public int isIntNumber(String number, int defaultValue) {
+	    return isIntNumber(number) ? Integer.parseInt(number) : defaultValue;
 	}
 }
