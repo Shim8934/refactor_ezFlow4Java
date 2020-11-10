@@ -1725,10 +1725,10 @@ function getReceiveDocInfo() {
 function setButtonReceiveTrue()
 {
 	SetBtnStateFalse();
-	btnAssign.Enable = "false";
+	/*btnAssign.Enable = "false";
 	btnDistribute.Enable = "false";
 	btnReturn.Enable = "false";
-	btnAproveSusin.Enable = "false";
+	btnAproveSusin.Enable = "false";*/
 }
 
 function setHeSongDocInfo() {
