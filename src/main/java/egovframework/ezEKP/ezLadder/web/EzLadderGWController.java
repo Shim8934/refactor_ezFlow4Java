@@ -84,7 +84,8 @@ public class EzLadderGWController {
 		logger.debug("web G/W LADDER [GET /rest/ladder/ladder-list/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
-		int page = Integer.parseInt(request.getParameter("currPage"));
+		String currPage = request.getParameter("currPage");
+		int page = commonUtil.isIntNumber(currPage, 1);
 		String mode = request.getParameter("mode");
 		String searchSelect = request.getParameter("searchSelect");
 		String searchInput = request.getParameter("searchInput");
