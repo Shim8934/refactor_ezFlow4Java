@@ -126,6 +126,15 @@ public class EzWebFolderController_y {
 		
 		param.put("totalCount"	, orElse(request.getParameter("totalCount")		, 0));
 		param.put("listCount"	, orElse(request.getParameter("listCount")		, 0));
+		
+		String currPage = request.getParameter("currPage");
+		
+		if (currPage != null && !currPage.isEmpty()) {
+			if (!commonUtil.isIntNumber(currPage)) {
+				return "";
+			}
+		}
+		
 		param.put("currPage"	, orElse(request.getParameter("currPage")		, 0));
 		param.put("totalpages"	, orElse(request.getParameter("totalpages")		, 0));
 		param.put("pStart"		, orElse(request.getParameter("pStart")			, 0));
