@@ -20650,6 +20650,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String userIDs = "'" + userID + "'";
 		String deptIDs = "";
 		String proxyOption = getIsUse("A23", "001", companyID, userLang, tenantID);
+		if (proxyOption == null) {
+		    return "";
+		}
 		StringBuffer resultXML = new StringBuffer();
 		List<ApprGProxyVO> proxyList = null;
 		// 대리결재를 사용할 경우.

@@ -551,8 +551,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String searchQuery = request.getParameter("searchQuery");
 		String searchCompanyID = request.getParameter("searchCompanyID");
 		String searchStatus = request.getParameter("searchStatus");
-
+		
 		logger.debug("listType = " + listType + " || userID = " + userID + " || deptID(AddJob) = " + deptID);
+		
+		if (!commonUtil.isIntNumber(pageSize)) {
+		    return "";
+		}
+		if (!commonUtil.isIntNumber(pageNum)) {
+		    return "";
+		}
 		
  		String userLang = userInfo.getLang();
 		Document domSub = null;

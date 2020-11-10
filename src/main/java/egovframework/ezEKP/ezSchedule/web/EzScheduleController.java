@@ -1632,6 +1632,10 @@ public class EzScheduleController extends EgovFileMngUtil {
         }        
         
         String _defaultid = request.getParameter("defaultid");
+        if(!commonUtil.isIntNumber(_defaultid)) {
+			logger.debug("This number is invalid.");	
+			_defaultid = "0";
+		}
 		if (_defaultid == null) _defaultid = "";
          
 		String _scheduleid = request.getParameter("id");
