@@ -1254,7 +1254,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         }
         
         if (!docID.equals("")) {
-			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", userInfo.getTenantId(), userInfo.getOffset());
+			//String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", userInfo.getTenantId(), userInfo.getOffset());
+        	String proxyUser = ezApprovalGService.getProxyUser2(userInfo.getId(), "1", userInfo.getTenantId(), userInfo.getOffset());
 			String[] proxyUserArray = proxyUser.split(",");
 			boolean checkPermission = true;
 			
