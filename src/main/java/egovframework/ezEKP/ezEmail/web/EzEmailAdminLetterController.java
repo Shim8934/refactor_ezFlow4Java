@@ -125,6 +125,7 @@ public class EzEmailAdminLetterController {
 			return "cmm/error/adminDenied";
 		}
 
+		companyId = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(companyId));
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("pageType", "letterBox");
 		model.addAttribute("userLang", userLang);
@@ -425,6 +426,7 @@ public class EzEmailAdminLetterController {
 		logger.debug("lang : " + loginInfo.getLang());
 
 		model.addAttribute("pageType", "letter");
+		companyId = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(companyId));
 		model.addAttribute("companyId", companyId);
 		
 		model.addAttribute("userLang", commonUtil.getPrimaryData(loginInfo.getLang(), loginInfo.getTenantId()));

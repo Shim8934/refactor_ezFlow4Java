@@ -39,7 +39,9 @@ public class EzWebFolderController_y {
 		String folderType = orElse(request.getParameter("folderType"), "");
 		String folderId = request.getParameter("folderId");
 		String allFileFlag = orElse(request.getParameter("allFileFlag"),"");
+		allFileFlag = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(allFileFlag));
 		String parentId = orElse(request.getParameter("parentId"),"");
+		parentId = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(parentId));
 		
 		LOGGER.debug("folderType : "+ folderType + " folderId : " + request.getParameter("folderId") + "allFileFlag : " + request.getParameter("allFileFlag"));
 		

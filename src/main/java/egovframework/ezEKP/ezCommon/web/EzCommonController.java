@@ -83,6 +83,7 @@ public class EzCommonController extends EgovFileMngUtil{
 			type = "";
 		}
 		
+		type = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(type));
 		model.addAttribute("type", type);
 		return "ezCommon/manyColor";
 	}
