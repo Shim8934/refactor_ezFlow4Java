@@ -18,7 +18,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
-		 	var uid = "${uID}";
+		 	var uid = "<c:out value='${uID}'/>";
 		 	
 		    window.resizeTo("600", "620");
 		    

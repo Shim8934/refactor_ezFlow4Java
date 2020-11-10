@@ -104,7 +104,7 @@ public class EzLadderController {
 		}
 		mode = mode != null ? mode : "all";
 		currPage = currPage != null ? currPage : "1";
-		searchSelect = searchSelect != null ? searchSelect : "";
+		searchSelect = searchSelect != null ? commonUtil.stripScriptTagsAndFunctions(searchSelect) : "";
 		searchInput = searchInput != null ? searchInput : "";
 		searching = searching != null ? searching : "";
 		sort = sort != null ? sort : "basic";
@@ -200,7 +200,7 @@ public class EzLadderController {
 	public String setLadderView(String type, String ladderId, Model model) throws Exception {
 		logger.debug("setLadder started.");
 		
-		model.addAttribute("ladType", type);
+		model.addAttribute("ladType", commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(type)));
 		model.addAttribute("ladderId", ladderId);
 		
 		logger.debug("setLadder ended.");
