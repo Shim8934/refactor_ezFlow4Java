@@ -3,9 +3,11 @@ package egovframework.ezEKP.ezResource.web;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -1769,6 +1771,9 @@ public class EzResourceController extends EgovFileMngUtil {
 		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		
+		Map<String, Boolean> menuAccessMap = commonUtil.checkMenuAccess(Arrays.asList(new String[] {"schedule"}), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang(), userInfo.getId(), userInfo.getDeptID());
+		boolean useSchedule = menuAccessMap.get("schedule");
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("editor", editor);
 		model.addAttribute("noneActiveX", noneActiveX);
@@ -1806,6 +1811,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("endDateTimeRepeat", endDateTimeRepeat);
 		model.addAttribute("checkSDT", checkSDT);
 		model.addAttribute("checkEDT", checkEDT);
+		model.addAttribute("useSchedule", useSchedule);
 		
 		if (reFlag.equals("1")) {
 			model.addAttribute("strTmpReFlagVal", "2");

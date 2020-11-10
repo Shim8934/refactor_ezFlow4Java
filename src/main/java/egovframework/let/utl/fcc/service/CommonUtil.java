@@ -2189,14 +2189,12 @@ public class CommonUtil {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} else {
-					List<MenuInfoVO> menuFilter = menuList.stream().filter(menuInfo -> menuInfo.getMenuCode() != null && menuInfo.getMenuCode().equals(menuCode))
-												.collect(Collectors.toList());
-					
-					if (menuFilter.size() > 0) {
-						menuAccess = true;
-					}
 				}
+				
+				List<MenuInfoVO> menuFilter = menuList.stream().filter(menuInfo -> menuInfo.getMenuCode() != null && menuInfo.getMenuCode().equals(menuCode))
+											.collect(Collectors.toList());
+				
+				menuAccess = menuAccess && menuFilter.size() > 0;
 				
 				logger.debug("checkMenuAccess : " + menuCode + " -> " + menuAccess);
 				
