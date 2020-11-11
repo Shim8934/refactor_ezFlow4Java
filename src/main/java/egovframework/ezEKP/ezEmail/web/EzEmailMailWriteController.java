@@ -498,6 +498,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String msgto = "";
 		if (request.getParameter("msgto") != null) {
 			msgto = request.getParameter("msgto").trim().replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\"");
+			msgto = commonUtil.stripScriptTagsAndFunctions(msgto);
 		}
         
         String _url = "";

@@ -594,6 +594,16 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
      * 서버에 있는 이미지 요청을 처리한다. (화면에 보여주는 이미지)
      */
     public void downImage(String filePath, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	// 보안을 위해 /fileroot내에 있는 파일들에만 접근가능하도록 제한한다.
+    	// 본래 /fileroot로 시작해야 정상이나 혹 //fileroot 등과 같이 사용되는 경우를 대비하여
+    	// contains를 사용함.
+    	if (!filePath.contains("fileroot")) {
+    		LOGGER.debug("filePath=" + filePath + " doesn't contain fileroot.");
+    		
+    		return;
+    	}
+    	
+    	filePath = commonUtil.detectPathTraversal(filePath);    	
         String realPath = commonUtil.getRealPath(request);
         
         filePath = realPath + filePath;

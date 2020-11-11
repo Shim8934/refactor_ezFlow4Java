@@ -113,8 +113,10 @@ public class EzEmailMailListController {
 		
 		// retrieve the passed in parameters
 		String dispname = request.getParameter("dispname");
+		dispname = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(dispname));
 		String url = request.getParameter("url");
 		url = (url != null) ? url : "INBOX";
+		url = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(url));
 		logger.debug("dispname=" + dispname + ",url=" + url);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);

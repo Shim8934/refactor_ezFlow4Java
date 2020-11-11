@@ -139,7 +139,9 @@ public class EzEditorController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 
 		String type = request.getParameter("type");
+		type = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(type));
 		String height = request.getParameter("height");
+		height = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(height));
 		String formID = request.getParameter("formID").equals("") ? "editor1" : request.getParameter("formID");
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 
