@@ -546,7 +546,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		logger.debug("getMonthlyBirthdayEmployees Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
-		String url = "/rest/ezPortal/birthday/months/" + req.getParameter("birthdayMonth");
+		String birthdayMonth = req.getParameter("birthdayMonth");
+		if (!commonUtil.isIntNumber(birthdayMonth)) {
+		    logger.debug("birthdayMonth is not int value");
+		    return null;
+		}
+		String url = "/rest/ezPortal/birthday/months/" + birthdayMonth;
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("birthdayCurPage", req.getParameter("birthdayCurPage"));

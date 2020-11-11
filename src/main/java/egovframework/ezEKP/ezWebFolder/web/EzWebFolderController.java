@@ -109,6 +109,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/check-wfadmin/" + userInfo.getId();
 		String folderType = request.getParameter("folderType")      != null ? request.getParameter("folderType") : "C";
+		folderType = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(folderType));
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

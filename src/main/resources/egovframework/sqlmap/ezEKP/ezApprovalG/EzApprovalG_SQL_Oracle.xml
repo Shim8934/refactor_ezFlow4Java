@@ -30519,7 +30519,7 @@
     </update>
      <select id="EzApprovalG.getAprOrgDocID" parameterClass="Map" resultClass="String">
     	SELECT
-    		NVL(ORGDOCID, '') AS ORGDOCID
+    		NVL(ORGDOCID, ' ') AS ORGDOCID
     	FROM
     		TBL_APRDOCINFO
     	WHERE

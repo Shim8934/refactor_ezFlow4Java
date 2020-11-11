@@ -555,9 +555,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("listType = " + listType + " || userID = " + userID + " || deptID(AddJob) = " + deptID);
 		
 		if (!commonUtil.isIntNumber(pageSize)) {
+		    logger.debug("pageSize is not int value");
 		    return "";
 		}
 		if (!commonUtil.isIntNumber(pageNum)) {
+		    logger.debug("pageNum is not int value");
 		    return "";
 		}
 		

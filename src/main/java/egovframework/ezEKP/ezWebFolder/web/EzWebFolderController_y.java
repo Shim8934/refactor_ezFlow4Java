@@ -39,7 +39,9 @@ public class EzWebFolderController_y {
 		String folderType = orElse(request.getParameter("folderType"), "");
 		String folderId = request.getParameter("folderId");
 		String allFileFlag = orElse(request.getParameter("allFileFlag"),"");
+		allFileFlag = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(allFileFlag));
 		String parentId = orElse(request.getParameter("parentId"),"");
+		parentId = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(parentId));
 		
 		LOGGER.debug("folderType : "+ folderType + " folderId : " + request.getParameter("folderId") + "allFileFlag : " + request.getParameter("allFileFlag"));
 		
@@ -124,6 +126,15 @@ public class EzWebFolderController_y {
 		
 		param.put("totalCount"	, orElse(request.getParameter("totalCount")		, 0));
 		param.put("listCount"	, orElse(request.getParameter("listCount")		, 0));
+		
+		String currPage = request.getParameter("currPage");
+		
+		if (currPage != null && !currPage.isEmpty()) {
+			if (!commonUtil.isIntNumber(currPage)) {
+				return "";
+			}
+		}
+		
 		param.put("currPage"	, orElse(request.getParameter("currPage")		, 0));
 		param.put("totalpages"	, orElse(request.getParameter("totalpages")		, 0));
 		param.put("pStart"		, orElse(request.getParameter("pStart")			, 0));
@@ -135,7 +146,15 @@ public class EzWebFolderController_y {
 		param.put("searchCreateName", orElse(request.getParameter("searchCreateName")	, ""));
 		param.put("searchFileType"	, orElse(request.getParameter("searchFileType")		, ""));
 		param.put("searchPageCount"	, orElse(request.getParameter("searchPageCount")	, ""));
-		param.put("sortType"		, orElse(request.getParameter("sortType")			, ""));
+		
+		String sortType = orElse(request.getParameter("sortType"), "");
+		
+		// SQL Injection 방지를 위해 유효한 값을 체크
+		if (!sortType.isEmpty() && !sortType.equalsIgnoreCase("DESC") && !sortType.equalsIgnoreCase("ASC")) {
+			return "";
+		}
+			
+		param.put("sortType"		, sortType);
 		param.put("sortColumn"		, orElse(request.getParameter("sortColumn")			, ""));
 		
 		LOGGER.debug("folderId : " + folderId);

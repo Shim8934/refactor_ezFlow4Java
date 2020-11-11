@@ -281,13 +281,48 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 
 		String listCount = doc.getElementsByTagName("LISTCOUNT").item(0).getTextContent();
+		
+		if (!commonUtil.isIntNumber(listCount)) {
+			return "";
+		}
+		
 		String refreshInterval = doc.getElementsByTagName("REFRESHINTERVAL").item(0).getTextContent();
+		
+		if (!commonUtil.isIntNumber(refreshInterval)) {
+			return "";
+		}
+		
 		String keepDeleteLength = doc.getElementsByTagName("KEEPDELETELENGTH").item(0).getTextContent();
+		
+		if (!commonUtil.isIntNumber(keepDeleteLength)) {
+			return "";
+		}
+		
 		String previewMode = doc.getElementsByTagName("PREVIEWMODE").item(0).getTextContent();
 		String previewWList = doc.getElementsByTagName("PREVIEWWLIST").item(0).getTextContent();
+
+		if (!commonUtil.isIntNumber(previewWList)) {
+			return "";
+		}
+		
 		String previewWContent = doc.getElementsByTagName("PREVIEWWCONTENT").item(0).getTextContent();
+		
+		if (!commonUtil.isIntNumber(previewWContent)) {
+			return "";
+		}
+		
 		String previewHList = doc.getElementsByTagName("PREVIEWHLIST").item(0).getTextContent();
+
+		if (!commonUtil.isIntNumber(previewHList)) {
+			return "";
+		}
+		
 		String previewHContent = doc.getElementsByTagName("PREVIEWHCONTENT").item(0).getTextContent();
+		
+		if (!commonUtil.isIntNumber(previewHContent)) {
+			return "";
+		}
+		
 		String previewMailImage = doc.getElementsByTagName("PREVIEWMAILIMAGE").item(0).getTextContent();
 		String textOption = doc.getElementsByTagName("TEXTOPTION").item(0).getTextContent();
 		String mailSenderNm = "";

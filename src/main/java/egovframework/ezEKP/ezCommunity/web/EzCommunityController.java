@@ -3660,7 +3660,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("myCopNewBoardItem started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		int page = Integer.parseInt(request.getParameter("page"));
+		/* 2020-11-11 홍승비 - 오버플로우 대응 (페이지 기본값 1) */
+		int page = commonUtil.isIntNumber(request.getParameter("page"), 1);
 		int startRow = 2 * (page - 1);
 		int endRow = 2;
 		
@@ -4146,7 +4147,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String option = request.getParameter("option");
 		String keyword = request.getParameter("keyword");
-		int page = Integer.parseInt(request.getParameter("page"));
+		/* 2020-11-11 홍승비 - 오버플로우 대응 (페이지 기본값 1) */
+		int page = commonUtil.isIntNumber(request.getParameter("page"), 1);
 		
 		int startRow = (5 * (page - 1)) + 1;
 		int endRow = 5 * page;
