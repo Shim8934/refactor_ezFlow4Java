@@ -180,14 +180,10 @@
 		            }
 		        }
 		        
-		        <c:if test="${useReform}">
-		        	document.getElementById("TForm").style.width = "1080px";
-		        	
-		        	// IE scroll enable
-		        	if (document.body.scroll === "") {
-		        		document.body.scroll = "yes";
-		        	}
-		        </c:if>
+	        	// IE scroll enable
+	        	if (document.body.scroll === "") {
+	        		document.body.scroll = "yes";
+	        	}
 		    });
 		
 		    function Editor_Complete() {
@@ -1265,7 +1261,7 @@
                 <script type="text/javascript">
                     selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
                 </script>
-				<table id="TForm" style="height:770px; width:1030px;">
+				<table id="TForm" style="height:770px; width: 100%;">
 					<tr>
                         <td style="height:770px; vertical-align:top">
                         	<c:choose>
@@ -1273,11 +1269,11 @@
 	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/HWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
                         		</c:when>
                         		<c:otherwise>
-	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectApprovalEditor.do?type=ADMIN&height=770&formID=${formID}" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
+	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectApprovalEditor.do?type=ADMIN&height=770&formID=${formID}" name="message" frameborder="0" style="padding: 0; height: 99%; width: 100%; min-width:800px; overflow: auto;"></iframe>
                         		</c:otherwise>
                         	</c:choose>
                         </td>
-                        <td id="rootTD" name="rootTD" style="width:100%; vertical-align:top; text-align:left; padding-left:10px; display:none"></td>
+                        <td id="rootTD" name="rootTD" style="width:280px; vertical-align:top; text-align:left; padding-left:10px; display:none"></td>
                     </tr>
                 </table>
 			</div>
@@ -1526,7 +1522,7 @@
 		        <h2 id="H4" class="receiver_tltype01" style="margin-bottom:5px;">
 		        	<span style="min-width: 45px;" id="Span4"><spring:message code='reform.menuitem.editor'/></span>
 		        </h2>
-		        <iframe id="iframe_ApvReForm" class="viewbox" src="/admin/ezApprovalG/reformDesignProcessor.do?height=880&id=editor2" name="iframe_ApvReForm" frameborder="0" style="padding: 0; height: 100%; width: 1080px; overflow: auto; border:none"></iframe>
+		        <iframe id="iframe_ApvReForm" class="viewbox" src="/admin/ezApprovalG/reformDesignProcessor.do?height=880&id=editor2" name="iframe_ApvReForm" frameborder="0" style="padding: 0; height: 100%; width: 100%; min-width:1080px;  overflow: auto; border:none"></iframe>
 		    </div>
 		    <div id="ApvForm_content8" style="width:100%;height:90%;display:none; padding-top:10px;">
 		        <h2 id="H8" class="receiver_tltype01" style="margin-bottom:5px;">
