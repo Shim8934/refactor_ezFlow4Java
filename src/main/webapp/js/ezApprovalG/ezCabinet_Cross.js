@@ -1516,48 +1516,98 @@ function btnSearchRec_onclick_Complete(rtnVal) {
     }
 }
 
+// 열람권한 멀티지정 START 
+// 2020/11/13 박기범
+var SetRecUserRolePara = new Array();
 function btnSetRecUserRole_onclick() {
-    var DocList = new ListView();          
+    var DocList = new ListView();  
     DocList.LoadFromID("DocList");
     var selRow = DocList.GetSelectedRows();
+    var selDocIDs 	= new Array();
+    var pRecIDs		= new Array();
+    var pSepAttNos	= new Array();
+    
     if (selRow.length > 0) {
-        var tr = selRow[0];
-        if (DocList_Flag == "RECORD") {
-            if (tr.getAttribute("DATA8") != "00") 
-            {
-                OpenAlertUI(strLang590);
-                return;
-            }
-        }
-
-        if (DocID == "") {
-            OpenAlertUI(strLang590);
-            return;
-        }
-        else {
-            SetRecUserRole(tr.getAttribute("DATA6"), tr.getAttribute("DATA8"), DeptID);
-        }
-    }
-    else {
+    	var strSepAttDocs = "";
+    	var strSelDocs = "";
+    	
+    	for (var i = 0; i < selRow.length; i++) {
+    		// 분리첨부등록, DocID여부 체크
+    		const sepAttTF = (DocList_Flag == "RECORD" && selRow[i].getAttribute("DATA8") != "00");
+    		const docIdTF = (selRow[i].getAttribute("DATA1") == "");
+    		
+    		if (sepAttTF || docIdTF) {
+    			strSepAttDocs += selRow[i].childNodes.item(4).getAttribute("title") + ", ";
+    		} else {
+    			selDocIDs	.push(selRow[i].getAttribute("DATA1"));
+    			pRecIDs		.push(selRow[i].getAttribute("DATA6"));
+    			pSepAttNos	.push(selRow[i].getAttribute("DATA8"));
+    			// 멀티지정일 경우 일괄 설정할건지 출력하는 허가창 출력 로직
+    			var rtnXml = GetRecViewerInfo(selRow[i].getAttribute("DATA6"), selRow[i].getAttribute("DATA8"));
+    			
+    			if (SelectSingleNode(SelectSingleNode(rtnXml.documentElement, "LISTVIEWDATA"), "ROWS") != null) {
+    				strSelDocs += selRow[i].childNodes.item(4).getAttribute("title") + ", ";
+    			}
+    		}
+    		
+    	}
+    	
+    	if (strSepAttDocs != "") {
+    		strSepAttDocs = strSepAttDocs.substring(0,strSepAttDocs.length - 2);
+    		OpenAlertUI(strSepAttDocs + " : " + strLang590);
+    		return;
+    	}
+    	
+    	SetRecUserRolePara[0] = pRecIDs;	
+    	SetRecUserRolePara[1] = pSepAttNos;	
+    	SetRecUserRolePara[2] = DeptID;
+    	if (selDocIDs.length > 1 && strSelDocs != ""){
+    		strSelDocs = strSelDocs.substring(0,strSelDocs.length - 2) + strLangPgb01;
+    		OpenInformationUI(strSelDocs, btnSetRecUserRole_onclick_Complete);
+    	} else {
+    		SetRecUserRole(SetRecUserRolePara);
+    	}
+    } else {
         OpenAlertUI(strLang584);
         return;
     }
+    
 }
 
 var setrecuserrole_cross_dialogArguments = new Array();
-function SetRecUserRole(pRecID, pSepAttNo, pDeptCode) {
-    var para = new Array();
-    para[0] = pRecID;		
-    para[1] = pSepAttNo;	
-    para[2] = pDeptCode;	
-
+function SetRecUserRole(SetRecUserRolePara) {
     var url = "/ezApprovalG/setRecUserRole.do";
 
-    setrecuserrole_cross_dialogArguments[0] = para;
+    setrecuserrole_cross_dialogArguments[0] = SetRecUserRolePara;
 
     var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(909, 450));
     try { OpenWin.focus(); } catch (e) { }
 }
+
+// 일괄 설정 허가창 출력용 - 열람권한 설정된 유저 호출용 함수
+function GetRecViewerInfo(pRecID, pSepAttNo) {
+    var xmlhttp = createXMLHttpRequest();
+    var xmlpara = createXmlDom();
+
+    var objNode;
+    createNodeInsert(xmlpara, objNode, "PARAMETERS");
+    createNodeAndInsertText(xmlpara, objNode, "RECID", pRecID);
+    createNodeAndInsertText(xmlpara, objNode, "SEPATTNO", pSepAttNo);
+    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
+    createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", UserLang);
+
+    xmlhttp.open("POST", "/ezApprovalG/getRecViewerInfo.do", false);
+    xmlhttp.send(xmlpara);
+    return  xmlhttp.responseXML;
+}
+
+function btnSetRecUserRole_onclick_Complete(Ans) {
+    DivPopUpHidden();
+    if (Ans) {
+    	SetRecUserRole(SetRecUserRolePara);
+    }
+}
+// 열람권한 멀티지정 (박기범) END
 
 function SaveToRecReadHist() {
     var xmlpara = createXmlDom();

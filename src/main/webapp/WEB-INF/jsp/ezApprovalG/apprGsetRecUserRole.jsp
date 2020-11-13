@@ -20,11 +20,14 @@
     var g_InitFlag = "0";
     var OrderCell = "";
     var g_RecID, g_SepAttNo, g_DeptCode;
-    var rtnVal = new Array();
+    var g_RecIDs 	= new Array();
+    var g_SepAttNos = new Array();
+    var rtnVal 		= new Array();
     var CompanyID = "<c:out value='${userInfo.companyID}'/>";
     var UserLang = "<c:out value='${userInfo.lang}'/>";
     var RetValue;
     var ReturnFunction;
+    var multiFlag;
     window.onload = function () {
         var ua = navigator.userAgent;
         if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
@@ -41,9 +44,12 @@
                 RetValue = window.dialogArguments;
             }
         }
-        g_RecID = RetValue[0];
-        g_SepAttNo = RetValue[1];
-        g_DeptCode = RetValue[2];
+        g_RecIDs 	= RetValue[0];
+        g_SepAttNos = RetValue[1];
+        g_DeptCode 	= RetValue[2];
+        g_RecID		= g_RecIDs[0];
+        g_SepAttNo	= g_SepAttNos[0];
+        multiFlag = g_RecIDs.length > 1 ? "1" : "0";
         rtnVal[0] = "FALSE";
         var pSearchList = "EXACT_Department::"+g_DeptCode.trim();
         var pCellList = "displayname;title;description;company";
@@ -120,6 +126,16 @@
         
         var LVXml = createXmlDom();
         LVXml = SelectSingleNode(SelectSingleNode(rtnXml,"ROLEINFO"),"LISTVIEWDATA");
+	   	
+        // 2020-11-12 박기범 - 멀티 열람권한 설정인 경우(multiFlag==1) 선택 이용자 빈상태로 init
+	   	if (multiFlag==1) {
+	   		var delList = LVXml.querySelectorAll("ROWS");
+	   		for (var i = 0; i < delList.length; i++) {
+		   		LVXml.removeChild(delList[i]);
+	   		}
+	   	}
+        // 멀티 관련 init End
+        
         var listview = new ListView();
         listview.SetID("lvSelUserList");
         listview.SetMulSelectable(true);
@@ -315,40 +331,47 @@
         }
     }
     function SaveRecUserRole() {
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETERS");
-
-        if (document.getElementsByName("rdoRecRole")[0].checked)
-            createNodeAndInsertText(xmlpara, objNode, "FLAG", "0");
-        else if (document.getElementsByName("rdoRecRole")[1].checked)
-            createNodeAndInsertText(xmlpara, objNode, "FLAG", "1");
-
-        createNodeAndInsertText(xmlpara, objNode, "RECID", g_RecID);
-        createNodeAndInsertText(xmlpara, objNode, "SEPATTNO", g_SepAttNo);
-
-        if (document.getElementsByName("rdoRecRole")[1].checked) {
-            var objUserInfoXml = GetSelUserInfo();	
-            xmlpara.documentElement.appendChild(objUserInfoXml.documentElement);
+        var xmlhttpSuccess = 0;
+        
+		// 2020-11-12 박기범 - 멀티 열람권한 설정인 경우 가능하게 for문 추가
+        for (var i = 0; i < g_RecIDs.length; i++) {
+        	var xmlhttp = createXMLHttpRequest();
+	        var xmlpara = createXmlDom();
+	        var objNode;
+	        createNodeInsert(xmlpara, objNode, "PARAMETERS");
+	
+	        if (document.getElementsByName("rdoRecRole")[0].checked)
+	            createNodeAndInsertText(xmlpara, objNode, "FLAG", "0");
+	        else if (document.getElementsByName("rdoRecRole")[1].checked)
+	            createNodeAndInsertText(xmlpara, objNode, "FLAG", "1");
+	
+	        createNodeAndInsertText(xmlpara, objNode, "RECID", g_RecIDs[i]);
+	        createNodeAndInsertText(xmlpara, objNode, "SEPATTNO", g_SepAttNos[i]);
+	
+	        if (document.getElementsByName("rdoRecRole")[1].checked) {
+	            var objUserInfoXml = GetSelUserInfo();	
+	            xmlpara.documentElement.appendChild(objUserInfoXml.documentElement);
+	        }
+	
+	        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
+	
+        	xmlhttp.open("POST", "/ezApprovalG/saveRecUserRole.do", false);
+	        xmlhttp.send(xmlpara);
+	        if (xmlhttp != null && xmlhttp.readyState == 4) {
+				if (xmlhttp.statusText == "OK") {
+					xmlhttpSuccess++;
+				} else {
+					alert("<spring:message code='ezApprovalG.t1159'/>");
+					return false;
+				}
+			}
         }
-
-        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-
-        xmlhttp.open("POST", "/ezApprovalG/saveRecUserRole.do", false);
-        xmlhttp.send(xmlpara);
-
-        if (xmlhttp != null && xmlhttp.readyState == 4) {
-         	 if (xmlhttp.statusText == "OK") {
-         		 return true;
-         	 } else {
-                  alert("<spring:message code='ezApprovalG.t1159'/>");
-                  return false;
-         	 }
-       }
+		
+		if (xmlhttpSuccess == g_RecIDs.length){
+			return true;
+		}
     }
-    
+
     function GetSelUserInfo() {
         var listview = new ListView();
         listview.LoadFromID("lvSelUserList");

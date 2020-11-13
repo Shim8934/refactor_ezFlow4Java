@@ -1048,6 +1048,9 @@ var strLanggarm08 = "\n Your department has been changed or your concurrent posi
 //2019-04-15 천성준
 var strLangCSJ02 = "The destination information specified does not match the organization chart.<br>Please re-assign the receipt dept.";
 
+//2020-11-13 박기범
+var strLangPgb01 = "이(가) <br>이미 설정되어 있습니다. <br>일괄설정 하시겠습니까?";
+
 /* 2020-07-09 홍승비 - 결재문서 프린트를 위한 폰트 스타일 */
 var strLangHSBPR01 = "Arial";
 
