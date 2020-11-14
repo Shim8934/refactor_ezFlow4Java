@@ -168,6 +168,12 @@ public class EzOrganController {
 
 		logger.debug("page=" + page);
 		
+		if (page != null && !page.isEmpty()) {
+			if (!commonUtil.isIntNumber(page)) {
+				return "";
+			}			
+		}
+		
 		if (page == null) {		
 			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, isPrimary, userInfo.getTenantId(), noAddJob);
 		} else {
