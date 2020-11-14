@@ -117,7 +117,7 @@
 	<script type="text/javascript">
 		// resultRead() 사용 *
 		var pageType = "${pageType}"; // letter
-		var returnCompany = '${companyId}'; // companyId
+		var returnCompany = "<c:out value='${companyId}'/>"; // companyId
 		var userLang = "${userLang}";
 		var result = [];
 		var treeCollection = [];

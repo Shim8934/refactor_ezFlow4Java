@@ -236,6 +236,9 @@
 	        }
 	        
 	        if (xmpTo.innerHTML != "") {
+	            var xmpToValue = xmpTo.innerHTML;
+	            xmpToValue = ReplaceText(xmpToValue, "&lt;", "<");
+	            xmpToValue = ReplaceText(xmpToValue, "&gt;", ">");
 	        	var moduleType = "<c:out value='${moduleType}'/>";
 
 	        	if (moduleType == "attitudeAbsented") {
@@ -246,10 +249,10 @@
 	        	
 	        	if (moduleType && moduleType == "poll") {
 	        		var pollSendType = "<c:out value='${pollSendType}'/>";       		
-		            var addrArr = getEmailAddressList2(xmpTo.innerHTML, pollSendType);
+		            var addrArr = getEmailAddressList2(xmpToValue, pollSendType);
 		            addReceiverFromList(0, addrArr);
 	        	} else {
-		            var splitAddr = getEmailAddressList(xmpTo.innerHTML);
+		            var splitAddr = getEmailAddressList(xmpToValue);
 		            addReceiverFromList(0, splitAddr);
 	        	}
 	        }
@@ -2495,7 +2498,7 @@
 	                    </tr>
 	                </table>
 	                
-	                <xmp id="xmpTo" style="display: none">${to}</xmp>
+	                <xmp id="xmpTo" style="display: none"><c:out value='${to}'/></xmp>
 	                <xmp id="xmpCc" style="display: none">${cc}</xmp>
 	                <xmp id="xmpBcc" style="display: none">${bcc}</xmp>
 	                <xmp id="xmpSubject" style="display: none">${subject}</xmp>

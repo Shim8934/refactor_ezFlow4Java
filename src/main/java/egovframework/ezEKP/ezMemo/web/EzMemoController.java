@@ -312,7 +312,7 @@ public class EzMemoController {
 			JSONObject memo = (JSONObject) resultBody.get("memo");
 			model.addAttribute("memo", memo);
 			if (layerFlag != null) {
-				model.addAttribute("layerFlag", commonUtil.stripScriptTagsAndFunctions(layerFlag));
+				model.addAttribute("layerFlag", commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(layerFlag)));
 			}
 			return "json";
 		}

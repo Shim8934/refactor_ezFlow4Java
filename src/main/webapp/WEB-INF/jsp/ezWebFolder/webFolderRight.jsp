@@ -43,7 +43,7 @@
 		var pEnd =10;
 		var folderId = "<c:out value='${folderId}'/>";
 		var folderType = "<c:out value='${folderType}'/>";
-		var allFileFlag = "${allFileFlag}";
+		var allFileFlag = "<c:out value='${allFileFlag}'/>";
 		var resultErr1 = "<spring:message code='ezWebFolder.t306'/>";
 		var resultErr2 = "<spring:message code='ezWebFolder.t305'/>";
 		var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
@@ -51,7 +51,7 @@
 		var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
 		var functionType = "";
 		var inputNameDlg_cross_dialogArguments = new Array();
-		var parentId = "${parentId}";
+		var parentId = "<c:out value='${parentId}'/>";
 		var userId = "";
 		var folderTypeCheck = "N";
 		var _selectedCell = null;

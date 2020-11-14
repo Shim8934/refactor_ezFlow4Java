@@ -30,7 +30,7 @@
 		    var persFolderId    = "";
 			var folderId = "";
 			var folderUpper = "";
-			var folderType = "${folderType}";
+			var folderType = "<c:out value='${folderType}'/>";
 	    	var $element ;
 	    	var useBottomFrameOnly = "${useBottomFrameOnly}";
 		    var firFolderId = "";
