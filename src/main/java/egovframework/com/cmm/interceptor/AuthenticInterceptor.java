@@ -251,6 +251,9 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 		CommonUtil.addXUACompatibleHeaderToResponse(request, response);
+		
+		response.setHeader("Cache-Control", "no-store");
+		response.setHeader("Pragma", "no-cache");
 	}
 	
 	/**
