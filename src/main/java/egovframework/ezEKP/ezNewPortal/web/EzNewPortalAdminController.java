@@ -274,7 +274,14 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		
-		String url = "/rest/admin/ezportal/themes/companies/" + paramMap.get("companyId");
+		String companyID = (String) paramMap.get("companyId");
+		
+		if (companyID == null) {
+		    LOGGER.debug("--> companyID is null");
+		    return "";
+		}
+		
+		String url = "/rest/admin/ezportal/themes/companies/" + companyID;
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
 				

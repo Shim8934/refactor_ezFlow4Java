@@ -1892,6 +1892,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		
+		if (tCheck == null) {
+		    logger.debug("--> tCheck is null");
+		    return "";
+		}
+		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
@@ -2040,6 +2045,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String companyID = request.getParameter("companyID");
 		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
+		if (tCheck == null) {
+		    logger.debug("--> tCheck is null");
+		    return "";
+		}
 		
 		String title = "";
 		

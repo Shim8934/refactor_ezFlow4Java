@@ -241,6 +241,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		model.addAttribute("useOpenGov", useOpenGov);
 		
+		if (listType == null) {
+		    logger.debug("--> listType is null");
+		    return "";
+		}
+		
 		StringBuffer containers = new StringBuffer();
 		
 		List<ApprGLeftVO> apprGLeftVOList = ezApprovalGService.getUseContInfo(userInfo, "2");
@@ -468,6 +473,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userLang = userInfo.getLang();
 		String shareUserId = request.getParameter("shareUserId");
 		
+        if (listType == null) {
+            logger.debug("--> listType is null");
+            return "";
+        }
+		
 		//문서유통 문서 타입
 		String relayG_type = ezCommonService.getTenantConfig("UserInfo_RelayG_Type", userInfo.getTenantId()); 
 		
@@ -550,6 +560,31 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String searchStatus = request.getParameter("searchStatus");
 		
 		logger.debug("listType = " + listType + " || userID = " + userID + " || deptID(AddJob) = " + deptID);
+		
+        if (userID == null) {
+            logger.debug("--> userID is null");
+            return "";
+        }
+        if (searchQuery == null) {
+            logger.debug("--> searchQuery is null");
+            return "";
+        }
+        if (orderCell == null) {
+            logger.debug("--> orderCell is null");
+            return "";
+        }
+        if (listType == null) {
+            logger.debug("--> listType is null");
+            return "";
+        }
+        if (deptID == null) {
+            logger.debug("--> deptID is null");
+            return "";
+        }
+        if (companyID == null) {
+            logger.debug("--> companyID is null");
+            return "";
+        }
 		
 		if (!commonUtil.isIntNumber(pageSize)) {
 		    logger.debug("pageSize is not int value");
