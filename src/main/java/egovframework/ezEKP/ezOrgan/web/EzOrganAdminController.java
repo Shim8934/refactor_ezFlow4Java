@@ -4380,11 +4380,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		return "admin/ezOrgan/addGroup";
 	}
 	
-	@RequestMapping(value = "/admin/ezOrgan/addGroup2.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezOrgan/addGroupForReference.do", method = RequestMethod.GET)
 	public String addGroup2(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
 			Model model, HttpServletRequest request) throws Exception {
-		logger.debug("addGroup2 started.");
+		logger.debug("addGroupForReference started.");
 
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
@@ -4407,7 +4407,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("dept", auth.getDeptID());
 		
-		logger.debug("addGroup2 ended.");
+		logger.debug("addGroupForReference ended.");
 
 		return "admin/ezOrgan/addGroup2";
 	}
