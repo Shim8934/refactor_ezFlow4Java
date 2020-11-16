@@ -88,8 +88,8 @@
 	        }
 
 	        function InsertPicture(field, path, callback) {
-	            HwpCtrl.MoveToField(field);
-	            HwpCtrl.InsertPicture(path, true, 0, false, false, 0, 0, 0, callback)
+	            HwpCtrl.MoveToField(field, true, false, false);
+	            HwpCtrl.InsertPicture(path, true, 1, false, false, 0, 13, 7, callback);
 	        }
 
 	        function GetFieldList(number, option) {

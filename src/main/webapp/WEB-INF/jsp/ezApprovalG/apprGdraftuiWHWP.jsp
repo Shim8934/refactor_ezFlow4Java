@@ -709,10 +709,11 @@
                         return;
                     }
                 }
-                rtnSignInfo = SendDraftMappingSign(ret);
+                SendDraftMappingSign(ret);
+                //rtnSignInfo = SendDraftMappingSign(ret);
                 // IsSkipDrafter == "FALSE" 에 대한 분기 끝
                 
-                GetHTML(saveDraftInfo);
+                //GetHTML(saveDraftInfo);
 	        }
 	        // sendDraft2 끝
 	        
@@ -1700,10 +1701,11 @@
                         return;
                     }
                 }
-                rtnSignInfo = SendDraftMappingSign(ret);
+                SendDraftMappingSign(ret);
+                //rtnSignInfo = SendDraftMappingSign(ret);
                 // IsSkipDrafter == "FALSE" 에 대한 분기 끝
                 
-                GetHTML(saveDraftInfo);
+				//GetHTML(saveDraftInfo);
 	    	}
 	    	
 	    	

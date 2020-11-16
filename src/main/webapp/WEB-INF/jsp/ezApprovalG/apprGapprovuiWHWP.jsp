@@ -666,15 +666,26 @@
 	                parameter[0] = pDocID;
 	                openSingUI(parameter);
 	            } else {
-					UpdateLineHistory();
+	            	Approve_complete(ret);
+	            
+					/* UpdateLineHistory();	// 결재완료시 변경 이력 남기도록 변경
 			        
 		        	setMenuDisable("btnApprove", false);
-			        GetHTML(Approve_complete);
+			        GetHTML(Approve_complete); */
 	            }
 	        }
 			 
 			 function openSingUI_Complete(ret) {
-				 if (ret == "NAME") {
+				 DivPopUpHidden();
+				 if (ret == "cancel" || ret == undefined) {
+		            var pAlertContent = "[<spring:message code='ezApprovalG.t29'/>";
+			        OpenAlertUI(pAlertContent);
+			        setMenuDisable("btnApprove", false);
+			        return;
+			     }
+				 Approve_complete(ret);
+				 
+				 /* if (ret == "NAME") {
 		            var Rtnval;
 		            var Ans = true
 		            if (!Ans) ret = "cancel";
@@ -686,17 +697,16 @@
 			        setMenuDisable("btnApprove", false);
 			        return;
 			     } else { 
-			        UpdateLineHistory();
+			        UpdateLineHistory();	// 결재완료시 변경 이력 남기도록 변경
 			        
 		        	setMenuDisable("btnApprove", false);
 			        GetHTML(Approve_complete);
-			 	 }
+			 	 } */
 			 }
 
 			   // Approve -> (openSingUI_Complete) -> Approve_complete 시작
-			   function Approve_complete(html) {
-				   var ret = "NAME";
-				   OrgHtml = html;
+			   function Approve_complete(ret) {
+				   DivPopUpHidden();
 				   
 				   if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 			            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
@@ -779,7 +789,8 @@
 					    }
 		            }
 				   
-				   signInfo = AprrovMappingSign(ret);		// 사인 이미지 생성
+				   //signInfo = AprrovMappingSign(ret);		// 사인 이미지 생성
+				   AprrovMappingSign(ret);
 		            var rtnVal = true;
 		            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
@@ -802,7 +813,7 @@
 					    }
 		            }
 		            
-		            GetHTML(Before_SaveApproveInfo);		// 사인 추가된 문서 데이터 저장
+		           // GetHTML(Before_SaveApproveInfo);		// 사인 추가된 문서 데이터 저장
 			   }
 			   // Approve_complete 끝
 			   
@@ -851,6 +862,8 @@
 				        setMenuDisable("btnApprove", false);
 				        return;
 				    } else {
+				    	UpdateLineHistory();
+				    
 				        if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2)|| pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 				            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 		

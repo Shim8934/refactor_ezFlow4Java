@@ -459,10 +459,10 @@ function SendDraftMappingSign(ret) {
 		if (message.FieldExist(psigncell)) {
 			if(ret != "NAME") {
 				message.PutFieldText(psigncell, "");					
-				message.AppendFieldText(psigncell, strLang7 + "\15" + OpinionText);
+				message.PrependFieldText(psigncell, strLang7 + OpinionText);
 				//HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
-				//message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
-				message.InsertPicture(psigncell, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
+				//message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
+				message.InsertPicture(psigncell, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
 				
 			  	signInfo[signCnt] = psigncell;
 			  	
@@ -524,10 +524,10 @@ function SendDraftMappingSign(ret) {
 				if (CurAprType == strAprType4)
                     OpinionText = strLangAprType4 + OpinionText;
 
-                message.AppendFieldText(psigncell, OpinionText);
+                message.PrependFieldText(psigncell, OpinionText);
                 
-                //message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
-                message.InsertPicture(psigncell, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
+                //message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
+                message.InsertPicture(psigncell, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
 			  	
 			  	signInfo[signCnt] = psigncell;
 			  	
@@ -561,10 +561,18 @@ function SendDraftMappingSign(ret) {
 			}
 		}
 	}	
-    return signInfo;	
+    //return signInfo;	
+	rtnSignInfo = signInfo;
+	if(ret == "NAME") {
+		GetHTML(saveDraftInfo);
+	}
   } catch(e) {
     alert("SendDraftMappingSign(ret) :: " + e);
   }
+}
+
+function SendDraftMappingSign_after() {
+	GetHTML(saveDraftInfo);
 }
 
 
