@@ -3357,6 +3357,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
 			mode = req.getParameter("mode");
+		} else {
+			mode = "";
 		}
 		
 		List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());

@@ -519,7 +519,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		logger.debug("selectBackGroundImage started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String type = boardBackgroundVO.getType();
+		String type = boardBackgroundVO.getType() != null ? boardBackgroundVO.getType() : "NEW";
 		
 		boardBackgroundVO.setTenantID(userInfo.getTenantId());
 		
@@ -528,11 +528,11 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			
 			if (list.size() > 0) {
 				String filePath = commonUtil.getUploadPath("upload_board.BOARDBACKGROUND", userInfo.getTenantId());
-				String fileName = ((BoardBackgroundVO) list.get(0)).getSaveFileName();
+				String fileName = ((BoardBackgroundVO) list.get(0)).getSaveFileName() != null ? ((BoardBackgroundVO) list.get(0)).getSaveFileName() : "";
 				
-				model.addAttribute("width", boardBackgroundVO.getWidth());
-				model.addAttribute("height", boardBackgroundVO.getHeight());
-				model.addAttribute("backgroundID", boardBackgroundVO.getBackgroundID());
+				model.addAttribute("width", boardBackgroundVO.getWidth() != null ? boardBackgroundVO.getWidth() : 100);
+				model.addAttribute("height", boardBackgroundVO.getHeight() != null ? boardBackgroundVO.getHeight() : 100);
+				model.addAttribute("backgroundID", boardBackgroundVO.getBackgroundID() != null ? boardBackgroundVO.getBackgroundID() : "");
 				model.addAttribute("filePath", filePath);
 				model.addAttribute("fileName", fileName);
 			} else {
