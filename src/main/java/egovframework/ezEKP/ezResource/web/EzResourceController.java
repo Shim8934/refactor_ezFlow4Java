@@ -354,6 +354,12 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 			
 			// 시분초 버림.
+			if(xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent() == null || xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent() == "") {
+				return "";
+			} else if(xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent() == null || xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent() == "") {
+				return "";
+			}
+			
 			xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent().substring(0, 10));
 			xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent().substring(0, 10));
 			
@@ -2518,6 +2524,11 @@ public class EzResourceController extends EgovFileMngUtil {
 	@ResponseBody
 	public JSONObject getResoucePortlet(@CookieValue("loginCookie") String loginCookie, String date) throws Exception {
 		logger.debug("============ getResoucePortlet started ============");
+		
+		if(date == null) {
+			JSONObject err = new JSONObject();
+			return err;
+		}
 
 		List<ResBrdVO> list = ezResourceService.getResourcePortlet(loginCookie, date);
 		JSONObject jObject = new JSONObject();
