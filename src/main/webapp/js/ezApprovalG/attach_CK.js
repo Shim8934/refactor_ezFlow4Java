@@ -79,10 +79,23 @@ function APRAttachXMLParsing(ATTACH, pDocID) {
         GetXml = GetXml + "<DATA16>" + MakeXMLString(GetAttribute(AttachRow[i], "DATA16")) + "</DATA16>";
         GetXml = GetXml + "<DATA17>" + MakeXMLString(GetAttribute(AttachRow[i], "DATA17")) + "</DATA17>";
         GetXml = GetXml + "<DATA18>" + MakeXMLString(GetAttribute(AttachRow[i], "DATA18")) + "</DATA18>";
+        
+        // 대용량첨부, 대용량첨부 삭제여부 플래그
+        var isBigAttach = "N";
+        if (MakeXMLString(GetAttribute(AttachRow[i], "ISBIGATTACH")) == "Y") {
+        	isBigAttach = "Y";
+        }
+        GetXml = GetXml + "<ISBIGATTACH>" + isBigAttach + "</ISBIGATTACH>";
+        
+        var isBigAttachDel = "N";
+        if (MakeXMLString(GetAttribute(AttachRow[i], "ISBIGATTACHDEL")) == "Y") {
+        	isBigAttachDel = "Y";
+        }
+        GetXml = GetXml + "<ISBIGATTACHDEL>" + isBigAttachDel + "</ISBIGATTACHDEL>";
 
-
-        for (j = 1 ; j < pCurCellLen ; j++)
+        for (j = 1 ; j < pCurCellLen ; j++) {
             GetXml = GetXml + "<COLUMN>" + MakeXMLString(GetChildNodes(AttachRow[i])[j].innerHTML) + "</COLUMN>";
+        }
 
         GetXml = GetXml + "</ROW>";
 
@@ -193,6 +206,8 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	pAttachxml = pAttachxml + "<DATA16>" + MakeXMLString(arr_userinfo[14]) + "</DATA16>";
     	pAttachxml = pAttachxml + "<DATA17>" + MakeXMLString(arr_userinfo[15]) + "</DATA17>";
     	pAttachxml = pAttachxml + "<DATA18>" + MakeXMLString(arr_userinfo[16]) + "</DATA18>";
+    	pAttachxml = pAttachxml + "<ISBIGATTACH>" + tempAddToBigAttach + "</ISBIGATTACH>"; // 대용량첨부 플래그
+    	pAttachxml = pAttachxml + "<ISBIGATTACHDEL>N</ISBIGATTACHDEL>"; // 대용량첨부 삭제여부 플래그 (신규 첨부파일 추가 시 값은 N으로 고정)
     	pAttachxml = pAttachxml + "</CELL><CELL>";
     	//pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[2]) + "</VALUE>";
     	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue) + "</VALUE>";
@@ -241,6 +256,8 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	pAttachxml = pAttachxml + "<DATA16>" + MakeXMLString(arr_userinfo[14]) + "</DATA16>";
     	pAttachxml = pAttachxml + "<DATA17>" + MakeXMLString(arr_userinfo[15]) + "</DATA17>";
     	pAttachxml = pAttachxml + "<DATA18>" + MakeXMLString(arr_userinfo[16]) + "</DATA18>";
+    	pAttachxml = pAttachxml + "<ISBIGATTACH>" + tempAddToBigAttach + "</ISBIGATTACH>"; // 대용량첨부 플래그
+    	pAttachxml = pAttachxml + "<ISBIGATTACHDEL>N</ISBIGATTACHDEL>"; // 대용량첨부 삭제여부 플래그 (신규 첨부파일 추가 시 값은 N으로 고정)
     	pAttachxml = pAttachxml + "</CELL><CELL>";
     	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue) + "</VALUE>";
     	pAttachxml = pAttachxml + "</CELL><CELL>";
@@ -272,7 +289,8 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
 var temppFileLocation;
 var temppFileSize;
 var temppFileName;
-function AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation) {
+var tempAddToBigAttach;
+function AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation, pAddToBigAttach) {
     var pAttachxml;
     var re = /&/g;
     var ptmpArray = new Array();
@@ -282,6 +300,8 @@ function AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation) {
     pTempURL = pFileLocation.replace(pTmp, "");
 
     pFileLocation = pTempURL + pTmp;
+    
+    tempAddToBigAttach = pAddToBigAttach; // 대용량첨부 플래그 설정
     
     if (CrossYN()) {
 	    if (approvalFlag == "G") {

@@ -73,7 +73,13 @@
 			
 			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
 			var forceCallBackYN = "<c:out value='${forceCallBackYN}'/>";
+			var useWebHWP = "<c:out value='${useWebHWP}'/>";
 			
+	        // 대용량첨부 관련
+	        var bigAttachDownloadPeriod = "<c:out value ='${bigAttachDownloadPeriod}'/>";
+	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
+	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
+	        
 			function btnOpinion_onclick() {
 			    //openOpinionViewUI();
 				openOpinionUI_New("Show");
@@ -108,10 +114,11 @@
 			    pDocHref = docHref;
 			    pOpinionFlag = opinionFlag;
 			    pListTypeValue = listTypeValue;
-			    if (pListTypeValue == "4")
+			    if (pListTypeValue == "4") {
 					pListSusin = listSusin;
-					
+				}	
 				cancelYN();
+				setAttachGuideText();
 			}
 	
 			// 웹 한글 기안기용
@@ -510,6 +517,21 @@
 
 				return false;
 			}
+		    
+	    	// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
+	    	function setAttachGuideText() {
+                var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += strLangHSBAt05 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadPeriod + "</span></td>";
+                attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += strLangHSBAt06 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadDay + strLangHSBAt07 + "</span>" + strLangHSBAt08;
+                
+                if(bigSizeAttachDownloadLimitCount > 0) {
+                	attachGuideText += " / <span style='color:#FF0000 ;'>" + bigSizeAttachDownloadLimitCount + strLangHSBAt09 + "</span> " + strLangHSBAt10;
+                }
+                
+                document.getElementById("apprAttachGuideTR").innerHTML = attachGuideText;
+	    	}
+	    	
 	    </script>
 	</head>
 	<body class="popup" onload="return window_onload()" onbeforeunload="return window_onbeforeunload()">
@@ -549,14 +571,19 @@
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file" style="height: 70px;">
+	                <table class="file" style="height: 60px; margin-top:-10px;">
 	                    <tr>
 	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
 	                        <td>
-	                            <div id="lstAttachLink" style="height: 65px;"></div>
+	                            <div id="lstAttachLink" style="height: 50px;"></div>
 	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                        </td>
 	                    </tr>
+	                </table>
+	                
+	                <%-- 대용량첨부 가이드 메세지 영역 --%>
+	                <table class="file" style="height: 20px;">
+	                    <tr id="apprAttachGuideTR"></tr>
 	                </table>
 	            </td>
 	        </tr>

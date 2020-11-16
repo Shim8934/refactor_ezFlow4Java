@@ -1050,3 +1050,16 @@ var strLangCSJ02 = "指定されている受信先に含まれいる社員の中
 
 /* 2020-07-09 홍승비 - 결재문서 프린트를 위한 폰트 스타일 */
 var strLangHSBPR01 = "Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif";
+
+/* 2020-11-12 홍승비 - 전자결재 대용량첨부 추가 */
+var strLangHSBAt00 = "を超える場合には、大容量メールとして送信処理されます。\n大容量添付は ";
+var strLangHSBAt01 = "以後自動削除されます。";
+var strLangHSBAt02 = "大容量";
+var strLangHSBAt03 = "大容量ファイルは ";
+var strLangHSBAt04 = "まで添付可能です。";
+var strLangHSBAt05 = "ダウンロード期間 : ";
+var strLangHSBAt06 = "大容量添付ファイルは、 ";
+var strLangHSBAt07 = "日間";
+var strLangHSBAt08 = "保管";
+var strLangHSBAt09 = "回まで";
+var strLangHSBAt10 = "ダウンロード可能";

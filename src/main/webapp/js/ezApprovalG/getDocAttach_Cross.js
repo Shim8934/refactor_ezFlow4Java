@@ -86,6 +86,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
             var Row = xmlRtn[i];
             var Cell = GetChildNodes(Row);
 
+            // 일반 파일 첨부
             if (SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA4") == "File" || SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA4") == strLang1136) {
                 var IncodFileNM = encodeURIComponent(SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA1"));
                 var filename = encodeURIComponent(getNodeText(GetChildNodes(xmlRtn[i])[1]));
@@ -133,8 +134,15 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 //strAttach = strAttach + "<a href='/myoffice/Common/downloadattach.aspx?filename=" + filename + "&filepath=" + filepath + "' " + strTarget + "' onclick='AttachProcess()'>";
 
                 strAttach = strAttach + "<IMG SRC='" + fileImage + "' border='0'>";
-                strAttach = strAttach + MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])) + "</a> &nbsp; ";
+                strAttach = strAttach + MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])) + "</a>";
+                
+                if (SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "ISBIGATTACH") == "Y") { // 대용량첨부파일 표시
+                	strAttach = strAttach + "<font style='color:blue'>[" + strLangHSBAt02 + "]</font> &nbsp; ";
+                } else {
+                	strAttach = strAttach + " &nbsp; ";
+                }
             }
+            // 문서첨부
             else {
                 var FilePath = trim_Cross(SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA1"));
                 var FileExt = getOriginalFileExtension(FilePath);

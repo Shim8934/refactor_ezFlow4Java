@@ -2810,7 +2810,7 @@ function openFileAttachUI() {
         aprattach_cross_dialogArguments[0] = "";
         aprattach_cross_dialogArguments[1] = "";
 
-        DivPopUpShow(540, 390, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + ext);
+        DivPopUpShow(760, 415, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + ext);
     } catch (e) {
         alert("openFileAttachUI()" + e.description);
     }

@@ -1526,6 +1526,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "]]></DATA3>");
 					resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHTYPE").item(k).getTextContent()) + "]]></DATA4>");
 					resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("REALATTACHNAME").item(k).getTextContent()) + "]]></DATA5>");
+					
+					/* 2020-11-13 홍승비 - 대용량첨부 관련 정보 추가 */
+					resultXML.append("<ISBIGATTACH><![CDATA[" + makeListField(docXML.getElementsByTagName("ISBIGATTACH").item(k).getTextContent()) + "]]></ISBIGATTACH>");
+					resultXML.append("<ISBIGATTACHDEL><![CDATA[" + makeListField(docXML.getElementsByTagName("ISBIGATTACH").item(k).getTextContent()) + "]]></ISBIGATTACHDEL>");
 				}
 				
 				resultXML.append("</CELL>");
@@ -9078,6 +9082,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE2").item(k).getTextContent()) + "]]></DATA16>");
 					resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "]]></DATA17>");
 					resultXML.append("<DATA18><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME2").item(k).getTextContent()) + "]]></DATA18>");
+					resultXML.append("<ISBIGATTACH><![CDATA[" + makeListField(docXML.getElementsByTagName("ISBIGATTACH").item(k).getTextContent()) + "]]></ISBIGATTACH>");
+					resultXML.append("<ISBIGATTACHDEL><![CDATA[" + makeListField(docXML.getElementsByTagName("ISBIGATTACHDEL").item(k).getTextContent()) + "]]></ISBIGATTACHDEL>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -9192,6 +9198,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("FLAG", "Y");
 				map.put("companyID", companyID);
 				map.put("v_TENANTID", tenantID);
+				
+				/* 2020-11-12 홍승비 - 대용량첨부 플래그, 첨부파일 최초 저장일 추가 */
+				map.put("v_ISBIGATTACH", xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(19).getTextContent());
+				map.put("v_ISBIGATTACHDEL", xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(20).getTextContent());
+				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 				
 				ezApprovalGDAO.insertAprAttachInfo(map);
 				ezApprovalGDAO.updateAttachFileInfo(map);
@@ -32405,4 +32416,133 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         return sb.toString();
 	}
 	
+	/* 2020-11-13 홍승비 - 특정 첨부파일이 대용량첨부인지, 대용량첨부라면 다운로드가 가능한지 체크하여 반환*/
+	@Override
+	public String checkAttachFileCanDownload(String docID, String docAttachSN, String companyID, int tenantID) throws Exception {
+		logger.debug("checkAttachFileCanDownload started.");
+		
+		String result = "NO";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DOCID", docID);
+		map.put("v_ATTACHFILESN", docAttachSN);
+		
+		// 대용량첨부가 아닌 일반 첨부 파일이거나, 저장기간이 남은(스케줄러로 삭제되지 않은) 대용량첨부인 경우 전부 유니온하여 리턴
+		// TBL_APRATTACHINFO, TBL_ENDATTACHINFO 전부 유니온
+		int canDownloadAttachFileCnt = ezApprovalGDAO.cntAttachFileCanDownload(map);
+		
+		if (canDownloadAttachFileCnt > 0) {
+			result = "YES";
+		}
+		
+		logger.debug("checkAttachFileCanDownload ended. canDownloadAttachFileCnt = " + canDownloadAttachFileCnt + ", result = " + result);
+		return result;
+	}
+	
+	/* 2020-11-13 홍승비 - 대용량첨부파일의 다운로드횟수 초과여부 반환 */
+	@Override
+	public String checkBigAttachFileDownloadCntOver(String docID, String docAttachSN, int bigSizeAttachDownloadLimitCount, String companyID, int tenantID) throws Exception {
+		logger.debug("checkBigAttachFileDownloadCntOver started.");
+		
+		String result = "NO";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DOCID", docID);
+		map.put("v_ATTACHFILESN", docAttachSN);
+		
+		// 대용량 첨부파일인지 체크
+		int isBigAttachFileCnt = ezApprovalGDAO.cntIsBigAttachFile(map);
+		// 대용량 첨부파일인 경우, 다운로드 카운트가 존재하는지 체크
+		if (isBigAttachFileCnt > 0) {
+			int isDownloadLimitCntExists = ezApprovalGDAO.cntDownloadLimitCntExists(map);
+			if (isDownloadLimitCntExists <= 0) { // 없다면 신규 레코드 삽입
+				ezApprovalGDAO.insertBigAttachFileDownloadCnt(map);
+			} else { // 존재한다면 카운트 리턴
+				int bigAttachFileDownloadCnt = ezApprovalGDAO.getBigAttachFileDownloadCnt(map);
+				if (bigAttachFileDownloadCnt >= bigSizeAttachDownloadLimitCount) { // 다운로드 카운트 초과
+					result = "YES";
+				}
+			}
+		}
+		// 대용량첨부가 아니라면 그대로 NO 리턴
+		
+		logger.debug("checkBigAttachFileDownloadCntOver ended. result = " + result);
+		return result;
+	}
+	
+	/* 2020-11-13 홍승비 - 대용량첨부파일의 다운로드 성공 시, 다운로드 카운트 증가 */
+	@Override
+	public void updateBigAttachFileDownloadCnt(String docID, String docAttachSN, String companyID, int tenantID) throws Exception {
+		logger.debug("updateBigAttachFileDownloadCnt started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DOCID", docID);
+		map.put("v_ATTACHFILESN", docAttachSN);
+		
+		ezApprovalGDAO.updateBigAttachFileDownloadCnt(map);
+		logger.debug("updateBigAttachFileDownloadCnt ended.");
+	}
+	
+	/* 2020-11-13 홍승비 - 대용량첨부파일의 삭제 시, 다운로드 카운트 레코드 제거 */
+	@Override
+	public void deleteBigAttachFileDownloadCnt(String docID, String docAttachSN, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteBigAttachFileDownloadCnt started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DOCID", docID);
+		map.put("v_ATTACHFILESN", docAttachSN);
+		
+		ezApprovalGDAO.deleteBigAttachFileDownloadCnt(map);
+		logger.debug("deleteBigAttachFileDownloadCnt ended.");
+	}
+	
+	/* 2020-11-13 홍승비 - 자동삭제 스케줄러를 위한 저장기간 만료 대용량 첨부파일 리스트 리턴  (ISBIGATTACH = Y, ISBIGATTACHDEL = N) */
+	@Override
+	public List<ApprGAttachInfoVO> getBigAttachFileForDelete(int tenantID) throws Exception {
+		logger.debug("getBigAttachFileForDelete started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANTID", tenantID);
+		
+		List<ApprGAttachInfoVO> apprGAttachInfoVOList = ezApprovalGDAO.getBigAttachFileForDelete(map);
+		
+		logger.debug("getBigAttachFileForDelete ended.");
+		return apprGAttachInfoVOList;
+	}
+	
+	/* 2020-11-16 홍승비 - 대용량첨부파일의 삭제여부 플래그 갱신 */
+	public void updateIsBigAttachDel(String docID, String docAttachSN, String tblName, String companyID, int tenantID) throws Exception {
+		logger.debug("updateIsBigAttachDel started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TBLNAME", tblName);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DOCID", docID);
+		map.put("v_ATTACHFILESN", docAttachSN);
+		
+		ezApprovalGDAO.updateIsBigAttachDel(map);
+		logger.debug("updateIsBigAttachDel ended.");
+	}
+	
+	/* 2020-11-16 홍승비 - 첨부파일의 가장 작은 저장일자 리턴 */
+	public String getAttachFileMinSaveDate(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("getAttachFileMinSaveDate started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DOCID", docID);
+		
+		logger.debug("getAttachFileMinSaveDate ended.");
+		return ezApprovalGDAO.getAttachFileMinSaveDate(map);
+	}
 }
