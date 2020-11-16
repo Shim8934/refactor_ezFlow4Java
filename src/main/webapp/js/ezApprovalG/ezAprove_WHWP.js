@@ -141,7 +141,6 @@ function AprrovMappingSign(ret)
 				}
 				
 				message.InsertPicture(habyui, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
-				//message.InsertPicture(habyui, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
 				//SetDocumentElement(HwpCtrl, habyui, ret);
 				
 				signCnt = signCnt + 1
@@ -240,7 +239,6 @@ function AprrovMappingSign(ret)
 	  				content = strLang7 + OpinionText;
 	  				
 	  				message.InsertPicture(signID, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
-	  				//message.InsertPicture(signID, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
 
 	  				signInfo[signCnt] = signID;
 			        SignName[signCnt] = signID;
@@ -330,7 +328,6 @@ function AprrovMappingSign(ret)
 	  				}
 	  				
 	  				message.InsertPicture(signID, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
-	  				//message.InsertPicture(signID, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
 	      
 	  				signInfo[signCnt] = signID;
 		            SignName[signCnt] = signID;
@@ -1292,13 +1289,11 @@ function putSignXML(SignXML) {
 					message.PutFieldText(SignName, " ");
 					message.AppendFieldText(SignName, strLang8);
 					message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SignCont), null);
-
 				} else if (SignType == "IMAGE") {
 				    var img = SignCont.split("::");
 				    message.PutFieldText(SignName, "");
 					if(img.length >= 1) {
 					    message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(img[0]), null);
-					    //message.InsertPicture(SignName, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(img[0]), null);
 					}
 				    if(img.length >= 2)
 				    	message.AppendFieldText(SignName, img[1]);
