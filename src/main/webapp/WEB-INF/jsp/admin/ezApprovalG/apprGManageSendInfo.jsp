@@ -13,7 +13,6 @@
 		
 		<script type="text/javascript">
 	        var PresentCompanyID = "<c:out value = '${userInfo.companyID}' />";
-	        var encodeInfoPath = "<c:out value = '${encodeInfoPath}' />";
 	
 			document.onselectstart = function () {
 	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
