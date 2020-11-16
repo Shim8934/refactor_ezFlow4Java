@@ -17,7 +17,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<!-- date Format -->		
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/moment.min.js')}"></script>
 	    <style>
 	    	#contentlist table.mainlist tr:not(.tr_noItems) td {
 	    		overflow : hidden;

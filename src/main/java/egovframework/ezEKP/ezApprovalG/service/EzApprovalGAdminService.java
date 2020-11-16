@@ -213,4 +213,27 @@ public interface EzApprovalGAdminService {
 	String deleteShareDocDir(String ownerId, int tenantId) throws Exception;
 	
 	public String getSendOutDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang, int tenantID, String offset, String searchQuery) throws Exception;
+
+	public String getAdminSearchDocList(
+			String formID,
+			String docNumber,
+			String docTitle, 
+			String drafter, 
+			String approvUser, 
+			String draftDeptName, 
+			String draftfrom, 
+			String draftto, 
+			String apprfrom,
+			String apprto, 
+			String pageSize, 
+			String pageNum, 
+			String orderCell, 
+			String orderOption, 
+			String companyID,  
+			int tenantID, 
+			String lang, 
+			String offSet, 
+			String approvalFlag, 
+			Locale locale
+			) throws Exception;
 }
