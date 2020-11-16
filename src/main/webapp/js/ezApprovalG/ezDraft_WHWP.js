@@ -462,7 +462,7 @@ function SendDraftMappingSign(ret) {
 				message.PrependFieldText(psigncell, strLang7 + OpinionText);
 				//HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
 				message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
-				//message.InsertPicture(psigncell, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
+
 				
 			  	signInfo[signCnt] = psigncell;
 			  	
@@ -525,10 +525,8 @@ function SendDraftMappingSign(ret) {
                     OpinionText = strLangAprType4 + OpinionText;
 
                 message.PrependFieldText(psigncell, OpinionText);
-                
                 message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
-                //message.InsertPicture(psigncell, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
-			  	
+                
 			  	signInfo[signCnt] = psigncell;
 			  	
 				SignType[signCnt] = "IMAGE";

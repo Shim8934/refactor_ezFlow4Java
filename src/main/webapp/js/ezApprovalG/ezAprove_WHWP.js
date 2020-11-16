@@ -1290,9 +1290,9 @@ function putSignXML(SignXML) {
 					message.AppendFieldText(SignName, SignCont);
 				} else if (SignType == "PROXY") {
 					message.PutFieldText(SignName, " ");
-					message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SignCont), null);
 					message.AppendFieldText(SignName, strLang8);
-					//message.InsertPicture(SignName, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SignCont), null);
+					message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SignCont), null);
+
 				} else if (SignType == "IMAGE") {
 				    var img = SignCont.split("::");
 				    message.PutFieldText(SignName, "");
