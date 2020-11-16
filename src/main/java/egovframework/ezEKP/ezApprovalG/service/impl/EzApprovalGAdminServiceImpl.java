@@ -4870,4 +4870,209 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String getStatusName(String fieldValue, String companyID, String userLang, int tenantID) throws Exception{
 		return getCode2Name("A60", fieldValue.toUpperCase(), companyID, userLang, tenantID);
 	}
+	
+	@Override
+	public String getAdminSearchDocList(
+			String formID,
+			String docNumber,
+			String docTitle, 
+			String drafter, 
+			String approvUser, 
+			String draftDeptName, 
+			String draftfrom, 
+			String draftto, 
+			String apprfrom,
+			String apprto, 
+			String pageSize, 
+			String pageNum, 
+			String orderCell, 
+			String orderOption, 
+			String companyID,  
+			int tenantID, 
+			String lang, 
+			String offSet, 
+			String approvalFlag, 
+			Locale locale
+			) throws Exception {
+		
+		StringBuffer resultXML = new StringBuffer();
+
+		String OrderOption1 = "";
+		String OrderOption2 = "";
+		String OrderOptionValue = "";
+		boolean docAttachFlag = false; //2019-03-28 천성준 - 문서첨부 리스트 검색인지 체크 Flag. true:기안>문서첨부>검색, false:다른리스트들 검색(추후 문서첨부 리스트 재개발되면 지울예정)
+		
+		 // 수정(2007.06.18) : multidata 기능추가 
+		String strMultiData = commonUtil.getMultiData(lang, tenantID);
+		
+		String listString = "";
+		
+		// 표준모듈 (2007.05.07) : 다국어
+		if (approvalFlag.equals("G")) {
+			listString = getListHeader("082", companyID, lang, tenantID);
+		} else {
+			listString = getListHeader("S082", companyID, lang, tenantID);
+		}
+		
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCNUMBER", docNumber);
+		map.put("v_DOCTITLE", docTitle);
+		map.put("v_DRAFTER", drafter);
+		map.put("v_DEPTNAME", draftDeptName);
+		map.put("v_FORMID", formID);
+		map.put("v_STARTDATE1", draftfrom );
+		map.put("v_STARTDATE2", draftto);
+		map.put("v_ENDDATE1", apprfrom);
+		map.put("v_ENDDATE2", apprto);
+		map.put("v_APPROVUSER", approvUser);
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		map.put("approvalFlag", approvalFlag);		
+		
+		map.put("v_ORDEROPTION", OrderOption1);
+		map.put("v_ORDEROPTIONLENGTH", OrderOption1.length());
+		
+		if (OrderOption1.length() > 0 ) {
+			map.put("v_ORDEROPTIONVALUE", OrderOption1.substring(0,OrderOption1.trim().length()).toLowerCase());
+		}
+		
+		map.put("v_ORDEROPTION2", OrderOption2);
+		map.put("v_ORDEROPTIONLENGTH2", OrderOption2.length());
+		
+		if (OrderOption2.length() > 0 ) {
+			map.put("v_ORDEROPTIONVALUE2", OrderOption2.substring(0,OrderOption2.trim().length()).toLowerCase());
+		}
+		
+		int totalCount = ezApprovalGAdminDAO.getSearchDocListCount(map);
+		
+		resultXML.append("<DOCLIST>");
+		resultXML.append("<TOTALCNT>"+ totalCount +"</TOTALCNT>");
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		int hlength = listXML.getElementsByTagName("ROW").getLength();
+		
+		for (int k = 0; k < hlength; k++) {
+			//2019-03-28 천성준 - 기안 > 문서첨부 > 문서리스트에서 보여줄 헤더만 보이게 필요없는건 빼는로직 추가(추후 문서첨부 로직 재개발 예정)
+			if (docAttachFlag) {
+				String tmpStr = listXML.getElementsByTagName("COLNAME").item(k).getTextContent().toUpperCase();
+				if (tmpStr.equals("FORMNAME") || tmpStr.equals("EDMSYN") || tmpStr.equals("DOCSTATENAME") || tmpStr.equals("SENDFLAG") || tmpStr.equals("HASATTACHYN") || tmpStr.equals("ISPUBLIC")) {
+					continue;
+				}
+			}
+			
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "</COLNAME>");
+			
+			if (!orderCell.equals("") && orderCell.equals(listXML.getElementsByTagName("NAME").item(k).getTextContent())) {
+				if (orderOption.equals("")) {
+					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
+				} else {
+					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
+					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+				}
+				OrderOptionValue = listXML.getElementsByTagName("COLNAME").item(k).getTextContent();
+			}
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+
+		map.put("v_ORDEROPTION", OrderOption1);
+		map.put("v_ORDEROPTIONLENGTH", OrderOption1.length());
+		
+		if (OrderOption1.length() > 0 ) {
+			map.put("v_ORDEROPTIONVALUE", OrderOptionValue.toLowerCase());
+		}
+		map.put("v_ORDEROPTION2", OrderOption2);
+		map.put("v_ORDEROPTIONLENGTH2", OrderOption2.length());
+		
+		if (OrderOption2.length() > 0 ) {
+			map.put("v_ORDEROPTIONVALUE2", OrderOptionValue.toLowerCase());
+		}
+		
+		map.put("v_MULTIDATALANG", strMultiData);
+		map.put("v_PAGESIZE2", totalCount - (Integer.parseInt(pageSize)*(Integer.parseInt(pageNum)-1)));
+		map.put("v_PAGESIZE", Integer.parseInt(pageSize)*Integer.parseInt(pageNum));
+		map.put("v_PAGESIZE3", Integer.parseInt(pageSize) * Integer.parseInt(pageNum) - Integer.parseInt(pageSize));
+
+        map.put("alFlag", "");
+
+		List <ApprGDocListVO> searchDocList = ezApprovalGAdminDAO.getSearchDocList(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int j = 0; j < searchDocList.size(); j++) {
+			sb.append(commonUtil.getQueryResult(searchDocList.get(j)));
+		}
+		sb.append("</DATA>");
+		
+		boolean firstFlag = true;
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		String FieldName = "";
+		String FieldValue = "";
+		resultXML.append("<ROWS>");
+		
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		for(int k = dlength-1; k >=0; k-- ) {
+			resultXML.append("<ROW>");
+			firstFlag = true;
+			
+			for(int i=0; i<hlength; i++) {
+				FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase();
+				//2019-03-28 천성준 - 기안 > 문서첨부 > 문서리스트에서 보여줄 데이터만 보이게 필요없는건 빼는로직 추가(추후 문서첨부 로직 재개발 예정)
+				if (docAttachFlag) {
+					if (FieldName.equals("FORMNAME") || FieldName.equals("EDMSYN") || FieldName.equals("DOCSTATENAME") || FieldName.equals("SENDFLAG") || FieldName.equals("HASATTACHYN") || FieldName.equals("ISPUBLIC")) {
+						continue;
+					}
+				}
+				
+        		FieldValue = docXML.getElementsByTagName(FieldName).item(k).getTextContent();
+ 				resultXML.append("<CELL>");
+				resultXML.append("<VALUE><![CDATA[" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet) + "]]></VALUE>");
+			
+				if (firstFlag) { 
+					resultXML.append("<DATA1><![CDATA[" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "]]></DATA1>");
+					resultXML.append("<DATA2><![CDATA[" + docXML.getElementsByTagName("HREF").item(k).getTextContent() + "]]></DATA2>");
+					resultXML.append("<DATA3><![CDATA[" + docXML.getElementsByTagName("WRITERID").item(k).getTextContent() + "]]></DATA3>");
+					resultXML.append("<DATA4><![CDATA[" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "]]></DATA4>");
+					resultXML.append("<DATA5><![CDATA[" + docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent() + "]]></DATA5>");
+					resultXML.append("<DATA6><![CDATA[" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "]]></DATA6>");
+					resultXML.append("<DATA7><![CDATA[" + docXML.getElementsByTagName("DOCSTATENAME").item(k).getTextContent() + "]]></DATA7>");
+					resultXML.append("<DATA8><![CDATA[" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "]]></DATA8>");
+					resultXML.append("<DATA9><![CDATA[" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "]]></DATA9>");
+					resultXML.append("<DATA10><![CDATA[" + docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent() + "]]></DATA10>");
+					resultXML.append("<DATA11><![CDATA[" + docXML.getElementsByTagName("EDMSYN").item(k).getTextContent() + "]]></DATA11>");
+					resultXML.append("<DATA12><![CDATA[" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "]]></DATA12>");
+					resultXML.append("<DATA99><![CDATA[" + docXML.getElementsByTagName("FORMNAME").item(k).getTextContent() + "]]></DATA99>"); // 기안 > 문서첨부 >[양식명]을 리스트에서 보여주기위한 DATA99값 추가
+					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
+					resultXML.append("<HASOPINIONYN><![CDATA[" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "]]></HASOPINIONYN>");
+					firstFlag = false;
+				}
+				
+				if (listXML.getElementsByTagName("COLNAME").item(i).getTextContent().equals("HASATTACHYN")) {
+					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
+				}
+				
+				if (listXML.getElementsByTagName("COLNAME").item(i).getTextContent().equals("ISPUBLIC")) {
+					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+				}
+				resultXML.append("</CELL>");
+			}
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+				
+ 		return resultXML.toString();
+	}
+				
 }

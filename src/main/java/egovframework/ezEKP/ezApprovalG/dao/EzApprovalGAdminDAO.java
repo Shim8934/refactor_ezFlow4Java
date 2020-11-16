@@ -634,4 +634,13 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public List<Map<String, Object>> selectSendOutInfoList(Map<String, Object> map) throws Exception{
 		return (List<Map<String, Object>>) list("EzApprovalGAdminDAO.selectSendOutInfoList", map);
 	}
+	
+	public int getSearchDocListCount(Map<String, Object> map) throws Exception{
+		return (int)select("EzApprovalGAdminDAO.getSearchDocListCount", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getSearchDocList(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalGAdminDAO.getSearchDocList", map);
+	}
 }

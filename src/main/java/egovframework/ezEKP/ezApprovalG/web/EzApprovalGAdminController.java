@@ -3279,10 +3279,25 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("getStatSearchDocList started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String offset = userInfo.getOffset();
+		Locale locale = userInfo.getLocale();
+		String lang = userInfo.getLang();
+		
+		//양식아이디
+		String formID = request.getParameter("formID");
+		//문서번호
 		String docNumber = request.getParameter("docNumber");
-        String docTitle = request.getParameter("docTitle");
-        String drafter = request.getParameter("drafter");
+        //문서제목
+		String docTitle = request.getParameter("docTitle");
+        //기안자
+		String drafter = request.getParameter("drafter");
+        //결재자
+		String approvUser = request.getParameter("approvUser");
+        //기안부서
+		String draftDeptName = request.getParameter("deptName1");
         
+		//기안일자 시작
         String draftFromYear = request.getParameter("draftFromYear");
         String draftFromMonth = request.getParameter("draftFromMonth");
         String draftFromDay = request.getParameter("draftFromDay");
@@ -3290,8 +3305,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String draftFrom = "";
         
         if (draftFromYear != null && !draftFromYear.equals("")) {
-        	draftFrom = draftFromYear + "-" + draftFromMonth + "-" + draftFromDay;
+        	draftFrom = commonUtil.getDateStringInUTC(commonUtil.makeDate(draftFromYear, draftFromMonth, draftFromDay, true), offset, false).trim();
         }
+        
+        //기안일자 끝
         String draftToYear = request.getParameter("draftToYear");
         String draftToMonth = request.getParameter("draftToMonth");
         String draftToDay = request.getParameter("draftToDay");
@@ -3299,9 +3316,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String draftTo = "";
         
         if (draftToYear != null && !draftToYear.equals("")) {
-        	draftTo = draftToYear + "-" + draftToMonth + "-" + draftToDay;
+        	draftTo = commonUtil.getDateStringInUTC(commonUtil.makeDate(draftToYear, draftToMonth, draftToDay, true), offset, false).trim();
         }
         
+        //완료일자 시작
         String apprFromYear = request.getParameter("apprFromYear");
         String apprFromMonth = request.getParameter("apprFromMonth");
         String apprFromDay = request.getParameter("apprFromDay");
@@ -3309,40 +3327,41 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String aprFrom = "";
         
         if (apprFromYear != null && !apprFromYear.equals("")) {
-        	aprFrom = apprFromYear + "-" + apprFromMonth + "-" + apprFromDay;
+        	aprFrom = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprFromYear, apprFromMonth, apprFromDay, true), offset, false).trim();
         }
         
+        //완료일자 끝
         String apprToYear = request.getParameter("apprToYear");
         String apprToMonth = request.getParameter("apprToMonth");
         String apprToDay = request.getParameter("apprToDay");
         String aprTo = "";
         
         if (apprToYear != null && !apprToYear.equals("")) {
-        	aprTo =apprToYear + "-" + apprToMonth + "-" + apprToDay;
+        	aprTo = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprToYear, apprToMonth, apprToDay, true), offset, false).trim();
         }
         	
-        String formID = request.getParameter("formID");
-        String draftDeptName = request.getParameter("deptName1");
+        //페이지 번호
         String pageNum = request.getParameter("pageNum");
+        //총페이지 수
         String pageSize = request.getParameter("pageSize");
-        String docState = request.getParameter("docState");
 
-        String subQuery = request.getParameter("subQuery");
+        //정렬 대상 셀
         String orderCell = request.getParameter("orderCell");
+        //정렬 옵션
         String orderOption = request.getParameter("orderOption");
-        String approvUser = request.getParameter("approvUser");
-        String companyID = request.getParameter("companyID");
-        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         
+        //테넌트 아이디
+        int tenantID = userInfo.getTenantId();
+        
+        //회사 아이디
+        String companyID = request.getParameter("companyID");
+        
+        //일반/공공구분
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
         String result = "";
-        if (approvalFlag.equals("S")) {
-        	result = ezApprovalGService.getSearchDocListS("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFrom, draftTo, aprFrom,
-        			aprTo, "", "", draftDeptName, docState, "", "", pageSize, pageNum, orderCell, orderOption, "ALL", companyID, userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
-        } else {
-        	result = ezApprovalGService.getSearchDocList("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay, 
-    				draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
-    				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "", companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
-        }
+
+        result = ezApprovalGAdminService.getAdminSearchDocList(formID, docNumber, docTitle, drafter, approvUser, draftDeptName, draftFrom, draftTo, aprFrom, aprTo, pageSize, pageNum, orderCell, orderOption, companyID, tenantID, lang, offset, approvalFlag, locale);
         
         logger.debug("getStatSearchDocList ended.");
         
