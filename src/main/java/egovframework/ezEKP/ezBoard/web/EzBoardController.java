@@ -165,14 +165,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		String qstId = "";
 
 		if (req.getParameter("func") != null && !req.getParameter("func").equals("")) {
-			func = req.getParameter("func");	
+			func = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("func")));	
 		}
 		
 		if (req.getParameter("subFunc") != null && !req.getParameter("subFunc").equals("")) {
-			subFunc = req.getParameter("subFunc");	
+			subFunc = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("subFunc")));	
 		}
 		if (req.getParameter("qstId") != null && !req.getParameter("qstId").equals("")) {
-			qstId = req.getParameter("qstId");	
+			qstId = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("qstId")));	
 		}
 		
 		model.addAttribute("func", func);

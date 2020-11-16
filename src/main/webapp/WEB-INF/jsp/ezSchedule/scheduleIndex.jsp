@@ -10,7 +10,7 @@
 	<frameset rows="0,*" frameborder="0" border="0">
 		<frame src="" name="white" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" />
 	    <frameset cols="220,*" frameborder="0" border="0">
-		    <frame src="/ezSchedule/scheduleLeft.do?funCode=${funCode}&subfunction=${subCode}" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize />
+		    <frame src="/ezSchedule/scheduleLeft.do?funCode=<c:out value='${funCode}'/>&subfunction=${subCode}" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize />
             <frame src="" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize />
 	    </frameset>
     </frameset>

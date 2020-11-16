@@ -5406,4 +5406,285 @@
 			FILESTATE = #V_FILESTATE#			
 	</select>
 	
+	<select id ="EzApprovalGAdminDAO.getSearchDocListCount" parameterClass="Map" resultClass="int" remapResults="true">
+	<![CDATA[
+		SELECT 
+			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID
+			)
+   		FROM 
+   			TBL_ENDAPRDOCINFO 
+   		LEFT OUTER JOIN 
+   			TBL_ENDAPRLINEINFO 
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+   		AND 
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+   		AND	
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+   		INNER JOIN 
+   			TBL_EXPENDAPRDOCINFO 
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+   			]]>		 	
+   		WHERE 
+   			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+   		AND 
+   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		AND
+		    TBL_ENDAPRDOCINFO.COMPANYID = #companyID# 
+		<isNotEmpty property="v_STARTDATE1"> 
+   		<![CDATA[
+ 				AND   
+			STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')   
+    		]]>  
+   		</isNotEmpty>
+   		<isNotEmpty property="v_STARTDATE2"> 
+   		<![CDATA[
+    		 AND  
+     		 	STARTDATE <= STR_TO_DATE(#v_STARTDATE2# , '%Y-%m-%d %H:%i:%s')
+ 		 ]]>  
+		</isNotEmpty> 
+   		<isNotEmpty property="v_ENDDATE1"> 
+   		<![CDATA[
+  		 AND   
+    		  	ENDDATE >= STR_TO_DATE(#v_ENDDATE1#, '%Y-%m-%d %H:%i:%s')
+    		 ]]> 
+   		</isNotEmpty>
+   		<isNotEmpty property="v_ENDDATE2">  
+  		<![CDATA[
+     		AND  
+   			ENDDATE <= STR_TO_DATE(#v_ENDDATE2#, '%Y-%m-%d %H:%i:%s')   
+     		 ]]>  
+  		</isNotEmpty>       
+   		<isNotEmpty property="v_DOCNUMBER"> 
+   		 AND 
+   		 	DOCNO LIKE '%$v_DOCNUMBER$%'
+   		</isNotEmpty>
+   		<isNotEmpty property="v_DOCTITLE"> 
+   		 AND 
+   		 	DOCTITLE LIKE '%$v_DOCTITLE$%'
+   		</isNotEmpty>
+   		<isNotEmpty property="v_DRAFTER"> 
+   		AND 
+   			WRITERNAME$v_MULTIDATALANG$ LIKE '%$v_DRAFTER$%' 
+   		</isNotEmpty>
+   		<isNotEmpty property="v_DEPTNAME"> 
+   		 AND 
+   		 	WRITERDEPTNAME$v_MULTIDATALANG$ LIKE '%$v_DEPTNAME$%'
+   		</isNotEmpty>
+   		<isNotEmpty property="v_FORMID"> 
+   		 AND 
+   		 	FORMID = #v_FORMID#
+   		</isNotEmpty>
+    	<isNotEmpty property="v_APPROVUSER"> 
+   		AND 
+   			TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%$v_APPROVUSER%$'
+   		</isNotEmpty>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getSearchDocList" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		SELECT 
+			* 
+		FROM(
+				SELECT 
+					A.* 
+			  FROM (
+							SELECT 
+								DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
+										 TBL_ENDAPRDOCINFO.DOCTYPE,
+					   				     TBL_ENDAPRDOCINFO.DOCSTATE, 
+					   				     TBL_ENDAPRDOCINFO.FUNCTIONTYPE, 
+					   				     TBL_ENDAPRDOCINFO.HREF,
+					   					 TBL_ENDAPRDOCINFO.DOCTITLE, 
+					   					 TBL_ENDAPRDOCINFO.DOCNO, 
+					   					 TBL_ENDAPRDOCINFO.HASATTACHYN,
+					   					 TBL_ENDAPRDOCINFO.HASOPINIONYN, 
+					   					 TBL_ENDAPRDOCINFO.STARTDATE, 
+					   					 TBL_ENDAPRDOCINFO.ENDDATE,
+								   		 TBL_ENDAPRDOCINFO.WRITERID, 
+								   		 TBL_ENDAPRDOCINFO.WRITERNAME, 
+								   		 IFNULL(TBL_ENDAPRDOCINFO.WRITERNAME2, TBL_ENDAPRDOCINFO.WRITERNAME) AS WRITERNAME2, 
+								   		 TBL_ENDAPRDOCINFO.WRITERJOBTITLE, 
+								   		 IFNULL(TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, TBL_ENDAPRDOCINFO.WRITERJOBTITLE) AS WRITERJOBTITLE2,
+								   		 TBL_ENDAPRDOCINFO.WRITERDEPTID, 
+								   		 TBL_ENDAPRDOCINFO.WRITERDEPTNAME, 
+								   		 IFNULL(TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, TBL_ENDAPRDOCINFO.WRITERDEPTNAME) AS WRITERDEPTNAME2, 
+								   		 TBL_ENDAPRDOCINFO.FORMID, 
+								   		 TBL_ENDAPRDOCINFO.CONTAINERID, 
+								   		 TBL_EXPENDAPRDOCINFO.FORMNAME, 
+								   		 IFNULL(TBL_EXPENDAPRDOCINFO.FORMNAME2, TBL_EXPENDAPRDOCINFO.FORMNAME) AS FORMNAME2, 
+								   		 TBL_EXPENDAPRDOCINFO.STATUS,
+								   		 TBL_ENDAPRDOCINFO.ORGDOCID, 
+								   		 TBL_ENDAPRDOCINFO.ISPUBLIC, 
+								   		 TBL_EXPENDAPRDOCINFO.EDMSYN,
+								   		 IFNULL(TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,'') AS SECURITYAPPROVAL,
+								   		 TBL_ENDAPRDOCINFO.COMPANYID,
+								   		 TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 companyName,
+										  TBL_DEPTMASTER.COMPNM2 companyName2
+
+							   	FROM 
+							   			 TBL_ENDAPRDOCINFO 
+							   	LEFT OUTER JOIN 
+							   			 TBL_ENDAPRLINEINFO 
+							   	ON 
+							   			 TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+							   	AND 
+							   			 TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+							   	AND 
+							   			 TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+							   	INNER JOIN 
+							   			 TBL_EXPENDAPRDOCINFO 
+							   	ON 
+							   			 TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+							   	AND
+							   			 TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+					   			AND
+							   			 TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+							   	INNER JOIN
+							   			TBL_DEPTMASTER
+							   	ON
+							   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_DEPTMASTER.CN
+							   	AND
+							   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID		 
+							   	WHERE 
+							   			 TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+							    AND
+							    		 TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+							    AND
+		    							TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+		    					<isNotEmpty property="v_STARTDATE1">
+							   	 	 AND 
+							   	 	 	   STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_STARTDATE2">
+							   	<![CDATA[
+							   	 	 AND 
+							   	 		   STARTDATE <= STR_TO_DATE(#v_STARTDATE2#,'%Y-%m-%d %H:%i:%s')
+							   	 ]]>
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_ENDDATE1">
+							   	 	 AND 
+							   	 	       ENDDATE >= STR_TO_DATE(#v_ENDDATE1#,'%Y-%m-%d %H:%i:%s')
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_ENDDATE2">
+							   	<![CDATA[
+							   	 	 AND 
+							   	 	 		ENDDATE <= STR_TO_DATE(#v_ENDDATE2#,'%Y-%m-%d %H:%i:%s')
+							   	 ]]>
+							   	</isNotEmpty>				 
+							   	<isNotEmpty property="v_DOCNUMBER">
+							   	 	AND 
+							   	 		 DOCNO LIKE '%$v_DOCNUMBER$%'
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_DOCTITLE">
+							   	 	AND 
+							   	 		 DOCTITLE LIKE '%$v_DOCTITLE$%'
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_DRAFTER">
+							   	 	 AND 
+							   	 	 	 WRITERNAME$v_MULTIDATALANG$ LIKE '%$v_DRAFTER$%'
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_DEPTNAME">
+							   	 	AND 
+							   	 		 WRITERDEPTNAME$v_MULTIDATALANG$ LIKE '%$v_DEPTNAME$%'
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_FORMID">
+							   	 	 AND 
+							   	 	      FORMID = $v_FORMID$
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_APPROVUSER" >
+								AND 
+									TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%$v_APPROVUSER%$' 
+							    GROUP BY 
+							      	TBL_ENDAPRDOCINFO.DOCID, 
+							      	TBL_ENDAPRDOCINFO.DOCTYPE,
+							      	TBL_ENDAPRDOCINFO.DOCSTATE, 
+							      	TBL_ENDAPRDOCINFO.FUNCTIONTYPE, 
+							      	TBL_ENDAPRDOCINFO.HASATTACHYN,
+							      	TBL_ENDAPRDOCINFO.HASOPINIONYN,
+							      	TBL_ENDAPRDOCINFO.HREF,
+							      	TBL_ENDAPRDOCINFO.DOCTITLE, 
+							      	TBL_ENDAPRDOCINFO.DOCNO, 
+							      	TBL_ENDAPRDOCINFO.HASATTACHYN,
+							      	TBL_ENDAPRDOCINFO.HASOPINIONYN, 
+							      	TBL_ENDAPRDOCINFO.STARTDATE, 
+							      	TBL_ENDAPRDOCINFO.ENDDATE,
+							      	TBL_ENDAPRDOCINFO.WRITERID, 
+							      	TBL_ENDAPRDOCINFO.WRITERNAME, 
+							      	TBL_ENDAPRDOCINFO.WRITERNAME2, 
+							      	TBL_ENDAPRDOCINFO.WRITERNAME, 
+							      	TBL_ENDAPRDOCINFO.WRITERJOBTITLE, 
+							      	TBL_ENDAPRDOCINFO.WRITERJOBTITLE2, 
+							      	TBL_ENDAPRDOCINFO.WRITERJOBTITLE,
+							      	TBL_ENDAPRDOCINFO.WRITERDEPTID, 
+							      	TBL_ENDAPRDOCINFO.WRITERDEPTNAME, 
+							      	TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, 
+							      	TBL_ENDAPRDOCINFO.WRITERDEPTNAME,
+							      	TBL_ENDAPRDOCINFO.FORMID, 
+							      	TBL_ENDAPRDOCINFO.CONTAINERID, 
+							      	TBL_EXPENDAPRDOCINFO.FORMNAME, 
+							      	TBL_EXPENDAPRDOCINFO.FORMNAME2, 
+							      	TBL_EXPENDAPRDOCINFO.FORMNAME,
+							      	TBL_EXPENDAPRDOCINFO.STATUS,
+							      	TBL_ENDAPRDOCINFO.ORGDOCID, 
+							      	TBL_ENDAPRDOCINFO.ISPUBLIC, 
+							      	TBL_EXPENDAPRDOCINFO.EDMSYN,
+							      	TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL
+							   	</isNotEmpty>
+							   	<isNotEmpty property="v_ORDEROPTION">
+							   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
+							   			<isEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
+							   				ORDER BY 
+							   						$v_ORDEROPTION$ , DOCNO DESC
+							   			</isEqual>
+							   			<isNotEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
+							   	 			ORDER BY
+							   	 			 		$v_ORDEROPTION$, ENDDATE DESC
+							   			</isNotEqual>
+							   		</isGreaterEqual>
+							   		<isLessThan  property="v_ORDEROPTIONLENGTH" compareValue="7">
+							   			ORDER BY 
+							   					$v_ORDEROPTION$ , ENDDATE DESC
+							   		</isLessThan>
+							   	</isNotEmpty>
+							   	<isEmpty property="v_ORDEROPTION">
+							   		ORDER BY 
+							   				ENDDATE DESC  , DOCNO DESC
+							   	</isEmpty>
+								<isNotEqual property="alFlag" compareValue="1">
+							   	LIMIT #v_PAGESIZE#
+								</isNotEqual>
+							   	 ) A 
+							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
+							   	 	) B
+<!-- 				<isEqual property="approvalFlag" compareValue="Y"> -->
+<!-- 				INNER JOIN TBL_CODELIST B   -->
+<!-- 				ON A.DOCTYPE = B.CODE2 -->
+<!-- 				WHER B.CODE = 'A02'  -->
+<!-- 				</isEqual> -->
+				<isNotEmpty property="v_ORDEROPTION2">
+				<isGreaterEqual property="v_ORDEROPTIONLENGTH2" compareValue="7">
+				<isEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
+					 ORDER BY 
+					 		$v_ORDEROPTION2$  , DOCNO
+				</isEqual>
+				<isNotEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
+					 ORDER BY 
+					 		$v_ORDEROPTION2$, ENDDATE
+				</isNotEqual>
+				</isGreaterEqual>
+				<isLessThan property="v_ORDEROPTIONLENGTH2" compareValue="7">
+					ORDER BY 
+							$v_ORDEROPTION2$ , ENDDATE
+				</isLessThan>
+				</isNotEmpty>
+				<isEmpty property="v_ORDEROPTION2">
+				 ORDER BY 
+				 		ENDDATE  , DOCNO
+				</isEmpty>
+	</select>
 </sqlMap>

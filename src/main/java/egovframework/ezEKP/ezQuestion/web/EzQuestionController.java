@@ -964,6 +964,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	public String qstStep1(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req,Model model)  {
 		logger.debug("qstStep1 started.");
 		
+		/*
 		String brdID = commonUtil.stripScriptTagsAndFunctions(req.getParameter("brdID"));
 		String brdNm = commonUtil.stripScriptTagsAndFunctions(req.getParameter("brdNm"));
 
@@ -973,6 +974,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		logger.debug("qstStep1 ended.");
 		
 		return "/ezQuestion/qstStep1";
+		*/
+		
+		return "";
 	}
 	
 	/**
@@ -982,6 +986,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	public String qstStep2(HttpServletRequest req, QstStep1VO qstStep1VO, QstAddVO questionAddVO, ModelMap model) {
 		logger.debug("qstStep2 started");
 
+		/*
 		StringBuilder pStep1DataXML = new StringBuilder();
 		
 		String content = commonUtil.cleanValue(commonUtil.stripScriptTagsAndFunctions(req.getParameter("txtContent")));
@@ -1014,6 +1019,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 		logger.debug("qstStep2 ended");
 		return "/ezQuestion/qstStep2";
+		*/
+		
+		return "";
 	}
 	
 	/**

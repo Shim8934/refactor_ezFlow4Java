@@ -6,7 +6,7 @@ grep "Thread finish" run.log > finish.log
 start_time=`head -1 start.log | awk '{print $1, $2}'`
 finish_time=`tail -1 finish.log | awk '{print $1, $2}'`
 
-sed -i 's/-\(..\)$/-0\1/g;s/-\(.\)$/-00\1/g' finish.log
+sed -i 's/-\(..\)$/-00\1/g;s/-\(.\)$/-000\1/g;s/-\(...\)$/-0\1/g' finish.log
 sort -k 9 finish.log > finish.log.sorted
 cat start.log | awk '{print $1, $2}' > start.log.time
 cat finish.log.sorted | awk '{print $1, $2}' > finish.log.time

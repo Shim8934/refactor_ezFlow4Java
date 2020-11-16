@@ -1212,7 +1212,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		model.addAttribute("userMyID", userMyID);
 		model.addAttribute("userMyName", userMyName);
 		model.addAttribute("userMyName2", userMyName2);
-		model.addAttribute("mode", commonUtil.stripScriptTagsAndFunctions(mode));
+		model.addAttribute("mode", commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(mode)));
 		
 		return "/ezCircular/circularWrite";
 	}

@@ -4257,7 +4257,9 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 	@Override
 	public JSONObject callSearchServerForResult2(LoginVO userInfo, Map<String, Object> param) throws Exception {
 		String type = Optional.ofNullable(param.get("type")).map(Object::toString).orElse("");
+		type = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(type));
 		String keyword = Optional.ofNullable(param.get("keyword")).map(Object::toString).orElse("");
+		keyword = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(keyword));
 		String searchRange = Optional.ofNullable(param.get("searchRange")).map(Object::toString).orElse("");
 		String startDate = Optional.ofNullable(param.get("startDate")).map(Object::toString).orElse("");
 		String endDate = Optional.ofNullable(param.get("endDate")).map(Object::toString).orElse("");

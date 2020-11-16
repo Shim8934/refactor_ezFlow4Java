@@ -31,11 +31,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<script type="text/javascript">
 		    var g_bdraft = false;
-		    var g_moveUrl = "${url}";
+		    var g_moveUrl = "<c:out value='${url}'/>";
 		    var g_servername = "${serverName}";	
 			var g_expath = "exchange";
 			var g_userID = "${userId}";
-		    var g_szRootFolderName = '${folderName}';
+		    var g_szRootFolderName = "<c:out value='${folderName}'/>";
 		    var g_bPrevShow = false;
 		    var g_ViewID = null;
 		    var g_PreViewID = null;
@@ -390,7 +390,7 @@
 		        GetListInfo(HeaderObject, ContentObject);	        
 		        PreviewMode_ChangeBtn();
 		        window_onunload_Event = true;
-		        document.getElementById("select2").value = "${folderName}";
+		        document.getElementById("select2").value = "<c:out value='${folderName}'/>";
 		        $("#Sdatepicker").datepicker('disable');
 			    $(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
 			    $("#Edatepicker").datepicker('disable');
@@ -778,7 +778,7 @@
 							dataType : "text",
 							async : true,
 							url : requestUrl,
-							data : { folderPath : '${url}', userkey : userkey},
+							data : { folderPath : "<c:out value='${url}'/>", userkey : userkey},
 							success : function(result) {
 								if (result == "") {
 									alert("<spring:message code='ezEmail.lhm33' />");
@@ -795,7 +795,7 @@
 									}
 									
 									var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
-											+ encodeURIComponent('${folderName}')
+											+ encodeURIComponent("<c:out value='${folderName}'/>")
 											+ "&temp=" + result + "&encryptPw=" + encodeURIComponent(encryptPw)
 											+ "&userkey=" + encodeURIComponent(userkey);
 									
@@ -892,7 +892,7 @@
 		            	userkey = obj.userkey;
 			            var frm = document.getElementById("importMailboxform");
 			            var requestUrl = "/ezEmail/mailboxImportZip.do?folderPath="
-							+ encodeURIComponent('${url}') 
+							+ encodeURIComponent("<c:out value='${url}'/>") 
 							+ "&userkey=" + encodeURIComponent(userkey)
 							+ "&encryptPw=" + encodeURIComponent(encryptPw)
 							+ "&tempId=" + encodeURIComponent(path);
@@ -1271,7 +1271,7 @@
 		</script>	
 	</head>
 	<body style="overflow:hidden;margin-bottom:0px;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
-		<h1>${folderName}<span id="mailBoxInfo"></span><span id ="resultCount" style="display:none;"></span>
+		<h1><c:out value='${folderName}'/><span id="mailBoxInfo"></span><span id ="resultCount" style="display:none;"></span>
 			<span class="searchForm" style="margin-right:53px;">
 				<select name="searchCheck searchFilter" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
 					<option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option>
@@ -1723,11 +1723,11 @@
 		</div>
 		<input name="keyword" id="keyword" style="vertical-align: top; display: none;" onkeyup="return search_keypress(event)">
 		<input name="prekeyword" id="ALL" style="vertical-align: top;height:25px; margin-right:5px;display:none;" onkeyup="return search_keypress(event)" placeholder=<spring:message code="ezEmail.t641" />>
-		<span style="display:none;" value="${folderName}"/>
+		<span style="display:none;" value="<c:out value='${folderName}'/>"/>
 		<select id="select2" style="height: 25px;margin-right: 5px; display:none;">
 			    	<option value="ALL"><spring:message code="ezEmail.t643" /></option>      
 				    <c:forEach var="folderName" items="${topLevelFolderNames}" varStatus="status">
-				    <option value="${folderName}">
+				    <option value="<c:out value='${folderName}'/>">
 						<c:choose>
 							<c:when test="${folderName eq 'INBOX'}">
 								<spring:message code="ezEmail.t644" />
@@ -1745,7 +1745,7 @@
 								<spring:message code="ezEmail.t648" />
 							</c:when>
 							<c:otherwise>
-								${folderName}
+								<c:out value='${folderName}'/>
 							</c:otherwise>
 						</c:choose>      	
 				    </option>

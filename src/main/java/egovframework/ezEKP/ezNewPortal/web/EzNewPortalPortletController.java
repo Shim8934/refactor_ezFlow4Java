@@ -385,7 +385,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = request.getParameter("portletId");
 		String portletName = request.getParameter("portletName");
-		portletName = portletName.replaceAll("=", "");
+		
+        if (portletName == null) {
+            logger.debug("--> portletName is null");
+            return "";
+        }
+        
+        portletName = portletName.replaceAll("=", "");
 		
 		String buJaeInfo = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
 		

@@ -53,7 +53,7 @@
 					
 					<input type="hidden" id="letterbox_no" name="letterBoxNo">
 					<input type="hidden" id="parent_letterbox_no" name="parentLetterBoxNo">
-					<input type="hidden" id="company_id" name="companyID" value="${companyId}">
+					<input type="hidden" id="company_id" name="companyID" value="<c:out value='${companyId}'/>">
 				</form>
 			</div>
 			<div class="btnpositionJsp" style="width:100%;text-align:center;float:left;margin-top:10px;padding:7px;">
@@ -65,7 +65,7 @@
 		</script>
 		<script type="text/javascript">
 			var pageType = "${pageType}";
-	    	var returnCompany = '${companyId}';
+	    	var returnCompany = "<c:out value='${companyId}'/>";
 	    	var userLang = '${userLang}';
 		    var result = [];
 		    var letter_displayname;

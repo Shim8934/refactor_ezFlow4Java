@@ -10,7 +10,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript">
 		    var ReturnFunction;
-		    var type = "${type}";
+		    var type = "<c:out value='${type}'/>";
 		    window.onload = function()
 		    {
 		        try {

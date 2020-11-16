@@ -704,7 +704,7 @@
 </head>
 <body>
 	<ul class="contentlayout">
-		<li class="contentlayout_right" style="width: 285px;">
+		<li class="contentlayout_right" style="width: 285px; padding-left: 10px;">
 			<!-- reform -->
 			<!-- 최적화사이즈widht285px  가변가능-widht변경가능 -->
 			<div id="reform">
@@ -881,7 +881,7 @@
 				<c:when test="${editor eq 'DEXT'}">
 					<table id="PreForm" style="vertical-align: top; border-spacing: 0px;">
 						<tr>
-							<td valign="top" style="width: 800px; vertical-align: top;">
+							<td valign="top" style="width: 100%; vertical-align: top;">
 								<script type="text/javascript">
 									// the following line is commented out since it causes an error message(editor's name is not correct. Please check editor's name)
 									// is displayed.
@@ -915,7 +915,7 @@
 				<c:when test="${editor eq 'NAMO'}">
 					<table id="PreForm" style="overflow: auto; vertical-align: top; border-spacing: 0px;">
 						<tr>
-							<td valign="top" style="width: 800px; vertical-align: top;">
+							<td valign="top" style="width: 100%; vertical-align: top;">
 								<script type="text/javascript">
 									var CrossEditor2 = new NamoSE("reform-namo");
 									var uploadUrl = "/ezEditor/namoUpload.do?type=";
@@ -945,7 +945,7 @@
 				<c:when test="${editor eq 'TAGFREE'}">
 					<table id="PreForm" style="overflow: auto; vertical-align: top; border-spacing: 0px;">
 						<tr>
-							<td id="xfe_ex" valign="top" style="width: 800px;">
+							<td id="xfe_ex" valign="top" style="width: 100%;">
 								<script type="text/javascript">
 									var userLang = "${userlang}";
 									var uploadFilePath = "/ezEditor/tfxUpload.do?type=";
@@ -997,9 +997,7 @@
 					</table>
 				</c:when>
 				<c:when test="${editor eq 'KUKUDOCS'}">
-					<table id="PreForm" style="overflow: auto; vertical-align: top; border-spacing: 0px;">
-						<tr>
-							<td id="reform-kukudocs" valign="top" style="width: 785px;">
+				<textarea cols="80" id="reform-kukudocs" name="reform-kukudocs" rows="10"></textarea>
 								<script>
 									// 언어 설정
 									var lang = "";
@@ -1115,15 +1113,18 @@
 									}
 
 									var kukudocsEditor = new KuKudocsEditor('reform-kukudocs', {
+										licPathURL: '/js/ezEditor/kukudocsEditor/kukudocs.lic',
+										minHeight : 0,
+										maxHeight : 0,
 										width: '100%',
 										height: editorInfo.height,
+										defaultTableWidth : 700,
 										defaultLanguage: lang,
 										languagePathURL: '/js/ezEditor/kukudocsEditor/lang/',
 										defaultFontFamily: editorInfo.defaultFontFamily,
 										defaultFontSize: editorInfo.defaultFontSize,
 										fontSize: fontSize,
 										fontFamily: fontFamily,
-										defaultTableWidth: 700,
 										customMagicLineStyle: 'background-color:#888;',
 										customAlignMenu: customAlignMenu,
 										useMenuBar: false,
@@ -1132,8 +1133,8 @@
 										usePreviewMode: false,
 										useEditorResize: false,
 										useFirstFocus: false,
-										useOnlyTableContentMenu: true,
-										useSecurityEvent: false,
+										useOnlyTableContentMenu : true,
+										useNoneBorderVisualize : true,
 										publicPathURL: '/js/ezEditor/kukudocsEditor/',
 										defaultEditorStylePath: '/js/ezEditor/kukudocsEditor/stylesheets/editor_style.css',
 										loadingImageURL: '/js/ezEditor/kukudocsEditor/images/load.gif',
@@ -1142,14 +1143,11 @@
 										Editor_Complete: onLoaded
 									});
 								</script>
-							</td>
-						</tr>
-					</table>
 				</c:when>
 				<c:when test="${editor eq 'CK'}">
-					<table id="PreForm" style="overflow: auto; vertical-align: top; border-spacing: 0px;">
+					<table id="PreForm" style="overflow: auto; vertical-align: top; border-spacing: 0px; width: 100%;">
 						<tr>
-							<td id="ck_reform" valign="top" style="width: 785px;"></td>
+							<td id="ck_reform" valign="top" style="width: 100%;"></td>
 							<script>
 								CKEDITOR.config.imageUploadUrl = "/ezEditor/ckSimpleUpload.do";
 								CKEDITOR.config.contentsCss = "/js/ezEditor/ckEditor/contents.css";
@@ -1161,7 +1159,7 @@
 								CKEDITOR.config.resize_enabled = false;
 								CKEDITOR.config.allowedContent = true;
 								
-								CKEDITOR.replace('ck_reform', {height: 750, width: 785});
+								CKEDITOR.replace('ck_reform', {height: 750, width: "100%"});
 							</script>
 						</tr>
 					</table>

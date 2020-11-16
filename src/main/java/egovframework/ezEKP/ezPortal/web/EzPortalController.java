@@ -4102,7 +4102,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String keyword = req.getParameter("keyword") != null ? req.getParameter("keyword") : "";
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("keyword", keyword);
+		model.addAttribute("keyword", commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(keyword)));
 		
 		logger.debug("totalSearch is ended.");
 		return "/ezPortal/totalSearchMain";
@@ -4127,7 +4127,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String keyword = req.getParameter("keyword") != null ? req.getParameter("keyword") : "";
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("keyword", keyword);
+		model.addAttribute("keyword", commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(keyword)));
 		logger.debug("totalSearchRight is ended.");
 		return "/ezPortal/totalSearchRight";
 	}
