@@ -41,6 +41,7 @@ function trim(str) {
  * */
 function setAttachInfo(tempDocID, INGFlag, attachTag) {
     attachTag.innerHTML = "";
+    var docAttachTag = document.getElementById(attachTag.id + "Doc"); // 문서첨부영역 분리
     
 	var result = "";
 	
@@ -81,6 +82,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     var xmlRtn = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
     if (xmlRtn.length > 0) {
         var strAttach = " &nbsp ";
+        var strDocAttach = " &nbsp ";
         var rep = /'/g;
         for (i = 0; i < xmlRtn.length; i++) {
             var Row = xmlRtn[i];
@@ -141,6 +143,9 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 } else {
                 	strAttach = strAttach + " &nbsp; ";
                 }
+                
+                /* 2020-11-17 홍승비 - 일반첨부와 문서첨부 영역의 분리 */
+                attachTag.innerHTML = strAttach + "<iframe frameborder=\"0\" id=\"ifrmDownload\" name=\"ifrmDownload\" src=\"about:blank\" width=\"0\" height=\"0\"></iframe>";
             }
             // 문서첨부
             else {
@@ -151,9 +156,9 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 var FileName = trim_Cross(getNodeText(GetChildNodes(xmlRtn[i])[1]));
                 var OpenLocation = "";
                 if (FileDocID == "" && FilePath == "") {
-                    strAttach = strAttach + "<a style='cursor:pointer' onclick=\"OpenAttachAlertUI('" + strLang260 + "')\">";
-                    strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
-                    strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
+                	strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"OpenAttachAlertUI('" + strLang260 + "')\">";
+                	strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
+                    strDocAttach = strDocAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
                 } else if (FileExt == "hwp") {
                 	//2018-09-12 천성준 - mht결재문서에 hwp문서를 문서첨부 하고 IE가 아닌 chrome으로 mht결재문서를 문서보기 하면 알럿이 뜨면서 첨부파일 정보가 공백이 되어서 IE검사 주석처리함. 대신 문서보기 하단 문서첨부를 클릭해서 열때 hwp이면 IE검사를 하게 로직 추가함
                 	/*if (isIE()) {
@@ -180,21 +185,23 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 	} else {
                 		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
                 	}
-                	strAttach = strAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
-                	strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
-                	strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
+                	strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
+                	strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
+                	strDocAttach = strDocAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
                 	
                 } else {
                     openLocation = "/ezApprovalG/contDocView.do";
                     openLocation = openLocation + "?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocID=";
-                    strAttach = strAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
-                    strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
-                    strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
+                    strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
+                    strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
+                    strDocAttach = strDocAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
                 }
+                
+                /* 2020-11-17 홍승비 - 일반첨부와 문서첨부 영역의 분리 */
+                docAttachTag.innerHTML = strDocAttach + "<iframe frameborder=\"0\" id=\"ifrmDownload\" name=\"ifrmDownload\" src=\"about:blank\" width=\"0\" height=\"0\"></iframe>";
             }
-
         }
-        attachTag.innerHTML = strAttach + "<iframe frameborder=\"0\" id=\"ifrmDownload\" name=\"ifrmDownload\" src=\"about:blank\" width=\"0\" height=\"0\"></iframe>";
+        
         try {
             pHasAttachYN = "Y";
         } catch (e) { }

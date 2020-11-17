@@ -1728,10 +1728,13 @@
 	                <table class="file" style="height: 60px; margin-top:-10px;">
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t65'/></th>
-	                        <td>
+	                        <td style=" width:50%; border-right:1px solid #d5d5d5;">
 	                            <div id="lstAttachLink" style="height: 50px;"></div>
 	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                        </td>
+	                        <td style=" width:50%;">
+								<div id="lstAttachLinkDoc" style="height: 50px;"></div>
+							</td>
 	                    </tr>
 	                </table>
 	
