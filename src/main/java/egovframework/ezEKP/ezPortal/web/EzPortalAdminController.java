@@ -1065,10 +1065,14 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		if (req.getParameter("portalGubun") != null && !req.getParameter("portalGubun").equals("")) {
 			portalGubun = req.getParameter("portalGubun");
+		} else {
+			portalGubun = "";
 		}
 		
 		if (req.getParameter("pSearchString") != null && !req.getParameter("pSearchString").equals("")) {
 			pSearchString = req.getParameter("pSearchString");
+		} else {
+			pSearchString = "";
 		}
 		
 		if (req.getParameter("intPage") != null && !req.getParameter("intPage").equals("")) {

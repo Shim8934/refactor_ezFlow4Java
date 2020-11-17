@@ -388,7 +388,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String mode = request.getParameter("mode");
+		String mode = request.getParameter("mode") != null ? request.getParameter("mode") : "";
 		String userID = userInfo.getId();
 		String result = "";
 		
@@ -901,8 +901,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String use_Editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()); 
 		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		String use_oneLineCount = "";
-		String pBoardID = boardPropertyVO.getBoardID();
-		String pBoardName = boardPropertyVO.getBoardName();
+		String pBoardID = boardPropertyVO.getBoardID() != null ? boardPropertyVO.getBoardID() : "";
+		String pBoardName = boardPropertyVO.getBoardName() != null ? boardPropertyVO.getBoardName() : "";
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		
 		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
@@ -1261,8 +1261,8 @@ public class EzBoardController extends EgovFileMngUtil{
     	
     	userInfo = commonUtil.userInfo(loginCookie);
     	
-    	String boardID = boardVO.getBoardId();
-    	String boardType = boardVO.getBoardType();
+    	String boardID = boardVO.getBoardId() != null ? boardVO.getBoardType() : "";
+    	String boardType = boardVO.getBoardType() != null ? boardVO.getBoardType() : "0";
     	String mode = boardVO.getMode();
     	String type = "1";
     	String resultXML = "";
@@ -1277,6 +1277,14 @@ public class EzBoardController extends EgovFileMngUtil{
     	boardVO.setLang(userInfo.getLang());
     	boardVO.setTenantID(userInfo.getTenantId());
     	boardVO.setLikeFlag(boardInfo.getLikeFlag());
+    	
+    	int tempPageNum = new Integer(boardVO.getPageNum()) != null ? boardVO.getPageNum() : 1;
+    	boardVO.setPageNum(tempPageNum);
+    	
+    	String tempOrderOption = boardVO.getOrderOption() != null ? boardVO.getOrderOption() : "";
+    	String tempOrderCell = boardVO.getOrderCell() != null ? boardVO.getOrderCell() : "";
+    	boardVO.setOrderOption(tempOrderOption);
+    	boardVO.setOrderCell(tempOrderCell);
     	
     	if (boardType.equals("4") || boardType.equals("7")) { // 썸네일, 동영상
     		resultXML = getThumbList(boardVO, userInfo, type);

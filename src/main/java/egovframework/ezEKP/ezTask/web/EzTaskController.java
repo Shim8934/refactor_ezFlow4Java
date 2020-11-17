@@ -1268,6 +1268,10 @@ public class EzTaskController extends EgovFileMngUtil {
     	String useDate = request.getParameter("useDate");
     	String pSelectTab = "";
     	
+    	if(useDate == null || startDate == null) {
+    		return "";
+    	}
+    	
     	if (request.getParameter("pSelectTab") != null) {
     		pSelectTab = request.getParameter("pSelectTab");
     	}

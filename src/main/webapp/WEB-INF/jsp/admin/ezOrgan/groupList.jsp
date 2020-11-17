@@ -173,14 +173,14 @@
 		if (CrossYN()) {
 			mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 			mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
-			var OpenWin = window.open("/admin/ezOrgan/addGroup2.do?companyId="
+			var OpenWin = window.open("/admin/ezOrgan/addGroupForReference.do?companyId="
 					+ companyId, "", GetOpenWindowfeature(970, 670));
 			try {
 				OpenWin.focus();
 			} catch (e) {
 			}
 		} else {
-			var rtnValue = window.showModalDialog("/admin/ezOrgan/addGroup2.do",
+			var rtnValue = window.showModalDialog("/admin/ezOrgan/addGroupForReference.do",
 					companyId, feature);
 			if (typeof (rtnValue) != "undefined")
 				getPermissionGroupList();

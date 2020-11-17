@@ -28,7 +28,7 @@
 		<!-- month picker-->		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/monthpicker.js')}"></script>
 		<!-- date Format -->		
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/moment.min.js')}"></script>
 		<style>
 			#attiStatis table td {
 				color : #777;

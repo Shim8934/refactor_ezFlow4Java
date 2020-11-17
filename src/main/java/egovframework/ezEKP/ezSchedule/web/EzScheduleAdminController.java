@@ -350,6 +350,11 @@ public class EzScheduleAdminController {
 		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		
+		if (holidayType == null) {
+			logger.debug("holidayType is null");
+			return "";
+		}
+		
 		if (holidayType.equals("a")) {
 			String company = request.getParameter("company");	
 			StringBuilder companySel = new StringBuilder();

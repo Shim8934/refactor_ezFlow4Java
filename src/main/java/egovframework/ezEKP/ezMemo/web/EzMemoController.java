@@ -944,12 +944,19 @@ public class EzMemoController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezMemo/setDetailMemoStatus.do", method = RequestMethod.POST)
-	public String setDetailMemoStatus(@CookieValue("loginCookie") String loginCookie,  int memoId, int openStatus, HttpServletRequest request, Model model) throws Exception {
+	public String setDetailMemoStatus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("setDetailMemoStatus started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		if(request.getParameter("memoId") == null || request.getParameter("openStatus") == null) {
+			return "";
+		}
+		
+		int memoId = Integer.parseInt(request.getParameter("memoId"));
+		int openStatus = Integer.parseInt(request.getParameter("openStatus"));
 		
 		if (memoId > 0) {
 			param.put("memo_id", memoId);

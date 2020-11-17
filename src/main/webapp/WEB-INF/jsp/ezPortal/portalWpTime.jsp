@@ -7,7 +7,7 @@
 		<title><spring:message code="ezPortal.t232" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('main.e6', 'msg')}" type="text/css" />
-		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<%--		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> --%>
 	</head>
 	<body class="body_bg2">
 		<article class="time">
