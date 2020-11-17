@@ -519,7 +519,7 @@ function openFileAttachUI() {
 	aprattach_dialogArguments[0] = parameter;
 	aprattach_dialogArguments[1] = openFileAttachUI_Complete;
 	
-	DivPopUpShow(760, 415, url);
+	DivPopUpShow(800, 610, url);
 }
 
 function openFileAttachUI_Complete(ret) {

@@ -25,6 +25,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attach_CK.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/webfolderFilePick.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 			var pDocID = null;
 			var OrderCell = "";
@@ -80,6 +81,9 @@
 	        var normalAttachSize = 0; // 일반첨부파일 크기
 	        var bigAttachSize = 0; // 대용량 첨부파일 크기
 	        var isBigAttachBtnClicked = false; // 대용량첨부 버튼으로 파일을 추가하는지 여부
+	        
+	        // 웹폴더첨부용 변수
+	        var pickerData = "";
 			
 			// 문서정보를 가져오는 함수
 			function getDocInfo()
@@ -221,6 +225,12 @@
 				pAttachSN = pAttachSN + 1;
 				
 				//btn_AttachDel.disabled = true; 
+				
+				// 웹폴더첨부를 위한 파라미터 설정
+				pickerData = {
+						'confirmBT' : webFolderConfirmBT, // 웹폴더첨부 확인 시 실행할 함수
+						'cancelBT' : webFolderCancelBT // 웹폴더첨부 취소 시 실행할 함수
+				};
 			}
 			
 			
@@ -1044,6 +1054,147 @@
 		    	}
 		    }
 		    
+		    // 웹폴더첨부를 위한 함수
+		    function filePicker() {
+		    	filePick.open(pickerData);
+		    }
+		    
+		    // 웹폴더첨부 확인, 확정 시 동작
+		    function webFolderConfirmBT(selectedFileInfo) {
+		    	var webFolderFileList = JSON.parse(selectedFileInfo.fileList);
+		    	var webFolderFileListCnt = webFolderFileList.length;
+		    	
+		    	if (isfileup) {
+		            alert(strLangjjh03);
+		            return;
+		        }
+		        // 새로 추가할 웹폴더 첨부파일과 기존 파일의 개수제한 체크
+				var checkAttachResult = checkAttachFileCntLimit(webFolderFileListCnt);
+		        if (checkAttachResult == "NO") {
+		        	return;
+		        }
+		        
+		        var fd = new FormData();
+		        var calTotalSize = 0; // 전체 첨부파일 크기
+		        var calNormalAttachSize = 0; // 일반첨부파일 크기
+		        var calBigAttachSize = 0; // 대용량 첨부파일 크기
+		        var calBigAttachCnt = 0; // 대용량 첨부파일 개수
+		        var addToBigAttach = "N"; // 대용량 첨부파일로 추가하는지 여부
+
+		        // 대용량 첨부파일과 일반 첨부파일 분리하여 각각의 총합 계산
+		        for (var i = 0; i < webFolderFileListCnt; i++) {
+		        	calTotalSize += parseInt(webFolderFileList[i].fileSize);
+		        	
+		        	// 대용량첨부 버튼으로 추가하는 경우, 모든 파일을 대용량첨부로 계산 (isBigAttachBtnClicked)
+		        	// 일반 첨부파일의 총 용량을 넘지 않는다면 일반 첨부파일로 저장
+		        	if (isBigAttachBtnClicked == false && (normalAttachSize + calNormalAttachSize + parseInt(webFolderFileList[i].fileSize) < apprAttachLimit * 1024 * 1024)) {
+		        		calNormalAttachSize += parseInt(webFolderFileList[i].fileSize);
+		        	}
+		        	// 일반 첨부파일의 총 용량을 넘는 순간부터 대용량 첨부파일로 저장
+		        	else if (isBigAttachBtnClicked == true || (normalAttachSize + calNormalAttachSize + parseInt(webFolderFileList[i].fileSize) >= apprAttachLimit * 1024 * 1024)) {
+		        		calBigAttachSize += parseInt(webFolderFileList[i].fileSize);
+		        		calBigAttachCnt += 1;
+		        		addToBigAttach = "Y";
+		        	}
+		        }
+		        
+		        // 일반 첨부파일의 총용량제한 초과 시, 현재 추가하는 파일 전부를 대용량첨부로 변경
+		        if (addToBigAttach == "Y") {
+		        	var bigFileCheck = false;
+		        	
+		        	// 대용량첨부 버튼으로 추가하는 경우, 확인 알러트 발생하지 않음
+		        	if (isBigAttachBtnClicked == true) {
+		        		bigFileCheck = true;
+		        	} else {
+		        		bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00 + bigSizeApprAttachDelDay + strLang1030 + " " +strLangHSBAt01);
+		        	}
+		        	
+		        	if (bigFileCheck != true) {
+		        		addToBigAttach = "N";
+		        		return;
+		        	} else {
+		        		calBigAttachSize += calNormalAttachSize; // 같이 추가되는 일반 첨부파일도 전부 대용량으로 추가되므로.
+		        		calNormalAttachSize = 0; // 대용량으로 변환되므로 일반 첨부파일로는 추가되지 않음
+		        	}
+		        }
+		        
+		     	// 대용량첨부파일 최대개수 초과 체크
+				var checkBigAttachResult = checkBigAttachFileCntLimit(calBigAttachCnt);
+		        if (checkBigAttachResult == "NO") {
+		        	return;
+		        }
+		        
+		        // 대용량첨부파일 최대크기 초과 체크
+				if (bigAttachSize + calBigAttachSize > (bigSizeApprAttachLimit * 1024 * 1024)) {
+		        	alert(strLangHSBAt03 + bigSizeApprAttachLimit  + strLangHSBAt04);
+		        	return;
+		        }
+
+		        // 첨부파일 총용량제한 (일반 + 대용량의 합)
+		        if (apprTotalAttachLimit != "") {
+			        if (apprTotalAttachLimit > 0) {
+			        	var totMaxSize = parseInt(apprTotalAttachLimit) * 1024 * 1024;
+	
+			        	if (totalSize + calTotalSize > totMaxSize) {
+				        	alert(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
+				        	isfileup = false;
+				        	return;
+				        } else {
+				        	totalSize += calTotalSize;
+				        }
+			        }
+		        }
+		        
+		        var webFolderFileStr = "";
+		        for (var i = 0; i < webFolderFileListCnt; i++) {
+					var fnl = webFolderFileList[i].fileName.length;
+		        	
+		        	if (fnl > attachFileNameMaxLength) {
+		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+		        		isfileup = false;
+		        		return;
+		        	} else { // 파일명, 사이즈, 경로를 하드하게 '|' 문자열로 붙여서 서버로 전달
+		        		webFolderFileStr += webFolderFileList[i].fileName + "|" +  webFolderFileList[i].fileSize + "|" + webFolderFileList[i].filePath + "|||"; 
+		        	}		            
+		        }
+		        
+		        isfileup = true;
+		        fd.append("webFolderFileStr", webFolderFileStr);
+		        fd.append("boardid", window.parent.pBoardID);
+		        fd.append("maxsize", pBoardFileSize * 1024 * 1024);
+		        fd.append("compid", orgCompanyID);
+		        fd.append("docid", document.getElementById("docid").value);
+		        fd.append("attachsn", pAttachSN);
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : false,
+		    		url : "/ezApprovalG/multiUploadWebFolder.do",
+		    		data : fd,
+		    		processData: false, 
+		    		contentType: false,
+		    		success: function(text){
+		    			var uFileCnt = text.resultUpload.length
+
+		    			for (var i = 0; i < uFileCnt; i++) {
+		    				returnvalue(text.resultUpload[i], text.fileName[i], text.fileLocation[i], text.fileSize[i], addToBigAttach);
+		    			}
+		    			
+		    			isfileup = false;
+		    			
+		    			// 일반첨부, 대용량첨부 용량 갱신
+		    			normalAttachSize += calNormalAttachSize;
+		    			bigAttachSize += calBigAttachSize;
+		    		}
+		    	});
+		    }
+		    
+		    // 웹폴더첨부 취소 시 동작. 필요하다면 input file 부분을 초기화한다.
+		    function webFolderCancelBT() {
+		    	return;
+		    }
+		    
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}
@@ -1059,8 +1210,8 @@
 		<table>
 		  <tr>
 		    <td style="text-align:center;">
-		    	<div class="listview" style="min-width:518px;">
-		        	<div id="ATTACH" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" STYLE="overflow-x:hidden;MIN-WIDTH:518px;HEIGHT:260px;margin:auto;"></div>
+		    	<div class="listview" style="min-width:780px;">
+		        	<div id="ATTACH" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" STYLE="overflow-x:hidden;HEIGHT:455px;min-width:780px;margin:auto;"></div>
 		      	</div>
 		      	<%-- 2020-11-12 홍승비 - 파일첨부 관련 알림 메세지 영역 --%>
 		      	<div style="text-align:left; line-height:21px;">
@@ -1081,8 +1232,12 @@
 		    <div class="btnposition btnpositionNew">       
 		        <input id="file1" name="file1" type="file" onchange="onDrop()" multiple="multiple" style="margin-left:100px; display: none;">
 		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd" onclick="isBigAttachButtonClick('N')" style="cursor:pointer"><spring:message code='ezApprovalG.t268'/></span></label></a>
+		        
 		        <%-- 2020-11-12 홍승비 - 대용량첨부기능 추가 --%>
 		        <a class="imgbtn"><label for="file1"><span id="btn_BigAttachAdd" onclick="isBigAttachButtonClick('Y')" style="cursor:pointer"><spring:message code='ezEmail.t663'/></span></label></a>
+		        <%-- 2020-11-17 홍승비 - 웹폴더첨부기능 추가 --%>
+				<a class="imgbtn"><span id="btn_WebFolderAttachAdd" onclick="isBigAttachButtonClick('N'); filePicker();" style="cursor:pointer"><spring:message code='ezSystem.HSBAppr06'/></span></a>
+		         
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
 				<%-- 2020-03-19 홍승비 - 첨부파일 위/아래 이동버튼 추가 --%>
 		        <a class="imgbtn"><span id="btn_AttachMoveUp" onClick="return btn_AttachMoveUp_onclick()"><img src="/images/ImgIcon/prev.gif" alt="" style="vertical-align:middle;"></span></a>
@@ -1098,6 +1253,11 @@
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
+		<%-- 2020-11-17 홍승비 - 웹폴더 첨부 레이어팝업을 위한 태그 추가--%>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_sub">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel_sub">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer_sub"></iframe>
 		</div>
 	</body>
 </html>

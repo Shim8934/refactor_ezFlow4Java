@@ -1202,7 +1202,7 @@ function openFileAttachUI() {
 	return ret;*/
 	  
 	  var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + "hwp";
-	  DivPopUpShow(760, 415, url);
+	  DivPopUpShow(800, 610, url);
   } catch(e) {
 	  alert("openFileAttachUI() :: " + e);
   }

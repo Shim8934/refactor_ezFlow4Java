@@ -2619,10 +2619,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String[] resultUploadArray = new String[cnt];
 		String[] fileLocationArray = new String[cnt];
 		String[] fileNameArray = new String[cnt];
-		int[] fileSizeArray = new int[cnt];		
+		int[] fileSizeArray = new int[cnt];
 		
 		for (int i = 0; i < cnt; i++) {
-			String fileName = multiFile.get(i).getOriginalFilename();		
+			String fileName = multiFile.get(i).getOriginalFilename();
 			
 			int fileSize = (int) multiFile.get(i).getSize();
 			int maxSize = 0;
@@ -2667,6 +2667,110 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("fileSize", fileSizeArray);
 		
 		logger.debug("multiUpload ended");
+		
+		return "json";
+	}
+	
+	/**
+	 * 2020-11-17 홍승비 - 전자결재 > 웹폴더 첨부 전용 메서드 추가
+	 * */
+	@RequestMapping(value = "/ezApprovalG/multiUploadWebFolder.do", method = RequestMethod.POST)	
+	public String multiUploadWebFolder(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, MultipartHttpServletRequest request, Model model) throws Exception{
+		logger.debug("multiUploadWebFolder started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);		 
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		String companyID = request.getParameter("compid");		
+		String docID = request.getParameter("docid");
+		String fileAttachSN = request.getParameter("attachsn");
+		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String oldYear = ezApprovalGService.getDocHrefYear(docID, companyID, userInfo.getTenantId());
+		String webFolderFileStr = request.getParameter("webFolderFileStr");
+		
+		// uploadFile, tempUploadFile 디렉토리 경로
+		String upd = dirPath + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
+		String tempUpd = dirPath + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator;
+		File uFile = new File(commonUtil.detectPathTraversal(upd));
+		File tFile = new File(commonUtil.detectPathTraversal(tempUpd));
+		
+		if (uFile.isDirectory()) {
+			uFile.mkdir();
+		}
+		
+		if (!tFile.isDirectory()) {
+			tFile.mkdirs();
+		}
+		
+		if (!uFile.isDirectory()) {
+			uFile.mkdirs();
+		}
+		
+		String[] webFolderFileArray = webFolderFileStr.split("\\|\\|\\|");
+		int cnt = webFolderFileArray.length;
+		String[] resultUploadArray = new String[cnt];
+		String[] fileLocationArray = new String[cnt];
+		String[] fileNameArray = new String[cnt];
+		int[] fileSizeArray = new int[cnt];
+		
+		// 0:파일명, 1:파일사이즈, 2:파일경로
+		for (int i = 0; i < cnt; i++) {
+			
+			String[] tempWebFolderFile = webFolderFileArray[i].split("\\|");
+			String fileName = tempWebFolderFile[0];
+			int fileSize = Integer.parseInt(tempWebFolderFile[1]);
+			int maxSize = 0;
+			
+			if (request.getParameter("maxsize") != null) {
+				maxSize = Integer.parseInt(request.getParameter("maxsize"));
+			}
+			
+			if (fileName.indexOf("\\") > -1) {
+				fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
+			}
+			
+			fileNameArray[i] = fileName;
+			fileSizeArray[i] = fileSize;
+			
+			// 첨부파일 순번 설정 4자리
+			String fileAttachFormatSN = "00000" + fileAttachSN;
+			fileAttachFormatSN = fileAttachFormatSN.substring(fileAttachFormatSN.length() - 4, fileAttachFormatSN.length());
+		
+			String saveFileName = docID + fileAttachFormatSN + fileName;
+			
+			if (fileSize > maxSize) {
+				resultUploadArray[i] = "overflow";
+			} else {
+				// 첨부파일의 확장자가 useExtension에 포함되지 않은경우
+				if (useExtension.indexOf(fileName.substring(fileName.lastIndexOf(".") + 1)) == -1 && !useExtension.equals("*")) {
+					resultUploadArray[i] = "denied";
+				} else {
+					// 웹폴더 파일 경로의 해당 파일이 존재한다면, 새로운 전자결재 첨부파일 경로에 파일 카피를 진행 (실제 파일이 없다면 다음 루프 진행)
+					File orgWebFolderFile = new File(commonUtil.getRealPath(request) + tempWebFolderFile[2]);
+					if (!orgWebFolderFile.exists()) {
+						fileLocationArray[i] = "";
+						resultUploadArray[i] = "false";
+						continue;
+					}
+					else {
+						File newAttachFile = new File(tempUpd + saveFileName); // 새로운 전자결재 첨부파일 경로에 형식적인 임의 파일을 생성
+						FileUtils.copyFile(orgWebFolderFile, newAttachFile); // 새로운 파일을 웹폴더 파일로 덮어쓰기(카피)
+						
+						String tempUploadFilePath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator + saveFileName;
+						fileLocationArray[i] = tempUploadFilePath;
+						resultUploadArray[i] = "true";
+						
+						fileAttachSN = Integer.toString(Integer.parseInt(fileAttachSN) + 1);
+					}
+				}
+			}
+		}
+			
+		model.addAttribute("resultUpload", resultUploadArray);
+		model.addAttribute("fileLocation", fileLocationArray);
+		model.addAttribute("fileName", fileNameArray);
+		model.addAttribute("fileSize", fileSizeArray);
+		
+		logger.debug("multiUploadWebFolder ended");
 		
 		return "json";
 	}
