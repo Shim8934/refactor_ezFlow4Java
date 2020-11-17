@@ -1131,6 +1131,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			useZipCodeSearch = "YES";
 		}
 		
+		boolean useOnlyInnerMail = "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
+		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
 		model.addAttribute("lang", lang);
@@ -1142,7 +1144,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 		model.addAttribute("locale", userInfo.getLocale());
 		model.addAttribute("userPrimary", userInfo.getPrimary());
-		
+		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 				
 		logger.debug("userInfo ended");
 		
