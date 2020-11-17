@@ -2125,8 +2125,8 @@ public class CommonUtil {
 			menuCodeList.forEach(menuCode -> {
 				boolean menuAccess = false;
 				
-				if (menuCode.equals("workspace")) {//협업
-					try {
+				try {
+    				if (menuCode.equals("workspace")) {//협업
 						String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId);
 						List<MenuInfoVO> menuFilter = menuList.stream().filter(menuInfo -> menuInfo.getMenuUrl().contains("ezWorkspace"))
 								.collect(Collectors.toList());
@@ -2138,58 +2138,63 @@ public class CommonUtil {
 								menuAccess = true;
 							}
 						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else if(menuCode.equals("mail") || menuCode.equals("address")) {		// 메일, 주소록
-					String useExternalMailServer = "";
-					try {
-						useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
-						if (useExternalMailServer != null && useExternalMailServer.equals("YES")) {
-							menuAccess = false;
-						} else {
-							menuAccess = true;
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else if (menuCode.equals("board")) {//게시판
-					try {
+    				} else if(menuCode.equals("mail") || menuCode.equals("address")) {		// 메일, 주소록
+						String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
+						menuAccess = useExternalMailServer.equals("NO");
+    				} else if (menuCode.equals("board")) {//게시판
 						String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
-						
-						if (useBoard.equals("NO")) {
-							menuAccess = false;
-						} else {
-							menuAccess = true;
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else if (menuCode.equals("schedule")) {//일정
-					try {
+						menuAccess = useBoard.equals("YES");
+    				} else if (menuCode.equals("schedule")) {//일정
 						String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
-						
-						if (useSchedule.equals("NO")) {
-							menuAccess = false;
-						} else {
-							menuAccess = true;
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else if (menuCode.equals("resource")) {//자원
-					try {
+						menuAccess = useSchedule.equals("YES");
+    				} else if (menuCode.equals("resource")) {//자원
 						String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
-						
-						if (useResource.equals("NO")) {
-							menuAccess = false;
-						} else {
-							menuAccess = true;
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
+						menuAccess = useResource.equals("YES");
+    				} else if (menuCode.equals("community")) {
+                        String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+                        menuAccess = useCommunity.equals("YES");
+    				} else if (menuCode.equals("circular")) {
+                        String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", tenantId);
+                        menuAccess = useCircular.equals("YES");
+                    } else if (menuCode.equals("memo")) {
+                        String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
+                        menuAccess = useMemo.equals("YES");
+                    } else if (menuCode.equals("survey")) {
+                        String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
+                        menuAccess = useSurvey.equals("YES");
+                    } else if (menuCode.equals("webfolder")) {
+                        String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
+                        menuAccess = useWebfolder.equals("YES");
+                    } else if (menuCode.equals("journal")) {
+                        String useJournal = ezCommonService.getTenantConfig("USE_JOURNAL", tenantId);
+                        menuAccess = useJournal.equals("YES");
+                    } else if (menuCode.equals("attitude")) {
+                        String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", tenantId);
+                        menuAccess = useAttitude.equals("YES");
+                    } else if (menuCode.equals("task")) {
+                        String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
+                        menuAccess = useToDo.equals("YES");
+                    } else if (menuCode.equals("vote")) {
+                        String useBallotSystem = ezCommonService.getTenantConfig("useBallotSystem", tenantId);
+                        menuAccess = useBallotSystem.equals("YES");
+                    } else if (menuCode.equals("ladder")) {
+                        String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
+                        menuAccess = useLadder.equals("YES");
+                    } else if (menuCode.equals("pms")) {
+                        String usePms = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
+                        menuAccess = usePms.equals("YES");
+                    } else if (menuCode.equals("cabinet")) {
+                        String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
+                        menuAccess = useCabinet.equals("YES");
+                    } else if (menuCode.equals("question")) {
+                        String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+                        menuAccess = useQuestion.equals("YES");
+                    } else {
+                        menuAccess = true;
+                    }
+				} catch (Exception e) {
+				    e.printStackTrace();
+                }
 				
 				List<MenuInfoVO> menuFilter = menuList.stream().filter(menuInfo -> menuInfo.getMenuCode() != null && menuInfo.getMenuCode().equals(menuCode))
 											.collect(Collectors.toList());
