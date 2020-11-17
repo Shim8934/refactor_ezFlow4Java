@@ -94,7 +94,7 @@ public class EzAddressController{
 		
 		logger.debug("addressZipCodePopupOpen ended.");
 		
-		return "ezAddress/addressZipCodePopUpOpen";
+		return "ezAddress/addressZipSelectInternet";
 	}
 	
 	/**
