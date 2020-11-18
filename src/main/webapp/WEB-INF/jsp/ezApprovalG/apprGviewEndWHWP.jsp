@@ -493,12 +493,12 @@
 	                <table class="file" style="height: 60px; margin-top:-10px;">
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t65'/></th>
-	                        <td style=" width:50%; border-right:1px solid #d5d5d5;">
+	                        <td style=" width:70%; border-right:1px solid #d5d5d5;">
 	                            <div id="lstAttachLink" style="height: 50px;"></div>
 	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                            <iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
 	                        </td>
-	                        <td style=" width:50%;">
+	                        <td style=" width:30%;">
 								<div id="lstAttachLinkDoc" style="height: 50px;"></div>
 							</td>
 	                    </tr>

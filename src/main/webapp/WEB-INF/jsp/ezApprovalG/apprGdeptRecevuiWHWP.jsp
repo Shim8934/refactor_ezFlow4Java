@@ -1034,10 +1034,10 @@
 	                <table class="file" style="height: 60px; margin-top:-10px;">
 	                    <tr>
 	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
-	                        <td style=" width:50%; border-right:1px solid #d5d5d5;">
+	                        <td style=" width:70%; border-right:1px solid #d5d5d5;">
 	                            <div id="lstAttachLink" style="height: 50px;"></div>
 	                        </td>
-	                        <td style=" width:50%;">
+	                        <td style=" width:30%;">
 								<div id="lstAttachLinkDoc" style="height: 50px;"></div>
 							</td>
 	                    </tr>
