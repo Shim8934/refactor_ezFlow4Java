@@ -597,7 +597,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
     	// 보안을 위해 /fileroot내에 있는 파일들에만 접근가능하도록 제한한다.
     	// 본래 /fileroot로 시작해야 정상이나 혹 //fileroot 등과 같이 사용되는 경우를 대비하여
     	// contains를 사용함.
-    	if (!filePath.contains("fileroot")) {
+    	if (!isValidFilePath(filePath)) {
     		LOGGER.debug("filePath=" + filePath + " doesn't contain fileroot.");
     		
     		return;
@@ -664,6 +664,15 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
         
 
 	}
+    
+    public boolean isValidFilePath(String filePath) {
+    	
+    	if(filePath.contains("/fileroot/") || filePath.contains("/files/") || filePath.contains("/images/") || filePath.contains("/images_en/") || filePath.contains("/images_ja/")) {
+    		return true;
+    	}
+    	
+    	return false;
+    }
     
     /**
      * 서버 파일/폴더를 재귀적으로 삭제한다.
