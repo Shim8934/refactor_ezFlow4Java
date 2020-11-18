@@ -847,11 +847,11 @@
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t286' /></th>
 	            <td colspan="5">
                     <c:if test="${primaryLang == '1'}">
-                    	<c:if test="${useZipCodeSearch == 'YES'}">
+                    	<c:if test="${useZipCodeSearch == 'YES' && not useOnlyInnerMail}">
 	                		<input id="ZipCode" style="WIDTH: 100px;" maxlength="6" readonly="readonly" />
 	                		<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="GetPostCode()"><spring:message code='ezOrgan.t286' /></span></a>
                     	</c:if>
-                    	<c:if test="${useZipCodeSearch == 'NO'}">
+                    	<c:if test="${useZipCodeSearch == 'NO' || useOnlyInnerMail}">
                     		<input id="ZipCode" style="WIDTH: 100px;" maxlength="6" />
                     		<span><spring:message code='ezOrgan.t286' /></span>
                     	</c:if>

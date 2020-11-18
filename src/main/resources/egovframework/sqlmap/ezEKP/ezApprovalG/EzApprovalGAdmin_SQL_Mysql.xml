@@ -5432,10 +5432,6 @@
    			]]>		 	
    		WHERE 
    			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
-   		AND 
-   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-		AND
-		    TBL_ENDAPRDOCINFO.COMPANYID = #companyID# 
 		<isNotEmpty property="v_STARTDATE1"> 
    		<![CDATA[
  				AND   
@@ -5484,6 +5480,10 @@
    		AND 
    			TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%$v_APPROVUSER%$'
    		</isNotEmpty>
+   		AND 
+   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		AND
+		    TBL_ENDAPRDOCINFO.COMPANYID = #companyID# 
 	</select>
 	
 	<select id="EzApprovalGAdminDAO.getSearchDocList" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
@@ -5552,10 +5552,6 @@
 							   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID		 
 							   	WHERE 
 							   			 TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
-							    AND
-							    		 TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-							    AND
-		    							TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 		    					<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
 							   	 	 	   STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')
@@ -5575,7 +5571,11 @@
 							   	 	 AND 
 							   	 	 		ENDDATE <= STR_TO_DATE(#v_ENDDATE2#,'%Y-%m-%d %H:%i:%s')
 							   	 ]]>
-							   	</isNotEmpty>				 
+							   	</isNotEmpty>
+							   	AND
+							    		 TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+							    AND
+		    							TBL_ENDAPRDOCINFO.COMPANYID = #companyID#				 
 							   	<isNotEmpty property="v_DOCNUMBER">
 							   	 	AND 
 							   	 		 DOCNO LIKE '%$v_DOCNUMBER$%'

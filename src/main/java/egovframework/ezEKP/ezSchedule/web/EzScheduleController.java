@@ -257,6 +257,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 		StringBuilder returnXML = new StringBuilder();
 		String isRest = "normal";
 		
+		if(cID == null) {
+			return "";
+		}
+		
 		List<ScheGetHolidayVO> getHoliday = ezScheduleService.getTholiday(cID.trim(), userInfo.getCompanyID(), userInfo.getTenantId(), isRest);
 				
 		for (int i=0; i<getHoliday.size(); i++ ) {
@@ -336,6 +340,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String startDate = request.getParameter("STARTDATE");
 		String endDate = request.getParameter("ENDDATE");
 		String idList = request.getParameter("IDLIST");
+		
+		if(startDate == null || endDate == null || idList == null) {
+			return "";
+		}
+		
+		
 		String groupID = request.getParameter("GROUPID");	
 		
 		StringBuilder sb = new StringBuilder("<DATA>");

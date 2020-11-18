@@ -127,7 +127,7 @@ public class EzCommunityAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
-		String bName = request.getParameter("bName");
+		String bName = request.getParameter("bName") != null ? request.getParameter("bName") : "";
 		
 		if (request.getParameter("code") != null) {
 			code = request.getParameter("code");

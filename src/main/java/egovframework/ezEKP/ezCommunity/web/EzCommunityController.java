@@ -1597,14 +1597,17 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int curPage = 0, totalPage = 0, nowBlock = 0, keywordCount = 0;
 		int comNoPerPage = 17;
 		
-		bName = request.getParameter("bName").toLowerCase();
+		bName = request.getParameter("bName").toLowerCase() != null ? request.getParameter("bName") : "";
 		
 		if (request.getParameter("sRadio") != null) {
 			sRadio = request.getParameter("sRadio");
 		}
 		if (request.getParameter("code") != null) {
 			code = request.getParameter("code");
+		} else {
+			code = "";
 		}
+		
 		if (request.getParameter("keyword") != null) {
 			keyword = request.getParameter("keyword");
 		}
@@ -1779,7 +1782,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-		String mode = request.getParameter("mode");
+		String mode = request.getParameter("mode") != null ? request.getParameter("mode") : "";
 		String bName = request.getParameter("bName");
 		
 		if (request.getParameter("code") != null) {
@@ -3685,7 +3688,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("getBestNewCommunity started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String mode = request.getParameter("mode");
+		String mode = request.getParameter("mode") != null ? request.getParameter("mode") : "";
 		
 		logger.debug("getBestNewCommunity ended.");
 		
@@ -4065,7 +4068,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("mainPageCategory started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String mode = request.getParameter("mode");
+		String mode = request.getParameter("mode") != null ? request.getParameter("mode") : "";
 		
 		List<CommunityCCategoryVO> list = new ArrayList<CommunityCCategoryVO>();
 		
@@ -4145,7 +4148,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String search = "";
 		
-		String option = request.getParameter("option");
+		String option = request.getParameter("option") != null ? request.getParameter("option") : "";
 		String keyword = request.getParameter("keyword");
 		/* 2020-11-11 홍승비 - 오버플로우 대응 (페이지 기본값 1) */
 		int page = commonUtil.isIntNumber(request.getParameter("page"), 1);
