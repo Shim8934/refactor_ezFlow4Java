@@ -605,7 +605,6 @@
                 if (nonElecRec == "Y" && nonElecRecInfoXml == "") {
                 	var pAlertContent = "기록물 정보를 입력해 주세요.";
                     OpenAlertUI(pAlertContent);
-                    btnApprovalInfo(1);
                     return;
                 }
 
