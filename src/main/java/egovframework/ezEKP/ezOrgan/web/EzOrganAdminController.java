@@ -3625,6 +3625,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String userId = request.getParameter("userId");
 		logger.debug("params:userName=" + userName + ", userId=" + userId);
 		
+		if (userId == null) {
+			return "";
+		}
+		
 		String adminOrder = ezCommonService.getUserConfigInfo(tenantId, userId, "adminOrderNotUsedMobileLogin");
 		
 		if (adminOrder.equals("")) {

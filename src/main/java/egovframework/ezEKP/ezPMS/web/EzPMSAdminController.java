@@ -164,6 +164,11 @@ public class EzPMSAdminController {
 		
 		String userId = userInfo.getId();
 		String projectId = request.getParameter("projectId");
+		
+		if (projectId == null) {
+			return "";
+		}
+		
 		String url = "/rest/ezPMS/projects/" + projectId + "/userId/" + userId;
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 		String status = result.get("status").toString();

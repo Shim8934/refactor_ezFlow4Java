@@ -2417,6 +2417,10 @@ public class EzAddressController{
 		String format = request.getParameter("format");
         logger.debug("format=" + format);
         
+        if (format == null) {
+        	return;
+        }
+        
         String fileName = null;
         
 		switch (format) {

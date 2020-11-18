@@ -157,9 +157,29 @@ public class EzOrganController {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String deptid = request.getParameter("deptID");
+		
+		if (deptid == null) {
+			return "";
+		}
+		
 		String celllist = request.getParameter("cell");
+		
+		if (celllist == null) {
+			return "";
+		}
+		
 		String proplist = request.getParameter("prop");
+		
+		if (proplist == null) {
+			return "";
+		}
+		
 		String listtype = request.getParameter("type");		
+		
+		if (listtype == null) {
+			return "";
+		}
+		
 		String isPrimary = userInfo.getPrimary();
 		String page = request.getParameter("page");
 		String noAddJob = request.getParameter("noAddJob");

@@ -145,6 +145,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezQuestion/qstList.do", method = RequestMethod.GET)
 	public String qstList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, QstListVO qstListVO) throws Exception{
 		logger.debug("qstList Start");
+		
+		// 사용되지 않으므로 웹취약점 점검으로 인해 리턴하도록 함.
+		/*		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String brdID = "5", title = "", responseRange = "", pollStartDate = "", pollEndDate = "";
@@ -243,7 +246,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}				
 		}
 		
-		/* 2018-10-10 홍승비 - 전자설문 검색결과가 없는 경우 메세지 변경을 위해 title 인자 추가 */
+		// 2018-10-10 홍승비 - 전자설문 검색결과가 없는 경우 메세지 변경을 위해 title 인자 추가
 		logger.debug("receve="+receve);
 		model.addAttribute("qstListVO", qstListVO);
 		model.addAttribute("adminYN", adminYN);
@@ -252,6 +255,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 		model.addAttribute("titleSearch", title);
 			
 		logger.debug("qstList End");
+		*/
+		
 		return "/ezQuestion/qstList";
 	}
 	
