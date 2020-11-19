@@ -11,7 +11,8 @@
     		$("#ifrmPreViewH").load(function(){
     			$("#ifrmPreViewH").contents().find("tr:eq(0) #close").css("display", "none");
     			var btn_popup = "<ul><li><img src='/images/kr/cm/btn_newpopup.gif' title='새창으로열기' alt='새창으로열기' onclick='return parent.btn_newpopup()'></li></ul>";
-    			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu").html(btn_popup);
+    			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu li").css("display", "none");
+    			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu").append(btn_popup);
     		});
     	});
     } else {
