@@ -27,6 +27,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -39,6 +40,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -51,6 +53,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -3163,6 +3166,110 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		logger.debug("downloadAttach ended. result = " + result);
+	}
+	
+	/**
+	 * 2020-11-18 홍승비 - 모두저장(압축파일 내려받기)
+	 * */
+	@RequestMapping(value="/ezApprovalG/downloadAttachAll.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("downloadAttachAll started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String filePaths = request.getParameter("filePaths");
+		String fileNames = request.getParameter("fileNames");
+		String realPath = commonUtil.getRealPath(request);
+		// zip 파일을 pDirTempPath 하위에 임시로 만들어 다운받은 뒤, 다운 완료 시 삭제한다.
+		String tempFileUploadPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile";
+		String guid = UUID.randomUUID().toString();
+		String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
+		
+		logger.debug("fileNames : " + fileNames);
+		
+		ZipOutputStream zos = null;
+		String downFileName = "";
+		
+		try {
+			File tempFile = new File(pDirTempPath + commonUtil.separator + ".zip");
+			
+			if (tempFile.exists()) {
+				tempFile.delete();
+			}
+			
+			tempFile = new File(tempFileUploadPath);
+			
+			if (!tempFile.exists()) {
+				tempFile.mkdirs();
+			}
+			
+			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
+			
+			String[] fileNamesArr = fileNames.split(":::");
+			String[] filePathsArr = filePaths.split(":::");
+			
+			downFileName = fileNamesArr[0] + " " + messageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr.length-1) + messageSource.getMessage("ezStatistics.t1067", userInfo.getLocale()) + ".zip"; // zip파일명
+			
+			// 중복된 파일명을 덮어쓰지 않고 (1), (2)... 붙임 (commonUtil.getUniqueFileName 사용)
+			Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
+			
+			if (fileNamesArr.length != 0) {// 파일이 있으면 zip 생성
+				for (int i = 0; i < fileNamesArr.length; i++) {
+					BufferedInputStream bis = null;
+					
+					try {
+						File sourceFile = new File(commonUtil.detectPathTraversal(realPath + filePathsArr[i])); // 다운받기 위한 원본 파일의 경로
+						byte[] fileBytes = Files.readAllBytes(sourceFile.toPath());
+						
+						// fileNamesArr는 확장자를 포함함
+						if (fileNamesArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+							fileBytes = klibUtil.decrypt(fileBytes);
+						}
+						
+						fileNamesArr[i] = commonUtil.getUniqueFileName(fileNamesArr[i], fileNameMap);
+						ZipEntry zentry = new ZipEntry(fileNamesArr[i]);
+						zos.putNextEntry(zentry);
+						zos.write(fileBytes);
+						zos.closeEntry();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} finally {
+						if (bis != null) {
+							try {
+								bis.close();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				zos.flush();
+				zos.close();
+				zos = null;
+	
+				File file = new File(pDirTempPath + ".zip");
+				
+				if (file.exists()) {
+					downFile(request, response, pDirTempPath + ".zip", downFileName);
+					file.delete();
+				}
+			}
+		} catch (Exception e) {
+			File file = new File(pDirTempPath + ".zip");
+			
+			if (file.exists()) {
+				file.delete();
+			}
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		logger.debug("downloadAttachAll ended.");
 	}
 	
 	/**

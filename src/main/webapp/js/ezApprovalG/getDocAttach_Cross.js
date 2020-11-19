@@ -81,7 +81,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     xmldom =loadXMLString(result);
     var xmlRtn = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
     if (xmlRtn.length > 0) {
-        var strAttach = " &nbsp ";
+        var strAttach = "";
         var strDocAttach = " &nbsp ";
         var rep = /'/g;
         for (i = 0; i < xmlRtn.length; i++) {
@@ -93,6 +93,8 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 var IncodFileNM = encodeURIComponent(SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA1"));
                 var filename = encodeURIComponent(getNodeText(GetChildNodes(xmlRtn[i])[1]));
                 var filepath = IncodFileNM.replace(rep, "&#39;");
+                var xmlFileName = MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])); // 특문처리를 거쳐서 실제 파일명과 파일경로을 표출
+                var xmlFilePath = MakeXMLString(SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA1"));
                 var strTarget = "target='_blank'";
                 var fileImage = "";
                 var strFileExt = filename.substr(filename.lastIndexOf('.')).toLowerCase();
@@ -132,16 +134,18 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 var protocol = window.location.protocol;
                 var serverName = window.location.hostname;
 
+                /* 2020-11-18 홍승비 - 선택 및 다중 다운로드를 위한 체크박스 추가, 파일 아이콘 위치 정렬 */
+                strAttach = strAttach + "<span style='display:inline-block;'><input type='checkbox' name='fileSelect' fileName=\"" + xmlFileName + "\" filepath=\"" + xmlFilePath +"\">";
                 strAttach = strAttach + "<a href= /ezApprovalG/downloadAttach.do?fileName=" + filename + "&docID=" + tempDocID + "&docStatus=" + INGFlag + "&docAttachSN=" + SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA2") + "&filePath=" + filepath + " onclick='AttachProcess()'>";
                 //strAttach = strAttach + "<a href='/myoffice/Common/downloadattach.aspx?filename=" + filename + "&filepath=" + filepath + "' " + strTarget + "' onclick='AttachProcess()'>";
 
-                strAttach = strAttach + "<IMG SRC='" + fileImage + "' border='0'>";
+                strAttach = strAttach + "<IMG SRC='" + fileImage + "' border='0' style='vertical-align:sub;'>";
                 strAttach = strAttach + MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])) + "</a>";
                 
                 if (SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "ISBIGATTACH") == "Y") { // 대용량첨부파일 표시
-                	strAttach = strAttach + "<font style='color:blue'>[" + strLangHSBAt02 + "]</font> &nbsp; ";
+                	strAttach = strAttach + " <font style='color:blue'>[" + strLangHSBAt02 + "]</font> &nbsp;</span>";
                 } else {
-                	strAttach = strAttach + " &nbsp; ";
+                	strAttach = strAttach + " &nbsp;</span>";
                 }
                 
                 /* 2020-11-17 홍승비 - 일반첨부와 문서첨부 영역의 분리 */
@@ -289,4 +293,49 @@ function OpenAlertUI_Complete() {
     DivPopUpHidden();
 }
 // END
+
+/* 2020-11-18 홍승비 - 전자결재 첨부파일 모두선택 함수 */
+function attach_SelectAll() {
+	var attachChkBoxs = $("#lstAttachLink").find("input:checkbox");
+	
+	if (attachChkBoxs.length > 0) {
+		attachChkBoxs.each(function() {
+			this.checked = true;
+		});
+	}
+}
+
+/* 2020-11-18 홍승비 - 전자결재 첨부파일 다중 다운로드 함수 (체크한 파일이 2개 이상이라면 zip으로 다운로드) */
+function attach_Download() {
+    var checkedFiles = $("#lstAttachLink").find("input:checkbox[name='fileSelect']:checked");
+    var checkedFilesLength = checkedFiles.length;
+    var filePath = ""; // 전체파일경로
+    var filePaths = ""; // 각 파일의 저장경로 (/fileroot/...)
+	var fileNames = ""; // 파일이름
+	
+	if (checkedFilesLength == 1) { // 하나만 저장하는 경우
+		checkedFiles.next()[0].click();
+	}
+	else if (checkedFilesLength > 1) { // 여러개는 zip으로 저장
+		for (var i = 0; i < checkedFilesLength; i++) {
+			filePaths += GetAttribute(checkedFiles.get(i), "filepath") + ":::"; // 각 파일의 상대경로 (/fileroot/.../....../파일명) + 구분자
+			fileNames += GetAttribute(checkedFiles.get(i), "fileName") + ":::"; // 각 파일의 이름 + 구분자
+		}
+		
+		var $frm = $("<form></form>");
+    	$frm.attr("action", "/ezApprovalG/downloadAttachAll.do");
+    	$frm.attr("method", "post");
+    	$frm.appendTo("body");
+    	
+    	// 서버단의 HttpServletRequest가 이스케이프 문자를 해석하므로, 다시 한 번 인코딩을 진행하여 값을 전달 
+    	param1 = $("<input type='hidden' value=\"" + MakeXMLString(filePaths) + "\" name='filePaths' />");
+    	param2 = $("<input type='hidden' value=\"" + MakeXMLString(fileNames) + "\" name='fileNames' />");
+    	
+    	$frm.append(param1).append(param2);
+    	$frm.submit();
+	}
+	else { // 체크된 파일 없음
+		return;
+	}
+}
 

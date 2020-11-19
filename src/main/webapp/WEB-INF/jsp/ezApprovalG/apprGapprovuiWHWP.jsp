@@ -328,7 +328,7 @@
 		        }
 	
 		        window.onresize = function () {
-		        	var mHeight = document.documentElement.clientHeight - 152 - document.getElementById("message").offsetTop + "px";
+		        	var mHeight = document.documentElement.clientHeight - 172 - document.getElementById("message").offsetTop + "px";
 		       		message.Resize(mHeight);
 		        }
 	
@@ -1719,21 +1719,25 @@
 	
 	                </div>
 	            </td> -->
-	            <td style="padding-bottom:10px;height:820px;" >
+	            <td style="padding-bottom:10px;height:800px;" >
 		    		<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	            </td>
 	        </tr>
 	        <tr>
 	            <td height="20">
-	                <table class="file" style="height: 60px; margin-top:-10px;">
+	                <table class="file" style="height:80px; margin-top:-9px;">
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t65'/></th>
-	                        <td style=" width:70%; border-right:1px solid #d5d5d5;">
-	                            <div id="lstAttachLink" style="height: 50px;"></div>
+	                        <td style=" width:62%; border-right:1px solid #d5d5d5;">
+	                            <div id="lstAttachLink" style="height:70px;"></div>
 	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                        </td>
+							<td class="pos2" style="width:8%; background:#fffcfa;">
+								<a class="imgbtn imgbck" style="width:60px;"><span style="padding:0px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+								<a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
+	                        </td>
 	                        <td style=" width:30%;">
-								<div id="lstAttachLinkDoc" style="height: 50px;"></div>
+								<div id="lstAttachLinkDoc" style="height:70px;"></div>
 							</td>
 	                    </tr>
 	                </table>
