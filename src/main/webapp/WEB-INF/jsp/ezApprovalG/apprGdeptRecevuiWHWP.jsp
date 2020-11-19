@@ -970,16 +970,28 @@
 	        
 	    	// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
 	    	function setAttachGuideText() {
+	    		// 대용량첨부의 자동삭제 기능, 저장만료기한 사용하지 않음
+                var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                
+                if(bigSizeAttachDownloadLimitCount > 0) {
+                	attachGuideText += strLangHSBAt06 + " <span style='color:#FF0000 ;'>" + bigSizeAttachDownloadLimitCount + strLangHSBAt09 + "</span> " + strLangHSBAt10;
+                }
+                
+                attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += "</td>";
+/*                 
                 var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
                 attachGuideText += strLangHSBAt05 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadPeriod + "</span></td>";
                 attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
                 attachGuideText += strLangHSBAt06 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadDay + strLangHSBAt07 + "</span>" + strLangHSBAt08;
-                
-                if(bigSizeAttachDownloadLimitCount > 0) {
-                	attachGuideText += " / <span style='color:#FF0000 ;'>" + bigSizeAttachDownloadLimitCount + strLangHSBAt09 + "</span> " + strLangHSBAt10;
-                }
-                
-                document.getElementById("apprAttachGuideTR").innerHTML = attachGuideText;
+                 */
+                 
+                 if (bigSizeAttachDownloadLimitCount > 0) {
+                	 document.getElementById("apprAttachGuideTR").innerHTML = attachGuideText;
+                 }
+                 else {
+                	 document.getElementById("apprAttachGuideTR").style.display = "none";
+                 }
 	    	}
 	    	
 	    </script>

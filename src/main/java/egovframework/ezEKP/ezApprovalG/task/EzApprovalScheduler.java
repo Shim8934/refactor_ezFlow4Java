@@ -1,11 +1,8 @@
 package egovframework.ezEKP.ezApprovalG.task;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.io.FilenameFilter;
 import java.net.URLEncoder;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.text.SimpleDateFormat;
@@ -15,7 +12,6 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -81,14 +77,15 @@ public class EzApprovalScheduler extends EgovFileMngUtil {
 	private EzEmailUtil ezEmailUtil;
 	
 	/**
-	 * delete garbage files
+	 * delete garbage files // 전자결재 대용량첨부 자동삭제기능 사용하지 않음
 	 */
 	@Scheduled(cron = "${config.cron.dailyApprFileManage}")
 	public void dailyApprFileManage() throws Exception {
 		logger.debug("dailyApprFileManage scheduler started.");
+		logger.debug("dailyApprFileManage scheduler do nothing!");
 		
 		// choose scheduler running server
-		if (!preScheduler("dailyApprFileManage")) {
+		/*if (!preScheduler("dailyApprFileManage")) {
 			logger.debug("dailyApprFileManage scheduler ended.");
 			return;
 		}
@@ -96,7 +93,7 @@ public class EzApprovalScheduler extends EgovFileMngUtil {
 		String realPath = config.getProperty("data_root");
 		
 		// delete expired big-attachment files (Approval)
-		deleteApprExpireAttach(realPath);
+		deleteApprExpireAttach(realPath);*/
 		
 		logger.debug("dailyApprFileManage scheduler ended.");
 	}
