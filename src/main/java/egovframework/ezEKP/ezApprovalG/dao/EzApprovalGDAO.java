@@ -3842,4 +3842,16 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateRecInfoRejectFlag(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateRecInfoRejectFlag", map);
 	}
+	
+	public String getApprovConfig(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getApprovConfig", map);
+	}
+	
+	public void setApprovConfig(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.setApprovConfig", map);
+	}
+	
+	public void setApprovConfig2(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.setApprovConfig2", map);
+	}
 }

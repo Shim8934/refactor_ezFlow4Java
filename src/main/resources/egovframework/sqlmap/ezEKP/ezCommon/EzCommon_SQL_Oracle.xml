@@ -4709,4 +4709,22 @@
 	]]>
 	</statement>
 	
+	<statement id="EzCommonDAO.createTblAprpreview"> 
+    	CREATE TABLE TBL_APRPREVIEW (
+           	USERID NVARCHAR2(80) NOT NULL 
+			, PREVIEW NVARCHAR2(50) 
+			, TENANT_ID NUMBER NOT NULL 
+			, CONSTRAINT "TBL_APRPREVIEW_PK" PRIMARY KEY (USERID , TENANT_ID)
+		)
+	</statement>
+	<select id="EzCommonDAO.checkTblAprpreview">
+		<![CDATA[
+		SELECT 
+			USERID
+		FROM 
+			TBL_APRPREVIEW
+		WHERE
+				ROWNUM <= 1
+		]]>
+	</select>	
 </sqlMap>

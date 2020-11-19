@@ -562,8 +562,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String absenceAllClear = ezCommonService.getTenantConfig("absenceAllClear", userInfo.getTenantId());
+		
 		/* 2021-04-07 홍승비 - 비전자문서 양식 MHT 확장자 추가 (기본은 HWP) */
 		String nonElecRecType = ezCommonService.getTenantConfig("ApprNonElecRecType", userInfo.getTenantId()) != null ? ezCommonService.getTenantConfig("ApprNonElecRecType", userInfo.getTenantId()) : "HWP";
+		
+		// 전자결재 미리보기영역 관련 설정 추가
+		String previewInfo = ezApprovalGService.getApprovConfig(userInfo.getId(), userInfo.getTenantId());
 		
 		model.addAttribute("SubQuery", subQuery);
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -589,6 +593,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("absenceAllClear", absenceAllClear);
 		model.addAttribute("nonElecRecType", nonElecRecType);
+		model.addAttribute("previewInfo", previewInfo);
 		
 		logger.debug("aprManage ended.");
 		
@@ -7503,6 +7508,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("share", "share");
 		}
 		
+		String previewInfo = ezApprovalGService.getApprovConfig(userInfo.getId(), userInfo.getTenantId());
+		
 		model.addAttribute("useEnforceSihang", useEnforceSihang);
 		model.addAttribute("buJaeInfo", buJaeInfo);
 		model.addAttribute("endAprType", endAprType);
@@ -7530,6 +7537,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("excelFileName", EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + "_" + messageSource.getMessage("ezApprovalG.t1750", userInfo.getLocale()));
 		model.addAttribute("shareDeptId", shareDeptId);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("previewInfo", previewInfo);
 		
  		logger.debug("getContainerInfo ended");
 		
@@ -11784,6 +11792,25 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		logger.debug("checkIsGroupDoc ended. result = " + result);
+		return result;
+	}
+
+	/**
+	 * 전자결재 미리보기 설정 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/setApprovConfig.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String setApprovConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("setApprovConfig started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userID = request.getParameter("pUserID");
+		String preView = request.getParameter("pPreView");
+
+		String result = ezApprovalGService.setApprovConfig(userID, preView, userInfo.getTenantId());
+
+		logger.debug("setApprovConfig ended");
 		return result;
 	}
 	

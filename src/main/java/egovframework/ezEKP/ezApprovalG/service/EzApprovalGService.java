@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGPreviewVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -782,7 +783,7 @@ public interface EzApprovalGService {
     public String checkbtnReSend24Display(String docID, String companyID, int tenantID) throws Exception;
     public Map<String, Object> getDoc24Info(String docID, String companyID, int tenantID) throws Exception;
     public void insertReciptInfoDoc24(String docID, String docDeptCode, String docDeptName, String companyId, int tenantId) throws Exception;
-
+    
 	public String getReceiptHistoryInfo(String docID, String deptID, String companyID, String lang, int tenantID, String offset) throws Exception;
     
     /* 2022-01-11 홍승비 - 일괄기안 시 표출할 양식 리스트 리턴 (deptID 파라미터를 전달하는 경우, 현재 사용자의 부서에서 접근 가능한 양식만 표출함) */
@@ -842,4 +843,7 @@ public interface EzApprovalGService {
 	/* 2022-03-17 홍승비 - 결재완료된 내부시행문 미처리문서함에서 반송 동작 추가 (완료문서 테이블에 접근) */
 	public String doSihangConvReject(String docID, String recordID, String userID, String deptID, String companyID, int tenantID) throws Exception;
 	
+	/* 2020-11-17 정소미 - 전자결재 미리보기 설정*/
+	public String setApprovConfig(String userID, String preView, int tenantID) throws Exception;
+	public String getApprovConfig(String userID, int tenantID) throws Exception;
 }

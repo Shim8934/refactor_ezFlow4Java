@@ -2333,12 +2333,23 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+
 	public void alterTblDevMaster() {
 		try {
 			update("EzCommonDAO.alterTblDevMaster");
 		} catch (Exception e) {
 			logger.debug("alterTblDevMaster() ERROR...");
 			e.printStackTrace();
+		}
+	}
+	
+	public void createTblAprpreview() {
+		try {
+			select("EzCommonDAO.checkTblAprpreview");
+		} catch (Exception e) {
+			logger.debug("tbl_aprpreview doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAprpreview");
 		}
 	}
 }

@@ -904,10 +904,28 @@ function lvtDoclist_SelChange() {
             	break;
         }
     }
-    /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
-    var headerNameTD = $(event.target).attr("headerName");
-    if (headerNameTD != null && typeof(headerNameTD) != "undefined" && headerNameTD == "DOCTITLE") {
-    	lvtDoclist_onSel_DBclick();
+    
+    if ($("#PreviewRayerH").length && $("#PreviewRayerH").css("display") != "none") {
+    	PreviewRayerChange("H", 'Container');
+    	if (CrossYN()) {
+    		if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
+        		ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "선택된 문서가 없습니다.";	        			
+    		}
+        } else {
+        	if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
+            	ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "선택된 문서가 없습니다.";		            		
+        	}
+        }
+    }
+    // 원클릭 이벤트는 미리보기 영역이 열려있지 않은 경우에만 동작함
+    else if ($("#PreviewRayerH").length) {
+        /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
+        var headerNameTD = $(event.target).attr("headerName");
+        if (headerNameTD != null && typeof(headerNameTD) != "undefined" && headerNameTD == "DOCTITLE") {
+        	lvtDoclist_onSel_DBclick();
+        }
+        
+    	PreviewRayerChange("NONE", 'Container');
     }
 }
 

@@ -2815,4 +2815,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		logger.debug("createExcelByList end. list size:" + rowSize);
 		return fileName;
 	}
+	
+	@Override
+	public void createTblAprpreview() throws Exception {
+		ezCommonDAO.createTblAprpreview();
+	}
 }

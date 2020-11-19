@@ -209,6 +209,21 @@ function getDocList_after(xml) {
     }
 
     SearchFlag = false;
+    
+    if ($("#PreviewRayerH").length && $("#PreviewRayerH").css("display") != "none") {
+    	PreviewRayerChange("H", 'Manage');
+    	if (CrossYN()) {
+    		if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
+        		ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "선택된 문서가 없습니다.";	        			
+    		}
+        } else {
+        	if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
+            	ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "선택된 문서가 없습니다.";		            		
+        	}
+        }
+    } else if ($("#PreviewRayerH").length) {
+    	PreviewRayerChange("NONE", 'Manage');
+    }
 
     if (USE_OCS == "YES")
         check_presence2();
@@ -393,6 +408,22 @@ function getReceivedDocList_after(xml) {
             }
 
         }
+        
+        if ($("#PreviewRayerH").css("display") != "none") {
+        	PreviewRayerChange("H", 'Manage');
+        	if (CrossYN()) {
+        		if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
+	        		ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "선택된 문서가 없습니다.";	        			
+        		}
+            } else {
+            	if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
+	            	ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "선택된 문서가 없습니다.";		            		
+            	}
+            }
+        } else {
+        	PreviewRayerChange("NONE", 'Manage');
+        }
+        
         try {
         	parent.frames["left"].pListTypeValue = pListTypeValue;
             parent.frames["left"].getAprCount();
@@ -3222,4 +3253,8 @@ function delGroupDocInfoByDocID(pDocID, pMode) {
 			console.log(e);
 		}
 	});
+}
+
+function btn_newpopup() {
+	lvDocList_DBSelChange();
 }

@@ -24,6 +24,7 @@
 	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/font-awesome-4.7.0/css/font-awesome.min.css')}" type="text/css"/>
+	    <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -36,6 +37,7 @@
 	    <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 	    <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.min.css')}"> --> 
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Common_Function.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/PreviewItem.js')}"></script>
 	    <script type="text/javascript" id="clientEventHandlersJS">
 	        var labelcolor = "gray";
 	        var xmlhttp = createXMLHttpRequest();
@@ -100,6 +102,19 @@
  	        var shareDeptId = "<c:out value = '${shareDeptId}'/>";
  	        var share = "<c:out value = '${share}'/>";
  	        var useWebHWP = "<c:out value = '${useWebHWP}'/>";
+ 	       	var onclickFlag = false;
+		    var pMailListDiv = 0;
+		    var pMailPreVDiv = 0;
+		    var pMailListWidthH = 0;
+		    var pMailPreWidthH = 0;
+		    var pMailListDiv_H = 0;
+		    var pMailPreVDiv_H = 0;
+		    var p_ListorderValue = "";
+		    var pPreviewShow_HOW = "OFF";
+		    var clickPreviweType = "TEXT";
+		    var PreviewH_Move = false;
+		    var selobj = null;
+		    var previewInfo = "<c:out value = '${previewInfo}'/>";
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -291,6 +306,12 @@
 		            AddOption(sel_status, '<spring:message code="ezApprovalG.t1687"/>', 'N');
 		            AddOption(sel_status, '<spring:message code="ezApproval.t854"/>', 'Y');
 	            }
+	            
+	            if (previewInfo == "H") {
+					PreviewRayerChange(previewInfo, 'Container');
+				} else {
+					PreviewRayerChange("NONE", 'Container');
+				}
 	        };
 			
 	        // 부재자정보 체크
@@ -1836,9 +1857,13 @@
 		    		return false;
 		    	}
 		    }
+		    
+		    function btn_newpopup() {
+		    	lvtDoclist_onSel_DBclick();
+		    }
 	    </script>
 	</head>
-	<body class="mainbody" style="margin-top: 0px">
+	<body class="mainbody" style="margin-top:0px; overflow:hidden;" marginwidth="0" marginheight="0" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	    <div id="MOC_Div" style="display: none"></div>
 	    <h1 class="title_h1"><span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 	        <span class="searchForm">
@@ -1892,6 +1917,15 @@
 		            <li id="tSearchCondi"><span class="icon16 icon16_search" id="SearchCondi" onclick="return SearchCondi_onclick()"></span></li>
 		            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
 	            </c:if>
+
+				<%-- 전자결재 우측 미리보기 영역 상단 아이콘 --%>
+			    <div id="right" class="sub_frameIcon" style="float:right;">	
+					<div class="sub_frameIconUL" style="width:auto !important;">
+					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE', 'Container')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H', 'Container')"></span></p>
+					</div>
+				</div>
+				
 	            <!-- <img src="/images/i_bar.gif"> -->
 	            <li style="vertical-align: middle; float:right">
 	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
@@ -1921,43 +1955,62 @@
 		        </li>
       		</ul>
 	    </div>
-	    <div class="div_scroll" style="width:100%;HEIGHT:375px; overflow:AUTO; margin-bottom:10px;" id="divList">
-	        <div id="lvtDoclist"></div>
-	    </div>
-	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="loadingPanel" onclick="ContextMenuHidden();"></div>
-	    <div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingProgress">
-	        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
-	    </div>
-	    <div id="tblPageRayer"></div>
-	    <div id="trSubInfoTab">
-	        <%-- <div id="tabnav" style="width: 100%">
-	            <ul>
-	                <li id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1', event);Approval_onclick()"><spring:message code='ezApprovalG.t1769'/></span></li>
-	                <li id="tagsub2"><span onclick="pDocInfoValue='2';MM_swapImagesub('2', event);Recipent_onclick()"><spring:message code='ezApprovalG.t950'/></span></li>
-	                <li id="tagsub3"><span onclick="pDocInfoValue='3';MM_swapImagesub('3', event);Attach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
-	                <li id="tagsub4"><span onclick="pDocInfoValue='4';MM_swapImagesub('4', event);Opinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
-	                <c:if test="${approvalFlag != 'G'}">
-					    <li id="tagsub5"><span onClick="MM_swapImagesub('5', event);Circulation_onclick()" ><spring:message code='ezApprovalG.hyj24'/></span></li>
-				    </c:if>
-	            </ul>
-	        </div> --%>
-	        <div id="tabnav" class="portlet_tabpart01" style="width:100%">
-				<div class="portlet_tabpart01_top" id="tab1">
-				    <p><span id="tagsub1"><spring:message code='ezApprovalG.t1769'/></span></p>
-				    <p><span id="tagsub2"><spring:message code='ezApprovalG.t950'/></span></p>
-				    <p><span id="tagsub3"><spring:message code='ezApprovalG.t56'/></span></p>
-				    <p><span id="tagsub4"><spring:message code='ezApprovalG.t55'/></span></p>
-				    <c:if test="${approvalFlag != 'G'}">
-					   	<p><span id="tagsub5"><spring:message code='ezApprovalG.hyj24'/></span></p>
-				    </c:if>
-			  	</div>	
-			</div>
-	
-	        <div style="WIDTH:100%;HEIGHT:315px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
-	            <div id="lvtDetail" style="border: 0;"></div>
+	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="mailPanel"></div>
+	    <div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
+	   	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
+		    <div class="div_scroll" style="width:100%;HEIGHT:395px; overflow:AUTO; margin-bottom:10px;" id="divList">
+		        <div id="lvtDoclist"></div>
+		    </div>
+		    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="loadingPanel" onclick="ContextMenuHidden();"></div>
+		    <div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingProgress">
+		        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
+		    </div>
+		    <div id="tblPageRayer"></div>
+		    <div id="trSubInfoTab">
+		        <%-- <div id="tabnav" style="width: 100%">
+		            <ul>
+		                <li id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1', event);Approval_onclick()"><spring:message code='ezApprovalG.t1769'/></span></li>
+		                <li id="tagsub2"><span onclick="pDocInfoValue='2';MM_swapImagesub('2', event);Recipent_onclick()"><spring:message code='ezApprovalG.t950'/></span></li>
+		                <li id="tagsub3"><span onclick="pDocInfoValue='3';MM_swapImagesub('3', event);Attach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
+		                <li id="tagsub4"><span onclick="pDocInfoValue='4';MM_swapImagesub('4', event);Opinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+		                <c:if test="${approvalFlag != 'G'}">
+						    <li id="tagsub5"><span onClick="MM_swapImagesub('5', event);Circulation_onclick()" ><spring:message code='ezApprovalG.hyj24'/></span></li>
+					    </c:if>
+		            </ul>
+		        </div> --%>
+		        <div id="tabnav" class="portlet_tabpart01" style="width:100%">
+					<div class="portlet_tabpart01_top" id="tab1">
+					    <p><span id="tagsub1"><spring:message code='ezApprovalG.t1769'/></span></p>
+					    <p><span id="tagsub2"><spring:message code='ezApprovalG.t950'/></span></p>
+					    <p><span id="tagsub3"><spring:message code='ezApprovalG.t56'/></span></p>
+					    <p><span id="tagsub4"><spring:message code='ezApprovalG.t55'/></span></p>
+					    <c:if test="${approvalFlag != 'G'}">
+						   	<p><span id="tagsub5"><spring:message code='ezApprovalG.hyj24'/></span></p>
+					    </c:if>
+				  	</div>	
+				</div>
+		
+		        <div style="WIDTH:100%;HEIGHT:290px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+		            <div id="lvtDetail" style="border: 0;"></div>
+		        </div>
+		    </div>
+		</span>
+		
+		<%-- 전자결재 우측 미리보기 영역 --%>
+		<div id="PreviewRayerH" style="border:0px; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
+	        <div class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
+	            <p class="hbar_dotted">
+	                <img src="/images/prevview_hbar_dotted.gif">
+	            </p>
+	        </div>
+	        <div id="PreContent_RayerH" style="position: absolute; border: 0px; margin-left:7px;">
+	            <div class="previewmail"> 
+	            	<div class="previewmail_info"></div>
+	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+	            </div>
 	        </div>
 	    </div>
-	
+	    
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	        //selToggleList(document.getElementById("tabnav"), "ul", "li", "1");

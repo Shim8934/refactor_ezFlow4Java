@@ -46,16 +46,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern; 
- 
-
-
-
-
-
-
-
-
-
 
 import javax.annotation.Resource; 
 import javax.mail.internet.InternetAddress; 
@@ -65,16 +55,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath; 
 import javax.xml.xpath.XPathConstants; 
 import javax.xml.xpath.XPathFactory; 
- 
-
-
-
-
-
-
-
-
-
 
 import kr.dogfoot.hwplib.object.HWPFile; 
 import kr.dogfoot.hwplib.object.bodytext.Section; 
@@ -94,14 +74,6 @@ import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataType;
 import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation; 
 import kr.dogfoot.hwplib.reader.HWPReader; 
 import kr.dogfoot.hwplib.writer.HWPWriter; 
- 
-
-
-
-
-
-
-
 
 import org.apache.commons.codec.binary.Base64; 
 import org.apache.commons.io.FileUtils; 
@@ -133,16 +105,6 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource; 
 import org.xml.sax.SAXException; 
 import org.xml.sax.SAXParseException; 
- 
-
-
-
-
-
-
-
-
-
 
 import egovframework.com.cmm.EgovMessageSource; 
 import egovframework.com.cmm.service.EgovFileMngUtil; 
@@ -210,28 +172,8 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil; 
 import egovframework.let.utl.fcc.service.KlibUtil; 
 import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositionShapeIdPair; 
- 
-
-
-
-
-
-
-
-
-
 
 import javax.servlet.ServletContext; 
- 
-
-
-
-
-
-
-
-
-
 
 import java.util.Iterator;
 
@@ -34162,4 +34104,49 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return retValue;
 	}
 	
+	// 전자결재 미리보기영역 관련 설정
+	@Override
+	public String setApprovConfig(String userID, String preView, int tenantID) throws Exception {
+		logger.debug("setApprovConfig started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERID", userID);
+		if (preView.equals("") || preView == null) {
+			preView = "OFF";
+		}
+		map.put("v_PREVIEW", preView);
+		map.put("v_TENANTID", tenantID);
+		
+		try {
+			String tempString = ezApprovalGDAO.getApprovConfig(map);
+			
+			if (tempString != null && !tempString.equals("")) {
+				ezApprovalGDAO.setApprovConfig(map);
+			} else {
+				ezApprovalGDAO.setApprovConfig2(map);
+			}
+			
+			logger.debug("setApprovConfig ended");
+			return "OK";
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+			return "NO";
+		}
+	}
+
+	@Override
+	public String getApprovConfig(String userID, int tenantID) throws Exception {
+		logger.debug("getApprovConfig started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		
+		String tempString = ezApprovalGDAO.getApprovConfig(map);
+		
+		logger.debug("getApprovConfig ended");
+		return tempString;
+	}
 }
