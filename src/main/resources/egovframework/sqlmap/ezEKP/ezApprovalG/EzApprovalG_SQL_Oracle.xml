@@ -33089,4 +33089,32 @@
 		]]>
 	</select>
 	
+	<update id="EzApprovalG.updateDocInfo" parameterClass="Map">
+		<isEqual property="v_DELFLAG" compareValue="Y">
+			UPDATE	
+					TBL_EXPENDAPRDOCINFO
+				SET		
+						DELFLAG	=	#v_DELFLAG#, 
+						SUMMARY = 	#v_SUMMARY#
+				 WHERE  
+		     		DOCID = #v_DOCID#
+		     AND
+		     		TENANT_ID =#v_TENANTID#
+		     AND
+		     		COMPANYID = #companyID#
+		</isEqual>
+		<isNotEqual property="v_DELFLAG" compareValue="Y">
+			UPDATE	
+					TBL_EXPENDAPRDOCINFO
+				SET		
+						DELFLAG	=	NULL, 
+						SUMMARY = 	#v_SUMMARY#
+				 WHERE  
+		     		DOCID = #v_DOCID#
+		     AND
+		     		TENANT_ID =#v_TENANTID#
+		     AND
+		     		COMPANYID = #companyID#
+		</isNotEqual>		
+	</update>
 </sqlMap>
