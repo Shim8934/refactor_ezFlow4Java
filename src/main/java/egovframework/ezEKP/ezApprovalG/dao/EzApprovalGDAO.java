@@ -3541,4 +3541,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public int getNullTmpDocAprStateCnt(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.getNullTmpDocAprStateCnt", map);
 	}
+	
+	public void updateDocInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateDocInfo", map);
+	}
 }

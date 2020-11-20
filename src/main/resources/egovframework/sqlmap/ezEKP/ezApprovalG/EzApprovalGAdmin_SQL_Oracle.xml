@@ -5154,7 +5154,7 @@
    			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
    			]]>		 	
    		WHERE 
-   			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+   			1 = 1
 		<isNotEmpty property="v_STARTDATE1"> 
    		<![CDATA[
  			AND   
@@ -5276,7 +5276,7 @@
 							   	AND
 							   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID		 
 							   	WHERE 
-							   			 TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+							   		1 = 1
 		    					<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
 							   	 	 	   STARTDATE >= TO_DATE(#v_STARTDATE1#, 'YYYY-MM-DD HH24:MI:SS')

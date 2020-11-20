@@ -4905,4 +4905,66 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	              return "admin/ezApprovalG/apprGcabTransfer";
 	}
 
+	//관리자 전자결재 완료문서 삭제 팝업
+	@RequestMapping(value = "/admin/ezApprovalG/statisticsDelDocInfo.do", method = RequestMethod.GET)
+	public String officialregister_pop(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("statisticsDelDocInfo started");
+		
+		String docID = request.getParameter("DocID");
+		
+		model.addAttribute("docID", docID);
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("planguage", userInfo);
+		
+		logger.debug("statisticsDelDocInfo Controller");
+		
+		return "/ezStatistics/statisticsDelDocInfo";
+	}
+	
+	/**
+	 *add get data title 
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getDelDocInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getDelDocInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,Model model, @RequestBody String xmlPara) throws Exception{
+		logger.debug("getDelDocInfo started  "+ xmlPara);
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String docID = xmlDom.getElementsByTagName("DocID").item(0).getTextContent();
+		
+		//String	result = ezApprovalGService.getDocInfo("docID", "END", "DELFLAG;SUMMARY", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(),"", "");
+		String	result = ezApprovalGService.getDocInfo(docID, "END", "DELFLAG;SUMMARY", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(),"", "");
+					
+		logger.debug("getDelDocInfo ended " +result);
+		
+		return result;
+	}
+	
+	/**
+	 *add set data title 
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/setDelDocInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String setDelDocInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,Model model, @RequestBody String xmlPara) throws Exception{
+		logger.debug("getDelDocInfo started  "+ xmlPara);
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String docID   = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
+		String delFlag = xmlDom.getElementsByTagName("DELFLAG").item(0).getTextContent();
+		String delInfo = xmlDom.getElementsByTagName("DELINFO").item(0).getTextContent();
+		
+		
+		String	result = ezApprovalGService.updateDocInfo(docID, userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), delFlag, delInfo);
+					
+		logger.debug("getDelDocInfo ended " +result);
+		
+		return result;
+	}
+	
 }

@@ -331,4 +331,24 @@ public class ApprGAprLineVO {
 		this.opinionGB = opinionGB;
 	}
 	
+	@Override
+	public String toString() {
+		return "ApprGAprLineVO [docID=" + docID + ", orgUserID=" + orgUserID + ", proxyUserID=" + proxyUserID
+				+ ", proxyUserName=" + proxyUserName + ", proxyUserName2=" + proxyUserName2 + ", proxyUserJobTitle="
+				+ proxyUserJobTitle + ", proxyUserJobTitle2=" + proxyUserJobTitle2 + ", proxyUserDeptID="
+				+ proxyUserDeptID + ", proxyUserDeptName=" + proxyUserDeptName + ", proxyUserDeptName2="
+				+ proxyUserDeptName2 + ", userID=" + userID + ", formID=" + formID + ", aprMemberSN=" + aprMemberSN
+				+ ", aprType=" + aprType + ", aprTypeName=" + aprTypeName + ", aprState=" + aprState + ", aprMemberID="
+				+ aprMemberID + ", aprMemberIsDeptYN=" + aprMemberIsDeptYN + ", aprMemberName=" + aprMemberName
+				+ ", aprMemberJobTitle=" + aprMemberJobTitle + ", aprMemberDeptID=" + aprMemberDeptID
+				+ ", aprMemberDeptName=" + aprMemberDeptName + ", aprMemberLdapPath=" + aprMemberLdapPath
+				+ ", receivedDate=" + receivedDate + ", processDate=" + processDate + ", reasonDoNotApprov="
+				+ reasonDoNotApprov + ", isProposerYN=" + isProposerYN + ", isBriefUserYN=" + isBriefUserYN
+				+ ", aprMemberName2=" + aprMemberName2 + ", aprMemberJobTitle2=" + aprMemberJobTitle2
+				+ ", aprMemberDeptName2=" + aprMemberDeptName2 + ", processorID=" + processorID + ", receivedDeptID="
+				+ receivedDeptID + ", flag=" + flag + ", gDocID=" + gDocID + ", aprCount=" + aprCount + ", docType="
+				+ docType + ", docState=" + docState + ", orgDocID=" + orgDocID + ", companyID=" + companyID
+				+ ", opinionGB=" + opinionGB + "]";
+	}
+	
 }

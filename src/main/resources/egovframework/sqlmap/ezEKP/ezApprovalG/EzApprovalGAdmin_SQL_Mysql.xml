@@ -5431,7 +5431,7 @@
    			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
    			]]>		 	
    		WHERE 
-   			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+   			1 = 1
 		<isNotEmpty property="v_STARTDATE1"> 
    		<![CDATA[
  				AND   
@@ -5524,7 +5524,8 @@
 								   		 IFNULL(TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,'') AS SECURITYAPPROVAL,
 								   		 TBL_ENDAPRDOCINFO.COMPANYID,
 								   		 TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 companyName,
-										  TBL_DEPTMASTER.COMPNM2 companyName2
+										 TBL_DEPTMASTER.COMPNM2 companyName2,
+										 TBL_EXPENDAPRDOCINFO.DELFLAG
 
 							   	FROM 
 							   			 TBL_ENDAPRDOCINFO 
@@ -5551,7 +5552,7 @@
 							   	AND
 							   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID		 
 							   	WHERE 
-							   			 TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
+							   		1 = 1
 		    					<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
 							   	 	 	   STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')

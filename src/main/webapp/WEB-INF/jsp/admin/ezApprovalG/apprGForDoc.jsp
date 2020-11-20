@@ -18,13 +18,14 @@
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_obj.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>		
 		<script type="text/javascript">
 			var labelcolor = "gray";
 			var OrderCell = "";
 			var xmlhttp = createXMLHttpRequest();
 			var xmldoc = createXmlDom();
-			var DocID, pURL, FormID, DocTitle, OrgDocid;
+			var DocID, pURL, FormID, DocTitle, OrgDocid, DelFlag;
 			var jobState = "APPROVAL" ;
 			var pChackYN = "FALSE";
 			var g_tagSelectsub = "1";
@@ -75,7 +76,7 @@
 			
 			var _draftUser = "";
 			function lvtDoclist_SelChange() {
-				var SelList = new ListView();
+				var SelList = new ListConstr();
 				SelList.LoadFromID("DocList");
 				var oArrRows = SelList.GetSelectedRows();
 				
@@ -87,7 +88,14 @@
 	                FormID = GetAttribute(tr, "DATA6");
 	                OrgDocid = GetAttribute(tr, "DATA5");
 	                _draftUser = GetAttribute(tr, "DATA3");
-				
+				    DelFlag = GetAttribute(tr, "DELFLAG");
+	                
+	                if(DelFlag == "Y") {
+                		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0002'/>");
+                	}else{
+                		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0001'/>");
+                	}
+	                
 				    switch (jobState) {
 				        case "ATTACH":
 				            Attach_onclick();
@@ -138,7 +146,7 @@
 				
 				$.ajax({
 	            	type : "POST",
-	            	url : "/admin/ezApprovalG/getStatSearchDocList.do",
+	            	url : "/ezApprGJson/getStatSearchDocList.do",
 	            	async : true,
 	            	dataType : "text",
 	            	data : {
@@ -170,7 +178,8 @@
 	            		approvUser : SearchCond[19],
 	            		companyID : pCompanyID
 	            	},
-	            	success : function(result) {
+	            	success : function(resultXml) {
+	            		var result = JSON.parse(resultXml);
 	            		getDocList_after(result);
 	            	}
 	            });
@@ -178,16 +187,9 @@
 			
 			function getDocList_after(result) {
 				try {
-				    Resultxml = loadXMLString(result);
 				
-				    var listNode = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA");
-				    var cntNode = SelectSingleNodeNew(Resultxml, "DOCLIST/TOTALCNT");
-				    
-				    if (listNode == null) {
-				    	return;
-				    }
-				    
-				    var lstCnt = getNodeText(cntNode);
+
+				    var lstCnt = result.totalCount;
 	                if (lstCnt == "") {
 	                    lstCnt = 0;
 	                }
@@ -197,24 +199,19 @@
 				    pTotalCnt = lstCnt;
 				    makePageSelPage();
 				
-				    var xmlDoc;
-				    xmlDoc = createXmlDom();
-	                xmlDoc.appendChild(listNode);
-	                
-				    if (document.getElementById("lvtDoclist").innerHTML != "") {
-				        document.getElementById("lvtDoclist").innerHTML = "";
-				    }
-				
-				    var DocList = new ListView();
-				    DocList.SetID("DocList");
-				    DocList.SetMulSelectable(false);
-				    DocList.SetRowOnClick("lvtDoclist_SelChange");
-				    DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");
-				    DocList.SetUrgentFlag(true);
-				    DocList.SetSecurityFlag(false);
-				    DocList.DataSource(xmlDoc);
-				    DocList.DataBind("lvtDoclist");
-				    DocList = null;
+				    result['tableId'] = 'DocList';
+				    result['multiSelectable'] = false;
+				    result['rowOnClick'] = 'lvtDoclist_SelChange';
+				    result['rowOnDblClick'] = 'lvtDoclist_onSel_DBclick';
+				    result['urgentFlag'] = true;
+				    result['securityFlag'] = false;
+				    result['bindId'] = 'lvtDoclist';
+				    result['delFlag'] = true;
+				    
+				    
+				    console.log(result);
+				    
+				    var DocList = new ListConstr(result);
 				}
 				catch (e) {
 				}
@@ -223,7 +220,7 @@
 			}
 			
 			function selFirstRow() {
-	            var DocList = new ListView();
+	            var DocList = new ListConstr();
 	            DocList.LoadFromID("DocList");
 	            var oArrRows = DocList.GetSelectedRows();
 	            var tr = oArrRows[0];
@@ -232,6 +229,15 @@
 	                DocID = GetAttribute(tr, "DATA1");
 	                pURL = GetAttribute(tr, "DATA2");
 	                _draftUser = GetAttribute(tr, "DATA3");
+	                
+				    DelFlag = GetAttribute(tr, "DELFLAG");
+	                
+	                if(DelFlag == "Y") {
+                		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0002'/>");
+                	}else{
+                		$("#btnDelete").text("<spring:message code='ezApprovalG.kms0001'/>");
+                	}
+	                
 	            }
 	            else {
 	                DocID = "";
@@ -935,6 +941,23 @@
 	            
 	            GetDocList();
 	        }
+	        
+	        
+		    function btnDelete_onclick() {
+		    	PopupCenter("/admin/ezApprovalG/statisticsDelDocInfo.do?DocID=" + escape(DocID) ,"",520,350)
+		    }
+		    function popupCallback(obj) {
+				if(obj.flag == true) {
+					GetDocList();
+				}
+			}
+		    function PopupCenter(pageURL, title,w,h) 
+			{
+				  var left = (screen.width/2)-(w/2);
+				  var top = (screen.height/2)-(h/2);
+				  var targetWin = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+				  return targetWin;
+			} 
 		</script>
 	</head>
 	<body class="mainbody">
@@ -976,6 +999,7 @@
 		            	<option value="ALL"><spring:message code ='ezApprovalG.kmsg01'/></option>
 		        	</select>
 		        </li>
+		        <li id="tbtnDelete"><span id="btnDelete" onclick="return btnDelete_onclick(1)"><spring:message code='ezApprovalG.t266'/></span></li>
 	        </ul>
 	    </div>
 	

@@ -59,4 +59,11 @@ public class ApprGListHeaderVO {
 	public void setTablename(String tablename) {
 		this.tablename = tablename;
 	}
+	
+	@Override
+	public String toString() {
+		return "ApprGListHeaderVO [name=" + name + ", name2=" + name2 + ", name3=" + name3 + ", name4=" + name4
+				+ ", width=" + width + ", colName=" + colName + ", tablename=" + tablename + "]";
+	}
+	
 }

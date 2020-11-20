@@ -712,4 +712,5 @@ public interface EzApprovalGService {
 	/* 2020-10-05 홍승비 - 임시저장문서의 결재선이 정상적인지 체크하는 메서드 */
 	public String isTmpDocAprStateOK(String pDocSN, String userID, int tenantID, String companyID) throws Exception;
 	
+	public String updateDocInfo(String docID, LoginVO userInfo, String companyID, int tenantID, String delFlag, String delInfo) throws Exception;
 }
