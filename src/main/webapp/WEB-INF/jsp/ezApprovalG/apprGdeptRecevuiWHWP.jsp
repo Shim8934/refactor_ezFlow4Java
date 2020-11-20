@@ -320,54 +320,50 @@
 			            pDocTitle = "<spring:message code='ezApprovalG.t1394'/>";
 			
 			    if ((LastSignSN == 1 || typeof (LastSignSN) == "undefined") && IsSkipDrafter == "TRUE") {
-			        var pAlertContent = "<spring:message code='ezApprovalG.t1489'/>";
-				    OpenAlertUI(pAlertContent);
-				    return;
-				}
-			
-			    if (!checkLines())
-			        return;
-			
-			    if (message.FieldExist("docnumber")) {
-			        var tempValue = message.GetFieldText("docnumber");
-			        if (tempValue != tempValue.replace("분류", "")) {
-			            var pAlertContent = "<spring:message code='ezApprovalG.t1691'/>";
+			    	var pAlertContent = "<spring:message code='ezApprovalG.t1489'/><BR> <spring:message code='ezApprovalG.t1490'/>";
+	                var Ans = OpenInformationUI(pAlertContent, CheckAprLine);
+				} else {
+				    if (!checkLines())
+				        return;
+				
+				    if (message.FieldExist("docnumber")) {
+				        var tempValue = message.GetFieldText("docnumber");
+				        if (tempValue != tempValue.replace("분류", "")) {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t1691'/>";
+						    OpenAlertUI(pAlertContent);
+						    return;
+						}
+				    }
+				
+				    if (pDocTitle == "") {
+				        var pAlertContent = "<spring:message code='ezApprovalG.t1695'/>";
 					    OpenAlertUI(pAlertContent);
 					    return;
 					}
-			    }
-			
-			    if (pDocTitle == "") {
-			        var pAlertContent = "<spring:message code='ezApprovalG.t1695'/>";
-				    OpenAlertUI(pAlertContent);
-				    return;
+					else {
+					 	if (CheckUsePassword()) {
+	                        chk_Passwd();
+	                    }
+	                    else {
+	                        check_skipdraft();
+	                    }
+				    }
 				}
-				else {
-				 	if (CheckUsePassword()) {
-                        chk_Passwd();
-                    }
-                    else {
-                        check_skipdraft();
-                    }
-                    /* if (CheckUsePassword()) {
-	                    var chkpass = chk_Passwd();
-	                    if (chkpass == "False") {
-	                        var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
-	                        OpenAlertUI(pAlertContent);
-	                        return;
-	                    } else if (chkpass == "cancel" || chkpass == undefined) {
-	                        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-                            OpenAlertUI(pAlertContent);
-                            return;
-                        }
-                    }
-                    
-                    check_skipdraft(); */
-			    }
 			  } catch (e) {
-			      alert(e.description);
+			      alert("btnSendDraft_onclick : " + e);
 			  }
 			}
+			
+		    function CheckAprLine(Ans) {
+		        DivPopUpHidden();
+		        if (Ans) {
+		        	btnApprovalInfo("14");
+		            return;
+		        }
+		        else {
+		            return;
+		        }
+		    }
 			
 			function CheckUsePassword() {
 				var result = "";
@@ -547,14 +543,8 @@
 		  		    OpenAlertUI(pAlertContent);
 		  		    return;
 		  		}
-	
-	            getHTML(openSignUI_CompleteHTML);
-			}
-			
-			function openSignUI_CompleteHTML(html) {
-				pOrgHtml = html;
-				
-				if (LastSignSN == 1 || DraftLastFlag) {
+	            
+	            if (LastSignSN == 1 || DraftLastFlag) {
 	                var rtnVal;
 	                rtnVal = ExcuteInfo("DOCNUM_BEFORE", "")
 	                if (!rtnVal) {
@@ -584,9 +574,14 @@
 		  			    return;
 		  			}
 	            }
-	            rtnSignInfo = SendDraftMappingSign(ret);
 	            
-	            saveRecevInfo();
+	            SendDraftMappingSign(ret);
+			}
+			
+			function before_saveRecevInfo(html) {
+				pOrgHtml = html;
+				
+				saveRecevInfo();
 			}
 	
 			function btnOpinion_onclick() {

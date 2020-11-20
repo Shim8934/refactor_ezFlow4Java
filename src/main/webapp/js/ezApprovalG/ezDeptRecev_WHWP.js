@@ -515,19 +515,15 @@ function setClearSusinCellInfo()
 }
 
 
-function putJunkyulSign(signID)
-{
+function putJunkyulSign(signID) {
 	if (message.FieldExist(signID))
-		
 		message.PutFieldText(signID, strLangEtcAprType4);
 }
 
 
 
-function SendDraftMappingSign(ret)
-{
-  try{
-	
+function SendDraftMappingSign(ret) {
+  try {
 	var psigncell;
 	var pseumyungcell;
 	var pseumyungdatecell;
@@ -540,11 +536,8 @@ function SendDraftMappingSign(ret)
 	var PositionText = "";
 	PositionText = getOpinionCount();
 	
-	if(LastSignSN == 1) 
-	{
-		
-		if(pDraftFlag == "SUSIN" ||  pDocState == "011")
-		{	
+	if(LastSignSN == 1) {
+		if(pDraftFlag == "SUSIN" || pDocState == "011") {	
 			fieldname = pSusinSN + "sign" + sn;
 			if (message.FieldExist(fieldname))
 				message.PutFieldText(fieldname, "");		
@@ -552,9 +545,7 @@ function SendDraftMappingSign(ret)
 			fieldname = pSusinSN + "jikwe" + sn;
 			if (message.FieldExist(fieldname))
 				message.PutFieldText(fieldname, "");		
-		}
-		else
-		{			
+		} else {			
 			fieldname = "sign" + sn;
 			if (message.FieldExist(fieldname))
 				message.PutFieldText(fieldname, "");		
@@ -566,11 +557,9 @@ function SendDraftMappingSign(ret)
 		
 		sn = 1;
 	}
-	else if (DraftLastFlag)		
-	{
+	else if (DraftLastFlag)	{
 		putJunkyulSign("sign" + sn);
-		for(i=1;i<20;i++)
-	  	{
+		for(i=1;i<20;i++) {
 	  		if(pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
 	  		else signID = "sign" + i
 
@@ -580,12 +569,11 @@ function SendDraftMappingSign(ret)
 		sn = LastSignNo;
 	}
 
-	if(pDraftFlag == "SUSIN" ||  pDocState == "011")
-	{ 
+	if(pDraftFlag == "SUSIN" ||  pDocState == "011") { 
 		psigncell = pSusinSN + "sign" + sn;
 		pseumyungcell = pSusinSN + "jikwe" + sn;
 		pseumyungdatecell = pSusinSN + "seumyungdate" + sn;
-	}else{
+	} else {
 		psigncell = "sign" + sn;
 		pseumyungcell = "jikwe" + sn;
 		pseumyungdatecell = "seumyungdate" + sn;
@@ -600,18 +588,13 @@ function SendDraftMappingSign(ret)
 	var SingFlag = true;
 	
 
-
-	if(ret != "NAME")
-	{
-		if (message.FieldExist(psigncell))
-		{
-			
+	if(ret != "NAME") {
+		if (message.FieldExist(psigncell)) {
 			message.PutFieldText(psigncell, "");	
-			HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
-			
+			//message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
+			message.InsertPicture(psigncell, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
 		}
 	
-	  	
 	  	signInfo[signCnt] = psigncell;
 	  	SignName[signCnt] = psigncell;
 	  	SignType[signCnt] = "IMAGE";
@@ -619,25 +602,20 @@ function SendDraftMappingSign(ret)
 	  	signCnt = signCnt + 1
 	  	SingFlag = true;
 	}
-	else
-	{
-	  if (message.FieldExist(psigncell))
-	  {
-	
+	else {
+		if (message.FieldExist(psigncell)) {
             message.PutFieldText(psigncell, arr_userinfo[2]);	  	
-	  		
 	  		signInfo[signCnt] = psigncell;
 	  		SignName[signCnt] = psigncell;
 	  	    SignType[signCnt] = "TEXT";
 		    SignContent[signCnt] = arr_userinfo[2];
 	  		signCnt = signCnt + 1
 	  		SingFlag = false; 
-	  }
+		}
 	}
 	
     
-	if (message.FieldExist(pseumyungcell))
-	{
+	if (message.FieldExist(pseumyungcell)) {
 		message.PutFieldText(pseumyungcell, arr_userinfo[3] + PositionText);		
 		signInfo[signCnt] = pseumyungcell;
 		SignName[signCnt] = pseumyungcell;
@@ -647,8 +625,7 @@ function SendDraftMappingSign(ret)
 	}
 
 	
-	if (message.FieldExist(pseumyungdatecell))
-	{
+	if (message.FieldExist(pseumyungdatecell)) {
 		message.PutFieldText(pseumyungdatecell, s);		
 		signInfo[signCnt] = pseumyungdatecell;
 		SignName[signCnt] = pseumyungdatecell;
@@ -657,12 +634,19 @@ function SendDraftMappingSign(ret)
 		signCnt = signCnt + 1
 	}
 	
-    return signInfo;
+	
+	if(ret == "NAME") {
+		rtnSignInfo = signInfo;
+		GetHTML(before_saveRecevInfo);
+	}
   }catch(e){
-    alert("SendDraftMappingSign(ret)" + e.description);
+    alert("SendDraftMappingSign(ret)" + e);
   }
 }
 
+function SendDraftMappingSign_after() {
+	GetHTML(before_saveRecevInfo);
+}
 
 function UndoSignInfo(signInfo)
 {
@@ -1384,7 +1368,7 @@ function openSignUI(parameter) {
 		//var ret = "NAME";
     	 openSignUI_Complete("NAME");
      }
-	return ret;
+    //return ret;
   } catch(e) {
     alert("openSignUI : " + e);
   }
@@ -1952,7 +1936,7 @@ function SaveFile()
 
 	var data = {
 		docID : pDocID,
-		html  : HwpCtrl.GetCloneData("", "HWP"),
+		html  : pOrgHtml,
 		orgCompanyID : orgCompanyID
 	}
 
