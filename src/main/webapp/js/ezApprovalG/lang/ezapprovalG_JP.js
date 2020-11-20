@@ -1052,7 +1052,8 @@ var strLangCSJ02 = "指定されている受信先に含まれいる社員の中
 var strLangHSBPR01 = "Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif";
 
 /* 2020-11-12 홍승비 - 전자결재 대용량첨부 추가 */
-var strLangHSBAt00 = "を超える場合には、大容量メールとして送信処理されます。\n大容量添付は ";
+//var strLangHSBAt00 = "を超える場合には、大容量メールとして送信処理されます。\n大容量添付は ";
+var strLangHSBAt00 = "を超える場合には、大容量メールとして送信処理されます。 ";
 var strLangHSBAt01 = "以後自動削除されます。";
 var strLangHSBAt02 = "大容量";
 var strLangHSBAt03 = "大容量ファイルは ";

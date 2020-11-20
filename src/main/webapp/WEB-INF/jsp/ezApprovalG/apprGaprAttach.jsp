@@ -846,7 +846,8 @@
 		        	if (isBigAttachBtnClicked == true) {
 		        		bigFileCheck = true;
 		        	} else {
-		        		bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00 + bigSizeApprAttachDelDay + strLang1030 + " " +strLangHSBAt01);
+		        		//bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00 + bigSizeApprAttachDelDay + strLang1030 + " " +strLangHSBAt01);
+		        		bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00);
 		        	}
 		        	
 		        	if (bigFileCheck != true) {
@@ -1106,7 +1107,8 @@
 		        	if (isBigAttachBtnClicked == true) {
 		        		bigFileCheck = true;
 		        	} else {
-		        		bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00 + bigSizeApprAttachDelDay + strLang1030 + " " +strLangHSBAt01);
+		        		//bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00 + bigSizeApprAttachDelDay + strLang1030 + " " +strLangHSBAt01);
+		        		bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00);
 		        	}
 		        	
 		        	if (bigFileCheck != true) {
@@ -1256,7 +1258,7 @@
 		</div>
 		<%-- 2020-11-17 홍승비 - 웹폴더 첨부 레이어팝업을 위한 태그 추가--%>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_sub">&nbsp;</div>	
-		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel_sub">
+		<div class="layerpopup"  style="z-index:2000; position:absolute; display:none; overflow:hidden;" id="iFramePanel_sub">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer_sub"></iframe>
 		</div>
 	</body>
