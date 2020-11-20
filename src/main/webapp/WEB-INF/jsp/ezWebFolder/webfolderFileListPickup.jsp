@@ -413,7 +413,7 @@
 					inputElmt.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 					
 					var selectedFileCheck = folderId + "/" + result[i]["fileId"];
-					if (filePickArr.includes(selectedFileCheck)){
+					if (filePickArr.indexOf(selectedFileCheck) > -1){
 						inputElmt.setAttribute("checked", true);
 						trElmt.setAttribute("class", "bnkWebFolder2");
 					}
