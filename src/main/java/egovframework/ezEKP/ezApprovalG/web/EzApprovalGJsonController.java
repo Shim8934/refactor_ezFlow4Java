@@ -1,0 +1,202 @@
+package egovframework.ezEKP.ezApprovalG.web;
+
+import java.util.Locale;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGJsonService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGServiceImpl;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
+
+/** 
+ * @Description [Controller] 사용자 - 전자결재
+ * @author 솔루션2팀 강민수
+ * @Modification Information
+ *
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2020.10.29    강민수         신규작성
+ *
+ * @see
+ */
+
+@Controller
+public class EzApprovalGJsonController {
+
+	@Resource(name = "EzApprovalGJsonService")
+	private EzApprovalGJsonService ezApprovalGJsonService;
+	
+	@Autowired
+	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGJsonController.class);
+	
+	/**
+	 * 전자결재G 결재라인 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprGJson/aprLineRequest.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> aprLineRequest(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("aprLineRequest started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String userID = request.getParameter("userID");
+		String formID = request.getParameter("formID");
+		String reDraftFlag = "DRAFT";
+		String isUsed = request.getParameter("isUsed");
+		String beforeDocID = request.getParameter("beforeDocID");
+		String mode = request.getParameter("mode");
+		String docState = request.getParameter("docState");
+		
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
+		if (isUsed == null) {
+			isUsed = "";
+		}
+		
+		if (beforeDocID == null) {
+			beforeDocID = "";
+		}
+		
+		if (request.getParameter("reDraft") != null) {
+			reDraftFlag = request.getParameter("reDraft");
+		}
+		
+		Map<String, Object> resultMap = ezApprovalGJsonService.getAprLineInfo(docID.trim(), userID, formID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), reDraftFlag, isUsed, beforeDocID, mode, docState);
+
+		logger.debug("aprLineRequest ended.");
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 전자결재G관리 전체문서조회(완료문서) 문서목록 호출 함수
+	 */
+	@RequestMapping(value = "/ezApprGJson/getStatSearchDocList.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> getStatSearchDocLlist(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getStatSearchDocList started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String offset = userInfo.getOffset();
+		Locale locale = userInfo.getLocale();
+		String lang = userInfo.getLang();
+		
+		//양식아이디
+		String formID = request.getParameter("formID");
+		//문서번호
+		String docNumber = request.getParameter("docNumber");
+        //문서제목
+		String docTitle = request.getParameter("docTitle");
+        //기안자
+		String drafter = request.getParameter("drafter");
+        //결재자
+		String approvUser = request.getParameter("approvUser");
+        //기안부서
+		String draftDeptName = request.getParameter("deptName1");
+        
+		//기안일자 시작
+        String draftFromYear = request.getParameter("draftFromYear");
+        String draftFromMonth = request.getParameter("draftFromMonth");
+        String draftFromDay = request.getParameter("draftFromDay");
+        
+        String draftFrom = "";
+        
+        if (draftFromYear != null && !draftFromYear.equals("")) {
+        	draftFrom = commonUtil.getDateStringInUTC(commonUtil.makeDate(draftFromYear, draftFromMonth, draftFromDay, true), offset, false).trim();
+        }
+        
+        //기안일자 끝
+        String draftToYear = request.getParameter("draftToYear");
+        String draftToMonth = request.getParameter("draftToMonth");
+        String draftToDay = request.getParameter("draftToDay");
+
+        String draftTo = "";
+        
+        if (draftToYear != null && !draftToYear.equals("")) {
+        	draftTo = commonUtil.getDateStringInUTC(commonUtil.makeDate(draftToYear, draftToMonth, draftToDay, true), offset, false).trim();
+        }
+        
+        //완료일자 시작
+        String apprFromYear = request.getParameter("apprFromYear");
+        String apprFromMonth = request.getParameter("apprFromMonth");
+        String apprFromDay = request.getParameter("apprFromDay");
+        
+        String aprFrom = "";
+        
+        if (apprFromYear != null && !apprFromYear.equals("")) {
+        	aprFrom = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprFromYear, apprFromMonth, apprFromDay, true), offset, false).trim();
+        }
+        
+        //완료일자 끝
+        String apprToYear = request.getParameter("apprToYear");
+        String apprToMonth = request.getParameter("apprToMonth");
+        String apprToDay = request.getParameter("apprToDay");
+        String aprTo = "";
+        
+        if (apprToYear != null && !apprToYear.equals("")) {
+        	aprTo = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprToYear, apprToMonth, apprToDay, true), offset, false).trim();
+        }
+        	
+        //페이지 번호
+        String pageNum = request.getParameter("pageNum");
+        //총페이지 수
+        String pageSize = request.getParameter("pageSize");
+
+        //정렬 대상 셀
+        String orderCell = request.getParameter("orderCell");
+        //정렬 옵션
+        String orderOption = request.getParameter("orderOption");
+        
+        //테넌트 아이디
+        int tenantID = userInfo.getTenantId();
+        
+        //회사 아이디
+        String companyID = request.getParameter("companyID");
+        
+        //일반/공공구분
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
+        String result = "";
+
+        Map<String, Object> resultMap =  ezApprovalGJsonService.getAdminSearchDocList(formID, docNumber, docTitle, drafter, approvUser, draftDeptName, draftFrom, draftTo, aprFrom, aprTo, pageSize, pageNum, orderCell, orderOption, companyID, tenantID, lang, offset, approvalFlag, locale);
+        
+        logger.debug("getStatSearchDocList ended.");
+        
+		return resultMap;
+	}
+	
+	/**
+	 * 전자결재 JSON 테스트 페이지
+	 */
+	@RequestMapping(value = "/ezApprGJson/jsonTest.do", method = RequestMethod.GET)
+	public String formCheckUI(){
+		return "ezApprovalG/jsonTest";
+	}
+	
+}
