@@ -673,6 +673,7 @@
 		        
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "IMPORTANCE", importance);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TITLE", document.getElementById("txtTitle").value);
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE6", document.getElementById("txtTitle2").value);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "STARTDATE", pStartDate);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ENDDATE", pEndDate);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ABSTRACT", document.getElementById("txtAbstract").value);
@@ -1420,8 +1421,9 @@
 	                    
 	                    var orgFileList = orgfile.split(".");
 	                    var orgFileType = orgFileList[orgFileList.length - 1];
-		                    
-		               if (orgFileType == "hwp"){
+		                 
+	                    if (pUrl.toLowerCase().indexOf(".hwp") > -1) {
+		               	//if (orgFileType == "hwp"){ //ezd로 들어옴
 		            	   	xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
 		                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
 		                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";

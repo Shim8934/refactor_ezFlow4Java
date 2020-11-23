@@ -1771,7 +1771,7 @@
 	
 	                </div>
 	            </td> -->
-	            <td style="padding-bottom:10px;height:800px;" id="messageWHWPEditor" >
+	            <td style="padding-bottom:10px;height:800px;" id="messageWHWPEditor">
 		    		<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	            </td>
 	        </tr>

@@ -878,6 +878,15 @@
 			                delOpinionInfo();
 			            	delOpinionsExceptDrafters();
 			            }
+			            
+			          	//2020-11-19 정소미 - 채용 양식일 경우
+			            if (message.GetListItem(message.GetFieldsList(), "hiredatechk") != null) {
+			            	var fields = message.GetFieldsList();
+			            	if (getNodeText(message.GetListItem(fields, "hiredatechk")) == "") {
+			            		OpenInformationUI("채용일자 없이 진행하시겠습니까?<br>- 채용일자는 면접 후 최종 보고 시에만 입력<br>- 채용계획, 서류 결과 보고 시에는 입력 불필요", check_btnSendDraft4);
+			        			return;
+			            	}
+			            }
 
 			            /* 2022-03-23 홍승비 - 비전자문서가 아닌 경우, 결재올림 시 문서번호 재설정 진행 */
 			        	if (nonElecRec != "Y") {

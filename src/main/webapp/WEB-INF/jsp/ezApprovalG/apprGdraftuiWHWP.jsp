@@ -697,6 +697,15 @@
                 if (pDraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
                     delOpinionInfo();
                 }
+                
+              	//2020-11-19 정소미 - 채용 양식일 경우
+	            if (message.FieldExist("hiredatechk")) {
+	            	var hiredate = trim(message.GetFieldText("hiredatechk"));
+	            	if (hiredate == "") {
+	            		OpenInformationUI("채용일자 없이 진행하시겠습니까?<br>- 채용일자는 면접 후 최종 보고 시에만 입력<br>- 채용계획, 서류 결과 보고 시에는 입력 불필요", check_btnSendDraft4);
+	        			return;
+	            	}
+	            }
 
               	if (nonElecRec != "Y") {
 					UpdateDocNum();
@@ -1916,7 +1925,6 @@
 	        <c:if test="${empty beforeUrl}">
 	        <tr>
 	        	<td style="padding-bottom:10px;height:820px;" id="messageWHWPEditor">
-	        	<%--<td style="padding-bottom:10px;height:800px;" >--%>
 		    		<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	            </td>
 	        </tr>
