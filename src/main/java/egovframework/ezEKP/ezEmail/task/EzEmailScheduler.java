@@ -274,14 +274,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Scheduled(fixedDelay = 600000, initialDelay = 60000)
 	public void deleteMailBlob() throws Exception {
 		logger.debug("deleteMailBlob started.");
-		
-		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
-		
-		if (useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
-			logger.debug("deleteMailBlob ended.");
-			return;
-		}
-		
+				
 		//choose scheduler running server
 		if (!preScheduler("deleteMailBlob")) {
 			logger.debug("deleteMailBlob ended.");
