@@ -464,6 +464,7 @@ function MakeFormInfoXML_Detail() {
 
     createNodeAndInsertText(xmlpara, objNode, "APPROPTION", formOptTypeAtr);    
     //    
+    createNodeAndInsertText(xmlpara, objNode, "SIHANGTYPE", document.querySelector("#selSihangType").value);    
     
     return getXmlString(xmlpara.childNodes[0]);
 }

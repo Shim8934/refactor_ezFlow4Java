@@ -117,6 +117,45 @@ function SendOffer_Complete(ret) {
         return;
     }
 }
+function SendOfferForConvSihang(pSimsaUserInfo, pDocID, pDocHref, pUserID) {
+	var result = {};
+    if (pSimsaUserInfo[0] == "OK") {
+        var newDocID = CreateNewDoc(pDocID, pUserID);
+        if (newDocID == "") {
+			UndoUpdateProcessYN(pDocID);
+			result.state = false;
+			result.msg = strLang196;
+            return result;
+        }
+
+        var rvalue = UpdateReceiptOffer(newDocID, pDocID)
+        if (!rvalue) {
+            UndoCreateDoc(newDocID);
+            UndoUpdateProcessYN(pDocID);
+			result.state = false;
+			result.msg = strLang196;
+            return result;
+        }
+        var rvalue2 = doSendOfferAjax(newDocID, pDocID, pSimsaUserInfo, pDocHref);
+        if (!rvalue2) {
+            UndoCreateDoc(newDocID);
+			UndoUpdateProcessYN(pDocID);
+			result.state = false;
+			result.msg = strLang196;
+            return result;
+		}
+		
+		result.state = true;
+		result.newDocID = newDocID;
+		return result;
+    }
+    else {
+        UndoUpdateProcessYN(pDocID);
+		result.state = false;
+		result.msg = strLang196;
+		return result;
+	}
+}
 
 function UndoUpdateProcessYN(pDocID)
 {
@@ -174,8 +213,20 @@ function UpdateReceiptOffer(pDocID, pOrgDocID)
    }
 }
 
-function doSendOffer(newDocID, pDocID, array, pHref)
-{
+function doSendOffer(newDocID, pDocID, array, pHref) {
+	var result = doSendOfferAjax(newDocID, pDocID, array, pHref);
+	
+	if (result) {
+		var pAlertContent = strLang198;
+		OpenAlertUI(pAlertContent);
+	} else {
+		var pAlertContent = strLang199;
+		OpenAlertUI(pAlertContent);
+	}
+
+	return result;
+}
+function doSendOfferAjax(newDocID, pDocID, array, pHref) {
 	var xmlpara = createXmlDom();
 	var xmlhttp = createXMLHttpRequest();
 	var objNode;
@@ -196,32 +247,25 @@ function doSendOffer(newDocID, pDocID, array, pHref)
 
 	xmlhttp.open("POST","/ezApprovalG/sendOfferG.do",false);
 	xmlhttp.send(xmlpara);
-	
-	 if (xmlhttp != null && xmlhttp.readyState == 4) {
-      	 if (xmlhttp.statusText == "OK") {
-      		var dataNodes = GetChildNodes(xmlhttp.responseXML); 
-      		
-      		if(getNodeText(dataNodes[0]) == "TRUE") {
-      			var pAlertContent = strLang198;
-      			OpenAlertUI(pAlertContent);
-      			return true;
-      		} 
-      	 } else {
-      		var pAlertContent = strLang199;
-    		OpenAlertUI(pAlertContent);
-    		return false;
-      	 }
-    }
+
+	if (xmlhttp != null && xmlhttp.readyState == 4) {
+		if (xmlhttp.statusText == "OK") {
+			var dataNodes = GetChildNodes(xmlhttp.responseXML); 
+			return getNodeText(dataNodes[0]) === "TRUE";
+		} else {
+			return false;
+		}
+ }
 }
 var xmlhttp2 = createXMLHttpRequest();
 function SendOfferCheckBtn(pDocID, pUserID)
 {
-	try
-	{
-		if( document.getElementById("tdichange_Rec").style.display == "none" )
-			return;
-	}
-	catch(e) {}
+	// try
+	// {
+	// 	if( document.getElementById("tdichange_Rec").style.display == "none" )
+	// 		return;
+	// }
+	// catch(e) {}
 	
 	try
 	{
@@ -248,10 +292,27 @@ function SendOfferCheckBtn_after() {
         var dataNodes = GetChildNodes(xmlhttp2.responseXML);
         var rtnVal = getNodeText(dataNodes[0]);
 
-        if (rtnVal == "TRUE" || rtnVal == "NORECEIPT")
-            document.getElementById("ichange_Rec").Enable = "true";
-        else
-            document.getElementById("ichange_Rec").Enable = "false";
+        if (rtnVal == "RECEIPTOUTER") {
+			SetMenuBtn("tdichange_Rec", "");
+			SetMenuBtn("tdichangeS_Rec", "none");
+			SetMenuBtn("tdReSend", "none");
+		} else if (rtnVal == "RECEIPT" || rtnVal == "RECEIPADDR") {
+			SetMenuBtn("tdichange_Rec", "none");
+			SetMenuBtn("tdichangeS_Rec", "");
+			SetMenuBtn("tdReSend", "none");
+		} else if (rtnVal == "NORECEIPTOUTER") {
+			SetMenuBtn("tdichange_Rec", "");
+			SetMenuBtn("tdichangeS_Rec", "none");
+			SetMenuBtn("tdReSend", "none");
+		} else if (rtnVal == "NORECEIPT") {
+			SetMenuBtn("tdichange_Rec", "none");
+			SetMenuBtn("tdichangeS_Rec", "none");
+			SetMenuBtn("tdReSend", "");
+		} else {
+			SetMenuBtn("tdichange_Rec", "none");
+			SetMenuBtn("tdichangeS_Rec", "none");
+			SetMenuBtn("tdReSend", "none");
+		}
     }
     catch (e) { }
 }
@@ -280,11 +341,11 @@ function SendOfferCheck(pDocID, pUserID)
 			OpenAlertUI(pAlertContent)
 			return false;
 		}
-		else if (rtnVal == "TRUE")
+		else if (rtnVal == "RECEIPT" || rtnVal == "RECEIPTOUTER")
 		{
 			return true;
 		}
-		else if (rtnVal == "NORECEIPT")
+		else if (rtnVal == "NORECEIPT" || rtnVal == "NORECEIPTOUTER")
 		{
 			var pInformationContent = " " + strLang201 + "<br>" + strLang202;
 			var ret = OpenInformationUI(pInformationContent, SendOfferCheck_OpenUI);

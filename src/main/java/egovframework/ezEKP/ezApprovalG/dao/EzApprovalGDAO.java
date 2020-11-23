@@ -1221,6 +1221,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (int)select("EzApprovalG.sendOfferCheck_EndReceipt", map);
 	}
 	
+	public List<String> sendOfferCheck_EndReceipt2(Map<String, Object> map) throws Exception{
+	    return (List<String>) list("EzApprovalG.sendOfferCheck_EndReceipt2", map);
+	}
+	
 	public int checkAprLine(Map<String, Object> map) throws Exception{
 		return (int)select("EzApprovalG.checkAprLine", map);
 	}

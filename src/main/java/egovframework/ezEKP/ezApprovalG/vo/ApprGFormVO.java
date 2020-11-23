@@ -75,6 +75,9 @@ public class ApprGFormVO {
 	/**양식 세부설정**/
 	private String aprOption;
 	
+	/** 시행문 타입 */
+	private String sihangType;
+	
 	public String getPassAprLineFlag() {
 		return passAprLineFlag;
 	}
@@ -378,5 +381,13 @@ public class ApprGFormVO {
 	public void setAprOption(String aprOption) {
 		this.aprOption = aprOption;
 	}
+
+    public String getSihangType() {
+        return sihangType;
+    }
+
+    public void setSihangType(String sihangType) {
+        this.sihangType = sihangType;
+    }
 
 }

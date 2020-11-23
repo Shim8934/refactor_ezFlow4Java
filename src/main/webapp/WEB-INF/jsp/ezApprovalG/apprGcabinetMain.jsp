@@ -92,7 +92,9 @@
 		        var g_DeliveryXmlhttp = createXMLHttpRequest();
 			    var pOpenYaer = "<c:out value ='${openYear}'/>";
 		        var vWriterID;
-		        var ext= "";
+				var ext= "";
+				var WriterID = null;
+				var WriterDeptID = null;
 		        document.onselectstart = function () { return false; };
 		
 		        window.onload = function () {
@@ -171,6 +173,9 @@
 		                    break;
 		                case "m10":
 		                    ToggleAdminMenu();
+		                    break;
+		                case "UNTREATED":
+		                    untreatedList_onclick();
 		                    break;
 		                default:
 		                    RecordList_onclick();
@@ -342,7 +347,33 @@
 		    }
 		    function ichange_onclick() {
 		        SendOffer(UserID);
-		    }
+			}
+			function ichangeS_onclick() {
+		        var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+				
+				var selRows = DocList.GetSelectedRows();
+		        if (selRows.length === 0) {
+		            var pAlertContent = "문서를 선택해주십시오.";
+		            alert(pAlertContent);
+		            return;
+				}
+
+				var selRow = selRows[0];
+				
+				var docID = GetAttribute(selRow, "DATA1");
+				var docHref = GetAttribute(selRow, "DATA2");
+
+				var url = "/ezApprovalG/ezConvSihang.do" +
+					"?docID=" + encodeURIComponent(docID) +
+					"&docHref=" + encodeURIComponent(docHref) +
+					"&orgCompanyID=" + CompanyID;
+					// "/ezApprovalG/convSendDocView.do" + 
+					// "?docID=" + encodeURIComponent(DocID) + 
+					// "&docHref=" + encodeURIComponent(docHref);
+					
+				window.open(url, "enforce", GetOpenWindowfeature(window.screen.availHeight - 50, window.screen.availWidth / 2));
+			}
 		    function Approval_onclick() {
 		        jobState = "APPROVAL";
 		        getDataInfo();
@@ -600,7 +631,14 @@
 		        InitGlobals("CABINET", "0", "0");
 		
 		        GetCaninetList();
-		    }
+			}
+			function untreatedList_onclick() {
+		        document.getElementById("imgTitle").innerHTML = "미처리문서함";
+		        document.getElementById("imgTitle").style.display = "";
+		        SwapSubMenuDisplay("1");
+		        InitGlobals("RECORD", "23", "1");
+		        GetRecordList();
+			}
 		
 		    var regcabinet_cross_dialogArguments = new Array();
 		    function btnRegCabinet_onclick() {
@@ -1672,10 +1710,9 @@
 	        </ul>
 	
 	        <ul id="trRecSubMenu" style="Display: none;">
-	            <li class="important" id="tdichange_Rec"><span id="ichange_Rec" onclick="return ichange_onclick()">
-	               <spring:message code='ezApprovalG.t939'/></span></li>
-	            <li class="important" id="tdReSend"><span id="ReSend" onclick="return btnReSend_onclick()">
-	                <spring:message code='ezApprovalG.t940'/></span></li>
+	            <li class="important" id="tdichange_Rec" style="display:none;"><span id="ichange_Rec" onclick="return ichange_onclick()"><spring:message code='ezApprovalG.t939'/></span></li>
+	            <li class="important" id="tdichangeS_Rec" style="display:none;"><span id="ichangeS_Rec" onclick="return ichangeS_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
+	            <li class="important" id="tdReSend" style="display:none;"><span id="ReSend" onclick="return btnReSend_onclick()"><spring:message code='ezApprovalG.t940'/></span></li>
 	            <!-- <li id="tbar3" style="background: none; padding-right: 2px;">
 	                <img src="/images/i_bar.gif"></li> -->	            
 	            <li class="important" id="tdRegRecord" style="Display: None"><span id="RegRecord" onclick="return btnRegRecord_onclick()"><spring:message code='ezApprovalG.t933'/></span></li>

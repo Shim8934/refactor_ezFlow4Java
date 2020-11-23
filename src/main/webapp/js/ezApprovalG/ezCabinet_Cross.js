@@ -179,27 +179,6 @@ function ezCabMunuCtl(MenuType, selRow) {
 
             if (typeof (tdModifyRec) != "undefined" && typeof (tdModifyRec) != "unknown")
                 document.getElementById("tdModifyRec").style.display = pMenuFlag;
-
-            if (typeof (ichange_Rec) != "undefined" && typeof (ichange_Rec) != "unknown") {
-                if (selRow.getAttribute("DATA8") == "00") {
-                    if (IsUserDeptRec() == "true" && document.getElementById("tdichange_Rec").style.display == "") {
-                        document.getElementById("ichange_Rec").style.display = "";
-                        document.getElementById("tdichange_Rec").style.display = "";
-                        //SwapImage(ichange_Rec, "");
-                    }
-                    else {
-                        document.getElementById("ichange_Rec").style.display = "none";
-                        document.getElementById("tdichange_Rec").style.display = "none";
-                        //SwapImage(ichange_Rec, "dis");
-                    }
-                }
-                else {
-                    document.getElementById("ichange_Rec").style.display = "none";
-                    document.getElementById("tdichange_Rec").style.display = "none";
-                    //SwapImage(ichange_Rec, "dis");
-                }
-            }
-
             
             if (g_bRecAdmin || AdminYN == "TRUE") {
                 if (typeof (tdVeiwRecHist) != "undefined" && typeof (tdVeiwRecHist) != "unknown") {
@@ -283,18 +262,25 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
             }
 
-            if (typeof (tdichange_Rec) != "undefined" && typeof (tdichange_Rec) != "unknown") {
-                if (selRow.getAttribute("DATA8") == "00" && selRow.getAttribute("DATA13") == "0") {
-                    document.getElementById("ichange_Rec").style.display = "";
-                    document.getElementById("tdichange_Rec").style.display = "";
-                    //SwapImage(ichange_Rec, "");
-                }
-                else {
-                    document.getElementById("ichange_Rec").style.display = "none";
-                    document.getElementById("tdichange_Rec").style.display = "none";
-                    //SwapImage(ichange_Rec, "dis");
+            if (document.getElementById("tdGongRam")) {
+                if ((GetAttribute(selRow, "DATA15") == "011" || GetAttribute(selRow, "DATA15") == "001") && arr_userinfo[1] == GetAttribute(selRow, "DATA3") && GetAttribute(selRow, "DATA8") === "00")
+                    document.getElementById("tdGongRam").style.display = "";
+                else
+                    document.getElementById("tdGongRam").style.display = "none";
+            }
+
+            if (document.querySelector("#tdichange_Rec") && document.querySelector("#tdichangeS_Rec")) {
+                var seperateAttachNo = GetAttribute(selRow, "DATA8");
+                var rejectFlag = GetAttribute(selRow, "DATA13");
+                if (isDrafter(WriterID, WriterDeptID) && seperateAttachNo === "00" && rejectFlag === "0") {
+                    SendOfferCheckBtn(GetAttribute(selRow, "DATA1"), arr_userinfo[1]);
+                } else {
+                    SetMenuBtn("tdichange_Rec", "none");
+                    SetMenuBtn("tdichangeS_Rec", "none");
+                    SetMenuBtn("tdReSend", "none");
                 }
             }
+            
             break;
     }
 
@@ -310,6 +296,9 @@ function ezCabMunuCtl(MenuType, selRow) {
 function SetMenuBtn(sbtnname, sbtnstyle) {
     if (document.getElementById(sbtnname) != null)
         document.getElementById(sbtnname).style.display = sbtnstyle;
+}
+function isDrafter(writerID, writerDeptID) {
+    return writerID === arr_userinfo[1] && writerDeptID === arr_userinfo[4];
 }
 
 function IsUserDeptRec() {

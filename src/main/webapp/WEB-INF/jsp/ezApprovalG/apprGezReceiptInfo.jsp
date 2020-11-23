@@ -18,6 +18,7 @@
 		    var OrderCell = "";
 		    var RtnVal = "";
 		    var ext = "<c:out value ='${ext}'/>";
+		    var mode = "<c:out value ='${mode}'/>";
 		    window.onload = function () {
 		        try {
 		            $.ajax({
@@ -27,7 +28,7 @@
 		        		url : "/ezApprovalG/getReceiptinfo.do",
 		        		data : {
 		        				docID : pDocID,
-		        				mode  : "APR"
+		        				mode  : mode
 		        				},
 		        		success: function(xml){
 		        			 RtnVal = loadXMLString(xml);

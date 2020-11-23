@@ -213,7 +213,8 @@
 	        var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate = "";
 	        var OrgAprUserDeptID = "";
 	        var useDynamicAprLine = "<c:out value ='${useDynamicAprLine}'/>";
-	        var passAprLine = "";
+			var passAprLine = "";
+			var isOuterForm = ${isOuterForm};
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -2486,11 +2487,11 @@
 	                        	<c:if test="${approvalFlag eq 'G'}">
 		                        	<c:choose>
 		                        		<c:when test="${receptGubunYN eq 'Y'}">
-		                        			<c:if test="${docType eq '001'}">
+		                        			<c:if test="${docType eq '001' && isOuterForm}">
 					                            <p><span id="3tab4" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
 	           		                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
 		                        			</c:if>
-		                        			<c:if test="${docType ne '001'}">
+		                        			<c:if test="${docType ne '001' || (docType eq '001' && not isOuterForm)}">
 					                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
            		                            	<p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
            		                            	<p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>

@@ -256,4 +256,8 @@ public interface EzCommonService {
 	public void createMenuTenantConfig() throws Exception;
 
 	public void addPassAprLineFlag() throws Exception;
+	
+	public void addFormSihangTypeColumn() throws Exception;
+	
+	public void insertAutoSendOfferFlag() throws Exception;
 }

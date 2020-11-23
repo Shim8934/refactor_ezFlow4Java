@@ -2934,4 +2934,32 @@
 			PASSAPRLINEFLAG  VARCHAR(4) DEFAULT 'N' COMMENT '기결재통과플래그'
 	</statement>
 	
+    <select id="EzCommonDAO.checkFormSihangTypeColumn">
+        SELECT 
+            SIHANGTYPE
+        FROM 
+            TBL_FORMINFO
+        LIMIT 1
+    </select>
+    <statement id="EzCommonDAO.updateFormSihangTypeColumn">
+        ALTER TABLE 
+            TBL_FORMINFO
+        ADD COLUMN 
+            SIHANGTYPE VARCHAR(10) DEFAULT '' COMMENT '전자결재G 시행문 타입'
+    </statement>
+    
+    <select id="EzCommonDAO.checkAutoSendOfferFlag" resultClass="int">
+        SELECT 
+            COUNT(*) 
+        FROM 
+            TBL_TENANT_CONFIG 
+        WHERE 
+            PROPERTY_NAME = 'autoSendOfferFlag' 
+        AND 
+            TENANT_ID = 0
+    </select>
+    <insert id="EzCommonDAO.insertAutoSendOfferFlag">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION,CONFIG_NAME,REGDATE,CONFIG_TYPE) VALUES 
+        (0, 'autoSendOfferFlag', '0', '자동발송의뢰 사용 시 기안부서 최종결재가 끝나면 기안자의 미처리문서함에 도착한다. 0: 자동발송의뢰 사용안함, 1: 자동발송의뢰 사용함 (내부시행문, 민원인시행문만 자동발송의뢰) (default: 0)', '내부시행문 자동발송의뢰 옵션', '2020-11-23 00:00:00.000', '전자결재G')
+    </insert>
 </sqlMap>

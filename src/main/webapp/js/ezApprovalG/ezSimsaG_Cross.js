@@ -1369,8 +1369,8 @@ return str_temp;
 function setMenuDisable(id, flag) {
     if (document.getElementById(id) != null) {
         if (flag)
-            document.getElementById(id).disabled = true;
+            document.getElementById(id).style.display = "";
         else
-            document.getElementById(id).disabled = false;
+            document.getElementById(id).style.display = "none";
     }
 }

@@ -2506,6 +2506,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String formDescript = doc.getElementsByTagName("FormDescript").item(0).getTextContent();
 		String formKind = doc.getElementsByTagName("FormKind").item(0).getTextContent();
 		
+		String formSihangType = doc.getElementsByTagName("SIHANGTYPE").item(0).getTextContent();
+		
 		/* 2020-07-16 홍승비 - 전자결재 일반버전에서도 연동양식을 사용할 수 있도록 수정 */
 		if (approvalFlag.equals("S")) {
 			keepPeriod = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
@@ -2581,6 +2583,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_PREFORMFLAG", useReform ? "Y" : "N");
 		// 양식 상세옵션
 		map.put("v_formAprOption", formAprOption);
+		map.put("v_FORMSIHANGTYPE", formSihangType);
 
 		if (formID.equals("")) {
 			formID = generateNextFormId(companyID, userInfo.getTenantId());

@@ -9135,6 +9135,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			listType = "001";
 			recordListVO.setUsePublicFlag(true);
 			break;
+		case "23" :	// 미처리문서
+		    listType = "001";
+		    recordListVO.setUsePublicFlag(true);
+		    break;
 		}
 		
 		if (recordListVO.isUsePublicFlag()) {
@@ -9418,10 +9422,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						//int doclength = docXML1.getElementsByTagName("ROW").getLength();
 						resultXML.append("<DATA19><![CDATA[" + makeListField(docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent()) + "]]></DATA19>");
 						resultXML.append("<DATA20></DATA20>");
-						
 					}
 				}
-				
 				
 				if (fieldName.toUpperCase().equals("ATTACHFLAG")) {
 					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("ATTACHFLAG").item(k).getTextContent() + "</HASATTACHYN>");
@@ -21401,6 +21403,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String sendOfferCheck(String docID, String userID, String string, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("sendOfferCheck started");
+		
+		String autoSendOfferFlag = ezCommonService.getTenantConfig("autoSendOfferFlag", tenantID);
 
 		StringBuilder rtnVal = new StringBuilder("");
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -21453,7 +21457,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			int tempCount2 = ezApprovalGDAO.sendOfferCheck_EndReceipt(map);
 			
 			if(tempCount2 <= 0){
-				rtnVal.append("<RESULT>NORECEIPT</RESULT>");
+			    if ("1".equals(autoSendOfferFlag)) {
+			        List<String> receiptIDs = ezApprovalGDAO.sendOfferCheck_EndReceipt2(map);
+			        
+			        if(receiptIDs.size() == 0){
+			            rtnVal.append("<RESULT>NORECEIPT</RESULT>"); //내부발송
+			        } else {
+			            if (receiptIDs.get(0).startsWith("Address")) {
+			                rtnVal.append("<RESULT>NORECEIPADDR</RESULT>"); //민원인발송
+			            } else {
+			                rtnVal.append("<RESULT>NORECEIPTOUTER</RESULT>"); //외부발송
+			            }
+			        }
+			    } else {
+			        rtnVal.append("<RESULT>NORECEIPTOUTER</RESULT>");
+			    }
 			}
 		}
 		if(rtnVal.toString().equals("")){
@@ -21462,7 +21480,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	        if (howToSendOffer.equals("1")) {
 	        	rtnVal.append("<RESULT>TOKIAN</RESULT>");
 			}else{
-				rtnVal.append("<RESULT>TRUE</RESULT>");
+			    if ("1".equals(autoSendOfferFlag)) {
+                    List<String> receiptIDs = ezApprovalGDAO.sendOfferCheck_EndReceipt2(map);
+                    
+                    if(receiptIDs.size() == 0){
+                        rtnVal.append("<RESULT>RECEIPT</RESULT>"); //내부발송,민원인발송
+                    } else {
+                        if (receiptIDs.get(0).startsWith("Address")) {
+                            rtnVal.append("<RESULT>RECEIPADDR</RESULT>"); //외부발송
+                        } else {
+                            rtnVal.append("<RESULT>RECEIPTOUTER</RESULT>"); //외부발송
+                        }
+                    }
+			    } else {
+			        rtnVal.append("<RESULT>RECEIPTOUTER</RESULT>");
+			    }
+//				rtnVal.append("<RESULT>TRUE</RESULT>");
 			}
 		}
 
@@ -23973,7 +24006,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.updateDoSendExpAprDocInfo(map);
 		}
 	   int receivedSn = ezApprovalGDAO.getReceiptInfo_receivesNm(map);
-	   receivedSn += 1;
+//	   receivedSn += 1;
 	   if (!gFlag.equals("G")) {
 		   receivedSn = 0;
 	   }
@@ -31596,5 +31629,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("isTmpDocAprStateOK ended.");
 		
 		return result;
+	}
+	
+	@Override
+	public boolean isOuterForm(String formID, String companyID, int tenantID) throws Exception {
+	    logger.debug("isOuterForm started.");
+	    logger.debug("### formID=" + formID + ", companyID=" + companyID + ", tenantID=" + tenantID);
+	    
+	    boolean isOuterForm = false;
+	    
+	    if (formID != null && !formID.isEmpty()) {
+	        String formInfoXmlStr = getFormInfoDetail(formID, companyID, tenantID);
+	        Document formInfoXml = commonUtil.convertStringToDocument(formInfoXmlStr);
+	        
+	        if (formInfoXml.getElementsByTagName("SIHANGTYPE") != null) {
+	            String sihangType = formInfoXml.getElementsByTagName("SIHANGTYPE").item(0).getTextContent().trim();
+	            if ("outer".equalsIgnoreCase(sihangType)) {
+	                isOuterForm = true;
+	            }
+	        }
+	    }
+        
+        logger.debug("isOuterForm ended.");
+        
+        return isOuterForm;
 	}
 }

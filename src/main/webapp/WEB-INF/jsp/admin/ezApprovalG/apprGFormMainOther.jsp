@@ -102,7 +102,10 @@
 					$(".approvalS").hide();
 					$(".approvalG").show();
 				}
-		        
+				
+				if (approvalFlag === "G" && document.querySelector("#selFormKind").value === "001") {
+					document.querySelector("#selSihangType").style.display = "";
+				}
 		        document.getElementById("1tab1").setAttribute("class", "tabon");
 		        Tab1_SelectID = "1tab1";
 		        ChangeTab(document.getElementById("1tab1"));
@@ -291,6 +294,19 @@
 									if (document.getElementById(OptArr[i]) != null) {
 										document.getElementById(OptArr[i]).checked = true;
 									}
+								}
+							}
+
+							if (result.vo.sihangType) {
+								document.querySelector("#selSihangType").value = result.vo.sihangType;
+							} else {
+								document.querySelector("#selSihangType").value = "inner";
+							}
+							if (approvalFlag === "G") {
+								if (document.querySelector("#selFormKind").value === "001") {
+									document.querySelector("#selSihangType").style.display = "";
+								} else {
+									document.querySelector("#selSihangType").style.display = "none";
 								}
 							}
 			            }
@@ -1074,7 +1090,14 @@
 					$("#ApvForm_sub5").hide();		        
 		        } else {
 		        	$("#ApvForm_sub5").show();
-		        }
+				}
+				
+				if (approvalFlag === "G" && value === "001") {
+					document.querySelector("#selSihangType").style.display = "";
+				} else {
+					document.querySelector("#selSihangType").style.display = "none";
+					document.querySelector("#selSihangType").value = "inner";
+				}
 			}
 			
 			//양식 세부설정 기본값 설정
@@ -1173,7 +1196,13 @@
                     </td>
                     <th style="width:100px; text-align:center"><spring:message code='ezApproval.t758'/></th>
                     <td style="width:40%;" colspan="5">
-                        <select id="selFormKind" name="selFormKind" style="width: 100%;" onchange="changeSelFormKind(this.value)">${docType}</select>
+						<div style="width: 100%; display: flex; justify-content: space-between;">
+							<select id="selFormKind" name="selFormKind" style="flex: 2;" onchange="changeSelFormKind(this.value)">${docType}</select>
+							<select id="selSihangType" name="selSihangType" style="flex: 1; margin-left: 2px; display:none;">
+								<option value="inner" selected>내부</option>
+								<option value="outer">외부</option>
+							</select>
+						</div>
                     </td>
                 </tr>
                 <tr>
