@@ -1552,6 +1552,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			cnt = Integer.parseInt(request.getParameter("cnt"));
 		}
 		
+		if (cnt == 0) {
+			return "";
+		}
+		
 		String realPath = commonUtil.getRealPath(request);
 		String[] pFileName = new String[cnt];
 		Long[] fileSize = new Long[cnt];

@@ -5436,11 +5436,7 @@
    			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
    			]]>		 	
    		WHERE 
-   			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
-   		AND 
-   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-		AND
-		    TBL_ENDAPRDOCINFO.COMPANYID = #companyID# 
+   			1 = 1
 		<isNotEmpty property="v_STARTDATE1"> 
    		<![CDATA[
  				AND   
@@ -5489,6 +5485,10 @@
    		AND 
    			TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%$v_APPROVUSER%$'
    		</isNotEmpty>
+   		AND 
+   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		AND
+		    TBL_ENDAPRDOCINFO.COMPANYID = #companyID# 
 	</select>
 	
 	<select id="EzApprovalGAdminDAO.getSearchDocList" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
@@ -5529,7 +5529,8 @@
 								   		 IFNULL(TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,'') AS SECURITYAPPROVAL,
 								   		 TBL_ENDAPRDOCINFO.COMPANYID,
 								   		 TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 companyName,
-										  TBL_DEPTMASTER.COMPNM2 companyName2
+										 TBL_DEPTMASTER.COMPNM2 companyName2,
+										 TBL_EXPENDAPRDOCINFO.DELFLAG
 
 							   	FROM 
 							   			 TBL_ENDAPRDOCINFO 
@@ -5556,11 +5557,7 @@
 							   	AND
 							   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID		 
 							   	WHERE 
-							   			 TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
-							    AND
-							    		 TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
-							    AND
-		    							TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+							   		1 = 1
 		    					<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
 							   	 	 	   STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')
@@ -5580,7 +5577,11 @@
 							   	 	 AND 
 							   	 	 		ENDDATE <= STR_TO_DATE(#v_ENDDATE2#,'%Y-%m-%d %H:%i:%s')
 							   	 ]]>
-							   	</isNotEmpty>				 
+							   	</isNotEmpty>
+							   	AND
+							    		 TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+							    AND
+		    							TBL_ENDAPRDOCINFO.COMPANYID = #companyID#				 
 							   	<isNotEmpty property="v_DOCNUMBER">
 							   	 	AND 
 							   	 		 DOCNO LIKE '%$v_DOCNUMBER$%'

@@ -1028,6 +1028,20 @@
 		]]>
 	</update>
 	
+	<update id="EzWebFolderDAO.moveRenameFile" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FILE
+			SET
+				FOLDER_ID = #folderId#,
+				FILE_NAME = #newFileName#
+			WHERE
+				FILE_ID = #fileId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+
 	<update id="EzWebFolderDAO.updateDownCnt" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -1258,6 +1272,7 @@
 	
 	<select id="EzWebFolderDAO.getDeptFolderTreeForUser" resultMap="folderSimpleVO">
 		<![CDATA[
+			select distinct * from (
 			SELECT
 				f.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
 				f.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
@@ -1285,7 +1300,7 @@
 			ORDER BY
 				f.FOLDER_NAME1,
 				f.FOLDER_LEVEL ASC,
-				f.FOLDER_STEP  ASC
+				f.FOLDER_STEP  ASC)
 		]]>
 	</select>
 	

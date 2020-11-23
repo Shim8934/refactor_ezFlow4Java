@@ -707,7 +707,17 @@ public class EzEmailMailListController {
 		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
 		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());
 		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		
+		if (startDate == null) {
+			return "";
+		}
+		
 		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+		
+		if (endDate == null) {
+			return "";
+		}
+		
 		String andorStatus = doc.getElementsByTagName("ANDORSTATUS").item(0).getTextContent();
 		String attachStatus = doc.getElementsByTagName("ATTACHSTATUS").item(0).getTextContent();
 		

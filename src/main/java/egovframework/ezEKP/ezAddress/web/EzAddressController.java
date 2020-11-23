@@ -424,6 +424,7 @@ public class EzAddressController{
 		}
 		
 		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
+		boolean useOnlyInnerMail = "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
 		
 		model.addAttribute("addressId", addressId);
 		model.addAttribute("folderId", folderId);
@@ -442,6 +443,7 @@ public class EzAddressController{
 		model.addAttribute("deptAdmin", deptAdmin);
 		model.addAttribute("compAdmin", compAdmin);
 		model.addAttribute("useAnyoneEdit", useAnyoneEdit);
+		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		
 		logger.debug("addressWrite ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId
@@ -2414,6 +2416,10 @@ public class EzAddressController{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String format = request.getParameter("format");
         logger.debug("format=" + format);
+        
+        if (format == null) {
+        	return;
+        }
         
         String fileName = null;
         

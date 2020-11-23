@@ -159,8 +159,14 @@ public class ApprGDocListVO {
 	private String folderName;
 	private String fileState;
 	
+	private String delFlag;
 	
-	
+	public String getDelFlag() {
+		return delFlag;
+	}
+	public void setDelFlag(String delFlag) {
+		this.delFlag = delFlag;
+	}
 	public String getFolderName() {
 		return folderName;
 	}

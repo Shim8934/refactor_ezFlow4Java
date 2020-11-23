@@ -31653,5 +31653,37 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         logger.debug("isOuterForm ended.");
         
         return isOuterForm;
+    }
+	/**
+	 * 현재 진행 문서에 Delflag를 변경하는 함수
+	 * */
+	@Override
+	public String updateDocInfo(String docID, LoginVO userInfo, String companyID, int tenantID, String delFlag, String delInfo) throws Exception {
+	// 문서의 정보를 가져온다. 
+			// mode : APR - 진행, else - 완료,       selected : ALL - 정규스펙, else - 필요한 것만 ";"로 구분.
+		
+		logger.debug("updateDocInfo Started");
+		StringBuilder rtnXML = new StringBuilder();
+		
+		if (docID == null || docID.equals("")) {
+			return "<DATA></DATA>";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		map.put("v_SUMMARY", delInfo);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DELFLAG", delFlag);
+		
+		//재사용 시 END 테이블에서 정보 가져옴
+		
+		logger.debug("updateDocInfo Param : v_DOCID = " + docID + " v_SUMMARY = " + delInfo + " v_TENANTID = " + tenantID + " companyID = " + companyID + "v_DELFLAG = " + delFlag);
+		// 문서 리스트 출력 TBL_APRDOCINFO, TBL_EXPAPRDOCINFO
+		ezApprovalGDAO.updateDocInfo(map);
+		
+		
+		logger.debug("updateDocInfo Ended");
+		return "<RESULT>TRUE</RESULT>";
 	}
 }

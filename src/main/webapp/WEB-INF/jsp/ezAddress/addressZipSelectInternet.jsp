@@ -6,7 +6,14 @@
 	request.setCharacterEncoding("UTF-8");  // 한글깨지면 주석제거
 	
 // 	String confmKey = ${confirmKey}; // 검색API 승인키
+
+	boolean isSecure = request.isSecure();
+
 	String domain = "http://www.juso.go.kr"; // 인터넷망
+	if (isSecure) {
+		domain = "https://www.juso.go.kr";
+	}
+	
 	// ※ 행정망 내에서 운영되는 시스템도 이용 가능합니다. 행정망 서비스를 위한 API 요청URL은 별도로 문의 주시기 바랍니다.(1588-0061)
 	String resultType = "4"; // 검색결과 화면 출력유(1 : 도로명, 2 : 도로명+지번, 3 : 도로명+상세건물명, 4 : 도로명+지번+상세건물명)
 %>

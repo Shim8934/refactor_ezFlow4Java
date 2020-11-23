@@ -866,6 +866,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		String companyID = request.getParameter("companyID");
+		
+		if (companyID == null) {
+			return "";
+		}
+		
 		String initDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm"), userInfo.getOffset(), false);
 		String flag = request.getParameter("flag");
 

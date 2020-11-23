@@ -597,6 +597,11 @@ public class EzCommonController extends EgovFileMngUtil{
 		logger.debug("downloadAttach started");
 
 		String filePath = request.getParameter("filePath");
+		
+		if (filePath == null) {
+			return;
+		}
+		
 		String fileName = "";
 //		String realPath = commonUtil.getRealPath(request);
 		

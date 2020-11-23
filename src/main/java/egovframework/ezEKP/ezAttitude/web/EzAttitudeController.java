@@ -2398,6 +2398,11 @@ public class EzAttitudeController {
 		String font = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
 		String userId = userInfo.getId();
 		String attitudeId = request.getParameter("attitudeId");
+		
+		if (attitudeId == null) {
+			return "";
+		}
+		
 		String companyID = request.getParameter("companyID");
 		String typeId = request.getParameter("typeId");
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");

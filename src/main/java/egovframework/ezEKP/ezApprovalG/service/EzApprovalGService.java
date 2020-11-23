@@ -713,4 +713,6 @@ public interface EzApprovalGService {
 	public String isTmpDocAprStateOK(String pDocSN, String userID, int tenantID, String companyID) throws Exception;
 
 	public boolean isOuterForm(String formID, String companyID, int tenantID) throws Exception;
+	
+	public String updateDocInfo(String docID, LoginVO userInfo, String companyID, int tenantID, String delFlag, String delInfo) throws Exception;
 }
