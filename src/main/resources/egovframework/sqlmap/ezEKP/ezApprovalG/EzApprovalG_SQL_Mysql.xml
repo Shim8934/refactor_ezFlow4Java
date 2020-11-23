@@ -32106,10 +32106,9 @@
     <select id ="EzApprovalG.getLeftDocCount_new" parameterClass="Map" resultClass="egovMap" >
 		SELECT 
 			*
-		FROM
-			(SELECT
+		FROM (SELECT
 				SUM(CASE WHEN 
-						(A.APR = TRUE AND (A.APRSTATE = '002' OR A.APRSTATE = '005' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015')
+						(A.APR = TRUE AND (A.APRSTATE = '002' OR A.APRSTATE = '005') AND A.APRTYPE != '015')
 					OR
 						(A.APR = FALSE AND A.APRTYPE = '007' AND (A.APRSTATE = '002' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015')
 					THEN A.COUNT ELSE 0 END
@@ -32128,28 +32127,13 @@
 	            D.`COMPANYID` = L.`COMPANYID`
 	        WHERE
 	          		L.APRTYPE != '015'
-	          	AND D.DOCSTATE != '017'
+	          	AND
+	          		L.APRSTATE IN ('002', '005')		
 	        <isEqual property="MineViewYN" compareValue="YES">
 	           	AND	L.APRSTATE != '001'
 	        </isEqual>
 	           	AND 
-			        (
 					L.`APRMEMBERID` = #v_USERID#
-					<isNotEmpty property="proxyList">
-						OR 
-							(
-								L.`APRMEMBERID` IN 
-								<iterate property="proxyList" open="(" close=")" conjunction=",">
-									#proxyList[].id#
-								</iterate>
-							AND
-								L.aprmemberdeptid IN
-								<iterate property="proxyList" open="(" close=")" conjunction=",">
-									#proxyList[].dept#
-								</iterate>
-							)
-					</isNotEmpty>
-					)    
 	        <![CDATA[
 	        	AND 
 	                STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
@@ -32203,31 +32187,11 @@
 	        AND 
 	            D.`COMPANYID` = L.`COMPANYID` 
 	   		WHERE
-	   			D.STARTDATE IS NOT NULL
-	   		AND 
-	   			D.DOCSTATE <> '017' 	
-	   		AND 
+	   			D.STARTDATE IS NOT NULL	
+	   		AND
 	   			L.APRTYPE <> '015' 
-	   		]]>		
-	   		AND	
-	   			(
-					L.`APRMEMBERID` = #v_USERID#
-					<isNotEmpty property="proxyList">
-						OR 
-							(
-								L.`APRMEMBERID` IN 
-								<iterate property="proxyList" open="(" close=")" conjunction=",">
-									#proxyList[].id#
-								</iterate>
-							AND
-								L.aprmemberdeptid IN
-								<iterate property="proxyList" open="(" close=")" conjunction=",">
-									#proxyList[].dept#
-								</iterate>
-							)
-					</isNotEmpty>
-				)
-			<![CDATA[		  
+			AND 
+				L.`APRMEMBERID` = #v_USERID#	  
 	   		AND 
 	   			D.DocState <> '017'
 	   		AND 
@@ -32261,7 +32225,7 @@
 							CN = #v_USERID#
 						AND
 							TENANT_ID = #v_TENANTID# 
-						)					
+						)							
         ]]>) AS '3', <!--기안한 문서-->
 			(
 		   		SELECT 
@@ -32608,14 +32572,25 @@
 		</isEqual> <!-- 공유결재 -->
 		FROM (
 			SELECT
+				Z.DOCID,
+				Z.APRSTATE,
+				Z.FUNCTIONTYPE,
+				Z.APRTYPE,
+				Z.DOCSTATE,
+				Z.APRMEMBERSN,
+				Z.APRMEMBERID,
+				APR,
+				COUNT(Z.DOCID) COUNT
+			FROM
+			(SELECT
+			    D.`DOCID`,
 				L.`APRSTATE`,
 				D.`FUNCTIONTYPE`,
 				L.`APRTYPE`,
-				D.`DOCSTATE`,
+				CASE WHEN L.`APRTYPE` = '007' AND  D.`DOCSTATE` = '002' THEN '017' ELSE D.DOCSTATE END AS DOCSTATE,
 				L.`APRMEMBERSN`,
 				L.`APRMEMBERID`,
-				TRUE AS APR,
-				COUNT(D.`DOCID`) AS COUNT
+				TRUE AS APR
 			FROM
 				tbl_aprdocinfo D
 			JOIN 
@@ -32626,6 +32601,8 @@
 				D.`TENANT_ID` = L.`TENANT_ID`
 			AND 
 				D.`COMPANYID` = L.`COMPANYID`
+			AND
+				L.APRSTATE IN ( '002', '005')	
 			WHERE
 				(
 					L.`APRMEMBERID` = #v_USERID#
@@ -32646,29 +32623,56 @@
 				)
 			<![CDATA[
 				AND 
-					STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
+					D.STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
 				AND 
-					STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
+					D.STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
+				AND 
+					D.STARTDATE IS NOT NULL	
 			]]>
+				
 				AND 
 					D.TENANT_ID = #v_TENANTID#
+				AND 
+					D.COMPANYID IN (
+						SELECT 
+							EXTENSIONATTRIBUTE2 
+						FROM 
+							TBL_DEPTMASTER 
+						INNER JOIN 
+							TBL_ADDJOBMASTER 
+						ON
+							(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+							AND 
+							TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+						WHERE 
+							TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+						AND 
+							TBL_ADDJOBMASTER.CN = #v_USERID#
+						UNION ALL
+						SELECT 
+							PHYSICALDELIVERYOFFICENAME
+						FROM
+							TBL_USERMASTER
+						WHERE
+							CN = #v_USERID#
+						AND
+							TENANT_ID = #v_TENANTID# 
+						)	
 				GROUP BY 
+				    D.DOCID,
 					L.`APRSTATE`,
 					D.`FUNCTIONTYPE`,
-					L.`APRTYPE`,
-					D.`DOCSTATE`,
-					L.`APRMEMBERSN`,
-					L.`APRMEMBERID`
+					`DOCSTATE`
 		UNION ALL
 			SELECT
+				D.`DOCID`,
 				L.`APRSTATE`,
 				D.`FUNCTIONTYPE`,
 				L.`APRTYPE`,
-				D.`DOCSTATE`,
+				CASE WHEN L.`APRTYPE` = '007' AND  D.`DOCSTATE` = '002' THEN '017' ELSE D.DOCSTATE END AS DOCSTATE,
 				L.`APRMEMBERSN`,
 				L.`APRMEMBERID`,
-				FALSE AS APR,
-				COUNT(D.`DOCID`) AS COUNT
+				FALSE AS APR
 			FROM
 				tbl_endaprdocinfo D
 			JOIN 
@@ -32687,6 +32691,10 @@
 				D.TENANT_ID = E.TENANT_ID
 			AND
 				D.COMPANYID = E.COMPANYID
+			AND
+				L.APRSTATE = '002'
+			AND 
+				L.APRTYPE = '007'		
 			WHERE
 				(
 					L.`APRMEMBERID` = #v_USERID#
@@ -32707,19 +32715,48 @@
 				)
 			<![CDATA[
 				AND 
-					STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
+					D.STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
 				AND 
-					STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
+					D.STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
+				AND 
+					D.STARTDATE IS NOT NULL	
 			]]>
 				AND 
 					D.TENANT_ID = #v_TENANTID#
+				AND 
+					D.COMPANYID IN (
+						SELECT 
+							EXTENSIONATTRIBUTE2 
+						FROM 
+							TBL_DEPTMASTER 
+						INNER JOIN 
+							TBL_ADDJOBMASTER 
+						ON
+							(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+							AND 
+							TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+						WHERE 
+							TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+						AND 
+							TBL_ADDJOBMASTER.CN = #v_USERID#
+						UNION ALL
+						SELECT 
+							PHYSICALDELIVERYOFFICENAME
+						FROM
+							TBL_USERMASTER
+						WHERE
+							CN = #v_USERID#
+						AND
+							TENANT_ID = #v_TENANTID# 
+						)		
 				GROUP BY
+					D.DOCID,
 					L.`APRSTATE`,
 					D.`FUNCTIONTYPE`,
-					L.`APRTYPE`,
-					D.`DOCSTATE`,
-					L.`APRMEMBERSN`,
-					L.`APRMEMBERID`) A) B
+					`DOCSTATE`) Z 
+				GROUP BY
+					Z.DOCID
+					) A ) B
 	</select>
 	
 	<insert id="EzApprovalG.copyOpinionsFromOrgDoc" parameterClass="map">
@@ -32908,5 +32945,33 @@
 		   		(TRIM(APRSTATE) = ''  OR  TRIM(APRSTATE) IS NULL  OR  APRSTATE IS NULL)
 		]]>
 	</select>
+	<update id="EzApprovalG.updateDocInfo" parameterClass="Map">
+		<isEqual property="v_DELFLAG" compareValue="Y">
+			UPDATE	
+					TBL_EXPENDAPRDOCINFO
+				SET		
+						DELFLAG	=	#v_DELFLAG#, 
+						SUMMARY = 	#v_SUMMARY#
+				 WHERE  
+		     		DOCID = #v_DOCID#
+		     AND
+		     		TENANT_ID =#v_TENANTID#
+		     AND
+		     		COMPANYID = #companyID#
+		</isEqual>
+		<isNotEqual property="v_DELFLAG" compareValue="Y">
+			UPDATE	
+					TBL_EXPENDAPRDOCINFO
+				SET		
+						DELFLAG	=	NULL, 
+						SUMMARY = 	#v_SUMMARY#
+				 WHERE  
+		     		DOCID = #v_DOCID#
+		     AND
+		     		TENANT_ID =#v_TENANTID#
+		     AND
+		     		COMPANYID = #companyID#
+		</isNotEqual>
+	</update>
 	
 </sqlMap>
