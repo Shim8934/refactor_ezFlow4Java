@@ -14,8 +14,9 @@
     			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu li").css("display", "none");
     			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu").append(btn_popup);
     			
-    			if ($("#ifrmPreViewH").contents().find("#messageWHWPEditor") != null) {
-    				if($("#ifrmPreViewH").contents().find("#messageWHWPEditor").css("height") == "800px"){
+    			if ($("#ifrmPreViewH").contents().find("#messageWHWPEditor").length > 0) {
+    				var height = $("#ifrmPreViewH").contents().find("#messageWHWPEditor").css("height");
+    				if(height == "800px" || height == "803px"){
     					$("#ifrmPreViewH").contents().find("#messageWHWPEditor").css("height", "540px");
     				}
     			}
