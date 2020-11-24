@@ -124,6 +124,13 @@
 		        }
 		    }
 		    
+		 	// 2020-11-23 더블클릭 이벤트 추가 - 박기범
+		    function btnViewTask_onclick() {
+		        var tempDeptID = DeptID;
+		        DeptID = "";
+		        btnViewTaskInfo_onclick();
+		        DeptID = tempDeptID;
+		    }
 		</script>
 	</head>
 	<body class="mainbody">

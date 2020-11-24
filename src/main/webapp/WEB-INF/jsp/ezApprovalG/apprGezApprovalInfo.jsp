@@ -215,6 +215,8 @@
 	        var useDynamicAprLine = "<c:out value ='${useDynamicAprLine}'/>";
 			var passAprLine = "";
 			var isOuterForm = ${isOuterForm};
+			// 2020-11-23 등급 툴팁 추가 - 박기범
+	        var tooltipLevelFlag = "Y"
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -361,6 +363,9 @@
                 if (pReDraftFlag == "SUSIN") {
                 	$('.openGov').hide();
 				}
+                
+             	// 2020-11-23 등급 툴팁 추가 - 박기범
+                giveTooltipLevel();
 	        };
 	
 	        function KeEventControl(obj) {
@@ -2224,6 +2229,21 @@
 					$("#passAprLine").prop("checked", true);
 				}
 			}
+	    	
+	    	// 2020-11-23 공개등급 tooltip 추가 - 박기범
+	    	function giveTooltipLevel() {
+	    		if (tooltipLevelFlag != "Y"){
+	    			return;
+	    		}
+	    		document.querySelector('input[name=selSecLevel1]').nextSibling.setAttribute('title','법률 또는 명령에 의하여 비밀로 유지되거나 비공개사항으로 규정된 항목'														);
+	    		document.querySelector('input[name=selSecLevel2]').nextSibling.setAttribute('title','공개될 경우 국가안보,국방,통일 외교관계 등 국익을 해할 우려가 있는 정보'													);
+	    		document.querySelector('input[name=selSecLevel3]').nextSibling.setAttribute('title','공개될 경우 국민의 생명,신체,재산 등 공공안전 및 이익을 해할 우려가 있는 정보'													);
+	    		document.querySelector('input[name=selSecLevel4]').nextSibling.setAttribute('title','수사,재판,범죄예방 등의 관련정보로서 공개될 경우 직무수행이 곤란하거나 형사피고인의 공정한 재판받을 권리를 침해할 우려가 있는 정보'					);
+	    		document.querySelector('input[name=selSecLevel5]').nextSibling.setAttribute('title','감사,감독,검사,시험,규제,입찰계약,기술개발,인사관리,의사결정 또는 내부검토과정에\n있는 사항으로서 공개될 경우 업무수행 등에 지장을 초래할 우려가 있는 정보'	);
+	    		document.querySelector('input[name=selSecLevel6]').nextSibling.setAttribute('title','이름,주민등록번호 등에 의해 특정인을 식별할 수 있는 개인에 관한 정보'														);
+	    		document.querySelector('input[name=selSecLevel7]').nextSibling.setAttribute('title','법인,단체 또는 개인의 영업상 비밀에 관한 정보로서 공개될 경우 법인 등의 정당한 이익을 해할 우려가 있는 정보'								);
+	    		document.querySelector('input[name=selSecLevel8]').nextSibling.setAttribute('title','공개될 경우 부동산투기,매점매석 등으로 특정인에게 이익 보는 불이익을 줄 우려가 있는 정보'											);
+	    	}
 
 	    </script>
 	    <style>
@@ -2876,11 +2896,6 @@
 		                    </select>
 		                </td>
 		            </tr>
-		            <tr style="display:none">
-		                <th><spring:message code='ezApprovalG.t876'/></th>
-		                <td>
-							<input type="text" name="txtLimitRange" id="txtLimitRange" class="text" style="Width: 170px; font-size: 9pt"><span>(<spring:message code='ezApprovalG.t1209'/></span>
-						</td>
 					<tr style="display:none">
 						<th><spring:message code='ezApprovalG.t979'/></th>
 						<td>
@@ -2940,7 +2955,7 @@
 							* 35자 이내로 입력해주세요
 						</td>
 					</tr>
-		            <tr class="openGov">
+		            <tr>
 		                <th><spring:message code='ezApprovalG.t989'/></th>
 		                <td>
 		                    <div style="padding-top: 5px; padding-left: 3px;">
@@ -2953,11 +2968,17 @@
 		                        <input type="checkbox" name="selSecLevel7" id="selSecLevel7" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 7<spring:message code='ezApprovalG.t991'/></span>
 		                        <input type="checkbox" name="selSecLevel8" id="selSecLevel8" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 8<spring:message code='ezApprovalG.t991'/></span>
 		                    </div>
-		                    <div>
+		                    <div class="openGov">
 		                         <textarea id="txt_Reason" name="txt_Reason" style="height: 40px; width: 100%; box-sizing: border-box; -moz-box-sizing: border-box;"></textarea>
 		                    </div>
 		                </td>
-		            </tr>					
+		            </tr>
+		            <tr>
+		                <th><spring:message code='ezApprovalG.t876'/></th>
+		                <td>
+							<input type="text" name="txtLimitRange" id="txtLimitRange" class="text" style="Width: 170px; font-size: 9pt"><span>(<spring:message code='ezApprovalG.t1209'/></span>
+						</td>
+					</tr>
 		            <tr class="openGov">
 		                <th>원문공개열람제한일</th>
 		                <td>
