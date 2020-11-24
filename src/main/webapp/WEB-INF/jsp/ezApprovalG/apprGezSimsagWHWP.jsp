@@ -5,7 +5,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title><spring:message code='ezApprovalG.t257'/></title>
+    <c:choose>
+        <c:when test="${isConvSihang}">
+            <title>시행문변환</title>
+        </c:when>
+        <c:otherwise>
+            <title><spring:message code='ezApprovalG.t257'/></title>
+        </c:otherwise>
+    </c:choose>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
@@ -19,6 +26,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezSimsaG_HWP.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendOffer_Cross.js')}"></script>
     <script type="text/javascript">
     	var pDocID = "<c:out value = '${docID}'/>";
     	var pDocHref = "<c:out value = '${docHref}'/>";
@@ -89,6 +97,7 @@
         var orgCompanyID = "<c:out value='${orgCompanyID}' />";
         var docTitle = "";
         var SaveHtml = "";
+        var isConvSihang = ${isConvSihang};
         
         function btnPrint_onclick() {
         	message.PrintDocument();
@@ -105,9 +114,9 @@
         }
         
         var ezapropinion_cross_dialogArguments = new Array();
-        function OpenInformationUI(pInformationContent, CompleteFunction) {
+        function OpenInformationUI(pInformationContent, CompleteFunction, pType) {
             var parameter = pInformationContent;
-            var url = "/ezApprovalG/ezAprOpinion.do";
+            var url = "/ezApprovalG/ezAprOpinion.do?type=" + pType;
             //var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
             //var RtnVal = window.showModalDialog(url, parameter, feature);
             //return RtnVal;
@@ -180,6 +189,12 @@
         function window_onload() {
             try {
                 window.onresize();
+                
+                if (isConvSihang) {
+                    setMenuDisable("btnOpinion", true);
+                } else {
+                    setMenuDisable("btnReject", true);
+                }
             } catch (e) {
                 alert("<spring:message code='ezApprovalG.t1373'/>" + e.description);
                 hideProgress();
@@ -247,7 +262,11 @@
 
                     ObjGPKI.ServerName = "ldap.gcc.go.kr";
 
-                    setAttachInfo(pOrgDocID, "END", lstAttachLink);
+                    if (isConvSihang) {
+                        setAttachInfo(pDocID, "END", lstAttachLink);
+                    } else {
+                        setAttachInfo(pOrgDocID, "END", lstAttachLink);
+                    }
                     setArrAttachInfo();
                     GetAprDeptXML();
                     GetExchInfo();
@@ -285,20 +304,27 @@
         }
 
         function btnSetReceivLine_onclick() {
-        	var url = "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID + "&ext=" + ext;
+            var convSihangParam = isConvSihang ? "&mode=END" : "";
+            var url = "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID + "&ext=" + ext + convSihangParam;
             //var feature = "status:no;dialogWidth:540px;dialogHeight:230px;help:no;scroll:no;edge:sunken";
             //var ret = window.showModalDialog(url, "", feature);
             DivPopUpShow(720, 240, url);
         }
 
+        var aprendopinion_dialogArgument = [];
         function btnOpinion_onclick() {
-            var parameter = new Array();
-            parameter[0] = pOrgDocID;
+            var parameter = [];
+            parameter[0] = pDocID;
             parameter[1] = "Show";
+            parameter[2] = orgCompanyID;
+    
+            aprendopinion_dialogArgument[0] = parameter;
+            aprendopinion_dialogArgument[1] = btnOpinion_onclick_Complete;
 
-            var url = "/myoffice/ezApprovalG/formContainer/AprEndOpinion.aspx";
-            var feature = "status:no;dialogWidth:387px;dialogHeight:304px;scroll:no;edge:sunken"
-            var ret = window.showModalDialog(url, parameter, feature);
+            DivPopUpShow(530, 520, "/ezApprovalG/aprEndOpinion.do");
+        }
+        function btnOpinion_onclick_Complete() {
+            DivPopUpHidden();
         }
 
         function btnSend_onclick() {
@@ -330,7 +356,11 @@
         
         function Send_OpenUI2(html) {
         	SaveHtml = html;
-            SaveFile();
+            var saveFileRtnVal = SaveFile();
+            if (!saveFileRtnVal) {
+                OpenAlertUI("문서 저장에 실패했습니다.");
+                return;
+            }
 
             var rtnVal = "FALSE";
             if (isExternal) {
@@ -550,6 +580,31 @@
         }
 
         function SetContainer() {
+            var docID = pDocID;
+            var orgDocID = pOrgDocID;
+
+            if (isConvSihang) {
+                var simsaUserInfo = [];
+                simsaUserInfo[0] = "OK";
+                simsaUserInfo[1] = arr_userinfo[1];
+                simsaUserInfo[2] = arr_userinfo[11];
+                simsaUserInfo[3] = arr_userinfo[13];
+                simsaUserInfo[4] = arr_userinfo[4];
+                simsaUserInfo[5] = arr_userinfo[15];
+                simsaUserInfo[6] = arr_userinfo[12];
+                simsaUserInfo[7] = arr_userinfo[16];
+                simsaUserInfo[8] = arr_userinfo[14];
+
+                var rtnJson = SendOfferForConvSihang(simsaUserInfo, pDocID, pDocHref, arr_userinfo[1]);
+                if (!rtnJson.state) {
+                    OpenAlertUI(rtnJson.msg);
+                    return;
+                }
+
+                docID = rtnJson.newDocID;
+                orgDocID = pDocID;
+            }
+            
         	var result = "";
 	    	
     		$.ajax({
@@ -558,22 +613,27 @@
 	    		async : false,
 	    		url : "/ezApprovalG/sendOfferAprove.do",
 	    		data : {
-	    			docID : pDocID,
-	    			orgDocID  : pOrgDocID,
+                    docID : docID,
+                    orgDocID  : orgDocID,
 	    			userID : pUserID,
 	    			userName : arr_userinfo[11],
 	    			deptID   : arr_userinfo[4],
 	    			userName2: arr_userinfo[12]
 	    		},
 	    		success: function(xml){
-	    			result = loadXMLString(xml);
+                    var ResultXML = loadXMLString(xml);
+                    result = getNodeText(GetChildNodes(ResultXML)[0]);
 	    		} , error: function() {
 	    			return "FALSE";
 	    		}     			
 	    	});
 	    	 
-	        var ResultXML = result;
-	        return getNodeText(GetChildNodes(ResultXML)[0]);
+            if (isConvSihang && result !== "TRUE") {
+                UndoCreateDoc(docID);
+                UndoUpdateProcessYN(orgDocID);
+            }
+
+            return result;
 	    }
 
         function setBtnDisable() {
@@ -588,45 +648,62 @@
 
 
         function SaveFile() {
-			var result = "";
-			
-			var data = {
-	    			docID : pOrgDocID,
-	    			// formId : pFormID,
-	    			html  : SaveHtml
-				}
-				
-		    $.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/ezApprovalG/saveEndFileHwp.do",
-		    		contentType : "application/json",
-		    		data : JSON.stringify(data),
-		    		success: function(xml){
-		    			result = xml;
-		    		}        			
-		    	});
-			
-	        var reqData = {
-    			docID : pDocID,
-                   // formId : pFormID,
-    			html  :  SaveHtml
-        	}
-	        
-	        $.ajax({
-	    		type : "POST",
-	    		dataType : "text",
-	    		async : false,
-	    		url : "/ezApprovalG/saveFileHWP.do",
-	    		contentType : "application/json",
-	    		data : JSON.stringify(reqData),
-	    		success: function(text){
-	    		}        			
-	    	});
-	        
-	        return result;
+            var result = "";
+            
+            if (isConvSihang) {
+                result = saveEndFile(pDocID, SaveHtml);
+            } else {
+                result = saveEndFile(pOrgDocID, SaveHtml);
+                if (result) {
+                    result = saveIngFile(pDocID, SaveHtml);
+                }
+            }
+            
+            return result;
+        }
 
+        function saveEndFile(pDocID, pHtml) {
+            var result = null;
+            var reqData = {
+                docID : pDocID,
+                html  : pHtml
+            };
+            
+            $.ajax({
+                type : "POST",
+                dataType : "text",
+                async : false,
+                url : "/ezApprovalG/saveEndFileHwp.do",
+                contentType : "application/json",
+                data : JSON.stringify(reqData),
+                success: function(xml){
+                    result = xml;
+                }                   
+            });
+            
+            return result === "SUCCESS";
+        }
+
+        function saveIngFile(pDocID, pHtml) {
+            var result = null;
+            var reqData = {
+                docID : pDocID,
+                html  :  pHtml
+            };
+            
+            $.ajax({
+                type : "POST",
+                dataType : "text",
+                async : false,
+                url : "/ezApprovalG/saveFileHWP.do",
+                contentType : "application/json",
+                data : JSON.stringify(reqData),
+                success: function(xml){
+                    result = xml;
+                }                   
+            });
+            
+            return result === "TRUE";
         }
 
         function GetSealInfo() {
@@ -669,6 +746,8 @@
 	        return result;
 	    }
 
+        var selectSeal_cross_dialogArguments = new Array(); // 관인선택 레이어팝업에 파라미터를 전달할 배열
+        var selectSeal_cross_returnValues = new Array(); // 레이어팝업에서 선택된 관인의 정보를 리턴하는 배열
 	    var tempDeptSealXML;
 	    var tempCompSealXML;
         function btnStamp_onclick() {
@@ -678,51 +757,95 @@
                 return;
             }
 
-            if (!stampFlag) {
+            if (!stampFlag && !NostampFlag) {
                 var DeptSealXML = GetDeptSealInfo();
                 var CompSealXML = GetSealInfo();
+                var sealType = "";
 
                 if (SelectNodes(DeptSealXML, "ROWS/ROW").length > 0 && SelectNodes(CompSealXML, "ROWS/ROW").length > 0) {
-                    var pInformationContent = "<spring:message code='ezApprovalG.t192'/><BR><spring:message code='ezApprovalG.t193'/>";
-                    var Ans = OpenInformationUI(pInformationContent);
-                    if (!Ans) {
-                        SealXML = CompSealXML;
-                    } else {
-                        SealXML = DeptSealXML;
-                    }
+                    var pInformationContent = "관인을 선택하세요.";
+                    var Ans = OpenInformationUI(pInformationContent, Stamp_OpenUI, "seal");
+                    tempDeptSealXML = DeptSealXML;
+                    tempCompSealXML = CompSealXML;
+                    return;
                 } else if (SelectNodes(DeptSealXML, "ROWS/ROW").length <= 0 && SelectNodes(CompSealXML, "ROWS/ROW").length <= 0) {
                     var pAlertContent =  "<spring:message code='ezApprovalG.t194'/><BR><spring:message code='ezApprovalG.t195'/>";
                         OpenAlertUI(pAlertContent);
                         return;
                 } else if (SelectNodes(DeptSealXML, "ROWS/ROW").length > 0) {
                     SealXML = DeptSealXML;
+                    sealType = "dept";
                 } else if (SelectNodes(CompSealXML, "ROWS/ROW").length > 0) {
                     SealXML = CompSealXML;
+                    sealType = "comp";
                 }
 
-                var SealHref = getNodeText(SelectNodes(SealXML, "ROWS/ROW/CELL")[0].getElementsByTagName("DATA2")[0]);
-	            var SealWidth = parseInt(getNodeText(GetChildNodes(SelectNodes(SealXML, "ROWS/ROW/CELL")[1])[0]));
-	            var SealHeight = parseInt(getNodeText(GetChildNodes(SelectNodes(SealXML, "ROWS/ROW/CELL")[2])[0]));
-
-                if (message.FieldExist("sealsign")) {
-                	message.PutFieldText("sealsign", "");
-                	//message.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SealHref), 6);
-                	message.SetFieldBackImage("sealsign", document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SealHref), 6);
-                	SetDocumentElement(message, "surl", SealHref);
-                    SetDocumentElement(message, "swidth", SealWidth);
-                    SetDocumentElement(message, "sheight", SealHeight);
-                    stampFlag = true;
-                    NostampFlag = false;
-                }
+                selectSeal_cross_dialogArguments[0] = sealType; // 회사관인 또는 부서별관인(직인) 타입
+                selectSeal_cross_dialogArguments[1] = SealXML; // 관인정보 XML
+                selectSeal_cross_dialogArguments[2] = Stamp_OpenUI_complete; // 관인 선택 후 레이어팝업 종료 시 동작할 함수
+                DivPopUpShow(350, 290, "/ezApprovalG/selectSeal.do");
             } else {
                 if (message.FieldExist("sealsign")) {
-                	message.PutFieldText("sealsign", "");
-                	message.SetFieldBackImage("sealsign", "");
+                    message.PutFieldText("sealsign", "");
+                    message.SetFieldBackImage("sealsign", "");
                 }
                 stampFlag = false;
+                NostampFlag = false;
             }
         }
 
+        function Stamp_OpenUI(Ans) {
+            DivPopUpHidden();
+            
+            var sealType = "";
+            if (!Ans) {
+                SealXML = tempCompSealXML;
+                sealType = "comp";
+            } else {
+                SealXML = tempDeptSealXML;
+                sealType = "dept";
+            }
+            
+            selectSeal_cross_dialogArguments[0] = sealType; // 회사관인 또는 부서별관인(직인) 타입
+            selectSeal_cross_dialogArguments[1] = SealXML; // 관인정보 XML
+            selectSeal_cross_dialogArguments[2] = Stamp_OpenUI_complete; // 관인 선택 후 레이어팝업 종료 시 동작할 함수
+            DivPopUpShow(350, 290, "/ezApprovalG/selectSeal.do");
+        }
+
+        function Stamp_OpenUI_complete(retVal) {
+            DivPopUpHidden();
+            
+            var SealHref = retVal[0];
+            var SealWidth = retVal[1];
+            var SealHeight = retVal[2];
+            var SealCheck = retVal[3];
+
+            // var fields = message.GetFieldsList();
+            // field = message.GetListItem(fields, "sealsign");
+            
+            if (message.FieldExist("sealsign") && SealCheck != "false") {
+                var signWidth = getPixel(SealWidth) + "px";
+                var signHeight = getPixel(SealHeight) + "px";
+                strimg = "<img src='" + encodeURI(SealHref) + "' border=0 embedding='1' ";
+                strimg = strimg + " width=" + signWidth;
+                strimg = strimg + " height=" + signHeight + ">";
+
+                message.PutFieldText("sealsign", "");
+                message.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SealHref), 5);
+                SetDocumentElement(message, "surl", SealHref);
+                SetDocumentElement(message, "swidth", SealWidth);
+                SetDocumentElement(message, "sheight", SealHeight);
+                stampFlag = true;
+                NostampFlag = false;
+            }
+            else if (SealCheck == "false") {
+                return; // 관인선택 레이어팝업에서 취소버튼을 클릭한 경우
+            }
+            else {
+                alert("<spring:message code='ezApprovalG.t194'/>")
+            }
+        }
+        
         function btnNoStamp_onclick() {
             var strimg;
             if (!message.FieldExist("sealsign")) {
@@ -731,26 +854,27 @@
                 return;
             }
 
-            if (!NostampFlag) {
+            if (!NostampFlag && !stampFlag) {
                 var SealHref = "/files/sealImg/nostamp.gif"
                 var SealWidth = 30;
                 var SealHeight = 10;
 
                 if (message.FieldExist("sealsign")) {
-                	message.PutFieldText("sealsign", "");
-                    //message.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SealHref), 6);
-                    message.SetFieldBackImage("sealsign", document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SealHref), 6);
-                    NostampFlag = true;
+                    message.PutFieldText("sealsign", "");
+                    message.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SealHref), 6);
                     SetDocumentElement(message, "surl", SealHref);
                     SetDocumentElement(message, "swidth", SealWidth);
                     SetDocumentElement(message, "sheight", SealHeight);
+                    NostampFlag = true;
+                    stampFlag = false;
                 }
             } else {
                 if (message.FieldExist("sealsign")) {
-                	message.PutFieldText("sealsign", "");
-                	message.SetFieldBackImage("sealsign", "");
+                    message.PutFieldText("sealsign", "");
+                    message.SetFieldBackImage("sealsign", "");
                 }
                 NostampFlag = false;
+                stampFlag = false;
             }
         }
 
@@ -1299,7 +1423,7 @@
                         <li id="btnNoStamp"><span onclick="return btnNoStamp_onclick()"><spring:message code='ezApprovalG.t222'/></span></li>
                         <li id="btnSend"><span onclick="return btnSend_onclick()"><spring:message code='ezApprovalG.t214'/></span></li>
                         <li id="btnBoard"><span onclick="return btnBoard_onclick()"><spring:message code='ezApprovalG.t215'/></span></li>
-                        <li id="btnReject"><span onclick="return btnReject_onclick()"><spring:message code='ezApprovalG.t49'/></span></li>
+                        <li id="btnReject" style="display: none"><span onclick="return btnReject_onclick()"><spring:message code='ezApprovalG.t49'/></span></li>
                         <li id="btnPrint"><span class='icon16 popup_icon16_print' onclick="return btnPrint_onclick()"></span></li>
                     </ul>
                 </div>

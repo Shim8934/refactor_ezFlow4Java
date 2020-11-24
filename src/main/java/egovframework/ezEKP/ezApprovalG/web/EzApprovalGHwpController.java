@@ -1759,7 +1759,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGdeptRecevuiWHWP";
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/ezSimsaG_WHWP.do", method = RequestMethod.GET)
+	@RequestMapping(value = {"/ezApprovalG/ezSimsaG_WHWP.do", "/ezApprovalG/ezConvSihang_WHWP.do"}, method = RequestMethod.GET)
 	public String ezSimsaG_WHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezSimsaG_WHWP started");
 
@@ -1776,9 +1776,20 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator;
 	    String orgCompanyID = request.getParameter("orgCompanyID");
 
-	    //회사아이디가 기관코드로 안돼있기때문에 지정해줘야됨
-	    String companyID = config.getProperty("config.companyNum");
-	    userInfo.setCompanyID(companyID);
+        boolean isConvSihang = false;
+        if (request.getRequestURI().endsWith("ezConvSihang_WHWP.do")) {
+            isConvSihang = true;
+        }
+        
+        //회사아이디가 기관코드로 안돼있기때문에 지정해줘야됨
+        String companyID = "";
+        if (!isConvSihang) {
+            //기관코드와 회사 아이디가 다를 경우 보정처리.
+            companyID = config.getProperty("config.companyNum");
+        } else {
+            companyID = orgCompanyID;
+        }
+        userInfo.setCompanyID(companyID);
 
 	    model.addAttribute("userInfo", userInfo);
 	    model.addAttribute("docID", docID);
@@ -1791,6 +1802,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    model.addAttribute("Use_ImgTagTOAttah_body", Use_ImgTagTOAttah_body);
 	    model.addAttribute("orgCompanyID", orgCompanyID);
 	    model.addAttribute("docTitle", docTitle);
+	    model.addAttribute("isConvSihang", isConvSihang);
 		
 		LOGGER.debug("ezSimsaG_WHWP ended");
 		

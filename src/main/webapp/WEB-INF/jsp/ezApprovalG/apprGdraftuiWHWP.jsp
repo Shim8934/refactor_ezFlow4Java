@@ -1314,7 +1314,7 @@
 			        ezapprovalinfo_dialogArguments[0] = parameter;
 	                ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 			
-			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "hwp";
+	                var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID;
 			        //var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 			        //var ret = window.showModalDialog(url, parameter, feature);
 			        var ret = window.open(url, '', 'height=750,width=1194,scrollbars=no' + GetOpenPosition(1194, 750));

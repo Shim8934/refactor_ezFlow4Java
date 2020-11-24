@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title><spring:message code='ezApprovalG.t1'/></title>
+	    <title><spring:mebtnApprovalInfo_Completessage code='ezApprovalG.t1'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
@@ -1419,7 +1419,7 @@
 			                        ezapprovalinfo_dialogArguments[0] = parameter;
 			    		            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-			    		            var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+			    		            var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
 			    		            try { OpenWin.focus(); } catch (e) { }
 
 			    			        
