@@ -2105,4 +2105,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.addPassAprLineFlagColumn();
 	}
 	
+    @Override
+    public void addFormSihangTypeColumn() throws Exception {
+        ezCommonDAO.addFormSihangTypeColumn();
+    }
+    
+    @Override
+    public void insertAutoSendOfferFlag() throws Exception {
+        ezCommonDAO.insertAutoSendOfferFlag();
+    }
 }

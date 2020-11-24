@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -96,8 +97,16 @@
 	    </div>
 	    <div class="popup_noti_btnarea"> 
 	   	    <div class="btnposition"> 
-	            <input type="submit"  value="<spring:message code='ezApprovalG.t20'/>" name="btn_OpinionOK" id="Submit1" onClick="return btn_OpinionOK_onclick()" > 
-	            <input type="submit"  value="<spring:message code='ezApprovalG.t119'/>" name="btn_OpinionCANCEL" id="Submit2" onClick="return btn_OpinionCANCEL_onclick()" >
+			   <c:choose>
+			   		<c:when test="${type eq 'seal'}">
+						<input type="submit"  value="부서관인" name="btn_OpinionOK" id="Submit1" onClick="return btn_OpinionOK_onclick()" > 
+						<input type="submit"  value="회사관인" name="btn_OpinionCANCEL" id="Submit2" onClick="return btn_OpinionCANCEL_onclick()" >
+					</c:when>
+					<c:otherwise>
+						<input type="submit"  value="<spring:message code='ezApprovalG.t20'/>" name="btn_OpinionOK" id="Submit1" onClick="return btn_OpinionOK_onclick()" > 
+						<input type="submit"  value="<spring:message code='ezApprovalG.t119'/>" name="btn_OpinionCANCEL" id="Submit2" onClick="return btn_OpinionCANCEL_onclick()" >
+					</c:otherwise>
+			   </c:choose>
 		    </div>
 	        <span class="bl"> </span> <span class="br"></span>
 	    </div>

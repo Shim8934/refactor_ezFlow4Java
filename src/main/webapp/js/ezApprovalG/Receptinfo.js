@@ -7,7 +7,7 @@ function Receptinfo_ini() {
         
         if (approvalFlag == "G") {
         	if (receptGubunYN == "Y") {
-        		if (pDocType == "001") { //시행문
+                if (pDocType == "001" && isOuterForm) { //시행문
         			ChangeReceptTab(document.getElementById("3tab4"));
         			initReceptListView();
         			document.getElementById("3tab4").onclick();

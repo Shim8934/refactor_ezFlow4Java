@@ -554,6 +554,9 @@ function MakeFormInfoXML_Detail() {
 
     if(document.getElementById("hidfileNM").value != "")
     	createNodeAndInsertText(xmlpara, objNode, "HWPFILEPATH", document.getElementById("hidfileNM").value);
+
+    //    
+    createNodeAndInsertText(xmlpara, objNode, "SIHANGTYPE", document.querySelector("#selSihangType").value);    
     
     return getXmlString(xmlpara.childNodes[0]);
 }

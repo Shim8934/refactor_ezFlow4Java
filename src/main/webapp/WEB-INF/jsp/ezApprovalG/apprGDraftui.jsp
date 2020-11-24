@@ -1708,7 +1708,7 @@
 					pGubun = "11";
 				}
 				
-		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "mht";
+		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "mht" + "&formID=" + pFormID;
 		        
 		        if (ListType == "21") {
 		            OpenUrl += "&docSN=" + DocSN;

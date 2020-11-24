@@ -362,6 +362,10 @@
 		                    break;    
 		                case "MYCONTWHO":
 		                    cmdOK_onclick('', "<spring:message code='ezApproval.t990042'/>", "TBL_ENDAPRLINEINFO.AprType = '" + strAprType40 + "' AND TBL_ENDAPRLINEINFO.AprState = '" + strAprState2 + "'");
+							break;
+		                case "UNTREATED":
+							pListTypeValue = "23";
+		                    DocManageMain(pthis.id);
 		                    break;
 		                default:
 		                    break;
@@ -474,6 +478,10 @@
 				                }
 				                else if (listtype == "21") {
 				                    parent.frames["right"].passValLeftMenu("21");
+				                    parent.frames["right"].checkBujaeInfo();
+				                }
+				                else if (listtype == "23") {
+				                    parent.frames["right"].passValLeftMenu("23");
 				                    parent.frames["right"].checkBujaeInfo();
 				                }
 				                else {
@@ -837,12 +845,26 @@
 	                	}
 		            } catch (e) { }
 		            
-		            // 공유결재문서
-		            if (pListTypeValue != "11") {
-		            	if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) > 0)
-		            		count11.innerHTML = "&nbsp;&nbsp;" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(11));
+					try {
+						// 공유결재문서
+						if (pListTypeValue != "11") {
+							if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) > 0)
+								count11.innerHTML = "&nbsp;&nbsp;" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(11));
+							else
+								count11.innerHTML = "";
+						}
+					} catch (e) { }
+
+		            if (pListTypeValue != "23") {
+						var untreatedCntIdx = 11;
+						if ("<c:out value='${useShareApproval}' />" === "YES") {
+							untreatedCntIdx++;
+						}
+
+		            	if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(untreatedCntIdx)) > 0)
+		            		countUntreated.innerHTML = "&nbsp;&nbsp;" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(untreatedCntIdx));
 		            	else
-		            		count11.innerHTML = "";
+		            		countUntreated.innerHTML = "";
 		            }
 		        } catch (e) { }
 		    }
@@ -1078,7 +1100,10 @@
 		                        break;
 		                    case "m09":
 		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
-		                        break;
+								break;
+							case "UNTREATED":
+		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+								break;
 		                }
 		            }
 		        } catch (e) { }
@@ -1206,7 +1231,9 @@
 					</c:if>
                    	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="APPROVAL2" onclick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><spring:message code='ezApprovalG.t1706'/><span id=count2></span></span></li>
                    	<li><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL3" onclick="setPresentValue('<spring:message code='ezApprovalG.t1748'/>');convMain('2','')"><spring:message code='ezApprovalG.t1748'/><span id=count3></span></span></li>
-                   	
+					<c:if test="${approvalFlag eq 'G' && autoSendOfferFlag eq '1'}">
+                   	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" id="UNTREATED" onclick="setPresentValue('미처리문서');Open_Func(this);">미처리문서<span id=countUntreated></span></span></li>
+                   	</c:if>
                    	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" id="APPROVAL21" onclick="setPresentValue('<spring:message code='ezApprovalG.t3000'/>');convMain('21','')"><spring:message code='ezApprovalG.t3000'/><span id=count21></span></span></li>
                    	<c:if test="${hideSusin != 'N'}">
                        	<li><span class="sub_iconLNB tree_appr_department"></span><span class="list_text" id="APPROVAL4" onclick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><spring:message code='ezApprovalG.t1749'/><span id=count4></span></span></li>

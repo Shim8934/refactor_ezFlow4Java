@@ -283,6 +283,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		getUserSubTitle(userInfo, referenceTemp);
 		
+		String autoSendOfferFlag = ezCommonService.getTenantConfig("autoSendOfferFlag", userInfo.getTenantId());
+		
 		if(approvalFlag.equals("S")) {
 //			List<ApprGTaskVO> itemList = ezApprovalGService.getCodeContainer(userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getDeptID(), commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()), approvalFlag, userInfo.getLang());
 			List<ApprGFormVO> itemList = ezApprovalGService.getFormContainer(userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getDeptID());
@@ -334,9 +336,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("whoKyulYN", whoKyulYN);
 		model.addAttribute("useShareApproval", useShareApproval);
 		model.addAttribute("useWebHWP", useWebHWP);
+		model.addAttribute("autoSendOfferFlag", autoSendOfferFlag); // 전자결재G 미처리문서함 사용여부
 		
         logger.debug("apprGLeft Value : listType= " + listType + "containers= " + containers.toString() + "viewLeftCount= " + viewLeftCount);       
-        logger.debug("apprGLeft Ended");       
+        logger.debug("apprGLeft Ended");
 
 		return "ezApprovalG/apprGLeft";
 	}
@@ -1437,6 +1440,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		String useDynamicAprLine = ezCommonService.getTenantConfig("UseDynamicAprLine", userInfo.getTenantId()); //가변 결재선 사용여부 - 1(사용) / 0(사용안함)
 		
+		String formID = request.getParameter("formID");
+		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			userInfo.setCompanyID(orgCompanyID);
 		}
@@ -1481,6 +1486,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("regMi", regMi);
 		}
 		
+        boolean isOuterForm = ezApprovalGService.isOuterForm(formID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		model.addAttribute("periodnode", periodnode);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("userInfo", userInfo);
@@ -1508,6 +1515,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useReceiveInfoName", useReceiveInfoName);
 		model.addAttribute("useOpenGov", useOpenGov);
 		model.addAttribute("useDynamicAprLine", useDynamicAprLine); //가변 결재선 사용여부 - 1(사용) / 0(사용안함)
+		model.addAttribute("isOuterForm", isOuterForm);
 		
 		logger.debug("ezApprovalInfo ended.");
 		
@@ -8274,7 +8282,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 발송의뢰문서 발송 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezSimsaG.do", method = RequestMethod.GET)
+	@RequestMapping(value = {"/ezApprovalG/ezSimsaG.do", "/ezApprovalG/ezConvSihang.do"}, method = RequestMethod.GET)
 	public String ezSimsaG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("ezSimsaG started");
 
@@ -8309,9 +8317,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		//기관코드와 회사 아이디가 다를 경우 보정처리.
-		String companyID = config.getProperty("config.companyNum");
-		userInfo.setCompanyID(companyID);
+        boolean isConvSihang = false;
+        if (request.getRequestURI().endsWith("ezConvSihang.do")) {
+            isConvSihang = true;
+        }
+        
+        //회사아이디가 기관코드로 안돼있기때문에 지정해줘야됨
+        String companyID = "";
+        if (!isConvSihang) {
+            //기관코드와 회사 아이디가 다를 경우 보정처리.
+            companyID = config.getProperty("config.companyNum");
+        } else {
+            companyID = request.getParameter("orgCompanyID");;
+        }
+        userInfo.setCompanyID(companyID);
 		
 		model.addAttribute("docID", docID);
 		model.addAttribute("docHref", docHref);
@@ -8322,6 +8341,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("docTitle", docTitle);
+		model.addAttribute("isConvSihang", isConvSihang);
 		
 		logger.debug("ezSimsaG ended");
 		
@@ -8354,9 +8374,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//userInfo = commonUtil.aprUserInfo(loginCookie); //2019.03.25 천성준 - 사용안해서 일단 주석
 		String docID = request.getParameter("docID");
 		String ext = request.getParameter("ext");
+		String mode = request.getParameter("mode");
+		
+		if (mode == null || mode.isEmpty()) {
+		    mode = "APR";
+		}
 		
 		model.addAttribute("docID", docID);
 		model.addAttribute("ext", ext);
+		model.addAttribute("mode", mode);
 		
 		logger.debug("ezReceiptInfo ended");
 

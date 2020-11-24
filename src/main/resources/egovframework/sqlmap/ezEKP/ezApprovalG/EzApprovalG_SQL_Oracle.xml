@@ -6053,6 +6053,16 @@
 				<isEqual property="transFlag" compareValue="1" prepend="OR">
 						TBL_SEPERATEATTACH.CabinetID = TBL_CABINET.TCabinetID  
 				</isEqual>
+                <isEqual property="listFlag" compareValue="23">
+                    JOIN 
+                        TBL_ENDRECEIPTPOINTINFO 
+                    ON 
+                        TBL_RECORD.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID 
+                    AND 
+                        TBL_RECORD.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID 
+                    AND 
+                        TBL_RECORD.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID
+                </isEqual>
 					WHERE 
 						TBL_RECORD.TENANT_ID = #tenantID#
 					AND
@@ -6203,6 +6213,18 @@
 							TBL_RECORD.COMPANYID = #companyID#							
 					</isNotEqual>
 				</isEqual>
+                <isEqual property="listFlag" compareValue="23">
+                    AND 
+                       TBL_ENDAPRDOCINFO.DOCTYPE = '001'
+                    AND 
+                       TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'N'
+                    AND
+                       TBL_ENDAPRDOCINFO.WRITERID = #userID#
+                    AND 
+                       TBL_ENDAPRDOCINFO.WRITERDEPTID = #deptCode#
+                    AND
+                       TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
+                </isEqual>
 			<isNotEmpty property="isDocPrint">
 				<isEqual property="isDocPrint" compareValue="TRUE">
 					<isLessThan property="start" compareValue="0">
@@ -13676,6 +13698,16 @@
 		<isEqual property="transFlag" compareValue="1" prepend="OR">
 				TBL_SEPERATEATTACH.CabinetID = TBL_CABINET.TCabinetID  
 		</isEqual>
+	    <isEqual property="listFlag" compareValue="23">
+	        JOIN
+	            TBL_ENDRECEIPTPOINTINFO 
+	        ON 
+	            TBL_RECORD.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID 
+	        AND 
+	            TBL_RECORD.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID 
+	        AND 
+	            TBL_RECORD.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID
+	    </isEqual>
 			WHERE 
 				TBL_RECORD.TENANT_ID = #tenantID#
 			AND
@@ -13827,6 +13859,18 @@
 					TBL_RECORD.COMPANYID= #companyID#
 			</isNotEqual>
 		</isEqual> 
+	    <isEqual property="listFlag" compareValue="23">
+	        AND
+	            TBL_ENDAPRDOCINFO.DOCTYPE = '001'
+	        AND
+	            TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'N'
+	        AND
+	            TBL_ENDAPRDOCINFO.WRITERID = #userID#
+	        AND
+	            TBL_ENDAPRDOCINFO.WRITERDEPTID = #deptCode#
+	        AND
+	           TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
+	    </isEqual>
 		)
 	</select>
 	
@@ -13978,13 +14022,16 @@
 	<select id="EzApprovalG.getReceiptProcessInfoRec" parameterClass="Map" resultClass="int">
 		<isEqual property="v_FLAG" compareValue="APR"> 
 		 SELECT 
-				CASE WHEN 
-						RECEIVESN = 0 THEN 0 
-				ELSE  
-						RECEIVESN 
-				END 
+                CASE WHEN 
+                    RECEIVESNCNT = 0 
+                THEN 
+                    0 
+                ELSE  
+                    RECEIVESN 
+                END 
          FROM ( SELECT 
-         			COUNT(RECEIVESN) RECEIVESN
+         			COUNT(RECEIVESN) RECEIVESNCNT,
+         			MAX(RECEIVESN) RECEIVESN
          		FROM 
          			TBL_APRRECEIPTPROCESSINFO 
          WHERE  
@@ -13996,13 +14043,16 @@
 		</isEqual>
 		<isNotEqual property="v_FLAG" compareValue="APR"> 
 		SELECT 
-				CASE WHEN 
-						RECEIVESN = 0 THEN 0 
-				ELSE  
-						RECEIVESN 
-				END 
+                CASE WHEN 
+                    RECEIVESNCNT = 0 
+                THEN 
+                    0 
+                ELSE  
+                    RECEIVESN 
+                END 
          FROM ( SELECT 
-         			COUNT(RECEIVESN) RECEIVESN
+         			COUNT(RECEIVESN) RECEIVESNCNT,
+         			MAX(RECEIVESN) RECEIVESN
          		FROM 
          			TBL_ENDRECEIPTPROCESSINFO 
          WHERE  
@@ -21984,7 +22034,7 @@
           	  AND
           	  		COMPANYID = #companyID#
 		</isEqual>
-		<isNotEqual property="v_FLAG" compareValue="1">
+		<isEqual property="v_FLAG" compareValue="2">
 		 	 SELECT 
 		 	 		COUNT(RECEIPTPOINTID)  CNT  
              FROM 
@@ -21997,9 +22047,22 @@
           	  		TENANT_ID = #v_TENANTID#
           	 AND
           	  		COMPANYID = #companyID#
-		</isNotEqual>
+		</isEqual>
 	</select>
-	
+    <select id="EzApprovalG.sendOfferCheck_EndReceipt2" parameterClass="Map" resultClass="String">
+         SELECT 
+             RECEIPTPOINTID
+         FROM 
+             TBL_ENDRECEIPTPOINTINFO 
+         WHERE  
+             DOCID = #v_DOCID#
+         AND 
+             EXTRECEPTYN = 'Y'
+         AND
+             TENANT_ID = #v_TENANTID#
+         AND
+             COMPANYID = #companyID#
+    </select>	
 <!-- 		<procedure id="EzApprovalG.updateReceiptOffer" parameterClass="Map" > -->
 <!-- 		{CALL EZSP_UPDATERECEIPTOFFER(#v_DOCID#,#v_ORGDOCID#)}	 -->
 <!-- 	</procedure> -->
@@ -32914,6 +32977,52 @@
 		   		) A
 			)) AS "12"
 		</isEqual> <!-- 공유결재 -->
+            , SUM((
+            <![CDATA[
+            SELECT 
+                COUNT(DISTINCT(A.DOCID))
+            FROM
+                TBL_ENDAPRDOCINFO A 
+            JOIN 
+                TBL_EXPENDAPRDOCINFO B 
+            ON 
+                A.DOCID = B.DOCID 
+            AND 
+                A.TENANT_ID = B.TENANT_ID 
+            AND 
+                A.COMPANYID = B.COMPANYID 
+            JOIN 
+                TBL_ENDRECEIPTPOINTINFO C 
+            ON 
+                A.DOCID = C.DOCID 
+            AND 
+                A.TENANT_ID = C.TENANT_ID 
+            AND 
+                A.COMPANYID = C.COMPANYID 
+            WHERE 
+                A.TENANT_ID = #v_TENANTID#
+            AND 
+                A.COMPANYID = #companyID#
+            AND 
+                A.DOCTYPE ='001'
+            AND 
+                A.WRITERID = #v_USERID#
+            AND 
+                A.WRITERDEPTID = #v_DEPTID#
+            AND 
+                A.ENDDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS') 
+            AND 
+                A.ENDDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS') 
+            AND 
+                (
+                    B.DELFLAG IS NULL 
+                OR 
+                    B.DELFLAG <> '1'
+                )
+            AND 
+                C.PROCESSYN = 'N' 
+            ]]>
+            )) AS "23" <!-- 미처리문서함 -->
 		FROM DUAL ) B
 	</select>
 	

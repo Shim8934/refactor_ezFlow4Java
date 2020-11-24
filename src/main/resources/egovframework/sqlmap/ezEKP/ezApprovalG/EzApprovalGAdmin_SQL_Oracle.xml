@@ -946,7 +946,8 @@
 					TBL_AUTODOCNUM_ITEM.itemName2,
 					TBL_AUTODOCNUM_ITEM.useFlag,
 					TBL_AUTODOCNUM_ITEM.keepPeriodCode,
-					aproption
+					aproption,
+					SIHANGTYPE
 				FROM
 					TBL_FORMINFO
 				JOIN 
@@ -977,7 +978,8 @@
 					formfilelocation,
 					formconnflag,
 					aproption ,
-					passaprlineflag
+					passaprlineflag,
+					SIHANGTYPE
 				FROM
 					TBL_FORMINFO
 				WHERE
@@ -1711,7 +1713,8 @@
 				passaprlineflag,
 				aprOption,
 				tenant_id,
-				companyid)
+				companyid,
+                SIHANGTYPE)
 			VALUES
 				(#v_PFORMCONTAINERID#,
 				#v_PFORMID#,
@@ -1725,7 +1728,8 @@
 				#v_PPASSAPRLINEFLAG#,
 				#v_formAprOption#,
 				#tenantID#,
-				#companyID#)
+				#companyID#,
+                #v_FORMSIHANGTYPE#)
 		]]>
 	</insert>
 
@@ -1744,7 +1748,8 @@
 				reformflag = #v_PREFORMFLAG#,
 				formversion = formversion + 1,
 				aprOption = #v_formAprOption#,
-				passaprlineflag = #v_PPASSAPRLINEFLAG#
+				passaprlineflag = #v_PPASSAPRLINEFLAG#,
+                SIHANGTYPE = #v_FORMSIHANGTYPE#
 			WHERE
 				tenant_id = #tenantID#
 			AND

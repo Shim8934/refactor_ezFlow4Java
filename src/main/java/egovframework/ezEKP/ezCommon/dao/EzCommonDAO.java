@@ -1576,5 +1576,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.updateFormPassAprLineFlagColumn");
 		}
 	}
-	
+
+   public void addFormSihangTypeColumn() {
+        try {
+            select("EzCommonDAO.checkFormSihangTypeColumn");
+        } catch (Exception e) {
+            logger.debug("tbl_forminfo SIHANGTYPE column doesn't exist. creating the column...");
+            
+            update("EzCommonDAO.updateFormSihangTypeColumn");
+        }
+    }
+   
+   public void insertAutoSendOfferFlag() {
+       try {
+           int rowCnt = (int) select("EzCommonDAO.checkAutoSendOfferFlag");
+           if (rowCnt == 0) {
+               logger.debug("tbl_tenant_config autoSendOfferFlag data doesn't exist. creating the data...");
+               insert("EzCommonDAO.insertAutoSendOfferFlag");
+           }
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+   }
 }

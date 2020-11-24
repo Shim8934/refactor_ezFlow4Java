@@ -30,6 +30,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONObject;
@@ -44,6 +45,7 @@ import org.w3c.dom.NodeList;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -2506,6 +2508,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String formDescript = doc.getElementsByTagName("FormDescript").item(0).getTextContent();
 		String formKind = doc.getElementsByTagName("FormKind").item(0).getTextContent();
 		
+		String formSihangType = doc.getElementsByTagName("SIHANGTYPE").item(0).getTextContent();
+		
 		/* 2020-07-16 홍승비 - 전자결재 일반버전에서도 연동양식을 사용할 수 있도록 수정 */
 		if (approvalFlag.equals("S")) {
 			keepPeriod = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
@@ -2581,6 +2585,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_PREFORMFLAG", useReform ? "Y" : "N");
 		// 양식 상세옵션
 		map.put("v_formAprOption", formAprOption);
+		map.put("v_FORMSIHANGTYPE", formSihangType);
 
 		if (formID.equals("")) {
 			formID = generateNextFormId(companyID, userInfo.getTenantId());
@@ -3027,6 +3032,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		if(formID.equals("") && useWHWP.equalsIgnoreCase("YES")) {
 			hwpFileName = doc.getElementsByTagName("HWPFILEPATH").item(0).getTextContent();
 		}
+
+		String formSihangType = doc.getElementsByTagName("SIHANGTYPE").item(0).getTextContent();
 		
 		/* 2020-07-16 홍승비 - 전자결재 일반버전에서도 연동양식을 사용할 수 있도록 수정 */
 		if (approvalFlag.equals("S")) {
@@ -3095,6 +3102,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("v_formAprOption", formAprOption);
+		map.put("v_FORMSIHANGTYPE", formSihangType);
 
 		String result = "";
 		
