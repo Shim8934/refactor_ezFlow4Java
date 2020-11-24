@@ -33020,7 +33020,7 @@
             AND 
                 C.PROCESSYN = 'N' 
             ]]>
-            )) AS "23" --> <!-- 미처리문서함 -->
+            )) AS "23" <!-- 미처리문서함 -->
 		FROM DUAL ) B
 	</select>
 	
