@@ -14030,7 +14030,8 @@
                     RECEIVESN 
                 END 
          FROM ( SELECT 
-         			COUNT(RECEIVESN) RECEIVESN
+         			COUNT(RECEIVESN) RECEIVESNCNT,
+         			MAX(RECEIVESN) RECEIVESN
          		FROM 
          			TBL_APRRECEIPTPROCESSINFO 
          WHERE  
@@ -14050,7 +14051,8 @@
                     RECEIVESN 
                 END 
          FROM ( SELECT 
-         			COUNT(RECEIVESN) RECEIVESN
+         			COUNT(RECEIVESN) RECEIVESNCNT,
+         			MAX(RECEIVESN) RECEIVESN
          		FROM 
          			TBL_ENDRECEIPTPROCESSINFO 
          WHERE  
