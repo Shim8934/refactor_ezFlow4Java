@@ -363,14 +363,33 @@
 				
 				var docID = GetAttribute(selRow, "DATA1");
 				var docHref = GetAttribute(selRow, "DATA2");
+				var ext = docHref.substr(docHref.lastIndexOf(".") + 1);
 
-				var url = "/ezApprovalG/ezConvSihang.do" +
-					"?docID=" + encodeURIComponent(docID) +
-					"&docHref=" + encodeURIComponent(docHref) +
-					"&orgCompanyID=" + CompanyID;
-					// "/ezApprovalG/convSendDocView.do" + 
-					// "?docID=" + encodeURIComponent(DocID) + 
-					// "&docHref=" + encodeURIComponent(docHref);
+                var url = null;
+                if (ext === "mht") {
+                    url = "/ezApprovalG/ezConvSihang.do" +
+                        "?docID=" + encodeURIComponent(docID) +
+                        "&docHref=" + encodeURIComponent(docHref) +
+                        "&orgCompanyID=" + CompanyID;
+                } else if (ext === "hwp") {
+                    if (useWebHWP === "NO") {
+                        if (!isIE()) {
+                            var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+                            alert(pAlertContent);
+                            return;
+                        }
+
+                        url = "/ezApprovalG/ezConvSihang_HWP.do" +
+                            "?docID=" + encodeURIComponent(docID) +
+                            "&docHref=" + encodeURIComponent(docHref) +
+                            "&orgCompanyID=" + CompanyID;
+                    } else {
+                        url = "/ezApprovalG/ezConvSihang_WHWP.do" +
+                            "?docID=" + encodeURIComponent(docID) +
+                            "&docHref=" + encodeURIComponent(docHref) +
+                            "&orgCompanyID=" + CompanyID;
+                    }
+                }
 					
 				window.open(url, "enforce", GetOpenWindowfeature(window.screen.availHeight - 50, window.screen.availWidth / 2));
 			}

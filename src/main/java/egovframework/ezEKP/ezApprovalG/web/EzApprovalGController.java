@@ -8312,19 +8312,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		String companyID = "";
-		if (orgDocID != null && !orgDocID.isEmpty()) {
-		    //기관코드와 회사 아이디가 다를 경우 보정처리.
-		    companyID = config.getProperty("config.companyNum");
-		} else {
-		    companyID = request.getParameter("orgCompanyID");
-		}
-		userInfo.setCompanyID(companyID);
-		
-		boolean isConvSihang = false;
-		if (request.getRequestURI().endsWith("ezConvSihang.do")) {
-		    isConvSihang = true;
-		}
+        boolean isConvSihang = false;
+        if (request.getRequestURI().endsWith("ezConvSihang.do")) {
+            isConvSihang = true;
+        }
+        
+        //회사아이디가 기관코드로 안돼있기때문에 지정해줘야됨
+        String companyID = "";
+        if (!isConvSihang) {
+            //기관코드와 회사 아이디가 다를 경우 보정처리.
+            companyID = config.getProperty("config.companyNum");
+        } else {
+            companyID = request.getParameter("orgCompanyID");;
+        }
+        userInfo.setCompanyID(companyID);
 		
 		model.addAttribute("docID", docID);
 		model.addAttribute("docHref", docHref);
