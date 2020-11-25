@@ -21714,7 +21714,7 @@
 			ExecuteDate, 
 			ReceiptMemberName, 
 			ReceiptMemberName2, 
-            TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), 
+            #v_SYSDATE#, 
             #v_CHANGEREASON#, 
             #v_USERID#, 
             #v_USERNAME#, 
