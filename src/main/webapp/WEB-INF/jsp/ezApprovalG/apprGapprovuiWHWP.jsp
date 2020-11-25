@@ -1363,67 +1363,65 @@
 			    
 			    var ezapprovalinfo_dialogArguments = new Array();
 			    function btnApprovalInfo() {
-			    			        CheckDocCellInfo();
-			    			        var onlydocinfiview = false;
-			    			        var parameter = new Array();
-			    			        parameter[0] = pDocID;
-			    			        parameter[1] = pFormID;
-			    			        parameter[2] = SignCount;
-			    			        parameter[3] = SignInfo;
-			    			        parameter[4] = hapyuiCount;
-			    			        parameter[5] = pDraftFlag;
-			    			        parameter[6] = pSuSinFlag;
-			    			        parameter[7] = pChamJoFlag;
-			    			        parameter[8] = gongramCount;
-			    			        parameter[9] = true;
-			    			        parameter[10] = pDocType;
-			    			        parameter[11] = gamsaCount;
-			    			        parameter[12] = "DRAFT";
-			    			        parameter[28] = onlydocinfiview;
-			    			        parameter[30] = cabinetID;
-			    			        parameter[31] = tempSecurity;
-			    			        parameter[32] = tempUrgent;
-			    			        parameter[33] = pSummery;
-			    			        parameter[34] = pSpecialRecordCode;
-			    			        parameter[35] = pPublicityCode;
-			    			        parameter[36] = pLimitRange;
-			    			        parameter[37] = pPageNum;
-			    			        parameter[38] = tempSecurityDate;
-			    			        parameter[39] = SummaryFlag;
-			    			        parameter[40] = "";
-			    			        parameter[45] = pPublicityYN;
-			    			        parameter[46] = nonElecRec;
-			    				    
-			    				    if (nonElecRec == "Y") {
-			    				    	if (pGubun != "1") {
-			    				        	parameter[47] = cabinetID;
-			    			        	} else {
-			    				        	parameter[47] = "nonElecRecTempCabinet";
-			    			        	}
-			    				        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
-			    				        parameter[49] = nonSepAttachLVXml; // 분첨
-			    				        parameter[50] = g_szSCListXml;
-			    				        parameter[51] = sepAttachCheckYN; // 분첨
-			    			        }
+   			        CheckDocCellInfo();
+   			        var onlydocinfiview = false;
+   			        var parameter = new Array();
+   			        parameter[0] = pDocID;
+   			        parameter[1] = pFormID;
+   			        parameter[2] = SignCount;
+   			        parameter[3] = SignInfo;
+   			        parameter[4] = hapyuiCount;
+   			        parameter[5] = pDraftFlag;
+   			        parameter[6] = pSuSinFlag;
+   			        parameter[7] = pChamJoFlag;
+   			        parameter[8] = gongramCount;
+   			        parameter[9] = true;
+   			        parameter[10] = pDocType;
+   			        parameter[11] = gamsaCount;
+   			        parameter[12] = "DRAFT";
+   			        parameter[28] = onlydocinfiview;
+   			        parameter[30] = cabinetID;
+   			        parameter[31] = tempSecurity;
+   			        parameter[32] = tempUrgent;
+   			        parameter[33] = pSummery;
+   			        parameter[34] = pSpecialRecordCode;
+   			        parameter[35] = pPublicityCode;
+   			        parameter[36] = pLimitRange;
+   			        parameter[37] = pPageNum;
+   			        parameter[38] = tempSecurityDate;
+   			        parameter[39] = SummaryFlag;
+   			        parameter[40] = "";
+   			        parameter[45] = pPublicityYN;
+   			        parameter[46] = nonElecRec;
+   				    
+   				    if (nonElecRec == "Y") {
+   				    	if (pGubun != "1") {
+   				        	parameter[47] = cabinetID;
+   			        	} else {
+   				        	parameter[47] = "nonElecRecTempCabinet";
+   			        	}
+   				        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+   				        parameter[49] = nonSepAttachLVXml; // 분첨
+   				        parameter[50] = g_szSCListXml;
+   				        parameter[51] = sepAttachCheckYN; // 분첨
+   			        }
 
-			    			        if (useOpenGov == "YES") {
-			                            parameter[52] = basis;
-			                            parameter[53] = reason;
-			                            parameter[54] = listOpenFlag;
-			                            parameter[55] = fileOpenFlagList;
-			    					}
+   			        if (useOpenGov == "YES") {
+                        parameter[52] = basis;
+                        parameter[53] = reason;
+                        parameter[54] = listOpenFlag;
+                        parameter[55] = fileOpenFlagList;
+   					}
 
-			    			        if (tempItemCode != "")
-			    			            tempdocnumcode = tempItemCode;
-			                        
-			                        ezapprovalinfo_dialogArguments[0] = parameter;
-			    		            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+   			        if (tempItemCode != "")
+   			            tempdocnumcode = tempItemCode;
+                       
+                    ezapprovalinfo_dialogArguments[0] = parameter;
+   		            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-			    		            var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
-			    		            try { OpenWin.focus(); } catch (e) { }
-
-			    			        
-			                    }
+   		            var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
+   		            try { OpenWin.focus(); } catch (e) { }
+				}
 
 			    function btnApprovalInfo_Complete(ret) {
    			        if (ret != undefined && ret[0] == "OK") {
