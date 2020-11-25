@@ -69,7 +69,8 @@
 		    var openGovFlag = "<c:out value = '${openGovFlag}'/>";
 		    
 		    var usePassAprLine = "<c:out value = '${usePassAprLine}'/>";
-		    var passAprLineFlag = "<c:out value='${passAprLineFlag}'/>";
+			var passAprLineFlag = "<c:out value='${passAprLineFlag}'/>";
+			var receptGubunYN = "<c:out value='${receptGubunYN}'/>";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -103,8 +104,10 @@
 					$(".approvalG").show();
 				}
 				
-				if (approvalFlag === "G" && document.querySelector("#selFormKind").value === "001") {
-					document.querySelector("#selSihangType").style.display = "";
+				if (approvalFlag === "G" && receptGubunYN === "Y") {
+					if (document.querySelector("#selFormKind").value === "001") {
+						document.querySelector("#selSihangType").style.display = "";
+					}
 				}
 		        document.getElementById("1tab1").setAttribute("class", "tabon");
 		        Tab1_SelectID = "1tab1";
@@ -334,7 +337,7 @@
 							} else {
 								document.querySelector("#selSihangType").value = "inner";
 							}
-							if (approvalFlag === "G") {
+							if (approvalFlag === "G" && receptGubunYN === "Y") {
 								if (document.querySelector("#selFormKind").value === "001") {
 									document.querySelector("#selSihangType").style.display = "";
 								} else {
@@ -1125,11 +1128,10 @@
 		        	$("#ApvForm_sub5").show();
 				}
 				
-				if (approvalFlag === "G" && value === "001") {
+				if (approvalFlag === "G" && receptGubunYN === "Y" && value === "001") {
 					document.querySelector("#selSihangType").style.display = "";
 				} else {
 					document.querySelector("#selSihangType").style.display = "none";
-					document.querySelector("#selSihangType").value = "inner";
 				}
 			}
 			
