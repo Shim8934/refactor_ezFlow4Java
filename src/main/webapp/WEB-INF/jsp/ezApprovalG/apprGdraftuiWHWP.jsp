@@ -632,13 +632,9 @@
                     return;
                 }
 
-                
-                if (cabinetID == "")
-                    btnApprovalInfo(3);
-                
                 if (cabinetID == "") {
                     var pAlertContent = "<spring:message code='ezApprovalG.t1397'/>";
-                    OpenAlertUI(pAlertContent);
+                    OpenInformationUI(pAlertContent, check_btnSendDraft3);
                     return;
                 }
 
@@ -1611,6 +1607,13 @@
 		        DivPopUpHidden();
 		        if (ans)
 		            btnApprovalInfo(1);
+		    }
+	    	
+	    	// 기록물철 없을때 팝업
+	    	function check_btnSendDraft3(ans) {
+		        DivPopUpHidden();
+		        if (ans)
+		            btnApprovalInfo(3);
 		    }
 	    	
 	    	// 기안자 == 최종 결재자
