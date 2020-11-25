@@ -341,16 +341,23 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 * 전자결재 문서정보이력 상세보기
 	 */	
 	@RequestMapping(value = "/ezApprovalG/docViewerHWP.do", method = RequestMethod.GET)
-	public String docViewerHWP(HttpServletRequest request, Model model) throws Exception {
+	public String docViewerHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("docViewerHWP started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 
 		String docHref = request.getParameter("docHref");
+		String useWebHWP = ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId());
 		
 		model.addAttribute("docHref", commonUtil.cleanValue(docHref));
 		
 		LOGGER.debug("docViewerHWP ended");
 		
-		return "ezApprovalG/apprGdocViewerHWP";
+		if(useWebHWP.equals("YES")) {
+			return "ezApprovalG/apprGdocViewerWHWP";
+		} else {
+			return "ezApprovalG/apprGdocViewerHWP";
+		}
 	}
 	
 	/**
