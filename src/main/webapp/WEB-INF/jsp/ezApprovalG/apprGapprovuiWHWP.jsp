@@ -1426,126 +1426,121 @@
 			                    }
 
 			    function btnApprovalInfo_Complete(ret) {
+   			        if (ret != undefined && ret[0] == "OK") {
+   			            try {
+   			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
+   			                    if (ret[1] != false) {
+   			                    	$.ajax({
+   			                    		type : "POST",
+   			                    		dataType : "json",
+   			                    		async : false,
+   			                    		url : "/ezApprovalG/aprLineSave.do",
+   			                    		data : {
+   			                    				ret    : ret[1]
+   			                    				},
+   			                    		success : function(result){
+   			                    			
+   			                    		}
+   			                    	});
+   			
+   			                        IsSkipDrafter = "FALSE";
+   			                        btnSendDraftEnable = "true";
+   			                        ReAprLineSingMapping(ret);
+   			                        //SaveFile();
+   			                        getCurApproverAprLine();
+   			                    }
+   			                    savexmlhttp = null;
+   			                    savexmlhttp = createXMLHttpRequest();
+   			                }
+   			
+   			                if (pGubun != "6" && pGubun != "7" && pGubun != "9" && pGubun != "11" && pGubun != "12" && pGubun != "13") {
+   			                	$.ajax({
+   		                    		type : "POST",
+   		                    		dataType : "text",
+   		                    		async : false,
+   		                    		url : "/ezApprovalG/aprDeptSave.do",
+   		                    		data : {
+   		                    				aprDeptInfo : ret[2]
+   		                    				},
+   		                    		success : function(result){
+   		                    			if (result == 'TRUE') {
+   		                    				
+   		                    			} else {
+   		                    				alert(strLang163);
+   		                    			}
+   		                    		}
+   		                    	});
+   			                	
+   			                    btnReceivLineEnable = false;
+   			                    setRecevInfo(ret[3]);
+   			                }
+   			
+   			                if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {
+   			                    var g_SelCabXml = ret[4];
+   			                    var xmlCab = createXmlDom();
+   			                    xmlCab = loadXMLString(g_SelCabXml);
+   			                    cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+   			                    TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+   			                }
+   			                
+   			                tempSecurity = ret[7];                // 보안등급 관련
+   			                tempUrgent = ret[8];                  // 긴급 결재 여부
+   			                pSummery = ret[9];                    // 요약 내용 관련
+   			                tempSecurityDate = ret[14];           // 보안 결재 체크 관련
+   			                pPublicityCode = ret[11];             // 대민공개여부 및 공개등급 관련 
+   			                pPublicityYN = ret[21];             // 공개여부 및 공개등급 관련 
+   			                pSpecialRecordCode = ret[10];
+   			                pLimitRange = ret[12];
+   			                pPageNum = ret[13];
+   			                // 문서 공개 범위 설정 (대민 공개 여부)
+   			                // setPublicFlag2();
+   			                setPublicFlag();
+   			                
+   			                if (nonElecRec == "Y") {
+   				            	nonElecRecInfoXml = ret[23];
+   				            	nonSepAttachLVXml = ret[24];
+   				            	g_szSCListXml = ret[25];
+   						        sepAttachCheckYN = ret[26];
+   				            	if (ext == "hwp") {
+   					            	setNonElecRecInfo_whwp(nonElecRecInfoXml);
+   				            	}
+   				            }
 
-			    			        if (ret != undefined && ret[0] == "OK") {
-			    			            try {
-			    			                message.EditMode(2);
-			    			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
-			    			
-			    			                    if (ret[1] != false) {
-			    			                    	$.ajax({
-			    			                    		type : "POST",
-			    			                    		dataType : "json",
-			    			                    		async : false,
-			    			                    		url : "/ezApprovalG/aprLineSave.do",
-			    			                    		data : {
-			    			                    				ret    : ret[1]
-			    			                    				},
-			    			                    		success : function(result){
-			    			                    			
-			    			                    		}
-			    			                    	});
-			    			
-			    			                        IsSkipDrafter = "FALSE";
-			    			                        btnSendDraftEnable = "true";
-			    			                        ReAprLineSingMapping(ret);
-			    			                        SaveFile();
-			    			                        getCurApproverAprLine();
-			    			                    }
-			    			                    savexmlhttp = null;
-			    			                    savexmlhttp = createXMLHttpRequest();
-			    			                }
-			    			
-			    			                if (pGubun != "6" && pGubun != "7" && pGubun != "9" && pGubun != "11" && pGubun != "12" && pGubun != "13") {
-			    			                	$.ajax({
-			    		                    		type : "POST",
-			    		                    		dataType : "text",
-			    		                    		async : false,
-			    		                    		url : "/ezApprovalG/aprDeptSave.do",
-			    		                    		data : {
-			    		                    				aprDeptInfo : ret[2]
-			    		                    				},
-			    		                    		success : function(result){
-			    		                    			if (result == 'TRUE') {
-			    		                    				
-			    		                    			} else {
-			    		                    				alert(strLang163);
-			    		                    			}
-			    		                    		}
-			    		                    	});
-			    			                	
-			    			                    btnReceivLineEnable = false;
-			    			                    setRecevInfo(ret[3]);
-			    			                }
-			    			
-			    			                if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {
-			    			                    var g_SelCabXml = ret[4];
-			    			                    var xmlCab = createXmlDom();
-			    			                    xmlCab = loadXMLString(g_SelCabXml);
-			    			                    cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
-			    			                    TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
-			    			                }
-			    			                
-			    			                tempSecurity = ret[7];                // 보안등급 관련
-			    			                tempUrgent = ret[8];                  // 긴급 결재 여부
-			    			                pSummery = ret[9];                    // 요약 내용 관련
-			    			                tempSecurityDate = ret[14];           // 보안 결재 체크 관련
-			    			                pPublicityCode = ret[11];             // 대민공개여부 및 공개등급 관련 
-			    			                pPublicityYN = ret[21];             // 공개여부 및 공개등급 관련 
-			    			                pSpecialRecordCode = ret[10];
-			    			                pLimitRange = ret[12];
-			    			                pPageNum = ret[13];
-			    			                // 문서 공개 범위 설정 (대민 공개 여부)
-			    			                // setPublicFlag2();
-			    			                setPublicFlag();
-			    			                
-			    			                if (nonElecRec == "Y") {
-			    				            	nonElecRecInfoXml = ret[23];
-			    				            	nonSepAttachLVXml = ret[24];
-			    				            	g_szSCListXml = ret[25];
-			    						        sepAttachCheckYN = ret[26];
-			    				            	if (ext == "hwp") {
-			    					            	setNonElecRecInfo_whwp(nonElecRecInfoXml);
-			    				            	}
-			    				            }
+   				            if (useOpenGov == "YES") {
+                                   $.ajax({
+                                       type : "POST",
+                                       dataType : "text",
+                                       async : false,
+                                       url : "/ezApprovalG/openGovInfoSave.do",
+                                       data : {
+                                           openGovListFlag : ret[27],
+                                           fileOpenFlagList : ret[28],
+                                           basis : ret[29],
+                                           reason : ret[30],
+                                           publicity : ret[11],
+                                           docID : pDocID,
+                                           limitDate : ret[31]
+                                       }
+                                   });
 
-			    				            if (useOpenGov == "YES") {
-			                                    $.ajax({
-			                                        type : "POST",
-			                                        dataType : "text",
-			                                        async : false,
-			                                        url : "/ezApprovalG/openGovInfoSave.do",
-			                                        data : {
-			                                            openGovListFlag : ret[27],
-			                                            fileOpenFlagList : ret[28],
-			                                            basis : ret[29],
-			                                            reason : ret[30],
-			                                            publicity : ret[11],
-			                                            docID : pDocID,
-			                                            limitDate : ret[31]
-			                                        }
-			                                    });
+                                   listOpenFlag = ret[27];
+                                   fileOpenFlagList = ret[28];
+                                   basis = ret[29];
+                                   reason = ret[30];
+                                   limitDate = ret[31];
+   							}
 
-			                                    listOpenFlag = ret[27];
-			                                    fileOpenFlagList = ret[28];
-			                                    basis = ret[29];
-			                                    reason = ret[30];
-			                                    limitDate = ret[31];
-			    							}
+   							//2020-05-08 : 결재정보확인 시 문서정보 저장 후 문서 반영
+   							setApprDocInfo();	
+   							//SaveFile();
 
-			    							//2020-05-08 : 결재정보확인 시 문서정보 저장 후 문서 반영
-			    							setApprDocInfo();	
-			    							SaveFile();
-
-			    			                SummaryFlag = true;
-			    			                savexmlhttp = null;
-			    			                message.EditMode(3);
-			    			            }
-			    			            catch (e) {
-			    			                alert("저장시 오류 발생");
-			    			            }
-			    			        }
-
+   			                SummaryFlag = true;
+   			                savexmlhttp = null;
+   			            }
+   			            catch (e) {
+   			                alert("저장시 오류 발생");
+   			            }
+   			        }
 			    }
 
 
