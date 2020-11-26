@@ -392,9 +392,12 @@
 		    		<th><spring:message code="ezEmail.hdp01"/></th>
 		    		<td><input data-paramId="ApprBigSizeAttachLimitCount" id="ApprBigSizeAttachLimitCount" maxlength="2" type="text" value="<c:out value='${configMap.ApprBigSizeAttachLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td>
 		    	</tr>
-            	<tr data-name="approval">
+		    	
+		    	<%-- 다운로드횟수제한 기본값 0으로 셋팅하고 display none처리 (사실상 기능 사용안함) --%>
+            	<tr data-name="approval" style="display:none;">
             		<th><spring:message code="ezEmail.hdp02"/></th>
-            		<td><input data-paramId="ApprBigSizeAttachDownloadLimitCount" id="ApprBigSizeAttachDownloadLimitCount" maxlength="5" type="text" value="<c:out value='${configMap.ApprBigSizeAttachDownloadLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td>
+            		<%--<td><input data-paramId="ApprBigSizeAttachDownloadLimitCount" id="ApprBigSizeAttachDownloadLimitCount" maxlength="5" type="text" value="<c:out value='${configMap.ApprBigSizeAttachDownloadLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td>--%>
+            		<td><input data-paramId="ApprBigSizeAttachDownloadLimitCount" id="ApprBigSizeAttachDownloadLimitCount" maxlength="5" type="text" value="0"> (<spring:message code="ezSystem.x0014"/>)</td>
             	</tr>
             	
 	        </tbody>
