@@ -259,7 +259,8 @@
         function FieldsAvailable(isTrue) {
             try {
                 if (isTrue) {
-
+                	message.EditMode(0);
+                	
                     ObjGPKI.ServerName = "ldap.gcc.go.kr";
 
                     if (isConvSihang) {
