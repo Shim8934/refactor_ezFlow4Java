@@ -1872,7 +1872,7 @@ function openOpinionUI_New_Complete(ret) {
 	            pHasOpinionYN = "N";
 	            ret = "cancel";
 	        }
-	        makeOpinionList(objXML);
+	        //makeOpinionList(objXML);
 		}
 	} catch (e) {
 		alert("openOpinionUI_New_Complete ::: " + e.description);
