@@ -31642,7 +31642,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	        String formInfoXmlStr = getFormInfoDetail(formID, companyID, tenantID);
 	        Document formInfoXml = commonUtil.convertStringToDocument(formInfoXmlStr);
 	        
-	        if (formInfoXml.getElementsByTagName("SIHANGTYPE") != null) {
+	        if (formInfoXml.getElementsByTagName("SIHANGTYPE").getLength() > 0) {
 	            String sihangType = formInfoXml.getElementsByTagName("SIHANGTYPE").item(0).getTextContent().trim();
 	            if ("outer".equalsIgnoreCase(sihangType)) {
 	                isOuterForm = true;
