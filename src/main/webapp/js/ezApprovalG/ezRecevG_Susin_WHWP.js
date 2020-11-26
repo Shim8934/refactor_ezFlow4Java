@@ -1,26 +1,3 @@
-function btnSetTaskCode_onclick() {
-  try {
-	var para = new Array();
-	para[0] = cabinetID;
-	var url = "/myoffice/ezApprovalG/ezCabinet/SelectCabinet.aspx?initFlag=1";
-	var feature = "dialogWidth:850px;dialogHeight:455px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
-  
-	if(url != "") {
-		var rtn = window.showModalDialog(url,para,feature);
-	}
-	
-	if (rtn[0] == "TRUE") {
-		var g_SelCabXml = rtn[1];
-		var xmlCab = createXmlDom();
-		xmlCab = loadXMLString(g_SelCabXml);
-		cabinetID = getNodeText(xmlCab.selectSingleNode("CABINETINFO/CABINET/CABINETID"));
-		TaskCode = getNodeText(xmlCab.selectSingleNode("CABINETINFO/CABINET/TASKCODE"));
-	}
-  } catch(e) {
-	alert("btnSetTaskCode_onclick : " + e.description);
-  }
-}
-
 function GetDraftAprLineInfo(ret) {
     try {
         var xmlKuljea;

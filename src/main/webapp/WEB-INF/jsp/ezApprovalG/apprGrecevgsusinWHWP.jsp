@@ -624,9 +624,21 @@
 			}
 			    
 			function TaskCode_Check() {
+		        if (cabinetID == "") {
+		        	if (nonElecRec != "Y") {
+			            btnSetTaskCode_onclick();
+		        	} else {
+			            TaskCode_Save();
+		        	}
+		        } else {
+		            TaskCode_Save();
+		        }
+		    }
+			    
+			function TaskCode_Save() {
 				if (cabinetID == "") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
-		            OpenAlertUI(pAlertContent, check_btnSendDraft);
+		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
 		
