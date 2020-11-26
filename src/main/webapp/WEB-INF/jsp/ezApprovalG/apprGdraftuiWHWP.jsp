@@ -32,7 +32,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/showModalDialog.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraft_WHWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 	    <script type="text/javascript">
@@ -191,7 +190,8 @@
 	        }
 	
 	       	window.onresize = function () {
-	       		var mHeight = document.documentElement.clientHeight - 152 - document.getElementById("message").offsetTop + "px";
+	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
+	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
 	       		message.Resize(mHeight);
 	        }
 	
@@ -1764,14 +1764,9 @@
 	            </td>
 	        </tr>
 	        <tr>
-	        	<td style="padding-bottom:10px;height:820px;" >
+	        	<td style="padding-bottom:10px;height:820px;" id="messageWHWPEditor">
 		    		<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	            </td>
-	           
-	            	<!-- <iframe id="message" class="viewbox" src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe> -->
-	                <!-- <div style="height: 100%">
-	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "2", "1", "<c:out value ='${hwpToolbar}'/>", "1");</script>
-	                </div> -->
 	        </tr>
 	        <tr>
 	            <td height="20">
