@@ -10,16 +10,10 @@
     	$(document).ready(function () {
     		$("#ifrmPreViewH").load(function(){
     			$("#ifrmPreViewH").contents().find("tr:eq(0) #close").css("display", "none");
+    			$("#ifrmPreViewH").css("height", $("#PreviewRayerH").css("height"));
     			var btn_popup = "<ul><li><img src='/images/kr/cm/btn_newpopup.gif' title='새창으로열기' alt='새창으로열기' onclick='return parent.btn_newpopup()'></li></ul>";
     			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu li").css("display", "none");
     			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu").append(btn_popup);
-    			
-    			if ($("#ifrmPreViewH").contents().find("#messageWHWPEditor").length > 0) {
-    				var height = $("#ifrmPreViewH").contents().find("#messageWHWPEditor").css("height");
-    				if(height == "800px" || height == "803px"){
-    					$("#ifrmPreViewH").contents().find("#messageWHWPEditor").css("height", "540px");
-    				}
-    			}
     		});
     	});
     } else {
