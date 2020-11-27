@@ -21,11 +21,11 @@
     	document.getElementById("ifrmPreViewH").onload = function(){
     		if (CrossYN()) {
     			if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
-    				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "선택된 문서가 없습니다.";	        			
+    				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = strLang930;	        			
     			}
     		} else {
     			if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
-    				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "선택된 문서가 없습니다.";		            		
+    				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = strLang930;		            		
     			}
     		}    		
     	}
