@@ -14030,7 +14030,8 @@
                     RECEIVESN 
                 END 
          FROM ( SELECT 
-         			COUNT(RECEIVESN) RECEIVESN
+         			COUNT(RECEIVESN) RECEIVESNCNT,
+         			MAX(RECEIVESN) RECEIVESN
          		FROM 
          			TBL_APRRECEIPTPROCESSINFO 
          WHERE  
@@ -14050,7 +14051,8 @@
                     RECEIVESN 
                 END 
          FROM ( SELECT 
-         			COUNT(RECEIVESN) RECEIVESN
+         			COUNT(RECEIVESN) RECEIVESNCNT,
+         			MAX(RECEIVESN) RECEIVESN
          		FROM 
          			TBL_ENDRECEIPTPROCESSINFO 
          WHERE  
@@ -22659,7 +22661,7 @@
 			ExecuteDate, 
 			ReceiptMemberName, 
 			ReceiptMemberName2, 
-            TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), 
+            #v_SYSDATE#, 
             #v_CHANGEREASON#, 
             #v_USERID#, 
             #v_USERNAME#, 
@@ -33020,7 +33022,7 @@
             AND 
                 C.PROCESSYN = 'N' 
             ]]>
-            )) AS "23" --> <!-- 미처리문서함 -->
+            )) AS "23" <!-- 미처리문서함 -->
 		FROM DUAL ) B
 	</select>
 	

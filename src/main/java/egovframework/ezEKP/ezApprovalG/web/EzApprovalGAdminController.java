@@ -574,6 +574,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String usePassAprLine = ezCommonService.getTenantConfig("usePassAprLine", userInfo.getTenantId());
 		String passAprLineFlag = request.getParameter("passAprLineFlag");
+		String receptGubunYN = ezCommonService.getTenantConfig("receptGubunYN", userInfo.getTenantId());
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
 		
@@ -619,6 +620,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("locale", userInfo.getLocale());
 		model.addAttribute("useReceiveInfoName", useReceiveInfoName);
+		model.addAttribute("receptGubunYN", receptGubunYN);
 		
 		if (config.getProperty("config.useOpenGov").equals("YES")) {
 			model.addAttribute("useOpenGov", "YES");
