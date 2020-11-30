@@ -149,6 +149,7 @@
             oOption = null;
         }
         
+        /* 2020-11-30 홍승비 - 크롬 브라우저에서는 자식창의 부모창 제어 기능을 방지하므로, 자식창에서 confirm 뜨도록 처리 */
         function save_info() {
 
         	if (gubun == "one") {
@@ -156,16 +157,20 @@
 
             		para[0] = $("select[name=selTContName]").val()
             	} 
-	        	if(ReturnFunction1 != null)
+	        	if(ReturnFunction1 != null) {
+	        		window.opener.confirm = window.confirm;
 	        		ReturnFunction1(para);
+	        	}
 	        	window.close();
         	} else {
             	if ($("select[name=selTContName]").val() != null && $("select[name=selTContName]").val() !="") {
 
             		para[0] = $("select[name=selTContName]").val()
             	}
-	        	if(ReturnFunction2 != null)
+	        	if(ReturnFunction2 != null) {
+	        		window.opener.confirm = window.confirm;
 	        		ReturnFunction2(para);
+	        	}
 	        	window.close();        		
         	}
         }
