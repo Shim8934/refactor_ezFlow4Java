@@ -535,8 +535,8 @@
 					}
 				}		
 				
-				if (previewInfo == "H") {
-					PreviewRayerChange(previewInfo, 'Manage');
+				if (previewInfo == "H" || pPreviewShow_HOW == "H") {
+					PreviewRayerChange("H", 'Manage');
 				} else {
 					PreviewRayerChange("NONE", 'Manage');
 				}
