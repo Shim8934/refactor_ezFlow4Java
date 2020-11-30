@@ -123,7 +123,7 @@
 		    var pMailListDiv_H = 0;
 		    var pMailPreVDiv_H = 0;
 		    var p_ListorderValue = "";
-		    var pPreviewShow_HOW = "OFF";
+		    var pPreviewShow_HOW = "";
 		    var clickPreviweType = "TEXT";
 		    var PreviewH_Move = false;
 		    var selobj = null;
@@ -535,11 +535,10 @@
 					}
 				}		
 				
-				if (previewInfo == "H" || pPreviewShow_HOW == "H") {
-					PreviewRayerChange("H", 'Manage');
-				} else {
-					PreviewRayerChange("NONE", 'Manage');
+				if (pPreviewShow_HOW == "") {
+					pPreviewShow_HOW = previewInfo;
 				}
+				PreviewRayerChange(pPreviewShow_HOW, 'Manage');
 		    }
 			
 		    function change_statusCell() {

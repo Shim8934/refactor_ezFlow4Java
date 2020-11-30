@@ -101,9 +101,7 @@
         }
         
         PreviewMode_ChangeBtn();
-        if (previewInfo != pPreviewShow_HOW) {
-        	Set_ApprovConfig();        	
-        }
+        Set_ApprovConfig(); 
         isPreviewChange = false;
         scroll();
     } catch (e) { }
