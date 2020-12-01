@@ -32098,17 +32098,41 @@
 		INNER JOIN 
 			TBL_EXPENDAPRDOCINFO X 
 		ON 
-			E.DOCID = X.DOCID AND E.TENANT_ID = X.TENANT_ID
+			E.DOCID = X.DOCID AND E.TENANT_ID = X.TENANT_ID AND E.COMPANYID = X.COMPANYID
 		INNER JOIN 
 			TBL_CONTAINER C 
 		ON 
-			E.CONTAINERID = C.CONTAINERID AND E.TENANT_ID = C.TENANT_ID
+			E.CONTAINERID = C.CONTAINERID AND E.TENANT_ID = C.TENANT_ID AND E.COMPANYID = C.COMPANYID
 		WHERE 
 			C.CONTAINEROWNDEPID = #deptId#
 		AND 
 			E.TENANT_ID = #tenantId#
 		AND
-			E.COMPANYID = #companyId#
+			E.COMPANYID IN (
+                SELECT 
+                    EXTENSIONATTRIBUTE2 
+                FROM 
+                    TBL_DEPTMASTER 
+                INNER JOIN 
+                    TBL_ADDJOBMASTER 
+                ON
+                    (TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+                AND
+                    TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+                WHERE 
+                    TBL_ADDJOBMASTER.TENANT_ID = #tenantId#
+                AND 
+                    TBL_ADDJOBMASTER.CN = #userId#
+                UNION ALL
+                SELECT 
+                    PHYSICALDELIVERYOFFICENAME
+                FROM
+                    TBL_USERMASTER
+                WHERE
+                    CN = #userId#
+                AND
+                    TENANT_ID = #tenantId#
+            )
 	</select>
 	
 	<select id="EzApprovalG.getShareList" parameterClass="Map" resultClass="KEDSharedUserInfo">

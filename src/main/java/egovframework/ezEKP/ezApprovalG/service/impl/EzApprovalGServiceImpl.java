@@ -31279,13 +31279,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     }
     
 	@Override
-	public List<ApprGFormVO> getFormContainer(int tenantId, String companyId, String deptId) {
+	public List<ApprGFormVO> getFormContainer(int tenantId, String companyId, String deptId, String userId) {
 		logger.debug("getFormContainer ended");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("deptId", deptId);
+		map.put("userId", userId);
 		
 		logger.debug("getFormContainer ended");
 		return ezApprovalGDAO.getFormContainer(map);
