@@ -2756,26 +2756,43 @@ public class EzEmailUtil {
 		// 폴더 오픈 시 IMAP select 커맨드가 호출되는데 폴더 안에 메일이 많은 경우 오버헤드가 큰 관계로
 		// 패러메터로 넘어온 이미 오픈된 folder를 folderMap에 미리 넣는다.
 		folderMap.put(folderPath, folder);
-
-		for (String mailUrl : mailList) {
-			mailFolderPath = mailUrl.split("/")[0];
-			mailUid = Long.parseLong(mailUrl.split("/")[1]);
+		
+		if (folder != null && !searchSubFolder && mailList.size() > 0) {
+			logger.debug("single folder search. folderPath=" + folderPath);
 			
-			if (folderMap.containsKey(mailFolderPath)) {
-				mailFolder = folderMap.get(mailFolderPath);
-				message = ((IMAPFolder)mailFolder).getMessageByUID(mailUid);
+			int mailListCount = mailList.size();
+			long[] mailUids = new long[mailListCount];
+			
+			for (int i = 0; i < mailListCount; i++) {
+				String mailUrl = mailList.get(i);
+				mailUids[i] = Long.parseLong(mailUrl.split("/")[1]);
+			}			
+			
+			Message[] messages = ((IMAPFolder)folder).getMessagesByUID(mailUids);
+			
+			logger.debug("advancedSearchFolder ended.");
+			return messages;
+		} else {
+			for (String mailUrl : mailList) {
+				mailFolderPath = mailUrl.split("/")[0];
+				mailUid = Long.parseLong(mailUrl.split("/")[1]);
 				
-				if (message != null) {
-					messageList.add(message);
-				}
-			} else {
-				mailFolder = ia.getFolder(mailFolderPath);
-				mailFolder.open(Folder.READ_ONLY);
-				folderMap.put(mailFolderPath, mailFolder);
-				message = ((IMAPFolder)mailFolder).getMessageByUID(mailUid);
-				
-				if (message != null) {
-					messageList.add(message);
+				if (folderMap.containsKey(mailFolderPath)) {
+					mailFolder = folderMap.get(mailFolderPath);
+					message = ((IMAPFolder)mailFolder).getMessageByUID(mailUid);
+					
+					if (message != null) {
+						messageList.add(message);
+					}
+				} else {
+					mailFolder = ia.getFolder(mailFolderPath);
+					mailFolder.open(Folder.READ_ONLY);
+					folderMap.put(mailFolderPath, mailFolder);
+					message = ((IMAPFolder)mailFolder).getMessageByUID(mailUid);
+					
+					if (message != null) {
+						messageList.add(message);
+					}
 				}
 			}
 		}
