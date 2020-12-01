@@ -243,9 +243,10 @@ public class KlibUtil {
 
 	private void debugBytes(String byteArrayName, byte[] bytes) {
 		boolean isGreaterThanEllipsis = bytes.length > DEBUG_BYTE_SIZE;
-		byte[] ellipsisBytes = new byte[DEBUG_BYTE_SIZE];
+		int debugSize = isGreaterThanEllipsis ? DEBUG_BYTE_SIZE : bytes.length;
+		byte[] ellipsisBytes = new byte[debugSize];
 
-		System.arraycopy(bytes, 0, ellipsisBytes, 0, DEBUG_BYTE_SIZE);
+		System.arraycopy(bytes, 0, ellipsisBytes, 0, debugSize);
 
 		LOGGER.debug(isGreaterThanEllipsis ? "{}: {}…, to string: {}…" : "{}: {}, to string: {}", byteArrayName, DatatypeConverter.printHexBinary(ellipsisBytes), new String(ellipsisBytes));
 	}

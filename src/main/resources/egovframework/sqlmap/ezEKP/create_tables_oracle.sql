@@ -3730,7 +3730,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"SUSINENDCNT" NUMBER(10,0), 
 	"SUSINTIME" FLOAT(126), 
 	"RETURNCNT" NUMBER(10,0), 
-	"TENANT_ID" NUMBER(5,0)
+	"TENANT_ID" NUMBER(5,0),
+	"COMPANYID" VARCHAR2(160)
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_DAILYFORMCOUNTLOG
@@ -3749,7 +3750,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"SUSINENDCNT" NUMBER(10,0), 
 	"SUSINTIME" FLOAT(126), 
 	"RETURNCNT" NUMBER(10,0), 
-	"TENANT_ID" NUMBER(5,0)
+	"TENANT_ID" NUMBER(5,0),
+	"COMPANYID" VARCHAR2(160)
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_DELETECABINETINFO
@@ -9834,13 +9836,13 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 --  DDL for Index PK_TBL_DAILYDOCCOUNTLOG
 --------------------------------------------------------
 
-  CREATE UNIQUE INDEX "PK_TBL_DAILYDOCCOUNTLOG" ON "TBL_DAILYDOCCOUNTLOG" ("TENANT_ID", "REGDATE", "DEPTID", "USERID") 
+  CREATE UNIQUE INDEX "PK_TBL_DAILYDOCCOUNTLOG" ON "TBL_DAILYDOCCOUNTLOG" ("TENANT_ID", "REGDATE", "DEPTID", "USERID", "COMPANYID") 
   ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_DAILYFORMCOUNTLOG
 --------------------------------------------------------
 
-  CREATE UNIQUE INDEX "PK_TBL_DAILYFORMCOUNTLOG" ON "TBL_DAILYFORMCOUNTLOG" ("TENANT_ID", "REGDATE", "FORMID", "FORMCONTID") 
+  CREATE UNIQUE INDEX "PK_TBL_DAILYFORMCOUNTLOG" ON "TBL_DAILYFORMCOUNTLOG" ("TENANT_ID", "REGDATE", "FORMID", "FORMCONTID", "COMPANYID") 
   ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_DEPTCONT
