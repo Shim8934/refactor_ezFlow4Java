@@ -110,7 +110,7 @@
 		    var pMailListDiv_H = 0;
 		    var pMailPreVDiv_H = 0;
 		    var p_ListorderValue = "";
-		    var pPreviewShow_HOW = "OFF";
+		    var pPreviewShow_HOW = "";
 		    var clickPreviweType = "TEXT";
 		    var PreviewH_Move = false;
 		    var selobj = null;
@@ -307,11 +307,14 @@
 		            AddOption(sel_status, '<spring:message code="ezApproval.t854"/>', 'Y');
 	            }
 	            
-	            if (previewInfo == "H") {
-					PreviewRayerChange(previewInfo, 'Container');
-				} else {
-					PreviewRayerChange("NONE", 'Container');
+	            if (pPreviewShow_HOW == "") {
+					if (previewInfo != null && previewInfo.trim() != "") {
+						pPreviewShow_HOW = previewInfo;
+					} else {
+						pPreviewShow_HOW = "OFF";
+					}
 				}
+				PreviewRayerChange(pPreviewShow_HOW, 'Container');
 	        };
 			
 	        // 부재자정보 체크

@@ -536,7 +536,11 @@
 				}		
 				
 				if (pPreviewShow_HOW == "") {
-					pPreviewShow_HOW = previewInfo;
+					if (previewInfo != null && previewInfo.trim() != "") {
+						pPreviewShow_HOW = previewInfo;
+					} else {
+						pPreviewShow_HOW = "OFF";
+					}
 				}
 				PreviewRayerChange(pPreviewShow_HOW, 'Manage');
 		    }

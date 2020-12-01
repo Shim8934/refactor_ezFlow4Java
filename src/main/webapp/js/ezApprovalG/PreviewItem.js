@@ -1,11 +1,14 @@
 ﻿function PreviewRayerChange(pGubun, pPage) {
+	if (pGubun == "NONE") {
+		pGubun = "OFF";
+	}
     pGubun = pGubun.trim();
     selobj = null;
     document.getElementById("ifrmPreViewH").src = "";
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
     selobj = DocList.GetSelectedRows()[0];
-    if (selobj != null && pGubun != "NONE" && selobj.childNodes.length != 0) {
+    if (selobj != null && pGubun != "OFF" && selobj.childNodes.length != 0) {
     	ItemPreviewRead(selobj, pPage);   
     	$(document).ready(function () {
     		$("#ifrmPreViewH").load(function(){
@@ -30,10 +33,6 @@
     		}    		
     	}
     }
-
-    if (pGubun == "OFF") {
-    	pGubun = "NONE";
-    }
     
     try {
         if (document.getElementById("previewmail_bar_h") != null)
@@ -45,7 +44,7 @@
         }
 
         isPreviewChange = true;
-        if (pGubun == "NONE") {
+        if (pGubun == "OFF") {
             pPreviewShow_HOW = "OFF";
             document.getElementById("PreviewRayerH").style.display = "none";
             CurrentHeight = document.documentElement.clientHeight - 133;
