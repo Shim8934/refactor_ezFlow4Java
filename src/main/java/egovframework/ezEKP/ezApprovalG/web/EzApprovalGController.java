@@ -301,7 +301,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			List<KEDSharedUserInfo> deptShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "D", userInfo.getTenantId());
 			Map<String, List<ApprGFormVO>> shareUsersItemList = new HashMap<String, List<ApprGFormVO>>(); 
 			for (KEDSharedUserInfo kedSharedUserInfo : deptShareList) {
-				List<ApprGFormVO> shareUserItemList = ezApprovalGService.getFormContainer(userInfo.getTenantId(), userInfo.getCompanyID(), kedSharedUserInfo.getShareId(), userInfo.getId());
+				List<ApprGFormVO> shareUserItemList = ezApprovalGService.getFormContainer(userInfo.getTenantId(), "", kedSharedUserInfo.getShareId(), userInfo.getId());
 				shareUsersItemList.put(kedSharedUserInfo.getShareId(), shareUserItemList);
 			}
 			List<KEDSharedUserInfo> userShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "U", userInfo.getTenantId());

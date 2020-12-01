@@ -32107,32 +32107,10 @@
 			C.CONTAINEROWNDEPID = #deptId#
 		AND 
 			E.TENANT_ID = #tenantId#
-		AND
-			E.COMPANYID IN (
-                SELECT 
-                    EXTENSIONATTRIBUTE2 
-                FROM 
-                    TBL_DEPTMASTER 
-                INNER JOIN 
-                    TBL_ADDJOBMASTER 
-                ON
-                    (TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-                AND
-                    TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-                WHERE 
-                    TBL_ADDJOBMASTER.TENANT_ID = #tenantId#
-                AND 
-                    TBL_ADDJOBMASTER.CN = #userId#
-                UNION ALL
-                SELECT 
-                    PHYSICALDELIVERYOFFICENAME
-                FROM
-                    TBL_USERMASTER
-                WHERE
-                    CN = #userId#
-                AND
-                    TENANT_ID = #tenantId#
-            )
+        <isNotEmpty property="companyId">
+        AND
+            E.COMPANYID = #companyId#
+        </isNotEmpty>
 	</select>
 	
 	<select id="EzApprovalG.getShareList" parameterClass="Map" resultClass="KEDSharedUserInfo">
