@@ -99,6 +99,7 @@
         var SaveHtml = "";
         var isConvSihang = ${isConvSihang};
         var HtmlBody = "";
+        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
         
         // 대용량첨부 관련
         var bigAttachDownloadPeriod = "<c:out value ='${bigAttachDownloadPeriod}'/>";

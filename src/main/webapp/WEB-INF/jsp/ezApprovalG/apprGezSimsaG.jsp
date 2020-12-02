@@ -97,7 +97,13 @@
 		    var ext = "mht";
 		    var docTitle = "";
 		    var isConvSihang = ${isConvSihang};
+		    var useWebHWP = "<c:out value ='${useWebHWP}'/>";
 		    
+	        // 대용량첨부 관련
+	        var bigAttachDownloadPeriod = "<c:out value ='${bigAttachDownloadPeriod}'/>";
+	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
+	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
+	        
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "");
 		    }
@@ -119,6 +125,9 @@
 		                }
 		            }
 		        }
+		        
+				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
+				setAttachGuideText();
 		    }
 		    var noFieldsAvailable = false;
 		    function FieldsAvailable() {
@@ -1867,6 +1876,33 @@
 	            	}
 	            }
 		    }
+		    
+	    	// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
+	    	function setAttachGuideText() {
+	    		// 대용량첨부의 자동삭제 기능, 저장만료기한 사용하지 않음
+	            var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+	            
+	            if(bigSizeAttachDownloadLimitCount > 0) {
+	            	attachGuideText += strLangHSBAt06 + " <span style='color:#FF0000 ;'>" + bigSizeAttachDownloadLimitCount + strLangHSBAt09 + "</span> " + strLangHSBAt10;
+	            }
+	            
+	            attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+	            attachGuideText += "</td>";
+	/*                 
+	            var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+	            attachGuideText += strLangHSBAt05 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadPeriod + "</span></td>";
+	            attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+	            attachGuideText += strLangHSBAt06 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadDay + strLangHSBAt07 + "</span>" + strLangHSBAt08;
+	             */
+	             
+	             if (bigSizeAttachDownloadLimitCount > 0) {
+	            	 document.getElementById("apprAttachGuideTR").innerHTML = attachGuideText;
+	             }
+	             else {
+	            	 document.getElementById("apprAttachGuideTR").style.display = "none";
+	             }
+	    	}
+	    	
 		</script>
 	</head>
 	<body class="popup"  style="overflow:hidden;height:100%;">
@@ -1899,12 +1935,28 @@
 		    </td>
 		  </tr>
 			<tr> 
-				<td style="height:20px;"><table class="file">
-		        <tr>
-		          <th><spring:message code='ezApprovalG.t65'/></th>
-		          <td><div id="lstAttachLink"></div></td>
-		        </tr>
-		      </table> 
+				<td style="height:20px;">
+	                <table class="file" style="height:80px;">
+	                    <tr>
+	                        <th><spring:message code='ezApprovalG.t65'/></th>
+	                        <td style=" width:62%; border-right:1px solid #d5d5d5;">
+	                            <div id="lstAttachLink" style="height:70px;"></div>
+	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
+	                        </td>
+							<td class="pos2" style="width:8%; background:#fffcfa;">
+									<a class="imgbtn imgbck" style="width:60px;"><span style="padding:0px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+									<a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
+		                        </td>
+	                        <td style=" width:30%;">
+								<div id="lstAttachLinkDoc" style="height:70px;"></div>
+							</td>
+	                    </tr>
+	                </table>
+	                
+					<%-- 대용량첨부 가이드 메세지 영역 --%>
+	                <table class="file" style="height: 20px;">
+	                    <tr id="apprAttachGuideTR"></tr>
+	                </table>
 				</td>
 			</tr>
 		</table>

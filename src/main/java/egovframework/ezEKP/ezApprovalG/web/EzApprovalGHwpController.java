@@ -1747,6 +1747,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("pSusinAdmin", pSusinAdmin);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		// 대용량첨부 관련 정보
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
@@ -1833,6 +1834,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("docNumZeroCnt", docNumZeroCnt);
 		model.addAttribute("signImageSize", signImageSize);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		// 대용량첨부 관련 정보
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
@@ -1893,6 +1895,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    model.addAttribute("orgCompanyID", orgCompanyID);
 	    model.addAttribute("docTitle", docTitle);
 	    model.addAttribute("isConvSihang", isConvSihang);
+	    model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		// 대용량첨부 관련 정보
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
