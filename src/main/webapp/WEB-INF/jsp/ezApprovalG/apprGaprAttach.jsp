@@ -257,7 +257,7 @@
 						return;
 					} else {
 				        document.getElementById("btn_AttachDel").disabled = false;
-				        document.getElementById("attachsn").value = pAttachSN;            
+				        document.getElementById("attachsn").value = pAttachSN;
 				        document.getElementById("maxsize").value = pBoardFileSize * 1024 * 1024; 
 				        var frm = document.getElementById('form');
 				        frm.submit();
@@ -862,13 +862,16 @@
 		     	// 대용량첨부파일 최대개수 초과 체크
 				var checkBigAttachResult = checkBigAttachFileCntLimit(calBigAttachCnt);
 		        if (checkBigAttachResult == "NO") {
+		        	isfileup = false;
 		        	document.form.file1.value = "";
 		        	return;
 		        }
 		        
 		        // 대용량첨부파일 최대크기 초과 체크
-				if (bigAttachSize + calBigAttachSize > (bigSizeApprAttachLimit * 1024 * 1024)) {
+				if (bigAttachSize + calBigAttachSize > parseInt(bigSizeApprAttachLimit) * 1024 * 1024) {
 		        	alert(strLangHSBAt03 + bigSizeApprAttachLimit  + strLangHSBAt04);
+		        	isfileup = false;
+		        	document.form.file1.value = "";
 		        	return;
 		        }
 
@@ -876,8 +879,8 @@
 		        if (apprTotalAttachLimit != "") {
 			        if (apprTotalAttachLimit > 0) {
 			        	var totMaxSize = parseInt(apprTotalAttachLimit) * 1024 * 1024;
-	
-			        	if (totalSize + calTotalSize > totMaxSize) {
+			        	
+			        	if (parseInt(totalSize + calTotalSize) > totMaxSize) {
 				        	alert(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
 				        	isfileup = false;
 				        	// 용량 초과 파일 같은 파일 업로드 시 알러트 다시 뜨게 수정 2018-04-19 강민수92
@@ -1123,12 +1126,16 @@
 		     	// 대용량첨부파일 최대개수 초과 체크
 				var checkBigAttachResult = checkBigAttachFileCntLimit(calBigAttachCnt);
 		        if (checkBigAttachResult == "NO") {
+		        	isfileup = false;
+		        	document.form.file1.value = "";
 		        	return;
 		        }
 		        
 		        // 대용량첨부파일 최대크기 초과 체크
-				if (bigAttachSize + calBigAttachSize > (bigSizeApprAttachLimit * 1024 * 1024)) {
+				if (bigAttachSize + calBigAttachSize > parseInt(bigSizeApprAttachLimit) * 1024 * 1024) {
 		        	alert(strLangHSBAt03 + bigSizeApprAttachLimit  + strLangHSBAt04);
+		        	isfileup = false;
+		        	document.form.file1.value = "";
 		        	return;
 		        }
 
@@ -1136,10 +1143,11 @@
 		        if (apprTotalAttachLimit != "") {
 			        if (apprTotalAttachLimit > 0) {
 			        	var totMaxSize = parseInt(apprTotalAttachLimit) * 1024 * 1024;
-	
-			        	if (totalSize + calTotalSize > totMaxSize) {
+			        	
+			        	if (parseInt(totalSize + calTotalSize) > totMaxSize) {
 				        	alert(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
 				        	isfileup = false;
+				        	document.form.file1.value = "";
 				        	return;
 				        } else {
 				        	totalSize += calTotalSize;
