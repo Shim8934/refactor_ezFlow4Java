@@ -1242,11 +1242,10 @@
 		    <div class="btnposition btnpositionNew">       
 		        <input id="file1" name="file1" type="file" onchange="onDrop()" multiple="multiple" style="margin-left:100px; display: none;">
 		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd" onclick="isBigAttachButtonClick('N')" style="cursor:pointer"><spring:message code='ezApprovalG.t268'/></span></label></a>
-		        
 		        <%-- 2020-11-12 홍승비 - 대용량첨부기능 추가 --%>
-		        <a class="imgbtn"><label for="file1"><span id="btn_BigAttachAdd" onclick="isBigAttachButtonClick('Y')" style="cursor:pointer"><spring:message code='ezEmail.t663'/></span></label></a>
+		        <a class="imgbtn"><label for="file1"><span id="btn_BigAttachAdd" onclick="isBigAttachButtonClick('Y')" style="cursor:pointer"><spring:message code='ezSystem.HSBAppr11'/></span></label></a>
 		        <%-- 2020-11-17 홍승비 - 웹폴더첨부기능 추가 --%>
-				<a class="imgbtn"><span id="btn_WebFolderAttachAdd" onclick="isBigAttachButtonClick('N'); filePicker();" style="cursor:pointer"><spring:message code='ezSystem.HSBAppr06'/></span></a>
+				<a class="imgbtn"><span id="btn_WebFolderAttachAdd" onclick="isBigAttachButtonClick('N'); filePicker();" style="cursor:pointer"><spring:message code='ezSystem.HSBAppr12'/></span></a>
 		         
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
 				<%-- 2020-03-19 홍승비 - 첨부파일 위/아래 이동버튼 추가 --%>
