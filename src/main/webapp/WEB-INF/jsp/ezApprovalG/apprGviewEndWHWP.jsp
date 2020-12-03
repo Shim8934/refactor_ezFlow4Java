@@ -464,6 +464,109 @@
                  }
 	    	}
 		 
+		var editable = "";
+	 	function btnReuse_onclick(type) {
+	 		editable = type;
+	 		var parameter = new Array();
+	        parameter[0] = "sol2";
+	        parameter[1] = "A01000";
+	        
+	        url = "/ezApprovalG/getFormCont.do";
+	        
+	        if (CrossYN()) {
+	            getformcont_cross_dialogArguments[0] = parameter;
+	            getformcont_cross_dialogArguments[1] = btnReuse_onclick_complete;
+	            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+	            
+	            try { getFormCont_Cross.focus(); } catch (e) {}
+	        } else {
+	            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+	            var ret = window.showModalDialog(url, parameter, feature);
+	            formURL = ret[0];
+	            formDocType = ret[1];
+	            
+	            if (formURL != "cancel") {
+	                openDraftUI(formURL, formDocType);
+	            }
+	        }
+	 	}
+	 	
+	 	var editable = "";
+	 	var newFormURL = "";
+	 	var newFormDocType = "";
+		function btnReuse_onclick_complete(ret) {
+			if(ret[0] != "cancel") {
+				newFormURL = ret[0];
+		        newFormDocType = ret[1];
+		        newFormID = newFormURL.substring(newFormURL.lastIndexOf("/")+1);
+		        
+				var pAlertContent;
+				 $.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		data : {
+			    			formID : newFormID,
+			    			companyID : orgCompanyID
+			    		},
+			    		url : "/ezApprovalG/getFormDetail.do",
+			    		success: function(xml){
+							xml = loadXMLString(xml);
+							
+							var currConnflag = getNodeText(GetElementsByTagName(xml, 'FORMCONNFLAG')[0]);
+							var currVersion = getNodeText(GetElementsByTagName(xml, 'FORMVERSION')[0]);
+	
+							if(currConnflag === 'Y') {
+								pAlertContent = '연동양식은 재사용 할 수 없습니다.';
+								OpenAlertUI(pAlertContent);
+								return;
+							}
+							
+							openDraftUI("DRAFT", "");
+						},
+						error: function() {
+							pAlertContent = '문서 재사용에 실패하였습니다.';
+							OpenAlertUI(pAlertContent);
+						}        			
+		    	});
+			}
+	     }
+		 
+		function openDraftUI(pDraftFlag) {
+			var param = {
+				formURL : newFormURL,
+				draftFlag : pDraftFlag,
+				formDocType : newFormDocType,
+				susinSN : "0",
+				docstate : "",
+				listType : "1",
+				aprState : "",
+				isTmpDoc : "",
+				isUsed : editable,
+				beforeDocID : pDocID
+			}
+	        
+			var openLocation = "";
+			
+			if(useWebHWP == "YES")
+				openLocation = "/ezApprovalG/draftuiWHWP.do";
+			else 
+				openLocation = "/ezApprovalG/draftuiHWP.do";
+			
+			openLocation = openLocation
+				+ "?formURL=" + escape(param.formURL)
+				+ "&draftFlag=" + escape(param.draftFlag)
+				+ "&formDocType=" + escape(param.formDocType)
+				+ "&susinSN=" + escape(param.susinSN) 
+				+ "&docState=" + escape(param.docstate) 
+				+ "&listType=" + escape(param.listType) 
+				+ "&aprState=" + escape(param.aprState)
+				+ "&isTmpDoc=" + escape(param.isTmpDoc) 
+				+ "&isUsed=" +  escape(param.isUsed)
+				+ "&beforeDocID=" + escape(param.beforeDocID);
+	        
+	        var result = GetOpenWindow(openLocation, "", 1050, 970, "YES");
+	        window.close();
+	    }
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden" onload="javascript:window_onload()">
@@ -479,6 +582,7 @@
 	                        <c:if test="${useBoard == 'YES' }">
 	                        <li id="btnBoard"><span onclick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 	                        </c:if>
+	                        <li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
 	                    	<c:if test="${useExternalMailServer == 'NO' }">
 	                        <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onclick="return btnMail_onclick()"></span></li>
