@@ -8935,7 +8935,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 부서병렬합의 접수 컨텐츠2 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/recevContent2.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/ezApprovalG/recevContentTwo.do", method = RequestMethod.GET)
 	public String recevContent2() throws Exception{
 		logger.debug("recevContent2 started");
 		logger.debug("recevContent2 ended");

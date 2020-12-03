@@ -1162,7 +1162,7 @@
 		            </tr>
 		            <tr>
 		                <td style="vertical-align: top;">
-		                    <iframe id="message2" name="message2" src="recevContent2.do" style="background-color: White; height: 0px; width: 0px; border: none"></iframe>
+		                    <iframe id="message2" name="message2" src="recevContentTwo.do" style="background-color: White; height: 0px; width: 0px; border: none"></iframe>
 		                </td>
 		            </tr>
 		        </table>

@@ -2655,7 +2655,7 @@ public class EzAttitudeController {
 	/**
 	 *  관리자 작성화면2
 	 */
-	@RequestMapping(value = "/ezAttitude/attAdminNewItem2.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/ezAttitude/attAdminNewItemTwo.do", method = RequestMethod.GET)
 	public String attAdminNewItem2(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attAdminNewItem started");
 		
