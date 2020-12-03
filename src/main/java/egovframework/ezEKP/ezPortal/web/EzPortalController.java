@@ -2841,7 +2841,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").equals("")) {
-			topMenuID = req.getParameter("topMenuID");
+			topMenuID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("topMenuID")));
 		}
 		
 		if (funCode.equals("1")) {
@@ -3506,7 +3506,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String topMenuID = "";
 		
 		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").equals("")) {
-			topMenuID = req.getParameter("topMenuID");
+			topMenuID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("topMenuID")));
 		}
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -3599,10 +3599,10 @@ public class EzPortalController extends EgovFileMngUtil {
 		String rUrl = "";
 		
 		if (req.getParameter("lUrl") != null && !req.getParameter("lUrl").equals("")) {
-			lUrl = req.getParameter("lUrl");
+			lUrl = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("lUrl")));
 		}
 		if (req.getParameter("rUrl") != null && !req.getParameter("rUrl").equals("")) {
-			rUrl = req.getParameter("rUrl");
+			rUrl = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("rUrl")));
 		}
 		
 		model.addAttribute("lUrl", lUrl);

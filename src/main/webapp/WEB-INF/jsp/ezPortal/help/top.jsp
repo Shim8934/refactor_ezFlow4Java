@@ -30,7 +30,7 @@
 		<script type="text/javascript">
 			var beforethis;
 			var lang = "${userInfo.lang}";
-			var topMenuID = "${topMenuID}";
+			var topMenuID = "<c:out value='${topMenuID}'/>";
 			
 			window.onload = function () {
 				if ("${firstScreen_Mail}" == "YES") {

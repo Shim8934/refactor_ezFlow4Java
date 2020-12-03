@@ -131,7 +131,7 @@
 								</c:if>
 								<tr>
 									<th nowrap style="height:26px"><spring:message code='main.t76' /></th>
-									<td id="username">${LiteralDisplayName }</td>
+									<td id="username"><c:out value='${LiteralDisplayName}'/></td>
 								</tr>
 								<tr>
 									<th nowrap style="height:26px"><spring:message code='main.t77' /></th>
@@ -139,7 +139,7 @@
 								</tr>
 								<tr>
 									<th nowrap style="height:27px" ><spring:message code='main.t78' /></th>
-									<td ><span id="email" style="cursor:pointer" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" onClick="email_onclick()">${LiteralEmail }</span></td>
+									<td ><span id="email" style="cursor:pointer" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" onClick="email_onclick()"><c:out value='${LiteralEmail}'/></span></td>
 						        </tr>
 						    </table>
 						    

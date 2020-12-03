@@ -255,7 +255,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		//내게쓰기 
 		String isMailToMe = "NO";
 		if (request.getParameter("isMailToMe") != null) {
-			isMailToMe = request.getParameter("isMailToMe");
+			isMailToMe = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("isMailToMe")));
 		}
 
 		if (!(tempStr.equals("") || tempStr.equals("REPLY") || tempStr.equals("REPLYALL") || tempStr.equals("FORWARD") || tempStr.equals("READ") 

@@ -24,7 +24,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/ListView_list.js')}"></script>
 		<script type="text/javascript">
-		    var type = "${type}";
+		    var type = "<c:out value='${type}'/>";
 		    var tagName = "${tagName}";
 		    var ReturnFunction;
 		    var userID = "${userInfo.id}";
