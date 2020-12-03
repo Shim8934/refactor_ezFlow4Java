@@ -1266,12 +1266,12 @@
 	                        <td style=" width:62%; border-right:1px solid #d5d5d5;">
 	                            <div id="lstAttachLink" style="height:70px;"></div>
 	                        </td>
-							<td class="pos2" style="width:8%; background:#fffcfa;">
-								<a class="imgbtn imgbck" style="width:60px;"><span style="padding:0px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-								<a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
-	                        </td>
 	                        <td style=" width:30%;">
 								<div id="lstAttachLinkDoc" style="height:70px;"></div>
+							</td>
+							<td class="pos2" style="width:8%; background:#fffcfa;">
+								<a class="imgbtn imgbck" style="width:60px;"><span style="padding:0px; height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+								<a class="imgbtn imgbck" style="width:60px;"><span style="padding:0px; height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
 							</td>
 	                    </tr>
 	                </table>
