@@ -770,8 +770,8 @@
 			<![CDATA[
 				ORDER BY
 					A.parentwritedate DESC,
-					A.itemlevel,
-					A.startdate DESC
+					A.upperitemidtree,
+					A.itemlevel
 			]]>
 		</isEqual>
 		
