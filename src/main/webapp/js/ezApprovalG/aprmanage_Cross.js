@@ -485,6 +485,9 @@ function getSendOutDocList_after(xml) {
 
         setbuttonenable();
 
+        //검색 후 페이지네이션이 안되는 현상 수정. 2020-12-02 홍대표.
+        SearchFlag = false;
+
         //DisplayAprLineStat(lstCnt);
 
         if (pDocInfoValue == "1") {

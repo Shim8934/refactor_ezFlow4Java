@@ -2865,13 +2865,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				sb.append("<WriterDeptID>" + commonUtil.cleanValue(boardList.getWriterDeptID()) + "</WriterDeptID>");
 				sb.append("<WriterDeptName>" + commonUtil.cleanValue(boardList.getWriterDeptName()) + "</WriterDeptName>");
 				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(boardList.getWriterCompanyName()) + "</WriterCompanyName>");
-				
-				if (boardList.getWriteDate().equals(boardList.getParentWriteDate())) {
-					sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(boardList.getWriteDate(), offset, false) + "</WriteDate>");
-				} else {
-					sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(boardList.getParentWriteDate(), offset, false) + "</WriteDate>");
-				}
-				
+				sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(boardList.getWriteDate(), offset, false) + "</WriteDate>");
 				sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
 				sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
 				
@@ -3107,7 +3101,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		item.setUpperItemIDTree(xmlData.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
 		
 		if (pMode.equals("reply")) {
-			item.setUpperItemIDTree(item.getUpperItemIDTree() + getReverseDateNow() + item.getItemID());
+			item.setUpperItemIDTree(item.getUpperItemIDTree() + getReverseDateNow());
 		}
 		
 		item.setItemLevel(Integer.parseInt(xmlData.getElementsByTagName("ITEMLEVEL").item(0).getTextContent()));
@@ -4839,13 +4833,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				sb.append("<WriterDeptID>" + commonUtil.cleanValue(board.getWriterDeptID()) + "</WriterDeptID>");
 				sb.append("<WriterDeptName>" + commonUtil.cleanValue(board.getWriterDeptName()) + "</WriterDeptName>");
 				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(board.getWriterCompanyName()) + "</WriterCompanyName>");
-				
-				if (board.getWriteDate().equals(board.getParentWriteDate())) {
-					sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(board.getWriteDate(), offset, false) + "</WriteDate>");
-				} else {
-					sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(board.getParentWriteDate(), offset, false) + "</WriteDate>");
-				}
-				
+				sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(board.getWriteDate(), offset, false) + "</WriteDate>");
 				sb.append("<Importance>" + board.getImportance() + "</Importance>");
 				sb.append("<Title>" + commonUtil.cleanValue(board.getTitle()) + "</Title>");
 				

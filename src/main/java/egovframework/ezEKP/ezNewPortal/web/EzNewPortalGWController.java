@@ -4567,7 +4567,11 @@ public class EzNewPortalGWController {
 						break;
 					}
 				}
-				int approvalCount = Integer.parseInt(appr1);
+				// 2020-12-03 이혁진 포틀릿에 있는 결재할 문서 숫자 대결자로 지정되었을때 숫자 반영하게 변경
+				String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
+				String lang = portletLang;
+				int approvalCount = ezNewPortalService.getApprovalDoingListCount(userId, companyId, tenantId, info.getOffSet(), approvalFlag, lang);
+//				int approvalCount = Integer.parseInt(appr1);
 				int approvalProgressingCount = Integer.parseInt(appr2);
 				int approvalDraftCount = Integer.parseInt(appr3);
 				int approvalDeptSusinCount = Integer.parseInt(appr4);

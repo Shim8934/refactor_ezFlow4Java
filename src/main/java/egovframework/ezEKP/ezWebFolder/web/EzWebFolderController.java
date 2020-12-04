@@ -74,7 +74,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/users/" +userInfo.getId() + "/checkRootFolder";
-		String folderType = req.getParameter("folderType")      != null ? req.getParameter("folderType") : "C";
+		String folderType = req.getParameter("folderType")      != null ? commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("folderType"))) : "C";
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
