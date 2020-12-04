@@ -1513,25 +1513,26 @@
 		                        var htmlData = message.GetEditorContentURL(fullPath);
 		                        htmlData = ReplaceText(htmlData, "class=&quot;FIELD&quot;", "");
 		                        htmlData = ReplaceText(htmlData, "class=FIELD", "");
-		                        htmlData = ReplaceText(htmlData, "&amp;", "&");
+		                        /* 2020-11-30 홍승비 - 본문의 내용 내부 특수문자 치환할 필요 없으므로 주석처리, 이스케이프 문자 처리 추가 */
+/* 		                        htmlData = ReplaceText(htmlData, "&amp;", "&");
 		                        htmlData = ReplaceText(htmlData, "&lt;", "<");
-		                        htmlData = ReplaceText(htmlData, "&gt;", ">");
-		                        
+		                        htmlData = ReplaceText(htmlData, "&gt;", ">"); */
 		                        htmlData = "<body free>" + htmlData + "</body>";
-		                        if (gubun != "2"){
+		                        
+		                        if (gubun != "2") {
 		                        	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t424' /></B>" + strWriteDate + "</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t425' /></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B><c:out value = '${boardListVO.title}' /></p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B>" + ReplaceText("<c:out value = '${boardListVO.title}' />", "&amp;#92;", "\\") + "</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 		                        	htmlData = replyHeader + htmlData;
-		                        }else{
+		                        } else {
 		                        	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t424' /></B>" + strWriteDate + "</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t425' /></B>" + strWriterFakeName + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B><c:out value = '${boardListVO.title}' /></p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B>" + ReplaceText("<c:out value = '${boardListVO.title}' />", "&amp;#92;", "\\") + "</p>";
 		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 		                        	htmlData = replyHeader + htmlData;
 		                        }
