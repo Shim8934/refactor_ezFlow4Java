@@ -35,10 +35,12 @@
 			/* 팝업공지 대상자 지정 */
 	        var authList = [];
 	        
-	        window.onload = window_onload;
+	        window.onload = window_onload();
 	        function window_onload() {
 	            //compid = window.dialogArguments;
-
+				// 2020-12-04 이혁진 팝업공지사항 이미지 삽입 하단 버튼 클릭 불가 수정하기위해 팝업 사이즈 재조정
+				console.log('test');
+				window.resizeTo (750,840);
 	            if (startdate == "" && enddate == "") {
 	                var nowDate = new Date();
 	                document.getElementById("Sdatepicker").value = DateFormat(nowDate);
@@ -625,7 +627,8 @@
 			</tr>
 			<tr>
 				<th><spring:message code = 'ezPersonal.t155' /></th>
-				<td id="addPopEditor" style="padding:3px; height:355px">
+				<!-- 2020-12-07 이혁진 팝업공지사항 이미지 삽입 하단 버튼 클릭 불가 수정하기위해 에디터 사이즈 재조정 -->
+				<td id="addPopEditor" style="padding:3px; height:450px">
 					<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0px; height:100%; width:100%; overflow:auto;border:none; margin-bottom:-3px;"></iframe>
 				</td>
 			</tr>
