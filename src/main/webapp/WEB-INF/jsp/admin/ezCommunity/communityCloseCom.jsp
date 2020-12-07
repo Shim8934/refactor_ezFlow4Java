@@ -63,11 +63,11 @@
 			
 			function open_info( code ) {
 				if (CrossYN() && new RegExp(/Chrome/).test(navigator.userAgent)) {
-					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=400,height=375";
-				    feature = feature + GetOpenPosition(380, 350);
+					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=550,height=370";
+				    feature = feature + GetOpenPosition(550, 370);
 				} else {
-					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=380,height=355";
-				    feature = feature + GetOpenPosition(380, 350);
+					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=550,height=360";
+				    feature = feature + GetOpenPosition(550, 360);
 				}
 				
 			    comm = window.open("/admin/ezCommunity/commInfo.do?code=" + code + "&type=Del&title=" + encodeURI("<spring:message code = 'ezCommunity.t38' />") + "", "", feature);

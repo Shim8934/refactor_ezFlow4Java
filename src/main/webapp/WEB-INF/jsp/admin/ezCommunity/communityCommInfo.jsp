@@ -13,7 +13,7 @@
 		
 		<script type="text/javascript">
 			window.onload = function () {	        	
-	        	window.resizeTo(550, 360 + window.outerHeight - window.innerHeight);
+	        	//window.resizeTo(550, 360 + window.outerHeight - window.innerHeight);
 	        	
 				var agent = navigator.userAgent.toLowerCase(); 
 				if (!CrossYN() || agent.search( "trident" ) > -1 ) {
