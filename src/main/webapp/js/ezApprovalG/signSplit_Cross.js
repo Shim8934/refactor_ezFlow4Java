@@ -18,7 +18,7 @@ function setSignSlash(pSignKinds, pSusin) {
     var field, fieldvalue;
     var tempFieldName;
     var fields = message.GetFieldsList();
-    for (i = 1; i < 20; i++) {
+    for (i = 1; i < 21; i++) {
         fieldName = pSusin + pSignKinds + i;
         field = message.GetListItem(fields, fieldName);
         if (field) {
