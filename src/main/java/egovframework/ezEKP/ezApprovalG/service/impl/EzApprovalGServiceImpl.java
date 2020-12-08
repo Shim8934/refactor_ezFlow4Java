@@ -1851,7 +1851,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		logger.debug("stringBuiler : " + sb.toString());
 		logger.debug("getDocType ended.");
 		
 		return sb.toString();
@@ -1932,7 +1931,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</ROWS>");
 		resultXML.append("</LISTVIEWDATA>");
 		
-		logger.debug("resultXML : " + resultXML);
 		logger.debug("getFormInfo ended.");
 
 		return resultXML.toString();
@@ -3601,8 +3599,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					rtnXML.append("<DISPLAYNAME>" + "" + "</DISPLAYNAME><JOBTITLE><![CDATA[");
 					rtnXML.append(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(p).getTextContent().trim() + "]]></JOBTITLE><JOBTITLE2><![CDATA[");
 					rtnXML.append(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(p).getTextContent().trim() + "]]></JOBTITLE2></ROW>");
-					
-					logger.debug("<<<in FOR rtnXML : " + rtnXML.toString());
 				}
 			}
 		}
@@ -20390,9 +20386,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		sb.append("</DATA>");
 
 		logger.debug("getFormInfoDB ended");
-		
-		logger.debug("sb.toString() : " + sb.toString()); 
-		
 		return sb.toString();
 	}
 
@@ -29131,17 +29124,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("isPortal", "Y");
 		
 		List<ApprGFormVO> apprGFormVOlist = ezApprovalGDAO.getFormInfo(map); 
-		
-		//구해안 잠시 결과물 로그 찍어봄
-		int count1 =0;
-		logger.debug("========즐겨찾기 리스트 맞는지 확인 시작========");
-		for (ApprGFormVO fL : apprGFormVOlist) {
-			count1++;
-			logger.debug("getUserID" + count1 + "  :  " + fL.getUserID());
-			logger.debug("getFormID" + count1 + "  :  " + fL.getFormID());
-			logger.debug("getFormName" + count1 + "  :  " + fL.getFormName());
-		}
-		logger.debug("========즐겨찾기 리스트 맞는지 확인 끝========");
 	
 		return apprGFormVOlist;
 	}
