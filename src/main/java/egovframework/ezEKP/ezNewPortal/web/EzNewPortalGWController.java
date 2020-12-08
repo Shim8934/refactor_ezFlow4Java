@@ -5371,4 +5371,87 @@ public class EzNewPortalGWController {
 		LOGGER.debug("ezNewPortal G/W checkMenuAuth ended.");
 		return result;
 	}
+
+	/**
+	 * 포탈개인화 G/W [GET] 포틀릿 - 탭 게시판 포틀릿 조회 - 박기범:2020/12/03
+	*/
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPortal/portlets/tabBoard", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getTabBoardPortlet(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getTabBoardPortlet started.");
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = info.getTenantId();
+			String deptId = info.getDeptID();
+			String deptPath = info.getDeptPathCode();
+			deptPath = "everyone," + deptPath + "," + userId;
+			String companyId = info.getCompanyID();
+			String rollInfo = info.getRollInfo();
+			String portletLang = info.getLang();
+			//회사의 존재하는 탭게시판 불러오기, 탭ID, boardid, boardname을 리턴한다.
+			List<HashMap<String, Object>> tabBoardIdList = ezBoardService.getCompanyTabBoardIDList(companyId, tenantId);
+			
+			// 전송할 data
+			JSONObject data = new JSONObject();
+			
+			if (tabBoardIdList.size() > 0) {
+				data.put("existence" , "true");
+				
+				for (HashMap<String, Object> hashMap : tabBoardIdList) {
+					String tabBoardId = hashMap.get("BOARDID").toString();
+					String tabBoardName = hashMap.get("BOARDNAME").toString();
+					// 탭게시판 권한 체크
+					boolean accessCheckSub = boardAuthCheck(tabBoardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+					
+					if (accessCheckSub) {
+						List<HashMap<String, Object>> tabBoardList = ezBoardService.getBoardListItem(tabBoardId, userId, 1, 5, 5, "WRITEDATE DESC", "", "1", tenantId);
+						List<JSONObject> tabBoard = new ArrayList<JSONObject>();
+						
+						for (int j = 0; j < tabBoardList.size(); j++) {
+							JSONObject subData = new JSONObject();
+							String writeDateSub = tabBoardList.get(j).get("WRITEDATE").toString();
+							subData.put("writeDate", commonUtil.getDateStringInUTC(writeDateSub, info.getOffset(), false));
+							subData.put("itemID", tabBoardList.get(j).get("ITEMID").toString());
+							subData.put("guBun", tabBoardList.get(j).get("GUBUN").toString());
+							
+							if (tabBoardList.get(j).get("EXTENSIONATTRIBUTE6") != null){
+								subData.put("extensionAttribute6", tabBoardList.get(j).get("EXTENSIONATTRIBUTE6").toString());
+							}
+							
+							subData.put("title", tabBoardList.get(j).get("TITLE").toString());
+							subData.put("writerName", tabBoardList.get(j).get("WRITERNAME").toString());
+							subData.put("writerName2", tabBoardList.get(j).get("WRITERNAME2").toString());
+							subData.put("boardID", tabBoardList.get(j).get("BOARDID").toString());
+							tabBoard.add(subData);
+						}
+						
+						String tabId = hashMap.get("TABID").toString();
+						data.put("tabBoardId" + tabId, tabBoardId);
+						data.put("tabBoard" + tabId, tabBoard);
+						data.put("tabBoardName" + tabId, tabBoardName);
+					}
+					data.put("portletLang", portletLang);
+				}
+				
+			} else {
+				data.put("existence" , "false");
+			}
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("ezNewPortal G/W getTabBoardPortlet ended.");
+		return result;
+	}
 }

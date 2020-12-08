@@ -414,6 +414,8 @@
 					var portletNameList;
 					var listHTML = "";
 					var portletCnt = result.length;
+					// 2020-12-07 박기범 - portletCode 조회 추가 
+					var portletCode ="";
 					
 					for (var i = 0; i < portletCnt; i++) {
 						portletId = result[i].portletId;
@@ -424,7 +426,8 @@
 						portletNameList = result[i].portletNameList;
 						menuId = result[i].menuId;
 						portletNameListCnt = portletNameList.length;
-						
+						portletCode =  result[i].portletCode;
+
 						listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder + "' data2='" + menuId + "' data-url='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(result[i].portletUrl), '\"', "&#39;"), "\'", "&#34;") + "'>";
 						
 						if (usePrimaryLangOnly == "YES") {
@@ -499,7 +502,8 @@
 							
 						}
 						
-						if (menuId == 4 && portletId != 10) {
+						// 2020-12-07 박기범:tabBoard 게시판도 게시판설정 감추도록 분기 추가
+						if (menuId == 4 && portletId != 10 && portletCode != "tabBoard") {
 							listHTML += "<tr class='boardTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t048' /> :</th><td class='portletInfoTD'>";
 							
 							var boardName = "";

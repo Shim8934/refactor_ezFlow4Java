@@ -4809,4 +4809,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("isMyBoardExist ended");
 		return result;
 	}
+	
+	// 2020-12-03 박기범 - 회사별 탭게시판에 존재하는 ID와 boardname를 리턴하는 메서드
+	@Override
+	public List<HashMap<String, Object>> getCompanyTabBoardIDList(String companyID, int tenantID) throws Exception {
+		logger.debug("getCompanyTabBoardIDList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+		
+		logger.debug("getCompanyTabBoardIDList ended");
+		return  ezBoardDAO.getCompanyTabBoardIDList(map);
+	}
 }

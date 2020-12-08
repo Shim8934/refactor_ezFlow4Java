@@ -229,6 +229,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertDailyWorkAttitudeColumn(); //2020-08-07 김정언 - 근태관리 WORK_STATUS (일근무/반근무) 컬럼 추가
 	    	ezCommonService.addFormSihangTypeColumn(); //2020-11-23 김보혜 전자결재G 시행문일때 내부발송/유통(외부)발송 양식 구분 컬럼 추가
 	    	ezCommonService.insertAutoSendOfferFlag(); //2020-11-23 김보혜 전자결재G 문서발송시 발송옵션 추가
+	    	ezCommonService.insertTabBoardPortlet(); //2020-12-03 박기범 - 탭게시판포틀릿 추가
+	    	ezCommonService.createTblTabBoard(); //2020-12-04 탭게시판 등록 용 테이블 추가
     	} catch (Exception e) {
     		e.printStackTrace();
     	}

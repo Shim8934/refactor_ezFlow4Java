@@ -1693,6 +1693,10 @@
 					AND portlet_type = 'G' 
 				THEN 
 					'webfolder'
+				WHEN portlet_url like '%tabBoardPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'tabBoard'
 			END
 	]]>
 	</update>
@@ -2962,4 +2966,56 @@
         INSERT INTO TBL_TENANT_CONFIG (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION,CONFIG_NAME,REGDATE,CONFIG_TYPE) VALUES 
         (0, 'autoSendOfferFlag', '0', '자동발송의뢰 사용 시 기안부서 최종결재가 끝나면 기안자의 미처리문서함에 도착한다. 0: 자동발송의뢰 사용안함, 1: 자동발송의뢰 사용함 (내부시행문, 민원인시행문만 자동발송의뢰) (default: 0)', '내부시행문 자동발송의뢰 옵션', '2020-11-23 00:00:00.000', '전자결재G')
     </insert>
+
+	<select id="EzCommonDAO.checkTblTabBoard">
+		SELECT 
+			BOARDID
+		FROM 
+			TBL_BOARD_TABBOARD
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblTabBoard">
+		CREATE TABLE `tbl_board_tabboard` (
+			`TABID` 		mediumint(2) 	NOT NULL,
+			`BOARDID` 		varchar(80) 	NOT NULL,
+			`TENANT_ID` 	mediumint(5) 	NOT NULL,
+			`COMPANYID` 	varchar(80) 	NOT NULL,
+			`BOARDNAME` 	varchar(255),
+			`BOARDNAME2` 	varchar(255),
+			PRIMARY KEY (`TABID`,`TENANT_ID`, `COMPANYID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+
+	<select id="EzCommonDAO.checkPortletCodeString" resultClass="int">
+		SELECT 
+            COUNT(*)
+        FROM 
+            TBL_PORTAL_PORTLET
+		WHERE
+			PORTLETCODE = #portletCode#
+	</select>
+
+	<select id="EzCommonDAO.getNewPortletId" resultClass="int">
+		SELECT 
+            (MAX(PORTLET_ID) +1) PORTLET_ID
+        FROM 
+            TBL_PORTAL_PORTLET
+	</select>
+
+	<insert id="EzCommonDAO.insertPortletName">
+		INSERT INTO TBL_PORTAL_PORTLET_NAME
+			(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		VALUES
+			(#portletId#, #menuId#, 1, #tenantId#, #companyId#, #portletName1#),
+			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, #portletName2#),
+			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, #portletName3#)
+	</insert>
+
+	<insert id="EzCommonDAO.insertPortletWithCode">
+		INSERT INTO TBL_PORTAL_PORTLET 
+			(PORTLET_ID, MENU_ID, PORTLET_URL, PORTLET_TYPE, DEFAULT_ORDER, PORTLETCODE)
+		VALUES 
+			(#portletId#, #menuId#, #portletUrl#, #portletType#, #defaultOrder#, #portletCode#)
+	</insert>
 </sqlMap>
