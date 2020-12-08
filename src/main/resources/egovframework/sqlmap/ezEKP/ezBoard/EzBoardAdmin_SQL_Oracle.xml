@@ -2752,7 +2752,7 @@
 		]]>
 	</insert>
 
-	<!-- 2020/12/03 (부)공지게시판 등록, 제거 : 박기범-->
+	<!-- 2020/12/03 탭공지게시판 등록, 제거 : 박기범-->
 	<delete id="EzBoardAdminDAO.deleteTabBoard" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM

@@ -1687,6 +1687,7 @@
 		UPDATE 
 			TBL_PORTAL_PORTLET
 		SET
+			portletcode =
 			CASE
 				WHEN portlet_url like '%receivedMailPortlet%' 
 					AND portlet_type = 'G' 
@@ -1768,10 +1769,6 @@
 					AND portlet_type = 'G' 
 				THEN 
 					'webfolder'
-				WHEN portlet_url like '%tabBoardPortlet%' 
-					AND portlet_type = 'G' 
-				THEN 
-					'tabBoard'
 			END
 	]]>
 	</update>

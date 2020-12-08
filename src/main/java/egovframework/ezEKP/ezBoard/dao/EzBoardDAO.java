@@ -800,7 +800,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.getMyBoardCount", map);
 	}
 
-	/* 2020-12-03 박기범 - (부)공지 게시판 조회 쿼리 추가 */
+	/* 2020-12-03 박기범 - 탭 공지 게시판 조회 쿼리 추가 */
 	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getCompanyTabBoardIDList(Map<String, Object> map) throws Exception {
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getCompanyTabBoardIDList", map);
