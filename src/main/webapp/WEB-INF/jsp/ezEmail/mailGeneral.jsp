@@ -18,7 +18,7 @@
 		    var MailQuater;
 		    var previewSubTree = "${previewSubTree}";
 		    var usePreviewSubTree = "${usePreviewSubTree}";
-		    var dotnetFlag = "${dotnetFlag}";
+		    var dotnetFlag = "<c:out value='${dotnetFlag}'/>";
 		    
 		    window.onload = function()
 		    {

@@ -318,7 +318,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		}
 		
 		if (request.getParameter("email") != null) {
-			email = request.getParameter("email");
+			email = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("email")));
 		}
 		
 		if (request.getParameter("dept") != null) {

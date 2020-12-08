@@ -285,15 +285,15 @@
 				    	<table class="content" style="margin-top:10px;width:450px">
 					        <tr id="oldpassTR">
 					            <th><spring:message code='ezPersonal.t949'/></th>
-					            <td ><input type="password" id="txtOldPassword" size="25" onKeyPress="change_press(event)"  disabled=true maxlength="50"> </td>               
+					            <td ><input type="password" id="txtOldPassword" size="25" onKeyPress="change_press(event)"  disabled=true maxlength="50" autocomplete="off"> </td>               
 					        </tr>
 					        <tr>
 					            <th><spring:message code='ezPersonal.t950'/></th>
-					            <td><input type="password" id="txtNewPassword" size="25" onKeyPress="change_press(event)" disabled=true maxlength="50"></td>               
+					            <td><input type="password" id="txtNewPassword" size="25" onKeyPress="change_press(event)" disabled=true maxlength="50" autocomplete="off"></td>               
 					        </tr>
 					        <tr>
 					            <th><spring:message code='ezPersonal.t951'/></th>
-					            <td><input type="password" id="txtNewPasswordConfirm" size="25" onKeyPress="change_press(event)" disabled=true maxlength="50"></td>               
+					            <td><input type="password" id="txtNewPasswordConfirm" size="25" onKeyPress="change_press(event)" disabled=true maxlength="50" autocomplete="off"></td>               
 					        </tr>
 					    </table>  
 			   	 </div>

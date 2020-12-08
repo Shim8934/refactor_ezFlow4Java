@@ -204,6 +204,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
 		String dotnetFlag = request.getParameter("dotnetFlag");
 		
+		if (dotnetFlag != null) {
+			dotnetFlag = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(dotnetFlag));
+		}
+		
 		if (keepDeleteLength.equals("30")) {
 			keepDeleteLength = "60";
 		}

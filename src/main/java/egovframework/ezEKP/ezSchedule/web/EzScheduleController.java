@@ -655,6 +655,11 @@ public class EzScheduleController extends EgovFileMngUtil {
         String idList = "";
         String idType = "T";        
         String idTypeTmp = request.getParameter("idtype");
+        
+        if (idTypeTmp != null) {
+        	idTypeTmp = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(idTypeTmp));
+        }
+        
         //2018-06-07 구해안checkbox 값을 가져와서 char[]에 담기
         String idTypeChk = request.getParameter("idTypeChk");
         @SuppressWarnings("unused")
@@ -1657,6 +1662,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		String _otherid = request.getParameter("otherid");
 		if (_otherid == null) _otherid = "";
+		
+		_otherid = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(_otherid));
          
 		String pageFrom = request.getParameter("pageFrom");
 		if (pageFrom == null) pageFrom = "";
@@ -1852,19 +1859,19 @@ public class EzScheduleController extends EgovFileMngUtil {
     		if (_datetype == null) _datetype = "";
 			
 			if (request.getParameter("sdate") != null) {
-				startDateTime = request.getParameter("sdate");
+				startDateTime = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("sdate")));
 			} else {				
 				if (request.getParameter("startdate") != null) {
-					cDate = request.getParameter("startdate");
+					cDate = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("startdate")));
 				}	
 				startDateTime = getUploadDate(cDate, true);
 			}
 			
 			if (request.getParameter("edate") != null) {
-				endDateTime = request.getParameter("edate");
+				endDateTime = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("edate")));
 			} else {
 				if (request.getParameter("enddate") != null) {
-					cDate = request.getParameter("enddate");
+					cDate = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("enddate")));
 				}
 				endDateTime = getUploadDate(cDate, false);
 			}
