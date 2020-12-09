@@ -517,6 +517,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 byte[] imageByte = byteOutStream.toByteArray();
                 String strImageData = new String(Base64.getMimeEncoder().encodeToString(imageByte));
 
+                in.close();
                 byteOutStream.close();
 
                 imagesBuilder.append(strImageData + commonUtil.CRLF);
