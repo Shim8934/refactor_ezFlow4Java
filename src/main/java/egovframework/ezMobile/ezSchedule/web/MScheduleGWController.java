@@ -130,6 +130,12 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			/* 2018-02-01 장진혁 모바일에서 검색을 다양하게 하기 위한 요소 추가 */
 			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchColumn, searchData);
 						
+			String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
+	        if(useWorkspaceSchedule.equalsIgnoreCase("YES")) {
+	        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
+	        	result.put("workspaceHostUrl", workspaceHostUrl);
+	        }
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", sList);		
@@ -1060,6 +1066,66 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/group/status] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 협업 - 그룹웨어 일정 데이터 연동
+	 */
+	@RequestMapping(value="/mobile/ezschedule/list/workspace/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject mWorkspaceScheduleGetList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/list/workspace/{userId:.+}.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			String searchTitle = request.getParameter("searchTitle");
+			
+			if (startDate != null && !startDate.equals("")) {
+				String[] sDate = startDate.split("-");
+				String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
+				String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+				
+				startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
+			} else {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				
+				startDate = sdf.format(cal.getTime()) + " 00:00:00";
+			}
+			
+			if (endDate != null && !endDate.equals("")) {
+				String[] eDate = endDate.split("-");
+				String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
+				String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
+				
+				endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
+			} else {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				
+				endDate = sdf.format(cal.getTime()) + " 23:59:59";
+			}
+			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			List<ScheduleInfoVO> sList = mScheduleService.scheduleListForWorkspace(info, startDate, endDate, searchTitle);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", sList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/list/workspace/{userId:.+}] ended.");
 		
 		return result;
 	}

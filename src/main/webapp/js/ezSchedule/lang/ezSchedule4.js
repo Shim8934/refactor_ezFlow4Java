@@ -185,3 +185,5 @@ var strLangKHJ7 = "ics파일을 저장하는 중 에러발생";
 var strLangKHJ8 = "권한이 없습니다.";
 /* 2019-04-03 */
 var strLangHSB1 = "MHT 파일을 저장하는데 실패하였습니다.";
+/* 2020-05-19 */
+var strLang131_1 = "협업일정";

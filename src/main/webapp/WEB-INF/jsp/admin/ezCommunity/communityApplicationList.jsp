@@ -399,11 +399,11 @@
 				closeInfoPopup();
 				
 				if (CrossYN() && new RegExp(/Chrome/).test(navigator.userAgent)) {
-					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=510,height=395";
-					feature = feature + GetOpenPosition(510, 395);
+					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=550,height=395";
+					feature = feature + GetOpenPosition(550, 395);
 				} else {
-					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=490,height=390";
-					feature = feature + GetOpenPosition(490, 375);
+					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=550,height=390";
+					feature = feature + GetOpenPosition(550, 390);
 				}
 				
 				if (selectedTabId == "admitCommu") {

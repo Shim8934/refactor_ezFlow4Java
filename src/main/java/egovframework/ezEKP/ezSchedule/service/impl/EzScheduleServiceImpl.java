@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,6 +19,9 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +30,11 @@ import org.w3c.dom.NodeList;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
@@ -53,6 +60,15 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	
 	@Resource(name="EzResourceService")
 	private EzResourceService ezResourceService;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
+	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -624,8 +640,441 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				resultList.add(vo);
 			}
 		}
+		
+		String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", tenantId);
+	    logger.debug("useWorkspaceSchedule : " + useWorkspaceSchedule);
+		
+	    // 협업 일정 가져오기
+	    if(useWorkspaceSchedule.equalsIgnoreCase("yes")) {
+	    	String[] sDate = orgStartDate.split("-");
+			String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
+			String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+			
+			String startDate = sDate[0] + "-" + sMon + "-" + sDay;
+			
+			String[] eDate = orgEndDate.split("-");		
+			String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
+			String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
+			
+			String endDate = eDate[0] + "-" + eMon + "-" + eDay;
+			
+			String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", tenantId);
+	        
+			String domain = workspaceHostUrl + "/ezWorkspace/api/GroupwareApi/post/scheduleread/";
+	    	String params = "userAccountId=" + URLEncoder.encode(userID, "UTF-8") + "&startDate=" + URLEncoder.encode(startDate, "UTF-8") 
+	    						+ "&endDate=" + URLEncoder.encode(endDate, "UTF-8") + "&searchTerm=" + "&bMobile=" + URLEncoder.encode("false", "UTF-8");
+	    	String workspaceScheduleLists = ezEmailUtil.getWebServiceResult(domain, params);
+	    	
+	    	if(workspaceScheduleLists != null && !workspaceScheduleLists.equals("")) {
+		    	JSONParser jsonparser = new JSONParser();
+		    	JSONArray jsonarray = (JSONArray)jsonparser.parse(workspaceScheduleLists);
+		    	
+		    	logger.debug("data.length = " + jsonarray.size());
+		    	
+		    	for(int i=0; i<jsonarray.size(); i++) {
+		    		ScheduleInfoVO sVo = new ScheduleInfoVO();
+		    		JSONObject jsonobject = (JSONObject)jsonarray.get(i);
+		    		
+		    		sVo.setDateType(jsonobject.get("ItemDateType").toString());
+					sVo.setScheduleType("4");
+					sVo.setScheduleId("collaboration:" + jsonobject.get("ItemId").toString());
+					sVo.setParentId("collaboration:" + jsonobject.get("ItemPostId").toString());
+					sVo.setStartDate(jsonobject.get("ItemStartDate").toString().replace("T", " "));
+					sVo.setEndDate(jsonobject.get("ItemEndDate").toString().replace("T", " "));
+					sVo.setCreatorName(jsonobject.get("ItemUserName").toString());
+					sVo.setTitle(jsonobject.get("ItemPostTitle").toString());
+					sVo.setOwnerId(jsonobject.get("ItemUserAccountId").toString());
+					sVo.setOwnerName(jsonobject.get("ItemUserName").toString());
+					sVo.setRepeatCount(Integer.parseInt(jsonobject.get("ItemRepeatCount").toString()));
+					
+					int importance = Integer.parseInt(jsonobject.get("ItemImportance").toString()) + 1;
+					sVo.setImportance(importance + "");
+	
+					resultList.add(sVo);
+		    	}
+			}
+	    }
 
 		logger.debug("=====getScheduleList Ended=====");
+		if (tempResultList != null) {
+			resultList = realList(resultList, tempResultList, orgStartDate, orgEndDate);
+		}
+		
+		return resultList;
+	}
+	
+	@Override
+	public List<ScheduleInfoVO> getScheduleListForWorkspace(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId, String companyID, String userID, String deptID) throws Exception {						
+		logger.debug("=====getScheduleListForWorkspace start=====");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_INDILIST", indiList);
+		map.put("v_PIDLIST", pidList);		
+		map.put("v_PFILTER", filter);
+		map.put("v_PSTARTDATE", utcStartDate);
+		map.put("v_PENDDATE", utcEndDate);
+		map.put("v_PKEYWORD", keyword);
+		map.put("v_OFFSETMIN", offSetMin);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_SEARCHTITLE", searchTitle);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_USERID", userID);
+		map.put("v_DEPTID", deptID);
+		
+		List<ScheduleInfoVO> sList = ezScheduleDAO.getScheduleList(map);
+
+		List<ScheduleInfoVO> resultList = new ArrayList<ScheduleInfoVO>();
+		List<ScheduleInfoVO> tempResultList = new ArrayList<ScheduleInfoVO>();
+		
+		for (int i=0; i < sList.size(); i++) {
+			ScheduleInfoVO vo = sList.get(i);
+						
+			//반복일정 구현 시작
+			if (vo.getDateType().equals("3")) {
+				map.put("v_SCHEDULEID", vo.getScheduleId());
+				
+				List<String> rList = ezScheduleDAO.getScheduleRepeDelList(map);
+				
+				String endDate = vo.getEndDate();
+				String[] info = vo.getRepetition().split("\\|");
+
+				if (!info[0].equals("0")) {
+					endDate = orgEndDate;
+				}
+				if (endDate.compareTo(orgEndDate) > 0) {
+					endDate = orgEndDate;
+				}
+				
+				int maxCount = Integer.parseInt(info[0]);
+				int count = 0;
+				boolean isFirst = true;
+				
+				if (maxCount == 0) {
+					maxCount = -1;
+				}
+												
+				Calendar date_cal = Calendar.getInstance();
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
+				
+				Date scheduleStartDate = sdf.parse(vo.getStartDate());
+				
+				date_cal.setTime(scheduleStartDate);
+				
+				Calendar scheduleCalendar = Calendar.getInstance();
+				scheduleCalendar.setTime(date_cal.getTime());
+				
+				Calendar firstDateOfThisCalendar = Calendar.getInstance();
+				firstDateOfThisCalendar.setTime(sdf.parse(orgStartDate));
+				
+				Calendar lastDateOfCalendar = Calendar.getInstance();
+				lastDateOfCalendar.setTime(sdf.parse(orgEndDate));
+				
+				Calendar calculatedScheduleEndDateCalendar = Calendar.getInstance();
+				Calendar eDate_cal = Calendar.getInstance();
+				eDate_cal.setTime(sdf.parse(endDate));
+				
+				switch (info[2]) {
+					case "0" :
+						while (true) {
+							if (date_cal.compareTo(eDate_cal) > 0) break;
+							//if (date_cal.compareTo(lastDateOfCalendar) > 0) break;
+							if (maxCount == count) break;
+							
+							boolean generated = false;
+							int dayOFWeek = date_cal.get(Calendar.DAY_OF_WEEK) - 1;
+
+							if (info[3].equals("0")) {
+								if (dayOFWeek != 0 && dayOFWeek != 6) {
+									generated = true;
+								}
+							} else {
+								generated = true;
+							}
+
+							if (generated) {
+								count++;
+								
+								String calcuDate = nsdf.format(date_cal.getTime());
+
+								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {	
+									//row 추가
+									if (!rList.contains(calcuDate)) {
+										ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);
+										resultList.add(rVo);
+									}
+								}
+							}
+							
+							if (info[3].equals("0")) {
+								date_cal.add(Calendar.DATE, 1);
+							} else {
+								date_cal.add(Calendar.DATE, Integer.parseInt(info[3]));
+							}
+						}
+					break;
+					case "1" :
+						
+						String isExistEndDate = info[0];
+						String isAllday = info[1];
+						String weeklyInterval = info[3];
+						String dayInfo = info[4];
+						
+						List<Integer> repeatDayList = new ArrayList<Integer>();
+						//repeatDayList = setDayInfo(dayInfo);
+						
+						if(dayInfo != null && !dayInfo.trim().equals("")){
+							char[] yoilArr = new char[info[4].length()]; // 스트링을 담을 배열
+
+							for (int j = 0; j < dayInfo.length(); j++) {
+								yoilArr[j] = dayInfo.charAt(j);					
+							}
+							int yoiltoNumber;
+							for (char yoil : yoilArr) {
+								
+								yoiltoNumber = yoil - 48;
+								repeatDayList.add(yoiltoNumber); 
+							}
+						}
+								
+						int MAXSCHEDULECOUNT = 1000;
+						int weeklyMaxCount = maxCount * repeatDayList.size();
+						
+						while (true) {
+							if (scheduleCalendar.compareTo(lastDateOfCalendar) > 0) {
+								//TODO boolean 리턴함수
+								calculatedScheduleEndDateCalendar.setTime(lastDateOfCalendar.getTime());
+								calculatedScheduleEndDateCalendar.add(Calendar.DATE, (Integer.parseInt(weeklyInterval)) * 7);
+								if(scheduleCalendar.compareTo(calculatedScheduleEndDateCalendar) > 0) {
+									break;
+								}
+							}
+							
+							if (Integer.parseInt(isExistEndDate) > 0) {
+								if (weeklyMaxCount <= count) break;
+							} 
+							
+							if (count > MAXSCHEDULECOUNT) {
+								break;
+							}
+							
+							String scheduleDate = nsdf.format(scheduleCalendar.getTime());
+								
+								if(isExistEndDate.equals("0")){ //isExistEndDate Code "0" : 종료일 있음
+									//TODO makeFunction
+									for (int k = 0; k < repeatDayList.size(); k++) {
+										scheduleCalendar.set(Calendar.DAY_OF_WEEK,repeatDayList.get(k)+1);
+										scheduleDate = nsdf.format(scheduleCalendar.getTime());
+										if (scheduleCalendar.getTime().compareTo(scheduleStartDate) >= 0 && scheduleCalendar.getTime().compareTo(sdf.parse(endDate)) <= 0) {
+											if (!rList.contains(scheduleDate)) {
+												count++;
+												int weeklyCount = (int) Math.ceil(count / (double)repeatDayList.size());
+												ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), weeklyCount, isAllday);									
+												tempResultList.add(rVo);
+											} else {
+												count++;
+											}
+										}
+									}
+								} else if (Integer.parseInt(isExistEndDate) > 0) { //isExistEndDate Code > 0 : 숫자만큼 일정을 반복
+									for (int k = 0; k < repeatDayList.size(); k++) {
+										scheduleCalendar.set(Calendar.DAY_OF_WEEK,repeatDayList.get(k)+1);
+										scheduleDate = nsdf.format(scheduleCalendar.getTime());
+										if (scheduleCalendar.getTime().compareTo(scheduleStartDate) >= 0 && scheduleCalendar.getTime().compareTo(sdf.parse(endDate)) <= 0) {
+											if (weeklyMaxCount > count) {
+												if (!rList.contains(scheduleDate)) {
+													count++;
+													int weeklyCount = (int) Math.ceil(count / (double)repeatDayList.size());
+													ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), weeklyCount, isAllday);									
+													tempResultList.add(rVo);
+												} else {
+													count++;
+												}
+											} else {
+												break;
+											}
+										} 
+									}
+								} else { //isExistEndDate Code "-1" : 종료일 없음
+									for (int k = 0; k < repeatDayList.size(); k++) {
+										scheduleCalendar.set(Calendar.DAY_OF_WEEK,repeatDayList.get(k)+1);
+										scheduleDate = nsdf.format(scheduleCalendar.getTime());
+										if (scheduleCalendar.getTime().compareTo(scheduleStartDate) >= 0 && scheduleCalendar.getTime().compareTo(sdf.parse(endDate)) <= 0) {
+											if (!rList.contains(scheduleDate)) {
+												count++;
+												int weeklyCount = (int) Math.ceil(count / (double)repeatDayList.size());
+												ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), weeklyCount, isAllday);									
+												tempResultList.add(rVo);
+											} else {
+												count++;
+											}
+										}
+									}
+								}
+							scheduleCalendar.add(Calendar.DATE, (Integer.parseInt(weeklyInterval)) * 7);
+						}						
+					break;	
+					
+					case "2" :
+						while (true) {
+							int year = date_cal.get(Calendar.YEAR);
+							int month = date_cal.get(Calendar.MONTH) + 1;
+
+							if ((year >= eDate_cal.get(Calendar.YEAR) && month > eDate_cal.get(Calendar.MONTH) + 1) || year > eDate_cal.get(Calendar.YEAR)) break;
+							if (maxCount == count) break;
+							
+							boolean generated = false;
+							
+							Calendar newCal = Calendar.getInstance();
+							newCal.set(year, month-1, 1);
+
+							if (info[3].equals("1")) {
+								newCal.add(Calendar.DATE, Integer.parseInt(info[5]) - 1);
+							} else {
+								int diff = Integer.parseInt(info[6]) - (newCal.get(Calendar.DAY_OF_WEEK) - 1);
+								
+								if (diff < 0) {
+									diff += 7;									
+								}								
+								newCal.add(Calendar.DATE, diff);
+								
+								if (Integer.parseInt(info[5]) < 5) {
+									newCal.add(Calendar.DATE, (Integer.parseInt(info[5]) - 1) * 7);
+								} else {
+									while (true) {
+										newCal.add(Calendar.DATE, 7);
+										
+										if (newCal.get(Calendar.MONTH) + 1 != month) {
+											newCal.add(Calendar.DATE, -7);
+											break;
+										}
+									}
+								}
+							}
+
+							if (newCal.get(Calendar.MONTH) + 1 == month && (!isFirst || newCal.get(Calendar.DATE) >= date_cal.get(Calendar.DATE))) {
+								generated = true;
+							}
+							
+							isFirst = false;
+
+							if (generated) {
+								count++;
+
+								String calcuDate = nsdf.format(newCal.getTime());
+								
+								if (info[0].equals("0")) {
+									if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+										//row 추가
+										if (!rList.contains(calcuDate)) {
+											ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+											resultList.add(rVo);
+										}
+									}
+								} else {
+									if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {
+										//row 추가
+										if (!rList.contains(calcuDate)) {
+											ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+											resultList.add(rVo);
+										}
+									}
+								}
+							}
+							
+							date_cal.add(Calendar.DATE, 1 - date_cal.get(Calendar.DATE));
+							date_cal.add(Calendar.MONTH, Integer.parseInt(info[4]));							
+						}
+					break;
+					
+					case "3" :
+						while (true) {
+							int year = date_cal.get(Calendar.YEAR);
+							int month = Integer.parseInt(info[4]);
+									
+							if (year > lastDateOfCalendar.get(Calendar.YEAR)) break;
+							if (maxCount == count) break;
+							
+							boolean generated = false;
+							
+							Calendar newCal = Calendar.getInstance();
+							newCal.set(year, month-1, 1);
+							
+							if (info[3].equals("1")) {
+								newCal.add(Calendar.DATE, Integer.parseInt(info[5]) - 1);
+								
+								if (info[5].equals("2")) {
+									//음력으로 newCal 다시 만듬									
+									if (!isFirst || newCal.compareTo(date_cal) >= 0) {
+										generated = true;
+									}
+								}
+							} else {
+								int diff = Integer.parseInt(info[6]) - (newCal.get(Calendar.DAY_OF_WEEK) - 1); 
+								
+								if (diff < 0) {
+									diff += 7;									
+								}								
+								newCal.add(Calendar.DATE, diff);
+								
+								if (Integer.parseInt(info[5]) < 5) {
+									newCal.add(Calendar.DATE, (Integer.parseInt(info[5]) - 1) * 7);
+								} else {
+									while (true) {
+										newCal.add(Calendar.DATE, 7);
+										
+										if (newCal.get(Calendar.MONTH) + 1 != month) {
+											newCal.add(Calendar.DATE, -7);
+											break;
+										}
+									}
+								}
+							}
+							
+							if (newCal.get(Calendar.MONTH) + 1 == month && (!isFirst || newCal.get(Calendar.DATE) >= date_cal.get(Calendar.DATE))) {
+								generated = true;
+							}
+							
+							isFirst = false;
+							
+							if (generated) {
+								count++;
+								
+								String calcuDate = nsdf.format(newCal.getTime());
+								
+								if (info[0].equals("0")) {
+									if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0 && calcuDate.compareTo(vo.getStartDate().substring(0,10)) >= 0) {
+										//row 추가
+										if (!rList.contains(calcuDate)) {
+											ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+											resultList.add(rVo);
+										}
+									}
+								} else {
+									if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0 && calcuDate.compareTo(vo.getStartDate().substring(0,10)) >= 0) {
+										//row 추가
+										if (!rList.contains(calcuDate)) {
+											ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+											resultList.add(rVo);
+										}
+									}
+								}
+							}
+							
+							date_cal.add(Calendar.DATE, 1 - date_cal.get(Calendar.DATE));
+							date_cal.add(Calendar.YEAR, 1);
+						}						
+					break;	
+				}				
+			}
+			//반복일정 구현 끝
+			else {
+				resultList.add(vo);
+			}
+		}
+
+		logger.debug("=====getScheduleListForWorkspace Ended=====");
 		if (tempResultList != null) {
 			resultList = realList(resultList, tempResultList, orgStartDate, orgEndDate);
 		}

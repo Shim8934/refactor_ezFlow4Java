@@ -2743,5 +2743,27 @@
             	(#v_PBOARDID#, #v_TENANTID#, #v_COMPANYID#)
 		]]>
 	</insert>
+
+	<!-- 2020/12/03 탭게시판 등록, 제거 : 박기범-->
+	<delete id="EzBoardAdminDAO.deleteTabBoard" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_BOARD_TABBOARD
+            WHERE
+            	TENANT_ID = #v_TENANTID#
+            AND  
+            	COMPANYID = #v_COMPANYID#
+			AND
+				TABID = #v_TABID#
+		]]>
+	</delete>
 	
+	<insert id="EzBoardAdminDAO.insertTabBoard" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_BOARD_TABBOARD (TABID, BOARDID, TENANT_ID, COMPANYID, BOARDNAME, BOARDNAME2)
+            VALUES
+            	(#v_TABID#, #v_PBOARDID#, #v_TENANTID#, #v_COMPANYID#, #v_BOARDNAME#, #v_BOARDNAME2#)
+		]]>
+	</insert>	
 </sqlMap>

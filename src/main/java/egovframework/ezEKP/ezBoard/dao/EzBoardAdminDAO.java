@@ -353,4 +353,14 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void updateBoardGroupID(Map<String, Object> map) throws Exception {
 		update("EzBoardAdminDAO.updateBoardGroupID", map);
 	}
+
+	/* 2020-12-03 박기범 - 탭게시판 레코드 삭제 쿼리 */
+	public void deleteTabBoard(Map<String, Object> map) throws Exception {
+		delete("EzBoardAdminDAO.deleteTabBoard", map);
+	}
+
+	/* 2020-12-03 박기범 - 탭게시판 레코드 삽입 쿼리 */
+	public void insertTabBoard(Map<String, Object> map) throws Exception {
+		insert("EzBoardAdminDAO.insertTabBoard", map);
+	}
 }

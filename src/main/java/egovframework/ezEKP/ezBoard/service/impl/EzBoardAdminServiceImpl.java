@@ -1329,4 +1329,38 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		logger.debug("updateNoticeBoard ended");
 	}
+	
+	/* 2020-12-03 박기범 - 탭게시판 레코드 삭제 */
+	@Override
+	public void deleteTabBoard(int tabId, int tenantId, String companyID) throws Exception {
+		logger.debug("deleteTabBoard started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TABID", tabId);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+		
+		ezBoardAdminDAO.deleteTabBoard(map);
+		
+		logger.debug("deleteTabBoard ended");
+	}
+
+	/* 2020-12-03 박기범 - 탭게시판 레코드 갱신 */
+	@Override
+	public void updateTabBoard(int tabId, String boardID, int tenantId, String companyID, String boardName, String boardName2) throws Exception {
+		logger.debug("updateTabBoard started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TABID", tabId);
+		map.put("v_PBOARDID", boardID);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_BOARDNAME", boardName);
+		map.put("v_BOARDNAME2", boardName2);
+		
+		ezBoardAdminDAO.deleteTabBoard(map); // 기존 탭게시판 삭제 후 새로운 레코드 삽입
+		ezBoardAdminDAO.insertTabBoard(map);
+		
+		logger.debug("updateTabBoard ended");
+	}
 }

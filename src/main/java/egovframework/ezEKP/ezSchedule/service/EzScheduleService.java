@@ -32,6 +32,8 @@ public interface EzScheduleService {
 	
 	public List<ScheduleInfoVO> getScheduleList(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId, String companyID, String userID, String deptId, String useAnnualScheduleYN) throws Exception;
 	
+	public List<ScheduleInfoVO> getScheduleListForWorkspace(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId, String companyID, String userID, String deptId) throws Exception;
+	
 	public List<ScheduleGroupListVO> getScheduleGroupList(String userId, int tenantId ,String companyID) throws Exception;
 
 	public List<ScheduleGroupListVO> getMyGroupList(String userId, int tenantId ,String companyID) throws Exception;

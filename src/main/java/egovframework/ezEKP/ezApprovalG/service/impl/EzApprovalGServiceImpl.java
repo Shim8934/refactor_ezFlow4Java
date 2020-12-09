@@ -1851,7 +1851,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		logger.debug("stringBuiler : " + sb.toString());
 		logger.debug("getDocType ended.");
 		
 		return sb.toString();
@@ -1932,7 +1931,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</ROWS>");
 		resultXML.append("</LISTVIEWDATA>");
 		
-		logger.debug("resultXML : " + resultXML);
 		logger.debug("getFormInfo ended.");
 
 		return resultXML.toString();
@@ -3601,8 +3599,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					rtnXML.append("<DISPLAYNAME>" + "" + "</DISPLAYNAME><JOBTITLE><![CDATA[");
 					rtnXML.append(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(p).getTextContent().trim() + "]]></JOBTITLE><JOBTITLE2><![CDATA[");
 					rtnXML.append(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(p).getTextContent().trim() + "]]></JOBTITLE2></ROW>");
-					
-					logger.debug("<<<in FOR rtnXML : " + rtnXML.toString());
 				}
 			}
 		}
@@ -6074,6 +6070,45 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return retValue;
 	}
 	
+    private Cell findHwpFieldCell(ParagraphList pList, String fieldName) throws Exception {
+        Cell fieldCell = null;
+        
+        for (Paragraph p : pList) {
+            fieldCell = findHwpFieldCell(p, fieldName);
+        }
+        
+        return fieldCell;
+    }
+    
+    private Cell findHwpFieldCell(Paragraph p, String fieldName) throws Exception {
+        if (p == null || p.getControlList() == null) {
+            return null;
+        }
+        
+        for (Control c : p.getControlList()) {
+            if (c.getType() == ControlType.Table) {
+                ControlTable ct = (ControlTable) c;
+                
+                for (Row row : ct.getRowList()) {
+                    for (Cell cell : row.getCellList()) {
+                        Cell fieldCell = null;
+                        
+                        if (cell.getListHeader().getFieldName() != null && cell.getListHeader().getFieldName().equals(fieldName)) {
+                            fieldCell = cell;
+                        } else {
+                            fieldCell = findHwpFieldCell(cell.getParagraphList(), fieldName);
+                        }
+                        
+                        if (fieldCell != null) {
+                            return fieldCell;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return null;
+    }
 	
 	/**
 	 * @param fieldName
@@ -6087,24 +6122,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		for (Section s : hwpFile.getBodyText().getSectionList()) {
 			for (Paragraph p : s) {
-				if (p == null || p.getControlList() == null) {
-					//return false; 2019.09.03 천성준 - 한글양식에 줄이 2이상 일때, 필드 검색중 줄이 넘어가면 false를 반환해버려서 찾으려는 필드가 존재해도 찾지 못하는 현상 수정
-					continue;
-				}
-
-				for (Control c : p.getControlList()) {
-					if (c.getType() == ControlType.Table) {
-						ControlTable ct = (ControlTable) c;
-						
-						for (Row row : ct.getRowList()) {
-							for (Cell cell : row.getCellList()) {
-								if (cell.getListHeader().getFieldName() != null && cell.getListHeader().getFieldName().equals(fieldName)) {
-									return true;
-								}
-							}
-						}
-					}
-				}
+                Cell cell = findHwpFieldCell(p, fieldName);
+                if (cell != null) {
+                    return true;
+                }
 			}
 		}
 		
@@ -6125,24 +6146,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		for (Section s : hwpFile.getBodyText().getSectionList()) {
 			for (Paragraph p : s) {
-				if (p == null || p.getControlList() == null) {
-					continue;
-				}
-
-				for (Control c : p.getControlList()) {
-					if (c.getType() == ControlType.Table) {
-						ControlTable ct = (ControlTable) c;
-						
-						for (Row row : ct.getRowList()) {
-							for (Cell cell : row.getCellList()) {
-								if (cell.getListHeader().getFieldName() != null && cell.getListHeader().getFieldName().equals(fieldName)) {
-									cell.getParagraphList().getParagraph(0).createText();
-									cell.getParagraphList().getParagraph(0).getText().addString(signText);
-								}
-							}
-						}
-					}
-				}
+                Cell cell = findHwpFieldCell(p, fieldName);
+                if (cell != null) {
+                    cell.getParagraphList().getParagraph(0).createText();
+                    cell.getParagraphList().getParagraph(0).getText().addString(signText);
+                }
 			}
 		}
  
@@ -6161,25 +6169,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		for (Section s : hwpFile.getBodyText().getSectionList()) {
 			for (Paragraph p : s) {
-				ArrayList<Control> controlList = p.getControlList();
-				if (controlList == null) {
-					continue;
-				}
-				
-				for (Control c : controlList) {
-					if (c.getType() == ControlType.Table) {
-						ControlTable ct = (ControlTable) c;
-						
-						for (Row row : ct.getRowList()) {
-							for (Cell cell : row.getCellList()) {
-								if (cell.getListHeader().getFieldName() != null && cell.getListHeader().getFieldName().equals(fieldName)) {
-									fieldText = cell.getParagraphList().getParagraph(0).getText().getNormalString(0);
-									break;
-								}
-							}
-						}
-					}
-				}
+                Cell cell = findHwpFieldCell(p, fieldName);
+                if (cell != null) {
+                    fieldText = cell.getParagraphList().getParagraph(0).getText().getNormalString(0);
+                }
 			}
 		}
 		
@@ -6199,46 +6192,33 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		for (Section s : hwpFile.getBodyText().getSectionList()) {
 			for (Paragraph p : s) {
-				if (p == null || p.getControlList() == null) {
-					continue;
-				}
-
-				for (Control c : p.getControlList()) {
-					if (c.getType() == ControlType.Table) {
-						ControlTable ct = (ControlTable) c;
-						
-						for (Row row : ct.getRowList()) {
-							for (Cell cell : row.getCellList()) {
-								if (cell.getListHeader().getFieldName() != null && cell.getListHeader().getFieldName().equals(fieldName)) {
-									ParagraphList paragraphList = cell.getParagraphList();
-									ParaHeader ph = paragraphList.getParagraph(0).getHeader();
-									ParaCharShape pcs = paragraphList.getParagraph(0).getCharShape();
-									
-									for (int k = 1; k < signTextArray.length; k++) {
-										Paragraph newParagraph = paragraphList.addNewParagraph();
-										
-										newParagraph.createText();
-										newParagraph.createCharShape();
-										
-										//글자모양 복사해주기
-										for (CharPositionShapeIdPair charPositionShapeIdPair : pcs.getPositonShapeIdPairList()) {
-											newParagraph.getCharShape().addParaCharShape(charPositionShapeIdPair.getPosition(), charPositionShapeIdPair.getShapeId());
-										}
-										
-										//헤더값 복사해서 정렬 맞추기
-										newParagraph.getHeader().setParaShapeId(ph.getParaShapeId());
-										newParagraph.getHeader().setStyleId(ph.getStyleId());
-										
-										newParagraph.getText().addString(signTextArray[k]);
-									}
-									
-									paragraphList.getParagraph(0).createText();
-									paragraphList.getParagraph(0).getText().addString(signTextArray[0]);
-								}
-							}
-						}
-					}
-				}
+                Cell cell = findHwpFieldCell(p, fieldName);
+                if (cell != null) {
+                    ParagraphList paragraphList = cell.getParagraphList();
+                    ParaHeader ph = paragraphList.getParagraph(0).getHeader();
+                    ParaCharShape pcs = paragraphList.getParagraph(0).getCharShape();
+                    
+                    for (int k = 1; k < signTextArray.length; k++) {
+                        Paragraph newParagraph = paragraphList.addNewParagraph();
+                        
+                        newParagraph.createText();
+                        newParagraph.createCharShape();
+                        
+                        //글자모양 복사해주기
+                        for (CharPositionShapeIdPair charPositionShapeIdPair : pcs.getPositonShapeIdPairList()) {
+                            newParagraph.getCharShape().addParaCharShape(charPositionShapeIdPair.getPosition(), charPositionShapeIdPair.getShapeId());
+                        }
+                        
+                        //헤더값 복사해서 정렬 맞추기
+                        newParagraph.getHeader().setParaShapeId(ph.getParaShapeId());
+                        newParagraph.getHeader().setStyleId(ph.getStyleId());
+                        
+                        newParagraph.getText().addString(signTextArray[k]);
+                    }
+                    
+                    paragraphList.getParagraph(0).createText();
+                    paragraphList.getParagraph(0).getText().addString(signTextArray[0]);
+                }
 			}
 		}
 
@@ -6490,21 +6470,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			int LSignNum = 0;
 			int lastSignNum = 0;
 			
-			if (!signAdd.equals("")) {
-				for (int k = 1; k < 10; k++) {
-					if (!findHwpField(signAdd + "sign" + k, hwpFile)) {
-						LSignNum = k - 1;
-						lastSignNum = LSignNum;
-						break;
-					}
-				}
-			} else {
-				for (int k = 1; k < 10; k++) {
-					if (!findHwpField("id=\"sign" + k + "\"", hwpFile)) {
-						LSignNum = k - 1;
-						lastSignNum = LSignNum;
-						break;
-					}
+			for (int k = 1; k < 10; k++) {
+				if (!findHwpField(signAdd + "sign" + k, hwpFile)) {
+					LSignNum = k - 1;
+					lastSignNum = LSignNum;
+					break;
 				}
 			}
 			
@@ -20416,9 +20386,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		sb.append("</DATA>");
 
 		logger.debug("getFormInfoDB ended");
-		
-		logger.debug("sb.toString() : " + sb.toString()); 
-		
 		return sb.toString();
 	}
 
@@ -29157,17 +29124,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("isPortal", "Y");
 		
 		List<ApprGFormVO> apprGFormVOlist = ezApprovalGDAO.getFormInfo(map); 
-		
-		//구해안 잠시 결과물 로그 찍어봄
-		int count1 =0;
-		logger.debug("========즐겨찾기 리스트 맞는지 확인 시작========");
-		for (ApprGFormVO fL : apprGFormVOlist) {
-			count1++;
-			logger.debug("getUserID" + count1 + "  :  " + fL.getUserID());
-			logger.debug("getFormID" + count1 + "  :  " + fL.getFormID());
-			logger.debug("getFormName" + count1 + "  :  " + fL.getFormName());
-		}
-		logger.debug("========즐겨찾기 리스트 맞는지 확인 끝========");
 	
 		return apprGFormVOlist;
 	}

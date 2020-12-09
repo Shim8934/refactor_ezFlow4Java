@@ -260,4 +260,8 @@ public interface EzCommonService {
 	public void addFormSihangTypeColumn() throws Exception;
 	
 	public void insertAutoSendOfferFlag() throws Exception;
+
+	public void insertTabBoardPortlet() throws Exception;
+	
+	public void createTblTabBoard() throws Exception;
 }
