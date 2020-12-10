@@ -5359,6 +5359,77 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return "<RESULT>" + resultApr + "</RESULT>";
 	}
+	
+	@Override
+	public String getUncompleteDocList(String deptID, String companyID, String cabinetID, int tenantID, String userLang) throws Exception {
+		logger.debug("getUncompleteDocList started");
+
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyID", companyID);
+		map.put("v_CABINETID", cabinetID);
+		map.put("v_TENANTID", tenantID);
+		
+		List<ApprGDocListVO> docInfo = ezApprovalGDAO.getUncompleteDocList(map);
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+		
+		for(int i = 0; i < docInfo.size(); i++) {
+			sb.append(commonUtil.getQueryResult(docInfo.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		StringBuilder rtnXML = new StringBuilder();
+		
+		rtnXML.append("<LISTVIEWDATA>");
+		rtnXML.append("<HEADERS>");
+		rtnXML.append("<HEADER><NAME>제목</NAME><WIDTH>140</WIDTH><COLNAME>DocTitle</COLNAME></HEADER>");
+		rtnXML.append("<HEADER><NAME>문서상태</NAME><WIDTH>80</WIDTH><COLNAME>DocState</COLNAME></HEADER>");
+		rtnXML.append("<HEADER><NAME>결재자</NAME><WIDTH>80</WIDTH><COLNAME>AprMemberName</COLNAME></HEADER>");
+		rtnXML.append("<HEADER><NAME>결재방법</NAME><WIDTH>80</WIDTH><COLNAME>AprType</COLNAME></HEADER>");
+		rtnXML.append("<HEADER><NAME>결재상태</NAME><WIDTH>80</WIDTH><COLNAME>AprState</COLNAME></HEADER>");
+		rtnXML.append("<HEADER><NAME>기안부서</NAME><WIDTH>90</WIDTH><COLNAME>AprMemberDeptName</COLNAME></HEADER>");
+		rtnXML.append("<HEADER><NAME>기안자</NAME><WIDTH>60</WIDTH><COLNAME>WriterName</COLNAME></HEADER>");
+		rtnXML.append("<HEADER><NAME>기안일자</NAME><WIDTH>140</WIDTH><COLNAME>StartDate</COLNAME></HEADER>");
+		rtnXML.append("</HEADERS>");
+	
+		rtnXML.append("<ROWS>");
+		for (int k = 0; k < dlength; k++){
+			rtnXML.append("<ROW>");
+			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("DOCTITLE").item(k).getTextContent())) + "</VALUE>");
+			rtnXML.append("<DOCID>" + makeXMLString(makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent())) + "</DOCID></CELL>");
+			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("A02", docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent(), companyID, userLang, tenantID))) + "</VALUE></CELL>");
+			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent())) + "</VALUE></CELL>");
+			
+			if (approvalFlag.equals("G")) {
+				rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("A03", docXML.getElementsByTagName("APRTYPE").item(k).getTextContent(), companyID, userLang, tenantID))) + "</VALUE></CELL>");
+			} else {
+				rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("SA03", docXML.getElementsByTagName("APRTYPE").item(k).getTextContent(), companyID, userLang, tenantID))) + "</VALUE></CELL>");
+			}
+			
+			if (approvalFlag.equals("G")) {
+				rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("A04", docXML.getElementsByTagName("APRSTATE").item(k).getTextContent(), companyID, userLang, tenantID))) + "</VALUE></CELL>");
+			} else {
+				rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("SA04", docXML.getElementsByTagName("APRSTATE").item(k).getTextContent(), companyID, userLang, tenantID))) + "</VALUE></CELL>");
+			}
+			
+			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent())) + "</VALUE></CELL>");
+			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERNAME").item(k).getTextContent())) + "</VALUE></CELL>");
+			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("STARTDATE").item(k).getTextContent())) + "</VALUE></CELL>");
+			rtnXML.append("</ROW>");	
+		}
+		rtnXML.append("</ROWS>");
+		rtnXML.append("</LISTVIEWDATA>");
+		logger.debug("getUncompleteDocList ended");
+		
+		return rtnXML.toString();
+	}
 
 	@Override
 	public String transferCabinet(Document xmlDom, int tenantID) throws Exception {
