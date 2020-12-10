@@ -271,7 +271,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_boardGroupAdmin_FG", boardGroupAdmin_FG);
 		
 		logger.debug("brdBoardTree ended");
-		logger.debug("map.toString() : " + map.toString());
+		//logger.debug("map.toString() : " + map.toString());
 		return ezBoardAdminDAO.brdBoardTree(map);
 	}
 
@@ -1206,7 +1206,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ISDEPT", isDept);
 		map.put("v_ISEQUALDEPT", isEqualDept);
 		
-		logger.debug("map in getACL  ::  " + map.toString());
+		//logger.debug("map in getACL  ::  " + map.toString());
 		logger.debug("getACL ended");
 		return ezBoardAdminDAO.getACL(map);
 	}
@@ -1216,7 +1216,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		logger.debug("checkIfBoardGroupAdmin2 started");
 		
 		if (pRootBoardID.equalsIgnoreCase("top") || pRootBoardID.equalsIgnoreCase("all")) {
-			logger.debug("checkIfBoardGroupAdmin2 : pRootBoardID is '" + pRootBoardID + "', return empty String");
+			//logger.debug("checkIfBoardGroupAdmin2 : pRootBoardID is '" + pRootBoardID + "', return empty String");
 			return "";
 		}
 
@@ -1230,7 +1230,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ISEQUALDEPT", isEqualDept);
 		map.put("isBoardGroup", isBoardGroup);
 
-		logger.debug("map in checkIfBoardGroupAdmin2  ::  " + map.toString());
+		//logger.debug("map in checkIfBoardGroupAdmin2  ::  " + map.toString());
 		result = ezBoardAdminDAO.checkIfBoardGroupAdmin2(map);
 		
 		if (result == null) {

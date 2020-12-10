@@ -70,7 +70,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	@Override
 	public List<CommunityCComCloseVO> aspCloseComGet1(String keyword, String sRadio, String s, String lang, String sort1, String sort2, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCloseGet1 started.");
-		logger.debug("keyword=" + keyword + ", sRadio=" + sRadio);
+		//logger.debug("keyword=" + keyword + ", sRadio=" + sRadio);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD", keyword);
@@ -416,7 +416,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		CommunityClubVO vo = ezCommunityAdminDAO.admCommunityInfoEdit(map);
 		
 		logger.debug("admCommunityInfoEdit ended.");
-		logger.debug("sysID="+vo.getC_SysopID());
+		//logger.debug("sysID="+vo.getC_SysopID());
 		return vo;
 	}
 
@@ -451,7 +451,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	public void createCommunityAdmitSendMail(String loginCookie, LoginVO userInfo, List<HashMap<String, Object>> recipientList,
 			boolean isAdmit) throws Exception {
 		logger.debug("createCommunityAdmitSendMail started.");
-		logger.debug("isAdmit=" + isAdmit);
+		//logger.debug("isAdmit=" + isAdmit);
 		
 		if (recipientList != null) {
 			Locale locale = userInfo.getLocale();
@@ -463,7 +463,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
         	from.setAddress(userInfo.getEmail());
 			
 			for (HashMap<String, Object> recipient : recipientList) {
-				logger.debug("recipient=" + (String)recipient.get("USERNAME") + ", " + (String)recipient.get("C_CLUBNAME") + ", " + (String)recipient.get("EMAIL"));
+				//logger.debug("recipient=" + (String)recipient.get("USERNAME") + ", " + (String)recipient.get("C_CLUBNAME") + ", " + (String)recipient.get("EMAIL"));
 				
 				InternetAddress to = new InternetAddress();
 				to.setPersonal((String)recipient.get("USERNAME"), "UTF-8");

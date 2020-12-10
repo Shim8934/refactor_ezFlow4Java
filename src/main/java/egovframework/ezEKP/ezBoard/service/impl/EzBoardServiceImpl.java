@@ -3311,7 +3311,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	 */
 	public boolean saveMHT(String strHTML, String strMHTFilename, String strBoardID, String strFilePath, String strType, String realPath) throws Exception {
 		logger.debug("saveMHT started");
-		logger.debug("strHTML length : " + strHTML.length());
+		//logger.debug("strHTML length : " + strHTML.length());
 
 		String docPath = "";
 		String mhtFilePath = "";
@@ -3506,7 +3506,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		List<BoardDeleteItemVO> boardInfoList = ezBoardDAO.getDeleteReservedBoard();
 		
 		for (BoardDeleteItemVO k : boardInfoList) {
-			logger.debug("deleteBoardPath :  " + realPath + commonUtil.getUploadPath("upload_board.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID());
+			//logger.debug("deleteBoardPath :  " + realPath + commonUtil.getUploadPath("upload_board.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID());
 			Path docPath = Paths.get(realPath + commonUtil.getUploadPath("upload_board.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID());
 			
 			//게시판 디렉토리 하위 이미지, 게시물 관련 파일 모두 지우기
@@ -3514,20 +3514,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				Files.walkFileTree(docPath, new FileVisitor<Path>() {
 					@Override
 					public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-						logger.debug("delete preVisitDirectory :: " + docPath);
+						//logger.debug("delete preVisitDirectory :: " + docPath);
 						return FileVisitResult.CONTINUE;
 					}
 
 					@Override
 					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 						Files.deleteIfExists(file);
-						logger.debug("delete File :: " + docPath);
+						//logger.debug("delete File :: " + docPath);
 						return FileVisitResult.CONTINUE;
 					}
 
 					@Override
 					public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-						logger.debug("delete visitFileFailed :: " + docPath);
+						//logger.debug("delete visitFileFailed :: " + docPath);
 						return FileVisitResult.CONTINUE;
 					}
 
@@ -3535,7 +3535,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 						if (exc == null) {
 							Files.deleteIfExists(dir);
-							logger.debug("delete Directory :: " + docPath);
+							//logger.debug("delete Directory :: " + docPath);
 							return FileVisitResult.CONTINUE;
 						} else {
 							throw exc;
@@ -3549,10 +3549,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			
 			ezBoardDAO.deleteReservedBoard(k);
-			logger.debug("delete boardID : " + k.getBoardID() + " is Done");
+			//logger.debug("delete boardID : " + k.getBoardID() + " is Done");
 		}
 		
-		logger.debug("deleteReservedBoard:::deleteBoardCount = " + deleteCnt);
+		//logger.debug("deleteReservedBoard:::deleteBoardCount = " + deleteCnt);
 		logger.debug("deleteReservedBoard ended");
 	}
 
@@ -3584,7 +3584,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			ezBoardDAO.deleteBoardItemAttach(map);
 			ezBoardDAO.deleteReservedBoardItem(k);
-			logger.debug("delete itemID : " + k.getItemID() + " is Done");
+			//logger.debug("delete itemID : " + k.getItemID() + " is Done");
 		}
 
 		logger.debug("deleteReservedBoardItem ended");
@@ -3761,7 +3761,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	public String insertNewItem(Document doc, String pMode, String realPath, LoginVO userInfo) throws Exception {
 		logger.debug("insertNewItem started");
-		logger.debug("pMode : " + pMode);
+		//logger.debug("pMode : " + pMode);
 
 		BoardListVO boardListVO = new BoardListVO();
 		
