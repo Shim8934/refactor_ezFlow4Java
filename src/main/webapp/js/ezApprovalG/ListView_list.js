@@ -794,13 +794,21 @@ function ListView() {
                 	}
                 }
             }
-            for (var j = 0; j < oDatasLast.length; j++) {
-                var strData = oDatasLast[j].tagName;
-                var strValue = "";
-                if (oDatasLast[j].firstChild != null && oDatasLast[j].firstChild.nodeValue != null)
-                    strValue = oDatasLast[j].firstChild.nodeValue;
-
-                objTr.setAttribute(strData, strValue);
+            
+            // DATA1, DATA2. .. 이외의 값 셋팅 sewon
+            for(var j=0; j<oCells.length; j++) {
+            	if(j!=0) {
+            		var oCellsList = GetDataElements(oCells[j]);
+            		for (var z= 0; z<oCellsList.length; z++) {
+                        var strData = oCellsList[z].tagName;
+                        var strValue = "";
+                        if (oCellsList[z].firstChild != null && oCellsList[z].firstChild.nodeValue != null)
+                            strValue = oCellsList[z].firstChild.nodeValue;
+                        if(strData == "ABSENCE" || strData == "JUNBUBYN" || strData == "APPRLINETYPE") {
+                        	objTr.setAttribute(strData, strValue);
+                        }
+                    }
+            	}
             }
 
             oTbody.appendChild(objTr);

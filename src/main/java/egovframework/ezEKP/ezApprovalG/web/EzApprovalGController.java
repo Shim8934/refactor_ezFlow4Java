@@ -512,6 +512,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("shareUser", "shareUser");
 		}
 		
+		String absenceAllClear = ezCommonService.getTenantConfig("absenceAllClear", userInfo.getTenantId());
+		
 		model.addAttribute("SubQuery", subQuery);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("userInfo", userInfo);
@@ -533,6 +535,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useAdditionalRole", ezCommonService.getTenantConfig("USE_AdditionalROle", userInfo.getTenantId()));
 		model.addAttribute("userLang", userLang);
 		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("absenceAllClear", absenceAllClear);
 		
 		logger.debug("aprManage ended.");
 		

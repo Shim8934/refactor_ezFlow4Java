@@ -10,16 +10,23 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.ibm.icu.util.ChineseCalendar;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
@@ -54,6 +61,9 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name="EzOrganService")
+	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -703,5 +713,36 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		
 		logger.debug("getCheckDuplShareUser ended.");
 		return rtnValue;
+	}
+	
+	public Object saveBujaeUser(String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("saveBujaeUser started");
+
+		JSONArray ja = new JSONArray();
+		JSONParser parser = new JSONParser();
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = "";
+
+		//TODO: 원래는 user를 ad에서 정보 가져오는데 임시로 하드코딩함 전자결재외에 다른 부분 발견하면 수정요망(전자결재만 존재하면 그냥 박아도됨)
+		String pClass = "user";
+		String strFormArray = request.getParameter("formArray");
+		
+		ja = (JSONArray)parser.parse(strFormArray);
+		
+		for(int i=0; i<ja.size(); i++) {
+			JSONObject jo = new JSONObject();
+			if(i == 0) {
+				jo = (JSONObject)ja.get(i);
+				result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", jo.get("proxy").toString(), pClass, userInfo.getTenantId());
+			} else {
+				jo = (JSONObject)ja.get(i);
+				result = ezOrganService.updateAddJobProxy(userInfo.getId(), jo.get("proxy").toString(), userInfo.getTenantId(), jo.get("deptId").toString());
+			}
+		}
+		
+		logger.debug("saveBujaeUser ended");
+		return result;
 	}
 }

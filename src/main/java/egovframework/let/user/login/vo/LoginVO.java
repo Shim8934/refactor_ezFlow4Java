@@ -143,6 +143,8 @@ public class LoginVO implements Serializable {
     private Date password_updatedt;    
     /** 휴대전화번호 */
     private String mobile;
+    /** 부재정보 */
+    private String extensionattribute5;
     
 	public String getMobile() {
 		return mobile;
@@ -505,6 +507,10 @@ public class LoginVO implements Serializable {
 	public void setPassword_updatedt(Date password_updatedt) {
 		this.password_updatedt = password_updatedt;
 	}
-	
-
+	public String getExtensionattribute5() {
+		return extensionattribute5;
+	}
+	public void setExtensionattribute5(String extensionattribute5) {
+		this.extensionattribute5 = extensionattribute5;
+	}
 }

@@ -111,6 +111,24 @@
 			var userLang = "${userInfo.lang}";
 		    var shareUser = "<c:out value = '${shareUser}'/>";
 		    var primary = "<c:out value = '${primary}'/>"; // 재기안 시 부서명 다국어 분기처리를 위한 primary (1:기본어, 2:다국어)
+		    var setting = null;
+		    var onclickFlag = false;
+		    var pMailListDiv = 0;
+		    var pMailPreVDiv = 0;
+		    var pMailListWidthH = 0;
+		    var pMailPreWidthH = 0;
+		    var pMailListDiv_H = 0;
+		    var pMailPreVDiv_H = 0;
+		    var p_ListorderValue = "";
+		    var pPreviewShow_HOW = "";
+		    var clickPreviweType = "TEXT";
+		    var PreviewH_Move = false;
+		    var selobj = null;
+		    var previewInfo = "<c:out value = '${previewInfo}'/>";
+		    var extensionattribute4 = "<c:out value = '${userInfo.gyumJik}'/>";
+		    var extensionattribute5 = "<c:out value = '${userInfo.extensionattribute5}'/>";
+		    var absenceAllClear = "<c:out value = '${absenceAllClear}'/>";
+		    var deptPathCode = "<c:out value = '${userInfo.deptPathCode}'/>";
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    
@@ -177,8 +195,9 @@
 		    }
 		
 		    function checkBujaeInfo_Complete(Rtnval) {
-	            if (Rtnval == true) {
-	                setBujaeOff();
+		    	if (Rtnval == true) {
+	                //setBujaeOff();
+	                saveBujaeUser();
 	                btnVisible('ok');
 	            }
 	            else if (Rtnval == "ING") { }
@@ -308,8 +327,66 @@
 		    			}
 		    		}        			
 		    	});
-		        
-		        
+		    }
+		    
+		    function saveBujaeUser() {
+		    	
+		    	var jo = new Object();
+		    	var formArray = new Array();
+		    	var index = 0;
+		    	
+		    	var gyumjikArray = extensionattribute4.split(";");
+				var deptPathCodeArray = deptPathCode.split(",");
+				var deptId = deptPathCodeArray[deptPathCodeArray.length-1];
+		    	
+		    	jo.count = index;
+	        	jo.deptId = deptId	// 본직
+	        	jo.proxy = extensionattribute5;
+	        	
+	        	formArray.push(jo);
+	        	
+	        	if(extensionattribute4 != "" && extensionattribute4 != undefined && extensionattribute4 != null) {
+	        		if(absenceAllClear == "YES") {
+	        			jo.proxy = "";
+	        			for(var i=0; i<gyumjikArray.length; i++) {
+							var gyumjikArray2 = gyumjikArray[i].split(":");
+							jo = new Object();
+							
+							jo.count = i+1;
+				        	jo.deptId = gyumjikArray2[0]	// 겸직부서
+				        	jo.proxy = "";
+				        	
+				        	formArray.push(jo);
+						}
+		        	} else {
+		        		if(deptId == arr_userinfo[4]) {
+		        			jo.proxy = "";
+		        		} else {
+		        			jo = new Object();
+			        		jo.count = index+1;
+				        	jo.deptId = arr_userinfo[4]	// 현재 접근부서
+				        	jo.proxy = "";
+				        	
+				        	formArray.push(jo);
+		        		}
+		        	}
+	        	}
+				
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezPersonal/saveBujaeUser.do",
+		    		data : {
+		    				formArray : JSON.stringify(formArray)
+		    				},
+		    		success: function(text){
+			            alert("<spring:message code='ezPersonal.tt16'/>");
+		    		},
+		    		error: function(){
+			            alert("<spring:message code='ezPersonal.tt14'/>");
+		    		}
+		    	});
 		    }
 		
 		    $(function () {

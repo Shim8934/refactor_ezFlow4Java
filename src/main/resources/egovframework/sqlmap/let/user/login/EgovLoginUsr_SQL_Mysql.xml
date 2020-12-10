@@ -37,6 +37,7 @@
         <result property="sabun"              	column="sabun"                		columnIndex="24"/>
         <result property="password_updatedt"    column="password_updatedt"          columnIndex="25"/>
         <result property="mobile"    			column="mobile"          			columnIndex="26"/>
+        <result property="extensionattribute5"	column="extensionattribute5"		columnIndex="27"/>
     </resultMap>    
     
     <resultMap id="tenantServerName" class="egovframework.let.user.login.vo.TenantServerNameVO">
@@ -206,7 +207,8 @@
  	                extensionattribute2 as userFileUrl, 
  	                extensionattribute14 as sabun, 
  	                password_updatedt,
- 	                mobile
+ 	                mobile,
+ 	                extensionattribute5
  	            FROM  
  	                TBL_USERMASTER a 
  	            WHERE  
@@ -261,7 +263,8 @@
 					u.extensionattribute2 as userFileUrl,
 					u.extensionattribute14 as sabun,
 					u.password_updatedt,
-					u.mobile as mobile
+					u.mobile as mobile,
+					u.extensionattribute5
 				FROM 
 					TBL_USERMASTER u
 				inner join
@@ -307,7 +310,8 @@
 	                extensionattribute2 as userFileUrl, 
 	                extensionattribute14 as sabun,
 	                password_updatedt,
-	                mobile as mobile
+	                mobile as mobile,
+	                extensionattribute5
 	            FROM  
 	                TBL_USERMASTER a 
 	            WHERE  
@@ -362,7 +366,8 @@
 					u.extensionattribute2 as userFileUrl,
 					u.extensionattribute14 as sabun,
 					u.password_updatedt,
-					u.mobile as mobile
+					u.mobile as mobile,
+					u.extensionattribute5
 				FROM 
 					TBL_USERMASTER u
 				inner join
@@ -470,7 +475,8 @@
                 extensionattribute2 as userFileUrl,
                 extensionattribute14 as sabun,
                 password_updatedt,
-                mobile
+                mobile,
+                extensionattribute5
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -511,7 +517,8 @@
                 extensionattribute2 as userFileUrl,
                 extensionattribute14 as sabun,
                 password_updatedt,
-                mobile
+                mobile,
+                extensionattribute5
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -552,7 +559,8 @@
                 extensionattribute2 as userFileUrl,
                 extensionattribute14 as sabun,
                 password_updatedt,
-                mobile
+                mobile,
+                extensionattribute5
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -604,7 +612,8 @@
 			    a.extensionattribute2 as userFileUrl,
 			    a.extensionattribute14 as sabun,
 			    password_updatedt,
-			    a.mobile
+			    a.mobile,
+			    a.extensionattribute5
 			FROM 
 				TBL_USERMASTER a
 			LEFT JOIN

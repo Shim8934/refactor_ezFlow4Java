@@ -1,9 +1,12 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -612,6 +615,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         pPropList = convertAddandConvert(pCategory, pPropList);
 
         for (int i = 0; i < celllist.length; i++) {
+        	boolean isAbsence = false;
         	cellvalue = "";
 
             if (!pMemberID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPARTMENT") != null && !pMemberID.equals(doc.getElementsByTagName("DEPARTMENT").item(0).getTextContent()))) {
@@ -655,8 +659,35 @@ public class EzOrganServiceImpl implements EzOrganService {
                     cellvalue = "";
                 }
             }
-
-            nodeInfo.append("<CELL><VALUE>" + commonUtil.cleanValue(cellvalue) + "</VALUE>");
+            // 부재자 YN 날짜계산
+            if(celllist[i].toUpperCase().equals("EXTENSIONATTRIBUTE5") && !cellvalue.equals("")) {
+            	String cellValSplit[] = cellvalue.split("[:]");
+            	
+            	if(cellValSplit.length > 5) {
+            		String absenceToDateStr = cellValSplit[5]+":"+cellValSplit[6];
+                	
+                	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                	try {
+    					Date curDate = dateFormat.parse(dateFormat.format(new Date()));
+    					Date absenceToDate  = dateFormat.parse(absenceToDateStr);
+    					
+    					isAbsence = absenceToDate.after(curDate);
+    				} catch (ParseException e) {
+    					// TODO Auto-generated catch block
+    					logger.error("dateFormat.parse(dateFormat.format(new Date())) error :: " + e);
+    					e.printStackTrace();
+    				}
+            	}
+            	
+            	if(isAbsence) {
+            		cellvalue = "Y";
+            	} else {
+            		cellvalue = "";
+            	}
+            	nodeInfo.append("<CELL><VALUE>" + commonUtil.cleanValue(cellvalue) + "</VALUE>");
+            } else {
+            	nodeInfo.append("<CELL><VALUE>" + commonUtil.cleanValue(cellvalue) + "</VALUE>");
+            }
 
             if (i == 0) {
                 String strNode = "";
@@ -683,7 +714,9 @@ public class EzOrganServiceImpl implements EzOrganService {
                 }
             }
             if(celllist[i].toUpperCase().equals("EXTENSIONATTRIBUTE5")) {
-            	nodeInfo.append("<ABSENCE>" + doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent() + "</ABSENCE>");
+            	if(isAbsence) {
+            		nodeInfo.append("<ABSENCE>" + doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent() + "</ABSENCE>");
+            	}
             }
             nodeInfo.append("</CELL>");
         }
