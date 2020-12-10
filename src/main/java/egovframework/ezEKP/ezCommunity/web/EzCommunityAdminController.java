@@ -227,9 +227,9 @@ public class EzCommunityAdminController {
 		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
 		String offSetMin   = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		logger.debug("pageNum=" + pageNum);
+/*		logger.debug("pageNum=" + pageNum);
 		logger.debug("searchType=" + searchType + ",searchValue=" + searchValue);
-		logger.debug("offSetMin=" + offSetMin);
+		logger.debug("offSetMin=" + offSetMin);*/
 		
 		/* 2020-01-03 홍승비 - 커뮤니티 검색 시 커뮤니티소개 검색옵션 다시 추가 */
 		int totalCount = ezCommunityAdminService.aspSearchKeyGet2(commonUtil.getMultiData(lang, tenantId), searchType, searchType2, searchValue, companyId, tenantId);
@@ -245,7 +245,7 @@ public class EzCommunityAdminController {
 			}
 		}
 		
-		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
+		//logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
 		
 		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(primary, pageNum, searchType, searchType2, searchValue, offSetMin, companyId, tenantId);
 		if (clubList.size() > 0) {
@@ -285,9 +285,9 @@ public class EzCommunityAdminController {
 		String searchType2 = request.getParameter("searchType2") != null ? request.getParameter("searchType2") : "" ;
 		String offSetMin   = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		logger.debug("pageNum=" + pageNum);
+/*		logger.debug("pageNum=" + pageNum);
 		logger.debug("searchValue=" + searchValue);
-		logger.debug("offSetMin=" + offSetMin);
+		logger.debug("offSetMin=" + offSetMin);*/
 		
 		/* 2020-01-06 홍승비 - 폐쇄한 커뮤니티 검색 시 폐쇄사유 추가 */
 		int totalCount = ezCommunityAdminService.getClosedCommuListCount(commonUtil.getMultiData(lang, tenantId), userInfo.getLocale(), searchType2, searchValue, companyId, tenantId);
@@ -303,7 +303,7 @@ public class EzCommunityAdminController {
 			}
 		}
 		
-		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
+		//logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
 		
 		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.getClosedCommuList(primary, userInfo.getLocale(), pageNum, searchType2, searchValue, offSetMin, companyId, tenantId);
 		if (clubList.size() > 0) {
@@ -361,7 +361,7 @@ public class EzCommunityAdminController {
 		String cCateB = request.getParameter("cCateB");
 		String cCateC = request.getParameter("cCateC");
 		
-		logger.debug("code=" + code + ",clubName=" + clubName + ",clubDesc=" + clubDesc + ",cCateA=" + cCateA + ",cCateB=" + cCateB + ",cCateC=" + cCateC);
+		//logger.debug("code=" + code + ",clubName=" + clubName + ",clubDesc=" + clubDesc + ",cCateA=" + cCateA + ",cCateB=" + cCateB + ",cCateC=" + cCateC);
 		
 		String result = ezCommunityAdminService.admCommunityInfoEditOk(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), cCateA, cCateB, cCateC, clubName, clubDesc, code, userInfo.getTenantId());
 		
@@ -565,9 +565,9 @@ public class EzCommunityAdminController {
 		String code        = request.getParameter("code") != null ? request.getParameter("code") : "" ; //언제쓰이는지?
 		String offSetMin   = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		logger.debug("pageNum=" + pageNum);
+/*		logger.debug("pageNum=" + pageNum);
 		logger.debug("searchType=" + searchType + ", searchType2=" + searchType2 + ", searchValue=" + searchValue);
-		logger.debug("offSetMin=" + offSetMin);
+		logger.debug("offSetMin=" + offSetMin);*/
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), companyId, tenantId);
 		
@@ -586,7 +586,7 @@ public class EzCommunityAdminController {
 			}
 		}
 		
-		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
+		//logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
 		
 		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) -> 사간겸직한 회원이 만든 커뮤니티는 겸직한 회사만큼 전부 표출됨(수정필요) */
 		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(searchValue, searchType, searchType2, commonUtil.getMultiData(lang, tenantId), pageNum, offSetMin, companyId, tenantId);
@@ -623,10 +623,10 @@ public class EzCommunityAdminController {
 		String code        = request.getParameter("code") != null ? request.getParameter("code") : "" ; //언제쓰이는지?
 		String offSetMin   = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		logger.debug("pageNum=" + pageNum);
+/*		logger.debug("pageNum=" + pageNum);
 		logger.debug("searchType=" + searchType + ",searchValue=" + searchValue);
 		logger.debug("offSetMin=" + offSetMin);
-		
+		*/
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), companyId, tenantId);
 		
 		/* 2020-01-06 홍승비 - 폐쇄사유 검색옵션 추가 */
@@ -644,7 +644,7 @@ public class EzCommunityAdminController {
 			}
 		}
 		
-		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
+		//logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
 		
 		/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
 		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(searchValue, searchType, searchType2, commonUtil.getMultiData(lang, tenantId), pageNum, offSetMin, companyId, tenantId);
