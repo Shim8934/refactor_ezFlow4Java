@@ -500,12 +500,12 @@
 			        getGongRamDocInfo();
 			
 			        var g_SepAttachLVXml = "";
-			        g_SepAttachLVXml = GetDocumentElement(message, "SepAttachLVXml", true);
+			        g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
 			
 			        if (!g_SepAttachLVXml)
 			            g_SepAttachLVXml = "";
 			
-			        SetDocumentElement(message, "SepAttachLVXml", SetSepAttParamXmlNull(g_SepAttachLVXml))
+			        SetDocumentElement(message, "sepattachlvxml", SetSepAttParamXmlNull(g_SepAttachLVXml))
 			
 			        if (pReadPC) {
 			            var DocumentInfo = createXmlDom();
@@ -643,7 +643,7 @@
 		        }
 		
 		        var g_SepAttachLVXml = "";
-		        g_SepAttachLVXml = GetDocumentElement(message, "SepAttachLVXml", true);
+		        g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
 		        if (!g_SepAttachLVXml)
 		            g_SepAttachLVXml = "";
 		

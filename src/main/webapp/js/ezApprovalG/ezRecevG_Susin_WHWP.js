@@ -985,7 +985,7 @@ function SaveDraftDocInfo_susin() {
 	createNodeAndInsertText(xmlpara, objNode, "DOCNUMCODE", pDocNumCode);
 	createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", pOrgDocNumCode);
 	var g_SepAttachLVXml = "";
-	g_SepAttachLVXml = GetDocumentElement(message, "SepAttachLVXml", true);
+	g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
 	if (!g_SepAttachLVXml)
 	    createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
 	else
@@ -1147,7 +1147,7 @@ function btnAddSepAttach_onclick_Complete(rtn) {
 	DivPopUpHidden();
 	if (rtn[0] == "TRUE") {
 		g_SepAttachLVXml = rtn[1];
-		SetDocumentElement(message, "SepAttachLVXml", SetSepAttParamXmlNull(g_SepAttachLVXml));
+		SetDocumentElement(message, "sepattachlvxml", SetSepAttParamXmlNull(g_SepAttachLVXml));
 	}
 }
 

@@ -1334,7 +1334,7 @@ function SaveDraftDocInfo_ilban(pState)
 	createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", "");
 
 	var g_SepAttachLVXml = "";
-	g_SepAttachLVXml = GetDocumentElement(message, "SepAttachLVXml", true);
+	g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
 	if (!g_SepAttachLVXml)
 	    createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
 	else
@@ -1789,7 +1789,7 @@ function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
         createNodeAndInsertText(xmlpara, objNode, "DRAFTFLAG", DraftFlag);
 
         var g_SepAttachLVXml = "";
-        g_SepAttachLVXml = GetDocumentElement(message, "SepAttachLVXml", true);
+        g_SepAttachLVXml = GetDocumentElement(message, "sepattachlvxml", true);
         if (!g_SepAttachLVXml)
             createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
         else
