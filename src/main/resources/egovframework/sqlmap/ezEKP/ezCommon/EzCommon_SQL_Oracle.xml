@@ -1687,7 +1687,7 @@
 		UPDATE 
 			TBL_PORTAL_PORTLET
 		SET
-			portletcode = 
+			portletcode =
 			CASE
 				WHEN portlet_url like '%receivedMailPortlet%' 
 					AND portlet_type = 'G' 
@@ -3091,4 +3091,63 @@
         INSERT INTO TBL_TENANT_CONFIG (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION,CONFIG_NAME,REGDATE,CONFIG_TYPE) VALUES 
         (0, 'autoSendOfferFlag', '0', '자동발송의뢰 사용 시 기안부서 최종결재가 끝나면 기안자의 미처리문서함에 도착한다. 0: 자동발송의뢰 사용안함, 1: 자동발송의뢰 사용함 (내부시행문, 민원인시행문만 자동발송의뢰) (default: 0)', '내부시행문 자동발송의뢰 옵션', TO_DATE('2020-11-23 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재G')
     </insert>
+
+	<select id="EzCommonDAO.checkTblTabBoard">
+		<![CDATA[
+			SELECT 
+				BOARDID
+			FROM 
+				TBL_BOARD_TABBOARD
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblTabBoard">
+		CREATE TABLE TBL_BOARD_TABBOARD (
+			TABID 		NUMBER(2,0) 	NOT NULL,
+			BOARDID 	NVARCHAR2(40) 	NOT NULL,
+			TENANT_ID 	NUMBER(5,0) 	NOT NULL,
+			COMPANYID 	NVARCHAR2(80) 	NOT NULL,
+			BOARDNAME 	NVARCHAR2(255),
+			BOARDNAME2 	NVARCHAR2(255),
+			CONSTRAINT "TBL_BOARD_TABBOARD_PK" PRIMARY KEY (TABID, TENANT_ID, COMPANYID)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkPortletCodeString" resultClass="int">
+		SELECT 
+            COUNT(*)
+        FROM 
+            TBL_PORTAL_PORTLET
+		WHERE
+			PORTLETCODE = #portletCode#
+	</select>
+
+	<select id="EzCommonDAO.getNewPortletId" resultClass="int">
+		SELECT 
+            (MAX(PORTLET_ID) +1) PORTLET_ID
+        FROM 
+            TBL_PORTAL_PORTLET
+	</select>
+
+	<insert id="EzCommonDAO.insertPortletName">
+		INSERT ALL
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+			VALUES (#portletId#, #menuId#, 1, #tenantId#, #companyId#, #portletName1#)
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+			VALUES (#portletId#, #menuId#, 2, #tenantId#, #companyId#, #portletName2#)			
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+			VALUES (#portletId#, #menuId#, 3, #tenantId#, #companyId#, #portletName3#)
+		SELECT *
+		FROM DUAL
+	</insert>
+
+	<insert id="EzCommonDAO.insertPortletWithCode">
+		INSERT INTO TBL_PORTAL_PORTLET 
+			(PORTLET_ID, MENU_ID, PORTLET_URL, PORTLET_TYPE, DEFAULT_ORDER, PORTLETCODE)
+		VALUES 
+			(#portletId#, #menuId#, #portletUrl#, #portletType#, #defaultOrder#, #portletCode#)
+	</insert>
+
 </sqlMap>

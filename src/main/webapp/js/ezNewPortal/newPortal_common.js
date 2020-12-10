@@ -487,6 +487,24 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 		});
 		
 		break;
+	
+	case "tabBoard" : // 탭게시판
+		url = "/js/ezNewPortal/portlets/tabBoardPortlet.js";
+		
+		$.getScript(url)
+		.done(function (script, textStatus) {
+			try {
+				getTabBoard();
+			} catch(err) {
+				console.log(err);
+			}
+			
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+		});
+		
+		break;
 	}
 }
 

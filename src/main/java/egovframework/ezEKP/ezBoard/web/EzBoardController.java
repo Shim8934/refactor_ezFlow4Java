@@ -970,7 +970,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isMyBoard", isMyBoard);
 		
 		logger.debug("boardItemList ended");
-		logger.debug("requestURL : " + requestURL);
+		//logger.debug("requestURL : " + requestURL);
         return requestURL;
 	}
 
@@ -1242,9 +1242,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setDelete_FG("false");
 		}
 		
-		logger.debug("boardInfo before ended    ::   BoardGroupAdmin_FG=" + boardInfo.getBoardGroupAdmin_FG() + " | BoardAdmin_FG=" + boardInfo.getBoardAdmin_FG()  + " | Access_=" + boardInfo.getAccess_()
+/*		logger.debug("boardInfo before ended    ::   BoardGroupAdmin_FG=" + boardInfo.getBoardGroupAdmin_FG() + " | BoardAdmin_FG=" + boardInfo.getBoardAdmin_FG()  + " | Access_=" + boardInfo.getAccess_()
 				+ " | ListView_FG=" + boardInfo.getListView_FG() + " | Read_FG=" + boardInfo.getRead_FG() + " | Write_FG=" + boardInfo.getWrite_FG()
-				+ " | Reply_FG=" + boardInfo.getReply_FG() + " | Delete_FG=" + boardInfo.getDelete_FG());
+				+ " | Reply_FG=" + boardInfo.getReply_FG() + " | Delete_FG=" + boardInfo.getDelete_FG());*/
 		logger.debug("getBoardInfo ended");
         return boardInfo;
 	}
@@ -1256,8 +1256,8 @@ public class EzBoardController extends EgovFileMngUtil{
     @ResponseBody
     public String getBoardList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, BoardVO boardVO) throws Exception{
     	logger.debug("getBoardList started");
-    	logger.debug("boardID : " + boardVO.getBoardId());
-    	logger.debug("boardType : " + boardVO.getBoardType());
+    	//logger.debug("boardID : " + boardVO.getBoardId());
+    	//logger.debug("boardType : " + boardVO.getBoardType());
     	
     	userInfo = commonUtil.userInfo(loginCookie);
     	
@@ -3515,7 +3515,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userDeptPath = deptPathOrgan.toString();
 		addJobDeptList.add(userDeptPath);
 		
-		logger.debug("accessCheck userDeptPath in web    ::    " + userDeptPath);
+		//logger.debug("accessCheck userDeptPath in web    ::    " + userDeptPath);
 		
 		List<String> addJobList = ezBoardService.getPDOAddJobDeptID(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 		StringJoiner addJobStr = new StringJoiner(",");
@@ -3628,7 +3628,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		} // 개인, 직위/직책, 부서권한 전부 존재하지 않는다면 false
 		
-		logger.debug("accessCheck rtv      ::     " + rtv);
+		//logger.debug("accessCheck rtv      ::     " + rtv);
 		logger.debug("accessCheck ended");
 		return rtv;
     }
@@ -5028,7 +5028,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			strACLXML = sb.toString();
 		}
 		
-		logger.debug("strACLXML in boardACL   ::  " + strACLXML);
+		//logger.debug("strACLXML in boardACL   ::  " + strACLXML);
 		logger.debug("getACL ended");
 		return strACLXML;
 	}
@@ -6205,7 +6205,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		filePath = pSignatureDir + commonUtil.separator + fileName;
 		
 		if (filePath != null && !filePath.equals("")) {
-			logger.debug("filePath : " + filePath + "|| fileName : " + fileName);
+			//logger.debug("filePath : " + filePath + "|| fileName : " + fileName);
 			/* 2018-08-13 홍승비 - IE에서 이미지 파일 content-type 수정 */
 			//downFile(request, response, realPath + filePath, fileName);
 			downImage(filePath, request, response);
@@ -7800,7 +7800,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String itemID = request.getParameter("itemID");
 		String content = request.getParameter("content");
 		
-		logger.debug("content=" + content + ",itemID=" + itemID);
+		//logger.debug("content=" + content + ",itemID=" + itemID);
 		
 		String[] itemIDs = itemID.split(";");
 		
@@ -8039,7 +8039,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
-		logger.debug("caption : " + caption);
+		//logger.debug("caption : " + caption);
 		model.addAttribute("caption", caption);
 		model.addAttribute("message", message);
 		model.addAttribute("buttonNamesArray", buttonNamesArray);
@@ -8707,8 +8707,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String fullFilePath = realPath + filePath;
 		// int bufferSize = 4096;
 
-		logger.debug("fullFilePath : " + fullFilePath);
-		logger.debug("fileNames : " + fileNames);
+		//logger.debug("fullFilePath : " + fullFilePath);
+		//logger.debug("fileNames : " + fileNames);
 		
 		ZipOutputStream zos = null;
 		String downFileName = "";

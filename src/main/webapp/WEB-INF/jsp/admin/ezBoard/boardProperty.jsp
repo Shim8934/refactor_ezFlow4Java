@@ -31,6 +31,10 @@
 			var selecttarget_cross_dialogArguments = new Array();
 			var manycolor_dialogArguments = new Array();
 			var BoardExtension_dialogArguments = new Array();
+			// 2020-12-04 박기범 - 탭게시판 ID추가
+			var tabBoardID1 = $.trim("<c:out value='${tabBoardID1}'/>");
+			var tabBoardID2 = $.trim("<c:out value='${tabBoardID2}'/>");
+			var tabBoardID3 = $.trim("<c:out value='${tabBoardID3}'/>");
 			
 	        document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -77,6 +81,17 @@
 	            /* 2019-10-11 홍승비 - 공지사항 게시판 사용여부 추가 */
 	            if (noticeBoardID == BoardID) { // 공지사항 게시판과 현재 게시판의 ID가 동일
 	            	$("#chkNoticeBoard").prop("checked", true);
+	            }
+	            
+	            // 2020-12-01 박기범 - 탭게시판 사용여부 추가
+	            if (tabBoardID1 == BoardID) { 
+	            	$("#chktabBoard1").prop("checked", true);
+	            }
+	            if (tabBoardID2 == BoardID) { 
+	            	$("#chktabBoard2").prop("checked", true);
+	            }
+	            if (tabBoardID3 == BoardID) { 
+	            	$("#chktabBoard3").prop("checked", true);
 	            }
 	            
 	            if ($("#chkQnABoard").is(":checked") || $("#chkAnonyBoard").is(":checked")) {
@@ -291,6 +306,32 @@
 	            	pNoticeBoardMod = "DELETE"; // 기존의 공지사항 게시판 레코드를 전부 삭제한다.
 	            }
 	            
+	            // 2020-12-04 박기범 - 탭게시판 갱신내용 적용
+	            var ptabBoardMod1 = "";
+	            var ptabBoardMod2 = "";
+	            var ptabBoardMod3 = "";
+
+				if (tabBoardID1 != BoardID && $("#chktabBoard1").is(":checked") == true) {
+					ptabBoardMod1 = "UPDATE"; 
+	            }
+	            else if (tabBoardID1 == BoardID && $("#chktabBoard1").is(":checked") == false) {
+	            	ptabBoardMod1 = "DELETE"; 
+	            }
+
+				if (tabBoardID2 != BoardID && $("#chktabBoard2").is(":checked") == true) {
+					ptabBoardMod2 = "UPDATE"; 
+	            }
+	            else if (tabBoardID2 == BoardID && $("#chktabBoard2").is(":checked") == false) {
+	            	ptabBoardMod2 = "DELETE"; 
+	            }
+
+				if (tabBoardID3 != BoardID && $("#chktabBoard3").is(":checked") == true) {
+					ptabBoardMod3 = "UPDATE"; 
+	            }
+	            else if (tabBoardID3 == BoardID && $("#chktabBoard3").is(":checked") == false) {
+	            	ptabBoardMod3 = "DELETE"; 
+	            }
+
 	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
 	            	type : "POST",
@@ -304,7 +345,8 @@
 	            		boardColor:brd_color, portlet:"N", backGround:background,
 	            		formFlag:FormFlag, oneLineReply:oneLineReply, apprFlag:APPRFLAG, orgApprFlag:orgAPPRFLAG,
 	            		apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG, parentBoardID : parentBoardID,
-	            		likeFlag:useBoardLike, noticeBoardMod:pNoticeBoardMod
+	            		likeFlag:useBoardLike, noticeBoardMod:pNoticeBoardMod,
+						tabBoardMod1:ptabBoardMod1,tabBoardMod2:ptabBoardMod2,tabBoardMod3:ptabBoardMod3
 	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
@@ -1019,7 +1061,18 @@
 	                <spring:message code="ezBoard.t162" /><spring:message code="ezBoard.hsbNt02" />
 	            </td>
 	        </tr>
-	        
+			
+			<%-- 2020-12-04 박기범 - 특정 게시판을 탭게시판으로 설정하는 기능 추가 --%>
+			<tr id="trTabBoard" style="${style}">
+	            <th><spring:message code="ezBoard.pgb01" /></th>
+	            <td>
+					<input type="checkbox" id="chktabBoard1"/><spring:message code="ezBoard.pgb02" />
+					<input type="checkbox" id="chktabBoard2"/><spring:message code="ezBoard.pgb03" />
+					<input type="checkbox" id="chktabBoard3"/><spring:message code="ezBoard.pgb04" />
+					<spring:message code="ezBoard.pgb05" />
+				</td>
+			</tr>
+			
 	        <%-- 첨부크기제한 --%>
 	        <tr id="attachLimitTr" style="${style}">
 	            <th><spring:message code="ezBoard.t167" /></th>

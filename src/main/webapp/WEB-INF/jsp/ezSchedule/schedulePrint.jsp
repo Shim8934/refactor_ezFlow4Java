@@ -103,7 +103,7 @@
 			         	<c:if test="${item.scheduleType == '1'}"><spring:message code='ezSchedule.t281' /></c:if>
 			         	<c:if test="${item.scheduleType == '2'}"><spring:message code='ezSchedule.t12' /></c:if>
 			         	<c:if test="${item.scheduleType == '3'}"><spring:message code='ezSchedule.t11' /></c:if>
-			         	<c:if test="${item.scheduleType == '4'}"><spring:message code='ezSchedule.t282' /></c:if>
+			         	<c:if test="${item.scheduleType == '4'}"><spring:message code='ezNewPortal.pjg01' /></c:if>
 			         	<c:if test="${item.scheduleType == '7'}"><spring:message code='ezSchedule.t282' /></c:if>
 			         	<c:if test="${item.scheduleType == '8'}"><spring:message code='ezSchedule.t205' /> / <spring:message code='ezSchedule.t996' /></c:if>
 			         </td>

@@ -1598,4 +1598,51 @@ public class EzCommonDAO extends EgovAbstractDAO {
            e.printStackTrace();
        }
    }
+
+   public void createTblTabBoard() {
+		try {
+			select("EzCommonDAO.checkTblTabBoard");
+		} catch (Exception e) {
+			logger.debug("tbl_board_tabboard doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblTabBoard");
+		}
+	}
+	
+	public int checkPortletCodeString(Map<String, Object> map) {
+		return (int) select("EzCommonDAO.checkPortletCodeString", map);
+	}
+	
+	public void insertTabBoardPortletInfo(Map<String, Object> map) {
+		String companyId = checkPortletForComapny(map);
+
+		if (companyId == null) {
+			try {
+				logger.debug("insert TabBoard portlet data");
+				insert("EzCommonDAO.insertPortletComp",map);
+				insert("EzCommonDAO.insertPortletName",map);
+				insert("EzCommonDAO.insertPortalThemePortlet",map);
+				insert("EzCommonDAO.insertPortalPortletAuth",map);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public int getNewPortletId() {
+		return (int) select("EzCommonDAO.getNewPortletId");
+	}
+	// 2020-12-04 포틀릿 코드도 같이 추가하는 로직 추가 - 박기범
+	public void insertPortletWithCode(Map<String, Object> map) {
+		String url = checkPortlet(map);
+
+		if (url == null) {
+			try {
+					insert("EzCommonDAO.insertPortletWithCode",map);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

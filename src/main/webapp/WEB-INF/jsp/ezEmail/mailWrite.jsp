@@ -179,7 +179,7 @@
 	    var ezPMSToUserId = "${pmsToUserId}";
 	    var ezPMSUserIdType = "${pmsUserIdType}";
 	    var ezPMSTaskId = "${pmsTaskId}";
-	    var isMailToMe = "${isMailToMe}";
+	    var isMailToMe = "<c:out value='${isMailToMe}'/>";
 	    var receiverCount = 0;
         var groupAddressCountMap = {};
         var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");

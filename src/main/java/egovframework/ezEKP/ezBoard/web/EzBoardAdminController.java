@@ -850,6 +850,15 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		/* 2019-10-11 홍승비 - 공지사항 게시판 여부 파라미터 추가 */
 		String noticeBoardID = ezBoardService.getCompanyNoticeBoardID(userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		/* 2020-12-04 박기범 - 탭게시판 여부 파라미터 추가 */
+		List<HashMap<String, Object>> tabBoardIDList = ezBoardService.getCompanyTabBoardIDList(userInfo.getCompanyID(), userInfo.getTenantId());
+		if (tabBoardIDList != null) {
+			for (HashMap<String, Object> hashMap : tabBoardIDList) {
+				String tabID = hashMap.get("TABID").toString();
+				model.addAttribute("tabBoardID" + tabID, hashMap.get("BOARDID").toString());
+			}
+		}
+		
 		/* 2018-07-26 홍승비 - 다국어 표출 시 lang 대신 primary 조건 사용하도록 수정 */
 		model.addAttribute("model", boardPropertyVO);
 		model.addAttribute("use_multiData", use_multiData);
@@ -888,6 +897,20 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				ezBoardAdminService.updateNoticeBoard(boardPropertyVO.getBoardID(), userInfo.getTenantId(), userInfo.getCompanyID());
 			} else { // DELETE
 				ezBoardAdminService.deleteNoticeBoard(userInfo.getTenantId(), userInfo.getCompanyID());
+			}
+		}
+		
+		/* 2020-12-04 박기범 - 탭 게시판 설정 기능 추가*/
+		int tabNum = 3; //탭 개수
+		
+		for (int i = 1; i <= tabNum; i++) {
+			String tabBoardMod = request.getParameter("tabBoardMod" + i);
+			if (!tabBoardMod.equals("")) {
+				if(tabBoardMod.equals("UPDATE")) {
+					ezBoardAdminService.updateTabBoard(i, boardPropertyVO.getBoardID(), userInfo.getTenantId(), userInfo.getCompanyID(), boardPropertyVO.getBoardName(), boardPropertyVO.getBoardName2());
+				} else { // DELETE
+					ezBoardAdminService.deleteTabBoard(i, userInfo.getTenantId(), userInfo.getCompanyID());
+				}
 			}
 		}
 		

@@ -6181,5 +6181,21 @@
 				COMPANYID = #v_COMPANYID#
 	  	]]>
 	</select>
+
+	<select id="EzBoardDAO.getCompanyTabBoardIDList" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT
+				TABID,
+				BOARDID,
+				BOARDNAME,
+				BOARDNAME2
+			FROM
+				TBL_BOARD_TABBOARD
+			WHERE
+				COMPANYID = #v_COMPANYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
 	
 </sqlMap>

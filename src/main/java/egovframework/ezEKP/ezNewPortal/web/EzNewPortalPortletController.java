@@ -1203,5 +1203,54 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalSurveyPortlet End");
 		return "/ezNewPortal/portlets/surveyPortlet";
 	}
+	/*
+	 * 2020-12-03 탭게시판 포틀릿 - 박기범
+	*/
+	@RequestMapping(value = "/ezNewPortal/tabBoardPortlet.do", method=RequestMethod.GET)
+	public String tabBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("tabBoardPortlet Start");
+		
+		model.addAttribute("portletName", req.getParameter("portletName"));
+		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
+		
+		logger.debug("tabBoardPortlet End");
+		return "/ezNewPortal/portlets/tabBoardPortlet";
+	}
 	
+	// 2020-12-04 탭게시판 리스트 가져오기 - 박기범
+	@RequestMapping(value = "/ezNewPortal/getTabBoardPortlet.do", method=RequestMethod.GET)
+	public String getTabBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("getTabBoardPortlet Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("portletId", req.getParameter("portletId"));
+		String url = "/rest/ezPortal/portlets/tabBoard";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		String status = resultBody.get("status").toString();
+		int tabNum = 3; // 서브 탭 갯수
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			String existence = data.get("existence").toString();
+			
+			if (existence.equals("true")) {
+				for (int i = 1; i <= tabNum; i++) {
+					if (data.get("tabBoardName" + i) != null) {
+						model.addAttribute("tabBoardId" + i		, data.get("tabBoardId" + i)		);
+						model.addAttribute("tabBoard" + i		, data.get("tabBoard" + i)		);
+						model.addAttribute("tabBoardName" + i	, data.get("tabBoardName" + i)	);
+					}
+				}
+				model.addAttribute("portletLang", data.get("portletLang").toString());
+			}
+			
+			model.addAttribute("existence", existence);
+		}
+		
+		logger.debug("getTabBoardPortlet End");
+		return "json";
+	}
 }

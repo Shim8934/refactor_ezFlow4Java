@@ -210,3 +210,19 @@
 td.sun {background: #fdf7f7;}
 td.sat {background: #f7f9fd;}
 
+/* 협업 추가 */
+/* 월보기*/
+.calendar_month .td_list td.collaboration{color:#666666;}
+.calendar_month .td_list td .collaboration{border-radius: 7px;display:inline-block;width: 5px;height: 5px;border:1px solid #3f51b5;background:#3f51b5;overflow:hidden;margin:-2px 5px 0px 0px;padding:0;vertical-align:middle;}
+
+/* 주보기*/
+.calendar_data_collaboration{height:18px; background:#f2f2f2; border:1px solid #f2f2f2; line-height:150%; color:black;}
+.calendar_data_collaboration table td{background-color:#eaeaea !important;color:black;}
+.calendar_data_collaboration .collaboration{border-radius: 7px;display:inline-block;width: 5px;height: 5px;border:1px solid #3f51b5;background:#3f51b5;overflow:hidden;margin:-2px 5px 0px 0px;padding:0;vertical-align:middle;}
+.calendar_data_collaboration.icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
+.calendar_data_collaboration .icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */
+
+/* 달력layer 팝업 */
+.calendar_layer .text .td_list td.collaboration{color:#666666;}
+.calendar_layer .text .td_list td .collaboration{display:inline-block; width:11px; height:11px; border:1px solid #3f51b5; background:#3f51b5; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 회사 */
+

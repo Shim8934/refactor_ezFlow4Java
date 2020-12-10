@@ -735,6 +735,10 @@ function CalMonthDataBind(oAppointment) {
             oTd.className = "Group";
             oSpan.className = "Group";
         }
+        else if (oAppointment.ScheduleType == 4) {
+            oTd.className = "collaboration";
+            oSpan.className = "collaboration";
+        }
         else {
             oTd.className = "department";
             oSpan.className = "department";
@@ -892,6 +896,10 @@ function CalWeekDataBind(oAppointment, order) {
             oDiv.className = "calendar_data_Group";
             oSpan.className = "Group";
         }
+        else if (oAppointment.ScheduleType == 4) {
+        	oDiv.className = "calendar_data_collaboration";
+        	oSpan.className = "collaboration";
+        }
         else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
@@ -1033,6 +1041,10 @@ function CalWeekAllDataBind(oAppointment, order) {
             oDiv.className = "calendar_data_Group";
             oSpan.className = "Group";
         }
+        else if (oAppointment.ScheduleType == 4) {
+            oDiv.className = "calendar_data_collaboration";
+            oSpan.className = "collaboration";
+        }
         else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
@@ -1154,6 +1166,10 @@ function CalDayDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 7) {
             oDiv.className = "calendar_data_Group";
             oSpan.className = "Group";
+        }
+        else if (oAppointment.ScheduleType == 4) {
+            oDiv.className = "calendar_data_collaboration";
+            oSpan.className = "collaboration";
         }
         else {
             oDiv.className = "calendar_data_department";
@@ -1296,6 +1312,10 @@ function CalDayAllDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 7) {
             oDiv.className = "calendar_data_Group";
             oSpan.className = "Group";
+        }
+        else if (oAppointment.ScheduleType == 4) {
+            oDiv.className = "calendar_data_collaboration";
+            oSpan.className = "collaboration";
         }
         else {
             oDiv.className = "calendar_data_department";

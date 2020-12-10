@@ -1437,7 +1437,7 @@
 			}
 			
 			function deleteShareList(){
-				selectElem.remove();
+				selectElem.parentNode.removeChild(selectElem);
 			}
 			
 			function insertShareList(flag){

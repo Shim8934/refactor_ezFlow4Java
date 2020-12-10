@@ -477,10 +477,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("userId", userId);
 			model.addAttribute("usePortalAutoRefreshInterval", data.get("usePortalAutoRefreshInterval"));
 			
-			if (useEzWorkspace) {
+			//if (useEzWorkspace) {
 				model.addAttribute("workspaceHostUrl", data.get("workspaceHostUrl"));
 				model.addAttribute("workspaceContextRootUrl", data.get("workspaceContextRootUrl"));
-			}
+			//}
 
 			String usedTheme = data.get("usedTheme").toString();
 			returnUrl += "Theme" + usedTheme;

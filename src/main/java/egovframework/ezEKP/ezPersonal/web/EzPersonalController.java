@@ -492,7 +492,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String type = request.getParameter("type");
+		String type = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("type")));
 		String dept = request.getParameter("dept"); 
 		String tagName = request.getParameter("tagName");
 		

@@ -258,7 +258,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String thumb = "default_logo_empty.png";
 		logoPath = commonUtil.detectPathTraversal(logoPath);
 		
-		logger.debug("logoPath 		::		 " + logoPath);
+		//logger.debug("logoPath 		::		 " + logoPath);
 			
 		int isIn = 0, boardNo = 0;
 		int tenantID = userInfo.getTenantId();
@@ -347,7 +347,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		int thumbFileSize = 0;
 		int iStart = 0;
 		
-		logger.debug("" + cClubLogo);
+		//logger.debug("" + cClubLogo);
 		if (cClubLogo != null && !cClubLogo.isEmpty()) {
 			attachFile = cClubLogo.getOriginalFilename();
 			logoFileSize = (int) cClubLogo.getSize();
@@ -636,7 +636,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public List<CommunityBoardInfoVO> commHomeBoardInfo(String code, int tenantID) throws Exception {
 		logger.debug("commHomeBoardInfo started.");
-		logger.debug("code : " + code + ", tenantID : " + tenantID);
+		//logger.debug("code : " + code + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
@@ -644,7 +644,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		List<CommunityBoardInfoVO> boardInfoList = ezCommunityDAO.copHomeBoardGet(map);
 		
-		logger.debug("boardInfoList size : " + boardInfoList.size());
+		//logger.debug("boardInfoList size : " + boardInfoList.size());
 		logger.debug("commHomeBoardInfo ended.");
 		
 		return boardInfoList;
@@ -654,7 +654,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID, int tenantID, String offset) throws Exception {
 		logger.debug("commHomeBoardItemList started.");
-		logger.debug("boardID : " + boardID + ", tenantID : " + tenantID + ", now : " + commonUtil.getTodayUTCTime(""));
+		//logger.debug("boardID : " + boardID + ", tenantID : " + tenantID + ", now : " + commonUtil.getTodayUTCTime(""));
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", boardID);
@@ -664,7 +664,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		List<CommunityBoardItemVO> boardItemList = ezCommunityDAO.copHomeBoardItemGet(map);
 		
-		logger.debug("boardItemList.size : " + boardItemList.size());
+		//logger.debug("boardItemList.size : " + boardItemList.size());
 		logger.debug("commHomeBoardItemList ended.");
 		
 		return boardItemList;
@@ -1038,14 +1038,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", userInfo.getTenantId());
 		
 		List<CommunityCPollManagerVO> list = ezCommunityDAO.pollMainGet2(map);
-		logger.debug("pollMainGet2 ended. size : " + list.size());
+		//logger.debug("pollMainGet2 ended. size : " + list.size());
 		
 		String dateStr = commonUtil.getTodayUTCTime("");
-		logger.debug("userCurrentTime=" + dateStr);
+		//logger.debug("userCurrentTime=" + dateStr);
 		
 		/* 2018-05-08 홍승비 - 커뮤니티 관리자의 설문조사 테이블 > 관리TD의 모든 버튼 활성 */
 		String sysopID = ezCommunityDAO.adminMemberListGet2(map);
-		logger.debug("sysopID=" + sysopID);
+		//logger.debug("sysopID=" + sysopID);
 		
 		/* 2018-05-10 홍승비 - 커뮤니티 설문조사 예정, 진행중, 완료 조건 비교 수정(년-월-일 시:분:초 단위까지 전부 비교) */
 		for (CommunityCPollManagerVO item : list) {
@@ -1080,12 +1080,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			int strResponseCnt = ezCommunityDAO.pollMainGet4(map);
 			
 			logger.debug("pollMainGet4 ended.");
-
+			
 			sb.append("<tr>");
 			/* 2018-05-07 홍승비 - 커뮤니티 설문조사 체크박스 사용 (삭제를 위한 해당설문ID, 등록자ID, 커뮤니티ID) */
 			sb.append("<td><input type=\"checkbox\" id=\"" + item.getManagerID()+ ";\" pollRegID=\"" + item.getPollRegUser() + "\" clubNo=\"" + item.getC_clubNo() + "\"/></td>");			
-			sb.append("<td style=\"text-overflow:ellipsis;overflow:hidden;white-space:nowrap;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()) + "\">");
-			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" + commonUtil.cleanValue(item.getPollSubject()) + "</a></td>");
+			sb.append("<td style=\"text-overflow:ellipsis;overflow:hidden;white-space:nowrap;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()).replaceAll("\\\\", "&#92;") + "\">");
+			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" + commonUtil.cleanValue(item.getPollSubject()).replaceAll("\\\\", "&#92;") + "</a></td>");
 			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
 			sb.append("<td>" + strResponseCnt + egovMessageSource.getMessage("ezCommunity.t478", userInfo.getLocale()) + "</td>");
 			sb.append("<td>" + pollState + "</td>");
@@ -1246,14 +1246,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		startDate = startDate + " 00:00:00";
 		endDate = endDate + " 23:59:59";
 
-		logger.debug("startDate : " + startDate);
-		logger.debug("endDate : " + endDate);
+		//logger.debug("startDate : " + startDate);
+		//logger.debug("endDate : " + endDate);
 		
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
-		logger.debug("UTCstartDate : " + startDate);
-		logger.debug("UTCendDate : " + endDate);
+		//logger.debug("UTCstartDate : " + startDate);
+		//logger.debug("UTCendDate : " + endDate);
 		
 		switch (mode) {
 			case "write" :
@@ -1452,7 +1452,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					logger.debug("pollDeleteGet4 ended. size=" + answerList.size());
 					
 					for(CommunityCPollAnswerVO answer : answerList) {
-						logger.debug("getQuestionID="+ question.getQuestionID() + " || getAnswerID=" + answer.getAnswerID());
+						//logger.debug("getQuestionID="+ question.getQuestionID() + " || getAnswerID=" + answer.getAnswerID());
 						pollDeleteDel1(question.getQuestionID(), answer.getAnswerID(), tenantID);
 					}
 					
@@ -1729,7 +1729,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	@Override
 	public String commViewMember(LoginVO userInfo, String code, String strSysopID, String keyword, String sRadio, int comNoPerPage, int curPage) throws Exception {
-		logger.debug("code : " + code + ", strSysopID : " + strSysopID + ", keyword : " + keyword + ", sRadio : " + sRadio);
+		//logger.debug("code : " + code + ", strSysopID : " + strSysopID + ", keyword : " + keyword + ", sRadio : " + sRadio);
 		
 		StringBuilder sb = new StringBuilder();
 		/* 2018-07-18 홍승비 - primary 설정 변경 */
@@ -2117,7 +2117,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		/* 2018-06-21 홍승비 - MY커뮤니티 새글 표출 시 현재 companyID로 자신이 가입한 모든 CLUBNO 가져오도록 수정 */
 		List<String> clubNoList = myCommunityGet(userInfo.getId(), startRow, endRow, "LIST", userInfo.getCompanyID(), userInfo.getTenantId());
 
-		logger.debug("clubNoList.size : " + clubNoList.size());
+		//logger.debug("clubNoList.size : " + clubNoList.size());
 		
 		rtnVal.append("<ITEM><DATA>");
 		
@@ -2129,7 +2129,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
 		
-		logger.debug("v_copNo : " + clubNoList);
+		//logger.debug("v_copNo : " + clubNoList);
 		
 		if(clubNoList.size() > 0) {
 			List<CommunityMyCommunityVO> myCommunityList = ezCommunityDAO.myCommunityItemGet(map);
@@ -2247,7 +2247,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public String getBoardTitleName(String strBoardName, String strClubNo, int tenantID) throws Exception {
 		logger.debug("getBoardTitleName started.");
-		logger.debug("strBoardName : " + strBoardName + ", strClubNo : " + strClubNo + ", tenantID : " + tenantID);
+		//logger.debug("strBoardName : " + strBoardName + ", strClubNo : " + strClubNo + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_STRBOARDNAME", strBoardName);
@@ -2264,7 +2264,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public int bbsListGet1(String bName, String primary, String pKeyword, String sRadio, String companyID, int tenantID) throws Exception {
 		logger.debug("bbsListGet1 started.");
-		logger.debug("bName : " + bName + ", primary : " + primary + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio + ", tenantID : " + tenantID);
+		//logger.debug("bName : " + bName + ", primary : " + primary + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
@@ -2295,7 +2295,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		List<CommunityCBoardVO> list = ezCommunityDAO.bbsListGet2(map);
 		
-		logger.debug("bName : " + bName + ", primary : " + primary + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio);
+		//logger.debug("bName : " + bName + ", primary : " + primary + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio);
 		logger.debug("bbsListGet2 ended.");
 		
 		return list;
@@ -2304,7 +2304,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public String bbsEditGet1(String bName, String no, int tenantID) throws Exception {
 		logger.debug("bbsEditGet1 started.");
-		logger.debug("bName : " + bName + ", no : " + no + ", tenantID : " + tenantID);
+		//logger.debug("bName : " + bName + ", no : " + no + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
@@ -2321,7 +2321,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no, int tenantID, String offset) throws Exception {
 		logger.debug("bbsViewNewGet1 started.");
-		logger.debug("bName : " + bName + ", no : " + no + ", tenantID : " + tenantID);
+		//logger.debug("bName : " + bName + ", no : " + no + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
@@ -2340,7 +2340,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public CommunityCBoardVO bbsEditNew(String bName, String no, String primary, int tenantID) throws Exception {
 		logger.debug("bbsEditNew started.");
-		logger.debug("bName : " + bName + ", no : " + no + ", primary : " + primary + ", tenantID : " + tenantID);
+		//logger.debug("bName : " + bName + ", no : " + no + ", primary : " + primary + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
@@ -2358,7 +2358,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public List<CommunityCBoardVO> bbsViewNewGet2(String bName, int tenantID) throws Exception {
 		logger.debug("bbsViewNewGet2 started.");
-		logger.debug("bName : " + bName + ", tenantID : " + tenantID);
+		//logger.debug("bName : " + bName + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
@@ -2374,7 +2374,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public CommunityCBoardVO bbsDelOkGet(String bName, String itemNo, String code, int tenantID) throws Exception {
 		logger.debug("bbsDelOkGet started.");
-		logger.debug("bName : " + bName + ", itemNo : " + itemNo + ", code : " + code + ", tenantID : " + tenantID);
+		//logger.debug("bName : " + bName + ", itemNo : " + itemNo + ", code : " + code + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
@@ -2453,7 +2453,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public CommunityClubVO aspCommInfoGet1(String code, int tenantID) throws Exception {
 		logger.debug("aspCommInfoGet1 started.");
-		logger.debug("code : " + code + ", tenantID : " + tenantID);
+		//logger.debug("code : " + code + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
@@ -2489,7 +2489,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo) throws Exception {
 		logger.debug("communityConnCHK started.");
-		logger.debug("rollInfo = " + rollInfo);
+		//logger.debug("rollInfo = " + rollInfo);
 		String rtnValue = "";
 		boolean result = false;
 
@@ -2514,7 +2514,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	private String getClubCHK(String id, String clubID, String boardID, int tenantID) throws Exception{
 		logger.debug("getClubCHK started.");
-		logger.debug("id : " + id + ", clubID : " + clubID + ", boardID : " + boardID + ", tenantID : " + tenantID);
+		//logger.debug("id : " + id + ", clubID : " + clubID + ", boardID : " + boardID + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", id);
@@ -2538,7 +2538,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			}
 		}
 		
-		logger.debug("result : " + result);
+		//logger.debug("result : " + result);
 		logger.debug("getClubCHK ended.");
 		
 		return result;
@@ -2566,7 +2566,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         for (int i = 0; i < pAccessID.split(",").length; i++) {
         	boardTreeList = getBoardTreeGet2(pAccessID.split(",")[i].trim(), tenantID);
         	brdBoardTreeList = brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), "", "", pMode, pSelectBy, pExcludeBoardID, pClubNo, tenantID);
-        	logger.debug("brdBoardTreeList.size : " + brdBoardTreeList.size());
+        	//logger.debug("brdBoardTreeList.size : " + brdBoardTreeList.size());
         	
 			if (boardTreeList.size() > 0) {
 				for (int r = 0; r < boardTreeList.size(); r++) {
@@ -2786,7 +2786,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public CommunityBoardPropertyVO getBoardProperty(String pBoardID, int tenantID) throws Exception {
 		logger.debug("getBoardProperty started.");
-		logger.debug("pBoardID : " + pBoardID + ", tenantID : " + tenantID);
+		//logger.debug("pBoardID : " + pBoardID + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("boardID", pBoardID);
@@ -2802,7 +2802,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public String getCategory(String strSelCateA, String strSelCateB, String strSelCateC, LoginVO userInfo) throws Exception {
 		logger.debug("getCategory started.");
-		logger.debug("strSelCateA : " + strSelCateA + ", strSelCateB : " + strSelCateB + ", strSelCateC : " + strSelCateC);
+		//logger.debug("strSelCateA : " + strSelCateA + ", strSelCateB : " + strSelCateB + ", strSelCateC : " + strSelCateC);
 		
 		StringBuilder strHTML = new StringBuilder();
 		
@@ -2865,13 +2865,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				sb.append("<WriterDeptID>" + commonUtil.cleanValue(boardList.getWriterDeptID()) + "</WriterDeptID>");
 				sb.append("<WriterDeptName>" + commonUtil.cleanValue(boardList.getWriterDeptName()) + "</WriterDeptName>");
 				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(boardList.getWriterCompanyName()) + "</WriterCompanyName>");
-				
-				if (boardList.getWriteDate().equals(boardList.getParentWriteDate())) {
-					sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(boardList.getWriteDate(), offset, false) + "</WriteDate>");
-				} else {
-					sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(boardList.getParentWriteDate(), offset, false) + "</WriteDate>");
-				}
-				
+				sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(boardList.getWriteDate(), offset, false) + "</WriteDate>");
 				sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
 				sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
 				
@@ -2911,7 +2905,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", userInfo.getTenantId());
 		
 		int result = ezCommunityDAO.searchItemCount(map);
-		logger.debug("result=" + result);
+		//logger.debug("result=" + result);
 		logger.debug("searchItemCount ended.");
 		
 		return result;
@@ -2943,13 +2937,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				
 				if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 					map.put("v_pBoardID", ezCommunityDAO.setAsReadSelectBoardID(map));
-					logger.debug("v_pBoardID : " + ezCommunityDAO.setAsReadSelectBoardID(map));
+					//logger.debug("v_pBoardID : " + ezCommunityDAO.setAsReadSelectBoardID(map));
 				}
 				
-				logger.debug("item : " + item);
+				//logger.debug("item : " + item);
 				
 				int temp = ezCommunityDAO.setAsReadSelectTemp(map);
-				logger.debug("temp : " + temp);
+				//logger.debug("temp : " + temp);
 				
 				if (temp == 0) {
 					ezCommunityDAO.setAsReadInsert(map);
@@ -2977,7 +2971,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	@Override
 	public void deleteItem(String itemList, int tenantID) throws Exception {
-		logger.debug("deleteItem started. itemList = " + itemList);
+		//logger.debug("deleteItem started. itemList = " + itemList);
 		
 		String boardID = "";
 		
@@ -2988,10 +2982,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			map.put("itemID", itemID);
 			map.put("tenantID", tenantID);
 			
-			logger.debug("deleteItemGet itemID = " + itemID + " || tenantID = " + tenantID);
+			//logger.debug("deleteItemGet itemID = " + itemID + " || tenantID = " + tenantID);
 			boardID = ezCommunityDAO.deleteItemGet(map);
 			
-			logger.debug("itemID : " + itemID + ", boardID : " + boardID);
+			//logger.debug("itemID : " + itemID + ", boardID : " + boardID);
 			
 			ezCommunityDAO.deleteItem1(map);
 			ezCommunityDAO.deleteItem2(map);
@@ -3013,15 +3007,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		for (String item : itemList.split(";")) {
 			String itemID = item.split(",")[0];
 			
-			logger.debug("itemID = " + itemID + " || tenantID = " + tenantID);
+			//logger.debug("itemID = " + itemID + " || tenantID = " + tenantID);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pItemID", itemID);
 			map.put("tenantID", tenantID);
 			
 			int ret = ezCommunityDAO.checkIfHasReply(map);
-			logger.debug("itemID : " + itemID);
-			logger.debug("ret : " + ret);
+			//logger.debug("itemID : " + itemID);
+			//logger.debug("ret : " + ret);
 
 			if (ret != 0) {
 				return "TRUE";
@@ -3107,7 +3101,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		item.setUpperItemIDTree(xmlData.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
 		
 		if (pMode.equals("reply")) {
-			item.setUpperItemIDTree(item.getUpperItemIDTree() + getReverseDateNow() + item.getItemID());
+			item.setUpperItemIDTree(item.getUpperItemIDTree() + getReverseDateNow());
 		}
 		
 		item.setItemLevel(Integer.parseInt(xmlData.getElementsByTagName("ITEMLEVEL").item(0).getTextContent()));
@@ -3585,7 +3579,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             myLevel = Integer.parseInt(request.getParameter("level"));
         }
 		
-        logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLevel);
+        //logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLevel);
         String maxIdFieldName = "c_no";
         
         InputStream is = null;
@@ -3604,7 +3598,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	                bbsEditOkSet1(bName.toUpperCase(), title, no, code, attachList, textContent, userInfo.getTenantId());
 	                String strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator + cBoard.getFileName().trim();
 	                strPath = commonUtil.detectPathTraversal(strPath);
-	                logger.debug("strPath ==== " + strPath);
+	                //logger.debug("strPath ==== " + strPath);
 	                try{
 		    		    pw = new PrintWriter(new File(strPath));
 			    		pw.print(commonUtil.stripScriptTags(MHTcontent));
@@ -3798,7 +3792,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	        	sb.append("<USERNAME2>" + commonUtil.cleanValue(item.getUserName2()) + "</USERNAME2>");
 	        	sb.append("<COMPANYID>" + commonUtil.cleanValue(item.getCompanyID()) + "</COMPANYID>");
 	        	sb.append("<TITLE>" + commonUtil.cleanValue(item.getTitle()) + "</TITLE>");
-	        	sb.append("<CONTENT><![CDATA[" + commonUtil.cleanValue(item.getContent()).replaceAll("\n", "<br>") + "]]>" + "</CONTENT>");
+	        	sb.append("<CONTENT><![CDATA[" + commonUtil.cleanValue(item.getContent()).replaceAll("\n", "<br>").replaceAll("\\\\", "&#92;") + "]]>" + "</CONTENT>");
 	        	sb.append("<CONTENTURL>" + commonUtil.cleanValue(item.getContentURL()) + "</CONTENTURL>");
 	        	sb.append("<READNUM>" + item.getReadNum() + "</READNUM>");
 	        	sb.append("<WRITEDAY>" + commonUtil.getDateStringInUTC(item.getWriteDay().substring(0, item.getWriteDay().lastIndexOf(".")), userInfo.getOffset(), false) + "</WRITEDAY>");
@@ -4365,7 +4359,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_USERINFO_USERID", userInfo.getId());
 		map.put("tenantID", userInfo.getTenantId());
 		
-		logger.debug("code="+ code);
+		//logger.debug("code="+ code);
 		
 		if (ezCommunityDAO.commOutOkGet1(map) != 0) {
 			strReturn = "<RETURN><VALUE>0</VALUE></RETURN>";
@@ -4441,7 +4435,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public CommunityMemberInfoVO aspCommInfoGet2(String primary, String sysopID, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCommInfoGet2 started.");
-		logger.debug("primary : " + primary + ", sysopID : " + sysopID + ", tenantID : " + tenantID);
+		//logger.debug("primary : " + primary + ", sysopID : " + sysopID + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("primary", primary);
@@ -4672,7 +4666,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_BOARDNO", boardNo);
 		map.put("tenantID", userInfo.getTenantId());
 		
-		logger.debug("code="+code);
+/*		logger.debug("code="+code);
 		logger.debug("boardID"+boardID);
 		logger.debug("boardName="+boardName);
 		logger.debug("boardName2="+boardName2);
@@ -4683,7 +4677,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("v_USERINFO_DISPLAYNAME="+userInfo.getDisplayName1());
 		logger.debug("v_USERINFO_COMPANYNAME="+userInfo.getCompanyName1());
 		logger.debug("v_USERINFO_DEPTNAME="+userInfo.getDeptName1());
-		logger.debug("v_BOARDNO="+boardNo);
+		logger.debug("v_BOARDNO="+boardNo);*/
 		
 		ezCommunityDAO.createBoardInsertInsert1(map);
 		ezCommunityDAO.createBoardInsertInsert2(map);
@@ -4839,13 +4833,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				sb.append("<WriterDeptID>" + commonUtil.cleanValue(board.getWriterDeptID()) + "</WriterDeptID>");
 				sb.append("<WriterDeptName>" + commonUtil.cleanValue(board.getWriterDeptName()) + "</WriterDeptName>");
 				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(board.getWriterCompanyName()) + "</WriterCompanyName>");
-				
-				if (board.getWriteDate().equals(board.getParentWriteDate())) {
-					sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(board.getWriteDate(), offset, false) + "</WriteDate>");
-				} else {
-					sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(board.getParentWriteDate(), offset, false) + "</WriteDate>");
-				}
-				
+				sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(board.getWriteDate(), offset, false) + "</WriteDate>");
 				sb.append("<Importance>" + board.getImportance() + "</Importance>");
 				sb.append("<Title>" + commonUtil.cleanValue(board.getTitle()) + "</Title>");
 				
@@ -4865,7 +4853,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		sb.append("</NODES>");
 		
-		logger.debug("adminSearchItemXML ended. result=" + sb.toString());
+		logger.debug("adminSearchItemXML ended.");
+//		logger.debug("adminSearchItemXML ended. result=" + sb.toString());
 		
 		return sb.toString();
 	}
@@ -4973,7 +4962,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm, int tenantID) throws Exception {
 		logger.debug("adminMemberListOkGoSe started.");
-		logger.debug("code=" + code + ", id=" + cID + ", Nm=" + cNm);
+		//logger.debug("code=" + code + ", id=" + cID + ", Nm=" + cNm);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("v_C_ID", cID);
@@ -5359,7 +5348,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<td height=\"23\" align=\"center\">" + iCount + "</td>");
 			sb.append("<td>");
             
-            logger.debug("lang = " + userInfo.getPrimary() + " || userID = " + user.getC_ID() + " || companyID = " + user.getCompanyID() + " || userName = " + user.getUserName());
+            //logger.debug("lang = " + userInfo.getPrimary() + " || userID = " + user.getC_ID() + " || companyID = " + user.getCompanyID() + " || userName = " + user.getUserName());
             
             // 승인대기자의 정보를 표출할 때 해당 겸직부서(또는 원부서) 값을 같이 넘긴다.
             // userName을 알아서 분기태워 가져오므로(primary로 case 작업), userName2를 사용하지는 않는다.
@@ -5581,7 +5570,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String offset = userInfo.getOffset();
 		int tenantID = userInfo.getTenantId();
 		
-		logger.debug("id : " + id + ", pStartRow : " + pStartRow + ", pEndRow : " + pEndRow + ", pSortBy : " + pSortBy + ", tenantID : " + tenantID);
+		//logger.debug("id : " + id + ", pStartRow : " + pStartRow + ", pEndRow : " + pEndRow + ", pSortBy : " + pSortBy + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUserID", id);
@@ -5676,7 +5665,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		int result = ezCommunityDAO.getBoardTotalItemCount(map);
 		
-		logger.debug("result : " + result);
+		//logger.debug("result : " + result);
 		logger.debug("getBoardTotalItemCount ended.");
 		
 		return result;
@@ -5702,8 +5691,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", tenantID);
 		map.put("offset", offset);
 		
-		logger.debug("psortBY");
-		logger.debug(pSortBy);
+		//logger.debug("psortBY");
+		//logger.debug(pSortBy);
 		List<CommunityBoardItemVO> itemList = ezCommunityDAO.boardItemListPhotoGet2(map);
 		
 		sb.append("<NODES>");
@@ -5818,7 +5807,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	public List<CommunityCClubGuestVO> guestOneGet2(String sRadio, String keyword, String code, String primary, int tenantID) throws Exception {
 		logger.debug("guestOneGet2 started.");
-		logger.debug("sRadio : " + sRadio + ", keyword : " + keyword + ", code : " + code + ", primary : " + primary + ", tenantID : " + tenantID);
+		//logger.debug("sRadio : " + sRadio + ", keyword : " + keyword + ", code : " + code + ", primary : " + primary + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_s_radio", sRadio);
@@ -5861,10 +5850,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", tenantID);
 		
 		logger.debug("pollResOkSetSelect started.");
-		logger.debug("questionID : " + questionID);
-		logger.debug("pollSelect : " + pollSelect);
+		//logger.debug("questionID : " + questionID);
+		//logger.debug("pollSelect : " + pollSelect);
 		Integer answerID = ezCommunityDAO.pollResOkSetSelect(map);
-		logger.debug("answerID : " + answerID);
+		//logger.debug("answerID : " + answerID);
 		logger.debug("pollResOkSetSelect ended.");
 		
 		map.put("v_ANSWERID", answerID);
@@ -5905,7 +5894,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public List<CommunityClubVO> leftCommunityGet3(String userID, int tenantID) throws Exception {
 		logger.debug("leftCommunityGet3 started.");
-		logger.debug("userID : " + userID + ", tenantID : " + tenantID);
+		//logger.debug("userID : " + userID + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
@@ -5920,14 +5909,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public List<CommunityBoardTreeVO> brdBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSelectBy, String pExcludeBoardID, String pClubNo, int tenantID) throws Exception {
 		logger.debug("brdBoardTree started.");
-		logger.debug("pRootBoardID : " + pRootBoardID);
+/*		logger.debug("pRootBoardID : " + pRootBoardID);
 		logger.debug("pUserID : " + pUserID);
 		logger.debug("pDeptID : " + pDeptID);
 		logger.debug("pCompanyID : " + pCompanyID);
 		logger.debug("pMode : " + pMode);
 		logger.debug("pSelectBy : " + pSelectBy);
 		logger.debug("pExcludeBoardID : " + pExcludeBoardID);
-		logger.debug("pClubNo : " + pClubNo);
+		logger.debug("pClubNo : " + pClubNo);*/
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pRootBoardID", pRootBoardID);
@@ -5982,7 +5971,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public List<CommunityBoardInfoVO> getBoardList(String code, String primary, String position, int tenantID) throws Exception {
 		logger.debug("getBoardList started.");
-		logger.debug("code : " + code + ", primary : " + primary + ", position : " + position + ", tenantID : " + tenantID);
+		//logger.debug("code : " + code + ", primary : " + primary + ", position : " + position + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
@@ -6035,7 +6024,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	/* 2018-06-21 홍승비 - MY커뮤니티 새글 표출 시 현재 companyID로 자신이 가입한 모든 CLUBNO 가져오도록 수정 */
 	public List<String> myCommunityGet(String id, int pStart, int pEnd, String mode, String companyID, int tenantID) throws Exception {
 		logger.debug("myCommunityGet started.");
-		logger.debug("id : " + id + ", pStart : " + pStart + ", pEnd : " + pEnd + ", mode : " + mode + ", tenantID : " + tenantID);
+		//logger.debug("id : " + id + ", pStart : " + pStart + ", pEnd : " + pEnd + ", mode : " + mode + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", id);
@@ -6056,7 +6045,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public CommunityCBoardVO bbsEditOkGet1(String bName, String no, String code, int tenantID) throws Exception {
 		logger.debug("bbsEditOkGet1 started");
-		logger.debug("bName : " + bName + ", no : " + no + ", code : " + code + ", tenantID : " + tenantID);
+		//logger.debug("bName : " + bName + ", no : " + no + ", code : " + code + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
@@ -6073,7 +6062,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public CommunityClubVO commMakeOkGet1(String clubName, String cCateA, String cCateB, String cCateC, String lang, int tenantID) throws Exception {
 		logger.debug("commMakeOkGet1 started.");
-		logger.debug("clubName : " + clubName + ", cCateA : " + cCateA + ", cCateB : " + cCateB + ", cCateC : " + cCateC + ", lang : " + lang + ", tenantID : " + tenantID);
+		//logger.debug("clubName : " + clubName + ", cCateA : " + cCateA + ", cCateB : " + cCateB + ", cCateC : " + cCateC + ", lang : " + lang + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CLUBNAME", clubName);
@@ -6108,7 +6097,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public Map<String, String> getAdjacentItems(String pItemID, String pBoardID, String upperItemIDTree, String parentWriteDate, int tenantID) throws Exception {
 		logger.debug("getAdjacentItems started.");
-		logger.debug("pItemID : " + pItemID + ", pBoardID : " + pBoardID + ", upperItemIDTree : " + upperItemIDTree + ", parentWriteDate : " + parentWriteDate + ", tenantID : " + tenantID);
+		//logger.debug("pItemID : " + pItemID + ", pBoardID : " + pBoardID + ", upperItemIDTree : " + upperItemIDTree + ", parentWriteDate : " + parentWriteDate + ", tenantID : " + tenantID);
 		
 		String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "", tempItemID = "", tempTitle = "";
 		Map<String, Object> map;
@@ -6198,7 +6187,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public int brdCheckIfBoardGroupAdmin(String pRootBoardID, String id, String deptID, String companyID, int tenantID) throws Exception {
 		logger.debug("brdCheckIfBoardGroupAdmin started.");
-		logger.debug("pRootBoardID : " + pRootBoardID + ", id : " + id + ", deptID : " + deptID + ", companyID : " + companyID + ", tenantID : " + tenantID);
+		//logger.debug("pRootBoardID : " + pRootBoardID + ", id : " + id + ", deptID : " + deptID + ", companyID : " + companyID + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", pRootBoardID);
@@ -6217,7 +6206,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	public String getCategoryValueA(String strSelCateA, LoginVO userInfo) throws Exception {
 		logger.debug("getCategoryValueA started.");
-		logger.debug("strSelCateA : " + strSelCateA + ", tenantID : " + userInfo.getTenantId());
+		//logger.debug("strSelCateA : " + strSelCateA + ", tenantID : " + userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
 		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueA(userInfo.getTenantId());
@@ -6244,7 +6233,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	public String getCategoryValueB(String strSelCateB, LoginVO userInfo) throws Exception {
 		logger.debug("getCategoryValueB started.");
-		logger.debug("strSelCateB : " + strSelCateB + ", tenantID : " + userInfo.getTenantId());
+		//logger.debug("strSelCateB : " + strSelCateB + ", tenantID : " + userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
 		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueB(userInfo.getTenantId());
@@ -6270,7 +6259,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	public String getCategoryValueC(String strSelCateC, LoginVO userInfo) throws Exception {
 		logger.debug("getCategoryValueB started.");
-		logger.debug("strSelCateC : " + strSelCateC + ", tenantID : " + userInfo.getTenantId());
+		//logger.debug("strSelCateC : " + strSelCateC + ", tenantID : " + userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
 		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueC(userInfo.getTenantId());
@@ -6297,8 +6286,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public String getBoardTreeGet1(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String primary, int tenantID) throws Exception {
 		logger.debug("getBoardTreeGet1 started.");
-		logger.debug("pRootBoardID : " + pRootBoardID + ", pUserID : " + pUserID + ", pDeptID : " + pDeptID + ", pCompanyID : " + pCompanyID + ", pMode : " + pMode + ", pSubFlag : " + pSubFlag);
-		logger.debug("pSelectBy : " + pSelectBy + ", pExcludeBoardID : " + pExcludeBoardID + ", pClubNo : " + pClubNo + ", primary : " + primary + ", tenantID : " + tenantID);
+		//logger.debug("pRootBoardID : " + pRootBoardID + ", pUserID : " + pUserID + ", pDeptID : " + pDeptID + ", pCompanyID : " + pCompanyID + ", pMode : " + pMode + ", pSubFlag : " + pSubFlag);
+		//logger.debug("pSelectBy : " + pSelectBy + ", pExcludeBoardID : " + pExcludeBoardID + ", pClubNo : " + pClubNo + ", primary : " + primary + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pRootBoardID", pRootBoardID);
@@ -6315,7 +6304,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		String result = ezCommunityDAO.getBoardTreeGet1(map);
 		
-		logger.debug("result : " + result);
+		//logger.debug("result : " + result);
 		logger.debug("getBoardTreeGet1 ended.");
 		
 		return result;
@@ -6357,7 +6346,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public int bbsEditOkGet2(String maxIdFieldName, String bName, String code, int tenantID) throws Exception {
 		logger.debug("bbsEditOkGet2 started.");
-		logger.debug("maxIdFieldName : " + maxIdFieldName + ", bName : " + bName + ", code : " + code + ", tenantID : " + tenantID);
+		//logger.debug("maxIdFieldName : " + maxIdFieldName + ", bName : " + bName + ", code : " + code + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
@@ -6374,7 +6363,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public String bbsEditOkGet3(String maxIdFieldName, String bName, String code, int maxNum, int tenantID) throws Exception {
 		logger.debug("bbsEditOkGet3 started.");
-		logger.debug("maxIdFieldName : " + maxIdFieldName + ", bName : " + bName + ", code : " + code + ", strMaxNum : " + maxNum + ", tenantID : " + tenantID);
+		//logger.debug("maxIdFieldName : " + maxIdFieldName + ", bName : " + bName + ", code : " + code + ", strMaxNum : " + maxNum + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
@@ -6392,7 +6381,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public String commMakeOkGet6(String companyID, String id, int tenantID) throws Exception {
 		logger.debug("commMakeOkGet6 started.");
-		logger.debug("companyID : " + companyID + ", id : " + id + ", tenantID : " + tenantID);
+		//logger.debug("companyID : " + companyID + ", id : " + id + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_COMPANYID",	companyID);
@@ -6514,8 +6503,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String getClubMemberInfo(String pCN, String pSearch, String primary, int tenantID) throws Exception {
 		Document xmlDoc = commonUtil.convertStringToDocument(ezOrganService.getPropertyList(pCN, pSearch, primary, tenantID));
 		
-		logger.debug("xmlDoc DESCRIPTION1      ::     " + xmlDoc.getElementsByTagName("DESCRIPTION1").item(0).getTextContent());
-		logger.debug("xmlDoc DESCRIPTION2      ::     " + xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent());
+		//logger.debug("xmlDoc DESCRIPTION1      ::     " + xmlDoc.getElementsByTagName("DESCRIPTION1").item(0).getTextContent());
+		//logger.debug("xmlDoc DESCRIPTION2      ::     " + xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent());
 		
 		if (primary.equals("2")) {
 			return xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
@@ -6540,7 +6529,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public int commMakeOkGet2(int tenantID) throws Exception {
 		logger.debug("commMakeOkGet2 started.");
-		logger.debug("tenantID : " + tenantID);
+		//logger.debug("tenantID : " + tenantID);
 		
 		int result = ezCommunityDAO.commMakeOkGet2(tenantID);
 		
@@ -6666,7 +6655,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String thumbPath = item.getExtensionAttribute5();
 		String fileName = "";
 
-		logger.debug("attachments : + " + attachments + ", itemID : " + itemID + ", boardID : " + boardID + ", thumbPath : " + thumbPath + ", fileName : " + fileName);
+		//logger.debug("attachments : + " + attachments + ", itemID : " + itemID + ", boardID : " + boardID + ", thumbPath : " + thumbPath + ", fileName : " + fileName);
 		
 		try {
 /*			if (!attachments.substring(attachments.length() - 1).equals(";")) {
@@ -6771,7 +6760,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public void bbsEditOkSet1(String bName, String title, String no, String code, String attachList, String textContent, int tenantID) throws Exception {
 		logger.debug("bbsEditOkSet1 started.");
-		logger.debug("bName : "+ bName + ", title : " + title + ", no : " + no + ", code : " + code + ", attachList : " + attachList + ", textContent : " + textContent);
+		//logger.debug("bName : "+ bName + ", title : " + title + ", no : " + no + ", code : " + code + ", attachList : " + attachList + ", textContent : " + textContent);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
@@ -6789,7 +6778,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public void bbsEditOkSet2(String bName, int myRef, int myStep, String code, int tenantID) throws Exception {
 		logger.debug("bbsEditOkSet2 started.");
-		logger.debug("bName : " + bName);		
+		//logger.debug("bName : " + bName);		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_bName", bName);
@@ -6805,10 +6794,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public void bbsEditOkInsert(String bName, int myRef, int newStep, int newLevel, String attachList, int number, String textContent, String nowDate, String fileName, String code, String companyID, String id, String userNm, String userNm2, String title, String maxIdFieldName, int tenantID) throws Exception {
 		logger.debug("bbsEditOkInsert started.");
-		logger.debug("bName : " + bName + ", myRef : " + myRef + ", newStep : " + newStep + ", newLevel : " + newLevel + ", attachList : " + attachList + ", number : " + number);
+/*		logger.debug("bName : " + bName + ", myRef : " + myRef + ", newStep : " + newStep + ", newLevel : " + newLevel + ", attachList : " + attachList + ", number : " + number);
 		logger.debug(", textContent : " + textContent + ", nowDate : " + nowDate + ", fileName : " + fileName + ", code : " + code + ", companyID : " + companyID + ", id : " + id);
 		logger.debug(", userNm : " + userNm + ", userNm2 : " + userNm2 + ", title : " + title + ", maxIdFieldName : " + maxIdFieldName + ", tenantID : " + tenantID);
-		
+		*/
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
 		map.put("v_MYREF", myRef);
@@ -6835,7 +6824,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	public void bbsDelOkDel(String bName, String itemNo, String code, int tenantID) throws Exception {
 		logger.debug("bbsDelOkDel started.");
-		logger.debug("bName : " + bName + ", itemNo : " + itemNo + ", code : " + code + ", tenantID : " + tenantID);
+		//logger.debug("bName : " + bName + ", itemNo : " + itemNo + ", code : " + code + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
@@ -6850,7 +6839,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	public void commMakeOkInsert2(int clubNo, String clubName, String clubName2, String cCateA, String cCateB, String cCateC, String clubType, String clubConfirmType, String intro, int isIn, String logo, String thumb, String bBoardName1, String bBoardName2, String comatt, String code, String bNotiName1, String bNotiName2, String pNewID, int boardNo, String id, String displayName1, String companyName1, String deptName1, String pNewSubID, int openEmail, int openHp, int openComp, int openHouse, int openJob, int openBirth, int openSex, String companyID, int tenantID) throws Exception {
 		logger.debug("commMakeOkInsert2 started.");
-		logger.debug("clubNo : " + clubNo + ", clubName : " + clubName + ", tenantID : " + tenantID);
+		//logger.debug("clubNo : " + clubNo + ", clubName : " + clubName + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TMP_CLUBID", clubNo);
@@ -7422,8 +7411,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	to.setPersonal(vo.getDisplayName(), "UTF-8");
         	to.setAddress(vo.getEmail());
         	
-        	logger.debug("from = " + userInfo.getEmail());
-        	logger.debug("to = " + vo.getEmail());
+        	//logger.debug("from = " + userInfo.getEmail());
+        	//logger.debug("to = " + vo.getEmail());
         	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
         }
 		
@@ -7474,7 +7463,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         
         CommunityClubVO cvo = ezCommunityDAO.getCClubName(map);
         OrganUserVO uvo = ezOrganAdminService.getUserInfo(cID, userInfo.getPrimary(), userInfo.getTenantId());
-        logger.debug("C_ClubName=" + cvo.getC_ClubName() + ", email=" + uvo.getMail());
+        //logger.debug("C_ClubName=" + cvo.getC_ClubName() + ", email=" + uvo.getMail());
         
         if (uvo.getMail() != null) {
         	String subName = egovMessageSource.getMessage("ezCommunity.t1534", userInfo.getLocale());
@@ -7561,7 +7550,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		List<CommunityBoardDeleteItemVO> boardInfoList = ezCommunityDAO.getDeleteReservedBoard();
 		
 		for (CommunityBoardDeleteItemVO k : boardInfoList) {
-			logger.debug("deleteBoardPath :  " + realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID());
+			//logger.debug("deleteBoardPath :  " + realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID());
 			Path docPath = Paths.get(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID()));
 			
 			//커뮤니티 게시판 디렉토리 하위 이미지, 게시물 관련 파일 모두 지우기
@@ -7604,10 +7593,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			}
 			
 			ezCommunityDAO.deleteReservedBoard(k);
-			logger.debug("delete boardID : " + k.getBoardID() + " is Done");
+			//logger.debug("delete boardID : " + k.getBoardID() + " is Done");
 		}
 		
-		logger.debug("deleteReservedBoard:::deleteBoardCount = " + deleteCnt);
+		//logger.debug("deleteReservedBoard:::deleteBoardCount = " + deleteCnt);
 		logger.debug("deleteReservedBoard ended");
 	}
 
@@ -7638,7 +7627,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			ezCommunityDAO.deleteBoardItemAttach(map);
 			ezCommunityDAO.deleteReservedBoardItem(k);
-			logger.debug("delete itemID : " + k.getItemID() + " is Done");
+			//logger.debug("delete itemID : " + k.getItemID() + " is Done");
 		}
 
 		logger.debug("deleteReservedBoardItem ended");
@@ -7648,7 +7637,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public void sendReplyNoticeMail(String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception {
 		logger.debug("sendReplyNoticeMail started.");
-		logger.debug("boardID = " + boardID + " || itemID = " + itemID + " || itemTreeID = " + itemTreeID);
+		//logger.debug("boardID = " + boardID + " || itemID = " + itemID + " || itemTreeID = " + itemTreeID);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -7681,8 +7670,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	to.setPersonal(uvo.getDisplayName(), "UTF-8");
         	to.setAddress(uvo.getMail());
         	
-        	logger.debug("from = " + userInfo.getEmail());
-        	logger.debug("to = " + uvo.getMail());
+        	//logger.debug("from = " + userInfo.getEmail());
+        	//logger.debug("to = " + uvo.getMail());
         	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
 			
 		}

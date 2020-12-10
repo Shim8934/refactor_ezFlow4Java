@@ -30915,17 +30915,19 @@
 		INNER JOIN 
 			TBL_EXPENDAPRDOCINFO X 
 		ON 
-			E.DOCID = X.DOCID AND E.TENANT_ID = X.TENANT_ID
+			E.DOCID = X.DOCID AND E.TENANT_ID = X.TENANT_ID AND E.COMPANYID = X.COMPANYID
 		INNER JOIN 
 			TBL_CONTAINER C 
 		ON 
-			E.CONTAINERID = C.CONTAINERID AND E.TENANT_ID = C.TENANT_ID
+			E.CONTAINERID = C.CONTAINERID AND E.TENANT_ID = C.TENANT_ID AND E.COMPANYID = C.COMPANYID
 		WHERE 
 			C.CONTAINEROWNDEPID = #deptId#
 		AND 
 			E.TENANT_ID = #tenantId#
-		AND
-			E.COMPANYID = #companyId#
+        <isNotEmpty property="companyId">
+        AND
+            E.COMPANYID = #companyId#
+        </isNotEmpty>
 	</select>
 	
 	<select id="EzApprovalG.getShareList" parameterClass="Map" resultClass="KEDSharedUserInfo">

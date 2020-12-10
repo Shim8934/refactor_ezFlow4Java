@@ -314,7 +314,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("result", result);
 		
-		logger.debug(result);
+		//logger.debug(result);
 		logger.debug("getSubBoards ended.");
 		
 		return "json";
@@ -526,7 +526,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pastDate = "";
 		
 		logger.debug("boarditemList started.");
-		logger.debug("code : " + code + ", boardID : " + boardID + ", boardName : " + boardName);
+		//logger.debug("code : " + code + ", boardID : " + boardID + ", boardName : " + boardName);
 		
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo)) {
 			return "cmm/error/egovError";
@@ -685,7 +685,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String searchEnd = request.getParameter("searchEnd");
 		String searchConfig = "";
 		
-		logger.debug("title : " + title + ", writerName : " + writerName + ", strAbstract : " + strAbstract + ", searchStart : " + searchStart + ", searchEnd : " + searchEnd);
+		//logger.debug("title : " + title + ", writerName : " + writerName + ", strAbstract : " + strAbstract + ", searchStart : " + searchStart + ", searchEnd : " + searchEnd);
 		
 		if (!title.equals("")) {
 			searchConfig += egovMessageSource.getMessage("ezCommunity.t1467", userInfo.getLocale()) + "'" + title + "' " + egovMessageSource.getMessage("ezCommunity.t1468", userInfo.getLocale());
@@ -866,7 +866,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		Document xmlData = commonUtil.convertStringToDocument(xmlStr);
 		String pMode = request.getParameter("mode");
 		
-		logger.debug("xmlStr: " + xmlStr);
+		//logger.debug("xmlStr: " + xmlStr);
 		
 		String ret = ezCommunityService.newItem(xmlData, pMode, commonUtil.getRealPath(request), userInfo);
 		
@@ -1414,8 +1414,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pFilePath = request.getParameter("filePath");
 		pFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + pFilePath;
 		String realPath = commonUtil.getRealPath(request);
-		logger.debug("fileName : " + pFileName);
-		logger.debug("filePath : " + pFilePath);
+		//logger.debug("fileName : " + pFileName);
+		//logger.debug("filePath : " + pFilePath);
 		
 		downFile(request, response, realPath + pFilePath, pFileName);
 		
@@ -2044,7 +2044,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String mode = request.getParameter("mode");
 		String memo = URLDecoder.decode(request.getParameter("memo"), "utf-8");
 		//String memo = request.getParameter("memo");
-		logger.debug("code : " + code + ", mode : " + mode + ", memo : " + memo);
+		//logger.debug("code : " + code + ", mode : " + mode + ", memo : " + memo);
 		
 		bIsMyContent = ezCommunityService.guestEditOk(userInfo, item, code, mode, memo, cNo, bIsMyContent);
 		
@@ -2414,7 +2414,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("strSysopID", strSysopID);
 		model.addAttribute("strXML", strXML);
 		
-		logger.debug("strXML = " + strXML);
+		//logger.debug("strXML = " + strXML);
 		
 		return "ezCommunity/communityCommViewMember";
 	}
@@ -2539,7 +2539,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		String retXML = ezCommunityService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, userInfo.getPrimary(), userInfo.getTenantId());
 		
-		logger.debug("xmlret = " + retXML);
+		//logger.debug("xmlret = " + retXML);
 		
 		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")){
             retXML = "<RESULT>ERROR</RESULT>";
@@ -2688,7 +2688,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("tempLogoPath", result);
 		logger.debug("adminLogoUpload ended.");
-		logger.debug("result======" + result);
+		//logger.debug("result======" + result);
 		return "json";
 	}
 		
@@ -2716,7 +2716,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		model.addAttribute("tempThumbPath", result);
 		logger.debug("adminThumbUpload ended.");
-		logger.debug("result======" + result);
+		//logger.debug("result======" + result);
 		return "json";
 	}
 	
@@ -3026,7 +3026,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@ResponseBody
 	public String saveBoardOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, HttpServletRequest request) throws Exception {
 		logger.debug("saveBoardOrder started.");
-		logger.debug("xmlData = " + xmlData);
+		//logger.debug("xmlData = " + xmlData);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String ret = ezCommunityService.saveBoardOrder(xmlData, userInfo.getTenantId());
@@ -3451,7 +3451,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		//memberInfo.setDeptName(xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent());
 		
 		/* 2019-03-05 홍승비 - 커뮤니티 팝업홈 > 관리메뉴 > 회원정보가 사간겸직에 대응하도록 수정 */
-		logger.debug("getMemberInfo(" + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
+		//logger.debug("getMemberInfo(" + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
 		CommunityMemberInfoVO memberInfoVO = ezCommunityService.getMemberInfo(companyID, cID, userInfo.getTenantId());
 		
 		if (memberInfoVO != null) {
@@ -3461,7 +3461,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				memberInfo.setDeptName(memberInfoVO.getDeptName2());
 			}
 			
-			logger.debug("adminMemberListOkGet(" + code + ", " + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
+			//logger.debug("adminMemberListOkGet(" + code + ", " + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
 			clubUser = ezCommunityService.adminMemberListOkGet(code, cID, companyID, userInfo.getTenantId());
 			
 			if (clubUser != null) {
@@ -3668,12 +3668,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int startRow = 2 * (page - 1);
 		int endRow = 2;
 		
-		logger.debug("page : " + page + ", startRow : " + startRow + ", endRow : " + endRow);
+		//logger.debug("page : " + page + ", startRow : " + startRow + ", endRow : " + endRow);
 		
 		/* 2018-06-21 홍승비 - MY커뮤니티 새글 표출 시 현재 companyID로 자신이 가입한 모든 CLUBNO 가져오도록 수정 */
 		String result = ezCommunityService.myCopNewBoardItem(userInfo, startRow, endRow);
 		
-		logger.debug("result : " + result);
+		//logger.debug("result : " + result);
 		logger.debug("myCopNewBoardItem ended.");
 		
 		return result;
@@ -3984,7 +3984,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String cID = request.getParameter("cID");
 		String result = "";
 		
-		logger.debug("code : " + code + ", flag : " + flag + ", cID : " + cID);
+		//logger.debug("code : " + code + ", flag : " + flag + ", cID : " + cID);
 		
 		int postCount = ezCommunityService.adminMemPermitGet1(code, userInfo.getTenantId());		
 		String idSpanValue = ezCommunityService.adminMemPermit(userInfo, code);
@@ -4078,8 +4078,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 			for(CommunityCCategoryVO category : categoryList) {
 				CommunityCCategoryVO vo = ezCommunityService.mainPageCategory(category.getC_Code(), "a", userInfo.getCompanyID(), userInfo.getTenantId());
 				if (vo != null) {
-					logger.debug("code = " + category.getC_Code() + " || cat = a");
-					logger.debug(vo.getC_Name() + " : " + vo.getCnt());
+					//logger.debug("code = " + category.getC_Code() + " || cat = a");
+					//logger.debug(vo.getC_Name() + " : " + vo.getCnt());
 					list.add(vo);
 				}
 			}
@@ -4089,8 +4089,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 			for(CommunityCCategoryVO category : categoryList) {
 				CommunityCCategoryVO vo = ezCommunityService.mainPageCategory(category.getC_Code(), "b", userInfo.getCompanyID(), userInfo.getTenantId());
 				if (vo != null) {
-					logger.debug("code = " + category.getC_Code() + " || cat = b");
-					logger.debug(vo.getC_Name() + " : " + vo.getCnt());
+					//logger.debug("code = " + category.getC_Code() + " || cat = b");
+					//logger.debug(vo.getC_Name() + " : " + vo.getCnt());
 					list.add(vo);
 				}
 			}
@@ -4115,7 +4115,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String type = request.getParameter("type");
 		int page = Integer.parseInt(request.getParameter("page"));
 		
-		logger.debug("type = " + type + " || mode = " + mode + " || page = " + page);
+		//logger.debug("type = " + type + " || mode = " + mode + " || page = " + page);
 		
 		int startRow = (5 * (page - 1)) + 1;
 		int endRow = 5 * page;
@@ -4377,7 +4377,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@ResponseBody
 	public String saveItemPhoto (@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("saveItemPhoto started.");
-		logger.debug(xmlData);
+		//logger.debug(xmlData);
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlData);
 		String mode = request.getParameter("mode");
@@ -4394,7 +4394,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			xmlDom.getElementsByTagName("STARTDATE").item(0).setTextContent(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		}
 		
-		logger.debug("attachList : " + attachList + ", smallName : " + smallName + ", fileName : " + fileName + ", title : " + title + ", itemID : " + itemID);
+		//logger.debug("attachList : " + attachList + ", smallName : " + smallName + ", fileName : " + fileName + ", title : " + title + ", itemID : " + itemID);
 		
         xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).setTextContent(fileName);
 		xmlDom.getElementsByTagName("UPPERITEMIDTREE").item(0).setTextContent(itemID);

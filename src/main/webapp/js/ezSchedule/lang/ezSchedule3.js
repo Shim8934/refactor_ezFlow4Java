@@ -194,3 +194,5 @@ var strLangKHA2 = "全体記念日";
 var strLangGHA1 = "、";
 /* 2019-04-03 */
 var strLangHSB1 = "MHT ファイルの保存に失敗しました。";
+/* 2020-05-19 */
+var strLang131_1 = "협업일정";

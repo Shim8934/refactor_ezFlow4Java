@@ -532,6 +532,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 byte[] imageByte = byteOutStream.toByteArray();
                 String strImageData = new String(Base64.getMimeEncoder().encodeToString(imageByte));
 
+                in.close();
                 byteOutStream.close();
 
                 imagesBuilder.append(strImageData + commonUtil.CRLF);
@@ -2114,4 +2115,45 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void insertAutoSendOfferFlag() throws Exception {
         ezCommonDAO.insertAutoSendOfferFlag();
     }
+
+	@Override
+	public void insertTabBoardPortlet() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("portletCode", "tabBoard");
+		
+		if ( ezCommonDAO.checkPortletCodeString(map) > 0) {
+			return;
+		}
+		
+		logger.debug("insertTabBoardPortlet started");
+		
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		map.put("portletId", ezCommonDAO.getNewPortletId());
+		map.put("portletName1", "탭게시판");
+		map.put("portletName2", "tabBoard");
+		map.put("portletName3", "タブボード");
+		map.put("menuId", 4);
+		map.put("portletUrl", "/ezNewPortal/tabBoardPortlet.do");
+		map.put("portletType", "G");
+		map.put("defaultOrder", 23);
+		map.put("portletUsed", 1);	
+		map.put("portletOrder", 23);
+		map.put("boardId", null);
+		ezCommonDAO.insertPortletWithCode(map);
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				ezCommonDAO.insertTabBoardPortletInfo(map); // 회사별 있는지 확인후 insert
+			}
+		}
+		
+		logger.debug("insertTabBoardPortlet ended");
+	}
+
+	@Override
+	public void createTblTabBoard() throws Exception {
+		ezCommonDAO.createTblTabBoard();
+	}
 }
