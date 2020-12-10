@@ -123,8 +123,8 @@
 	                var xmlnode = SelectNodes(xmlhttp.responseXML, "ROOT/DATA/ROW");
 	                if (xmlnode.length != 0) {
 	                    for (var i = 0; i < xmlnode.length; i++) {
-	                        var BoardName = getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME"));
-	                        var BoardName2 = getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME2"));
+	                        var BoardName = MakeXMLString(getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME")));
+	                        var BoardName2 = MakeXMLString(getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME2")));
 	                        var BoardId = getNodeText(SelectSingleNode(xmlnode[i], "BOARDID"));
 	                        var BoardType = getNodeText(SelectSingleNode(xmlnode[i], "GUBUN"));
 	                        var _p = document.createElement("P");
@@ -304,11 +304,11 @@
 	            var SelectedBoardID = obj.getAttribute("DATA1");
 	            var chkPhotoBrd = obj.getAttribute("DATA5");
 	            
-	            if (chkPhotoBrd == 3)
+	            if (chkPhotoBrd == 3) {
 	                document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardType=" + chkPhotoBrd + "&adminType=y&buttonHidden=N";
-	            else if (chkPhotoBrd == 4)
+	            } else if (chkPhotoBrd == 4) {
 	                document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardType=" + chkPhotoBrd + "&adminType=y&buttonHidden=N";
-	            else {
+	            } else {
 	                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 	                    document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardType=N" + "&adminType=y&buttonHidden=N";
 	                }
