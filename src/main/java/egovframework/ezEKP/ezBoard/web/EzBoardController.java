@@ -4685,7 +4685,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String attID = commonUtil.detectPathTraversal(request.getParameter("attID"));
 		String realPath = commonUtil.getRealPath(request);
 		
-		logger.debug("FilePath: " + filePath + " || File Name: " + fileName + " || attID: " + attID);
+		//logger.debug("FilePath: " + filePath + " || File Name: " + fileName + " || attID: " + attID);
 		
 		if (attID != null && !attID.equals("")) {
 			downFile(request, response, realPath + filePath, attID);
@@ -7690,7 +7690,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String itemTreeID = request.getParameter("itemTreeID");
-		logger.debug("boardID=" + boardID + ",itemID=" + itemID + ",itemTreeID=" + itemTreeID);
+		//logger.debug("boardID=" + boardID + ",itemID=" + itemID + ",itemTreeID=" + itemTreeID);
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
@@ -8072,7 +8072,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 
-    	logger.debug("itemID = " + itemID);
+    	//logger.debug("itemID = " + itemID);
     	
     	model.addAttribute("boardInfo", boardInfo);
     	model.addAttribute("publicModulus", publicModulus);
@@ -9240,7 +9240,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		filePath = pSignatureDir + commonUtil.separator + fileName;
 		
 		if (filePath != null && !filePath.equals("")) {
-			logger.debug("filePath : " + filePath + "|| fileName : " + fileName);
+			//logger.debug("filePath : " + filePath + "|| fileName : " + fileName);
 			downFile(request, response, realPath + filePath, fileName);
 		}
 
@@ -9614,7 +9614,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			} // 이외의 경우는 직위, 직책권한이 존재하고 NO만 가지는 경우 || 직위, 직잭권한이 없고 부서권한이 NO만 가지는 경우 => 즉 result는 NO로 유지되어 리턴
 		}
 		
-		logger.debug("result in checkIfBoardGroupAdmin   ::   " + result);
+		//logger.debug("result in checkIfBoardGroupAdmin   ::   " + result);
 		logger.debug("checkIfBoardGroupAdmin ended");
 		return result;
 	}

@@ -364,7 +364,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("userLevel", userLevel);
 		
-		logger.debug("userLevel = " + userLevel);
+		//logger.debug("userLevel = " + userLevel);
 		logger.debug("checkCommHome ended.");
 		
 		return "ezCommunity/communityCheckCommHome";
@@ -412,7 +412,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			mode = 1;
 		}
 		
-		logger.debug("mode : " + mode);
+		//logger.debug("mode : " + mode);
 		String primary = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
 		String retXML = ezCommunityService.getBoardTree("top", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, primary, userInfo.getTenantId());
 		
@@ -851,7 +851,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("multiBoardName", multiBoardName);
 		
-		logger.debug("item.endDate: " + item.getEndDate());
+		//logger.debug("item.endDate: " + item.getEndDate());
 		
 		return "ezCommunity/communityNewBoardItem";
 	}
@@ -1507,8 +1507,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 			String pBoardID = request.getParameter("boardID");
 			String userDeptPath = userInfo.getDeptPathCode() + ",everyone"; // everyone 권한 포함하여 체크하도록 수정
 			
-			logger.debug("pBoardID = " + pBoardID);
-			logger.debug("userDeptPath = " + userDeptPath);
+			//logger.debug("pBoardID = " + pBoardID);
+			//logger.debug("userDeptPath = " + userDeptPath);
 			
 			for(String pAccessID : userDeptPath.split(",")) {
 				boardInfo = ezCommunityService.brdGetACL(pBoardID, pAccessID, userInfo.getTenantId());
@@ -3881,7 +3881,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		String gClubG = ezCommunityService.getACLGet1(cID, userInfo.getTenantId());
 		String cPermit = ezCommunityService.getACLGet2(uID, cID, userInfo.getTenantId());
-		logger.debug("gClubG=" + gClubG + " || cPermit=" + cPermit);
+		//logger.debug("gClubG=" + gClubG + " || cPermit=" + cPermit);
 		
 		if (cPermit == null || cPermit.equals("0")) {
 			if (gClubG.trim().equals("3")) {
@@ -3952,7 +3952,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
 		
-		logger.debug("code = " + code);
+		//logger.debug("code = " + code);
 
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
@@ -4683,7 +4683,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
         	from.setAddress(userInfo.getEmail());
         	
-        	logger.debug("from = " + userInfo.getEmail());
+        	//logger.debug("from = " + userInfo.getEmail());
         	
         	List<InternetAddress> to = new ArrayList<InternetAddress>();
         	
@@ -4695,7 +4695,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		        	
 		        	to.add(to1);
 		        	
-		        	logger.debug("to = " + vo.getEmail());
+		        	//logger.debug("to = " + vo.getEmail());
 		        }
 			}
 			
@@ -4767,7 +4767,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 
-    	logger.debug("itemID = " + pItemID);
+    	//logger.debug("itemID = " + pItemID);
     	
     	model.addAttribute("gubun", gubun);
     	model.addAttribute("boardInfo", boardInfo);
