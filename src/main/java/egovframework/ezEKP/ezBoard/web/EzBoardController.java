@@ -8852,7 +8852,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardType", boardType);
 		model.addAttribute("adminType", adminType);
 		model.addAttribute("buttonHidden", buttonHidden);
-		model.addAttribute("boardName", commonUtil.cleanValue(boardName));
+		model.addAttribute("boardName", commonUtil.cleanValue(boardName).replace("\\", "&#92;"));
 		model.addAttribute("useOneLineCount", useOneLineCount);
 		model.addAttribute("sortBy", sortBy);
 		model.addAttribute("page", page);
