@@ -3691,3 +3691,31 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .textbox_design.textbox_Success input[type="text"]:-ms-input-placeholder[type="text"]{border-color:#5dc560 !important; background-color:#f1fbf1 !important;color:#5dc560 !important;}
 .textbox_design.textbox_Success input[type="text"]::-webkit-input-placeholder{border-color:#5dc560 !important; background-color:#f1fbf1 !important; color:#5dc560 !important;}
 .textbox_design.textbox_Success input[type="text"]::-moz-placeholder {border-color:#5dc560 !important; background-color:#f1fbf1 !important; color:#5dc560 !important;}
+
+/* 리스트 로딩 */
+/* *, */
+/* *:before, */
+/* *:after { box-sizing: border-box; margin: 0; padding: 0; } */
+.loader { position: relative; width: 80px; height: 80px; border-radius: 50%; margin: 0px auto 0px auto; display: block; vertical-align: top; }
+/*LOADER-3 */
+.loader-3 .dot { width: 10px; height: 10px; background: #00e676; border-radius: 50%; position: absolute; top: calc(50% - 5px); }
+.loader-3 .dot.dot1 { background: #a6c947; }
+.loader-3 .dot.dot2 { background: #eb7837; }
+.loader-3 .dot.dot3 { background: #f6c02c; }
+.loader-3 .dot.dot4 { background: #02a5c6; }
+.loader-3 .dot1 { left: 0px; -webkit-animation: dot-jump 0.5s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; animation: dot-jump 0.5s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; }
+.loader-3 .dot2 { left: 20px; -webkit-animation: dot-jump 0.5s 0.2s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; animation: dot-jump 0.5s 0.2s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; }
+.loader-3 .dot3 { left: 40px; -webkit-animation: dot-jump 0.5s 0.4s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; animation: dot-jump 0.5s 0.4s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; }
+.loader-3 .dot4 { left: 60px; -webkit-animation: dot-jump 0.5s 0.4s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; animation: dot-jump 0.5s 0.6s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; }
+
+@-webkit-keyframes dot-jump {
+	0% { -webkit-transform: translateY(0); transform: translateY(0); }
+	100% { -webkit-transform: translateY(-15px); transform: translateY(-15px); }
+}
+
+@keyframes dot-jump {
+	0% { -webkit-transform: translateY(0); transform: translateY(0); }
+	100% { -webkit-transform: translateY(-15px); transform: translateY(-15px); }
+	/* box style */
+}
+.loadingBox2 { width: 80px; height: 80px; position: absolute; left: 50%; top: 40%; margin: -40px 0px 0px -40px; box-sizing: border-box; }

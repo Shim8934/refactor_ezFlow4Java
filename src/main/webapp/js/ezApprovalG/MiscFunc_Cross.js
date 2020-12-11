@@ -64,7 +64,7 @@ function DelAllRowOfLV(objListView) {
 	
 	if (rowLength != 0) {
 		for (count = 0; count < rowLength; count++) {
-			pListView.DeleteRow(pListView.GetSelectedRowID(count));
+			pListView.DeleteRow(pListView.GetSelectedRowID(0));
 		}
 	}
 	

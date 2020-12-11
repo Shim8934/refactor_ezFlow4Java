@@ -15442,6 +15442,51 @@
     ]]>
 	</select>
 	
+	<select id="EzApprovalG.getUncompleteDocList" parameterClass="Map" resultClass="ApprGDocListVO">
+	 <![CDATA[
+	 SELECT 
+	 		DISTINCT TBL_APRDOCINFO.DocID, 
+	 		TBL_APRDOCINFO.DOCTITLE, 
+	 		TBL_APRDOCINFO.DOCSTATE, 
+	 		TBL_APRLINEINFO.APRMEMBERNAME, 
+	 		TBL_APRLINEINFO.APRTYPE, 
+	 		TBL_APRLINEINFO.APRSTATE, 
+	 		TBL_APRLINEINFO.APRMEMBERDEPTNAME, 
+	 		TBL_APRDOCINFO.WRITERNAME, 
+	 		TBL_APRDOCINFO.STARTDATE
+     FROM 
+     		TBL_APRDOCINFO 
+     JOIN 
+     		TBL_EXPAPRDOCINFO    
+     ON 
+     		TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID
+     AND 
+     	    TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID
+ 	 AND
+     		TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID
+     JOIN 
+     		TBL_APRLINEINFO    
+     ON 
+     		TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID
+     AND
+     		TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID
+ 	 AND
+     		TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID
+     WHERE  
+     		CABINETID = #v_CABINETID#
+     AND
+     		TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
+	 AND
+     	    TBL_APRDOCINFO.COMPANYID = #companyID#
+     AND 
+     		FUNCTIONTYPE <> '004' 
+     AND 
+     		FUNCTIONTYPE <> '011' 
+     AND 
+     		APRSTATE = '002' 
+    ]]>
+	</select>
+	
 <!-- 	<procedure id="EzApprovalG.gongRamActivateCount" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZSP_GONGRAMACTIVATE_COUNT(#v_DOCID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->

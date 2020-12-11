@@ -199,6 +199,8 @@
 
                     SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
 
+                    listLoading(true); //20201211 조진호 - 리스트 출력 시 시간이 오래 걸릴 수 있어 로딩바 추가
+                    
                     // 개인문서함
 	                if (LoadSquery == "usercontlist") {
 	                    ContainerID = LoadContID;
@@ -1444,6 +1446,8 @@
 		        }
 		        PagingHTML += "</div>";
 		        td_Create1(PagingHTML);
+		        
+		        listLoading(false);	// 20201211 조진호 로딩바 display:none
 		        
 		        isSearch = false;
 		    }
