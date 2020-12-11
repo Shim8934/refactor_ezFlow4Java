@@ -1895,3 +1895,34 @@ function replaceEntityCodeToStr(str) {
 			  .replace(/&#039;/g, "\'")
 			  .replace(/&#034;/g, "\"");
 }
+
+//리스트 로딩
+function listLoading(pType){
+    try{
+        if(pType){
+            if(document.getElementById("listload_div") == null){
+                var divEle = document.createElement("DIV");
+                divEle.setAttribute("class", "loadingBox2");
+                divEle.setAttribute("id", "listload_div");
+
+                var loadHtml = "<div class=\"loader loader-3\">";
+                loadHtml += "<div class=\"dot dot1\"></div>";
+                loadHtml += "<div class=\"dot dot2\"></div>";
+                loadHtml += "<div class=\"dot dot3\"></div>";
+                loadHtml += "<div class=\"dot dot4\"></div>";
+                loadHtml += "</div>";
+
+                divEle.innerHTML = loadHtml;
+
+                if(document.getElementsByTagName("body").length > 0){
+                    document.getElementsByTagName("body").item(0).appendChild(divEle);
+                }
+            }else{
+                document.getElementById("listload_div").style.display = "";
+            }
+        }else{
+            if(document.getElementById("listload_div") != null)
+                document.getElementById("listload_div").style.display = "none";
+        }
+    }catch(e){}
+}

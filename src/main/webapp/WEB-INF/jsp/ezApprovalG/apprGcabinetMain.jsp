@@ -139,6 +139,8 @@
 		        
 		        var isPeriodYear = true;
 		        function LoadList() {
+		        	listLoading(true); //20201211 조진호 - 리스트 출력 시 시간이 오래 걸릴 수 있어 로딩바 추가
+		        	
 		            switch (g_sFlag) {
 		                case "m01":
 		                    RecordList_onclick();
