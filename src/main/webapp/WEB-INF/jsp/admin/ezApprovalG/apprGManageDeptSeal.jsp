@@ -318,6 +318,7 @@
 	<body class="mainbody">
 	    <h1>
 	    	<spring:message code = 'ezApprovalG.t1275' />
+	    	<span class="title_bar"><img src="/images/name_bar.gif"></span>
 	    	<select id="ListCompany" class="companySelect" onChange="selectCompanyID()">
 	        	<c:forEach var="item" items="${list}">
             		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>

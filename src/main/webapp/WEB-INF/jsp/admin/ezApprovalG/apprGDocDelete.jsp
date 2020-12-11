@@ -275,8 +275,7 @@
 				var strtext;
 				var PagingHTML = "";
 				$("#tblpageRayer").html("");
-				$("#listInfo").html("&nbsp;&nbsp;<span style='color:#017BEC;'>"
-						+ totalCount + " </span>")
+				$("#listInfo").html("&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + " </span>")
 				strtext = "<div class='pagenavi'>";
 				PagingHTML += strtext;
 				var pageNum = CurPage;

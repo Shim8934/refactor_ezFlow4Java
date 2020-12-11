@@ -121,16 +121,16 @@
 		</script>
 	</head>
 	<body class="mainbody" marginwidth="0" marginheight="0">
-		<h1><spring:message code='ezApprovalG.hsbAL01'/></h1>
-		<div id="mainmenu">    
-		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			    <select id="ListCompany" onChange="selectCompanyID()">
+		<h1><spring:message code='ezApprovalG.hsbAL01'/>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+		    <span>
+			    <select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 			    </select>
 		    </span>
-		</div>
+		</h1>
 		<br>
 		<div class = "txt">
 			<div><spring:message code='ezApprovalG.hsbAL04' arguments="${apprAttachLimitMax}"/></div>
