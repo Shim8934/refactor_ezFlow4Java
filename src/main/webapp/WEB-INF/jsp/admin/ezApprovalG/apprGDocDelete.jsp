@@ -275,8 +275,7 @@
 				var strtext;
 				var PagingHTML = "";
 				$("#tblpageRayer").html("");
-				$("#listInfo").html("&nbsp;&nbsp;<span style='color:#017BEC;'>"
-						+ totalCount + " </span>")
+				$("#listInfo").html("&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + " </span>")
 				strtext = "<div class='pagenavi'>";
 				PagingHTML += strtext;
 				var pageNum = CurPage;
@@ -898,12 +897,21 @@
 				    document.getElementById("mailPanel").style.display = "none";
 				    document.getElementById("MailProgress").style.display = "none";
 				}
+				
 		</script>
 	</head>
 	
 	<body class="mainbody" onLoad="javascript:window_onload()">
-		<h1><spring:message code='ezApprovalG.t1569'/><span id="listInfo"></span></h1>
-		<input type="hidden" id="ListCompany" value="${userInfo.companyID }" >
+		<h1><spring:message code='ezApprovalG.t1569'/><span id="listInfo"></span>
+			<%-- 2020-10-20 홍승비 - 회사선택 셀렉트박스 추가 --%>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select class="companySelect" id="ListCompany" onChange="changeCompID()">
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+			</select>
+		</h1>
+		<%-- <input type="hidden" id="ListCompany" value="${userInfo.companyID }" > --%>
 		<div class="portlet_tabpart01" style="margin-top:3px;text-align:right;">
 		    <div class="portlet_tabpart01_top" id="tab1">
 		        <p><span id="1tab1" divname="completedoclist"><spring:message code='ezApprovalG.kes01' /></span></p>

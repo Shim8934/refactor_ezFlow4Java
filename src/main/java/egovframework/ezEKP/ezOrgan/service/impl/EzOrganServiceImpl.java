@@ -2292,6 +2292,20 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_TENANT_ID",  tenantId);
 		return ezOrganDAO.getUserInfo(map);
 	}
+	
+	/* 2020-10-22 홍승비 - 전달한 필드(칼럼)에 대응하는 값을 TBL_DEPTMASTER 테이블에서 가져오는 메서드 */
+	@Override
+	public String getPropertyValueForDept(String fieldName, String deptID, int tenantID) throws Exception {
+		logger.debug("getPropertyValueForDept started.");
+		
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("v_FIELD", fieldName);
+		map.put("v_CN", deptID);
+		map.put("v_TENANT_ID", tenantID);
+		
+		//logger.debug("getPropertyValueForDept v_FIELD : " + fieldName + " || deptID : " + deptID);
+        logger.debug("getPropertyValueForDept ended.");
+        
+        return ezOrganDAO.getPropertyValue_S5(map);
+	}
 }
-
-

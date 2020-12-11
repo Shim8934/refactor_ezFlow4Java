@@ -7711,10 +7711,41 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String cabinetID = request.getParameter("cabinetID");
 		String result = ezApprovalGService.getUncompleteDocCount(userInfo.getDeptID(), userInfo.getCompanyID(), cabinetID, userInfo.getTenantId());
-		
+	
 		logger.debug("getUncompleteDocCount ended");
 		
 		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getUncompleteDocListOpen.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	public String getUncompleteDocListOpen(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("getUncompleteDocListOpen started");
+		
+		String cabinetID = request.getParameter("cabinetID");
+		String cabinetName = request.getParameter("cabinetName");
+		
+		model.addAttribute("cabinetID", cabinetID);
+		model.addAttribute("cabinetName", cabinetName);
+		
+		logger.debug("getUncompleteDocListOpen ended");
+		
+		return "ezApprovalG/apprGunCompleteDocListOpen";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getUncompleteDocList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getUncompleteDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("getUncompleteDocList started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String cabinetID = request.getParameter("cabinetID");
+	
+		String strXML = ezApprovalGService.getUncompleteDocList(userInfo.getDeptID(), userInfo.getCompanyID(), cabinetID, userInfo.getTenantId(), userInfo.getLang());
+		
+		logger.debug("getUncompleteDocList ended");
+		
+		return strXML;
 	}
 	
 	/**

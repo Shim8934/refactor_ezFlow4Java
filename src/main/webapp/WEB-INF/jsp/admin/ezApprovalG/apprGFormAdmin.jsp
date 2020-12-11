@@ -664,29 +664,23 @@
 			</TREEVIEWDATA>
 		</xml>
 		
+		<h1>
 		<c:choose>
 			<c:when test="${approvalFlag == 'S' }">
-				<h1>
-					<spring:message code = 'ezApprovalG.t1463' />
-		    		<span class="title_bar"><img src="/images/name_bar.gif"></span>
-					<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
-			        	<c:forEach var="item" items="${list}">
-		            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-		            	</c:forEach>
-				    </select>
-				</h1>
+				<spring:message code = 'ezApprovalG.t1463' />
 			</c:when>
 			<c:otherwise>
-				<h1>
-					<spring:message code = 'ezApprovalG.t1612' />
-					<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
-			        	<c:forEach var="item" items="${list}">
-		            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-		            	</c:forEach>
-				    </select>
-				</h1>
+				<spring:message code = 'ezApprovalG.t1612' />
 			</c:otherwise>
 		</c:choose>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
+	        	<c:forEach var="item" items="${list}">
+	           		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	           	</c:forEach>
+		    </select>
+		</h1>
+		
 		<div id="mainmenu">
 		    <ul>
 		        <li class="important" id="btnInsFcont"><span onclick="return btnInsFcont_onclick()"><spring:message code = 'ezApprovalG.t1623' /></span></li>

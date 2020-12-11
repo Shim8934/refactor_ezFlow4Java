@@ -4065,8 +4065,14 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		
 		logger.debug("getIsUse param : v_CODE1=" + code1 + " v_CODE2=" + code2 + " v_TENANTID=" + tenantID);
-
-		return ezApprovalGDAO.getIsUse(map);
+		
+		// nullPointer 접근 오류 대응
+		String result = ezApprovalGDAO.getIsUse(map);
+		if (result == null) {
+			result = "";
+		}
+		
+		return result;
 	}
 	
 	@Override
