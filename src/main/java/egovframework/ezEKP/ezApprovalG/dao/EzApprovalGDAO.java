@@ -1181,6 +1181,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (int)select("EzApprovalG.getUncompleteDocCount", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getUncompleteDocList(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.getUncompleteDocList", map);
+	}
+	
 	public int gongRamActivateCount(Map<String, Object> map) throws Exception{
 		return (int)select("EzApprovalG.gongRamActivateCount", map);
 	}

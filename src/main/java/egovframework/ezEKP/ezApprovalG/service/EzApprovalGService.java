@@ -291,6 +291,8 @@ public interface EzApprovalGService {
                                         String draftDeptName, String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, LoginVO userInfo) throws Exception;
 
     public String getUncompleteDocCount(String deptID, String companyID, String cabinetID, int tenantID) throws Exception;
+    
+    public String getUncompleteDocList(String deptID, String companyID, String cabinetID, int tenantID, String userLang) throws Exception;
 
     public String transferCabinet(Document xmlDom, int tenantID) throws Exception;
     
