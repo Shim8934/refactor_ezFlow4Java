@@ -325,7 +325,7 @@
 	        var cabName = selRow.getAttribute("DATA5");
 	        if (Cnt002 > 0) {
 	            alert(selRow.cells[0].innerText + "<spring:message code='ezApprovalG.t570'/>" + Cnt002 + "<spring:message code='ezApprovalG.t571'/>");
-	            window.open("/ezApprovalG/getUncompleteDocListOpen.do?cabinetID=" + cabID + "&cabinetName=" + cabName, "getUncompleteDocListOpen", GetOpenWindowfeature(840,300));
+	            window.open("/ezApprovalG/getUncompleteDocListOpen.do?cabinetID=" + cabID + "&cabinetName=" + cabName, "getUncompleteDocListOpen", GetOpenWindowfeature(860,300));
 	            return;
 	        }
 	        var SelListView = new ListView();

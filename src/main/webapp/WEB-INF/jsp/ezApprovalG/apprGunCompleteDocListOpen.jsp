@@ -11,7 +11,7 @@
 		.mainlist tr th {text-align:center;}
 		.mainlist tr td {text-align:center;}
 	</style>
-<title>진행문서리스트</title>
+<title>[ <c:out value ='${cabinetName}'/> ] <spring:message code='ezApprovalG.yjyg01' /></title>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -63,7 +63,7 @@
 	  	</script>
 </head>
 <body class="popup">
-	<h1>[ <c:out value ='${cabinetName}'/> ] 의 진행 문서 목록</h1>
+	<h1>[ <c:out value ='${cabinetName}'/> ] <spring:message code='ezApprovalG.yjyg01' /></h1>
 		<div id="close">
             <ul>
                 <li><span id="btnCancel" onclick="return btnCancel_onclick()"></span></li>
