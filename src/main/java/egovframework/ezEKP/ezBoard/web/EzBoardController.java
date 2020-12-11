@@ -3961,6 +3961,19 @@ public class EzBoardController extends EgovFileMngUtil{
 					boardListVO = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 				}
 				
+				if (mode.equals("modify")) {
+					/* 2020-12-11 홍승비 - URL 변조하여 임의의 게시물 수정 가능한 취약점 수정 */
+					// 게시물과 게시판의 boardID 정보가 서로 맞지 않는 경우 오류 페이지 리턴
+					if (boardListVO.getBoardID() == null || boardID == null || !boardListVO.getBoardID().equals(boardID)) {
+						return "main/warning";
+					}
+					// 해당 게시판에 관리자 권한이 없으면서 다른 사용자의 게시물을 수정하려는 경우 오류 페이지 리턴
+					else if ((boardInfo.getBoardAdmin_FG() == null || (boardInfo.getBoardAdmin_FG() != null && boardInfo.getBoardAdmin_FG().equals("false"))) &&
+							!boardListVO.getWriterID().equals(userInfo.getId())) {
+						return "main/warning";
+					}
+				}
+				
 				boardListVO.setWriteDate(commonUtil.getDateStringInUTC(boardListVO.getWriteDate(), userInfo.getOffset(), false));
 				
 				if (mode.equals("reply")) {
