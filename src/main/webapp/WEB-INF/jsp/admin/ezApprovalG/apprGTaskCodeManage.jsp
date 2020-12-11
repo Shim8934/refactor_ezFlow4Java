@@ -36,7 +36,8 @@
 		    var listview = new ListView();
 		    
 		    $(document).ready(function(){
-		        document.getElementById("SCompID").value = companyID;
+		       // document.getElementById("SCompID").value = companyID;
+		        companyID = document.getElementById("ListCompany").value;
 		        Tree_setconfig();
 		        getGroupTree(1, 1, 0, true);
 		        InitListView();
@@ -605,10 +606,11 @@
 		    }
 	
 		    function selectCompanyID() {
-		        if (companyID != document.getElementById("SCompID").value) {
-		            companyID = document.getElementById("SCompID").value;
+		        if (companyID != document.getElementById("ListCompany").value) {
+		            companyID = document.getElementById("ListCompany").value;
 	
 		            getGroupTree(1, 1, 0, true);
+		            getGroupItem("");
 		        }
 		    }
 		</script>
@@ -708,17 +710,25 @@
 			</c:otherwise>
 		</c:choose>
 		
+		<h1>
 		<c:choose>
 			<c:when test="${approvalFlag == 'S' }">
-				<h1><spring:message code = 'main.t40' /></h1>
+				<spring:message code = 'main.t40' />
 			</c:when>
 			<c:otherwise>
-				<h1><spring:message code = 'ezApprovalG.t789' /></h1>
+				<spring:message code = 'ezApprovalG.t789' />
 			</c:otherwise>
 		</c:choose>
+		<span class="title_bar"><img src="/images/name_bar.gif"></span>
+		<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
+        	<c:forEach var="item" items="${list}">
+           		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+           	</c:forEach>
+	    </select>
+		</h1>
 		
 		<div id="mainmenu">
-			<input type="hidden" id="SCompID" value="${userInfo.companyID }" >
+			<%--<input type="hidden" id="SCompID" value="${userInfo.companyID }" >--%>
 			<ul>		        
 		        <c:choose>
 		        	<c:when test="${approvalFlag == 'S'}">
