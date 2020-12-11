@@ -187,11 +187,12 @@
 		
 		        var SelYearFlag = false;
 		        function onSelect_Year() {
+		        	listLoading(true); //20201211 조진호 - 리스트 출력 시 시간이 오래 걸릴 수 있어 로딩바 추가
 		            SelYearFlag = true;
 		            if (GetSelectVal("rec_year") != "ALL" || GetSelectVal("cab_year") != "ALL" || GetSelectVal("del_year") != "ALL") {
 		
-		                hideProgress();
-		                showProgress();
+		                //hideProgress();
+		                //showProgress();
 		
 		                if (DocList_Flag == "CABINET") {
 		                    g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + GetSelectVal("cab_year") + "</SPRODUCEY><EPRODUCEY>" + GetSelectVal("cab_year") + "</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
@@ -235,6 +236,8 @@
 		                    GetDocDeliveryList(g_DeliverySearchParamXml);
 		                }
 		            }
+		            
+		            listLoading(false);	// 20201211 조진호 로딩바 display:none
 		        }
 		
 		        function btnAddJob_onclick() {
