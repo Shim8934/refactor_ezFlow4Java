@@ -536,13 +536,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 byte[] imageByte = byteOutStream.toByteArray();
                 String strImageData = new String(Base64.getMimeEncoder().encodeToString(imageByte));
 
-                in.close();
                 byteOutStream.close();
 
                 imagesBuilder.append(strImageData + commonUtil.CRLF);
                 imagesBuilder.append("--" + m_strBoundary);
             } catch (Exception e) {
                 logger.debug(e.getMessage());
+            } finally {
+                in.close();
             }
         }
 
@@ -565,10 +566,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             String contentType = "application/octet-stream";
             String extension = ".gif"; //기존확장자가.gif로고정되어있었으므로,디폴트로사용함
 
+            InputStream tempIn = null;
             try {
-                contentType = URLConnection.guessContentTypeFromStream(Files.newInputStream(Paths.get(realPath, backgroundImgSrc)));
+                tempIn = Files.newInputStream(Paths.get(realPath, backgroundImgSrc));
+                contentType = URLConnection.guessContentTypeFromStream(tempIn);
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                tempIn.close();
             }
 
             if (contentType == null) {
@@ -671,6 +676,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 backgroundImagesBuilder.append("--" + m_strBoundary);
             } catch (Exception e) {
                 logger.debug(e.getMessage());
+            } finally {
+                in.close();
             }
         }
 
