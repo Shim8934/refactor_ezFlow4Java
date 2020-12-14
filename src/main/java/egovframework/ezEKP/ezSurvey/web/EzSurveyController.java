@@ -1093,9 +1093,9 @@ public class EzSurveyController extends EgovFileMngUtil {
 										ResponseVO resVO = responVO.get(responseCnt++);
 										
 										rowCount++;
-										sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 8, 9));
-										sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 10, 11));
-										sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 12, 13));
+										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
+										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 10, 11));
+										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
 										row = sheet.createRow(rowCount);
 										
 										for(int l=8; l<=13; l++) {
@@ -1301,9 +1301,9 @@ public class EzSurveyController extends EgovFileMngUtil {
 										ResponseVO resVO = responsVO.get(responseCnt++);
 										
 										rowCount++;
-										sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 8, 9));
-										sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 10, 11));
-										sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 12, 13));
+										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
+										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 10, 11));
+										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
 										row = sheet.createRow(rowCount);
 										
 										for(int l=8; l<=13; l++) {
