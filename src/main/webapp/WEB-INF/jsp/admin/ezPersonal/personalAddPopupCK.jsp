@@ -35,11 +35,10 @@
 			/* 팝업공지 대상자 지정 */
 	        var authList = [];
 	        
-	        window.onload = window_onload();
+	        window.onload = window_onload;
 	        function window_onload() {
 	            //compid = window.dialogArguments;
 				// 2020-12-04 이혁진 팝업공지사항 이미지 삽입 하단 버튼 클릭 불가 수정하기위해 팝업 사이즈 재조정
-				console.log('test');
 				window.resizeTo (750,840);
 	            if (startdate == "" && enddate == "") {
 	                var nowDate = new Date();
