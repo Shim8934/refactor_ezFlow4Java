@@ -266,7 +266,7 @@
 			var menuId = event.data.menuId;
 			
 			var request = new XMLHttpRequest();
-			request.open('DELETE', '/admin/ezNewPortal/deletePortlet.do', true);
+			request.open('POST', '/admin/ezNewPortal/deletePortlet.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 
