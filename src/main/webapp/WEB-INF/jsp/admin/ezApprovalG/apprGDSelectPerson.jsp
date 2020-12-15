@@ -53,14 +53,18 @@
 		
 		            if (type == "Proxy") {
 		                createNodeInsert(xmlpara, objNode, "DATA");
-		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${buJaedeptid}'/>");
-		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${buJaedeptid}'/>");
+		                //createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${buJaedeptid}'/>");
+		                //createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${buJaedeptid}'/>");
+		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "");
+		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${buJaedeptid}'/>" + "/organ");
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
 		            else {
 		                createNodeInsert(xmlpara, objNode, "DATA");
-		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${buJaedeptid}'/>");
-		                createNodeAndInsertText(xmlpara, objNode, "TOPID", companyID);
+		                //createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${buJaedeptid}'/>");
+		                //createNodeAndInsertText(xmlpara, objNode, "TOPID", companyID);
+		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "");
+		                createNodeAndInsertText(xmlpara, objNode, "TOPID", companyID + "/organ");
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
 		            

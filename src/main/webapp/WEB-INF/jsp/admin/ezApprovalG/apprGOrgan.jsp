@@ -35,8 +35,11 @@
 	
 	            topID = dialogArguments;
 	            
-	            if (topID == "")
+	            /* 2020-10-21 홍승비 - 관리자단 전자결재 > 문서삭제, 문서이동(부서선택, 이동)에서 현재 선택한 회사의 조직도 표출 */
+	            if (topID == "") {
 	                topID = "top";
+	            }
+				topID += "/organ";
 	
 	            Tree_setconfig();
 	
@@ -67,19 +70,22 @@
 	
 	            var treeNode = new TreeNode();
 	            treeNode.LoadFromID(nodeIdx.NodeID);
-	            if (treeNode.GetNodeData("EXTENSIONATTRIBUTE2") == topID) {
+	            
+	            // 전체 회사 조직도 표출 및 선택 가능
+	        //    if (treeNode.GetNodeData("EXTENSIONATTRIBUTE2") == topID) {
 	                Para[0] = treeNode.GetNodeData("CN");
 	                Para[1] = treeNode.GetNodeData("VALUE");
+	                Para[2] = treeNode.GetNodeData("EXTENSIONATTRIBUTE2"); // 선택한 부서/회사의 회사ID를 전달
 	
 	                if(ReturnFunction != null)
 	                    ReturnFunction(Para);
 	                window.close();
-	            }
+/* 	            }
 	            else {
 	            	// 2018-06-20. 황윤호  관리자 > 전자결재 > alert창 짤림 수정
 	            	window.close();
 		            window.opener.alert("<spring:message code='ezApproval.t774'/>");
-	            }
+	            } */
 	        }
 	
 	        function bt_Close_onclick() {

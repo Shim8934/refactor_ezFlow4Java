@@ -239,7 +239,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ISDEPT", isDept);
 		map.put("v_ISEQUALDEPT", isEqualDept);
 		
-		logger.debug("map in getBoardTree_Get2    ::   " + map.toString());
+		//logger.debug("map in getBoardTree_Get2    ::   " + map.toString());
 		logger.debug("getBoardTree_Get2 ended");
 		return ezBoardAdminDAO.getBoardTree_Get2(map);
 	}

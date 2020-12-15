@@ -1960,6 +1960,8 @@ function makePageSelPage() {
     }
     PagingHTML += "</div>";
     td_Create1(PagingHTML);
+    
+    listLoading(false);	// 20201211 조진호 로딩바 display:none
 }
 function goToPageByNum(Value) {
     currentpage = Value;

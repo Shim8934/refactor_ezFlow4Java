@@ -497,6 +497,7 @@ function GetDistList() {
 }
 
 function GetCaninetList() {
+	listLoading(true); //20201211 조진호 - 리스트 출력 시 시간이 오래 걸릴 수 있어 로딩바 추가
     if (isPeriodYear && g_CabSearchParamXml == "") {
         var nowyear = new Date().getFullYear();
         var nowmonth = new Date().getMonth() + 1;
@@ -528,6 +529,7 @@ function GetCaninetList() {
         default:
             GetCaninetListXml();
     }
+    listLoading(false);	// 20201211 조진호 로딩바 display:none
 }
 
 function GetRecordList() {
@@ -734,6 +736,7 @@ function InsertToCabListView(Resultxml) {
         DisplayLineCnt_ezCab(NodeListLen);
 
         selFirstRow(Resultxml);
+        listLoading(false);	// 20201211 조진호 로딩바 display:none
     } catch (e) { }
 }
 
@@ -1614,6 +1617,7 @@ function SearchCabinet_Complete(rtnVal) {
 
 
 function openergetDocInfo() {
+	listLoading(true); //20201211 조진호 - 리스트 출력 시 시간이 오래 걸릴 수 있어 로딩바 추가
     if (DocList_Flag == "CABINET") {
         GetCaninetList();
     }
@@ -1755,6 +1759,9 @@ function makePageSelPage(pTotalCnt) {
         PagingHTML += strtext;
     }
     PagingHTML += "</div>";
+    
+    listLoading(false);	// 20201211 조진호 로딩바 display:none
+    
     td_Create1(PagingHTML);
 }
 function goToPageByNum(Value) {
@@ -1878,6 +1885,8 @@ function orgmakePageSelPage(pTotalCnt) {
 
     td_pTotalCount.textContent = totalPage;
     txt_PageInputNum.value = curpage;
+    
+    listLoading(false);	// 20201211 조진호 로딩바 display:none
     return;
 }
 

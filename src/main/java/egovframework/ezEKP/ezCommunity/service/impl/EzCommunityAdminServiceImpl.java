@@ -45,7 +45,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	@Override
 	public int aspCloseComGet2(String searchValue, String searchType, String searchType2, String lang, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCloseComGet2 started.");
-		logger.debug("v_S_RADIO=" + searchType + ", v_SEARCHTYPE2=" + searchType2);
+		//logger.debug("v_S_RADIO=" + searchType + ", v_SEARCHTYPE2=" + searchType2);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD",  searchValue);
 		map.put("v_S_RADIO",  searchType);
@@ -302,7 +302,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	@Override
 	public List<HashMap<String, Object>> aspCommAdmitOkSet2(String code, String lang, String useEzKMS, String comName, int tenantID) throws Exception {
 		logger.debug("aspCommAdmitOkSet2 started.");
-		logger.debug("useEzKMS=" + useEzKMS);
+		//logger.debug("useEzKMS=" + useEzKMS);
 		
 		List<HashMap<String, Object>> result = null;
 		
@@ -434,7 +434,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	@Override
 	public String admCommunityInfoEditOk(String lang, String cCateA, String cCateB, String cCateC, String clubName, String clubDesc, String code, int tenantID) throws Exception {
 		logger.debug("admCommunityInfoEditOk started.");
-		logger.debug("clubDesc=" + clubDesc);
+		//logger.debug("clubDesc=" + clubDesc);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", lang);

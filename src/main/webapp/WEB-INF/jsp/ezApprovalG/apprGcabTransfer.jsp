@@ -28,7 +28,7 @@
 	        var g_DTaskCode = "";
 	        var g_DTaskName = "";
 	        var g_SDeptCode = "<c:out value ='${userInfo.deptID}'/>";
-	    	var g_SDeptName = "<c:out value ='${userInfo.deptName}'/>";
+	    	var g_SDeptName = "<c:out value ='${userInfo.deptName}' escapeXml='false'/>";
 	        var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
 	        var UserLang = "<c:out value ='${userInfo.lang}'/>";
 	        var date = new Date();
@@ -321,8 +321,11 @@
 	
 	    function AddRow(selRow) {
 	        var Cnt002 = GetUncompleteDocCount(selRow.getAttribute("DATA1"));
+	        var cabID = selRow.getAttribute("DATA1");
+	        var cabName = selRow.getAttribute("DATA5");
 	        if (Cnt002 > 0) {
 	            alert(selRow.cells[0].innerText + "<spring:message code='ezApprovalG.t570'/>" + Cnt002 + "<spring:message code='ezApprovalG.t571'/>");
+	            window.open("/ezApprovalG/getUncompleteDocListOpen.do?cabinetID=" + cabID + "&cabinetName=" + cabName, "getUncompleteDocListOpen", GetOpenWindowfeature(860,300));
 	            return;
 	        }
 	        var SelListView = new ListView();

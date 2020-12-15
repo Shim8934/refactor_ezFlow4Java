@@ -3713,10 +3713,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String strMoveListIDInfo = request.getParameter("strMoveListIDInfo");
 		String SourceContID = request.getParameter("SourceContID");
 		String TargetContID = request.getParameter("TargetContID");
+		String SourceCompanyID = request.getParameter("SourceCompanyID");
 		String chkAll = request.getParameter("chkAll");
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 
-		String result = ezApprovalGAdminService.moveDocList(strMoveListIDInfo, SourceContID, TargetContID, chkAll, userInfo.getCompanyID(), userInfo.getTenantId());
+		String result = ezApprovalGAdminService.moveDocList(strMoveListIDInfo, SourceContID, TargetContID, chkAll, SourceCompanyID, userInfo.getTenantId());
 		
 		logger.debug("moveContainer ended");
 		
@@ -3950,6 +3951,18 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			bReason = egovMessageSource.getMessage("ezPersonal.t35", locale);
 		}
 		
+		/* 2020-10-21 홍승비 - 회사 선택 기능 추가 */
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+		}
+		
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("userID", userID);
 		model.addAttribute("startDate", startDate);
@@ -3963,6 +3976,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("textProxyName", textProxyName);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("list", resultList);
 
 		logger.debug("manageBujae ended");
 		return "admin/ezApprovalG/apprGManageBujae";
@@ -4036,10 +4050,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		String type = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("type")));
-		
+		String selectedCompanyID = request.getParameter("selectedCompanyID");
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		model.addAttribute("type", type);
+		model.addAttribute("selectedCompanyID", selectedCompanyID);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 
@@ -4067,7 +4082,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
-		String buJaeCompanyID = ezOrganService.getPhysicalDeliveryOfficeName(buJaeId, "PHYSICALDELIVERYOFFICENAME", userInfo.getTenantId());
+		/* 2020-10-22 홍승비 - 부재자의 겸직부서 ID로 찾은 해당 회사의 ID를 전달 */
+		//String buJaeCompanyID = ezOrganService.getPhysicalDeliveryOfficeName(buJaeId, "PHYSICALDELIVERYOFFICENAME", userInfo.getTenantId());
+		String buJaeCompanyID = ezOrganService.getPropertyValueForDept("EXTENSIONATTRIBUTE2", buJaedeptid, userInfo.getTenantId());
 		
 		logger.debug("***companyID*** : " + buJaeCompanyID);
 		

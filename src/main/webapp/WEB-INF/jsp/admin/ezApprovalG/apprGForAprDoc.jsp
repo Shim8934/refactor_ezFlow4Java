@@ -775,10 +775,10 @@
 			}
 			
 			function selectCompanyID() {
-			    if (pCompanyID != document.getElementById("SCompID").value) {
-			        pCompanyID = document.getElementById("SCompID").value;
+			    if (pCompanyID != document.getElementById("ListCompany").value) {
+			        pCompanyID = document.getElementById("ListCompany").value;
 			        pChackYN = "FALSE";
-			
+			        
 			        GetDocList();
 			    }
 			}
@@ -1011,7 +1011,14 @@
     		<c:if test="${type == 'admin' }">
     			<input type="hidden" id="SCompID" value="${userInfo.companyID }" >
 			</c:if>
-        	<ul>        		
+        	<ul>
+				<li>
+        			<select id="ListCompany" onChange="selectCompanyID()">
+			        	<c:forEach var="item" items="${list}">
+		            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+		            	</c:forEach>
+				    </select>
+        		</li>
             	<li id="SearchCondi"><span class="icon16 icon16_search" onclick="return SearchCondi_onclick()"></span></li>
             	<c:if test="${useEditApprDoc == 'YES' }">
             		<li id="modifyButton"><span onclick="return modifyDocumnet()"><spring:message code= 'ezApprovalG.t44' /></span></li>

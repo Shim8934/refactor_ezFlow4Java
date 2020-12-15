@@ -81,6 +81,8 @@
 		//2018-10-16 김보미 - 프로그래스바
 		var startTime = "";
 		var endTime = "";
+		var pSourceCompanyID = "";
+		var pTargetCompanyID = "";
 		
 	    function window_onload() {
 	   	
@@ -274,8 +276,7 @@
 			var strtext;
 			var PagingHTML = "";
 			$("#tblpageRayer").html("");
-			$("#listInfo").html(" &nbsp;[<spring:message code='main.t252'/><span style='color:#017BEC;'> "
-					+ totalCount + " </span><spring:message code='ezSystem.kyj2'/>]")
+			$("#listInfo").html("&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + " </span>");
 			strtext = "<div class='pagenavi'>";
 			PagingHTML += strtext;
 			var pageNum = CurPage;
@@ -596,10 +597,12 @@
 	            if (typeof (retVal) != "undefined") {
 	                document.getElementsByName("SDeptName")[0].id = retVal[0];
 	                document.getElementsByName("SDeptName")[0].value = retVal[1];
+	                pSourceCompanyID = retVal[2]; // 보낼부서의 회사ID를 설정
 	                pChackYN == "FALSE"
 	                if(document.getElementsByName("SDeptName")[0].id == ""){
 	                	document.getElementsByName("drafterdept")[0].id = "";
 		                document.getElementsByName("drafterdept")[0].value = "";
+		                pSourceCompanyID = "";
 	                }
 	            }
 	            Flag = "SDeptName";
@@ -612,6 +615,7 @@
 	            	if(retVal[0] != "" && retVal[1] !="") {
  	            		document.getElementsByName("SDeptName")[0].id = "";
  		                document.getElementsByName("SDeptName")[0].value = "";
+						pSourceCompanyID = "";
 	            		alert("<spring:message code='ezApprovalG.t1788'/>");
 	            	}
 	            	//$('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
@@ -670,6 +674,7 @@
 	        	 if (CrossYN()) {
 	        		 	approval_admin_popup_choicedept_dialogArguments[0] = "one";
 		                approval_admin_popup_choicedept_dialogArguments[1] = bt_OK_onclick_Complete;
+		                approval_admin_popup_choicedept_dialogArguments[2] = pSourceCompanyID;
 		                var OpenWin = window.open("/admin/ezApprovalG/approvGAdminPopupChoiceDept.do", "approvalGAdminPopupChoiceDept", GetOpenWindowfeature(500, 180));
 		                try { OpenWin.focus(); } catch (e) { }
 		            } else {
@@ -722,6 +727,7 @@
 	        	 if (CrossYN()) {
 	        		 	approval_admin_popup_choicedept_dialogArguments[0] = "all";
 		                approval_admin_popup_choicedept_dialogArguments[1] = bt_All_onclick_Complete;
+		                approval_admin_popup_choicedept_dialogArguments[2] = pSourceCompanyID;
 		                var OpenWin = window.open("/admin/ezApprovalG/approvGAdminPopupChoiceDept.do", "approvalGAdminPopupChoiceDept", GetOpenWindowfeature(500, 180));
 		                try { OpenWin.focus(); } catch (e) { }
 		            } else {
@@ -859,13 +865,28 @@
 		        $('#DocCompleteListBody').empty().append("<tr><td colspan='10' style='text-align:center;'>"+text1+"</td></tr>");
 		        makePageSelPage();
 		    }
+			
+			function selectCompanyID() {
+				if (P_CompanyID != document.getElementById("ListCompany").value) {
+					P_CompanyID = document.getElementById("ListCompany").value;
+					all_keyword_Clear();
+				}
+			}
 	    </script>
 	</head>
 	
 	<body class="mainbody" onLoad="javascript:window_onload()">
-		<h1><spring:message code='ezApprovalG.t1678'/><span id="listInfo"></span></h1>
+		<h1><spring:message code='ezApprovalG.t1678'/><span id="listInfo"></span>
+			<%-- 2020-10-20 홍승비 - 회사선택 셀렉트박스 추가 --%>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+			</select>
+		</h1>
 		<span style="float:right; margin-top: -20px;"><spring:message code='ezApproval.psb01'/></span>
-		<input type="hidden" id="ListCompany" value="${userInfo.companyID }" >
+<%-- 		<input type="hidden" id="ListCompany" value="${userInfo.companyID }" > --%>
 		<!-- 2018-08-02 김보미 - 검색테이블 ui 수정 -->	
 		<!-- <table style="width:100%;">		
 			<tr>

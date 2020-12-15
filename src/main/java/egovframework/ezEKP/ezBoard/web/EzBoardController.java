@@ -960,7 +960,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		model.addAttribute("boardInfo", boardInfo);
-		model.addAttribute("boardName", commonUtil.cleanValue(pBoardName));
+		model.addAttribute("boardName", commonUtil.cleanValue(pBoardName).replace("\\", "&#92;"));
 		model.addAttribute("boardID", commonUtil.stripScriptTags(pBoardID));
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useRunTime", useRunTime);
@@ -3961,6 +3961,19 @@ public class EzBoardController extends EgovFileMngUtil{
 					boardListVO = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 				}
 				
+				if (mode.equals("modify")) {
+					/* 2020-12-11 홍승비 - URL 변조하여 임의의 게시물 수정 가능한 취약점 수정 */
+					// 게시물과 게시판의 boardID 정보가 서로 맞지 않는 경우 오류 페이지 리턴
+					if (boardListVO.getBoardID() == null || boardID == null || !boardListVO.getBoardID().equals(boardID)) {
+						return "main/warning";
+					}
+					// 해당 게시판에 관리자 권한이 없으면서 다른 사용자의 게시물을 수정하려는 경우 오류 페이지 리턴
+					else if ((boardInfo.getBoardAdmin_FG() == null || (boardInfo.getBoardAdmin_FG() != null && boardInfo.getBoardAdmin_FG().equals("false"))) &&
+							!boardListVO.getWriterID().equals(userInfo.getId())) {
+						return "main/warning";
+					}
+				}
+				
 				boardListVO.setWriteDate(commonUtil.getDateStringInUTC(boardListVO.getWriteDate(), userInfo.getOffset(), false));
 				
 				if (mode.equals("reply")) {
@@ -4685,7 +4698,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String attID = commonUtil.detectPathTraversal(request.getParameter("attID"));
 		String realPath = commonUtil.getRealPath(request);
 		
-		logger.debug("FilePath: " + filePath + " || File Name: " + fileName + " || attID: " + attID);
+		//logger.debug("FilePath: " + filePath + " || File Name: " + fileName + " || attID: " + attID);
 		
 		if (attID != null && !attID.equals("")) {
 			downFile(request, response, realPath + filePath, attID);
@@ -5958,7 +5971,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardType", boardType);
 		model.addAttribute("adminType", adminType);
 		model.addAttribute("buttonHidden", buttonHidden);
-		model.addAttribute("boardName", commonUtil.cleanValue(boardName));
+		model.addAttribute("boardName", commonUtil.cleanValue(boardName).replace("\\", "&#92;"));
 		model.addAttribute("useOneLineCount", useOneLineCount);
 		model.addAttribute("sortBy", sortBy);
 		model.addAttribute("page", page);
@@ -7690,7 +7703,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String itemTreeID = request.getParameter("itemTreeID");
-		logger.debug("boardID=" + boardID + ",itemID=" + itemID + ",itemTreeID=" + itemTreeID);
+		//logger.debug("boardID=" + boardID + ",itemID=" + itemID + ",itemTreeID=" + itemTreeID);
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
@@ -8072,7 +8085,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 
-    	logger.debug("itemID = " + itemID);
+    	//logger.debug("itemID = " + itemID);
     	
     	model.addAttribute("boardInfo", boardInfo);
     	model.addAttribute("publicModulus", publicModulus);
@@ -8852,7 +8865,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardType", boardType);
 		model.addAttribute("adminType", adminType);
 		model.addAttribute("buttonHidden", buttonHidden);
-		model.addAttribute("boardName", commonUtil.cleanValue(boardName));
+		model.addAttribute("boardName", commonUtil.cleanValue(boardName).replace("\\", "&#92;"));
 		model.addAttribute("useOneLineCount", useOneLineCount);
 		model.addAttribute("sortBy", sortBy);
 		model.addAttribute("page", page);
@@ -9240,7 +9253,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		filePath = pSignatureDir + commonUtil.separator + fileName;
 		
 		if (filePath != null && !filePath.equals("")) {
-			logger.debug("filePath : " + filePath + "|| fileName : " + fileName);
+			//logger.debug("filePath : " + filePath + "|| fileName : " + fileName);
 			downFile(request, response, realPath + filePath, fileName);
 		}
 
@@ -9614,7 +9627,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			} // 이외의 경우는 직위, 직책권한이 존재하고 NO만 가지는 경우 || 직위, 직잭권한이 없고 부서권한이 NO만 가지는 경우 => 즉 result는 NO로 유지되어 리턴
 		}
 		
-		logger.debug("result in checkIfBoardGroupAdmin   ::   " + result);
+		//logger.debug("result in checkIfBoardGroupAdmin   ::   " + result);
 		logger.debug("checkIfBoardGroupAdmin ended");
 		return result;
 	}

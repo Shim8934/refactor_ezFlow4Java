@@ -391,7 +391,7 @@
 					<input type="checkbox" value="1" id="deliverySend" onclick="ReservedSend(this);">
 					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t374' /> </span>
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" readonly="readonly"/>
+					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;"/>
 				</td>
 			</tr>
 		</table>

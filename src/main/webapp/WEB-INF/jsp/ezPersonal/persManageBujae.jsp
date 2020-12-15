@@ -81,11 +81,10 @@
 		            		proxySpAbCd = proxySplit[proxySplit.length-1];
 		            		
 		            		if(proxySpAbUsrId != '') {
-		            			$.each($(this).parent().parent().prev().find('input[id^=TextName_'+(i+2)+']'), function(j, jtem) {
-			            			$(this).val(proxySpAbUsrNm);
-			            			$(this).attr('userId', proxySpAbUsrId);
-			            			$(this).attr('deptId', proxySpAbDptId);
-			            		});
+		            			$(this).parent().parent().prev().find('input[id^=TextName_'+(i+2)+']').val(proxySpAbUsrNm);
+		            			$(this).parent().parent().prev().find('input[id^=TextName_'+(i+2)+']').attr('userId', proxySpAbUsrId);
+		            			$(this).parent().parent().prev().find('input[id^=TextName_'+(i+2)+']').attr('deptId', proxySpAbDptId);
+		            			$(this).parent().parent().hide();
 		            		} else {
 		            			$.each($(this).context.options, function(j, jtem) {
 			            			if($(this).val() == proxySpAbCd) {
@@ -256,6 +255,7 @@
 			        deptid = rtnValue.split(":")[2];
 			        $('#'+tagName).attr('userId', userid);
 		            $('#'+tagName).attr('deptId', deptid);
+		            $('#'+tagName).parent().parent().next().hide();
 			    }
 			    if (typeof (rtnValue) != "undefined" && type_Complete == "Proxy") {
 			        proxyuserid = rtnValue.split(":")[0];
@@ -566,7 +566,7 @@
 					<td>
 						<input type="text" name="TextName_1" id="TextName_1" Width="120" value="${textName}" deptId="" userId="" ReadOnly />
 						<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person('', 'TextName_1')"><spring:message code='ezPersonal.t32'/></span></a> 
-		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName_1').value=''; $('#TextName_1').attr('check','clear'); $('#TextName_${status.count+1}').attr('deptId', ''); $('#TextName_${status.count+1}').attr('userId', '');"><spring:message code='ezPersonal.t33'/></span></a>
+		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName_1').value=''; $('#TextName_1').attr('check','clear'); $('#TextName_${status.count+1}').attr('deptId', ''); $('#TextName_${status.count+1}').attr('userId', ''); $('#TR_Select_${status.count+1}').show();"><spring:message code='ezPersonal.t33'/></span></a>
 		                ${userInfo.deptName}
 					</td>
 				</tr>
@@ -591,7 +591,7 @@
 				    </tr>
 				</c:if> --%>
 				<c:if test="${approvalFlag eq 'G'}">
-					<tr id="TR_Select_1">
+					<tr id="TR_Select_1" <c:choose><c:when test="${fn:trim(textName) ne ''}">style="display:none;"</c:when></c:choose> >
 						<th><spring:message code='ezPersonal.t42'/></th>
 						<td>
 							<SELECT id="absentreason_1" onchange="return Sel_Change('1');"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
@@ -614,7 +614,7 @@
 					</tr>
 				</c:if>
 				<c:if test="${approvalFlag eq 'S'}">
-					<tr id="TR_Select_1" style="display: none;">
+					<tr id="TR_Select_1" <c:choose><c:when test="${fn:trim(textName) ne ''}">style="display:none;"</c:when></c:choose> >
 						<th><spring:message code='ezPersonal.t42'/></th>
 						<td>
 							<SELECT id="absentreason_1" onchange="return Sel_Change('1');"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
@@ -641,7 +641,7 @@
 						<td>
 							<input type="text" name="TextName_${status.count+1}" id="TextName_${status.count+1}" Width="120" value="" deptId="" userId="" ReadOnly />
 							<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person('', 'TextName_${status.count+1}');"><spring:message code='ezPersonal.t32'/></span></a> 
-			                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName_${status.count+1}').value=''; $('#TextName_${status.count+1}').attr('check','clear'); $('#TextName_${status.count+1}').attr('deptId', ''); $('#TextName_${status.count+1}').attr('userId', '');"><spring:message code='ezPersonal.t33'/></span></a>
+			                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName_${status.count+1}').value=''; $('#TextName_${status.count+1}').attr('check','clear'); $('#TextName_${status.count+1}').attr('deptId', ''); $('#TextName_${status.count+1}').attr('userId', ''); $('#TR_Select_${status.count+1}').show();""><spring:message code='ezPersonal.t33'/></span></a>
 			                ${addJob.description}
 						</td>
 					</tr>
@@ -689,7 +689,7 @@
 						</tr>
 					</c:if>
 					<c:if test="${approvalFlag eq 'S'}">
-						<tr id="TR_Select_${status.count+1}" style="display: none;">
+						<tr id="TR_Select_${status.count+1}">
 							<th><spring:message code='ezPersonal.t42'/></th>
 							<td>
 								<SELECT id="absentreason_${status.count+1}" onchange="return Sel_Change('${status.count+1}');" proxy="${addJob.extensionAttribute5}"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->

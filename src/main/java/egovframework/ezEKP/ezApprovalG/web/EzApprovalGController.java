@@ -514,6 +514,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("shareUser", "shareUser");
 		}
 		
+		String absenceAllClear = ezCommonService.getTenantConfig("absenceAllClear", userInfo.getTenantId());
+		
 		model.addAttribute("SubQuery", subQuery);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("userInfo", userInfo);
@@ -536,6 +538,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useAdditionalRole", ezCommonService.getTenantConfig("USE_AdditionalROle", userInfo.getTenantId()));
 		model.addAttribute("userLang", userLang);
 		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("absenceAllClear", absenceAllClear);
 		
 		logger.debug("aprManage ended.");
 		
@@ -7713,10 +7716,41 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String cabinetID = request.getParameter("cabinetID");
 		String result = ezApprovalGService.getUncompleteDocCount(userInfo.getDeptID(), userInfo.getCompanyID(), cabinetID, userInfo.getTenantId());
-		
+	
 		logger.debug("getUncompleteDocCount ended");
 		
 		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getUncompleteDocListOpen.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	public String getUncompleteDocListOpen(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("getUncompleteDocListOpen started");
+		
+		String cabinetID = request.getParameter("cabinetID");
+		String cabinetName = request.getParameter("cabinetName");
+		
+		model.addAttribute("cabinetID", cabinetID);
+		model.addAttribute("cabinetName", cabinetName);
+		
+		logger.debug("getUncompleteDocListOpen ended");
+		
+		return "ezApprovalG/apprGunCompleteDocListOpen";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getUncompleteDocList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getUncompleteDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("getUncompleteDocList started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String cabinetID = request.getParameter("cabinetID");
+	
+		String strXML = ezApprovalGService.getUncompleteDocList(userInfo.getDeptID(), userInfo.getCompanyID(), cabinetID, userInfo.getTenantId(), userInfo.getLang());
+		
+		logger.debug("getUncompleteDocList ended");
+		
+		return strXML;
 	}
 	
 	/**

@@ -126,8 +126,8 @@
 	                var xmlnode = SelectNodes(xmlhttp.responseXML, "ROOT/DATA/ROW");
 	                if (xmlnode.length != 0) {
 	                    for (var i = 0; i < xmlnode.length; i++) {
-	                        var BoardName = getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME"));
-	                        var BoardName2 = getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME2"));
+	                        var BoardName = MakeXMLString(getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME")));
+	                        var BoardName2 = MakeXMLString(getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME2")));
 	                        var BoardId = getNodeText(SelectSingleNode(xmlnode[i], "BOARDID"));
 	                        var BoardType = getNodeText(SelectSingleNode(xmlnode[i], "GUBUN"));
 	                        var _p = document.createElement("P");

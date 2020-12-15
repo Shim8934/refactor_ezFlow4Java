@@ -201,7 +201,7 @@ public class EzOrganController {
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);
-		
+		/* --jangsewon
 		if (celllist.toUpperCase().indexOf("EXTENSIONATTRIBUTE5") > -1) {
             String[] arryCell = celllist.toUpperCase().split(";");
             // String tooltip = "";
@@ -217,6 +217,7 @@ public class EzOrganController {
                 // Element Nodetip = doc.createElement("TOOLTIP");
 
                 if (!doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().equals("")) {
+             --jangsewon */
                 	//2018-07-12 이효진 미사용 소스 주석처리
                     /*String[] arry = doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().split(":");
                     tooltip = arry[3].replace("/", ":") + " ~ " + arry[4].replace("/", ":");
@@ -240,13 +241,14 @@ public class EzOrganController {
                         xmldom.GetElementsByTagName("ROW").Item(i).ChildNodes.Item(idx).ChildNodes.Item(0).InnerText = "";
                     }*/
                     //xmldom.GetElementsByTagName("ROW").Item(i).ChildNodes.Item(idx).ChildNodes.Item(0).InnerText = "";
+		/* --jangsewon
                     doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).setTextContent("Y");
                 } else {
                 	doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).setTextContent("");
                 }
             }
         }
-		
+		--jangsewon */
 		String result = commonUtil.convertDocumentToString(doc);
 		result = result.replaceAll("null", "");
 		
