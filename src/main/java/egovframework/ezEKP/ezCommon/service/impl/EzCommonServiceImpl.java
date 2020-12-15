@@ -365,10 +365,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         Elements elements = document.select("body[style*='background-image'], table[style*='background-image'], td[style*='background-image']");
 
         if (!elements.isEmpty()) {
+            int tempCount = 0;
             for (Element element : elements) {
                 String[] firstSplit = element.attr("style").split(":");
                 String[] secondSplit;
-                int tempCount = 0;
 
                 for (int i = 0; i < firstSplit.length; i++) {
                     secondSplit = firstSplit[i].split(";");
@@ -376,14 +376,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                     if (i % 2 != 0) {
                         if (secondSplit.length == 1) break;
                         if (secondSplit[1].trim().equalsIgnoreCase("background-image")) {
-                            backgroundImgSrcs.add(firstSplit[i + 1].split(";")[0].trim());
+                            String backgroundImbUrl = (firstSplit[i + 1].split(";")[0].trim()).replaceAll("^url\\([\"|']", "").replaceAll("[\"|']\\)$", "");
+                            backgroundImgSrcs.add(backgroundImbUrl);
                             logger.debug(backgroundImgSrcs.get(tempCount));
                             tempCount++;
                         }
                     } else {
                         if (i + 1 == firstSplit.length) break;
                         if (firstSplit[i].split(";")[secondSplit.length - 1].trim().equalsIgnoreCase("background-image")) {
-                            backgroundImgSrcs.add(firstSplit[i + 1].split(";")[0].trim());
+                            String backgroundImbUrl = (firstSplit[i + 1].split(";")[0].trim()).replaceAll("^url\\([\"|']", "").replaceAll("[\"|']\\)$", "");
+                            backgroundImgSrcs.add(backgroundImbUrl);
                             logger.debug(backgroundImgSrcs.get(tempCount));
                             tempCount++;
                         }
@@ -436,7 +438,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             } catch (IOException e) {
                 //url 일 시 realPath + path 로 exception 발생 -> 위의 default값 사용하므로 따로 exception 처리 하지 않음.
             } finally {
-                tempIn.close();
+                if (tempIn != null) {
+                    tempIn.close();
+                }
             }
 
             if (contentType == null) {
@@ -543,7 +547,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             } catch (Exception e) {
                 logger.debug(e.getMessage());
             } finally {
-                in.close();
+                if (in != null) {
+                    in.close();
+                }
             }
         }
 
@@ -570,10 +576,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             try {
                 tempIn = Files.newInputStream(Paths.get(realPath, backgroundImgSrc));
                 contentType = URLConnection.guessContentTypeFromStream(tempIn);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                tempIn.close();
+                if (tempIn != null) {
+                    tempIn.close();
+                }
             }
 
             if (contentType == null) {
@@ -677,7 +685,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             } catch (Exception e) {
                 logger.debug(e.getMessage());
             } finally {
-                in.close();
+                if (in != null) {
+                    in.close();
+                }
             }
         }
 
