@@ -631,6 +631,14 @@
                 	OpenAlertUI("외부발송문서 총 용량은 최대 7.4MB 입니다" + "<br>" + "첨부파일이나 본문용량을 줄여주시기 바랍니다.");
                     return;
                 }
+                
+                if (OrgAprUserID != arr_userinfo[1]) {
+                    if (!confirm(OrgAprUserName + "<spring:message code='ezApprovalG.t2106'/>")) {
+                    	window.returnValue = "CLOSE";
+                    	btnClose_onclick();
+                        return;
+                    }
+                }
 					
 			    setMenuDisable("btnApprove", true);
 				
