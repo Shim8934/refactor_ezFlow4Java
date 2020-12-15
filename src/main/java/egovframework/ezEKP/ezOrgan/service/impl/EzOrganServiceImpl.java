@@ -664,12 +664,18 @@ public class EzOrganServiceImpl implements EzOrganService {
             	String cellValSplit[] = cellvalue.split("[:]");
             	
             	if(cellValSplit.length > 5) {
+            		String absenceFromDateStr = cellValSplit[3]+":"+cellValSplit[4];
             		String absenceToDateStr = cellValSplit[5]+":"+cellValSplit[6];
                 	
                 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 	try {
-    					Date curDate = dateFormat.parse(dateFormat.format(new Date()));
+                		Date curDate = dateFormat.parse(dateFormat.format(new Date()));
+    					Date absenceFromDate  = dateFormat.parse(absenceFromDateStr);
     					Date absenceToDate  = dateFormat.parse(absenceToDateStr);
+    					
+    					if(absenceFromDate.before(curDate) && absenceToDate.after(curDate)) {
+    						isAbsence = true;
+    					}
     					
     					isAbsence = absenceToDate.after(curDate);
     				} catch (ParseException e) {
