@@ -6,6 +6,8 @@ function GetTaskFullList() {
     totalPage = 0;
 
     var ListName;
+
+    listLoading(true);  // 20201215 강승구 로딩바 display:none
     switch (g_ListFlag) {
         case "1":
             Resultxml = GetTaskFullListXml();
@@ -211,6 +213,8 @@ function DisplayTaskList(Resultxml) {
 
         pagingCount_Task(curpage, nowblock);
     }
+
+    listLoading(false); // 20201215 강승구 로딩바 display:none
 }
 
 

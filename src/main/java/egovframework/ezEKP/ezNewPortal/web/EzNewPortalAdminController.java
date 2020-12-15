@@ -826,7 +826,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 포틀릿 삭제
 	 */
-	@RequestMapping(value = "/admin/ezNewPortal/deletePortlet.do", method=RequestMethod.DELETE)
+	@RequestMapping(value = "/admin/ezNewPortal/deletePortlet.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void deletePortlets(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest req, Model model) throws Exception {
 		LOGGER.debug("addPortlets started.");
