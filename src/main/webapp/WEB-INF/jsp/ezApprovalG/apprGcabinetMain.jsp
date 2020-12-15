@@ -237,7 +237,7 @@
 		                }
 		            }
 		            
-		            listLoading(false);	// 20201211 조진호 로딩바 display:none
+		            //listLoading(false);	// 20201211 조진호 로딩바 display:none
 		        }
 		
 		        function btnAddJob_onclick() {

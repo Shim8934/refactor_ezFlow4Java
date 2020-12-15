@@ -104,22 +104,28 @@ function ezCabMunuCtl(MenuType, selRow) {
                 document.getElementById("tdBtnCabDel").style.display = "";    
             }
 
-            if (ListTypeFlag == "8" && GetCabChargerRight() === "true" && g_sFlag != "m09") {
-                if (selRow.getAttribute("DATA6") == "0") {
+            // 20201215 강승구 '종료연기승인', '편철확정' 오류수정
+            var endProBtn = document.getElementById("tdbtnEndProduce");
+            var endCancelProBtn = document.getElementById("tdbtnCancelEndProd");
+
+            if(endProBtn && endCancelProBtn) {
+                if (ListTypeFlag == "8" && GetCabChargerRight() === "true" && g_sFlag != "m09") {
+                    if (selRow.getAttribute("DATA6") == "0") {
+                        document.getElementById("tdbtnEndProduce").style.display = "";
+                        document.getElementById("tdbtnCancelEndProd").style.display = "none";
+                    } else {
+                        document.getElementById("tdbtnEndProduce").style.display = "none";
+                        document.getElementById("tdbtnCancelEndProd").style.display = "";
+                    }
+                    document.getElementById("tdNewVol").style.display = "";
+                } else if(ListTypeFlag == "10" && GetCabChargerRight() === "true" && g_sFlag == "m07"){			// 2020-09-14 김민성 - 종료연기신청, 정리대상목록 권호수추가 버튼 추가
                     document.getElementById("tdbtnEndProduce").style.display = "";
                     document.getElementById("tdbtnCancelEndProd").style.display = "none";
+                    document.getElementById("tdNewVol").style.display = "";
                 } else {
                     document.getElementById("tdbtnEndProduce").style.display = "none";
-                    document.getElementById("tdbtnCancelEndProd").style.display = "";
+                    document.getElementById("tdbtnCancelEndProd").style.display = "none";
                 }
-                document.getElementById("tdNewVol").style.display = "";
-            } else if(ListTypeFlag == "10" && GetCabChargerRight() === "true" && g_sFlag == "m07"){			// 2020-09-14 김민성 - 종료연기신청, 정리대상목록 권호수추가 버튼 추가
-                document.getElementById("tdbtnEndProduce").style.display = "";
-                document.getElementById("tdbtnCancelEndProd").style.display = "none";
-                document.getElementById("tdNewVol").style.display = "";
-            } else {
-                document.getElementById("tdbtnEndProduce").style.display = "none";
-                document.getElementById("tdbtnCancelEndProd").style.display = "none";
             }
 
             /**
