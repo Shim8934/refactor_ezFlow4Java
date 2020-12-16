@@ -1261,7 +1261,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	
     	userInfo = commonUtil.userInfo(loginCookie);
     	
-    	String boardID = boardVO.getBoardId() != null ? boardVO.getBoardType() : "";
+    	String boardID = boardVO.getBoardId() != null ? boardVO.getBoardId() : "";
     	String boardType = boardVO.getBoardType() != null ? boardVO.getBoardType() : "0";
     	String mode = boardVO.getMode();
     	String type = "1";
