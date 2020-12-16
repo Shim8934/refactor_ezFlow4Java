@@ -998,6 +998,11 @@ function ListView() {
                     	oText = document.createTextNode(strValue);
                     	objTd.appendChild(oText);
                     }
+                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").toUpperCase() == "DISPCLASSNO") { // 분류번호의 부서명에 특수문자 포함되는 경우를 위한 분기
+                    	objTd.title = ConvMakeXMLString(strValue);
+                    	oText = document.createTextNode(ConvMakeXMLString(strValue));
+                    	objTd.appendChild(oText);
+                    }
                     else {
                         objTd.appendChild(oText);
                     }
@@ -1887,4 +1892,15 @@ function checkboxBtnShowCtl() {
 //2020-04-27 : 드래그앤드랍 추가
 function allowDrop(ev) {
     ev.preventDefault();
+}
+
+/* 2020-12-16 홍승비 - 특수문자의 역 인코딩 함수 추가 */
+function ConvMakeXMLString(str) {
+    str = ReplaceText(str, "&lt;", "<");
+    str = ReplaceText(str, "&gt;", ">");
+    str = ReplaceText(str, "&#039;", "'");
+    str = ReplaceText(str, "&#034;", "\"");
+	str = ReplaceText(str, "&amp;", "&");
+	str = ReplaceText(str, "&#92;", "\\");
+    return str;
 }
