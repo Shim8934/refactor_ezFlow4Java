@@ -6725,7 +6725,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						if (lastSignDate.equals("")) {
 							signAry = new String[]{messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), proxySign + displayName};
 						} else {
-							signAry = new String[]{messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), lastSignDate, proxySign + displayName};
+							signAry = new String[]{messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + lastSignDate, proxySign + displayName};
 						}
 						
 						setHwpText(hwpFile, tempSign, signAry);

@@ -1839,7 +1839,7 @@ function isExistDept(ExtFlag) {
                 rtnVal = true;
         }
 
-        if (GetAttribute(CurSelRow[0], "DATA1") == "Address") {
+        if (GetAttribute(CurSelRow[0], "DATA1") == "Address1") {
             rtnVal = true;
         }
     }
