@@ -1064,3 +1064,5 @@ var strLangHSBAt07 = "日間";
 var strLangHSBAt08 = "保管";
 var strLangHSBAt09 = "回まで";
 var strLangHSBAt10 = "ダウンロード可能";
+var strLangHSBAt11 = "PDFファイルが変換完了後、確認をクリックすると、次のファイルもダウンロードされます。";
+var strLangHSBAt12 = "添付ファイルを選択してください。";

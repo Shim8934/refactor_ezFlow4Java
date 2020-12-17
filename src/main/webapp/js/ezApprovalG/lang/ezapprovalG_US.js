@@ -1064,3 +1064,5 @@ var strLangHSBAt07 = "Days";
 var strLangHSBAt08 = "Custody";
 var strLangHSBAt09 = "Up to";
 var strLangHSBAt10 = "Downloadable";
+var strLangHSBAt11 = "After the conversion is complete, click OK to download the next file as well.";
+var strLangHSBAt12 = "Please select an attachment.";

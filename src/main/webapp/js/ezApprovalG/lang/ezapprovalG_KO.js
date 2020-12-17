@@ -1069,3 +1069,5 @@ var strLangHSBAt07 = "일간";
 var strLangHSBAt08 = "보관";
 var strLangHSBAt09 = "회까지";
 var strLangHSBAt10 = "다운로드 가능";
+var strLangHSBAt11 = "PDF 파일이 변환이 완료된 후 확인을 누르시면 다음 파일도 다운로드 됩니다.";
+var strLangHSBAt12 = "첨부파일을 선택해주세요.";

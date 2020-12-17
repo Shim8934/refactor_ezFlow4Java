@@ -335,7 +335,7 @@ function attach_Download() {
     	$frm.submit();
 	}
 	else { // 체크된 파일 없음
+		alert(strLangHSBAt12);
 		return;
 	}
 }
-
