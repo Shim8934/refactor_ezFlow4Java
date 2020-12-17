@@ -799,7 +799,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 					_pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
 				}
 				
-				pFileName[i] = _pFileName;
+				pFileName[i] = commonUtil.normalizeFileName(_pFileName);
 			}
 		}
 		
