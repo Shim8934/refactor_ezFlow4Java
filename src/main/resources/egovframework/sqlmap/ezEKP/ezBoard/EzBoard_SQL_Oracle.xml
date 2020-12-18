@@ -1261,14 +1261,6 @@
 		   				A.WRITERNAME2,
 		   				A.WRITERDEPTNAME2,
 		   				A.WRITERCOMPANYNAME2,
-		   				(SELECT 
-		                	COUNT(*)  
-	     				FROM 
-	     					TBL_Board_OneLineReply 
-	    				WHERE  
-	    					TENANT_ID = A.TENANT_ID
-	    				AND
-	    					ITEMID = A.ItemID) ONELINECNT,
 		   				A.UPPERITEMIDTREE,
 		   				A.DOCNO,
 		   			    '' AS NOTICE,
@@ -6195,6 +6187,19 @@
 				COMPANYID = #v_COMPANYID#
 			AND
 				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getOneLineCNT" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				TBL_Board_OneLineReply 
+			WHERE 
+				ITEMID = #v_itemID# 
+			AND 
+				TENANT_ID = #v_TENANTID# 
 		]]>
 	</select>
 	
