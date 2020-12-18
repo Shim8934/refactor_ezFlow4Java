@@ -5475,7 +5475,6 @@
 		]]>
 	</select>
 	
-<<<<<<< HEAD
 	<!-- 2019-09-18 홍승비 - 사용자의 직위와 직책 ID를 리턴하는 쿼리 -->
 	<select id="EzBoardDAO.getUserJJID" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -5934,9 +5933,7 @@
 				TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
-	
-</sqlMap>
-=======
+
 	<select id="EzBoardDAO.getOneLineCNT" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT 
@@ -5950,4 +5947,3 @@
 		]]>
 	</select>
 </sqlMap>
->>>>>>> 7250df77a1...  * [표준반영] 게시판 쿼리 성능 개선
