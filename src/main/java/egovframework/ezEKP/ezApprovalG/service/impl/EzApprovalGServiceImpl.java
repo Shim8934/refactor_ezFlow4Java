@@ -6725,7 +6725,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						if (lastSignDate.equals("")) {
 							signAry = new String[]{messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), proxySign + displayName};
 						} else {
-							signAry = new String[]{messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), lastSignDate, proxySign + displayName};
+							signAry = new String[]{messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + lastSignDate, proxySign + displayName};
 						}
 						
 						setHwpText(hwpFile, tempSign, signAry);
@@ -23114,6 +23114,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			 resultXML.append("<HEADER>");
 			 resultXML.append("<NAME>" + arrList.getElementsByTagName("NAME").item(j).getTextContent().trim() + "</NAME>");
 			 resultXML.append("<WIDTH>" + arrList.getElementsByTagName("WIDTH").item(j).getTextContent().trim() + "</WIDTH>");
+			 
+			 /* 2020-12-16 홍승비 - 기록물관리 메뉴에서 부서명이 포함된 분류번호 특수문자 처리를 위해 COLNAME속성 추가 */
+			 if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("DISPCLASSNO")) {
+				 resultXML.append("<COLNAME>DISPCLASSNO</COLNAME>");
+			 }
 			 resultXML.append("</HEADER>");
 		 }
 		

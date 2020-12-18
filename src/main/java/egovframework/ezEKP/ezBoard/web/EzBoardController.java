@@ -1261,7 +1261,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	
     	userInfo = commonUtil.userInfo(loginCookie);
     	
-    	String boardID = boardVO.getBoardId() != null ? boardVO.getBoardType() : "";
+    	String boardID = boardVO.getBoardId() != null ? boardVO.getBoardId() : "";
     	String boardType = boardVO.getBoardType() != null ? boardVO.getBoardType() : "0";
     	String mode = boardVO.getMode();
     	String type = "1";
@@ -1709,7 +1709,7 @@ public class EzBoardController extends EgovFileMngUtil{
     						resultXML.append("<DATA8>" + noticeList.get(k).get("ITEMLEVEL") + "</DATA8>");
     						resultXML.append("<DATA9>" + noticeList.get(k).get("NOTICE") + "</DATA9>");
     						resultXML.append("<DATA10>" + noticeList.get(k).get("GUBUN") + "</DATA10>");
-    						resultXML.append("<DATA11>" + noticeList.get(k).get("ONELINECNT") + "</DATA11>");
+    						resultXML.append("<DATA11>" + ezBoardService.getOneLineCNT(noticeList.get(k).get("ITEMID").toString(), userInfo.getTenantId()) + "</DATA11>");
     					}
     					
     					resultXML.append("</CELL>");
@@ -3271,7 +3271,14 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA2>" + boardListItem.get(j).get("ITEMID") + "</DATA2>");
 					resultXML.append("<DATA3>" + boardListItem.get(j).get("WRITERID") + "</DATA3>");
 					resultXML.append("<DATA4>" + boardListItem.get(j).get("IMPORTANCE") + "</DATA4>");
-					resultXML.append("<DATA5>" + boardListItem.get(j).get("READFLAG") + "</DATA5>");
+					
+					int readCount = ezBoardService.getReaderListCount(boardListItem.get(j).get("BOARDID").toString(), boardListItem.get(j).get("ITEMID").toString(), userInfo.getId(), userInfo.getLang(), userInfo.getTenantId());
+					if (readCount > 0) {
+						resultXML.append("<DATA5>1</DATA5>");
+					} else {
+						resultXML.append("<DATA5>0</DATA5>");
+					}
+					
 					resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardListItem.get(j).get("ABSTRACT")) + "</DATA6>");
 					String nowDate = commonUtil.getTodayUTCTime("");
 					nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
@@ -3285,7 +3292,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA8>" + boardListItem.get(j).get("ITEMLEVEL") + "</DATA8>");
 					resultXML.append("<DATA9>" + boardListItem.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10></DATA10>");
-					resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
+					resultXML.append("<DATA11>" + ezBoardService.getOneLineCNT(boardListItem.get(j).get("ITEMID").toString(), userInfo.getTenantId()) + "</DATA11>");
 					
 					if (globals.getProperty("Globals.DbType").equals("oracle")) {
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");

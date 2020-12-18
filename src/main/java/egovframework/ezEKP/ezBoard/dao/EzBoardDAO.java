@@ -805,4 +805,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public List<HashMap<String, Object>> getCompanyTabBoardIDList(Map<String, Object> map) throws Exception {
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getCompanyTabBoardIDList", map);
 	}
+	
+	public int getOneLineCNT(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.getOneLineCNT", map);
+	}
 }

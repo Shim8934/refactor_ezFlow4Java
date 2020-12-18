@@ -1185,9 +1185,6 @@ public class EzCircularController extends EgovFileMngUtil {
 			model.addAttribute("circularID", circularID);
 			model.addAttribute("result", result);
 			model.addAttribute("listSize", list.size());
-		} else {
-			logger.debug("circularID is null");
-			return "";
 		}
 		
 		if(mode.equals("write")) {

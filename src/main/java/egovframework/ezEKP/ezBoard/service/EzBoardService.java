@@ -364,4 +364,6 @@ public interface EzBoardService {
 	/* 2020-12-03 박기범 - 회사별 탭게시판에 등록된 탭ID,boardid, boardname을 리턴하는 메서드 */
 	public List<HashMap<String, Object>> getCompanyTabBoardIDList(String companyID, int tenantID) throws Exception;
 	
+	public int getOneLineCNT(String itemID, int tenantID) throws Exception;
+	
 }
