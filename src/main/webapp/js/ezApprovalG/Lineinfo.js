@@ -1205,6 +1205,11 @@ function APRLINESNUPPERFunction() {
     			return;
     		}
     		
+    		if(pSelectedRows[0] == undefined){
+    			OpenAlertUI(strLangS574);
+    			return;            
+    		}
+    		
     		if (pSelectedRows.length != 0) {
     			if (pSelectedRows[0].childNodes[0].innerHTML.replace("★","").replace("⊙","") == 1) {
     				var pAlertContent = "" + strLang306 + "";
