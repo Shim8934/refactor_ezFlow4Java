@@ -177,6 +177,7 @@
 	            try {
 	                pSusinSN = SusinSN;
 	                setMenuBar("btnSendDraft", true);
+	                setMenuBar("btntotaldocinfo", false);
 	                dragNdrapNo();
 	
 	                IsSkipDrafter = "FALSE"
@@ -217,6 +218,8 @@
 	                if (isTrue) {
 	                    SetBtnStateTrue();
 	                    setAutoProperty();
+	                    setMenuBar("btntotaldocinfo", true);
+	                    
 	                    //window.focus();
 	                    //HwpCtrl.focus();
 	
