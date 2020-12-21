@@ -930,7 +930,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			if (globals.getProperty("Globals.DbType").equals("oracle")) {
 				orderOption1 = " TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ";
 			} else {
-				orderOption1 = " A.PARENTWRITEDATE2 DESC, A.UPPERITEMIDTREE ";
+				orderOption1 = " A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ";
 			}
 		}
 		
