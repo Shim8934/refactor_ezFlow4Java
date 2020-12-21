@@ -214,7 +214,7 @@ public class CommonUtil {
     
     public String stripScriptTagsAndFunctions(String src) {
     	if (src != null && !src.isEmpty()) {
-	        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert\\(.*?\\)|confirm\\(.*?\\)|prompt\\(.*?\\)|window.*?location",
+	        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|confirm([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|prompt([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|window.*?location",
 	        				Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 	        Matcher m = p.matcher(src);
 	        src = m.replaceAll("");
@@ -836,7 +836,8 @@ public class CommonUtil {
 	
 	public String cleanScriptValue(String htmlCode, String type) {
         if("clean".equals(type)){
-        	htmlCode = htmlCode.replaceAll("</?script>", "&lt;sciprt&gt;");
+        	//htmlCode = htmlCode.replaceAll("</?script>", "&lt;sciprt&gt;");
+        	htmlCode = stripScriptTagsAndFunctions(htmlCode);
         }
 		
 		return htmlCode;
