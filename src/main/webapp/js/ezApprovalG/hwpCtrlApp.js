@@ -57,7 +57,7 @@ LayoutView["initialize"] = function(id, baseurl, callback) {
     var iframe = document.createElement("iframe");
     //var parentUrl = getBaseUrl(location.href);
     var parentUrl = location.href.split("/")[0] + "//" + location.href.split("/")[2];
-    var frameUrl = parentUrl + "/js/ezApprovalG/hwpctrlmain.html";
+    var frameUrl = parentUrl + "/ezApprovalG/hwpctrlmain.do";
     if (uri.queryKey.noframe) {
         frameUrl = parentUrl + "/hwpctrlmain_noframe.html";
     }

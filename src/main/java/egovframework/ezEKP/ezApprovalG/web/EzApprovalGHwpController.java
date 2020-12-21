@@ -1917,4 +1917,19 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		LOGGER.debug("WHWPEditor ended.");
 		return "ezApprovalG/apprGWHWPEditor";
 	}
+	
+	/**
+	 * 전자결재G 한글 웹 기안기 관련 파일 호출
+	 */
+	@RequestMapping(value="/ezApprovalG/hwpctrlmain.do", method = RequestMethod.GET)
+	public String hwpctrlmain(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LOGGER.debug("hwpctrlmain started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		model.addAttribute("webHWPUrl", ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId()));
+		
+		LOGGER.debug("hwpctrlmain ended.");
+		return "ezApprovalG/hwpctrlmain";
+	}
 }
