@@ -333,7 +333,7 @@ public class EzOrganController {
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);
-		
+		/* jangsewon 주석처리
 		if (celllist.toUpperCase().indexOf("EXTENSIONATTRIBUTE5") > -1) {
             String[] arryCell = celllist.toUpperCase().split(";");
             String tooltip = "";
@@ -363,7 +363,7 @@ public class EzOrganController {
                 }
             }
         }
-		
+		*/
 		String result = commonUtil.convertDocumentToString(doc);
 		result = result.replaceAll("null", "");
 		

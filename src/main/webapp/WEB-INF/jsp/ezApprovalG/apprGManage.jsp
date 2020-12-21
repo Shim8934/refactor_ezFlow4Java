@@ -383,10 +383,10 @@
 		    				formArray : JSON.stringify(formArray)
 		    				},
 		    		success: function(text){
-			            alert("<spring:message code='ezPersonal.tt16'/>");
+			            //alert("<spring:message code='ezPersonal.tt16'/>");
 		    		},
 		    		error: function(){
-			            alert("<spring:message code='ezPersonal.tt14'/>");
+			            //alert("<spring:message code='ezPersonal.tt14'/>");
 		    		}
 		    	});
 		    }

@@ -4822,4 +4822,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getCompanyTabBoardIDList ended");
 		return  ezBoardDAO.getCompanyTabBoardIDList(map);
 	}
+	
+	@Override
+	public int getOneLineCNT(String itemID, int tenantID) throws Exception {
+		logger.debug("getOneLineCNT started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_itemID", itemID);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getOneLineCNT ended.");
+		return ezBoardDAO.getOneLineCNT(map);
+	}
 }
