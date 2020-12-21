@@ -2981,7 +2981,8 @@
 	    		(#companyID#, #tenantID#, 49, 0, 1, 18, null),
 	    		(#companyID#, #tenantID#, 51, 6, 1, 21, null),
 	    		(#companyID#, #tenantID#, 70, 10, 1, 22, null),
-	    		(#companyID#, #tenantID#, 73, 19, 1, 20, null)
+	    		(#companyID#, #tenantID#, 73, 19, 1, 20, null),
+				(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 1, 23, null)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I29" parameterClass="Map">
@@ -3049,7 +3050,10 @@
 	    		(70, 10, 3, #tenantID#, #companyID#, 'Webフォルダ'),
 	    		(73, 19, 1, #tenantID#, #companyID#, '전자설문'),
 	    		(73, 19, 2, #tenantID#, #companyID#, 'Survey'),
-	    		(73, 19, 3, #tenantID#, #companyID#, '電子アンケート')
+	    		(73, 19, 3, #tenantID#, #companyID#, '電子アンケート'),
+				(SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 1, #tenantID#, #companyID#, '탭게시판'),
+				(SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 2, #tenantID#, #companyID#, 'tabBoard'),
+				(SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 3, #tenantID#, #companyID#, 'タブボード')
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I30" parameterClass="Map">
@@ -3079,6 +3083,7 @@
 	    		(1, #tenantID#, #companyID#, 51, 1, 21, 6, 0),
 	    		(1, #tenantID#, #companyID#, 70, 1, 22, 10, 0),
 	    		(1, #tenantID#, #companyID#, 73, 1, 20, 19, 0),
+				(1, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 1, 23, 4, 0),
 	    		(2, #tenantID#, #companyID#, 1, 1, 1, 1, 0),
 	    		(2, #tenantID#, #companyID#, 2, 1, 2, 4, 0),
 	    		(2, #tenantID#, #companyID#, 4, 1, 3, 15, 0),
@@ -3100,6 +3105,7 @@
 	    		(2, #tenantID#, #companyID#, 73, 1, 20, 19, 0),
 	    		(2, #tenantID#, #companyID#, 51, 1, 21, 6, 0),
 	    		(2, #tenantID#, #companyID#, 70, 1, 22, 10, 0),
+				(2, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 1, 23, 4, 0),
 	    		(3, #tenantID#, #companyID#, 1, 1, 1, 1, 0),
 	    		(3, #tenantID#, #companyID#, 2, 1, 2, 4, 0),
 	    		(3, #tenantID#, #companyID#, 4, 1, 3, 15, 0),
@@ -3120,7 +3126,8 @@
 	    		(3, #tenantID#, #companyID#, 49, 1, 18, 0, 0),
 	    		(3, #tenantID#, #companyID#, 51, 1, 21, 6, 0),
 	    		(3, #tenantID#, #companyID#, 70, 1, 22, 10, 0),
-	    		(3, #tenantID#, #companyID#, 73, 1, 20, 19, 0)
+	    		(3, #tenantID#, #companyID#, 73, 1, 20, 19, 0),
+				(3, #tenantID#, #companyID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 1, 23, 4, 0)
   		]]>
     </insert>
     
@@ -3157,7 +3164,8 @@
 	    		(34, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
 	    		(36, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
 	    		(47, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
-	    		(49, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+	    		(49, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+				(SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), #companyID#, #tenantID#, #companyID#, 1, 0, 1)
   		]]>
     </insert>
     
