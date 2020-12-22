@@ -727,6 +727,14 @@
 				if (CurSelRow.length > 0)
 				{
 					var DuplicateFlag = DuplicateAprDeptCheck(APRDEPT, CurSelRow[0].getAttribute("DATA2"));
+					
+					/* 2020-12-22 홍승비 - 재발송 시 부서 검색하여 추가하는 경우에도 결재문서 수신여부 체크 */
+					if (GetEntryInfo(CurSelRow[0].getAttribute("DATA2")) == "N") {
+						var pAlertContent = strLang1105;
+						OpenAlertUI(pAlertContent);
+						return;
+					}
+					 
 					if(DuplicateFlag)
 					{
 						AprLineAddDept2(CurSelRow);  
