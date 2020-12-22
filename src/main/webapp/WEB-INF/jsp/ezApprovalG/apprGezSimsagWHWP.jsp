@@ -23,7 +23,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezSimsaG_Cross.js')}"></script>
-	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezSimsaG_HWP.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezSimsaG_WHWP.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendOffer_Cross.js')}"></script>
@@ -98,6 +98,7 @@
         var docTitle = "";
         var SaveHtml = "";
         var isConvSihang = ${isConvSihang};
+        var HtmlBody = "";
         
         function btnPrint_onclick() {
         	message.PrintDocument();
@@ -362,7 +363,17 @@
                 OpenAlertUI("문서 저장에 실패했습니다.");
                 return;
             }
-
+            
+            if (message.FieldExist("body")) {
+                message.GetCloneData("body", "HTML", before_SendExt);
+            }
+            else {
+                before_SendExt("");
+            }
+        }
+        
+        function before_SendExt(pBody) {
+        	HtmlBody = pBody;
             var rtnVal = "FALSE";
             if (isExternal) {
                 if (isAddress) {
