@@ -6881,7 +6881,7 @@
    		</isEqual>
    		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
 	   		ORDER BY 
-	   			$v_ORDEROPTION$, MODIFYDATE DESC' 
+	   			$v_ORDEROPTION$, MODIFYDATE DESC 
    		</isNotEqual>
    		</isGreaterEqual>
    		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="10">
@@ -9626,6 +9626,7 @@
 <!-- 	<procedure id="EzApprovalG.aprAttachMail" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true"> -->
 <!-- 		{CALL EZSP_APRATTACHMAIL(#v_DOCID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
+<!-- 2020.12.22 박기범 게시물 등록시 조회,등록되는 첨부파일명을 DISPLAYNAME으로 변경 -->
 	<select id="EzApprovalG.aprAttachMail" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true">
 		<isEqual property="v_FLAG" compareValue="1">
 			 SELECT 
@@ -9656,7 +9657,7 @@
 			SELECT * 
                  FROM ( 
                  		SELECT 
-               			     ATTACHFILENAME ATTACHNAME  ,
+               			     DISPLAYNAME ATTACHNAME  ,
                              ATTACHFILEHREF ATTACHFILEHREF  ,
                              ATTACHFILESIZE ATTACHFILESIZE  
                         FROM 
@@ -9704,7 +9705,7 @@
 				* 
             FROM ( 
             		SELECT 
-            			ATTACHFILENAME ATTACHNAME  ,
+            			DISPLAYNAME ATTACHNAME  ,
                         ATTACHFILEHREF ATTACHFILEHREF  ,
                         ATTACHFILESIZE ATTACHFILESIZE  
                     FROM 
@@ -9756,13 +9757,13 @@
 				* 
             FROM ( 
             		SELECT 
-            			ATTACHFILENAME ATTACHNAME  ,
+            			DISPLAYNAME ATTACHNAME  ,
                         ATTACHFILEHREF ATTACHFILEHREF  ,
                         ATTACHFILESIZE ATTACHFILESIZE  
                     FROM ( 
                     		SELECT 
                     			(CAST(OWNERID AS VARCHAR2(200)) || '@' || CAST(SN AS VARCHAR2(200))) DOCID  ,
-                                 ATTACHFILENAME ,
+                                 DISPLAYNAME ,
                                  ATTACHFILEHREF ,
                                  ATTACHFILESIZE 
                             FROM 
@@ -20687,7 +20688,7 @@
 			INSERT INTO	TBL_RECROLEINFO  (
 			  RecordID, SeperateAttachNo, UserID, UserRight, UserName, UserName2, UserTitle2, DeptCode, DeptName, DeptName2
 			)Values( 
-			  #v_RECORDID#, #v_SEPATTNO# , 'All_User', #userRight# , '모든 이용자, 'All User' , 'a','a','A','b'
+			  #v_RECORDID#, #v_SEPATTNO# , 'All_User', #userRight# , '모든 이용자', 'All User' , 'a','a','A','b'
 			)
 	     ]]> 
 	</insert>
