@@ -4019,7 +4019,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 			
 			if (boardInfo.getGuBun().equals("2")) {
-				strWriterFakeName = boardListVO.getWriterName().replace("\\", "&#92;");
+				strWriterFakeName = boardListVO.getWriterName();
+				if (strWriterFakeName != null) {
+					strWriterFakeName = strWriterFakeName.replace("\\", "&#92;");
+				}
 			}
 		}
 		
