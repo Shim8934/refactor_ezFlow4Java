@@ -32225,62 +32225,88 @@
 						(A.APR = FALSE AND A.APRTYPE = '007' AND (A.APRSTATE = '002' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015')
 					THEN A.COUNT ELSE 0 END
 				) AS '1', <!-- 결재할 문서, 공람문서는 제외한다. AprType <> ''015'' -->
-	        (SELECT
-	            COUNT(DISTINCT D.`DOCID`, D.`COMPANYID`)
-	        FROM
-	            tbl_aprdocinfo D
-	        JOIN 
-	            tbl_aprlineinfo L 
-	        ON
-	            D.`DOCID` = L.`DOCID`
-	        AND 
-	            D.`TENANT_ID` = L.`TENANT_ID`
-	        AND 
-	            D.`COMPANYID` = L.`COMPANYID`
-	        WHERE
-	          		L.APRTYPE != '015'
-	          	AND
-	          		L.APRSTATE IN ('002', '005')		
-	        <isEqual property="MineViewYN" compareValue="YES">
-	           	AND	L.APRSTATE != '001'
-	        </isEqual>
-	           	AND 
-					L.`APRMEMBERID` = #v_USERID#
-	        <![CDATA[
-	        	AND 
-	                STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
-	            AND 
-	                STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
-	        ]]>
-	            AND 
-	                D.TENANT_ID = #v_TENANTID#
-	            AND    
-	            	L.COMPANYID IN (
-										SELECT 
-											EXTENSIONATTRIBUTE2 
-										FROM 
-											TBL_DEPTMASTER 
-										INNER JOIN 
-											TBL_ADDJOBMASTER 
-										ON
-											(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-											AND 
-											TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-										WHERE 
-											TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-										AND 
-											TBL_ADDJOBMASTER.CN = #v_USERID#
-										UNION ALL
-										SELECT 
-											PHYSICALDELIVERYOFFICENAME
-										FROM
-											TBL_USERMASTER
-										WHERE
-											CN = #v_USERID#
-										AND
-											TENANT_ID = #v_TENANTID# 
-										)    
-	           )
+	        	(
+       	<![CDATA[
+        	SELECT 
+				COUNT(DISTINCT DOCID, COMPANYID) 
+           	FROM 
+           		VAPRWILLDOCLIST
+           	WHERE 
+           		APRMEMBERID = #v_USERID# 
+           	AND 
+           		AprType != '015'
+           	AND 
+         		DocState != '017'      
+      		]]>    
+          <isEqual property="MineViewYN" compareValue="YES">
+			AND	    
+				AprState != '001'
+		  </isEqual>
+           	AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID IN (
+						SELECT 
+							EXTENSIONATTRIBUTE2 
+						FROM 
+							TBL_DEPTMASTER  D1
+						INNER JOIN 
+							TBL_ADDJOBMASTER  D2
+						ON
+							(D2.TENANT_ID = D1.TENANT_ID 
+							AND 
+							D1.CN = D2.DEPTID) 
+						WHERE 
+							D2.TENANT_ID = #v_TENANTID#
+						AND 
+							D2.CN = #v_USERID#
+						UNION ALL
+						SELECT 
+							UM.PHYSICALDELIVERYOFFICENAME
+						FROM
+							TBL_USERMASTER UM
+						WHERE
+							UM.CN = #v_USERID#
+						AND
+							UM.TENANT_ID = #v_TENANTID#
+						)
+			AND docid in
+				(SELECT
+					TA.docid
+				FROM
+					TBL_APRLINEINFO TA
+				WHERE
+					TA.aprmemberid = #v_USERID#
+				AND
+					TA.tenant_id = #v_TENANTID#
+				AND
+					companyid IN(
+						SELECT
+							TD.extensionattribute2
+						FROM
+							TBL_DEPTMASTER TD
+						INNER JOIN
+							TBL_ADDJOBMASTER TA
+						ON
+							(TA.tenant_id = TD.tenant_id
+						AND
+							TD.cn = TA.deptid)
+						WHERE
+							TA.tenant_id = #v_TENANTID#
+						AND
+							TA.cn = #v_USERID# 
+						UNION ALL
+						SELECT
+							TU2.physicaldeliveryofficename
+						FROM
+							TBL_USERMASTER TU2
+						WHERE
+							TU2.cn = #v_USERID#
+						AND
+							TU2.tenant_id = #v_TENANTID#
+					)
+				)
+			)
 	         AS '2', <!-- 결재진행문서, 공람문서는 제외한다. AprType <> ''015'' -->
 	        (  
         	<![CDATA[
