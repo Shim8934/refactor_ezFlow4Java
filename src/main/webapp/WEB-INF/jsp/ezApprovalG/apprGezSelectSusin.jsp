@@ -697,19 +697,21 @@
 			}
 			
 			function event_displayUserList(result)
-			{    
-					if (result.getElementsByTagName("ROW").length > 0)
-					{
-					    var pUserList = new ListView();      //// ListView 선언
-			            pUserList.LoadFromID("pUserList");            
-						pUserList.SetSelectFlag(false);			
-			            pUserList.DataSource(result);                             // DataSource 지정
-			            pUserList.RowDataBind("UserList");                          // ListView DataBind
-			        }			
-					else
-						alert("<spring:message code='ezApprovalG.t247'/>")
-			
-					result = null;
+			{
+				if (result.getElementsByTagName("ROW").length > 0)
+				{
+				    var pUserList = new ListView();      //// ListView 선언
+		            pUserList.LoadFromID("pUserList");
+					pUserList.SetSelectFlag(false);
+		            pUserList.DataSource(result);                             // DataSource 지정
+		            pUserList.RowDataBind("UserList");                          // ListView DataBind
+		        }
+				else {
+					// 부서검색 결과가 없는 경우, 데이터가 없다는 메세지 표출
+					//alert("<spring:message code='ezApprovalG.t247'/>")
+					$("#pUserList").find("tbody").html("<tr id='pUserList_TR_noItems'><td align='center' colspan='1'>" + strLang944 + "</td></tr>");
+				}
+				result = null;
 			}
 			
 			function list2_onSel_DBclick()
@@ -727,6 +729,14 @@
 				if (CurSelRow.length > 0)
 				{
 					var DuplicateFlag = DuplicateAprDeptCheck(APRDEPT, CurSelRow[0].getAttribute("DATA2"));
+					
+					/* 2020-12-22 홍승비 - 재발송 시 부서 검색하여 추가하는 경우에도 결재문서 수신여부 체크 */
+					if (GetEntryInfo(CurSelRow[0].getAttribute("DATA2")) == "N") {
+						var pAlertContent = strLang1105;
+						OpenAlertUI(pAlertContent);
+						return;
+					}
+					 
 					if(DuplicateFlag)
 					{
 						AprLineAddDept2(CurSelRow);  
