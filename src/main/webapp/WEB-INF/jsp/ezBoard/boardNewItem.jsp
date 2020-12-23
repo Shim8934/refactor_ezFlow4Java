@@ -70,7 +70,7 @@
 		    var SSCompanyName2 = "${userInfo.companyName2}";
 		    var strItemID = "${itemID}";
 		    var strWriterID = "${boardListVO.writerID}";
-		    var strWriterName = "${boardListVO.writerName}";
+		    var strWriterName = ConvMakeXMLString("<c:out value='${boardListVO.writerName}'/>"); // 익명게시판의 게시자명 특문처리 대응
 		    var strWriterDeptName = "${boardListVO.writerDeptName}";
 		    var strWriterCompanyName = "${boardListVO.writerCompanyName}";
 		    var strWriteDate = "${boardListVO.writeDate}";
@@ -83,7 +83,7 @@
 		    var strUpperItemIDTree = "${boardListVO.upperItemIDTree}";
 		    var strItemLevel = "${boardListVO.itemLevel}";
 		    var strWriterTitle = "${boardListVO.extensionAttribute3}";
-		    var strWriterFakeName = "${strWriterFakeName}";
+		    var strWriterFakeName = ConvMakeXMLString("<c:out value='${strWriterFakeName}'/>"); // 익명게시판의 게시자명 특문처리 대응
 		    var pAttachListXml = "";
 		    var AttachLimit = "${boardInfo.attachSizeLimit}";
 			var pReservedItem = "${reservedItem}";
@@ -224,6 +224,10 @@
 			    }
 			    if (pMode == "reply") {
 			    	document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value='${boardListVO.title}'/>");
+			    	
+			    	 if (gubun == "2") { // 익명게시물 답변 시에도 게시자명 특문처리 추가
+						document.getElementById("txtNickName").value = ConvMakeXMLString(strWriterFakeName);
+					}
 				}
 			    if (pReservedItem != "true") {
 			        //var nowDate = new Date();
@@ -2311,7 +2315,7 @@
 		                    <tr>
 		                        <th><spring:message code='ezBoard.t436' /></th>
 		                        <td>
-		                            <input type="text" id="txtNickName" style="WIDTH: 150px" maxlength="15" value="${boardListVO.writerName}">&nbsp;&nbsp;(<spring:message code='ezBoard.t437' /></td>
+		                            <input type="text" id="txtNickName" style="WIDTH: 150px" maxlength="15" value="<c:out value='${boardListVO.writerName}'/>">&nbsp;&nbsp;(<spring:message code='ezBoard.t437' /></td>
 		                    </tr>
 	                    </c:if>
 	                    <tr>
@@ -2412,7 +2416,7 @@
 		                    <tr style="display: none">
 		                        <th><spring:message code='ezBoard.t436' /></th>
 		                        <td style="vertical-align: middle" colspan="2">
-		                            <input type="text" id="txtNickName" style="WIDTH: 100px" maxlength="15" value="${boardListVO.writerName}">
+		                            <input type="text" id="txtNickName" style="WIDTH: 100px" maxlength="15" value="<c:out value='${boardListVO.writerName}'/>">
 		                            &nbsp;&nbsp;(<spring:message code='ezBoard.t437' /></td>
 		                    </tr>
 		                    <tr style="display: none">
