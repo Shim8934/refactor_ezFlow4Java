@@ -3871,10 +3871,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 			
 			if (boardInfo.getGuBun().equals("2")) {
-				if (boardListVO.getWriterName() == null) {
-					boardListVO.setWriterName("");
-				}
-				strWriterFakeName = commonUtil.htmlUnescape(boardListVO.getWriterName()).replace("\\", "&#92;");
+				strWriterFakeName = boardListVO.getWriterName().replace("\\", "&#92;");
 			}
 		}
 		
