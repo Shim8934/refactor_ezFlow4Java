@@ -42,7 +42,7 @@
 		    var pBoardName = "${boardInfo.boardName}";
 		    var strWriterID = "${boardItem.writerID}";
 		    var strWriterDeptID = "${boardItem.writerDeptID} ";
-		    var strWriterName = '${boardItem.writerName}'.replace("\"", "");
+		    var strWriterName = ConvMakeXMLString("<c:out value='${boardItem.writerName}'/>"); // 익명게시판의 게시자명 특문처리 대응
 		    var strWriterDeptName = "${boardItem.writerDeptName}";
 		    var strWriterCompanyName = "${boardItem.writerCompanyName}";
 		    var strWriteDate = "${boardItem.writeDate}";
@@ -1354,6 +1354,17 @@
 		    	} else {
 		    		refreshFlag = "N";
 		    	}
+		    }
+		    
+		    /* 2020-12-23 홍승비 - 익명게시물 게시자명 특문처리 추가 */
+		    function ConvMakeXMLString(str) {
+		        str = ReplaceText(str, "&lt;", "<");
+		        str = ReplaceText(str, "&gt;", ">");
+		        str = ReplaceText(str, "&#039;", "'");
+		        str = ReplaceText(str, "&#034;", "\"");
+		  	    str = ReplaceText(str, "&amp;", "&");	    
+		  		str = ReplaceText(str, "&#92;", "\\");
+		        return str;
 		    }
 		    
 		</script>
