@@ -995,15 +995,16 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 	
         
     if (symbolName != "") {
-		var Nodes = eNodes.getElementsByTagName("contents");
-		var tempNode = sihangXML.createNode(1,"content","");
-		Nodes(0).appendChild(tempNode);
-		tempNode.setAttribute("content-role", "symbol");
-		tempNode.setAttribute("filename", symbolName);
-		tempNode.setAttribute("content-transfer-encoding", "base64");
-		tempNode.setAttribute("content-type", "");
-		tempNode.setAttribute("charset", "euc-kr");
-		setNodeText(tempNode , symbolPath.replace(pDomainName, ""));
+    	var Nodes = SelectNodes(eNodes, "contents");
+		var tempNode = createNode(sihangXML, "content");
+		Nodes[0].appendChild(tempNode);
+		
+		SetAttribute(tempNode, "content-role", "symbol");
+		SetAttribute(tempNode, "filename", symbolName);
+		SetAttribute(tempNode, "content-transfer-encoding", "base64");
+		SetAttribute(tempNode, "content-type", "");
+		SetAttribute(tempNode, "charset", "euc-kr");
+		setNodeText(tempNode, symbolPath.replace(pDomainName, ""));
 	}	
         
     if (logoName != "") {
