@@ -3774,7 +3774,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		/* 2019-01-31 홍승비 - 게시물 보기 시 게시자 이름 특문처리 (익명게시판 오류수정) */
 		if (boardItem.getWriterName() != null && !boardItem.getWriterName().equals("")) {
-			boardItem.setWriterName(commonUtil.htmlUnescape(boardItem.getWriterName()));
+			boardItem.setWriterName(commonUtil.htmlUnescape(boardItem.getWriterName()).replace("\\", "&#92;"));
 		}
 		
 		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
@@ -4020,6 +4020,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			if (boardInfo.getGuBun().equals("2")) {
 				strWriterFakeName = boardListVO.getWriterName();
+				if (strWriterFakeName != null) {
+					strWriterFakeName = strWriterFakeName.replace("\\", "&#92;");
+				}
 			}
 		}
 		
