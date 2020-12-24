@@ -32,6 +32,7 @@ var messages = {
 	strLang31 : "기안문서",
 	strLang32 : "부서수신함",
 	strLang33 : "You have already registered to leave work.",
+	strLang34 : "You have already participated in this survey.",
 	strLang586 : "Jan",
 	strLang587 : "Feb",
 	strLang588 : "Mar",
