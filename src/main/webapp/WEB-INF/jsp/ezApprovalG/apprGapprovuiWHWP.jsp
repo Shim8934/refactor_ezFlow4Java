@@ -242,12 +242,12 @@
 		                openOtherApprovUI();
 		                return;
 		            }
-		
-		
+		            
 		            DocNumCode = "";
-		
-		            showProgress(tempString.replace("\n", ""));
-		
+		            
+		            // 웹한글에서 지원하지 않는 함수 주석처리
+		          //  showProgress(tempString.replace("\n", ""));
+		            
 		            if (pDocID == NextDocID) {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t3'/>";
 				        OpenAlertUI(pAlertContent);
@@ -296,9 +296,16 @@
 		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
 		        } else if (NextDocExtended.substring(NextDocExtended.lastIndexOf(".") + 1).toLowerCase() == "hwp" && useWebHWP == "YES") {
 		            var openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + escape(pArgument[0]);
-		            openLocation = openLocation + "&ID=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
+		            openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
 		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
-		        } else {
+		        }
+		        /* 2020-12-24 홍승비 - 모두결재 시 웹한글문서 다음에 일반 mht문서가 위치하는 경우, 연결 URL 수정 */
+		        else if (NextDocExtended.substring(NextDocExtended.lastIndexOf(".") + 1).toLowerCase() == "mht") {
+		        	openLocation = "/ezApprovalG/approvui.do?docID=" + escape(pArgument[0]);
+		            openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
+		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag) + "&orgCompanyID=" + orgCompanyID;
+		        }
+		        else {
 		            if (pUse_Editor == "TAGFREE") {
 		                var openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui_IE.aspx?DocID=" + escape(pArgument[0]);
 		                openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]) + "&uName2=" + escape(pArgument[4]);
@@ -643,7 +650,7 @@
 				
 			    var parameter = new Array();
 			    parameter[0] = pDocID;
-			    var signInfo
+			    var signInfo;
 				
 			    if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 			        if (pDraftFlag == "HABYUI" || pDraftFlag == "B_GAMSA" || pDraftFlag == "A_GAMSA")
