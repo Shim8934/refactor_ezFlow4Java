@@ -2371,7 +2371,7 @@ public class EzEmailUtil {
     	
     	return mailList;
     }
-    
+        
 	public Message[] searchFolder (
 			Folder folder, 
 			String searchField, 
@@ -3007,6 +3007,45 @@ public class EzEmailUtil {
 		}
 		
 		logger.debug("getMailListUsingRDBOnlyFromJGw ended.");
+		return resultMap;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getMailInfo(
+			String userAccount,
+			String folderPath,
+			long mailUid
+			) throws Exception {
+		logger.debug("getMailInfo started.");
+		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",mailUid=" + mailUid);
+				
+		String userAccountParam = "userAccount=" + URLEncoder.encode(userAccount, "UTF-8");
+		String folderPathParam = "folderPath=" + URLEncoder.encode(folderPath, "UTF-8");
+		String mailUidParam = "mailUid=" + mailUid;
+						
+		String inputParams = userAccountParam + "&" + folderPathParam + "&" + mailUidParam;
+		
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailInfo";
+		String response = getWebServiceResult(requestURL, inputParams);
+		
+		Map<String, String> resultMap = null;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				resultMap = (Map<String, String>)responseObj.get("mailInfo");
+				
+			} else {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("getMailInfo ended.");
+		
 		return resultMap;
 	}
 	

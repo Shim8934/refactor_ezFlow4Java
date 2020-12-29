@@ -7582,6 +7582,25 @@
                 ORDER BY 
                       APRMEMBERSN 
          </isEqual>
+         <isEqual property="v_FLAG" compareValue="4">
+			SELECT
+				APRMEMBERSN ,
+				APRTYPE ,
+				APRMEMBERID ,
+				APRMEMBERDEPTID ,
+				ISPROPOSERYN ,
+				ISBRIEFUSERYN 
+			FROM 
+				TBL_ENDAPRLINEINFO
+			WHERE
+				DOCID = #v_DOCID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			ORDER BY 
+				APRMEMBERSN
+         </isEqual>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getApproveDocInfo" parameterClass="Map" resultClass="ApprGDocListVO"> -->

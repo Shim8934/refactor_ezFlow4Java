@@ -22,6 +22,8 @@
 			    var shareId = "${shareId}";
 			    var deletePermission = "${deletePermission}";
 			    var sendPermission = "${sendPermission}";
+				var ReadCountCheck ="${pReadFlag}";		
+			    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간				
 			    var mouseTop;
 			    var mailWritePreview = window.parent.mailWritePreview; // 메일작성 > 미리보기
 			    
@@ -38,6 +40,8 @@
 				}
 				
 				function window_onload() {
+				    parent.sentDateMsg = sentDateMsg;
+				    
 				    if (window.parent.pContentClass == "IPM.Schedule.Meeting.Request") {
 				        ContentClassbtn.style.display = "";
 				    }
@@ -90,6 +94,12 @@
 					if ($(".previewmail_addImage").length > 0) {
 						$(".previewmail_addImage").css("opacity","1");
 					}
+					
+			        try {
+			            if (ReadCountCheck=="N") {
+			                parent.opener.refreshUnreadCount();
+			            }
+			        } catch (e) { }				    					
 				}
 				
 				function sizeBtnAppend() {
