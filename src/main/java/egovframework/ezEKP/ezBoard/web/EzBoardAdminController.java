@@ -901,15 +901,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		}
 		
 		/* 2020-12-04 박기범 - 탭 게시판 설정 기능 추가*/
+		BoardPropertyVO boardpro = ezBoardService.getBoardProperty(boardPropertyVO.getBoardID(), userInfo.getTenantId());
 		int tabNum = 3; //탭 개수
 		
 		for (int i = 1; i <= tabNum; i++) {
 			String tabBoardMod = request.getParameter("tabBoardMod" + i);
 			if (!tabBoardMod.equals("")) {
+				String tempCompanyId = boardpro.getCompanyID() != null ? boardpro.getCompanyID() : " " ;
 				if(tabBoardMod.equals("UPDATE")) {
-					ezBoardAdminService.updateTabBoard(i, boardPropertyVO.getBoardID(), userInfo.getTenantId(), userInfo.getCompanyID(), boardPropertyVO.getBoardName(), boardPropertyVO.getBoardName2());
+					ezBoardAdminService.updateTabBoard(i, boardPropertyVO.getBoardID(), userInfo.getTenantId(), tempCompanyId, boardPropertyVO.getBoardName(), boardPropertyVO.getBoardName2());
 				} else { // DELETE
-					ezBoardAdminService.deleteTabBoard(i, userInfo.getTenantId(), userInfo.getCompanyID());
+					ezBoardAdminService.deleteTabBoard(i, boardpro.getTenantID(), tempCompanyId);
 				}
 			}
 		}

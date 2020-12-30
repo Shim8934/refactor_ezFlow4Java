@@ -363,4 +363,9 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void insertTabBoard(Map<String, Object> map) throws Exception {
 		insert("EzBoardAdminDAO.insertTabBoard", map);
 	}
+
+	/* 2020-12-30 박기범 - 탭게시판 레코드 일괄삭제 쿼리 */
+	public void deleteAllComTabBoard(Map<String, Object> map) throws Exception {
+		delete("EzBoardAdminDAO.deleteAllComTabBoard", map);
+	}
 }

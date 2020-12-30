@@ -1357,6 +1357,11 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_COMPANYID", companyID);
 		map.put("v_BOARDNAME", boardName);
 		map.put("v_BOARDNAME2", boardName2);
+
+		// 그룹사 게시판일 경우 일괄 삭제
+		if ( companyID == " " ) {
+			ezBoardAdminDAO.deleteAllComTabBoard(map);
+		}
 		
 		ezBoardAdminDAO.deleteTabBoard(map); // 기존 탭게시판 삭제 후 새로운 레코드 삽입
 		ezBoardAdminDAO.insertTabBoard(map);
