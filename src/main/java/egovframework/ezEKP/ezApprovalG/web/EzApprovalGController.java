@@ -2530,6 +2530,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("apprAttachLimit=" + apprAttachLimit + ", bigSizeApprAttachLimit=" + bigSizeApprAttachLimit);
 		
+		// 2020-12-30 김민성 - 시행문 양식인 경우 첨부파일 6MB로 제한
+		boolean isOuterForm = ezApprovalGService.isOuterForm(formID, userInfo.getCompanyID(), userInfo.getTenantId());
+		if(isOuterForm) {
+			bigSizeApprAttachLimit = "0";
+			apprTotalAttachLimit = "6";
+			apprAttachLimit = "6";
+		}
+		
 		//String bigSizeMailAttachDelDate = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(pBigAttachDownloadDay), "yyyy-MM-dd");
         //String pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), Integer.parseInt(pBigAttachDownloadDay), "yyyy/MM/dd");
         int pBigAttachLimitCount = bigSizeAttachLimitCount == null || bigSizeAttachLimitCount.equals("") ? 0 : Integer.parseInt(bigSizeAttachLimitCount);
@@ -2602,6 +2610,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("bigSizeApprAttachLimit", bigSizeApprAttachLimit); // 전자결재 대용량 첨부파일 크기제한
 		//model.addAttribute("bigSizeApprAttachDelDay", pBigAttachDownloadDay); // 전자결재 대용량 첨부파일 보존기간
 		model.addAttribute("spanDisplayStyle", commonUtil.stripScriptTagsAndFunctions(spanDisplayStyle)); // 첨부파일 알림 메세지 스타일
+		model.addAttribute("isOuterForm", isOuterForm);
 		
 		logger.debug("aprAttach ended");
 		
