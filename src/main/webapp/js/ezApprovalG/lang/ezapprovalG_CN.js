@@ -1063,3 +1063,31 @@ var strLangHSBAt09 = "Up to";
 var strLangHSBAt10 = "Downloadable";
 var strLangHSBAt11 = "After the conversion is complete, click OK to download the next file as well.";
 var strLangHSBAt12 = "Please select an attachment.";
+
+var strLang947 = "Departments is unavailable as recipient. \nPlease check!";
+var strLang948 = "Departments unavailable as recipient will be automatically deleted. \nDo you wish to continue?"
+var strLang949 = "Receive Disabled department is duplicated. \nPlease check!"
+var strLang950 = "This Department cannot be a receiver. \nPlease check again."
+var strLang951 = "해당부서는 수신자로 지정할 수 없습니다. <br>확인하여 주십시요."
+
+var strLang952 = "审核批准行的位置无法更改.";
+var strLang953 = "审核批准行不能删除.";
+var strLang954 = "最终审计师不能删除.";
+
+//2020-11-23 염정이
+var strLangYJY01 = "备注";
+var strLangYJY02 = "代決";
+
+/* 2020-12-09 홍승비 - RMS이관메뉴 메세지 추가 */
+var strLangHSBRMS01 = "Transfer waiting list data input succeeded.";
+
+var strLangBg01 = "Translation";
+var strLangBg02 = "Supervision";
+var strLangBg03 = "Translation/Supervision Confirm";
+
+var strLang955 = "总统";
+var strLang956 = "副总统";
+var strLang957 = "导向器";
+
+var strLangAdd00040 = "발신기관에서 보내온 본문정보가 잘못되었습니다. 재전송요청하시기 바랍니다.";
+var strLangAdd00041 = "본문정보중 이미지정보가 포함되어 있지않아서 제거 후 저장되었습니다.<br />접수 하시겠습니까?";

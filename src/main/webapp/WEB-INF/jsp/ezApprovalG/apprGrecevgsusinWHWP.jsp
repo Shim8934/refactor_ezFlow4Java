@@ -124,6 +124,7 @@
 		    var rtnSignInfo = "";
 		    var SaveHtml = "";
 		    var useWebHWP = "YES";
+		    var imgCheck = true;
 			//원문정보공개
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 			
@@ -352,7 +353,8 @@
 		
 			function FieldsAvailable(isTrue) {
 			    if (needDoubleFormFlag) {
-			        var tempFlag = getExtInfo();
+			    	getExtInfo();
+			        /* var tempFlag = getExtInfo();
 			        if (tempFlag) {
 			            setAutoProperty();
 			            process_AfterOpen();
@@ -365,7 +367,7 @@
 						chkBtnConfirm("1");
 			
 						return;
-			        }
+			        } */
 			    } else {
 			        if (pFormHref == "") {
 			            var isRelay = GetRelayDocInfo();
@@ -393,7 +395,8 @@
 			                        }
 			                    }
 			                    
-			                    var tempFlag = getExtInfo();
+			                    getExtInfo();
+			                    /* var tempFlag = getExtInfo();
 			                    if (tempFlag) {
 			                        setAutoProperty();
 			                        process_AfterOpen();
@@ -409,7 +412,7 @@
 			                            chkBtnConfirm("1");
 			                            return;
 			                        }
-			                    }
+			                    } */
 			                } catch (e) {
 			                    document.getElementById("btnRefresh").style.display = "";
 			                }
@@ -422,9 +425,13 @@
 			            }
 			        }
 			    }
-			
+			    
+			    FieldsAvailable_complate(isTrue);
+			}
+
+			function FieldsAvailable_complate(isTrue) {
+			    pGubun = "11";
 			    if (isTrue) {
-			        pGubun = "11";
 			
 			        SetReceiptNumber();
 			        //hideProgress();
@@ -539,7 +546,7 @@
 		        	message.PutFieldText("receiptnumber", "@dp-@YY-@nn");
 		        }
 		        
-		        message.MoveToField("doctitle");
+		        //message.MoveToField("doctitle");
 		        message.ScrollPosInfo(0, 0);
 		        
 		        if(useExternalMailServer == "NO") {

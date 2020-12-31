@@ -292,226 +292,168 @@ function getExtInfo()
 		}        			
 	});
     
-    var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-    xmlDoc.async = "false";
-    xmlDoc.loadXML(result);
-    
-    sihangXML = xmlDoc;
+    sihangXML = loadXMLString(result);
 	
-	if (sihangXML.xml == "") {
+	if (getXmlString(sihangXML) == "") {
 	    alert(strLang726 + xmlURL);
 	    return false;
 	}
 
-	var eNodes = sihangXML.documentElement;
-	var bodyTagUse = true;
-    // 에러로그 여부
-    try {
-        var Nodes = eNodes.selectNodes("body");
-        if (Nodes.length > 0) {
-            bodyTagUse = true;
-        }
-        else {
-            bodyTagUse = false;
-        }
-        Nodes = eNodes.selectNodes("ERRORMESSAGE");
-
-        if (Nodes.length > 0) {
-            if (bodyTagUse) {
-                OpenAlertUI("오류내용:" + getNodeText(Nodes[0]) + "<br>" + " > 문서를 불러올수 있으나 정상표시되는지 확인하세요.");
-            }
-            else {
-                OpenAlertUI("오류내용:" + getNodeText(Nodes[0]) + "<br>" + " > 문서를 불러올수 없습니다.");
-                return false;
-            }
-        }
-    } catch (e) {
+	var eNodes = sihangXML;
+	
+	try {
+		var bodyTagUse = true;
+	    // 에러로그 여부
+	    try {
+	    	var Nodes = SelectNodes(eNodes, "body");
+	        if (Nodes.length > 0) {
+	            bodyTagUse = true;
+	        }
+	        else {
+	            bodyTagUse = false;
+	        }
+	        Nodes = SelectNodes(eNodes, "ERRORMESSAGE");
+	
+	        if (Nodes.length > 0) {
+	            if (bodyTagUse) {
+	                OpenAlertUI("오류내용:" + getNodeText(Nodes[0]) + "<br>" + " > 문서를 불러올수 있으나 정상표시되는지 확인하세요.");
+	            }
+	            else {
+	                OpenAlertUI("오류내용:" + getNodeText(Nodes[0]) + "<br>" + " > 문서를 불러올수 없습니다.");
+	                return false;
+	            }
+	        }
+	    } catch (e) {
+	    	alert("getExtInfo error");
+	    }
+	
+		var Nodes = SelectNodes(eNodes, "pubdoc/head/organ");
+		if( Nodes.length > 0 ) {
+			if( message.FieldExist("organ") ) {	
+			    message.PutFieldText("organ", getNodeText(Nodes[0]));
+			}
+		}
+	} catch (e) {
     	alert("getExtInfo error");
     }
-
-	var Nodes = eNodes.selectNodes("head/organ");		
-	if( Nodes.length > 0 )
-	{
-		if( HwpCtrl.CheckFieldExist("organ") )
-		{	
-		    HwpCtrl.SetFieldText("organ", getNodeText(Nodes(0)));
-		}
-	}
-	
-	var Nodes = eNodes.selectNodes("head/receiptinfo/recipient");
-	if( Nodes.length > 0 )
-	{
-	    if( GetAttribute(Nodes(0),"refer") == "true" )	
-		{
-			if( HwpCtrl.CheckFieldExist("recipient") )
-				HwpCtrl.SetFieldText("recipient", strLang728);
-			
-			if( HwpCtrl.CheckFieldExist("recipientheader") )
-				HwpCtrl.SetFieldText("recipientheader", strLang129);
-			
-			if( HwpCtrl.CheckFieldExist("recipients") )
-			    HwpCtrl.SetFieldText("recipients", getNodeText(Nodes(0)));
-		}
-		else
-		{
-			if( HwpCtrl.CheckFieldExist("recipient") )
-			    HwpCtrl.SetFieldText("recipient", getNodeText(Nodes(0)));
-			
-			if( HwpCtrl.CheckFieldExist("recipientheader") )
-				HwpCtrl.SetFieldText("recipientheader", " ");
-			
-			if( HwpCtrl.CheckFieldExist("recipients") )
-				HwpCtrl.SetFieldText("recipients", " ");
-		}
-	}
-	
-	var Nodes = eNodes.selectNodes("head/receiptinfo/via");		 
-	if( Nodes.length > 0 )
-	{
-		if( HwpCtrl.CheckFieldExist("refer") )
-		{
-		    HwpCtrl.SetFieldText("refer", getNodeText(Nodes(0)));
-		}
-	}
-	
-	var Nodes = eNodes.selectNodes("body/title");				
-	if( Nodes.length > 0 )
-	{
-		if( HwpCtrl.CheckFieldExist("doctitle") )
-		{
-		    HwpCtrl.SetFieldText("doctitle", getNodeText(Nodes(0)));
-		}
-		if( HwpCtrl.CheckFieldExist("doctitle2") )
-		{
-		    HwpCtrl.SetFieldText("doctitle2", getNodeText(Nodes(0)));
-		}
-	}
-	
-	var Nodes = eNodes.selectNodes("body");
-	if( Nodes.length > 0 )
-	{
-	    if( GetAttribute(Nodes(0),"separate") == "false" )
-		{
-			var tempNodes = eNodes.selectNodes("body/content");
-			if( tempNodes.length > 0 )
-			{
-				if( HwpCtrl.CheckFieldExist("body") )
-				{
-					var bodySTR = "";
-					for( var i = 0 ; i < tempNodes(0).childNodes.length ; i++ )
-					{
-						if( i == 0 )
-						    bodySTR = getNodeText(tempNodes(0).childNodes(i));
-						else
-						    bodySTR = bodySTR + getNodeText(tempNodes(0).childNodes(i));
-					}
-					
-					if( bodySTR.indexOf("<![CDATA[") > -1 )
-					{
-						bodySTR = bodySTR.replace("<![CDATA[", "");
-						bodySTR = bodySTR.replace("]]>", "");
-					}
-					HwpCtrl.SetCloneData(Decode(bodySTR), "body", "HTML");
-				}
-			}
-		}
-		else
-		{
-			if( !needDoubleFormFlag )
-			{
-				HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
-				needDoubleFormFlag = true;
-				var URL = document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pRelayURL2);
-	  			var isTrue = HwpCtrl.LoadFile(URL, true);
-	  			FieldsAvailable(isTrue);
-	  			return false;
-			}
-			
-			var tempNodes = eNodes.selectNodes("body/content");
-			if( tempNodes.length > 0 )
-			{
-				if( HwpCtrl.CheckFieldExist("body") )
-				{
-					var bodySTR = "";
-					for( var i = 0 ; i < tempNodes(0).childNodes.length ; i++ )
-					{
-						if( i == 0 )
-							bodySTR = getNodeText(tempNodes(0).childNodes(i));
-						else
-						    bodySTR = bodySTR + getNodeText(tempNodes(0).childNodes(i));
-					}
-					
-					if( bodySTR.indexOf("<![CDATA[") > -1 )
-					{
-						bodySTR = bodySTR.replace("<![CDATA[", "");
-						bodySTR = bodySTR.replace("]]>", "");
-					}
-					HwpCtrl.SetCloneData(Decode(bodySTR), "body", "HTML");
-				}
-			}
-		}
-	}
-	
-	var Nodes = eNodes.selectNodes("foot/sendername");
-	if( Nodes.length > 0 )
-	{
-		if( HwpCtrl.CheckFieldExist("chief") )
-		{
-		    HwpCtrl.SetFieldText("chief", getNodeText(Nodes(0)));
-		}
-	}
-	
-	var Nodes = eNodes.selectNodes("foot/seal");
-	if( Nodes.length > 0 )
-	{
-	    var pomit = GetAttribute(Nodes(0),"omit")
-		if( pomit == "false" )
-		{
-			sealPath = dirPath + sCompanyID + "/ExDocSign/" + sealURL;
-			if( HwpCtrl.CheckFieldExist("sealsign") )
-			{
-				HwpCtrl.SetFieldText("sealsign", "");
-				HwpCtrl.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(sealPath));
-			}
-		}
 		
-		if( pomit == "true" )
-		{
-			if( HwpCtrl.CheckFieldExist("sealsign") )
-			{
-				HwpCtrl.SetFieldText("sealsign", "");
-				//관인없을 경우, 경로가 닷넷 경로 그대로 사용하던 오류 수정. 2019-11-22 홍대표.
-				HwpCtrl.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape("/files/sealImg/nostamp.gif"), 12);
+	try {
+		var Nodes = SelectNodes(eNodes, "pubdoc/head/receiptinfo/recipient");
+		if( Nodes.length > 0 ) {
+		    if( GetAttribute(Nodes[0],"refer") == "true" ) {
+				if( message.FieldExist("recipient") )
+					message.PutFieldText("recipient", strLang728);
+				
+				if( message.FieldExist("recipientheader") )
+					message.PutFieldText("recipientheader", strLang129);
+				
+				if( message.FieldExist("recipients") )
+				    message.PutFieldText("recipients", getNodeText(Nodes[0]));
+		    } else {
+				if( message.FieldExist("recipient") )
+				    message.PutFieldText("recipient", getNodeText(Nodes[0]));
+				
+				if( message.FieldExist("recipientheader") )
+					message.PutFieldText("recipientheader", " ");
+				
+				if( message.FieldExist("recipients") )
+					message.PutFieldText("recipients", " ");
 			}
 		}
+	} catch(e) {
+		alert("recipients error");
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/approvalinfo/approval");
+	try {
+		var Nodes = SelectNodes(eNodes, "pubdoc/head/receiptinfo/via");
+		if( Nodes.length > 0 ) {
+			if( message.FieldExist("refer") ) {
+			    message.PutFieldText("refer", getNodeText(Nodes[0]));
+			}
+		} 
+	} catch(e) {
+		alert("refer error");
+	}
+		
+	try {
+		var Nodes = null;
+		var Nodes = SelectNodes(eNodes, "pubdoc/body/title");				
+		if( Nodes.length > 0 ) {
+			if( message.FieldExist("doctitle") ) {
+			    message.PutFieldText("doctitle", ReplaceHTML(getNodeText(Nodes[0])));
+			}
+			if( message.FieldExist("doctitle2") ) {
+			    message.PutFieldText("doctitle2", ReplaceHTML(getNodeText(Nodes[0])));
+			}
+		}
+	} catch(e) {
+		alert("title error");
+	}
+	
+	try {
+		var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendername");
+		if( Nodes.length > 0 ) {
+			if( message.FieldExist("chief") ) {
+			    message.PutFieldText("chief", getNodeText(Nodes[0]));
+			}
+		}
+	} catch(e) {
+		alert("sendername error");
+	}
+		
+	try {
+		var Nodes = SelectNodes(eNodes, "pubdoc/foot/seal");
+		if( Nodes.length > 0 ) {
+		    var pomit = GetAttribute(Nodes[0],"omit");
+			if( pomit == "false" ) {
+				sealPath = dirPath + sCompanyID + "/ExDocSign/" + sealURL;
+				if( message.FieldExist("sealsign") )
+				{
+					message.PutFieldText("sealsign", "");
+					message.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(sealPath));
+				}
+			}
+			
+			if( pomit == "true" )
+			{
+				if( message.FieldExist("sealsign") )
+				{
+					message.PutFieldText("sealsign", "");
+					//관인없을 경우, 경로가 닷넷 경로 그대로 사용하던 오류 수정. 2019-11-22 홍대표.
+					message.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape("/files/sealImg/nostamp.gif"), 12);
+				}
+			}
+		}
+	} catch(e) {
+		alert("seal error");
+	}
+	
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/approvalinfo/approval");
 	var ApprovalAnyFlag = 0;
 	if( Nodes.length > 0 )
 	{
 		var lastSignSN = Nodes.length;
 		for( var i = 0 ; i < Nodes.length ; i++ )
 		{
-		    var SignOrder = GetAttribute(Nodes(i),"order");
+		    var SignOrder = GetAttribute(Nodes[i],"order");
 			var SignText = "";
 			if( SignOrder == "final" )
 				SignOrder = lastSignSN;
 			
 			SignText = "";
 			
-			var tempNode = Nodes(i).selectSingleNode("signposition");
+			var tempNode = SelectSingleNode(Nodes[i], "signposition");
 			if( tempNode )
 			{
-				if( HwpCtrl.CheckFieldExist("jikwe" + SignOrder) )
+				if( message.FieldExist("jikwe" + SignOrder) )
 				{
-				    HwpCtrl.SetFieldText("jikwe" + SignOrder, getNodeText(tempNode) + SignText);
+				    message.PutFieldText("jikwe" + SignOrder, getNodeText(tempNode) + SignText);
 				}
 			}
 			var SignInputFlag = false;
 			SignText = "";
 			
-			var tempNode = Nodes(i).selectSingleNode("type");
+			var tempNode = SelectSingleNode(Nodes[i], "type");
 			if( tempNode )
 			{
 			    if( getNodeText(tempNode) == strLang6)
@@ -530,314 +472,309 @@ function getExtInfo()
 				}
 			}
 			
-			if( GetAttribute(Nodes(i),"order") == "final" || ApprovalAnyFlag == 1 )
+			if( GetAttribute(Nodes[i],"order") == "final" || ApprovalAnyFlag == 1 )
 			{
-				var tempNode = Nodes(i).selectSingleNode("date");
+				var tempNode = SelectSingleNode(Nodes[i], "date");
 				if( tempNode )
 				    SignText = SignText + convertDate(getNodeText(tempNode)) + "\15";
 			}
 						
-			var tempNode = Nodes(i).selectSingleNode("name");
+			var tempNode = SelectSingleNode(Nodes[i], "name");
 			if( tempNode )
 			{
-				if( HwpCtrl.CheckFieldExist("sign" + SignOrder) )
+				if( message.FieldExist("sign" + SignOrder) )
 				{
 					if( ApprovalAnyFlag > 1 )
 					{
-						HwpCtrl.SetFieldText("sign" + SignOrder, SignText);
+						message.PutFieldText("sign" + SignOrder, SignText);
 					}
 					else
 					{
-					    HwpCtrl.SetFieldText("sign" + SignOrder, getNodeText(tempNode));
-						HwpCtrl.AppendFieldText("sign" + SignOrder, SignText, true);
+					    message.PutFieldText("sign" + SignOrder, SignText+getNodeText(tempNode));
+						//HwpCtrl.AppendFieldText("sign" + SignOrder, SignText, true);
 					}
 				}
 				SignInputFlag = true;
 			}
 
-			var tempNode = Nodes(i).selectSingleNode("signimage");
+			var tempNode = SelectSingleNode(Nodes[i], "signimage");
 			if (tempNode)
 			{
-			    signPath =  dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(tempNode.selectSingleNode("img"),"src"));
-				if( HwpCtrl.CheckFieldExist("sign" + SignOrder) )
-				{
-					HwpCtrl.SetFieldText("sign" + SignOrder, "");
-					HwpCtrl.SetFieldImage("sign" + SignOrder, document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(signPath), 3, 0, 0, true, 2);
-					HwpCtrl.AppendFieldText("sign" + SignOrder, SignText, true);
+			    signPath =  dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(SelectSingleNode(tempNode, "img"),"src"));
+				if( message.FieldExist("sign" + SignOrder) ) {
+					message.PutFieldText("sign" + SignOrder, "");
+					message.SetFieldImage("sign" + SignOrder, document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(signPath), 3);
+					message.AppendFieldText("sign" + SignOrder, SignText, true);
 				}
 				SignInputFlag = true;
 			}
 			
-			if (!SignInputFlag)
-			{
-				if(HwpCtrl.CheckFieldExist("sign" + SignOrder))
-				{
-					HwpCtrl.SetFieldText("sign" + SignOrder, SignText);
+			if (!SignInputFlag) {
+				if(message.FieldExist("sign" + SignOrder)) {
+					message.PutFieldText("sign" + SignOrder, SignText);
 				}
 			}
 		}
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/approvalinfo/assist");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/approvalinfo/assist");
 	if( Nodes.length > 0 )
 	{
 		var lastSignSN = Nodes.length;
 		for( var i = 0 ; i < Nodes.length ; i++ )
 		{
-		    var SignOrder = GetAttribute(Nodes(i),"order");
+		    var SignOrder = GetAttribute(Nodes[i],"order");
 			var SignText = "";
 			if( SignOrder == "final" )
 				SignOrder = lastSignSN;
 			
-			var tempNode = Nodes(i).selectSingleNode("signposition");
+			var tempNode = SelectSingleNode(Nodes[i], "signposition");
 			if( tempNode )
 			{
-				if( HwpCtrl.CheckFieldExist("habyuipositon" + SignOrder) )
+				if( message.FieldExist("habyuipositon" + SignOrder) )
 				{
-				    HwpCtrl.SetFieldText("habyuipositon" + SignOrder, getNodeText(tempNode) + SignText);
+				    message.PutFieldText("habyuipositon" + SignOrder, getNodeText(tempNode) + SignText);
 				}
 			}
 			
-			var tempNode = Nodes(i).selectSingleNode("name");
+			var tempNode = selectSingleNode(Nodes[i], "name");
 			if( tempNode )
 			{
-				if( HwpCtrl.CheckFieldExist("habyuisign" + SignOrder) )
+				if( message.FieldExist("habyuisign" + SignOrder) )
 				{
-				    HwpCtrl.SetFieldText("habyuisign" + SignOrder, getNodeText(tempNode));
+				    message.PutFieldText("habyuisign" + SignOrder, getNodeText(tempNode));
 				}
 			}
 
-			var tempNode = Nodes(i).selectSingleNode("signimage");
+			var tempNode = SelectSingleNode(Nodes[i], "signimage");
 			if( tempNode )
 			{
-			    signPath =  dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(tempNode.selectSingleNode("img"),"src"));
-				if( HwpCtrl.CheckFieldExist("habyuisign" + SignOrder) )
-				{					
-					HwpCtrl.SetFieldText("habyuisign" + SignOrder, "");
-					HwpCtrl.SetFieldImage("habyuisign" + SignOrder, document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(signPath), 3, 0, 0, true, 2);
-					HwpCtrl.AppendFieldText("habyuisign" + SignOrder, SignText, true);
+			    signPath =  dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(SelectSingleNode(tempNode, "img"),"src"));
+				if( message.FieldExist("habyuisign" + SignOrder) ) {					
+					message.PutFieldText("habyuisign" + SignOrder, "");
+					message.SetFieldImage("habyuisign" + SignOrder, document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(signPath), 3, 0, 0, true, 2);
+					message.AppendFieldText("habyuisign" + SignOrder, SignText, true);
 				}
 			}
 		}
 		
 	}
-	var Nodes = eNodes.selectNodes("foot/processinfo/regnumber");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/processinfo/regnumber");
 	if( Nodes.length > 0 )
 	{
-		if( HwpCtrl.CheckFieldExist("docnumber") )
-		{
-		    HwpCtrl.SetFieldText("docnumber", getNodeText(Nodes(0)));
+		if( message.FieldExist("docnumber") ) {
+		    message.PutFieldText("docnumber", getNodeText(Nodes[0]));
 		}
 		
-		var regnumbercode = GetAttribute(Nodes(0),"regnumbercode");
+		var regnumbercode = GetAttribute(Nodes[0],"regnumbercode");
 		if( regnumbercode.length > 0 )
 		{
-			SetDocumentElement(HwpCtrl, "deptid", regnumbercode.substring(0, 7));
-			SetDocumentElement(HwpCtrl, "regnumbercode", regnumbercode.substring(7, regnumbercode.length));
+			SetDocumentElement(message, "deptid", regnumbercode.substring(0, 7));
+			SetDocumentElement(message, "regnumbercode", regnumbercode.substring(7, regnumbercode.length));
 			pOrgDocNumCode = regnumbercode;
 		}
 		else
 		{
-			SetDocumentElement(HwpCtrl, "deptid", "");
-			SetDocumentElement(HwpCtrl, "regnumbercode", "");
+			SetDocumentElement(message, "deptid", "");
+			SetDocumentElement(message, "regnumbercode", "");
 			pOrgDocNumCode = "";
 		}
 	}
 	else
 	{
-		if( HwpCtrl.CheckFieldExist("docnumber") )
+		if( message.FieldExist("docnumber") )
 		{
-			HwpCtrl.SetFieldText("docnumber", "");
+			message.PutFieldText("docnumber", "");
 		}
 		
-		SetDocumentElement(HwpCtrl, "deptid", "");
-		SetDocumentElement(HwpCtrl, "regnumbercode", "");
+		SetDocumentElement(message, "deptid", "");
+		SetDocumentElement(message, "regnumbercode", "");
 		pOrgDocNumCode = "";
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/processinfo/enforcedate");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/processinfo/enforcedate");
 	if( Nodes.length > 0 )
 	{
-		if( HwpCtrl.CheckFieldExist("enforcedate") )
+		if( message.FieldExist("enforcedate") )
 		{	
-		    HwpCtrl.SetFieldText("enforcedate", getNodeText(Nodes(0)));
+		    message.PutFieldText("enforcedate", getNodeText(Nodes[0]));
 		}
 	}
 	
-	var Nodes = eNodes.selectNodes("foor/processinfo/receipt");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foor/processinfo/receipt");
 	if( Nodes.length > 0 )
 	{
-		var tempNode = Nodes(0).selectSingleNode("number");
+		var tempNode = Nodes[0].selectSingleNode("number");
 		if( tempNode )
 		{
-			if( HwpCtrl.CheckFieldExist("receiptnumber") )
+			if( message.FieldExist("receiptnumber") )
 			{
-			    SetDocumentElement(HwpCtrl, "receiptnumber", getNodeText(tempNode));
+			    SetDocumentElement(message, "receiptnumber", getNodeText(tempNode));
 			}
   			
-  			SetDocumentElement(HwpCtrl, "recvdeptid", "");
-  			SetDocumentElement(HwpCtrl, "recvdeptname", "");
-  			SetDocumentElement(HwpCtrl, "recvdocnum", "");
+  			SetDocumentElement(message, "recvdeptid", "");
+  			SetDocumentElement(message, "recvdeptname", "");
+  			SetDocumentElement(message, "recvdocnum", "");
 		}
 		else
 		{
-			if( HwpCtrl.CheckFieldExist("receiptnumber") )
+			if( message.FieldExist("receiptnumber") )
 			{
-				SetDocumentElement(HwpCtrl, "receiptnumber", "");
+				SetDocumentElement(message, "receiptnumber", "");
 			}
-  			SetDocumentElement(HwpCtrl, "recvdeptid", "");
-  			SetDocumentElement(HwpCtrl, "recvdeptname", "");
-  			SetDocumentElement(HwpCtrl, "recvdocnum", "");
+  			SetDocumentElement(message, "recvdeptid", "");
+  			SetDocumentElement(message, "recvdeptname", "");
+  			SetDocumentElement(message, "recvdocnum", "");
 		}
 		
 		var ReceiptDateText = "";
-		var tempNode = Nodes(0).selectSingleNode("date");
+		var tempNode = Nodes[0].selectSingleNode("date");
 		if( tempNode )
 		{
 		    ReceiptDateText = getNodeText(tempNode);
 		}
 
-		var tempNode = Nodes(0).selectSingleNode("time");
+		var tempNode = Nodes[0].selectSingleNode("time");
 		if( tempNode )
 		{
 		    ReceiptDateText = ReceiptDateText + " " + getNodeText(tempNode);
 		}
 		
-		if( HwpCtrl.CheckFieldExist("receiptdate") )
+		if( message.FieldExist("receiptdate") )
 		{
-			HwpCtrl.SetFieldText("receiptdate", ReceiptDateText);
+			message.PutFieldText("receiptdate", ReceiptDateText);
 		}		
 	}
 	else
 	{
-		if( HwpCtrl.CheckFieldExist("receiptnumber") )
+		if( message.FieldExist("receiptnumber") )
 		{
-			SetDocumentElement(HwpCtrl, "receiptnumber", "");
+			SetDocumentElement(message, "receiptnumber", "");
 		}
 		
-		if( HwpCtrl.CheckFieldExist("receiptdate") )
+		if( message.FieldExist("receiptdate") )
 		{
-			HwpCtrl.SetFieldText("receiptdate", getGyulJeDate());
+			message.PutFieldText("receiptdate", getGyulJeDate());
 		}
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/sendinfo/zipcode");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/zipcode");
 	if( Nodes.length > 0 )
 	{
-		if( HwpCtrl.CheckFieldExist("zipcode") )
+		if( message.FieldExist("zipcode") )
 		{	
-		    HwpCtrl.SetFieldText("zipcode", getNodeText(Nodes(0)));
+		    message.PutFieldText("zipcode", getNodeText(Nodes[0]));
 		}
 	}
 	else
 	{
-		if( HwpCtrl.CheckFieldExist("zipcode") )
+		if( message.FieldExist("zipcode") )
 		{
-			HwpCtrl.SetFieldText("zipcode", "");
+			message.PutFieldText("zipcode", "");
 		}
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/sendinfo/address");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/address");
 	if( Nodes.length > 0 )
 	{
-		if( HwpCtrl.CheckFieldExist("address") )
+		if( message.FieldExist("address") )
 		{	
-		    HwpCtrl.SetFieldText("address", getNodeText(Nodes(0)));
+		    message.PutFieldText("address", getNodeText(Nodes[0]));
 		}
 	}
 	else
 	{
-		if( HwpCtrl.CheckFieldExist("address") )
+		if( message.FieldExist("address") )
 		{
-			HwpCtrl.SetFieldText("address", "");
+			message.PutFieldText("address", "");
 		}
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/sendinfo/homeurl");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/homeurl");
 	if( Nodes.length > 0 )
 	{
-		if( HwpCtrl.CheckFieldExist("homepage") )
+		if( message.FieldExist("homepage") )
 		{	
-		    HwpCtrl.SetFieldText("homepage", getNodeText(Nodes(0)));
+		    message.PutFieldText("homepage", getNodeText(Nodes[0]));
 		}
 	}
 	else
 	{
-		if( HwpCtrl.CheckFieldExist("homepage") )
+		if( message.FieldExist("homepage") )
 		{
-			HwpCtrl.SetFieldText("homepage", "");
+			message.PutFieldText("homepage", "");
 		}
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/sendinfo/telephone");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/telephone");
 	if( Nodes.length > 0 )
 	{
-		if( HwpCtrl.CheckFieldExist("telephone") )
+		if( message.FieldExist("telephone") )
 		{	
-		    HwpCtrl.SetFieldText("telephone", getNodeText(Nodes(0)));
+		    message.PutFieldText("telephone", getNodeText(Nodes[0]));
 		}
 	}
 	else
 	{
-		if( HwpCtrl.CheckFieldExist("telephone") )
+		if( message.FieldExist("telephone") )
 		{
-			HwpCtrl.SetFieldText("telephone", "");
+			message.PutFieldText("telephone", "");
 		}
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/sendinfo/fax");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/fax");
 	if( Nodes.length > 0 )
 	{
-		if( HwpCtrl.CheckFieldExist("fax") )
+		if( message.FieldExist("fax") )
 		{	
-		    HwpCtrl.SetFieldText("fax", getNodeText(Nodes(0)));
+		    message.PutFieldText("fax", getNodeText(Nodes[0]));
 		}
 	}
 	else
 	{
-		if( HwpCtrl.CheckFieldExist("fax") )
+		if( message.FieldExist("fax") )
 		{
-			HwpCtrl.SetFieldText("fax", "");
+			message.PutFieldText("fax", "");
 		}
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/sendinfo/email");
+	var Nodes = SelectNodes(eNodes, "foot/sendinfo/email");
 	if( Nodes.length > 0 )
 	{
-		if( HwpCtrl.CheckFieldExist("email") )
+		if( message.FieldExist("email") )
 		{	
-		    HwpCtrl.SetFieldText("email", getNodeText(Nodes(0)));
+		    message.PutFieldText("email", getNodeText(Nodes[0]));
 		}
 	}
 	else
 	{
-		if( HwpCtrl.CheckFieldExist("email") )
+		if( message.FieldExist("email") )
 		{
-			HwpCtrl.SetFieldText("email", "");
+			message.PutFieldText("email", "");
 		}
 	}
 
-	var Nodes = eNodes.selectNodes("foot/sendinfo/publication");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/publication");
 	if( Nodes.length > 0 )
 	{
-		if( HwpCtrl.CheckFieldExist("publication") )
+		if( message.FieldExist("publication") )
 		{	
-		    HwpCtrl.SetFieldText("publication", getNodeText(Nodes(0)));
-			pPublicFlag = GetAttribute(Nodes(0),"code");
+		    message.PutFieldText("publication", getNodeText(Nodes[0]));
+			pPublicFlag = GetAttribute(Nodes[0],"code");
 		}
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/sendinfo/symbol");
+	var Nodes = SelectNodes(eNodes, "foot/sendinfo/symbol");
 	if( Nodes.length > 0 )
 	{
-		if( HwpCtrl.CheckFieldExist("symbol") )
+		if( message.FieldExist("symbol") )
 		{
-		    signPath =  dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(Nodes(0).childNodes(0),"src"));
+		    signPath =  dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(GetChildNodes(Nodes[0])[0],"src"));
 			var signWidth, signHeight;
-			if (GetAttribute(Nodes(0).childNodes(0),"width") == "" || GetAttribute(Nodes(0).childNodes(0),"width") == null) {
+			if (GetAttribute(GetChildNodes(Nodes[0])[0],"width") == "" || GetAttribute(GetChildNodes(Nodes[0])[0],"width") == null) {
 				signWidth = 20;
 			} else {
-				signWidth = GetAttribute(Nodes(0).childNodes(0),"width");
+				signWidth = GetAttribute(GetChildNodes(Nodes[0])[0],"width");
 				//px로 들어오거나 pt로 들어올경우 mm 단위로 변환
 				if (signWidth.indexOf("px") > -1) {
 					signWidth = signWidth.replace("px", "") / 3.779;
@@ -848,10 +785,10 @@ function getExtInfo()
 				}
 			}
 	  		
-			if (GetAttribute(Nodes(0).childNodes(0),"height") == "" || GetAttribute(Nodes(0).childNodes(0),"height") == null) {
+			if (GetAttribute(GetChildNodes(Nodes[0])[0],"height") == "" || GetAttribute(GetChildNodes(Nodes[0])[0],"height") == null) {
 				signHeight = 20;
 			} else {
-				signHeight = GetAttribute(Nodes(0).childNodes(0),"height")
+				signHeight = GetAttribute(GetChildNodes(Nodes[0])[0],"height")
 				
 				if (signHeight.indexOf("px") > -1) {
 					signHeight = signHeight.replace("px", "") / 3.779;
@@ -862,83 +799,83 @@ function getExtInfo()
 				}
 			}
 	  		
-			HwpCtrl.SetFieldText("symbol", "");
-			HwpCtrl.SetFieldImage("symbol", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(signPath), 1, signWidth, signHeight, true, 2);
+			message.PutFieldText("symbol", "");
+			message.SetFieldImage("symbol", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(signPath), 1, signWidth, signHeight, true, 2);
 		}
 	}
 	else
 	{
-		if( HwpCtrl.CheckFieldExist("symbol") )
+		if( message.FieldExist("symbol") )
 		{
-			HwpCtrl.SetFieldText("symbol", "");
+			message.PutFieldText("symbol", "");
 		}
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/sendinfo/logo");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/logo");
 	if( Nodes.length > 0 )
 	{
-		if( HwpCtrl.CheckFieldExist("logo") )
+		if( message.FieldExist("logo") )
 		{
-		    signPath =  dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(Nodes(0).childNodes(0),"src"));
+		    signPath =  dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(GetChildNodes(Nodes[0])[0],"src"));
 			var signWidth, signHeight;
-			if (GetAttribute(Nodes(0).childNodes(0),"width") == "" || GetAttribute(Nodes(0).childNodes(0),"width") == null)
+			if (GetAttribute(GetChildNodes(Nodes[0])[0],"width") == "" || GetAttribute(GetChildNodes(Nodes[0])[0],"width") == null)
 	  			signWidth = 20;
 	  		else
-			    signWidth = GetAttribute(Nodes(0).childNodes(0),"width").replace("mm", "");
+			    signWidth = GetAttribute(GetChildNodes(Nodes[0])[0],"width").replace("mm", "");
 
-			if (GetAttribute(Nodes(0).childNodes(0),"height") == "" || GetAttribute(Nodes(0).childNodes(0),"height") == null)
+			if (GetAttribute(GetChildNodes(Nodes[0])[0],"height") == "" || GetAttribute(GetChildNodes(Nodes[0])[0],"height") == null)
 	  			signHeight = 20;
 	  		else
-			    signHeight = GetAttribute(Nodes(0).childNodes(0),"height").replace("mm", "");
+			    signHeight = GetAttribute(GetChildNodes(Nodes[0])[0],"height").replace("mm", "");
 	  		
-			HwpCtrl.SetFieldText("logo", "");
-			HwpCtrl.SetFieldImage("logo", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(signPath), 1, signWidth, signHeight, true, 2);
+			message.PutFieldText("logo", "");
+			message.SetFieldImage("logo", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(signPath), 1, signWidth, signHeight, true, 2);
 		}
 	}
 	else
 	{
-		if( HwpCtrl.CheckFieldExist("logo") )
+		if( message.FieldExist("logo") )
 		{
-			HwpCtrl.SetFieldText("logo", "");
+			message.PutFieldText("logo", "");
 		}
 	}
 	
-	var Nodes = eNodes.selectNodes("foot/campaign/headcampaign");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/campaign/headcampaign");
 	if( Nodes.length > 0 )
 	{
-		if( HwpCtrl.CheckFieldExist("headcampaign") )
+		if( message.FieldExist("headcampaign") )
 		{	
-		    HwpCtrl.SetFieldText("headcampaign", getNodeText(Nodes(0)));
+		    message.PutFieldText("headcampaign", getNodeText(Nodes[0]));
 		}
 	}
 	else
 	{
-		if( HwpCtrl.CheckFieldExist("headcampaign") )
+		if( message.FieldExist("headcampaign") )
 		{	
-			HwpCtrl.SetFieldText("headcampaign", "");
+			message.PutFieldText("headcampaign", "");
 		}
 	}
 
-	var Nodes = eNodes.selectNodes("foot/campaign/footcampaign");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/campaign/footcampaign");
 	if( Nodes.length > 0 )
 	{
-		if( HwpCtrl.CheckFieldExist("footcampaign") )
+		if( message.FieldExist("footcampaign") )
 		{	
-		    HwpCtrl.SetFieldText("footcampaign", getNodeText(Nodes(0)));
+		    message.PutFieldText("footcampaign", getNodeText(Nodes[0]));
 		}
 	}
 	else
 	{
-		if( HwpCtrl.CheckFieldExist("footcampaign") )
+		if( message.FieldExist("footcampaign") )
 		{	
-			HwpCtrl.SetFieldText("footcampaign", "");
+			message.PutFieldText("footcampaign", "");
 		}
 	}
 
-	var Nodes = eNodes.selectNodes("attach/title");
+	var Nodes = SelectNodes(eNodes, "pubdoc/attach/title");
 	if( Nodes.length > 0 )
 	{
-		if( HwpCtrl.CheckFieldExist("attachment") )
+		if( message.FieldExist("attachment") )
 		{
 			var AttachmentText = "";
 			var isFirst = true;
@@ -947,24 +884,146 @@ function getExtInfo()
 			{
 				if( isFirst )
 				{
-				    AttachmentText = getNodeText(Nodes(i));
+				    AttachmentText = getNodeText(Nodes[i]);
 					isFirst = false;
 				}
 				else
 				{
-				    AttachmentText = ", " + getNodeText(Nodes(i));
+				    AttachmentText = ", " + getNodeText(Nodes[i]);
 				}
 			}
-			HwpCtrl.SetFieldText("attachment", AttachmentText);
+			message.PutFieldText("attachment", AttachmentText);
 		}
 	}
 	
+	try {
+		var Nodes = SelectNodes(eNodes, "pubdoc/body");
+		if( Nodes.length > 0 ) {
+		    if( GetAttribute(Nodes[0], "separate") == "false" || GetAttribute(Nodes[0], "separate") == null) {
+				var tempNodes = SelectNodes(eNodes, "pubdoc/body/content");
+				if( tempNodes.length > 0 ) {
+					if( message.FieldExist("body") ) {
+						var bodySTR = "";
+						for( var i = 0 ; i < tempNodes[0].childNodes.length ; i++ ) {
+							if( i == 0 )
+							    bodySTR = getNodeText(tempNodes[0].childNodes[i]);
+							else
+							    bodySTR = bodySTR + getNodeText(tempNodes[0].childNodes[i]);
+						}
+						
+						if( bodySTR.indexOf("<![CDATA[") > -1 ) {
+							bodySTR = bodySTR.replace("<![CDATA[", "");
+							bodySTR = bodySTR.replace("]]>", "");
+						}
+						message.SetCloneDataCallback(Decode(bodySTR), "body", "HTML", SetBody_Complete);
+					}
+				}
+			}
+			else
+			{
+				if( !needDoubleFormFlag )
+				{
+					needDoubleFormFlag = true;
+					var URL = document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pRelayURL2);
+					message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+					return false;
+				}
+				
+				var tempNodes = SelectNodes(eNodes, "pubdoc/body/content");
+				if( tempNodes.length > 0 )
+				{
+					if( message.FieldExist("body") )
+					{
+						var bodySTR = "";
+						for( var i = 0 ; i < tempNodes[0].childNodes.length ; i++ )
+						{
+							if( i == 0 )
+								bodySTR = getNodeText(tempNodes[0].childNodes[i]);
+							else
+							    bodySTR = bodySTR + getNodeText(tempNodes[0].childNodes[i]);
+						}
+						
+						if( bodySTR.indexOf("<![CDATA[") > -1 )
+						{
+							bodySTR = bodySTR.replace("<![CDATA[", "");
+							bodySTR = bodySTR.replace("]]>", "");
+						}
+						message.SetCloneDataCallback(Decode(bodySTR), "body", "HTML", SetBody_Complete);
+					}
+				}
+			}
+		}
+	} catch(e) {
+		alert("body error");
+	}
+	/*
 	SetHref("UPD");
 	SetDocInfo();
 	SaveFile();		
 	SendAckForSend("", "accept");
-	return true;
+	return true;*/
 }          
+
+function SetBody_Complete(rtnVal) {
+	if (rtnVal) {
+		if (!imgCheck) {
+			var pInformationContent = strLangAdd00041;
+			var Ans = OpenInformationUI(pInformationContent);
+			return getExtInfo_Complete(Ans);
+		}
+		else {			
+			GetHTML(getExtInfo_CompleteSave);
+		}
+    }
+}
+
+function getExtInfo_CompleteSave(html) {
+	SaveHtml = html;
+	var rtn = SaveFile();
+	if(rtn.toUpperCase() != "TRUE") {
+		var pInformationContent = strLangAdd00040;
+		alert(pInformationContent);
+		return getExtInfo_Fail();
+	}
+	else {
+		btnReqReSend.style.display = "none";
+		SetHref("UPD");
+		SetDocInfo();
+		SendAckForSend("", "accept");
+
+		setAutoProperty();
+		process_AfterOpen();
+		SetBtnStateTrue();
+
+		FieldsAvailable_complate(true);
+	}
+}
+
+function getExtInfo_Fail(rtnVal) {
+	DivPopUpHidden();
+	SetHref("DEL");
+	chkBtnConfirm("1");
+	btnReqReSend.style.display = "";
+	return false;
+}
+
+function getExtInfo_Complete(rtnVal) {
+	DivPopUpHidden();
+	if (!rtnVal) {
+
+		SetHref("DEL");
+		chkBtnConfirm("1");
+		btnReqReSend.style.display = "";
+		return false;
+	}
+	else {
+		btnReqReSend.style.display = "none";
+		SetHref("UPD");
+		SetDocInfo();
+		SendAckForSend("", "accept");
+		return true;
+	}
+}
 
 function SetHref(mode) {
  	var result = "";
@@ -1117,4 +1176,18 @@ function btnReqReSend_onclick() {
 
         SendAckForSend(pRetMsg, "req-resend");
     }
+}
+
+function ReplaceHTML(str) {
+    str = ReplaceAll(str, "&#39;", "'");
+    str = ReplaceAll(str, "&amp;", "&");
+    str = ReplaceAll(str, "&lt;", "<");
+    str = ReplaceAll(str, "&gt;", ">");
+    str = ReplaceAll(str, "&apos;", "'");
+    str = ReplaceAll(str, "&quot;", "\"");
+    return str;
+}
+
+function ReplaceAll(pStrContent, pStrOrg, pStrRep) {
+    return pStrContent.split(pStrOrg).join(pStrRep);
 }

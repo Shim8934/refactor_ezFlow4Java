@@ -1071,3 +1071,31 @@ var strLangHSBAt09 = "회까지";
 var strLangHSBAt10 = "다운로드 가능";
 var strLangHSBAt11 = "PDF 파일이 변환이 완료된 후 확인을 누르시면 다음 파일도 다운로드 됩니다.";
 var strLangHSBAt12 = "첨부파일을 선택해주세요.";
+
+var strLang947 = "해당 부서는 수신처 지정불가입니다. \n확인하여 주십시요!";
+var strLang948 = "수신처지정 불가 리스트에 입력된 부서는 모든 수신처리스트에서 자동 삭제됩니다. \n계속하시겠습니까?"
+var strLang949 = "수신처불가 부서가 중복되었습니다. \n확인하여 주십시요!"
+var strLang950 = "해당부서는 수신자로 지정할 수 없습니다. \n확인하여 주십시요!"
+var strLang951 = "해당부서는 수신자로 지정할 수 없습니다. <br>확인하여 주십시요."
+
+var strLang952 = "감사 결재선은 위치가 변경될 수 없습니다.";
+var strLang953 = "감사 결재선은 삭제할 수 없습니다.";
+var strLang954 = "최종 감사자는 삭제하실 수 없습니다.";
+
+// 2020-11-23 염정이
+var strLangYJY01 = "비고";
+var strLangYJY02 = "대결";
+
+/* 2020-12-09 홍승비 - RMS이관메뉴 메세지 추가 */
+var strLangHSBRMS01 = "전송대기목록에 데이터를 입력하였습니다.";
+
+var strLangBg01 = "번역";
+var strLangBg02 = "감수";
+var strLangBg03 = "번역/감수 확인";
+
+var strLang955 = "총장";
+var strLang956 = "부총장";
+var strLang957 = "원장";
+
+var strLangAdd00040 = "발신기관에서 보내온 본문정보가 잘못되었습니다. 재전송요청하시기 바랍니다.";
+var strLangAdd00041 = "본문정보중 이미지정보가 포함되어 있지않아서 제거 후 저장되었습니다.<br />접수 하시겠습니까?";
