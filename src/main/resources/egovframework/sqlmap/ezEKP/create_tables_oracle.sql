@@ -8173,7 +8173,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"UPDATE_ID" VARCHAR2(80 BYTE), 
 	"UPDATE_DATE" DATE, 
 	"DELETER_ID" VARCHAR2(100 BYTE), 
-	"TENANT_ID" NUMBER(7,0)
+	"TENANT_ID" NUMBER(7,0),
+	PRIMARY KEY ("TENANT_ID", "FILE_ID")
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_FILETYPE
@@ -8242,7 +8243,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"CREATE_NAME2" VARCHAR2(200 BYTE), 
 	"CREATE_DATE" DATE, 
 	"COMPANY_ID" VARCHAR2(200 BYTE), 
-	"TENANT_ID" NUMBER(7,0)
+	"TENANT_ID" NUMBER(7,0),
+	PRIMARY KEY ("TENANT_ID", "LOG_ID")
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_SHARE
