@@ -133,7 +133,7 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		    	
-		        if (BoardAdmin_FG == "true") {
+		        if (gubun != "2" && BoardAdmin_FG == "true") { // 익명게시판은 공지사항 기능 사용하지 않음
 		            document.getElementById("noti").style.display = "";
 		        }
 		        
