@@ -4228,7 +4228,7 @@ function APRLINEXMLParsingCC() {
 //2020-04-28 : 결재선 부서검색
 function btnAprLineSearchDept_onClick() {
 	try{
-        var tmpDeptName = textUser.value;
+        var tmpDeptName = document.getElementById("textUser").value;
         if (tmpDeptName.length == 0) {
             var pAlertContent = strLang240;
             document.getElementById("textUser").focus();
