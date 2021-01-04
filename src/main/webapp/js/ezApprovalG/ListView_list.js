@@ -808,6 +808,8 @@ function ListView() {
                 }
                 
                 if (oHeaders.length > 0) {
+                	var colNameUpperCase = SelectSingleNodeValue(oHeaders[j], "COLNAME").toUpperCase();
+                	
                 	if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "AttachFlag") {
                 		objTd.style.textAlign = "center";
                 		if (SelectSingleNodeValue(oCells[j], "HASATTACHYN") == "Y" || SelectSingleNodeValue(oCells[j], "HASATTACHYN") == "1") {
@@ -853,7 +855,7 @@ function ListView() {
                     	oText = document.createTextNode(strValue);
                     	objTd.appendChild(oText);
                     }
-                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").toUpperCase() == "DISPCLASSNO") { // 분류번호의 부서명에 특수문자 포함되는 경우를 위한 분기
+                    else if (colNameUpperCase == "DISPCLASSNO" || colNameUpperCase == "ATTACHUSERDEPTNAME") { // 분류번호, 첨부자의 부서명에 특수문자 포함되는 경우를 위한 분기
                     	objTd.title = ConvMakeXMLString(strValue);
                     	oText = document.createTextNode(ConvMakeXMLString(strValue));
                     	objTd.appendChild(oText);
