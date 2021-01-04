@@ -10758,6 +10758,9 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 
   CREATE UNIQUE INDEX "SYS_C0029223" ON "TBL_WEBFOLDER_FOLDERUSER" ("SEQ_ID", "TENANT_ID") 
   ;
+  
+  CREATE INDEX "IDX_WF_FOLDERUSER_USER_ID" ON "TBL_WEBFOLDER_FOLDERUSER" ("USER_ID");
+  CREATE INDEX "IDX_WF_FOLDERUSER_FOLDER_ID" ON "TBL_WEBFOLDER_FOLDERUSER" ("FOLDER_ID");  
 --------------------------------------------------------
 --  DDL for Index SYS_C0029249
 --------------------------------------------------------
