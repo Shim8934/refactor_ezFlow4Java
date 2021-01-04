@@ -368,4 +368,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void deleteAllComTabBoard(Map<String, Object> map) throws Exception {
 		delete("EzBoardAdminDAO.deleteAllComTabBoard", map);
 	}
+	public void deleteAllTabBoard(Map<String, Object> map) throws Exception {
+		delete("EzBoardAdminDAO.deleteAllTabBoard", map);
+	}
 }

@@ -571,6 +571,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		ezBoardAdminDAO.deleteBoardInfo(map);
 		// 해당 게시판의 정보 즐겨찾기에서 전부 삭제
 		ezBoardAdminDAO.deleteBoardMyBoard(map);
+		// 2021-01-04 박기범 : 탭게시판포틀릿 정보에서 전부 삭제
+		ezBoardAdminDAO.deleteAllTabBoard(map);
 		// 삭제 예정 테이블에 해당 게시판 삽입 -> 게시판 스케줄러가 이후 해당 테이블의 레코드를 삭제함
 		ezBoardAdminDAO.insertDeleteReservedBoard(map);
 		

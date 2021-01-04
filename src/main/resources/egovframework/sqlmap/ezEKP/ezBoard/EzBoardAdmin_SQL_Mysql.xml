@@ -2781,5 +2781,14 @@
 				TABID = #v_TABID#
 		]]>
 	</delete>
+
+	<delete id="EzBoardAdminDAO.deleteAllTabBoard" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_BOARD_TABBOARD
+            WHERE
+            	BOARDID = #v_pBoardID#
+		]]>
+	</delete>
 	
 </sqlMap>
