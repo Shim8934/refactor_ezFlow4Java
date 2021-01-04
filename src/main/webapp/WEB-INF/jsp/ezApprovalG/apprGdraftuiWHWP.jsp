@@ -285,6 +285,7 @@
 	                        setFirstDrafter();
 	                    }
 	                    
+	                    message.EditMode(2);
 	                    message.MoveToField("doctitle");
 	                    message.ScrollPosInfo(0, 0);
 	                } else {
