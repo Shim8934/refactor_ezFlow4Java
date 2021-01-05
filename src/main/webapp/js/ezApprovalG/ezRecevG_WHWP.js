@@ -410,7 +410,7 @@ function getExtInfo()
 				if( message.FieldExist("sealsign") )
 				{
 					message.PutFieldText("sealsign", "");
-					message.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(sealPath));
+					message.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + encodeURI(sealPath));
 				}
 			}
 			
@@ -738,7 +738,7 @@ function getExtInfo()
 		}
 	}
 	
-	var Nodes = SelectNodes(eNodes, "foot/sendinfo/email");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/email");
 	if( Nodes.length > 0 )
 	{
 		if( message.FieldExist("email") )
@@ -899,7 +899,7 @@ function getExtInfo()
 	try {
 		var Nodes = SelectNodes(eNodes, "pubdoc/body");
 		if( Nodes.length > 0 ) {
-		    if( GetAttribute(Nodes[0], "separate") == "false" || GetAttribute(Nodes[0], "separate") == null) {
+		    //if( GetAttribute(Nodes[0], "separate") == "true" || GetAttribute(Nodes[0], "separate") == null) {
 				var tempNodes = SelectNodes(eNodes, "pubdoc/body/content");
 				if( tempNodes.length > 0 ) {
 					if( message.FieldExist("body") ) {
@@ -918,7 +918,7 @@ function getExtInfo()
 						message.SetCloneDataCallback(Decode(bodySTR), "body", "HTML", SetBody_Complete);
 					}
 				}
-			}
+			/*}
 			else
 			{
 				if( !needDoubleFormFlag )
@@ -951,7 +951,7 @@ function getExtInfo()
 						message.SetCloneDataCallback(Decode(bodySTR), "body", "HTML", SetBody_Complete);
 					}
 				}
-			}
+			}*/
 		}
 	} catch(e) {
 		alert("body error");
