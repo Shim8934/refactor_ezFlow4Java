@@ -764,7 +764,7 @@ function getExtInfo()
 		}
 	}
 	
-	var Nodes = SelectNodes(eNodes, "foot/sendinfo/symbol");
+	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/symbol");
 	if( Nodes.length > 0 )
 	{
 		if( message.FieldExist("symbol") )
@@ -995,8 +995,15 @@ function getExtInfo_CompleteSave(html) {
 		process_AfterOpen();
 		SetBtnStateTrue();
 
+		GetHTML(before_FieldsAvailable_complate);
+	}	
+}
+
+function before_FieldsAvailable_complate(html) {
+	SaveHtml = html;
+	var rtn = SaveFile();
+	if(rtn.toUpperCase() == "TRUE")
 		FieldsAvailable_complate(true);
-	}
 }
 
 function getExtInfo_Fail(rtnVal) {
