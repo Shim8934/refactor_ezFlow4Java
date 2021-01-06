@@ -4835,4 +4835,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getOneLineCNT ended.");
 		return ezBoardDAO.getOneLineCNT(map);
 	}
+	
+	/* 2021-01-06 홍승비 - 게시물의 읽음여부 판별 시, 현재 사용자가 읽은 게시물을 셀렉트하도록 수정 */
+	@Override
+	public int getReaderListCount2(String boardID, String itemID, String userID, int tenantID) throws Exception {
+		logger.debug("getReaderListCount2 started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PBOARDID", boardID);
+		map.put("v_ITEMID", itemID);
+		map.put("v_PUSERID", userID);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getReaderListCount2 ended");
+		return ezBoardDAO.getReaderListCount2(map);
+	}
 }

@@ -3272,7 +3272,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA3>" + boardListItem.get(j).get("WRITERID") + "</DATA3>");
 					resultXML.append("<DATA4>" + boardListItem.get(j).get("IMPORTANCE") + "</DATA4>");
 					
-					int readCount = ezBoardService.getReaderListCount(boardListItem.get(j).get("BOARDID").toString(), boardListItem.get(j).get("ITEMID").toString(), userInfo.getId(), userInfo.getLang(), userInfo.getTenantId());
+					/* 2021-01-06 홍승비 - 게시물의 읽음여부 판별 시, 현재 사용자가 읽은 게시물을 셀렉트하도록 수정 */
+					int readCount = ezBoardService.getReaderListCount2(boardListItem.get(j).get("BOARDID").toString(), boardListItem.get(j).get("ITEMID").toString(), userInfo.getId(), userInfo.getTenantId());
 					if (readCount > 0) {
 						resultXML.append("<DATA5>1</DATA5>");
 					} else {
