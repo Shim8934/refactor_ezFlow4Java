@@ -7,6 +7,7 @@
 	<head>
 	    <title><spring:message code='ezBoard.t1007'/></title>
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript">
 	        var ImageCount = "${imageCount}";
@@ -27,7 +28,14 @@
 	        	}
 	        }
 	        
+	        /* 2021-01-04 홍승비 - 아무것도 체크하지 않고 저장버튼 누르는 경우 알러트 표출 */
 	        function downloadAll(checks) {
+	        	var checkedList = $("input:checkbox:checked");
+	        	if (checkedList.length < 1) {
+	        		alert('<spring:message code="ezBoard.t1017" />');
+	        		return;
+	        	}
+	        	
 	            if (checks[suffix]) {
 	                if (checks[suffix].checked) {
 	                    location.href = GetAttribute(checks[suffix++], "filehref");

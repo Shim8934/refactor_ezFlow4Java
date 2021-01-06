@@ -271,7 +271,7 @@ function RdisplayUserList(DeptID) {
 		url : "/ezOrgan/getDeptMemberList.do",
 		data : {
 				deptID   : DeptID, 
-				cell 	 : "displayName;description;title;telephoneNumber",
+				cell 	 : "displayName;description;title;telephoneNumber;extensionattribute5",
 				prop     : "department;displayName;description;title;physicalDeliveryOfficeName",
 				type 	 : "user"
 				},
@@ -792,7 +792,7 @@ function searchUserList2(search) {
     			url : "/ezOrgan/getSearchList.do",
     			data : {
     				search : "displayname::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID,
-    				cell   : "displayname;description;title;telephonenumber",
+    				cell   : "displayname;description;title;telephonenumber;extensionattribute5",
     				prop   : "department;displayName;description;title;physicalDeliveryOfficeName",
     				type   : "user"
     			},
@@ -828,7 +828,7 @@ function searchUserList3(search) {
 			url : "/ezOrgan/getSearchList.do",
 			data : {
 				search : "displayname::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID,
-				cell   : "displayname;description;title;telephonenumber",
+				cell   : "displayname;description;title;telephonenumber;extensionattribute5",
 				prop   : "department;displayName;description;title;physicalDeliveryOfficeName",
 				type   : "user"
 			},

@@ -461,8 +461,10 @@
 						<select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;height:24px">
 							<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
 							<c:forEach var = "type" items="${typeList}">
-								<option value="<c:out value='${type.typeId }'/>">${type.typeName }</option>
-							</c:forEach>
+								<c:if test="${type.typeId ne 'A25'}">
+									<option value="<c:out value='${type.typeId }'/>">${type.typeName }</option>
+								</c:if>
+							</c:forEach>							
 						</select>
 					</td>
 				</tr>

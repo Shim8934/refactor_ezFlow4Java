@@ -1205,6 +1205,11 @@ function APRLINESNUPPERFunction() {
     			return;
     		}
     		
+    		if(pSelectedRows[0] == undefined){
+    			OpenAlertUI(strLangS574);
+    			return;            
+    		}
+    		
     		if (pSelectedRows.length != 0) {
     			if (pSelectedRows[0].childNodes[0].innerHTML.replace("★","").replace("⊙","") == 1) {
     				var pAlertContent = "" + strLang306 + "";
@@ -4223,7 +4228,7 @@ function APRLINEXMLParsingCC() {
 //2020-04-28 : 결재선 부서검색
 function btnAprLineSearchDept_onClick() {
 	try{
-        var tmpDeptName = textUser.value;
+        var tmpDeptName = document.getElementById("textUser").value;
         if (tmpDeptName.length == 0) {
             var pAlertContent = strLang240;
             document.getElementById("textUser").focus();

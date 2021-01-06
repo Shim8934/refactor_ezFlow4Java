@@ -122,7 +122,7 @@
 	            </td>
 	        </tr>
 	        <tr>
-	        	<th style="width:200px; text-align:center">추가 연차 수</th>
+	        	<th style="width:200px; text-align:center"><spring:message code='ezAttitude.kje33' /></th>
 	            <td>
 	            	<input id="additionalAnnualCnt" name="additionalAnnualCnt" type="text" style="width:30px;text-align:right;padding-bottom: 5px;" value="" maxlength="3">
 	            	<label id="banchaTxt"></label><spring:message code='ezAttitude.t68' />

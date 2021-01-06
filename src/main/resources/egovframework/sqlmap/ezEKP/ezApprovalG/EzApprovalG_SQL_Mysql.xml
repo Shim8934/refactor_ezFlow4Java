@@ -9823,6 +9823,7 @@
 <!-- 	<procedure id="EzApprovalG.aprAttachMail" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true"> -->
 <!-- 		{CALL EZSP_APRATTACHMAIL(#v_DOCID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
+<!-- 2020.12.22 박기범 게시물 등록시 조회,등록되는 첨부파일명을 DISPLAYNAME으로 변경 -->
 	<select id="EzApprovalG.aprAttachMail" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true">
 		<isEqual property="v_FLAG" compareValue="1">
 			 SELECT 
@@ -9853,7 +9854,7 @@
 			SELECT * 
                  FROM ( 
                  		SELECT 
-               			     ATTACHFILENAME ATTACHNAME  ,
+               			     DISPLAYNAME ATTACHNAME  ,
                              ATTACHFILEHREF ATTACHFILEHREF  ,
                              ATTACHFILESIZE ATTACHFILESIZE  
                         FROM 
@@ -9901,7 +9902,7 @@
 				* 
             FROM ( 
             		SELECT 
-            			ATTACHFILENAME ATTACHNAME  ,
+            			DISPLAYNAME ATTACHNAME  ,
                         ATTACHFILEHREF ATTACHFILEHREF  ,
                         ATTACHFILESIZE ATTACHFILESIZE  
                     FROM 
@@ -9953,13 +9954,13 @@
 				* 
             FROM ( 
             		SELECT 
-            			ATTACHFILENAME ATTACHNAME  ,
+            			DISPLAYNAME ATTACHNAME  ,
                     	ATTACHFILEHREF ATTACHFILEHREF  ,
                     	ATTACHFILESIZE ATTACHFILESIZE  
                     FROM ( 
                     		SELECT 
                     			CONCAT(OWNERID , '@' ,SN ) DOCID  ,
-                            	ATTACHFILENAME ,
+                            	DISPLAYNAME ,
                             	ATTACHFILEHREF ,
                             	ATTACHFILESIZE 
                             FROM 
@@ -28966,7 +28967,7 @@
 	  			TBL_APRATTACHINFO 
 	  		(DOCID,  ATTACHFILESN, VIEWORDER, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME,  ATTACHUSERNAME2, ATTACHUSERJOBTITLE, ATTACHUSERJOBTITLE2,	ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, ATTACHUSERDEPTNAME2, PAGENUM,  DISPLAYNAME,     BODYATTACH,      COMPANYID, TENANT_ID)
 			VALUES 
-			(#NEWID#, #ATTACHSN#, #VIEWORDER#,  #ATTACHNAME#,   #ATTACHURL#,        '0',            '',            '',              '',              '',                 '',                 '',                '',                '',               '0',    #ATTACHDISPNAME#, #ATTACHTYPE#, #companyID#, #v_TENANTID#)
+			(#NEWID#, #ATTACHSN#, #VIEWORDER#,  #ATTACHNAME#,   #ATTACHURL#, #ATTACHFILESIZE#,            '',            '',              '',              '',                 '',                 '',                '',                '',               '0',    #ATTACHDISPNAME#, #ATTACHTYPE#, #companyID#, #v_TENANTID#)
 	  </insert>
 	  
 	  <insert  id="EzApprovalG.insertRelayAprReceiptProessInfo" parameterClass="Map">

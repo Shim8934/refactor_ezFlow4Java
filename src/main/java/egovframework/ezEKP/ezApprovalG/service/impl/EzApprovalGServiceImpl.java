@@ -28271,6 +28271,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         strAttachURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" 
 						               + commonUtil.separator + nYear + commonUtil.separator + getDocDir(strNewID) + commonUtil.separator + strNewID.trim() + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
 						strAttachDisplayName = strAttachName;
+						String strFileSize = "0";
 
 						map.put("NEWID", strNewID);
 			    		map.put("ATTACHSN", domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent());
@@ -28280,8 +28281,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			    		map.put("ATTACHDISPNAME", strAttachDisplayName);
 			    		map.put("ATTACHTYPE", domXML.getElementsByTagName("ATTACHTYPE").item(i).getTextContent());
 			    		
-						ezApprovalGDAO.insertRelayAttchInfo(map);
-
 						if(!domXML.getElementsByTagName("ATTACHURL").item(i).getTextContent().equals("") ) {
 							strSource = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "ExDocDown" + commonUtil.separator + domXML.getElementsByTagName("ATTACHURL").item(i).getTextContent();
                             strTarget = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID) + commonUtil.separator  + strNewID.trim()  + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
@@ -28296,7 +28295,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             try {
                                 // 복사할 대상 파일을 지정해준다.
                                 File file = new File(commonUtil.detectPathTraversal(strSource));
-                                 
+                                long lFileSize = file.length();
+                                strFileSize = Long.toString(lFileSize);
+                                
                                 // FileInputStream 는 File object를 생성자 인수로 받을 수 있다.         
                                 input = new FileInputStream(file);
                                 // 복사된 파일의 위치를 지정해준다.
@@ -28320,6 +28321,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                                 }
                             }
                         }
+						map.put("ATTACHFILESIZE", strFileSize);
+						
+						ezApprovalGDAO.insertRelayAttchInfo(map);		// 2021-01-06 김민성 - 중계문서 첨부파일 filesize 계산하여 넣도록 수정
 					}
 				}
 			}

@@ -698,9 +698,9 @@
 	<select id="EzBoardDAO.getNewItemListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(A.ITEMID) CNT
+				COUNT(*) CNT
         	FROM 
-        		TBL_Board_Item A
+        		TBL_BOARD_BOARDINFO P
             JOIN 
             	( SELECT 
             		BOARDID,
@@ -714,11 +714,11 @@
                   AND
                   	UserID = #v_pUserID# ) B   
             ON 
-				A.TENANT_ID = B.TENANT_ID
+				P.TENANT_ID = B.TENANT_ID
 			AND
-			  	A.BOARDID = B.BOARDID                
+			  	P.BOARDID = B.BOARDID                
 			INNER JOIN 
-			  	TBL_BOARD_BOARDINFO P  
+			  	TBL_Board_Item A 
 			ON 
 			  	A.TENANT_ID = P.TENANT_ID
 			AND
@@ -1199,19 +1199,10 @@
    				A.ATTACHMENTS,
    				A.ITEMLEVEL,
    				A.ABSTRACT,
-   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
    				A.EXTENSIONATTRIBUTE5,
    				A.WRITERNAME2,
    				A.WRITERDEPTNAME2,
    				A.WRITERCOMPANYNAME2,
-   				(SELECT 
-                	COUNT(*)  
-    			FROM 
-    				TBL_Board_OneLineReply
-   				WHERE  
-   					TENANT_ID = A.TENANT_ID
-   				AND
-   					ITEMID = A.ItemID) ONELINECNT,
    				A.UPPERITEMIDTREE,
    				A.DOCNO,
    			    '' AS NOTICE,
@@ -1221,14 +1212,6 @@
    				A.EXTENSIONATTRIBUTE8,
    				A.EXTENSIONATTRIBUTE9,
    				A.EXTENSIONATTRIBUTE10,
-                ( SELECT 
-                      GUBUN 
-                  FROM 
-                      TBL_BOARD_BOARDINFO B 
-                  WHERE
-                      B.TENANT_ID = #v_TENANTID#
-                  AND 
-                      B.BOARDID = A.BOARDID ) as GUBUN,
 				(SELECT 
                 	IFNULL(COUNT(*), 0)  
     			FROM 
@@ -1236,32 +1219,14 @@
    				WHERE  
    					TENANT_ID = A.TENANT_ID
    				AND
-   					ITEMID = A.ItemID) as LIKECOUNT
+   					ITEMID = A.ItemID) as LIKECOUNT,
+                B.GUBUN
 			  FROM 
-			  	TBL_BOARD_ITEM A 
-			  LEFT OUTER JOIN 
-			  	( SELECT 
-			  		COUNT(USERID) AS TOTALCOUNT, 
-			  		ITEMID,
-			  		TENANT_ID 
-				  FROM 
-				  	TBL_BOARD_ITEM_READ
-				  WHERE 
-				  	TENANT_ID = #v_TENANTID#
-				  AND
-				  	USERID = #v_PUSERID# 
-				  AND 
-				  	BOARDID = #v_PBOARDID#
-				  GROUP BY 
-				  	ITEMID, TENANT_ID ) D 
-			  ON 
-			  	A.TENANT_ID = D.TENANT_ID
-			  AND
-			  	A.ITEMID = D.ITEMID
+			  	TBL_BOARD_ITEM A INNER JOIN TBL_BOARD_BOARDINFO B ON B.BOARDID = A.BOARDID
 			  WHERE
 			  	A.TENANT_ID = #v_TENANTID#
 			  AND 
-			  	BOARDID = #v_PBOARDID#
+			  	B.BOARDID = #v_PBOARDID#
 	]]>
 			  <isNotEmpty property="tempString" prepend="AND">
 			  	A.APPRFLAG = 'Y'
@@ -1269,17 +1234,17 @@
 			  <isEqual property="type" compareValue="1">
 			  	<![CDATA[
 				  	AND 
-				  		STARTDATE <= #nowDate# 
+				  		A.STARTDATE <= #nowDate# 
 				  	AND 
-				  		ENDDATE > #nowDate#
+				  		A.ENDDATE > #nowDate#
 				]]>
 			  </isEqual>
 			  <isEqual property="type" compareValue="2">
 			  	<![CDATA[
 				  	AND 
-				  		STARTDATE <= #nowDate# 
+				  		A.STARTDATE <= #nowDate# 
 				  	AND 
-				  		ENDDATE > #nowDate#
+				  		A.ENDDATE > #nowDate#
 				  	AND 
 				  		D.TOTALCOUNT IS NULL 
 				]]>
@@ -1287,9 +1252,9 @@
 			  <isEqual property="type" compareValue="3">
 			  	<![CDATA[
 				  	AND 
-				  		STARTDATE <= #nowDate# 
+				  		A.STARTDATE <= #nowDate# 
 				  	AND 
-				  		ENDDATE < #nowDate# 
+				  		A.ENDDATE < #nowDate# 
 				]]>
 			  </isEqual>
 			  ORDER BY
@@ -1516,14 +1481,6 @@
                     A.WRITERNAME2 ,
                     A.WRITERDEPTNAME2 ,
                     A.WRITERCOMPANYNAME2 ,
-                    (SELECT 
-	                	COUNT(*)  
-     				FROM 
-     					TBL_Board_OneLineReply 
-    				WHERE  
-    					TENANT_ID = A.TENANT_ID
-    				AND
-    					ITEMID = A.ItemID) ONELINECNT  ,
                     A.UPPERITEMIDTREE ,
                     A.DOCNO ,
                     A.EXTENSIONATTRIBUTE2 NOTICE  ,
@@ -5209,6 +5166,24 @@
 	  	]]>
   </select>
   
+	<!-- 2021-01-06 홍승비 - 현재 사용자가 읽은 게시물 카운트를 셀렉트하는 쿼리 추가 -->
+	<select id="EzBoardDAO.getReaderListCount2" parameterClass="Map" resultClass="Integer">
+	  	<![CDATA[
+			SELECT 
+				COUNT(USERID) AS TOTALCOUNT
+			FROM 
+				TBL_BOARD_ITEM_READ
+			WHERE 
+				TENANT_ID = #v_TENANTID#
+			AND
+				USERID = #v_PUSERID# 
+			AND 
+				BOARDID = #v_PBOARDID#
+			AND
+				ITEMID = #v_ITEMID# 
+	  	]]>
+	</select>
+  
   <update id="EzBoardDAO.updateMoveOneLineReply" parameterClass="Map">
 		<![CDATA[
 			UPDATE TBL_BOARD_ONELINEREPLY
@@ -5971,10 +5946,26 @@
 			FROM
 				TBL_BOARD_TABBOARD
 			WHERE
-				COMPANYID = #v_COMPANYID#
+				(COMPANYID = #v_COMPANYID#
+			OR
+				TRIM(COMPANYID) = ''
+			OR
+				COMPANYID IS NULL)
 			AND
 				TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
-	
+
+	<select id="EzBoardDAO.getOneLineCNT" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				TBL_Board_OneLineReply 
+			WHERE 
+				ITEMID = #v_itemID# 
+			AND 
+				TENANT_ID = #v_TENANTID# 
+		]]>
+	</select>
 </sqlMap>

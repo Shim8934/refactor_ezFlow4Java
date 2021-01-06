@@ -571,6 +571,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		ezBoardAdminDAO.deleteBoardInfo(map);
 		// 해당 게시판의 정보 즐겨찾기에서 전부 삭제
 		ezBoardAdminDAO.deleteBoardMyBoard(map);
+		// 2021-01-04 박기범 : 탭게시판포틀릿 정보에서 전부 삭제
+		ezBoardAdminDAO.deleteAllTabBoard(map);
 		// 삭제 예정 테이블에 해당 게시판 삽입 -> 게시판 스케줄러가 이후 해당 테이블의 레코드를 삭제함
 		ezBoardAdminDAO.insertDeleteReservedBoard(map);
 		
@@ -1357,6 +1359,11 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_COMPANYID", companyID);
 		map.put("v_BOARDNAME", boardName);
 		map.put("v_BOARDNAME2", boardName2);
+
+		// 그룹사 게시판일 경우 일괄 삭제
+		if ( companyID == " " ) {
+			ezBoardAdminDAO.deleteAllComTabBoard(map);
+		}
 		
 		ezBoardAdminDAO.deleteTabBoard(map); // 기존 탭게시판 삭제 후 새로운 레코드 삽입
 		ezBoardAdminDAO.insertTabBoard(map);

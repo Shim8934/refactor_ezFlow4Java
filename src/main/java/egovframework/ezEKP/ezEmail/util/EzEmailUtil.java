@@ -1138,7 +1138,7 @@ public class EzEmailUtil {
 				|| includeInlineAsAttachment
 				|| (part.isMimeType("application/*") && ((MimePart)part).getContentID() == null)
 				|| isInlinePartWithoutContentID
-		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null)) {
+		        || part.isMimeType("message/rfc822")) {
             double size = part.getSize();
             String[] encodingHeaders = part.getHeader("Content-Transfer-Encoding");
             
@@ -1317,10 +1317,19 @@ public class EzEmailUtil {
 				filename = "";
 			}
             
-            if (filename != null) {
+            if (!filename.isEmpty()) {
             	filename = commonUtil.normalizeFileName(filename);
             }
 			
+            // message/rfc822 타입이면서 filename 속성이 없는 경우에는
+            // 첨부된 eml의 제목으로 파일명을 설정한다.
+			if (part.isMimeType("message/rfc822") && filename.isEmpty()) {
+				Message nestedMessage = (Message)part.getContent();
+				
+				filename = getSubject(nestedMessage);;
+				filename = (filename != null) ? filename + ".eml" : "ForwardedMessage.eml";
+			}
+                        
 			if (attachedFileList != null) {
 				Map<String, String> attachedFileInfo = new HashMap<String, String>();
 				
@@ -1936,66 +1945,6 @@ public class EzEmailUtil {
 					isAttach = "OK";
 				}
 			}
-		} else if (part.isMimeType("message/rfc822")) {
-			Message nestedMessage = (Message)part.getContent();
-			
-			double size = part.getSize();
-			String strSize = getSizeWithUnit(size);
-			
-			String filename = getSubject(nestedMessage);;
-			filename = (filename != null) ? filename + ".eml" : "ForwardedMessage.eml";
-						
-			if (attachedFileList != null) {
-				Map<String, String> attachedFileInfo = new HashMap<String, String>();
-				
-				attachedFileInfo.put("filename", filename);
-				attachedFileInfo.put("size", String.valueOf(size));
-				attachedFileInfo.put("folderPath", folderPath);
-				attachedFileInfo.put("uid", String.valueOf(uid));
-				attachedFileInfo.put("index", String.valueOf(bodyPartIndex));
-				
-				attachedFileList.add(attachedFileInfo);
-			}
-			
-			if (forPrint) {
-				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align:middle'></span>";
-				pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
-				pAttachListHtml += this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span></br>";
-			} else if (secureKey != null) {
-				String aitem = "/ezEmail/downloadSecureAttach.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&filename=" + URLEncoder.encode(filename, "UTF-8") + "&index=" + bodyPartIndex;
-				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align:middle'></span>";
-				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span></li>";
-			} else if (mobile) {
-				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
-				
-				if (shareId != null) {
-					aitem += "','" + URLEncoder.encode(shareId, "UTF-8");
-				}
-				
-				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' onclick=\"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
-				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
-				pAttachListHtml += " </p>";
-			} else {
-				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
-				
-				if (shareId != null) {
-					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
-				}
-				
-				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' class='imgSpan' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align: top;'></span>";
-				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
-				if (useImageConvertServer != null && !useImageConvertServer.equalsIgnoreCase("0")) {
-					pAttachListHtml += " <span class='icon_rbtn2' style='right: 30px;' title='" + egovMessageSource.getMessage("ezEmail.t487", locale) 
-							+ "' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Preview('" + URLEncoder.encode(folderPath,"UTF-8") + "','" 
-							+ uid + "','" + bodyPartIndex + "','" + EgovStringUtil.getSpclStrCnvr2(filename) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align: top'></span>";
-				}
-				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16' style='vertical-align: top'></span></li>";
-
-			}
-			
-			isAttach = "OK";
-			filesize = (Double.parseDouble(filesize) + size) + "";
-			filecnt = (Integer.parseInt(filecnt) + 1) + "";				
 		}
 		
 		resultList.add(htmlBody);
@@ -2371,7 +2320,7 @@ public class EzEmailUtil {
     	
     	return mailList;
     }
-    
+        
 	public Message[] searchFolder (
 			Folder folder, 
 			String searchField, 
@@ -3007,6 +2956,45 @@ public class EzEmailUtil {
 		}
 		
 		logger.debug("getMailListUsingRDBOnlyFromJGw ended.");
+		return resultMap;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getMailInfo(
+			String userAccount,
+			String folderPath,
+			long mailUid
+			) throws Exception {
+		logger.debug("getMailInfo started.");
+		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",mailUid=" + mailUid);
+				
+		String userAccountParam = "userAccount=" + URLEncoder.encode(userAccount, "UTF-8");
+		String folderPathParam = "folderPath=" + URLEncoder.encode(folderPath, "UTF-8");
+		String mailUidParam = "mailUid=" + mailUid;
+						
+		String inputParams = userAccountParam + "&" + folderPathParam + "&" + mailUidParam;
+		
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailInfo";
+		String response = getWebServiceResult(requestURL, inputParams);
+		
+		Map<String, String> resultMap = null;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				resultMap = (Map<String, String>)responseObj.get("mailInfo");
+				
+			} else {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("getMailInfo ended.");
+		
 		return resultMap;
 	}
 	

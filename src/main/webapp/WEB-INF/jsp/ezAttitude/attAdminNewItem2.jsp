@@ -703,7 +703,9 @@
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
 												<c:if test="${item.parentId ne 'A05'}">
-													<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
+													<c:if test="${item.typeId ne 'A25'}">
+														<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
+													</c:if>
 												</c:if>
 											</c:forEach>
 										</select>

@@ -66,6 +66,13 @@
 						}
 					});
 	        	}, 10);
+	        	
+				<c:if test="${unread == 1}">
+		        try {
+		            parent.parent.frames["left"].get_unreadcount();
+		        } catch(e) {		            
+		        }
+		        </c:if>
 	        });
 	        
 	        function btnPrint_onClick() {

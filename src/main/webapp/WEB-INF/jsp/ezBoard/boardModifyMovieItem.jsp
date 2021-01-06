@@ -37,15 +37,8 @@
 	    </style>
         <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-   	    <c:if test="${!isCrossBrowser}">
-		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain.js')}"></script>
-		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem.js')}"></script>
-		    <script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
-	    </c:if>
-	    <c:if test="${isCrossBrowser}">
-		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain_CK.js')}"></script>
-		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem_CK.js')}"></script>
-	    </c:if>
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain_CK.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem_CK.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script> 
         <script type="text/javascript">
 	        var movieID = "${movieID}";
@@ -211,11 +204,6 @@
 			 	return canvas.toDataURL();
 			}
    		</script>
-   		<c:if test="${!isCrossBrowser}">
-	   		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
-		        Append_AttachAdd(filename);
-			</script>
-   		</c:if>
 	</head>
 	<body class="popup" onLoad="window_onload()" style="overflow:hidden;">
 	    <table class="layout">
@@ -254,9 +242,6 @@
 	        </tr>
 	       <tr>
 		    <td style="display:none;">
-		    	<c:if test="${!isCrossBrowser}">
-			    	<SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
-		    	</c:if>
 		    	<div id="lstAttachLink">&nbsp;</div>
 		    </td>
 	  	</tr>

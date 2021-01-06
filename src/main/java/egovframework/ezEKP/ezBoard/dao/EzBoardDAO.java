@@ -805,4 +805,13 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public List<HashMap<String, Object>> getCompanyTabBoardIDList(Map<String, Object> map) throws Exception {
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getCompanyTabBoardIDList", map);
 	}
+	
+	public int getOneLineCNT(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getOneLineCNT", map);
+	}
+
+	/* 2021-01-06 홍승비 - 게시물의 읽음여부 판별 시, 현재 사용자가 읽은 게시물을 셀렉트하도록 수정 */
+	public int getReaderListCount2(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getReaderListCount2", map);
+	}
 }

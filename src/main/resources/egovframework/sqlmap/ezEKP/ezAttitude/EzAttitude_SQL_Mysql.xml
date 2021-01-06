@@ -2612,6 +2612,22 @@
 						(START_DATE < #v_PSTARTDATE# and END_DATE >= #v_PENDDATE#)
 					)
 				]]>
+				<isNotEmpty property="v_PKEYWORD">
+					<isEqual property="v_PFILTER" compareValue="title">
+	            	AND 
+	            		B.TYPE_NAME like concat('%',#v_PKEYWORD#,'%')
+					</isEqual>
+					<isEqual property="v_PFILTER" compareValue="location">
+	            	AND 
+	            		A.REGION like concat('%',#v_PKEYWORD#,'%')		
+					</isEqual>
+					<isEqual property="v_PFILTER" compareValue="IsPublic">
+		            	<isNotEmpty property="v_INDILIST">
+			            	AND 
+			            		A.WRITER_ID IN ($v_INDILIST$)
+		            	</isNotEmpty>
+					</isEqual>
+            	</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeDAO.getAttitudeTime" parameterClass="Map" resultClass="String">

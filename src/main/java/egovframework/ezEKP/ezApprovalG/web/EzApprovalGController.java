@@ -1839,7 +1839,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 
         //원문정보공개 데이터 제거
-        if (config.getProperty("useOpenGov").equalsIgnoreCase("YES")) {
+        if (config.getProperty("config.useOpenGov").equalsIgnoreCase("YES")) {
             ezApprovalGService.deleteOpenGovDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
         }
 
@@ -5407,7 +5407,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isNonElecRec", isNonElecRec);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
-		model.addAttribute("useOpenGov", config.getProperty("useOpenGov"));
+		model.addAttribute("useOpenGov", config.getProperty("config.useOpenGov"));
 		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		

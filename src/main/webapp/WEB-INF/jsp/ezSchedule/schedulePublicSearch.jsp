@@ -184,7 +184,7 @@
 	        }
 	    }
 		
-	    function open_schedule(scheduleid, repeatcount, date, scheduletype, ownerid, dateType) {
+	    function open_schedule(scheduleid, repeatcount, date, scheduletype, ownerid, dateType, parentid) {
 	        date = date.substring(0, 10);
 
 	        if (scheduletype == "<spring:message code='ezSchedule.t281' />") {
@@ -199,9 +199,20 @@
 	            scheduletype = "3";
 	        }
 
-	        var feature = GetOpenPosition(760, 660);
-	        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=" + repeatcount + "&type=" + scheduletype + "&ownerid=" + ownerid + "&date=" + date + "&datetype=" + dateType, "",
-				"height = 670px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	        if(dateType == "4") {
+	        	if (CrossYN()) {
+	    			var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + scheduleid + "&typeId=" + parentid, "", GetOpenWindowfeature(672, 640));
+	    			
+	    			try { OpenWin.focus(); } catch (e) { }
+	    		} else {
+	    			window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + scheduleid + "&typeId=" + parentid, "", 
+	    			    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+	    		}
+	        } else {
+		        var feature = GetOpenPosition(760, 660);
+		        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=" + repeatcount + "&type=" + scheduletype + "&ownerid=" + ownerid + "&date=" + date + "&datetype=" + dateType, "",
+					"height = 670px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	        	
+	        }
 	    }
 
 	    
@@ -262,7 +273,7 @@
 			    	<th style="width:140px"><spring:message code='ezSchedule.t275' /></th>
 			  	</tr>
 			  	<c:forEach var="item" items="${scheduleList}">			  	
-		    	<tr style="cursor:pointer;padding:0" onClick="open_schedule('${item.scheduleId}','${item.repeatCount}','${item.startDate}','${item.scheduleType}','${item.dateType}','')" bgcolor=#ffffff>
+		    	<tr style="cursor:pointer;padding:0" onClick="open_schedule('${item.scheduleId}','${item.repeatCount}','${item.startDate}','${item.scheduleType}','','${item.dateType}','${item.parentId}')" bgcolor=#ffffff>
 		    		<td colspan=2 style="padding:0 2px;width:30px;text-align:center;">
 		    			<c:if test="${item.importance == '1'}"><img src='/images/calendar/i_l.png' width='13' height='13'/></c:if>
 		    			<c:if test="${item.importance == '2'}">&nbsp;</c:if>
