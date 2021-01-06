@@ -37,7 +37,7 @@ var getTabBoard = function () {
 }
 // 게시판 활성(스트링, 데이터, 스트링, 정수)
 function loadTabBoard(rtabBoardId, tabBoard, tabBoardName, tabId) {
-    if (tabBoard != null || tabBoard != undefined) {
+    if (typeof tabBoard != "undefined" && tabBoard != null) {
         var tabDocsHTML = "";
 
         tabBoard.forEach(function (item, index) {
@@ -148,7 +148,7 @@ function openDoc_section3_Type(pItemID, pType, oBoardID) {
 }
 
 function tabBoardPlus() {
-    if (tabBoardId != "") {
+    if (typeof tabBoardId != "undefined" && tabBoardId != "") {
         window.open("/ezBoard/boardMainRedirect.do?boardID=" + encodeURIComponent(tabBoardId), "main", "");
     }
 }

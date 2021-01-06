@@ -2760,7 +2760,9 @@
             WHERE
             	TENANT_ID = #v_TENANTID#
             AND  
-            	COMPANYID = #v_COMPANYID#
+            	(COMPANYID = #v_COMPANYID#
+			OR
+				TRIM(COMPANYID) IS NULL)
 			AND
 				TABID = #v_TABID#
 		]]>
@@ -2773,5 +2775,25 @@
             VALUES
             	(#v_TABID#, #v_PBOARDID#, #v_TENANTID#, #v_COMPANYID#, #v_BOARDNAME#, #v_BOARDNAME2#)
 		]]>
-	</insert>	
+	</insert>
+
+	<delete id="EzBoardAdminDAO.deleteAllComTabBoard" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_BOARD_TABBOARD
+            WHERE
+            	TENANT_ID = #v_TENANTID#
+			AND
+				TABID = #v_TABID#
+		]]>
+	</delete>
+	
+	<delete id="EzBoardAdminDAO.deleteAllTabBoard" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_BOARD_TABBOARD
+            WHERE
+            	BOARDID = #v_pBoardID#
+		]]>
+	</delete>
 </sqlMap>

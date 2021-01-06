@@ -45,6 +45,8 @@
 		        if (!check) {
 		        	 document.getElementById("file1").value = "";
 		        	 document.getElementById("saveFileName").value = "";
+		        	 alert("<spring:message code ='ezBoard.hsbImg01' />");
+		        	 return;
 		        }
 		        var guid = "{" + GetGUID() + "}";
 		        document.form.guid.value = guid;	       
@@ -68,6 +70,7 @@
 			            document.getElementById("imageheight").value = height;
 			            document.getElementById("saveFileName").value = fileName;	
 			            document.getElementById("filetxt").value = filetxt;
+			            document.getElementById("file1").value = "";
 					},
 					error : function(){
 						alert("upload error");		
@@ -148,7 +151,7 @@
 			<tr>
 				<th><spring:message code="ezBoard.t5001"/></th>
 				<td colspan="3">					
-					<input type="file" name="file1" id="file1" style="width:85%;margin-left:3px; display:none;" onchange="btn_AttachAdd_onclick()"/>
+					<input type="file" name="file1" id="file1" style="width:85%;margin-left:3px; display:none;" onchange="btn_AttachAdd_onclick()" accept="image/*"/>
 					<input type="text" name="filetxt" id="filetxt" style="width:78%;cursor:default;"
 					 readonly onclick="SliderImage()"/>
 					<a class="imgbtn imgbck" style="height:22px"><span onclick="SliderImage();"><spring:message code="ezBoard.t5010"/></span></a>

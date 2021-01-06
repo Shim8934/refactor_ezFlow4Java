@@ -44,16 +44,23 @@
 					}        			
 				});
 		        
+		        /* 2020-12-29 홍승비 - 크롬 브라우저에서는 닫힌 자식창이 부모창에 요청을 보내더라도 리턴값을 받지 못하므로, 동작 시점을 닫기 전으로 수정 */
+		        if (ReturnFunction != null) {
+		        	window.opener.confirm = window.confirm;
+		            ReturnFunction(rtnVal);
+		        } else {
+		            window.returnValue = rtnVal;
+		        }
 		        window.close();
 		    }
-		    window.onunload = function ()
+/* 		    window.onunload = function ()
 		    {
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
 		        } else {
 		            window.returnValue = rtnVal;
 		        }
-		    };
+		    }; */
 		    function btn_OpinionCANCEL_onclick()
 		    {
 		        if (ReturnFunction != null)

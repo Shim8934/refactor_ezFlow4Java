@@ -14168,7 +14168,9 @@ CREATE TABLE `tbl_webfolder_folderuser` (
   `CREATE_DATE` datetime NOT NULL COMMENT '생성일',
   `COMPANY_ID` varchar(50) NOT NULL COMMENT '회사 아이디',
   `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  PRIMARY KEY (`SEQ_ID`,`TENANT_ID`)
+  PRIMARY KEY (`SEQ_ID`,`TENANT_ID`),
+  KEY `IDX_USER_ID` (`USER_ID`),
+  KEY `IDX_FOLDER_ID` (`FOLDER_ID`)  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 폴더 사용자';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
