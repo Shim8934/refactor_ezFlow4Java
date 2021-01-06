@@ -1580,7 +1580,7 @@
 		            <tr>
 		                <th><spring:message code='ezBoard.t1008'/></th>
 		                <td id="cimagecontent" colspan="3" style="padding-right:0px">
-		                    <div id="Div2" style="OVERFLOW-Y: auto; height:55px;WIDTH: 100%; padding-top:5px;padding-bottom:5px; vertical-align:middle; white-space:pre;"><c:out value="${boardItem.mainContent}"/></div>
+		                    <div id="Div2" style="OVERFLOW-Y: auto; overflow-x:hidden; height:55px;WIDTH: 100%; padding-top:5px;padding-bottom:5px; vertical-align:middle; white-space:pre-wrap;"><c:out value="${boardItem.mainContent}"/></div>
 		                </td>
 		            </tr>
 		          </table>
