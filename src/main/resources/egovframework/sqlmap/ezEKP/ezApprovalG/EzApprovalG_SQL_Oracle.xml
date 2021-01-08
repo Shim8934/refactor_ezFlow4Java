@@ -8340,17 +8340,24 @@
 					             	 TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#) RECEIVEDDEPTID  ,
 				              (
 		                        SELECT 
-		                        	 TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTNAME 
-						        FROM 
-						        	 TBL_APRRECEIPTPROCESSINFO 
-						     	WHERE  
-						     		 TBL_APRRECEIPTPROCESSINFO.DOCID = #v_DOCID#
-						        AND 
-						        	 TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
-						        AND
-						             TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
-					        	AND
-					             	 TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#) RECEIVEDDEPTNAME  ,
+		                        	TBL_DEPTMASTER.DISPLAYNAME
+		                        FROM
+		                        	TBL_DEPTMASTER
+		                        WHERE
+		                        	CN =
+				                      (  SELECT 
+				                        	 TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID 
+								        FROM 
+								        	 TBL_APRRECEIPTPROCESSINFO 
+								     	WHERE  
+								     		 TBL_APRRECEIPTPROCESSINFO.DOCID = #v_DOCID#
+								        AND 
+								        	 TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
+								        AND
+								             TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+							        	AND
+							             	 TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#) 
+							   ) RECEIVEDDEPTNAME  ,
 		                      (
 		                       SELECT 
 		                      	  *  
