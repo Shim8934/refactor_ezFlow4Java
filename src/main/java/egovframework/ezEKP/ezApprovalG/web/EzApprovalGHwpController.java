@@ -1017,11 +1017,21 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		String result = "";
 		String docID = jsonObj.get("docID") == null ? null : jsonObj.get("docID").toString();
-		String formText = jsonObj.get("html") == null ? null : jsonObj.get("html").toString();
+		String formText = jsonObj.get("html") == null ? "" : jsonObj.get("html").toString();
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String path = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		try {
+			if (docID == null | formText.equals("")) {
+				result = "FAIL";
+				
+				LOGGER.debug("<<<docID : " + docID);
+				LOGGER.debug("<<<formText : " + formText);
+				LOGGER.debug("there is no primary data.");
+
+				return result;
+			}
+			
 			File file = new File(commonUtil.detectPathTraversal(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)));
 			
 			if (!file.exists()) {

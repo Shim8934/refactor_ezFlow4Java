@@ -4064,6 +4064,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		OutputStream bos = null;
 		
 		try {
+			if (docID == null | formText.equals("")) {
+				ret = "FALSE";
+
+				logger.debug("<<<docID : " + docID);
+				logger.debug("<<<formText : " + formText);
+				logger.debug("there is no primary data.");
+
+				return ret;
+			}
+			
 			String tmpPath = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + "TMP";
 			
 			File tmpDir = new File(commonUtil.detectPathTraversal(tmpPath));
@@ -4394,6 +4404,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("<<<saveDir : " + saveDir);
 
 		try {
+			if (docID == null | formText.equals("")) {
+				ret = "FALSE";
+
+				logger.debug("<<<docID : " + docID);
+				logger.debug("<<<formText : " + formText);
+				logger.debug("there is no primary data.");
+
+				return ret;
+			}
+			
 			File file = new File(commonUtil.detectPathTraversal(saveDir));
 			
 			if (!file.exists()) {
