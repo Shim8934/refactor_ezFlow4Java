@@ -1144,6 +1144,7 @@
 	<select id="MApprovalG.getAprLineInfo" parameterClass="Map" resultClass="MApprGAprLineInfoVO">
 		<isNotEqual property="type" compareValue="END">
 			SELECT
+				A.APRMEMBERID,
 	          	A.APRSTATE,
 	          	A.APRTYPE,
 	          	CASE 
@@ -1203,6 +1204,7 @@
 		</isNotEqual>
 		<isEqual property="type" compareValue="END">
 			SELECT
+				A.APRMEMBERID,
 	          	A.APRSTATE,
 	          	A.APRTYPE,
 	          	CASE 
