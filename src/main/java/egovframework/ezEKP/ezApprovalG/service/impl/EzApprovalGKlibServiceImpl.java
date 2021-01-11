@@ -245,12 +245,10 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 				// 첨부파일 순서
 				parameterMap.put("attachFileSN", attachInfo.getAttachFileSN());
 				
+				// 진행 중인 문서, 완료 문서, 임시보관함 등에 있는 동일한 경로의 파일에 모두 .ezd 업데이트
 				ezApprovalGKlibDAO.updateEndAttachInfoHref(parameterMap);
-				/* 진행 중인 문서의 해당 첨부파일이 존재하면 .ezd 확장자를 붙여준다.
-				 orgdocid를 현재 결재완료된 문서의 아이디를 쓰는 경우가 존재하기 때문이다.
-				예를 들어 수신 문서 같은 경우에는 수신 정보를 원본 문서의 href를 복사해서 붙여넣기 때문에
-				.ezd 확장자가 붙어있지 않아서 다운로드할 때 FileNotFound 오류가 난다. */
 				ezApprovalGKlibDAO.updateAprAttachInfoHref(parameterMap);
+				ezApprovalGKlibDAO.updateTmpAttachInfoHref(parameterMap);
 			}
 		}
 

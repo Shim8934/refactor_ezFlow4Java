@@ -212,7 +212,7 @@
 		if (groupName == undefined || groupName == "") {
 			for (var i = 0; i < document.getElementsByName("chk").length; i++) {
 				if (document.getElementsByName("chk").item(i).checked == true) {
-					groupName = document.getElementsByName("chk").item(i).name;
+					groupName = document.getElementsByName("chk").item(i).className;
 				}
 			}
 		}
@@ -244,8 +244,7 @@
 		if (mode == 'get') {
 			for (var i = 0; i < document.getElementsByName("chk").length; i++) {
 				if (document.getElementsByName("chk").item(i).checked == true) {
-					CheckBoxArr[CheckBoxArr.length] = document
-							.getElementsByName("chk").item(i).value;
+					CheckBoxArr[CheckBoxArr.length] = document.getElementsByName("chk").item(i).value;
 				}
 			}
 		}
@@ -305,8 +304,8 @@
 												+ "', '"
 												+ i.groupName + "')\">";
 										html += "    <td style='width:30px;'>";
-										html += "        <input type='checkbox' onclick='selectCheckBox()' name='chk' id='chk' value='"
-												+ i.groupID + "' name='" + i.groupName + "'/>";
+										html += "        <input type='checkbox' onclick='selectCheckBox()' id='chk' name='chk' value='"
+												+ i.groupID + "' class='" + i.groupName + "'/>";
 										html += "    </td>";
 										html += "<td style='cursor:pointer; width: 20%;'>"
 												+ i.groupName + "</td>";
