@@ -428,6 +428,7 @@ function getExtInfo()
 		alert("seal error");
 	}
 	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/approvalinfo/approval");
 	var ApprovalAnyFlag = 0;
 	if( Nodes.length > 0 )
@@ -516,7 +517,11 @@ function getExtInfo()
 			}
 		}
 	}
+	} catch(e) {
+		alert("sign error");
+	}
 	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/approvalinfo/assist");
 	if( Nodes.length > 0 )
 	{
@@ -559,6 +564,11 @@ function getExtInfo()
 		}
 		
 	}
+	} catch(e) {
+		alert("habyuisign error");
+	}
+	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/processinfo/regnumber");
 	if( Nodes.length > 0 )
 	{
@@ -591,7 +601,11 @@ function getExtInfo()
 		SetDocumentElement(message, "regnumbercode", "");
 		pOrgDocNumCode = "";
 	}
+	} catch(e) {
+		alert("regnumber error");
+	}
 	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/processinfo/enforcedate");
 	if( Nodes.length > 0 )
 	{
@@ -600,7 +614,11 @@ function getExtInfo()
 		    message.PutFieldText("enforcedate", getNodeText(Nodes[0]));
 		}
 	}
+	} catch(e) {
+		alert("enforcedate error");
+	}
 	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foor/processinfo/receipt");
 	if( Nodes.length > 0 )
 	{
@@ -657,7 +675,11 @@ function getExtInfo()
 			message.PutFieldText("receiptdate", getGyulJeDate());
 		}
 	}
+	} catch(e) {
+		alert("receipt error");
+	}
 	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/zipcode");
 	if( Nodes.length > 0 )
 	{
@@ -673,7 +695,11 @@ function getExtInfo()
 			message.PutFieldText("zipcode", "");
 		}
 	}
+	} catch(e) {
+		alert("zipcode error");
+	}
 	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/address");
 	if( Nodes.length > 0 )
 	{
@@ -689,7 +715,11 @@ function getExtInfo()
 			message.PutFieldText("address", "");
 		}
 	}
+	} catch(e) {
+		alert("address error");
+	}
 	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/homeurl");
 	if( Nodes.length > 0 )
 	{
@@ -705,7 +735,11 @@ function getExtInfo()
 			message.PutFieldText("homepage", "");
 		}
 	}
+	} catch(e) {
+		alert("homeurl error");
+	}
 	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/telephone");
 	if( Nodes.length > 0 )
 	{
@@ -721,7 +755,11 @@ function getExtInfo()
 			message.PutFieldText("telephone", "");
 		}
 	}
+	} catch(e) {
+		alert("telephone error");
+	}
 	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/fax");
 	if( Nodes.length > 0 )
 	{
@@ -737,7 +775,11 @@ function getExtInfo()
 			message.PutFieldText("fax", "");
 		}
 	}
+	} catch(e) {
+		alert("fax error");
+	}
 	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/email");
 	if( Nodes.length > 0 )
 	{
@@ -753,7 +795,11 @@ function getExtInfo()
 			message.PutFieldText("email", "");
 		}
 	}
-
+	} catch(e) {
+		alert("email error");
+	}
+	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/publication");
 	if( Nodes.length > 0 )
 	{
@@ -763,7 +809,11 @@ function getExtInfo()
 			pPublicFlag = GetAttribute(Nodes[0],"code");
 		}
 	}
+	} catch(e) {
+		alert("publication error");
+	}
 	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/symbol");
 	if( Nodes.length > 0 )
 	{
@@ -810,7 +860,11 @@ function getExtInfo()
 			message.PutFieldText("symbol", "");
 		}
 	}
+	} catch(e) {
+		alert("symbol error");
+	}
 	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/sendinfo/logo");
 	if( Nodes.length > 0 )
 	{
@@ -839,7 +893,11 @@ function getExtInfo()
 			message.PutFieldText("logo", "");
 		}
 	}
+	} catch(e) {
+		alert("logo error");
+	}
 	
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/campaign/headcampaign");
 	if( Nodes.length > 0 )
 	{
@@ -855,7 +913,11 @@ function getExtInfo()
 			message.PutFieldText("headcampaign", "");
 		}
 	}
+	} catch(e) {
+		alert("headcampaign error");
+	}
 
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/foot/campaign/footcampaign");
 	if( Nodes.length > 0 )
 	{
@@ -871,7 +933,11 @@ function getExtInfo()
 			message.PutFieldText("footcampaign", "");
 		}
 	}
+	} catch(e) {
+		alert("footcampaign error");
+	}
 
+	try {
 	var Nodes = SelectNodes(eNodes, "pubdoc/attach/title");
 	if( Nodes.length > 0 )
 	{
@@ -894,6 +960,9 @@ function getExtInfo()
 			}
 			message.PutFieldText("attachment", AttachmentText);
 		}
+	}
+	} catch(e) {
+		alert("title error");
 	}
 	
 	try {
