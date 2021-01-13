@@ -307,6 +307,7 @@
 		        return;
 		    }
 			
+			var ezapralertlong_cross_dialogArguments = new Array();
 			function btnReqOpinion_onclick() {
 				var result = "";
 		    	
@@ -324,9 +325,17 @@
 		    	});
 		    	
 				var url = "/ezApprovalG/ezAprAlertLong.do";
-				var feature = "status:no;dialogWidth:330px;dialogHeight:305px;help:no;scroll:no;edge:sunken";
+				/* var feature = "status:no;dialogWidth:330px;dialogHeight:305px;help:no;scroll:no;edge:sunken";
 				
-				window.showModalDialog(url, result, feature);
+				window.showModalDialog(url, result, feature); */
+		    	ezapralertlong_cross_dialogArguments[0] = parameter;
+				ezapralertlong_cross_dialogArguments[1] = OpenAlertUILong_Complete;
+				
+				DivPopUpShow(330, 305, url);
+			}
+			
+			function OpenAlertUILong_Complete() {
+				DivPopUpHidden();
 			}
 	
 			function SaveSignCheck() {
