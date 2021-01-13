@@ -215,12 +215,12 @@ function covBody(pbody) {
     BodyStr = BodyStr.replace(/';'/g, ";'");
     
     //2018-09-14 홍대표	 불필요한 속성과 단위 변경.
-    var pxToMm = function(str, p1, p2, offset, s){
+    var pxToMm = function(str, p1, p2, p3, offset, s){
     	return p1 + (p2 * 0.264583) + "mm";
     }
     
     BodyStr = BodyStr.replace(/[^-]height='height:\d+'/ig, "");
-    BodyStr = BodyStr.replace(/([^-]height:)(\d+[\w?]*)/ig, pxToMm).replace(/(width:)(\d+[\w?]*)/ig, pxToMm);
+    BodyStr = BodyStr.replace(/([^-]height:)(\d+)([\w?]*)/ig, pxToMm).replace(/(width:)(\d+)([\w?]*)/ig, pxToMm);
     BodyStr = BodyStr.replace(/(border-)(left|right|top|bottom):[\w\d\s#.(),]*;/g, "");
     
     BodyStr = BodyStr.replace(/(\?(\w)*?\w=)((')(\w*?)['])/ig, "$1$5$4");
@@ -633,7 +633,7 @@ function makeXML(newDocID) {
 	var Nodes = eNodes.getElementsByTagName("sendinfo");
 	//한글기안기 심볼, 로고 이미지 경로 하드코딩 추후 유동적으로 사용할 수 있도록 수정필요 2019-11-25 홍대표.
 	//로고와 심볼 파일을 ex) fileroot/0/files/upload_approvalG\Top/ 에 위치시킴
-	SetDocumentElement(message, "symbolurl", "symbol.gif");
+	SetDocumentElement(message, "symbolurl", "");
     if (message.FieldExist("symbol")) {
 		symbolName = GetDocumentElement(message, "symbolurl");
 		
@@ -765,6 +765,7 @@ function makeXML(newDocID) {
 	var re = /\"/g;
 	strtempxml = strtempxml.replace(re, "'");
 	strtempxml = strtempxml.replace(/​/g, "");
+	strtempxml = strtempxml.trim();
 	sihangXML = loadXMLString(strtempxml);
 	
     var SaveDocHTTp = createXMLHttpRequest();
