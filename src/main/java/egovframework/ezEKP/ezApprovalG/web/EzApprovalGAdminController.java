@@ -556,7 +556,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1")) {
 			return "cmm/error/adminDenied";
 		}
-		
+		// 2021-01-21 심기영 오피스결재 여부 추가
+		String useOfficeApproval = ezCommonService.getTenantConfig("UseOfficeApproval", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String formProcSpelling = ezCommonService.getTenantConfig("FormProcSpelling", userInfo.getTenantId()); 
 		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
@@ -667,6 +668,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("reformUrl", reformUrl);
 		/* FormBuilder end */
+		
+		// 2021-01-21 심기영 오피스결재 여부 추가
+		model.addAttribute("useOfficeApproval", useOfficeApproval);
 		
 		logger.debug("formMainOther ended.");
 		

@@ -2512,6 +2512,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		String formSihangType = doc.getElementsByTagName("SIHANGTYPE").item(0).getTextContent();
 		
+		// 2021-01-21 심기영 오피스 양식 여부
+		String officeFlag = doc.getElementsByTagName("officeFlag").item(0).getTextContent();
+		
 		/* 2020-07-16 홍승비 - 전자결재 일반버전에서도 연동양식을 사용할 수 있도록 수정 */
 		if (approvalFlag.equals("S")) {
 			keepPeriod = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
@@ -2597,6 +2600,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			logger.debug("setFormDataInsert1 started.");
 			ezApprovalGAdminDAO.setFormDataInsert1(map);
 			logger.debug("setFormDataInsert1 ended.");
+			
+			if("Y".equals(officeFlag)) {
+				ezApprovalGAdminDAO.insertOfficeFormFlag(map);
+			}
 			
 			if (approvalFlag.equals("S")) {
 				map.put("keepPeriod", keepPeriod);
@@ -2705,6 +2712,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			logger.debug("setFormDataUpdate started.");
 			ezApprovalGAdminDAO.setFormDataUpdate(map);
 			logger.debug("setFormDataUpdate ended.");
+			
+			/* 2021-01-21 심기영 오피스결재 양식 용 추가 */
+			if("Y".equals(officeFlag)) {
+				// 오피스 양식에서 오피스 양식으로 수정할 경우 duplicate key error가 날 수 있기 때문에 지웠다가 다시 insert
+				ezApprovalGAdminDAO.deleteOfficeFormFlag(map);
+				ezApprovalGAdminDAO.insertOfficeFormFlag(map);
+			} else {
+				ezApprovalGAdminDAO.deleteOfficeFormFlag(map);
+			}
 			
 			if (approvalFlag.equals("S")) {
 				map.put("keepPeriod", keepPeriod);

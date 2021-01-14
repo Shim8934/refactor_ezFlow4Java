@@ -118,8 +118,14 @@ var openForm_Complete = function (ret) {
     formURL = ret[0];
     formDocType = ret[1];
 
+	 var officeFlag = "";
+    
+    if(typeof ret[4] != "undefined") {
+    	officeFlag = ret[4];
+    }
+
     if (formURL != "cancel") {
-        openDraftUI();
+        openDraftUI("DRAFT","",officeFlag);
     }
 }
 

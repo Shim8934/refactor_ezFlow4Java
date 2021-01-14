@@ -435,6 +435,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             try {
                 tempIn = Files.newInputStream(Paths.get(realPath + imgSrc));
                 contentType = URLConnection.guessContentTypeFromStream(tempIn);
+            	if(imgSrc.contains("222.106.242.180")){
+            		continue;
+            	}else{
+            		contentType = URLConnection.guessContentTypeFromStream(Files.newInputStream(Paths.get(realPath + imgSrc)));
+            	}
             } catch (IOException e) {
                 //url 일 시 realPath + path 로 exception 발생 -> 위의 default값 사용하므로 따로 exception 처리 하지 않음.
             } finally {

@@ -16,6 +16,8 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 
+import org.json.simple.JSONObject;
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 
 import javax.servlet.http.HttpServletRequest;
@@ -647,8 +649,14 @@ public interface EzApprovalGService {
     void setHesongBansongCabinetID(String docID, String cabinetID, String taskCode, String companyID, int tenantId) throws Exception;
 
     String getDeptIdOfCabinet(String orgCabinetId, int tenantId, String companyID) throws Exception;
-
-    public String getStoragePeriodName(String period, String lang, String approvalFlag, String companyID, int tenantID) throws Exception;
+	
+	public String getStoragePeriodName(String period, String lang, String approvalFlag, String companyID, int tenantID) throws Exception;
+	
+	// 변환서버에 변환을 요청
+	public String convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId) throws Exception;
+	
+	// 이미지로 변환된 오피스문서의 정보를 가져옴
+	public JSONObject getConvertedImgInfo(String hash) throws Exception;
 
     public String getProxyUser2(String userID, String userLang, int tenantID, String offset) throws Exception;
 

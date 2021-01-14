@@ -69,6 +69,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -1068,6 +1069,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String isTmpDoc = request.getParameter("isTmpDoc");
 		String isUsed = request.getParameter("isUsed");
 		String nonElecRec = request.getParameter("nonElecRec");
+		// 2021-01-21 심기영 오피스 결재 여부 추가
+		String officeFlag = request.getParameter("officeFlag");
 		// FormBuilder
 		// String reformflag = request.getParameter("reformflag");
 		
@@ -1231,6 +1234,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} else {
 			model.addAttribute("reformflag", ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getId(), userInfo.getCompanyID(), tenantID).getReformFlag());
 		}
+		// 2021-01-21 심기영 오피스결재 여부 추가
+		model.addAttribute("officeFlag", officeFlag);
 
 		String formId = ezApprovalGService.getFormId(formURL);
 		if (useOpenGov.equalsIgnoreCase("YES")) {
@@ -10144,6 +10149,73 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGaprOpinionPopup";
 	}
 	
+	/**
+	 * @param model
+	 * @param request
+	 * @return
+	 * 오피스결재에서 오피스문서파일을 업로드 하는 화면
+	 */
+	@RequestMapping(value = "/ezApprovalG/officeAttach.do", method = RequestMethod.GET)
+	public String officeAttach(Model model, HttpServletRequest request) {
+		logger.debug("officeAttach started.");
+//		model.addAttribute("converterServerURL", config.getProperty("config.officeConverterServerURL"));
+		logger.debug("officeAttach ended.");
+		return "ezApprovalG/officeAttach";
+	}
+	
+	/**
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 * 오피스결재에서 오피스문서파일을 서버에 올리는 과정
+	 */
+//	@ResponseBody
+//	@RequestMapping(value = "/ezApprovalG/officeUpload.do", method = RequestMethod.POST)
+//	public ResponseEntity<JSONObject> officeUpload(MultipartHttpServletRequest request) throws Exception {
+//		logger.debug("officeUpload started.");
+//		
+//		String docId = request.getParameter("docId");
+//		int tenantId = Integer.parseInt(request.getParameter("tenantId"));
+//		String companyId = request.getParameter("companyId");
+//		String userId = request.getParameter("userId");
+//		MultipartFile file = request.getFile("fileToUpload");
+//		
+//		// 변환솔루션이 다른 서버에 설치되어있을 경우, 이 경로를 변환솔루션 서버에 마운트 시켜야함
+//		String tempUploadPath = config.getProperty("config.officeTempUploadPath");
+//				
+//		JSONObject convertedImgInfo = ezApprovalGService.convertDocumentToImg(file, tempUploadPath, docId, tenantId, companyId, userId);	
+//	
+//		logger.debug("officeUpload ended.");
+//		return new ResponseEntity<JSONObject>(convertedImgInfo, HttpStatus.OK);	
+//	}
+	
+	
+	/**
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 * 오피스결재에서 오피스문서파일을 서버에 올리는 과정
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/ezApprovalG/officeUpload.do", method = RequestMethod.POST)
+	public String officeUpload(MultipartHttpServletRequest request) throws Exception {
+		logger.debug("officeUpload started.");
+		
+		String docId = request.getParameter("docId");
+		int tenantId = Integer.parseInt(request.getParameter("tenantId"));
+		String companyId = request.getParameter("companyId");
+		String userId = request.getParameter("userId");
+		MultipartFile file = request.getFile("fileToUpload");
+		
+		// 변환솔루션이 다른 서버에 설치되어있을 경우, 이 경로를 변환솔루션 서버에 마운트 시켜야함
+		String tempUploadPath = config.getProperty("config.officeTempUploadPath");
+				
+		String convertedImgInfo = ezApprovalGService.convertDocumentToImg(file, tempUploadPath, docId, tenantId, companyId, userId);	
+	
+		logger.debug("officeUpload ended.");
+		return convertedImgInfo;	
+	}
+
 	@RequestMapping(value = "/ezApprovalG/enforceSihangDocView.do", method = RequestMethod.GET)
 	public String enforceSihangDocView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("enforceSihangDocView started.");

@@ -428,6 +428,13 @@ function MakeFormInfoXML_Detail() {
     	createNodeAndInsertText(xmlpara, objNode, "ConnFlag", "N");
     }
     
+    // 2021-01-21 심기영 오피스 양식 여부 체크 
+    if(document.getElementById('officeFlag').checked) {
+    	createNodeAndInsertText(xmlpara, objNode, "officeFlag", "Y");
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "officeFlag", "N");
+    }
+    
     if (document.getElementById('setOpenGovFlag').checked) {
     	createNodeAndInsertText(xmlpara, objNode, "openGovFlag", "Y"); // 원문공개 체크 
     } else {

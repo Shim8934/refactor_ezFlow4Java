@@ -551,6 +551,15 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalGAdminDAO.removeAutoDoc", map);
 	}
 	
+	/* 2021-01-21 심기영 오피스결재 추가 */
+	public void insertOfficeFormFlag(Map<String, Object> map) {
+		insert("EzApprovalGAdmin.insertOfficeFormFlag", map);
+	}
+	/* 2021-01-21 심기영 오피스결재 추가 */
+	public void deleteOfficeFormFlag(Map<String, Object> map) {
+		delete("EzApprovalGAdmin.deleteOfficeFormFlag", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<ApprGAttachInfoVO> getAdminTotalDownload(Map<String, Object> map) throws Exception{
 		return (List<ApprGAttachInfoVO>) list("EzApprovalGAdminDAO.getAdminTotalDownload", map);

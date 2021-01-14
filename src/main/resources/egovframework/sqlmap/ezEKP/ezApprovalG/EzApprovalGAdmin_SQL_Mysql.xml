@@ -948,7 +948,11 @@
 					TBL_AUTODOCNUM_ITEM.useFlag,
 					TBL_AUTODOCNUM_ITEM.keepPeriodCode,
 					aproption,
-					SIHANGTYPE
+					SIHANGTYPE,
+					CASE
+						WHEN O.FORMID IS NULL THEN 'N'
+						WHEN O.FORMID IS NOT NULL THEN 'Y'
+                    END AS officeFlag
 				FROM
 					TBL_FORMINFO
 				JOIN 
@@ -959,6 +963,14 @@
 	            	TBL_FORMINFO.companyid = TBL_AUTODOCNUM_ITEM.companyid
 	            AND
 	            	TBL_FORMINFO.formid = TBL_AUTODOCNUM_ITEM.formid
+            	LEFT JOIN
+					TBL_FORM_OFFICE O
+				ON 
+	            	TBL_FORMINFO.tenant_id = O.tenant_id
+	            AND
+	            	TBL_FORMINFO.companyid = O.companyid
+	            AND
+	            	TBL_FORMINFO.formid = O.formid
 				WHERE
 					TBL_FORMINFO.tenant_id = #tenantID#
 				AND
@@ -981,9 +993,21 @@
 					opengovflag,
 					aproption ,
 					passaprlineflag,
-					SIHANGTYPE
+					SIHANGTYPE,
+					CASE
+						WHEN O.FORMID IS NULL THEN 'N'
+						WHEN O.FORMID IS NOT NULL THEN 'Y'
+                    END AS officeFlag
 				FROM
 					TBL_FORMINFO
+				LEFT JOIN
+					TBL_FORM_OFFICE O
+				ON 
+	            	TBL_FORMINFO.tenant_id = O.tenant_id
+	            AND
+	            	TBL_FORMINFO.companyid = O.companyid
+	            AND
+	            	TBL_FORMINFO.formid = O.formid
 				WHERE
 					tenant_id = #tenantID#
 				AND
@@ -4620,6 +4644,21 @@
 			    #companyID# )
 		]]>				
 	</insert>
+	
+	<insert id="EzApprovalGAdmin.insertOfficeFormFlag" parameterClass="Map">
+		INSERT INTO TBL_FORM_OFFICE
+		VALUES(#v_PFORMID#, #tenantID#, #companyID#)
+	</insert>
+	
+	<delete id="EzApprovalGAdmin.deleteOfficeFormFlag">
+		DELETE FROM TBL_FORM_OFFICE
+		WHERE
+			FORMID = #v_PFORMID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</delete>
 	
 	<select id="EzApprovalGAdminDAO.getAdminTotalDownload" parameterClass="Map" resultClass="ApprGAttachInfoVO">
 				SELECT * FROM (
