@@ -375,7 +375,13 @@ function MakeListInfoHTML(ConentObject) {
                             
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
-                            _TDColum.onclick = function (event) { event_listclick(this, event); };
+                            _TDColum.onclick = function (event) {
+                                event_listclick(this, event);
+
+                                if (pPreviewShow_HOW == "OFF") {
+                                    event_listDBClick(this.parentElement);
+                                }
+                            };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
                             _TDColum.onselectstart = function () { return false; };
                             break;
