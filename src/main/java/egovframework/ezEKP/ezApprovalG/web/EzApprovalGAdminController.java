@@ -4393,8 +4393,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
             aprTo = apprToYear + "-" + apprToMonth + "-" + apprToDay;
         }
 
-        String formID = request.getParameter("formID");
-        String draftDeptName = request.getParameter("deptName1");
+		String formID = request.getParameter("formID");
+		String formName = request.getParameter("formName");
+		String draftDeptName = request.getParameter("deptName1");
         String pageNum = request.getParameter("pageNum");
         String pageSize = request.getParameter("pageSize");
         String docState = request.getParameter("docState");
@@ -4407,7 +4408,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
         String result = "";
-        result = ezApprovalGService.getSearchDocListForOpenGov("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay,
+        result = ezApprovalGService.getSearchDocListForOpenGov("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, formName, draftFromYear, draftFromMonth, draftFromDay,
                 draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
                 draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "", companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 
