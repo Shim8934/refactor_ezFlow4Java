@@ -173,6 +173,7 @@ public class EzApprovalGJsonServiceImpl extends EgovFileMngUtil implements EzApp
 	@Override
 	public Map<String, Object> getAdminSearchDocList(
 			String formID,
+			String formName,
 			String docNumber,
 			String docTitle, 
 			String drafter, 
@@ -221,6 +222,7 @@ public class EzApprovalGJsonServiceImpl extends EgovFileMngUtil implements EzApp
 		map.put("v_DRAFTER", drafter);
 		map.put("v_DEPTNAME", draftDeptName);
 		map.put("v_FORMID", formID);
+		map.put("v_FORMNAME", formName);
 		map.put("v_STARTDATE1", draftfrom );
 		map.put("v_STARTDATE2", draftto);
 		map.put("v_ENDDATE1", apprfrom);

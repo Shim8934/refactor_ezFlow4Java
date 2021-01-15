@@ -786,6 +786,11 @@
 			]]>
 		</isNotEqual>
 
+		<isNotEmpty property="v_FORMNAME">
+			AND 
+				(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+		</isNotEmpty>
+
 		<isNotEqual property="v_DOCSTATE" compareValue="">
 			<![CDATA[
 				AND
@@ -2291,6 +2296,10 @@
 					formid = #v_FORMID#
 			]]>
 		</isNotEqual>
+		<isNotEmpty property="v_FORMNAME">
+			AND 
+				(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+		</isNotEmpty>
 		<isNotEqual property="v_DOCSTATE" compareValue="">
 			<![CDATA[
 				AND
@@ -5481,6 +5490,10 @@
    		 AND 
    		 	FORMID = #v_FORMID#
    		</isNotEmpty>
+		<isNotEmpty property="v_FORMNAME">
+		AND 
+			(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+		</isNotEmpty>
     	<isNotEmpty property="v_APPROVUSER"> 
    		AND 
    			TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%$v_APPROVUSER%$'
@@ -5601,6 +5614,10 @@
 							   	<isNotEmpty property="v_FORMID">
 							   	 	 AND 
 							   	 	      FORMID = $v_FORMID$
+							   	</isNotEmpty>
+								<isNotEmpty property="v_FORMNAME">
+							   	 	AND 
+							   	 		(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_APPROVUSER" >
 								AND 

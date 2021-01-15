@@ -104,7 +104,7 @@ public interface EzApprovalGAdminService {
 			String draftFromMonth, String draftFromDay, String draftToYear,
 			String draftToMonth, String draftToDay, String apprFromYear,
 			String apprFromMonth, String apprFromDay, String apprToYear,
-			String apprToMonth, String apprToDay, String formID,
+			String apprToMonth, String apprToDay, String formID, String formName,
 			String draftDeptName, String draftDeptName2, String pageNum,
 			String pageSize, String docState, String subQuery,
 			String orderCell, String orderOption, String companyID, String primary, String approvUser, String offset, int tenantID) throws Exception;
@@ -216,6 +216,7 @@ public interface EzApprovalGAdminService {
 
 	public String getAdminSearchDocList(
 			String formID,
+			String formName,
 			String docNumber,
 			String docTitle, 
 			String drafter, 
