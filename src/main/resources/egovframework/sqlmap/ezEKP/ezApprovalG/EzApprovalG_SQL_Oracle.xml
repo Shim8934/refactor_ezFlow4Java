@@ -9220,7 +9220,7 @@
 							   	</isNotEmpty>
 								<isNotEmpty property="v_FORMNAME"> 
 								AND 
-									(FORMNAME LIKE '%#v_FORMNAME#%' OR FORMNAME2 LIKE '%#v_FORMNAME#%')
+									(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
 								</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
@@ -14960,7 +14960,7 @@
 	   		</isNotEmpty>
 			<isNotEmpty property="v_FORMNAME"> 
 			AND 
-				(FORMNAME LIKE '%#v_FORMNAME#%' OR FORMNAME2 LIKE '%#v_FORMNAME#%')
+				(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
 			</isNotEmpty>
 	   		<isNotEmpty property="v_STARTDATE1"> 
 	   		<![CDATA[
@@ -31531,7 +31531,7 @@
 							   	</isNotEmpty>
 								<isNotEmpty property="v_FORMNAME"> 
 								AND 
-									(FORMNAME LIKE '%#v_FORMNAME#%' OR FORMNAME2 LIKE '%#v_FORMNAME#%')
+									(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
 								</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
@@ -31830,7 +31830,7 @@
    		</isNotEmpty>
 		<isNotEmpty property="v_FORMNAME"> 
    		AND 
-   			(FORMNAME LIKE '%#v_FORMNAME#%' OR FORMNAME2 LIKE '%#v_FORMNAME#%')
+   			(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
    		</isNotEmpty>
 		<isNotEmpty property="v_FORMNAME"> 
    		AND 
