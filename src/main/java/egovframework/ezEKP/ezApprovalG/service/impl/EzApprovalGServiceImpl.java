@@ -27527,6 +27527,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (int k = 0; k < doc.getElementsByTag("td").size(); k++) {
 				Element tdElement = doc.getElementsByTag("td").get(k);
 				String tdStyle = tdElement.attr("style");
+            	if(tdStyle != null && !tdStyle.equals("") && !tdStyle.endsWith(";")){
+            		tdStyle += ";";
+            	}
+            	tdElement.attr("style", tdStyle);
+            	
 				if (tdElement.hasAttr("align")) {
 					switch (tdElement.attr("align").toLowerCase()) {
 					case "left":
