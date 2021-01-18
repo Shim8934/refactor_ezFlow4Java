@@ -320,8 +320,10 @@
 			
 			        if (document.getElementsByName("FormName")[0].id == "FormName") {
 			            document.getElementsByName("FormName")[0].id = "";
-			        }
-			        RtnVal[21] = document.getElementsByName("FormName")[0].id;
+					}
+					// 2021-01-14 폼이름 검색으로 변경 - 박기범
+			        // RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        RtnVal[21] = document.getElementsByName("FormName")[0].value;
 			        RtnVal[22] = EndAprYear.value;
 			        RtnVal[23] = drafterdept.value;
 			        RtnVal[24] = "";
@@ -374,8 +376,9 @@
 		            RtnVal[6] = apprto;
 		            RtnVal[7] = myapprfrom;
 		            RtnVal[8] = myapprto;
-
-		            RtnVal[9] = document.getElementById("formid").value;
+					// 2021-01-14 폼이름 검색으로 변경 - 박기범
+		            // RtnVal[9] = document.getElementById("formid").value;
+		            RtnVal[9] = document.getElementsByName("FormName")[0].value;
 		            RtnVal[10] = document.getElementById("EndAprYear").value;
 		            RtnVal[11] = document.getElementById("drafterdept").value;
 
@@ -558,7 +561,9 @@
 			            document.getElementsByName("FormName")[0].id = "";
 			        }
 			
-			        RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        // 2021-01-14 폼이름 검색으로 변경 - 박기범
+			        // RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        RtnVal[21] = document.getElementsByName("FormName")[0].value;
 			        RtnVal[22] = EndAprYear.value;
 			        RtnVal[23] = drafterdept.value;
 			
@@ -578,7 +583,9 @@
 		          RtnVal[6] = initdate.substring(0, 10) + " 23:59:59";
 		          RtnVal[7] = "";
 		          RtnVal[8] = "";
-		          RtnVal[9] = document.getElementById("formid").value;
+		          // 2021-01-14 폼이름 검색으로 변경 - 박기범
+		          // RtnVal[9] = document.getElementById("formid").value;
+		          RtnVal[9] = document.getElementsByName("FormName")[0].value;
 		          RtnVal[10] = document.getElementById("EndAprYear").value;
 		          RtnVal[11] = document.getElementById("drafterdept").value;
 		          RtnVal[12] = "";
@@ -683,7 +690,9 @@
 			        if (document.getElementsByName("FormName")[0].id == "FormName") {
 			            document.getElementsByName("FormName")[0].id = "";
 			        }
-			        RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        // 2021-01-14 폼이름 검색으로 변경 - 박기범
+			        // RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        RtnVal[21] = document.getElementsByName("FormName")[0].value;
 			        RtnVal[22] = EndAprYear.value;
 			        RtnVal[23] = drafterdept.value;
 			
@@ -706,7 +715,9 @@
 		             RtnVal[7] = "";
 		             RtnVal[8] = "";
 
-		             RtnVal[9] = document.getElementById("formid").value;
+		             // 2021-01-14 폼이름 검색으로 변경 - 박기범
+		             // RtnVal[9] = document.getElementById("formid").value;
+		             RtnVal[9] = document.getElementsByName("FormName")[0].value;
 		             RtnVal[10] = document.getElementById("EndAprYear").value;
 		             RtnVal[11] = document.getElementById("drafterdept").value;
 		             RtnVal[12] = "";
@@ -820,7 +831,9 @@
 			        if (document.getElementsByName("FormName")[0].id == "FormName") {
 			            document.getElementsByName("FormName")[0].id = "";
 			        }
-			        RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        // 2021-01-14 폼이름 검색으로 변경 - 박기범
+			        // RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        RtnVal[21] = document.getElementsByName("FormName")[0].value;
 			        RtnVal[22] = EndAprYear.value;
 			        RtnVal[23] = drafterdept.value;
 			
@@ -842,7 +855,9 @@
 		            RtnVal[7] = "";
 		            RtnVal[8] = "";
 
-		             RtnVal[9] = document.getElementById("formid").value;
+		             // 2021-01-14 폼이름 검색으로 변경 - 박기범
+		             // RtnVal[9] = document.getElementById("formid").value;
+		             RtnVal[9] = document.getElementsByName("FormName")[0].value;
 		             RtnVal[10] = document.getElementById("EndAprYear").value;
 		             RtnVal[11] = document.getElementById("drafterdept").value;
 		             RtnVal[12] = "";
@@ -977,11 +992,11 @@
 		    <th ><spring:message code='ezApprovalG.t442'/></th>
 		    <c:choose>
 		    	<c:when test="${userInfo.lang == '1'}">
-				    <td ><input type="text" id="FormName" name="FormName" style="width:200px" disabled>
+				    <td ><input type="text" id="FormName" name="FormName" style="width:200px" >
 		      		<a  class="imgbtn imgbck" style="vertical-align:middle; margin-top:1.48px;"><span onClick="return btn_FormSelect_onclick()"><spring:message code='ezApprovalG.t442'/></span></a></td>
 		    	</c:when>
 		    	<c:otherwise>
-				    <td ><input type="text" id="FormName" name="FormName" style="width:193px" disabled>
+				    <td ><input type="text" id="FormName" name="FormName" style="width:193px" >
 		      		<a  class="imgbtn imgbck" style="vertical-align:middle"><span onClick="return btn_FormSelect_onclick()"><spring:message code='ezApprovalG.t442'/></span></a></td>
 		    	</c:otherwise>
 		    </c:choose>

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code = 'ezApprovalG.t1267' /></title>
+		<title><spring:message code = 'main.t48' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<%-- <link rel="stylesheet" href="${util.addVer('ezApprovalG.e3', 'msg')}" type="text/css"> --%>
@@ -317,7 +317,7 @@
 	</xml>
 	<body class="mainbody">
 	    <h1>
-	    	<spring:message code = 'ezApprovalG.t1275' />
+	    	<spring:message code = 'main.t48' />
 	    	<span class="title_bar"><img src="/images/name_bar.gif"></span>
 	    	<select id="ListCompany" class="companySelect" onChange="selectCompanyID()">
 	        	<c:forEach var="item" items="${list}">

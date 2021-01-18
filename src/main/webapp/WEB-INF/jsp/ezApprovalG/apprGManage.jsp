@@ -1993,8 +1993,8 @@
 
 			        if (SearchCond[21] != "" && SearchCond[21] !== undefined )		// FormID
 			        {
-			            TYPE += "FORMID;";
-			            DATA += "<FORMID>" + SearchCond[21] + "</FORMID>";
+			            TYPE += "FORMNAME;";
+			            DATA += "<FORMNAME>" + SearchCond[21] + "</FORMNAME>";
 			        }
 			
 			        if (SearchCond[23] != "" && SearchCond[23] !== undefined )		// draftDeptName
@@ -2042,8 +2042,8 @@
 				    }
 
 				    if (condition[9] != "") {
-				        TYPE += "FORMID;"
-				        DATA += "<FORMID>" + condition[9] + "</FORMID>";
+				        TYPE += "FORMNAME;"
+				        DATA += "<FORMNAME>" + condition[9] + "</FORMNAME>";
 				    }
 				    
 				    if (typeof (condition[11]) != "undefined" && condition[11] != "") {

@@ -1144,6 +1144,7 @@
 	<select id="MApprovalG.getAprLineInfo" parameterClass="Map" resultClass="MApprGAprLineInfoVO">
 		<isNotEqual property="type" compareValue="END">
 			SELECT
+				A.APRMEMBERID,
 	          	A.APRSTATE,
 	          	A.APRTYPE,
 	          	CASE 
@@ -1203,6 +1204,7 @@
 		</isNotEqual>
 		<isEqual property="type" compareValue="END">
 			SELECT
+				A.APRMEMBERID,
 	          	A.APRSTATE,
 	          	A.APRTYPE,
 	          	CASE 
@@ -1619,7 +1621,8 @@
 		   				CASE 
 		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
 		   					ELSE WRITERJOBTITLE$lang$
-		   				END WRITERJOBTITLE
+		   				END WRITERJOBTITLE,
+		   				TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
 					FROM
 						VAPRDOINGDOCLIST
 					WHERE
@@ -1660,7 +1663,8 @@
 		   				CASE 
 		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
 		   					ELSE WRITERJOBTITLE$lang$
-		   				END WRITERJOBTITLE
+		   				END WRITERJOBTITLE,
+		   				TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
 					FROM
 						VENDCHAMJODOCINFO
 					WHERE
@@ -1704,7 +1708,8 @@
 	   				CASE 
 	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
 	   					ELSE WRITERJOBTITLE$lang$
-	   				END WRITERJOBTITLE
+	   				END WRITERJOBTITLE,
+					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
 				FROM
 					VAPRWILLDOCLIST
 				WHERE
@@ -1742,7 +1747,8 @@
 	   				CASE 
 	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
 	   					ELSE WRITERJOBTITLE$lang$
-	   				END WRITERJOBTITLE
+	   				END WRITERJOBTITLE,
+					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
 				FROM
 					VAPRWILLDOCLIST
 				WHERE
@@ -1779,7 +1785,8 @@
    				CASE 
    					WHEN (A.WRITERJOBTITLE$lang$ = '' OR A.WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
    					ELSE A.WRITERJOBTITLE$lang$
-   				END WRITERJOBTITLE
+   				END WRITERJOBTITLE,
+				TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
@@ -1867,7 +1874,8 @@
 		   				CASE 
 		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
 		   					ELSE WRITERJOBTITLE$lang$
-		   				END WRITERJOBTITLE
+		   				END WRITERJOBTITLE,
+		   				TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
 					FROM
 						VAPRDOINGDOCLIST
 					WHERE
@@ -1908,7 +1916,8 @@
 		   				CASE 
 		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
 		   					ELSE WRITERJOBTITLE$lang$
-		   				END WRITERJOBTITLE
+		   				END WRITERJOBTITLE,
+		   				TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
 					FROM
 						VENDCHAMJODOCINFO
 					WHERE

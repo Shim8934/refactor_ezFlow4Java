@@ -689,6 +689,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
             if (tempQuery.indexOf("FORMID;") != -1) {
                 returnQuery += " AND FormID = '" + domSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
             }
+			// 2021-01-14 박기범 formname추가
+			if (tempQuery.indexOf("FORMNAME;") != -1) {
+                returnQuery += " AND (FORMNAME LIKE '%" + domSub.getElementsByTagName("FORMNAME").item(0).getTextContent() + 
+                "%' OR FORMNAME2 LIKE '%" + domSub.getElementsByTagName("FORMNAME").item(0).getTextContent() + "%') ";
+            }
             
             if (tempQuery.indexOf("KAPR;") != -1) {
                 returnQuery += " AND keyword LIKE '%" + domSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
@@ -6816,6 +6821,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docTitle = "";
 		String drafter = "";
 		String formID = "";
+		String formName = "";
 		String draftDeptName = "";
 		                       
 		String containerID = "";
@@ -6840,7 +6846,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         String papprto = xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
         String mypapprfrom = xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent();
         String mypapprto = xmlDom.getDocumentElement().getChildNodes().item(8).getTextContent();
-        formID = xmlDom.getDocumentElement().getChildNodes().item(9).getTextContent();
+        formName = xmlDom.getDocumentElement().getChildNodes().item(9).getTextContent();
         draftDeptName = xmlDom.getDocumentElement().getChildNodes().item(11).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
         containerID = xmlDom.getDocumentElement().getChildNodes().item(12).getTextContent();
         userID = xmlDom.getDocumentElement().getChildNodes().item(13).getTextContent();
@@ -6889,7 +6895,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
             if (!xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent().trim().equals(""))
                 subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent();
         }
-         result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftfrom, draftto, apprfrom,
+         result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, formName, draftfrom, draftto, apprfrom,
                 papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", shareDeptId, pageSize, pageNum, orderCell, orderOption, searchStatus,
                 userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 		
@@ -6930,7 +6936,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
         String myApprToYEAR = xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent();
         String myApprToMONTH = xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent();
         String myApprToDAY = xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent();
-        String formID = xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent();
+        String formID = "";
+        String formName = xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent();
         String draftDeptName = xmlDom.getDocumentElement().getChildNodes().item(23).getTextContent();
 
         String containerID = xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent();
@@ -6943,7 +6950,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         String orderCell = xmlDom.getDocumentElement().getChildNodes().item(32).getTextContent();
         String orderOption = xmlDom.getDocumentElement().getChildNodes().item(33).getTextContent();
         
-        String result = ezApprovalGService.getSearchDocList(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftFromYEAR, draftFromMONTH, draftFromDAY, draftToYEAR,
+        String result = ezApprovalGService.getSearchDocList(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, formName, draftFromYEAR, draftFromMONTH, draftFromDAY, draftToYEAR,
         		draftToMONTH, draftToDAY, apprFromYEAR, apprFromMONTH, apprFromDAY, apprToYEAR, apprToMONTH, apprToDAY, myApprFromYEAR, myApprFromMONTH, myApprFromDAY, myApprToYEAR, myApprToMONTH,
         		myApprToDAY, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "", userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
         
@@ -7442,9 +7449,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
             String subQuery = request.getParameter("SQ");
 
             if (approvalFlag.equalsIgnoreCase("G")) {
-                excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, allFG, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
+                excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21,"", P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, allFG, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
             } else {
-                excelValue = ezApprovalGService.getSearchDocListS(P12, userInfo.getId(), subQuery, P0, P1, P2, P9, P3, P4, P5, P6, P7, P8, P11, "", allFG, "", pageSize, pageNum, orderCell, orderOption,  "", userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
+                excelValue = ezApprovalGService.getSearchDocListS(P12, userInfo.getId(), subQuery, P0, P1, P2, P9,"", P3, P4, P5, P6, P7, P8, P11, "", allFG, "", pageSize, pageNum, orderCell, orderOption,  "", userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
             }
 		}
 		

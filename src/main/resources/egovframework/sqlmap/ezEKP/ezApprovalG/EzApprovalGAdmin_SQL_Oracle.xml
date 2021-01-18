@@ -788,6 +788,11 @@
 			]]>
 		</isNotEqual>
 
+		<isNotEmpty property="v_FORMNAME">
+			AND 
+				(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+		</isNotEmpty>
+
 		<isNotEqual property="v_DOCSTATE" compareValue="">
 			<![CDATA[
 				AND
@@ -2298,6 +2303,10 @@
 					formid = #v_FORMID#
 			]]>
 		</isNotEqual>
+		<isNotEmpty property="v_FORMNAME">
+			AND 
+				(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+		</isNotEmpty>
 		<isNotEqual property="v_DOCSTATE" compareValue="">
 			<![CDATA[
 				AND
@@ -5204,6 +5213,10 @@
    		 AND 
    		 	FORMID = #v_FORMID#
    		</isNotEmpty>
+		<isNotEmpty property="v_FORMNAME">
+		AND 
+			FORMNAME$v_MULTIDATALANG$ LIKE '%$v_FORMNAME$%'
+		</isNotEmpty>
    		 AND 
    			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 		 AND
@@ -5321,6 +5334,10 @@
 							   	<isNotEmpty property="v_FORMID">
 							   	 	AND 
 							   	 	      FORMID = $v_FORMID$
+							   	</isNotEmpty>
+								<isNotEmpty property="v_FORMNAME">
+							   	 	AND 
+							   	 	    FORMNAME$v_MULTIDATALANG$ LIKE '%$v_FORMNAME$%'
 							   	</isNotEmpty>
 							   		AND
 							    		 TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#

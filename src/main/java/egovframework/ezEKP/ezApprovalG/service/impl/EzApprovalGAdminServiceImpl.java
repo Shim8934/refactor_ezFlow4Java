@@ -1964,7 +1964,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			String draftFromMonth, String draftFromDay, String draftToYear,
 			String draftToMonth, String draftToDay, String apprFromYear,
 			String apprFromMonth, String apprFromDay, String apprToYear,
-			String apprToMonth, String apprToDay, String formID,
+			String apprToMonth, String apprToDay, String formID, String formName,
 			String draftDeptName, String draftDeptName2, String pageNum,
 			String pageSize, String docState, String subQuery,
 			String orderCell, String orderOption, String companyID, String lang, String approvUser, String offset, int tenantID)
@@ -2019,6 +2019,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("v_DEPTNAME", draftDeptName);
 		map1.put("v_DEPTNAME2", draftDeptName2);
 		map1.put("v_FORMID", formID);
+		map1.put("v_FORMNAME", formName); // 2021-01-13 박기범: 양식명 추가
 		map1.put("v_DOCSTATE", docState);
 		map1.put("v_STARTDATE1", commonUtil.getDateStringInUTC(commonUtil.makeDate(draftFromYear, draftFromMonth, draftFromDay, true), offset, true));
 		map1.put("v_STARTDATE2", commonUtil.getDateStringInUTC(commonUtil.makeDate(draftToYear, draftToMonth, draftToDay, false), offset, true));
@@ -2053,6 +2054,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map2.put("v_DEPTNAME", draftDeptName);
 		map2.put("v_DEPTNAME2", draftDeptName2);
 		map2.put("v_FORMID", formID);
+		map2.put("v_FORMNAME", formName); // 2021-01-13 박기범: 양식명 추가
 		map2.put("v_DOCSTATE", docState);
 		map2.put("v_STARTDATE1", commonUtil.getDateStringInUTC(commonUtil.makeDate(draftFromYear, draftFromMonth, draftFromDay, true), offset, true));
 		map2.put("v_STARTDATE2", commonUtil.getDateStringInUTC(commonUtil.makeDate(draftToYear, draftToMonth, draftToDay, false), offset, true));
@@ -4888,6 +4890,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String getAdminSearchDocList(
 			String formID,
+			String formName,
 			String docNumber,
 			String docTitle, 
 			String drafter, 
@@ -4936,6 +4939,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_DRAFTER", drafter);
 		map.put("v_DEPTNAME", draftDeptName);
 		map.put("v_FORMID", formID);
+		map.put("v_FORMNAME", formName);	// 2021-01-13 박기범 문서명 검색 추가
 		map.put("v_STARTDATE1", draftfrom );
 		map.put("v_STARTDATE2", draftto);
 		map.put("v_ENDDATE1", apprfrom);

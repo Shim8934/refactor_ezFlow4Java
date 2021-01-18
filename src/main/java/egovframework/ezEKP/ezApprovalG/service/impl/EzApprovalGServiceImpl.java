@@ -19822,7 +19822,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getSearchDocList(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftFromYEAR, String draftFromMONTH,
+	public String getSearchDocList(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String formName, String draftFromYEAR, String draftFromMONTH,
 			String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR, String apprToMONTH,
 			String apprToDAY, String myApprFromYEAR, String myApprFromMONTH, String myApprFromDAY, String myApprToYEAR, String myApprToMONTH, String myApprToDAY, String draftDeptName,
 			String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String alFlag, String companyID, String lang, String approvUser, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception {
@@ -19892,7 +19892,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
-		int totalCount = getSearchDocListCount(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
+		int totalCount = getSearchDocListCount(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, formName, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
 				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, commonUtil.getMultiData(lang, tenantID), approvUser, approvalFlag, companyID, tenantID, offset);
 		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
 		int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
@@ -19927,7 +19927,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		resultXML.append("</HEADERS>");
 		
-		String docList = getSearchDocList(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
+		String docList = getSearchDocList(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, formName, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
 				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, querySize, querySize2, querySize3, orderOption1, orderOption2, alFlag, lang, approvUser, companyID, tenantID, offset, approvalFlag, locale);
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
@@ -20040,7 +20040,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	private String getSearchDocList(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String docNumber, String docTitle, String drafter,
-			String draftDeptName, String formID, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
+			String draftDeptName, String formID, String formName, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
 			String docState, int querySize, int querySize2, int querySize3, String orderOption1, String orderOption2, String alFlag, String langType, String approvUser, String companyID, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception {
 		logger.debug("getSearchDocList started");
 		
@@ -20068,6 +20068,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTER", drafter.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("v_FORMID", formID.trim());
+		map.put("v_FORMNAME", formName.trim());
 		map.put("v_ENDDATE1", tmpEndDate1);
 		map.put("v_ENDDATE2", tmpEndDate2);
 		map.put("v_STARTDATE1", tmpStartDate1);
@@ -20143,7 +20144,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	private int getSearchDocListCount(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String docNumber, String docTitle, String drafter,
-			String draftDeptName, String formID, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
+			String draftDeptName, String formID, String formName, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
 			String docState, String langType, String approvUser, String approvalFlag, String companyID, int tenantID, String offset) throws Exception {
 		logger.debug("getSearchDocListCount started");
 
@@ -20164,6 +20165,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTER", drafter.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("v_FORMID", formID.trim());
+		map.put("v_FORMNAME", formName.trim());
 		map.put("v_STARTDATE1", tmpStartDate1);
 		map.put("v_STARTDATE2", tmpStartDate2);
 		map.put("v_ENDDATE1", tmpEndDate1);
@@ -25597,7 +25599,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getSearchDocListS(String containerID, String userID, 	String subQuery, String docNumber, String docTitle, String drafter,	String formID, String draftfrom, String draftto, String apprfrom,
+	public String getSearchDocListS(String containerID, String userID, 	String subQuery, String docNumber, String docTitle, String drafter,	String formID,String formName, String draftfrom, String draftto, String apprfrom,
 			String apprto, String mypapprfrom, String mypapprto, String draftDeptName, String docState, String AprFlag, String deptId, String pageSize, String pageNum, String orderCell, String orderOption,String searchStatus, String companyID, String lang, String pApprovUser, int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 
@@ -25642,6 +25644,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTER", drafter);
 		map.put("v_DRAFTDEPTNAME", draftDeptName);
 		map.put("v_FORMID", formID);
+		map.put("v_FORMNAME", formName);
 		map.put("v_DOCSTATE", docState);
 		
 		if(deptId.split("/").length > 1){
@@ -28271,6 +28274,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         strAttachURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" 
 						               + commonUtil.separator + nYear + commonUtil.separator + getDocDir(strNewID) + commonUtil.separator + strNewID.trim() + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
 						strAttachDisplayName = strAttachName;
+						String strFileSize = "0";
 
 						map.put("NEWID", strNewID);
 			    		map.put("ATTACHSN", domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent());
@@ -28280,8 +28284,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			    		map.put("ATTACHDISPNAME", strAttachDisplayName);
 			    		map.put("ATTACHTYPE", domXML.getElementsByTagName("ATTACHTYPE").item(i).getTextContent());
 			    		
-						ezApprovalGDAO.insertRelayAttchInfo(map);
-
 						if(!domXML.getElementsByTagName("ATTACHURL").item(i).getTextContent().equals("") ) {
 							strSource = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "ExDocDown" + commonUtil.separator + domXML.getElementsByTagName("ATTACHURL").item(i).getTextContent();
                             strTarget = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID) + commonUtil.separator  + strNewID.trim()  + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
@@ -28296,7 +28298,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             try {
                                 // 복사할 대상 파일을 지정해준다.
                                 File file = new File(commonUtil.detectPathTraversal(strSource));
-                                 
+                                long lFileSize = file.length();
+                                strFileSize = Long.toString(lFileSize);
+                                
                                 // FileInputStream 는 File object를 생성자 인수로 받을 수 있다.         
                                 input = new FileInputStream(file);
                                 // 복사된 파일의 위치를 지정해준다.
@@ -28320,6 +28324,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                                 }
                             }
                         }
+						map.put("ATTACHFILESIZE", strFileSize);
+						
+						ezApprovalGDAO.insertRelayAttchInfo(map);		// 2021-01-06 김민성 - 중계문서 첨부파일 filesize 계산하여 넣도록 수정
 					}
 				}
 			}
@@ -29986,8 +29993,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     	
     	if (mode.equals("APR")) {
     		Subject = messageSource.getMessage("ezEmail.csj12", userInfo.getLocale()) + " " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent(); //[결재문서도착알림] + DOCTITLE
-    		bodyContent.append("<span style='font-size:13pt; font-weight:bold;'>" + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span>");
-    		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj14", userInfo.getLocale()) + "</span>");
+    		bodyContent.append("<span style='font-size:13px; font-weight:bold;'>" + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span>");
+    		bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj14", userInfo.getLocale()) + "</span>");
     		bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getServerName() + (request.getServerPort() == 80 ? "" : ":" + request.getServerPort()) + "/ezApprovalG/approvui.do?");
     		bodyContent.append("docID=" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
     		bodyContent.append("&id=" + targetUserID + "&name=" + targetUserName + "&deptID=" + targetUserDeptID);
@@ -29995,15 +30002,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     		bodyContent.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>");
     		bodyContent.append(messageSource.getMessage("ezEmail.csj15", userInfo.getLocale())); //결재 문서 바로가기 링크
     		bodyContent.append("</a><br><br>");
-    		bodyContent.append("<span style='font-size:13pt; font-weight:bold;'>" + messageSource.getMessage("ezEmail.csj16", userInfo.getLocale()) + "</span><br>");
-    		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
-    		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
-    		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
+    		bodyContent.append("<span style='font-size:13px; font-weight:bold;'>" + messageSource.getMessage("ezEmail.csj16", userInfo.getLocale()) + "</span><br>");
+    		bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
+    		bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
+    		bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
     	} else {
     		Subject = messageSource.getMessage("ezEmail.csj06", userInfo.getLocale()) + " " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent(); //[결재완료알림] + DOCTITLE
-    		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
-    		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
-    		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
+    		bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
+    		bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
+    		bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
     	}
     	
     	bodyContent.append("</td></tr></table>");
@@ -30559,7 +30566,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public String getSearchDocListForOpenGov(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftFromYEAR, String draftFromMONTH,
+	public String getSearchDocListForOpenGov(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String formName, String draftFromYEAR, String draftFromMONTH,
 			String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR, String apprToMONTH,
 			String apprToDAY, String myApprFromYEAR, String myApprFromMONTH, String myApprFromDAY, String myApprToYEAR, String myApprToMONTH, String myApprToDAY, String draftDeptName,
 			String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String alFlag, String companyID, String lang, String approvUser, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception {
@@ -30629,7 +30636,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
-		int totalCount = getSearchDocListCountForOpenGov(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
+		int totalCount = getSearchDocListCountForOpenGov(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, formName, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
 				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, commonUtil.getMultiData(lang, tenantID), approvUser, approvalFlag, companyID, tenantID, offset);
 		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
 		int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
@@ -30664,7 +30671,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		resultXML.append("</HEADERS>");
 		
-		String docList = getSearchDocListForOpenGov(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
+		String docList = getSearchDocListForOpenGov(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, formName, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
 				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, querySize, querySize2, querySize3, orderOption1, orderOption2, alFlag, lang, approvUser, companyID, tenantID, offset, approvalFlag, locale);
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
@@ -30757,7 +30764,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	private String getSearchDocListForOpenGov(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String docNumber, String docTitle, String drafter,
-			String draftDeptName, String formID, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
+			String draftDeptName, String formID, String formName, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
 			String docState, int querySize, int querySize2, int querySize3, String orderOption1, String orderOption2, String alFlag, String langType, String approvUser, String companyID, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception {
 		logger.debug("getSearchDocListForOpenGov started");
 		
@@ -30783,6 +30790,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTER", drafter.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("v_FORMID", formID.trim());
+		map.put("v_FORMNAME", formName.trim());
 		map.put("v_ENDDATE1", tmpEndDate1);
 		map.put("v_ENDDATE2", tmpEndDate2);
 		map.put("v_STARTDATE1", tmpStartDate1);
@@ -30860,7 +30868,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	private int getSearchDocListCountForOpenGov(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String docNumber, String docTitle, String drafter,
-			String draftDeptName, String formID, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
+			String draftDeptName, String formID, String formName, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
 			String docState, String langType, String approvUser, String approvalFlag, String companyID, int tenantID, String offset) throws Exception {
 		logger.debug("getSearchDocListCount started");
 
@@ -30881,6 +30889,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTER", drafter.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("v_FORMID", formID.trim());
+		map.put("v_FORMNAME", formName.trim());
 		map.put("v_STARTDATE1", tmpStartDate1);
 		map.put("v_STARTDATE2", tmpStartDate2);
 		map.put("v_ENDDATE1", tmpEndDate1);
@@ -31433,8 +31442,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						continue;
 					}
 					Subject = messageSource.getMessage("ezEmail.csj12", userInfo.getLocale()) + " " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent(); //[결재문서도착알림] + DOCTITLE
-					bodyContent.append("<span style='font-size:13pt; font-weight:bold;'>" + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span>");
-					bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj14", userInfo.getLocale()) + "</span>");
+					bodyContent.append("<span style='font-size:13px; font-weight:bold;'>" + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span>");
+					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj14", userInfo.getLocale()) + "</span>");
 					bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getServerName() + (request.getServerPort() == 80 ? "" : ":" + request.getServerPort()) + "/ezApprovalG/approvui.do?");
 					bodyContent.append("docID=" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
 					bodyContent.append("&id=" + targetUserID + "&name=" + targetUserName + "&deptID=" + targetUserDeptID);
@@ -31442,19 +31451,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					bodyContent.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>");
 					bodyContent.append(messageSource.getMessage("ezEmail.csj15", userInfo.getLocale())); //결재 문서 바로가기 링크
 					bodyContent.append("</a><br><br>");
-					bodyContent.append("<span style='font-size:13pt; font-weight:bold;'>" + messageSource.getMessage("ezEmail.csj16", userInfo.getLocale()) + "</span><br>");
-					bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
-					bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
-					bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
+					bodyContent.append("<span style='font-size:13px; font-weight:bold;'>" + messageSource.getMessage("ezEmail.csj16", userInfo.getLocale()) + "</span><br>");
+					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
+					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
+					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
 				} else {
 					if (notiDoc.getElementsByTagName("LINEPASS").item(0).getTextContent().equals("0")) {
 						continue;
 					}
 					Subject = "[" + messageSource.getMessage("ezApprovalG.garm09", userInfo.getLocale()) + "] " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent(); //[결재문서도착알림] + DOCTITLE
-					bodyContent.append("<span style='font-size:13pt; font-weight:bold;'>" + messageSource.getMessage("ezEmail.csj16", userInfo.getLocale()) + "</span><br>");
-					bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
-					bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
-					bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
+					bodyContent.append("<span style='font-size:13px; font-weight:bold;'>" + messageSource.getMessage("ezEmail.csj16", userInfo.getLocale()) + "</span><br>");
+					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
+					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
+					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
 					bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getServerName() + (request.getServerPort() == 80 ? "" : ":" + request.getServerPort()) + "/ezApprovalG/approvui.do?");
 					bodyContent.append("docID=" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
 					bodyContent.append("&id=" + targetUserID + "&name=" + targetUserName + "&deptID=" + targetUserDeptID);

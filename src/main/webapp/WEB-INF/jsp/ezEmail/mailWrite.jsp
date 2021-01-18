@@ -239,6 +239,7 @@
 	            var xmpToValue = xmpTo.innerHTML;
 	            xmpToValue = ReplaceText(xmpToValue, "&lt;", "<");
 	            xmpToValue = ReplaceText(xmpToValue, "&gt;", ">");
+	            xmpToValue = ReplaceText(xmpToValue, "&#034;", "\"");
 	        	var moduleType = "<c:out value='${moduleType}'/>";
 
 	        	if (moduleType == "attitudeAbsented") {
