@@ -17187,6 +17187,7 @@
 	<insert id="EzApprovalG.aprMakeTmp2Ing2" parameterClass="Map">
 		INSERT INTO 
 			TBL_APROPINIONINFO
+		(DocID, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, UserName2, UserJobTitle2, UserDeptName2, TENANT_ID, COMPANYID)
      	( SELECT 
      		  #v_PDOCID# ,
               USERID ,
