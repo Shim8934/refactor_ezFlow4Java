@@ -23896,6 +23896,7 @@
    <insert id="EzApprovalG.insertTmpAprOpinionInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_TMPAPROPINIONINFO
+   		(OWNERID, SN, USERID, OPINIONGB , CONTENT , USERNAME , USERJOBTITLE , USERDEPTID , USERDEPTNAME , OPINIONSN , UserName2 ,  UserJobTitle2 , UserDeptName2 , TENANT_ID , COMPANYID)
 		(SELECT 
 				#v_USERID#, 
 				#v_SN#, 
