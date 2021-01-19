@@ -113,6 +113,8 @@
 				            break;
 				    }
 				}
+				
+				lvtDoclist_onSel_DBclick();
 			}
 			
 			function GetDocList() {
