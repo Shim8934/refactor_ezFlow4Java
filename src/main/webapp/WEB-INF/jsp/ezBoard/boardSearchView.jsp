@@ -231,7 +231,8 @@
 			        DocList.SetID("BoardList");
 			        DocList.SetMulSelectable(false);
 			        DocList.SetHeaderOnClick("SortPage");
-			        DocList.SetRowOnDblClick("ItemRead_onclick(this)");
+//			        DocList.SetRowOnDblClick("ItemRead_onclick(this)");
+			        DocList.SetRowOnClick("ItemRead_onclick(this)");
 			        DocList.SetTitleIdx(0);
 			        DocList.SetSelectFlag(false);
 			        DocList.DataSource(xmlDoc);

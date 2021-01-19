@@ -393,7 +393,7 @@
 		    		</c:otherwise>
 		    	</c:choose>
 		    	<td>${reservedList.boardName}</td>
-		    	<td title="${fn:replace(reservedList.ABSTRACT, '\'', '`') }" style='cursor:pointer;white-space: nowrap; text-overflow:ellipsis; overflow:hidden' ondblclick="ItemRead_onclick('${reservedList.boardID}', '${reservedList.boardName}', '${reservedList.itemID}')">${reservedList.title}</td>
+		    	<td title="${fn:replace(reservedList.ABSTRACT, '\'', '`') }" style='cursor:pointer;white-space: nowrap; text-overflow:ellipsis; overflow:hidden' onclick="ItemRead_onclick('${reservedList.boardID}', '${reservedList.boardName}', '${reservedList.itemID}')">${reservedList.title}</td>
 		    	<td>${fn:substring(reservedList.startDate, 0, 16)}</td>
 		    	<c:choose> 
 		    		<c:when test="${fn:substring(reservedList.endDate, 0, 4) == '9999'}">

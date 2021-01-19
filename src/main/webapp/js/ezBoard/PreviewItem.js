@@ -341,11 +341,14 @@ function PreviewMode_ChangeBtn() {
     } catch (e) { }
 }
 
+/* 2021-01-19 홍승비 - 미리보기 영역이 열려있지 않다면, 원클릭으로 게시물 읽기팝업창을 호출 */
 function ItemPreviewRead_click(obj) {
     selobj = document.getElementById(obj);
     onclickFlag = true;
     if (g_bPrevShow) {
         ItemPreviewRead(document.getElementById(obj));
+    } else {
+    	ItemRead_onclick(selobj);
     }
 }
 var xmlhttp = createXMLHttpRequest();
@@ -1278,6 +1281,8 @@ function ItemPreviewRead_AlbumClick(objDiv) {
     onclickFlag = true;
     if (g_bPrevShow) {
     	ItemPreviewRead_Album(objDiv);
+    } else {
+    	ItemRead_onclick(selobj);
     }
 }
 function ItemPreviewRead_Album(objDiv) {
