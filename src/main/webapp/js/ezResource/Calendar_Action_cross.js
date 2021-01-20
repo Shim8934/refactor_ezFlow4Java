@@ -595,6 +595,7 @@ function tableListControl_Week()
             _mtd.style.height = "60px";
             //_mtd.onselectstart = "return false";
             _mtd.onselectstart = function () { return false; };
+            _mtd.setAttribute("onclick", "newSchedule_onclick(event)");
             _mtd.setAttribute("ondblclick", "newSchedule_onclick(event)");
             //_mtd.ondblclick = new Function("newSchedule_onclick(event);");
             if(k == 0) {
@@ -1122,6 +1123,7 @@ function tableListControl_today() {
             _TD.setAttribute("DATA1", title_name[k].split("/")[0]);
             _TD.setAttribute("DATA2", title_name[k].split("/")[1]);
             _TD.setAttribute("title", _TD.getAttribute("DATA2"));
+            _TD.setAttribute("onclick", "newSchedule_onclick(event)");
             _TD.setAttribute("ondblclick", "newSchedule_onclick(event)");
             
             _TD.align = "left";

@@ -247,6 +247,7 @@ function CalendarView(pTagetID) {
                 var dTd = document.createElement("TD")
                 dTd.className = "calendar_t_time";
                 dTd.setAttribute("dispDate", dayText.substring(0,10));
+                dTd.setAttribute("onclick", "newSchedule_onclick(event)");
                 dTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
                 var dDiv = document.createElement("DIV")
                 dDiv.setAttribute("id", dayText.substring(0, 10) + "ALL");
@@ -260,6 +261,7 @@ function CalendarView(pTagetID) {
                 var dTd = document.createElement("TD")
                 dTd.className = "calendar_t_text";
                 dTd.setAttribute("dispDate", dayText.substring(0,10));
+                dTd.setAttribute("onclick", "newSchedule_onclick(event)");
                 dTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
                 dTr.appendChild(dTd);
                 dTable.appendChild(dTr);
@@ -689,6 +691,7 @@ function MonthData(oThisDate, TDIndex) {
     subTd.setAttribute("id", "TD_" + cell_ID + "_Day");
     subTd.setAttribute("onmouseover", "MonthlyViewHeader_onMouseOver(this)");
     subTd.setAttribute("onmouseout", "MonthlyViewHeader_onMouseOut(this)");
+    subTd.setAttribute("onclick", "newSchedule_onclick(event)");
     subTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
     subTd.setAttribute("dispDate", cell_ID);
     //subTd.innerHTML = pDateData;
@@ -1087,6 +1090,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         var dTr = document.createElement("TR")
         var dTd = document.createElement("TD")
         dTd.className = "calendar_t_time";
+        dTd.setAttribute("onclick", "newSchedule_onclick(event)");
         dTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
         dTd.setAttribute("dispDate", divID);
         var dDiv = document.createElement("DIV")
@@ -1102,6 +1106,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         var dTd = document.createElement("TD")
         dTd.className = "calendar_t_text";
         dTd.setAttribute("dispDate", divID);
+        dTd.setAttribute("onclick", "newSchedule_onclick(event)");
         dTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
         dTr.appendChild(dTd);
         dTable.appendChild(dTr);
@@ -1123,6 +1128,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         var dTd = document.createElement("TD")
         dTd.className = "calendar_t_time";
         dTd.setAttribute("id", "TD_" + divID + "_" + k + ":0_Value");
+        dTd.setAttribute("onclick", "newSchedule_onclick(event)");
         dTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
         dTd.setAttribute("dispTime", divID + " " + leadingZeros(k, 2) + ":00:00");
         dTr.appendChild(dTd);
@@ -1131,6 +1137,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         var dTd = document.createElement("TD")
         dTd.className = "calendar_t_text";
         dTd.setAttribute("id", "TD_" + divID + "_" + k + ":3_Value");
+        dTd.setAttribute("onclick", "newSchedule_onclick(event)");
         dTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
         dTd.setAttribute("dispTime", divID + " " + leadingZeros(k, 2) + ":30:00");
         dTr.appendChild(dTd);
@@ -1218,6 +1225,7 @@ function DayData(j) {
     var s_Td = document.createElement("TD");
     s_Td.className = "calendar_t_time";
     s_Td.setAttribute("id", "TD_" + divID + "_" + j + ":0_Value");
+    s_Td.setAttribute("onclick", "newSchedule_onclick(event)");
     s_Td.setAttribute("ondblclick", "newSchedule_onclick(event)");
     s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":00:00");
     s_Tr.appendChild(s_Td);
@@ -1225,6 +1233,7 @@ function DayData(j) {
     var s_Tr = document.createElement("TR");
     var s_Td = document.createElement("TD");
     s_Td.className = "calendar_t_text";
+    s_Td.setAttribute("onclick", "newSchedule_onclick(event)");
     s_Td.setAttribute("ondblclick", "newSchedule_onclick(event)");
     s_Td.setAttribute("id", "TD_" + divID + "_" + j + ":3_Value");
     s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":30:00");
