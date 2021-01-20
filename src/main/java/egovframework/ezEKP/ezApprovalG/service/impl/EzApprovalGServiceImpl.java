@@ -27606,6 +27606,36 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 					tdElement.attr("height", "0");
 				}
+
+				// td에 padding style이 있는 문서에 대해
+				// td에 padding으로 들어간 값을 현재 td 아래 p요소의 margin style로 넣어주고 td의 style은 삭제
+				if(tdStyle.indexOf("padding:") > -1 && tdElement.child(0).tagName().toLowerCase().equals("p")) {
+					tdStyle = tdElement.attr("style");
+					String pdElem = tdStyle.substring(tdStyle.indexOf("padding:")+8, tdStyle.indexOf(";", tdStyle.indexOf("padding:")));
+					String tdStyleForP = "";
+					String[] pdElems = pdElem.split(" ");
+					for(int l=0; l<pdElems.length; l++) {
+						switch(l) { 
+							case 0:
+								tdStyleForP += "margin-top:" + SizeConvertToMM(pdElems[l]) + ";";
+								break;
+							case 1:
+								tdStyleForP += "margin-right:" + SizeConvertToMM(pdElems[l]) + ";";
+								break;
+							case 2:
+								tdStyleForP += "margin-bottom:" + SizeConvertToMM(pdElems[l]) + ";";
+								break;
+							case 3:
+								tdStyleForP += "margin-left:" + SizeConvertToMM(pdElems[l]) + ";";
+								break;
+						}
+					}
+					
+					Element pElement = tdElement.child(0);
+					String pStyle = pElement.attr("style");
+					pElement.attr("style", pStyle + tdStyleForP);
+					tdElement.attr("style", "");
+				}
 				
 			}
 			
