@@ -591,8 +591,8 @@ function SendDraftMappingSign(ret) {
 	if(ret != "NAME") {
 		if (message.FieldExist(psigncell)) {
 			message.PutFieldText(psigncell, "");	
-			//message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
-			message.InsertPicture(psigncell, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
+			message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
+			//message.InsertPicture(psigncell, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
 		}
 	
 	  	signInfo[signCnt] = psigncell;
