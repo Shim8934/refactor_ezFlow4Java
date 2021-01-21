@@ -615,6 +615,12 @@
 		   				}
 			   			$(parentElem).removeClass("noView");
 		   			}
+		   			
+					/* 2021-01-21 홍승비 - 미리보기 영역 열려있지 않은 경우, 원클릭으로 업무일지 읽기팝업창 표출 */
+					if (document.getElementById("PreviewRayerH").style.display == "none" && document.getElementById("PreviewRayerW").style.display == "none") {
+						goJournalDetail(parentElem); // parentElem은 현재 td 엘리먼트의 상위 tr 태그
+					}
+					
 // 	   				$("#ifrmPreViewH").attr("src","/ezJournal/journalPreview.do?journalId="+journalId);
 					$.ajax({
 		   				type : "post",
