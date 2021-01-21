@@ -2027,7 +2027,7 @@ public class EzApprovalGRelayScheduler {
 				    	  
 				    	  logger.debug("send: " + paramMap);
 				    	  
-				    	  if(!map.get("V_SENDSTATE").equals("send")) {
+				    	  if(!map.get("SENDSTATE").equals("send")) {
 				    		  paramMap.put("V_SENDSTATE", "send");
 				    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
 				    	  }
@@ -2043,7 +2043,7 @@ public class EzApprovalGRelayScheduler {
 				    	  
 				    	  logger.debug("sendtemp: " + paramMap);
 				    	  
-				    	  if(!map.get("V_SENDSTATE").equals("sendtemp")) {
+				    	  if(!map.get("SENDSTATE").equals("sendtemp")) {
 				    		  paramMap.put("V_SENDSTATE", "sendtemp");
 				    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
 				    	  }
@@ -2059,7 +2059,7 @@ public class EzApprovalGRelayScheduler {
 				    	  
 				    	  logger.debug("senderr: " + paramMap);
 				    	  
-				    	  if(!map.get("V_SENDSTATE").equals("senderr")) {
+				    	  if(!map.get("SENDSTATE").equals("senderr")) {
 				    		  paramMap.put("V_SENDSTATE", "senderr");
 				    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
 				    	  }
@@ -2075,7 +2075,7 @@ public class EzApprovalGRelayScheduler {
 				    	  
 				    	  logger.debug("senderrtemp: " + paramMap);
 				    	  
-				    	  if(!map.get("V_SENDSTATE").equals("senderrtemp")) {
+				    	  if(!map.get("SENDSTATE").equals("senderrtemp")) {
 				    		  paramMap.put("V_SENDSTATE", "senderrtemp");
 				    		  ezApprovalGAdminDao.updateSendOutInfo(paramMap);
 				    	  }
