@@ -472,9 +472,9 @@
 
 			function ReadTask(obj)
 			{
-				var taskid = $(obj).closest("tr").attr("taskid");
+				var taskid = $(obj).attr("taskid");
 				var feature = "";
-				var startD = obj.parentElement.getAttribute("startdate");				
+				var startD = obj.getAttribute("startdate");				
 
 				feature = GetOpenPosition(790, 820);
 	        	
@@ -627,18 +627,18 @@
 			</tr>
 			</tbody>
 			<!-- 18-05-24 김민성 - 중요도 이미지로 수정 -->
-			<tr class="row_body" id="row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
-				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-                <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
+			<tr class="row_body" id="row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this); ReadTask(this);">
+				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;text-align:center;"></td>
+				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;text-align:center;"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;"></td>
+                <td class="tr_Read" style="cursor:pointer;white-space:nowrap;"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;"></td>
 			</tr>
 		</table>
 		<div id="todo_BODY" style="height:300px; overflow-y:auto;">
