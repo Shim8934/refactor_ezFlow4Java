@@ -459,7 +459,7 @@ var CabinetItem = function() {
 				
 				trElmt.setAttribute("class", unselectClass);
 				trElmt.setAttribute("role",  itemList[i]["itemId"]);
-				trElmt.onclick    = function(event) {clickRowFunct(event);};
+				trElmt.onclick    = function(event) {clickRowFunct(event); itemDblClickHandler2(event, this);};
 				trElmt.ondblclick = function(event) {itemDblClickHandler(this);};
 				
 				var inputElmt  = document.createElement("input");
@@ -756,6 +756,16 @@ var CabinetItem = function() {
 	function itemDblClickHandler(trObj) {
 		var itemId   = trObj.getAttribute("role");
 		openFileDetail(itemId);
+	}
+	
+	/* 2021-01-21 홍승비 - 미리보기 영역 열려있지 않은 경우, 원클릭으로 캐비넷 읽기팝업창 표출 */
+	function itemDblClickHandler2(event, trObj) {
+		if (document.getElementById("previewCabH").style.display == "none" && document.getElementById("previewCabW").style.display == "none") {
+			if (!event.ctrlKey && !event.shiftKey) {
+				var itemId   = trObj.getAttribute("role");
+				openFileDetail(itemId);
+			}
+		}
 	}
 	
 	function generatePreviewElmt(divElmt) {
