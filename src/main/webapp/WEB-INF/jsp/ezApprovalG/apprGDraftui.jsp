@@ -107,6 +107,7 @@
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 		    arr_userinfo[17]  = "<c:out value ='${userInfo.primary}'/>";
 		    var pCompanyID = "<c:out value ='${userInfo.companyID}'/>";
+		    var pTenantID = "<c:out value='${userInfo.tenantId}'/>";
 		    var pUserID = arr_userinfo[1];
 		    var KuyjeType = "002";
 		    var signDateFormat = "<c:out value ='${optSignDateFormat}'/>";

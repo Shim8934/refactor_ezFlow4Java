@@ -10202,10 +10202,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("officeUpload started.");
 		
 		String docId = request.getParameter("docId");
-		int tenantId = Integer.parseInt(request.getParameter("tenantId"));
+		
 		String companyId = request.getParameter("companyId");
 		String userId = request.getParameter("userId");
 		MultipartFile file = request.getFile("fileToUpload");
+ 		int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 		
 		// 변환솔루션이 다른 서버에 설치되어있을 경우, 이 경로를 변환솔루션 서버에 마운트 시켜야함
 		String tempUploadPath = config.getProperty("config.officeTempUploadPath");
