@@ -27502,9 +27502,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					tableElement.attr("height", "0");
 				}
 				
-//				if (tableElement.hasAttr("style")) {
-//					tableElement.removeAttr("style");
-//				}
+				if (tableElement.hasAttr("style")) {
+					tableElement.removeAttr("style");
+				}
 				
 				if (tableElement.hasAttr("align")) {
 					switch (tableElement.attr("align").toString()) {
