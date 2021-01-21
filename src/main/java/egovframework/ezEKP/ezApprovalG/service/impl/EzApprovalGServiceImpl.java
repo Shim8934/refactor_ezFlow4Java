@@ -27268,7 +27268,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 	}
                 	String parentSpanStyle = doc.getElementsByTag("span").get(i).parent().attr("style").toString();
                 	
-                	htmlStyle.append(parentSpanStyle);
+                	//htmlStyle.append(parentSpanStyle);
 
                     // 상위태그가 P태그일 경우 P태그의 innerText와 span의 innerText가 동일할 경우 span의 Style을 P태그의 style로 입력한다.
                 	if (doc.getElementsByTag("span").get(i).parent().text() != null && !doc.getElementsByTag("span").get(i).parent().text().equals("") 
@@ -27293,7 +27293,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         			htmlStyle.append(spanStyle.substring(spanStyle.indexOf("line-height"), spanStyle.indexOf(";", spanStyle.indexOf("line-height"))+1));
                                 }
                             }
-                            doc.getElementsByTag("span").get(i).parentNode().attr("style",htmlStyle.toString());
+                            
+                            htmlStyle.append(parentSpanStyle);
+                            
+                            if(!htmlStyle.toString().equals("")) {
+                            	doc.getElementsByTag("span").get(i).parentNode().attr("style",htmlStyle.toString());
+                            }
     						htmlStyle.setLength(0);
                         }
                     }
@@ -27634,7 +27639,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					Element pElement = tdElement.child(0);
 					String pStyle = pElement.attr("style");
 					pElement.attr("style", pStyle + tdStyleForP);
-					tdElement.attr("style", "");
+				}
+				
+				if (tdElement.hasAttr("style")) {
+					tdElement.removeAttr("style");
+				}
+				
+				if (tdElement.hasAttr("bgcolor")) {
+					tdElement.removeAttr("bgcolor");
 				}
 				
 			}
