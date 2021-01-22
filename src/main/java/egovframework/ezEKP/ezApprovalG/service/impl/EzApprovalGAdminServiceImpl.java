@@ -2338,9 +2338,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String delForm(String formID, String companyID, String realPath, int tenantID) throws Exception {
-		logger.debug("delForm started.");
-		String result = deleteForm(formID, companyID, tenantID);
+	public String delForm(String formID, String companyID, String realPath, int tenantID, String officeFlag) throws Exception {
+		logger.debug("delForm started.");		
+		String result = deleteForm(formID, companyID, tenantID,officeFlag);
 		
 		if (result.equals("TRUE")) {
 			String filePath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID;
@@ -2470,13 +2470,18 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		return "TRUE";
 	}
 	
-	private String deleteForm(String formID, String companyID, int tenantID) throws Exception {
+	private String deleteForm(String formID, String companyID, int tenantID, String officeFlag) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_FORMID", formID);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
-		
+				
 		logger.debug("deleteForm started.");
+		if(officeFlag != null && officeFlag.equalsIgnoreCase("Y")) {
+			logger.debug("officeForm Delete started");
+			ezApprovalGAdminDAO.deleteForm3(map);
+			logger.debug("officeForm Delete ended");
+		}
 		ezApprovalGAdminDAO.deleteForm1(map);
 		ezApprovalGAdminDAO.deleteForm2(map);
 		logger.debug("deleteForm ended.");

@@ -423,7 +423,7 @@
 		                	type : "POST",
 		                	url : "/admin/ezApprovalG/delForm.do",
 		                	async : false,
-		                	data : {formID : GetAttribute(selRow[0], "DATA1"), companyID : companyID},
+		                	data : {formID : GetAttribute(selRow[0], "DATA1"), companyID : companyID, officeFlag : GetAttribute(selRow[0],"DATA-OFFICEFLAG")},
 		                	success : function (result) {
 		                		tempRet = result;
 		                		

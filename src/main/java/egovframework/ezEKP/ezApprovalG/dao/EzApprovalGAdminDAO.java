@@ -363,6 +363,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		delete("EzApprovalGAdmin.deleteForm2", map);
 	}
 	
+	public void deleteForm3(Map<String, Object> map) throws Exception{
+		delete("EzApprovalGAdmin.deleteForm3", map);		
+	}
+	
 	public String setContainerIDForDoc1(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalGAdmin.setContainerIDForDoc1", map);
 	}

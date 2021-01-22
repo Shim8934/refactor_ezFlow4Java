@@ -261,8 +261,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String result = ezApprovalGService.getFormContainerInfo(id, "", companyID, userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 		
-		logger.debug("result : " + result);
-		
 		model.addAttribute("resultXML", result);
 		
 		logger.debug("getFormContInfo ended.");
@@ -287,7 +285,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), companyID, userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("id : " + id + ", kind : " + kind + ", companyID : " + companyID);
-		logger.debug("result = " + result);
 		
 		model.addAttribute("resultXML", result);
 		
@@ -1030,8 +1027,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String formID = request.getParameter("formID");
 		String companyID = request.getParameter("companyID");
 		String realPath = commonUtil.getRealPath(request);
+		String officeFlag = request.getParameter("officeFlag");
 		
-		String result = ezApprovalGAdminService.delForm(formID, companyID, realPath, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.delForm(formID, companyID, realPath, userInfo.getTenantId(),officeFlag);
 		
 		logger.debug("delForm ended");
 
