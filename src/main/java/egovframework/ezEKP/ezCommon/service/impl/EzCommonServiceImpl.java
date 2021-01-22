@@ -433,8 +433,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
             InputStream tempIn = null;
             try {
-                tempIn = Files.newInputStream(Paths.get(realPath + imgSrc));
-                contentType = URLConnection.guessContentTypeFromStream(tempIn);
             	if(imgSrc.contains("222.106.242.180")){
             		continue;
             	}else{
