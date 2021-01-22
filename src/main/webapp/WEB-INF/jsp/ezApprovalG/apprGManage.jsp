@@ -530,12 +530,12 @@
 		    var SelYearFlag = false;
 		    function onSelect_Year() {
 		        SelYearFlag = true;
-		        if (GetSelectVal("sel_year") != "ALL")
+		        if (GetSelectVal("sel_year") != "ALL") {
 		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + GetSelectVal("sel_year") + "-01-01</APRSTARTDATE><APRENDDATE>" + GetSelectVal("sel_year") + "-12-31</APRENDDATE></DATA></ROOT>";
-		        else {
+		        } else { // 최근 1년인 경우, 월과 일의 형식 오류 수정
 		            var nowyear = nowDate.substring(0,4);
-		            var nowmonth = parseInt(nowDate.substring(5,7));
-		            var nowday = parseInt(nowDate.substring(8,10));        
+		            var nowmonth = nowDate.substring(5,7);
+		            var nowday = nowDate.substring(8,10);
 		
 		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";		            
 

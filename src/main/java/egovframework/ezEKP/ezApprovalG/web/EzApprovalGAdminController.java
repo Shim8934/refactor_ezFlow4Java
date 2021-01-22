@@ -261,8 +261,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String result = ezApprovalGService.getFormContainerInfo(id, "", companyID, userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 		
-		logger.debug("result : " + result);
-		
 		model.addAttribute("resultXML", result);
 		
 		logger.debug("getFormContInfo ended.");
@@ -287,7 +285,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), companyID, userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("id : " + id + ", kind : " + kind + ", companyID : " + companyID);
-		logger.debug("result = " + result);
 		
 		model.addAttribute("resultXML", result);
 		
@@ -556,7 +553,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1")) {
 			return "cmm/error/adminDenied";
 		}
-		
+		// 2021-01-21 심기영 오피스결재 여부 추가
+		String useOfficeApproval = ezCommonService.getTenantConfig("UseOfficeApproval", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String formProcSpelling = ezCommonService.getTenantConfig("FormProcSpelling", userInfo.getTenantId()); 
 		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
@@ -667,6 +665,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("reformUrl", reformUrl);
 		/* FormBuilder end */
+		
+		// 2021-01-21 심기영 오피스결재 여부 추가
+		model.addAttribute("useOfficeApproval", useOfficeApproval);
 		
 		logger.debug("formMainOther ended.");
 		
@@ -1026,8 +1027,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String formID = request.getParameter("formID");
 		String companyID = request.getParameter("companyID");
 		String realPath = commonUtil.getRealPath(request);
+		String officeFlag = request.getParameter("officeFlag");
 		
-		String result = ezApprovalGAdminService.delForm(formID, companyID, realPath, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.delForm(formID, companyID, realPath, userInfo.getTenantId(),officeFlag);
 		
 		logger.debug("delForm ended");
 

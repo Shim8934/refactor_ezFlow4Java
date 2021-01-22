@@ -66,6 +66,16 @@ public class ApprGFormVO {
 	private String reformFlag;
 	/** 폼버전 */
 	private String formVersion;
+	
+	// 오피스 양식 여부
+	private OfficeFlag officeFlag;
+		
+	private enum OfficeFlag {
+		Y, N
+	}
+		
+	private String companyID;
+
 	/** 기결재통과 */
 	private String passAprLineFlag;
 	
@@ -364,6 +374,19 @@ public class ApprGFormVO {
 
 	public void setFormVersion(String formVersion) {
 		this.formVersion = formVersion;
+	}
+	
+	public OfficeFlag getOfficeFlag() {
+		return officeFlag;
+	}
+	public void setOfficeFlag(OfficeFlag officeFlag) {
+		this.officeFlag = officeFlag;
+	}
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
 	}
 
 	public String getOpenGovFlag() {

@@ -363,6 +363,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		delete("EzApprovalGAdmin.deleteForm2", map);
 	}
 	
+	public void deleteForm3(Map<String, Object> map) throws Exception{
+		delete("EzApprovalGAdmin.deleteForm3", map);		
+	}
+	
 	public String setContainerIDForDoc1(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalGAdmin.setContainerIDForDoc1", map);
 	}
@@ -549,6 +553,15 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 	public void removeAutoDoc(Map<String, Object> map) {
 		update("EzApprovalGAdminDAO.removeAutoDoc", map);
+	}
+	
+	/* 2021-01-21 심기영 오피스결재 추가 */
+	public void insertOfficeFormFlag(Map<String, Object> map) {
+		insert("EzApprovalGAdmin.insertOfficeFormFlag", map);
+	}
+	/* 2021-01-21 심기영 오피스결재 추가 */
+	public void deleteOfficeFormFlag(Map<String, Object> map) {
+		delete("EzApprovalGAdmin.deleteOfficeFormFlag", map);
 	}
 	
 	@SuppressWarnings("unchecked")

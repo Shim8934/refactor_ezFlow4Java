@@ -118,8 +118,14 @@ var openForm_Complete = function (ret) {
     formURL = ret[0];
     formDocType = ret[1];
 
+	 var officeFlag = "";
+    
+    if(typeof ret[4] != "undefined") {
+    	officeFlag = ret[4];
+    }
+
     if (formURL != "cancel") {
-        openDraftUI();
+        openDraftUI("DRAFT","",officeFlag);
     }
 }
 
@@ -148,7 +154,7 @@ var openForm = function () {
     }
 }
 
-var openDraftUI = function () {
+var openDraftUI = function (pDraftFlag, pCurSelRow,officeFlag) {
     var pArgument = new Array();
     var gb = "";
     
@@ -164,6 +170,13 @@ var openDraftUI = function () {
     pArgument[6] = ""
     pArgument[7] = "";
 
+	// 2021-01-21 심기영 오피스결재 추가
+    var p_officeFlag = "";
+    
+    if(officeFlag !== null) {
+    	p_officeFlag = officeFlag;
+    }
+
     var openLocation = "";
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
         if (!isIE()) {
@@ -178,7 +191,7 @@ var openDraftUI = function () {
     
     openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
     openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
-    openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
+    openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag);
     
     openWindowForAppr(openLocation);
 }

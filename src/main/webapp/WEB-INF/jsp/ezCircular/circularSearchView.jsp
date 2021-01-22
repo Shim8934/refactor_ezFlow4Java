@@ -337,7 +337,8 @@
                 var DocList = new ListView();
                 DocList.SetID("BoardList");
                 DocList.SetHeaderOnClick("SortPage");
-                DocList.SetRowOnDblClick("ItemRead_onclick(this)");
+//                DocList.SetRowOnDblClick("ItemRead_onclick(this)");
+                DocList.SetRowOnClick("ItemRead_onclick(this)");
                 DocList.SetTitleIdx(0);
                 DocList.SetSelectFlag(false);
                 DocList.DataSource(xmlDoc);

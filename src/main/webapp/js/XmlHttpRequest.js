@@ -1896,6 +1896,21 @@ function replaceEntityCodeToStr(str) {
 			  .replace(/&#034;/g, "\"");
 }
 
+function ReplaceHTML(str) {
+    str = ReplaceAll(str, "&#39;", "'");
+    str = ReplaceAll(str, "&amp;", "&");
+    str = ReplaceAll(str, "&lt;", "<");
+    str = ReplaceAll(str, "&gt;", ">");
+    str = ReplaceAll(str, "&apos;", "'");
+    str = ReplaceAll(str, "&quot;", "\"");
+    return str;
+}
+
+function ReplaceAll(pStrContent, pStrOrg, pStrRep) {
+    return pStrContent.split(pStrOrg).join(pStrRep);
+}
+
+
 //리스트 로딩
 function listLoading(pType){
     try{

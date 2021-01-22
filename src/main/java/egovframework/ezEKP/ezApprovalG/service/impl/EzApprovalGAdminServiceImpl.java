@@ -2338,9 +2338,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String delForm(String formID, String companyID, String realPath, int tenantID) throws Exception {
-		logger.debug("delForm started.");
-		String result = deleteForm(formID, companyID, tenantID);
+	public String delForm(String formID, String companyID, String realPath, int tenantID, String officeFlag) throws Exception {
+		logger.debug("delForm started.");		
+		String result = deleteForm(formID, companyID, tenantID,officeFlag);
 		
 		if (result.equals("TRUE")) {
 			String filePath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID;
@@ -2470,13 +2470,18 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		return "TRUE";
 	}
 	
-	private String deleteForm(String formID, String companyID, int tenantID) throws Exception {
+	private String deleteForm(String formID, String companyID, int tenantID, String officeFlag) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_FORMID", formID);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
-		
+				
 		logger.debug("deleteForm started.");
+		if(officeFlag != null && officeFlag.equalsIgnoreCase("Y")) {
+			logger.debug("officeForm Delete started");
+			ezApprovalGAdminDAO.deleteForm3(map);
+			logger.debug("officeForm Delete ended");
+		}
 		ezApprovalGAdminDAO.deleteForm1(map);
 		ezApprovalGAdminDAO.deleteForm2(map);
 		logger.debug("deleteForm ended.");
@@ -2511,6 +2516,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String formKind = doc.getElementsByTagName("FormKind").item(0).getTextContent();
 		
 		String formSihangType = doc.getElementsByTagName("SIHANGTYPE").item(0).getTextContent();
+		
+		// 2021-01-21 심기영 오피스 양식 여부
+		String officeFlag = doc.getElementsByTagName("officeFlag").item(0).getTextContent();
 		
 		/* 2020-07-16 홍승비 - 전자결재 일반버전에서도 연동양식을 사용할 수 있도록 수정 */
 		if (approvalFlag.equals("S")) {
@@ -2597,6 +2605,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			logger.debug("setFormDataInsert1 started.");
 			ezApprovalGAdminDAO.setFormDataInsert1(map);
 			logger.debug("setFormDataInsert1 ended.");
+			
+			if("Y".equals(officeFlag)) {
+				ezApprovalGAdminDAO.insertOfficeFormFlag(map);
+			}
 			
 			if (approvalFlag.equals("S")) {
 				map.put("keepPeriod", keepPeriod);
@@ -2705,6 +2717,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			logger.debug("setFormDataUpdate started.");
 			ezApprovalGAdminDAO.setFormDataUpdate(map);
 			logger.debug("setFormDataUpdate ended.");
+			
+			/* 2021-01-21 심기영 오피스결재 양식 용 추가 */
+			if("Y".equals(officeFlag)) {
+				// 오피스 양식에서 오피스 양식으로 수정할 경우 duplicate key error가 날 수 있기 때문에 지웠다가 다시 insert
+				ezApprovalGAdminDAO.deleteOfficeFormFlag(map);
+				ezApprovalGAdminDAO.insertOfficeFormFlag(map);
+			} else {
+				ezApprovalGAdminDAO.deleteOfficeFormFlag(map);
+			}
 			
 			if (approvalFlag.equals("S")) {
 				map.put("keepPeriod", keepPeriod);

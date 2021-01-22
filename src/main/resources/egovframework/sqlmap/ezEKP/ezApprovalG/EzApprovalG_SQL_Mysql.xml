@@ -4500,7 +4500,12 @@
 		<isEqual property="v_FORMCONTID" compareValue="ROOT">
 			<isNotEmpty property="v_USERID">
 				SELECT 
-					TBL_FORMINFO.* 
+					TBL_FORMINFO.* ,
+				CASE
+					WHEN O.FORMID IS NOT NULL
+					 THEN 'Y'
+					ELSE 'N'
+				END AS OFFICEFLAG		
 				FROM 
 					TBL_FORMINFO 
 				INNER JOIN 
@@ -4511,6 +4516,14 @@
       				TBL_FORMINFO.TENANT_ID = TBL_FORMUSERINFO.TENANT_ID
       			AND
       				TBL_FORMINFO.COMPANYID = TBL_FORMUSERINFO.COMPANYID
+   				LEFT JOIN
+      				TBL_FORM_OFFICE O
+      			ON 
+      				TBL_FORMINFO.FORMID = O.FORMID
+      			AND
+      				TBL_FORMINFO.TENANT_ID = O.TENANT_ID
+      			AND
+      				TBL_FORMINFO.COMPANYID = O.COMPANYID	
       			WHERE 
       				TBL_FORMUSERINFO.USERID = #v_USERID#
       			<isEqual property="v_FORMKIND" compareValue="000">
@@ -4519,28 +4532,28 @@
       			<isEqual property="v_FORMKIND" compareValue="BASE">
       				<![CDATA[
       				 AND 
-      				 	FORMDOCTYPE < '004'
+      				 	TBL_FORMINFO.FORMDOCTYPE < '004'
       				 ]]>
       			</isEqual>
       			<isNotEqual property="v_FORMKIND" compareValue="BASE">
       			<isNotEqual property="v_FORMKIND" compareValue="000">
       				 AND 
-      					FORMDOCTYPE = #v_FORMKIND#
+      					TBL_FORMINFO.FORMDOCTYPE = #v_FORMKIND#
       			</isNotEqual>
       			</isNotEqual>
       			<isEqual property="v_SEARCHTYPE" compareValue="0">
       			<isEmpty property="v_LANGTYPE">
       				 AND 
-      				 	FORMNAME LIKE '%$v_SEARCHNAME$%'
+      				 	TBL_FORMINFO.FORMNAME LIKE '%$v_SEARCHNAME$%'
       			</isEmpty>
       			<isNotEmpty property="v_LANGTYPE">
       				 AND 
-      					FORMNAME2 LIKE '%$v_SEARCHNAME$%'
+      					TBL_FORMINFO.FORMNAME2 LIKE '%$v_SEARCHNAME$%'
       			</isNotEmpty>
       			</isEqual>
       			<isEqual property="v_SEARCHTYPE" compareValue="1">
       				AND 
-      					FORMDESCRIPTION LIKE '%$v_SEARCHNAME$%'
+      					TBL_FORMINFO.FORMDESCRIPTION LIKE '%$v_SEARCHNAME$%'
       			</isEqual>
       				AND 
 						TBL_FORMINFO.TENANT_ID = #v_TENANTID#
@@ -4550,7 +4563,11 @@
 		</isEqual>
 		<isEqual property="v_FORMCONTID" compareValue="ALL">
 			SELECT 
-				* 
+				TBL_FORMINFO.*,
+				CASE
+						WHEN O.FORMID IS NOT NULL THEN 'Y'
+						ELSE 'N'
+					END AS OFFICEFLAG		 
 			FROM 
 				TBL_FORMINFO
          	LEFT OUTER JOIN 
@@ -4568,7 +4585,15 @@
          	AND
          		TBL_FORMINFO.TENANT_ID = TBL_FORMCONTAINER.TENANT_ID 
          	AND
-         		TBL_FORMINFO.COMPANYID = TBL_FORMCONTAINER.COMPANYID 
+         		TBL_FORMINFO.COMPANYID = TBL_FORMCONTAINER.COMPANYID
+       		LEFT JOIN
+   				TBL_FORM_OFFICE O
+   			ON 
+   				TBL_FORMINFO.FORMID = O.FORMID
+   			AND
+   				TBL_FORMINFO.TENANT_ID = O.TENANT_ID
+   			AND
+   				TBL_FORMINFO.COMPANYID = O.COMPANYID 
          	WHERE 
          		(1=1)
          	AND
@@ -4581,36 +4606,36 @@
          <isEqual property="v_FORMKIND" compareValue="BASE">
          <![CDATA[
          	AND 
-         		FORMDOCTYPE < '004' 
+         		TBL_FORMINFO.FORMDOCTYPE < '004' 
          ]]>
          </isEqual>
           <isNotEqual property="v_FORMKIND" compareValue="BASE">
           <isNotEqual property="v_FORMKIND" compareValue="000">
           <![CDATA[
          	AND 
-         		FORMDOCTYPE = #v_FORMKIND#
+         		TBL_FORMINFO.FORMDOCTYPE = #v_FORMKIND#
           ]]>
           </isNotEqual>
           </isNotEqual>
           <isEqual property="v_SEARCHTYPE" compareValue="0">
           <isEmpty property="v_LANGTYPE"> 
          	 AND 
-         	 	FORMNAME LIKE '%$v_SEARCHNAME$%'
+         	 	TBL_FORMINFO.FORMNAME LIKE '%$v_SEARCHNAME$%'
           </isEmpty>
           <isNotEmpty property="v_LANGTYPE"> 
          	AND 
-         		FORMNAME2 LIKE '%$v_SEARCHNAME$%'
+         		TBL_FORMINFO.FORMNAME2 LIKE '%$v_SEARCHNAME$%'
           </isNotEmpty>
           </isEqual>
           <isEqual property="v_SEARCHTYPE" compareValue="1">
           	AND 
-          		FORMDESCRIPTION LIKE '%$v_SEARCHNAME$%'
+          		TBL_FORMINFO.FORMDESCRIPTION LIKE '%$v_SEARCHNAME$%'
           </isEqual>
          	AND 
          		(
-         			FORMCONTOWNDEPID = 'ALL' 	
+         		TBL_FORMCONTAINER.FORMCONTOWNDEPID = 'ALL' 	
          			OR 	
-         			FORMCONTUSERDEPID = (
+         		TBL_FORMCONTAINER.FORMCONTUSERDEPID = (
          									SELECT 
          										DEPARTMENT 
          									FROM 
@@ -4625,19 +4650,31 @@
 		<isNotEqual property="v_FORMCONTID" compareValue="ROOT">
 		<isNotEqual property="v_FORMCONTID" compareValue="ALL">
 			SELECT 
-				TBL_FORMINFO.* 
+				TBL_FORMINFO.* ,
+				CASE
+					WHEN O.FORMID IS NOT NULL THEN 'Y'
+					ELSE 'N'
+				END AS OFFICEFLAG
 			FROM 
 				TBL_FORMINFO
+			LEFT JOIN
+   				TBL_FORM_OFFICE O
+   			ON 
+   				TBL_FORMINFO.FORMID = O.FORMID
+   			AND
+   				TBL_FORMINFO.TENANT_ID = O.TENANT_ID
+   			AND
+   				TBL_FORMINFO.COMPANYID = O.COMPANYID
 			<isEqual property="v_FORMKIND" compareValue="000"> 
 			WHERE 
-				FORMCONTID = #v_FORMCONTID#
+				TBL_FORMINFO.FORMCONTID = #v_FORMCONTID#
 			</isEqual>
 			<isEqual property="v_FORMKIND" compareValue="BASE"> 
 			<![CDATA[
 			 WHERE 
-			 	FORMCONTID = #v_FORMCONTID# 
+			 	TBL_FORMINFO.FORMCONTID = #v_FORMCONTID# 
 			 AND 
-			 	FORMDOCTYPE < '004'
+			 	TBL_FORMINFO.FORMDOCTYPE < '004'
 			 ]]>
 			</isEqual>
 			<isNotEqual property="v_FORMKIND" compareValue="000"> 
@@ -4645,27 +4682,27 @@
 			 WHERE 
 			 	FORMCONTID = #v_FORMCONTID# 
 			 AND 
-			 	FORMDOCTYPE = #v_FORMKIND#
+			 	TBL_FORMINFO.FORMDOCTYPE = #v_FORMKIND#
 			</isNotEqual>
 			</isNotEqual>
 			<isEqual property="v_SEARCHTYPE" compareValue="0">
          	<isEmpty property="v_LANGTYPE"> 
          		AND 
-         			FORMNAME LIKE '%$v_SEARCHNAME$%'
+        			TBL_FORMINFO.FORMNAME LIKE '%$v_SEARCHNAME$%'
          	</isEmpty>
          	<isNotEmpty property="v_LANGTYPE"> 
          		AND 
-         			FORMNAME2 LIKE '%$v_SEARCHNAME$%'
+         			TBL_FORMINFO.FORMNAME2 LIKE '%$v_SEARCHNAME$%'
          	</isNotEmpty>
          	</isEqual>
          	<isEqual property="v_SEARCHTYPE" compareValue="1">
          	 	AND 
-         	 		FORMDESCRIPTION LIKE '%$v_SEARCHNAME$%'
+         	 		TBL_FORMINFO.FORMDESCRIPTION LIKE '%$v_SEARCHNAME$%'
          	</isEqual>
          		AND
-         			TENANT_ID = #v_TENANTID#
+         			TBL_FORMINFO.TENANT_ID = #v_TENANTID#
          		AND
-         			COMPANYID = #companyID#
+         			TBL_FORMINFO.COMPANYID = #companyID#
 		</isNotEqual>
 		</isNotEqual>
 		ORDER BY FORMORDER 

@@ -2143,6 +2143,8 @@ function openFormUI_Complete(ret) {
     DivPopUpHidden();
     pFormHref = ret[0];
     pDocType = ret[1];
+    // 2021-01-21 심기영 오피스결재 추가
+    officeFlag = ret[4];
 
     if (pFormHref == "PC") {
         document.getElementById('pFile').click();
@@ -2211,6 +2213,13 @@ function openFormUI_Complete(ret) {
             tempSecurityDate = "";
 
             message.Set_EditorContentURL(pFormHref);
+            
+            // 2021-01-21 심기영 오피스결재 추가
+             if(officeFlag == 'Y') {
+	        	document.getElementById("mailPanel").style.display = "";
+	        	document.getElementById("layerpopup").style.display = "";
+	        	document.getElementById("iFrameLayer2").src = "/ezApprovalG/officeAttach.do";
+            }
         }
     }
 }

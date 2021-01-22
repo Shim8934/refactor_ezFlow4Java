@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,10 +8,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -63,6 +68,9 @@ import kr.dogfoot.hwplib.writer.HWPWriter;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
@@ -72,6 +80,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -1917,8 +1926,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME2").item(k).getTextContent()) + "]]></DATA7>");
 					resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMCONTID").item(k).getTextContent()) + "]]></DATA8>");
 					resultXML.append("<REFORMFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("REFORMFLAG").item(k).getTextContent()) + "]]></REFORMFLAG>");
-					resultXML.append("<OPENGOVFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("OPENGOVFLAG").item(k).getTextContent()) + "]]></OPENGOVFLAG>");
-					
+					resultXML.append("<DATA-COMPANYID><![CDATA[" + makeListField(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "]]></DATA-COMPANYID>");
+					resultXML.append("<DATA-OFFICEFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("OFFICEFLAG").item(k).getTextContent()) + "]]></DATA-OFFICEFLAG>");
+					resultXML.append("<OPENGOVFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("OPENGOVFLAG").item(k).getTextContent()) + "]]></OPENGOVFLAG>");					
 					resultXML.append("<PASSAPRLINEFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("PASSAPRLINEFLAG").item(k).getTextContent()) + "]]></PASSAPRLINEFLAG>");
 				}
 				
@@ -30100,6 +30110,151 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		logger.debug("getStoragePeriodName ended | result:" + rtnVal);
 		return rtnVal;
+	}
+
+//	@Override
+//	public JSONObject convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId) throws Exception {
+//		logger.debug("convertDocumentToImg started");
+//		
+//		String originalFilename = file.getOriginalFilename();
+//		EgovFileMngUtil.writeFile(file, originalFilename, tempUploadPath);
+//		
+//		// 다른 서버에 설치되어있는 변환솔루션의 경우, 솔루션서버에 마운트된 위치를 filePath로 알려줘야함
+////		String filePath = URLEncoder.encode("222.106.242.180:"+tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
+//		String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4fEa1FIQeYI3%252BPB33JlY%252BCLJjVjx1iVJebmrlmJl1TgrI%253D";
+////		String filePath = URLEncoder.encode("/home/jmocha/temp/" + originalFilename, "UTF-8"); // 테스트용
+//		String fileName = URLEncoder.encode(originalFilename, "UTF-8");
+//		String fileExt = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
+//		
+//		String address = config.getProperty("config.officeConverterServerURL") + "/DG_viewer/viewer/getThumbnail.do?"
+//					   + "filepath=" + filePath + "&filename=" + fileName + "&fileext=" + fileExt;
+//		
+//		logger.debug("image converting requestURL : " + address);
+//		
+//		URL url = new URL(address);
+//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();	
+//		conn.setRequestMethod("GET");
+//		
+//		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//		String line;
+//		StringBuffer response = new StringBuffer();
+//		
+//		while((line = br.readLine()) != null) {			
+//			response.append(line);						
+//		}
+//		
+//		JSONObject res = (JSONObject) new JSONParser().parse(response.toString());
+//		String hash = (String) res.get("hash");
+//		
+//		br.close();
+//		
+//		JSONObject convertedImgInfo = getConvertedImgInfo(hash);
+//
+//		// 컨버팅 후, 오피스 문서 파일 삭제
+//		File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
+//		tempFile.delete();
+//		
+//		logger.debug("convertDocumentToImg ended");
+//		return convertedImgInfo;	
+//	}
+	
+	@Override
+	public String convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId) throws Exception {
+		logger.debug("convertDocumentToImg started");
+		
+		String originalFilename = file.getOriginalFilename();
+		EgovFileMngUtil.writeFile(file, originalFilename, tempUploadPath);
+		
+		// 다른 서버에 설치되어있는 변환솔루션의 경우, 솔루션서버에 마운트된 위치를 filePath로 알려줘야함
+//		String filePath = URLEncoder.encode(tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
+		// String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4fEa1FIQeYI3%252BPB33JlY%252BCLJjVjx1iVJebmrlmJl1TgrI%253D";
+		String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4f8FdvYtnOEMuZ3PX0v9%252BN2g%253D%253D";
+//		String filePath = URLEncoder.encode("/home/jmocha/temp/" + originalFilename, "UTF-8"); // 테스트용
+		String fileName = URLEncoder.encode(originalFilename, "UTF-8");
+		String fileExt = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
+		
+		String address = config.getProperty("config.officeConverterServerURL") + "/DG_viewer/viewer/getThumbnail.do?"
+				+ "filepath=" + filePath + "&filename=" + fileName + "&fileext=" + fileExt;
+		
+		logger.debug("image converting requestURL : " + address);
+		
+		URL url = new URL(address);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();	
+		conn.setRequestMethod("GET");
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		String line;
+		StringBuffer response = new StringBuffer();
+		
+		while((line = br.readLine()) != null) {			
+			response.append(line);						
+		}
+		
+		br.close();
+		
+		// 2021-01-14 이혁진 넘어온 response값을 가지고 이미지URL생성
+		String convertedImgInfo = config.getProperty("config.officeConverterServerURL") + "/DG_viewer" + response;
+		
+		// 컨버팅 후, 오피스 문서 파일 삭제
+		File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
+		tempFile.delete();
+		
+		logger.debug("convertDocumentToImg ended");
+		return convertedImgInfo;	
+	}
+
+	@Override
+	public JSONObject getConvertedImgInfo(String hash) throws Exception {
+		logger.debug("getConvertedImgInfo started");
+		
+		String body = "hash=" + hash;
+		
+		JSONObject result;
+		
+		int attemptCNT = 0;
+		
+		// 컨버팅 프로세스가 변환서버에서 다 끝나기 전에 리퀘스트를 보내서 파일명을 가져오지 못할 때가 있음. 가져올때까지 리퀘스트를 보낸다.
+		while(true) {
+			URL url = new URL(config.getProperty("config.officeConverterServerURL") + "/DG_viewer/viewer/getThumbnail.do");
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setDoOutput(true);
+			
+			OutputStream os = conn.getOutputStream();
+			os.write(body.getBytes("UTF-8"));
+			os.flush();
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String line;
+			StringBuffer response = new StringBuffer();
+			
+			while((line = br.readLine()) != null) {
+				response.append(line);
+			}
+			
+			br.close();	
+			os.close();
+			
+			result = (JSONObject) new JSONParser().parse(response.toString());
+			Long pageTotal = result.get("page_total") != null ? (Long) result.get("page_total") : -1L;
+			int fileCNT = ((JSONArray)result.get("dirnmL")).size();
+			
+			logger.debug("page_total : " + pageTotal + ", fileCNT : " + fileCNT);
+			
+			if(fileCNT == pageTotal) {
+				break;
+			// 변환솔루션서버가 제대로 동작하지 않을 경우, 무한루프에 빠질 수 있기 때문에 변환시도 횟수를 120회로 제한(2분)
+			} else if(++attemptCNT > 120) {
+				throw new Exception("convert fails");
+			}
+			
+			logger.debug("attemptCNT : " + attemptCNT + "(time : " + System.currentTimeMillis() + ")");
+			Thread.sleep(1000);
+		}
+		
+		logger.debug("getConvertedImgInfo ended");
+		return result;	
+		
 	}
 	
 	// 겸직 id 리스트 가져오기
