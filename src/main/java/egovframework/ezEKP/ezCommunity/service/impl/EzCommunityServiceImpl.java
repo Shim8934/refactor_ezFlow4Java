@@ -6572,7 +6572,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 						Integer.toString(41 - getTime.getDayOfMonth()) +
 						Integer.toString(33 - getTime.getHour()) +
 						Integer.toString(69 - getTime.getMinute()) +
-						Integer.toString(69 - getTime.getSecond());
+						Integer.toString(69 - getTime.getSecond()) +
+						Integer.toString(999 - getTime.getNano()/1000000);
 		
 		return result;
 	}

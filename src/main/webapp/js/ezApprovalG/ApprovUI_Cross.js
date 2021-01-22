@@ -2804,8 +2804,11 @@ function ReAprLineSingMapping(ret) {
             hidx = hidx + 1;
         }
     }
-
-    if (field == message.GetListItem(fields, "lineapr")) {
+    
+    // 정주환 결재라인수정시 오류 수정 lineapr
+    var field = message.GetListItem(fields, "lineapr");
+//    if (field == message.GetListItem(fields, "lineapr")) {
+    if(field){
         if (idx > 5) {
             message.GetListItem(fields, "lineapr").style.display = "";
             for (i = 0; i < message.GetListItem(fields, "lineapr").childNodes.length; i++) {
@@ -2821,8 +2824,10 @@ function ReAprLineSingMapping(ret) {
             }
         }
     }
-
-    if (field == message.GetListItem(fields, "linehab")) {
+    
+    field = message.GetListItem(fields, "linehab");
+//    if (field == message.GetListItem(fields, "linehab")) {
+    if(field){
         if (hidx > 5) {
             message.GetListItem(fields, "linehab").style.display = "";
             for (i = 0; i < message.GetListItem(fields, "linehab").childNodes.length; i++) {
