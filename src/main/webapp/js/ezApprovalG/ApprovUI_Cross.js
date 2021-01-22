@@ -2593,9 +2593,10 @@ function ReAprLineSingMapping(ret) {
             break;
         }
         else {
+        	// 정주환 결재라인 변경 startidx 수정
             if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5)
                 startIdx = startIdx + 1;
-            else if (OrderType[i] != strAprType2 && OrderType[i] != strAprType7 && OrderType[i] != strAprType9 & OrderType[i] != strAprType11 && OrderType[i] != strAprType12)
+            else if (OrderType[i] != strAprType2 && OrderType[i] != strAprType7 && OrderType[i] != strAprType8 && OrderType[i] != strAprType9 && OrderType[i] != strAprType11 && OrderType[i] != strAprType12)
                 startIdx = startIdx + 1;
             else if (OrderType[i] == strAprType8 ||OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)
                 hapyuiCnt = hapyuiCnt + 1;
