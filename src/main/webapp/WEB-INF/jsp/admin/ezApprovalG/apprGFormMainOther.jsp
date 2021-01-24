@@ -1225,11 +1225,13 @@
 						
 						<%-- 2021-01-21  심기영 오피스 결재 추가 여부용  --%>
 						<c:if test="${useOfficeApproval == 'YES' && approvalFlag == 'G'}">
-							<input type="checkbox" id="officeFlag" name="officeFlag"><spring:message code='ezApproval.t933'/>
+							<input type="checkbox" id="officeFlag" name="officeFlag">
+							<label for="officeFlag"><span><spring:message code='ezApproval.t933'/></span></label>
 						</c:if>
 						<%-- 2021-01-21  심기영 오피스 결재 추가 여부용  --%>
 						<c:if test="${useOfficeApproval == 'YES' && approvalFlag == 'S'}">
-							<input type="checkbox" id="officeFlag" name="officeFlag"><spring:message code='ezApproval.t933'/>
+							<input type="checkbox" id="officeFlag" name="officeFlag">
+							<label for="officeFlag"><span><spring:message code='ezApproval.t933'/></span></label>
 						</c:if>
                         <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> 원문정보공개</span>
 <%--                         <span style="<c:if test="${useDraftAll != 'YES' && approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> 일괄기안</span> --%>
