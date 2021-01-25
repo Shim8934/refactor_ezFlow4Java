@@ -4633,9 +4633,9 @@
           </isEqual>
          	AND 
          		(
-         		TBL_FORMCONTAINER.FORMCONTOWNDEPID = 'ALL' 	
+         		FORMCONTOWNDEPID = 'ALL' 	
          			OR 	
-         		TBL_FORMCONTAINER.FORMCONTUSERDEPID = (
+         		FORMCONTUSERDEPID = (
          									SELECT 
          										DEPARTMENT 
          									FROM 
