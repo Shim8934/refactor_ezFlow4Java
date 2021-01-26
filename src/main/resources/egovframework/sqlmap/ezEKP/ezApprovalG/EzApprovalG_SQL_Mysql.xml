@@ -30669,7 +30669,7 @@
 	 <select id="EzApprovalG.getOrgLastAprMemberName" parameterClass="Map" resultClass="String">
 
         SELECT
-            APRMEMBERNAME
+            APRMEMBERID
         FROM
             tbl_endaprlineinfo
         WHERE
@@ -30685,6 +30685,10 @@
                 AND
                     COMPANYID = #companyID#
             )
+        AND
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
         ORDER BY
             aprmembersn DESC
 		LIMIT 1
