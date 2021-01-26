@@ -4662,9 +4662,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<DATA9><![CDATA[" + apprGTaskVOList.get(k).getTempFlag() + "]]></DATA9>");
 			resultXML.append("<DATA10><![CDATA[" + apprGTaskVOList.get(k).getDisplayRecFlag() + "]]></DATA10>");
 			resultXML.append("<DATA11><![CDATA[" + apprGTaskVOList.get(k).getSpecialCatalogFlag() + "]]></DATA11>");
-			resultXML.append("<DATA12><![CDATA[" + apprGTaskVOList.get(k).getSc1() + "]]></DATA12>");
-			resultXML.append("<DATA13><![CDATA[" + apprGTaskVOList.get(k).getSc2() + "]]></DATA13>");
-			resultXML.append("<DATA14><![CDATA[" + apprGTaskVOList.get(k).getSc3() + "]]></DATA14>");
+
+			/* 2021-01-26 홍승비 - 특수기록물의 null 처리 추가 (값이 없는 경우 공백으로 리턴) */
+			resultXML.append("<DATA12><![CDATA[" + (apprGTaskVOList.get(k).getSc1() != null && !apprGTaskVOList.get(k).getSc1().equals("null") ? apprGTaskVOList.get(k).getSc1() : "") + "]]></DATA12>");
+			resultXML.append("<DATA13><![CDATA[" + (apprGTaskVOList.get(k).getSc2() != null && !apprGTaskVOList.get(k).getSc2().equals("null") ? apprGTaskVOList.get(k).getSc2() : "") + "]]></DATA13>");
+			resultXML.append("<DATA14><![CDATA[" + (apprGTaskVOList.get(k).getSc3() != null && !apprGTaskVOList.get(k).getSc3().equals("null") ? apprGTaskVOList.get(k).getSc3() : "") + "]]></DATA14>");
 			resultXML.append("<DATA15><![CDATA[" + apprGTaskVOList.get(k).getKeepingMethod() + "]]></DATA15>");
 			resultXML.append("<DATA16><![CDATA[" + apprGTaskVOList.get(k).getKeepingPlace() + "]]></DATA16>");
 			resultXML.append("<DATA17><![CDATA[" + apprGTaskVOList.get(k).getTaskName() + "]]></DATA17>");
