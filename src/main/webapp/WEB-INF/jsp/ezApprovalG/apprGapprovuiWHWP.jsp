@@ -391,14 +391,14 @@
 		    }
 	
 		    function CheckOpinionYN() {
+		    	if (pDraftFlag == "SUSIN"){
+		            getSusinSNInfo();
+		    	} else {
+		            pSusinSN = "0";
+		    	}
 		        if (pHasOpinionYN == "Y") {
 		            var pInformationContent = "<spring:message code='ezApprovalG.t1374'/><br> <spring:message code='ezApprovalG.t10'/>";
 			        var Ans = OpenInformationUI(pInformationContent, CheckOpinionYN_complete);
-			    } else {
-			        if (pDraftFlag == "SUSIN")
-			            getSusinSNInfo();
-			        else
-			            pSusinSN = "0";
 			    }
 		    }
 		    
