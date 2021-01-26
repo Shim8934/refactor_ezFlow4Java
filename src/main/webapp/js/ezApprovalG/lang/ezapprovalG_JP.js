@@ -846,7 +846,7 @@ var strLang1103 = "HWP is not supported(Draft/Re-draft)."
 var strLangFromFile = "/xml/ezApprovalG/ezFormInfo.xml";
 
 /* 2015-06-30 표준모듈:추가 - KSK */
-var strLang1105 = "決裁文書を受信して​​いない部門です。\n追加することはできません。";
+var strLang1105 = "決裁文書を受信して​​いない部門です。<br>追加することはできません。";
 var strLang1106 = "検索語を入力してください。";
 var strLang1107 = "送信者";
 var strLang1108 = "審査者";
