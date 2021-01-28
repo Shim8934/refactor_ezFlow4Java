@@ -785,8 +785,11 @@ function getdoclistSub_after(xml) {
     catch (e) { }
 }
 
+/* 2021-01-19 홍승비 - 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
 var oArrRowsid = "";
 function lvtDoclist_SelChange() {
+	lvtDoclist_onSel_DBclick();
+	
     var SelList = new ListView();
     SelList.LoadFromID("DocList");
     var oArrRows = SelList.GetSelectedRows();

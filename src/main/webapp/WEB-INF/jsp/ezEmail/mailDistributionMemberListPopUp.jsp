@@ -126,6 +126,7 @@
             listview.DataSource(data);
             listview.RowDataBind();
 
+            $("#DL_Body tr").css("cursor","default");
             isScroll();
 		}
 	

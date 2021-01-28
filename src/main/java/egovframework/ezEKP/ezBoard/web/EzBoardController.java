@@ -6613,7 +6613,12 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			return "OK";
 		} else {
+			/* 2021-01-26 홍승비 - 메인 이미지 플래그와 사진설명 수정을 함께 적용하도록 수정 */
+			boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
+			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent();
+			
 			ezBoardService.setMainImageID(doc.getElementsByTagName("IMAGEID").item(0).getTextContent(), doc.getElementsByTagName("ITEMID").item(0).getTextContent(), userInfo.getTenantId());
+			ezBoardService.photoListUpdate(doc.getElementsByTagName("IMAGEID").item(0).getTextContent(), boardID, content, "", doc.getElementsByTagName("ITEMID").item(0).getTextContent(), "", "", userInfo.getTenantId());
 			
 			return "OK";
 		}

@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
+import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -140,7 +141,7 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 			LOGGER.debug("backupDir: {}", backupDir);
 
 			/** 결재완료문서 폴더 */
-			// 결재완료문서 폴더, ex) doc/2018/792
+			// 결재완료문서 폴더, ex) doc/2018/792/
 			Path relativeDocumentFile = Paths.get("doc", oldYear, docDirPath);
 			// 결재완료문서 폴더 (절대경로)
 			Path realDocumentFile = uploadApprovalDir.resolve(relativeDocumentFile);
@@ -164,19 +165,26 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 			LOGGER.debug("realAttachmentDir: {}", realAttachmentDir);
 			LOGGER.debug("realAttachmentHistoryDir: {}", realAttachmentHistoryDir);
 
+			// .ezd인 파일들은 제외하고 백업
+			FileFilter fileFilter = file -> !file.toString().endsWith("." + ENCRYPTED_FILE_EXT);
+
 			// 결재완료문서 백업
-			FileUtils.copyDirectory(realDocumentFile.toFile(), backupDir.resolve(relativeDocumentFile).toFile());
+			FileUtils.copyDirectory(realDocumentFile.toFile(),
+					backupDir.resolve(relativeDocumentFile).toFile(), fileFilter);
 			// 결재문서 히스토리 폴더 백업
 			if (Files.exists(realDocumentHistoryDir)) {
-				FileUtils.copyDirectory(realDocumentHistoryDir.toFile(), backupDir.resolve(relativeDocumentHistoryDir).toFile());
+				FileUtils.copyDirectory(realDocumentHistoryDir.toFile(),
+						backupDir.resolve(relativeDocumentHistoryDir).toFile(), fileFilter);
 			}
 			// 첨부파일 폴더 백업
 			if (Files.exists(realAttachmentDir)) {
-				FileUtils.copyDirectory(realAttachmentDir.toFile(), backupDir.resolve(relativeAttachmentDir).toFile());
+				FileUtils.copyDirectory(realAttachmentDir.toFile(),
+						backupDir.resolve(relativeAttachmentDir).toFile(), fileFilter);
 			}
 			// 첨부파일 히스토리 폴더 백업
 			if (Files.exists(realAttachmentHistoryDir)) {
-				FileUtils.copyDirectory(realAttachmentHistoryDir.toFile(), backupDir.resolve(relativeAttachmentHistoryDir).toFile());
+				FileUtils.copyDirectory(realAttachmentHistoryDir.toFile(),
+						backupDir.resolve(relativeAttachmentHistoryDir).toFile(), fileFilter);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

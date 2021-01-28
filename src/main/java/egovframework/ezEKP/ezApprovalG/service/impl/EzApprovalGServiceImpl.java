@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,10 +8,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -63,6 +68,9 @@ import kr.dogfoot.hwplib.writer.HWPWriter;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
@@ -72,6 +80,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -1917,8 +1926,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME2").item(k).getTextContent()) + "]]></DATA7>");
 					resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMCONTID").item(k).getTextContent()) + "]]></DATA8>");
 					resultXML.append("<REFORMFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("REFORMFLAG").item(k).getTextContent()) + "]]></REFORMFLAG>");
-					resultXML.append("<OPENGOVFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("OPENGOVFLAG").item(k).getTextContent()) + "]]></OPENGOVFLAG>");
-					
+					resultXML.append("<DATA-COMPANYID><![CDATA[" + makeListField(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "]]></DATA-COMPANYID>");
+					resultXML.append("<DATA-OFFICEFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("OFFICEFLAG").item(k).getTextContent()) + "]]></DATA-OFFICEFLAG>");
+					resultXML.append("<OPENGOVFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("OPENGOVFLAG").item(k).getTextContent()) + "]]></OPENGOVFLAG>");					
 					resultXML.append("<PASSAPRLINEFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("PASSAPRLINEFLAG").item(k).getTextContent()) + "]]></PASSAPRLINEFLAG>");
 				}
 				
@@ -4652,9 +4662,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<DATA9><![CDATA[" + apprGTaskVOList.get(k).getTempFlag() + "]]></DATA9>");
 			resultXML.append("<DATA10><![CDATA[" + apprGTaskVOList.get(k).getDisplayRecFlag() + "]]></DATA10>");
 			resultXML.append("<DATA11><![CDATA[" + apprGTaskVOList.get(k).getSpecialCatalogFlag() + "]]></DATA11>");
-			resultXML.append("<DATA12><![CDATA[" + apprGTaskVOList.get(k).getSc1() + "]]></DATA12>");
-			resultXML.append("<DATA13><![CDATA[" + apprGTaskVOList.get(k).getSc2() + "]]></DATA13>");
-			resultXML.append("<DATA14><![CDATA[" + apprGTaskVOList.get(k).getSc3() + "]]></DATA14>");
+
+			/* 2021-01-26 홍승비 - 특수기록물의 null 처리 추가 (값이 없는 경우 공백으로 리턴) */
+			resultXML.append("<DATA12><![CDATA[" + (apprGTaskVOList.get(k).getSc1() != null && !apprGTaskVOList.get(k).getSc1().equals("null") ? apprGTaskVOList.get(k).getSc1() : "") + "]]></DATA12>");
+			resultXML.append("<DATA13><![CDATA[" + (apprGTaskVOList.get(k).getSc2() != null && !apprGTaskVOList.get(k).getSc2().equals("null") ? apprGTaskVOList.get(k).getSc2() : "") + "]]></DATA13>");
+			resultXML.append("<DATA14><![CDATA[" + (apprGTaskVOList.get(k).getSc3() != null && !apprGTaskVOList.get(k).getSc3().equals("null") ? apprGTaskVOList.get(k).getSc3() : "") + "]]></DATA14>");
 			resultXML.append("<DATA15><![CDATA[" + apprGTaskVOList.get(k).getKeepingMethod() + "]]></DATA15>");
 			resultXML.append("<DATA16><![CDATA[" + apprGTaskVOList.get(k).getKeepingPlace() + "]]></DATA16>");
 			resultXML.append("<DATA17><![CDATA[" + apprGTaskVOList.get(k).getTaskName() + "]]></DATA17>");
@@ -7174,8 +7186,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String tempMht = "";
 		String drafterDept = "";
 		String receiveDept = "";
+		String receiveDeptName = "";
 		String fileForder1 = "";
 		String strDeptID = "";
+		String strDeptName = "";
 		
 		// boolean hukyulDoc = false;
 		String currentAprType = "";
@@ -7204,6 +7218,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			receiveDept = aprXML.getElementsByTagName("RECEIPTDEPTID").item(0).getTextContent();
 			fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
+			receiveDeptName = aprXML.getElementsByTagName("RECEIVEDDEPTNAME").item(0).getTextContent();
 		} else {
 			/**
 			 * 진행되어야할 문서 (APRSTATE 002 : 진행 , 005 : 보류)의 정보 추출
@@ -7363,6 +7378,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("LSignNum = " + LSignNum);
 		logger.debug("lastSignNum = " + lastSignNum);
 		
+		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
 		if (result.equals("A")) { // "A"pprove 승인
 			docState = "003";
 			String tempDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
@@ -7577,8 +7593,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && !aprStateSign.equals("011") && habYuiAprStateFlag) {
 				if (aprStateSign.equals("012")) {
 					strDeptID = receiveDept;
+					strDeptName = receiveDeptName;
 				} else {
 					strDeptID = drafterDept;
+					strDeptName = receiveDeptName;
 				}
 				
 				if (!excuteInfo("DOCNUM_BEFORE", "DRAFT", doc, docID, userID, formURL)) {
@@ -7618,6 +7636,48 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					return "Link ERROR";
 				}
 			}
+			
+            /** 수신 일괄결재시 채번 */
+            if (approvalFlag.equals("G") && useReceiveDocNo.equals("NO") && totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && aprStateSign.equals("011")) {
+                strDeptID = receiveDept;
+                strDeptName = receiveDeptName;
+
+                if (!excuteInfo("DOCNUM_BEFORE", "SUSIN", doc, docID, userID, formURL)) {
+                    return "Link ERROR";
+                }
+                
+                String ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+                
+                logger.debug("serialNum = " + ret);
+                
+                docNumFlag = true;
+                
+                Document docXML = commonUtil.convertStringToDocument(ret);
+                cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
+                if (!ret.equals("") && doc.getElementById("receiptnumber") != null) {
+                    docNO = getRecRegSNToName(strDeptName, createDocNO(cabinetSN , docNumZeroCnt), strDeptID, userInfo.getTenantId(), companyID);
+                    doc.getElementById("receiptnumber").text(docNO);
+                    
+                    if (doc.getElementById("receiptdate") != null) {
+                        doc.getElementById("receiptdate").text(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false).replace("-", "."));
+                    }
+                    
+                    retNum = getNDigitNum(cabinetSN, 6);
+                    
+                    doc.body().attr("regnumbercode", retNum);
+                    doc.body().attr("deptid", strDeptID);
+                }
+                
+                linkCheck = excuteInfo("DOCNUM_AFTER", "SUSIN", doc, docID, userID, formURL);
+                
+                if (!linkCheck) {
+                    if (docNumFlag) {
+                        rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
+                    }
+                    
+                    return "Link ERROR";
+                }
+            }
 		} else if (result.equals("B")) { // 반송
 			docState = "004";
 			
@@ -7746,8 +7806,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String docNumCode = paramXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
 			
 			if (aprStateSign.equals("011")) {
-				paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent("");
-				paramXML.getElementsByTagName("ORGDOCNUMCODE").item(0).setTextContent("");
+			    if (approvalFlag.equals("S")) {
+			        paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent("");
+			        paramXML.getElementsByTagName("ORGDOCNUMCODE").item(0).setTextContent("");
+			    } else if (approvalFlag.equals("G") && useReceiveDocNo.equals("NO")) {
+			        paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent(strDeptID + retNum);
+			        paramXML.getElementsByTagName("ORGDOCNUMCODE").item(0).setTextContent("");
+			    }
 			} else {
 				paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent(docNumCode + retNum);
 			}
@@ -15847,10 +15912,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		
 		//발신부서 최종결재자 불러오기 
-		String aprName = ezApprovalGDAO.getOrgLastAprMemberName(map);
+		String aprID = ezApprovalGDAO.getOrgLastAprMemberName(map);
+		String aprName = "";
+		String aprName2 = "";
 		
 		if (aprName == null || aprName.equals("")) {
-			aprName = docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim();
+//			aprName = docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim();
+		    aprName = ezOrganService.getPropertyValue(aprID, "displayName", tenantID);
+		    aprName2 = ezOrganService.getPropertyValue(aprID, "displayName2", tenantID);
 		}
 		
 		//접수자 가져오기
@@ -15927,7 +15996,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim(), 
 						docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim(),
 						writerDeptID, writerDeptName, writerDeptName2, "2", ezOrganService.getPropertyValue(userID, "title", tenantID), ezOrganService.getPropertyValue(userID, "title2", tenantID),
-						aprName, "", docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(),
+						aprName, aprName2, docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(),
 						docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim(),
 						commonUtil.getTodayUTCTime("yyyy-MM-dd"), receiverName, receiverName, deliverySN, "1", 
 						docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim(), 
@@ -16290,8 +16359,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String regYear = getAccountingYear(processDate, companyID, langType, tenantID);
 		String title = objParam.getElementsByTagName("TITLE").item(0).getTextContent();
 		String numOfPage = objParam.getElementsByTagName("NUMOFPAGE").item(0).getTextContent();
-		// String aprMemberTitle = objParam.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent();
-		// String aprMemberTitle2 = objParam.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent();
+//    	String aprMemberTitle = objParam.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent();
+//    	String aprMemberTitle2 = objParam.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent();
 		String aprMemberName = objParam.getElementsByTagName("APRMEMBERNAME").item(0).getTextContent();
 		String aprMemberName2 = objParam.getElementsByTagName("APRMEMBERNAME2").item(0).getTextContent();
 		String drafterName = objParam.getElementsByTagName("DRAFTERNAME").item(0).getTextContent();
@@ -30100,6 +30169,151 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		logger.debug("getStoragePeriodName ended | result:" + rtnVal);
 		return rtnVal;
+	}
+
+//	@Override
+//	public JSONObject convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId) throws Exception {
+//		logger.debug("convertDocumentToImg started");
+//		
+//		String originalFilename = file.getOriginalFilename();
+//		EgovFileMngUtil.writeFile(file, originalFilename, tempUploadPath);
+//		
+//		// 다른 서버에 설치되어있는 변환솔루션의 경우, 솔루션서버에 마운트된 위치를 filePath로 알려줘야함
+////		String filePath = URLEncoder.encode("222.106.242.180:"+tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
+//		String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4fEa1FIQeYI3%252BPB33JlY%252BCLJjVjx1iVJebmrlmJl1TgrI%253D";
+////		String filePath = URLEncoder.encode("/home/jmocha/temp/" + originalFilename, "UTF-8"); // 테스트용
+//		String fileName = URLEncoder.encode(originalFilename, "UTF-8");
+//		String fileExt = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
+//		
+//		String address = config.getProperty("config.officeConverterServerURL") + "/DG_viewer/viewer/getThumbnail.do?"
+//					   + "filepath=" + filePath + "&filename=" + fileName + "&fileext=" + fileExt;
+//		
+//		logger.debug("image converting requestURL : " + address);
+//		
+//		URL url = new URL(address);
+//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();	
+//		conn.setRequestMethod("GET");
+//		
+//		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//		String line;
+//		StringBuffer response = new StringBuffer();
+//		
+//		while((line = br.readLine()) != null) {			
+//			response.append(line);						
+//		}
+//		
+//		JSONObject res = (JSONObject) new JSONParser().parse(response.toString());
+//		String hash = (String) res.get("hash");
+//		
+//		br.close();
+//		
+//		JSONObject convertedImgInfo = getConvertedImgInfo(hash);
+//
+//		// 컨버팅 후, 오피스 문서 파일 삭제
+//		File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
+//		tempFile.delete();
+//		
+//		logger.debug("convertDocumentToImg ended");
+//		return convertedImgInfo;	
+//	}
+	
+	@Override
+	public String convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId) throws Exception {
+		logger.debug("convertDocumentToImg started");
+		
+		String originalFilename = file.getOriginalFilename();
+		EgovFileMngUtil.writeFile(file, originalFilename, tempUploadPath);
+		
+		// 다른 서버에 설치되어있는 변환솔루션의 경우, 솔루션서버에 마운트된 위치를 filePath로 알려줘야함
+//		String filePath = URLEncoder.encode(tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
+		// String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4fEa1FIQeYI3%252BPB33JlY%252BCLJjVjx1iVJebmrlmJl1TgrI%253D";
+		String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4f8FdvYtnOEMuZ3PX0v9%252BN2g%253D%253D";
+//		String filePath = URLEncoder.encode("/home/jmocha/temp/" + originalFilename, "UTF-8"); // 테스트용
+		String fileName = URLEncoder.encode(originalFilename, "UTF-8");
+		String fileExt = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
+		
+		String address = config.getProperty("config.officeConverterServerURL") + "/DG_viewer/viewer/getThumbnail.do?"
+				+ "filepath=" + filePath + "&filename=" + fileName + "&fileext=" + fileExt;
+		
+		logger.debug("image converting requestURL : " + address);
+		
+		URL url = new URL(address);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();	
+		conn.setRequestMethod("GET");
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		String line;
+		StringBuffer response = new StringBuffer();
+		
+		while((line = br.readLine()) != null) {			
+			response.append(line);						
+		}
+		
+		br.close();
+		
+		// 2021-01-14 이혁진 넘어온 response값을 가지고 이미지URL생성
+		String convertedImgInfo = config.getProperty("config.officeConverterServerURL") + "/DG_viewer" + response;
+		
+		// 컨버팅 후, 오피스 문서 파일 삭제
+		File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
+		tempFile.delete();
+		
+		logger.debug("convertDocumentToImg ended");
+		return convertedImgInfo;	
+	}
+
+	@Override
+	public JSONObject getConvertedImgInfo(String hash) throws Exception {
+		logger.debug("getConvertedImgInfo started");
+		
+		String body = "hash=" + hash;
+		
+		JSONObject result;
+		
+		int attemptCNT = 0;
+		
+		// 컨버팅 프로세스가 변환서버에서 다 끝나기 전에 리퀘스트를 보내서 파일명을 가져오지 못할 때가 있음. 가져올때까지 리퀘스트를 보낸다.
+		while(true) {
+			URL url = new URL(config.getProperty("config.officeConverterServerURL") + "/DG_viewer/viewer/getThumbnail.do");
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setDoOutput(true);
+			
+			OutputStream os = conn.getOutputStream();
+			os.write(body.getBytes("UTF-8"));
+			os.flush();
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String line;
+			StringBuffer response = new StringBuffer();
+			
+			while((line = br.readLine()) != null) {
+				response.append(line);
+			}
+			
+			br.close();	
+			os.close();
+			
+			result = (JSONObject) new JSONParser().parse(response.toString());
+			Long pageTotal = result.get("page_total") != null ? (Long) result.get("page_total") : -1L;
+			int fileCNT = ((JSONArray)result.get("dirnmL")).size();
+			
+			logger.debug("page_total : " + pageTotal + ", fileCNT : " + fileCNT);
+			
+			if(fileCNT == pageTotal) {
+				break;
+			// 변환솔루션서버가 제대로 동작하지 않을 경우, 무한루프에 빠질 수 있기 때문에 변환시도 횟수를 120회로 제한(2분)
+			} else if(++attemptCNT > 120) {
+				throw new Exception("convert fails");
+			}
+			
+			logger.debug("attemptCNT : " + attemptCNT + "(time : " + System.currentTimeMillis() + ")");
+			Thread.sleep(1000);
+		}
+		
+		logger.debug("getConvertedImgInfo ended");
+		return result;	
+		
 	}
 	
 	// 겸직 id 리스트 가져오기

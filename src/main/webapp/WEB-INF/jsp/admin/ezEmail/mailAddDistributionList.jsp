@@ -231,22 +231,34 @@
 	                    var nodes = SelectNodes(result, "DATA/ROW");
 	                    
 	                    for (var i = 0 ; i < nodes.length ; i++) {
+	                    	var node0 = getNodeText(GetChildNodes(nodes[i])[0]);
+	                    	var node1 = MakeXMLString(getNodeText(GetChildNodes(nodes[i])[1]));
+	                    	var node2 = MakeXMLString(getNodeText(GetChildNodes(nodes[i])[2]));
+	                    	var node3 = MakeXMLString(getNodeText(GetChildNodes(nodes[i])[3]));
+	                    	
 	                        if (getNodeText(GetChildNodes(nodes[i])[0]) == "distributionSub") {
-	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</DATA1>";
+	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + node2 + "</DATA1>";
 	                        } else {
-	                        	pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + getNodeText(GetChildNodes(nodes[i])[1]) + "</DATA1>";
+	                        	pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + node1 + "</DATA1>";
 	                        }
 	                        
-	                        if(getNodeText(GetChildNodes(nodes[i])[0]) == "user"){
-	                            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
-	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "group"){
-	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
-	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "distribution") {
-	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t57' /> : " + memberReplaceHTML(getNodeText(GetChildNodes(nodes[i])[2])) + "</VALUE></CELL></ROW>";
-	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "distributionSub") {
-	                            pparsingXML = pparsingXML + "<DATA3>" + getNodeText(GetChildNodes(nodes[i])[3]) + "</DATA3>";
-	                            pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]) + "(" + getNodeText(GetChildNodes(nodes[i])[3]) + ")" + "</VALUE></CELL></ROW>";
+	                        switch (node0) {
+		                        case "group" :
+		                        	 pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + node2 + "</VALUE></CELL></ROW>";
+		                        	break;
+	                        	
+		                        case "distribution" :
+		                        	pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t57' /> : " + node2 + "</VALUE></CELL></ROW>";
+		                        	break;
+	                        	
+		                        case "distributionSub" :
+		                        	pparsingXML = pparsingXML + "<DATA3>" + node3 + "</DATA3>";
+		                            pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
+		                            pparsingXML = pparsingXML + "<VALUE>" + node2 + "(" + node3 + ")" + "</VALUE></CELL></ROW>";
+		                        	break;
+
+		                        default :
+		                        	pparsingXML = pparsingXML + "<VALUE>" + node2 + "</VALUE></CELL></ROW>";
 	                        }
 	                    }
 	                              

@@ -390,6 +390,9 @@ function lvtDoclist_SelChange() {
     var tr = DocList.GetSelectedRows();
     if (tr.length > 0) {
         processRowClick(tr[0]);
+        
+        /* 2021-01-20 홍승비 - 전자결재G 기록물대장에서 원클릭 시 더블클릭 이벤트 함께 적용 */
+        lvtDoclist_onSel_DBclick();
     }
 }
 

@@ -369,8 +369,8 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
     protected static void writeFile(MultipartFile file, String newName, String stordFilePath) throws Exception {
 		InputStream stream = null;
 		OutputStream bos = null;
-		newName = EgovStringUtil.isNullToString(newName).replaceAll("..", "");
-		stordFilePath = EgovStringUtil.isNullToString(stordFilePath).replaceAll("..", "");
+//		newName = EgovStringUtil.isNullToString(newName).replaceAll("..", "");
+//		stordFilePath = EgovStringUtil.isNullToString(stordFilePath).replaceAll("..", "");
 		
 		try {
 		    stream = file.getInputStream();

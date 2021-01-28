@@ -828,7 +828,8 @@ function CalMonthDataBind(oAppointment) {
         }
         else {
         	var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        	oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");        	
+        	oTd.setAttribute("onclick", "ReadSchedule(" + divID + ")");
+        	oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
         	oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
         	oTd.setAttribute("onmouseout", "hideTooltip(this)");
         }
@@ -981,6 +982,7 @@ function CalWeekDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
         if (objDivE) {
@@ -1120,6 +1122,7 @@ function CalWeekAllDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
         objDivS.appendChild(oDiv);
@@ -1254,6 +1257,7 @@ function CalDayDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
         if (objDivE) {
@@ -1393,6 +1397,7 @@ function CalDayAllDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
         objDivS.appendChild(oDiv);

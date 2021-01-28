@@ -121,7 +121,7 @@ public interface EzApprovalGAdminService {
 	
 	public ApprGFormVO getFormContent(String formID, String lang, String companyID,int tenantID, String approvalFlag) throws Exception;
 	
-	public String delForm(String formID, String companyID, String realPath, int tenantID) throws Exception;
+	public String delForm(String formID, String companyID, String realPath, int tenantID, String officeFlag) throws Exception;
 	
 	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID, String approvalFlag, String useReceiveInfoName) throws Exception;
 

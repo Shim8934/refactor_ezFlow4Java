@@ -5462,7 +5462,7 @@
 <!-- 	<procedure id="EzapprovalG.findTask" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZSP_FINDTASK(#v_DEPTCODE#, #v_TITLE#, #v_TASKCODE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzapprovalG.findTask" parameterClass="Map" resultClass="ApprGTaskVO">
+	<select id="EzapprovalG.findTask" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
 		<isEmpty property="approvalFlag">
 			SELECT 
 		     	 DISTINCT TASKCODE, 
@@ -16990,6 +16990,7 @@
 	<insert id="EzApprovalG.aprMakeTmp2Ing2" parameterClass="Map">
 		INSERT INTO 
 			TBL_APROPINIONINFO
+		(DocID, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, UserName2, UserJobTitle2, UserDeptName2, TENANT_ID, COMPANYID)
      	( SELECT 
      		  #v_PDOCID# ,
               USERID ,
@@ -23895,6 +23896,7 @@
    <insert id="EzApprovalG.insertTmpAprOpinionInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_TMPAPROPINIONINFO
+   		(OWNERID, SN, USERID, OPINIONGB , CONTENT , USERNAME , USERJOBTITLE , USERDEPTID , USERDEPTNAME , OPINIONSN , UserName2 ,  UserJobTitle2 , UserDeptName2 , TENANT_ID , COMPANYID)
 		(SELECT 
 				#v_USERID#, 
 				#v_SN#, 
