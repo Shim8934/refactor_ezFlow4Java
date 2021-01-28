@@ -1655,7 +1655,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					if (part == null) {
 						logger.error("AttachPart not found. AttachPartIndex=" + index);
 					} else {
-						response.setContentType(part.getContentType());
+						String partContentType = part.getContentType();
+						
+						// Chrome에서 message/rfc822 Type으로 내려 보내면
+						// blocked a frame with origin from accessing a cross-origin frame
+						// 오류가 발생해 추가함.
+						if (partContentType.equalsIgnoreCase("message/rfc822")) {
+							partContentType = "application/octet-stream";
+						}
+						
+						response.setContentType(partContentType);
 						
 						filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);						
 						
