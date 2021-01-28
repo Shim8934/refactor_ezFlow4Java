@@ -44,8 +44,9 @@ function setDocNumFormat() {
                 numHeader = numHeader + DeptSymbol + Tail
                 break;
 
+            //2021-01-28 문서번호의 년도가 제대로 출력되지 않는 부분 해결
             case "YY":
-                numHeader = numHeader + d.getYear() + Tail
+                numHeader = numHeader + d.getFullYear() + Tail
                 break;
 
             case "yy":

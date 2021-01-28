@@ -527,8 +527,9 @@
 			    message.EditMode(0);
 				
 		        //2018-10-15 반송 후 배부된 문서의 접수번호 초기화
+				//2021-01-28 문서번호 초기화시 @dp-@YY-@nn으로 수정
 		        if (pDraftFlag == "REDRAFT" || pDraftFlag == "SUSIN") {
-		        	message.PutFieldText("receiptnumber", "@dp-@nn");
+		        	message.PutFieldText("receiptnumber", "@dp-@YY-@nn");
 		        }
 		        
 		        message.MoveToField("doctitle");
