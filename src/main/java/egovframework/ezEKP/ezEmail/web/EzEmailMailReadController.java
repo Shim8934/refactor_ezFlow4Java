@@ -336,18 +336,28 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 				if (!recipientsStr.isEmpty()) {
 					// To, Cc, Bcc를 분리한다.(||로 구분됨.)
+					// sol0015@coupang.com <sol0015@coupang.com>; Judy Kh (Kyoung Hye Jang ) [PL Korea Sourcing] <khjang@coupang.com>||정덕범 <james71d@sajo.co.kr>; 강수한 <a0142@sajo.co.kr>; 함지혜 <a3016n@sajo.co.kr>||
 					String[] recipientsArr = recipientsStr.split("\\|\\|", 3);		
 					
 					if (!recipientsArr[0].isEmpty()) {
-						String[] strArr = recipientsArr[0].split("; ");
+						// Undisclosed recipients:; <Undisclosed recipients:;>|||| 와 같은 경우가 있어
+						// split delimiter를 기존 "; "에서 ">; "로 변경함.
+						String[] strArr = recipientsArr[0].split(">; ");
 						
 						for (int i = 0; i < strArr.length; i++) {
 							String item = strArr[i].trim();
 							String[] tokens = item.split(" <");
 							String name = tokens[0]; 		
 							name = commonUtil.trimDoubleQuotes(name);								
-							String address = tokens[1];
-							address = address.substring(0, address.length() - 1);
+							String address = ""; 
+									
+							if (tokens.length > 1) {
+								address = tokens[1];
+							}
+							
+							if (address.endsWith(">")) {
+								address = address.substring(0, address.length() - 1);
+							}
 							
 							logger.debug("TO=" + name + " " + address);
 							
@@ -368,15 +378,22 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					}	
 					
 					if (recipientsArr.length > 1 && !recipientsArr[1].isEmpty()) {
-						String[] strArr = recipientsArr[1].split("; ");
+						String[] strArr = recipientsArr[1].split(">; ");
 						
 						for (int i = 0; i < strArr.length; i++) {
 							String item = strArr[i].trim();
 							String[] tokens = item.split(" <");
 							String name = tokens[0]; 		
 							name = commonUtil.trimDoubleQuotes(name);								
-							String address = tokens[1];
-							address = address.substring(0, address.length() - 1);
+							String address = ""; 
+							
+							if (tokens.length > 1) {
+								address = tokens[1];
+							}
+							
+							if (address.endsWith(">")) {
+								address = address.substring(0, address.length() - 1);
+							}
 							
 							logger.debug("CC=" + name + " " + address);
 							
@@ -397,17 +414,24 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					}						
 
 					if (recipientsArr.length > 2 && !recipientsArr[2].isEmpty()) {
-						String[] strArr = recipientsArr[2].split("; ");
+						String[] strArr = recipientsArr[2].split(">; ");
 						
 						for (int i = 0; i < strArr.length; i++) {
 							String item = strArr[i].trim();
 							String[] tokens = item.split(" <");
 							String name = tokens[0]; 		
 							name = commonUtil.trimDoubleQuotes(name);								
-							String address = tokens[1];
-							address = address.substring(0, address.length() - 1);
+							String address = ""; 
 							
-							logger.debug("BCC=" + name + address);
+							if (tokens.length > 1) {
+								address = tokens[1];
+							}
+							
+							if (address.endsWith(">")) {
+								address = address.substring(0, address.length() - 1);
+							}
+							
+							logger.debug("BCC=" + name + " " + address);
 
 							if (i != 0) {
 								bccStr += ", ";
@@ -2179,15 +2203,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					String[] recipientsArr = recipientsStr.split("\\|\\|", 3);		
 					
 					if (!recipientsArr[0].isEmpty()) {
-						toStr = recipientsArr[0].replace("; ", ";");
+						// Undisclosed recipients:; <Undisclosed recipients:;>|||| 와 같은 경우가 있어
+						// :; 를 제거하도록 함.
+						toStr = recipientsArr[0].replace(":;", "").replace("; ", ";");
 					}
 					
 					if (recipientsArr.length > 1 && !recipientsArr[1].isEmpty()) {
-						ccStr = recipientsArr[1].replace("; ", ";");
+						ccStr = recipientsArr[1].replace(":;", "").replace("; ", ";");
 					}
 
 					if (recipientsArr.length > 2 && !recipientsArr[2].isEmpty()) {
-						bccStr = recipientsArr[2].replace("; ", ";");
+						bccStr = recipientsArr[2].replace(":;", "").replace("; ", ";");
 					}						
 				}					
 				
