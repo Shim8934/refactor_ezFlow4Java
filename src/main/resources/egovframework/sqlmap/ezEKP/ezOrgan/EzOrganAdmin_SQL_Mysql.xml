@@ -3051,9 +3051,9 @@
 	    		(73, 19, 1, #tenantID#, #companyID#, '전자설문'),
 	    		(73, 19, 2, #tenantID#, #companyID#, 'Survey'),
 	    		(73, 19, 3, #tenantID#, #companyID#, '電子アンケート'),
-				(SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 1, #tenantID#, #companyID#, '탭게시판'),
-				(SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 2, #tenantID#, #companyID#, 'tabBoard'),
-				(SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 3, #tenantID#, #companyID#, 'タブボード')
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 1, #tenantID#, #companyID#, '탭게시판'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 2, #tenantID#, #companyID#, 'tabBoard'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 3, #tenantID#, #companyID#, 'タブボード')
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I30" parameterClass="Map">
@@ -3165,7 +3165,7 @@
 	    		(36, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
 	    		(47, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
 	    		(49, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
-				(SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), #companyID#, #tenantID#, #companyID#, 1, 0, 1)
   		]]>
     </insert>
     

@@ -107,6 +107,7 @@
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 		    arr_userinfo[17]  = "<c:out value ='${userInfo.primary}'/>";
 		    var pCompanyID = "<c:out value ='${userInfo.companyID}'/>";
+		    var pTenantID = "<c:out value='${userInfo.tenantId}'/>";
 		    var pUserID = arr_userinfo[1];
 		    var KuyjeType = "002";
 		    var signDateFormat = "<c:out value ='${optSignDateFormat}'/>";
@@ -162,6 +163,8 @@
 			var nonSepAttachLVXml = "";
 			var reformFlag = "${reformflag}";
 			var wAprMemberSN = "1";
+			<%-- 2021-01-21 심기영 오피스 양식 여부 --%>
+			var officeFlag = "<c:out value='${officeFlag}'/>";
 			//원문정보공개
             var useOpenGov = "<c:out value ='${useOpenGov}'/>";
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
@@ -190,6 +193,15 @@
 		        	document.getElementById("btnSelForm").style.display = "none";
                 	document.getElementById("btnAddSepAttach").style.display = "none";
                 	document.getElementById("btnSaveServer").style.display = "none";
+		        }
+		        
+		        if(officeFlag == "Y") {
+		        	document.getElementById("mailPanel").style.display = "";
+		        	document.getElementById("layerpopup").style.display = "";
+		        	document.getElementById("iFrameLayer2").src = "/ezApprovalG/officeAttach.do";
+		        	document.getElementById("message").src = "/ezApprovalG/draftContent.do?isUsed=${isUsed}";
+		        } else {
+		        	document.getElementById("message").src = "/ezApprovalG/draftContent.do?isUsed=${isUsed}";
 		        }
 		    };
 		    function dragNdrapNo()
@@ -2139,7 +2151,7 @@
 		  </tr>
 		  <tr>
 		    <td  style="padding-bottom:10px;height:86%;" >
-		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/draftContent.do?isUsed=${isUsed}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		      </td>
 		  </tr>
 		  <tr>
@@ -2160,6 +2172,9 @@
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
+		<div id="layerpopup" class="layerpopup" style="z-index: 1000; position: absolute; top: 50%; margin-top: -100px; height: 200px; left: 50%; margin-left: -250px; width: 500px; display: none;">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none; width: 100%; height: 100%;" id="iFrameLayer2"></iframe>
 		</div>
 	</body>
 </html>

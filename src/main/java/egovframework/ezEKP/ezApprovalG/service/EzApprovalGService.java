@@ -16,6 +16,8 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 
+import org.json.simple.JSONObject;
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 
 import javax.servlet.http.HttpServletRequest;
@@ -272,7 +274,7 @@ public interface EzApprovalGService {
 
     public String getInnerLineInfo(String docID, String deptID, String docState, String companyID, int tenantID) throws Exception;
 
-    public String getSearchDocList(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftFromYEAR, String draftFromMONTH,
+    public String getSearchDocList(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String formName, String draftFromYEAR, String draftFromMONTH,
                                    String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR, String apprToMONTH,
                                    String apprToDAY, String myApprFromYEAR, String myApprFromMONTH, String myApprFromDAY, String myApprToYEAR, String myApprToMONTH, String myApprToDAY, String draftDeptName,
                                    String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String alFlag, String companyID, String lang, String approvUser, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception;
@@ -451,7 +453,7 @@ public interface EzApprovalGService {
 
     public String deleteUserContDoc(String docID, String contID, String companyID, String lang, int tenantId) throws Exception;
 
-    public String getSearchDocListS(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftfrom, String draftto, String apprfrom, String papprto, String mypapprfrom, String mypapprto,
+    public String getSearchDocListS(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String formName, String draftfrom, String draftto, String apprfrom, String papprto, String mypapprfrom, String mypapprto,
                                     String draftDeptName, String docState, String AprFlag, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String searchStatus, String companyID, String lang, String string2, int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception;
 
     public List<ApprGContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception;
@@ -647,8 +649,14 @@ public interface EzApprovalGService {
     void setHesongBansongCabinetID(String docID, String cabinetID, String taskCode, String companyID, int tenantId) throws Exception;
 
     String getDeptIdOfCabinet(String orgCabinetId, int tenantId, String companyID) throws Exception;
-
-    public String getStoragePeriodName(String period, String lang, String approvalFlag, String companyID, int tenantID) throws Exception;
+	
+	public String getStoragePeriodName(String period, String lang, String approvalFlag, String companyID, int tenantID) throws Exception;
+	
+	// 변환서버에 변환을 요청
+	public String convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId) throws Exception;
+	
+	// 이미지로 변환된 오피스문서의 정보를 가져옴
+	public JSONObject getConvertedImgInfo(String hash) throws Exception;
 
     public String getProxyUser2(String userID, String userLang, int tenantID, String offset) throws Exception;
 
@@ -671,7 +679,7 @@ public interface EzApprovalGService {
     public Map<String, Object> getOpenGovInfo(String docID, int tenantId, String companyID) throws Exception;
 
     public String getSearchDocListForOpenGov(String string, String string2, String subQuery, String docNumber, String docTitle, String drafter,
-                                             String formID, String draftFromYear, String draftFromMonth, String draftFromDay, String draftToYear, String draftToMonth,
+                                             String formID, String formName, String draftFromYear, String draftFromMonth, String draftFromDay, String draftToYear, String draftToMonth,
                                              String draftToDay, String apprFromYear, String apprFromMonth, String apprFromDay, String apprToYear, String apprToMonth,
                                              String apprToDay, String string3, String string4, String string5, String string6, String string7, String string8,
                                              String draftDeptName, String docState, String string9, String pageSize, String pageNum, String orderCell,

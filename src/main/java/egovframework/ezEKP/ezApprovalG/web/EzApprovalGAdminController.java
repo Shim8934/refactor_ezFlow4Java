@@ -263,8 +263,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String result = ezApprovalGService.getFormContainerInfo(id, "", companyID, userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 		
-		logger.debug("result : " + result);
-		
 		model.addAttribute("resultXML", result);
 		
 		logger.debug("getFormContInfo ended.");
@@ -289,7 +287,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), companyID, userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("id : " + id + ", kind : " + kind + ", companyID : " + companyID);
-		logger.debug("result = " + result);
 		
 		model.addAttribute("resultXML", result);
 		
@@ -558,7 +555,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1")) {
 			return "cmm/error/adminDenied";
 		}
-		
+		// 2021-01-21 심기영 오피스결재 여부 추가
+		String useOfficeApproval = ezCommonService.getTenantConfig("UseOfficeApproval", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String formProcSpelling = ezCommonService.getTenantConfig("FormProcSpelling", userInfo.getTenantId()); 
 		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
@@ -669,6 +667,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("reformUrl", reformUrl);
 		/* FormBuilder end */
+		
+		// 2021-01-21 심기영 오피스결재 여부 추가
+		model.addAttribute("useOfficeApproval", useOfficeApproval);
 		
 		logger.debug("formMainOther ended.");
 		
@@ -1042,8 +1043,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String formID = request.getParameter("formID");
 		String companyID = request.getParameter("companyID");
 		String realPath = commonUtil.getRealPath(request);
+		String officeFlag = request.getParameter("officeFlag");
 		
-		String result = ezApprovalGAdminService.delForm(formID, companyID, realPath, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.delForm(formID, companyID, realPath, userInfo.getTenantId(),officeFlag);
 		
 		logger.debug("delForm ended");
 
@@ -3147,6 +3149,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String apprToDay = request.getParameter("apprToDay");
 
         String formID = request.getParameter("formID");
+        String formName = request.getParameter("formName");
         String draftDeptName = request.getParameter("deptName1");
         String draftDeptName2 = request.getParameter("deptName2");
         String pageNum = request.getParameter("pageNum");
@@ -3160,7 +3163,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String companyID = request.getParameter("companyID");
 		
         String result = ezApprovalGAdminService.searchManageAprDocList(docNumber, docTitle, drafter, drafter2, draftFromYear, draftFromMonth, draftFromDay, 
-				draftToYear,draftToMonth,draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, formID, draftDeptName, 
+				draftToYear,draftToMonth,draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, formID, formName, draftDeptName, 
 				draftDeptName2,pageNum, pageSize, docState, subQuery, orderCell, orderOption, companyID, userInfo.getLang(), approvUser, userInfo.getOffset(), userInfo.getTenantId());
         
 		logger.debug("getStatSearchAprDocList ended.");
@@ -3306,6 +3309,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		//양식아이디
 		String formID = request.getParameter("formID");
+		//양식명 2021.01.13 박기범 추가
+		String formName = request.getParameter("formName");
 		//문서번호
 		String docNumber = request.getParameter("docNumber");
         //문서제목
@@ -3381,7 +3386,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
         String result = "";
 
-        result = ezApprovalGAdminService.getAdminSearchDocList(formID, docNumber, docTitle, drafter, approvUser, draftDeptName, draftFrom, draftTo, aprFrom, aprTo, pageSize, pageNum, orderCell, orderOption, companyID, tenantID, lang, offset, approvalFlag, locale);
+        result = ezApprovalGAdminService.getAdminSearchDocList(formID, formName, docNumber, docTitle, drafter, approvUser, draftDeptName, draftFrom, draftTo, aprFrom, aprTo, pageSize, pageNum, orderCell, orderOption, companyID, tenantID, lang, offset, approvalFlag, locale);
         
         logger.debug("getStatSearchDocList ended.");
         
@@ -4408,8 +4413,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
             aprTo = apprToYear + "-" + apprToMonth + "-" + apprToDay;
         }
 
-        String formID = request.getParameter("formID");
-        String draftDeptName = request.getParameter("deptName1");
+		String formID = request.getParameter("formID");
+		String formName = request.getParameter("formName");
+		String draftDeptName = request.getParameter("deptName1");
         String pageNum = request.getParameter("pageNum");
         String pageSize = request.getParameter("pageSize");
         String docState = request.getParameter("docState");
@@ -4422,7 +4428,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
         String result = "";
-        result = ezApprovalGService.getSearchDocListForOpenGov("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay,
+        result = ezApprovalGService.getSearchDocListForOpenGov("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, formName, draftFromYear, draftFromMonth, draftFromDay,
                 draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
                 draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "", companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 

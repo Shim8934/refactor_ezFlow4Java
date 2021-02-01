@@ -227,12 +227,15 @@ function PreviewMode_ChangeBtn() {
     } catch (e) { }
 }
 
+/* 2021-01-21 홍승비 - 미리보기 영역 열려있지 않은 경우, 원클릭으로 회람판 읽기팝업창 표출 */
 function ItemPreviewRead_click(obj) {
     selobj = document.getElementById(obj);
     onclickFlag = true;
     
     if (g_bPrevShow) {
         ItemPreviewRead(document.getElementById(obj));
+    } else {
+    	ItemRead_onclick(selobj);
     }
 }
 

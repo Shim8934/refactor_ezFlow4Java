@@ -757,6 +757,7 @@ function CalMonthDataBind(oAppointment, oAppointment2) {
         //oTd.setAttribute("onmouseover", "TooltipMouseOver(this, \"M\")");
         oTd.onmouseover = function (event) { TooltipMouseOver(this,"M", event); };
         oTd.setAttribute("onmouseout", "hideTooltip()");
+        oTd.setAttribute("onclick", "event.cancelBubble=true;OnDoubleClickAppointment(this);");
         oTd.setAttribute("ondblclick", "event.cancelBubble=true;OnDoubleClickAppointment(this);");
 
         oTd.setAttribute("titletext", oAppointment.oOwner_nm + "(" + oAppointment.oDept_name + ")");
@@ -895,6 +896,7 @@ function CalWeekDataBind(oAppointment, order, oAppointment2) {
         //oDiv.setAttribute("onmouseover", "TooltipMouseOver(this, \"W\")");
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, "W", event); };
         oDiv.setAttribute("onmouseout", "hideTooltip()");
+        oDiv.setAttribute("onclick", "event.cancelBubble=true;OnDoubleClickAppointment(this);");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;OnDoubleClickAppointment(this);");
         oDiv.setAttribute("titletext", oAppointment.oOwner_nm + "(" + oAppointment.oDept_name + ")");
         oDiv.setAttribute("returnFlag", oAppointment.oReturnFlag);
@@ -1037,6 +1039,7 @@ function CalWeekAllDataBind(oAppointment, order) {
         //oDiv.setAttribute("onmouseover", "TooltipMouseOver(this, \"W\")");
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, "W", event); };
         oDiv.setAttribute("onmouseout", "hideTooltip()");
+        oDiv.setAttribute("onclick", "event.cancelBubble=true;OnDoubleClickAppointment(this);");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;OnDoubleClickAppointment(this);");
         oDiv.setAttribute("titletext", oAppointment.oOwner_nm + "(" + oAppointment.oDept_name + ")");
         oDiv.setAttribute("returnFlag", oAppointment.oReturnFlag);
@@ -1173,6 +1176,7 @@ function CalDayDataBind(oAppointment, order, oAppointment2) {
         //oDiv.setAttribute("onmouseover", "TooltipMouseOver(this, \"D\")");
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, "D", event); };
         oDiv.setAttribute("onmouseout", "hideTooltip()");
+        oDiv.setAttribute("onclick", "event.cancelBubble=true;OnDoubleClickAppointment(this);");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;OnDoubleClickAppointment(this);");
         oDiv.setAttribute("titletext", oAppointment.oOwner_nm + "(" + oAppointment.oDept_name + ")");
         oDiv.setAttribute("returnFlag", oAppointment.oReturnFlag);
@@ -1316,6 +1320,7 @@ function CalDayAllDataBind(oAppointment, order) {
         //oDiv.setAttribute("onmouseover", "TooltipMouseOver(this, \"D\")");
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, "D", event); };
         oDiv.setAttribute("onmouseout", "hideTooltip()");
+        oDiv.setAttribute("onclick", "event.cancelBubble=true;OnDoubleClickAppointment(this);");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;OnDoubleClickAppointment(this);");
         oDiv.setAttribute("titletext", oAppointment.oOwner_nm + "(" + oAppointment.oDept_name + ")");
         oDiv.setAttribute("returnFlag", oAppointment.oReturnFlag);

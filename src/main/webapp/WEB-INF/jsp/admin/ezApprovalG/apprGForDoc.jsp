@@ -114,6 +114,8 @@
 				            break;
 				    }
 				}
+				
+				lvtDoclist_onSel_DBclick();
 			}
 			
 			function GetDocList() {
@@ -166,7 +168,8 @@
 	            		apprToYear : SearchCond[12],
 	            		apprToMonth : SearchCond[13],
 	            		apprToDay : SearchCond[14],
-	            		formID : SearchCond[15],
+						formID : SearchCond[15],
+						formName : SearchCond[16],
 	            		deptName1 : SearchCond[17],
 	            		deptName2 : SearchCond[17],
 	            		pageNum : pageNum,

@@ -497,7 +497,7 @@ var SurveyItem = function() {
 				trElmt.setAttribute("userId"    , itemList[i]["creatorId"]);
 				trElmt.setAttribute("createDate", itemList[i]["createDate"].substring(0, 19));
 				trElmt.setAttribute("surveyTtl" , itemList[i]["title"]);
-				trElmt.onclick    = function(event) {clickRowFunct(event);};
+				trElmt.onclick    = function(event) {clickRowFunct(event);itemDblClickHandler2(event, this);};
 				trElmt.ondblclick = function(event) {itemDblClickHandler(this);};
 				
 				var inputElmt  = document.createElement("input");
@@ -833,6 +833,20 @@ var SurveyItem = function() {
 		}
 		else {
 			modifySurveyItem(trObj.getAttribute("role"));
+		}
+	}
+	
+	/* 2021-01-20 홍승비 - 원클릭 이벤트에 더블클릭 함수 추가 (미리보기 영역이 열려있지 않은 경우에만) */
+	function itemDblClickHandler2(event, trObj) {
+		if (document.getElementById("previewH").style.display == "none" && document.getElementById("previewW").style.display == "none") {
+			if (!event.ctrlKey && !event.shiftKey) {
+				if (pageMode != "draft") {
+					openSurveyDetail(trObj.getAttribute("role"));
+				}
+				else {
+					modifySurveyItem(trObj.getAttribute("role"));
+				}
+			}
 		}
 	}
 	

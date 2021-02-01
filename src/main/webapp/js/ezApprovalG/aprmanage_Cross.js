@@ -760,7 +760,7 @@ function openUserInfo() {
     }
 }
 
-function openDraftUI(pDraftFlag, pCurSelRow) {
+function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
 	// 2018.08.27 재기안은 윈도우 하나만 열리도록 수정
 	var windowName = "";
 	
@@ -810,12 +810,18 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
         pArgument[6] = "";
         pArgument[7] = "";
     }
+    // 2021-01-21 심기영 오피스결재 추가
+    var p_officeFlag = "";
+    
+    if(officeFlag !== null) {
+    	p_officeFlag = officeFlag;
+    }
   
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
     	openLocation = "/ezApprovalG/draftui.do?formURL=";
         openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
         openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-        openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
+        openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag);
         
 //        // FormBuilder
 //        if (window.reformflag == null) {
@@ -1013,8 +1019,15 @@ function openForm_Complete(ret) {
     formDocType = ret[1];
     reformflag = ret["reformflag"];
     
+    // 2021-01-21 심기영 오피스결재 추가
+    var officeFlag = "";   
+    // 2021-01-21 심기영 오피스결재 추가
+    if(typeof ret[4] != "undefined") {
+    	officeFlag = ret[4];
+    }
+    // 2021-01-21 심기영 오피스결재 추가
     if (formURL != "cancel") {
-        openDraftUI("DRAFT", "");
+        openDraftUI("DRAFT", "",officeFlag);
     }
 }
 

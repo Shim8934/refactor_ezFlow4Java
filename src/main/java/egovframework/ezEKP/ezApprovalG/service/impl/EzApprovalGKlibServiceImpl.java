@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
+import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -140,7 +141,7 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 			LOGGER.debug("backupDir: {}", backupDir);
 
 			/** 결재완료문서 폴더 */
-			// 결재완료문서 폴더, ex) doc/2018/792
+			// 결재완료문서 폴더, ex) doc/2018/792/
 			Path relativeDocumentFile = Paths.get("doc", oldYear, docDirPath);
 			// 결재완료문서 폴더 (절대경로)
 			Path realDocumentFile = uploadApprovalDir.resolve(relativeDocumentFile);
@@ -164,19 +165,26 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 			LOGGER.debug("realAttachmentDir: {}", realAttachmentDir);
 			LOGGER.debug("realAttachmentHistoryDir: {}", realAttachmentHistoryDir);
 
+			// .ezd인 파일들은 제외하고 백업
+			FileFilter fileFilter = file -> !file.toString().endsWith("." + ENCRYPTED_FILE_EXT);
+
 			// 결재완료문서 백업
-			FileUtils.copyDirectory(realDocumentFile.toFile(), backupDir.resolve(relativeDocumentFile).toFile());
+			FileUtils.copyDirectory(realDocumentFile.toFile(),
+					backupDir.resolve(relativeDocumentFile).toFile(), fileFilter);
 			// 결재문서 히스토리 폴더 백업
 			if (Files.exists(realDocumentHistoryDir)) {
-				FileUtils.copyDirectory(realDocumentHistoryDir.toFile(), backupDir.resolve(relativeDocumentHistoryDir).toFile());
+				FileUtils.copyDirectory(realDocumentHistoryDir.toFile(),
+						backupDir.resolve(relativeDocumentHistoryDir).toFile(), fileFilter);
 			}
 			// 첨부파일 폴더 백업
 			if (Files.exists(realAttachmentDir)) {
-				FileUtils.copyDirectory(realAttachmentDir.toFile(), backupDir.resolve(relativeAttachmentDir).toFile());
+				FileUtils.copyDirectory(realAttachmentDir.toFile(),
+						backupDir.resolve(relativeAttachmentDir).toFile(), fileFilter);
 			}
 			// 첨부파일 히스토리 폴더 백업
 			if (Files.exists(realAttachmentHistoryDir)) {
-				FileUtils.copyDirectory(realAttachmentHistoryDir.toFile(), backupDir.resolve(relativeAttachmentHistoryDir).toFile());
+				FileUtils.copyDirectory(realAttachmentHistoryDir.toFile(),
+						backupDir.resolve(relativeAttachmentHistoryDir).toFile(), fileFilter);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -245,12 +253,10 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 				// 첨부파일 순서
 				parameterMap.put("attachFileSN", attachInfo.getAttachFileSN());
 				
+				// 진행 중인 문서, 완료 문서, 임시보관함 등에 있는 동일한 경로의 파일에 모두 .ezd 업데이트
 				ezApprovalGKlibDAO.updateEndAttachInfoHref(parameterMap);
-				/* 진행 중인 문서의 해당 첨부파일이 존재하면 .ezd 확장자를 붙여준다.
-				 orgdocid를 현재 결재완료된 문서의 아이디를 쓰는 경우가 존재하기 때문이다.
-				예를 들어 수신 문서 같은 경우에는 수신 정보를 원본 문서의 href를 복사해서 붙여넣기 때문에
-				.ezd 확장자가 붙어있지 않아서 다운로드할 때 FileNotFound 오류가 난다. */
 				ezApprovalGKlibDAO.updateAprAttachInfoHref(parameterMap);
+				ezApprovalGKlibDAO.updateTmpAttachInfoHref(parameterMap);
 			}
 		}
 

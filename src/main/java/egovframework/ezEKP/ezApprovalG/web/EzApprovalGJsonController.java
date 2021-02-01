@@ -109,6 +109,8 @@ public class EzApprovalGJsonController {
 		
 		//양식아이디
 		String formID = request.getParameter("formID");
+		//양식명
+		String formName = request.getParameter("formName");
 		//문서번호
 		String docNumber = request.getParameter("docNumber");
         //문서제목
@@ -184,7 +186,7 @@ public class EzApprovalGJsonController {
 
         String result = "";
 
-        Map<String, Object> resultMap =  ezApprovalGJsonService.getAdminSearchDocList(formID, docNumber, docTitle, drafter, approvUser, draftDeptName, draftFrom, draftTo, aprFrom, aprTo, pageSize, pageNum, orderCell, orderOption, companyID, tenantID, lang, offset, approvalFlag, locale);
+        Map<String, Object> resultMap =  ezApprovalGJsonService.getAdminSearchDocList(formID,formName, docNumber, docTitle, drafter, approvUser, draftDeptName, draftFrom, draftTo, aprFrom, aprTo, pageSize, pageNum, orderCell, orderOption, companyID, tenantID, lang, offset, approvalFlag, locale);
         
         logger.debug("getStatSearchDocList ended.");
         

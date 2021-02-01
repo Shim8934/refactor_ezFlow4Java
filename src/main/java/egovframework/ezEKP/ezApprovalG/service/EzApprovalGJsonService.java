@@ -9,6 +9,7 @@ public interface EzApprovalGJsonService {
 	
 	public Map<String, Object> getAdminSearchDocList(
 			String formID,
+			String formName,
 			String docNumber,
 			String docTitle, 
 			String drafter, 

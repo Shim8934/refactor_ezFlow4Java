@@ -299,9 +299,10 @@
 		        if (document.getElementsByName("FormName")[0].id == "FormName") {
 		            document.getElementsByName("FormName")[0].id = "";
 		        }
-		        
-		        RtnVal[15] = document.getElementsByName("FormName")[0].id;
-		        RtnVal[16] = "";
+				// 2021-01-13 박기범 : 문서명(16) 조회 추가 및 문서아이디(15)검색 제거.
+				// RtnVal[15] = document.getElementsByName("FormName")[0].id;
+				RtnVal[15] = "";
+		        RtnVal[16] = document.getElementsByName("FormName")[0].value;
 		        RtnVal[17] = document.getElementById("drafterdept").value;
 		        RtnVal[18] = "";
 		        
@@ -440,9 +441,10 @@
 		        if (document.getElementsByName("FormName")[0].id == "FormName") {
 		            document.getElementsByName("FormName")[0].id = "";
 		        }
-		        
-		        RtnVal[21] = document.getElementsByName("FormName")[0].id;
-		        RtnVal[22] = "";
+		        // 2021-01-13 박기범 : 문서명(16) 조회 추가 및 문서아이디(15)검색 제거.
+				// RtnVal[15] = document.getElementsByName("FormName")[0].id;
+				RtnVal[15] = "";
+		        RtnVal[16] = document.getElementsByName("FormName")[0].value;
 		        RtnVal[23] = document.getElementById("drafterdept").value;
 		        RtnVal[24] = "";
 		        
@@ -528,9 +530,10 @@
 			    if (document.getElementsByName("FormName")[0].id == "FormName") {
 			        document.getElementsByName("FormName")[0].id = "";
 			    }
-			    
-			    RtnVal[21] = document.getElementsByName("FormName")[0].id;
-			    RtnVal[22] = "";
+			    // 2021-01-13 박기범 : 문서명(16) 조회 추가 및 문서아이디(15)검색 제거.
+				// RtnVal[15] = document.getElementsByName("FormName")[0].id;
+				RtnVal[15] = "";
+		        RtnVal[16] = document.getElementsByName("FormName")[0].value;
 			    RtnVal[23] = document.getElementById("drafterdept").value;
 			    RtnVal[24] = "";
 			    
@@ -627,9 +630,10 @@
 		        if (document.getElementsByName("FormName")[0].id == "FormName") {
 		            document.getElementsByName("FormName")[0].id = "";
 		        }
-		        
-		        RtnVal[21] = document.getElementsByName("FormName")[0].id;
-		        RtnVal[22] = "";
+		        // 2021-01-13 박기범 : 문서명(16) 조회 추가 및 문서아이디(15)검색 제거.
+				// RtnVal[15] = document.getElementsByName("FormName")[0].id;
+				RtnVal[15] = "";
+		        RtnVal[16] = document.getElementsByName("FormName")[0].value;
 		        RtnVal[23] = document.getElementById("drafterdept").value;
 		        RtnVal[24] = "";
 		        
@@ -751,7 +755,7 @@
 	        <tr>
 	            <th><spring:message code ='ezApprovalG.t442' /></th>
 	            <td>
-	                <input type="text" id="FormName" name="FormName" style="width: 200px;" disabled>
+	                <input type="text" id="FormName" name="FormName" style="width: 200px;">
 	                <a class="imgbtn imgbck"><span onclick="return btn_FormSelect_onclick()"><spring:message code ='ezApproval.t113' /></span></a>
 	            </td>
 	        </tr>

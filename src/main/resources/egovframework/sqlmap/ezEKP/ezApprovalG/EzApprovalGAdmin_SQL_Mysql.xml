@@ -786,6 +786,11 @@
 			]]>
 		</isNotEqual>
 
+		<isNotEmpty property="v_FORMNAME">
+			AND 
+				(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+		</isNotEmpty>
+
 		<isNotEqual property="v_DOCSTATE" compareValue="">
 			<![CDATA[
 				AND
@@ -943,7 +948,11 @@
 					TBL_AUTODOCNUM_ITEM.useFlag,
 					TBL_AUTODOCNUM_ITEM.keepPeriodCode,
 					aproption,
-					SIHANGTYPE
+					SIHANGTYPE,
+					CASE
+						WHEN O.FORMID IS NULL THEN 'N'
+						WHEN O.FORMID IS NOT NULL THEN 'Y'
+                    END AS officeFlag
 				FROM
 					TBL_FORMINFO
 				JOIN 
@@ -954,6 +963,14 @@
 	            	TBL_FORMINFO.companyid = TBL_AUTODOCNUM_ITEM.companyid
 	            AND
 	            	TBL_FORMINFO.formid = TBL_AUTODOCNUM_ITEM.formid
+            	LEFT JOIN
+					TBL_FORM_OFFICE O
+				ON 
+	            	TBL_FORMINFO.tenant_id = O.tenant_id
+	            AND
+	            	TBL_FORMINFO.companyid = O.companyid
+	            AND
+	            	TBL_FORMINFO.formid = O.formid
 				WHERE
 					TBL_FORMINFO.tenant_id = #tenantID#
 				AND
@@ -966,7 +983,7 @@
 			<![CDATA[
 				SELECT
 					formcontid,
-					formid,
+					TBL_FORMINFO.formid,
 					formname,
 					formname2,
 					formdoctype,
@@ -976,15 +993,27 @@
 					opengovflag,
 					aproption ,
 					passaprlineflag,
-					SIHANGTYPE
+					SIHANGTYPE,
+					CASE
+						WHEN O.FORMID IS NULL THEN 'N'
+						WHEN O.FORMID IS NOT NULL THEN 'Y'
+                    END AS officeFlag
 				FROM
 					TBL_FORMINFO
+				LEFT JOIN
+					TBL_FORM_OFFICE O
+				ON 
+	            	TBL_FORMINFO.tenant_id = O.tenant_id
+	            AND
+	            	TBL_FORMINFO.companyid = O.companyid
+	            AND
+	            	TBL_FORMINFO.formid = O.formid
 				WHERE
-					tenant_id = #tenantID#
+					TBL_FORMINFO.tenant_id = #tenantID#
 				AND
-					companyid = #companyID#
+					TBL_FORMINFO.companyid = #companyID#
 				AND
-					formid = #v_PFORMID#
+					TBL_FORMINFO.formid = #v_PFORMID#
 			]]>
 		</isEqual>
 	</select>
@@ -2291,6 +2320,10 @@
 					formid = #v_FORMID#
 			]]>
 		</isNotEqual>
+		<isNotEmpty property="v_FORMNAME">
+			AND 
+				(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+		</isNotEmpty>
 		<isNotEqual property="v_DOCSTATE" compareValue="">
 			<![CDATA[
 				AND
@@ -3409,6 +3442,18 @@
 		]]>
 	</delete>
 
+	<delete id="EzApprovalGAdmin.deleteForm3" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_FORM_OFFICE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #v_FORMID#
+		]]>
+	</delete>
 	<!-- <procedure id="EzApprovalGAdmin.setContainerIDForDoc2" -->
 	<!-- parameterClass="Map"> -->
 	<!-- <![CDATA[ -->
@@ -4612,6 +4657,21 @@
 		]]>				
 	</insert>
 	
+	<insert id="EzApprovalGAdmin.insertOfficeFormFlag" parameterClass="Map">
+		INSERT INTO TBL_FORM_OFFICE
+		VALUES(#v_PFORMID#, #tenantID#, #companyID#)
+	</insert>
+	
+	<delete id="EzApprovalGAdmin.deleteOfficeFormFlag">
+		DELETE FROM TBL_FORM_OFFICE
+		WHERE
+			FORMID = #v_PFORMID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</delete>
+	
 	<select id="EzApprovalGAdminDAO.getAdminTotalDownload" parameterClass="Map" resultClass="ApprGAttachInfoVO">
 				SELECT * FROM (
 				<isEqual property="v_PMODE" compareValue="ALL">
@@ -5481,6 +5541,10 @@
    		 AND 
    		 	FORMID = #v_FORMID#
    		</isNotEmpty>
+		<isNotEmpty property="v_FORMNAME">
+		AND 
+			(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+		</isNotEmpty>
     	<isNotEmpty property="v_APPROVUSER"> 
    		AND 
    			TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%$v_APPROVUSER%$'
@@ -5601,6 +5665,10 @@
 							   	<isNotEmpty property="v_FORMID">
 							   	 	 AND 
 							   	 	      FORMID = $v_FORMID$
+							   	</isNotEmpty>
+								<isNotEmpty property="v_FORMNAME">
+							   	 	AND 
+							   	 		(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_APPROVUSER" >
 								AND 

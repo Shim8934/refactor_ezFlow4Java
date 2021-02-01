@@ -316,7 +316,7 @@
 	        }
 	        
 	        window.onresize = function(){
-	        	resizeTo(docWidth, docHeight);
+	        	// resizeTo(docWidth, docHeight);
 	        }
 	    </script>
 	</head>

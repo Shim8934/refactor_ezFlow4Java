@@ -4500,7 +4500,12 @@
 		<isEqual property="v_FORMCONTID" compareValue="ROOT">
 			<isNotEmpty property="v_USERID">
 				SELECT 
-					TBL_FORMINFO.* 
+					TBL_FORMINFO.* ,
+				CASE
+					WHEN O.FORMID IS NOT NULL
+					 THEN 'Y'
+					ELSE 'N'
+				END AS OFFICEFLAG		
 				FROM 
 					TBL_FORMINFO 
 				INNER JOIN 
@@ -4511,6 +4516,14 @@
       				TBL_FORMINFO.TENANT_ID = TBL_FORMUSERINFO.TENANT_ID
       			AND
       				TBL_FORMINFO.COMPANYID = TBL_FORMUSERINFO.COMPANYID
+   				LEFT JOIN
+      				TBL_FORM_OFFICE O
+      			ON 
+      				TBL_FORMINFO.FORMID = O.FORMID
+      			AND
+      				TBL_FORMINFO.TENANT_ID = O.TENANT_ID
+      			AND
+      				TBL_FORMINFO.COMPANYID = O.COMPANYID	
       			WHERE 
       				TBL_FORMUSERINFO.USERID = #v_USERID#
       			<isEqual property="v_FORMKIND" compareValue="000">
@@ -4519,28 +4532,28 @@
       			<isEqual property="v_FORMKIND" compareValue="BASE">
       				<![CDATA[
       				 AND 
-      				 	FORMDOCTYPE < '004'
+      				 	TBL_FORMINFO.FORMDOCTYPE < '004'
       				 ]]>
       			</isEqual>
       			<isNotEqual property="v_FORMKIND" compareValue="BASE">
       			<isNotEqual property="v_FORMKIND" compareValue="000">
       				 AND 
-      					FORMDOCTYPE = #v_FORMKIND#
+      					TBL_FORMINFO.FORMDOCTYPE = #v_FORMKIND#
       			</isNotEqual>
       			</isNotEqual>
       			<isEqual property="v_SEARCHTYPE" compareValue="0">
       			<isEmpty property="v_LANGTYPE">
       				 AND 
-      				 	FORMNAME LIKE '%$v_SEARCHNAME$%'
+      				 	TBL_FORMINFO.FORMNAME LIKE '%$v_SEARCHNAME$%'
       			</isEmpty>
       			<isNotEmpty property="v_LANGTYPE">
       				 AND 
-      					FORMNAME2 LIKE '%$v_SEARCHNAME$%'
+      					TBL_FORMINFO.FORMNAME2 LIKE '%$v_SEARCHNAME$%'
       			</isNotEmpty>
       			</isEqual>
       			<isEqual property="v_SEARCHTYPE" compareValue="1">
       				AND 
-      					FORMDESCRIPTION LIKE '%$v_SEARCHNAME$%'
+      					TBL_FORMINFO.FORMDESCRIPTION LIKE '%$v_SEARCHNAME$%'
       			</isEqual>
       				AND 
 						TBL_FORMINFO.TENANT_ID = #v_TENANTID#
@@ -4550,7 +4563,11 @@
 		</isEqual>
 		<isEqual property="v_FORMCONTID" compareValue="ALL">
 			SELECT 
-				* 
+				TBL_FORMINFO.*,
+				CASE
+						WHEN O.FORMID IS NOT NULL THEN 'Y'
+						ELSE 'N'
+					END AS OFFICEFLAG		 
 			FROM 
 				TBL_FORMINFO
          	LEFT OUTER JOIN 
@@ -4568,7 +4585,15 @@
          	AND
          		TBL_FORMINFO.TENANT_ID = TBL_FORMCONTAINER.TENANT_ID 
          	AND
-         		TBL_FORMINFO.COMPANYID = TBL_FORMCONTAINER.COMPANYID 
+         		TBL_FORMINFO.COMPANYID = TBL_FORMCONTAINER.COMPANYID
+       		LEFT JOIN
+   				TBL_FORM_OFFICE O
+   			ON 
+   				TBL_FORMINFO.FORMID = O.FORMID
+   			AND
+   				TBL_FORMINFO.TENANT_ID = O.TENANT_ID
+   			AND
+   				TBL_FORMINFO.COMPANYID = O.COMPANYID 
          	WHERE 
          		(1=1)
          	AND
@@ -4581,36 +4606,36 @@
          <isEqual property="v_FORMKIND" compareValue="BASE">
          <![CDATA[
          	AND 
-         		FORMDOCTYPE < '004' 
+         		TBL_FORMINFO.FORMDOCTYPE < '004' 
          ]]>
          </isEqual>
           <isNotEqual property="v_FORMKIND" compareValue="BASE">
           <isNotEqual property="v_FORMKIND" compareValue="000">
           <![CDATA[
          	AND 
-         		FORMDOCTYPE = #v_FORMKIND#
+         		TBL_FORMINFO.FORMDOCTYPE = #v_FORMKIND#
           ]]>
           </isNotEqual>
           </isNotEqual>
           <isEqual property="v_SEARCHTYPE" compareValue="0">
           <isEmpty property="v_LANGTYPE"> 
          	 AND 
-         	 	FORMNAME LIKE '%$v_SEARCHNAME$%'
+         	 	TBL_FORMINFO.FORMNAME LIKE '%$v_SEARCHNAME$%'
           </isEmpty>
           <isNotEmpty property="v_LANGTYPE"> 
          	AND 
-         		FORMNAME2 LIKE '%$v_SEARCHNAME$%'
+         		TBL_FORMINFO.FORMNAME2 LIKE '%$v_SEARCHNAME$%'
           </isNotEmpty>
           </isEqual>
           <isEqual property="v_SEARCHTYPE" compareValue="1">
           	AND 
-          		FORMDESCRIPTION LIKE '%$v_SEARCHNAME$%'
+          		TBL_FORMINFO.FORMDESCRIPTION LIKE '%$v_SEARCHNAME$%'
           </isEqual>
          	AND 
          		(
-         			FORMCONTOWNDEPID = 'ALL' 	
+         		FORMCONTOWNDEPID = 'ALL' 	
          			OR 	
-         			FORMCONTUSERDEPID = (
+         		FORMCONTUSERDEPID = (
          									SELECT 
          										DEPARTMENT 
          									FROM 
@@ -4625,19 +4650,31 @@
 		<isNotEqual property="v_FORMCONTID" compareValue="ROOT">
 		<isNotEqual property="v_FORMCONTID" compareValue="ALL">
 			SELECT 
-				TBL_FORMINFO.* 
+				TBL_FORMINFO.* ,
+				CASE
+					WHEN O.FORMID IS NOT NULL THEN 'Y'
+					ELSE 'N'
+				END AS OFFICEFLAG
 			FROM 
 				TBL_FORMINFO
+			LEFT JOIN
+   				TBL_FORM_OFFICE O
+   			ON 
+   				TBL_FORMINFO.FORMID = O.FORMID
+   			AND
+   				TBL_FORMINFO.TENANT_ID = O.TENANT_ID
+   			AND
+   				TBL_FORMINFO.COMPANYID = O.COMPANYID
 			<isEqual property="v_FORMKIND" compareValue="000"> 
 			WHERE 
-				FORMCONTID = #v_FORMCONTID#
+				TBL_FORMINFO.FORMCONTID = #v_FORMCONTID#
 			</isEqual>
 			<isEqual property="v_FORMKIND" compareValue="BASE"> 
 			<![CDATA[
 			 WHERE 
-			 	FORMCONTID = #v_FORMCONTID# 
+			 	TBL_FORMINFO.FORMCONTID = #v_FORMCONTID# 
 			 AND 
-			 	FORMDOCTYPE < '004'
+			 	TBL_FORMINFO.FORMDOCTYPE < '004'
 			 ]]>
 			</isEqual>
 			<isNotEqual property="v_FORMKIND" compareValue="000"> 
@@ -4645,27 +4682,27 @@
 			 WHERE 
 			 	FORMCONTID = #v_FORMCONTID# 
 			 AND 
-			 	FORMDOCTYPE = #v_FORMKIND#
+			 	TBL_FORMINFO.FORMDOCTYPE = #v_FORMKIND#
 			</isNotEqual>
 			</isNotEqual>
 			<isEqual property="v_SEARCHTYPE" compareValue="0">
          	<isEmpty property="v_LANGTYPE"> 
          		AND 
-         			FORMNAME LIKE '%$v_SEARCHNAME$%'
+        			TBL_FORMINFO.FORMNAME LIKE '%$v_SEARCHNAME$%'
          	</isEmpty>
          	<isNotEmpty property="v_LANGTYPE"> 
          		AND 
-         			FORMNAME2 LIKE '%$v_SEARCHNAME$%'
+         			TBL_FORMINFO.FORMNAME2 LIKE '%$v_SEARCHNAME$%'
          	</isNotEmpty>
          	</isEqual>
          	<isEqual property="v_SEARCHTYPE" compareValue="1">
          	 	AND 
-         	 		FORMDESCRIPTION LIKE '%$v_SEARCHNAME$%'
+         	 		TBL_FORMINFO.FORMDESCRIPTION LIKE '%$v_SEARCHNAME$%'
          	</isEqual>
          		AND
-         			TENANT_ID = #v_TENANTID#
+         			TBL_FORMINFO.TENANT_ID = #v_TENANTID#
          		AND
-         			COMPANYID = #companyID#
+         			TBL_FORMINFO.COMPANYID = #companyID#
 		</isNotEqual>
 		</isNotEqual>
 		ORDER BY FORMORDER 
@@ -5660,7 +5697,7 @@
 <!-- 	<procedure id="EzapprovalG.findTask" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZSP_FINDTASK(#v_DEPTCODE#, #v_TITLE#, #v_TASKCODE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzapprovalG.findTask" parameterClass="Map" resultClass="ApprGTaskVO">
+	<select id="EzapprovalG.findTask" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
 		<isEmpty property="approvalFlag">
 			SELECT 
 		     	 DISTINCT TASKCODE, 
@@ -9398,6 +9435,10 @@
 							   	 	 AND 
 							   	 	      FORMID = $v_FORMID$
 							   	</isNotEmpty>
+								<isNotEmpty property="v_FORMNAME"> 
+								AND 
+									(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+								</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
 							   	 	 	   STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')
@@ -15145,6 +15186,10 @@
    		 AND 
    		 	FORMID = #v_FORMID#
    		</isNotEmpty>
+		<isNotEmpty property="v_FORMNAME"> 
+   		AND 
+   			(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+   		</isNotEmpty>
    		<isNotEmpty property="v_STARTDATE1"> 
    		<![CDATA[
  				AND   
@@ -17179,6 +17224,7 @@
 	<insert id="EzApprovalG.aprMakeTmp2Ing2" parameterClass="Map">
 		INSERT INTO 
 			TBL_APROPINIONINFO
+		(DocID, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, UserName2, UserJobTitle2, UserDeptName2, TENANT_ID, COMPANYID)
      	( SELECT 
      		  #v_PDOCID# ,
               USERID ,
@@ -23989,6 +24035,7 @@
    <insert id="EzApprovalG.insertTmpAprOpinionInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_TMPAPROPINIONINFO
+   		(OWNERID, SN, USERID, OPINIONGB , CONTENT , USERNAME , USERJOBTITLE , USERDEPTID , USERDEPTNAME , OPINIONSN , UserName2 ,  UserJobTitle2 , UserDeptName2 , TENANT_ID , COMPANYID)
 		(SELECT 
 				#v_USERID#, 
 				#v_SN#, 
@@ -30622,7 +30669,7 @@
 	 <select id="EzApprovalG.getOrgLastAprMemberName" parameterClass="Map" resultClass="String">
 
         SELECT
-            APRMEMBERNAME
+            APRMEMBERID
         FROM
             tbl_endaprlineinfo
         WHERE
@@ -30638,6 +30685,10 @@
                 AND
                     COMPANYID = #companyID#
             )
+        AND
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
         ORDER BY
             aprmembersn DESC
 		LIMIT 1
@@ -31382,6 +31433,10 @@
 							   	 	 AND 
 							   	 	      FORMID = $v_FORMID$
 							   	</isNotEmpty>
+								<isNotEmpty property="v_FORMNAME"> 
+								AND 
+									(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+								</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
 							   	 	 	   STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')
@@ -31676,6 +31731,14 @@
    		<isNotEmpty property="v_FORMID"> 
    		 AND 
    		 	FORMID = #v_FORMID#
+   		</isNotEmpty>
+		<isNotEmpty property="v_FORMNAME"> 
+   		AND 
+   			(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
+   		</isNotEmpty>
+		<isNotEmpty property="v_FORMNAME"> 
+   		AND 
+   			(FORMNAME = #v_FORMNAME# or FORMNAME2 = #v_FORMNAME#)
    		</isNotEmpty>
    		<isNotEmpty property="v_STARTDATE1"> 
    		<![CDATA[
@@ -32225,62 +32288,88 @@
 						(A.APR = FALSE AND A.APRTYPE = '007' AND (A.APRSTATE = '002' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015')
 					THEN A.COUNT ELSE 0 END
 				) AS '1', <!-- 결재할 문서, 공람문서는 제외한다. AprType <> ''015'' -->
-	        (SELECT
-	            COUNT(DISTINCT D.`DOCID`, D.`COMPANYID`)
-	        FROM
-	            tbl_aprdocinfo D
-	        JOIN 
-	            tbl_aprlineinfo L 
-	        ON
-	            D.`DOCID` = L.`DOCID`
-	        AND 
-	            D.`TENANT_ID` = L.`TENANT_ID`
-	        AND 
-	            D.`COMPANYID` = L.`COMPANYID`
-	        WHERE
-	          		L.APRTYPE != '015'
-	          	AND
-	          		L.APRSTATE IN ('002', '005')		
-	        <isEqual property="MineViewYN" compareValue="YES">
-	           	AND	L.APRSTATE != '001'
-	        </isEqual>
-	           	AND 
-					L.`APRMEMBERID` = #v_USERID#
-	        <![CDATA[
-	        	AND 
-	                STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
-	            AND 
-	                STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
-	        ]]>
-	            AND 
-	                D.TENANT_ID = #v_TENANTID#
-	            AND    
-	            	L.COMPANYID IN (
-										SELECT 
-											EXTENSIONATTRIBUTE2 
-										FROM 
-											TBL_DEPTMASTER 
-										INNER JOIN 
-											TBL_ADDJOBMASTER 
-										ON
-											(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-											AND 
-											TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-										WHERE 
-											TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-										AND 
-											TBL_ADDJOBMASTER.CN = #v_USERID#
-										UNION ALL
-										SELECT 
-											PHYSICALDELIVERYOFFICENAME
-										FROM
-											TBL_USERMASTER
-										WHERE
-											CN = #v_USERID#
-										AND
-											TENANT_ID = #v_TENANTID# 
-										)    
-	           )
+	        	(
+       	<![CDATA[
+        	SELECT 
+				COUNT(DISTINCT DOCID, COMPANYID) 
+           	FROM 
+           		VAPRWILLDOCLIST
+           	WHERE 
+           		APRMEMBERID = #v_USERID# 
+           	AND 
+           		AprType != '015'
+           	AND 
+         		DocState != '017'      
+      		]]>    
+          <isEqual property="MineViewYN" compareValue="YES">
+			AND	    
+				AprState != '001'
+		  </isEqual>
+           	AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID IN (
+						SELECT 
+							EXTENSIONATTRIBUTE2 
+						FROM 
+							TBL_DEPTMASTER  D1
+						INNER JOIN 
+							TBL_ADDJOBMASTER  D2
+						ON
+							(D2.TENANT_ID = D1.TENANT_ID 
+							AND 
+							D1.CN = D2.DEPTID) 
+						WHERE 
+							D2.TENANT_ID = #v_TENANTID#
+						AND 
+							D2.CN = #v_USERID#
+						UNION ALL
+						SELECT 
+							UM.PHYSICALDELIVERYOFFICENAME
+						FROM
+							TBL_USERMASTER UM
+						WHERE
+							UM.CN = #v_USERID#
+						AND
+							UM.TENANT_ID = #v_TENANTID#
+						)
+			AND docid in
+				(SELECT
+					TA.docid
+				FROM
+					TBL_APRLINEINFO TA
+				WHERE
+					TA.aprmemberid = #v_USERID#
+				AND
+					TA.tenant_id = #v_TENANTID#
+				AND
+					companyid IN(
+						SELECT
+							TD.extensionattribute2
+						FROM
+							TBL_DEPTMASTER TD
+						INNER JOIN
+							TBL_ADDJOBMASTER TA
+						ON
+							(TA.tenant_id = TD.tenant_id
+						AND
+							TD.cn = TA.deptid)
+						WHERE
+							TA.tenant_id = #v_TENANTID#
+						AND
+							TA.cn = #v_USERID# 
+						UNION ALL
+						SELECT
+							TU2.physicaldeliveryofficename
+						FROM
+							TBL_USERMASTER TU2
+						WHERE
+							TU2.cn = #v_USERID#
+						AND
+							TU2.tenant_id = #v_TENANTID#
+					)
+				)
+			)
 	         AS '2', <!-- 결재진행문서, 공람문서는 제외한다. AprType <> ''015'' -->
 	        (  
         	<![CDATA[

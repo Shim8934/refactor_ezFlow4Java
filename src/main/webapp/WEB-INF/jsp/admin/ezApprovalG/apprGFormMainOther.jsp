@@ -65,6 +65,8 @@
 		    var useReform = "${useReform}" === "true";
 		    var reformUrl = "${reformUrl}";
 		    // FormBuilder end
+		    <%-- 2021-01-21 심기영 오피스결재 여부 변수 추가 --%>
+		    var useOfficeApproval = "<c:out value = '${useOfficeApproval}'/>";
 		    var useOpenGov = "<c:out value = '${useOpenGov}'/>";
 		    var openGovFlag = "<c:out value = '${openGovFlag}'/>";
 		    
@@ -304,6 +306,10 @@
 			                    document.getElementById("setConnFlag").checked = true;
 			                }
 			                
+		        			if(result.vo.officeFlag == "Y") {
+		        				document.getElementById("officeFlag").checked = true;
+		        			}
+		        			
 			                if (approvalFlag == 'S') {
 				                if (result.vo.useFlag == "Y") {
 				                    setAutoItemCode.checked = true;
@@ -1318,6 +1324,17 @@
 							<label for="reform-checkbox"><span><spring:message code='reform.using'/></span></label>
 						</c:if>
 						<!-- FormBuilder - end -->
+						
+						<%-- 2021-01-21  심기영 오피스 결재 추가 여부용  --%>
+						<c:if test="${useOfficeApproval == 'YES' && approvalFlag == 'G'}">
+							<input type="checkbox" id="officeFlag" name="officeFlag">
+							<label for="officeFlag"><span><spring:message code='ezApproval.t933'/></span></label>
+						</c:if>
+						<%-- 2021-01-21  심기영 오피스 결재 추가 여부용  --%>
+						<c:if test="${useOfficeApproval == 'YES' && approvalFlag == 'S'}">
+							<input type="checkbox" id="officeFlag" name="officeFlag">
+							<label for="officeFlag"><span><spring:message code='ezApproval.t933'/></span></label>
+						</c:if>
                         <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> 원문정보공개</span>
 <%--                         <span style="<c:if test="${useDraftAll != 'YES' && approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> 일괄기안</span> --%>
 						<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/> <spring:message code='ezApprovalG.garm09'/></span>

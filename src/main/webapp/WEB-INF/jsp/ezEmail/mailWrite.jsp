@@ -237,8 +237,15 @@
 	        
 	        if (xmpTo.innerHTML != "") {
 	            var xmpToValue = xmpTo.innerHTML;
-	            xmpToValue = ReplaceText(xmpToValue, "&lt;", "<");
-	            xmpToValue = ReplaceText(xmpToValue, "&gt;", ">");
+                xmpToValue = ReplaceText(xmpToValue, "&amp;", "&");
+                xmpToValue = ReplaceText(xmpToValue, "&lt;", "<");
+                xmpToValue = ReplaceText(xmpToValue, "&gt;", ">");
+                xmpToValue = ReplaceText(xmpToValue, "&#034;", "\"");
+                // 세미콜론이 빠져있는 경우가 발견되어 추가함
+                xmpToValue = ReplaceText(xmpToValue, "&#034", "\"");
+                xmpToValue = ReplaceText(xmpToValue, "&#039;", "'");
+                // 세미콜론이 빠져있는 경우가 발견되어 추가함
+                xmpToValue = ReplaceText(xmpToValue, "&#039", "'");
 	        	var moduleType = "<c:out value='${moduleType}'/>";
 
 	        	if (moduleType == "attitudeAbsented") {

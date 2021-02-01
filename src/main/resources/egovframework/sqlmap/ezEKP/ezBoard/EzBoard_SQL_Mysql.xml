@@ -1223,11 +1223,34 @@
                 B.GUBUN
 			  FROM 
 			  	TBL_BOARD_ITEM A INNER JOIN TBL_BOARD_BOARDINFO B ON B.BOARDID = A.BOARDID
+		]]>
+	  	<isEqual property="type" compareValue="2">
+		  	<![CDATA[
+			  	 LEFT OUTER JOIN 
+			  	( SELECT 
+			  		COUNT(USERID) AS TOTALCOUNT, 
+			  		ITEMID,
+			  		TENANT_ID 
+				  FROM 
+				  	TBL_BOARD_ITEM_READ
+				  WHERE 
+				  	TENANT_ID = #v_TENANTID#
+				  AND
+				  	USERID = #v_PUSERID# 
+				  AND 
+				  	BOARDID = #v_PBOARDID#
+				  GROUP BY 
+				  	ITEMID, TENANT_ID ) D 
+			  ON 
+			  	A.TENANT_ID = D.TENANT_ID
+			  AND
+			  	A.ITEMID = D.ITEMID
+		  	]]>
+	  	</isEqual>
 			  WHERE
 			  	A.TENANT_ID = #v_TENANTID#
 			  AND 
 			  	B.BOARDID = #v_PBOARDID#
-	]]>
 			  <isNotEmpty property="tempString" prepend="AND">
 			  	A.APPRFLAG = 'Y'
 			  </isNotEmpty>
