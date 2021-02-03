@@ -536,7 +536,22 @@ function func_addaddr_Complete(ret) {
             }
     	}
     	
-		alert(strLang136);
+    	// duplicateList 동일한 메일주소
+    	
+    	if (duplicateList.length > 0) {
+    		var alertMsg = strLang136 + "\n" + strLangKSA01;
+    		var dupliNameTxt = [];
+    		
+    		$.each(duplicateList, function(i, e) {
+    			dupliNameTxt.push(e.name);
+			});
+    		
+    		alertMsg = alertMsg.replace("%s", dupliNameTxt.join(","));
+    		
+    		alert(alertMsg);
+    	} else {
+    		alert(strLang136);
+    	}
     } catch (e) {
         xmlHTTP = null;
         alert(strLang133 + e.message);

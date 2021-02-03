@@ -55,6 +55,10 @@
 	    	.countColor {
 	    		color:#017BEC;
 	    	}
+	    	#userDLInput span {
+	    		display: inline-block;
+	    		vertical-align: middle;
+	    	}
 	    </style>
 	    <script>
 	        var cn = "${cn}";

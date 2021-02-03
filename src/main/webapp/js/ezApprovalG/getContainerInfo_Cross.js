@@ -195,7 +195,12 @@ function GetDocSearch() {
         createNodeAndInsertText(xmlpara, objNode, "PageNum", curpage);
         createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
         createNodeAndInsertText(xmlpara, objNode, "DocState", "");
+        
+        /* 2021-02-01 홍승비 - 개인문서함 > 문서함검색의 경우 '상태'값이 없으므로 undefined & null 처리 추가 */
         var searchStatus = $("#sel_status option:selected").val();
+        if (typeof(searchStatus) == "undefined" || searchStatus == null) {
+        	searchStatus = "ALL";
+        }
         createNodeAndInsertText(xmlpara, objNode, "searchStatus", searchStatus);
         
         createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);

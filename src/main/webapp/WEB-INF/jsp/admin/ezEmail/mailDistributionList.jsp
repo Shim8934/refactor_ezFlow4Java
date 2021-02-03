@@ -217,8 +217,12 @@
 		        }
 		    }
 		    function add_dl_Complete(rtnValue) {
-		        if (typeof (rtnValue) != "undefined")
+		        if (typeof (rtnValue) != "undefined") {
 		            company_change();
+			        $("#searchValue").val("");
+			        $("#searchType option:first-child").attr("selected","selected");
+
+		        }
 		    }
 		    function mod_dl() {
 		
