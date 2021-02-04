@@ -4307,7 +4307,12 @@
 		<isEqual property="v_FORMCONTID" compareValue="ROOT">
 			<isNotEmpty property="v_USERID">
 				SELECT 
-					TBL_FORMINFO.* 
+					TBL_FORMINFO.* ,
+				CASE
+					WHEN O.FORMID IS NOT NULL
+					 THEN 'Y'
+					ELSE 'N'
+				END AS OFFICEFLAG	
 				FROM 
 					TBL_FORMINFO 
 				INNER JOIN 
@@ -4317,7 +4322,15 @@
       			AND
       				TBL_FORMINFO.TENANT_ID = TBL_FORMUSERINFO.TENANT_ID
       			AND
-      				TBL_FORMINFO.COMPANYID = TBL_FORMUSERINFO.COMPANYID      				
+      				TBL_FORMINFO.COMPANYID = TBL_FORMUSERINFO.COMPANYID 
+   				LEFT JOIN
+      				TBL_FORM_OFFICE O
+      			ON 
+      				TBL_FORMINFO.FORMID = O.FORMID
+      			AND
+      				TBL_FORMINFO.TENANT_ID = O.TENANT_ID
+      			AND
+      				TBL_FORMINFO.COMPANYID = O.COMPANYID	     				
       			WHERE 
       				TBL_FORMUSERINFO.USERID = #v_USERID#
       			<isEqual property="v_FORMKIND" compareValue="000">
@@ -4357,7 +4370,11 @@
 		</isEqual>
 		<isEqual property="v_FORMCONTID" compareValue="ALL">
 			SELECT 
-				* 
+				TBL_FORMINFO.*,
+				CASE
+						WHEN O.FORMID IS NOT NULL THEN 'Y'
+						ELSE 'N'
+					END AS OFFICEFLAG
 			FROM 
 				TBL_FORMINFO
          	LEFT OUTER JOIN 
@@ -4375,7 +4392,15 @@
          	AND
          		TBL_FORMINFO.TENANT_ID = TBL_FORMCONTAINER.TENANT_ID
          	AND
-         		TBL_FORMINFO.COMPANYID = TBL_FORMCONTAINER.COMPANYID          		 
+         		TBL_FORMINFO.COMPANYID = TBL_FORMCONTAINER.COMPANYID
+       		LEFT JOIN
+   				TBL_FORM_OFFICE O
+   			ON 
+   				TBL_FORMINFO.FORMID = O.FORMID
+   			AND
+   				TBL_FORMINFO.TENANT_ID = O.TENANT_ID
+   			AND
+   				TBL_FORMINFO.COMPANYID = O.COMPANYID           		 
          	WHERE 
          		(1=1)
          	AND
@@ -4432,9 +4457,21 @@
 		<isNotEqual property="v_FORMCONTID" compareValue="ROOT">
 		<isNotEqual property="v_FORMCONTID" compareValue="ALL">
 			SELECT 
-				TBL_FORMINFO.* 
+				TBL_FORMINFO.* ,
+				CASE
+					WHEN O.FORMID IS NOT NULL THEN 'Y'
+					ELSE 'N'
+				END AS OFFICEFLAG 
 			FROM 
 				TBL_FORMINFO
+			LEFT JOIN
+   				TBL_FORM_OFFICE O
+   			ON 
+   				TBL_FORMINFO.FORMID = O.FORMID
+   			AND
+   				TBL_FORMINFO.TENANT_ID = O.TENANT_ID
+   			AND
+   				TBL_FORMINFO.COMPANYID = O.COMPANYID
 			<isEqual property="v_FORMKIND" compareValue="000"> 
 			WHERE 
 				FORMCONTID = #v_FORMCONTID#
