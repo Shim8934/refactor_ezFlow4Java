@@ -1626,10 +1626,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			MailSignatureVO mailSignature = ezEmailService.getMailSignature(tenantID, userId);
-
-			switch (Optional.ofNullable(mailSignature)
+			String mailSignUseFlag = Optional.ofNullable(mailSignature)
 					.map(MailSignatureVO::getUseFlag)
-					.orElse("")) {
+					.orElse("0");
+
+			switch (mailSignUseFlag) {
 			case "1":
 				signValue = mailSignature.getContent1();
 				break;
@@ -1670,7 +1671,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			data.put("attachFileNameMaxLength", attachFileNameMaxLength); //20190114 조진호 - 첨부파일명 길이제한
 			data.put("defaultFontAndSize", defaultFontAndSize); //20190510 조진호 - 기본 글씨 속성
 			data.put("textOption", textOption); //20190530 조진호 - textMode
-			data.put("signUseFlag", mailSignature.getUseFlag()); // 기본 서명 플래그 값
+			data.put("signUseFlag", mailSignUseFlag); // 기본 서명 플래그 값
 			data.put("signValue", signValue); // 기본 서명 HTML
 			
 	        result.put("status", "ok");
