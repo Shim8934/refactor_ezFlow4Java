@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
@@ -1626,7 +1627,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			MailSignatureVO mailSignature = ezEmailService.getMailSignature(tenantID, userId);
 
-			switch (mailSignature.getUseFlag()) {
+			switch (Optional.ofNullable(mailSignature)
+					.map(MailSignatureVO::getUseFlag)
+					.orElse("")) {
 			case "1":
 				signValue = mailSignature.getContent1();
 				break;
