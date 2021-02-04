@@ -101,6 +101,7 @@ import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
+import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezEmail.web.EzEmailMailReadController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -995,6 +996,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String textOption = "";
 			String defaultFontAndSize = "";
 			
+			// 기본 서명 HTML
+			String signValue = "";
+			
 			if (jsonObject.get("cmd") != null) {
 				cmd = (String) jsonObject.get("cmd");
 			}
@@ -1620,6 +1624,20 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 			}
 			
+			MailSignatureVO mailSignature = ezEmailService.getMailSignature(tenantID, userId);
+
+			switch (mailSignature.getUseFlag()) {
+			case "1":
+				signValue = mailSignature.getContent1();
+				break;
+			case "2":
+				signValue = mailSignature.getContent2();
+				break;
+			case "3":
+				signValue = mailSignature.getContent3();
+				break;
+			}
+			
 			JSONObject data = new JSONObject();
 	        data.put("fromEmail",fromEmail);
 			data.put("to", to);
@@ -1649,6 +1667,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			data.put("attachFileNameMaxLength", attachFileNameMaxLength); //20190114 조진호 - 첨부파일명 길이제한
 			data.put("defaultFontAndSize", defaultFontAndSize); //20190510 조진호 - 기본 글씨 속성
 			data.put("textOption", textOption); //20190530 조진호 - textMode
+			data.put("signUseFlag", mailSignature.getUseFlag()); // 기본 서명 플래그 값
+			data.put("signValue", signValue); // 기본 서명 HTML
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -6250,7 +6270,39 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 
 	    return returnObj;
     }
-	
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezemail/sign/users/{userId:.+}",
+			method = RequestMethod.GET,
+			produces = "application/json;charset=utf-8")
+	public JSONObject getUserSignatureList(HttpServletRequest request, @PathVariable String userId) {
+		LOGGER.debug("MOBILE G/W MAIL getUserSignatureList started.");
+		LOGGER.debug("uesrId={}", userId);
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+
+			MailSignatureVO mailSignature = ezEmailService.getMailSignature(userInfo.getTenantId(), userId);
+
+			result.put("data", mailSignature);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			result.put("data", "fail");
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+
+		LOGGER.debug("MOBILE G/W MAIL getUserSignatureList ended.");
+
+		return result;
+	}
+
 	/**
 	 * 공유사서함 정보 호출 함수
 	 */
