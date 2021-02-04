@@ -98,6 +98,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 
 		String sFlag = (request.getParameter("sFlag") != null ? request.getParameter("sFlag") : "");
+		String shareDeptId = (request.getParameter("shareDeptId") != null ? request.getParameter("shareDeptId") : "");
 		String contType = "END";
 		String dirpath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + "doc";
 		String deptInfo = "";
@@ -138,6 +139,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("openYear", openYear);
 		model.addAttribute("contType", contType);
 		model.addAttribute("sFlag", sFlag);
+		model.addAttribute("shareDeptId", shareDeptId);
 		
 		logger.debug("cabinetMain ended");
 		

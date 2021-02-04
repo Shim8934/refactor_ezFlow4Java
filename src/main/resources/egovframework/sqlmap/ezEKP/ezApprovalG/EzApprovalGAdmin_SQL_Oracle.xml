@@ -4582,6 +4582,22 @@
 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 	</select>
 	
+	<insert id="EzApprovalGAdmin.insertShareDocDir" parameterClass="Map">
+		INSERT INTO TBL_SHARE_DOC_DIR(OWNER_ID, SHARE_ID, SHARE_TYPE, TENANT_ID, OWNER_TYPE)
+		<iterate property="shareList" conjunction="UNION ALL">
+			SELECT #ownerId#, #shareList[].shareId#, #shareList[].shareType#, #tenantId#,  #ownerType# FROM DUAL
+		</iterate>
+	</insert>
+	
+	<delete id="EzApprovalGAdmin.deleteShareDocDir" parameterClass="Map">
+		DELETE FROM 
+			TBL_SHARE_DOC_DIR
+		WHERE
+			OWNER_ID = #ownerId#
+		AND
+			TENANT_ID = #tenantId# 
+	</delete>
+	
 	<select id="EzApprovalGAdmin.getShareDocDirOwnerList" parameterClass="Map" resultClass="KEDAuthorUserInfo">
 		SELECT
 			DISTINCT
