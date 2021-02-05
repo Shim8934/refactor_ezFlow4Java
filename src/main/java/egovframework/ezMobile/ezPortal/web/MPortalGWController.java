@@ -152,7 +152,10 @@ public class MPortalGWController extends EgovFileMngUtil {
 					scheduleCnt = scheduleInfo.get("cnt");
 					
 					String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
-			        if(useWorkspaceSchedule.equalsIgnoreCase("YES")) {
+					if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
+						useWorkspaceSchedule = "NO";
+					}
+			        if("YES".equalsIgnoreCase(useWorkspaceSchedule)) {
 			        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
 			        	dataObject.put("workspaceHostUrl", workspaceHostUrl);
 			        }
@@ -344,7 +347,10 @@ public class MPortalGWController extends EgovFileMngUtil {
 					}
 					
 					String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
-			        if(useWorkspaceSchedule.equalsIgnoreCase("YES")) {
+					if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
+						useWorkspaceSchedule = "NO";
+					}
+					if("YES".equalsIgnoreCase(useWorkspaceSchedule)) {
 			        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
 			        	dataObject.put("workspaceHostUrl", workspaceHostUrl);
 			        }

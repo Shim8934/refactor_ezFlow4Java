@@ -983,7 +983,7 @@
 			<![CDATA[
 				SELECT
 					formcontid,
-					formid,
+					TBL_FORMINFO.formid,
 					formname,
 					formname2,
 					formdoctype,
@@ -1009,11 +1009,11 @@
 	            AND
 	            	TBL_FORMINFO.formid = O.formid
 				WHERE
-					tenant_id = #tenantID#
+					TBL_FORMINFO.tenant_id = #tenantID#
 				AND
-					companyid = #companyID#
+					TBL_FORMINFO.companyid = #companyID#
 				AND
-					formid = #v_PFORMID#
+					TBL_FORMINFO.formid = #v_PFORMID#
 			]]>
 		</isEqual>
 	</select>

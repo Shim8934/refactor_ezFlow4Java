@@ -1282,7 +1282,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			
 			Folder folder = ia.getFolder(folderPath);
 			
-			String mimetype = "message/rfc822";	
+			// Chrome에서 message/rfc822 Type으로 내려 보내면
+			// blocked a frame with origin from accessing a cross-origin frame
+			// 오류가 발생해 application/octet-stream으로 변경함.			
+			String mimetype = "application/octet-stream";	
 			response.setContentType(mimetype);
 			
 			if (folder == null || !folder.exists()) {

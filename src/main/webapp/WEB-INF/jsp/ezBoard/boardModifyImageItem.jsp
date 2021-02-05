@@ -176,7 +176,7 @@
 	                strXML += "<OFILENAME>" + orgFileName + "</OFILENAME>";
 	                strXML += "</NODE>";
 	                strXML += "</DATA>";
-	
+	                
 	                var xmlhttp = createXMLHttpRequest();
 	                var xmldom = createXmlDom();
 	
@@ -484,11 +484,13 @@
 	                </div>
 	            </td>
 	        </tr>
+	        <%--
 	        <tr>
 	            <td style="width:100%; display:none;">
 	                <input type="text" id='getcontent' style='width:100%' maxlength="50" value="${imageContent}"/>
 	            </td>         
 	        </tr>
+	        --%>
 	        <tr>
 	    <td style="display:none;">
 	    	<c:if test="${!isCrossBrowser}">

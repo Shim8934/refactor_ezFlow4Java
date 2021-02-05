@@ -1938,7 +1938,7 @@ form{display:inline;margin:0}
 .address_boxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_boxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
 .address_boxlist ul .company { color:#393939; margin-bottom: 10px;}
-.address_boxlist .point_txt { color:steelblue; margin-left:3px; font-family: dotum;}
+.address_boxlist .point_txt { color:steelblue; margin-left:3px; font-family: malgun gothic, Verdana, Arial, Helvetica, sans-serif;}
 
 .address_onboxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_onboxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
@@ -1948,7 +1948,7 @@ form{display:inline;margin:0}
 .address_onboxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_onboxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
 .address_onboxlist ul .company { color:#393939; margin-bottom: 10px;}
-.address_onboxlist .point_txt { color:steelblue; margin-left:3px; font-family: dotum;}
+.address_onboxlist .point_txt { color:steelblue; margin-left:3px; font-family: malgun gothic, Verdana, Arial, Helvetica, sans-serif;}
 
 .sublist{table-layout:fixed; border:0 none !important;font-family:malgun gothic, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .sublist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:3px 4px 4px; border-bottom:1px solid #ddd; font-weight:normal;}

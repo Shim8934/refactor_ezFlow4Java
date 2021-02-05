@@ -532,7 +532,7 @@
 		</div>
 
 <!-- 		2018-07-20 강민석 존재하지 않는 ID를 입력했을 경우 alert -> layer 팝업으로 변경 -->
-		<div id="exDiv3" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
+		<div id="exDiv3" style="display:none;max-width:620px; min-height:190px;padding:27px 0;margin-bottom:100px">
 			<div id="close">
 	            <ul>
 	                <li><a rel="modal:close"><span></span></a></li>
@@ -540,7 +540,7 @@
 	        </div>
 			<div class="warning_wrap" style="padding-left:20px">
 				<p style="border:0px" id="imgMnt2"></p>
-		        <dl>
+		        <dl style="width: 65%;">
 					<dt id="layerTitle" class="layerTitle">${message1}</dt>
 		            <dd><spring:message code='fail.common.login.warning1'/></dd>
 		            <dd><spring:message code='fail.common.login.warning6'/></dd>

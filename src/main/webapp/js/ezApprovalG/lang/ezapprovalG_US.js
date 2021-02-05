@@ -846,7 +846,7 @@ var strLang1103 = "Hangul forms do not support the draft inside or recover."
 var strLangFromFile = "HWP is not supported (Draft / Re-draft)."
 
 /* 2015-06-30 표준모듈:추가 - KSK */
-var strLang1105 = "The department does not receive approval documents. \nCan not be added.";
+var strLang1105 = "The department does not receive approval documents.<br>Can not be added.";
 var strLang1106 = "Please enter your search term.";
 var strLang1107 = "Sender";
 var strLang1108 = "Reviewer";

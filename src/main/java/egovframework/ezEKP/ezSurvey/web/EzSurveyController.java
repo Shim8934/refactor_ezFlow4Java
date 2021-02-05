@@ -935,8 +935,8 @@ public class EzSurveyController extends EgovFileMngUtil {
 		int rowCount = 5;
 		for (QuestionVO qVO : surveyResultData) {
 			// 질문 헤더
-			sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+1, 0, 0));
-			sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+1, 1, 13));
+			sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount+1, 0, 0));
+			sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount+1, 1, 13));
 			row = sheet.createRow(rowCount);
 			row.createCell(0).setCellValue(egovMessageSource.getMessage("ezSurvey.t103", locale) + qVO.getLevel() + " (" + egovMessageSource.getMessage("ezSurvey.t100" + qVO.getType(), locale) + ")");
 			
@@ -1000,9 +1000,9 @@ public class EzSurveyController extends EgovFileMngUtil {
 								ResponseVO resVO = optVO.getResponses().get(i);
 								
 								rowCount++;
-								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 8, 9));
-								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 10, 11));
-								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 12, 13));
+								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
+								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 10, 11));
+								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
 								row = sheet.createRow(rowCount);
 								
 								for(int j=8; j<=13; j++) {
@@ -1121,10 +1121,10 @@ public class EzSurveyController extends EgovFileMngUtil {
 							
 							if(annoynumous == 0) {
 								if(isFirstRow) {
-									sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 0, 7));
-									sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 8, 9));
-									sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 10, 11));
-									sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 12, 13));
+									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 0, 7));
+									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
+									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 10, 11));
+									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
 									
 									for(int l=0; l<=13; l++) {
 										row.createCell(l);
@@ -1142,13 +1142,13 @@ public class EzSurveyController extends EgovFileMngUtil {
 									isFirstRow = false;
 								}
 								
-								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 0, 7));
-								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 8, 9));
-								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 10, 11));
-								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 12, 13));
+								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 0, 7));
+								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
+								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 10, 11));
+								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
 							}
 							else {
-								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 0, 13));
+								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 0, 13));
 							}
 							
 							// 답변
@@ -1222,9 +1222,9 @@ public class EzSurveyController extends EgovFileMngUtil {
 									ResponseVO resVO = responseVO.get(responseCnt++);
 									
 									rowCount++;
-									sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 8, 9));
-									sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 10, 11));
-									sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 12, 13));
+									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
+									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 10, 11));
+									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
 									row = sheet.createRow(rowCount);
 									
 									for(int j=8; j<=13; j++) {

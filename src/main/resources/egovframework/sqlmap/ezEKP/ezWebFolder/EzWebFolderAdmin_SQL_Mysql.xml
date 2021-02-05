@@ -476,7 +476,11 @@
 					TBL_WEBFOLDER_CONFIG
 				SET
 					UPLOAD_LIMIT = #uploadLimit#,
+			]]>
+				<isNotEmpty property="companyLimit">
 					COMPANY_TOTAL_LIMIT = #companyLimit#,
+				</isNotEmpty>
+			<![CDATA[
 					DEPARTMENT_TOTAL_LIMIT = #departmentLimit#,
 					USER_TOTAL_LIMIT = #userLimit#
 				WHERE
