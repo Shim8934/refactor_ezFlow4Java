@@ -7,14 +7,17 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezApproval.t934'/></title>
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Common_Function.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 		
 		<script type="text/javascript">
 			var filelist;
 			var isfileup = false;
 			var converterServerURL = "${converterServerURL}";
+			var imgDiv;
 			
 			function btnfileup() {   
 		        if (!isfileup) {
@@ -99,9 +102,17 @@
 				});                            
             }
 			
-			function setConvertedImg(convertedImgInfo) {	
-	        	var div = document.createElement('div');
-	        	
+			function setConvertedImg(convertedImgInfo) {
+	        	var divLength = parent.document.getElementById("message").contentWindow.document.getElementById("body").getElementsByClassName("divImg").length;
+	        	if(divLength >0){
+	        		$("#message").contents().find(".divImg").remove();
+		        	var body = parent.document.getElementById("message").contentWindow.document.getElementById("body");
+		        	var divImg = body.getElementsByClassName("divImg");
+		        	$(divImg).remove();
+	        	}
+		        var div = document.createElement('div');
+	        	$(div).addClass("divImg");
+	        	$(div).css("overflow", "hidden");
 	        	parent.document.getElementById("message").contentWindow.document.getElementById("body").appendChild(div);
 	        	
 	        	var imgURL = convertedImgInfo;
@@ -121,7 +132,10 @@
 	        	var imgURLF = imgURL.substr(0, fileIndexOf); // 이미지URL 이미지 순서 정해지기 전
 	        	var imgURLL = fileURL.substr(fileIndexOf2); // 이미지URL 이미지 순서 정해진 후
 	        	
-	        	
+	        	var body = $(parent.document).find('body');
+	        	var selectBox = body.find("#selectImg");
+	        	$(selectBox).children('option').remove();
+// 	        	$(selectBox).addClass('imgSelect');
 	        	for(var i = 1; i <= pages; i++) {  		
 	        		var imgSrc = document.createElement('img');
 	        		var fileNm;
@@ -135,28 +149,43 @@
 	        		}
 	        		
 	        		imgSrc.src = imgURLF + fileNm + imgURLL;
-	        		imgSrc.style.width = "100%";
+	        		imgSrc.style.width = "654px";
 	        		imgSrc.style.border = "1px solid rgb(200, 200, 200)";
 	        		imgSrc.style.boxSizing = "border-box";
 	        		$(imgSrc).addClass("office-image");
+	        		$(imgSrc).css("position", "relative");
+	        		$(imgSrc).attr("z-index", 100);
+
         		
-	        		var imgDiv = document.createElement('div');   	        		
+	        		imgDiv = document.createElement('div');   	        		
+	        		$(imgDiv).css("overflow", "hidden");
 	        		$(imgDiv).css("page-break-before", "always");
+	        		$(imgDiv).css("text-align", "center");
+	        		
+	        		if(i>1){
+	        			$(imgDiv).css("display", "none");
+	        		}else{
+	        			$(imgDiv).addClass("imgDiv");
+	        		}
+	        		
 	        		
 	        		if(i == pages) {
 	        			$(imgDiv).css("page-break-after", "always");
 	        		}
-	        		
-	        		imgDiv.appendChild(imgSrc);	        		
+	        		imgDiv.appendChild(imgSrc);
 	        		div.appendChild(imgDiv);
 	        		
-	        		var spaceDiv = document.createElement('div');
-	        		spaceDiv.style.height = "5px";
-	        		$(spaceDiv).addClass("no-print-page");
-	        		
-	        		div.appendChild(spaceDiv);
+	        		if(i <= pages){
+		        		$(selectBox).append("<option value='" + i + "'>" + i +" / "+pages+ " Page</option>");
+	        		}
 	        	}
-	        }
+	        	var imgMove = parent.document.getElementById("message").contentWindow.document.getElementById("body").getElementsByClassName("office-image");
+// 		        	$(imgMove).draggable({
+// 		        		scroll : false
+// 	    	    	});
+	        	}
+			
+			
 		</script>
 	</head>
 	<body>

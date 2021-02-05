@@ -27,6 +27,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = "<c:out value = '${docID}'/>";
@@ -152,6 +153,52 @@
 				if (nonElecRec == "Y") {
 					document.getElementById("btnAddSepAttach").style.display = "none";
 				}
+				
+				$("#message").load(function() {
+					var selectOp = $("#selectImg option").length;
+					if(selectOp == 1){
+						$("#selectImg option").remove();
+					}
+					var val = parseInt($("#selectImg option:selected").val());
+					var divImg = $("#message").contents().find(".divImg");
+					$(divImg).children().css("zoom",100+"%");
+					var pages = $(divImg).children().length;
+					if(selectOp==1){
+						for(var i=1; i<=pages; i++){
+							if(i <= pages){
+								$("#selectImg").append("<option value='" + i + "'>" + i +" / "+pages+ " Page</option>");
+							}
+						}
+					}
+					if(pages > 1){
+						window.resizeTo(1920, 1200);
+						var sw = screen.width;
+			    		var sh = screen.height;
+			    		var cw = document.body.clientWidth;
+			    		var ch = document.body.clientHeight;
+			    		var top  = sh / 2 - ch / 2 - 100;
+			    		var left = sw / 2 - cw / 2;
+						$("#officeBtn").css("display","");
+						var selectNum = $("#message").contents().find(".divImg").find(".imgDiv").index();
+						$("#selectImg option:eq("+ selectNum +")").prop('selected', true);
+					}
+					var imgMove = $("#message").contents().find(".divImg").find(".imgDiv");
+					$(imgMove).find(".office-image").css("zoom", 100+"%");
+					if(imgMove.length == 0){
+						$("#zoomIn").css("display","none");
+						$("#zoomOut").css("display","none");
+						$("#zoomReset").css("display","none");
+						$("#prev").css("display","none");
+						$("#next").css("display","none");
+						$("#prevAll").css("display","none");
+						$("#nextAll").css("display","none");
+						$("#selectImg").css("display","none");
+						$("#all").attr("src", "/images/icviewer_downsize.png");
+						
+					}
+					
+				});
+				
 			});
 		    
 		    function process_AfterOpen() {
@@ -252,6 +299,7 @@
 		        } catch (e) {
 		            alert("process_AfterOpen : " + e.description);
 		        }
+		        
 		    }
 		    function process_AfterOpen_Complete(Ans) {
 		        DivPopUpHidden();
@@ -1832,6 +1880,27 @@
 		    <td style="padding-bottom:10px;height:90%;">
 		        <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="recevEndContent.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		    </td>
+		  </tr>
+		  <tr>
+		  <td>
+		  <div id="officeBtn" style="display:none;">
+		  	<div style="text-align:center; background-color:rgba(0, 0, 0, 0.5); height: 50px;">
+		  		<img id="zoomIn" onclick="zoomIn()" src="/images/icviewer_plus.png" width="25" height="25" style="cursor:pointer; position: relative; top: 13px;">
+		  		<img id="zoomOut" onclick="zoomOut()" src="/images/icviewer_minus.png" width="25" height="25" style="cursor:pointer; position: relative; top: 13px;">
+		  		<img id="zoomReset" src="/images/icviewer_reset.png" width="25" height="25" onclick="zoomReset()" style="cursor:pointer; position: relative; top: 13px;">
+		  		<img id="officeBar1" src="/images/icviewer_bar.png" style="position: relative; top: 13px;">
+		  		<img id="prevAll" border="0" src="/images/icviewer_p_prev.png" width="25" height="25" onClick="prevClickAll()" style="cursor:pointer; position: relative; top: 13px;">
+		  		<img id="prev" border="0" src="/images/icviewer_prev.png" width="25" height="25" onClick="prevClick()" style="cursor:pointer; position: relative; top: 13px;">
+		  			<select id="selectImg" class="imgSelect" onchange="selectImg()">
+		  				<option value=""></option>
+		  			</select>
+		  		<img id="next" border="0" src="/images/icviewer_next.png" width="25" height="25" onClick="nextClick()" style="cursor:pointer; position: relative; top: 13px;">
+		  		<img id="nextAll" border="0" src="/images/icviewer_n_next.png" width="25" height="25" onClick="nextClickAll()" style="cursor:pointer; position: relative; top: 13px;">
+		  		<img id="officeBar2" src="/images/icviewer_bar.png" style="position: relative; top: 13px;">
+		  		<img src="/images/icviewer_expend.png" class="allImg" id="all" onclick="allImg(this)" style="cursor:pointer; position: relative; top: 13px;" width="25" height="25">
+			</div>
+		</div>
+		  </td>
 		  </tr>
 		   <tr>
 		    <td style="height:20px;"><table class="file">

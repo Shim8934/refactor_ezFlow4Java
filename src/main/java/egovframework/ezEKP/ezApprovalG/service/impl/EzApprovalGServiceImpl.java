@@ -30167,8 +30167,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		// 다른 서버에 설치되어있는 변환솔루션의 경우, 솔루션서버에 마운트된 위치를 filePath로 알려줘야함
 //		String filePath = URLEncoder.encode(tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
-		// String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4fEa1FIQeYI3%252BPB33JlY%252BCLJjVjx1iVJebmrlmJl1TgrI%253D";
-		String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4f8FdvYtnOEMuZ3PX0v9%252BN2g%253D%253D";
+		//400장
+// 	 String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4fEa1FIQeYI3%252BPB33JlY%252BCLJjVjx1iVJebmrlmJl1TgrI%253D";
+		// 엑셀
+		String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4fdPYpLmCWzzgjfbPjoEgvsB32hMod332fBGiVzDvdMA9LEhq8SWDfnHXmgXfwqy2hcXehoNGjE9rNOtlr0cyMpd1d0rJz27rnaDFpCcdNoqc%253D";
+		// 10장
+//		String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4ft%252BRV%252FhVxGhN7is8MRVAdmyimyAbMBXvZPRNRArrGlfA%253D";
 //		String filePath = URLEncoder.encode("/home/jmocha/temp/" + originalFilename, "UTF-8"); // 테스트용
 		String fileName = URLEncoder.encode(originalFilename, "UTF-8");
 		String fileExt = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);

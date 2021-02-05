@@ -1297,7 +1297,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String isUsed = request.getParameter("isUsed");
-		
+		String officeFlag = request.getParameter("officeFlag");
 		if (request.getParameter("draftFlag") != null) {
 			mode = request.getParameter("draftFlag");
 		}
@@ -1306,6 +1306,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("mode", mode);
 		model.addAttribute("editor", editor);
 		model.addAttribute("isUsed", isUsed);
+		model.addAttribute("officeFlag", officeFlag);
 		logger.debug("draftContent ended.");
 		
 		return "ezApprovalG/apprGDraftContent";
