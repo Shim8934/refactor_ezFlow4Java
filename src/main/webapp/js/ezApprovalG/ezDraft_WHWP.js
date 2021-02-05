@@ -621,11 +621,11 @@ function ConvertDocType(pDocType) {
 }*/
 
 function setDrafterAddress() {
-	SetDocumentElement(message, "drafter", arr_userinfo[2]);
-	SetDocumentElement(message, "address", arr_userinfo[8]);
-	SetDocumentElement(message, "drafterdept",arr_userinfo[4]);
-	SetDocumentElement(message, "lastKyulName", lastKyulName);
-	SetDocumentElement(message, "lastKyuljikwee", lastKyuljiwee);
+	SetDocumentElement("drafter", arr_userinfo[2]);
+	SetDocumentElement("address", arr_userinfo[8]);
+	SetDocumentElement("drafterdept",arr_userinfo[4]);
+	SetDocumentElement("lastKyulName", lastKyulName);
+	SetDocumentElement("lastKyuljikwee", lastKyuljiwee);
 }
 
 var getformcont_cross_dialogArguments = new Array();
@@ -1493,7 +1493,7 @@ function setDocNumFormat(pPrefix)
 			
 	message.PutFieldText(pPrefix + "docnumber", numHeader);
 	if(numHeader.indexOf(strLang107) > 0) {
-		SetDocumentElement(message, "", message.GetFieldText("docnumber"));
+		// SetDocumentElement("", message.GetFieldText("docnumber"));
 		//HwpCtrl.SetDocumentInfo("NULL", "NULL", numHeader);
 	}
 	

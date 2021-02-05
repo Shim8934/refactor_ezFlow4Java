@@ -147,6 +147,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -207,6 +208,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Resource(name = "EzApprovalGAdminDAO")
 	private EzApprovalGAdminDAO ezApprovalGAdminDao;
+	
+	@Resource(name = "loginService")
+    private LoginService loginService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGServiceImpl.class);
 	
@@ -6158,6 +6162,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
         for (Paragraph p : pList) {
             fieldCell = findHwpFieldCell(p, fieldName);
+            
+            if (fieldCell != null) {
+                break;
+            }
         }
         
         return fieldCell;
@@ -7078,6 +7086,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String connString, connFlag;
 		String queryString, queryType;
 		String processIdx, processTime;
+		String serviceQueryString;
 		
 		org.jsoup.nodes.Document doc = Jsoup.parse(keywords, "", Parser.xmlParser());
 		
@@ -7089,51 +7098,107 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return true;
 		}
 
-		for (org.jsoup.nodes.Node connNode : htmlConn.childNodes()) {
+		for (Element connNode : htmlConn.children()) {
 			processIdx = connNode.attr("processidx");
 			processTime = connNode.attr("processtime");
 			
 			logger.debug("processIdx = " + processIdx + " || processTime = " + processTime);
 			
 			if (processIdx.equals(pProcessIdx) && processTime.equals(draftFlag)) {
-				connFlag = connNode.childNode(0).attr("flag");
-				connString = ((Element) connNode.childNode(0)).text();
+			    Element connStringElem = connNode.getElementsByTag("connstring").first();
+				connFlag = connStringElem.attr("flag");
+				connString = connStringElem.text();
 				
-				queryType = connNode.childNode(1).attr("qtype");
-				queryString = ((Element) connNode.childNode(1)).text();
+				Element queryElem = connNode.getElementsByTag("query").first();
+				queryType = queryElem.attr("qtype");
+				queryString = queryElem.text();
+				
+				Element serviceQueryElem = connNode.getElementsByTag("servicequery").first();
+				serviceQueryString = serviceQueryElem.text();
+				
+	            Element keysElem = connNode.getElementsByTag("keys").first();
+	            String [] arrItemNames = {
+	                "c_docid",
+	                "c_formid",
+	                "c_draft_userid",
+	                "c_draft_username",
+	                "c_draft_position",
+	                "c_draft_deptid",
+	                "c_draft_deptname",
+	                "c_processidx",
+	                "c_processtime",
+	                "c_connkey",
+	                "c_connformcode"
+	            };
+	            
+	            for (int i = 0, len = arrItemNames.length; i < len; i++) {
+	                keysElem
+	                    .appendElement("key")
+	                    .attr("kind", "single")
+	                    .text(arrItemNames[i]);
+	            }
+	            
+	            Elements keyElems = keysElem.children();
 				
 				logger.debug("connFlag = " + connFlag + " || connString = " + connString);
 				logger.debug("queryType = " + queryType + " || queryString = " + queryString);
+				logger.debug("serviceQueryString = " + serviceQueryString);
 				
-				if (queryType.equals("service")) {
-					Object connBean = context.getBean("EzConnUtil");
-					Class<?> refClass = connBean.getClass();
-					
-					Field fieldDocID = refClass.getDeclaredField("docID");
-					fieldDocID.setAccessible(true);
-					fieldDocID.set(connBean, docID);
-					
-					Field fieldUserID = refClass.getDeclaredField("userID");
-					fieldUserID.setAccessible(true);
-					fieldUserID.set(connBean, userID);
-					
-					Field fieldcompanyID = refClass.getDeclaredField("companyID");
-					fieldcompanyID.setAccessible(true);
-					fieldcompanyID.set(connBean, companyID);
-					
-					Field fieldTenantID = refClass.getDeclaredField("tenantID");
-					fieldTenantID.setAccessible(true);
-					fieldTenantID.set(connBean, tenantID);
-					
-					/** queryString로 호출할 서비스구분*/
-					for (Method method : refClass.getDeclaredMethods()) {
-						if (queryString.equals(method.getName())) {
-							//ezConnUtil connTest() 테스트용도
-							logger.debug("method name = " + method.getName());
-							
-							method.invoke(connBean);
-						}
-					}
+	            if (queryType.equals("UA") || queryType.equals("UA_EX") || connFlag.equals("UI")) {
+	                return false;
+	            }
+				
+				if (!serviceQueryString.isEmpty()) {
+	                StringBuilder sb = new StringBuilder("<PARAMETER>");
+	                
+	                for(int i = 0, len = keyElems.size(); i < len; i++) {
+	                    Element keyElem = keyElems.get(i);
+	                    
+	                    if("single".equals(keyElem.attr("kind"))) {
+	                        String keyName = keyElem.text();
+	                        String keyValue = "";
+	                        
+	                        switch (keyName) {
+                            case "c_processidx":
+                                keyValue = processIdx;
+                                break;
+                            case "c_processtime":
+                                keyValue = processTime;
+                                break;
+                            default:
+                                if (findHwpField(keyName, hwpFile)) {
+                                    keyValue = getHwpText(keyName, hwpFile);
+                                } else {
+                                    if (htmlConn.getElementsByTag(keyName).first() != null) {
+                                        keyValue = htmlConn.getElementsByTag(keyName).first().text();
+                                    }
+                                }
+                            }
+	                        
+	                        sb.append(String.format("<%s>%s</%s>", keyName, keyValue, keyName));
+	                    }
+	                }
+	                sb.append("</PARAMETER>");
+	                    
+	                Document keyData = commonUtil.convertStringToDocument(sb.toString());
+	                    
+	                Object connServiceBean = context.getBean("EzApprovalGConnService");
+	                Class<? extends Object> refClass = connServiceBean.getClass();
+	                
+	                LoginVO tempLoginVO = new LoginVO();
+	                tempLoginVO.setId(userID);
+	                tempLoginVO.setTenantId(tenantID);
+	                tempLoginVO.setDn("NOPASSWORD");
+	                
+	                LoginVO userInfo = loginService.selectUser(tempLoginVO);
+	                
+	                Method connMethod =  refClass.getDeclaredMethod(serviceQueryString, Document.class, LoginVO.class);
+	                if(connMethod != null) {
+	                    logger.debug("method name = " + connMethod.getName());
+	                    connMethod.invoke(connServiceBean, keyData, userInfo);
+	                } else {
+	                    return false;
+	                }
 				}
 			}
 		}

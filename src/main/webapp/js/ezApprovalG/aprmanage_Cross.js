@@ -930,15 +930,6 @@ function InitlvAprLine() {
             document.getElementById("tbtnforcecallback").style.display = "none";
         }
 
-        if (pListTypeValue == "2") {
-            var DocID = GetAttribute(tr, "DATA1");
-            cancelYN(DocID);
-        }
-        else if (pListTypeValue == "3") {
-            var DocID = GetAttribute(tr, "DATA1");
-            cancelYN(DocID);
-        }
-
         SelectFlag = false;
         getAprLine(tr);
 
@@ -2304,10 +2295,6 @@ function setbuttonenable() {
     } else
         document.getElementById("tDocInfo").style.display = "none";
 
-    if (pListTypeValue != "2" && pListTypeValue != "3") {
-        document.getElementById("tbtncallback").style.display = "none";
-    }
-
     if (GetBujaeFlag()) {
         document.getElementById("tbtnDraft").style.display = "none";
         //SwapImage(document.getElementById("btnDraft"), "dis");
@@ -2321,7 +2308,6 @@ function setbuttonenable() {
         document.getElementById("tbtnReceipt").style.display = "none";
         document.getElementById("tbtnReturn").style.display = "none";
         document.getElementById("tbtnNonElecRec").style.display = "none";
-        document.getElementById("tbtncallback").style.display = "none";
         document.getElementById("tbtnRegList").style.display = "none";
         document.getElementById("tbtnLinkDraft").style.display = "none";
 
@@ -2584,138 +2570,9 @@ function getSimsaDocList() {
 	});
 }
 
-function doCancel(pDocID, tempListType) {
-	var result = "";
-
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : false,
-		url : "/ezApprovalG/doCancel.do",
-		data : {
-			docID : pDocID,
-			userID : pUserID
-		},
-		success: function(xml){
-			result = xml;
-		}, error: function () {
-			var pAlertContent = strLang898;
-	        OpenAlertUI(pAlertContent, "", "OPEN");
-		}
-	});
-	
-	//2018-07-10 배현상, OpenAlertUI에서 브라우저 alert으로 수정
-    var RtnVal = getNodeText(loadXMLString(result).documentElement);
-
-    if (RtnVal == "TRUE") {
-        if (tempListType == "3") {
-            var pAlertContent = strLang891 + "\n" + strLang892;
-            alert(pAlertContent);
-        }
-        else {
-            var pAlertContent = strLang893 + "\n" + strLang894;
-            alert(pAlertContent);
-        }
-        SendMailToCancel(pDocID); 
-        openergetDocInfo();
-        attitude_annual_conn(pDocID);
-
-        try {
-            parent.frames["left"].getAprCount();
-        }
-        catch (e) { }
-    }
-    else if (RtnVal == "ERR01") {
-        var pAlertContent = strLang895;
-        alert(pAlertContent);
-    }
-    else if (RtnVal == "ERR02") {
-        var pAlertContent = strLang896;
-        alert(pAlertContent);
-    }
-    else if (RtnVal == "ERR03") {
-        var pAlertContent = strLang897;
-        alert(pAlertContent);
-    } else {
-    	var pAlertContent = strLang898;
-        alert(pAlertContent);
-    }
-}
 
 var xmlhttp3;
 var temppDocID;
-function cancelYN(pDocID) {
-    temppDocID = pDocID;
-	
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : true,
-		url : "/ezApprovalG/doCanCelYN.do",
-		data : {
-			docID : pDocID,
-			userID : pUserID
-		},
-		success: function(xml){
-			cancelYN_after(loadXMLString(xml));
-		}
-	});
-}
-function cancelYN_after(xml) {
-    var RtnVal = getNodeText(xml.documentElement);
-    if (RtnVal == "CALLBACK" && pListTypeValue == "2" && !GetBujaeFlag()) {
-        document.getElementById("tbtncallback").style.display = "";
-        document.getElementById("tbtnforcecallback").style.display = "none";
-    }
-    else if (RtnVal == "CALLBACK" && pListTypeValue == "3" && !GetBujaeFlag()) {
-    	document.getElementById("tbtncallback").style.display = "";
-    	document.getElementById("tbtnforcecallback").style.display = "none";
-    }
-    else if (RtnVal == "CANCEL" && pListTypeValue == "3" && !GetBujaeFlag()) {
-        document.getElementById("tbtncallback").style.display = "";
-        document.getElementById("tbtnforcecallback").style.display = "none";
-    }
-    else {
-    	if (forceCallBackYN == "YES") {
-    		//강제회수는 기안자만 가능하도록 수정
-    		if (!checkIsDrafter()) {
-                document.getElementById("tbtncallback").style.display = "none";
-                document.getElementById("tbtnforcecallback").style.display = "none";
-
-    			return;
-    		}
-    		
-	    	var result = "";
-	    	
-	    	$.ajax({
-	    		type : "POST",
-	    		dataType : "text",
-	    		async : false,
-	    		url : "/ezApprovalG/doForceCancelYN.do",
-	    		data : {
-	    			docID : temppDocID,
-	    			userID : pUserID
-	    		},
-	    		success: function(xml){
-	    			result = xml;
-	    		}
-	    	});
-	    	
-	        var RtnVal = getNodeText(loadXMLString(result).documentElement);
-	        if (RtnVal == "TRUE")
-	        	document.getElementById("tbtnforcecallback").style.display = "";
-	        else
-	            document.getElementById("tbtnforcecallback").style.display = "none";
-	
-	        document.getElementById("tbtncallback").style.display = "none";
-	        temppDocID = null;
-    	} else {
-    		 document.getElementById("tbtnforcecallback").style.display = "none";
-    	     document.getElementById("tbtncallback").style.display = "none";
-    	}
-    }
-}
-
 function returnYN(pDocID) {
 	var result = "";
 	
@@ -3077,22 +2934,6 @@ function RemoveTmpDoc(pDocID) {
 	        alert(pAlertContent);
 		}
 	});
-}
-
-//2019-05-03 김보미 - 근태관리 연동
-function attitude_annual_conn(docId) {		 		
-	$.ajax({ 			
-		type:'POST', 			
-		dataType : 'json', 			
-		async : true, 			
-		url : '/ezAttitude/approvalGConn.do', 			
-		data : { 				
-			status : 'delete', 				
-			docId : docId 			
-		},
-		success : function(result) { 			},
-		error : function() { 			} 		
-	});  
 }
 
 function checkIsDrafter() {

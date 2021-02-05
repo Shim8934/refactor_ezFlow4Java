@@ -265,10 +265,14 @@
 		    function FieldsAvailable(isTrue) {
 		    	 try {                
 		             if (isTrue) {
-		                 message.EditMode(1);	// 0:읽기 전용, 1:일반 편집모드, 2:양식 모드, 16:배포용 문서
-		                 if (document.getElementById("setConnFlag").checked) {
-		                     //ConnInfoXmlRead();
-		                 }
+						 message.EditMode(1);	// 0:읽기 전용, 1:일반 편집모드, 2:양식 모드, 16:배포용 문서
+						 var docElemInfo = message.WHWP_GetDocumentElement();
+						 txt_OpinionContent.value = docElemInfo[0];
+						 txt_OpinionContent1.value = docElemInfo[1];
+						 txt_OpinionContent2.value = docElemInfo[2];
+		                //  if (document.getElementById("setConnFlag").checked) {
+		                //      //ConnInfoXmlRead();
+		                //  }
 		              }
 		         } catch (e) {
 		             alert("FieldsAvailable() :: " + e);
@@ -766,7 +770,7 @@
 		        FormConnInfo_dialogarguments[0] = "";
 		        FormConnInfo_dialogarguments[1] = FormConnInfo_onclick_Complete;
 		        var url = "/admin/ezApprovalG/formConnInfo.do?companyID=" + encodeURIComponent(companyID);
-		        GetOpenWindow(url, "FormConnInfo", 440, 480, "NO");
+		        GetOpenWindow(url, "FormConnInfo", 440, 500, "NO");
 		    }
 		
 		    function FormConnInfo_onclick_Complete(retVal) {
@@ -959,13 +963,20 @@
 		    }
 		
 		    function btn_OpinionAdd1_onclick() {
-		        var SampleXML = "\n <VALIDATION>\n      <FIELD></FIELD>\n       <CLASS></CLASS>\n       <DESC></DESC>\n </VALIDATION>";
-		        txt_OpinionContent1.value = txt_OpinionContent1.value + SampleXML;
+				var SampleXML = "<VALIDATION>\n\t<FIELD></FIELD>\n\t<CLASS></CLASS>\n\t<DESC></DESC>\n</VALIDATION>";
+				if (txt_OpinionContent1.value) {
+					txt_OpinionContent1.value += "\n";
+				}
+		        txt_OpinionContent1.value += SampleXML;
 		    }
 		
 		    function btn_OpinionAdd2_onclick() {
-		        var SampleXML = "\n<CHECK>\n	<CASES>\n		<CASE>\n			<FIELD></FIELD>\n			<VALUE></VALUE>\n			<TYPE></TYPE>\n		</CASE>\n	</CASES>\n		<APRLINES>\n	    <APRLINE>\n			<APRTYPE></APRTYPE>\n			<CLASS></CLASS>\n			<VALUE></VALUE>\n			<DESC></DESC>\n		</APRLINE>\n	</APRLINES>\n</CHECK>";
-		        txt_OpinionContent2.value = txt_OpinionContent2.value + SampleXML;
+		        // var SampleXML = "<CHECK>\n	<CASES>\n		<CASE>\n			<FIELD></FIELD>\n			<VALUE></VALUE>\n			<TYPE></TYPE>\n		</CASE>\n	</CASES>\n		<APRLINES>\n	    <APRLINE>\n			<APRTYPE></APRTYPE>\n			<CLASS></CLASS>\n			<VALUE></VALUE>\n			<DESC></DESC>\n		</APRLINE>\n	</APRLINES>\n</CHECK>";
+				var SampleXML = "<APRLINE>\n\t<APRTYPE></APRTYPE>\n\t<CLASS></CLASS>\n\t<VALUE></VALUE>\n\t<DESC></DESC>\n</APRLINE>";
+				if (txt_OpinionContent2.value) {
+					txt_OpinionContent2.value += "\n";
+				}
+		        txt_OpinionContent2.value += SampleXML;
 		    }
 		    
 		    function btn_FormConnSave_onclick() {
@@ -997,8 +1008,8 @@
 		        }
 		        
 		        OpenInformationUI_Complete();
-		    }
-		    
+			}
+
 		    function GetEntryInfo(_DEPTID) {
 		        var ReceiveDocument = "";
 
@@ -1465,9 +1476,9 @@
 	                    &lt;VALIDATIONS&gt;<br>
 	                    <textarea name="txt_OpinionContent1" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:350px" id="txt_OpinionContent1"></textarea>
 	                    <br> &lt;/VALIDATIONS&gt;<br>
-	                    &lt;STATUS&gt;<br>
+	                    &lt;APRLINES&gt;<br>
 	                    <textarea name="txt_OpinionContent2" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:350px" id="txt_OpinionContent2"></textarea>
-	                    <br> &lt;/STATUS&gt;<br>
+	                    <br> &lt;/APRLINES&gt;<br>
 	                    &lt;/WORKFLOW&gt;<br>
 	                    &lt;/xml&gt;
 	                </td>

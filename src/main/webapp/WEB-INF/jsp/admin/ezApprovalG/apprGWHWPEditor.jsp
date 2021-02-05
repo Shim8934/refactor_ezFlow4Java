@@ -10,7 +10,7 @@
 		<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
     	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_WHWP.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 		    var HwpCtrl;
 	        var splitChar = "\x02";
@@ -412,7 +412,65 @@
 	           
 	       function SaveDocument(fileName, fileType, callback) {
 	            HwpCtrl.SaveDocument(fileName, fileType, callback);
-	        }
+			}
+
+			function WHWP_GetDocumentElement() {
+				var retVal = new Array("", "", "");
+
+				var whwpInfo = loadXMLString(GetDocumentInfo());
+				var keywordStr = ConvertEntityReferenceToChar(getXmlString(SelectSingleNodeNew(whwpInfo, "DATA/KEYWORD")));
+				var keywordXml = loadXMLString(keywordStr);
+
+				var connXml = SelectNodes(keywordXml, "KEYWORD/CONNROOT/conn");
+				if (connXml.length > 0) {
+					var connXmlStr = getXmlString(SelectSingleNodeNew(keywordXml, "KEYWORD/CONNROOT"));
+					retVal[0] = connXmlStr.replace(/<[/]?CONNROOT>/g, "").replace(/<\/conn></g, "</conn>\n<");
+				}
+
+				var workflow1Xml = SelectNodes(keywordXml, "KEYWORD/WORKFLOW/VALIDATIONS");
+				if (workflow1Xml.length > 0) {
+					var validXmlStr = getXmlString(SelectSingleNodeNew(keywordXml, "KEYWORD/WORKFLOW/VALIDATIONS"));
+					retVal[1] = validXmlStr.replace(/<[/]?VALIDATIONS>/g, "").replace(/<\/VALIDATION></g, "</VALIDATION>\n<");
+				}
+				var workflow2Xml = SelectNodes(keywordXml, "KEYWORD/WORKFLOW/APRLINES");
+				if (workflow2Xml.length > 0) {
+					var aprlineXmlStr = getXmlString(SelectSingleNodeNew(keywordXml, "KEYWORD/WORKFLOW/APRLINES"));
+					retVal[2] = aprlineXmlStr.replace(/<[/]?APRLINES>/g, "").replace(/<\/APRLINE></g, "</APRLINE>\n<");;
+				}
+
+				return retVal;
+			}
+
+			function WHWP_SetDocumentElement(connXmlStr) {
+				connXmlStr = ConvertCharToEntityReference(connXmlStr);
+				SetDocumentInfo("NULL", "NULL", "NULL", connXmlStr, "NULL");
+			}
+
+	        function FormInfoCheck(type) {
+	            try {
+	                switch (type) {
+	                    case "null":
+							return HwpCtrl.IsEmpty;
+	                    default:
+							var CheckCount = 0;
+							var fieldList = encodeURIComponent(HwpCtrl.GetFieldList(2))
+								.split("%02")
+								.map(function(field) {
+									return decodeURIComponent(field);
+								});
+	                        for (var i = 0, ilen = fieldList.length; i < ilen; i++) {
+								var fieldInfo = fieldList[i].match(/\w+/g);
+	                            if (fieldInfo[0] === type) {
+									CheckCount = +fieldInfo[1];
+									break;
+								}
+	                        }
+	                        return CheckCount;
+	                }
+	            } catch (e) {
+					alert("FormInfoCheck error");
+	            }
+			}
 		</script>
 	</head>
 	<body style="padding: 0; margin: 0;">

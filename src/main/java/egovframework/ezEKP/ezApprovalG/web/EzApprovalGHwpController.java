@@ -41,6 +41,8 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -67,6 +69,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+    @Resource(name = "EzOrganService")
+    private EzOrganService ezOrganService;
 	
 	/**
 	 * @param loginCookie
@@ -1562,6 +1567,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			useExternalMailServer = "NO";
 		}
 		
+		String forceCallBackYN = ezCommonService.getTenantConfig("forceCallBack_YN", userInfo.getTenantId());
+		
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("docID", docID);
 		model.addAttribute("docHref", docHref);
@@ -1577,6 +1584,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("forceCallBackYN", forceCallBackYN);
 		
 		LOGGER.debug("ezviewAprWHWP ended");
 		

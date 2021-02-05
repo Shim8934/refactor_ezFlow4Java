@@ -387,10 +387,6 @@ function SaveHWPFormInfo(hwpData) {
         return;
     }
     
-    //작성양식 XML
-    if(formID != "")
-    	formMHT = hwpData;
-    
     //연동정보 XML
     var arrFormConn = "";
     arrFormConn = MakeFormConnXML();
@@ -415,6 +411,18 @@ function SaveHWPFormInfo(hwpData) {
         OpenAlertUI(arrFormWorkFlow[2]);
         document.getElementById("1tab4").click();
         return;
+    }
+
+    //작성양식 XML
+    if(formID != "") {
+        var arrFormMHT = MakeFormMHTXML(hwpData);
+        if (arrFormMHT[0] == "TRUE") {
+            formMHT = arrFormMHT[1];
+        } else {
+            OpenAlertUI(arrFormMHT[2]);
+            document.getElementById("1tab2").click();
+            return;
+        }
     }
     
     //자동분류 XML
@@ -568,58 +576,62 @@ function MakeFormInfoXML_Detail() {
     return getXmlString(xmlpara.childNodes[0]);
 }
 
-function MakeFormMHTXML() {
+function MakeFormMHTXML(pBodyData) {
     var retValue = new Array();
-    if (useEditor == "HWP") {
-        retValue[0] = "TRUE";
-        retValue[1] = message.HWP_GetCloneData();
-        retValue[2] = "";
-        return retValue;
-    }
+    var mustField;
   
-    if (message.FormInfoCheck("null"))
-    {
+    mustField = message.FormInfoCheck("null");
+    if (mustField) {
         retValue[0] = "FALSE";
         retValue[1] = "";
         retValue[2] = strLang1024;
-        return retValue;
     }
 
-    if (message.FormInfoCheck("body") != 0) {
-        if (message.FormInfoCheck("body") > 1) {
-            retValue[0] = "FALSE";
-            retValue[1] = "";
-            retValue[2] = strLang1012;
-            return retValue;
-        }        
-    }
-    else {
+    mustField = message.FormInfoCheck("body");
+    if (mustField === 0) {
         retValue[0] = "FALSE";
         retValue[1] = "";
         retValue[2] = strLang1013;
-        return retValue;
+    } else if (mustField > 1) {
+        retValue[0] = "FALSE";
+        retValue[1] = "";
+        retValue[2] = strLang1012;
     }
 
-    if (message.FormInfoCheck("doctitle") != 0) {
-        if (message.FormInfoCheck("doctitle") > 1) {
-            retValue[0] = "FALSE";
-            retValue[1] = "";
-            retValue[2] = strLang1014;
-            return retValue;
-        }
-    }
-    else {
-        if (message.FormInfoCheck("doctitlefield") == null || message.FormInfoCheck("doctitlefield") == "") {
+    mustField = message.FormInfoCheck("doctitle");
+    if (mustField === 0) {
+        mustField = message.FormInfoCheck("doctitlefield");
+        if (!mustField) {
             retValue[0] = "FALSE";
             retValue[1] = "";
             retValue[2] = strLang1015;
-            return retValue;
-        }        
+        }
+    } else if (mustField > 1) {
+        retValue[0] = "FALSE";
+        retValue[1] = "";
+        retValue[2] = strLang1014;
     }
-    retValue[0] = "TRUE";
-    retValue[1] = MakeFormMHTXML_Detail();
-    retValue[2] = "";
-    
+
+    if (retValue.length === 0) {
+        switch (useEditor) {
+            case "HWP":
+                retValue[0] = "TRUE";
+                retValue[1] = message.HWP_GetCloneData();
+                retValue[2] = "";
+                break;
+            case "WebHWP":
+                retValue[0] = "TRUE";
+                retValue[1] = pBodyData;
+                retValue[2] = "";
+                break;
+            default:
+                retValue[0] = "TRUE";
+                retValue[1] = MakeFormMHTXML_Detail();
+                retValue[2] = "";
+                break;
+        }
+    }
+
     return retValue;
 }
 
@@ -671,6 +683,27 @@ function MakeFormMHTXML_Detail() {
         
         HTML.appendChild(BODY);
         return ConvertHTMLtoMHT("<HTML>" + HTML.innerHTML + "</HTML>");
+}
+
+function SaveConnWHWPXML_Detail() {
+    var connXmlStr = "", workflowXmlStr = "";
+
+    if (txt_OpinionContent.value) {
+        connXmlStr = txt_OpinionContent.value.replace(/\r/g, "").replace(/\n/g, "").replace(/\t/g, "");
+        connXmlStr = "<CONNROOT>" + connXmlStr + "</CONNROOT>";
+    }
+
+    if (txt_OpinionContent1.value || txt_OpinionContent2.value) {
+        var work1XmlStr = txt_OpinionContent1.value.replace(/\r/g, "").replace(/\n/g, "").replace(/\t/g, "");
+        var work2XmlStr = txt_OpinionContent2.value.replace(/\r/g, "").replace(/\n/g, "").replace(/\t/g, "");
+        workflowXmlStr = 
+            "<WORKFLOW>" + 
+            "<VALIDATIONS>" + work1XmlStr + "</VALIDATIONS>" + 
+            "<APRLINES>" + work2XmlStr + "</APRLINES>" + 
+            "</WORKFLOW>";
+    }
+
+    message.WHWP_SetDocumentElement(connXmlStr + workflowXmlStr);
 }
 
 function GetHTML(callback) {
@@ -861,6 +894,7 @@ function btnClose_onclick() {
 function btnSave_onclick() {
     if(useEditor == "WebHWP") {
     	if(formID != "") {
+            SaveConnWHWPXML_Detail(); // 한글연동/워크플로우 정보 저장
     		GetHTML(SaveHWPFormInfo);
     	} else {
     		SaveHWPFormInfo();

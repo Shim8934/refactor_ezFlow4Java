@@ -1038,6 +1038,8 @@ function DivPopUpShow(popUpW, popUpH, URL) {
         document.getElementById("mailPanel").style.display = "";
         document.getElementById("iFramePanel").style.display = "";
     } catch (e) {}
+
+    return document.getElementById("iFrameLayer");
 }
 
 function DivPopUpHidden() {

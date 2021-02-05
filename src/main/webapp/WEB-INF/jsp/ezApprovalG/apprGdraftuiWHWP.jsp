@@ -260,21 +260,21 @@
 	                    } */
 	
 	                    process_AfterOpen();
-	
-	                    if (_connkey_ != "") {
-	                        try {
-	                            if (message.FieldExist("_connkey_"))
-	                                message.PutFieldText("_connkey_", _connkey_);
-	                        } catch (e) { }
-	                    }
+						connInit();
+	                    // if (_connkey_ != "") {
+	                    //     try {
+	                    //         if (message.FieldExist("_connkey_"))
+	                    //             message.PutFieldText("_connkey_", _connkey_);
+	                    //     } catch (e) { }
+	                    // }
 	                    
-	                    var rtnVal = ExcuteInfo("INIT", "");
+	                    // var rtnVal = ExcuteInfo("INIT", "");
 	                    
-	                    if (!rtnVal) {
-	                        if (OpenInformationUI("<spring:message code='ezApprovalG.t122'/>")) {
-	                            btnClose_onclick();
-	                        }
-	                    }
+	                    // if (!rtnVal) {
+	                    //     if (OpenInformationUI("<spring:message code='ezApprovalG.t122'/>")) {
+	                    //         btnClose_onclick();
+	                    //     }
+	                    // }
 	                    
 	                    if (pDraftFlag != "REDRAFT") {
 	                        setFirstDrafter();
@@ -555,21 +555,11 @@
 
                 bAttachProcess = false;
 
-                if (GetDocumentElement(message, "WORKFLOWXML") != "") {
-                    var rtn = checkValidation(GetDocumentElement(message, "WORKFLOWXML"))
-                    if (rtn == "FALSE")
+                if (GetDocumentElement("WORKFLOW", true)) {
+                    var rtn = checkValidation();
+                    if (rtn == "FALSE") {
                         return;
-                    else if (rtn != "TRUE") {
-                        var pInformationContent = rtn + "<spring:message code='ezApprovalG.t130'/>";
-                        var Ans = OpenInformationUI(pInformationContent);
-
-                        if (Ans) {
-                            var Ans = btnSetAprLine_onclick();
-                            return;
-                        } else {
-                            return;
-                        }
-                    }
+					}
 	            }
 
 				var Fields = message.GetFieldList(0, 1);
@@ -1186,7 +1176,7 @@
 				DivPopUpHidden();
 		        if (rtn[0] == "TRUE") {
 		            g_SepAttachLVXml = rtn[1];
-		            SetDocumentElement(message, "sepattachlvxml", g_SepAttachLVXml);
+		            SetDocumentElement("sepattachlvxml", g_SepAttachLVXml);
 		        }
 			}
 			
@@ -1710,7 +1700,26 @@
 				//GetHTML(saveDraftInfo);
 	    	}
 	    	
-	    	
+	    	function connInit() {
+				var connRootText = GetDocumentElement("CONNROOT", true);
+				if (connRootText) {
+					document.querySelector("#btnSaveServer").style.display = "none";
+
+					setConnDefaultKey(pDraftFlag);
+
+					if (ConnExist(["conn;processidx;INIT", "conn;processtime;DRAFT", "query;qtype;UA"]) || ConnExist(["conn;processidx;INIT", "conn;processtime;DRAFT", "query;qtype;UA_EX"])) {
+						document.querySelector("#btnConn").style.display = "";
+					}
+
+					setTimeout(function() {
+						ExcuteInfo("INIT", pDraftFlag);
+					}, 0);
+				}
+			}
+
+			function btnConn_onclick() {
+				ExcuteInfo("INIT", pDraftFlag);
+			}
 	    </script>
 	</head>
 	<body class="popup">

@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 	    <script type="text/javascript">
 	        var docID = "<c:out value='${docID}'/>";
 	        var docHref = "<c:out value='${docHref}'/>";
@@ -60,7 +61,7 @@
 		    arr_userinfo[13]  = "<c:out value='${userInfo.title1}'/>";
 		    arr_userinfo[14]  = "<c:out value='${userInfo.title2}'/>";
 		    arr_userinfo[15]  = "<c:out value='${userInfo.deptName1}'/>";
-		    arr_userinfo[16]  = "<c:out value='${userInfo.deptName2}'/>";
+			arr_userinfo[16]  = "<c:out value='${userInfo.deptName2}'/>";
 		    
 	        pUserID = arr_userinfo[1];
 	
@@ -71,6 +72,7 @@
 			var orgCompanyID = "<c:out value='${orgCompanyID}'/>";
 			
 			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
+			var forceCallBackYN = "<c:out value='${forceCallBackYN}'/>";
 			
 			function btnOpinion_onclick() {
 			    //openOpinionViewUI();
@@ -107,7 +109,9 @@
 			    pOpinionFlag = opinionFlag;
 			    pListTypeValue = listTypeValue;
 			    if (pListTypeValue == "4")
-			        pListSusin = listSusin;
+					pListSusin = listSusin;
+					
+				cancelYN();
 			}
 	
 			// 웹 한글 기안기용
@@ -278,7 +282,234 @@
 		    	}
 		    	
 		    	return rtnVal;
+			}
+			
+			function btnforcecallback_onclick() {
+				var pMsg = "문서를 강제회수하시겠습니까?";
+				OpenInformationUI(pMsg, btnforcecallback_onclick_Complete);
+			}
+		    function btnforcecallback_onclick_Complete(ans) {
+		        if (ans) {
+		            doCancelForce();
+		        }
+			}
+			function doCancelForce() {
+				var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // pdraftflag 정상적으로 가져오게 수정해야함
+				if (!retVal) {
+					return;
+				}
+
+				var result = "";
+				
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		async : false,
+	        		url : "/ezApprovalG/doCancelForce.do",
+	        		data : {
+	        			docID : pDocID,
+	        			userID : pUserID
+	        		},
+	        		success: function(xml){
+	        			result = xml;
+	        		}, error: function () {
+    	                doCancel_error();
+    	            }
+	        	});
+		        
+	        	//2018-07-10 배현상, OpenAlertUI에서 브라우저alert으로 변경 및 로직 수정
+	        	var RtnVal = getNodeText(loadXMLString(result).documentElement);
+	        	
+		        if (RtnVal == "TRUE") {
+					SendMailToCancel_Function(getAprLinefor("APR", pDocID));
+					attitude_annual_conn(pDocID);
+					
+					ExcuteInfo("CALLBACK_AFTER", "DRAFT");
+
+					OpenAlertUI("문서를 회수하였습니다.", function() {
+						btnClose_onclick();
+					});
+		        } else {
+					doCancel_error(RtnVal);
+					ExcuteInfo("CALLBACK_FAIL", "DRAFT");
+				}
+			}
+		    function SendMailToCancel_Function(GetCurrentlinelist) {
+	            var MemberList = loadXMLString(GetCurrentlinelist)
+	            var pDocTitle = message.GetFieldText("doctitle").trim();
+	            var objNodes = SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW");
+	            g_szUserID = pUserID;
+	            g_senderinfo = "";
+	            for (i = 0; i < objNodes.length; i++) {
+	                var nowstate = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[12]);
+	                var LineUserID = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[4]);
+	                var LineSN = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[0]);
+	                if (nowstate == "002" || nowstate == "003") {
+	                    if (LineSN != "1") {
+	                        sendmail(LineUserID, pDocTitle, arr_userinfo[2], js_yyyy_mm_dd_hh_mm_ss(), "callback", "", true)
+	                    }
+	                }
+
+	            }
+			}
+			//2019-05-03 김보미 - 근태관리 연동
+			function attitude_annual_conn(docId) {		 		
+				$.ajax({ 			
+					type:'POST', 			
+					dataType : 'json', 			
+					async : true, 			
+					url : '/ezAttitude/approvalGConn.do', 			
+					data : { 				
+						status : 'delete', 				
+						docId : docId 			
+					},
+					success : function(result) { 			},
+					error : function() { 			} 		
+				});  
+			}
+		    function btncallback_onclick() {
+				var pMsg = "문서를 회수하시겠습니까?";
+				OpenInformationUI(pMsg, btncallback_onclick_Complete);
 		    }
+		    function btncallback_onclick_Complete(ans) {
+		        if (ans) {
+		            doCancel();
+		        }
+			}
+			function doCancel() {
+				var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // pdraftflag 정상적으로 가져오게 수정해야함
+				if (!retVal) {
+					return;
+				}
+
+				var result = "";
+
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/doCancel.do",
+					data : {
+						docID : pDocID,
+						userID : pUserID
+					},
+					success: function(xml){
+						result = xml;
+					}, error: function () {
+						doCancel_error();
+					}
+				});
+				
+				var RtnVal = getNodeText(loadXMLString(result).documentElement);
+
+				if (RtnVal == "TRUE") {
+					var rows = GetElementsByTagName(loadXMLString(getAprLinefor("APR", pDocID)), "ROW");
+					var drafterRow = rows[rows.length - 1];
+					var cell = drafterRow.firstElementChild;
+
+					var docTitle = message.GetFieldText("doctitle").trim();
+					var drafterName = SelectSingleNodeValue(cell, "DATA13");
+					var draftDate = SelectSingleNodeValue(cell, "DATA2");
+
+					SendMailToCancel(pDocID, docTitle, drafterName, draftDate); 
+					attitude_annual_conn(pDocID);
+
+					ExcuteInfo("CALLBACK_AFTER", "DRAFT");
+
+					OpenAlertUI("문서를 회수하였습니다.", function() {
+						btnClose_onclick();
+					});
+					
+				} else {
+					doCancel_error(RtnVal);
+					ExcuteInfo("CALLBACK_FAIL", "DRAFT");
+				}
+			}
+			function doCancel_error(errType) {
+				var pAlertContent = "";
+
+				switch (errType) {
+					case "ERR01":
+						pAlertContent = strLang895;
+						break;
+					case "ERR02":
+						pAlertContent = strLang896;
+						break;
+					case "ERR03":
+						pAlertContent = strLang897;
+						break;
+					default:
+						pAlertContent = strLang898;
+						break;
+				}
+
+				OpenAlertUI(pAlertContent);
+			}
+			function cancelYN() {
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezApprovalG/doCanCelYN.do",
+					data : {
+						docID : pDocID,
+						userID : pUserID
+					},
+					success: function(xml){
+						cancelYN_after(loadXMLString(xml));
+					}
+				});
+			}
+			function cancelYN_after(xml) {
+				var RtnVal = getNodeText(xml.documentElement);
+				var btnCallback = document.querySelector("#btnCallback");
+				var btnForceCallback = document.querySelector("#btnForceCallback");
+
+				btnCallback.style.display = "none";
+				btnForceCallback.style.display = "none";
+
+				var aprLineXml = loadXMLString(getAprLinefor("APR", pDocID));
+
+				if (RtnVal === "CALLBACK" || RtnVal === "CANCEL") {
+					btnCallback.style.display = "";
+				} else {
+					if (forceCallBackYN === "YES" && checkIsDrafter(aprLineXml)) {
+						$.ajax({
+							type : "POST",
+							dataType : "text",
+							async : false,
+							url : "/ezApprovalG/doForceCancelYN.do",
+							data : {
+								docID : pDocID,
+								userID : pUserID
+							},
+							success: function(xml){
+								result = xml;
+							}
+						});
+						
+						var RtnVal = getNodeText(loadXMLString(result).documentElement);
+
+						if (RtnVal === "TRUE") {
+							btnForceCallback.style.display = "";
+						}
+					}
+				}
+			}
+			function checkIsDrafter(pAprLineXml) {
+				var rows = GetElementsByTagName(pAprLineXml, "ROW");
+				var drafterRow = rows[rows.length - 1];
+
+				var cell = drafterRow.firstElementChild;
+				var aprUserID = SelectSingleNodeValue(cell, "DATA4");
+				var aprType = SelectSingleNodeValue(cell, "DATA11");
+
+				if (aprUserID === pUserID && aprType === "018") {
+					return true;
+				}
+
+				return false;
+			}
 	    </script>
 	</head>
 	<body class="popup" onload="return window_onload()" onbeforeunload="return window_onbeforeunload()">
@@ -288,6 +519,8 @@
 	                <div id="menu">
 	                    <ul>
 	                        <li id="btnGongRam" style="display: none"><span onclick="btnGongRam_onclick()"><spring:message code='ezApprovalG.t1442'/></span></li>
+	                        <li id="btnCallback" style="display:none"><span onclick="return btncallback_onclick()" ><spring:message code='ezApprovalG.t66'/></span></li>
+							<li id="btnForceCallback" style="display:none"><span onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
