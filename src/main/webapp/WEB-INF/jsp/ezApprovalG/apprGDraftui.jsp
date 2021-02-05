@@ -8,8 +8,10 @@
 		<title><spring:message code='ezApprovalG.t30'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}">
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/draft_Cross.js')}"></script>
@@ -26,6 +28,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var FormHref	=	"<c:out value ='${formURL}'/>";
 		    var DraftFlag	=	"<c:out value ='${draftFlag}'/>";
@@ -175,8 +178,19 @@
 	        var useDynamicAprLine = "<c:out value ='${useDynamicAprLine}'/>";
 			var isTmpDocCanApprov = false;
 			
+			
 		    window.onload = function ()
 		    {
+		    	if(officeFlag == 'Y'){
+		    		window.resizeTo(1920, 1200);
+		    		 var sw = screen.width;
+		    		 var sh = screen.height;
+		    		 var cw = document.body.clientWidth;
+		    		 var ch = document.body.clientHeight;
+		    		 var top  = sh / 2 - ch / 2 - 100;
+		    		 var left = sw / 2 - cw / 2;
+		    		 window.moveTo(left, top);
+		    	}
 		        try {
 		            pSusinSN = SusinSN;
 		            setMenuBar("btnSendDraft", true);
@@ -199,11 +213,14 @@
 		        	document.getElementById("mailPanel").style.display = "";
 		        	document.getElementById("layerpopup").style.display = "";
 		        	document.getElementById("iFrameLayer2").src = "/ezApprovalG/officeAttach.do";
-		        	document.getElementById("message").src = "/ezApprovalG/draftContent.do?isUsed=${isUsed}";
+		        	document.getElementById("message").src = "/ezApprovalG/draftContent.do?isUsed=${isUsed}&officeFlag=officeFlag";
 		        } else {
 		        	document.getElementById("message").src = "/ezApprovalG/draftContent.do?isUsed=${isUsed}";
 		        }
+		        
 		    };
+		    
+		    
 		    function dragNdrapNo()
 		    {
 		        try{
@@ -2138,6 +2155,9 @@
 		                <li id="btnHelper" style="display:none"><span  onClick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t158'/></span></li>
 		                <li id="btnSaveServer" <c:if test ="${approvalFlag == 'S'}">style="display:none"</c:if>><span onClick="return btnSaveServer_onclick()" ><spring:message code='ezApprovalG.t4000'/></span></li>
 						<li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
+						<c:if test="${officeFlag == 'Y' }">
+						<li id="reOffice"><span class="" onClick="reOffice(this)">파일재선택</span></li>
+						</c:if>
 		            	<c:if test="${useCabinet == 'YES'}">
 							<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 						</c:if>
@@ -2154,6 +2174,29 @@
 		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		      </td>
 		  </tr>
+		  <c:if test="${officeFlag == 'Y' }">
+		  <tr>
+		  	<td>
+		  		<div>
+		  	<div id="officeDiv">
+		  		<img id="zoomIn" onclick="zoomIn()" src="/images/icviewer_plus.png" width="25" height="25" style="cursor:pointer;">
+		  		<img id="zoomOut" onclick="zoomOut()" src="/images/icviewer_minus.png" width="25" height="25" style="cursor:pointer;">
+		  		<img id="zoomReset" src="/images/icviewer_reset.png" width="25" height="25" onclick="zoomReset()" style="cursor:pointer;">
+		  		<img id="officeBar1" src="/images/icviewer_bar.png">
+		  		<img id="prevAll" border="0" src="/images/icviewer_p_prev.png" width="25" height="25" onClick="prevClickAll()" style="cursor:pointer;">
+		  		<img id="prev" border="0" src="/images/icviewer_prev.png" width="25" height="25" onClick="prevClick()" style="cursor:pointer;">
+		  			<select id="selectImg" class="imgSelect" onchange="selectImg()">
+		  				<option value=""></option>
+		  			</select>
+		  		<img id="next" border="0" src="/images/icviewer_next.png" width="25" height="25" onClick="nextClick()" style="cursor:pointer;">
+		  		<img id="nextAll" border="0" src="/images/icviewer_n_next.png" width="25" height="25" onClick="nextClickAll()" style="cursor:pointer;">
+		  		<img id="officeBar2" src="/images/icviewer_bar.png">
+		  		<img src="/images/icviewer_expend.png" class="allImg" id="all" onclick="allImg(this)" style="cursor:pointer;" width="25" height="25">
+			</div>
+		</div>
+		  	</td>
+		  </tr>
+		  </c:if>
 		  <tr>
 		    <td height="20"><table class="file" ID="Table2">
 		        <tr>

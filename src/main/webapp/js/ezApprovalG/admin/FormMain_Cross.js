@@ -524,8 +524,8 @@ function MakeFormInfoXML_Detail() {
     	createNodeAndInsertText(xmlpara, objNode, "ConnFlag", "N");
     }
     
-    // 2021-01-21 심기영 오피스 양식 여부 체크 
-    if(document.getElementById('officeFlag').checked) {
+    // 2021-01-21 심기영 오피스 양식 여부 체크 (null 체크 조건 추가)
+    if(document.getElementById('officeFlag') != null && document.getElementById('officeFlag').checked) {
     	createNodeAndInsertText(xmlpara, objNode, "officeFlag", "Y");
     } else {
     	createNodeAndInsertText(xmlpara, objNode, "officeFlag", "N");

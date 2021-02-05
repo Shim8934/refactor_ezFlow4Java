@@ -821,6 +821,8 @@
 							        setMenuDisable("btnApprove", false);
 							        return;
 			                    }
+								CurrentAprType = pAprLineType;
+								CurrentAprUserID = pUserID;
 					            sendAlertMail("APR", pAprMemberSN, "APPROV");
 			                }
 			

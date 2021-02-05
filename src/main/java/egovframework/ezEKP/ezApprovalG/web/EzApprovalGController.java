@@ -651,6 +651,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
             String dateReg = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"; //sql injection 처리 
             if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
                 String aprStartDate = domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent();
+                aprStartDate = aprStartDate.substring(0, 10); // 년-월-일 뒤의 시-분-초를 제거 (아래에서 시간을 붙이므로)
                 if (!Pattern.matches(dateReg, aprStartDate)) {
                     return "";
                 }
@@ -672,6 +673,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
             
             if (tempQuery.indexOf("APRENDDATE;") != -1) {
                 String aprEndDate = domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent();
+                aprEndDate = aprEndDate.substring(0, 10);
                 if (!Pattern.matches(dateReg, aprEndDate)) {
                     return "";
                 }
@@ -689,6 +691,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 	}
                 }
             }
+            
+            
+            logger.debug("returnQuery(시간조건 추가)    ::    " + returnQuery);
+            
             
             if (tempQuery.indexOf("FORMID;") != -1) {
                 returnQuery += " AND FormID = '" + domSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
@@ -1300,7 +1306,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String isUsed = request.getParameter("isUsed");
-		
+		String officeFlag = request.getParameter("officeFlag");
 		if (request.getParameter("draftFlag") != null) {
 			mode = request.getParameter("draftFlag");
 		}
@@ -1309,6 +1315,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("mode", mode);
 		model.addAttribute("editor", editor);
 		model.addAttribute("isUsed", isUsed);
+		model.addAttribute("officeFlag", officeFlag);
 		logger.debug("draftContent ended.");
 		
 		return "ezApprovalG/apprGDraftContent";

@@ -742,7 +742,7 @@
 	            	var strDept = p_ListOrderObject.getAttribute("_data14");
 	            	
 	            	if (strData == null || strData == "") {
-	            		strData = "c=0;k=0;g=0;a=0;n=0;l=0;f=0;w=0;wf=0;wa=0";
+	            		strData = "c=0;k=0;g=0;a=0;n=0;l=0;f=0;w=0;wf=0;e=0";
 	            	}
 	            	
 	            	var _listView = new ListView();
@@ -1342,7 +1342,7 @@
 	        	var titleTxt_m = "<spring:message code='ezOrgan.t300' />";
 	        	var titleTxt_f = "<spring:message code='ezOrgan.lhj1' />";
 	        	var titleTxt_wf = "<spring:message code='ezOrgan.t303' />";
-	        	var titleTxt_wa = "<spring:message code='ezOrgan.kbm01' />";
+	        	var titleTxt_e = "<spring:message code='ezOrgan.kbm01' />";
 	        	
 	        	var titleTxt = eval("titleTxt_" + delType);
 	        	document.getElementById("subtitle").innerText = titleTxt;

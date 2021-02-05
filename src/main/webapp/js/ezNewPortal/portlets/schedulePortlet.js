@@ -132,7 +132,7 @@ function scheduleWrite() {
     var left = (width - wWeight) / 2;
     var top = (heigth - wHeight) / 2;
     
-    window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
+    window.open("/ezSchedule/scheduleWrite.do?defaultid=0&sdate=" + encodeURIComponent(selDate + " 00:00:00") + "&edate=" + encodeURIComponent(selDate + " 23:59:00"), "",
     "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 }
 
