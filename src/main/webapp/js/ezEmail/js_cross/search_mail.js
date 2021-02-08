@@ -494,10 +494,13 @@ function resultView(xmlDoc) {
 
         preparedTD(tr, "26px", "center", "middle", tempText, "", "", true);
 
+        var readStyle = "font-weight: inherit;";
+        
         if (read == "1") {
             tempText = "<img src='/images/ImgIcon/icon-msg-read.gif' border=0>";
         } else {
             tempText = "<img src='/images/ImgIcon/icon-msg-unread.gif' border=0>";
+            tr.style.fontWeight = "bold";
         }
 
         preparedTD(tr, "26px", "center", "middle", tempText, "", "", true);
@@ -523,21 +526,21 @@ function resultView(xmlDoc) {
         preparedTD(tr, "26px", "center", "middle", tempText, "", "", true);
 
         if (tofromname.innerText == strLang160) {
-            preparedTD(tr, "100px", "left", "middle", fromname, fromname, 1, false);
+            preparedTD(tr, "100px", "left", "middle", fromname, fromname, 1, false, readStyle);
             tr.recvFrom = fromname;
         } else {
             preparedTD(tr, "100px", "left", "middle", displayto, displayto, 1, false);
             tr.recvFrom = displayto;
         }
         
-        preparedTD(tr, "100%", "left", "middle", subject, subject, 1, false);
+        preparedTD(tr, "100%", "left", "middle", subject, subject, 1, false, readStyle);
 
         if (TrimText(datereceived) != "null") {
             datereceived = GetLocalTime(g_timezone, datereceived);
         }
 
         datereceived = datereceived.replace("T", " ")
-        preparedTD(tr, "200px", "left", "middle", datereceived, "", "", false);
+        preparedTD(tr, "200px", "left", "middle", datereceived, "", "", false, readStyle);
 
 
         var foldername = parentname;
@@ -550,8 +553,8 @@ function resultView(xmlDoc) {
             foldername = ReplaceText(foldername, strLang67, strLang71);
         }
 
-        preparedTD(tr, "120px", "left", "middle", foldername, foldername, 1, false);
-        preparedTD(tr, "50px", "left", "middle", FormatSize(Size), "", "", false);
+        preparedTD(tr, "120px", "left", "middle", foldername, foldername, 1, false, readStyle);
+        preparedTD(tr, "50px", "left", "middle", FormatSize(Size), "", "", false, readStyle);
 
         if (importance == 2) {
             for (var n = 0; n < tr.childNodes.length; n++) {
@@ -727,7 +730,7 @@ function ArrayDelete(TargetArray, DeleteNodeStr) {
     return TargetArray;
 }
 
-function preparedTD(TR, width, align, valign, innerHTML, title, textmode, nopadding) {
+function preparedTD(TR, width, align, valign, innerHTML, title, textmode, nopadding, styleStr) {
     if (navigator.userAgent.indexOf('Firefox') != -1) {
         var td = TR.insertCell(TR.childNodes.length);
     } else if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
@@ -736,6 +739,10 @@ function preparedTD(TR, width, align, valign, innerHTML, title, textmode, nopadd
         var td = TR.insertCell();
     }
 
+    if (typeof styleStr != "undefined") {
+    	td.style.cssText = styleStr + ( (!td.getAttribute("style")) ? "" : td.getAttribute("style") );
+    }
+    
     if (width != "") {
         td.style.width = width;
     }
@@ -805,6 +812,7 @@ function view_click() {
     if (this.getAttribute("read") == "0") {
     	this.childNodes.item(2).childNodes.item(0).src = "/images/ImgIcon/icon-msg-read.gif";
     	this.setAttribute("read", "1");
+    	this.style.fontWeight = "normal";
     }
 }
 

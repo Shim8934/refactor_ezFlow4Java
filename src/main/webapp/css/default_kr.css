@@ -3719,3 +3719,17 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 	/* box style */
 }
 .loadingBox2 { width: 80px; height: 80px; position: absolute; left: 50%; top: 40%; margin: -40px 0px 0px -40px; box-sizing: border-box; }
+
+
+.imgSelect{
+	width:110px;
+	height:25px;
+	border-color:#c8c8c8;
+	position: relative;
+    bottom: 8px;
+    position: relative; top: 5px;"
+}
+#officeDiv img{
+	position: relative; top: 13px;"
+}
+

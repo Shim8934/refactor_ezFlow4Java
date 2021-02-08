@@ -11,7 +11,7 @@ var joinPoll = function (e) {
 		var option = 'toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=400px,width=455px,top=' + top + ',left=' + left;
 		var url = '/ezPersonal/wpLightPoll.do';			
 	} else {
-		alert("이미 참여한 설문입니다.");
+		alert(messages.strLang34);
 		var top = (height - 455) / 2;
 		var left = (width - 400) / 2;
 		var option = 'height=400px,width=455, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=' + top + ',left = ' + left; 

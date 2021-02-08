@@ -8,6 +8,7 @@
 	    <script  type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ApprGContent.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
 		<style>
 			P { margin-top: 0px;margin-bottom: 0px; } 
 			.viewbox {
@@ -23,7 +24,6 @@
 		    }
    	 	</style>
 	    <script language="javascript" type="text/javascript">
-	    
 	        document.onselectstart = function () {
 	            var ret = false;
 	            var obj = event.srcElement;
@@ -65,6 +65,9 @@
 	        var isReform = parent.reformFlag === "Y";
 	        
 	        window.onload = function () {
+	        	var officeFlag = "<c:out value='${officeFlag}'/>";
+	        	console.log(officeFlag);
+	        	$('#officeVal').val(officeFlag);
 	            try {
 	                parent.DocumentComplete();
 	                document.execCommand("AutoUrlDetect", false, false);
@@ -950,6 +953,7 @@
 		        evt.stopPropagation();
 		        evt.preventDefault();
 		    }
+	        
 	    </script>
 	</head>
 	<body>

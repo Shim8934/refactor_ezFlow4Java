@@ -768,14 +768,15 @@ function UndoSignInfo(signInfo) {
         }
     }
 }
+
 function AprLineSNCount(pAprLineType, objNodes, pTmpAprLineType) {
     var objNodesLen = objNodes.length;
     var pAprLineSN = 0;
-
+    
     for (i = (objNodesLen - 1) ; i >= 0; i--) {
         var pCurrentAprState = getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12]);
         var pCurrentAprType = getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11]);
-        if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
+        if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) { // 개인순차/병렬협조, 부서순차/병렬협조
             if (pCurrentAprType == strAprType8 || pCurrentAprType == strAprType9 || pCurrentAprType == strAprType11 || pCurrentAprType == strAprType12) {
                 if ((getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5))) {
                     pAprLineSN = pAprLineSN + 1;
@@ -786,8 +787,9 @@ function AprLineSNCount(pAprLineType, objNodes, pTmpAprLineType) {
             }
         }
         else {
-            if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType4) {
-                if ((getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5))) {
+        	/* 2021-02-03 홍승비 - 결재선 카운트에 감사 유형 추가 (기안, 검토, 결재, 대결, 전결, 감사) */
+            if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType5) {
+                if ((getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5))) { // 진행, 보류
                     pAprLineSN = pAprLineSN + 1;
                     break;
                 } else {
@@ -3040,7 +3042,8 @@ function getLastSignSN(pNodes) {
 
         var pCurrentAprType = getNodeText(dataNodes[11]);
         
-        	if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType3 || pCurrentAprType == strAprType40 ) {
+        /* 2021-02-03 홍승비 - 결재선 카운트에 감사 유형 추가 (기안, 검토, 결재, 전결, 대결, 결재안함, 후결, 감사) */
+        	if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == strAprType1 || pCurrentAprType == strAprType4 || pCurrentAprType == strAprType16 || pCurrentAprType == strAprType3 || pCurrentAprType == strAprType40 || pCurrentAprType == strAprType5) {
                 if (pCurrentAprType == strAprType4) junkyulflag = true;
 
                 switch (pCurrentAprType) {
@@ -3069,6 +3072,10 @@ function getLastSignSN(pNodes) {
                         break;
                     //후결
                     case strAprType40:
+                        lastaprlineSN = lastaprlineSN + 1;
+                        break;
+                    // 감사
+                    case strAprType5:
                         lastaprlineSN = lastaprlineSN + 1;
                         break;
                 }

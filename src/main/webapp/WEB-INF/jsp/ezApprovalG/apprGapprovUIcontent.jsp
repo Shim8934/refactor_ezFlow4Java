@@ -7,6 +7,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ApprGContent.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
 		<!-- FormBuilder -->
 		<c:if test="${isReform}">
 			<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/reform/reformUseProcessor.js')}"></script>
@@ -34,7 +35,6 @@
 	            var ret = false;
 	            var obj = event.srcElement;
 	            var useAllowTextSelection = "<c:out value ='${useAllowTextSelection}'/>";
-	            
 	            try {
 	            	if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
 	            		ret = true;
@@ -66,6 +66,7 @@
 	            	}
 	            } catch (e) { }
 	            return ret;
+	            
 	        };
 // 	        var XmlBodyATT = createXmlDom();
 	        var pEditor = "<c:out value ='${editor}'/>";
@@ -77,6 +78,7 @@
 			// FormBuilder end
 	        
 	        window.onload = function () {
+	        	
 	            try {
 	                parent.DocumentComplete();
 	                document.execCommand("AutoUrlDetect", false, false);
@@ -456,6 +458,8 @@
 	            }
 	            catch (e) {
 	            }
+	            
+	            
 	        }
 	
            function GetDocTitle() {
