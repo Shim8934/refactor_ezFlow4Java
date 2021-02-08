@@ -149,7 +149,28 @@ function CreateNewAprLineTemplet(p_AprLineTempletName) {
     AprLineChangeType();
     var AprLineXml = APRLINETEMPLETXMLParsing();
     var AprLineInfo = createXmlDom();
+    var rows;
     AprLineInfo = loadXMLString(AprLineXml);
+    rows = AprLineInfo.getElementsByTagName("ROW");
+    
+    // 결재선 저장시 제외 list
+    for(var i=0; i<rows.length; i++) {
+    	var datas = rows[i].getElementsByTagName("DATA");
+    	for(var j=0; j<datas.length; j++) {
+    		if(datas[j].getAttribute("name") == "AprType" && datas[j].textContent == "005") {
+    			rows[i].parentNode.removeChild(rows[i]);
+    			if(i>0) {
+    				i--;
+    			}
+    			break;
+    		}
+    	}
+    }
+    // 순번 재정의
+    for(var i=0; i<rows.length; i++) {
+    	var columns = rows[i].getElementsByTagName("COLUMN");
+    	columns[0].textContent = rows.length-i;
+    }
 
     if (CrossYN()) {
         var xmlRtn = AprLineTemplet.documentElement;

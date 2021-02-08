@@ -49,6 +49,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -71,6 +72,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -2278,5 +2280,66 @@ public class CommonUtil {
 	
 	public int isIntNumber(String number, int defaultValue) {
 	    return isIntNumber(number) ? Integer.parseInt(number) : defaultValue;
+	}
+
+	/**
+	 * jangsewon
+	 * 2020.11.13
+	 * listview xml form 으로 변환
+	 * @param jo : DB에서 조회된 list + cnt (key:totalCnt,rows)
+	 * @param ja : DB에서 조회된 list
+	 * @param jaAttr : html tag에 들어갈 속성
+	 * @param jaProp : td에 들어갈 text
+	 * @return
+	 * @throws Exception
+	 */
+	public String makeListViewData(int tatalCnt, JSONArray ja, JSONArray jaAttr, JSONArray jaProp, String value) throws Exception {
+		
+		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
+		
+		result.append("<ROWS>");
+		result.append("<TOTALCNT>");
+		result.append(tatalCnt);
+		result.append("</TOTALCNT>");
+        
+        for (int i = 0; i < ja.size(); i++) {
+        	Map<String, Object> map = new HashMap<String, Object>();
+        	
+        	map = (Map<String, Object>)ja.get(i);
+        	
+            result.append("<ROW>");
+        	result.append("<CELL>");
+        	 // 첫번째 td value
+    		for(Entry<String, Object> entry : map.entrySet()) {
+    			if(((String)entry.getKey()).equals(value.toUpperCase())) {
+    				result.append("<VALUE>" + cleanValue(map.get(entry.getKey()).toString()) + "</VALUE>");
+    			}
+    		}
+            // 첫번째 td 속성
+        	for(int j=0; j<jaAttr.size(); j++) {
+        		for(Entry<String, Object> entry : map.entrySet()) {
+        			if(((String)jaAttr.get(j)).toUpperCase().equals(entry.getKey())) {
+        	            result.append("<" + jaAttr.get(j) + ">" + cleanValue(map.get(entry.getKey()).toString()) + "</" + jaAttr.get(j) + ">");
+        			}
+        		}
+    		}
+            result.append("</CELL>");
+            
+            // 나머지 td
+        	for(int j=0; j<jaProp.size(); j++) {
+        		for(Entry<String, Object> entry : map.entrySet()) {
+        			if(((String)jaProp.get(j)).toUpperCase().equals(entry.getKey())) {
+        				result.append("<CELL>");
+        	            result.append("<VALUE>" + cleanValue(map.get(entry.getKey()).toString()) + "</VALUE>");
+        	            result.append("</CELL>");
+        			}
+        		}
+    		}
+            result.append("</ROW>");
+        }
+        result.append("</ROWS>");
+        result.append("</LISTVIEWDATA>");
+        
+        return result.toString();
 	}
 }

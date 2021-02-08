@@ -231,6 +231,8 @@ function LineAprTyepSet() {
 var p_RejectFlag = false;
 var ProSn = 0;
 function LineAprTyepSetAll() {
+	var auditCount1 = 0;
+	var auditCount2 = 0;
 	if (approvalFlag == "S") {
 		var pAPRLINE = new ListView();
 	    pAPRLINE.LoadFromID("lvAPRLINE");
@@ -331,6 +333,48 @@ function LineAprTyepSetAll() {
 				pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
 			} else {
 				var AprTypeObj = ChangeAprlineType("user", pTotalRows[i].getAttribute("DATA11"));
+				var tempHtml = "";
+				// 감사
+				var index = pTotalRows.length-1;
+				var revIndex = 0;
+				// (index-revIndex)최초감사자 index값
+				$.each($(pTotalRows).get().reverse(), function(j, item) {
+					if($(this).attr("DATA11") == "005") {
+						revIndex = j;
+						return false;
+					}
+				});
+				
+				if(pTotalRows[i].getAttribute("JUNBUBYN") == "Y" || pTotalRows[i].getAttribute("APPRLINETYPE") == "audit_add"
+					|| pTotalRows[i].getAttribute("DATA11") == "005") {
+					$.each($(AprTypeObj), function(j, item) {
+						if(this.value == "005") {
+							tempHtml += this.outerHTML;
+						}
+					});
+					AprTypeObj = tempHtml;
+					
+					// 현재 결재자가 준법지원인일때(최초감사일때)
+					if(arr_userinfo[1] == pTotalRows[i].getAttribute("DATA4") && i == (index-revIndex)) {
+						//$('#td_check_rep_sugg').hide();
+						$("#auditAddBtn").hide();
+						$("#td_check_rep_sugg").hide();
+						$("#tr_radio_audit").show();
+						$("#APRLINE").css("height", "488px");
+					}
+					
+					pTotalRows[i].setAttribute("APPRLINETYPE", "audit_add");
+					pTotalRows[i].setAttribute("DATA9", "N");
+					auditCount1++;
+					
+				} else {
+					$.each($(AprTypeObj), function(j, item) {
+						if(this.value != "005") {
+							tempHtml += this.outerHTML;
+						}
+					});
+					AprTypeObj = tempHtml;
+				}
 				AprTyepID = pTotalRows[i].getAttribute("id") + "select";
 				AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style =\"width:100%\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
 				pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
@@ -348,6 +392,24 @@ function LineAprTyepSetAll() {
 			}
 		}
 	}
+	$.each($(pTotalRows).get().reverse(), function(index) {
+		var text = "";
+		var id = this.id;
+		id = id.substring(0, id.length-1) + index;
+		
+		if($(this).attr("DATA8") == "Y" && $(this).attr("DATA11") == "008") {
+			text = "★";
+		} else if($(this).attr("DATA9") == "Y" && $(this).attr("DATA11") == "005") {
+			auditCount2++;
+			if(auditCount1 > 1 && auditCount1 == auditCount2) {
+				text = "⊙";
+			}
+		}
+		
+		$(this).attr('id', id);
+		$(this).children('td:first').text(text+(index+1));
+		$(this).children().find('select').attr("id", id + 'select');
+	});
 }
 
 //############################################################################################################################################# 결재방법 지정 함수
@@ -1542,4 +1604,48 @@ function aprlineDrop(ev) {
     if (dragTabMenu == "APRLINE") {  //결재선 추가
         list2_onSel_DBclick();  
     }
+}
+
+function listViewStart(xml, id, dbClick) {
+    var retXml = createXmlDom();
+
+    if (document.getElementById(id).innerHTML != "")
+        document.getElementById(id).innerHTML = "";
+
+    var headerData = createXmlDom();
+    headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+    if (xml != "") {
+    	var xmlRtn = xml.documentElement.getElementsByTagName("ROWS")[0];
+    	
+    	if(xmlRtn.textContent == '') {
+    		OpenAlertUI(linealt19);
+    		return false;
+    	}
+    	
+    	if (CrossYN()) {
+            var Node = headerData.importNode(xmlRtn, true);
+            headerData.documentElement.appendChild(Node);
+        } else {
+            headerData.documentElement.appendChild(xmlRtn);
+        }
+    }
+    var auditUserList = new ListView();
+    auditUserList.SetID('tb_'+id);
+    auditUserList.SetSelectFlag(true);
+    auditUserList.SetHeightFree(true);
+    if(dbClick != undefined && dbClick != "") {
+    	auditUserList.SetRowOnDblClick(dbClick);
+    }
+    auditUserList.DataSource(headerData);
+    auditUserList.DataBind(id);
+
+    var userRows = auditUserList.GetDataRows();
+
+    if (userRows.length <= 0) {
+        OpenAlertUI(linealt11);
+    }
+    else if (USE_OCS.toUpperCase() == "YES") {
+        check_presence();
+    }
+    return true;
 }

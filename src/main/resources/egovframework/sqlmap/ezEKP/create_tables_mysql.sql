@@ -14670,6 +14670,19 @@ CREATE TABLE `tbl_sendoutinfo` (
   `COMPANYID` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `tbl_auditapprline`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;   
+CREATE TABLE `tbl_auditapprline`(
+	`AUDITAPPRLINEID`  VARCHAR(100),
+    `USERID` VARCHAR(40),
+    `DEPTID` VARCHAR(80), 
+    `ORDERBY` mediumint(5),
+    `INSERTDATE` DATE NOT NULL,
+    `TENANT_ID` mediumint(5) DEFAULT 0 NOT NULL, 
+	`COMPANYID` VARCHAR(20) NOT NULL,
+	CONSTRAINT `auditapprline_pk` PRIMARY KEY (`AUDITAPPRLINEID`, `USERID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 -- Final view structure for view `svtaskclass`
 --

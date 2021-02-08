@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezApprovalG.dao;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -3553,5 +3554,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public void updateDocInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateDocInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getDocList(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocList", map);
 	}
 }

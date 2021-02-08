@@ -10,10 +10,16 @@ import egovframework.ezEKP.ezApprovalG.vo.KEDAuthorUserInfo;
 import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
+
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.ModelAndView;
 import org.w3c.dom.Document;
 
 import java.util.List;
 import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public interface EzApprovalGAdminService {
 
@@ -237,4 +243,12 @@ public interface EzApprovalGAdminService {
 			String approvalFlag, 
 			Locale locale
 			) throws Exception;
+
+	public String auditApprLineManage(String loginCookie, HttpServletRequest request, HttpServletResponse response, ModelAndView model) throws Exception;
+
+	public String getAuditApprLineList(String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
+
+	public String auditApprLineManagePop(String loginCookie, HttpServletRequest request, HttpServletResponse response, ModelAndView model) throws Exception;
+
+	public Object getAuditApprLineListPrc(String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
 }

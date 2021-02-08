@@ -356,6 +356,222 @@
 	                 }
 	            }
 	            
+	            $("input[name=auditApprLine]").unbind().on("change", function() {
+                	var attrArray = new Array();
+    				var propArray = new Array();
+    				var rows = new Array();
+    				var apprLineList = new ListView();
+    				
+    	        	attrArray.push("userId");
+    	        	attrArray.push("userNm");
+    	        	attrArray.push("deptId");
+    	        	attrArray.push("deptNm");
+    	        	attrArray.push("userNm2");
+    	        	attrArray.push("deptNm2");
+    	        	attrArray.push("position");
+    	        	attrArray.push("auditApprLineId");
+    	        	attrArray.push("orderBy");
+    	        	
+    	        	propArray.push("userNm");
+    	        	propArray.push("deptNm");
+    	        	propArray.push("position");
+    	        	propArray.push("telephoneNumber");
+    	        	propArray.push("absence");
+    	        	
+    	        	apprLineList.LoadFromID("lvAPRLINE");
+    	        	rows = apprLineList.GetDataRows();
+    	        	
+   	        		for(var i=0; i<rows.length; i++) {
+   	        			if($(rows[i]).attr("DATA11") == "005" && $(rows[i]).attr("DATA12") == "001") {
+	   	 					$(rows[i]).trigger("click");
+	   	 					AprLineDel_onclick_action();
+	   	 				}
+	   	 			}
+    				
+    				$.ajax({
+    		        	type : "POST",
+    		        	dataType : "text",
+    		        	async : false,
+    		        	url : "/admin/ezOrgan/getAuditApprLineList.do",
+    		        	data : {
+    		        		companyID : companyID,
+    		        		pageNum : 1,
+    		        		pageSize : 15,
+    		        		searchType : "",
+    		        		searchValue : "",
+    		        		auditApprLineId : this.value,
+    		        		propArray : JSON.stringify(propArray),
+    		        		attrArray : JSON.stringify(attrArray),
+    		        		value : "userNm"
+    		        	},
+    		        	success : function(xml){
+    		        		var validUserArray = new Array();
+    		        		var xmlResult = loadXMLString(xml);
+    		        		var xmlRow = xmlResult.documentElement.getElementsByTagName("ROW");
+    		        		
+    		        		if(xmlRow.length == 0) {
+    		        			OpenAlertUI("<spring:message code='ezApprovalG.auditApprLine.06'/>");
+    		        			return;
+    		        		}
+    		        		
+    		        		for(var i=0; i<xmlRow.length; i++) {
+    		        			var isValidUser = false;
+    		        			var xmlRowCell = xmlRow[i].getElementsByTagName("CELL");
+    		        			var xmlDoc = createXmlDom();
+    		        			var data1 = xmlDoc.createElement("DATA1");
+    		        			var data2 = xmlDoc.createElement("DATA2");
+    		        			var data3 = xmlDoc.createElement("DATA3");
+    		        			var data4 = xmlDoc.createElement("DATA4");
+    		        			var data5 = xmlDoc.createElement("DATA5");
+    		        			var data6 = xmlDoc.createElement("DATA6");
+    		        			var data7 = xmlDoc.createElement("DATA7");
+    		        			var data8 = xmlDoc.createElement("DATA8");
+    		        			var data9 = xmlDoc.createElement("DATA9");
+    		        			var data10 = xmlDoc.createElement("DATA10");
+    		        			var data11 = xmlDoc.createElement("DATA11");
+    		        			var data12 = xmlDoc.createElement("DATA12");
+    		        			var absence = xmlDoc.createElement("ABSENCE");
+    		        			var junbubYn = xmlDoc.createElement("JUNBUBYN");
+    		        			var apprLineType = xmlDoc.createElement("APPRLINETYPE");
+    		        			
+    		        			data1.appendChild(xmlDoc.createTextNode("user"));
+    		        			data2.appendChild(xmlDoc.createTextNode(xmlRowCell[0].getElementsByTagName("userId")[0].textContent));
+    		        			data3.appendChild(xmlDoc.createTextNode(xmlRowCell[0].getElementsByTagName("deptId")[0].textContent));
+    		        			data4.appendChild(xmlDoc.createTextNode(xmlRowCell[0].getElementsByTagName("VALUE")[0].textContent));
+    		        			data5.appendChild(xmlDoc.createTextNode(xmlRowCell[0].getElementsByTagName("deptNm")[0].textContent));
+    		        			data6.appendChild(xmlDoc.createTextNode(xmlRowCell[0].getElementsByTagName("position")[0].textContent));
+    		        			data7.appendChild(xmlDoc.createTextNode(xmlRowCell[0].getElementsByTagName("userNm")[0].textContent));
+    		        			data8.appendChild(xmlDoc.createTextNode(xmlRowCell[0].getElementsByTagName("userNm2")[0].textContent));
+    		        			data9.appendChild(xmlDoc.createTextNode(xmlRowCell[0].getElementsByTagName("deptNm")[0].textContent));
+    		        			data10.appendChild(xmlDoc.createTextNode(xmlRowCell[0].getElementsByTagName("deptNm2")[0].textContent));
+    		        			data11.appendChild(xmlDoc.createTextNode(xmlRowCell[0].getElementsByTagName("position")[0].textContent));
+    		        			data12.appendChild(xmlDoc.createTextNode(xmlRowCell[0].getElementsByTagName("position")[0].textContent));
+    		        			absence.appendChild(xmlDoc.createTextNode(""));
+    		        			junbubYn.appendChild(xmlDoc.createTextNode(""));
+    		        			apprLineType.appendChild(xmlDoc.createTextNode("audit_add"));
+    		        			
+    		        			xmlRowCell[0].appendChild(data1);
+    		        			xmlRowCell[0].appendChild(data2);
+    		        			xmlRowCell[0].appendChild(data3);
+    		        			xmlRowCell[0].appendChild(data4);
+    		        			xmlRowCell[0].appendChild(data5);
+    		        			xmlRowCell[0].appendChild(data6);
+    		        			xmlRowCell[0].appendChild(data7);
+    		        			xmlRowCell[0].appendChild(data8);
+    		        			xmlRowCell[0].appendChild(data9);
+    		        			xmlRowCell[0].appendChild(data10);
+    		        			xmlRowCell[0].appendChild(data11);
+    		        			xmlRowCell[0].appendChild(data12);
+    		        			xmlRowCell[0].appendChild(absence);
+    		        			xmlRowCell[0].appendChild(junbubYn);
+    		        			xmlRowCell[0].appendChild(apprLineType);
+    		        			
+    		        			// 존재하는 사용자인지 검증
+    		        			$.ajax({
+    		        				type : "POST",
+    		        				dataType : "text",
+    		        				async : false,
+    		        				url : "/ezOrgan/getSearchList.do",
+    		        				data : {
+    		        					search : "displayName::" + xmlRowCell[0].getElementsByTagName("VALUE")[0].textContent + ";;PhysicalDeliveryOfficeName::" + companyID,
+    		        					cell   : "displayName;description;title;telephoneNumber;extensionattribute5",
+    		        					prop   : "department;displayName;description;title",
+    		        					type   : "user"
+    		        				},
+    		        				success: function(xml){
+    		        					
+    		        					var xmlfy = loadXMLString(xml);
+    		        					var rows = xmlfy.getElementsByTagName("ROW");
+    		        					
+    		        					for(var i=0; i<rows.length; i++) {
+    		        						var userId = rows[i].getElementsByTagName("CELL")[0].getElementsByTagName("DATA2")[0].textContent;
+    		        						var deptId = rows[i].getElementsByTagName("CELL")[0].getElementsByTagName("DATA3")[0].textContent;
+    		        						if(userId == xmlRowCell[0].getElementsByTagName("userId")[0].textContent
+    		        							&& deptId == xmlRowCell[0].getElementsByTagName("deptId")[0].textContent) {
+    		        							isValidUser = true;
+    		        						}
+    		        					}
+    		        					
+    		        					if(!isValidUser) {
+    		        						validUserArray.push({
+    		        							userNm : xmlRowCell[0].getElementsByTagName("VALUE")[0].textContent
+    		        							,deptNm : xmlRowCell[0].getElementsByTagName("deptNm")[0].textContent
+    		        						});
+    		        					}
+    		        				}
+    		        			});
+    		        		}
+    		        		
+    		        		if(validUserArray.length == 0) {
+    		        			var isResult = listViewStart(xmlResult, $("div[divname='listView']").attr("id"));
+        		        		if(isResult) {
+        		        			list2_onSel_DBclick_audit("tb_"+$("div[divname='listView']").attr("id"));
+        		        		}
+    		        		} else {
+    		        			var msg = "";
+    		        			for(var i=0; i<validUserArray.length; i++) {
+    		        				msg += "<spring:message code='main.t76' /> : " + validUserArray[i].userNm;
+    		        				msg += ", <spring:message code='main.t75' /> : " + validUserArray[i].deptNm;
+    		        				msg += "</br>";
+    		        			}
+    		        			msg += "<spring:message code='ezApprovalG.auditApprLine.06' />";
+    		        			
+    		        			OpenAlertUI(msg);
+    		        		}
+    		        	},
+    		        	error : function(error){
+    		        	    alert("<spring:message code='ezOrgan.t2' />" + error);
+    		        	}
+    		        });
+    				$(this).prop("checked", true);
+    	    	});
+                
+                $("#auditAddBtn").unbind().on("click", function() {
+		    		// 준법지원인이 들어가있는 확인
+			    	var listview = new ListView();
+			        listview.LoadFromID("lvAPRLINE");
+			    	var rows = listview.GetDataRows();
+			    	for(var i=0; i<rows.length; i++) {
+			    		if($(rows[i]).attr("JUNBUBYN") == "Y" || $(rows[i]).attr("APPRLINETYPE") == "audit_add" || $(rows[i]).attr("DATA11") == "005") {
+			    			OpenAlertUI("<spring:message code='ezApprovalG.auditApprLine.01' />");
+			    			return;
+			    		}
+			    	}
+			     
+			        // 준법지원인을 가져오기
+		    		$.ajax({
+		    			type : "POST",
+			        	dataType : "text",
+			        	url : "/ezApprovalG/getAuditAdd.do",
+			        	data : {
+			        		companyID : "${userInfo.companyID}",
+			        		type : "s=1",
+			        		pageNum : "1",
+			        		pageSize : "1",
+			        		searchType : "displayname",
+			        		searchValue : "",
+			        		cell : "displayName;description;title;junbubYn;extensionattribute5",
+			        		prop : "department;displayName;description;title"
+			        	},
+			        	success : function(xml) {
+			        		var isResult = listViewStart(loadXMLString(xml), $("div[divname='listView']").attr("id"));
+			        		
+			        		if(isResult) {
+			        			OpenInformationUI("<spring:message code='ezApprovalG.auditApprLine.05'/>", function(result) {
+				        			if(result) {
+				        				list2_onSel_DBclick_audit("tb_"+$("div[divname='listView']").attr("id"));
+				        			} else {
+				        				OpenInformationUI_Complete();
+				        			}
+				        		});
+			        		}
+			        	},
+			        	error : function(error){
+			        	    alert("<spring:message code='ezOrgan.t2' />" + error);
+			        	}
+			    	});
+		    	});
+	            
 	            if (approvalFlag != "G" || useOpenGov != "YES") {
 	            	$(".openGov").hide();
 	            }
@@ -2325,6 +2541,7 @@
 	                                            <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 247px; width: 437px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 1px;"></div>
 	                                            <div class="border_gray" style="Width: 438px; Height: 273px;">
 	                                                <div id="UserList" style="margin: 0px 1px 1px 1px; Width: 436px; Height: 100%; overflow: auto;"></div>
+	                                                <div id="auditUserList" divname="listView" style="display:none;"></div>
 	                                            </div>
 	                                        </span>
 	                                    </td>
@@ -2341,6 +2558,7 @@
                                     <td style="border: 1px solid #ddd;">
                                         <div class="border_gray" style="border: 0px;">
                                             <div id="UserList" style="border: 0px; margin: 0px 1px 1px 1px; Width: 436px; Height: 223px; overflow: auto;">
+                                            <div id="auditUserList" divname="listView" style="display:none;"></div>
                                             </div>
                                         </div>
                                     </td>
@@ -2419,6 +2637,11 @@
 	                                <td style="vertical-align: top;">
 	                                    <h2 class="h2_dot" style="margin-top:6px;"><spring:message code='ezApprovalG.t407'/>
 	                                        <div style="text-align: right; margin-top: -23px;">
+	                                        	<c:if test="${approvalFlag == 'G' }">
+		                                        	<a id="auditAddBtn" class="imgbtn">
+														<span><spring:message code='ezOrgan.t9903'/></span>
+													</a>
+												</c:if>
 	                                            <a class="imgbtn" onclick="AprlineUpper_onclick();" style="height:22px;box-shadow:0px 2px 0px 0px rgba(0,0,0,0.1)"><span>
 	                                                <img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezApprovalG.pjj28'/>" style="vertical-align:middle"/></span></a>
 	                                            <a class="imgbtn" onclick="AprlineDown_onclick();" style="height:22px;box-shadow:0px 2px 0px 0px rgba(0,0,0,0.1)"><span>
@@ -2440,7 +2663,7 @@
                                         	</c:if>
 	                                </td>
 	                            </tr>
-	                            <tr class="approvalG">
+	                            <tr id="td_check_rep_sugg" class="approvalG">
 	                                <td>
 	                                    <div>
 	                                        <table class="content" style="margin-top: 6px; width: 100%;">
@@ -2465,6 +2688,21 @@
 	                                                            </td>
 	                                                        </tr>
 	                                                    </table>
+	                                                </td>
+	                                            </tr>
+	                                        </table>
+	                                    </div>
+	                                </td>
+	                            </tr>
+	                            <tr style="display:none;" id="tr_radio_audit">
+	                                <td>
+	                                    <div>
+	                                        <table class="content" style="margin-top: 6px; width: 100%;">
+	                                            <tr>
+	                                            	<td id="td_radio_audit" colspan="2" style="text-align:center; background-color: #f8f8fa">
+	                                                    <input type="radio" name="auditApprLine" value="AD0001"><span><spring:message code='ezAdmin.auditApprLine.02'/></span>&nbsp;&nbsp;
+	                                                    <input type="radio" name="auditApprLine" value="AD0002"><span><spring:message code='ezAdmin.auditApprLine.03'/></span>&nbsp;&nbsp;
+	                                                    <input type="radio" name="auditApprLine" value="AD0003"><span><spring:message code='ezAdmin.auditApprLine.04'/></span>&nbsp;&nbsp;
 	                                                </td>
 	                                            </tr>
 	                                        </table>

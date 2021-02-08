@@ -1507,6 +1507,27 @@ function getCurApproverAprLine(type) {
             }
         }
     }
+    
+    var auditSignCnt = 0;
+    // auditSign set
+    for(var i=0; i<objNodes.length; i++) {
+    	var apprType = objNodes[i].getElementsByTagName("CELL")[0].getElementsByTagName("DATA11")[0].textContent;
+    	
+    	if(apprType == "005") {
+    		auditSignCnt++;
+    	}
+    }
+    if(auditSignCnt > 1) {
+    	for(var i=0; i<objNodes.length; i++) {
+        	var apprType = objNodes[i].getElementsByTagName("CELL")[0].getElementsByTagName("DATA11")[0].textContent;
+        	var userId = objNodes[i].getElementsByTagName("CELL")[0].getElementsByTagName("DATA4")[0].textContent;
+        	
+        	if(apprType == "005") {
+        		auditSignId = userId;
+        		break;
+        	}
+        }
+    }
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType2)
         setMenuBar("btnJunKyul", false);
 }

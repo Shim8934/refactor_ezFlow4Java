@@ -31,10 +31,8 @@
 			var totalPage = 0;
 			var pageSize = 15;
 			var BlockSize = 10;
-			var isAdmin = ${isAdmin};
 			var testObj = {};
 			var type = "";
-			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
 
 			document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -45,41 +43,61 @@
 	        
 	        var topid = "";
 	        var Tab1_flag = true;
-	        var DelType = "c";
-	        var type = "c=1";
+	        var DelType = "AD0001";
+	        var type = "AD0001";
 	    	
 			$(document).ready(function() {
-				if (isAdmin) {
-					type = 'c=1';
-					Permissions_List();
-				} else {
-					document.getElementById("Permission_sub1").style.display = "none";
-					document.getElementById("1tab2").click();
-					type = 'k=1';
-					Permissions_List();
-				}
-
-				//2018-08-06 김보미 - 페이지 위치 고정
+				getAuditApprLineList($('#tab1').find('span[class=tabon]').attr('auditApprLineId'));
 				windowResize();
 			});
 
 			function searchList() {
-				CurPage = 1;
-				Permissions_List();
+				getAuditApprLineList($('#tab1').find('span[class=tabon]').attr('auditApprLineId'));
 			}
 			
 			function company_change() {
 				clearSearchVal();
-				Permissions_List();
+				getAuditApprLineList($('#tab1').find('span[class=tabon]').attr('auditApprLineId'));
 		    }
 		    
-			function Permissions_List() {
-		        $.ajax({
+			function getAuditApprLineList(auditApprLineId) {
+		        
+				var attrArray = new Array();
+				var propArray = new Array();
+				
+	        	attrArray.push("userId");
+	        	attrArray.push("deptId");
+	        	attrArray.push("auditApprLineId");
+	        	attrArray.push("orderBy");
+	        	
+				propArray.push("orderBy");
+				propArray.push("userId");
+	        	propArray.push("userNm");
+	        	propArray.push("position");
+	        	propArray.push("deptNm");
+	        	propArray.push("mail");
+	        	propArray.push("telephoneNumber");
+	        	propArray.push("company");
+				
+				$.ajax({
 		        	type : "POST",
 		        	dataType : "text",
-		        	url : "/admin/ezOrgan/getPermissionsList.do",		        	
-		        	data : {companyID : document.getElementById("ListCompany").value, type : type, pageNum : CurPage, pageSize : pageSize, searchType : document.getElementById("searchType").value, searchValue : document.getElementById("searchValue").value},
+		        	url : "/admin/ezOrgan/getAuditApprLineList.do",		        	
+		        	data : {
+		        		companyID : document.getElementById("ListCompany").value,
+		        		type : type,
+		        		pageNum : "1",
+		        		pageSize : "15",
+		        		searchType : document.getElementById("searchType").value,
+		        		searchValue : document.getElementById("searchValue").value,
+		        		auditApprLineId : auditApprLineId,
+		        		propArray : JSON.stringify(propArray),
+		        		attrArray : JSON.stringify(attrArray),
+		        		value : "userId"
+		        	},
 		        	success : function(xml){
+		        		console.log('xml:');
+		        		console.log(xml);
 		        		result=loadXMLString(xml);
 		        		if (result.xml != "") {
 		                    if (result.documentElement.getElementsByTagName("TOTALCNT")[0] != null) {
@@ -106,25 +124,23 @@
 		                document.getElementById("AdminListView").innerHTML = "";
 
 		                var listview = new ListView();
-		                listview.SetID("lvPermissionList");
+		                listview.SetID("lvAuditApprLineList");
 		                listview.SetMulSelectable(false);
-		                listview.SetRowOnClick("Permissions_View");
-		                // 2019-01-09 황윤호 (권한관리 Db클릭 메서드 안쓰기로 함)
-		                //listview.SetRowOnDblClick("PermissionsDb_View");
+		                listview.SetRowOnClick("auditApprLineList_View");
 		                listview.SetHeightFree(true);
 		                listview.DataSource(headerData);
 		                listview.DataBind("AdminListView");
 		                checkbox_header();
 		                
-		                var a = document.getElementById("lvPermissionList_TR_0");
+		                var a = document.getElementById("lvAuditApprLineList_TR_0");
 		                
 		                if (a== null || a == "") {
 		                	
 		                } else {
 		                	a.style.backgroundColor = "rgb(255, 255, 255)";
 		                	a.setAttribute("selected", "false");
-		                	$("#lvPermissionList_TR_0").mouseout(function(){
-		                		$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
+		                	$("#lvAuditApprLineList_TR_0").mouseout(function(){
+		                		$("#lvAuditApprLineList_TR_0").css("background-color", "rgb(255, 255, 255)");
 		                	});
 		                }
 		                rowListSelect();
@@ -135,10 +151,10 @@
 		        	error : function(error){
 		        	    alert("<spring:message code='ezOrgan.t2' />" + error);
 		        	}
-		        });		        
+		        });
 		    }
 			
-			function Permissions_View(obj) {
+			function auditApprLineList_View(obj) {
 				var className = window.event.target.getAttribute('class');
 				if(className === 'checks') {
 					return;
@@ -177,8 +193,8 @@
 			var cnt;
 			function checkbox_header() {
 				var doc = window.document;
-				var th = doc.getElementById("lvPermissionList_TH_0");
-				var acList = doc.getElementById("lvPermissionList");
+				var th = doc.getElementById("lvAuditApprLineList_TH_0");
+				var acList = doc.getElementById("lvAuditApprLineList");
 				
 				th.innerHTML = "<input type= 'checkbox' id = 'checkAll' onchange= 'checkboxHeaderClick()'></input>";
 				
@@ -186,7 +202,7 @@
 				
 				var noItemsChk = acList.children[1].children[0].getAttribute("id");
 				
-				if (cnt <= 1 && noItemsChk == "lvPermissionList_TR_noItems") {
+				if (cnt <= 1 && noItemsChk == "lvAuditApprLineList_TR_noItems") {
 					return;
 				}
 				
@@ -198,17 +214,17 @@
 					+ seq 
 					+ "' value='" 
 					+ seq 
-					+ "' onchange='inputFunc(event,"
-					+ seq + ")'></input>";
+					+ "' onchange=inputFunc(event,'"
+					+ seq + "')></input>";
 				} 
 			}
 			
 			var checkFlag = false;
 			function checkboxHeaderClick() {
 				var doc = window.document;
-				var acList = doc.getElementById("lvPermissionList");
+				var acList = doc.getElementById("lvAuditApprLineList");
 				// 데이터가 있을 경우에만
-				if(acList.children[1].children[0].id !== 'lvPermissionList_TR_noItems'){
+				if(acList.children[1].children[0].id !== 'lvAuditApprLineList_TR_noItems'){
 					if (checkFlag) {
 						checkFlag = false;
 						$(".checks").prop("checked", false);
@@ -290,7 +306,7 @@
 		    function movePage(newPage) {
 		        if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
 		            CurPage = newPage;
-		            Permissions_List();
+		            getAuditApprLineList($('#tab1').find('span[class=tabon]').attr('auditApprLineId'));
 		        }
 		    }
 			
@@ -383,12 +399,9 @@
 				var doc  = window.document;
 				var add  = doc.getElementById("add");
 				var del  = doc.getElementById("del");
-				var mail = doc.getElementById("email");
 				
-				add.addEventListener("click", Permissions_Add);
+				add.addEventListener("click", auditApprLineAdd);
 				del.addEventListener("click", Choose_Del);
-				if(useExternalMailServer == 'NO')
-					mail.addEventListener("click", email_onclick);
 			}
 			
 			var Tab1_SelectID = "";
@@ -417,7 +430,8 @@
 		    
 		    var clickTabID = "1tab1";
 		    function ChangeTab(obj) {
-		        var pSelectTab = obj.getAttribute("divname");
+		    	console.log('runs ChangeTab!');
+		        var pSelectTab = obj.getAttribute("auditApprLineId");
 		        clickTabID = obj.id;
 		        DelType = pSelectTab;
 		        type = pSelectTab + "=1";
@@ -426,15 +440,13 @@
 		        checkFlag = false;
 		        clearSearchVal();
 		        rowList = [];
-		        Permissions_List();
+		        getAuditApprLineList(pSelectTab);
 		    }
 			
 			function Tab1_NewTabIni(pTabNodeID) {
 		        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
 		            if (document.getElementById(pTabNodeID).childNodes[i].nodeName == "P") {
 		                if (document.getElementById(pTabNodeID).childNodes[i].childNodes[0].nodeName == "SPAN") {
-		                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseover = function () { Tab1_MouserOver(this); };;
-		                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseout = function () { Tab1_MouserOut(this); };;
 		                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onclick = function () { Tab1_MouseClick(this); };;
 
 		                    if (Tab1_flag) {
@@ -447,153 +459,33 @@
 		        }
 		    }
 			
-			var permissions_check_dialogArguments = new Array();
-		    var Permissions_Add = function() {
+			var auditAppr_check_dialogArguments = new Array();
+		    var auditApprLineAdd = function() {
 		        var listview = new ListView();
-		        listview.LoadFromID("lvPermissionList");
+		        listview.LoadFromID("lvAuditApprLineList");
 		        var Params = new Array();
 		        var result = "";
-		       
+		        var url = "";
+		        
+		        url += "/admin/ezApprovalG/auditApprLineManagePop.do?companyID=" + document.getElementById("ListCompany").value;
+	            url += "&auditApprLineId=" + encodeURI($('#tab1').find('span[class=tabon]').attr('auditApprLineId'));
+	            url += "&title=" + encodeURI($('#tab1').find('span[class=tabon]').text());
+		        
 		        if (CrossYN()) {
-		            permissions_check_dialogArguments[0] = Params;
-		            permissions_check_dialogArguments[1] = Permissions_Add_Complete;
-		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), "Permissions_Check", GetOpenWindowfeature(1000, 620));
+		            auditAppr_check_dialogArguments[0] = Params;
+		            auditAppr_check_dialogArguments[1] = auditApprLineAdd_Complete;
+		            var OpenWin = window.open(url, "auditApprLineManagePop", GetOpenWindowfeature(1015, 620));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
-		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(1000, 620));
+		            window.showModalDialog(url, Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(1015, 620));
 		            clearSearchVal();
-		            Permissions_List();
+		            getAuditApprLineList($('#tab1').find('span[class=tabon]').attr('auditApprLineId'));
 		        }
 		    }
 		    
-		    function Permissions_Add_Complete() {
+		    function auditApprLineAdd_Complete() {
 		    	clearSearchVal();
-		        Permissions_List();
-		    }
-
-			function Permissions_Del(mode) {			
- 
-				var dataList = new Array();
-				var dataList2 = new Array();
-				var dataList3 = new Array();
-				var dataList4 = new Array();
-
-				$("input[name='checks']:checked").each(function(){
-					dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
-					dataList2.push(this.parentElement.parentElement.getAttribute("DATA2"));
-					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
-					dataList4.push(this.parentElement.parentElement.getAttribute("DATA5"));
-				}); 
-				
-				
-				/* // 선택된 사원이 없을 경우
-				if (dataList.length == 0) {
-					alert(strLang13);
-					return;
-				} */
-
-				/* // 권한 전체삭제
-				var cData = "";
-				if (mode == "ALL") {
-					cData = "["+dataList3+"]" + strLang19 + " " + "<spring:message code='ezAddress.t362' />" + strLang20;
-				} else {
-					cData = "["+dataList3+"]" + strLang19 + document.getElementById(clickTabID).innerText + " " + strLang20;
-				} */
-
-				//if (confirm(cData)) {
-					for (var i =0; i< dataList.length; i++) {
-						if (mode == "ALL") {
-							dataList2[i] = "";
-						} else {
-							var tempDelType = DelType;
-							var DelValue = tempDelType + "=1";
-
-							if (tempDelType == "") {
-								tempDelType = "c=0";
-							} else {
-								tempDelType = tempDelType + "=0";
-							}
-							dataList2[i] = dataList2[i].replace(DelValue, tempDelType);
-						}
-					}
-
-					jQuery.ajaxSettings.traditional = true; 
-
-					$.ajax({
-						type : "POST",
-						dataType : "text",
-						url : "/admin/ezOrgan/saveUserPermissionInfo.do",
-						async : false,
-						data : {
-							cn : dataList, 
-							extensionAttribute1: dataList2
-						},
-						success : function(result){
-							if (mode == "ALL") {
-								Permissions_List();
-							} else {
-								Permissions_List();
-							}
-						},
-						error : function(){
-							alert(strLang15);
-						}
-					});
-				//}
-				
-			}
-
-		    var email_onclick = function() {
-
-		        /* var listview = new ListView();
-		        listview.LoadFromID("lvPermissionList"); */
-		        
-		        var dataList3 = new Array();
-				var dataList4 = new Array();
-				
-				$("input[name='checks']:checked").each(function(){
-					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
-					dataList4.push(this.parentElement.parentElement.getAttribute("DATA4"));
-				});
-
-		        /* if (listview.GetSelectedRows().length == 0) {
-		            alert(strLang13);
-		            return;
-		        } */
-		        
-		     // 선택된 사원이 없을 경우
-				if (dataList3.length == 0) {
-					alert(strLang13);
-					return;
-				}
-
-		        var pheight = window.screen.availHeight;
-		        var conHeight = pheight * 0.8;
-		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
-		        var MsgTo = new Array();
-
-		        for (var i =0; i<dataList3.length; i++) {
-			        MsgTo[i] = "\"" + dataList3[i]+ "\" <" +dataList4[i]+ ">";
-		        }
-		        console.log(MsgTo);
-		        /* 2017-01-02 이효민사원
-		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW&msgTo=" + encodeURIComponent(MsgTo), "",
-		                           "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		        }
-		        else {
-		            if (pUse_Editor == "")
-		                window.open("/myoffice/ezEmail/mail_write.aspx?cmd=NEW&msgTo=" + encodeURIComponent(MsgTo), "",
-		                                "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		            else {
-		                window.open("/myoffice/ezEmail/mail_write_IE.aspx?cmd=NEW&msgTo=" + encodeURIComponent(MsgTo), "",
-		                            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		            }
-		        } */
-		        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(MsgTo), "",
-                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1"); 
+		    	getAuditApprLineList($('#tab1').find('span[class=tabon]').attr('auditApprLineId'));
 		    }
 		    
 		    function clearSearchVal () {
@@ -616,39 +508,54 @@
 		    
 		    var delete_confirm_cross_dialogArguments;
 		    var Choose_Del = function() {
-		    	var dataList = new Array();
-				var dataList2 = new Array();
-				var dataList3 = new Array();
-				var dataList4 = new Array();
-				var types = document.getElementById(clickTabID).innerText;
-
-				$("input[name='checks']:checked").each(function(){
-					dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
-					dataList2.push(this.parentElement.parentElement.getAttribute("DATA2"));
-					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
-					dataList4.push(this.parentElement.parentElement.getAttribute("DATA5"));
-				});
-				
-				testObj.dataList = dataList;
-				testObj.dataList2 = dataList2;
-				testObj.dataList3 = dataList3;
-				testObj.dataList4 = dataList4;
-				typeStyle = types;
-
-				// 선택된 사원이 없을 경우
-				if (dataList.length == 0) {
-					alert(strLang13);
-					return;
-				}
-				
-		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do?type=" + encodeURIComponent(types),"chooseDeletege", 600, 200);
+		    	
+		    	var delUserArray = new Array();
+		    	var insUserArray = new Array();
+		    	var index = 0;
+		    	var isValid = false;
+		    	
+		    	$.each($('#lvAuditApprLineList tbody tr'), function(i, item) {
+		    		var delUserObj = new Object();
+			    	var insUserObj = new Object();
+		    		var checkBox = $(this).find('input[type=checkbox]');
+		    		
+		    		if($(checkBox).is(':checked')) {
+		    			isValid = true;
+		    			delUserObj.userId = $(checkBox).val();
+		    			delUserArray.push(delUserObj);
+		    		} else {
+		    			index++;
+		    			insUserObj.userId = $(checkBox).val();
+		    			insUserObj.deptId = $(this).attr('deptId');
+		    			insUserObj.orderBy = index;
+		    			insUserArray.push(insUserObj);
+		    		}
+		    	});
+		    	
+		    	if(!isValid) {
+		    		alert('<spring:message code="ezAdmin.auditApprLine.08"/>');
+		    		return;
+		    	}
+		    	
+		    	$.ajax({
+	            	type : "POST"
+	            	,dataType : "text"
+	            	,url : "/admin/ezApprovalG/auditApprListPrc.do"
+	            	,async : false
+	            	,data : {
+	            		auditApprLineId : $('#tab1').find('span[class=tabon]').attr('auditApprLineId')
+	            		,insUserArray : JSON.stringify(insUserArray)
+	            	},
+	            	success : function(result) {
+	            		alert('<spring:message code="ezAdmin.auditApprLine.11"/>');
+	            	},
+	            	error : function() {
+	            		alert('<spring:message code="ezAdmin.auditApprLine.10"/>');
+	            	}
+	            });
+		    	getAuditApprLineList($('#tab1').find('span[class=tabon]').attr('auditApprLineId'));
 		    }
 		    
-		    /* function choose_Del_complete(data) {
-		    	console.log(data);
-		    	Permissions_Del(data);
-		    } */
-
 			// 등록, 수정 , 삭제 후 rowSelect 선택 method
 			function rowListSelect() {
 				var len = rowList.length;
@@ -676,6 +583,11 @@
 		    	<HEADERS>
 		    	    <HEADER>
 						<WIDTH>24</WIDTH>
+						<STYLE>border-top:0px;</STYLE>
+					</HEADER>
+					<HEADER>
+						<NAME><spring:message code='ezAdmin.auditApprLine.05' /></NAME>
+						<WIDTH>90</WIDTH>
 						<STYLE>border-top:0px;</STYLE>
 					</HEADER>
 		      		<HEADER>
@@ -719,7 +631,8 @@
 	
 	    <form id="Form1" method="post">
 		    <h1>
-		    	<spring:message code='ezOrgan.t00005' /><span id="mailBoxInfo"></span>
+		    	<spring:message code='ezAdmin.auditApprLine.01' />
+		    	<span id="mailBoxInfo"></span>
 		    	<span class="title_bar"><img src="/images/name_bar.gif"></span>
 		    	<select class="companySelect" id="ListCompany" onchange="company_change()">
 	            	<c:forEach var="item" items="${list}">
@@ -727,7 +640,7 @@
 	            	</c:forEach>
 	            </select>
 	            
-	            <span class="searchForm">
+	            <span class="searchForm" style="display:none;">
 	            	<select id="searchType" style="width:80px;height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
 						<option selected="" value="displayname"><spring:message code='ezOrgan.t67' /></option>
 						<option value="cn"><spring:message code='ezOrgan.t218' /></option>
@@ -738,21 +651,14 @@
 						<option value="company"><spring:message code= 'ezOrgan.t123' /></option>
 					</select>
 					
-					<input id="searchValue" onkeypress="if(event.keyCode==13) {searchList(); return false;}" onfocus="clearSearchVal();" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;">
+					<input id="searchValue" onkeypress="if(event.keyCode==13) {searchList(); return false;}" onfocus="clearSearchVal();" style="display:none;">
 					<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onclick="searchList()"></a>
 	            </span>
 		    </h1>
 		    <div id="mainmenu">
 		        <ul style="margin-top:15px;">
 		            <li class="important"><span id="add"><spring:message code='ezOrgan.mse3' /></span></li>
-		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		            <%-- <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li> --%>
-		            <!-- <li><span class="icon16 icon16_delete" onClick="Permissions_Del('MOD')"></span></li> -->
 		            <li><span class="icon16 icon16_delete" id="del"></span></li>
-		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		            <c:if test="${ useExternalMailServer eq 'NO'}">
-		            <li id="email"><span class="icon16 icon16_mail_gray"></span></li>
-		            </c:if>
 		        </ul>
 		    </div>
 		    <script type="text/javascript">
@@ -760,37 +666,11 @@
 		    </script>
 		    <div class="portlet_tabpart01" style="padding-bottom:3px; width:100%;">
 		        <div class="portlet_tabpart01_top" id="tab1">
-	                <p id="Permission_sub1"><span divname="c" id="1tab1"><spring:message code='ezOrgan.t291' /></span></p>
-	                <p id="Permission_sub2"><span divname="k" id="1tab2"><spring:message code='ezOrgan.t293' /></span></p>
-	                <p id="Permission_sub3"><span divname="g" id="1tab3"><spring:message code='ezOrgan.t295' /></span></p>
-	                <c:if test="${packageType == 'standard'}">
-	                	<p id="Permission_sub4"><span divname="a" id="1tab4"><spring:message code='ezOrgan.t292' /></span></p>
-		                <p id="Permission_sub5" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="i" id="1tab5"><spring:message code='ezOrgan.t294' /></span></p>
-	                </c:if>
-	                <c:if test="${packageType != 'mail' and useBoard == 'YES'}">
-		                <p id="Permission_sub6"><span divname="n" id="1tab6"><spring:message code='ezOrgan.t297' /></span></p>
-	                </c:if>
-	                <c:if test="${packageType == 'standard'}">
-	                    <c:if test="${useSurvey == 'YES'}">
-		                <p id="Permission_sub7"><span divname="l" id="1tab7"><spring:message code='ezOrgan.t296' /></span></p>
-		                </c:if>
-		                <p id="Permission_sub8" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="w" id="1tab8"><spring:message code='ezOrgan.t301' /></span></p>
-		                <p id="Permission_sub9" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="m" id="1tab9"><spring:message code='ezOrgan.t300' /></span></p>
-		                <c:if test="${approvalForDoc == 'Y'}">
-		                	<p id="Permission_sub10"><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
-		                </c:if>
-		                <c:if test="${useWebfolder == 'YES'}">
-		                <p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
-		                </c:if>
-		                <p id="Permission_sub12" <c:if test="${use_attitude != 'YES'}">style="display:none;"</c:if>><span divname="wa" id="1tab12"><spring:message code='ezOrgan.kbm01' /></span></p>
-		                <p id="Permission_sub13" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="s" id="1tab13"><spring:message code='ezOrgan.t9904' /></span></p>
-	                </c:if>
+	                <p id="auditApprLine_sub1"><span auditApprLineId="AD0001" id="1tab1"><spring:message code='ezAdmin.auditApprLine.02' /></span></p>
+	                <p id="auditApprLine_sub2"><span auditApprLineId="AD0002" id="1tab2"><spring:message code='ezAdmin.auditApprLine.03' /></span></p>
+	                <p id="auditApprLine_sub3"><span auditApprLineId="AD0003" id="1tab3"><spring:message code='ezAdmin.auditApprLine.04' /></span></p>
 		        </div>
 		    </div>
-		    <!-- 2018-08-06 김보미 - 페이지 위치 고정 -->
-<!-- 		    <div class="listview" style="Width:100%;"> -->
-<!-- 		        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div> -->
-<!-- 		    </div> -->
 			<div id="contentlist" style="width:100%; overflow: auto;">
 			    <div class="listview" style="border-left:0px;border-right:0px;border-bottom:1px">
 			        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div>
