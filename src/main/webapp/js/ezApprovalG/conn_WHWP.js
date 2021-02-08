@@ -534,11 +534,13 @@ function setData(pobjXml, currTD) {
         if (connRootXml) {
             if (GetAttribute(connRootXml, "STAGE") === "socket" || GetAttribute(connRootXml, "STAGE") === "db") {
                 var pAlertContent = strLang99;
-                if (getNodeText(connRootXml)) {
-                    pAlertContent = pAlertContent + "<br/>" + strLang100 + getNodeText(connRootXml);
-                }
-                OpenAlertUI(pAlertContent);
+            } else {
+                var pAlertContent = "연동에 실패하여 결재를 완료할 수 없습니다!";
             }
+            if (getNodeText(connRootXml)) {
+                pAlertContent = pAlertContent + "<br/>" + strLang100 + getNodeText(connRootXml);
+            }
+            OpenAlertUI(pAlertContent);
         }
         return false;
     }
