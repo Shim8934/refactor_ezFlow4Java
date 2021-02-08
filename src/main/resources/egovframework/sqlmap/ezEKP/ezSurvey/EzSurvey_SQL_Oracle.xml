@@ -1206,7 +1206,7 @@
 								r.column_id,
 								r.ranking_level,
 								r.slider_value,
-								(select extensionattribute2 from TBL_USERMASTER u where d.user_id = u.cn) as image,
+								(select extensionattribute2 from TBL_USERMASTER u where d.user_id = u.cn and d.tenant_id = u.tenant_id) as image,
 								TO_CHAR(TO_DATE(response_date, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') as response_date,
 								case when #primary# = '1' then d.user_name1 else d.user_name2 end as user_name,
 								case when #primary# = '1' then d.dept_name1 else d.dept_name2 end as dept_name
