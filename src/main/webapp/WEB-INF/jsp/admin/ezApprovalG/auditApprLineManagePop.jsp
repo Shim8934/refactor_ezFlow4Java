@@ -10,7 +10,7 @@
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 	    <style>
 	    	.box {
-	    		border-right:0px;
+	    		border-right:1px solid #ddd;
 	    	}
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
@@ -42,7 +42,6 @@
 		    var deptid = "<c:out value='${userInfo.deptID}'/>";
 		    var g_szAuthor = "";
 		    var g_senderinfo = "<c:out value='${userInfo.companyName1}'/>" + ", " + "<c:out value='${userInfo.deptName1}'/>" + ", " + "<c:out value='${userInfo.title1}'/>";
-		    var g_szUserID = "<c:out value='${userInfo.email}'/>";
 		    var name = "";
 		    var UserAgentState = navigator.userAgent.toLowerCase();
 		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
@@ -54,8 +53,6 @@
 		    var isfirst = true;
 		    var deptTreeTopId = "${deptTreeTopId}";
 			var isAdmin = "${isAdmin}";
-			var delType = "<c:out value='${DelType}'/>";
-			var type = "<c:out value='${type}'/>";
 			var companyId = "<c:out value='${companyID}'/>";
 			var totalCnt = 0;
 	        var CurPage = 1;
@@ -66,11 +63,13 @@
 	        var extraArry = new Array();
 	        var deleteArry = new Array();
 			var packageType = "${packageType}";
+			var auditApprLineId = "${auditApprLineId}";
+			var title = "${title}";
 
 			
 		    $(document).ready(function(){
 		    	try {
-	                ReturnFunction = opener.permissions_check_dialogArguments[1];
+	                ReturnFunction = opener.auditAppr_check_dialogArguments[1];
 	            } catch (e) {}	        
 
 		        try {
@@ -94,22 +93,8 @@
 		        xmlHTTP.send(strQuery);
 	
 		        ListTypeChangeIcon();
-			        
-		        var Resultxml = loadXMLString(PermissionList.innerHTML.toUpperCase());
-		        var pUserList = new ListView();
-		        pUserList.SetID("lvPermissionBasic");
-		        pUserList.SetMulSelectable(false);
-		        pUserList.SetHeightFree(true);
-		        pUserList.DataSource(Resultxml);
-		        pUserList.DataBind("PermissionBasic"); 
-		        
 		        ChangeListView_onClick(getOrganListType());
-		        
-		        if (isAdmin == "false") {
-		        	$("#lvPermissionBasic").find("tbody tr:first").css("display","none");
-		        }
-		        
-		        Permissions_List();
+		        getAuditApprLineList(auditApprLineId);
 		    });
 		    
 		    function ListTypeChangeIcon() {
@@ -246,7 +231,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;usertype", type : "user", noAddJob : "Y"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;usertype;department", type : "user", noAddJob : "Y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
@@ -337,7 +322,7 @@
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<spring:message code='ezOrgan.t101' />" + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span>";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + "<spring:message code='ezOrgan.t101' />" + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span></span>";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -350,7 +335,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<spring:message code='ezOrgan.t101' />" + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span>";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + "<spring:message code='ezOrgan.t101' />" + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span></span>";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -373,7 +358,7 @@
 	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
 	                    M_TR.onclick = function () { event_listclick(this); };
-	                    M_TR.ondblclick = function () { event_listdblclick(this)};
+	                    M_TR.ondblclick = function () { event_listdblclick(this); };
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };
 	                    
@@ -419,7 +404,7 @@
 	                    Sub_TD1.setAttribute("class", "name");
 	                    var pDisplayName = "";
 	                    
-	                    if( !pSeach && $(M_TR).attr("_DATA20" ) == "addJob"){
+	                    if( !pSeach && $(M_TR).attr("_DATA19" ) == "addJob"){
 		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
 		            	} else if( pSeach && $(M_TR).attr("_DATA19") == "addJob" ){
 		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
@@ -475,7 +460,7 @@
  	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
 	                    M_TR.onclick = function () { event_listclick(this); };
-	                    M_TR.ondblclick = function () { event_listdblclick(this)};
+	                    M_TR.ondblclick = function () { event_listdblclick(this); };
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };
 	                    
@@ -545,7 +530,7 @@
 	                        var M_TR_TD2 = document.createElement("TD");
 	                        M_TR_TD2.style.width = "80px";
 	                        var jobName = "";
-	                        if($(M_TR).attr("_DATA20") == "addJob"){
+	                        if($(M_TR).attr("_DATA19") == "addJob"){
 			            		jobName += "<spring:message code='ezOrgan.psb03'/> ";
 			            	}	      
 	                        
@@ -643,7 +628,7 @@
 	        
 	        //더블 클릭 할 때
 	        function event_listdblclick(elem) {
-	        	InsertReceiver("lvPermissionList");
+	        	InsertReceiver("lvAuditApprLineList");
 	        }
 	        /* function Permissions_Check(UserID) {
 	            var listview = new ListView();
@@ -711,17 +696,28 @@
 	        
 	        //선택한 사원을 오른쪽 리스트에 삽입할 때
 	        function InsertReceiver(elem) {
-	        	var listid = "lvPermissionBasic";
+	        	var listid = "lvAuditApprLineBasic";
 	        	var getlistview = new ListView();
 	            getlistview.LoadFromID(listid);
-	        	var pparsingXML2 = "";
         		var pparsingXML = "";
 	            var arrRows = getlistview.GetSelectedRows();
 	            var length = arrRows.length;
-	            var dataMatch = "";
-	            var pattern = new RegExp(delType);
 	            
+	            var isDup = false;
 	            var addJob = "";
+	            var strId = p_ListOrderObject.getAttribute("_data2");
+            	var strName = p_ListOrderObject.getAttribute("_data4");
+            	var strMail = p_ListOrderObject.getAttribute("_data3");
+            	var strData = p_ListOrderObject.getAttribute("_data10");
+            	var strDept = p_ListOrderObject.getAttribute("_data15");
+            	var strDeptId = p_ListOrderObject.getAttribute("_data12");
+            	
+            	$.each($('#lvAuditApprLineList tbody tr'), function(index, item) {
+            		if($(this).attr('userId') == strId) {
+            			isDup = true;
+            		}
+            	});
+            	
 	            if (pSeach){
 		            addJob = GetAttribute(p_ListOrderObject, "_data19");
 	            } else {
@@ -734,208 +730,77 @@
 	            } else if(addJob == "addJob"){
 	            	alert("<spring:message code='ezOrgan.psb01' />");
 	                return;
+	            } else if(isDup){
+	            	alert("<spring:message code='ezAdmin.auditApprLine.06' />");
+	            	return;
 	            } else {
-	            	var strId = p_ListOrderObject.getAttribute("_data2");
-	            	var strName = p_ListOrderObject.getAttribute("_data4");
-	            	var strMail = p_ListOrderObject.getAttribute("_data3");
-	            	var strData = p_ListOrderObject.getAttribute("_data10");
-	            	var strDept = p_ListOrderObject.getAttribute("_data14");
-	            	
-	            	if (strData == null || strData == "") {
-	            		strData = "c=0;k=0;g=0;a=0;n=0;l=0;f=0;w=0;wf=0;e=0";
-	            	}
-	            	
 	            	var _listView = new ListView();
-	            	_listView.LoadFromID("lvPermissionList");
+	            	_listView.LoadFromID("lvAuditApprLineList");
 	            	var arrRows = _listView.GetDataRows();
 	            	
-	            	for (var i =0; i < arrRows.length; i++) {
-	            		if (strId == arrRows[i].getAttribute("data1")){
-	            			alert("<spring:message code='ezOrgan.mse2' />");
-	            			return;
-	            		}
-	            	}
-	            	
-	            	for (var i=0; i < deleteArry.length; i++) {
-	            		if(strId == deleteArry[i].data1){
-	            			console.log(deleteArry[i].data1);
-	            			deleteArry.splice(i, 1);
-	            			console.log(deleteArry);
-	            		}
-	            	}
-	            	
-	            	
-	            	dataMatch = pattern.exec(strData);
-	            	
-	            	//권한관리 type 데이터 값이 없을 때
-	            	if (dataMatch == null || dataMatch == "") {
-	            		strData += delType + "=0";
-	            	}
-	            	
-	            	        var extraInfo = new Object();
-			                var tempDelType = delType;
-			                var DelValue = tempDelType + "=1";
-			                
-			                if (tempDelType == "") {
-			                    tempDelType = "c=0";
-			                } else {
-			                    tempDelType = tempDelType + "=0";
-			                }
-			                
-			               
-			                strData = strData.replace(tempDelType, DelValue);
-			                
-			                extraInfo.data1 = strId;
-			                extraInfo.data2 = strData;
-			                
-			                extraArry.push(extraInfo);
-			                
-			                dataMatch = "";
-			                
-			                console.log(extraArry);
-			                pparsingXML2 = "";
-		            		pparsingXML = "";
-		            		pparsingXML2 = "<LISTVIEWDATA><ROWS>";
-		            		pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-		            		pparsingXML = pparsingXML + "<DATA2>" + strData + "</DATA2>";
-		            		pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(strName) + "</DATA3>";
-		            		pparsingXML = pparsingXML + "<DATA4>" + strMail + "</DATA4>";
-		            		pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "</VALUE>";
-		            		pparsingXML = pparsingXML + "<CLASSNAME>userName</CLASSNAME></CELL>";
-		            		pparsingXML = pparsingXML + "<CELL><VALUE>" + MakeXMLString(strDept) + "</VALUE></CELL></ROW>";
-		            		pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
-		            		Resultxml = loadXMLString(pparsingXML2);
-			                
-		            		var listview = new ListView();
-		            		listview.LoadFromID("lvPermissionList");
-		            		
-		            		var MaxID = 0;
-		        		    var InitTr = listview.GetDataRows();
-		            		var MaxCntNum = 0;
-		            		for (var j = 0  ; j < InitTr.length  ; j++) {
-		                		var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-		                		if (MaxID < curnum) {
-		                    		MaxID = curnum;
-		                    		MaxCntNum = j;
-		                		}
-		            		}
-		            		
-		            		var objTr = listview.AddRow(InitTr.length);
-		        		    if (MaxCntNum != 0)
-				                MaxCntNum = MaxCntNum + 1;
-		            		SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
-		            		listview.AddDataRow(objTr, Resultxml);
+            		pparsingXML = "<LISTVIEWDATA><ROWS>";
+            		pparsingXML += "<ROW><CELL><userId>" + strId + "</userId>";
+            		pparsingXML += "<style>word-break:break-all</style>";
+            		pparsingXML += "<CLASSNAME>userID</CLASSNAME>";
+            		pparsingXML += "<auditApprLineId>" + auditApprLineId + "</auditApprLineId>";
+            		pparsingXML += "<deptId>" + strDeptId + "</deptId>";
+            		pparsingXML += "<orderBy>" + ($('#lvAuditApprLineList tbody tr').length+1) + "</orderBy>";
+            		pparsingXML += "<VALUE>" + strId + "</VALUE></CELL>";
+            		pparsingXML += "<CELL><VALUE>" + MakeXMLString(strName) + "</VALUE>";
+            		pparsingXML += "<style>word-break:break-all</style>";
+            		pparsingXML += "<CLASSNAME>userName</CLASSNAME></CELL>";
+            		pparsingXML += "<CELL>";
+            		pparsingXML += "<style>word-break:break-all</style>";
+            		pparsingXML += "<CLASSNAME>deptName</CLASSNAME>";
+            		pparsingXML += "<VALUE>" + MakeXMLString(strDept) + "</VALUE></CELL></ROW>";
+            		pparsingXML += "</ROWS></LISTVIEWDATA>";
+            		Resultxml = loadXMLString(pparsingXML);
+	                
+            		var listview = new ListView();
+            		listview.LoadFromID("lvAuditApprLineList");
+            		
+            		var MaxID = 0;
+        		    var InitTr = listview.GetDataRows();
+            		var MaxCntNum = 0;
+            		for (var j=0; j<InitTr.length; j++) {
+                		var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+                		if (MaxID < curnum) {
+                    		MaxID = curnum;
+                    		MaxCntNum = j;
+                		}
+            		}
+            		
+            		var objTr = listview.AddRow(InitTr.length);
+        		    if (MaxCntNum != 0)
+		                MaxCntNum = MaxCntNum + 1;
+            		SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+            		listview.AddDataRow(objTr, Resultxml);
 	            }
-	        	
-	            /* var pparsingXML = "";
-	            var pparsingXML2 = "";
-	            var strSIP = "";
-	            var pAddFlag = false;
-	            var listid = "lvPermissionBasic";
-	            var getlistview = new ListView();
-	            getlistview.LoadFromID(listid);
-
-	            var arrRows = getlistview.GetSelectedRows();
-	            var length = arrRows.length;
-	            
-	            var addJob = GetAttribute(p_ListOrderObject, "_data19");
-
-	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
-	                alert(strLang13);
-	                return;
-	            } else if(addJob == "addJob"){
-	            	alert("<spring:message code='ezOrgan.psb01' />");
-	                return;
-	            } else {
-	                var UserAcllistview = new ListView();
-	                UserAcllistview.LoadFromID("lvAclList");
-	                var strId = GetAttribute(arrRows[0], "data1");
-	                var strName = GetChildNodes(arrRows[0])[0].innerText;
-	                var bFlag = UserAcllistview.ExistRow("data1", strId);
-
-	                if (bFlag) {
-	                    alert(strLang25);
-	                    pAddFlag = true;
-	                } else {
-	                    pparsingXML2 = "";
-	                    pparsingXML = "";
-	                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-	                    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
-	                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                    Resultxml = loadXMLString(pparsingXML2);
-
-	                    var listview = new ListView();
-	                    listview.LoadFromID("lvAclList");
-
-	                    var MaxID = 0;
-	                    var InitTr = listview.GetDataRows();
-	                    var MaxCntNum = 0;
-
-	                    for (var j = 0  ; j < listview.GetRowCount() ; j++) {
-	                        var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                        
-	                        if (MaxID < curnum) {
-	                            MaxID = curnum;
-	                            MaxCntNum = j;
-	                        }
-	                    }
-	                    var objTr = listview.AddRow(listview.GetRowCount());
-	                    
-	                    if (MaxCntNum != 0) {
-	                        MaxCntNum = MaxCntNum + 1;
-	                    }
-	                    SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
-	                    listview.AddDataRow(objTr, Resultxml);
-
-	                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
-	                    
-	                    for (var y = 0; y < _tdlength; y++) {
-	                        document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-	                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
-	                    }
-	                }
-	            } */
+	            orderIdx($('#lvAuditApprLineList tbody tr'), 'orderBy');
 	        }
 
 	        function DeleteReceiver() {
-	            var listid = "lvPermissionList";
+	            var listid = "lvAuditApprLineList";
 	            var selList = new ListView();
-	            selList.LoadFromID(listid);
-
-	            var arrRows = selList.GetSelectedRows();
-	            var strId = arrRows[0].getAttribute("data1");
-	            var strData = arrRows[0].getAttribute("data2")
+	            var arrRows = new Array();
+	            var strId = "";
+	            var strData = "";
 	            
-	            var tempDelType = delType;
-			    var DelValue = tempDelType + "=0";
-			                
-			    if (tempDelType == "") {
-			        tempDelType = "c=0";
-			    } else {
-			        tempDelType = tempDelType + "=1";
-			    }
-			    strData = strData.replace(tempDelType, DelValue);
-			    
-			    for (var i=0; i < extraArry.length; i++) {
-            		if(strId == extraArry[i].data1){
-            			console.log(extraArry[i].data1);
-            			extraArry.splice(i, 1);
-            			console.log(extraArry);
-            		}
-            	}
-			    
-			    var deleteInfo = new Object();
-			    deleteInfo.data1 = strId;
-			    deleteInfo.data2 = strData;
-			    
-			    deleteArry.push(deleteInfo);
-			    
-			    console.log(deleteArry);
+	            selList.LoadFromID(listid);
+	            arrRows = selList.GetSelectedRows();
 
+	            if(arrRows.length == 0) {
+	            	alert("<spring:message code='ezAdmin.auditApprLine.08' />");
+	            	return;
+	            }
+	            
+	            strId = arrRows[0].getAttribute("data1");
+	            strData = arrRows[0].getAttribute("data2");
+	            
 	            for (var i = 0; i < arrRows.length; i++) {
 	                selList.DeleteRow(arrRows[i].id);
 	            }
+	            orderIdx($('#lvAuditApprLineList tbody tr'), 'orderBy');
 	        }
 	        
 	        String.prototype.trim = function () {
@@ -1082,8 +947,13 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",		        	
-		        	data : {search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, cell : "company;description;displayname;title;telephonenumber;" + document.getElementById("search_type").value, 
-		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;userType", type : "user", adminOrgan : "y", noAddJob : "Y"},
+		        	data : {
+		        		search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value
+		        		,cell : "company;description;displayname;title;telephonenumber;" + document.getElementById("search_type").value 
+		        		,prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;userType;department"
+		        		,type : "user"
+		        		,adminOrgan : "y"
+		        	},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var usedefault;		                
@@ -1134,89 +1004,61 @@
 			}
 		    
 		    function OK_Click() {
-		    	var totalArry = new Array();
-		    	var data1 = new Array();
-		    	var data2 = new Array();
 		    	
-		    	totalArry = extraArry.concat(deleteArry);
+		    	var insUserArray = new Array();
+		    	var isValid = false;
 		    	
-		        for (var i=0; i<totalArry.length; i++){
-		        	data1.push(totalArry[i].data1);
-			        data2.push(totalArry[i].data2);
+	    		try {
+			        $.each($('#lvAuditApprLineList tbody tr'), function(i, item) {
+			        	var insUserObj = new Object();
+						var userId = $(this).attr('userId');
+						var orderBy = $(this).attr('orderBy');
+			        	var deptId = $(this).attr('deptId');
+						
+			        	if(userId == '' || userId == undefined || userId == '' || userId == undefined || userId == '' || userId == undefined) {
+			        		isValid = true;
+			        		return false;
+			        	}
+			        	
+			        	insUserObj.userId = userId;
+			        	insUserObj.deptId = deptId;
+			        	insUserObj.orderBy = orderBy;
+			        	
+			        	insUserArray.push(insUserObj);
+			        });
+		        } catch(e) {
+		        	alert('<spring:message code="ezPersonal.tt15"/>');
+		        	return;
 		        }
-
-				if(data1.length == 0 || data2.length == 0) {
-					if(document.getElementById('lvPermissionList').children[1].childElementCount == 0) {
-						alert("등록할 사원을 선택해주세요.");
-						return;
-					}
-					alert(strLang14);
-					window.close();
-					return;
+		        
+		        if(isValid) {
+		        	alert('<spring:message code="ezAdmin.auditApprLine.07"/>');
+		        	return;
 		        }
-				jQuery.ajaxSettings.traditional = true; 
-		        $.ajax({
-	            	type : "POST",
-	            	dataType : "text",
-	            	url : "/admin/ezOrgan/saveStoreUserInfo.do",
-	            	async : false,
-	            	data : {parentCn : "", cn : data1, extensionAttribute1 : data2},
-	            	success : function(result){
-	            		 alert(strLang14);
+				
+				jQuery.ajaxSettings.traditional = true;
+		        
+				$.ajax({
+	            	type : "POST"
+	            	,dataType : "text"
+	            	,url : "/admin/ezApprovalG/auditApprListPrc.do"
+	            	,async : false
+	            	,data : {
+	            		auditApprLineId : auditApprLineId
+	            		,insUserArray : JSON.stringify(insUserArray)
+	            	},
+	            	success : function(result) {
+	            		alert('<spring:message code="ezAdmin.auditApprLine.09"/>');
 	            	
-	            	if (ReturnFunction!=null) {
-	     	            ReturnFunction();
-	     	        }
+		            	if (ReturnFunction!=null) {
+		     	            ReturnFunction();
+		     	        }
 	            		window.close();
 	            	},
-	            	error : function(){
-	            		alert(strLang15);
+	            	error : function() {
+	            		alert('<spring:message code="ezAdmin.auditApprLine.10"/>');
 	            	}
 	            });
-	            /* var PermissionList = new ListView();
-	            PermissionList.LoadFromID("lvPermissionBasic");
-
-	            var Acllistview = new ListView();
-	            Acllistview.LoadFromID("lvAclList");
-
-	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
-	                alert(strLang13);
-	                return;
-	            }
-	     
-	            var AclList = "";
-	            var AclText = "";
-	            
-	            for (var i = 0; i < PermissionList.GetRowCount() ; i++) {
-	                AclList += GetAttribute(PermissionList.GetDataRows()[i], "data1").toLowerCase() + "=0;";
-	            }
-
-	            for (var j = 0; j < Acllistview.GetRowCount() ; j++) {
-	                var AclCheck = GetAttribute(Acllistview.GetDataRows()[j], "data1").toLowerCase() + "=1";
-	                AclList = AclList.replace(GetAttribute(Acllistview.GetDataRows()[j], "data1").toLowerCase() + "=0", GetAttribute(Acllistview.GetDataRows()[j], "data1").toLowerCase() + "=1");
-	                AclText += "- " + GetChildNodes(Acllistview.GetDataRows()[j])[0].innerText + "<br>";
-	            }
-
-	            $.ajax({
-	            	type : "POST",
-	            	dataType : "html",
-	            	url : "/admin/ezOrgan/saveUserInfo.do",
-	            	async : false,
-	            	data : {parentCn : "", cn : GetAttribute(p_ListOrderObject, "_data2"), extensionAttribute1 : AclList},
-	            	success : function(result){
-	            		//TODO : 2016-05-03 장진혁과장 -- Email 전송메소드 구현 필요
-	            		//sendmail(GetAttribute(p_ListOrderObject, "_data2"), strLang18, AclText)
-	            		
-	            		if (result == 'CHECKPERMISSION') {
-	            		    alert(strLang31);
-	            		} else {
-	            		    alert(strLang14);
-	            		}
-	            	},
-	            	error : function(){
-	            		alert(strLang15);
-	            	}
-	            }); */
 	        }
 		    
 	        function setOrganListType(pListType) {
@@ -1267,12 +1109,34 @@
 	        	$("#spn_deptName").css("width", deptNameWidth);
 	        }
 		    
-	        function Permissions_List() {
-		        $.ajax({
+	        function getAuditApprLineList(auditApprLineId) {
+		        
+	        	var attrArray = new Array();
+	        	var propArray = new Array();
+	        	
+	        	attrArray.push("userId");
+	        	attrArray.push("deptId");
+	        	attrArray.push("auditApprLineId");
+	        	attrArray.push("orderBy");
+	        	
+	        	propArray.push("userNm");
+	        	propArray.push("deptNm");
+	        	
+	        	$.ajax({
 		        	type : "POST",
 		        	dataType : "text",
-		        	url : "/admin/ezOrgan/getPopUpPermissionsList.do",		        	
-		        	data : {companyID : companyId, type : type, pageNum : CurPage, pageSize : pageSize, searchType : "", searchValue : ""},
+		        	url : "/admin/ezOrgan/getAuditApprLineList.do",		        	
+		        	data : {
+		        		companyID : companyId,
+		        		pageNum : CurPage,
+		        		pageSize : pageSize,
+		        		searchType : "",
+		        		searchValue : "",
+		        		auditApprLineId : auditApprLineId,
+		        		propArray : JSON.stringify(propArray),
+		        		attrArray : JSON.stringify(attrArray),
+		        		value : "userId"
+		        	},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		if (result.xml != "") {
@@ -1296,33 +1160,49 @@
 		                    var xmlRtn = xmldom.documentElement.getElementsByTagName("ROWS")[0];
 		                    headerData.documentElement.appendChild(xmlRtn);
 		                }
+		                
+						var rows = headerData.getElementsByTagName("ROW");
+		                
+		                for(var i=0; i<rows.length; i++) {
+		                	var cell = rows[i].getElementsByTagName("CELL");
+			                
+			                for(var j=0; j<cell.length; j++) {
+			                	var xmlDoc = createXmlDom();
+			                	var className = xmlDoc.createElement("className");
+				                var style = xmlDoc.createElement("style");
+				                
+			                	className.appendChild(xmlDoc.createTextNode("className"));
+				                style.appendChild(xmlDoc.createTextNode("word-break:break-all"));
+				                
+			                	cell[j].appendChild(className);
+			                	cell[j].appendChild(style);
+			                }
+		                }
 
-		                document.getElementById("PermissionPopUpList").innerHTML = "";
+		                document.getElementById("auditApprLinePopList").innerHTML = "";
 
 		                var listview = new ListView();
-		                listview.SetID("lvPermissionList");
+		                listview.SetID("lvAuditApprLineList");
 		                listview.SetMulSelectable(false);
 		                //listview.SetRowOnClick("PermissionsPopUp_View");
 		                listview.SetRowOnDblClick("DeleteReceiver");
 		                listview.SetHeightFree(true);
 		                listview.DataSource(headerData);
-		                listview.DataBind("PermissionPopUpList");
+		                listview.DataBind("auditApprLinePopList");
 		                
-		                var a = document.getElementById("lvPermissionList_THEAD");
-		                var noclick = document.getElementById("lvPermissionList_TR_0");
+		                var a = document.getElementById("lvAuditApprLineList_THEAD");
+		                var noclick = document.getElementById("lvAuditApprLineList_TR_0");
 		                
 		                if (noclick == null || noclick == "") {
 		                	a.style.display = "none";
 		                } else {
 			                noclick.style.backgroundColor = "rgb(255, 255, 255)";
 			                noclick.setAttribute("selected", "false");
-			                $("#lvPermissionList_TR_0").mouseout(function(){
-			                	$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
+			                $("#lvAuditApprLineList_TR_0").mouseout(function(){
+			                	$("#lvAuditApprLineList_TR_0").css("background-color", "rgb(255, 255, 255)");
 		                });
 		                }
 		                a.style.display = "none";
-		               
-		                
 		        	},
 		        	error : function(error){
 		        	    alert("<spring:message code='ezOrgan.mse8'/>" + error);
@@ -1331,23 +1211,15 @@
 		    }
 	        
 	        function popupTitle() {
-	        	var titleTxt_c = "<spring:message code='ezOrgan.t291' />";
-	        	var titleTxt_k = "<spring:message code='ezOrgan.t293' />";
-	        	var titleTxt_g = "<spring:message code='ezOrgan.t295' />";
-	        	var titleTxt_a = "<spring:message code='ezOrgan.t292' />";
-	        	var titleTxt_i = "<spring:message code='ezOrgan.t294' />";
-	        	var titleTxt_n = "<spring:message code='ezOrgan.t297' />";
-	        	var titleTxt_l = "<spring:message code='ezOrgan.t296' />";
-	        	var titleTxt_w = "<spring:message code='ezOrgan.t301' />";
-	        	var titleTxt_m = "<spring:message code='ezOrgan.t300' />";
-	        	var titleTxt_f = "<spring:message code='ezOrgan.lhj1' />";
-	        	var titleTxt_wf = "<spring:message code='ezOrgan.t303' />";
-	        	var titleTxt_e = "<spring:message code='ezOrgan.kbm01' />";
-	        	var titleTxt_s = "<spring:message code='ezOrgan.t9904' />";	// 준법지원인
-	        	
-	        	var titleTxt = eval("titleTxt_" + delType);
+	        	var titleTxt = title;
 	        	document.getElementById("subtitle").innerText = titleTxt;
-	        	document.getElementById("PermissionStr").innerText = titleTxt;
+	        	document.getElementById("listTitle").innerText = titleTxt;
+	        }
+	        
+	        function orderIdx(row, target) {
+	        	$.each(row, function(index, item) {
+	            	$(this).attr(target, index+1);
+	            });
 	        }
 	        
 	    </script>
@@ -1517,7 +1389,7 @@
 	                        <td class="box">
 	                            <div style="width: 250px; height: 473px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 	                        </td>
-	                        <td></td>
+	                        <td style="width:20px;"></td>
 	                        <td class="listview" style="width: 426px" id="orglistView">
 	                            <table style="width: 100%; margin-top: -1px; height:35px;" class="popup_mainlist">
 	                                <tr>
@@ -1553,40 +1425,22 @@
 	                </table>
 	            </td>
 	                 <td style="width: 30px; text-align: center;">                            
-	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver(this)"><br>
-	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()">
+	                            <img src="/images/arr_r.gif"  alt="" width="18" height="18" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver(this)"><br>
+	                            <img src="/images/arr_l.gif" alt="" width="18" height="18" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()">
 	                 </td>   
-	            <td style="vertical-align:top; padding-top:4px; padding-left:4
-	            px;">
+	            <td style="vertical-align:top; padding-top:4px;">
 	                <table>
 	                    <tr>
 	                        <td>
 	                            <h2 id="Permission" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="margin-left:1px; border-bottom:0px;">
-	                                <%-- <span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezOrgan.t00011'/></span> --%>
-	                                <span style="min-width: 45px;" id="PermissionStr"></span>
+	                                <span style="min-width: 45px;" id="listTitle"></span>
 	                            </h2>
 	                            <div class="receiver_borderbox" style="border-top: 1px solid #565b66; margin-top:1px;">
-	                                <!-- <div id="PermissionBasic" style="width: 250px; Height: 210px; overflow-x: auto; overflow-y: auto;" ondblclick="InsertReceiver()"></div> -->
-	                                <div id="PermissionPopUpList" style="width: 250px; Height: 475px; overflow-x: auto; overflow-y: auto;"></div>
+	                                <div id="auditApprLinePopList" style="width: 250px; Height: 475px; overflow-x: auto; overflow-y: auto;"></div>
 	                            </div> 
 	                        </td>
 	                    </tr>
 	                    <tr>
-	                        <!-- <td style="text-align:center; padding-top:1px;">
-	                            <img src="../../../images/kr/cm/arr_down.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver()" />
-	                            <img src="../../../images/kr/cm/arr_up.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()" />
-	                        </td> -->
-	                    </tr>
-	                    <tr>
-	                        <%-- <td>
-	                            <h2 id="UserAcl" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="margin-left:1px; border-bottom:0px;">
-	                                <span style="min-width: 45px;" id="Span1"><spring:message code='ezOrgan.t00012'/></span>
-	                            </h2>
-	                            
-	                            <div class="receiver_borderbox" style="border-top: 1px solid #565b66;">
-	                                <div id="UserAclList" style="width: 250px; Height: 211px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver()"></div>
-	                            </div>
-	                        </td> --%>
 	                    </tr>
 	                </table>                                      
 	            </td>

@@ -34,7 +34,8 @@
 		<result property="title" 								column="title" 							columnIndex="5"/>		
 		<result property="description" 							column="description" 					columnIndex="6"/>		
 		<result property="telephoneNumber" 						column="telephoneNumber" 				columnIndex="7"/>		
-		<result property="company" 								column="company" 						columnIndex="8"/>		
+		<result property="company" 								column="company" 						columnIndex="8"/>
+		<result property="department" 							column="department"						columnIndex="9"/>
 	</resultMap>
 	
 	<resultMap id="retireList" class="OrganUserVO">
@@ -5267,6 +5268,7 @@
               			END
               				AS COMPANY,
         				EXTENSIONATTRIBUTE1 ,
+        				DEPARTMENT,
         				ROW_NUMBER() OVER (ORDER BY DISPLAYNAME) AS ROWNUM_
     				FROM
     					TBL_USERMASTER 

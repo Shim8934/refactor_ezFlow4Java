@@ -115,6 +115,10 @@
 						//문서유통 발송현황
 						url = "/admin/ezApprovalG/sendOut.do";
 						break;	
+					case "auditApprLineManage":
+						//감사결재선관리
+						url = "/admin/ezApprovalG/auditApprLineManage.do";
+						break;
 				}
 				
 				window.open(url,"right");
@@ -195,6 +199,10 @@
 				</c:if>
 				<%-- 2020-05-14 홍승비 - 전자결재 첨부파일 개수제한 설정메뉴 추가 --%>
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage('attachLimit')"><spring:message code='ezApprovalG.hsbAL01'/></span><ul></ul></h2>
+				<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage('auditApprLineManage')">
+						<spring:message code='ezAdmin.auditApprLine.01'/></span>
+					<ul></ul>
+				</h2>
 			</div>
 		</div>
 	</body>

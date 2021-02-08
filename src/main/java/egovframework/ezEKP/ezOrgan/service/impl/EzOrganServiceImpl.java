@@ -667,21 +667,21 @@ public class EzOrganServiceImpl implements EzOrganService {
             		String absenceFromDateStr = cellValSplit[3]+":"+cellValSplit[4];
             		String absenceToDateStr = cellValSplit[5]+":"+cellValSplit[6];
                 	
-                	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 	try {
-                		Date curDate = dateFormat.parse(dateFormat.format(new Date()));
+    					Date curDate = dateFormat.parse(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm"), "235|+09:00", false));
     					Date absenceFromDate  = dateFormat.parse(absenceFromDateStr);
     					Date absenceToDate  = dateFormat.parse(absenceToDateStr);
     					
     					if(absenceFromDate.before(curDate) && absenceToDate.after(curDate)) {
     						isAbsence = true;
     					}
-    					
-    					isAbsence = absenceToDate.after(curDate);
     				} catch (ParseException e) {
     					// TODO Auto-generated catch block
     					logger.error("dateFormat.parse(dateFormat.format(new Date())) error :: " + e);
     					e.printStackTrace();
+    				} catch (Exception ee) {
+    				    ee.printStackTrace();
     				}
             	}
             	

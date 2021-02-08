@@ -5437,5 +5437,135 @@
 				 		ENDDATE , DOCNO
 				</isEmpty>
 	</select>
+	
+	<resultMap id="auditApprLine" class="java.util.LinkedHashMap">
+		<result property="AUDITAPPRLINEID"		column="AUDITAPPRLINEID" />
+		<result property="USERID"				column="USERID" />
+		<result property="VALUE"				column="VALUE"				nullValue="" />
+		<result property="ORDERBY"				column="ORDERBY" />
+		<result property="INSERTDATE"			column="INSERTDATE"			nullValue="" />
+		<result property="TENANT_ID"			column="TENANT_ID" />
+		<result property="USERNM"				column="USERNM" />
+		<result property="POSITION"				column="POSITION"			nullValue="" />
+		<result property="DEPTNM"				column="DEPTNM"				nullValue="" />
+		<result property="MAIL"					column="MAIL"				nullValue="" />
+		<result property="TELEPHONENUMBER"		column="TELEPHONENUMBER"	nullValue="" />
+		<result property="COMPANY"				column="COMPANY" />
+		<result property="DEPTID"				column="DEPTID" />
+		<result property="DEPTNM"				column="DEPTNM" />
+		
+		<result property="USERNM2"				column="USERNM2"			nullValue="" />
+		<result property="DEPTNM2"				column="DEPTNM2"			nullValue="" />
+		<result property="TITLE"				column="TITLE"				nullValue="" />
+	</resultMap>
+	<select id="EzApprovalGAdmin.getAuditApprLineList" parameterClass="Map" resultMap="auditApprLine">
+		SELECT
+			ROWNUM, TB.*
+		FROM (
+			SELECT
+				A.AUDITAPPRLINEID,
+				A.USERID,
+				<isEqual property="value" compareValue="userId">
+					A.USERID AS VALUE,
+				</isEqual>
+				<isEqual property="value" compareValue="userNm">
+					B.DISPLAYNAME AS VALUE,
+				</isEqual>
+				A.ORDERBY,
+				A.INSERTDATE,
+				A.TENANT_ID,
+				A.COMPANYID,
+				B.DISPLAYNAME AS USERNM,
+				B.EXTENSIONATTRIBUTE10 AS POSITION,
+				B.MAIL,
+				B.TELEPHONENUMBER,
+				B.COMPANY,
+				C.CN AS DEPTID,
+				C.DISPLAYNAME AS DEPTNM,
+				
+				B.DISPLAYNAME2 AS USERNM2,
+				C.DISPLAYNAME2 AS DEPTNM2,
+				'' AS TITLE
+			FROM
+				TBL_AUDITAPPRLINE A INNER JOIN TBL_USERMASTER B
+			ON
+				A.USERID = B.CN
+			INNER JOIN
+				TBL_DEPTMASTER C
+			ON
+				A.DEPTID = C.CN
+			LEFT OUTER JOIN
+				TBL_USERMASTER_RETIRE D
+			ON
+				B.CN = D.CN
+			WHERE
+				1=1
+			AND
+				A.AUDITAPPRLINEID = #auditApprLineId#
+			AND
+				A.TENANT_ID = #tenantId#
+			AND
+				A.COMPANYID = #companyId#
+			AND
+				D.CN IS NULL
+			ORDER BY
+				ORDERBY ASC
+		) TB
+		WHERE ROWNUM BETWEEN #startRow# AND #endRow#
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getAuditApprLineListCnt" parameterClass="Map" resultClass="java.lang.Integer">
+		SELECT
+			COUNT(1)
+		FROM
+			TBL_AUDITAPPRLINE A INNER JOIN TBL_USERMASTER B
+		ON
+			A.USERID = B.CN
+		INNER JOIN
+			TBL_DEPTMASTER C
+		ON
+			A.DEPTID = C.CN
+		LEFT OUTER JOIN
+			TBL_USERMASTER_RETIRE D
+		ON
+			B.CN = D.CN
+		WHERE
+			1=1
+		AND
+			A.AUDITAPPRLINEID = #auditApprLineId#
+		AND
+			A.TENANT_ID = #tenantId#
+		AND
+			A.COMPANYID = #companyId#
+		AND
+			D.CN IS NULL
+	</select>
+	
+	<delete id="EzApprovalGAdminDAO.getAuditApprLineListDel" parameterClass="Map">
+		DELETE FROM
+			TBL_AUDITAPPRLINE
+       	WHERE
+       		AUDITAPPRLINEID = #auditApprLineId#
+	</delete>
+	
+	<insert id="EzApprovalGAdminDAO.getAuditApprLineListIns" parameterClass="Map">
+		INSERT INTO TBL_AUDITAPPRLINE (
+			AUDITAPPRLINEID,
+			USERID,
+			DEPTID,
+			ORDERBY,
+			INSERTDATE,
+			TENANT_ID,
+			COMPANYID
+		) VALUES (
+			#auditApprLineId#,
+			#userId#,
+			#deptId#,
+			#orderBy#,
+			SYSDATE,
+			#tenantId#,
+			#companyId#
+		)
+	</insert>
 </sqlMap>
 

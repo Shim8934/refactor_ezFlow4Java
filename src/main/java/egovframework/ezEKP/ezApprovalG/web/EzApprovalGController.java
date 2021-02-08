@@ -10545,4 +10545,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("getTmpDocAprStateIsOK ended");
 		return result;
 	}
+	
+	/**
+	* 결재선 추가될 준법지원인
+	*/
+	@RequestMapping(value = "/ezApprovalG/getAuditAdd.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public void getAuditAdd(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		response.setContentType("application/json;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Cache-Control", "no-cache");
+		response.getWriter().write(ezApprovalGService.getAuditAdd(loginCookie, userInfo, request).toString());
+	}
 }

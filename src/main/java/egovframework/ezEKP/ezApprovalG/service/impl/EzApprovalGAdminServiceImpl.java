@@ -26,13 +26,16 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.KEDAuthorUserInfo;
 import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.jsoup.Jsoup;
@@ -40,11 +43,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.ModelAndView;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -96,6 +103,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name = "EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGAdminServiceImpl.class);
 
@@ -5132,5 +5142,204 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				
  		return resultXML.toString();
 	}
-				
+	
+	public Object getAuditApprLineListPrc(String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("getAuditApprLineListPrc start");
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		
+		//관리자 권한 체크
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		String companyId = user.getCompanyID();
+		String auditApprLineId = request.getParameter("auditApprLineId");
+		String insUserArray = request.getParameter("insUserArray");
+		String delUserArray = request.getParameter("delUserArray");
+		
+		Map<String, Object> mapResult = new HashMap<String, Object>();
+		JSONParser parser = new JSONParser();
+		JSONArray jaInsUserArray = new JSONArray();
+		//JSONArray jaDelUserArray = new JSONArray();
+		
+		if(insUserArray != null) {
+			jaInsUserArray = (JSONArray)parser.parse(insUserArray);
+		}
+		/*
+		if(delUserArray != null) {
+			jaDelUserArray = (JSONArray)parser.parse(delUserArray);
+		}
+		*/
+		Map<String, Object> mapDel = new HashMap<String, Object>();
+		mapDel.put("auditApprLineId", auditApprLineId);
+		ezApprovalGAdminDAO.getAuditApprLineListDel(mapDel);
+		
+		for(int i=0; i<jaInsUserArray.size(); i++) {
+			Map<String, Object> mapIns = new HashMap<String, Object>();
+			
+			mapIns = (Map<String, Object>)jaInsUserArray.get(i);
+			mapIns.put("auditApprLineId", auditApprLineId);
+			// tenantid, companyid 는 로그인한 사용자 기준으로 해도 무방해 보임
+			// tenantid 는 화면에서 상이한 값으로 insert 될 수가 없음 => 로그인 사용자 tenantid 사용
+			// companyid 는 값이 달라도 부모화면에서 부터  전달 받음
+			mapIns.put("companyId", companyId);
+			mapIns.put("tenantId", user.getTenantId());
+			
+			ezApprovalGAdminDAO.getAuditApprLineListIns(mapIns);
+		}
+		
+		mapResult.put("auditApprLineId", auditApprLineId);
+		
+		JSONObject jo = new JSONObject();
+		jo.put("result = ", mapResult);
+		logger.debug("getAuditApprLineListPrc end");
+		
+		return jo;
+	}
+	
+	public String auditApprLineManagePop(String loginCookie, HttpServletRequest request, HttpServletResponse response, ModelAndView model) throws Exception {
+		logger.debug("auditApprLineManagePop started.");
+	    
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		
+		//관리자 권한 체크
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String userID = (request.getParameter("userID") != null ? request.getParameter("userID") : "");
+        String selCompany = (request.getParameter("companyID") != null ? request.getParameter("companyID") : "");
+		String topID = "";
+		String deptTreeTopId = "";
+		//String delType = (request.getParameter("DelType") !=null ? request.getParameter("DelType") : "");
+		//String type = (request.getParameter("type") !=null ? request.getParameter("type") : "");
+		String title = (request.getParameter("title") !=null ? request.getParameter("title") : "");
+		String auditApprLineId = (request.getParameter("auditApprLineId") !=null ? request.getParameter("auditApprLineId") : "");
+		String packageType = commonUtil.getPackageType(user.getTenantId());
+		
+		if (user.getRollInfo().indexOf("c=1") == -1) {
+			topID = user.getCompanyID();
+			deptTreeTopId = topID;
+		} else {
+			topID = "Top";
+			deptTreeTopId = topID + "/organ";
+		}
+		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
+		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
+		//2018-07-31 김보미 - 근태 추가
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", user.getTenantId());
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
+		
+		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", user.getTenantId());
+		
+		model.addObject("packageType", packageType);
+		model.addObject("userID", userID);
+		model.addObject("companyID", selCompany);
+		model.addObject("topID", topID);
+		model.addObject("userInfo", user);
+		model.addObject("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
+		model.addObject("approvalFlag", approvalFlag);
+		model.addObject("approvalForDoc", approvalForDoc);
+		model.addObject("use_attitude", use_attitude);
+		model.addObject("deptTreeTopId", deptTreeTopId);
+		model.addObject("useWebfolder", useWebfolder);
+		model.addObject("title", title);
+		model.addObject("auditApprLineId", auditApprLineId);
+		//model.addAttribute("DelType", delType);
+		//model.addAttribute("type", type);
+		
+		logger.debug("auditApprLineManagePop ended.");
+		
+		return "admin/ezApprovalG/auditApprLineManagePop";
+	}
+	
+	public String getAuditApprLineList(String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("getAuditApprLineList started.");
+	    
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);
+	    
+        String result = "";
+        String value = request.getParameter("value");
+		String companyID = request.getParameter("companyID");
+		String type = request.getParameter("type");
+		String strLang = userInfo.getPrimary();
+		String searchType = request.getParameter("searchType");
+		String searchValue = request.getParameter("searchValue");
+		String prop = request.getParameter("propArray");
+		String attr = request.getParameter("attrArray");
+		String auditApprLineId = request.getParameter("auditApprLineId");
+		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
+		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
+		int startRow = (pageSize * (pageNum - 1)) + 1;
+        int endRow = pageSize * pageNum;
+        
+		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
+		
+		if(("").equals(auditApprLineId)) {
+			auditApprLineId = "AD0001";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		JSONParser parser = new JSONParser();
+		JSONArray jaProp = (JSONArray)parser.parse(prop);
+		JSONArray jaAttr = (JSONArray)parser.parse(attr);
+		JSONArray ja = new JSONArray();
+		
+		map.put("tenantId", tenantID);
+		map.put("companyId", companyID);
+		map.put("auditApprLineId", auditApprLineId);
+		map.put("value", value);
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+
+		List<HashMap<String, Object>> list = ezApprovalGAdminDAO.getAuditApprLineList(map);
+		int count = ezApprovalGAdminDAO.getAuditApprLineListCnt(map);
+
+		for (int i = 0; i < list.size(); i++) {
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+			resultMap = list.get(i);
+			ja.add(resultMap);
+		}
+		
+		result = commonUtil.makeListViewData(count, ja, jaAttr, jaProp, value);
+		logger.debug("result = " + result);
+        logger.debug("getAuditApprLineList ended.");
+        
+		return result.toString();
+	}
+	
+	public String auditApprLineManage(String loginCookie, HttpServletRequest request, HttpServletResponse response, ModelAndView model) throws Exception {
+		logger.debug("auditApprLineManage started.");
+	    
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		//관리자 권한 체크
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
+				resultList.add(j++, vo);
+			}
+		}
+		
+		model.addObject("userCompany", user.getCompanyID());
+		model.addObject("list", resultList);
+		model.addObject("isAdmin", user.getRollInfo().indexOf("c=1") > -1);	
+		
+		logger.debug("auditApprLineManage ended.");
+		
+		return "admin/ezApprovalG/auditApprLineManage";
+	}
 }

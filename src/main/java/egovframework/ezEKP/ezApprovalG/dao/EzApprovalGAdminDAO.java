@@ -22,6 +22,7 @@ import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -655,5 +656,22 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> getSearchDocList(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalGAdminDAO.getSearchDocList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getAuditApprLineList(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzApprovalGAdmin.getAuditApprLineList", map);
+	}
+
+	public int getAuditApprLineListCnt(Map<String, Object> map) throws Exception {
+		return (int)select("EzApprovalGAdminDAO.getAuditApprLineListCnt", map);
+	}
+
+	public void getAuditApprLineListDel(Map<String, Object> map) throws Exception {
+		super.delete("EzApprovalGAdminDAO.getAuditApprLineListDel", map);
+	}
+
+	public void getAuditApprLineListIns(Map<String, Object> map) throws Exception {
+		super.insert("EzApprovalGAdminDAO.getAuditApprLineListIns", map);
 	}
 }

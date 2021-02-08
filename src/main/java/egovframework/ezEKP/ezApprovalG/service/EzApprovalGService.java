@@ -725,4 +725,6 @@ public interface EzApprovalGService {
 	public boolean isOuterForm(String formID, String companyID, int tenantID) throws Exception;
 	
 	public String updateDocInfo(String docID, LoginVO userInfo, String companyID, int tenantID, String delFlag, String delInfo) throws Exception;
+
+	public String getAuditAdd(String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception;
 }

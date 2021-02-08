@@ -69,6 +69,57 @@ function AprlineDel_onclickCC() {
 
 //############################################################################################################################################# 결재선 삭제 함수
 function AprlineDel_onclick() {
+	
+	var pAPRLINE = new ListView();      //// ListView 선언
+	pAPRLINE.LoadFromID("lvAPRLINE");
+	var pRows = pAPRLINE.GetDataRows();
+	var pSelectedRow = pAPRLINE.GetSelectedRows();
+	var isAuditApproval = false;
+	var lastAuditRow = null;
+	
+	if($(pSelectedRow).attr("DATA11") == "005" && $(pSelectedRow).attr("DATA12") == "001") {
+		for(var i=0; i<pRows.length; i++) {
+			if($(pRows[i]).attr("DATA11") == "005" && $(pRows[i]).attr("DATA12") == "003") {
+				isAuditApproval = true;
+			}
+			if($(pRows[i]).attr("DATA11") == "005" && $(pRows[i]).attr("DATA12") == "001" && lastAuditRow == null) {
+				lastAuditRow = pRows[i];
+			}
+		}
+		
+		if(isAuditApproval) {
+			if(pSelectedRow[0] == lastAuditRow) {
+				OpenAlertUI(strLang954);
+				return;
+			} else {
+				AprLineDel_onclick_action();
+			}
+		} else {
+			for(var i=0; i<pRows.length; i++) {
+				if($(pRows[i]).attr("DATA11") == "005" && $(pRows[i]).attr("DATA12") == "001") {
+					$(pRows[i]).trigger("click");
+					AprLineDel_onclick_action();
+				}
+			}
+			$("input[name=auditApprLine]").prop("checked", false);
+		}
+		
+	} else if($(pSelectedRow).attr("DATA11") == "020" || $(pSelectedRow).attr("DATA11") == "021") {
+		for(var i=0; i<pRows.length; i++) {
+			if(($(pRows[i]).attr("DATA11") == "020" || $(pRows[i]).attr("DATA11") == "021") && $(pRows[i]).attr("DATA12") == "001") {
+				$(pRows[i]).trigger("click");
+				AprLineDel_onclick_action();
+			}
+		}
+		$("input[name=apprBilingual]").attr("isChecked", "N");
+		$("input[name=apprBilingual][value=01]").attr("isChecked", "Y");
+		$("input[name=apprBilingual][value=01]").prop("checked", true);
+	} else {
+		AprLineDel_onclick_action();
+	}
+}
+
+function AprLineDel_onclick_action() {
 	if (approvalFlag == "S") {
 	    if (!CrossYN()) {
 	        var Event_ID = window.event.srcElement.id;
@@ -105,7 +156,12 @@ function AprlineDel_onclick() {
 			var Event_ID = "";
 		}
 		else {
-			var Event_ID = window.event.srcElement.id;
+			var Event_ID = "";
+			if (typeof(window.event) != "undefined") {
+				Event_ID = window.event.srcElement.id;
+			} else {
+				return;
+			}
 		}
 		if (Event_ID.indexOf("lvAPRLINE_TR_") == -1) {
 			if (nodelUser())
@@ -1601,10 +1657,14 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
 			
 			temppSelectedRow = pSelectedRow;
 			tempMode = Mode;
-			if($(pSelectedRow).attr('ABSENCE') != '' && $(pSelectedRow).attr('ABSENCE') != undefined) {
+			if($(pSelectedRow).attr("ABSENCE") != "" && $(pSelectedRow).attr("ABSENCE") != undefined) {
 				var pInformationContent = "" + strLang1039 + "";
 				OpenInformationUI(pInformationContent, OpenInformationUI_Result);
 			} else {
+				if($(pSelectedRow).attr("APPRLINETYPE") == "audit_add" || $(pSelectedRow).attr("JUNBUBYN") == "Y"
+					|| $(pSelectedRow).attr("APPRLINETYPE") == "020" || $(pSelectedRow).attr("APPRLINETYPE") == "021") {
+					chkDuplflag = false;
+				}
 				if (chkDuplflag) {
 					var pInformationContent = "" + strLang296 + "<br>" + strLang297 + "";
 					var ans = OpenInformationUI(pInformationContent, AprLineAddUser_Complete);
@@ -1724,7 +1784,19 @@ function AprLineAddUser_Complete(Ans) {
             }
         }
         else {
-            var objTr = pAPRLINE.NewAddRow(0, "lvAPRLINE" + "_TR_" + eval(MaxID + 1));
+        	var rowIndex = 0;
+        	var objTr = null;
+        	
+        	if (tempMode == "PERSON") {
+        		if(Resultxml.getElementsByTagName("APPRLINETYPE")[0].textContent == "audit_add"
+            		|| Resultxml.getElementsByTagName("JUNBUBYN")[0].textContent == "Y") {
+            		if(InitTr.length > 1) {
+            			rowIndex = 1;
+            		}
+            	}
+        	}
+        	
+            objTr = pAPRLINE.NewAddRow(rowIndex, "lvAPRLINE" + "_TR_" + eval(MaxID + 1));
             pAPRLINE.AddDataRow(objTr, Resultxml);
         }
 
@@ -1885,6 +1957,9 @@ function AprLineUserAdd(AprLineAddIndex, AprLineRow, pSelectedRow, selnode)
     pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA10")) + "</DATA16>";
     pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA11")) + "</DATA17>";
     pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA12")) + "</DATA18>";
+    pparsingXML = pparsingXML + "<ABSENCE>" + MakeXMLString(GetAttribute(pSelectedRow, "ABSENCE")) + "</ABSENCE>";
+	pparsingXML = pparsingXML + "<JUNBUBYN>" + MakeXMLString(GetAttribute(pSelectedRow, "JUNBUBYN")) + "</JUNBUBYN>";
+	pparsingXML = pparsingXML + "<APPRLINETYPE>" + MakeXMLString(GetAttribute(pSelectedRow, "APPRLINETYPE")) + "</APPRLINETYPE>";
     pparsingXML = pparsingXML + "</CELL><CELL>";
 	//pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pSelectedRow[0].cells[0].innerText) + "</VALUE>";
 	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA4")) + "</VALUE>";
@@ -4326,6 +4401,44 @@ function event_getAprLineDeptFullTree() {
         else {
             alert(strLang249 + g_xmlHTTP.statusText);
             g_xmlHTTP = null;
+        }
+    }
+}
+
+function list2_onSel_DBclick_audit(table_id) {
+	var pUserList = new ListView();      
+    pUserList.LoadFromID(table_id);
+
+	//var selnode = pUserList.GetSelectedRows();
+    var rows = pUserList.GetDataRows();
+	var RtnVal = CheckSignCellValue();  
+    
+    InsertMode = "Add";	
+    
+    var pAPRLINE = new ListView();      
+    pAPRLINE.LoadFromID("lvAPRLINE");
+    
+    for(var i=0; i<rows.length; i++) {
+    	var selnode = new Array();
+    	selnode.push(rows[i]);
+    	
+    	if (RtnVal) {
+        	if (approvalFlag == "S") {
+        		var lineArea = CheckLineArea_BeforeAdd();
+        		if (!lineArea) {return;}
+    			
+    			for(var j = selnode.length-1 ; j >= 0 ; j--){
+    				SAPRLINEATTENDADDFunction(selnode[j], "PERSON");
+    				initJunGyul();
+    			}
+        	} else {
+        		if (selnode.length != 0) {
+    				aprlinecount = 0;
+
+        			for(var j = selnode.length-1 ; j >= 0 ; j--)
+        				APRLINEATTENDADDFunction(selnode[j], "PERSON");
+        		}
+        	}
         }
     }
 }

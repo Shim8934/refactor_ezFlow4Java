@@ -143,6 +143,8 @@ import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
@@ -211,6 +213,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Resource(name = "loginService")
     private LoginService loginService;
+
+	@Resource(name = "EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
+	
+	@Resource(name = "EzOrganDAO")
+	private EzOrganDAO ezOrganDAO;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGServiceImpl.class);
 	
@@ -32015,4 +32023,204 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("updateDocInfo Ended");
 		return "<RESULT>TRUE</RESULT>";
 	}
+	
+	public String getAuditAdd(String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("getAuditAdd started.");
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = "";
+		String companyID = request.getParameter("companyID");
+		String type = request.getParameter("type");
+		String strLang = userInfo.getPrimary();
+		String searchType = request.getParameter("searchType");
+		String searchValue = request.getParameter("searchValue");
+		String cell = request.getParameter("cell");
+		String prop = request.getParameter("prop");
+		String langData = userInfo.getPrimary();
+		
+		String addCell = (request.getParameter("addCell") != null ? request.getParameter("addCell") : "");
+		String aprMemberId = request.getParameter("aprMemberId");
+		String aprType = request.getParameter("aprType");
+		String aprState = request.getParameter("aprState");
+		
+		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
+		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
+		int startRow = (pageSize * (pageNum - 1)) + 1;
+        int endRow = pageSize * pageNum;
+        int tenantID = userInfo.getTenantId();
+        int docCount = 0;
+        
+		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
+		
+        int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, searchType, searchValue, strLang, tenantID);
+
+        logger.debug("companyID=" + companyID + ",type=" + type + ",strLang=" + strLang + ",pageNum=" + pageNum
+                + ",pageSize=" + pageSize + ",startRow=" + startRow + ",endRow=" + endRow
+                + ",totalCount=" + cnt);
+        
+        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, searchType, searchValue, strLang, startRow, endRow, tenantID);
+        
+        int memberCount = 0;		
+		String[] memberInfo = new String[list.size()];
+		
+        for(int i=0; i<list.size(); i++) {
+        	logger.debug("getAuditAdd list displayName ["+i+"] = " + list.get(i).getDisplayName());
+        	
+        	Map<String, Object> map = new HashMap<String, Object>();
+        	StringBuilder sb = new StringBuilder();
+        	OrganUserVO obj = list.get(i);
+        	
+			sb.append("<DATA>");
+        	
+        	map.put("v_CN", list.get(i).getCn());
+    		map.put("v_DEPTCD", list.get(i).getDepartment());
+    		map.put("v_LANGDATA", langData);
+    		map.put("v_TENANT_ID", tenantID);
+    		
+    		OrganUserVO organVo = ezOrganDAO.getTBLUserMaster(map);
+    		sb.append(commonUtil.getQueryResult(organVo));
+    		
+			sb.append("</DATA>");
+			String cn = obj.getCn();
+			
+			List<HashMap<String, Object>> docList = null;
+			
+			if(addCell.equals("docCount")) {
+	        	Map<String, Object> docMap = new HashMap<String, Object>();
+				
+	        	docMap.put("aprMemberId", cn);
+	        	docMap.put("aprType", aprType);
+	        	docMap.put("aprState", aprState);
+	        	docMap.put("tenantId", tenantID);
+	        	docMap.put("companyId", companyID);
+	        	
+	        	docList = ezApprovalGDAO.getDocList(docMap);
+	        	
+	        	docCount = docList.size();
+	        }
+			
+			memberInfo[memberCount] = getMemberInfoCustom(sb.toString(), cell, prop, cn, "user", docCount);
+			memberCount++;
+        }
+		
+        StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA><ROWS>");
+        
+        for (int i = 0; i < memberCount; i++) {
+            memberlist.append(memberInfo[i]);
+        }
+        
+        memberlist.append("</ROWS></LISTVIEWDATA>");
+        
+        logger.debug("getAuditAdd result = " + memberlist);
+		logger.debug("getAuditAdd ended.");
+        
+        return memberlist.toString();
+	}
+	
+	private String getMemberInfoCustom(String pXMLString, String pCellList, String pPropList, String pMemberID, String pCategory, int docCount) throws Exception {
+        logger.debug("getMemberInfoCustom started");
+        logger.debug("pCellList=" + pCellList + ",pPropList=" + pPropList + ",pMemberID=" + pMemberID 
+                + ",pCategory=" + pCategory);
+
+	    Document doc = commonUtil.convertStringToDocument(pXMLString);
+        StringBuilder nodeInfo = new StringBuilder("<ROW>");
+        String[] celllist = pCellList.split(";");
+        String cellvalue = "";
+        pPropList = ezOrganService.convertAddandConvert(pCategory, pPropList);
+
+        for (int i = 0; i < celllist.length; i++) {
+        	cellvalue = "";
+
+            if (!pMemberID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPARTMENT") != null && !pMemberID.equals(doc.getElementsByTagName("DEPARTMENT").item(0).getTextContent()))) {
+            	switch (celllist[i].toLowerCase()) {
+                case "department":
+                    cellvalue = pMemberID;
+                    break;
+                case "description":
+                    cellvalue = doc.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+                    break;
+                case "title":
+                    if (doc.getElementsByTagName("TITLE") != null && !doc.getElementsByTagName("TITLE").item(0).getTextContent().equals("")) {
+                        cellvalue = doc.getElementsByTagName("TITLE").item(0).getTextContent();
+                        String[] sublist = cellvalue.split(";");
+                        cellvalue = "";
+
+                        for (String subinfo : sublist) {
+                            String[] subinfolist = subinfo.split(":");
+                            if (subinfolist[0].equals(pMemberID) && subinfolist.length > 1) {                                
+                                cellvalue = subinfolist[1];
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+            
+            logger.debug("cellList["+i+"]=" + celllist[i]);
+            
+              if (cellvalue == null || cellvalue.equals("")) { 
+                if (celllist[i] != null && !celllist[i].equals("")) {
+                    if (doc.getElementsByTagName(celllist[i].toUpperCase()).item(0) != null) {
+                    	if (!doc.getElementsByTagName(celllist[i].toUpperCase()).item(0).getTextContent().equals("")) {
+                    		cellvalue = doc.getElementsByTagName(celllist[i].toUpperCase()).item(0).getTextContent();
+                    	}
+                    } else {
+                         cellvalue = "";
+                    }
+                } else {
+                    cellvalue = "";
+                }
+            }
+            
+            if(celllist[i].toUpperCase().equals("DOCCOUNT")) {
+            	cellvalue = docCount+"";
+            }
+            nodeInfo.append("<CELL><VALUE>" + commonUtil.cleanValue(cellvalue) + "</VALUE>");
+
+            if (i == 0) {
+                String strNode = "";
+                
+                if (doc.getElementsByTagName("CN").item(0) != null) {
+                    strNode = doc.getElementsByTagName("CN").item(0).getTextContent();
+                }
+                
+                nodeInfo.append("<DATA1>" + pCategory + "</DATA1><DATA2>" + strNode + "</DATA2>");
+
+                if (!pPropList.equals("")) {
+                    String[] proplist = pPropList.split(";");
+                    String propvalue;
+                    int index = 0;
+                    for (int j = 0; j < proplist.length; j++) {
+                        if (doc.getElementsByTagName(proplist[j].toUpperCase()) != null && doc.getElementsByTagName(proplist[j].toUpperCase()).item(0) != null) {
+                            propvalue = doc.getElementsByTagName(proplist[j].toUpperCase()).item(0).getTextContent();
+                        } else {
+                            propvalue = "";
+                        }
+                        
+                        if(proplist[j].toUpperCase().equals("JUNBUB") || proplist[j].toUpperCase().equals("SUPERVISOR") || proplist[j].toUpperCase().equals("TRANSLATION")) {
+                        	nodeInfo.append("<" + proplist[j] + ">" + commonUtil.cleanValue(propvalue) + "</" + proplist[j] + ">");
+                        } else {
+                        	nodeInfo.append("<DATA" + (index + 3) + ">" + commonUtil.cleanValue(propvalue) + "</DATA" + (index + 3) + ">");
+                        	index++;
+                        }
+                    }
+                }
+            }
+            if(celllist[i].toUpperCase().equals("EXTENSIONATTRIBUTE5")) {
+            	nodeInfo.append("<ABSENCE>" + doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent() + "</ABSENCE>");
+            }
+            if(celllist[i].toUpperCase().equals("JUNBUBYN")) {
+            	nodeInfo.append("<JUNBUBYN>Y</JUNBUBYN>");
+            }
+            nodeInfo.append("</CELL>");
+        }
+        
+        nodeInfo.append("</ROW>");
+
+        logger.debug("nodeInfo=" + nodeInfo);
+        logger.debug("getMemberInfoCustom ended");
+        
+        return nodeInfo.toString();        
+    }
 }

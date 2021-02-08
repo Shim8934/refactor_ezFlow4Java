@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -4992,4 +4993,49 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/**
+	 * 감사 결재선 설정 메뉴 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/auditApprLineManage.do", method = RequestMethod.GET)
+	public Object auditApprLineManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse response, ModelAndView model) throws Exception {
+		model.setViewName(ezApprovalGAdminService.auditApprLineManage(loginCookie, request, response, model));
+		return model;
+	}
+	
+	/**
+	 * 감사 결재선 list 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/getAuditApprLineList.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public void getAuditApprLineList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse response, Model model) throws Exception {
+		response.setContentType("application/json;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Cache-Control", "no-cache");
+		response.getWriter().write(ezApprovalGAdminService.getAuditApprLineList(loginCookie, request, response, model).toString());
+	}
+	
+	/**
+	 * 감사결재선관리 등록 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/auditApprLineManagePop.do", method = RequestMethod.GET)	
+	public Object auditApprLineManagePop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse response, ModelAndView model) throws Exception {
+		model.setViewName(ezApprovalGAdminService.auditApprLineManagePop(loginCookie, request, response, model));
+		return model;
+	}
+	
+	/**
+	 * 감사결재선관리 DB 반영
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/auditApprListPrc.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void auditApprListPrc(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse response, Model model) throws Exception {
+		response.setContentType("application/json;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Cache-Control", "no-cache");
+		response.getWriter().write(ezApprovalGAdminService.getAuditApprLineListPrc(loginCookie, request, response, model).toString());
+	}
 }

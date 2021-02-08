@@ -4507,9 +4507,9 @@
          	 		FORMDESCRIPTION LIKE '%$v_SEARCHNAME$%'
          	</isEqual>
          		AND
-         			TENANT_ID = #v_TENANTID#
+         			TBL_FORMINFO.TENANT_ID = #v_TENANTID#
          		AND
-         			COMPANYID = #companyID#         			
+         			TBL_FORMINFO.COMPANYID = #companyID#         			
 		</isNotEqual>
 		</isNotEqual>
 		ORDER BY FORMORDER
@@ -33352,4 +33352,27 @@
 		     		COMPANYID = #companyID#
 		</isNotEqual>		
 	</update>
+	
+	<resultMap id="getDocList" class="java.util.LinkedHashMap">
+		<result property="docid"				column="docid" />
+		<result property="aprmembersn"			column="aprmembersn" />
+		<result property="aprtype"				column="aprtype" />
+		<result property="aprstate"				column="aprstate" />
+		<result property="aprmemberid"			column="aprmemberid" />
+	</resultMap>
+	<select id="EzApprovalG.getDocList" parameterClass="Map" resultMap="getDocList">
+		SELECT
+			docid
+			,aprmembersn
+			,aprtype
+			,aprstate
+			,aprmemberid
+		FROM TBL_APRLINEINFO
+		WHERE 1=1
+		AND APRMEMBERID = #aprMemberId#
+		AND APRTYPE = #aprType#
+		AND APRSTATE = #aprState#
+		AND TENANT_ID = #tenantId#
+		AND COMPANYID = #companyId#
+	</select>
 </sqlMap>
