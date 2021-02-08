@@ -1539,7 +1539,7 @@
 						<li><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t1788'/></span></li>
 					</c:when>
 				</c:choose>
-				<c:if test="${fn:indexOf(optGamsabu, userInfo.deptID) > -1}">
+				<c:if test="${fn:indexOf(optGamsabu, userInfo.deptID) > -1 && approvalFlag == 'S'}">
 					<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1517'/>');cmdOK_onclick('GAMSAHAM', '<spring:message code='ezApprovalG.t1517'/>')"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t1517'/></span></li>
 				</c:if>
 			</ul>

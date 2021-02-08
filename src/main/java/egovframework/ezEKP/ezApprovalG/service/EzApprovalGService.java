@@ -727,4 +727,6 @@ public interface EzApprovalGService {
 	public String updateDocInfo(String docID, LoginVO userInfo, String companyID, int tenantID, String delFlag, String delInfo) throws Exception;
 
 	public String getAuditAdd(String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception;
+
+	public String getGamsaYesanDeptInfo(String approvalFlag, String companyID, String lang, int tenantID) throws Exception;
 }

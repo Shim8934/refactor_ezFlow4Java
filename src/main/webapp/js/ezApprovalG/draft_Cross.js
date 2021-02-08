@@ -169,6 +169,7 @@ function GetDraftAprLineInfo(ret) {
     if(isSplit == "Y")  
 		SplitSign(OrderType,OrderName,OrderDept,OrderStat,OrderJobtitle);
     
+    var chkGamsa = false;
 	LastSignSN = OrderType.length;
 	// 마지막 결재하는 사람 찾기
     for(i=1;i<OrderType.length;i++) {
@@ -177,6 +178,8 @@ function GetDraftAprLineInfo(ret) {
 			i = OrderType.length;
 		} else if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 ||  OrderType[i] == strAprType1 ||  OrderType[i] == strAprType3) {
     		LastSignSN = i;
+        } else if (OrderType[i] == strAprType13) {
+        	chkGamsa = true;
         }
     }
     
@@ -283,7 +286,23 @@ function GetDraftAprLineInfo(ret) {
 			for (i=0; i<field.childElementCount; i++)
 			    field.children[i].style.display = "none";
 		}	
-	}		
+	}
+	
+    if (chkGamsa) {
+        fieldname = "deptgamsaname";
+        field = message.GetListItem(fields, fieldname);
+        if (field) {
+            setNodeText(field, "감    사");
+        }
+    }
+    else {
+        fieldname = "deptgamsaname";
+        field = message.GetListItem(fields, fieldname);
+        if (field) {
+            setNodeText(field, "");
+        }
+    }
+    
   } catch(e) {
     alert("GetDraftAprLineInfo(ret)" + e.description);
   }	
@@ -1675,6 +1694,30 @@ function ClearDocCellInfo(ret) {
                 field.innerHTML = "<br type='_moz'>";
         }
         
+        fieldname = "deptgamsaname";
+        field = message.GetListItem(fields, fieldname);
+        if (field) {
+            setNodeText(field, " ");
+            if (new RegExp(/Firefox/).test(navigator.userAgent))
+                field.innerHTML = "<br type='_moz'>";
+        }
+
+        fieldname = "deptgamsasign";
+        field = message.GetListItem(fields, fieldname);
+        if (field) {
+            setNodeText(field, " ");
+            if (new RegExp(/Firefox/).test(navigator.userAgent))
+                field.innerHTML = "<br type='_moz'>";
+        }
+
+        fieldname = "deptgamsadate";
+        field = message.GetListItem(fields, fieldname);
+        if (field) {
+            setNodeText(field, " ");
+            if (new RegExp(/Firefox/).test(navigator.userAgent))
+               field.innerHTML = "<br type='_moz'>";
+        }
+        
         //2018-09-27 김보미
         if (AprState == "015" || isUsed == "reuse") { //회송이거나 재사용일 경우 수신처 결재칸도 비울것. 
         	susunSN = "1";
@@ -2619,6 +2662,10 @@ function SetAutoPropertyValue() {
             pChamJoFlag = "N";
         }
         pChamJoFlag = "Y";
+        
+        if (message.GetListItem(fields, "deptgamsasign")) {
+            deptgamsaCount = 1;
+        }
 
     } catch (e) {
         alert("SetAutoPropertyValue()" + e.description);

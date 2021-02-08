@@ -1155,7 +1155,7 @@ function SetAutoPropertyValue() {
 		var field = fields[i];
 		if(!fields) return;
 		
-		if(pDraftFlag == "HAPYUI" || (pDraftFlag == "GAMSABU" && ConvertYN == "Y") || pDraftFlag == "WHOKYUL") {
+		if(pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
 	  		switch (field.id) {
 	  			case "bedocnumber" :
 	  				setDocNumFormat("be");
@@ -1421,16 +1421,16 @@ function SaveDraftDocInfo() {
             	createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
             }
             	
-            if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
+            if (pDraftFlag == "SUSIN" || (pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU"))
                 createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
             else
                 createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", "");
-            if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
+            if (pDraftFlag == "SUSIN" || (pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU"))
                 createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", pDocType);
             else
                 createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", "");
 
-            if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
+            if (pDraftFlag == "SUSIN" || (pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU"))
                 createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", pDocState);
             else
                 createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", "");
@@ -1451,7 +1451,7 @@ function SaveDraftDocInfo() {
                     createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
                 
                 	//부서순차합의 일경우 접수번호를 통해 가져온 DOCNO 를 가져오도록 수정. 2019-02-21 홍대표
-	                if(pDraftFlag == "HAPYUI" && approvalFlag == "G") {
+	                if((pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU") && approvalFlag == "G") {
 	                	xmlpara.getElementsByTagName("DOCNO")[0].textContent = pDocNo;
 	                }
             }
