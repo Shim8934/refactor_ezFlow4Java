@@ -519,6 +519,13 @@ function SetAttribute(node, name, value) {
     if (node != null) node.setAttribute(name, value);
 }
 
+//노드 속성을 제거합니다.
+function RemoveAttribute(node, name) {
+    if (node) {
+        node.removeAttribute(name);
+    }
+}
+
  //documentElement에서 xmlString을 가져옵니다.
 function getXmlString(xmlDoc) {
 

@@ -155,23 +155,21 @@
 		
 		                    /* 2020-07-17 홍승비 - 저장한 연동정보의 개행과 탭이 제대로 표출되지 않는 오류 수정 */
 		                    if (TagID == "CONN") {
-		                        ConnData = Doc_ContentHtml.children[i].innerHTML.replace('<CONNINFO>', '').replace('</CONNINFO>', '').replace('<conninfo>', '').replace('</conninfo>', '')
-		                        .replace(/>\t/g, '>\n\t').replace(/<\/?conn[ |>]/g, function($1) {
-									return '\n' + $1;
-								});
+		                        ConnData = Doc_ContentHtml.children[i].innerHTML;
 								
-		                        if (ConnData != "") {
-		                            setNodeText(txt_OpinionContent, ReplaceText(ConnData, "<BR>", "\n"));
+		                        if (ConnData) {
+		                            setNodeText(txt_OpinionContent, ConnData.replace(/<[/]?connroot>/g, "").replace(/><conn/g, ">\n<conn"));
 		                        }
 		                    }
 		                    else if (TagID == "WORKFLOW") {
-		                        WorkData = GetChildNodes(Doc_ContentHtml)[i].innerHTML.toUpperCase();
-		                        if (WorkData != "") {
-		                            var VALIDATIONS = WorkData.slice(WorkData.indexOf("<VALIDATION>"), WorkData.indexOf("</VALIDATIONS>"));
-		                            setNodeText(txt_OpinionContent1, ReplaceText(VALIDATIONS, "<BR>", "\n"));
+		                        WorkData = Doc_ContentHtml.children[i].innerHTML;
+		                        if (WorkData) {
+									WorkData = Doc_ContentHtml.children[i];
+		                            var VALIDATIONS = GetElementsByTagName(WorkData, "validations")[0].innerHTML.toUpperCase();
+		                            setNodeText(txt_OpinionContent1, VALIDATIONS.replace(/><VALIDATION/g, ">\n<VALIDATION"));
 		
-		                            var STATUS = WorkData.slice(WorkData.indexOf("<CHECK>"), WorkData.indexOf("</STATUS>"));
-		                            setNodeText(txt_OpinionContent2, ReplaceText(STATUS, "<BR>", "\n"));
+		                            var STATUS = GetElementsByTagName(WorkData, "aprlines")[0].innerHTML.toUpperCase();
+		                            setNodeText(txt_OpinionContent2, STATUS.replace(/><APRLINE/g, ">\n<APRLINE"));
 		                        }
 		                    }
 		                    else if (TagID == "BODYCONTENT") {

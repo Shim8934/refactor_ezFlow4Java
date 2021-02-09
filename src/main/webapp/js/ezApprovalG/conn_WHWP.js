@@ -14,7 +14,7 @@ var connVal = {
             "c_connkey",
             "c_connformcode"
         ],
-        errMsg: "[연동실패] 결재연동에 실패하였습니다.",
+        errMsg: "연동에 실패하여 결재를 완료할 수 없습니다!",
     }
 }
 
@@ -424,22 +424,6 @@ function checkValid(pField, pValue, pDesc) {
                     chkFlag = false;
                 }
                 break;
-            case "BIGGER":
-                tempValue = +tempValue;
-                pValue = +pValue;
-
-                if (tempValue < pValue) {
-                    chkFlag = false;
-                }
-                break;
-            case "SMALLER":
-                tempValue = +tempValue;
-                pValue = +pValue;
-
-                if (tempValue > pValue) {
-                    chkFlag = false;
-                }
-                break;
             // 추가적으로 필요한건 추가해서 쓸것
         }
 
@@ -514,175 +498,40 @@ function makeKeyValue(pKeyNodes, flag) {
 
     return xmlpara.documentElement;
 }
-function setData(pobjXml, currTD) {
+function setData(pobjXml) {
     if (!pobjXml) {
         return true;
     }
 
-    var flag, i, j, k, field;
-    var offset = 1;
-    var rows, row, rowBefore, nfield, fieldName, tblid, tblObject, tblRow;
-    var tblinfoNodes, currTR, currTRidx, cellnode, cellidx, isinsTR;
-    flag = "false";
+    try {
+        var flag, i, j;
+        var rows, row, nfield, fieldName;
+        flag = "false";
 
-    var connRootXml = pobjXml.documentElement;
-    if (connRootXml) {
-        flag = GetAttribute(connRootXml, "RESULT");
-    }
-
-    if (flag.toUpperCase() === "FALSE") {
+        var connRootXml = pobjXml.documentElement;
         if (connRootXml) {
-            if (GetAttribute(connRootXml, "STAGE") === "socket" || GetAttribute(connRootXml, "STAGE") === "db") {
-                var pAlertContent = strLang99;
-            } else {
-                var pAlertContent = "연동에 실패하여 결재를 완료할 수 없습니다!";
-            }
-            if (getNodeText(connRootXml)) {
-                pAlertContent = pAlertContent + "<br/>" + strLang100 + getNodeText(connRootXml);
-            }
-            OpenAlertUI(pAlertContent);
+            flag = GetAttribute(connRootXml, "RESULT");
         }
-        return false;
-    }
 
-    var xmlTbl, tblRowIdx = 0;
-    rows = connRootXml.childNodes;
-    if (rows.length > 0) {
-        for (i = 0; i < rows.length; i++) {
-            row = rows[i].childNodes;
+        if (flag.toUpperCase() === "FALSE") {
+            if (connRootXml) {
+                if (GetAttribute(connRootXml, "STAGE") === "socket" || GetAttribute(connRootXml, "STAGE") === "db") {
+                    var pAlertContent = strLang99;
+                } else {
+                    var pAlertContent = connVal.defaultVal.errMsg;
+                }
+                if (getNodeText(connRootXml)) {
+                    pAlertContent = pAlertContent + "<br/>" + strLang100 + getNodeText(connRootXml);
+                }
+                OpenAlertUI(pAlertContent);
+            }
+            return false;
+        }
 
-            // if (i > 0) { // 테이블연동 주석
-            //     rowBefore = rows[i - 1].childNodes;
-            //     if (GetAttribute(row[0],"name") != GetAttribute(rowBefore[0],"name"))
-            //         tblRowIdx = 0;
-            // } 
-            // if (GetDocumentElement("tblinfo", true) != "") { 
-            //     xmlTbl = loadXMLString(GetDocumentElement("tblinfo", true));
-            //     tblinfoNodes = xmlTbl.documentElement.childNodes
-
-            //     fieldName = GetAttribute(row[0],"name")
-            //     if (!fieldName)
-            //         fieldName = GetAttribute(row[0],"fname")
-
-            //     var breakFlag = false;
-            //     for (j = 0; j < tblinfoNodes.length; j++) {
-            //         offset = tblinfoNodes[j].childNodes.length;
-
-            //         for (k = 0; k < offset; k++) {
-            //             tblid = GetAttribute(tblinfoNodes[j].childNodes[k],fieldName)
-            //             if (tblid) {
-            //                 tblid = tblinfoNodes[j];
-            //                 breakFlag = true;
-            //                 break;
-            //             }
-            //         }
-            //         if (breakFlag) break;
-            //     }
-            // }
-
-            // if (tblid) {
-            //     tblObject = fields.item(tblid.tagName).TagObject
-
-            //     if (currTD && rows.length == 1) {
-            //         currTR = currTD.parentElement
-            //         currTRidx = currTR.rowIndex;
-
-            //         for (k = 0; k < row.length; k++) {
-            //             fieldName = GetAttribute(row[k],"name")
-            //             if (!fieldName) fieldName = GetAttribute(row[k],"fname")
-
-            //             cellidx = parseInt(GetAttribute(tblid,fieldName))
-            //             cellnode = currTR.cells(cellidx)
-            //             if (cellnode) {
-            //             	cellnode.text = getNodeText(row[k]);
-            //             }
-            //         }
-            //     } else {
-
-            //         if (GetAttribute(tblid,"color1"))
-            //             color1 = GetAttribute(tblid,"color1")
-            //         else
-            //             color1 = "white"
-
-            //         if (GetAttribute(tblid,"color2"))
-            //             color2 = GetAttribute(tblid,"color2")
-            //         else
-            //             color2 = "white"
-
-            //         isinsTR = false;
-            //         pzFormProc.specialTableObject = tblObject
-            //         currTR = tblObject.rows[tblRowIdx]
-            //         if (currTR) {
-            //             if (GetAttribute(currTR,"header")) {
-            //                 currTR = tblObject.rows[tblRowIdx + offset]
-            //                 if (currTR) {
-            //                     var k;
-            //                     for (k = tblObject.rows.length; k > (tblRowIdx + offset) ; k--) {
-            //                         pzFormProc.tableFlexibleRemoveRow(k, 1);
-            //                     }
-            //                     isinsTR = true;
-            //                 }
-            //                 else {
-            //                     isinsTR = true;
-            //                 }
-            //             }
-            //             else {
-            //             }
-            //         }
-            //         else {
-            //             isinsTR = true;
-            //             tblRowIdx = tblRowIdx - offset;
-            //         }
-
-            //         if (isinsTR) {
-            //             currTR = pzFormProc.tableFlexibleAddRow(tblRowIdx + 1, 1, offset);
-            //             if (currTR) {
-            //                 var idx
-            //                 for (j = 0; j < offset; j++) {
-            //                     var newRow = tblObject.rows[tblRowIdx + offset + j];
-            //                     if (bgFlag)
-            //                         newRow.bgColor = color1;
-            //                     else
-            //                         newRow.bgColor = color2;
-
-            //                     for (idx = 0; idx < currTR.cells.length; idx++) {
-
-            //                         attVal = GetAttribute(currTR.cells(idx),"processkey")
-            //                         if (attVal) newRow.cells(idx).setAttribute("processkey", attVal)
-
-            //                         attVal = GetAttribute(currTR.cells(idx),"processchange")
-            //                         if (attVal) newRow.cells(idx).setAttribute("processchange", attVal)
-
-            //                         attVal = GetAttribute(currTR.cells(idx),"lastnext")
-            //                         if (attVal) newRow.cells(idx).setAttribute("lastnext", attVal)
-            //                     }
-            //                 }
-            //                 if (bgFlag) bgFlag = false;
-            //                 else bgFlag = true;
-            //             }
-            //             tblRowIdx = tblRowIdx + offset;
-            //         }
-
-            //         for (k = 0; k < row.length; k++) {
-            //             fieldName = GetAttribute(row[k],"name")
-            //             if (!fieldName) fieldName = GetAttribute(row[k],"fname")
-
-            //             for (j = 0; j < offset; j++) {
-            //                 if (GetAttribute(tblid.childNodes[j],fieldName)) {
-            //                     cellidx = parseInt(GetAttribute(tblid.childNodes[j],fieldName))
-            //                     break;
-            //                 }
-            //             }
-
-            //             currTR = tblObject.rows(tblRowIdx + j);
-            //             cellnode = currTR.cells(cellidx)
-            //             if (cellnode) {
-            //             	cellnode.text = getNodeText(row[k]);
-            //             }
-            //         }
-            //         tblRowIdx = tblRowIdx + offset;
-            //     }
-            // } else {
+        rows = connRootXml.childNodes;
+        if (rows.length > 0) {
+            for (i = 0; i < rows.length; i++) {
+                row = rows[i].childNodes;
                 for (j = 0; j < row.length; j++) {
                     nfield = row[j];
                     fieldName = GetAttribute(nfield, "name");
@@ -695,12 +544,12 @@ function setData(pobjXml, currTD) {
 
                     if (message.FieldExist(fieldName)) {
                         if (fieldHTML == "Y") {
-                        	message.PutFieldText(fieldName, "");
+                            message.PutFieldText(fieldName, "");
                             message.AppendFieldText(fieldName, getNodeText(nfield), true, true, false, function() {
                                 message.MoveToField("doctitle");
                             });
                         } else {
-                        	message.PutFieldText(fieldName, getNodeText(nfield));
+                            message.PutFieldText(fieldName, getNodeText(nfield));
                         }
                     } else {
                         if (fieldHTML == "Y") {
@@ -710,10 +559,14 @@ function setData(pobjXml, currTD) {
                         }
                     }
                 }
-            // }
+            }
         }
+        return true;
+    } catch (e) {
+        var pAlertContent = connVal.defaultVal.errMsg;
+        OpenAlertUI(pAlertContent);
+        return false;
     }
-    return true;
 }
 
 function setConnDefaultKey(pDraftFlag) {

@@ -926,10 +926,6 @@ function InitlvAprLine() {
     if (oArrRows.length != 0) {
         var tr = oArrRows[0];
 
-        if (pListTypeValue == "1" || pListTypeValue == "11") {
-            document.getElementById("tbtnforcecallback").style.display = "none";
-        }
-
         SelectFlag = false;
         getAprLine(tr);
 
