@@ -1132,8 +1132,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String listType = request.getParameter("listType");
 		String aprState = request.getParameter("aprState");
 		String isTmpDoc = request.getParameter("isTmpDoc");
-		String connkey = request.getParameter("connkey");
 		String nonElecRec = request.getParameter("nonElecRec");
+		String connKey = StringUtils.defaultString(request.getParameter("connKey"));
+		String connFormCode = StringUtils.defaultString(request.getParameter("connFormCode"));
 		String docSN = "";
 		
 		if (nonElecRec == null) {
@@ -1186,7 +1187,6 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("optSplitKind", optSplitKind);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("sihangURL", sihangURL);
-		model.addAttribute("connkey", connkey);
 		model.addAttribute("docSN", docSN);
 		model.addAttribute("isHWP", "Y");
 		model.addAttribute("nonElecRec", nonElecRec);
@@ -1199,6 +1199,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String formAprOption = ezApprovalGService.getFormAprOptionInfo(formId, "FORM", userInfo.getCompanyID(), userInfo.getTenantId());
 		model.addAttribute("formAprOption", formAprOption);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("connKey", connKey);
+		model.addAttribute("connFormCode", connFormCode);
 		
 		LOGGER.debug("draftuiWHWP ended");
 		

@@ -726,8 +726,8 @@ function setConnDefaultKey(pDraftFlag) {
         SetDocumentElement("c_draft_position", arr_userinfo[3]);
         SetDocumentElement("c_draft_deptid", arr_userinfo[4]);
         SetDocumentElement("c_draft_deptname", arr_userinfo[5]);
-        SetDocumentElement("c_connkey", typeof connKey !== "undefined" ? connKey : "");
-        SetDocumentElement("c_connformcode", typeof connFormCode !== "undefined" ? connFormCode : "");
+        SetDocumentElement("c_connkey", typeof pConnKey !== "undefined" ? pConnKey : "");
+        SetDocumentElement("c_connformcode", typeof pConnFormCode !== "undefined" ? pConnFormCode : "");
     } else if (pDraftFlag === "SUSIN") {
         SetDocumentElement("c_susinid", pDocID);
     }
