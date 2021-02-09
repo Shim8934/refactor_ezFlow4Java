@@ -85,7 +85,8 @@
 	        		$(".approval").css("display","");
 	        	}
 		      	
-		      	if (docState == "012" || docState == "013") {
+		      	//감사문서도 재사용하지 못하도록 수정. 2020-03-16 홍대표.
+		      	if (docState == "012" || docState == "013" || docState == "014") {
 		      		document.getElementById("btnReuse").style.display = "none";
 		      	}
 		      	

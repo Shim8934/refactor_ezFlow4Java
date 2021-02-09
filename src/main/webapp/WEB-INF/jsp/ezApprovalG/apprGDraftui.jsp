@@ -181,6 +181,9 @@
 	        var pConnFormCode = "<c:out value ='${connFormCode}'/>";
 			
 			
+			//부서감사 관련 2020-01-14 홍대표
+			var deptgamsaCount = 0;
+			
 		    window.onload = function ()
 		    {
 		    	if(officeFlag == 'Y'){
@@ -1734,6 +1737,8 @@
                     parameter[56] = limitDate;
 				}
 
+		        parameter[43] = deptgamsaCount;
+		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		        

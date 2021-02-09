@@ -218,6 +218,9 @@
 			// 2020-11-23 등급 툴팁 추가 - 박기범
 	        var tooltipLevelFlag = "Y"
 	        
+	        // 부서감사 관련 2020-01-14 홍대표
+	        var pDeptgamsaCount = 0;
+	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
 	        		$("#idDatepicker").attr('disabled',false);
@@ -282,6 +285,36 @@
 	            if (SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[0] == null) {
 	                document.getElementById("deptaddbtn").style.display = "none";
 	            }
+	            
+                for (i = 0; i < SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE").length; i++) {
+                    if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE") == strAprType13) {
+                        if (pDeptgamsaCount == 0) {
+                            var node = SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i];
+                            var pnode = SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES")[0];
+                            pnode.removeChild(node);
+                            break;
+                        }
+                    }
+                }
+
+//                 for (i = 0; i < SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE").length; i++) {
+//                     if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE") == strAprType21) {
+//                         if (pYesanCount == 0) {
+//                             var node = SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i];
+//                             var pnode = SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES")[0];
+//                             pnode.removeChild(node);
+//                             break;
+//                         }
+//                     }
+//                 }
+
+                if (pDeptgamsaCount > 0) {
+                    document.getElementById("btnAddGamsaDept").style.display = "";
+                }
+                
+                if (pDeptgamsaCount > 0) {
+                    GetGamsaYesanDeptInfo();
+                }
             
 	            if(approvalFlag == "G") {
 		            CheckGubunInit();
@@ -681,6 +714,7 @@
 	            
 				//기결재통과 버튼 표출 체크
 				showPassAprLineBtn();
+	            pDeptgamsaCount = RetValue[43];
 	            
 	            if (pSuSinFlag == "N" || pDocType == "002") {
 	                document.getElementById("showReceptinfo").style.display = "none";//.innerHTML = "";
@@ -2461,6 +2495,17 @@
 	    		document.querySelector('input[name=selSecLevel8]').nextSibling.setAttribute('title','공개될 경우 부동산투기,매점매석 등으로 특정인에게 이익 보는 불이익을 줄 우려가 있는 정보'											);
 	    	}
 
+		    
+	        function GetGamsaYesanDeptInfo() {
+	            var xmlhttp = createXMLHttpRequest();
+	            var xmlpara = createXmlDom();
+
+	            xmlhttp.open("POST", "/ezApprovalG/getGamsaYesanDeptInfo.do", false);
+	            xmlhttp.send(xmlpara);
+
+	            GamsaYesanInfoXML = loadXMLString(xmlhttp.responseText);
+
+	        }
 	    </script>
 	    <style>
 	    	/* .mainlist_free tr th {text-align:center} */
@@ -2714,6 +2759,10 @@
 	                                <td style="text-align: right;">
 	                                	<span id="passAprLineSpan" style="float:left;display:none"><input id="passAprLine" type="checkbox" style="vertical-align: middle" onchange="passAprLine_onchange(this)"><span style="vertical-align: middle"> <spring:message code='ezApprovalG.garm09'/></span></span>
 	                                    <a style="margin-top: 8px;" class="imgbtn imgbck2">
+	                                	<a id="btnAddGamsaDept" style="margin-top: 8px; display: none;" class="imgbtn imgbck">
+	                                		<span onclick="return btnAddEtcDept_onclick('013')">감사추가</span>
+	                                	</a>
+	                                    <a style="margin-top: 8px;" class="imgbtn imgbck">
 	                                 </c:if>
 	                                 <c:if test = "${approvalFlag=='S'}">
 	                                 <td style="padding-top: 10px; text-align: right; vertical-align: top;" id="SaveAprLineTemplet">
