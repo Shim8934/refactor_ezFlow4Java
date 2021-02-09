@@ -328,6 +328,14 @@
 									document.getElementById("setOpenGovFlag").checked = true;	
 								}
 							}
+
+							var formXslt = result.vo.formXslt;
+							if(formXslt) {
+								formXslt = ConvertEntityReferenceToChar(formXslt);
+
+								document.querySelector("#setBodyXslt").checked = true;
+								document.querySelector("#BodyXslt").value = formXslt;
+							}
 							
 			                /* 2020-05-14 홍승비 - 양식세부옵션 null 체크 추가 */
 							//양식세부옵션
@@ -1276,6 +1284,7 @@
 					<p id = "ApvForm_sub8" style="display:none;"><span divname="ApvForm_div8" id="1tab8"><spring:message code='reform.menuitem.function'/></span></p>
 				</c:if>
 				<!-- FormBuilder - end -->
+				<p id = "ApvForm_sub10"><span divname="ApvForm_div10" id="1tab10">XSLT</span></p>
 	        </div>
         </div>
         
@@ -1700,6 +1709,50 @@
 		    </div>  
        	</c:if>
        	<!-- FormBuilder - end -->
+		<%-- XSLT --%>
+		<div id="ApvForm_content10" style="width: 100%; height: 828px; padding-top: 10px; overflow-y: auto; display: none;">                          
+            <ul class="contentlayout">
+            	<li class="contentlayout_none">
+                	<h2 class="receiver_tltype01" style="margin-bottom:5px;">
+		            	<span style="min-width: 45px;">XSLT</span>
+		            </h2>
+                    <span><input type="checkbox" style="margin-left: 0; vertical-align: middle;" id="setBodyXslt" name="setBodyXslt"><label for="setBodyXslt">XSLT를 등록하려면 체크하세요.</label></span>
+                    <table class="content" style="width:100%; margin-top: 2px;">
+                        <tbody>
+	                        <tr id="tr_setXslt">
+	                            <th style="width:5%; text-align:center">XSLT</th>
+	                            <td style="width:45%;">                                
+	                                <textarea id="BodyXslt" rows="15" style="resize: none; box-sizing: border-box; margin-top: 3px;"></textarea>
+	                            </td>
+	                            <th style="width:5%; text-align:center">XML</th>
+	                            <td style="width:45%;">                                
+	                                <textarea id="BodyXml" rows="15" style="resize: none; box-sizing: border-box; margin-top: 3px;"></textarea>  
+	                            </td>
+	                        </tr>                        
+	                    </tbody>
+	            	</table>
+                </li>
+                <br/> 
+                <li class="contentlayout_none">
+                	<h2 class="receiver_tltype01" style="margin-bottom:5px;">
+		            	<span style="min-width: 45px;">HTML Sample</span>
+		            </h2>
+                    <a class="imgbtn">
+                    	<span onclick="ViewHTML()" style="font-weight: bold;">HTML변환</span>   
+                    </a>                                                      
+                    <table class="content" style="width:100%; margin-top: 5px;">
+                        <tbody>
+                        	<tr id="tr_htmlView">
+	                            <td> 
+	                                <iframe name="iframeView" id="iframeView" style="height:400px;width:100%;overflow-y:auto" frameborder="0"></iframe>
+	                            </td>
+	                        </tr>
+	                    </tbody>
+	            	</table>
+                </li>
+            </ul>            
+        </div>
+		<%-- XSLT end --%>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background:none rgba(0,0,0,0.5); display:none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -1719,6 +1772,49 @@
         </form>
         <script type="text/javascript">
             Tab1_NewTabIni("tab1");
+
+			function ViewHTML() {
+				var pAlertContent = ""
+
+				var xsltCode = document.querySelector("#BodyXslt").value.trim();
+				var xmlCode = document.querySelector("#BodyXml").value.trim();
+
+				if(!xsltCode) {
+					pAlertContent = "XSLT 코드를 입력하세요.";
+		    		OpenAlertUI(pAlertContent);
+		    		return;
+				}
+
+				if(!xmlCode) {
+					pAlertContent = "XML 코드를 입력하세요.";
+		    		OpenAlertUI(pAlertContent);
+		    		return;
+				}
+
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", "/admin/ezApprovalG/convertXmltoHtml.do");
+				xhr.setRequestHeader("Content-Type", "application/json");
+				xhr.onreadystatechange = function() {
+					if(xhr.readyState === XMLHttpRequest.DONE) {
+						if(xhr.status === 200) {
+							var htmlCode = xhr.responseText;
+
+							if(htmlCode) {
+								iframeView.document.body.innerHTML = htmlCode;
+							}
+						} else if(xhr.status === 409) {
+							var pAlertContent = "변환에 실패했습니다.";
+							OpenAlertUI(pAlertContent);
+							return;
+						}
+					}
+				}
+
+				xhr.send(JSON.stringify({
+					xsltCode: xsltCode,
+					xmlCode: xmlCode
+				}));
+			}
         </script>
         <xml id="userlist_h" style="display: none">
             <LISTVIEWDATA>

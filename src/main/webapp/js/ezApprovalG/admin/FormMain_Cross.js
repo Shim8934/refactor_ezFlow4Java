@@ -10,6 +10,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -28,6 +29,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -46,6 +48,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -64,6 +67,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -82,6 +86,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -101,6 +106,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -120,6 +126,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "";
@@ -138,6 +145,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -157,6 +165,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -166,6 +175,26 @@ function ChangeTab(obj) {
                 document.getElementById("TForm").style.height = "0px";
             }
             break;            
+        case "ApvForm_div10":
+            if (document.getElementById("ApvForm_content10").style.display == "none") {
+                document.getElementById("ApvForm_content1").style.display = "none";
+                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
+                document.getElementById("ApvForm_content5").style.display = "none";
+                document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+
+                
+                document.getElementById("TForm").style.height = "0px";
+            }
+            break;          
     }
 }
 
@@ -549,6 +578,17 @@ function MakeFormInfoXML_Detail() {
     createNodeAndInsertText(xmlpara, objNode, "TBITEMCODE", document.getElementById("tbItemCode").value);
     createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME", document.getElementById("tbItemName").value);
     createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME2", document.getElementById("tbItemName2").value);
+    //formXslt
+    if(document.querySelector("#setBodyXslt").checked) {
+        var formXslt = document.querySelector("#BodyXslt").value.trim();
+        formXslt = ConvertCharToEntityReference(formXslt);
+
+        createNodeAndInsertText(xmlpara, objNode, "FORMXSLT", formXslt);
+    } else {
+        createNodeAndInsertText(xmlpara, objNode, "FORMXSLT", "");
+    }
+
+    //formXslt end
     //양식 세부설정
     var formOptArr = new Array();
     var formOptTypeAtr = "";
