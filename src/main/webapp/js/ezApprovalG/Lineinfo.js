@@ -4246,6 +4246,128 @@ function OnSelChangeDoEvent(pSelectedRow)
   }
 }
 
+function btnAddEtcDept_onclick(pType) {
+    try {
+        var pAPRLINE = new ListView();
+        pAPRLINE.LoadFromID("lvAPRLINE");
+        var AprLineRow = pAPRLINE.GetDataRows();
+        AprLineAddIndex = AprLineRow.length;
+        AprLineAddIndex = AprLineAddIndex + 1;
+
+        //불필요한 결재선 체크 로직 수정. 결재선에 결재 유형만 있을 때, 에러 발생. 2020-03-09 홍대표
+//        if (AprLineRow.length == 1) {
+//            if (GetAttribute(AprLineRow[0], "DATA11") == strAprType1 || GetAttribute(AprLineRow[0], "DATA11") == strAprType4 || GetAttribute(AprLineRow[0], "DATA11") == strAprType16) {
+//                var pAlertContent = "" + strLang298 + "<br>" + strLang299 + "";
+//                OpenAlertUI(pAlertContent);
+//                return;
+//            }
+//        }
+        
+
+        var tr = pAPRLINE.GetSelectedRows();
+        if (tr.length > 0 && InsertMode != "Add") {
+            AprLineAddIndex = parseInt(getNodeText(tr[0].cells[0]));
+        }
+
+        var Resultxml;
+        var pDeptID = "", pDeptName = "", pDeptName2 = "", pEx2 = "";
+       
+        if (SelectNodes(GamsaYesanInfoXML, "DATA/ROW").length > 0) {
+            for (i = 0; i < SelectNodes(GamsaYesanInfoXML, "DATA/ROW").length; i++) {
+
+                if (SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "APRTYPE") == pType) {
+                    pDeptID = SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "CN");
+                    pDeptName = SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "DISPLAYNAME");
+                    pDeptName2 = SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "DISPLAYNAME2");
+                    pEx2 = SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "EXTENSIONATTRIBUTE2");
+                    Resultxml = AprLineEtcDeptAdd(AprLineAddIndex, pType, pDeptID, pDeptName, pDeptName2, pEx2);
+
+                    break;
+                }
+            }
+        }
+        else {
+            OpenAlertUI("해당부서 정보가 존재하지 않습니다.");
+            return false;
+        }
+
+
+        var InitTr = pAPRLINE.GetDataRows();
+        var MaxID = 0;
+
+        for (var j = 0; j < InitTr.length; j++) {
+            var curnum = Number(pAPRLINE.GetSelectedRowID(j).substring(pAPRLINE.GetSelectedRowID(j).lastIndexOf('_') + 1), pAPRLINE.GetSelectedRowID(j).length);
+            if (MaxID < curnum)
+                MaxID = curnum;
+        }
+
+
+        if (InitTr.length == 0) {
+            //첫번째 row는 기안자가 꼭 있어야함.           
+            OpenAlertUI("기안자가 등록되지 않았습니다.");
+            return false;
+        }
+        else {
+            var objTr = pAPRLINE.NewAddRow(0, "lvAPRLINE" + "_TR_" + eval(MaxID + 1));
+            pAPRLINE.AddDataRow(objTr, Resultxml);
+        }
+
+        AprLineAddIndex = AprLineAddIndex + 1;
+
+
+        setRep_Suggester();
+        aprlinecount = 0;
+        LineAprTyepSetAll();
+    }
+    catch (e) {
+    	OpenAlertUI(e.description);
+    }
+}
+
+function AprLineEtcDeptAdd(AprLineAddIndex, nAprType, pDeptID, pDeptName, pDeptName2, pEx2) {
+    var pparsingXML = "<LISTVIEWDATA><HEADERS>";
+    pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>30</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>50</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>60</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>80</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>80</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>80</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>80</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL><STYLE><![CDATA[overflow: hidden; text-overflow: ellipsis; white-space: nowrap;]]></STYLE>";
+    pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
+    pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
+    pparsingXML = pparsingXML + "<DATA2>" + "" + "</DATA2>";
+    pparsingXML = pparsingXML + "<DATA3>" + pDocID + "</DATA3>";
+    pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(pDeptID) + "</DATA4>";
+    pparsingXML = pparsingXML + "<DATA5>" + "Y" + "</DATA5>";
+    pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(pDeptID) + "</DATA6>";
+    pparsingXML = pparsingXML + "<DATA7>" + "" + "</DATA7>";
+    pparsingXML = pparsingXML + "<DATA8>" + "N" + "</DATA8>";
+    pparsingXML = pparsingXML + "<DATA9>" + "N" + "</DATA9>";
+    pparsingXML = pparsingXML + "<DATA10>" + MakeXMLString(pEx2) + "</DATA10>";
+    pparsingXML = pparsingXML + "<DATA11>" + nAprType + "</DATA11>";
+    pparsingXML = pparsingXML + "<DATA12>" + strAprState1 + "</DATA12>";
+    pparsingXML = pparsingXML + "<DATA13>-</DATA13>";
+    pparsingXML = pparsingXML + "<DATA14>-</DATA14>";
+    pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(pDeptName) + "</DATA15>";
+    pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(pDeptName2) + "</DATA16>";
+    pparsingXML = pparsingXML + "<DATA17>-</DATA17>";
+    pparsingXML = pparsingXML + "<DATA18>-</DATA18>";
+    pparsingXML = pparsingXML + "</CELL><CELL><STYLE><![CDATA[overflow: hidden; text-overflow: ellipsis; white-space: nowrap;]]></STYLE>";
+    pparsingXML = pparsingXML + "<VALUE>-</VALUE>";
+    pparsingXML = pparsingXML + "</CELL><CELL><STYLE><![CDATA[overflow: hidden; text-overflow: ellipsis; white-space: nowrap;]]></STYLE>";
+    pparsingXML = pparsingXML + "<VALUE>-</VALUE>";
+    pparsingXML = pparsingXML + "</CELL><CELL><STYLE><![CDATA[overflow: hidden; text-overflow: ellipsis; white-space: nowrap;]]></STYLE>";
+    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pDeptName) + "</VALUE>";
+    pparsingXML = pparsingXML + "</CELL><CELL><STYLE><![CDATA[overflow: hidden; text-overflow: ellipsis; white-space: nowrap;]]></STYLE>";
+    pparsingXML = pparsingXML + "<VALUE>" + AprTypeToName(nAprType) + "</VALUE>";
+    pparsingXML = pparsingXML + "</CELL><CELL><STYLE><![CDATA[overflow: hidden; text-overflow: ellipsis; white-space: nowrap;]]></STYLE>";
+    pparsingXML = pparsingXML + "<VALUE>" + strLangAprState1 + "</VALUE>";
+    pparsingXML = pparsingXML + "</CELL><CELL><STYLE><![CDATA[overflow: hidden; text-overflow: ellipsis; white-space: nowrap;]]></STYLE><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>";
+
+    return loadXMLString(pparsingXML);
+}
+
 //회람
 function APRLINEXMLParsingCC() {
     try {

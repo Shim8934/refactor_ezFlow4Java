@@ -1178,7 +1178,7 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             	} else {
             		openLocation = "/ezApprovalG/ezDeptRecevUI_WHWP.do";
             	}
-            } else if (pDraftFlag == "HAPYUI" && approvalFlag == "G") {
+            } else if (approvalFlag == "G") {
             	openLocation = "/ezApprovalG/recevGDeptHapyui.do";
             } else {
             	openLocation = "/ezApprovalG/recev.do";
@@ -1339,6 +1339,7 @@ function openOpinionUI_New_Complete(ret) {
 	        if (pListTypeValue == "4") {
 	            switch (GetAttribute(temppSelectedRow, "DATA9")) {
 	                case "012":
+	                case "014":
 	                    setHeSongHapyuiDocInfo(temppSelectedRow);
 	                    break;
 	                case "011":
@@ -1349,6 +1350,7 @@ function openOpinionUI_New_Complete(ret) {
 	        else {
 	            switch (GetAttribute(temppSelectedRow, "DATA12")) {
 	                case "012":
+	                case "014":
 	                    setHeSongHapyuiDocInfo(temppSelectedRow);
 	                    break;
 	                case "011":
@@ -2232,7 +2234,8 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "";
                 document.getElementById("tbtnRegList").style.display = "none";
-                if (tr.getAttribute("DATA9") == "003" || tr.getAttribute("DATA9") == "014")
+                //G버전 감사는 회송 버튼이 보이도록 수정. 2020-02-25 홍대표.
+                if (tr.getAttribute("DATA9") == "003" || (tr.getAttribute("DATA9") == "014" && approvalFlag == "S"))
                     document.getElementById("tbtnReturn").style.display = "none";
                 else {
                     returnYN(tr.getAttribute("DATA1"));

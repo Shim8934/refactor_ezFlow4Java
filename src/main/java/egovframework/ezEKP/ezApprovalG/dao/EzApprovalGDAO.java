@@ -46,6 +46,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGYesanGamsaVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
@@ -3559,5 +3560,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getDocList(Map<String, Object> map) throws Exception {
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGYesanGamsaVO> getGamsaYesanDeptInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGYesanGamsaVO>) list("EzApprovalG.getGamsaYesanDeptInfo", map);
 	}
 }

@@ -4602,6 +4602,21 @@
 			    #companyID# )
 		]]>				
 	</insert>
+	
+	<insert id="EzApprovalGAdmin.insertOfficeFormFlag" parameterClass="Map">
+		INSERT INTO TBL_FORM_OFFICE
+		VALUES(#v_PFORMID#, #tenantID#, #companyID#)
+	</insert>
+	
+	<delete id="EzApprovalGAdmin.deleteOfficeFormFlag">
+		DELETE FROM TBL_FORM_OFFICE
+		WHERE
+			FORMID = #v_PFORMID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</delete>
 		
 	<select id="EzApprovalGAdminDAO.cntAttachLimit" parameterClass="Map" resultClass="int">
 		<![CDATA[

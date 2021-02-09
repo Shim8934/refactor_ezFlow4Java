@@ -109,6 +109,9 @@
 			var SummaryFlag = true;
 			var pDocNumCode = "";
 			
+			//부서감사 관련 2020-01-14 홍대표
+			var deptgamsaCount = 0;
+			
 			var strLang12 = "";
 			
 			var gpGubun = "";
@@ -767,8 +770,9 @@
 					        parameter[39] = SummaryFlag;
 					        parameter[41] = tempItemName;
 					        parameter[42] = tempItemName2;
+					        parameter[43] = deptgamsaCount;
 					        
-					        if(pDocState == "012") {
+					        if(pDocState == "012" || pDocState == "014") {
 					        	parameter[45] = "";
 					        	parameter[46] = "";
 					        }

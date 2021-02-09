@@ -325,12 +325,19 @@ function LineAprTyepSetAll() {
 			if ($("input:checkbox[id='passAprLine']").is(":checked") && (pTotalRows[i].getAttribute("DATA12") == "004" || pTotalRows[i].getAttribute("DATA12") == "003" || pTotalRows[i].getAttribute("DATA12") == "002")) {
             	p_StatusDis = "disabled";
             }
+			// 감사부서는 감사결재 유형만 사용할 수 있도록 설정. 2020-02-28 홍대표.
+			if(pDeptgamsaCount > 0 && pTotalRows[i].getAttribute("DATA4") == optGamsabu) {
+				p_StatusDis = "disabled";
+			}
 			
 			if (p_isDept == "Y") {
 				var AprTypeObj = ChangeAprlineType("group", pTotalRows[i].getAttribute("DATA11"));
 				AprTyepID = pTotalRows[i].getAttribute("id") + "select";
 				AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style =\"width:100%\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
 				pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
+				
+				// 감사부서는 감사결재 유형만 사용할 수 있도록 설정. 2020-02-28 홍대표.
+				setDeptGamsaType(pTotalRows[i]);
 			} else {
 				var AprTypeObj = ChangeAprlineType("user", pTotalRows[i].getAttribute("DATA11"));
 				var tempHtml = "";
@@ -427,6 +434,10 @@ function AprlineType_onchangeLine(obj) {
         if (pCheckTypevalue == "008" || pCheckTypevalue == "009" || pCheckTypevalue == "011" || pCheckTypevalue == "012") {
             if (pHapyuiArea == 0 && pHapYuiCount != "0")
                 Rtnval = CheckHapYuiCellValue();
+        }
+        
+        if (Rtnval && (pCheckTypevalue == "013" || pCheckTypevalue == "021" )) {
+            Rtnval = CheckGamsaYesan(pCheckTypevalue, obj);
         }
 
         if (Rtnval)
@@ -1249,7 +1260,7 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
 
             for (i = 0; i < SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE").length; i++) {
                 if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE") == strAprType13) {
-                    if (pGamSaCount > 0) {
+                    if (pDeptgamsaCount > 0) {
                         p_AprlineValue[j] = SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "NAME");
                         p_AprlineCode[j] = SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE");
                         j = j + 1;
@@ -1648,4 +1659,47 @@ function listViewStart(xml, id, dbClick) {
         check_presence();
     }
     return true;
+}
+function CheckGamsaYesan(pAprType, pObj) {
+    try {
+        var pDeptID, pDeptName;
+        for (i = 0; i < SelectNodes(GamsaYesanInfoXML, "DATA/ROW").length; i++) {
+            if (SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "APRTYPE") == pAprType) {
+                pDeptID = SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "CN");
+                pDeptName = SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "DISPLAYNAME");
+            }
+        }
+
+        var pAPRLINE = new ListView();
+        pAPRLINE.LoadFromID("lvAPRLINE");
+
+        var pSelRow = pAPRLINE.GetSelectedRows();
+        if (pSelRow.length > 0) {
+            if (pDeptID != GetAttribute(pSelRow[0], "DATA4")) {
+                var pAlertContent = "";
+                if (pAprType == "013")
+                    pAlertContent = strLang1068 + pDeptName + strLang1070;
+                else
+                    pAlertContent = strLang1069 + pDeptName + strLang1070;
+
+                OpenAlertUI(pAlertContent);
+                
+                pObj.value = GetAttribute(pSelRow[0], "DATA11");
+                return false;
+            }
+        }
+       
+       return true;
+    } catch (e) {
+    	alert("CheckGamsaYesan :: " + e.description);
+    }
+}
+
+function setDeptGamsaType(targetRow) {
+	[].forEach.call(targetRow.childNodes[4].getElementsByTagName("option"), function(elem) {
+		if(targetRow.getAttribute("DATA4") == optGamsabu && elem.value != strAprType13
+		  || targetRow.getAttribute("DATA4") != optGamsabu && elem.value == strAprType13) {
+			elem.parentNode.removeChild(elem);
+		}
+	})
 }

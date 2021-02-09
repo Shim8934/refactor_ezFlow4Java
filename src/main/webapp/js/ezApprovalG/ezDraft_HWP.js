@@ -125,6 +125,7 @@ function GetDraftAprLineInfo(ret) {
     if (OrderType.length > 2)
 		NextAprType = OrderType[2];
     
+    var chkGamsa = false;
 	LastSignSN = OrderType.length
     
     for(i=1;i<OrderType.length;i++)
@@ -135,8 +136,15 @@ function GetDraftAprLineInfo(ret) {
 			i = OrderType.length
 		}
 		
-		else if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1 || OrderType[i] == strAprType3 || OrderType[i] == strAprType13)
+		else if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1 || OrderType[i] == strAprType3)
+		{
     		LastSignSN = i;
+		}
+		
+		else if (OrderType[i] == strAprType13)
+		{
+        	chkGamsa = true;
+	    }
     }
     
     
@@ -176,7 +184,7 @@ function GetDraftAprLineInfo(ret) {
 	for(i=1;i < OrderJobtitle.length;i ++)
 	{
 		
-		if(OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1  || OrderType[i] == strAprType16 || OrderType[i] == strAprType3 || OrderType[i] == strAprType4 || OrderType[i] ==strAprType13)
+		if(OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1  || OrderType[i] == strAprType16 || OrderType[i] == strAprType3 || OrderType[i] == strAprType4)
 		{
 			fieldname = "jikwe" + idx;
 			if (HwpCtrl.CheckFieldExist(fieldname))
@@ -213,7 +221,22 @@ function GetDraftAprLineInfo(ret) {
 					HwpCtrl.SetFieldText(fieldname, strLang76 + HwpCtrl.GetFieldText(fieldname));
 			}
 			hidx = hidx + 1;
-		}	
+		}
+		
+	    if (chkGamsa) {
+	        fieldname = "deptgamsaname";
+	        field = HwpCtrl.CheckFieldExist(fieldname);
+	        if (field) {
+	            HwpCtrl.SetFieldText(fieldname, "감    사");
+	        }
+	    }
+	    else {
+	        fieldname = "deptgamsaname";
+	        field = HwpCtrl.CheckFieldExist(fieldname);
+	        if (field) {
+	            HwpCtrl.SetFieldText(fieldname, "");
+	        }
+	    }
 	}
 	
 	
@@ -377,6 +400,24 @@ function ClearDocCellInfo()
 			HwpCtrl.SetFieldBackImage(fieldname, "");
 		}
 		
+        fieldname = "deptgamsaname";
+        if (HwpCtrl.CheckFieldExist(fieldname))
+        {
+        	HwpCtrl.SetFieldText(fieldname, "");
+        }
+
+        fieldname = "deptgamsasign";
+        if (HwpCtrl.CheckFieldExist(fieldname))
+        {
+        	HwpCtrl.SetFieldText(fieldname, "");
+			HwpCtrl.SetFieldBackImage(fieldname, "");
+        }
+
+        fieldname = "deptgamsadate";
+        if (HwpCtrl.CheckFieldExist(fieldname))
+        {
+        	HwpCtrl.SetFieldText(fieldname, "");
+        }
 		
 		fieldname = "opinions";
 		if (HwpCtrl.CheckFieldExist(fieldname))
@@ -1014,6 +1055,10 @@ function SetAutoPropertyValue()
 	}
 	
 	pChamJoFlag = "Y";
+	
+    if (HwpCtrl.CheckFieldExist("deptgamsasign")) {
+        deptgamsaCount = 1;
+    }
 //  }catch(e){	
 //	alert("SetAutoPropertyValue()" + e.description);
 //  }
