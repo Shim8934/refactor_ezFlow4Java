@@ -674,4 +674,9 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void getAuditApprLineListIns(Map<String, Object> map) throws Exception {
 		super.insert("EzApprovalGAdminDAO.getAuditApprLineListIns", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getAuditStatisticsDocList(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzApprovalGAdmin.getAuditStatisticsDocList", map);
+	}
 }

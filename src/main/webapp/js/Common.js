@@ -553,5 +553,93 @@ function GetOfficeVersion()
     return result;
 }
 
+//jangsewon 문자를추가할 좌/우 선택, 추가할문자, 최종문자길이, 함수호출횟수확인용:0
+String.prototype.addstring = function(addPosition, addStr, strLength, callCnt) {
+	var result = "";
+	
+	try {
+		callCnt++;
+		
+		if(addPosition == "R") {
+			result = this + addStr;
+		} else if(addPosition == "L") {
+			result = addStr + this;
+		} else {
+			return result;
+		}
+		
+		if(this.length > strLength) {
+			result = this.substring(0, strLength);
+		} else if(this.length == strLength) {
+			result = this.toString();
+		} else {
+			result = result.addstring(addPosition, addStr, strLength, callCnt);
+		}
+	} catch(e) {
+		console.log("addStr error, " + e);
+		console.log("addStr callcnt, " + callCnt);
+	}
+	return result;
+};
 
+// jangsewon exceldown
+var listExcelDown = function(params) {
+	
+	/* params form
+	// 공통(필수)
+	params += "fileType=" + "excel"; // excel,csv,..
+	params += "&fileName=" + "파일명";
+	params += "&fileExt=" + "xlxs";	// xls..
+	params += "&listType=" + "list"; //list,document...
+	params += "&listName=" + "편의상 dao 호출명";
+	params += "&header=" + "문서id;제목;파일명;기안자...";	// header가 없어야할 case가 있을까?
+	params += "&width=" + "1000;2000;..." heaer 수와 동일해야함
+	// 그 외 (dao 등등..)
+	params += "&startDate=" + startDate;
+	params += "&endDate=" + endDate;
+	
+	params 에 대한 별도 valid 는 없음
+	*/
+	
+	var request = new XMLHttpRequest();
+	request.open("POST", "/admin/ezApprovalG/listExcelDown.do", true);
+	request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+	request.responseType = "blob";
+
+	request.onload = function(e) {
+		
+		var filename = "";
+		var disposition = request.getResponseHeader("Content-Disposition");
+		if (disposition && disposition.indexOf("attachment") !== -1) {
+			var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+			var matches = filenameRegex.exec(disposition);
+			if (matches != null && matches[1])
+				filename = decodeURI( matches[1].replace(/['"]/g, "") );
+		}
+		console.log("FILENAME: " + filename);
+
+		if (this.status === 200) {
+			var blob = this.response;
+			if(window.navigator.msSaveOrOpenBlob) {
+				window.navigator.msSaveBlob(blob, filename);
+			}
+			else{
+				var downloadLink = window.document.createElement("a");
+				var contentTypeHeader = request.getResponseHeader("Content-Type");
+				downloadLink.href = window.URL.createObjectURL(new Blob([blob], { type: contentTypeHeader }));
+				downloadLink.download = filename;
+				document.body.appendChild(downloadLink);
+				downloadLink.click();
+				document.body.removeChild(downloadLink);
+			}
+		}
+		
+		try {
+			listLoading(false);
+		} catch(error) {
+			console.log("listExcelDown erro :: ", error);
+		}
+	};
+	request.send(params);
+};
 

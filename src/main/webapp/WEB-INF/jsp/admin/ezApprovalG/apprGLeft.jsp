@@ -99,6 +99,9 @@
                     	// 기록물철 인계 2019-06-18 임민석
                     	url = "/admin/ezApprovalG/cabTransfer.do";
                     	break;
+                    case 20:
+    				    url = "/admin/ezApprovalG/apprGeneralAuditingStatistics.do";
+    					break;
 					case "enforce":
 						//시행문변환 - 관인등록
 						url = "/admin/ezApprovalG/enforceSihangSeal.do";
@@ -199,10 +202,11 @@
 				</c:if>
 				<%-- 2020-05-14 홍승비 - 전자결재 첨부파일 개수제한 설정메뉴 추가 --%>
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage('attachLimit')"><spring:message code='ezApprovalG.hsbAL01'/></span><ul></ul></h2>
-				<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage('auditApprLineManage')">
+				<%-- <h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage('auditApprLineManage')">
 						<spring:message code='ezAdmin.auditApprLine.01'/></span>
 					<ul></ul>
 				</h2>
+				<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(20)"><spring:message code='main.t98'/></span></h2> --%>
 			</div>
 		</div>
 	</body>

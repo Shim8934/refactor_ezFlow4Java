@@ -2637,11 +2637,11 @@
 	                                <td style="vertical-align: top;">
 	                                    <h2 class="h2_dot" style="margin-top:6px;"><spring:message code='ezApprovalG.t407'/>
 	                                        <div style="text-align: right; margin-top: -23px;">
-	                                        	<c:if test="${approvalFlag == 'G' }">
+	                                        	<%-- <c:if test="${approvalFlag == 'G' }">
 		                                        	<a id="auditAddBtn" class="imgbtn">
 														<span><spring:message code='ezOrgan.t9903'/></span>
 													</a>
-												</c:if>
+												</c:if> --%>
 	                                            <a class="imgbtn" onclick="AprlineUpper_onclick();" style="height:22px;box-shadow:0px 2px 0px 0px rgba(0,0,0,0.1)"><span>
 	                                                <img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezApprovalG.pjj28'/>" style="vertical-align:middle"/></span></a>
 	                                            <a class="imgbtn" onclick="AprlineDown_onclick();" style="height:22px;box-shadow:0px 2px 0px 0px rgba(0,0,0,0.1)"><span>

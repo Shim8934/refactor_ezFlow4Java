@@ -5020,4 +5020,46 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		response.setHeader("Cache-Control", "no-cache");
 		response.getWriter().write(ezApprovalGAdminService.getAuditApprLineListPrc(loginCookie, request, response, model).toString());
 	}
+	
+	/* General auditing statistics */	
+	@RequestMapping(value = "/admin/ezApprovalG/apprGeneralAuditingStatistics.do", method = RequestMethod.GET)
+	public String apprGeneralAuditingStatistics(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("apprGeneralAuditingStatistics started.");		
+		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());		
+		String type = request.getParameter("type");
+		type = (type == null || type.isEmpty()) ? "admin" : type;		
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
+			return "cmm/error/adminDenied"; 
+		}		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			if (userInfo.getRollInfo().contains("c=1") || (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+		}		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("list", resultList);
+		model.addAttribute("type", type);
+		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
+		model.addAttribute("openYear", ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId()));
+		logger.debug("apprGeneralAuditingStatistics end.");
+		return "/admin/ezApprovalG/apprGeneralAuditingStatistics";
+	}
+	
+	/**
+	 * 관리자 감사/bilingual 통계 list
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getAuditStatisticsDocList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public void getAuditStatisticsDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse response, Model model) throws Exception {
+		response.setContentType("application/json;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Cache-Control", "no-cache");
+		response.getWriter().write(ezApprovalGAdminService.getAuditStatisticsDocList(loginCookie, request, response, model).toString());
+	}
 }

@@ -251,4 +251,6 @@ public interface EzApprovalGAdminService {
 	public String auditApprLineManagePop(String loginCookie, HttpServletRequest request, HttpServletResponse response, ModelAndView model) throws Exception;
 
 	public Object getAuditApprLineListPrc(String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
+	
+	public Object getAuditStatisticsDocList(String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
 }
