@@ -46,6 +46,7 @@
 	<typeAlias  alias="ApprGDocListForOpenGovVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO"/>
 	<typeAlias  alias="ApprGOpenGovInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO"/>
 	<typeAlias alias="KEDSharedUserInfo" 			type="egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo"/>
+	<typeAlias  alias="ApprGYesanGamsaVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGYesanGamsaVO"/>
 	
 	<resultMap class="PortalTopOtherCompanyAddJobVO" 	id="PortalTopOtherCompanyAddJobMap">
 		<result property="companyID"					column="companyID"						/>
@@ -33242,5 +33243,42 @@
 		AND APRSTATE = #aprState#
 		AND TENANT_ID = #tenantId#
 		AND COMPANYID = #companyId#
+	</select>
+	
+	<select id="EzApprovalG.getGamsaYesanDeptInfo" parameterClass="Map" resultClass="ApprGYesanGamsaVO">
+		SELECT
+			(
+			CASE
+			WHEN A.CODE1 = 'A40' 
+			THEN '013'
+			ELSE ''
+			END
+			) AS APRTYPE,
+			CN,
+			DISPLAYNAME,
+			DISPLAYNAME2,
+			EXTENSIONATTRIBUTE2
+   		FROM 
+   			TBL_CODELIST A
+   		JOIN
+   			TBL_DEPTMASTER B
+   		ON
+   			A.NAME = B.CN
+   		AND
+   			A.TENANT_ID = B.TENANT_ID
+   		WHERE 
+   			A.TENANT_ID = #v_TENANTID#
+   		AND
+   			A.COMPANYID = #companyID#
+   		AND 
+   			A.ISUSE = 1
+		<isEqual property="approvalFlag" compareValue="G" prepend="AND">
+   			A.CODE1 = 'A40' 
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="S" prepend="AND">
+   			A.CODE1 = 'SA40' 
+		</isEqual>
+   		ORDER BY 
+   			A.CODE2
 	</select>
 </sqlMap>
