@@ -10,6 +10,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -28,6 +29,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -46,6 +48,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -64,6 +67,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -82,6 +86,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -101,6 +106,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -120,6 +126,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "";
@@ -138,6 +145,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -157,6 +165,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
                 document.getElementById("ApvForm_content9").style.display = "";
+                document.getElementById("ApvForm_content10").style.display = "none";
                 
                 if (useReform) {
                     document.getElementById("ApvForm_content7").style.display = "none";
@@ -166,6 +175,26 @@ function ChangeTab(obj) {
                 document.getElementById("TForm").style.height = "0px";
             }
             break;            
+        case "ApvForm_div10":
+            if (document.getElementById("ApvForm_content10").style.display == "none") {
+                document.getElementById("ApvForm_content1").style.display = "none";
+                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
+                document.getElementById("ApvForm_content5").style.display = "none";
+                document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content9").style.display = "none";
+                document.getElementById("ApvForm_content10").style.display = "";
+                
+                if (useReform) {
+                    document.getElementById("ApvForm_content7").style.display = "none";
+                    document.getElementById("ApvForm_content8").style.display = "none";
+                }
+
+                
+                document.getElementById("TForm").style.height = "0px";
+            }
+            break;          
     }
 }
 
@@ -549,6 +578,17 @@ function MakeFormInfoXML_Detail() {
     createNodeAndInsertText(xmlpara, objNode, "TBITEMCODE", document.getElementById("tbItemCode").value);
     createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME", document.getElementById("tbItemName").value);
     createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME2", document.getElementById("tbItemName2").value);
+    //formXslt
+    if(document.querySelector("#setBodyXslt").checked) {
+        var formXslt = document.querySelector("#BodyXslt").value.trim();
+        formXslt = ConvertCharToEntityReference(formXslt);
+
+        createNodeAndInsertText(xmlpara, objNode, "FORMXSLT", formXslt);
+    } else {
+        createNodeAndInsertText(xmlpara, objNode, "FORMXSLT", "");
+    }
+
+    //formXslt end
     //양식 세부설정
     var formOptArr = new Array();
     var formOptTypeAtr = "";
@@ -653,17 +693,23 @@ function MakeFormMHTXML_Detail() {
         HTML.appendChild(HEAD);
 
         var BODY = document.createElement("BODY");
-        var ConnVal = "";
-        var XMLInfo = "";
-        if (txt_OpinionContent.value != "") {
-            ConnVal = "<conninfo>\n" + txt_OpinionContent.value + "\n</conninfo>";
-            XMLInfo = "<xml id='conn' style='display:none'>" + ConnVal + "</xml>\n";
-        }
+        var connXmlStr = "", workflowXmlStr = "";
 
-        var WorkVal = "";
-        if (txt_OpinionContent1.value != "" || txt_OpinionContent2.value != "") {
-            WorkVal += "\n<WORKFLOW>\n<VALIDATIONS>\n" + txt_OpinionContent1.value + "\n</VALIDATIONS>\n<STATUS>\n" + txt_OpinionContent2.value + "\n</STATUS>\n</WORKFLOW>\n";
-            XMLInfo += "<xml id='WORKFLOW' style='display:none;'>" + WorkVal + "</xml>";
+        if (txt_OpinionContent.value) {
+            connXmlStr = txt_OpinionContent.value.replace(/\r/g, "").replace(/\n/g, "").replace(/\t/g, "");
+            connXmlStr = "<CONNROOT>" + connXmlStr + "</CONNROOT>";
+            connXmlStr = "<xml id='conn' style='display:none'>" + connXmlStr + "</xml>"
+        }
+    
+        if (txt_OpinionContent1.value || txt_OpinionContent2.value) {
+            var work1XmlStr = txt_OpinionContent1.value.replace(/\r/g, "").replace(/\n/g, "").replace(/\t/g, "");
+            var work2XmlStr = txt_OpinionContent2.value.replace(/\r/g, "").replace(/\n/g, "").replace(/\t/g, "");
+            workflowXmlStr = 
+                "<WORKFLOW>" + 
+                "<VALIDATIONS>" + work1XmlStr + "</VALIDATIONS>" + 
+                "<APRLINES>" + work2XmlStr + "</APRLINES>" + 
+                "</WORKFLOW>";
+            workflowXmlStr = "<xml id='WORKFLOW' style='display:none;'>" + workflowXmlStr + "</xml>";
         }
 
         var Div = document.createElement("DIV");
@@ -674,12 +720,18 @@ function MakeFormMHTXML_Detail() {
         	Div.innerHTML = Div.innerHTML.replace(/class=".*?FIELD.*?"/g, 'class="FIELD"');
         }
         
-        if (message.GetEditorContent().indexOf("BodyContent") > -1)
-            BODY.innerHTML = XMLInfo.replace(/\r\n/g, "").replace( /\n/g, "").replace(/\r/g, "") + Div.innerHTML;
-        else {
+        if (message.GetEditorContent().indexOf("BodyContent") === -1) {
             Div.id = "BodyContent";
-            BODY.innerHTML = XMLInfo.replace(/\r\n/g, "").replace( /\n/g, "").replace(/\r/g, "") + Div.outerHTML;
         }
+
+        if (connXmlStr) {
+            BODY.appendChild(loadXMLString(connXmlStr).documentElement);
+        }
+        if (workflowXmlStr) {
+            BODY.appendChild(loadXMLString(workflowXmlStr).documentElement);
+        }
+
+        BODY.innerHTML += Div.innerHTML;
         
         HTML.appendChild(BODY);
         return ConvertHTMLtoMHT("<HTML>" + HTML.innerHTML + "</HTML>");

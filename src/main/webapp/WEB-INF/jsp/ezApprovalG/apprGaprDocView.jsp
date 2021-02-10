@@ -534,13 +534,13 @@
 	        }
 		    
 	        function btncallback_onclick_Complete(ans) {
-	            if (ans && ConnExist("DRAFT_CALLBACK", "")) {
-	                var RtnVal = ExcuteInfo("DRAFT_CALLBACK", "")
-	                if (RtnVal) {
-	                    doCancel();
-	                }
-	            } else {
-	            	doCancel();
+				var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // pdraftflag 정상적으로 가져오게 수정해야함
+				if (!retVal) {
+					return;
+				}
+
+	            if (ans) {
+					doCancel();
 	            }
 	        }
 	        
@@ -696,6 +696,11 @@
 	        //2018-07-10 배현상, 강제회수 분기(doForceCancel 생성)
 	        function doForceCancel(ans) {
 	        	DivPopUpHidden();
+				var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // pdraftflag 정상적으로 가져오게 수정해야함
+				if (!retVal) {
+					return;
+				}
+
 	        	if (ans) {
 	        		var GetCurrentlinelist = getAprLinefor("APR", DocID);
 	        		var result = "";

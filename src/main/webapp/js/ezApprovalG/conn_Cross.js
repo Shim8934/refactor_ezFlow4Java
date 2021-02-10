@@ -1,128 +1,247 @@
-﻿/**
- * 연동 관련 소스
- * 전자결재 연동 관련 개발 시 참고
- * */
-var color1, color2
+﻿var connVal = {
+    defaultVal: {
+        key: [
+            "c_docid",
+            "c_susinid",
+            "c_formid",
+            "c_draft_userid",
+            "c_draft_username",
+            "c_draft_position",
+            "c_draft_deptid",
+            "c_draft_deptname",
+            "c_processidx",
+            "c_processtime",
+            "c_connkey",
+            "c_connformcode"
+        ],
+        errMsg: "연동에 실패하여 결재를 완료할 수 없습니다!",
+    }
+}
+
+var color1, color2;
 var bgFlag = true;
 var colSignCnt = 10;
 
-function ConnExist(pprocessIdx, currTD) {
-    var xmlData = createXmlDom();
-    xmlData.async = false;
-    if (message.CONNINFO.getElementsByTagName("XML").length > 0)
-    	xmlData = loadXMLString(message.CONNINFO.getElementsByTagName("XML").item(0).outerHTML.replace("<!--[CDATA[", "<![CDATA[").replace("-->", ">"));
-    else
-        return false;
-
+function GetDocumentElement(pCharName, pGubun) {
     try {
-        if (GetElementsByTagName(xmlData, "conninfo").length == 0) return false;
-    } catch (e) {
-        return false;
-    }
+        if (!pCharName) {
+            return "";
+        }
 
-    if (GetElementsByTagName(xmlData, "confilepath").length > 0) {
-        try {
-            var ConnRootText = getNodeText(GetElementsByTagName(xmlData, "confilepath").item(0));
-            xmlData = loadXMLFile("/ezCommon/downloadAttach.do?filePath=" + encodeURI(ConnRootText));
-        } catch (e) {
-            return false;
-        }
-    }
-    findFlag = false;
-    var conninfoxml = GetElementsByTagName(xmlData, "conninfo");
-    connNodes = GetChildNodes(conninfoxml.item(0));
-    for (i = 0; i < connNodes.length; i++) {
-        processIdx = GetAttribute(connNodes[i], "processidx");
-        processTime = GetAttribute(connNodes[i], "processtime");
+        var mhtInfo = message.GetDocumentInfo();
 
-        if (processIdx == pprocessIdx && processTime == pDraftFlag) {
-            findFlag = true;
-            break;
-        }
-        else if (processIdx == pprocessIdx && pprocessIdx == "FINAL_BEFORE") {
-            if (isLast()) {
-                findFlag = true;
-                connNode = connNodes[i]
-                break;
-            }
-        }
-        else if (processIdx == pprocessIdx && pprocessIdx == "FINAL_AFTER") {
-            if (isLastAfter()) {
-                findFlag = true;
-                connNode = connNodes[i]
-                break;
-            }
-        }
-        else if (processIdx == pprocessIdx && processIdx.substring(0, 6) == "TONGJE") {
-            findFlag = true;
-            connNode = connNodes[i]
-            break;
-        }
-        else if (pDraftFlag == "HAPYUI") {
-            if (HapyuiSN != "") {
-                if (processIdx == pprocessIdx && processTime == pDraftFlag + HapyuiSN) {
-                    findFlag = true;
-                    connNode = connNodes[i]
-                    break;
+        var root = mhtInfo.documentElement;
+        if (root) {
+            var connData = GetElementsByTagName(root, pCharName);
+            if (connData.length > 0) {
+                return getNodeText(connData[0]);
+            } else {
+                var fields = message.GetFieldsList();
+                var bodyField = message.GetListItem(fields, "body");
+                if (pGubun) {
+                    return "<" + pCharName + ">" + GetAttribute(bodyField, pCharName) + "</" + pCharName + ">";
+                } else {
+                    return GetAttribute(bodyField, pCharName);
                 }
             }
+        } else {
+            return "";
         }
-        else if (pDraftFlag == "GAMSABU") {
-            if (processIdx == pprocessIdx && processTime == "B_GAMSA") {
-                findFlag = true;
+    } catch (e) {
+        alert("연동정보를 불러오던 도중 오류가 발생했습니다.");
+        return "";
+    }
+}
+
+function SetDocumentElement(pCharName, pValue) {
+    try {
+        if (!pCharName) {
+            return true;
+        }
+
+        var fields = message.GetFieldsList();
+        var bodyField = message.GetListItem(fields, "body");
+
+        if (bodyField) {
+            SetAttribute(bodyField, pCharName, pValue);
+        }
+    } catch (e) {
+        alert("연동정보를 저장하던 도중 오류가 발생했습니다.");
+        return false;
+    }
+    return true;
+}
+
+// pAttr 형식 : ["검사할노드이름;검사할속성이름;검사할속성값"]
+function ConnExist(pAttr) {
+    var connInfoXml = loadXMLString(GetDocumentElement("CONNROOT"));
+    var connNodes = SelectNodes(connInfoXml, "connroot/conn");
+
+    var findFlag = true;
+    for (var i = 0, ilen = connNodes.length; i < ilen; i++) {
+        for (var j = 0, jlen = pAttr.length; j < jlen; j++) {
+            var findAttrArr = pAttr[j].split(";");
+            var attrValue = findAttribute(connNodes[0], findAttrArr[0], findAttrArr[1]);
+            if (attrValue !== findAttrArr[2]) {
+                findFlag = findFlag * false;
+            } else {
+                findFlag = findFlag * true;
+            }
+        }
+    }
+
+    return Boolean(findFlag);
+}
+
+function findAttribute(node, nodeName, attrName) {
+    var attrValue = "";
+
+    if (node.tagName === nodeName) {
+        attrValue = GetAttribute(node, attrName);
+    }
+
+    if (!attrValue) {
+        var childNodes = GetChildNodes(node);
+        for (var i = 0, ilen = childNodes.length; i < ilen; i++) {
+            attrValue = findAttribute(childNodes[i], nodeName, attrName);
+            if (attrValue) {
                 break;
             }
         }
     }
-    return findFlag;
-}
 
-function ExcuteInfo(pprocessIdx, currTD) {
+    return attrValue;
+}
+// function ConnExist(pprocessIdx, currTD) {
+//     var xmlData = createXmlDom();
+//     xmlData.async = false;
+//     if (message.CONNINFO.getElementsByTagName("XML").length > 0)
+//     	xmlData = loadXMLString(message.CONNINFO.getElementsByTagName("XML").item(0).outerHTML.replace("<!--[CDATA[", "<![CDATA[").replace("-->", ">"));
+//     else
+//         return false;
+
+//     try {
+//         if (GetElementsByTagName(xmlData, "conninfo").length == 0) return false;
+//     } catch (e) {
+//         return false;
+//     }
+
+//     if (GetElementsByTagName(xmlData, "confilepath").length > 0) {
+//         try {
+//             var ConnRootText = getNodeText(GetElementsByTagName(xmlData, "confilepath").item(0));
+//             xmlData = loadXMLFile("/ezCommon/downloadAttach.do?filePath=" + encodeURI(ConnRootText));
+//         } catch (e) {
+//             return false;
+//         }
+//     }
+//     findFlag = false;
+//     var conninfoxml = GetElementsByTagName(xmlData, "conninfo");
+//     connNodes = GetChildNodes(conninfoxml.item(0));
+//     for (i = 0; i < connNodes.length; i++) {
+//         processIdx = GetAttribute(connNodes[i], "processidx");
+//         processTime = GetAttribute(connNodes[i], "processtime");
+
+//         if (processIdx == pprocessIdx && processTime == pDraftFlag) {
+//             findFlag = true;
+//             break;
+//         }
+//         else if (processIdx == pprocessIdx && pprocessIdx == "FINAL_BEFORE") {
+//             if (isLast()) {
+//                 findFlag = true;
+//                 connNode = connNodes[i]
+//                 break;
+//             }
+//         }
+//         else if (processIdx == pprocessIdx && pprocessIdx == "FINAL_AFTER") {
+//             if (isLastAfter()) {
+//                 findFlag = true;
+//                 connNode = connNodes[i]
+//                 break;
+//             }
+//         }
+//         else if (processIdx == pprocessIdx && processIdx.substring(0, 6) == "TONGJE") {
+//             findFlag = true;
+//             connNode = connNodes[i]
+//             break;
+//         }
+//         else if (pDraftFlag == "HAPYUI") {
+//             if (HapyuiSN != "") {
+//                 if (processIdx == pprocessIdx && processTime == pDraftFlag + HapyuiSN) {
+//                     findFlag = true;
+//                     connNode = connNodes[i]
+//                     break;
+//                 }
+//             }
+//         }
+//         else if (pDraftFlag == "GAMSABU") {
+//             if (processIdx == pprocessIdx && processTime == "B_GAMSA") {
+//                 findFlag = true;
+//                 break;
+//             }
+//         }
+//     }
+//     return findFlag;
+// }
+
+function ExcuteInfo(pProcessIdx, pProcessTime) {
+    var connStringNode, queryNode, serviceQueryNode, keysNode;
     var connString, connFlag, queryString, queryType;
     var connNodes, connNode, keyNodes;
-    var i, findFlag;
-    var processIdx;
-    var rtnVal = true;
+    var i, ilen, findFlag;
+    var processIdx, processTime;
+    var rtnVal;
 
-    var xmlData = createXmlDom();
-    
-    try {
-        if (!message.GetTagList("CONNINFO")[0]) {
-        	return rtnVal;
-        }
-    } catch (e) {
+    rtnVal = true;
+
+    if (!pProcessTime) {
+        pProcessTime = pDraftFlag;
+    }
+
+    var connRootText = GetDocumentElement("CONNROOT");
+    if (!connRootText) {
         return true;
     }
-    xmlData = loadXMLString(message.GetTagList("CONNINFO")[0].parentNode.innerHTML);
-    findFlag = false;
-    connNodes = GetChildNodes(xmlData.documentElement);
-    for (i = 0; i < connNodes.length; i++) {
-        processIdx = GetAttribute(connNodes[i], "processidx");
-        processTime = GetAttribute(connNodes[i], "processtime");
 
-        if (processIdx == pprocessIdx && processTime == pDraftFlag) {
+    xmlData = loadXMLString(connRootText);
+    findFlag = false;
+    connNodes = SelectNodes(xmlData, "connroot/conn");
+    
+    for (i = 0, ilen = connNodes.length; i < ilen; i++) {
+        var tempConnNode = connNodes[i]
+        processIdx = GetAttribute(tempConnNode,"processidx");
+        processTime = GetAttribute(tempConnNode,"processtime");
+
+        if (processIdx == pProcessIdx && processTime == pProcessTime) {
+            SetDocumentElement("c_processidx", pProcessIdx);
+            SetDocumentElement("c_processtime", pProcessTime);
             findFlag = true;
-            connNode = connNodes[i];
+            connNode = tempConnNode;
             break;
         }
     }
-
+    
     if (findFlag) {
-        var subNodes = GetChildNodes(connNode);
-        connFlag = GetAttribute(subNodes[0], "flag");
-        connString = getNodeText(subNodes[0]);
-        queryType = GetAttribute(subNodes[1], "qtype");
-        queryString = getNodeText(subNodes[1]);
+        connStringNode = SelectSingleNode(connNode, "connstring");
+        queryNode = SelectSingleNode(connNode, "query")
+        serviceQueryNode = SelectSingleNode(connNode, "servicequery")
+        keysNode = SelectSingleNode(connNode, "keys")
 
-        var strItemNames = "SA_DocID";
-        var arrItemNames = strItemNames.split(",");
+        connString = getNodeText(connStringNode);
+        connFlag = GetAttribute(connStringNode, "flag");
+        queryString = getNodeText(queryNode);
+        queryType = GetAttribute(queryNode, "qtype");
+        
+        var defaultKeys = connVal.defaultVal.key;
         var objNewItem;
-        for (i = 0; i < arrItemNames.length; i++) {
-            objNewItem = createNodeAndInsertText(xmlData, objNewItem, "key", arrItemNames[i]);
-            SetAttribute(objNewItem, "kind", "single");
-            subNodes[2].appendChild(objNewItem);
+        
+        for (i = 0, ilen = defaultKeys.length; i < ilen; i++) {
+            objNewItem = xmlData.createElement("key");
+            objNewItem.setAttribute("kind", "single");
+            setNodeText(objNewItem, defaultKeys[i]);
+            keysNode.appendChild(objNewItem);
         }
-        keyNodes = GetChildNodes(subNodes[2]);
+        
+        keyNodes = GetChildNodes(keysNode);
 
         switch (queryType) {
             case "Q":
@@ -130,21 +249,75 @@ function ExcuteInfo(pprocessIdx, currTD) {
                 break;
 
             case "NA":
-                xmlData = callNoneUIASP(queryString, keyNodes);
+                xmlData = callNoneUIJSP(queryString, keyNodes);
+                rtnVal = setData(xmlData);
                 break;
 
             case "UA":
-                xmlData = callUIASP(connString, queryString, keyNodes);
+                xmlData = callPopupUIJSP(connString, queryString, keyNodes);
                 break;
 
             case "UA_EX":
-                xmlData = callUIASP_EX(connString, queryString, keyNodes);
+                xmlData = callDivPopupUIJSP(connString, queryString, keyNodes);
                 break;
         }
-        rtnVal = setData(xmlData, currTD);
+
     }
-    message.Conn_after();
+    
     return rtnVal;
+
+    // xmlData = loadXMLString(message.GetTagList("CONNINFO")[0].parentNode.innerHTML);
+    // findFlag = false;
+    // connNodes = GetChildNodes(xmlData.documentElement);
+    // for (i = 0; i < connNodes.length; i++) {
+    //     processIdx = GetAttribute(connNodes[i], "processidx");
+    //     processTime = GetAttribute(connNodes[i], "processtime");
+
+    //     if (processIdx == pprocessIdx && processTime == pDraftFlag) {
+    //         findFlag = true;
+    //         connNode = connNodes[i];
+    //         break;
+    //     }
+    // }
+
+    // if (findFlag) {
+    //     var subNodes = GetChildNodes(connNode);
+    //     connFlag = GetAttribute(subNodes[0], "flag");
+    //     connString = getNodeText(subNodes[0]);
+    //     queryType = GetAttribute(subNodes[1], "qtype");
+    //     queryString = getNodeText(subNodes[1]);
+
+    //     var strItemNames = "SA_DocID";
+    //     var arrItemNames = strItemNames.split(",");
+    //     var objNewItem;
+    //     for (i = 0; i < arrItemNames.length; i++) {
+    //         objNewItem = createNodeAndInsertText(xmlData, objNewItem, "key", arrItemNames[i]);
+    //         SetAttribute(objNewItem, "kind", "single");
+    //         subNodes[2].appendChild(objNewItem);
+    //     }
+    //     keyNodes = GetChildNodes(subNodes[2]);
+
+    //     switch (queryType) {
+    //         case "Q":
+    //             xmlData = callQuery(connFlag, connString, queryString, keyNodes);
+    //             break;
+
+    //         case "NA":
+    //             xmlData = callNoneUIASP(queryString, keyNodes);
+    //             break;
+
+    //         case "UA":
+    //             xmlData = callUIASP(connString, queryString, keyNodes);
+    //             break;
+
+    //         case "UA_EX":
+    //             xmlData = callUIASP_EX(connString, queryString, keyNodes);
+    //             break;
+    //     }
+    //     rtnVal = setData(xmlData, currTD);
+    // }
+    // message.Conn_after();
+    // return rtnVal;
 }
 function callQuery(pconnFlag, pconnString, pqueryString, pkeyNodes) {
     var xmlpara = createXmlDom();
@@ -165,517 +338,308 @@ function callQuery(pconnFlag, pconnString, pqueryString, pkeyNodes) {
 
     return xmlhttp.responseText;
 }
-function makeKeyValue(pkeyNodes, flag) {
-    var xmlpara = createXmlDom();
-    var xmlTbl = createXmlDom();
-    var i, j, k, customData, listCol, fieldVal, tblid, listKeyRow, tabObject;
-    var fieldName, colidx, tblinfoRow, cellValue, listnode;
-    var objRow, customData;
+function callNoneUIJSP(pQueryString, pKeyNodes) {
+    var objRoot = makeKeyValue(pKeyNodes, "A");
+    
+    var req = new XMLHttpRequest();
+    req.open("POST", pQueryString, false);
+    req.send(getXmlString(objRoot));
 
-    var prowNum = "";
-    var fields;
-    if (pPageType == "APPROVUI" || pPageType == "SUSIN")
-        fields = message.GetFieldsList();
-    else {
-        fields = message.Get_ConnFieldList();
-        if (fields.length == 0)
-            fields = message.GetFieldsList();
+    var res = null;
+    if (req.responseText) {
+        res = loadXMLString(req.responseText);
     }
 
-    if (flag == "A")
-        objRow = createNodeInsert(xmlpara, objRow, "PARAMETER");
-    else
-        objRow = createNodeInsert(xmlpara, objRow, "ROW");
+	return res;
+}
+var popup = null;
+function callPopupUIJSP(pConnString, pQueryString, pKeyNodes) {
+    var objRoot = makeKeyValue(pKeyNodes, "A")
 
-    for (i = 0; i < pkeyNodes.length; i++) {
-        if (GetAttribute(pkeyNodes[i], "kind") == "single") {
-            var keyName = getNodeText(pkeyNodes[i]);
-            fieldVal = getKeyValue(keyName, prowNum);
-            createNodeAndInsertText(xmlpara, customData, keyName, fieldVal);
-        }
-        else {
-            if (message.GetTagList("XML")[1]) {
-                xmlTbl = loadXMLString(message.GetTagList("XML")[1].innerHTML);
+    var feature = "width=800px, height=800px";
+    if (pConnString) {
+        feature = "width=" + pConnString.split(";")[0] + "px, height=" + pConnString.split(";")[1] + "px";
+    }
+    popup = window.open(pQueryString, "conn_popup", feature);
+    popup.focus();
 
-                tblid = GetAttribute(pkeyNodes[i], "tableid");
-                tblObject = message.GetListItem(fields, tblid);
+    window.addEventListener("message", function(e) {
+        console.log("postmessage response::", e);
+        if (e.data) {
+            var res = e.data;
+            if (res === "load") {
+                popup.postMessage(getXmlString(objRoot), "*");
+            } else if (res === "cancel") {
+                popup.close();
+            } else {
+                popup.close();
+                res = loadXMLString(e.data);
 
-                listKeyRow = GetChildNodes(pkeyNodes[i]);
-                customData = createNodeAndAppandNode(xmlpara, objRow, customData, "RECORDROOT");
-                SetAttribute(customData, "id", tblid);
-
-                var TagIdx = 0;
-                for (j = 0; j < tblObject.rows.length; j++) {
-                    if (tblObject.rows[j].getAttribute("header") || tblObject.rows[j].getAttribute("tail"))
-                        continue;
-
-                    listnode = createNodeAndAppandNode(xmlpara, customData, listnode, "R" + TagIdx);
-
-                    for (k = 0; k < listKeyRow.length; k++) {
-
-                        fieldName = listKeyRow[k].textContent;
-                        tblinfoRow = SelectSingleNodeNew(xmlTbl, "/tableinfo/" + tblid);
-                        var rowCnt;
-                        var row = GetChildNodes(tblinfoRow);
-                        var offset = row.length;
-                        colidx = "";
-                        for (rowCnt = 0; rowCnt < offset; rowCnt++) {
-                            if (row[rowCnt].getAttribute(fieldName)) {
-                                colidx = row[rowCnt].getAttribute(fieldName);
-                                break;
-                            }
-                        }
-                        if (colidx == "")
-                            cellValue = getKeyValue(fieldName, TagIdx + 1)
-                        else
-                            cellValue = tblObject.rows[j + rowCnt].cells[parseInt(colidx)].innerText;
-
-                        SetAttribute(listnode, fieldName, cellValue);
-                    }
-                    j = j + (offset - 1);
-                    TagIdx = TagIdx + 1;
-                }
+                setData(res);
             }
         }
+    });
+}
+function callDivPopupUIJSP(pConnString, pQueryString, pKeyNodes) {
+    var objRoot = makeKeyValue(pKeyNodes, "A")
+
+    var width = 800;
+    var height = 800;
+    if (pConnString) {
+        width = +pConnString.split(";")[0];
+        height = +pConnString.split(";")[1];
     }
-    return objRow;
-}
-function callNoneUIASP(pqueryString, pkeyNodes) {
-    var xmlpara = createXmlDom();
-    var objRoot = makeKeyValue(pkeyNodes, "A");
-    xmlpara.appendChild(objRoot);
+    popup = DivPopUpShow(width, height, pQueryString);
 
-    xmlhttp.open("POST", pqueryString, false);
-    xmlhttp.send(xmlpara);
+    window.addEventListener("message", function(e) {
+        console.log("postmessage response::", e);
+        if (e.data) {
+            var res = e.data;
+            if (res === "load") {
+                popup.contentWindow.postMessage(getXmlString(objRoot), "*");
+            } else if (res === "cancel") {
+                DivPopUpHidden();
+            } else {
+                DivPopUpHidden();
+                res = loadXMLString(e.data);
 
-    return xmlhttp.responseText;
-}
-function callUIASP(pconnString, pqueryString, pkeyNodes) {
-    var xmlsend = createXmlDom();
-    var xmlpara = createXmlDom();
-    var objRoot = makeKeyValue(pkeyNodes, "A");
-    xmlsend.appendChild(objRoot);
-
-    var url = pqueryString;
-    var feature = pconnString;
-    parameter = window.showModalDialog(url, xmlsend, feature);
-
-    xmlpara = parameter;
-    return xmlpara;
-}
-function callUIASP_EX(pconnString, pqueryString, pkeyNodes) {
-    var xmlsend = createXmlDom();
-    var xmlpara = createXmlDom();
-    var fields = message.GetFieldsList();
-
-    var objRoot = makeKeyValue(pkeyNodes, "A");
-    
-    if (CrossYN()) {
-    	var objRootToImport = xmlsend.importNode(objRoot, true);
-    	
-    	xmlsend.appendChild(objRootToImport);
-    } else {
-    	xmlsend.appendChild(objRoot);
-    }
-
-    var url = pqueryString;
-    var feature = pconnString;
-    parameter = window.showModalDialog(url, xmlsend, feature);
-    xmlpara = parameter;
-    return xmlpara;
+                setData(res);
+            }
+        }
+    });
 }
 function getKeyValue(fieldID, num) {
-    var rtnVal;
-    var field;
-    var fields;
-    //이쪽에서  GetFieldsList 이거타면 전체체크  Get_ConnFieldList이거 탈땐 body(에디터) 내부에 써진 거만 체크함
-    //message.DocumentBodyGetAttribute(fieldID) 여긴 왜 계속 null
-    if (pPageType == "APPROVUI" || pPageType == "SUSIN")
-        fields = message.GetFieldsList();
-    else
-        fields = message.Get_ConnFieldList();
+    var rtnVal = "";
 
-    if (num != "") fieldID = num + fieldID;
-    field = message.GetListItem(fields, fieldID);
-    
-    if (field == undefined)
-    {
-        fields = message.GetFieldsList();
-        field = message.GetListItem(fields, fieldID);
+    if (num) {
+        fieldID = num + fieldID;
     }
-    
-    rtnVal = "";
-    if (field && field != null) {
+
+    var fields = message.GetFieldsList();
+    var field = message.GetListItem(fields, fieldID);
+
+    if (field) {
         switch (field.tagName) {
             case "TD":
-                if (field._ez_mode == "html") {
-                    rtnVal = field.innerHTML;
-                }
-                else
-                    rtnVal = field.textContent;
+                rtnVal = getNodeText(field);
                 break;
             case "SELECT":
-                rtnVal = field.textContent;
+                rtnVal = field.value;
+                break;
+            case "INPUT":
+                var type = GetAttribute(field, "type");
+                if (type === "radio") {
+                } else if (type === "checkbox") {
+                } else {
+                    rtnVal = field.value;
+                }
                 break;
         }
+    } else {
+        rtnVal = GetDocumentElement(fieldID, false);
     }
-    else {
-        rtnVal = message.DocumentBodyGetAttribute(fieldID);
-    }
-    if (rtnVal) rtnVal = trim(rtnVal);
-    else rtnVal = "";
-    return rtnVal;
+
+    return trim(rtnVal);
 }
-function setData(pobjXml, currTD) {
-    BeforeConflict = document.body.getAttribute("CONFLICTWORKFLOW", 0);
-    if (BeforeConflict == "null" || BeforeConflict == null)
-        BeforeConflict = "";
+// function getKeyValue(fieldID, num) {
+//     var rtnVal;
+//     var field;
+//     var fields;
+//     //이쪽에서  GetFieldsList 이거타면 전체체크  Get_ConnFieldList이거 탈땐 body(에디터) 내부에 써진 거만 체크함
+//     //message.DocumentBodyGetAttribute(fieldID) 여긴 왜 계속 null
+//     if (pPageType == "APPROVUI" || pPageType == "SUSIN")
+//         fields = message.GetFieldsList();
+//     else
+//         fields = message.Get_ConnFieldList();
 
-    var flag, i, j, k, field;
+//     if (num != "") fieldID = num + fieldID;
+//     field = message.GetListItem(fields, fieldID);
+    
+//     if (field == undefined)
+//     {
+//         fields = message.GetFieldsList();
+//         field = message.GetListItem(fields, fieldID);
+//     }
+    
+//     rtnVal = "";
+//     if (field && field != null) {
+//         switch (field.tagName) {
+//             case "TD":
+//                 if (field._ez_mode == "html") {
+//                     rtnVal = field.innerHTML;
+//                 }
+//                 else
+//                     rtnVal = field.textContent;
+//                 break;
+//             case "SELECT":
+//                 rtnVal = field.textContent;
+//                 break;
+//         }
+//     }
+//     else {
+//         rtnVal = message.DocumentBodyGetAttribute(fieldID);
+//     }
+//     if (rtnVal) rtnVal = trim(rtnVal);
+//     else rtnVal = "";
+//     return rtnVal;
+// }
+function makeKeyValue(pKeyNodes, flag) {
+    var i, ilen, fieldId, fieldVal;
+    
+    var xmlpara = createXmlDom();
 
-    if (pPageType == "APPROVUI" || pPageType == "SUSIN")
-        fields = message.GetFieldsList();
-    else {
-        fields = message.Get_ConnFieldList();
-        if (fields.length == 0)
-            fields = message.GetFieldsList();
+    if (flag == "A") {
+        var objRow = createNodeInsert(xmlpara, null, "PARAMETER");
+    } else {
+        var objRow = createNodeInsert(xmlpara, null, "ROW");
+    }
+    
+    for (i = 0, ilen = pKeyNodes.length; i < ilen; i++) {
+        var keyNode = pKeyNodes[i];
+        if (GetAttribute(keyNode, "kind") === "single") {
+            fieldId = getNodeText(keyNode);
+            fieldVal = getKeyValue(fieldId);
+            createNodeAndAppandNodeCDataText(xmlpara, objRow, null, fieldId, fieldVal);
+        } 
+        // else { // 현재 테이블 연동은 xslt를 쓴다고 알고있음 -> 주석처리
+        //     if (message.GetTagList("XML")[1]) {
+        //         xmlTbl = loadXMLString(message.GetTagList("XML")[1].innerHTML);
+
+        //         tblid = GetAttribute(pkeyNodes[i], "tableid");
+        //         tblObject = message.GetListItem(fields, tblid);
+
+        //         listKeyRow = GetChildNodes(pkeyNodes[i]);
+        //         customData = createNodeAndAppandNode(xmlpara, objRow, customData, "RECORDROOT");
+        //         SetAttribute(customData, "id", tblid);
+
+        //         var TagIdx = 0;
+        //         for (j = 0; j < tblObject.rows.length; j++) {
+        //             if (tblObject.rows[j].getAttribute("header") || tblObject.rows[j].getAttribute("tail"))
+        //                 continue;
+
+        //             listnode = createNodeAndAppandNode(xmlpara, customData, listnode, "R" + TagIdx);
+
+        //             for (k = 0; k < listKeyRow.length; k++) {
+
+        //                 fieldName = listKeyRow[k].textContent;
+        //                 tblinfoRow = SelectSingleNodeNew(xmlTbl, "/tableinfo/" + tblid);
+        //                 var rowCnt;
+        //                 var row = GetChildNodes(tblinfoRow);
+        //                 var offset = row.length;
+        //                 colidx = "";
+        //                 for (rowCnt = 0; rowCnt < offset; rowCnt++) {
+        //                     if (row[rowCnt].getAttribute(fieldName)) {
+        //                         colidx = row[rowCnt].getAttribute(fieldName);
+        //                         break;
+        //                     }
+        //                 }
+        //                 if (colidx == "")
+        //                     cellValue = getKeyValue(fieldName, TagIdx + 1)
+        //                 else
+        //                     cellValue = tblObject.rows[j + rowCnt].cells[parseInt(colidx)].innerText;
+
+        //                 SetAttribute(listnode, fieldName, cellValue);
+        //             }
+        //             j = j + (offset - 1);
+        //             TagIdx = TagIdx + 1;
+        //         }
+        //     }
+        // }
     }
 
-    var offset = 1;
-
-    var rows, row, rowBefore, nfield, fieldName, tblid, tblObject, tblRow;
-    var tblinfoNodes, currTR, currTRidx, cellnode, cellidx, isinsTR;
-    flag = "false";
-
-    var xmlTbl = createXmlDom();
-    var xmlData = loadXMLString(pobjXml);
-    var root = xmlData.documentElement;
-
-    if (root) {
-        flag = GetAttribute(root, "RESULT");
+    return xmlpara.documentElement;
+}
+function setData(pobjXml) {
+    if (!pobjXml) {
+        return true;
     }
 
-    if (flag == "false" || flag == "FALSE") {
-        if (root) {
-            var pAlertContent = "";
-            var rootText = getNodeText(root);
+    try {
+        var flag, i, j, field;
+        var rows, row, nfield, fieldName;
+        flag = "false";
 
-            if (GetAttribute(root, "STAGE") == "socket" || GetAttribute(root, "STAGE") == "db") {
-                var pAlertContent = strLang99;
-                if (rootText != "")
-                    pAlertContent = pAlertContent + "<BR>" + strLang100 + rootText;
+        var connRootXml = pobjXml.documentElement;
+        if (connRootXml) {
+            flag = GetAttribute(connRootXml, "RESULT");
+        }
+
+        if (flag.toUpperCase() === "FALSE") {
+            if (connRootXml) {
+                if (GetAttribute(connRootXml, "STAGE") === "socket" || GetAttribute(connRootXml, "STAGE") === "db") {
+                    var pAlertContent = strLang99;
+                } else {
+                    var pAlertContent = connVal.defaultVal.errMsg;
+                }
+                if (getNodeText(connRootXml)) {
+                    pAlertContent = pAlertContent + "<br/>" + strLang100 + getNodeText(connRootXml);
+                }
                 OpenAlertUI(pAlertContent);
             }
+            return false;
         }
-        return false;
-    }
 
-    if (flag == "confirm" || flag == "CONFIRM") {
-        rows_EC = GetChildNodes(xmlData.documentElement);
-        if (rows_EC.length > 0) {
-            var row_EC_Child = GetChildNodes(rows_EC[0]);
-            tmp_name = GetAttribute(row_EC_Child[0], "name");
-            tmp_value = getNodeText(row_EC_Child[0]);
-            if (tmp_name == "msg") {
-                if (OpenInformationUI(tmp_value)) {
-                    tmp_name1 = GetAttribute(row_EC_Child[1], "name");
-                    tmp_value1 = getNodeText(row_EC_Child[1]);
-                    message.DocumentBodySetAttribute(tmp_name1, tmp_value1);
-                    tmp_procesidx = getNodeText(row_EC_Child[2]);
+        var fields = message.GetFieldsList();
 
-                    tmp_rtnval = ExcuteInfo(tmp_procesidx, "");
-                    return tmp_rtnval;
-                }
-                else
-                    return false;
-            }
-        }
-    }
-
-    if (flag == "winclose" || flag == "WINCLOSE") {
-        window.close();
-    }
-
-    var tblRowIdx = 0;
-    rows = GetChildNodes(xmlData.documentElement);
-    if (rows.length > 0) {
-        for (i = 0; i < rows.length; i++) {
-            row = GetChildNodes(rows[i]);
-
-            if (i > 0) {
-                rowBefore = GetChildNodes(rows[i - 1]);
-                if (row[0].getAttribute("name") != rowBefore[0].getAttribute("name"))
-                    tblRowIdx = 0;
-            }
-            if (message.GetTagList("XML")[1]) {
-                xmlTbl = loadXMLString(message.GetTagList("XML")[1].innerHTML);
-                tblinfoNodes = GetChildNodes(xmlTbl.documentElement);
-
-                fieldName = GetAttribute(row[0], "name").toLowerCase();
-                if (!fieldName) fieldName = GetAttribute(row[0], "fname").toLowerCase();
-
-                var breakFlag = false;
-                for (j = 0; j < tblinfoNodes.length; j++) {
-                    var tblinfoChild = GetChildNodes(tblinfoNodes[j]);
-                    offset = tblinfoChild.length;
-
-                    for (k = 0; k < offset; k++) {
-                        tblid = GetAttribute(tblinfoChild[k], fieldName);
-                        if (tblid) {
-                            tblid = tblinfoNodes[j];
-                            breakFlag = true;
-                            break;
-                        }
-                    }
-                    if (breakFlag) break;
-                }
-            }
-
-            if (tblid) {
-                tblObject = message.GetListItem(fields, tblid.tagName);
-
-                if (currTD && rows.length == 1) {
-
-                    currTR = currTD.parentElement
-                    currTRidx = currTR.rowIndex;
-
-                    for (k = 0; k < row.length; k++) {
-                        fieldName = GetAttribute(row[k], "name");
-                        if (!fieldName) fieldName = GetAttribute(row[k], "fname");
-
-                        cellidx = parseInt(GetAttribute(tblid, fieldName));
-                        cellnode = currTR.cells[cellidx];
-                        if (cellnode) {
-                            cellnode.innerText = getNodeText(row[k]);
-                        }
-                        else {
-                            message.DocumentBodySetAttribute("x_1" + fieldName, row[k].text);
-                        }
-                    }
-                }
-                else {
-
-                    if (GetAttribute(tblid, "color1"))
-                        color1 = GetAttribute(tblid, "color1");
-                    else
-                        color1 = "white"
-
-                    if (GetAttribute(tblid, "color2"))
-                        color2 = GetAttribute(tblid, "color2");
-                    else
-                        color2 = "white";
-
-                    isinsTR = false;
-
-                    currTR = tblObject.rows[tblRowIdx];
-                    if (currTR) {
-                        if (currTR.getAttribute("header")) {
-                            currTR = tblObject.rows[tblRowIdx + offset];
-                            if (currTR) {
-                                var k;
-                                for (k = tblObject.rows.length; k > (tblRowIdx + offset) ; k--) {
-                                    tblObject.deleteRow(k - 1);
-                                }
-                                isinsTR = true;
-                            }
-                            else {
-                                isinsTR = true;
-                            }
-                        }
-                        else {
-                            currTR = tblObject.rows[tblRowIdx + offset];
-                            if (currTR) {
-                                var k;
-                                for (k = tblObject.rows.length; k > (tblRowIdx + offset) ; k--) {
-                                    tblObject.deleteRow(k - 1);
-                                }
-                                isinsTR = true;
-                            }
-                            else {
-                                isinsTR = true;
-                            }
-                        }
-                    }
-                    else {
-                        isinsTR = true;
-                        tblRowIdx = tblRowIdx - offset;
-                    }
-
-                    //2014.03.06 ROW 연동시 헤더가 2개 이상인 경우
-                    if (isinsTR) {
-                        var td;
-                        for (j = 0; j < offset; j++) {
-                            currTR = document.createElement("TR");
-                            tblObject.appendChild(currTR);
-                            for (td = 0; td < tblObject.rows[j].cells.length ; td++) {
-                                currTR.insertCell(td);
-                            }
-
-                            if (currTR) {
-                                var idx;
-                                currTR = tblObject.rows[j];
-                                var newRow = tblObject.rows[tblRowIdx + offset + j];
-
-                                if (bgFlag)
-                                    newRow.bgColor = color1;
-                                else
-                                    newRow.bgColor = color2;
-
-                                for (idx = 0; idx < currTR.cells.length; idx++) {
-                                    attVal = currTR.cells[idx].getAttribute("processkey");
-                                    if (attVal) newRow.cells[idx].setAttribute("processkey", attVal)
-
-                                    attVal = currTR.cells[idx].getAttribute("processchange");
-                                    if (attVal) newRow.cells[idx].setAttribute("processchange", attVal)
-
-                                    attVal = currTR.cells[idx].getAttribute("lastnext");
-                                    if (attVal) newRow.cells[idx].setAttribute("lastnext", attVal);
-
-                                    attVal = currTR.cells[idx].getAttribute("EnterTab");
-                                    if (attVal) newRow.cells[idx].setAttribute("EnterTab", attVal);
-
-                                    attVal = currTR.cells[idx].getAttribute("rowspan");
-                                    if (attVal) newRow.cells[idx].setAttribute("rowspan", attVal);
-
-                                    attVal = currTR.cells[idx].getAttribute("colspan");
-                                    if (attVal) newRow.cells[idx].setAttribute("colspan", attVal);
-
-                                    try {
-                                        newRow.cells[idx].style.cssText = "word-break:break-all";
-                                    } catch (e) { }
-
-                                    attVal = currTR.cells[idx].getAttribute("height");
-                                    if (attVal) newRow.cells[idx].setAttribute("height", attVal)
-                                }
-                                if (bgFlag) bgFlag = false;
-                                else bgFlag = true;
-                            }
-                        }
-                        tblRowIdx = tblRowIdx + offset;
-                    }
-                    //2014.03.06
-
-                    for (k = 0; k < row.length; k++) {
-                        fieldName = row[k].getAttribute("name").toLowerCase();
-                        if (!fieldName) fieldName = row[k].getAttribute("fname").toLowerCase();
-
-                        var fieldAlign = row[k].getAttribute("align");
-                        var fieldHTML = row[k].getAttribute("HTML");
-
-                        for (j = 0; j < offset; j++) {
-                            var node = GetChildNodes(tblid)[j];
-                            if (GetAttribute(node, fieldName)) {
-                                cellidx = parseInt(GetAttribute(node, fieldName))
-                                break;
-                            }
-                            else
-                                cellidx = -1;
-                        }
-
-                        if (cellidx < 0 && k > 0) {
-                            var tempSN = tblRowIdx;
-                            try {
-                                tempSN = parseInt(tblRowIdx / GetChildNodes(tblid).length);
-                            } catch (e) { }
-                            message.DocumentBodySetAttribute("x_" + tempSN + fieldName, row[k].text);
-                        }
-                        else {
-                            currTR = tblObject.rows[tblRowIdx + j];
-                            cellnode = currTR.cells[cellidx];
-                            if (cellnode) {
-                                if (getNodeText(row[k]) == "")
-                                    cellnode.textContent = " ";
-                                else {
-                                    if (fieldHTML == "Y") {
-                                        cellnode.innerHTML = getNodeText(row[k]);
-                                    }
-                                    else if (fieldHTML == "T")
-                                        field.textContent = getNodeText(nfield);
-                                    else {
-                                        cellnode.textContent = getNodeText(row[k]);
-                                    }
-                                }
-                                if (fieldAlign != null && fieldAlign != "")
-                                    cellnode.align = fieldAlign;
-                            }
-
-                        }
-                    }
-                    tblRowIdx = tblRowIdx + offset;
-                }
-            }
-            else {
+        rows = connRootXml.childNodes;
+        if (rows.length > 0) {
+            for (i = 0; i < rows.length; i++) {
+                row = rows[i].childNodes;
                 for (j = 0; j < row.length; j++) {
-                    nfield = row[j]
+                    nfield = row[j];
                     fieldName = GetAttribute(nfield, "name");
-                    if (!fieldName) fieldName = GetAttribute(nfield, "fname");
+                    if (!fieldName) {
+                        fieldName = nfield.tagName;
+                    }
+                    fieldName = fieldName.toLowerCase();
 
                     var fieldHTML = GetAttribute(nfield, "HTML");
 
-                    field = message.GetListItem(fields, fieldName);
+                    var field = message.GetListItem(fields, fieldName);
+                    var fieldValue = getNodeText(nfield);
                     if (field) {
                         switch (field.tagName) {
                             case "TD":
-                                if (getNodeText(nfield) == "NONEDISPLAY_OPTION") {
-                                    field.textContent = "";
-                                    field.style.display = "none";
+                                if (!fieldValue) {
+                                    setNodeText(field, " ");
                                 }
-                                else {
-                                    if (getNodeText(nfield) == "")
-                                        field.innerHTML = "&nbsp;";
-                                    else {
-                                        if (fieldHTML == "Y")
-                                            message.div_BODY.innerHTML = getNodeText(nfield);
-                                        else if (fieldHTML == "T") {
-                                            if (pPageType == "APPROVUI" || pPageType == "SUSIN")
-                                                field.textContent = getNodeText(nfield);
-                                            else
-                                                message.Conn_BodyFieldWrite(fieldName, getNodeText(nfield));
-                                        }
-                                        else {
-                                            if (pPageType == "APPROVUI" || pPageType == "SUSIN")
-                                                field.textContent = getNodeText(nfield);
-                                            else
-                                                message.Conn_BodyFieldWrite(fieldName, getNodeText(nfield));
-                                        }
-                                    }
 
-                                    if (GetAttribute(nfield, "DISPLAY") != "NONE")
-                                        field.style.display = "";
+                                if (fieldHTML === "Y") {
+                                    field.innerHTML = fieldValue;
+                                } else {
+                                    setNodeText(field, fieldValue);
                                 }
                                 break;
                             case "SELECT":
-                                field.textContent = getNodeText(nfield);
                                 break;
-
                             case "INPUT":
-                                if (getNodeText(nfield) == "CHECKED") {
-                                    field.checked = true;
-                                    SetAttribute(field, "CHECKED", "true");
-                                }
-                                else if (getNodeText(nfield) == "ENABLE") {
-                                    field.disabled = false;
-                                    SetAttribute(field, "ENABLE", "true");
-                                }
-                                else if (getNodeText(nfield) == "DISABLE") {
-                                    field.disabled = true;
-                                    SetAttribute(field, "DISABLE", "true");
-                                }
-                                else {
-                                    field.checked = false;
-                                    RemoveAttribute(nfield, "CHECKED");
+                                var type = GetAttribute(field, "type");
+                                if (type === "radio" || type === "checkbox") {
+                                    if (fieldValue === "CHECKED") {
+                                        field.checked = true;
+                                        SetAttribute(field, "checked", "");
+                                    } else {
+                                        field.checked = false;
+                                        RemoveAttribute(field, "checked");
+                                    }
+                                } else {
+                                    field.value = fieldValue;
+                                    SetAttribute(field, "value", fieldValue);
                                 }
                                 break;
                         }
-                    }
-                    else {
-                        message.DocumentBodySetAttribute(fieldName, getNodeText(nfield));
+                    } else {
+                        SetDocumentElement(fieldName, fieldValue);
                     }
                 }
             }
         }
+        return true;
+    } catch (e) {
+        var pAlertContent = connVal.defaultVal.errMsg;
+        OpenAlertUI(pAlertContent);
+        return false;
     }
-    return true;
 }
 function getdocnumgroupid() {
     var url = "../docnum/docnumui.htm";
@@ -737,172 +701,195 @@ function getdocnumgroupid() {
         field.textContent = doclimit;
     }
 }
-function checkValidation(xmlPath) {
-    var XMLURL = "/ezCommon/downloadAttach.do?filePath=" + encodeURI(xmlPath);
-    var xmlpara = createXmlDom();
-    xmlpara.async = false;
-    xmlpara = loadXMLString(xmlPath.innerHTML);
+function checkValidation() {
+    var workflowXmlStr = GetDocumentElement("WORKFLOW");
+
+    if (!workflowXmlStr) {
+        return "TRUE";
+    }
+
+    var workflowXml = loadXMLString(workflowXmlStr);
 
     var chkflag = true;
-    var objNodes = SelectNodes(xmlpara, "WORKFLOW/VALIDATIONS/VALIDATION");
-    if (objNodes.length > 0) {
-        for (i = 0; i < objNodes.length; i++) {
-            if (chkflag) {
-                var pField = getNodeText(SelectSingleNode(objNodes[i], "FIELD"));
-                var pValue = getNodeText(SelectSingleNode(objNodes[i], "CLASS"));
-                var pDesc = getNodeText(SelectSingleNode(objNodes[i], "DESC"));
-                chkflag = checkValid(pField, pValue, pDesc);
-            }
-        }
-    }
-
-    if (!chkflag)
-        return "FALSE";
-
-    var objNodes = SelectNodes(xmlpara, "WORKFLOW/STATUS/CHECK");
-    if (objNodes.length > 0) {
-        for (i = 0; i < objNodes.length; i++) {
-            var objCASES = GetElementsByTagName(objNodes[i], "CASES");
-            var caseflag = true;
-            for (j = 0; j < objCASES.length; j++) {
-                var objCASE = GetElementsByTagName(objCASES[j], "CASE");
-                for (k = 0; k < objCASE.length; k++) {
-                    var pField = getNodeText(SelectSingleNode(objCASE[k], "FIELD"));
-                    var pValue = getNodeText(SelectSingleNode(objCASE[k], "VALUE"));
-                    var pType = getNodeText(SelectSingleNode(objCASE[k], "TYPE"));
-
-                    var field = message.GetListItem(fields, pField);
-                    if (field) {
-                        switch (pType) {
-                            case "BIGGER":
-                                var tempValue = field.textContent;
-                                var p = 0;
-                                for (p = 0; p < 10; p++)
-                                    tempValue = tempValue.replace(",", "");
-                                tempValue = parseInt(tempValue);
-                                if (tempValue <= pValue)
-                                    caseflag = false;
-                                break;
-
-                            case "SMALLER":
-                                var tempValue = field.textContent;
-                                var p = 0;
-                                for (p = 0; p < 10; p++)
-                                    tempValue = tempValue.replace(",", "");
-                                tempValue = parseInt(tempValue);
-                                if (tempValue > pValue)
-                                    caseflag = false;
-                                break;
-                        }
-                    }
-                }
-            }
-            if (caseflag) {
-                var rtnVal = chkAprLine(objNodes[i]);
-
-                if (rtnVal == "") {
-                    chkflag = true;
-                    return "TRUE";
-                }
-                else {
-                    chkflag = false;
-                    return rtnVal;
-                }
-            }
-        }
-    }
-    if (chkFlag)
-        return "TRUE"
-    else
-        return "FALSE";
-}
-function chkAprLine(objNodes) {
-    var xmldom = createXmlDom();
-    xmldom.async = false;
-    xmldom = loadXMLString(TempsaveAprlineinfo);
-
-    var objLines = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
-    var objCheck = GetChildNodesByNodeName(objNodes, "APRLINE");
-
-    var rtnMessage = "";
-
-    for (m = 0; m < objCheck.length; m++) {
-        var pAprType = getNodeText(SelectSingleNode(objCheck[m], "APRTYPE"));
-        var pClass = getNodeText(SelectSingleNode(objCheck[m], "CLASS"));
-        var pValue = getNodeText(SelectSingleNode(objCheck[m], "VALUE"));
-        var pDesc = getNodeText(SelectSingleNode(objCheck[m], "DESC"));
-
-        var chkflag;
-        var tempValue = "";
-
-        chkflag = false;
-        for (n = 0; n < objLines.length; n++) {
-            var chiildNode = GetChildNodes(objLines[n]);
-            switch (pClass) {
-                case "JOBTITLE":
-                    tempValue = getNodeText(chiildNode[2]);
-                    break;
-
-                case "USERID":
-                    tempValue = getNodeText(chiildNode[9]);
-                    break;
-            }
-            if (tempValue.toLowerCase() == pValue.toLowerCase() && getNodeText(chiildNode[4]) == pAprType)
-                chkflag = true;
-        }
+    var validations = SelectNodes(workflowXml, "workflow/validations/validation")
+    for (var i = 0, ilen = validations.length; i < ilen; i++) {
+        var validation = validations[i];
+        var pField = SelectSingleNodeValue(validation, "field");
+        var pClass = SelectSingleNodeValue(validation, "class");
+        var pDesc = SelectSingleNodeValue(validation, "desc");
+        chkflag = checkValid(pField, pClass, pDesc);
 
         if (!chkflag) {
-            rtnMessage = rtnMessage + pDesc + "<br>";
+            return "FALSE";
         }
     }
-    return rtnMessage;
+
+    var aprlines = SelectNodes(keywordXml, "workflow/aprlines/aprline");
+    for (var i = 0, ilen = aprlines.length; i < ilen; i++) {
+        var aprline = aprlines[i];
+        var pAprtype = SelectSingleNodeValue(aprline, "aprtype");
+        var pClass = SelectSingleNodeValue(aprline, "class");
+        var pValue = SelectSingleNodeValue(aprline, "value");
+        var pDesc = SelectSingleNodeValue(aprline, "desc");
+        chkflag = chkAprLine(pAprtype, pClass, pValue, pDesc);
+
+        if (!chkflag) {
+            return "FALSE";
+        }
+    }
+
+    return "TRUE";
 }
+// function checkValidation(xmlPath) {
+//     var XMLURL = "/ezCommon/downloadAttach.do?filePath=" + encodeURI(xmlPath);
+//     var xmlpara = createXmlDom();
+//     xmlpara.async = false;
+//     xmlpara = loadXMLString(xmlPath.innerHTML);
+
+//     var chkflag = true;
+//     var objNodes = SelectNodes(xmlpara, "WORKFLOW/VALIDATIONS/VALIDATION");
+//     if (objNodes.length > 0) {
+//         for (i = 0; i < objNodes.length; i++) {
+//             if (chkflag) {
+//                 var pField = getNodeText(SelectSingleNode(objNodes[i], "FIELD"));
+//                 var pValue = getNodeText(SelectSingleNode(objNodes[i], "CLASS"));
+//                 var pDesc = getNodeText(SelectSingleNode(objNodes[i], "DESC"));
+//                 chkflag = checkValid(pField, pValue, pDesc);
+//             }
+//         }
+//     }
+
+//     if (!chkflag)
+//         return "FALSE";
+
+//     var objNodes = SelectNodes(xmlpara, "WORKFLOW/STATUS/CHECK");
+//     if (objNodes.length > 0) {
+//         for (i = 0; i < objNodes.length; i++) {
+//             var objCASES = GetElementsByTagName(objNodes[i], "CASES");
+//             var caseflag = true;
+//             for (j = 0; j < objCASES.length; j++) {
+//                 var objCASE = GetElementsByTagName(objCASES[j], "CASE");
+//                 for (k = 0; k < objCASE.length; k++) {
+//                     var pField = getNodeText(SelectSingleNode(objCASE[k], "FIELD"));
+//                     var pValue = getNodeText(SelectSingleNode(objCASE[k], "VALUE"));
+//                     var pType = getNodeText(SelectSingleNode(objCASE[k], "TYPE"));
+
+//                     var field = message.GetListItem(fields, pField);
+//                     if (field) {
+//                         switch (pType) {
+//                             case "BIGGER":
+//                                 var tempValue = field.textContent;
+//                                 var p = 0;
+//                                 for (p = 0; p < 10; p++)
+//                                     tempValue = tempValue.replace(",", "");
+//                                 tempValue = parseInt(tempValue);
+//                                 if (tempValue <= pValue)
+//                                     caseflag = false;
+//                                 break;
+
+//                             case "SMALLER":
+//                                 var tempValue = field.textContent;
+//                                 var p = 0;
+//                                 for (p = 0; p < 10; p++)
+//                                     tempValue = tempValue.replace(",", "");
+//                                 tempValue = parseInt(tempValue);
+//                                 if (tempValue > pValue)
+//                                     caseflag = false;
+//                                 break;
+//                         }
+//                     }
+//                 }
+//             }
+//             if (caseflag) {
+//                 var rtnVal = chkAprLine(objNodes[i]);
+
+//                 if (rtnVal == "") {
+//                     chkflag = true;
+//                     return "TRUE";
+//                 }
+//                 else {
+//                     chkflag = false;
+//                     return rtnVal;
+//                 }
+//             }
+//         }
+//     }
+//     if (chkFlag)
+//         return "TRUE"
+//     else
+//         return "FALSE";
+// }
 function checkValid(pField, pValue, pDesc) {
     var chkFlag = true;
     var fields = message.GetFieldsList();
     var field = message.GetListItem(fields, pField);
-    var i = 0;
     if (field) {
+        var tempValue = getNodeText(pField);
+
         switch (pValue) {
             case "NUM":
-                var tempValue = trim(field.textContent);
-                for (i = 0; i < 10; i++)
-                    tempValue = tempValue.replace(",", "");
+                if (!tempValue) {
+                    chkFlag = false;
+                }
 
-                if (tempValue == "")
+                tempValue = tempValue.replace(/[0-9]/g, "");
+
+                if (tempValue) {
                     chkFlag = false;
-                else if (tempValue == parseInt(tempValue))
-                    chkFlag = true;
-                else
-                    chkFlag = false;
+                }
                 break;
-
             case "NOTNULL":
-                var tempValue = trim(field.textContent);
-                if (tempValue != "")
-                    chkFlag = true;
-                else
+                if (!tempValue) {
                     chkFlag = false;
+                }
                 break;
-
             case "NULL":
-                var tempValue = trim(field.textContent);
-                if (tempValue == "")
-                    chkFlag = true;
-                else
+                if (tempValue) {
                     chkFlag = false;
+                }
                 break;
-
-            case "DATE":
-                chkFlag = true;
-                break;
+            // 추가적으로 필요한건 추가해서 쓸것
         }
+
         if (!chkFlag) {
             OpenAlertUI(pDesc);
-            return false;
         }
     }
-    return true;
+
+    return chkFlag;
+}
+function chkAprLine(pAprtype, pClass, pValue, pDesc) {
+    var xmldom = loadXMLString(getAprLinefor("APR", pDocID));
+
+    var objLines = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
+
+    var chkflag = false;
+    for (var i = 0, ilen = objLines.length; i < ilen; i++) {
+        var objLine = objLines[i];
+        var cell = GetElementsByTagName(objLine, "CELL")[0];
+
+        var tempValue = "";
+        switch (pClass) {
+            case "JOBTITLE":
+                tempValue = SelectSingleNodeValue(cell, "DATA17");
+                break;
+            case "USERID":
+                tempValue = SelectSingleNodeValue(cell, "DATA4");
+                break;
+            // 추가적으로 필요한건 추가해서 쓸것
+        }
+
+        if (tempValue === pValue && SelectSingleNodeValue(cell, "DATA11") === pAprtype) {
+            chkflag = true;
+            break;
+        }
+    }
+
+    if (!chkflag) {
+        OpenAlertUI(pDesc);
+    }
+
+    return chkflag;
 }
 function CheckSignImg() {
     try {
@@ -1535,4 +1522,20 @@ function New_DrawAutoLine(ret, pDraftFlag) {
     } catch (e) {
 		alert("New_DrawAutoLine ERROR!!");
 	}
+}
+function setConnDefaultKey(pDraftFlag) {
+    if (pDraftFlag === "DRAFT") {
+        SetDocumentElement("c_docid", pDocID);
+        SetDocumentElement("c_susinid", "");
+        SetDocumentElement("c_formid", pFormID);
+        SetDocumentElement("c_draft_userid", arr_userinfo[1]);
+        SetDocumentElement("c_draft_username", arr_userinfo[2]);
+        SetDocumentElement("c_draft_position", arr_userinfo[3]);
+        SetDocumentElement("c_draft_deptid", arr_userinfo[4]);
+        SetDocumentElement("c_draft_deptname", arr_userinfo[5]);
+        SetDocumentElement("c_connkey", typeof pConnKey !== "undefined" ? pConnKey : "");
+        SetDocumentElement("c_connformcode", typeof pConnFormCode !== "undefined" ? pConnFormCode : "");
+    } else if (pDraftFlag === "SUSIN") {
+        SetDocumentElement("c_susinid", pDocID);
+    }
 }

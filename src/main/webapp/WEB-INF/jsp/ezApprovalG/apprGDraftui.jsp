@@ -177,6 +177,8 @@
 			var passAprLine = "";
 	        var useDynamicAprLine = "<c:out value ='${useDynamicAprLine}'/>";
 			var isTmpDocCanApprov = false;
+			var pConnKey = "<c:out value ='${connKey}'/>";
+	        var pConnFormCode = "<c:out value ='${connFormCode}'/>";
 			
 			
 			//부서감사 관련 2020-01-14 홍대표
@@ -272,6 +274,7 @@
 		                }
 		            }
 		            process_AfterOpen();
+					connInit();
 		            /*
 		            * 재기안인 경우
 		            * 1. 임시보관함에서는 기존에 저장된 내용이 있어서 수신처 값을 초기화하지 않는다.
@@ -349,21 +352,22 @@
 		    	});
 	        }
 		
-		    function Conn_Initial() {
-		        if (ConnExist("INIT", "")) {
-		            setMenuBar("btnHelper", true);
-		        }
-		        else {
-		            setMenuBar("btnHelper", false);
-		        }
-		
-		        var rtnVal = ExcuteInfo("INIT", "");
-		        if (!rtnVal) {
-		            if (OpenInformationUI("<spring:message code='ezApprovalG.t87'/>")) {
-		                    btnClose_onclick();
-		                }
-		            }
-		        }
+	    	function connInit() {
+				var connRootText = GetDocumentElement("CONNROOT");
+				if (connRootText) {
+					document.querySelector("#btnSaveServer").style.display = "none";
+
+					setConnDefaultKey(pDraftFlag);
+
+					if (ConnExist(["conn;processidx;INIT", "conn;processtime;DRAFT", "query;qtype;UA"]) || ConnExist(["conn;processidx;INIT", "conn;processtime;DRAFT", "query;qtype;UA_EX"])) {
+						document.querySelector("#btnConn").style.display = "";
+					}
+
+					setTimeout(function() {
+						ExcuteInfo("INIT", pDraftFlag);
+					}, 0);
+				}
+			}
 		
 		    function GetFormType(pFormID) {
 		        var Result = "";
@@ -568,6 +572,13 @@
 		        }
 		    }
 		    function btnSendDraft_onclick() {
+                if (GetDocumentElement("WORKFLOW")) {
+                    var rtn = checkValidation();
+                    if (rtn == "FALSE") {
+                        return;
+					}
+	            }
+
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
@@ -1302,11 +1313,9 @@
 		            window.opener.getApprGraph("appr");
 		        } catch (e) { }
 		    }
-		    function btnConn_onclick() {
-		        var pIdx = FormProc.editor.DOM.body.getAttribute("processkey");
-		        if (pIdx)
-		            rtnVal = ExcuteInfo(pIdx, "");
-		    }
+			function btnConn_onclick() {
+				ExcuteInfo("INIT", pDraftFlag);
+			}
 		    function btn_Attach_onclick() {
 		        btnFileAttach_onclick();
 		    }

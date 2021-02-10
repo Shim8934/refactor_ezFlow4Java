@@ -2524,6 +2524,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
 		String formDescript = doc.getElementsByTagName("FormDescript").item(0).getTextContent();
 		String formKind = doc.getElementsByTagName("FormKind").item(0).getTextContent();
+		String formXslt = doc.getElementsByTagName("FORMXSLT").item(0).getTextContent();
 		
 		String formSihangType = doc.getElementsByTagName("SIHANGTYPE").item(0).getTextContent();
 		
@@ -2598,6 +2599,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_PCOMPANYID", companyID);
 		map.put("v_PFORMCONNFLAG", formConnFlag);
 		map.put("v_POPENGOVFLAG", openGovFlag);
+		map.put("v_FORMXSLT", formXslt);
 		map.put("v_PPASSAPRLINEFLAG", passAprLineFlag);
 		map.put("companyID", companyID);
 		map.put("tenantID", userInfo.getTenantId());
@@ -3058,6 +3060,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
 		String formDescript = doc.getElementsByTagName("FormDescript").item(0).getTextContent();
 		String formKind = doc.getElementsByTagName("FormKind").item(0).getTextContent();
+		String formXslt = doc.getElementsByTagName("FORMXSLT").item(0).getTextContent();
 		
 		String useWHWP = ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId());
 		// 2020-10-19 김민성 - 한글 웹기안기 신규 양식인 경우 파일로 저장하는 형식
@@ -3132,6 +3135,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_PFORMCONNFLAG", formConnFlag);
 		map.put("v_PFORMDRAFTALLFLAG", formDraftAllFlag);
 		map.put("v_POPENGOVFLAG", openGovFlag);
+		map.put("v_FORMXSLT", formXslt);
 		map.put("companyID", companyID);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("v_formAprOption", formAprOption);

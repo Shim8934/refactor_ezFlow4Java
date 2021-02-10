@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -73,10 +74,15 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -92,6 +98,7 @@ import org.w3c.dom.NodeList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -5038,4 +5045,37 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		response.setHeader("Cache-Control", "no-cache");
 		response.getWriter().write(ezApprovalGAdminService.getAuditApprLineListPrc(loginCookie, request, response, model).toString());
 	}
+	
+    @RequestMapping(value = "/admin/ezApprovalG/convertXmltoHtml.do", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<String> convertXmltoHtml(
+            @RequestBody JSONObject codeData) {
+        logger.debug("convertXmltoHtml started");
+        
+        ResponseEntity<String> resEntity = null;
+        String resultHtmlCode = "";
+        
+        try {
+        
+            String xsltCode = (String) codeData.get("xsltCode");
+            String xmlCode = (String) codeData.get("xmlCode");
+            
+            if(xsltCode.isEmpty() || xmlCode.isEmpty()) {
+                throw new Exception("xsltCode or xmlCode is empty");
+            }
+                
+            resultHtmlCode = commonUtil.convertXsltToHtml(xsltCode, xmlCode);
+            
+            HttpHeaders header = new HttpHeaders();
+            header.setContentType(new MediaType("text", "html", StandardCharsets.UTF_8));
+            
+            resEntity = new ResponseEntity<String>(resultHtmlCode, header, HttpStatus.OK);
+        } catch(Exception e) {
+            e.printStackTrace();
+            resEntity = new ResponseEntity<String>(HttpStatus.CONFLICT);
+        }
+        
+        logger.debug("convertXmltoHtml ended");
+        
+        return resEntity;
+    }
 }
