@@ -2180,4 +2180,19 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTblTabBoard() throws Exception {
 		ezCommonDAO.createTblTabBoard();
 	}
+	
+	@Override
+	public void insertApprBigAttachInfo() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_TENANTID", tenantVo.getTenantId());
+			
+			ezCommonDAO.insertApprBigAttachConfig(map); // 전자결재 대용량첨부 테넌트 컨피그
+		}
+		
+		ezCommonDAO.addApprBigAttachColumn(); // 전자결재 대용량첨부 관련 컬럼
+		ezCommonDAO.createApprBigAttachTable(); // 전자결재 대용량첨부 관련 테이블
+	}
 }
