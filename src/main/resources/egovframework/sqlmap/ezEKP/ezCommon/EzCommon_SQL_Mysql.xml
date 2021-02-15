@@ -4108,4 +4108,18 @@
 			</iterate>
 	</select>
 	
+	<select id="EzCommonDAO.chkAddjobMasterJobIdIsPrimary" resultClass="String">
+		SHOW INDEX 
+		FROM TBL_ADDJOBMASTER 
+		WHERE COLUMN_NAME = 'jobid' AND KEY_NAME = 'PRIMARY'
+	</select>
+	
+	<statement id="EzCommonDAO.dropAddjobMasterPrimary">
+		ALTER TABLE TBL_ADDJOBMASTER DROP PRIMARY KEY
+	</statement>
+	
+	<statement id="EzCommonDAO.addAddjobMasterPrimary">
+		ALTER TABLE TBL_ADDJOBMASTER ADD CONSTRAINT PRIMARY KEY (CN, DEPTID, TENANT_ID, JOBID)
+	</statement>
+	
 </sqlMap>

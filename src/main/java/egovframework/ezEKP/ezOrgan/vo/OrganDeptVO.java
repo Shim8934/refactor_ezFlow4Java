@@ -66,6 +66,12 @@ public class OrganDeptVO {
     /** 수동으로 추가한 부서 구분(Y/N) */
 	private String manualFlag;
     
+	/** 
+	 * 지정된 부서의 멤버 목록가지고 올때 사용함 
+	 * ezOrganDAO.getDeptMemberList(map) */
+    private String isAddjob;
+	private String jobId;
+	
 	public String getCn() {
 		return cn;
 	}
@@ -258,5 +264,16 @@ public class OrganDeptVO {
 	public void setManualFlag(String manualFlag) {
 		this.manualFlag = manualFlag;
 	}
-	
+	public String getIsAddjob() {
+		return isAddjob;
+	}
+	public void setIsAddjob(String isAddjob) {
+		this.isAddjob = isAddjob;
+	}
+	public String getJobId() {
+		return jobId;
+	}
+	public void setJobId(String jobId) {
+		this.jobId = jobId;
+	}
 }
