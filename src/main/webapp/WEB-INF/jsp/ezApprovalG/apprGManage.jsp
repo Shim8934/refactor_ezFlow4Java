@@ -481,6 +481,14 @@
 					}
 				}
 				
+				if (pPreviewShow_HOW == "") {
+					if (previewInfo != null && previewInfo.trim() != "") {
+						pPreviewShow_HOW = previewInfo;
+					} else {
+						pPreviewShow_HOW = "OFF";
+					}
+				}
+				
 		    }
 			
 		    function change_statusCell() {
@@ -543,7 +551,7 @@
 		        }
 		        
 		        listLoading(true); // 20201211 조진호 - 리스트 출력 시 시간이 오래 걸릴 수 있어 로딩바 추가
-		
+		        
 		        if (pListTypeValue == "1") {
 		            getDocList();
 		        }

@@ -231,7 +231,6 @@
 	                    }
 	                } else if (useEditor == "WebHWP") {
 	                	var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(formURL);
-	                	//var URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(formURL);
 	                	message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
 	                } else {
 	                    document.getElementById("ApvForm_sub4").style.display = "";

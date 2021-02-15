@@ -141,7 +141,6 @@ function AprrovMappingSign(ret)
 				}
 				
 				message.InsertPicture(habyui, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
-				//message.InsertPicture(habyui, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
 				//SetDocumentElement(HwpCtrl, habyui, ret);
 				
 				signCnt = signCnt + 1
@@ -240,7 +239,6 @@ function AprrovMappingSign(ret)
 	  				content = strLang7 + OpinionText;
 	  				
 	  				message.InsertPicture(signID, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
-	  				//message.InsertPicture(signID, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
 
 	  				signInfo[signCnt] = signID;
 			        SignName[signCnt] = signID;
@@ -330,7 +328,6 @@ function AprrovMappingSign(ret)
 	  				}
 	  				
 	  				message.InsertPicture(signID, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
-	  				//message.InsertPicture(signID, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), AprrovMappingSign_after);
 	      
 	  				signInfo[signCnt] = signID;
 		            SignName[signCnt] = signID;
@@ -778,6 +775,10 @@ function SaveFile() {
 function SaveOrgFile() {
 	var result = "";
 	
+	// 2021.01.07 강승구 : 오류발생 후 파일이 사라지는 오류 수정
+	if (!OrgHtml)
+        return;
+
 	var data = {
 		docID : pDocID,
 		formId : pFormID,
@@ -1290,15 +1291,13 @@ function putSignXML(SignXML) {
 					message.AppendFieldText(SignName, SignCont);
 				} else if (SignType == "PROXY") {
 					message.PutFieldText(SignName, " ");
-					message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SignCont), null);
 					message.AppendFieldText(SignName, strLang8);
-					//message.InsertPicture(SignName, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SignCont), null);
+					message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SignCont), null);
 				} else if (SignType == "IMAGE") {
 				    var img = SignCont.split("::");
 				    message.PutFieldText(SignName, "");
 					if(img.length >= 1) {
 					    message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(img[0]), null);
-					    //message.InsertPicture(SignName, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(img[0]), null);
 					}
 				    if(img.length >= 2)
 				    	message.AppendFieldText(SignName, img[1]);

@@ -1958,6 +1958,10 @@ function SaveFile()
 function SaveOrgFile()
 {
 	var result = "";
+
+	// 2021.01.07 강승구 : 오류발생 후 파일이 사라지는 오류 수정
+	if (!pOrgHtml)
+        return;
 	
 	var data = {
 		docID : pDocID,

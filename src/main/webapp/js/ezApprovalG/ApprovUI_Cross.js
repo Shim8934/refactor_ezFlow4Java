@@ -1469,8 +1469,13 @@ function getCurApproverAprLine(type) {
     //최종 결재에 개인 합의 추가 하기 위해 결재선에 표시된 전체 개수
     LastTotalKyulSN = getLastTotalSignSN(objNodes);
     LastSignSN = objNodes.length;
-
+    
     for (var i = objNodes.length - 1; i < objNodes.length; i--) {
+    	// i가 음수값을 가지지 않도록 임시 수정
+    	if (i < 0) {
+    		break;
+    	}
+    	
         var params = new Array();
         params[0] = "0";
         var dataNodes = GetLastChildNodes(objNodes[i], params);

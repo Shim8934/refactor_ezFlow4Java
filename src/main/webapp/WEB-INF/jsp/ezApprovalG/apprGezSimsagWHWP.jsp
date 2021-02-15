@@ -219,7 +219,6 @@
         function Editor_Complete() {
         	if (pDocHref != "") { 
         		var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pDocHref);
-        		//var URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pDocHref);
         		message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
         	}
         }
@@ -685,6 +684,11 @@
 
         function saveEndFile(pDocID, pHtml) {
             var result = null;
+
+            // 2021.01.07 강승구 : 오류발생 후 파일이 사라지는 오류 수정
+            if (!pHtml)
+                return;
+
             var reqData = {
                 docID : pDocID,
                 html  : pHtml
