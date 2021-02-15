@@ -632,6 +632,7 @@
 								<OPTION value="b11"><spring:message code='ezPersonal.b11'/></OPTION>
 								<OPTION value="b12"><spring:message code='ezPersonal.b12'/></OPTION>
 							</SELECT>
+							${userInfo.deptName}
 						</td>
 					</tr>
 				</c:if>

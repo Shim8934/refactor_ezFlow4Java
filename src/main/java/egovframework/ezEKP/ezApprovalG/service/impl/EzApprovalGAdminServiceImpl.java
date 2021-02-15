@@ -5346,4 +5346,35 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return "admin/ezApprovalG/auditApprLineManage";
 	}
+	
+	public Object getAuditStatisticsDocList(String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("getAuditStatisticsDocList start");
+		JSONObject jo = new JSONObject();
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		boolean result = false;
+		
+		String companyId = user.getCompanyID();
+		int tenantId = user.getTenantId();
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		String idx = request.getParameter("idx");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("idx", idx);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("offsetMin", commonUtil.getMinuteUTC(user.getOffset()));
+		
+		List<HashMap<String, Object>> list = ezApprovalGAdminDAO.getAuditStatisticsDocList(map);
+		result = true;
+		
+		jo.put("rows", list);
+		jo.put("result", result);
+		logger.debug("getAuditStatisticsDocList end");
+		
+		return jo;
+	}
 }
