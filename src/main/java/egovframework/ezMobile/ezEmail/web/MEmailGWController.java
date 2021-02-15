@@ -127,7 +127,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	
 	private static final String MOBILE_FILEROOT_DOWNLOAD_URL = "/mobile/ezCommon/mFileDown.do?fileName=*.INLINE.*&amp;filePath=/fileroot";
 
-	private static final Pattern MOBILE_DOWNLOAD_IMAGE_PATTERN = Pattern.compile("(<img .*src=\")/mobile/ezCommon/mFileDown.do\\?fileName=\\*\\.INLINE\\.\\*&amp;filePath=(/fileroot/[^\"]*)");
+	private static final Pattern MOBILE_DOWNLOAD_IMAGE_PATTERN = Pattern.compile("src=\"/mobile/ezCommon/mFileDown.do\\?fileName=\\*\\.INLINE\\.\\*&amp;filePath=(/fileroot/[^\"]*)");
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -2712,7 +2712,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						StringBuffer sb = new StringBuffer();
 
 						while (imageMatcher.find()) {
-							String imagePath = realPath + imageMatcher.group(2);
+							String imagePath = realPath + imageMatcher.group(1);
 							File imageFile = new File(imagePath);
 							String imageExt = FilenameUtils.getExtension(imageFile.getName());
 							String imageName = UUID.randomUUID().toString() + "." + imageExt;
@@ -2742,7 +2742,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							imagePart.setDisposition(Part.INLINE);
 
 							imageParts.add(imagePart);
-							imageMatcher.appendReplacement(sb, "$1cid:" + cid);
+							imageMatcher.appendReplacement(sb, "src=\"cid:" + cid);
 						}
 
 						textBody = imageMatcher.appendTail(sb).toString();
