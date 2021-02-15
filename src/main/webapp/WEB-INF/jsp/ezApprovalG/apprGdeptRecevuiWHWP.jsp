@@ -917,8 +917,6 @@
 		    function Editor_Complete() {
 		    	if (pSusinDocURL != "") {
 	                var URL = document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pSusinDocURL);
-	                //var URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pSusinDocURL);
-	            
 	                message.Open(URL, "", "", function (res) { messageload = res.result; }, null);
 	            }
 		    }
@@ -930,7 +928,6 @@
 		    function Editor_Complete2Load() {
 	            if (pSusinDocURL != "") {
 	                var URL = document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pFormHref);
-	                //var URL = document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pFormHref);
 	                message2.Open(URL, "", "", function (res) {
 	                    messageload2 = true;
 	                    FieldsAvailable(res.result);
