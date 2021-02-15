@@ -1140,7 +1140,9 @@
 										loadingImageURL: '/js/ezEditor/kukudocsEditor/images/load.gif',
 										errorImageURL: '/js/ezEditor/kukudocsEditor/images/error.png',
 										imageUploadURL: imageUploadURL,
-										Editor_Complete: onLoaded
+										Editor_Complete: onLoaded,
+										useSecurityScript: false,
+										useSecurityEvent: false
 									});
 								</script>
 				</c:when>
