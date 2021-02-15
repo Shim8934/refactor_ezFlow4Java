@@ -2348,12 +2348,12 @@ public class CommonUtil {
 	}
 	
     public String convertXsltToHtml(String xslStr, String xmlStr) throws Exception {
-        return convertXsltToHtml(xslStr, xmlStr, false);
+        return convertXsltToHtml(xslStr, xmlStr, true);
     }
-    public String convertXsltToHtml(String xslStr, String xmlStr, boolean isEscapeStr) throws Exception {
+    public String convertXsltToHtml(String xslStr, String xmlStr, boolean isEncodingStr) throws Exception {
         logger.debug("convertXsltToHtml started");
         
-        if(isEscapeStr) {
+        if(isEncodingStr) {
             xslStr = htmlUnescape(xslStr);
         }
         

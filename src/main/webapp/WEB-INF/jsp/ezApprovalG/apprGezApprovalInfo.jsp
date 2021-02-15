@@ -2595,7 +2595,7 @@
 	                            <c:if test="${approvalFlag =='S'}">
 	                               <tr>
                                     <td style="vertical-align: top;">                                    	
-                                        <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+                                        <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 437px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
                                         </div>
                                     </td>
                                	 	</tr>
@@ -2682,11 +2682,11 @@
 	                                <td style="vertical-align: top;">
 	                                    <h2 class="h2_dot" style="margin-top:6px;"><spring:message code='ezApprovalG.t407'/>
 	                                        <div style="text-align: right; margin-top: -23px;">
-	                                        	<c:if test="${approvalFlag == 'G' }">
+	                                        	<%-- <c:if test="${approvalFlag == 'G' }">
 		                                        	<a id="auditAddBtn" class="imgbtn">
 														<span><spring:message code='ezOrgan.t9903'/></span>
 													</a>
-												</c:if>
+												</c:if> --%>
 	                                            <a class="imgbtn" onclick="AprlineUpper_onclick();" style="height:22px;box-shadow:0px 2px 0px 0px rgba(0,0,0,0.1)"><span>
 	                                                <img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezApprovalG.pjj28'/>" style="vertical-align:middle"/></span></a>
 	                                            <a class="imgbtn" onclick="AprlineDown_onclick();" style="height:22px;box-shadow:0px 2px 0px 0px rgba(0,0,0,0.1)"><span>
@@ -3403,11 +3403,11 @@
 			                    </div>
 			                </div>
 			                <!-- 조직도 -->
-			                <div id="Organ" style="width:390px">
+			                <div id="Organ" style="width:440px">
 			                	<table style="width:99.5%;table-layout: fixed">
 			                		<tr>
 	                                    <td style="vertical-align: top;">                                    	
-	                                        <div id="TreeViewCC" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+	                                        <div id="TreeViewCC" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 437px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 	                                        </div>
 	                                    </td>
                                	 	</tr>

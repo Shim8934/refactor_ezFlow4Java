@@ -5897,4 +5897,59 @@
 			#companyId#
 		)
 	</insert>
+	
+	<resultMap id="auditStatisticsDocList" class="java.util.LinkedHashMap">
+		<result property="docId"				column="docId" />
+		<result property="writerDeptName"		column="writerDeptName"		nullValue="" />
+		<result property="docNo"				column="docNo"				nullValue="" />
+		<result property="docTitle"				column="docTitle"			nullValue="" />
+		<result property="processDate"			column="processDate"		nullValue="" />
+		<!-- <result property="startDate"			column="startDate"			nullValue="" /> -->
+		<result property="endDate"				column="endDate"			nullValue="" />
+		<result property="aprMemberName"		column="aprMemberName"		nullValue="" />
+		<result property="content"				column="content"			nullValue=""	jdbcType="CLOB"	javaType="String" />
+	</resultMap>
+	<select id="EzApprovalGAdmin.getAuditStatisticsDocList" parameterClass="Map" resultMap="auditStatisticsDocList">
+		SELECT
+			A.DOCID
+			,A.WRITERDEPTNAME
+			,A.DOCNO
+			,A.DOCTITLE
+			,DATE_ADD(DATE_FORMAT(tb.processdate,'%Y-%m-%d %H:%i'), INTERVAL #offsetMin# MINUTE) AS processdate
+			,DATE_ADD(DATE_FORMAT(a.startdate,'%Y-%m-%d %H:%i'), INTERVAL #offsetMin# MINUTE) AS startdate
+			,DATE_ADD(DATE_FORMAT(a.enddate,'%Y-%m-%d %H:%i'), INTERVAL #offsetMin# MINUTE) AS enddate
+			,TB.APRMEMBERNAME
+			,D.CONTENT
+		FROM TBL_ENDAPRDOCINFO A INNER JOIN (SELECT
+												B.DOCID
+												,B.APRMEMBERSN
+												,C.APRMEMBERNAME
+												,C.PROCESSDATE
+											FROM (SELECT
+													DOCID
+													,MAX(APRMEMBERSN) AS APRMEMBERSN
+												FROM TBL_ENDAPRLINEINFO
+												WHERE APRTYPE = '005'
+												<isEqual property="idx" compareValue="0">
+													AND APRMEMBERID IN (SELECT CN FROM TBL_USERMASTER WHERE EXTENSIONATTRIBUTE1 LIKE '%s=1%')
+												</isEqual>
+												<isGreaterEqual property="idx" compareValue="1">
+													<isLessEqual property="idx" compareValue="3">
+														AND APRMEMBERID IN (SELECT USERID FROM TBL_AUDITAPPRLINE WHERE ORDERBY = CAST(#idx# AS UNSIGNED))
+													</isLessEqual>
+												</isGreaterEqual>
+												GROUP BY DOCID) B INNER JOIN TBL_ENDAPRLINEINFO C 
+												ON B.DOCID = C.DOCID 
+												AND B.APRMEMBERSN = C.APRMEMBERSN
+											) TB ON A.DOCID = TB.DOCID
+		LEFT OUTER JOIN TBL_ENDAPROPINIONINFO D ON A.DOCID = D.DOCID
+		WHERE 1=1
+		<![CDATA[
+			AND A.STARTDATE >= DATE_ADD(DATE_FORMAT(#startDate#,'%Y-%m-%d %H:%i'), INTERVAL #offsetMin# MINUTE)
+			AND A.ENDDATE <= DATE_ADD(DATE_FORMAT(#endDate#,'%Y-%m-%d %H:%i'), INTERVAL #offsetMin# MINUTE)
+		]]>
+		AND A.TENANT_ID = #tenantId#
+		AND A.COMPANYID = #companyId#
+		ORDER BY A.DOCID ASC
+	</select>
 </sqlMap>

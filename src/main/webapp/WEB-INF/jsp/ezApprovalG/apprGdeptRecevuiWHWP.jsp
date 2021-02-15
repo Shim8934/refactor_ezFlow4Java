@@ -123,7 +123,8 @@
 	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
 			
 			window.onresize = function () {
-	        	var mHeight = document.documentElement.clientHeight - 172 - document.getElementById("message").offsetTop + "px";
+				document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 170 + "px";
+				var mHeight = document.documentElement.clientHeight - 180 - document.getElementById("messageWHWPEditor").offsetTop + "px";
 	       		message.Resize(mHeight);
 	        }
 			
@@ -1024,7 +1025,7 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <td style="padding-bottom: 10px">
+	            <td>
 	                <table width="100%" height="100%">
 	                    <tr>
 	                        <td style="padding-bottom:10px;height:800px;" >
@@ -1033,7 +1034,7 @@
 	                    </tr>
 	                    <tr>
 	                        <td style="vertical-align: top; height: 0%" id="form2">
-					            <iframe id="message2" name="message2" src="/ezApprovalG/WHWPEditor.do?type=deptrecev"  style="background-color: White; height: 1px; width: 1px;"></iframe>
+					            <iframe id="message2" name="message2" src="/ezApprovalG/WHWPEditor.do?type=deptrecev"  style="background-color: White; height: 0px; width: 0px; border:0px;"></iframe>
 					        </td>
 	                    </tr>
 	                </table>
