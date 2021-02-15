@@ -14,7 +14,7 @@ var connVal = {
             "c_connkey",
             "c_connformcode"
         ],
-        errMsg: "연동에 실패하여 결재를 완료할 수 없습니다!",
+        errMsg: "연동에 실패하여 결재를 진행할 수 없습니다!",
     }
 }
 

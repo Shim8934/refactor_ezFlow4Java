@@ -68,6 +68,7 @@ import kr.dogfoot.hwplib.writer.HWPWriter;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -7166,7 +7167,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	                    Element keyElem = keyElems.get(i);
 	                    
 	                    if("single".equals(keyElem.attr("kind"))) {
-	                        String keyName = keyElem.text();
+	                        String keyName = keyElem.text().toLowerCase();
 	                        String keyValue = "";
 	                        
 	                        switch (keyName) {
@@ -7675,7 +7676,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					strDeptName = receiveDeptName;
 				}
 				
-				if (!excuteInfo("DOCNUM_BEFORE", "DRAFT", doc, docID, userID, formURL)) {
+				if (!excuteInfo("DOCNUM_BEFORE", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId())) {
 					return "Link ERROR";
 				}
 
@@ -7702,7 +7703,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					doc.body().attr("deptid", strDeptID);
 				}
 				
-				linkCheck = excuteInfo("DOCNUM_AFTER", "DRAFT", doc, docID, userID, formURL);
+				linkCheck = excuteInfo("DOCNUM_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 				
 				if (!linkCheck) {
 					if (docNumFlag) {
@@ -7718,7 +7719,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 strDeptID = receiveDept;
                 strDeptName = receiveDeptName;
 
-                if (!excuteInfo("DOCNUM_BEFORE", "SUSIN", doc, docID, userID, formURL)) {
+                if (!excuteInfo("DOCNUM_BEFORE", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId())) {
                     return "Link ERROR";
                 }
                 
@@ -7744,7 +7745,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     doc.body().attr("deptid", strDeptID);
                 }
                 
-                linkCheck = excuteInfo("DOCNUM_AFTER", "SUSIN", doc, docID, userID, formURL);
+                linkCheck = excuteInfo("DOCNUM_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
                 
                 if (!linkCheck) {
                     if (docNumFlag) {
@@ -7786,22 +7787,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (result.equals("A")) {
 			if (aprStateSign.equals("011")) {
 				if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-					linkCheck = excuteInfo("LAST_SIGN_BEFORE", "SUSIN", doc, docID, userID, formURL);
+					linkCheck = excuteInfo("LAST_SIGN_BEFORE", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 				} else {
-					linkCheck = excuteInfo("MIDDLE_SIGN_BEFORE", "SUSIN", doc, docID, userID, formURL);
+					linkCheck = excuteInfo("MIDDLE_SIGN_BEFORE", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 				}
 			} else {
 				if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-					linkCheck = excuteInfo("LAST_SIGN_BEFORE", "DRAFT", doc, docID, userID, formURL);
+					linkCheck = excuteInfo("LAST_SIGN_BEFORE", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 				} else {
-					linkCheck = excuteInfo("MIDDLE_SIGN_BEFORE", "DRAFT", doc, docID, userID, formURL);
+					linkCheck = excuteInfo("MIDDLE_SIGN_BEFORE", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 				}
 			}
 		} else if (result.equals("B")) {
 			if (aprStateSign.equals("011")) {
-				linkCheck = excuteInfo("BANSONG_BEFORE", "SUSIN", doc, docID, userID, formURL);
+				linkCheck = excuteInfo("BANSONG_BEFORE", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 			} else {
-				linkCheck = excuteInfo("BANSONG_BEFORE", "DRAFT", doc, docID, userID, formURL);
+				linkCheck = excuteInfo("BANSONG_BEFORE", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 			}
 		}
 		
@@ -7952,15 +7953,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (result.equals("A")) {
 				if (aprStateSign.equals("011")) {
 					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-						linkCheck = excuteInfo("LAST_SIGN_AFTER", "SUSIN", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("LAST_SIGN_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 					} else {
-						linkCheck = excuteInfo("MIDDLE_SIGN_AFTER", "SUSIN", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("MIDDLE_SIGN_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 					}
 				} else {
 					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-						linkCheck = excuteInfo("LAST_SIGN_AFTER", "DRAFT", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("LAST_SIGN_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 					} else {
-						linkCheck = excuteInfo("MIDDLE_SIGN_AFTER", "DRAFT", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("MIDDLE_SIGN_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 					}
 				}
 			}
@@ -8003,22 +8004,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (result.equals("A")) {
 					if (aprStateSign.equals("011")) {
 						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-							linkCheck = excuteInfo("END_FAIL", "SUSIN", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("END_FAIL", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 						} else {
-							linkCheck = excuteInfo("MIDDLE_END_FAIL", "SUSIN", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("MIDDLE_END_FAIL", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 						}
 					} else {
 						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-							linkCheck = excuteInfo("END_FAIL", "DRAFT", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("END_FAIL", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 						} else {
-							linkCheck = excuteInfo("MIDDLE_END_FAIL", "DRAFT", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("MIDDLE_END_FAIL", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 						}
 					}
 				} else if (result.equals("B")) {
 					if (aprStateSign.equals("011")) {
-						linkCheck = excuteInfo("BANSONG_FAIL", "SUSIN", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("BANSONG_FAIL", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 					} else {
-						linkCheck = excuteInfo("BANSONG_FAIL", "DRAFT", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("BANSONG_FAIL", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 					}
 				}
 				
@@ -8057,25 +8058,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (result.equals("A")) {
 					if (aprStateSign.equals("011")) {
 						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-							linkCheck = excuteInfo("LAST_END_AFTER", "SUSIN", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("LAST_END_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 							if (linkCheck) { //근태관리 연동양식 관련된 docId면 근태관리 연동양식 함수 태움.
 								ezAttitudeService.updateApprovalGConnInfo("1", userID, tempXmlDom.getElementsByTagName("ORGDOCID").item(0).getTextContent(), companyID, userInfo.getTenantId());
 							}
 						} else {
-							linkCheck = excuteInfo("MIDDLE_END_AFTER", "SUSIN", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("MIDDLE_END_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 						}
 					} else {
 						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-							linkCheck = excuteInfo("LAST_END_AFTER", "DRAFT", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("LAST_END_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 						} else {
-							linkCheck = excuteInfo("MIDDLE_END_AFTER", "DRAFT", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("MIDDLE_END_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 						}
 					}
 				} else if (result.equals("B")) {
 					if (aprStateSign.equals("011")) {
-						linkCheck = excuteInfo("BANSONG_AFTER", "SUSIN", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("BANSONG_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 					} else {
-						linkCheck = excuteInfo("BANSONG_AFTER", "DRAFT", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("BANSONG_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 					}
 				}
 				
@@ -8197,201 +8198,133 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("rollBackDocNumber ended");
 	}
 
-	public boolean excuteInfo(String pProcessIdx, String draftFlag, org.jsoup.nodes.Document doc, String docID, String userID, String formURL) throws Exception {
+	public boolean excuteInfo(String pProcessIdx, String draftFlag, org.jsoup.nodes.Document doc, String docID, String userID, String formURL, int tenantID) throws Exception {
 		logger.debug("excuteInfo started");
-
-		boolean rtnVal = true;
-		boolean findFlag;
 		
-		@SuppressWarnings("unused")
-		String connString = "";
-		String connFlag = "";
-		@SuppressWarnings("unused")
-		String queryString = "";
-		String queryType = "";
-		String processIdx, processTime;
+        String connString, connFlag;
+        String queryString, queryType;
+        String processIdx, processTime;
+        String serviceQueryString;
+        
+		Element htmlConn = doc.getElementsByTag("connroot").first();
 		
-		Document xmlData = null;
-		NodeList connNodes = null;
-		NodeList keyNodes = null;
-		NodeList listKeyRow = null;
-		Node connNode = null;
-		Node tblInfoRow = null;
-		
-		Element htmlConn = doc.getElementById("conn");
-		
-		if (htmlConn != null && htmlConn.outerHtml().contains("CONNINFO")) {
-			xmlData = commonUtil.convertStringToDocument(htmlConn.html());
-			connNodes = xmlData.getFirstChild().getChildNodes();
-		} else {
-			return true;
+		if (htmlConn == null) {
+		    logger.debug("excuteInfo started");
+		    return true;
 		}
 		
-		findFlag = false;
-		
-		for (int cnt = 0; cnt < connNodes.getLength(); cnt++) {
-			//확인해야됨 문법 제대로 검증안됨
-			processIdx = connNodes.item(cnt).getAttributes().getNamedItem("processidx").getNodeValue();
-			processTime = connNodes.item(cnt).getAttributes().getNamedItem("processtime").getNodeValue();
-			
-			if (processIdx.equals(pProcessIdx) && processTime.equals(draftFlag)) {
-				findFlag = true;
-				connNode = connNodes.item(cnt);
-				break;
-			}
-		}
-		
-		if (findFlag) {
-			connFlag = connNode.getChildNodes().item(0).getAttributes().getNamedItem("flag").getNodeValue();
-			connString = connNode.getChildNodes().item(0).getTextContent();
-			
-			queryType = connNode.getChildNodes().item(1).getAttributes().getNamedItem("qtype").getNodeValue();
-			queryString = connNode.getChildNodes().item(1).getTextContent();
-			
-			if (queryType.equals("UA") || queryType.equals("UA_EX") || connFlag.equals("UI")) {
-				return false;
-			}
-			
-			String strItemNames = "SA_draftUserID,SA_draftUserName,SA_draftDeptID,SA_draftDeptName,SA_draftPosition,SA_DocID,SA_OrgDocID,SYSTEM_ID,FORMID,HELPPATH";
-			String[] arrItemNames = strItemNames.split(",");
-			
-			for (int k = 0; k < arrItemNames.length; k++) {
-				Node root = connNode.getChildNodes().item(2);
-				org.w3c.dom.Element ele = connNode.getChildNodes().item(2).getOwnerDocument().createElement("key");
-				
-				ele.setAttribute("kind", "single");
-				ele.setTextContent(arrItemNames[k]);
-				root.appendChild(ele);
-				
-				root = null;
-				ele = null;
-			}
-			
-			keyNodes = connNode.getChildNodes().item(2).getChildNodes();
-			
-			@SuppressWarnings("unused")
-			String keyValue = "";
-			@SuppressWarnings("unused")
-			String[] arrKeys = null;
-			
-			switch (queryType) {
-			case "Q":
-				for (int cnt = 0; cnt < keyNodes.getLength(); cnt++) {
-					String keys = keyNodes.item(cnt).getTextContent();
-					Element keyHtml = doc.getElementById(keys);
-					keyValue = "";
-					
-					if (keyHtml != null) {
-						keyValue = keyHtml.html();
-					}
-				}
-				break;
-			case "NA":
-				arrKeys = new String[keyNodes.getLength()];
-				
-				StringBuilder sb = new StringBuilder("<PARAMETER>");
-				
-				for (int cnt = 0; cnt < keyNodes.getLength(); cnt++) {
-					if (keyNodes.item(cnt).getAttributes().getNamedItem("kind").getNodeValue().equals("single")) {
-						String keys = keyNodes.item(cnt).getTextContent();
-						Element keyHtml = doc.getElementById(keys);
-						keyValue = "";
-						
-						sb.append("<" + keys + ">");
-						
-						String keyTagName = "";
-						
-						if (keyHtml != null) {
-							keyTagName = keyHtml.tagName().toString();
-						}
-						
-						if (keyTagName.equals("TD")) {
-							sb.append(keyHtml.text());
-						} else if (keyTagName.equals("SELECT")) {
-							Elements selectEle = keyHtml.getElementsByTag("SELECT");
-							sb.append(selectEle.val());
-						} else {
-							if (doc.body().getElementsByAttribute(keys).get(0) != null) {
-								sb.append(doc.body().getElementsByAttribute(keys).get(0).toString());
-							}
-						}
-						sb.append("</" + keys + ">");
-					} else if (keyNodes.item(cnt).getAttributes().getNamedItem("kind").getNodeValue().equals("list")) {
-						Document xmlTbl = null;
-						Element htmlTbl = doc.getElementById("tblinfo");
-						
-						if (htmlTbl != null) {
-							xmlTbl = commonUtil.convertStringToDocument(htmlTbl.text());
-							
-							String tblID = keyNodes.item(cnt).getAttributes().getNamedItem("tableid").getNodeValue();
-							
-							listKeyRow = keyNodes.item(cnt).getChildNodes();
-							
-							HTMLTableElement table = (HTMLTableElement) doc.getElementById(tblID);
-							
-							if (table != null) {
-								sb.append("<RECORDROOT>");
-								
-								HTMLCollection trs = table.getRows();
-								
-								int tagIdx = 0;
-								int offSet = 0;
-								
-								for (int j = 0; j < trs.getLength(); j++) {
-									if (!trs.item(j).getAttributes().getNamedItem("header").toString().equals("") || !trs.item(j).getAttributes().getNamedItem("tail").toString().equals("")) {
-										continue;
-									}
-									
-									sb.append("<R" + tagIdx + " ");
-									
-									for (int k = 0; k < listKeyRow.getLength(); k++) {
-										String fieldName = listKeyRow.item(k).getTextContent();
-										
-										tblInfoRow = (Node) xmlTbl.getElementsByTagName("/TableInfo/" + tblID);
-										offSet = tblInfoRow.getChildNodes().getLength();
-										
-										String colIdx = "";
-										int rowCnt = 0;
-										
-										for (rowCnt = 0; rowCnt < offSet; rowCnt++) {
-											if (tblInfoRow.getChildNodes().item(rowCnt).getAttributes().getNamedItem(fieldName) != null) {
-												colIdx = tblInfoRow.getChildNodes().item(rowCnt).getAttributes().getNamedItem(fieldName).getNodeValue();
-												break;
-											}
-										}
-										
-										HTMLTableRowElement row = (HTMLTableRowElement) trs.item(j + rowCnt);
-										HTMLElement cel = (HTMLElement) row.getCells().item(Integer.parseInt(colIdx));
-										
-										String cellValue = makeXMLString(cel.getTextContent());
-										
-										sb.append(fieldName + "=\"" + cellValue + "\" ");
-										
-									}
-									
-									sb.append("/>");
-									
-									j = j + (offSet - 1);
-									tagIdx = tagIdx + 1;
-								}
-								sb.append("</RECORDROOT>");
-							}
-						}
-					}
-				}
-				
-				sb.append("<processTime>" + draftFlag + "</processTime>");
-				sb.append("<processidx>" + pProcessIdx + "</processidx>");
-				sb.append("</PARAMETER>");
-				
-				//그룹웨어 연동 페이지 인증 및 호출 함수 일단 생략 (추가여부는 추후 고려)
-				break;
-			}
-		}
+        for (Element connNode : htmlConn.children()) {
+            processIdx = connNode.attr("processidx");
+            processTime = connNode.attr("processtime");
+            
+            logger.debug("processIdx = " + processIdx + " || processTime = " + processTime);
+            
+            if (processIdx.equals(pProcessIdx) && processTime.equals(draftFlag)) {
+                Element connStringElem = connNode.getElementsByTag("connstring").first();
+                connFlag = connStringElem.attr("flag");
+                connString = connStringElem.text();
+                
+                Element queryElem = connNode.getElementsByTag("query").first();
+                queryType = queryElem.attr("qtype");
+                queryString = queryElem.text();
+                
+                Element serviceQueryElem = connNode.getElementsByTag("servicequery").first();
+                serviceQueryString = serviceQueryElem.text();
+                
+                Element keysElem = connNode.getElementsByTag("keys").first();
+                String [] arrItemNames = {
+                    "c_docid",
+                    "c_formid",
+                    "c_draft_userid",
+                    "c_draft_username",
+                    "c_draft_position",
+                    "c_draft_deptid",
+                    "c_draft_deptname",
+                    "c_processidx",
+                    "c_processtime",
+                    "c_connkey",
+                    "c_connformcode"
+                };
+                
+                for (int i = 0, len = arrItemNames.length; i < len; i++) {
+                    keysElem
+                        .appendElement("key")
+                        .attr("kind", "single")
+                        .text(arrItemNames[i]);
+                }
+                
+                Elements keyElems = keysElem.children();
+                
+                logger.debug("connFlag = " + connFlag + " || connString = " + connString);
+                logger.debug("queryType = " + queryType + " || queryString = " + queryString);
+                logger.debug("serviceQueryString = " + serviceQueryString);
+                
+                if (queryType.equals("UA") || queryType.equals("UA_EX") || connFlag.equals("UI")) {
+                    return false;
+                }
+                
+                if (!serviceQueryString.isEmpty()) {
+                    StringBuilder sb = new StringBuilder("<PARAMETER>");
+                    
+                    for(int i = 0, len = keyElems.size(); i < len; i++) {
+                        Element keyElem = keyElems.get(i);
+                        
+                        if("single".equals(keyElem.attr("kind"))) {
+                            String keyName = keyElem.text().toLowerCase();
+                            String keyValue = "";
+                            
+                            switch (keyName) {
+                            case "c_processidx":
+                                keyValue = processIdx;
+                                break;
+                            case "c_processtime":
+                                keyValue = processTime;
+                                break;
+                            default:
+                                Element keyTag = doc.getElementById(keyName);
+                                if (keyTag != null) {
+                                    String keyTagName = keyTag.tagName();
+                                    if (keyTagName.equalsIgnoreCase("td")) {
+                                        keyValue = keyTag.text();
+                                    } else {
+                                        keyValue = keyTag.val();
+                                    }
+                                } else {
+                                    keyValue = doc.getElementById("body").attr(keyName);
+                                }
+                            }
+                            
+                            sb.append(String.format("<%s>%s</%s>", keyName, keyValue, keyName));
+                        }
+                    }
+                    sb.append("</PARAMETER>");
+                        
+                    Document keyData = commonUtil.convertStringToDocument(sb.toString());
+                        
+                    Object connServiceBean = context.getBean("EzApprovalGConnService");
+                    Class<? extends Object> refClass = connServiceBean.getClass();
+                    
+                    LoginVO tempLoginVO = new LoginVO();
+                    tempLoginVO.setId(userID);
+                    tempLoginVO.setTenantId(tenantID);
+                    tempLoginVO.setDn("NOPASSWORD");
+                    
+                    LoginVO userInfo = loginService.selectUser(tempLoginVO);
+                    
+                    Method connMethod =  refClass.getDeclaredMethod(serviceQueryString, Document.class, LoginVO.class);
+                    if(connMethod != null) {
+                        logger.debug("method name = " + connMethod.getName());
+                        connMethod.invoke(connServiceBean, keyData, userInfo);
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        }
 
 		logger.debug("excuteInfo ended");
 		
-		return rtnVal;
+		return true;
 	}
 
 	public String getDocInfoDState(String docID, String col, String companyID, int tenantID) throws Exception {
