@@ -3111,7 +3111,9 @@
       				ATTACHFILENAME AS REALATTACHNAME,
       				TENANT_ID, 
       				COMPANYID,
-      				IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
+      				IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+      				ISBIGATTACH,
+      				ISBIGATTACHDEL
       			FROM 
       				TBL_APRATTACHINFO  
       			WHERE
@@ -3136,7 +3138,9 @@
       				ATTACHDOCNAME AS REALATTACHNAME,
       				TENANT_ID,
       				COMPANYID,
-					ATTACHSN AS VIEWSN
+					ATTACHSN AS VIEWSN,
+					'N' AS ISBIGATTACH,
+      				'N' AS ISBIGATTACHDEL
       			FROM 
       				TBL_APRDOCATTACHINFO
       			WHERE 
@@ -3165,7 +3169,9 @@
          				ATTACHFILENAME AS REALATTACHNAME,
          				TENANT_ID ,
       					COMPANYID,
-      					IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
+      					IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+         				ISBIGATTACH,
+						ISBIGATTACHDEL
          			FROM 
          				TBL_ENDATTACHINFO  
          			WHERE 
@@ -3188,7 +3194,9 @@
          			ATTACHDOCNAME AS REALATTACHNAME,
          			TENANT_ID,
       				COMPANYID,
-      				ATTACHSN AS VIEWSN
+      				ATTACHSN AS VIEWSN,
+					'N' AS ISBIGATTACH,
+      				'N' AS ISBIGATTACHDEL
          		FROM 
          			TBL_ENDAPRDOCATTACHINFO ) A 
          		WHERE 
@@ -3215,7 +3223,9 @@
             	ATTACHFILENAME AS REALATTACHNAME,
             	TENANT_ID,
       			COMPANYID,
-      			IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
+      			IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+				ISBIGATTACH,
+				ISBIGATTACHDEL
             FROM 
             	TBL_TMPATTACHINFO  
             WHERE 
@@ -3237,7 +3247,9 @@
             	ATTACHDOCNAME AS REALATTACHNAME,
             	TENANT_ID,
       			COMPANYID,
-      			ATTACHSN AS VIEWSN
+      			ATTACHSN AS VIEWSN,
+				'N' AS ISBIGATTACH,
+				'N' AS ISBIGATTACHDEL
             FROM 
             	TBL_TMPAPRDOCATTACHINFO ) A 
             WHERE 
@@ -3266,7 +3278,9 @@
             		ATTACHFILENAME AS REALATTACHNAME,
             		TENANT_ID,
       				COMPANYID,
-      				IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN
+      				IFNULL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+					ISBIGATTACH,
+					ISBIGATTACHDEL
             	FROM 
             		TBL_APRATTACHINFO  
             	WHERE 
@@ -3289,7 +3303,9 @@
             		ATTACHDOCNAME AS REALATTACHNAME,
             		TENANT_ID,
       				COMPANYID,
-      				ATTACHSN AS VIEWSN
+      				ATTACHSN AS VIEWSN,
+					'N' AS ISBIGATTACH,
+      				'N' AS ISBIGATTACHDEL
             	FROM 
             		TBL_APRDOCATTACHINFO ) A 
             	WHERE 
@@ -17287,7 +17303,7 @@
 	<insert id="EzApprovalG.aprMakeTmp2Ing4" parameterClass="Map">
 		INSERT INTO 
 			TBL_APRATTACHINFO
-		( DOCID, ATTACHFILESN, VIEWORDER, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERJOBTITLE, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, PAGENUM, DISPLAYNAME, BODYATTACH, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID )
+		( DOCID, ATTACHFILESN, VIEWORDER, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERJOBTITLE, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, PAGENUM, DISPLAYNAME, BODYATTACH, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE )
      	( SELECT 
      		  #v_PDOCID# ,
               ATTACHFILESN ,
@@ -17307,7 +17323,10 @@
               AttachUserJobTitle2 ,
               AttachUserDeptName2 ,
 	          TENANT_ID ,
-	          COMPANYID
+	          COMPANYID,
+			  ISBIGATTACH,
+			  ISBIGATTACHDEL,
+			  SAVEDATE
        	  FROM 
        	   	  TBL_TMPATTACHINFO 
           WHERE 
@@ -19525,7 +19544,7 @@
 	<insert id="EzApprovalG.insertTbAprAttachInfo" parameterClass="Map">
 	 	INSERT INTO 
 	 		TBL_APRATTACHINFO
-        ( DOCID, ATTACHFILESN, VIEWORDER, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERNAME2, ATTACHUSERJOBTITLE, ATTACHUSERJOBTITLE2, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, ATTACHUSERDEPTNAME2, PAGENUM, DISPLAYNAME, BODYATTACH, TENANT_ID, COMPANYID )
+        ( DOCID, ATTACHFILESN, VIEWORDER, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERNAME2, ATTACHUSERJOBTITLE, ATTACHUSERJOBTITLE2, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, ATTACHUSERDEPTNAME2, PAGENUM, DISPLAYNAME, BODYATTACH, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE )
         ( SELECT 
         		 #v_DOCID# ,
                  ATTACHFILESN ,
@@ -19545,7 +19564,10 @@
                  DISPLAYNAME ,
                  BODYATTACH ,
                  TENANT_ID ,
-                 COMPANYID
+                 COMPANYID,
+				 ISBIGATTACH,
+				 ISBIGATTACHDEL,
+				 SAVEDATE
           FROM 
           		TBL_ENDATTACHINFO 
           WHERE  
@@ -23067,9 +23089,9 @@
    <insert id="EzApprovalG.insertAprAttachInfo" parameterClass="map">
    		INSERT INTO 
    			   TBL_APRATTACHINFO 
-   			(DocID,       AttachFileSN,  ViewOrder,  AttachFileName,       AttachFileHref,    AttachFileSize,     AttachUserID,     AttachUserName,    AttachUserName2,        AttachUserJobTitle,     AttachUserJobTitle2,    AttachUserDeptID,    AttachUserDeptName,       AttachUserDeptName2,   PageNum,     DisplayName,    BodyAttach,     TENANT_ID,  COMPANYID) 
+   			(DocID,       AttachFileSN,  ViewOrder,  AttachFileName,       AttachFileHref,    AttachFileSize,     AttachUserID,     AttachUserName,    AttachUserName2,        AttachUserJobTitle,     AttachUserJobTitle2,    AttachUserDeptID,    AttachUserDeptName,       AttachUserDeptName2,   PageNum,     DisplayName,    BodyAttach,     TENANT_ID,  COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE) 
    		VALUES 
-   			(#v_DOCID#, #v_ATTACHFILESN#, #v_VIEWORDER#, #v_ATTACHFILENAME#, #v_ATTACHFILEHREF#, #v_ATTACHFILESIZE#, #v_ATTACHUSERID#, #v_ATTACHUSERNAME#, #v_ATTACHUSERNAME2#, #v_ATTACHUSERJOBTITLE#, #v_ATTACHUSERJOBTITLE2#, #v_ATTACHUSERDEPTID#, #v_ATTACHUSERDEPTNAME#, #v_ATTACHUSERDEPTNAME2#, #v_PAGENUM#, #v_DISPLAYNAME#, #v_BODYATTACH#, #v_TENANTID#, #companyID#)
+   			(#v_DOCID#, #v_ATTACHFILESN#, #v_VIEWORDER#, #v_ATTACHFILENAME#, #v_ATTACHFILEHREF#, #v_ATTACHFILESIZE#, #v_ATTACHUSERID#, #v_ATTACHUSERNAME#, #v_ATTACHUSERNAME2#, #v_ATTACHUSERJOBTITLE#, #v_ATTACHUSERJOBTITLE2#, #v_ATTACHUSERDEPTID#, #v_ATTACHUSERDEPTNAME#, #v_ATTACHUSERDEPTNAME2#, #v_PAGENUM#, #v_DISPLAYNAME#, #v_BODYATTACH#, #v_TENANTID#, #companyID#, #v_ISBIGATTACH#, #v_ISBIGATTACHDEL#, #v_SYSDATE#)
    </insert>
    
    <update id="EzApprovalG.updateAprDocInfo" parameterClass="map">
@@ -23667,9 +23689,9 @@
    <insert id="EzApprovalG.insertCamjoAprAttachInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_APRATTACHINFO 
-   		(      DocID,  AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   		(      DocID,  AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE) 
    		(SELECT 
-   			#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+   			#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE
    		 FROM 
             TBL_APRATTACHINFO 
          WHERE 
@@ -23804,9 +23826,9 @@
    <insert id="EzApprovalG.insertDeptAssistAprAttachInfo" parameterClass="Map">
         INSERT INTO 
         	TBL_APRATTACHINFO 
-        (    DocID,     AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+        (    DocID,     AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE) 
         (SELECT 
-        	#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID,  AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+        	#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID,  AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE
          FROM 
          	TBL_APRATTACHINFO A 
          WHERE 
@@ -24114,7 +24136,10 @@
 			AttachUserJobTitle2 ,
 			AttachUserDeptName2,
 			TENANT_ID ,
-			COMPANYID
+			COMPANYID,
+    		ISBIGATTACH,
+    		ISBIGATTACHDEL,
+    		SAVEDATE
 			<isEqual prepend=", " property="useOpenGov" compareValue="YES">
 				FILEOPENFLAG
 			</isEqual>
@@ -24139,7 +24164,10 @@
 			A.AttachUserJobTitle2 ,
 			A.AttachUserDeptName2,
 			A.TENANT_ID ,
-			A.COMPANYID
+			A.COMPANYID,
+	    	A.ISBIGATTACH,
+	    	A.ISBIGATTACHDEL,
+	    	A.SAVEDATE
 			<isEqual prepend=", " property="useOpenGov" compareValue="YES">
 				FILEOPENFLAG
 			</isEqual>
@@ -24463,9 +24491,9 @@
    <insert id="EzApprovalG.insertRejectEndAttachInfo" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_ENDATTACHINFO
-	     ( 	  	 DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
+	     ( 	  	 DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE )
 	     ( SELECT 
-	     		#v_NEWDOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+	     		#v_NEWDOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID , ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE
 	       FROM 
 	       		TBL_APRATTACHINFO A 
 	       WHERE  
@@ -24699,9 +24727,9 @@
    <insert id="EzApprovalG.insertReSendAprAttachInfo" parameterClass="Map">
    		 INSERT INTO 
    		 		TBL_APRATTACHINFO 
-   		 (		DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID ) 
+   		 (		DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE ) 
    		 (SELECT 
-   		 		#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+   		 		#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE
    		 FROM 
    		 		TBL_ENDATTACHINFO A  
    		 WHERE 
@@ -25343,9 +25371,9 @@
    <insert id="EzApprovalG.insertGongRamAprAttachInfo" parameterClass="Map">
    			INSERT INTO 
    				TBL_APRATTACHINFO 
-   			(     DocID, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle,  AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   			(     DocID, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle,  AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE) 
    			(SELECT 
-            	#v_GONGRAMDOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName,AttachUserDeptName2,  AttachUserJobTitle,  AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+            	#v_GONGRAMDOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName,AttachUserDeptName2,  AttachUserJobTitle,  AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE
             FROM 
             	TBL_ENDATTACHINFO A 
             WHERE 
@@ -25408,9 +25436,9 @@
 	<insert id="EzApprovalG.insertRegEndAttachInfo" parameterClass="Map">
 		INSERT INTO 
 			TBL_ENDATTACHINFO 
-		(		DocID,     AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize, AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID) 
+		(		DocID,     AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize, AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE) 
         ( SELECT 
-        		#v_DOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize ,AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID
+        		#v_DOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize ,AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE
           FROM 
           		TBL_APRATTACHINFO A 
           WHERE 
@@ -25502,9 +25530,9 @@
 			<isEqual property="v_FLAG" compareValue="APR">
 				INSERT INTO 
 					TBL_APRATTACHINFO 
-				(    DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+				(    DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE) 
 				(SELECT 
-					#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+					#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE
 				 FROM 
 		            TBL_APRATTACHINFO 
 		         WHERE 
@@ -25517,9 +25545,9 @@
 		    <isNotEqual property="v_FLAG" compareValue="APR">
 				INSERT INTO 
 					TBL_APRATTACHINFO 
-				(    DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+				(    DocID,    AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE) 
 				(SELECT 
-					#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+					#v_NEWID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE
 				 FROM 
 		            TBL_ENDATTACHINFO 
 		         WHERE 
@@ -25863,9 +25891,9 @@
    	<insert id="EzApprovalG.insertDoSendAprAttachInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_APRATTACHINFO 
-   		(DocID, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID) 
+   		(DocID, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE) 
    		(SELECT 
-   			#v_DOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+   			#v_DOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE
    		 FROM 
    			TBL_ENDATTACHINFO A
    		 WHERE 
@@ -26250,9 +26278,9 @@
    	<insert id="EzApprovalG.insertApprovEndAttachInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_ENDATTACHINFO 
-   		(   DocID,     AttachFileSN, ViewOrder, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
+   		(   DocID,     AttachFileSN, ViewOrder, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE)
 		(SELECT 
-			#v_DOCID#, AttachFileSN, ViewOrder, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID  
+			#v_DOCID#, AttachFileSN, ViewOrder, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE
 		 FROM 
 		 	TBL_APRATTACHINFO A  
 		 WHERE  
@@ -27843,9 +27871,9 @@
    <insert id="EzApprovalG.insertRejectEndAttachInfoS" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_ENDATTACHINFO
-	     ( 	  	 DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
+	     ( 	  	 DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE )
 	     ( SELECT 
-	     		#v_NEWDOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+	     		#v_NEWDOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID , ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE
 	       FROM 
 	       		TBL_APRATTACHINFO A 
 	       WHERE  
@@ -27859,9 +27887,9 @@
    <insert id="EzApprovalG.insertReuseAttachFileInfo" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_APRATTACHINFO
-	     ( 	  	 DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
+	     ( 	  	 DocID,      AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID, ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE )
 	     ( SELECT 
-	     		#v_DOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+	     		#v_DOCID#, AttachFileSN, VIEWORDER, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID , ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE
 	       FROM 
 	       		TBL_ENDATTACHINFO A 
 	       WHERE  
@@ -33221,6 +33249,257 @@
 		     		COMPANYID = #companyID#
 		</isNotEqual>
 	</update>
+	
+		<!-- 2020-11-13 홍승비 - 일반첨부파일이거나, 저장기간이 만료되지 않은 대용량첨부파일을 카운트 -->
+	<select id="EzApprovalG.cntAttachFileCanDownload" parameterClass="Map" resultClass="Integer">
+		SELECT
+			MAX(CNT)
+		FROM
+			((SELECT
+				COUNT(DOCID) AS CNT
+			FROM
+				TBL_APRATTACHINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+			AND
+				DOCID = #v_DOCID#
+			AND
+				ATTACHFILESN = #v_ATTACHFILESN#
+			AND
+				(ISBIGATTACH = 'N' OR (ISBIGATTACH = 'Y' AND ISBIGATTACHDEL = 'N'))
+			)
+			
+			UNION ALL
+			
+			(SELECT
+				COUNT(DOCID) AS CNT
+			FROM
+				TBL_ENDATTACHINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+			AND
+				DOCID = #v_DOCID#
+			AND
+				ATTACHFILESN = #v_ATTACHFILESN#
+			AND
+				(ISBIGATTACH = 'N' OR (ISBIGATTACH = 'Y' AND ISBIGATTACHDEL = 'N'))
+			)
+		)
+	</select>
+	
+	<!-- 2020-11-13 홍승비 - 대용량첨부파일이라면 카운트 리턴 -->
+	<select id="EzApprovalG.cntIsBigAttachFile" parameterClass="Map" resultClass="Integer">
+		SELECT
+			MAX(CNT)
+		FROM
+			((SELECT
+				COUNT(DOCID) AS CNT
+			FROM
+				TBL_APRATTACHINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+			AND
+				DOCID = #v_DOCID#
+			AND
+				ATTACHFILESN = #v_ATTACHFILESN#
+			AND
+				ISBIGATTACH = 'Y'
+			)
+			
+			UNION ALL
+			
+			(SELECT
+				COUNT(DOCID) AS CNT
+			FROM
+				TBL_ENDATTACHINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+			AND
+				DOCID = #v_DOCID#
+			AND
+				ATTACHFILESN = #v_ATTACHFILESN#
+			AND
+				ISBIGATTACH = 'Y'
+			)
+		) TMP
+	</select>
+	
+	<!-- 2020-11-13 홍승비 - 대용량첨부파일의 다운로드 카운트 레코드가 존재하는지 리턴 -->
+	<select id="EzApprovalG.cntDownloadLimitCntExists" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(DOCID)
+		FROM
+			TBL_APRBIGATTACH_DOWNLOADINFO
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #v_COMPANYID#
+		AND
+			DOCID = #v_DOCID#
+		AND
+			ATTACHFILESN = #v_ATTACHFILESN#
+	</select>
+	
+	<!-- 2020-11-13 홍승비 - 대용량첨부파일의 다운로드 카운트를 리턴 -->
+	<select id="EzApprovalG.getBigAttachFileDownloadCnt" parameterClass="Map" resultClass="Integer">
+		SELECT
+			DOWNLOAD_COUNT
+		FROM
+			TBL_APRBIGATTACH_DOWNLOADINFO
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #v_COMPANYID#
+		AND
+			DOCID = #v_DOCID#
+		AND
+			ATTACHFILESN = #v_ATTACHFILESN#
+	</select>
+	
+	<!-- 2020-11-13 홍승비 - 대용량첨부파일의 다운로드 카운트를 삽입 -->
+	<insert id="EzApprovalG.insertBigAttachFileDownloadCnt" parameterClass="Map">
+		INSERT INTO 
+			TBL_APRBIGATTACH_DOWNLOADINFO
+     	(DOCID, ATTACHFILESN, DOWNLOAD_COUNT, TENANT_ID, COMPANYID)
+     	VALUES 
+     	(#v_DOCID#, #v_ATTACHFILESN#, 0, #v_TENANTID#, #v_COMPANYID#)
+	</insert>
+	
+	<!-- 2020-11-13 홍승비 - 대용량첨부파일의 다운로드 카운트를 갱신 -->
+	<update id="EzApprovalG.updateBigAttachFileDownloadCnt" parameterClass="Map">
+		UPDATE
+			TBL_APRBIGATTACH_DOWNLOADINFO
+		SET
+			DOWNLOAD_COUNT = DOWNLOAD_COUNT + 1
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #v_COMPANYID#
+		AND
+			DOCID = #v_DOCID#
+		AND
+			ATTACHFILESN = #v_ATTACHFILESN#
+	</update>
+	
+	<!-- 2020-11-13 홍승비 - 대용량첨부파일 삭제 시, 다운로드 카운트 레코드 제거 -->
+	<delete id="EzApprovalG.deleteBigAttachFileDownloadCnt" parameterClass="Map" >
+		DELETE FROM
+			TBL_APRBIGATTACH_DOWNLOADINFO
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #v_COMPANYID#
+		AND
+			DOCID = #v_DOCID#
+		AND
+			ATTACHFILESN = #v_ATTACHFILESN#
+	</delete>
+	
+	<!-- 2020-11-16 홍승비 - 저장기간 만료 파일 자동삭제를 위해 대용량첨부파일 리스트를 가져오는 쿼리 -->
+	<select id ="EzApprovalG.getBigAttachFileForDelete" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true">
+		SELECT
+			DOCID,
+			ATTACHFILESN,
+			ATTACHFILEHREF,
+			COMPANYID,
+			'APR' AS TBLNAME
+		FROM
+			TBL_APRATTACHINFO
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			ISBIGATTACH = 'Y'
+		AND
+			ISBIGATTACHDEL = 'N'
+			
+		UNION
+		
+		SELECT
+			DOCID,
+			ATTACHFILESN,
+			ATTACHFILEHREF,
+			COMPANYID,
+			'END' AS TBLNAME
+		FROM
+			TBL_ENDATTACHINFO
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			ISBIGATTACH = 'Y'
+		AND
+			ISBIGATTACHDEL = 'N'
+	</select>
+	
+	<!-- 2020-11-13 홍승비 - 대용량첨부파일의 자동삭제여부를 갱신 -->
+	<update id="EzApprovalG.updateIsBigAttachDel" parameterClass="Map">
+		<isEqual property="v_TBLNAME" compareValue="APR">
+			UPDATE
+				TBL_APRATTACHINFO
+			SET
+				ISBIGATTACHDEL = 'Y'
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+			AND
+				DOCID = #v_DOCID#
+			AND
+				ATTACHFILESN = #v_ATTACHFILESN#
+		</isEqual>
+		<isEqual property="v_TBLNAME" compareValue="END">
+			UPDATE
+				TBL_ENDATTACHINFO
+			SET
+				ISBIGATTACHDEL = 'Y'
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+			AND
+				DOCID = #v_DOCID#
+			AND
+				ATTACHFILESN = #v_ATTACHFILESN#
+		</isEqual>
+	</update>
+	
+	<!-- 2020-11-13 홍승비 - 첨부파일의 다운로드 기간을 표출하기 위해 최초 저장일을 리턴 -->
+	<select id="EzApprovalG.getAttachFileMinSaveDate" parameterClass="Map" resultClass="String">
+		SELECT
+			MIN(SUBSTR(DATE_FORMAT(SAVEDATE, '%Y/%m/%d'), 1, 10))
+		FROM
+			((SELECT
+				IFNULL(MIN(SAVEDATE), SYSDATE()) AS SAVEDATE
+			FROM
+				TBL_APRATTACHINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+			AND
+				DOCID = #v_DOCID#)
+			
+			UNION ALL
+			
+			(SELECT
+				IFNULL(MIN(SAVEDATE), SYSDATE()) AS SAVEDATE
+			FROM
+				TBL_ENDATTACHINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+			AND
+				DOCID = #v_DOCID#)
+		)TMP
+	</select>
 	
 	<resultMap id="getDocList" class="java.util.LinkedHashMap">
 		<result property="docid"				column="docid" />
