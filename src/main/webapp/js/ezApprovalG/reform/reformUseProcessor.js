@@ -1,5 +1,6 @@
 var reformUseProc = {};
 var kNullIndexValue = "-9753579";
+var isIE10 = navigator.appVersion.indexOf("MSIE 10") !== -1;
 
 reformUseProc.isLoaded = false;
 reformUseProc.dataBindCache = {};
@@ -1178,6 +1179,7 @@ reformUseProc.defaultChangeHandler = function(controls) {
 		option.setAttribute("selected", "selected");
 	} else if (controlType == "text" || controlType == "textarea") {
 		controlElement.setAttribute("value", controlElement.value);
+		controlElement.defaultValue = controlElement.value;
 	} else if (controlType == "checkbox") {
 		if (controlElement.checked) {
 			controlElement.setAttribute("checked", "checked");
@@ -1460,6 +1462,8 @@ reformUseProc.extendGridRow = function(controlElement) {
 					if (firstControl != null) {
 						firstControl.focus();
 					}
+
+					reformUseProc.resizeFrame();
 				}
 			}
 		}
@@ -1498,6 +1502,7 @@ reformUseProc.extendGridRow = function(controlElement) {
 						}
 						
 						tbodyElement.removeChild(rowElement);
+						reformUseProc.resizeFrame();
 					}
 				}
 			}
@@ -1905,9 +1910,31 @@ reformUseProc.dateFormat = function(dateStr, separator) {
 	return dateStr;
 };
 
-reformUseProc.resizeTextArea = function(textAreaControl) {
-	textAreaControl.style.height = "0px";
-	textAreaControl.style.height = (10 + textAreaControl.scrollHeight) + "px";
+/**
+ * 해당 함수를 사용한 textarea는 무조건 overflow: hidden 처리 됩니다.
+ * */
+reformUseProc.resizeTextArea = function(textarea) {
+	var parentWindow = window.parent;
+	var parentWindowScroll = parentWindow.pageYOffset;
+	var prevScrollHeight = textarea.scrollHeight;
+	var gap = textarea.scrollTop;
+
+	// alert(gap);
+
+	if (isIE10) {
+		textarea.style.overflow = "";
+	}
+
+	textarea.style.height = "";
+	// IE 호환 때문에 꼭 넣어야 함, 크롬에서 늘어지더라도 어쩔 수 없음
+	textarea.style.height = (10 + textarea.scrollHeight) + "px";
+	// IE10 에서 스크롤이 보이지 않도록 처리
+	textarea.style.overflow = "hidden";
+
+	gap += textarea.scrollHeight - prevScrollHeight;
+
+	reformUseProc.resizeFrame();
+	parentWindow.scrollTo(parentWindow.pageXOffset, parentWindowScroll + gap);
 };
 
 reformUseProc.setListBoxSelectedIndex = function(controlElement, selectedIndex) {

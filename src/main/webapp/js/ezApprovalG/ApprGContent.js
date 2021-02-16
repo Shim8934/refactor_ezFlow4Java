@@ -65,7 +65,7 @@ function onInputTextarea(event) {
 	var selectionStart = textarea.selectionStart;
 	textarea.oldValue = value;
 	textarea.setAttribute("value", value);
-	textarea.innerHTML = value;
+	textarea.defaultValue = value;
 	textarea.selectionStart = selectionStart;
 	textarea.selectionEnd = selectionStart;
 	
