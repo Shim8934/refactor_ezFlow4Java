@@ -660,24 +660,49 @@
 	            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", AttachFileList2());
 		        }
 
+		        /* 2021-02-16 홍승비 - 익명게시판에 TOPWRITERID 저장하지 않도록 수정 */
 		        if (pMode == "new" || pMode == "new1" || pMode == "boardContent" || pMode == "boardAttach" || pUrl != "" || orgMode == "temp") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", newID);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", SSUserID);
+		            
+		            if (gubun == "2") {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", "");
+		            } else {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", SSUserID);
+		            }
+		            
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMLEVEL", "1");
 		        } else if ((pMode == "modify" || pMode == "temp") && pReservedItem == "") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", strUpperItemIDTree);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", strWriterID);
+		            
+		            if (gubun == "2") {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", "");
+		            } else {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", strWriterID);
+		            }
+		            
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", strParentWriteDate);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMLEVEL", strItemLevel);
 		        } else if ((pMode == "modify" || pMode == "temp") && pReservedItem == "true") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", strUpperItemIDTree);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", strWriterID);
+		            
+		            if (gubun == "2") {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", "");
+		            } else {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", strWriterID);
+		            }
+		            
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", pStartDate);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMLEVEL", strItemLevel);
 		        } else {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", strUpperItemIDTree);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", strWriterID);
+		            
+		            if (gubun == "2") {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", "");
+		            } else {
+		            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", strWriterID);
+		            }
+		            
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", strParentWriteDate);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMLEVEL", strItemLevel);
 		        }
