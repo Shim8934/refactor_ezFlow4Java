@@ -4419,33 +4419,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("getDocDirShareList start");
 		String result = "NO";
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, Object> map1 = new HashMap<String, Object>();
 		
-		if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle")) {
-			map1.put("ownerId", ownerId);
-			map1.put("tenantId", tenantId);
-			ezApprovalGAdminDAO.deleteShareDocDir(map1);
-			
-			for (int i=0; i<shareList.size();i++) {
-				map.put("ownerId", ownerId);
-				map.put("ownerType", ownerType);
-				map.put("shareListId", shareList.get(i).getShareId());
-				map.put("shareListType", shareList.get(i).getShareType());
-				map.put("tenantId", tenantId);
-				
-				result = ezApprovalGAdminDAO.insertShareDocDir(map);
-			}
-		}
-		else {
-			map.put("ownerId", ownerId);
-			map.put("ownerType", ownerType);
-			map.put("shareList", shareList);
-			map.put("tenantId", tenantId);
-			
-			ezApprovalGAdminDAO.deleteShareDocDir(map);
-			
-			result = ezApprovalGAdminDAO.insertShareDocDir(map);
-		}
+		map.put("ownerId", ownerId);
+		map.put("ownerType", ownerType);
+		map.put("shareList", shareList);
+		map.put("tenantId", tenantId);
+		
+		ezApprovalGAdminDAO.deleteShareDocDir(map);
+		
+		result = ezApprovalGAdminDAO.insertShareDocDir(map);
 		
 		logger.debug("getDocDirShareList end");
 		return result;
