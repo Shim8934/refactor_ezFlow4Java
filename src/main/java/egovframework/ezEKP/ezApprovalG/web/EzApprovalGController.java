@@ -319,6 +319,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("subContCount", subContCount);
 			model.addAttribute("itemList", itemList);
 			model.addAttribute("userCont", userCont);
+		} else {
+			List<KEDSharedUserInfo> deptShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "D", userInfo.getTenantId());
+			List<KEDSharedUserInfo> userShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "U", userInfo.getTenantId());
+			
+			model.addAttribute("deptShareList", deptShareList);
+			model.addAttribute("userShareList", userShareList);
 		}
 
 		model.addAttribute("approvalFlag", approvalFlag);

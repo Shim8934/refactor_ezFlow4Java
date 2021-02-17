@@ -96,6 +96,7 @@
 		        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
 				var WriterID = null;
 				var WriterDeptID = null;
+		        var shareDeptId = "${shareDeptId}";
 				
 		        document.onselectstart = function () { return false; };
 		
@@ -180,6 +181,10 @@
 		                    break;
 		                case "UNTREATED":
 		                    untreatedList_onclick();
+		                    break;
+		                case "docShare":
+		      		        DeptID = shareDeptId;
+		                    RecordList_onclick();
 		                    break;
 		                default:
 		                    RecordList_onclick();
