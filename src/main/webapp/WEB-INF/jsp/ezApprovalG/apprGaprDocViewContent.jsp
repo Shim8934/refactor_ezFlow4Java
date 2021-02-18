@@ -256,6 +256,10 @@
 	                        FieldCount++;
 	                    }
 	                }
+
+					var controls = getControlList();
+					FieldsList = FieldsList.concat(controls);
+					
 	                return FieldsList;
 	            } catch (e) { return FieldsList; }
 	        }

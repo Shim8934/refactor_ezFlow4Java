@@ -775,7 +775,7 @@ function GetBODY(iframePage) {
 function GetListItem(pList, str) {
 	var index = -1;
     for (i = 0; i < pList.length; i++) {
-        if (pList[i].id == str) {
+        if (pList[i].id.toUpperCase() == str.toUpperCase()) {
         	index = i;
         	break;
         }
@@ -1949,4 +1949,21 @@ function listLoading(pType){
                 document.getElementById("listload_div").style.display = "none";
         }
     }catch(e){}
+}
+
+function getControlList() {
+	var controls = [];
+
+	var controlListElem = document.getElementById("__reform_control_list");
+	if (controlListElem) {
+		var controlIdStr = controlListElem.getAttribute("value");
+		if (controlIdStr) {
+			controlIds = JSON.parse(controlIdStr);
+			controls = controlIds.map(function(id) {
+				return document.getElementById(id);
+			});
+		}
+	}
+
+	return controls;
 }

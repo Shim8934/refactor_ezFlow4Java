@@ -643,14 +643,14 @@ function SendMailToDrafter() {
     sendmail(NextUser, pDocTitle, Drafter, startDate, "approve_complete", "");
 }
 
-function SendMailToDrafter_Hesong() {
-    var pwriterID   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
-    var Drafter     = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
-    var pDocTitle   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
-    var NextUser = pwriterID;
+function SendMailToDrafter_Hesong(pWriterID, pWirterName, pDocTitle) {
+    // var pWriterID   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
+    // var drafter     = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
+    // var pDocTitle   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+    var NextUser = pWriterID;
     
     getOpinionInfo(pDocID, "APR");
-    sendmail(NextUser, pDocTitle, Drafter, "", "hesong", "");
+    sendmail(NextUser, pDocTitle, pWirterName, "", "hesong", "");
 }
 
 function trim(str)

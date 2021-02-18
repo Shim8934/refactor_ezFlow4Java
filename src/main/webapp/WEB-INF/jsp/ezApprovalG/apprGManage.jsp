@@ -950,12 +950,12 @@
 		            return;
 		        }
 		        
-		        if (CheckFormConnFlag(pCurSelRow.getAttribute("DATA1"))) {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t1726'/>";
-		            //OpenAlertUI(pAlertContent);
-		            alert(pAlertContent);
-		            return;
-		        }
+		        // if (CheckFormConnFlag(pCurSelRow.getAttribute("DATA1"))) {
+		        //     var pAlertContent = "<spring:message code='ezApprovalG.t1726'/>";
+		        //     //OpenAlertUI(pAlertContent);
+		        //     alert(pAlertContent);
+		        //     return;
+		        // }
 		        if (pCurSelRow) {
 		            var ret = CheckAprLineInfo(pCurSelRow);
 		            if (ret != "OK") {
@@ -2304,7 +2304,6 @@
 				<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL" aprAllType="LIST"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>  <!--onclick 함수 파라미터(LIST : 리스트 직접 일괄결재, POPUP : 팝업창 일괄결재-->
 				<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
-				<li id="tbtnReturn" style="DISPLAY:none"><span id="btnReturn" onclick="return btnReturn_onclick()" ><spring:message code='ezApprovalG.t1434'/></span></li>
 				<li id="tbtnSimsa" style="DISPLAY:none"><span id="btnSimsa" onclick="return btnSimsa_onclick()" ><spring:message code='ezApprovalG.t214'/></span></li>
 				<li id="tbtnRegList" class="approvalG"><span id="btnAddCabinet" onclick="return btnAddCabinet_onclick()" ><spring:message code='ezApprovalG.t933'/></span></li>
 				<li id="tbtnUserInfo" style="DISPLAY:none"><span id="btnUserInfo" onclick="return btnUserInfo_onclick()" ><spring:message code='ezApprovalG.t1741'/></span></li>

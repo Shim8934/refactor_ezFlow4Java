@@ -157,7 +157,8 @@
 		            LoadpzFormDocInfo(); // setAttachInfo(DocID, "APR", lstAttachLink);
 		            //없이 테스트
 // 		            SignCheck();
-		            cancelYN();			      	
+		            cancelYN();
+					returnYN();			      	
 		        }
 		    }
 		    
@@ -535,16 +536,18 @@
 		    
 		    function btncallback_onclick() {
 	            var pMsg = "<spring:message code='ezApprovalG.t68'/>";
-	            var Ans = OpenInformationUI(pMsg, doCancel);
+	            OpenInformationUI(pMsg, btncallback_onclick_Complete);
 	        }
 		    
 	        function btncallback_onclick_Complete(ans) {
-				var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // pdraftflag 정상적으로 가져오게 수정해야함
-				if (!retVal) {
-					return;
-				}
+				DivPopUpHidden();
 
 	            if (ans) {
+					var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // pdraftflag 정상적으로 가져오게 수정해야함
+					if (!retVal) {
+						return;
+					}
+
 					doCancel();
 	            }
 	        }
@@ -567,65 +570,76 @@
 				return feature;
 			}
 	        
-	        function doCancel(ans) {
-	        	DivPopUpHidden();
-	        	if (ans) {
-		            var GetCurrentlinelist = getAprLinefor("APR", DocID);
-		        	var result = "";
-		        	
-		        	//2018-07-10 배현상, 회수와 강제회수 분기(doCancelForce.do -> doCancel.do)
-		        	$.ajax({
-		        		type : "POST",
-		        		dataType : "text",
-		        		async : false,
-		        		url : "/ezApprovalG/doCancel.do",
-		        		data : {
-		        			docID : pDocID,
-		        			userID : pUserID,
-		        			orgCompanyID : orgCompanyID
-		        		},
-		        		success: function(xml){
-		        			result = xml;
-		        		}, error: function () {
-	    	                var pAlertContent = strLang898;
-	    	                OpenAlertUI(pAlertContent);
-		        		}
-		        	});
-		        	
-		            var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
-		            if (RtnVal == "TRUE") {
-		            	SendMailToCancel_Function(GetCurrentlinelist);
-	                    var pAlertContent = strLang891 + "<br> " + strLang892;
-	                    OpenAlertUI(pAlertContent, OpenAlertUI_Close);
-	                    
-	                    //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 회수
-	    		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
-	    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-del-script').getAttribute("code");
-	    		        	var script = document.createElement("script");
-	    					script.type = "text/javascript";
-	    					script.innerHTML = code;
-	    					document.querySelector("head").appendChild(script);
-	    					
-	    		        	attitude_annual_conn(pDocID);
-	    		        }
-		            }
-		            else if (RtnVal == "ERR01") {
-		                var pAlertContent = strLang895;
-		                OpenAlertUI(pAlertContent);
-		            }
-		            else if (RtnVal == "ERR02") {
-		                var pAlertContent = strLang896;
-		                OpenAlertUI(pAlertContent);
-		            }
-		            else if (RtnVal == "ERR03") {
-		                var pAlertContent = strLang897;
-		                OpenAlertUI(pAlertContent);
-		            } else {
-		            	var pAlertContent = strLang898;
-		                OpenAlertUI(pAlertContent);
-		            }
-	        	}
+	        function doCancel() {
+				var GetCurrentlinelist = getAprLinefor("APR", DocID);
+				var result = "";
+				
+				//2018-07-10 배현상, 회수와 강제회수 분기(doCancelForce.do -> doCancel.do)
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/doCancel.do",
+					data : {
+						docID : pDocID,
+						userID : pUserID,
+						orgCompanyID : orgCompanyID
+					},
+					success: function(xml){
+						result = xml;
+					}, error: function () {
+						doCancel_fail();
+					}
+				});
+				
+				var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
+				if (RtnVal == "TRUE") {
+					SendMailToCancel_Function(GetCurrentlinelist);
+					var pAlertContent = strLang891 + "<br> " + strLang892;
+					OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+					
+					//2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 회수
+					if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+						var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-del-script').getAttribute("code");
+						var script = document.createElement("script");
+						script.type = "text/javascript";
+						script.innerHTML = code;
+						document.querySelector("head").appendChild(script);
+						
+						attitude_annual_conn(pDocID);
+					}
+
+					ExcuteInfo("CALLBACK_AFTER", "DRAFT");
+				} else {
+					doCancel_fail(RtnVal);
+				}
 	        }
+
+			function doCancel_fail(errMsg) {
+				if (!errMsg) {
+					errMsg = "";
+				}
+
+				var pAlertContent = "";
+
+				switch (errMsg) {
+					case "ERR01":
+						pAlertContent = strLang895;
+						break;
+					case "ERR02":
+						pAlertContent = strLang896;
+						break;
+					case "ERR03":
+						pAlertContent = strLang897;
+						break;
+					default:
+						pAlertContent = strLang898;
+						break;
+				}
+
+				OpenAlertUI(pAlertContent);
+				ExcuteInfo("CALLBACK_FAIL", "DRAFT");
+			}
 	        
 	        function SendMailToCancel_Function(GetCurrentlinelist) {
 	            var MemberList = loadXMLString(GetCurrentlinelist)
@@ -695,71 +709,64 @@
 	        //2018-07-10 배현상, 강제회수 분기(btnforcecallback_onclick 생성)
 	        function btnforcecallback_onclick() {
 	        	var pMsg = "<spring:message code='ezApprovalG.t68'/>";
-	        	var Ans = OpenInformationUI(pMsg, doForceCancel);
+	        	OpenInformationUI(pMsg, btnforcecallback_onclick_complete);
+	        }
+
+	        function btnforcecallback_onclick_complete(ans) {
+				DivPopUpHidden();
+
+				if (ans) {
+					var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // pdraftflag 정상적으로 가져오게 수정해야함
+					if (!retVal) {
+						return;
+					}
+
+					doForceCancel();
+				}
 	        }
 	        
 	        //2018-07-10 배현상, 강제회수 분기(doForceCancel 생성)
-	        function doForceCancel(ans) {
-	        	DivPopUpHidden();
-				var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // pdraftflag 정상적으로 가져오게 수정해야함
-				if (!retVal) {
-					return;
-				}
+	        function doForceCancel() {
+				var GetCurrentlinelist = getAprLinefor("APR", DocID);
+				var result = "";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/doCancelForce.do",
+					data : {
+						docID : pDocID,
+						userID : pUserID
+					},
+					success: function(xml){
+						result = xml;
+					}, error: function () {
+						doCancel_fail();
+					}
+				});
+				
+				var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
+				if (RtnVal == "TRUE") {
+					SendMailToCancel_Function(GetCurrentlinelist);
+					var pAlertContent = strLang891 + "<br> " + strLang892;
+					OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+					
+					//2020-04-03 김정언 : 근태관리 연동양식일 경우 추가 - 강제회수
+					if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+						var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-del-script').getAttribute("code");
+						var script = document.createElement("script");
+						script.type = "text/javascript";
+						script.innerHTML = code;
+						document.querySelector("head").appendChild(script);
+						
+						attitude_annual_conn(pDocID);
+					}
 
-	        	if (ans) {
-	        		var GetCurrentlinelist = getAprLinefor("APR", DocID);
-	        		var result = "";
-	        		
-	        		$.ajax({
-	        			type : "POST",
-	        			dataType : "text",
-	        			async : false,
-	        			url : "/ezApprovalG/doCancelForce.do",
-	        			data : {
-	        				docID : pDocID,
-	        				userID : pUserID
-	        			},
-	        			success: function(xml){
-	        				result = xml;
-	        			}, error: function () {
-	        				var pAlertContent = strLang898;
-	        				OpenAlertUI(pAlertContent);
-	        			}
-	        		});
-	        		
-	        		var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
-	        		if (RtnVal == "TRUE") {
-	        			SendMailToCancel_Function(GetCurrentlinelist);
-	        			var pAlertContent = strLang891 + "<br> " + strLang892;
-	        			OpenAlertUI(pAlertContent, OpenAlertUI_Close);
-	        			
-	        			//2020-04-03 김정언 : 근태관리 연동양식일 경우 추가 - 강제회수
-	    		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
-	    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-del-script').getAttribute("code");
-	    		        	var script = document.createElement("script");
-	    					script.type = "text/javascript";
-	    					script.innerHTML = code;
-	    					document.querySelector("head").appendChild(script);
-	    					
-	    		        	attitude_annual_conn(pDocID);
-	    		        }
-	        		}
-	        		else if (RtnVal == "ERR01") {
-	        			var pAlertContent = strLang895;
-	        			OpenAlertUI(pAlertContent);
-	        		}
-	        		else if (RtnVal == "ERR02") {
-	        			var pAlertContent = strLang896;
-	        			OpenAlertUI(pAlertContent);
-	        		}
-	        		else if (RtnVal == "ERR03") {
-	        			var pAlertContent = strLang897;
-	        			OpenAlertUI(pAlertContent);
-	        		} else {
-	        			var pAlertContent = strLang898;
-	        			OpenAlertUI(pAlertContent);
-	        		}
-	        	}
+					ExcuteInfo("CALLBACK_AFTER", "DRAFT");
+				} else {
+					doCancel_fail(RtnVal);
+				}
 	        }
 	        
 	        function checkIsDrafter() {
@@ -816,6 +823,118 @@
                  }
 	    	}
 	    	
+		    var apropinion_cross_dialogArguments = new Array();
+		    var temppDocSN = "";
+		    function btnReturn_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+		    	if (deptCheckFlag == "3") {
+		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		return;
+		    	} else if (deptCheckFlag == "4") {
+		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		return;
+		    	} else if (deptCheckFlag == "2") {
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					return;
+				}	
+		    	
+		        var RecevState = getDocRecevState();
+		        if (RecevState != "011" && RecevState != "012" && RecevState != "013" && RecevState != "014") {
+		            if (RecevState == "015") {
+		                var pAlertContent = strLang912;
+		                OpenAlertUI(pAlertContent);
+		            }
+		            return false;
+		        }
+		        var pDocSN = "";
+		        var fields = message.GetFieldsList();
+		        var field = message.GetListItem(fields, "receiptnumber");
+		        if (field) {
+		            var fieldValue = trim(field.textContent);
+		            if (fieldValue && fieldValue.replace("@", "") == fieldValue) {
+		                var tmpDocSN = fieldValue.substr(fieldValue.lastIndexOf("-") + 1);
+		                if (!isNaN(tmpDocSN))
+		                    pDocSN = tmpDocSN;
+		            }
+		        }
+		        temppDocSN = pDocSN;
+		        
+		        openOpinionUI_New("HeSong", btnReturn_onclick_Complete);
+		    }
+		    function btnReturn_onclick_Complete(ret) {
+		        DivPopUpHidden();
+
+		        if (checkAprState()) {
+		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+	    			window.close();
+	    			return;
+		    	}
+
+		        var hesongok = true;
+		        if (ret != "cancel") {
+					var draftFlag = "SUSIN";
+					if (pDocState === "012") {
+						draftFlag = "HAPYUI";
+					}
+					
+					var RtnVal = ExcuteInfo("HESONG_BEFORE", draftFlag);
+		        	if (!RtnVal) {
+		                return;
+		            }
+
+		        	var Rtnxml = loadXMLString(ret);
+		            if (temppDocSN) {
+		                hesongok = setCabinetHeSong(temppDocSN);
+					}
+		
+		            if (hesongok) {
+						var writerID = GetDocInfoData("APR", "writerid");
+						var writerName = GetDocInfoData("APR", "writername");
+						var docTitle = GetDocInfoData("APR", "doctitle");
+		            	SendMailToDrafter_Hesong(writerID, writerName, docTitle);
+		                hesongok = setHeSongDocInfo();
+
+						if (hesongok) {
+							ExcuteInfo("HESONG_AFTER", draftFlag);
+						} else {
+							ExcuteInfo("HESONG_FAIL", draftFlag);
+						}
+		            }
+		        }
+		    }
+			function returnYN() {
+				var mode = getDocMode();
+				var docState = GetDocInfoData(mode, "docstate");
+				var functionType = GetDocInfoData(mode, "functiontype");
+
+				if ((docState === "011" && functionType === "004") || (docState === "012" && functionType === "004")) {
+					document.getElementById("tbtnReturn").style.display = "";
+				} else {
+					document.getElementById("tbtnReturn").style.display = "none";
+				}
+
+				// var result = "";
+				
+				// $.ajax({
+				// 	type : "POST",
+				// 	dataType : "text",
+				// 	async : false,
+				// 	url : "/ezApprovalG/gongRamDocInfo.do",
+				// 	data : {
+				// 		"docID" : pDocID
+				// 	},
+				// 	success: function(xml){
+				// 		result = xml;
+				// 	}
+				// });
+				
+				// var RtnVal = getNodeText(loadXMLString(result).documentElement);
+				// if (RtnVal == "NONE") {
+				// 	document.getElementById("tbtnReturn").style.display = "";
+				// } else {
+				// 	document.getElementById("tbtnReturn").style.display = "none";
+				// }
+			}
 		</script>
 	</head>
 	<body class="popup" style="height:100%">
@@ -831,6 +950,7 @@
 				  </c:if>
 				  <li id="tbtncallback" style="display: none;"><span id="btncallback" onclick="return btncallback_onclick()"><spring:message code='ezApprovalG.t66'/></span></li>
                   <li id="tbtnforcecallback" style="display: none;"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
+				  <li id="tbtnReturn" style="display: none;"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
 		          <li id="btnOpinion"><span onClick="return btnOpinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
 		          <li id="btnDocInfo" class="approvalG"><span onClick="return btnDocInfo_onclick()" ><spring:message code='ezApprovalG.t54'/></span></li>
 		          <li id="btnhistory"><span onClick="btnhistory_onclick()" ><spring:message code='ezApprovalG.t61'/></span></li>

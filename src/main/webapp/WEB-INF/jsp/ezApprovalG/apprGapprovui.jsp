@@ -435,10 +435,8 @@
 		            if (noFieldsAvailable) {
 		                noFieldsAvailable = false;
 		            } else {
-		                var rtnVal = ExcuteInfo("MIDDLE_SIGN_INIT","");
+		                var rtnVal = ExcuteInfo("MIDDLE_SIGN_INIT");
 		                if(!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t8'/>";
-		                    OpenAlertUI(pAlertContent);
 		                    return;				
 		                }		
 		                process_AfterOpen();
@@ -813,11 +811,8 @@
 		        //UpdateLineHistory(); //결재선 변경이력 남기는 로직 위치변경 770->1004
 		        if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-		                var rtnVal = ExcuteInfo("DOCNUM_BEFORE", "");
+		                var rtnVal = ExcuteInfo("DOCNUM_BEFORE");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
-		                    setMenuDisable("btnApprove", false);
 		                    return;
 		                }
 		            }
@@ -942,32 +937,23 @@
 		        
 		        if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-		                var rtnVal = ExcuteInfo("DOCNUM_AFTER", "");
+		                var rtnVal = ExcuteInfo("DOCNUM_AFTER");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
-		                    setMenuDisable("btnApprove", false);
 		                    return;
 		                }
 		            }
 		        }
 		        if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-		                var rtnVal = ExcuteInfo("LAST_SIGN_BEFORE", "");
+		                var rtnVal = ExcuteInfo("LAST_SIGN_BEFORE");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
-		                    setMenuDisable("btnApprove", false);
 		                    return;
 		                }
 		            }
 		        }
 		        else {
-		            var rtnVal = ExcuteInfo("MIDDLE_SIGN_BEFORE", "");
+		            var rtnVal = ExcuteInfo("MIDDLE_SIGN_BEFORE");
 		            if (!rtnVal) {
-		                var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                OpenAlertUI(pAlertContent);
-		                setMenuDisable("btnApprove", false);
 		                return;
 		            }
 		        }
@@ -978,21 +964,15 @@
 		        if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 		                SetAutoPropFinal();
-		                var rtnVal = ExcuteInfo("LAST_SIGN_AFTER", "");
+		                var rtnVal = ExcuteInfo("LAST_SIGN_AFTER");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
-		                    setMenuDisable("btnApprove", false);
 		                    return;
 		                }
 		            }
 		        }
 		        else {
-		            var rtnVal = ExcuteInfo("MIDDLE_SIGN_AFTER", "");
+		            var rtnVal = ExcuteInfo("MIDDLE_SIGN_AFTER");
 		            if (!rtnVal) {
-		                var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                OpenAlertUI(pAlertContent);
-		                setMenuDisable("btnApprove", false);
 		                return;
 		            }
 		        }
@@ -1037,22 +1017,15 @@
                     
 		            if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-		                    var rtnVal = ExcuteInfo("END_FAIL", "");
+		                    var rtnVal = ExcuteInfo("END_FAIL");
 		                    if (!rtnVal) {
-		                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                         
-		                        OpenAlertUI(pAlertContent);
-		                        setMenuDisable("btnApprove", false);
 		                        return;
 		                    }
 		                }
 		            }
 		            else {
-		                var rtnVal = ExcuteInfo("MIDDLE_END_FAIL", "");
+		                var rtnVal = ExcuteInfo("MIDDLE_END_FAIL");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
-		                    setMenuDisable("btnApprove", false);
 		                    return;
 		                }
 		            }
@@ -1067,11 +1040,8 @@
 		        	
 		            if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-		                    var rtnVal = ExcuteInfo("LAST_END_AFTER", "");
+		                    var rtnVal = ExcuteInfo("LAST_END_AFTER");
 		                    if (!rtnVal) {
-		                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                        OpenAlertUI(pAlertContent);
-		                        setMenuDisable("btnApprove", false);
 		                        return;
 		                    }
 		                    getOpinionInfo(pDocID, "END");
@@ -1107,11 +1077,8 @@
 		                }
 		            }
 		            else {
-		                var rtnVal = ExcuteInfo("MIDDLE_END_AFTER", "");
+		                var rtnVal = ExcuteInfo("MIDDLE_END_AFTER");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[ " + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
-		                    setMenuDisable("btnApprove", false);
 		                    return;
 		                }
 		                CurrentAprType = pAprLineType;
@@ -1225,10 +1192,8 @@
 		        if (ret != "cancel") {
 		        	pHasOpinionYN = "Y";
 		            UpdateLineHistory(); // '변경내역' 업데이트
-		            var rtnVal = ExcuteInfo("BANSONG_BEFORE", "");
+		            var rtnVal = ExcuteInfo("BANSONG_BEFORE");
 		            if (!rtnVal) {
-		                var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                OpenAlertUI(pAlertContent);
 		                return;
 		            }
 		            
@@ -1258,20 +1223,16 @@
 		            var RtnVal = SaveApproveInfo("2");
 		            if (RtnVal != "TRUE") {
 		            	UndoSignInfo(signInfo);
-		                var rtnVal = ExcuteInfo("BANSONG_FAIL", "");
+		                var rtnVal = ExcuteInfo("BANSONG_FAIL");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
 		                    return;
 		                }
 		                var pAlertContent = "<spring:message code='ezApprovalG.t37'/>";
 		                OpenAlertUI(pAlertContent);
 		                return;
 		            } else {
-		                var rtnVal = ExcuteInfo("BANSONG_AFTER", "");
+		                var rtnVal = ExcuteInfo("BANSONG_AFTER");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
       						return;
 		                }
 		                

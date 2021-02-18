@@ -520,12 +520,16 @@
 	                        FieldsList[FieldCount] = tmp;
 	                        FieldCount++;
 	                }
+
+					var controls = getControlList();
+					FieldsList = FieldsList.concat(controls);
+
 	                return FieldsList;
 	            } catch (e) {
 	                return FieldsList;
 	            }
 	        }
-	
+
 	        function GetTagList(strTagName) {
 	            try {
 	                var TagsList = new Array();

@@ -627,6 +627,10 @@ function setData(pobjXml) {
                                     SetAttribute(field, "value", fieldValue);
                                 }
                                 break;
+                            case "TEXTAREA":
+                                field.value = fieldValue;
+                                SetAttribute(field, "value", fieldValue);
+                                break;
                         }
                     } else {
                         SetDocumentElement(fieldName, fieldValue);
@@ -711,7 +715,7 @@ function checkValidation() {
     var workflowXml = loadXMLString(workflowXmlStr);
 
     var chkflag = true;
-    var validations = SelectNodes(workflowXml, "workflow/validations/validation")
+    var validations = SelectNodes(workflowXml, "workflow/validations/validation");
     for (var i = 0, ilen = validations.length; i < ilen; i++) {
         var validation = validations[i];
         var pField = SelectSingleNodeValue(validation, "field");
@@ -724,7 +728,7 @@ function checkValidation() {
         }
     }
 
-    var aprlines = SelectNodes(keywordXml, "workflow/aprlines/aprline");
+    var aprlines = SelectNodes(workflowXml, "workflow/aprlines/aprline");
     for (var i = 0, ilen = aprlines.length; i < ilen; i++) {
         var aprline = aprlines[i];
         var pAprtype = SelectSingleNodeValue(aprline, "aprtype");
@@ -824,7 +828,7 @@ function checkValid(pField, pValue, pDesc) {
     var fields = message.GetFieldsList();
     var field = message.GetListItem(fields, pField);
     if (field) {
-        var tempValue = getNodeText(pField);
+        var tempValue = getNodeText(field);
 
         switch (pValue) {
             case "NUM":

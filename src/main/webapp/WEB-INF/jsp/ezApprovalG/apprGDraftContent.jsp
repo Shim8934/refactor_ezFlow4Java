@@ -580,6 +580,12 @@
 	                        FieldCount++;
 	                    }
 	                }
+
+					if (isReform) {
+						var controls = iframe_content.getControlList();
+						FieldsList = FieldsList.concat(controls);
+					}
+
 	                return FieldsList;
 	            } catch (e) {
 	                return FieldsList;
@@ -904,11 +910,11 @@
 						iframe_content.document.body.innerHTML = div_BODY.innerHTML;
 					}
 	                
-	                if (isConDoc) {
-	                    parent.Conn_Initial();
-	                }
-	                
 	                parent.isEditorComplete = true;
+
+					if (isConDoc) {
+						parent.connInit();
+					}
 	            } catch (e) {
 	            }
 	        }

@@ -158,17 +158,17 @@
 		                        ConnData = Doc_ContentHtml.children[i].innerHTML;
 								
 		                        if (ConnData) {
-		                            setNodeText(txt_OpinionContent, ConnData.replace(/<[/]?connroot>/g, "").replace(/><conn/g, ">\n<conn"));
+		                            setNodeText(txt_OpinionContent, ConnData.replace(/<[/]?connroot>/g, "").replace(/conn><conn/g, "conn>\n<conn"));
 		                        }
 		                    }
 		                    else if (TagID == "WORKFLOW") {
 		                        WorkData = Doc_ContentHtml.children[i].innerHTML;
 		                        if (WorkData) {
 									WorkData = Doc_ContentHtml.children[i];
-		                            var VALIDATIONS = GetElementsByTagName(WorkData, "validations")[0].innerHTML.toUpperCase();
+		                            var VALIDATIONS = GetElementsByTagName(WorkData, "validations")[0].innerHTML;
 		                            setNodeText(txt_OpinionContent1, VALIDATIONS.replace(/><VALIDATION/g, ">\n<VALIDATION"));
 		
-		                            var STATUS = GetElementsByTagName(WorkData, "aprlines")[0].innerHTML.toUpperCase();
+		                            var STATUS = GetElementsByTagName(WorkData, "aprlines")[0].innerHTML;
 		                            setNodeText(txt_OpinionContent2, STATUS.replace(/><APRLINE/g, ">\n<APRLINE"));
 		                        }
 		                    }

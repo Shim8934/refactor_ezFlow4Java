@@ -2026,7 +2026,6 @@ function setbuttonenable() {
         document.getElementById("tbtnApprove2").style.displayd = "none";
         //document.getElementById("tbtnApproveALL").style.display = "none";
         document.getElementById("tbtnReceipt").style.display = "none";
-        document.getElementById("tbtnReturn").style.display = "none";
         document.getElementById("tbtnNonElecRec").style.display = "none";
         document.getElementById("tbtnSimsa").style.display = "none";
         document.getElementById("tbtnGongRam").style.display = "none";
@@ -2107,7 +2106,6 @@ function setbuttonenable() {
                 document.getElementById("tbtnApprove2").style.display = "none";
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
-                document.getElementById("tbtnReturn").style.display = "none";
                 document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
             } else if (GetAttribute(tr, "DATA12") == "015") {
@@ -2122,7 +2120,6 @@ function setbuttonenable() {
                 document.getElementById("tbtnApprove2").style.display = "none";
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
-                document.getElementById("tbtnReturn").style.display = "none";
                 document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
             } else if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
@@ -2145,24 +2142,14 @@ function setbuttonenable() {
                 document.getElementById("tbtnApprove2").style.display = "none";
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
-                document.getElementById("tbtnReturn").style.display = "none";
                 document.getElementById("tbtnNonElecRec").style.display = "none";
 
                 if (GetAttribute(tr, "DATA9") != "0") {
                     document.getElementById("tbtnRemoveDoc").style.display = "none";
-                    returnYN(GetAttribute(tr, "DATA1"));
-
-                    if (GetAttribute(tr, "DATA15") == "001")
-                        document.getElementById("tbtnReturn").style.display = "none";;
                 } else if (GetAttribute(tr, "DATA12") == "011" || GetAttribute(tr, "DATA12") == "012") {
                     document.getElementById("tbtnRemoveDoc").style.display = "none";
-                    returnYN(GetAttribute(tr, "DATA1"));
-
-                    if (GetAttribute(tr, "DATA15") == "001")
-                        document.getElementById("tbtnReturn").style.display = "none";;
                 } else {
                     document.getElementById("tbtnRemoveDoc").style.display = "";
-                    document.getElementById("tbtnReturn").style.display = "none";
                 }
             } else {
                 document.getElementById("tbtnDraft").style.display = "";
@@ -2179,7 +2166,6 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "";
 
                 document.getElementById("tbtnReceipt").style.display = "none";
-                document.getElementById("tbtnReturn").style.display = "none";
                 document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
                 document.getElementById("tbtnLinkDraft").style.display = "none";
@@ -2198,7 +2184,6 @@ function setbuttonenable() {
             document.getElementById("tbtnReceipt").style.display = "none";
             document.getElementById("tbtnNonElecRec").style.display = "none";
             document.getElementById("tbtnViewDoc").style.display = "none";
-            document.getElementById("tbtnReturn").style.display = "none";
             document.getElementById("tbtnRegList").style.display = "none";
             document.getElementById("tbtnLinkDraft").style.display = "none";
             document.getElementById("tbtnApproveALL").style.display = "none";
@@ -2230,15 +2215,6 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "";
                 document.getElementById("tbtnRegList").style.display = "none";
-                //G버전 감사는 회송 버튼이 보이도록 수정. 2020-02-25 홍대표.
-                if (tr.getAttribute("DATA9") == "003" || (tr.getAttribute("DATA9") == "014" && approvalFlag == "S"))
-                    document.getElementById("tbtnReturn").style.display = "none";
-                else {
-                    returnYN(tr.getAttribute("DATA1"));
-
-                    if (tr.getAttribute("DATA15") == "001")
-                        document.getElementById("tbtnReturn").style.display = "none";
-                }
             } else if (pFunctionType == "015") {
                 document.getElementById("tbtnDraft").style.display = "";
                 //SwapImage(document.getElementById("btnDraft"), "");
@@ -2251,7 +2227,6 @@ function setbuttonenable() {
                 document.getElementById("tbtnApprove2").style.display = "none";
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
-                document.getElementById("tbtnReturn").style.display = "none";
                 //document.getElementById("tbtnNonElecRec").style.display = "";
                 
                 if(approvalFlag == "G") {
@@ -2273,7 +2248,6 @@ function setbuttonenable() {
             //document.getElementById("tbtnApproveALL").style.display = "none";
             document.getElementById("tbtnReceipt").style.display = "none";
             document.getElementById("tbtnViewDoc").style.display = "none";
-            document.getElementById("tbtnReturn").style.display = "none";
             document.getElementById("tbtnRegList").style.display = "none";
             document.getElementById("tbtnLinkDraft").style.display = "none";
         }
@@ -2305,7 +2279,6 @@ function setbuttonenable() {
         document.getElementById("tbtnApprove2").style.display = "none";
         //document.getElementById("tbtnApproveALL").style.display = "none";
         document.getElementById("tbtnReceipt").style.display = "none";
-        document.getElementById("tbtnReturn").style.display = "none";
         document.getElementById("tbtnNonElecRec").style.display = "none";
         document.getElementById("tbtnRegList").style.display = "none";
         document.getElementById("tbtnLinkDraft").style.display = "none";
@@ -2315,13 +2288,8 @@ function setbuttonenable() {
         } catch (e) { }
     }
 
-    if (pListTypeValue != "4" && pListTypeValue != "1" && pListTypeValue != "11") {
-        document.getElementById("tbtnReturn").style.display = "none";
-    }
-    
     if (approvalFlag == "S") {
 	    if (pListTypeValue == "4") {
-	        document.getElementById("tbtnReturn").style.display = "none";
 	        document.getElementById("tbtnViewDoc").style.display = "none";
 	        document.getElementById("tbtnReceipt").style.display = "";
 	        
@@ -2572,47 +2540,6 @@ function getSimsaDocList() {
 
 var xmlhttp3;
 var temppDocID;
-function returnYN(pDocID) {
-	var result = "";
-	
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : false,
-		url : "/ezApprovalG/gongRamDocInfo.do",
-		data : {
-			docID : pDocID
-		},
-		success: function(xml){
-			result = xml;
-		}
-	});
-	
-    var RtnVal = getNodeText(loadXMLString(result).documentElement);
-    if (RtnVal == "NONE")
-        document.getElementById("tbtnReturn").style.display = "";
-    else
-        document.getElementById("tbtnReturn").style.display = "none";
-    
-}
-
-function returnYN_after() {
-    if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
-        try {
-            var RtnVal = getNodeText(xmlhttp2.responseXML.documentElement);
-            if (RtnVal == "NONE")
-                document.getElementById("tbtnReturn").style.display = "";
-            else
-                document.getElementById("tbtnReturn").style.display = "none";
-
-            xmlhttp2 = null;
-        }
-        catch (e) {
-        }
-    }
-    else
-        return;
-}
 
 function RemoveDocCabinet(tempDocID, FLAG) {
 	var result = "";
