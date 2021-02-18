@@ -1587,6 +1587,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
         }
     }
    
+   public void addScehdulegroup() {
+	   try {
+		   select("EzCommonDAO.addScehdulegroup");
+	   } catch (Exception e) {
+		   logger.debug("tbl_schedulegroup MODIFYDATE, PRECREATORID, PRECREATORNAME, PRECCREATORNAME2 column doesn't exist. creating the column...");
+		   
+		   update("EzCommonDAO.updateScehdulegroup");
+	   }
+   }
+   
    public void insertAutoSendOfferFlag() {
        try {
            int rowCnt = (int) select("EzCommonDAO.checkAutoSendOfferFlag");

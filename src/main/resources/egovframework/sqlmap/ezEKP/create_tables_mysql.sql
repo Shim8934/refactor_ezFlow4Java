@@ -11803,6 +11803,10 @@ CREATE TABLE `tbl_schedulegroup` (
   `CREATEDATE` datetime DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `companyid` varchar(40) DEFAULT NULL,
+  `MODIFYDATE` datetime DEFAULT NULL,
+  `PRECREATORID` varchar(100) DEFAULT NULL,
+  `PRECREATORNAME` varchar(100) DEFAULT NULL,
+  `PRECREATORNAME2` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`GROUPID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

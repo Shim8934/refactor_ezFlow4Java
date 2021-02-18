@@ -47,6 +47,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
@@ -1135,7 +1136,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		return gList;
 	}
-	
+		
 	@Override
 	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1170,6 +1171,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		return sb.toString();
 	}
+	
 
 	@Override
 	public void deleteScheduleGroup(String groupId, int tenantId) throws Exception {
@@ -1203,6 +1205,26 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_TENANTID", tenantId);
 		
 		ezScheduleDAO.deleteScheduleMember(map);
+	}
+	
+
+	@Override
+	public void updateManageScheduleMember(String groupID, String memberId, String memberName, String memberName2, int tenantId, String loginUserId, String loginUserName, String loginUserName2) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_GROUPID", groupID);
+		map.put("v_MEMBERID", memberId);
+		map.put("v_MEMBERNAME", memberName);
+		map.put("v_MEMBERNAME2", memberName2);
+		map.put("v_TENANTID", tenantId);
+		
+		ScheduleGroupVO creatorVO = ezScheduleDAO.selectCreatorMember(map);
+		map.put("v_CREATORID", creatorVO.getCreatorid());
+		map.put("v_CREATORNAME", creatorVO.getCreatorname());
+		map.put("v_CREATORNAME2", creatorVO.getCreatorname2());
+		
+		ezScheduleDAO.updateManageScheduleGroupMember(map);
+		ezScheduleDAO.updateManageScheduleMember(map);
+
 	}
 
 	@Override
@@ -1277,6 +1299,22 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		ezScheduleDAO.insertScheduleGroup(map);
 	}
 
+	@Override
+	public void updateScheduleGroup(String groupId, String id, String displayName,	String displayName2, String groupName, String description, int tenantId, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_GUID", groupId);
+		map.put("v_USERID", id);
+		map.put("v_DISPLAYNAME", displayName);
+		map.put("v_DISPLAYNAME2", displayName2);
+		map.put("v_GROUPNAME", groupName);
+		map.put("v_DESCRIPTION", description);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+		
+		ezScheduleDAO.updateScheduleGroup(map);
+	}
+
+	
 	@Override
 	public String scheduleGetLunarUse(String companyID, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();

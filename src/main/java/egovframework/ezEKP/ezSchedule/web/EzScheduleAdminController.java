@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -26,6 +27,8 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleAdminService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -73,6 +76,10 @@ public class EzScheduleAdminController {
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+	
+	
+	@Autowired
+	private EgovMessageSource msg;
 	
 	/**
 	 * 관리자 일정관리 메인화면 호출함수
@@ -664,5 +671,196 @@ public class EzScheduleAdminController {
 		
 		return "/admin/ezSchedule/scheduleAdminPopupHolidayRepeat";
 	}
+	
+	/**
+	 * 관리자 일정관리 그룹관리 탭 페이지
+	 */
+	@RequestMapping(value="/admin/ezSchedule/scheduleAdminGroupTab.do", method = RequestMethod.GET)
+	public String  scheduleAdminHolidayTab2(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		
+		logger.debug("============ scheduleAdminGroupTab started ============");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		logger.debug("============ scheduleAdminGroupTab ended ============");
+		
+		return "/admin/ezSchedule/scheduleAdminGroupTab";
+	}
+
+	/**
+	 * 일정그룹관리 그리드 리스트  카운트
+	 */
+	@RequestMapping(value="/admin/ezSchedule/scheduleGroupListCount.do",  method = RequestMethod.POST)
+	public String scheduleGroupListCount(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleGroupListCount started ============");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+    	if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+    	
+    	String offset = userInfo.getOffset();
+    	
+		String currPage = request.getParameter("pageNum");
+		if (currPage == null || currPage.equals("")) {
+			currPage = "1";
+		}
+		
+		int maxItemPerPage = 10; 
+		int currentPage = Integer.parseInt(currPage);
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		
+	
+		String searchType2  = request.getParameter("searchType2") != null ? request.getParameter("searchType2") : "" ;
+		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
+		String startDate = request.getParameter("startDate") != null ? request.getParameter("startDate") : "";
+		String endDate = request.getParameter("endDate") != null ? request.getParameter("endDate") : "";
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+
+		
+		List<ScheduleGroupListVO> myList = new ArrayList<ScheduleGroupListVO>();
+		
+	    myList = ezScheduleAdminService.getMyGroupList(commonUtil.getMinuteUTC(offset), loginSimpleVO.getId(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID(), searchType2, searchValue, startDate, endDate);
+		
+	    int totalCount = myList.size();
+	    
+	    int totalPage = totalCount / maxItemPerPage ;
+	    
+	    if (totalCount < 1) {
+			totalPage = 1;
+		} 
+	    
+	    if ((totalPage * maxItemPerPage) != totalCount && (totalCount % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1 ;
+		}
+	    currentPage = Math.min(currentPage, totalPage);	
+	    
+	    model.addAttribute("currPage", currentPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("searchType2", searchType2);
+		model.addAttribute("searchValue", searchValue);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+	    return "json";
+	}
+		
+	    /**
+	     * 일정그룹관리 그리드 리스트
+	     */
+	    @RequestMapping(value="/admin/ezSchedule/scheduleGroupList.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
+	    @ResponseBody
+	    public String scheduleGroupList(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+	    	
+	    	logger.debug("============ scheduleGroupList started ============");
+	    	
+
+	    	LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+	    	if (userInfo == null) {
+				return "cmm/error/adminDenied";
+			}
+	    	
+	    	String offset = userInfo.getOffset();
+	    	
+	    	
+	    	String currPage = request.getParameter("pageNum");
+			if (currPage == null || currPage.equals("")) {
+				currPage = "1";
+			}
+			
+			int maxItemPerPage = 10; 
+			int currentPage = Integer.parseInt(currPage);
+			int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+			
+			
+			
+	    	String searchType2  = request.getParameter("searchType2") != null ? request.getParameter("searchType2") : "" ;
+	    	String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
+	    	String startDate = request.getParameter("startDate") != null ? request.getParameter("startDate") : "";
+	    	String endDate = request.getParameter("endDate") != null ? request.getParameter("endDate") : "";
+	    	loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+	    	
+	    	
+	    	List<ScheduleGroupVO> myList = new ArrayList<ScheduleGroupVO>();
+	    	
+	    	
+	    	
+	    	myList = ezScheduleAdminService.getMyGroupList2(commonUtil.getMinuteUTC(offset), loginSimpleVO.getId(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID(), searchType2, searchValue, startDate, endDate, startRow, maxItemPerPage);
+	    	
+	    	
+		
+		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
+		result.append("<HEADERS><HEADER><NAME>CHECK</NAME><WIDTH>10%</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t159", loginSimpleVO.getLocale()) + "</NAME><WIDTH>20%</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t160", loginSimpleVO.getLocale()) + "</NAME><WIDTH>30%</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb17", loginSimpleVO.getLocale()) + "</NAME><WIDTH>10%</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t00002", loginSimpleVO.getLocale()) + "</NAME><WIDTH>10%</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb18", loginSimpleVO.getLocale()) + "</NAME><WIDTH>10%</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb19", loginSimpleVO.getLocale()) + "</NAME><WIDTH>10%</WIDTH></HEADER></HEADERS>");
+        result.append("<ROWS>");
+		
+        for (int i = 0; i < myList.size(); i++) {
+        	ScheduleGroupVO data = myList.get(i);
+        	
+        	if(data.getPrecreatorname() == null){
+        		data.setPrecreatorname("");
+        	}
+        	if(data.getModifydate() == null){
+        		data.setModifydate("");
+        	}
+        	if(data.getPrecreatorid() == null){
+        		data.setPrecreatorid("");
+        	}
+        	
+        	String preCreatorInfo = data.getPrecreatorname()+"("+data.getPrecreatorid()+")";
+        	if(data.getPrecreatorid()=="" || data.getPrecreatorid()==null){
+        		preCreatorInfo = "";
+        	}
+        	
+        	result.append("<ROW>");
+            result.append("<CELL>");
+            result.append("<VALUE>CHECK</VALUE>");
+            result.append("<DATA1>" + data.getGroupId() + "</DATA1>");
+            result.append("<DATA2><![CDATA[" + data.getDescription() + "]]></DATA2>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            
+            int myMemberListCnt = ezScheduleAdminService.getMyGroupMemberListCnt(data.getGroupId(), loginSimpleVO.getLang(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID());
+            //String cDate = commonUtil.getDateStringInUTC(data.getCreateDate(),loginSimpleVO.getOffset(),false).substring(0,10);
+            
+            result.append("<VALUE><![CDATA[" + data.getGroupName() + " (" + myMemberListCnt + msg.getMessage("ezSchedule.t00003", loginSimpleVO.getLocale()) + ")" + "]]></VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE><![CDATA[" + data.getDescription() + "]]></VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + data.getCreatorname()+"("+data.getCreatorid()+")" + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + data.getCreateDate() + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+           /* result.append("<VALUE>" + data.getPrecreatorname()+"("+data.getPrecreatorid()+")" + "</VALUE>");*/
+            result.append("<VALUE>" + preCreatorInfo + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + data.getModifydate() + "</VALUE>");
+            result.append("</CELL>");
+            result.append("</ROW>");
+        }
+        result.append("</ROWS>");
+        result.append("</LISTVIEWDATA>");
+        
+        
+		
+		return result.toString();
+	}
+	
+	
+	
 	
 }

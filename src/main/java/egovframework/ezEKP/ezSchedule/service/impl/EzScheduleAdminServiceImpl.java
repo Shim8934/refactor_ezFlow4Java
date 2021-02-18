@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleAdminDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleAdminService;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleShareVO;
 
 @Service("EzScheduleAdminService")
@@ -182,7 +184,58 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 		return ezScheduleAdminDAO.scheduleShareCheck(map);
 	}
 	
+
+	@Override
+	public List<ScheduleGroupListVO> getMyGroupList(String offset, String userID, int tenantID, String companyID, String searchType2, String searchValue, String startDate, String endDate) throws Exception {	
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_SEARCHTYPE", searchType2);
+		map.put("v_SEARCHVALUE", searchValue);
+		map.put("v_STARTDATE", startDate);
+		map.put("v_ENDDATE", endDate);
+		map.put("offset", offset);
+		
+		List<ScheduleGroupListVO> gList = ezScheduleAdminDAO.getMyGroupList(map);
+		
+		return gList;
+	}
 	
+	
+
+	@Override
+	public List<ScheduleGroupVO> getMyGroupList2 (String offset, String userId, int tenantId ,String companyID, String searchType2, String searchValue, String startDate, String endDate, int startRow, int maxItemPerPage) throws Exception {	
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userId);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_SEARCHTYPE", searchType2);
+		map.put("v_SEARCHVALUE", searchValue);
+		map.put("v_STARTDATE", startDate);
+		map.put("v_ENDDATE", endDate);
+		map.put("v_STARTROW", startRow);
+		map.put("v_MAXITEMPERPAGE", maxItemPerPage);
+		map.put("offset", offset);
+	
+		
+		List<ScheduleGroupVO> gList = ezScheduleAdminDAO.getMyGroupList2(map);
+		
+		return gList;
+	}
+
+	@Override
+	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_GROUPID", groupId);
+		map.put("v_LANG", lang);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+		
+		int cnt = ezScheduleAdminDAO.getMyGroupMemberListCnt(map);
+		
+		return cnt;
+	}
 	
 }
 

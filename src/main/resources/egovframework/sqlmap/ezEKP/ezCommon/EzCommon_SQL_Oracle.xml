@@ -3060,6 +3060,30 @@
 			PASSAPRLINEFLAG  VARCHAR2(4) DEFAULT 'N'
 	</statement>
 	
+    
+    <select id="EzCommonDAO.addScehdulegroup">
+    <![CDATA[
+        SELECT 
+            MODIFYDATE, PRECREATORID, PRECREATORNAME, PRECREATORNAME2
+        FROM 
+            TBL_SCHEDULEGROUP
+        WHERE
+            ROWNUM <= 1
+     ]]>
+    </select>
+    
+    <statement id="EzCommonDAO.updateScehdulegroup">
+        ALTER TABLE 
+            TBL_SCHEDULEGROUP
+        ADD (
+            MODIFYDATE datetime,
+            PRECREATORID varchar(100),
+            PRECREATORNAME varchar(100),
+            PRECREATORNAME2 varchar(100)
+            )
+    </statement>
+    
+    
     <select id="EzCommonDAO.checkFormSihangTypeColumn">
         <![CDATA[
         SELECT 

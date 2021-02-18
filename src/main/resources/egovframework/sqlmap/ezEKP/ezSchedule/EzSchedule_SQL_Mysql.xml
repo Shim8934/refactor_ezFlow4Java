@@ -14,6 +14,7 @@
 	<typeAlias  alias="ReceiveListVO" 		type="egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO"/>
 	<typeAlias  alias="OrganUserVO" 		type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	<typeAlias  alias="ResGetScheduleVO" 	type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
+	<typeAlias  alias="ScheduleGroupVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO"/>
 	
 	<resultMap class="ScheGetHolidayVO" id="scheGetHolidayVO">
 		<result property="holidayID"		column="HOLIDAYID"			columnIndex="1"/>
@@ -374,6 +375,8 @@
         	order by groupname
 		]]>
 	</select>
+	
+
 	<!-- checked -->
 	<select id="EzScheduleDAO.getMyGroupMemberListCnt" parameterClass="map" resultClass="int">
 <!-- 			 select 
@@ -1150,6 +1153,20 @@
 				tenant_id = #v_TENANTID#	
 		]]>
 	</select>
+	
+	<select id="EzScheduleDAO.selectCreatorMember" parameterClass="Map" resultClass="ScheduleGroupVO">
+		<![CDATA[
+			select
+				creatorid,
+				creatorname,
+				creatorname2
+			from
+				tbl_schedulegroup
+			where
+				groupId = #v_GROUPID#
+			
+		]]>
+	</select>
 	<!-- checked -->	
 	<insert id="EzScheduleDAO.insertSchedule" parameterClass="map">
 		<![CDATA[
@@ -1530,5 +1547,80 @@
 				tenant_id = #v_TENANTID#
 		]]>
 	</update>
+	
+
+	<update id="EzScheduleDAO.updateManageScheduleMember" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_schedulegroup
+			set 
+			    creatorid = #v_MEMBERID#,
+                creatorname = #v_MEMBERNAME#,
+                creatorname2 = #v_MEMBERNAME2#,
+                precreatorid = #v_CREATORID#,
+                precreatorname = #v_CREATORNAME#,
+                precreatorname2 = #v_CREATORNAME2#,
+                modifydate = utc_timestamp()
+	   		where  
+	   			groupid = #v_GROUPID#
+	   		and	
+	   			tenant_id = #v_TENANTID#
+	   	]]>		
+	</update>
+	
+
+	<update id="EzScheduleDAO.updateManageScheduleGroupMember" parameterClass="map">
+	<!-- <![CDATA[
+		update 
+			tbl_schedulegroupmember, (select * from tbl_schedulegroup where groupid = #v_GROUPID#) B
+		set 
+			tbl_schedulegroupmember.memberid = B.creatorid,
+			tbl_schedulegroupmember.membername = B.creatorname,
+			tbl_schedulegroupmember.membername2 = B.creatorname2,
+			tbl_schedulegroupmember.responsedate = utc_timestamp()
+		where  
+			tbl_schedulegroupmember.groupid = B.groupid
+	    and
+	    	tbl_schedulegroupmember.memberid = #v_MEMBERID# 
+		and
+	   		tbl_schedulegroupmember.tenant_id = #v_TENANTID#
+	  
+	]]> -->
+		 <![CDATA[
+			 update
+				tbl_schedulegroupmember
+			set 
+			    memberid = #v_CREATORID#,
+                membername = #v_CREATORNAME#,
+                membername2 = #v_CREATORNAME2#,
+                responsedate = utc_timestamp()
+                
+	   		where  
+	   			groupid = #v_GROUPID#
+	   		and	
+	   			tenant_id = #v_TENANTID#
+	   		and
+	   		    memberid = #v_MEMBERID# 
+	   	]]>	 
+	   	
+	   	
+	</update>
+	
+	
+	<update id="EzScheduleDAO.updateScheduleGroup" parameterClass="map">
+		<![CDATA[
+			update 
+				tbl_schedulegroup
+			set
+				groupname = #v_GROUPNAME#, 		
+				description = #v_DESCRIPTION#					
+			where 
+				groupid = #v_GUID#
+			and
+				tenant_id = #v_TENANTID#
+   		]]>
+	</update>
+	
+
 </sqlMap>
 

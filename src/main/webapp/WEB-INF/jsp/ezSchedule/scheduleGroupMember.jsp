@@ -14,8 +14,12 @@
 	    <script type="text/javascript">
 		    var groupid = "<c:out value='${groupID}' />";
 		    var companyid = "<c:out value='${userInfo.companyID}' />";
+		    var loginUserName = "<c:out value='${loginUserName}' />";
+		    var loginUserName2 = "<c:out value='${loginUserName2}' />";
+		    var loginUserId = "<c:out value='${loginUserId}' />";
+		    var loginUserRoll = "<c:out value='${loginUserRoll}' />";
 		    var g_Member; //그룹 멤버 정보
-
+		 
 		    function show_personinfo(userid) {
 		    	var deptID = "";
 		    	$.ajax({
@@ -38,6 +42,7 @@
 					
 		    var OpenWin;
 		    var schedule_select_attendant_dialogArguments = new Array();
+		    
 		    function add_member() {
 		        if (CrossYN()) {
 		        	//2018-08-10 김보미 - 그룹멤버 담은 변수 추가 및 url에 파라메타 추가
@@ -436,8 +441,143 @@
 		        });		
 		    }
 		    
+		    function check_length(chkstr, maxlength, fieldname) {
+		        var length = 0;
+		        var i;
+
+		        for (i = 0; i < chkstr.length; i++)
+		            if (chkstr.charCodeAt(i) > 256)
+		                length = length + 2;
+		            else
+		                length++;
+
+		        if (length > maxlength) {
+		            alert(fieldname + "<spring:message code='ezSchedule.t200' />" + maxlength + "<spring:message code='ezSchedule.t201' />");
+		            return false
+		        }
+
+		        return true;
+		    }
+		    
+		    function cancel_onclick() {
+		    	location.reload(true);
+		    }
+		  
+		    function save_onclick() {
+		        if (specialChk(document.all("groupname").value) || specialChk(document.all("description").value)) {
+		    		alert("<spring:message code='ezResource.special' />");
+		    		return;
+		    	}		    	
+		    	
+		         if (document.all("groupname").value.replace(/\s/g, '') == "") {
+		            alert("<spring:message code='ezSchedule.t195' />");
+		            document.all("groupname").value = "";
+		            document.all("groupname").focus();
+		            return;
+		        }
+
+		        if (document.all("description").value.replace(/\s/g, '') == "") {
+		            alert("<spring:message code='ezSchedule.t196' />");
+		            document.all("description").value = "";
+		            document.all("description").focus();
+		            return;
+		        } 
+		      
+		        if (!check_length(document.all("groupname").value, 50, "<spring:message code='ezSchedule.t159' />")) return;
+		        if (!check_length(document.all("description").value, 250, "<spring:message code='ezSchedule.t160' />")) return;
+		        
+		        
+		        		        
+		        $.ajax({
+					url : '/ezSchedule/scheduleModifyGroup.do',
+					method : 'POST',
+					async : false,
+					dataType : "text",
+					data : {
+						groupId : groupid,
+						groupName : document.all("groupname").value,
+						description : document.all("description").value,
+						displayName : "<c:out value='${userInfo.displayName1}' />",
+						displayName2 : "<c:out value='${userInfo.displayName2}' />"
+					} ,
+   					success : function(text) {
+   						alert("<spring:message code='ezSchedule.shb08' />");
+   			                window.close();
+   			                opener.location.reload();
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert("<spring:message code='ezSchedule.shb09' />");
+					}
+				});
+		    }
+		 
+		    function give_permission() {
+		    	var checks = document.getElementsByTagName("input");
+		        var memberId;
+		        var memberName;
+		        var memberName2;
+		        
+		        var count = 0;
+		        
+		        for (var i = 2; i < checks.length; i++) {
+		            if (checks.item(i).checked == true) {	
+		                memberId = GetAttribute(checks.item(i), "memberid");
+		                memberName = g_Member.name1[i-2]; 
+		                memberName2 = g_Member.name2[i-2];
+		                status = GetAttribute(checks.item(i), "memberstatus");
+		                count++;
+		            }
+		        }
+		       	     
+		        if (count == 0) {
+		            alert("<spring:message code='ezSchedule.shb02' />");
+		            return;
+		        }else if(count > 1){
+		        	alert("<spring:message code='ezSchedule.shb03' />");
+		        	return;
+		        }else if(status != 1){
+		        	alert("<spring:message code='ezSchedule.shb22' />");
+		        	return;
+		        }
+		        
+		        if (!confirm("<spring:message code='ezSchedule.shb05' />"))
+		            return; 
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "html",
+		    		async : false,
+		    		data : {
+		    			groupID : groupid,
+		    			memberID : memberId,
+		    			memberNAME : memberName,
+		    			memberNAME2 : memberName2,
+		    			loginUserId : loginUserId,
+		    			loginUserName : loginUserName,
+		    			loginUserName2 : loginUserName2		
+		    		},
+		    		url : "/ezSchedule/scheduleGiveManagement.do",
+		    		success: function(text){
+		    			opener.location.reload(); 
+		    			window.close();
+		    		},
+		    		error: function(err){
+		    			alert("<spring:message code='ezSchedule.shb14' />");
+		    		}
+		        });
+		        
+	    	}
+		    	
+		    	
+		    
+		    
 		    //2018-08-10 김보미 - 추가
 		    window.onload = function () {
+		    	    var groupName = "<c:out value='${groupName}' />";
+		    	    var description = "<c:out value='${description}' />";
+		        	$('#groupname').val(groupName);
+		        	$('#description').val(description);
+			    
 		    	g_Member = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
 		    	
 		    	<c:forEach var="item" items="${memberList}">
@@ -456,11 +596,43 @@
 				    <li title="<spring:message code='ezSchedule.t185' />"><span onClick="add_member()"><spring:message code='ezSchedule.t186' /></span></li>
 				    <li title="<spring:message code='ezSchedule.t187' />"><span onClick="del_member()"><spring:message code='ezSchedule.t188' /></span></li>
 				    <li title="<spring:message code='ezSchedule.t189' />"><span onClick="renew_member()"><spring:message code='ezSchedule.t169' /></span></li>
+				    <li title="<spring:message code='ezSchedule.shb01' />"><span onClick="give_permission()"><spring:message code='ezSchedule.shb01' /></span></li>
 			  	</ul>
 			</div>
 			<div id="close"><ul><li><span onClick="window.close()"></span></li></ul></div>
-			<span class="txt">▒ <spring:message code="ezSchedule.t17902" /></span>
-			<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:440px; HEIGHT:277px"> 
+			
+			<table class="popuplist" width="100%">
+				<tr> 
+			    	<th style="width:120px; white-space:nowrap; text-align:center"><spring:message code='ezSchedule.t202' /></th> 
+			      <!-- 	<td style="width:200px"> -->
+			       <td>
+			        	<!-- <input type="text" id="groupname" style="WIDTH:200px; height: 23px;" maxlength=50> -->
+			        	<input type="text" id="groupname" style="WIDTH:100%; height: 23px;" maxlength=50>
+			       </td>
+			     <!--  	</td> -->
+			      </tr>
+			      <tr>
+			      	<th style="width:120px; white-space:nowrap; text-align:center"><spring:message code='ezSchedule.t203' /></th> 
+			      	<td>
+			        	<input name="text" type="text" id="description" style="WIDTH:100%; height: 23px;" maxlength=250>
+			      	</td>
+			    </tr> 
+			    
+			</table>
+			
+			
+			<div id="menu" style="margin-top: 10px">
+				<ul style="margin-left:220px">
+				    <li title="<spring:message code='ezSchedule.shb10' />"><span onClick="save_onclick()"><spring:message code='ezSchedule.shb11' /></span></li>
+				    <li title="<spring:message code='ezSchedule.t5' />"><span onClick="cancel_onclick()"><spring:message code='ezSchedule.t5' /></span></li>
+			  	</ul>
+			</div>
+			
+			<br />
+			<span class="txt" style="color:red">▒ <spring:message code="ezSchedule.t17902" /></span>
+			<br />
+			<span class="txt" style="color:red">▒ <spring:message code="ezSchedule.shb21" /></span>
+			<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:520px; HEIGHT:300px"> 
 				<table width="100%" class="popuplist">
 			    	<tr>
 				    	<th style="width:40px; text-align:center"><spring:message code='ezSchedule.t190' /></th>

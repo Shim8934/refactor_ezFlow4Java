@@ -14,6 +14,8 @@
 	<typeAlias  alias="ReceiveListVO" 		type="egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO"/>
 	<typeAlias  alias="OrganUserVO" 		type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	<typeAlias  alias="ResGetScheduleVO" 	type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
+	<typeAlias  alias="ScheduleGroupVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO"/>
+	
 	
 	<resultMap class="ScheGetHolidayVO" id="scheGetHolidayVO">
 		<result property="holidayID"		column="HOLIDAYID"			columnIndex="1"/>
@@ -116,6 +118,19 @@
 		<result property="mail"				column="MAIL"				columnIndex="6"/>
 		<result property="department"		column="DEPARTMENT"			columnIndex="7"/>
 		<result property="info"				column="INFO"				columnIndex="8"/>		
+	</resultMap>
+	
+	<resultMap class="ScheduleGroupListVO" id="scheduleGroupMemberListVO2">
+		<result property="memberId"			column="MEMBERID"			columnIndex="1"/>
+		<result property="memberName"		column="MEMBERNAME"			columnIndex="2"/>
+		<result property="memberName2"		column="MEMBERNAME2"		columnIndex="3"/>
+		<result property="status"			column="STATUS"				columnIndex="4"/>
+		<result property="responseDate"		column="RESPONSEDATE"		columnIndex="5"/>
+		<result property="mail"				column="MAIL"				columnIndex="6"/>
+		<result property="department"		column="DEPARTMENT"			columnIndex="7"/>
+		<result property="info"				column="INFO"				columnIndex="8"/>		
+		<result property="description"				column="DESCRIPTION"	columnIndex="9"/>		
+		<result property="groupName"				column="GROUPNAME"		columnIndex="10"/>		
 	</resultMap>
 	
 	<resultMap class="ScheduleGroupListVO" id="inviteScheduleGroupListVO">
@@ -539,7 +554,7 @@
 	]]>
 	</select>
 	
-	<select id="EzScheduleDAO.getGroupMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
+	<select id="EzScheduleDAO.getGroupMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO2">
 			 <!-- SELECT 
 			 	memberid,
 			 	membername,
@@ -557,8 +572,8 @@
 	<![CDATA[
 	SELECT CC.*
 	FROM ( select A.memberid,
-		   E.GROUPNAME,
-		   E.DESCRIPTION,
+		   E.GROUPNAME as groupName,
+		   E.DESCRIPTION as description,
            A.memberName,               
 		   A.memberName2,
 		   A.status as status,
@@ -1165,6 +1180,20 @@
 		]]>
 	</select>
 	
+	<select id="EzScheduleDAO.selectCreatorMember" parameterClass="Map" resultClass="ScheduleGroupVO">
+		<![CDATA[
+			select
+				creatorid,
+				creatorname,
+				creatorname2
+			from
+				tbl_schedulegroup
+			where
+				groupId = #v_GROUPID#
+			
+		]]>
+	</select>
+	
 	<insert id="EzScheduleDAO.insertSchedule" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULE(
@@ -1546,5 +1575,58 @@
 		]]>
 	</update>
 
+	<update id="EzScheduleDAO.updateManageScheduleMember" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_schedulegroup
+			set 
+			    creatorid = #v_MEMBERID#,
+                creatorname = #v_MEMBERNAME#,
+                creatorname2 = #v_MEMBERNAME2#,
+                precreatorid = #v_CREATORID#,
+                precreatorname = #v_CREATORNAME#,
+                precreatorname2 = #v_CREATORNAME2#,
+                modifydate = SYS_EXTRACT_UTC(SYSTIMESTAMP)
+	   		where  
+	   			groupid = #v_GROUPID#
+	   		and	
+	   			tenant_id = #v_TENANTID#
+	   	]]>		
+	</update>
+	
+	<update id="EzScheduleDAO.updateManageScheduleGroupMember" parameterClass="map">
+		 <![CDATA[
+			 update
+				tbl_schedulegroupmember
+			set 
+			    memberid = #v_CREATORID#,
+                membername = #v_CREATORNAME#,
+                membername2 = #v_CREATORNAME2#,
+                responsedate = SYS_EXTRACT_UTC(SYSTIMESTAMP)
+                
+	   		where  
+	   			groupid = #v_GROUPID#
+	   		and	
+	   			tenant_id = #v_TENANTID#
+	   		and
+	   		    memberid = #v_MEMBERID# 
+	   	]]>	 
+	</update>
+	
+	<update id="EzScheduleDAO.updateScheduleGroup" parameterClass="map">
+		<![CDATA[
+			update 
+				tbl_schedulegroup
+			set
+				groupname = #v_GROUPNAME#, 		
+				description = #v_DESCRIPTION#					
+			where 
+				groupid = #v_GUID#
+			and
+				tenant_id = #v_TENANTID#
+   		]]>
+	</update>
+	
+	
 </sqlMap>
 
