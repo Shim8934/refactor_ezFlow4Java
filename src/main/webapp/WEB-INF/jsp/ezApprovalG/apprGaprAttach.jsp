@@ -81,6 +81,7 @@
 	        var normalAttachSize = 0; // 일반첨부파일 크기
 	        var bigAttachSize = 0; // 대용량 첨부파일 크기
 	        var isBigAttachBtnClicked = false; // 대용량첨부 버튼으로 파일을 추가하는지 여부
+	        var isOuterForm = "<c:out value ='${isOuterForm}'/>";
 	        
 	        // 웹폴더첨부용 변수
 	        var pickerData = "";
@@ -831,7 +832,7 @@
 		        		calNormalAttachSize += parseInt(file[i].size);
 		        	}
 		        	// 일반 첨부파일의 총 용량을 넘는 순간부터 대용량 첨부파일로 저장
-		        	else if (isBigAttachBtnClicked == true || (normalAttachSize + calNormalAttachSize + parseInt(file[i].size) >= apprAttachLimit * 1024 * 1024)) {
+		        	else if (isBigAttachBtnClicked == true || ((normalAttachSize + calNormalAttachSize + parseInt(file[i].size) >= apprAttachLimit * 1024 * 1024) && isOuterForm == "false")) {
 		        		calBigAttachSize += parseInt(file[i].size);
 		        		calBigAttachCnt += 1;
 		        		addToBigAttach = "Y";
