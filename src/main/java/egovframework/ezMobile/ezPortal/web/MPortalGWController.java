@@ -27,6 +27,8 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
@@ -85,6 +87,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzEmailService")
 	private EzEmailService ezEmailService;
+	
+	@Resource(name = "EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
@@ -643,4 +648,98 @@ public class MPortalGWController extends EgovFileMngUtil {
 		
 		return result;
 	}
+	
+	/**
+	 * 모바일 G/W 포탈 [GET] 겸직 리스트
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezPortal/users/{userId:.+}/addJob", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject addJobList(@PathVariable String userId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("getAddJobList Start");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			Map<String, Object> dataObject = new HashMap<String, Object>();
+			
+			String serverName = request.getHeader("x-user-host");			
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			int tenantId = info.getTenantId();
+			String lang = info.getLang();
+			
+			List<OrganUserVO> addJobList = new ArrayList<OrganUserVO>();
+			
+			OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, lang, tenantId);
+			addJobList.add(userVO);
+			
+			List<OrganUserVO> addJobList2 = ezOrganAdminService.getUserAddJobList(userId, lang, tenantId);
+			
+			addJobList.addAll(addJobList2);
+			
+			dataObject.put("addJobList", addJobList);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", dataObject);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");		
+		}		
+		
+		LOGGER.debug("getAddJobList End");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 포탈 [GET] 겸직 리스트 플래그
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezPortal/users/{userId:.+}/addJobFlag", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject addJobListFlag(@PathVariable String userId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("getAddJobFlag Start");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			Map<String, Object> dataObject = new HashMap<String, Object>();
+			
+			String serverName = request.getHeader("x-user-host");			
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			int tenantId = info.getTenantId();
+			String lang = info.getLang();
+			
+			List<OrganUserVO> addJobList = new ArrayList<OrganUserVO>();
+			
+			OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, lang, tenantId);
+			addJobList.add(userVO);
+			
+			List<OrganUserVO> addJobList2 = ezOrganAdminService.getUserAddJobList(userId, lang, tenantId);
+			
+			addJobList.addAll(addJobList2);
+			
+			if ( addJobList.size() >= 2 ) {
+				dataObject.put("addJobFlag", "YES");
+			}
+			else {
+				dataObject.put("addJobFlag", "NO");
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", dataObject);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");		
+		}		
+		
+		LOGGER.debug("getAddJobFlag End");
+		
+		return result;
+	}
+	
 }
