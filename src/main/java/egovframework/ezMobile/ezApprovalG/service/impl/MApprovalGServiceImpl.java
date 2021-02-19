@@ -16,6 +16,8 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -926,6 +928,80 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		}
 		
 		LOGGER.debug("insertSeumyungdateMobile ended");
+		return result;
+	}
+
+	@Override
+	public List<MApprovalGAbsenteeAddJobInfoVO> getAbsenteeAddJobInfo(MCommonVO userInfo) throws Exception {
+		LOGGER.debug("getAbsenteeAddJobInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userInfo.getUserId());
+		map.put("tenantId", userInfo.getTenantId());
+		List<MApprovalGAbsenteeAddJobInfoVO> list = mApprovalGDAO.getAbsenteeAddJobInfo(map);
+
+		LOGGER.debug("getAbsenteeAddJobInfo ended");
+		return list;
+	}
+
+	@Override
+	public int updateAbsenteeJobInfo(JSONObject data, String userId, int tenantId) throws Exception {
+		LOGGER.debug("updateAbsenteeJobInfo started");
+
+		int result = 0;
+		String startDate = data.get("startDate").toString();
+		String endDate = data.get("endDate").toString();
+		String dataArr = data.get("dataArr").toString();
+		String deptId		;
+		String jobId 		;
+		String proxyId 		;
+		String proxyName 	;
+		String proxyDept 	;
+		String proxyReason	;
+		String proxyInfo 	;
+		JSONParser parser = new JSONParser();
+		Object obj = parser.parse( dataArr );
+		JSONObject jsonObj = (JSONObject) obj;
+		Map<String, Object> map;
+		MApprovalGAbsenteeInfoVO absenteeInfoVO = new MApprovalGAbsenteeInfoVO();
+		absenteeInfoVO.setTenantId(tenantId);
+		absenteeInfoVO.setUserId(userId);
+
+		for (int i = 0; i < jsonObj.size(); i++) {
+			String index = i + "";
+			JSONObject json = (JSONObject) parser.parse(jsonObj.get(index).toString());
+
+			deptId = json.get("deptId").toString();
+			jobId  = json.get("jobId").toString();
+			proxyId = json.get("proxyId") != null ? json.get("proxyId").toString() : "";
+			proxyName = json.get("proxyName") != null ? json.get("proxyName").toString() : "";
+			proxyDept = json.get("proxyDept") != null ? json.get("proxyDept").toString() : "";
+			proxyReason = json.get("proxyReason") != null ? json.get("proxyReason").toString() : "";
+			proxyInfo = proxyId + ":" + proxyName + ":" + proxyDept + ":" + startDate + ":" + endDate;
+
+			if (!proxyReason.equals("")) { // 사유가 없는 경우 :제거
+				proxyInfo += ":" + proxyReason;
+			} else if (proxyId.equals("")) { //사유가 없음 & 대리결제자 없을경우
+				proxyInfo = "";
+			}
+
+			if (jobId.equals("-1")) {
+				absenteeInfoVO.setAbsenteeInfo(proxyInfo);
+				result += setAbsenteeInfo(absenteeInfoVO);
+			} else {
+				map = new HashMap<String, Object>();
+				map.put("userID", userId);
+				map.put("deptId", deptId);
+				map.put("tenantId", tenantId);
+				map.put("absenteeInfo", proxyInfo);
+				map.put("jobId", jobId);
+				mApprovalGDAO.updateAbsenteeAddJobInfo(map);
+			}
+
+		}
+
+
+		LOGGER.debug("updateAbsenteeJobInfo ended");
 		return result;
 	}
 }

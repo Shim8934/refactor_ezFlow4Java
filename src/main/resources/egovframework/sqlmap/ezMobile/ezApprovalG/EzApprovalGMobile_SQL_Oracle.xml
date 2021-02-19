@@ -10,6 +10,7 @@
 	<typeAlias  alias="MApprGAprLineInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO"/>
 	<typeAlias  alias="MApprGOpinionInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO"/>
 	<typeAlias  alias="MApprGAbsenteeInfoVO"				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO"/>
+	<typeAlias  alias="MApprovalGAbsenteeAddJobInfoVO"		type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeAddJobInfoVO"/>
 	
 	<select id="MApprovalG.getDoApproveList" parameterClass="Map" resultClass="MApprGDocInfoVO" remapResults="true">
 		<isEqual property="type" compareValue="DO">
@@ -2098,5 +2099,54 @@
 	   	AND
 	   		COMPANYID = #v_COMPANYID#
 	</select>
-	
+
+	<!--2021-02-15 박기범 : 모바일 겸직 부재자 설정 추가 -->
+	<select id="MApprovalG.getAbsenteeAddJobInfo"  parameterClass="Map" resultClass="MApprovalGAbsenteeAddJobInfoVO">
+		select
+			DEPARTMENT absenteeDeptId,
+			EXTENSIONATTRIBUTE5 absenteeInfo,
+			DESCRIPTION deptName,
+			DESCRIPTION2 deptName2,
+			TITLE,
+			TITLE2,
+			'-1' jobId
+		from
+			TBL_USERMASTER U
+		where
+			CN = #userID#
+		  AND
+			TENANT_ID = #tenantId#
+		UNION All
+		SELECT
+			A.DEPTID ,
+			UNISTR(A.PROXY),
+			B.DISPLAYNAME,
+			B.DISPLAYNAME2,
+			TITLE,
+			TITLE2,
+			JOBID
+		FROM
+			TBL_ADDJOBMASTER A
+				JOIN
+			TBL_DEPTMASTER B   ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
+		WHERE
+			A.CN = #userID#
+		  AND
+			A.TENANT_ID = #tenantId#
+	</select>
+
+	<update id="MApprovalG.updateAbsenteeAddJobInfo" parameterClass="Map">
+		UPDATE
+			tbl_addjobmaster
+		SET
+			proxy = #absenteeInfo#
+		WHERE
+			CN = #userID#
+		  AND
+			TENANT_ID = #tenantId#
+		  AND
+			JOBID = #jobId#
+		  AND
+			DEPTID = #deptId#
+	</update>
 </sqlMap>
