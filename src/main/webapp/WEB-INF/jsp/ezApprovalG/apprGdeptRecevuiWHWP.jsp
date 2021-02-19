@@ -926,7 +926,7 @@
 	        var messageload2 = false;
 		    function Editor_Complete() {
 		    	if (pSusinDocURL != "") {
-	                var URL = document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pSusinDocURL);
+	                var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pSusinDocURL);
 	                message.Open(URL, "", "", function (res) { messageload = res.result; }, null);
 	            }
 		    }
@@ -937,7 +937,7 @@
 		    
 		    function Editor_Complete2Load() {
 	            if (pSusinDocURL != "") {
-	                var URL = document.location.protocol + "//" + document.location.hostname + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pFormHref);
+	                var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pFormHref);
 	                message2.Open(URL, "", "", function (res) {
 	                    messageload2 = true;
 	                    FieldsAvailable(res.result);
@@ -1028,7 +1028,7 @@
 	            <td>
 	                <table width="100%" height="100%">
 	                    <tr>
-	                        <td style="padding-bottom:10px;height:800px;" >
+	                        <td style="padding-bottom:10px;height:800px;" id="messageWHWPEditor" >
 					    		<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 				            </td>
 	                    </tr>
