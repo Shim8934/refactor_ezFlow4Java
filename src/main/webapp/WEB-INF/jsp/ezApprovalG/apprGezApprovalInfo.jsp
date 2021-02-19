@@ -748,15 +748,17 @@
 	            }
 	            
 	            /* 2020-07-30 홍승비 - 실제 양식 상에 가변결재선이 없다면, 분기를 타지 않도록 수정 */
-	            if (approvalFlag == "S" && useDynamicAprLine == "1") { // 사용 여부 체크 분기 추가 (일반버전 + 테넌트컨피그)
+				// 2021-02-19 박희찬 - 가변결재선이 G버전에도 동작가능하도록 조건문 수정
+	            if (useDynamicAprLine == "1") { // 사용 여부 체크 분기 추가 (일반버전 + 테넌트컨피그)
 	            	var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
 	            
 					// 가변결재양식 사용 시, 최대 사인칸 20개로 고정
+					// 2021-02-19 박희찬, 최대 사인칸 10개로 수정
 		    	    if (autoAprLineField.length > 0) {
-		    	    	pSignCount = 20;
+		    	    	pSignCount = 10;
 		    	    	// (개인,부서)합의는 기안할때만 사용하도록
 		    	    	if (approvalType == "DRAFT") {
-			    	    	pHapYuiCount = 20;
+			    	    	pHapYuiCount = 10;
 		    	    	}
 		    	    }
 	            }
@@ -1518,13 +1520,13 @@
 		                
 			            /* 2020-07-30 홍승비 - 실제 양식 상에 가변결재선이 없다면, 분기를 타지 않도록 수정 */
 			            /* 2020-10-19 한글버전은 opener 호출시 오류발생, G버전은 가변 결재선을 사용하지 않음 */
-			            if (approvalFlag == "S") {
-							var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
-				            
-			                if (useDynamicAprLine == "1" && autoAprLineField.length > 0) {
-								ret[27] = SAPRLINETEMPLETXMLParsing();
-			                }  
-			            } 
+						// 2021-02-19 박희찬 - G버전에도 가변결재선 동작위해 조건문 수정
+						var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
+
+						if (useDynamicAprLine == "1" && autoAprLineField.length > 0) {
+							ret[27] = SAPRLINETEMPLETXMLParsing();
+						}
+
 
 		
 		                if (ReturnFunction != null) {

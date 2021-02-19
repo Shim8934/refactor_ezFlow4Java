@@ -2522,10 +2522,12 @@ function ReAprLineSingMapping(ret) {
     if (ret[5] == undefined) {
         xmlKuljea = ret[0];
         xmlReDraft = ret[2];
+        New_DrawAutoLine(ret[0], pDraftFlag);
     }
     else {
         xmlKuljea = ret[1];
         xmlReDraft = ret[5];
+        New_DrawAutoLine(ret[1], pDraftFlag);
     }
 
     var xmldom = createXmlDom();

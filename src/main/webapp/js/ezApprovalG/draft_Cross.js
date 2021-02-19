@@ -34,14 +34,18 @@ function GetDraftAprLineInfo(ret) {
 	var OrderReporter = new Array(); 
 					  
     var xmldom = createXmlDom();
-				
-    if (ret[5] == undefined) {
+
+      //2021-02-19 박희찬 G버전에도 가변결재사용할수 있도록 추가
+      if (ret[5] == undefined) {
         xmlKuljea = ret[0];
         xmlReDraft = ret[2];
+        New_DrawAutoLine(ret[0], pDraftFlag);
     }
     else {
         xmlKuljea = ret[1];
         xmlReDraft = ret[5];
+        New_DrawAutoLine(ret[1], pDraftFlag);
+
     }
 
 	setAprLinesXML(xmlKuljea);

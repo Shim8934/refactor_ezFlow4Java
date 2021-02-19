@@ -1158,8 +1158,9 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 			var tempAprSn = getNodeText(GetChildNodes(oRows[i])[0]);
 			var tempAprType = getNodeText(GetChildNodes(oRows[i])[16]);
 			var tempAprStat = getNodeText(GetChildNodes(oRows[i])[17]);
-			
-			if (tempAprType == "001" || tempAprType == "003" || tempAprType == "004" || tempAprType == "015" || tempAprType == "040") {
+
+			//2021-02-19 박희찬 G버전도 사용하기 위해 AprType 조건 추가
+		if (tempAprType == "001" || tempAprType == "003" || tempAprType == "004" || tempAprType == "015" || tempAprType == "040" || tempAprType == '019' || tempAprType == '018') {
 				signCnt++;
 				
 				if (tempAprStat == "003") {
@@ -1251,30 +1252,81 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 
 		var fields = message.GetFieldsList();
 		var field = message.GetListItem(fields, Recv + "autoAprLine");
+
+        //수신 테이블 그릴때 결재, 합의 개수를 가져오기 위하여 작성
+        try {
+            var apr = message.GetListItem(fields, "autoAprLine").children.item(0).tBodies.item(0).rows[1].children.length;
+            var habapr = message.GetListItem(fields, "autoHabyLine").children.item(0).tBodies.item(0).rows[1].children.length;
+        } catch (error) {
+            var apr, habapr = 0;
+        }
+
 		if (field && signCnt > 0) {
 			field.innerHTML = "";
 			
 			var signIdx = 1;
 			var signMax = 0;
-			
+
+			//2021-02-19 박희찬 - tablewidth를 동적으로 지정해주기 위해 코드 순서 변경
 			for (var r = 0; r < aprLineRowCnt; r++) {
-				var oTable = document.createElement("TABLE");
-				oTable.style.width = "100%";
+                if (r == 0) {
+                    if (signCnt > 10) {
+                        signMax = 10;
+                    } else {
+                        signMax = signCnt;
+                    }
+                } else {
+                    signIdx++;
+                    signMax = signCnt;
+                }
+
+			    var oTable = document.createElement("TABLE");
+
+                //float나 inline-flex가 적용되어 있으면 offsetWidth가 0처리되어 임시로 제거하고 하단에서 추가함
+                field.style.float = "";
+                field.style.display = "";
+                var tempWidth = field.offsetWidth;
+                tempWidth = Math.round((tempWidth - 30) / 10);
+
+                var tablewidth = "";
+                if (signMax > 10) {
+                    tablewidth = (((signMax - 10) * tempWidth) + 30) + "px";
+                } else {
+                    tablewidth = ((signMax * tempWidth) + 30) + "px";
+                }
+
+                //결재선 한줄 표시 위한 style 지정
+                //사이트 양식크기마다 설정
+                if (pDraftFlag != "SUSIN" && signCnt + habyCnt <= 8) {
+                    field.style.float = "left";
+                }
+
+                //수신결재 테이블 style 지정
+                if (pDraftFlag == "SUSIN" && signCnt + apr > 8 && habapr == 0) {
+                    //결재와 수신결재를 한줄에 그리지 못하여 내려야 할때 결재칸의 float style을 삭제한다.
+                    message.GetListItem(fields, "autoAprLine").style.float = "";
+                } else if (pDraftFlag == "SUSIN" && apr + habapr + signCnt <= 9) {
+                    //접수자 전결시 수신이 가운데 뜨도록 css 적용
+                    field.style.display = "inline-flex";
+                    if (habapr == 0) {
+                        message.GetListItem(fields, "autoAprLine").style.float = "left";
+                        field.style.float = "right";
+                    }
+                } else if (pDraftFlag == "SUSIN" && habapr == 0 && 1 < apr + signCnt <= 9) {
+                    //합의 테이블이 존재하지 않고 결재 개수와 수신결재 가수가 한줄에 표시되는것이 가능할때
+                    message.GetListItem(fields, "autoAprLine").style.float = "left";
+                    field.style.float = "right";
+                } else if(pDraftFlag =="SUSIN"){
+                    //합의 테이블이 존재하고 모든 결재 테이블이 분리되어있을때 수신테이블 style 지정
+                    field.style.float = "left";
+                }
+
+				oTable.style.width = tablewidth;
 				oTable.style.marginTop = "10px";
 				oTable.style.tableLayout = "fixed";
 				oTable.style.border = "1px solid black";
 				oTable.style.borderCollapse = "collapse";
-	
-				if (r == 0) {
-					if (signCnt > 10) {
-						signMax = 10;
-					} else {
-						signMax = signCnt;
-					}
-				} else {
-					signIdx++;
-					signMax = signCnt;
-				}
+
 				
 				for (var i = 0; i < 4; i++) {
 					var oTr = document.createElement("TR");
@@ -1343,6 +1395,8 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 					for (var j = signIdx; j <= signMax; j++) {
 						var oTd = document.createElement("TD");
 						oTd.className = "FIELD";
+						//padding 때문에 3을 빼줌
+                        oTd.style.width = (tempWidth - 3) + "px";
 						oTd.style.textAlign = "center";
 						oTd.style.border = "1px solid black";
 						oTd.style.fontFamily = "굴림";
@@ -1356,10 +1410,10 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 								oTd.id = SusinSN + "sign" + j;
 								break;
 							case 2 : 
-								oTd.id = SusinSN + "seumyung" + j;
+								oTd.id = SusinSN + "seumyungdate" + j;
 								break;
 							case 3 : 
-								oTd.id = SusinSN + "seumyungdate" + j;
+								oTd.id = SusinSN + "seumyung" + j;
 								break;
 						}
 						oTr.appendChild(oTd);
@@ -1380,23 +1434,43 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 			var habyMax = 0;
 			
 			for (var r = 0; r < habyRowCnt; r++) {
-				var oTable = document.createElement("TABLE");
-				oTable.style.width = "100%";
+                //tablewidth를 동적으로 지정하기 위해 소스코드 순서변경
+			    if (r == 0) {
+                    if (habyCnt > 10) {
+                        habyMax = 10;
+                    } else {
+                        habyMax = habyCnt;
+                    }
+                } else {
+                    habyIdx++;
+                    habyMax = habyCnt;
+                }
+
+                var habtablewidth = "";
+                field.style.float = "";
+                var habtempWidth = Math.round((field.offsetWidth - 30) / 10);
+
+
+                if (habyMax > 10) {
+                    habtablewidth = (((habyMax - 10) * habtempWidth) + 30) + "px";
+                } else {
+                    habtablewidth = ((habyMax * habtempWidth) + 30) + "px";
+                }
+
+                //결재선 한줄 표시 위한 style 지정
+                //사이트 양식크기마다 설정
+                if (habyCnt != 0 && signCnt + habyCnt <= 8) {
+                    field.style.float = "right";
+                }
+
+			    var oTable = document.createElement("TABLE");
+				oTable.style.width = habtablewidth;
 				oTable.style.marginTop = "10px";
 				oTable.style.tableLayout = "fixed";
 				oTable.style.border = "1px solid black";
 				oTable.style.borderCollapse = "collapse";
 	
-				if (r == 0) {
-					if (habyCnt > 10) {
-						habyMax = 10;
-					} else {
-						habyMax = habyCnt;
-					}
-				} else {
-					habyIdx++;
-					habyMax = habyCnt;
-				}
+
 				
 				for (var i = 0; i < 4; i++) {
 					var oTr = document.createElement("TR");
@@ -1451,7 +1525,8 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 					for (var j = habyIdx; j <= habyMax; j++) {
 						var oTd = document.createElement("TD");
 						oTd.className = "FIELD";
-						oTd.style.border = "1px solid black";
+                        oTd.style.width = (habtempWidth - 3) + "px";
+                        oTd.style.border = "1px solid black";
 						oTd.style.textAlign = "center";
 						oTd.style.fontFamily = "굴림";
 						oTd.style.fontSize = "9pt";
@@ -1464,10 +1539,10 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 								oTd.id = SusinSN + "habyuisign" + j;
 								break;
 							case 2 : 
-								oTd.id = SusinSN + "habyuija" + j;
+								oTd.id = SusinSN + "habyuidate" + j;
 								break;
 							case 3 : 
-								oTd.id = SusinSN + "habyuidate" + j;
+								oTd.id = SusinSN + "habyuija" + j;
 								break;
 						}
 						oTr.appendChild(oTd);
