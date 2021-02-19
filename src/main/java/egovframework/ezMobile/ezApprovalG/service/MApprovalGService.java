@@ -3,14 +3,10 @@ package egovframework.ezMobile.ezApprovalG.service;
 import java.util.List;
 import java.util.Locale;
 
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.*;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
+import org.json.simple.JSONObject;
 
 public interface MApprovalGService {
 
@@ -52,5 +48,9 @@ public interface MApprovalGService {
 	
 	/* 2020-07-02 홍승비 - 모바일에서 최종결재 완료 시 서명에 결재날짜 삽입 동작 추가(결재날짜 필드가 없는 경우에만, 웹과 동일하게) */
 	public String insertSeumyungdateMobile(String docId, String realPath, String offset, Locale locale, String domain, String scheme, String companyId, int tenantId) throws Exception;
-	
+
+	/* 2021-02-15 박기범 - 모바일 겸직 부재자설정*/
+	public List<MApprovalGAbsenteeAddJobInfoVO> getAbsenteeAddJobInfo(MCommonVO userInfo) throws Exception;
+
+	public int updateAbsenteeJobInfo(JSONObject data, String userId, int tenantId) throws Exception;
 }
