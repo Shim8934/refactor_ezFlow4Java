@@ -118,6 +118,7 @@
 					pListSusin = listSusin;
 				}	
 				cancelYN();
+				returnYN();
 				setAttachGuideText();
 			}
 	
@@ -543,6 +544,103 @@
                  }
 	    	}
 	    	
+		    var apropinion_cross_dialogArguments = new Array();
+		    var temppDocSN = "";
+		    function btnReturn_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+		    	if (deptCheckFlag == "3") {
+		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		return;
+		    	} else if (deptCheckFlag == "4") {
+		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		return;
+		    	} else if (deptCheckFlag == "2") {
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					return;
+				}	
+		    	
+		        var RecevState = getDocRecevState();
+		        if (RecevState != "011" && RecevState != "012" && RecevState != "013" && RecevState != "014") {
+		            if (RecevState == "015") {
+		                var pAlertContent = strLang912;
+		                OpenAlertUI(pAlertContent);
+		            }
+		            return false;
+		        }
+		        var pDocSN = "";
+				var field = "receiptnumber";
+				if (message.FieldExist(field)) {
+		            var fieldValue = trim(message.GetFieldText(field));
+		            if (fieldValue && fieldValue.replace("@", "") == fieldValue) {
+		                var tmpDocSN = fieldValue.substr(fieldValue.lastIndexOf("-") + 1);
+		                if (!isNaN(tmpDocSN))
+		                    pDocSN = tmpDocSN;
+		            }
+				}
+		        temppDocSN = pDocSN;
+		        
+		        openOpinionUI_New("HeSong", btnReturn_onclick_Complete);
+		    }
+		    function btnReturn_onclick_Complete(ret) {
+		        DivPopUpHidden();
+
+		        if (checkAprState()) {
+		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+	    			window.close();
+	    			return;
+		    	}
+
+		        var hesongok = true;
+		        if (ret != "cancel") {
+					var draftFlag = "SUSIN";
+					if (pDocState === "012") {
+						draftFlag = "HAPYUI";
+					}
+					
+					var RtnVal = ExcuteInfo("HESONG_BEFORE", draftFlag);
+		        	if (!RtnVal) {
+		                return;
+		            }
+
+		        	var Rtnxml = loadXMLString(ret);
+		            if (temppDocSN) {
+		                hesongok = setCabinetHeSong(temppDocSN);
+					}
+		
+		            if (hesongok) {
+						var writerID = GetDocInfoData("APR", "writerid");
+						var writerName = GetDocInfoData("APR", "writername");
+						var docTitle = GetDocInfoData("APR", "doctitle");
+		            	SendMailToDrafter_Hesong(writerID, writerName, docTitle);
+		                hesongok = setHeSongDocInfo();
+
+						if (hesongok) {
+							ExcuteInfo("HESONG_AFTER", draftFlag);
+						} else {
+							ExcuteInfo("HESONG_FAIL", draftFlag);
+						}
+		            }
+		        }
+		    }
+			function returnYN() {
+				var req = new XMLHttpRequest();
+				req.open("GET", "/ezApprovalG/returnYN.do?docID=" + pDocID + "&orgDocID=" + pOrgDocID + "&orgCompanyID=" + orgCompanyID);
+				req.send();
+				req.onload = function() {
+					var res = req.responseText;
+					switch (res) {
+						case "Y":
+							document.querySelector("#tbtnReturn").style.display = "";
+							break;
+						case "N":
+							document.querySelector("#tbtnReturn").style.display = "none";
+							break;
+						case "E":
+							console.log("fail returnYN");
+							break;
+					}
+				}
+			}
 	    </script>
 	</head>
 	<body class="popup" onload="return window_onload()" onbeforeunload="return window_onbeforeunload()">
@@ -554,6 +652,7 @@
 	                        <li id="btnGongRam" style="display: none"><span onclick="btnGongRam_onclick()"><spring:message code='ezApprovalG.t1442'/></span></li>
 	                        <li id="btnCallback" style="display:none"><span onclick="return btncallback_onclick()" ><spring:message code='ezApprovalG.t66'/></span></li>
 							<li id="btnForceCallback" style="display:none"><span onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
+							<li id="tbtnReturn" style="display: none;"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>

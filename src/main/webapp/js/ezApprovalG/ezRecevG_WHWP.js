@@ -579,14 +579,14 @@ function getExtInfo()
 		var regnumbercode = GetAttribute(Nodes[0],"regnumbercode");
 		if( regnumbercode.length > 0 )
 		{
-			SetDocumentElement(message, "deptid", regnumbercode.substring(0, 7));
-			SetDocumentElement(message, "regnumbercode", regnumbercode.substring(7, regnumbercode.length));
+			SetDocumentElement("deptid", regnumbercode.substring(0, 7));
+			SetDocumentElement("regnumbercode", regnumbercode.substring(7, regnumbercode.length));
 			pOrgDocNumCode = regnumbercode;
 		}
 		else
 		{
-			SetDocumentElement(message, "deptid", "");
-			SetDocumentElement(message, "regnumbercode", "");
+			SetDocumentElement("deptid", "");
+			SetDocumentElement("regnumbercode", "");
 			pOrgDocNumCode = "";
 		}
 	}
@@ -597,8 +597,8 @@ function getExtInfo()
 			message.PutFieldText("docnumber", "");
 		}
 		
-		SetDocumentElement(message, "deptid", "");
-		SetDocumentElement(message, "regnumbercode", "");
+		SetDocumentElement("deptid", "");
+		SetDocumentElement("regnumbercode", "");
 		pOrgDocNumCode = "";
 	}
 	} catch(e) {
@@ -627,22 +627,22 @@ function getExtInfo()
 		{
 			if( message.FieldExist("receiptnumber") )
 			{
-			    SetDocumentElement(message, "receiptnumber", getNodeText(tempNode));
+			    SetDocumentElement("receiptnumber", getNodeText(tempNode));
 			}
   			
-  			SetDocumentElement(message, "recvdeptid", "");
-  			SetDocumentElement(message, "recvdeptname", "");
-  			SetDocumentElement(message, "recvdocnum", "");
+  			SetDocumentElement("recvdeptid", "");
+  			SetDocumentElement("recvdeptname", "");
+  			SetDocumentElement("recvdocnum", "");
 		}
 		else
 		{
 			if( message.FieldExist("receiptnumber") )
 			{
-				SetDocumentElement(message, "receiptnumber", "");
+				SetDocumentElement("receiptnumber", "");
 			}
-  			SetDocumentElement(message, "recvdeptid", "");
-  			SetDocumentElement(message, "recvdeptname", "");
-  			SetDocumentElement(message, "recvdocnum", "");
+  			SetDocumentElement("recvdeptid", "");
+  			SetDocumentElement("recvdeptname", "");
+  			SetDocumentElement("recvdocnum", "");
 		}
 		
 		var ReceiptDateText = "";
@@ -667,7 +667,7 @@ function getExtInfo()
 	{
 		if( message.FieldExist("receiptnumber") )
 		{
-			SetDocumentElement(message, "receiptnumber", "");
+			SetDocumentElement("receiptnumber", "");
 		}
 		
 		if( message.FieldExist("receiptdate") )

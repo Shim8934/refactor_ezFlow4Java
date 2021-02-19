@@ -85,6 +85,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -11014,5 +11015,43 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("getGamsaYesanDeptInfo ended.");
 		
 		return gamsa;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/returnYN.do", method = RequestMethod.GET, produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String returnYN(@CookieValue("loginCookie") String loginCookie, @RequestParam String docID, @RequestParam String orgDocID, @RequestParam String orgCompanyID) {
+	    logger.debug("returnYN started.");
+	    String retStr = "N";
+	    try {
+	        LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+	        if (!userInfo.getCompanyID().equals(orgCompanyID)) {
+	            userInfo.setCompanyID(orgCompanyID);
+	        }
+	        
+	        Map<String, Object> docProcessState = ezApprovalGService.getDocProcessState(docID, orgDocID, userInfo);
+	        
+	        if (docProcessState != null) {
+	            String docState = (String) docProcessState.get("DOCSTATE");
+	            String functionType = (String) docProcessState.get("FUNCTIONTYPE");
+	            String procDocState = (String) docProcessState.get("PROCDOCSTATE");
+	            String procAprState = (String) docProcessState.get("PROCAPRSTATE");
+	            
+	            if ("011".equals(docState)) {
+	                if ("011".equals(procDocState)) {
+	                    if (!"015".equals(procAprState)) {
+	                        if ("011".equals(functionType) || "004".equals(functionType) || "006".equals(functionType)) {
+	                            retStr = "Y";
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    } catch(Exception e) {
+	        e.printStackTrace();
+	        retStr = "E";
+	    }
+	    
+	    logger.debug("returnYN ended.");
+	    return retStr;
 	}
 }

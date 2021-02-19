@@ -295,7 +295,7 @@ function SendDraftMappingSign(ret)
 				SignName[signCnt] = psigncell;
 				SignContent[signCnt] = ret + "::" + strLang7 + OpinionText;
 							  	
-			  	SetDocumentElement(message, psigncell, ret);
+			  	SetDocumentElement(psigncell, ret);
 			  	signCnt = signCnt + 1
 			  	SingFlag = true;
 			}
@@ -374,7 +374,7 @@ function SendDraftMappingSign(ret)
 				SignName[signCnt] = psigncell;
 				SignContent[signCnt] = ret + "::" + OpinionText;
 				
-			  	SetDocumentElement(message, psigncell, ret);
+			  	SetDocumentElement(psigncell, ret);
 			  	signCnt = signCnt + 1
 			  	SingFlag = true;
 			}
@@ -1147,7 +1147,7 @@ function btnAddSepAttach_onclick_Complete(rtn) {
 	DivPopUpHidden();
 	if (rtn[0] == "TRUE") {
 		g_SepAttachLVXml = rtn[1];
-		SetDocumentElement(message, "sepattachlvxml", SetSepAttParamXmlNull(g_SepAttachLVXml));
+		SetDocumentElement("sepattachlvxml", SetSepAttParamXmlNull(g_SepAttachLVXml));
 	}
 }
 

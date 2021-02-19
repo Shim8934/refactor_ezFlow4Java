@@ -1236,13 +1236,6 @@ function SendDraftMappingSign(ret) {
 	        signWidth = 50;
 	        signHeight = 28;
         }
-
-        if (LastSignSN === 1) {
-            var RtnVal = ExcuteInfo("LAST_SIGN_BEFORE");
-            if (!RtnVal) {
-                return false;
-            }
-        }
         
         // 결재칸에 부서 추가
         var field = message.GetListItem(fields, papprodeptcell);
@@ -1385,14 +1378,6 @@ function SendDraftMappingSign(ret) {
                 }
             }
         }
-
-        if (LastSignSN === 1) {
-            var RtnVal = ExcuteInfo("LAST_SIGN_AFTER");
-            if (!RtnVal) {
-                return false;
-            }
-        }
-
         return signInfo;
     } catch (e) {
         alert("SendDraftMappingSign(ret)" + e.description);

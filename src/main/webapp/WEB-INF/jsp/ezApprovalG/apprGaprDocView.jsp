@@ -903,37 +903,23 @@
 		        }
 		    }
 			function returnYN() {
-				var mode = getDocMode();
-				var docState = GetDocInfoData(mode, "docstate");
-				var functionType = GetDocInfoData(mode, "functiontype");
-
-				if ((docState === "011" && functionType === "004") || (docState === "012" && functionType === "004")) {
-					document.getElementById("tbtnReturn").style.display = "";
-				} else {
-					document.getElementById("tbtnReturn").style.display = "none";
+				var req = new XMLHttpRequest();
+				req.open("GET", "/ezApprovalG/returnYN.do?docID=" + pDocID + "&orgDocID=" + pOrgDocID + "&orgCompanyID=" + orgCompanyID);
+				req.send();
+				req.onload = function() {
+					var res = req.responseText;
+					switch (res) {
+						case "Y":
+							document.querySelector("#tbtnReturn").style.display = "";
+							break;
+						case "N":
+							document.querySelector("#tbtnReturn").style.display = "none";
+							break;
+						case "E":
+							console.log("fail returnYN");
+							break;
+					}
 				}
-
-				// var result = "";
-				
-				// $.ajax({
-				// 	type : "POST",
-				// 	dataType : "text",
-				// 	async : false,
-				// 	url : "/ezApprovalG/gongRamDocInfo.do",
-				// 	data : {
-				// 		"docID" : pDocID
-				// 	},
-				// 	success: function(xml){
-				// 		result = xml;
-				// 	}
-				// });
-				
-				// var RtnVal = getNodeText(loadXMLString(result).documentElement);
-				// if (RtnVal == "NONE") {
-				// 	document.getElementById("tbtnReturn").style.display = "";
-				// } else {
-				// 	document.getElementById("tbtnReturn").style.display = "none";
-				// }
 			}
 		</script>
 	</head>

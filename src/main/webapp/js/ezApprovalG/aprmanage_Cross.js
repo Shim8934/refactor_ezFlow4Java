@@ -1212,9 +1212,13 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
         
         var openLocation = "";
         if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-        	openLocation = "/ezApprovalG/ezRecevGSusinHWP.do";
-
-            openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
+            if (!useWebHWP) {
+                openLocation = "/ezApprovalG/ezRecevGSusinHWP.do";
+                openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
+            } else {
+                openLocation = "/ezApprovalG/ezRecevGSusinWHWP.do";
+                openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
+            }
         }
         else {
         	//docstate가 012(합의) 일 경우에 부서합의 페이지 띄우도록 수정 2019-02-27 홍대표

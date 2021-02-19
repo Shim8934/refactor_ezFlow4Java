@@ -272,70 +272,103 @@ function setCabinetHeSong(pDocSN) {
 }
 function setHeSongDocInfo() {
     try {
-    	var result = "";
-        var docState = "RECEIVE";
+        var result = "";
         
-    	// if (pAprState == strAprState15) {
-    	// 	docState = "REACK";
-    	// } else {
-    	// 	docState = "RECEIVE";
-    	// }
-    	
-        $.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/setHeSongDocInfo.do",
-    		data : {
-    			docID : pDocID,
-    			receiveSN : "1",
-    			deptID  : arr_userinfo[4],
-    			docState : pDocState,
-    			userID : pUserID,
-    			userName : arr_userinfo[11],
-    			userName2 : arr_userinfo[12]
-    		},
-    		success: function(xml){
-    			result = loadXMLString(xml);
-    		}, error: function() {
-    			var pAlertContent = strLang740;
-                OpenAlertUI(pAlertContent);
-                return false;
-    		}			
-    	});
+        if (pDocState === "012") {
+            var objRoot;
+            var objNode;
+            
+            var xmlpara = createXmlDom();
+            var xmlhttp = createXMLHttpRequest();
+            createNodeInsert(xmlpara, objNode, "ASSIGN");
+            
+            createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
+            createNodeAndInsertText(xmlpara, objNode, "pAprMemberDeptID", arr_userinfo[4]);
+            createNodeAndInsertText(xmlpara, objNode, "pAprMemberID", pUserID);
+            
+            //receivesn 받아올 곳 찾기 전까진 1로 고정.
+            createNodeAndInsertText(xmlpara, objNode, "pReceiveSN", "1");
 
-        var RtnVal = getNodeText(result.documentElement);
-
-        if (RtnVal == "TRUE") {
-        	   var pAlertContent = strLang741;
-               OpenAlertUI(pAlertContent, function () {
-                   window.close();
-               });
-               
-               //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 회송
-		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {       	
-					$.ajax({
-						type : 'POST',
-						dataType : 'json',
-						async : true,
-						url : '/ezAttitude/approvalGConn.do',
-						data : {
-							status : 'delete',
-							docId : pOrgDocID,
-							type : 'hesong'
-						},
-						success : function(result) {
-						},
-						error : function() {
-						}
-					});				
-		        }
-               
-               return true;
+            xmlhttp.open("POST", "/ezApprovalG/setHeSongHapyuiDocInfo.do", false);
+            xmlhttp.send(xmlpara);
+            
+            if (xmlhttp != null && xmlhttp.readyState == 4) {
+                if (xmlhttp.statusText == "OK") {
+                    var pAlertContent = strLang878;
+                    OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+                    return true;
+                } else {
+                    var pAlertContent = strLang740;
+                    OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+                    return false;
+                }
+            }
+        } else {
+            var docState = "RECEIVE";
+            // if (pAprState == strAprState15) {
+            // 	docState = "REACK";
+            // } else {
+            // 	docState = "RECEIVE";
+            // }
+            
+            $.ajax({
+                type : "POST",
+                dataType : "text",
+                async : false,
+                url : "/ezApprovalG/setHeSongDocInfo.do",
+                data : {
+                    docID : pDocID,
+                    receiveSN : "1",
+                    deptID  : arr_userinfo[4],
+                    docState : pDocState,
+                    userID : pUserID,
+                    userName : arr_userinfo[11],
+                    userName2 : arr_userinfo[12]
+                },
+                success: function(xml){
+                    result = loadXMLString(xml);
+                }, error: function() {
+                    var pAlertContent = strLang740;
+                    OpenAlertUI(pAlertContent);
+                    return false;
+                }			
+            });
+    
+            var RtnVal = getNodeText(result.documentElement);
+            
+            if (RtnVal == "TRUE") {
+                   var pAlertContent = strLang741;
+                   OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+                   
+                   //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 회송
+                    if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {       	
+                        $.ajax({
+                            type : 'POST',
+                            dataType : 'json',
+                            async : true,
+                            url : '/ezAttitude/approvalGConn.do',
+                            data : {
+                                status : 'delete',
+                                docId : pOrgDocID,
+                                type : 'hesong'
+                            },
+                            success : function(result) {
+                            },
+                            error : function() {
+                            }
+                        });				
+                    }
+                   
+                   return true;
+            }
         }
     }
     catch (e) {
         alert("setHeSongDocInfo :: " + e.description);
         return false;
     }
+}
+
+function OpenAlertUI_Close_Complete() {
+    btnClose_onclick();
 }

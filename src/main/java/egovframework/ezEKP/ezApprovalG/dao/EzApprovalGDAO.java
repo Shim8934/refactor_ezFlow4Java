@@ -3605,6 +3605,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<ApprGYesanGamsaVO> getGamsaYesanDeptInfo(Map<String, Object> map) throws Exception {
-		return (List<ApprGYesanGamsaVO>) list("EzApprovalG.getGamsaYesanDeptInfo", map);
+	    return (List<ApprGYesanGamsaVO>) list("EzApprovalG.getGamsaYesanDeptInfo", map);
+	}
+	
+	public Map<String, Object> getDocProcessState(Map<String, Object> map) throws Exception {
+		return (Map<String, Object>) select("EzApprovalG.getDocProcessState", map);
 	}
 }

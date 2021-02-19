@@ -752,4 +752,5 @@ public interface EzApprovalGService {
 	/* 2020-11-16 홍승비 - 첨부파일의 가장 작은 저장일자 리턴 */
 	public String getAttachFileMinSaveDate(String docID, String companyID, int tenantID) throws Exception;
 	 
+	public Map<String, Object> getDocProcessState(String docID, String orgDocID, LoginVO userInfo) throws Exception;
 }

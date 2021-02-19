@@ -33560,4 +33560,27 @@
    		ORDER BY 
    			A.CODE2
 	</select>
+	
+	<select id="EzApprovalG.getDocProcessState" parameterClass="Map" resultClass="HashMap">
+        SELECT
+            A.DOCSTATE, A.FUNCTIONTYPE, B.DOCSTATE AS PROCDOCSTATE, B.APRSTATE AS PROCAPRSTATE 
+        FROM 
+            TBL_APRDOCINFO A 
+        JOIN 
+            TBL_APRRECEIPTPROCESSINFO B 
+        ON 
+            A.DOCID = B.DOCID 
+        AND 
+            A.COMPANYID = B.COMPANYID 
+        AND 
+            A.TENANT_ID = B.TENANT_ID 
+        WHERE 
+            B.DOCID = #v_DOCID# 
+        AND 
+            B.PARENTSDOCID = #v_ORGDOCID# 
+        AND 
+            A.TENANT_ID = #v_TENANTID#
+        AND 
+            A.COMPANYID = #v_COMPANYID# 
+	</select>
 </sqlMap>

@@ -1165,10 +1165,15 @@
 		            if (!rtnVal) {
 		                return;
 		            }
+		            rtnVal = ExcuteInfo("LAST_SIGN_BEFORE");
+		            if (!rtnVal) {
+		                return;
+		            }
 		        }
 
 		        rtnSignInfo = SendDraftMappingSign(ret);
-				if (!rtnSignInfo) {
+				rtnVal = ExcuteInfo("LAST_SIGN_AFTER");
+				if (!rtnVal) {
 					return;
 				}
 

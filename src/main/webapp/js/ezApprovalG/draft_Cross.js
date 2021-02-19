@@ -1899,13 +1899,6 @@ function SendDraftMappingSign(ret) {
         	}
         }
 
-        if (LastSignSN === 1 || DraftLastFlag) {
-            var RtnVal = ExcuteInfo("LAST_SIGN_BEFORE");
-            if (!RtnVal) {
-                return false;
-            }
-        }
-
         psigncell = "sign" + sn;
         pseumyungcell = "jikwe" + sn;
         pseumyungdatecell = "seumyungdate" + sn;
@@ -2075,14 +2068,6 @@ function SendDraftMappingSign(ret) {
                 }
             }
         }
-
-        if (LastSignSN === 1 || DraftLastFlag) {
-            var RtnVal = ExcuteInfo("LAST_SIGN_AFTER");
-            if (!RtnVal) {
-                return false;
-            }
-        }
-
         return signInfo;
     } catch (e) {
         alert("SendDraftMappingSign(ret)" + e.description);

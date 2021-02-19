@@ -644,9 +644,20 @@
 		        }
 		
 		        if (SignCount >= 1) {
+					if (LastSignSN == 1) {
+						var rtnVal = ExcuteInfo("LAST_SIGN_BEFORE");
+						if (!rtnVal) {
+							return;
+						}
+					}
+
 		            rtnSignInfo = SendDraftMappingSign(ret);
-					if (!rtnSignInfo) {
-						return;
+
+					if (LastSignSN == 1) {
+						var rtnVal = ExcuteInfo("LAST_SIGN_AFTER");
+						if (!rtnVal) {
+							return;
+						}
 					}
 		        }
 		        saveSuSinDocInfo();
@@ -1111,8 +1122,18 @@
 		                hesongok = setCabinetHeSong(temppDocSN);
 		
 		            if (hesongok) {
-		            	 SendMailToDrafter_Hesong();
+						var docInfo = document.getElementById("DOCINFO").dataSource;
+						var writerID = SelectSingleNodeValueNew(docInfo, "DOCINFO/DATA/WRITERID")
+						var writerName = SelectSingleNodeValueNew(docInfo, "DOCINFO/DATA/WRITERNAME")
+						var docTitle = SelectSingleNodeValueNew(docInfo, "DOCINFO/DATA/DOCTITLE")
+		            	SendMailToDrafter_Hesong(writerID, writerName, docTitle);
 		                hesongok = setHeSongDocInfo();
+
+						if (hesongok) {
+							ExcuteInfo("HESONG_AFTER");
+						} else {
+							ExcuteInfo("HESONG_FAIL");
+						}
 		            }
 		        }
 		    }

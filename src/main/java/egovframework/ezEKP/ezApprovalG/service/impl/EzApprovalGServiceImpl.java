@@ -32525,4 +32525,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getAttachFileMinSaveDate ended.");
 		return ezApprovalGDAO.getAttachFileMinSaveDate(map);
 	}
+	
+	@Override
+	public Map<String, Object> getDocProcessState(String docID, String orgDocID, LoginVO userInfo) throws Exception {
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("v_DOCID", docID);
+	    map.put("v_ORGDOCID", orgDocID);
+	    map.put("v_TENANTID", userInfo.getTenantId());
+	    map.put("v_COMPANYID", userInfo.getCompanyID());
+	    
+	    Map<String, Object> docProcessState = ezApprovalGDAO.getDocProcessState(map);
+	    
+	    return docProcessState;
+	}
 }
