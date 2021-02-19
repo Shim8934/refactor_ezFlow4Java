@@ -569,6 +569,7 @@ function ListView() {
         return objTheader;
     }
 
+    
     //리스트뷰 바디 생성
     function GetTableBodyObj() {
         var oTbody = document.createElement("TBODY");
@@ -1463,7 +1464,8 @@ function show_groupinfo2(obj) {
         listview.GetSelectedRows()[0].onclick();  
     }*/
 	var checkRealID = "";
-	var feature = GetOpenPosition(430, 370);
+	//var feature = GetOpenPosition(430, 370);
+	var feature = GetOpenPosition(540, 550);
 	
 	var checkCnt = 0;
 	var allChild = $("#GroupListView")[0].childNodes[1];
@@ -1489,11 +1491,10 @@ function show_groupinfo2(obj) {
 			return;
 		}else{
 			checkRealID = checkId[0].id.substring(0,checkId[0].id.length -1);
-			window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID, "", "height = 370px, width = 460px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+			//window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID, "", "height = 370px, width = 460px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+			window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID, "", "height = 550px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 			return;
 		}
-		
-		
 	}else{
 		
 		var selectedTr = document.getElementById(obj);
@@ -1501,7 +1502,8 @@ function show_groupinfo2(obj) {
 		
 		//window.open("/myoffice/ezSchedule/schedule_group_member.aspx?id=" + GetAttribute(Selected[0], "data1"), "", "height = 370px, width = 430px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		
-		window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + selectedTr.getAttribute("data1"), "", "height = 370px, width = 460px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+		//window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + selectedTr.getAttribute("data1"), "", "height = 370px, width = 460px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+		window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + selectedTr.getAttribute("data1"), "", "height = 550px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		
 	}
 	            

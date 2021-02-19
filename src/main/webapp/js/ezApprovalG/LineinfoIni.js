@@ -914,6 +914,7 @@ function event_displayUserList(xml) {
     pUserList.SetDrag("list2_onDragStart");  //2020-04-27 : 드래그앤드랍 추가
     pUserList.SetSelectFlag(false);
     pUserList.SetHeightFree(true);
+    pUserList.SetTitleIdx(1);
     pUserList.DataSource(headerData);                 
     pUserList.DataBind("UserList");
 
@@ -952,6 +953,7 @@ function event_displayUserListCC(xml) {
     pUserList.SetRowOnDblClick("list4_onSel_DBclick");
 	pUserList.SetSelectFlag(false);
 	pUserList.SetHeightFree(true);
+	pUserList.SetTitleIdx(1);
 	pUserList.DataSource(headerData);                 
 	pUserList.DataBind("UserListCC");                   
 	

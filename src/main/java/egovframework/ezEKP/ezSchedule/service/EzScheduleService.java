@@ -43,7 +43,7 @@ public interface EzScheduleService {
 	public List<ScheduleReceiveListVO> getReceiveList(String id, int tenantId, String offSetMin ,String companyID) throws Exception;
 	
 	public List<ScheduleGroupListVO> getInviteScheduleGroupList(String id, int tenantId, String offSetMin ,String companyID) throws Exception;
-	
+		
 	public List<ScheduleSecretaryVO> getSecretaryList(String userId, int tenantId ,String companyID) throws Exception;
 	
 	public ScheduleConfigVO getScheduleConfig(String userId, int tenantId) throws Exception;
@@ -51,7 +51,7 @@ public interface EzScheduleService {
 	public ScheduleInfoVO getScheduleInfo(String scheduleId, String offSetMin, int tenantId ,String companyID) throws Exception;
 	
 	public String getMyGroupMemberList(String groupId, String lang, int tenantId ,String companyID) throws Exception;
-
+	
 	public String getDeptMemberList(String deptId, String subDept, String lang, int tenantId ,String companyID) throws Exception;
 	
 	public String scheduleGetLunarUse(String companyID, int tenantId) throws Exception;
@@ -78,6 +78,8 @@ public interface EzScheduleService {
 	public void deleteScheduleGroup(String groupId, int tenantId) throws Exception;	
 
 	public void deleteScheduleMember(String groupId, String memberId, int tenantId) throws Exception;
+	
+	public void updateManageScheduleMember(String groupId, String memberId,String memberName ,String memberName2, int tenantId, String loginUserId, String loginUserName, String loginUserName2) throws Exception;
 
 	public void updateScheduleMember(String groupId, String memberId, String status, int tenantId) throws Exception;
 	
@@ -86,7 +88,9 @@ public interface EzScheduleService {
 	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, int tenantId) throws Exception;
 
 	public void insertScheduleGroup(String gUID, String id, String displayName, String displayName2, String groupName, String description, int tenantId ,String companyID) throws Exception;	
-
+	
+	public void updateScheduleGroup(String groupId,String id, String displayName, String displayName2, String groupName, String description, int tenantId ,String companyID) throws Exception;
+	
 	public void deleteScheduleConfig(String userID, int tenantID) throws Exception;
 
 	public void deleteSecretary(String userID, int tenantID, String companyID) throws Exception;

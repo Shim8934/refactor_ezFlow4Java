@@ -10639,6 +10639,8 @@
 	            WHERE  
 	            	TBL_RECORD.DocID = #v_DOCID#
 	            AND
+					TBL_SEPERATEATTACH.SEPERATEATTACHNO = '00'
+	            AND
 					TBL_RECORD.TENANT_ID = #v_TENANTID#	
 				AND
 	      			TBL_RECORD.COMPANYID = #companyID#						

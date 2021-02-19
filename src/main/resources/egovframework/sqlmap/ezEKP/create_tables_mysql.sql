@@ -10595,7 +10595,8 @@ CREATE TABLE `tbl_recrelayattachinfo` (
   `AttachSN` int(11) DEFAULT NULL,
   `AttachType` char(1) DEFAULT NULL,
   `TENANT_ID` mediumint(5) DEFAULT NULL,
-  `COMPANYID` varchar(20) DEFAULT NULL
+  `COMPANYID` varchar(20) DEFAULT NULL,
+  `CREATEDATE` DATETIME DEFAULT CURRENT_TIMESTAMP() NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -10645,7 +10646,8 @@ CREATE TABLE `tbl_recrelaysigninfo` (
   `SIGNNAME` varchar(255) DEFAULT NULL,
   `REALSIGNNAME` varchar(255) DEFAULT NULL,
   `COMPANYID` varchar(45) DEFAULT NULL,
-  `TENANT_ID` varchar(45) DEFAULT NULL
+  `TENANT_ID` varchar(45) DEFAULT NULL,
+  `CREATEDATE` DATETIME DEFAULT CURRENT_TIMESTAMP() NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -11801,6 +11803,10 @@ CREATE TABLE `tbl_schedulegroup` (
   `CREATEDATE` datetime DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `companyid` varchar(40) DEFAULT NULL,
+  `MODIFYDATE` datetime DEFAULT NULL,
+  `PRECREATORID` varchar(100) DEFAULT NULL,
+  `PRECREATORNAME` varchar(100) DEFAULT NULL,
+  `PRECREATORNAME2` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`GROUPID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

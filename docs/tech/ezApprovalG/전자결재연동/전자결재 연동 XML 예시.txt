@@ -1,0 +1,26 @@
+*workflow - 특정 필드아이디의 값의 유효성검사
+<VALIDATION>
+	<FIELD>필드아이디</FIELD>
+	<CLASS>NUM|NOTNULL|NULL|BIGGER|SMALLER|...</CLASS>
+	<DESC>에러메세지</DESC>
+</VALIDATION>
+
+*workflow - 특정 결재자가 특정 결재타입으로 지정되어있는지 검사
+<APRLINE>
+	<APRTYPE>결재타입</APRTYPE>
+	<CLASS>JOBTITLE|USERID</CLASS>
+	<VALUE>검사할 값</VALUE>
+	<DESC>에러메세지</DESC>
+</APRLINE>
+
+*conn - 연동설정
+<conn processidx="INIT" processtime="DRAFT">
+	<connstring flag="CS"></connstring>
+	<query qtype="NA">/ezConn/sample1.do</query>
+	<servicequery>sample1</servicequery>
+	<keys>
+		<key kind="single">data1</key>
+		<key kind="single">data2</key>
+		<key kind="single">data3</key>
+	</keys>
+</conn>

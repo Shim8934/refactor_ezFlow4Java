@@ -757,7 +757,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", loginSimpleVO.getTenantId());
-
+	
 		model.addAttribute("use_ocs", use_ocs);
 		
 		return "/ezSchedule/scheduleManageGroup";
@@ -773,8 +773,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 		logger.debug("============ scheduleGroupList started ============");
 		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+
 		
-		List<ScheduleGroupListVO> myList = ezScheduleService.getMyGroupList(loginSimpleVO.getId(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID());
+		List<ScheduleGroupListVO> myList = new ArrayList<ScheduleGroupListVO>();
+		
+	    myList = ezScheduleService.getMyGroupList(loginSimpleVO.getId(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID());
+		
+		
 		
 		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
 		result.append("<HEADERS><HEADER><NAME>CHECK</NAME><WIDTH>10%</WIDTH></HEADER>");
@@ -846,6 +851,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	
 	/**
 	 * 일정그룹관리 멤버 팝업
+	 * 
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleGroupMember.do", method = RequestMethod.GET)	
 	public String scheduleGroupMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
@@ -860,12 +866,19 @@ public class EzScheduleController extends EgovFileMngUtil {
 		List<ScheduleGroupListVO> mList = ezScheduleService.getGroupMemberList(groupID, loginVO.getPrimary(),loginVO.getTenantId(), offSetMin ,loginVO.getCompanyID());
 		
 		model.addAttribute("userInfo", loginVO);
+		model.addAttribute("loginUserId", loginVO.getId());
+		model.addAttribute("loginUserName",loginVO.getDisplayName());
+		model.addAttribute("loginUserName2", loginVO.getDisplayName2());
+		model.addAttribute("loginUserRoll",loginVO.getRollInfo());
 		model.addAttribute("groupID", groupID);
 		model.addAttribute("memberList", mList);
+		model.addAttribute("groupName", mList.get(0).getGroupName());
+		model.addAttribute("description",mList.get(0).getDescription());
 		
 		return "/ezSchedule/scheduleGroupMember";
 	}
 	
+
 	/**
 	 * 일정그룹관리 멤버 제외 버튼 클릭 시
 	 */
@@ -882,6 +895,31 @@ public class EzScheduleController extends EgovFileMngUtil {
 		for (int i=0; i < member.length; i++) {			
 			ezScheduleService.deleteScheduleMember(groupID, member[i], loginSimpleVO.getTenantId());
 		}
+	}
+	
+	/**
+	 * 일정그룹관리 관리권한 양도 버튼 클릭 시 
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGiveManagement.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void scheduleGiveManagement(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO, String loginUserId, String loginUserName, String loginUserName2) throws Exception {
+		
+		logger.debug("============ scheduleGiveManagement started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		String groupID = request.getParameter("groupID");
+		
+		String memberId = request.getParameter("memberID");
+		
+		String memberName = request.getParameter("memberNAME");
+		
+		String memberName2 = request.getParameter("memberNAME2");
+		
+		
+		ezScheduleService.updateManageScheduleMember(groupID, memberId, memberName, memberName2, loginSimpleVO.getTenantId(), loginUserId, loginUserName, loginUserName2);
+			
+		
 	}
 	
 	/**
@@ -1065,6 +1103,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		return "/ezSchedule/scheduleGroupWrite";
 	}
 	
+	
 	/**
 	 * 일정그룹관리 그룹 추가 팝업 > 부서선택 클릭 시
 	 */
@@ -1082,6 +1121,31 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String result = ezScheduleService.getDeptMemberList(deptId, subDept, loginVO.getPrimary(), loginVO.getTenantId() ,loginVO.getCompanyID());
 				
 		return result;
+	}
+	
+	
+	/** 일정그룹 그룹명,설명 수정(저장) 버튼 클릭시 
+	 * 
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleModifyGroup.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void scheduleModifyGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ scheduleModifyGroup started ============");
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		
+		String groupId = request.getParameter("groupId");	
+		String groupName = request.getParameter("groupName");
+		String description = request.getParameter("description");
+		String displayName = request.getParameter("displayName");
+		String displayName2 = request.getParameter("displayName2");		
+
+		
+
+		ezScheduleService.updateScheduleGroup(groupId, loginVO.getId(), displayName, displayName2, groupName, description, loginVO.getTenantId() ,loginVO.getCompanyID());
+		
+		
 	}
 	
 	/**

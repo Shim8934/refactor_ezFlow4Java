@@ -6398,7 +6398,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"ATTACHSN" NUMBER(11,0), 
 	"ATTACHTYPE" VARCHAR2(1 BYTE), 
 	"TENANT_ID" NUMBER(5,0), 
-	"COMPANYID" VARCHAR2(20 BYTE)
+	"COMPANYID" VARCHAR2(20 BYTE),
+	"CREATEDATE" DATE DEFAULT SYSDATE
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_RECRELAYINFO
@@ -6437,7 +6438,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"SIGNNAME" VARCHAR2(255 BYTE), 
 	"REALSIGNNAME" VARCHAR2(255 BYTE), 
 	"COMPANYID" VARCHAR2(45 BYTE), 
-	"TENANT_ID" VARCHAR2(45 BYTE)
+	"TENANT_ID" VARCHAR2(45 BYTE),
+	"CREATEDATE" DATE DEFAULT SYSDATE
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_RECROLEINFO

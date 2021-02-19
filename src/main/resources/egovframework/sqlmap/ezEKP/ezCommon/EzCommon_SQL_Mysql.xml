@@ -2945,11 +2945,31 @@
             TBL_FORMINFO
         LIMIT 1
     </select>
+    
+    
     <statement id="EzCommonDAO.updateFormSihangTypeColumn">
         ALTER TABLE 
             TBL_FORMINFO
         ADD COLUMN 
             SIHANGTYPE VARCHAR(10) DEFAULT '' COMMENT '전자결재G 시행문 타입'
+    </statement>
+    
+    <select id="EzCommonDAO.addScehdulegroup">
+        SELECT 
+            MODIFYDATE, PRECREATORID, PRECREATORNAME, PRECREATORNAME2
+        FROM 
+            TBL_SCHEDULEGROUP
+        LIMIT 1
+    </select>
+    
+    <statement id="EzCommonDAO.updateScehdulegroup">
+        ALTER TABLE 
+            TBL_SCHEDULEGROUP
+        ADD COLUMN 
+            MODIFYDATE datetime,
+            PRECREATORID varchar(100),
+            PRECREATORNAME varchar(100),
+            PRECREATORNAME2 varchar(100)
     </statement>
     
     <select id="EzCommonDAO.checkAutoSendOfferFlag" resultClass="int">

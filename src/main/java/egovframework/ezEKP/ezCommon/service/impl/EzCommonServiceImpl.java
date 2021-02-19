@@ -2180,4 +2180,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTblTabBoard() throws Exception {
 		ezCommonDAO.createTblTabBoard();
 	}
+
+	@Override
+	public void addScehdulegroup() throws Exception {
+		ezCommonDAO.addScehdulegroup();
+		
+	}
 }

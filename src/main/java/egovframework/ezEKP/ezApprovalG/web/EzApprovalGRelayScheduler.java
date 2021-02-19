@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -411,12 +412,16 @@ public class EzApprovalGRelayScheduler {
         							 
         							 ezApprovalGService.fieldUpdate("emlURL", strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml", strXDocID, strReceiveID, strCompanyID, tenantID);
         							 ezApprovalGService.fieldUpdate("isPKI", "N", strXDocID, strReceiveID, strCompanyID, tenantID);
+
+        							 // 정주환 유통문서 img 태그 src 한글오류 수정
+        							 String randomUUID = UUID.randomUUID().toString();
         							 
         							 for (int count = 0; count < objXML.getElementsByTagName("content").getLength(); count++) {
         								 strCont_Role = objXML.getElementsByTagName("content").item(count).getAttributes().getNamedItem("content-role").getTextContent();
         								 strCont = objXML.getElementsByTagName("content").item(count).getTextContent();
         								 strCont_Name = new String(Base64.decodeBase64(objXML.getElementsByTagName("content").item(count).getAttributes().getNamedItem("filename").getTextContent()), "euc-kr");
         								 strCont = strCont.replace("\r", "").replace("\n", "").replace("\t", "");
+        								 String extension = strCont_Name.substring(strCont_Name.lastIndexOf("."));
         								 
         								 switch (strCont_Role) {
         								 case "pubdoc":
@@ -460,24 +465,33 @@ public class EzApprovalGRelayScheduler {
         									 ezApprovalGService.addAttachInfo(strCont_Name, strCont_Name, strXDocID, Integer.toString(count), "XSL", strCompanyID, tenantID);
         									 break;
         								 case "seal":
-        									 boolean WriteSealFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocSign" , strCont_Name);
+//        									 boolean WriteSealFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocSign" , strCont_Name);
+        									 boolean WriteSealFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocSign" , randomUUID + extension);
         									 logger.debug("#seal생성=" + WriteSealFile, "");
-        									 ezApprovalGService.fieldUpdate("sealURL", strCont_Name, strXDocID, strReceiveID, strCompanyID, tenantID);
+//        									 ezApprovalGService.fieldUpdate("sealURL", strCont_Name, strXDocID, strReceiveID, strCompanyID, tenantID);
+        									 ezApprovalGService.fieldUpdate("sealURL", randomUUID + extension, strXDocID, strReceiveID, strCompanyID, tenantID);
         									 break;
         								 case "sign":
-        									 boolean WriteSignFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        									 randomUUID = UUID.randomUUID().toString();
+//        									 boolean WriteSignFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        									 boolean WriteSignFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  randomUUID + extension);
         									 logger.debug("#sign생성=" + WriteSignFile, "");
-        									 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
+//        									 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
+        									 ezApprovalGService.addSignInfo(strCont_Name, randomUUID + extension, strXDocID, strCompanyID, tenantID);
         									 break;
         								 case "logo":
-        									 boolean WritetLogoFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+//        									 boolean WritetLogoFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        									 boolean WritetLogoFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  randomUUID + "logo" + extension);
         									 logger.debug("#logo생성=" + WritetLogoFile, "");
-        									 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
+//        									 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
+        									 ezApprovalGService.addSignInfo(strCont_Name, randomUUID + "logo" + extension, strXDocID, strCompanyID, tenantID);
         									 break;
         								 case "symbol":
-        									 boolean WriteSymbolFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+//        									 boolean WriteSymbolFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
+        									 boolean WriteSymbolFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  randomUUID + "symbol" + extension);
         									 logger.debug("#symbol생성=" + WriteSymbolFile, "");
-        									 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
+//        									 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
+        									 ezApprovalGService.addSignInfo(strCont_Name, randomUUID + "symbol" + extension, strXDocID, strCompanyID, tenantID);
         									 break;
         								 }
         							 }
@@ -1445,6 +1459,10 @@ public class EzApprovalGRelayScheduler {
     //전송시 cont_role에 따른 분기 처리
     public void sendContRoleType(ApprGRelayXMLVO relayXML, int count) throws Exception {
 
+    	String contName = relayXML.getContName(count);
+    	String rand = UUID.randomUUID().toString();
+    	String fileName = rand + contName.substring(contName.lastIndexOf("."));
+    	
         switch (relayXML.getContRole(count)) {
             case "pubdoc":
                 boolean WritePubDoc = WriteXMLFileFromBase64(relayXML.getCont(count), relayXML.getAprDocPath() + relayXML.getCompanyID() + commonUtil.separator + "ExDocXML" , relayXML.getxDocID().replace("/", "_").replace("#", "_") + relayXML.getReceiveID() + ".xml");
@@ -1487,24 +1505,24 @@ public class EzApprovalGRelayScheduler {
                 ezApprovalGService.addAttachInfo(relayXML.getContName(count), relayXML.getContName(count), relayXML.getxDocID(), Integer.toString(count), "XSL", relayXML.getCompanyID(), relayXML.getTenantID());
                 break;
             case "seal":
-                boolean WriteSealFile = WriteFileFromBase64(relayXML.getCont(count), relayXML.getAprDocPath() + relayXML.getCompanyID() + commonUtil.separator + "ExDocSign" , relayXML.getContName(count));
+            	boolean WriteSealFile = WriteFileFromBase64(relayXML.getCont(count), relayXML.getAprDocPath() + relayXML.getCompanyID() + commonUtil.separator + "ExDocSign" , fileName);
                 logger.debug("#seal생성=" + WriteSealFile, "");
-                ezApprovalGService.fieldUpdate("sealURL", relayXML.getContName(count), relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
+                ezApprovalGService.fieldUpdate("sealURL", fileName, relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
                 break;
             case "sign":
-                boolean WriteSignFile = WriteFileFromBase64(relayXML.getCont(count), relayXML.getAprDocPath() + relayXML.getCompanyID() + commonUtil.separator + "ExDocUserSign" ,  relayXML.getxDocID().replace("/", "_").replace("#", "_") + relayXML.getContName(count));
+            	boolean WriteSignFile = WriteFileFromBase64(relayXML.getCont(count), relayXML.getAprDocPath() + relayXML.getCompanyID() + commonUtil.separator + "ExDocUserSign" ,  fileName);
                 logger.debug("#sign생성=" + WriteSignFile, "");
-                ezApprovalGService.addSignInfo(relayXML.getContName(count), relayXML.getxDocID().replace("/", "_").replace("#", "_") + relayXML.getContName(count), relayXML.getxDocID(), relayXML.getCompanyID(), relayXML.getTenantID());
+                ezApprovalGService.addSignInfo(relayXML.getContName(count), fileName, relayXML.getxDocID(), relayXML.getCompanyID(), relayXML.getTenantID());
                 break;
             case "logo":
-                boolean WritetLogoFile = WriteFileFromBase64(relayXML.getCont(count), relayXML.getAprDocPath() + relayXML.getCompanyID() + commonUtil.separator + "ExDocUserSign" ,  relayXML.getxDocID().replace("/", "_").replace("#", "_") + relayXML.getContName(count));
+            	boolean WritetLogoFile = WriteFileFromBase64(relayXML.getCont(count), relayXML.getAprDocPath() + relayXML.getCompanyID() + commonUtil.separator + "ExDocUserSign" ,  fileName);
                 logger.debug("#logo생성=" + WritetLogoFile, "");
-                ezApprovalGService.addSignInfo(relayXML.getContName(count), relayXML.getxDocID().replace("/", "_").replace("#", "_") + relayXML.getContName(count), relayXML.getxDocID(), relayXML.getCompanyID(), relayXML.getTenantID());
+                ezApprovalGService.addSignInfo(relayXML.getContName(count), fileName, relayXML.getxDocID(), relayXML.getCompanyID(), relayXML.getTenantID());
                 break;
             case "symbol":
-                boolean WriteSymbolFile = WriteFileFromBase64(relayXML.getCont(count), relayXML.getAprDocPath() + relayXML.getCompanyID() + commonUtil.separator + "ExDocUserSign" ,  relayXML.getxDocID().replace("/", "_").replace("#", "_") + relayXML.getContName(count));
+            	boolean WriteSymbolFile = WriteFileFromBase64(relayXML.getCont(count), relayXML.getAprDocPath() + relayXML.getCompanyID() + commonUtil.separator + "ExDocUserSign" ,  fileName);
                 logger.debug("#symbol생성=" + WriteSymbolFile, "");
-                ezApprovalGService.addSignInfo(relayXML.getContName(count), relayXML.getxDocID().replace("/", "_").replace("#", "_") + relayXML.getContName(count), relayXML.getxDocID(), relayXML.getCompanyID(), relayXML.getTenantID());
+                ezApprovalGService.addSignInfo(relayXML.getContName(count), fileName, relayXML.getxDocID(), relayXML.getCompanyID(), relayXML.getTenantID());
                 break;
         }
 
