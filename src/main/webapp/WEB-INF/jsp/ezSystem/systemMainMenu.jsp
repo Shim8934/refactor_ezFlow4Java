@@ -383,7 +383,7 @@
 		    	
 		    	<%-- 2020-11-12 홍승비 - 전자결재 대용량첨부 관리자 설정 추가 --%>
 		    	<tr class="menuTit" data-MenuName="approval"><th><spring:message code="main.t25" /></th></tr>
-	        	<tr data-name="approval"><th><spring:message code="ezSystem.HSBAppr00"/></th><td><input data-paramId="ApprTotalAttachLimit" id="ApprTotalAttachLimit" maxlength="3" type="text" value="<c:out value='${configMap.ApprTotalAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>, <spring:message code="ezSystem.x0014"/>)</td></tr>          
+	        	<tr data-name="approval"><th><spring:message code="ezSystem.HSBAppr00"/></th><td><input data-paramId="ApprTotalAttachLimit" id="ApprTotalAttachLimit" maxlength="4" type="text" value="<c:out value='${configMap.ApprTotalAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>, <spring:message code="ezSystem.x0014"/>)</td></tr>          
 	        	<tr data-name="approval"><th><spring:message code="ezSystem.HSBAppr01"/></th><td><input data-paramId="ApprAttachLimit" id="ApprAttachLimit" maxlength="3" type="text" value="<c:out value='${configMap.ApprAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>)</td></tr>          
 	            <tr data-name="approval"><th><spring:message code="ezSystem.x0002"/></th><td><input data-paramId="BigSizeApprAttachLimit" id="BigSizeApprAttachLimit" maxlength="4" type="text" value="<c:out value='${configMap.BigSizeApprAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>, <spring:message code="ezSystem.x0019"/>)</td></tr>
 	            <%-- 대용량첨부 자동삭제 기능 사용하지 않음, 주석처리 --%>
