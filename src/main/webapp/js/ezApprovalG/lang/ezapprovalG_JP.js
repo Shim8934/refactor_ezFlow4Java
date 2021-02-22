@@ -1050,3 +1050,47 @@ var strLangCSJ02 = "指定されている受信先に含まれいる社員の中
 
 /* 2020-07-09 홍승비 - 결재문서 프린트를 위한 폰트 스타일 */
 var strLangHSBPR01 = "Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif";
+
+/* 2020-11-12 홍승비 - 전자결재 대용량첨부 추가 */
+//var strLangHSBAt00 = "を超える場合には、大容量メールとして送信処理されます。\n大容量添付は ";
+var strLangHSBAt00 = "を超える場合には、大容量メールとして送信処理されます。 ";
+var strLangHSBAt01 = "以後自動削除されます。";
+var strLangHSBAt02 = "大容量";
+var strLangHSBAt03 = "大容量ファイルは ";
+var strLangHSBAt04 = "まで添付可能です。";
+var strLangHSBAt05 = "ダウンロード期間 : ";
+var strLangHSBAt06 = "大容量添付ファイルは、 ";
+var strLangHSBAt07 = "日間";
+var strLangHSBAt08 = "保管";
+var strLangHSBAt09 = "回まで";
+var strLangHSBAt10 = "ダウンロード可能";
+var strLangHSBAt11 = "PDFファイルが変換完了後、確認をクリックすると、次のファイルもダウンロードされます。";
+var strLangHSBAt12 = "添付ファイルを選択してください。";
+
+var strLang947 = "Departments is unavailable as recipient. \nPlease check!";
+var strLang948 = "Departments unavailable as recipient will be automatically deleted. \nDo you wish to continue?"
+var strLang949 = "Receive Disabled department is duplicated. \nPlease check!"
+var strLang950 = "This Department cannot be a receiver. \nPlease check again."
+var strLang951 = "해당부서는 수신자로 지정할 수 없습니다. <br>확인하여 주십시요."
+
+var strLang952 = "監査承認ラインの場所は変更できません.";
+var strLang953 = "監査承認ラインは削除できません.";
+var strLang954 = "最終審査員は削除できません.";
+
+// 2020-11-23 염정이
+var strLangYJY01 = "びこう";
+var strLangYJY02 = "だいけつ";
+
+/* 2020-12-09 홍승비 - RMS이관메뉴 메세지 추가 */
+var strLangHSBRMS01 = "転送待機リストにデータを入力しました。";
+
+var strLangBg01 = "翻訳";
+var strLangBg02 = "監督";
+var strLangBg03 = "翻訳/監督 確認";
+
+var strLang955 = "総長";
+var strLang956 = "副総長";
+var strLang957 = "院長";
+
+var strLangAdd00040 = "발신기관에서 보내온 본문정보가 잘못되었습니다. 재전송요청하시기 바랍니다.";
+var strLangAdd00041 = "본문정보중 이미지정보가 포함되어 있지않아서 제거 후 저장되었습니다.<br />접수 하시겠습니까?";

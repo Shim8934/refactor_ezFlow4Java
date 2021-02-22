@@ -135,6 +135,25 @@
 							case "MailBigSizeAttachDownloadLimitCount" :
 								alertMsg = "<spring:message code='ezEmail.hdp02'/>: <spring:message code='ezEmail.t99000066'/>";
 								break;
+							/* 2020-11-12 홍승비 - 전자결재 대용량첨부 관리자 설정 추가 */
+							case "ApprTotalAttachLimit" :
+								alertMsg = "<spring:message code='ezSystem.HSBAppr00'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							case "ApprAttachLimit" :
+								alertMsg = "<spring:message code='ezSystem.HSBAppr01'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							case "BigSizeApprAttachLimit" :
+								alertMsg = "<spring:message code='ezSystem.x0002'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							case "BigSizeApprAttachDelDay" :
+								alertMsg = "<spring:message code='ezSystem.x0001'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							case "ApprBigSizeAttachLimitCount" :
+								alertMsg = "<spring:message code='ezEmail.hdp01'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							case "ApprBigSizeAttachDownloadLimitCount" :
+								alertMsg = "<spring:message code='ezEmail.hdp02'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
 							default :
 								errFlag = false;
 						}
@@ -145,7 +164,7 @@
 						}
 					}
 					
-					if(name == "MailBigSizeAttachLimitCount") { 
+					if(name == "MailBigSizeAttachLimitCount" || name == "ApprBigSizeAttachLimitCount") {
 						if (value > 20) {
 							alert("<spring:message code='ezEmail.hdp01'/>: <spring:message code='ezEmail.hdp06'/>");
 							return false;
@@ -361,6 +380,26 @@
 			    		<td><select data-paramId="useMailConfirm" id="use_MailConfirm"><option <c:if test="${configMap.useMailConfirm == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.useMailConfirm == null or configMap.useMailConfirm == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td>
 			    	</tr>
 		    	</c:if>
+		    	
+		    	<%-- 2020-11-12 홍승비 - 전자결재 대용량첨부 관리자 설정 추가 --%>
+		    	<tr class="menuTit" data-MenuName="approval"><th><spring:message code="main.t25" /></th></tr>
+	        	<tr data-name="approval"><th><spring:message code="ezSystem.HSBAppr00"/></th><td><input data-paramId="ApprTotalAttachLimit" id="ApprTotalAttachLimit" maxlength="3" type="text" value="<c:out value='${configMap.ApprTotalAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>, <spring:message code="ezSystem.x0014"/>)</td></tr>          
+	        	<tr data-name="approval"><th><spring:message code="ezSystem.HSBAppr01"/></th><td><input data-paramId="ApprAttachLimit" id="ApprAttachLimit" maxlength="3" type="text" value="<c:out value='${configMap.ApprAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>)</td></tr>          
+	            <tr data-name="approval"><th><spring:message code="ezSystem.x0002"/></th><td><input data-paramId="BigSizeApprAttachLimit" id="BigSizeApprAttachLimit" maxlength="4" type="text" value="<c:out value='${configMap.BigSizeApprAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>, <spring:message code="ezSystem.x0019"/>)</td></tr>
+	            <%-- 대용량첨부 자동삭제 기능 사용하지 않음, 주석처리 --%>
+	            <%--<tr data-name="approval"><th><spring:message code="ezSystem.x0001"/></th><td><input data-paramId="BigSizeApprAttachDelDay" id="BigSizeApprAttachDelDay" maxlength="3" type="text" value="<c:out value='${configMap.BigSizeApprAttachDelDay}'/>"> (<spring:message code="ezSystem.x0010"/>)</td></tr>--%>          
+		    	<tr data-name="approval">
+		    		<th><spring:message code="ezEmail.hdp01"/></th>
+		    		<td><input data-paramId="ApprBigSizeAttachLimitCount" id="ApprBigSizeAttachLimitCount" maxlength="2" type="text" value="<c:out value='${configMap.ApprBigSizeAttachLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td>
+		    	</tr>
+		    	
+		    	<%-- 다운로드횟수제한 기본값 0으로 셋팅하고 display none처리 (사실상 기능 사용안함) --%>
+            	<tr data-name="approval" style="display:none;">
+            		<th><spring:message code="ezEmail.hdp02"/></th>
+            		<%--<td><input data-paramId="ApprBigSizeAttachDownloadLimitCount" id="ApprBigSizeAttachDownloadLimitCount" maxlength="5" type="text" value="<c:out value='${configMap.ApprBigSizeAttachDownloadLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td>--%>
+            		<td><input data-paramId="ApprBigSizeAttachDownloadLimitCount" id="ApprBigSizeAttachDownloadLimitCount" maxlength="5" type="text" value="0"> (<spring:message code="ezSystem.x0014"/>)</td>
+            	</tr>
+            	
 	        </tbody>
 	    </table> 
 	    <div class="btnpositionJsp">

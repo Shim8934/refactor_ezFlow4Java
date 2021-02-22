@@ -1874,10 +1874,16 @@ public class EzNewPortalGWController {
 			
 			LOGGER.debug("useMemo : " + useMemo + ", useExternalMailServer : " + useExternalMailServer);
 			
+			String useWebHWP = ezCommonService.getTenantConfig("useWebHWP", tenantId);
+			if (useWebHWP == null || useWebHWP.equals("")) {
+				useWebHWP = "NO";
+			}
+			
 			data.put("useMemo", useMemo);
 			data.put("startPage", startPage);
 			data.put("useExternalMailServer", useExternalMailServer);
 			data.put("useContextmenu", useContextmenu);
+			data.put("useWebHWP", useWebHWP);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

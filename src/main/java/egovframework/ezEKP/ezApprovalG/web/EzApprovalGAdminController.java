@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -73,10 +74,15 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -92,6 +98,7 @@ import org.w3c.dom.NodeList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -221,6 +228,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 //		폼프로세서 사용하려면 useEditor "" 으로 세팅
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
+		String useWebHWP = ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId());
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -240,6 +248,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useHWP", useHWP);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useWebHWP", useWebHWP);
 		
 		logger.debug("formAdmin ended.");
 		
@@ -608,8 +617,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("formID", formID);
 		model.addAttribute("docType", docType);
 		model.addAttribute("companyID", companyID);
-		if (type != null && type.equals("HWP")) {
-			model.addAttribute("useEditor", "HWP");
+		if (type != null && (type.equals("HWP") || type.equals("WebHWP"))) {
+			model.addAttribute("useEditor", type);
 			model.addAttribute("ext", "hwp");
 			model.addAttribute("realPath", commonUtil.getRealPath(request).replace("\\","/"));
 		} else {
@@ -639,7 +648,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		boolean isReform = "y".equalsIgnoreCase(reformflag);
 		
 		// 폼빌더 사용 여부 (폼빌더 양식이어도 true, 한글 에디터라면 무조건 false)
-		model.addAttribute("useReform", !"HWP".equals(type) && (useReform.equalsIgnoreCase("yes") || isReform));
+		model.addAttribute("useReform", (!("HWP".equals(type) || "WebHWP".equals(type))) && (useReform.equalsIgnoreCase("yes") || isReform));
 		// 폼빌더 양식 여부
 		model.addAttribute("isReform", isReform);
 		
@@ -765,6 +774,20 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("HWPEditor ended.");
 		
 		return "admin/ezApprovalG/apprGHWPEditor";
+	}
+	
+	/**
+	 * 전자결재G 관리자 > 한글 웹 기안기 양식작성기 화면 호출
+	 */
+	@RequestMapping(value="/admin/ezApprovalG/WHWPEditor.do", method = RequestMethod.GET)
+	public String WHWPEditor(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("WHWPEditor started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		model.addAttribute("webHWPUrl", ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId()));
+		
+		logger.debug("WHWPEditor ended.");
+		return "admin/ezApprovalG/apprGWHWPEditor";
 	}
 
 	/**
@@ -3063,6 +3086,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("useEditApprDoc", useEditApprDoc);
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("openYear", ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId()));
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		logger.debug("forAprDoc ended.");
 		
@@ -3270,6 +3294,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("type", type);
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("openYear", ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId()));
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		logger.debug("forDoc ended.");
 		
@@ -5021,6 +5046,39 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		response.getWriter().write(ezApprovalGAdminService.getAuditApprLineListPrc(loginCookie, request, response, model).toString());
 	}
 	
+    @RequestMapping(value = "/admin/ezApprovalG/convertXmltoHtml.do", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<String> convertXmltoHtml(
+            @RequestBody JSONObject codeData) {
+        logger.debug("convertXmltoHtml started");
+        
+        ResponseEntity<String> resEntity = null;
+        String resultHtmlCode = "";
+        
+        try {
+        
+            String xsltCode = (String) codeData.get("xsltCode");
+            String xmlCode = (String) codeData.get("xmlCode");
+            
+            if(xsltCode.isEmpty() || xmlCode.isEmpty()) {
+                throw new Exception("xsltCode or xmlCode is empty");
+            }
+                
+            resultHtmlCode = commonUtil.convertXsltToHtml(xsltCode, xmlCode);
+            
+            HttpHeaders header = new HttpHeaders();
+            header.setContentType(new MediaType("text", "html", StandardCharsets.UTF_8));
+            
+            resEntity = new ResponseEntity<String>(resultHtmlCode, header, HttpStatus.OK);
+        } catch(Exception e) {
+            e.printStackTrace();
+            resEntity = new ResponseEntity<String>(HttpStatus.CONFLICT);
+        }
+        
+        logger.debug("convertXmltoHtml ended");
+        
+        return resEntity;
+    }
+
 	/* General auditing statistics */	
 	@RequestMapping(value = "/admin/ezApprovalG/apprGeneralAuditingStatistics.do", method = RequestMethod.GET)
 	public String apprGeneralAuditingStatistics(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {

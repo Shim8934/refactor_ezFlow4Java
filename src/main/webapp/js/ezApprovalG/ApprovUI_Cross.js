@@ -979,7 +979,7 @@ function openFileAttachUI() {
     aprattach_cross_dialogArguments[0] = parameter;
     aprattach_cross_dialogArguments[1] = openFileAttachUI_Complete;
 
-    DivPopUpShow(535, 415, url);
+    DivPopUpShow(800, 610, url);
 }
 
 function openFileAttachUI_Complete(ret) {
@@ -1469,8 +1469,13 @@ function getCurApproverAprLine(type) {
     //최종 결재에 개인 합의 추가 하기 위해 결재선에 표시된 전체 개수
     LastTotalKyulSN = getLastTotalSignSN(objNodes);
     LastSignSN = objNodes.length;
-
+    
     for (var i = objNodes.length - 1; i < objNodes.length; i--) {
+    	// i가 음수값을 가지지 않도록 임시 수정
+    	if (i < 0) {
+    		break;
+    	}
+    	
         var params = new Array();
         params[0] = "0";
         var dataNodes = GetLastChildNodes(objNodes[i], params);
@@ -3165,7 +3170,7 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-    if (CrossYN() && ext != 'hwp') {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;

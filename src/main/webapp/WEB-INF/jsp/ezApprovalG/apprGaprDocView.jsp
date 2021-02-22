@@ -69,10 +69,13 @@
 		    var forceCallBackYN = "<c:out value ='${forceCallBackYN}'/>";
 		    var ext = "<c:out value ='${ext}'/>";
 		    var orgCompanyID = "<c:out value ='${orgCompanyID}'/>";
-		    
-		    
-		    
-		    
+			var useWebHWP = "<c:out value='${useWebHWP}'/>";
+			
+	        // 대용량첨부 관련
+	        var bigAttachDownloadPeriod = "<c:out value ='${bigAttachDownloadPeriod}'/>";
+	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
+	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
+	        
 		    $(function () {
 		      	if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
@@ -127,6 +130,8 @@
 					}
 				});
 		      	
+				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
+				setAttachGuideText();
 		    });
 		    
 		    function btnOpinion_onclick() {
@@ -152,7 +157,8 @@
 		            LoadpzFormDocInfo(); // setAttachInfo(DocID, "APR", lstAttachLink);
 		            //없이 테스트
 // 		            SignCheck();
-		            cancelYN();			      	
+		            cancelYN();
+					returnYN();			      	
 		        }
 		    }
 		    
@@ -530,17 +536,19 @@
 		    
 		    function btncallback_onclick() {
 	            var pMsg = "<spring:message code='ezApprovalG.t68'/>";
-	            var Ans = OpenInformationUI(pMsg, doCancel);
+	            OpenInformationUI(pMsg, btncallback_onclick_Complete);
 	        }
 		    
 	        function btncallback_onclick_Complete(ans) {
-	            if (ans && ConnExist("DRAFT_CALLBACK", "")) {
-	                var RtnVal = ExcuteInfo("DRAFT_CALLBACK", "")
-	                if (RtnVal) {
-	                    doCancel();
-	                }
-	            } else {
-	            	doCancel();
+				DivPopUpHidden();
+
+	            if (ans) {
+					var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // pdraftflag 정상적으로 가져오게 수정해야함
+					if (!retVal) {
+						return;
+					}
+
+					doCancel();
 	            }
 	        }
 	        
@@ -562,65 +570,76 @@
 				return feature;
 			}
 	        
-	        function doCancel(ans) {
-	        	DivPopUpHidden();
-	        	if (ans) {
-		            var GetCurrentlinelist = getAprLinefor("APR", DocID);
-		        	var result = "";
-		        	
-		        	//2018-07-10 배현상, 회수와 강제회수 분기(doCancelForce.do -> doCancel.do)
-		        	$.ajax({
-		        		type : "POST",
-		        		dataType : "text",
-		        		async : false,
-		        		url : "/ezApprovalG/doCancel.do",
-		        		data : {
-		        			docID : pDocID,
-		        			userID : pUserID,
-		        			orgCompanyID : orgCompanyID
-		        		},
-		        		success: function(xml){
-		        			result = xml;
-		        		}, error: function () {
-	    	                var pAlertContent = strLang898;
-	    	                OpenAlertUI(pAlertContent);
-		        		}
-		        	});
-		        	
-		            var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
-		            if (RtnVal == "TRUE") {
-		            	SendMailToCancel_Function(GetCurrentlinelist);
-	                    var pAlertContent = strLang891 + "<br> " + strLang892;
-	                    OpenAlertUI(pAlertContent, OpenAlertUI_Close);
-	                    
-	                    //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 회수
-	    		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
-	    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-del-script').getAttribute("code");
-	    		        	var script = document.createElement("script");
-	    					script.type = "text/javascript";
-	    					script.innerHTML = code;
-	    					document.querySelector("head").appendChild(script);
-	    					
-	    		        	attitude_annual_conn(pDocID);
-	    		        }
-		            }
-		            else if (RtnVal == "ERR01") {
-		                var pAlertContent = strLang895;
-		                OpenAlertUI(pAlertContent);
-		            }
-		            else if (RtnVal == "ERR02") {
-		                var pAlertContent = strLang896;
-		                OpenAlertUI(pAlertContent);
-		            }
-		            else if (RtnVal == "ERR03") {
-		                var pAlertContent = strLang897;
-		                OpenAlertUI(pAlertContent);
-		            } else {
-		            	var pAlertContent = strLang898;
-		                OpenAlertUI(pAlertContent);
-		            }
-	        	}
+	        function doCancel() {
+				var GetCurrentlinelist = getAprLinefor("APR", DocID);
+				var result = "";
+				
+				//2018-07-10 배현상, 회수와 강제회수 분기(doCancelForce.do -> doCancel.do)
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/doCancel.do",
+					data : {
+						docID : pDocID,
+						userID : pUserID,
+						orgCompanyID : orgCompanyID
+					},
+					success: function(xml){
+						result = xml;
+					}, error: function () {
+						doCancel_fail();
+					}
+				});
+				
+				var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
+				if (RtnVal == "TRUE") {
+					SendMailToCancel_Function(GetCurrentlinelist);
+					var pAlertContent = strLang891 + "<br> " + strLang892;
+					OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+					
+					//2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 회수
+					if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+						var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-del-script').getAttribute("code");
+						var script = document.createElement("script");
+						script.type = "text/javascript";
+						script.innerHTML = code;
+						document.querySelector("head").appendChild(script);
+						
+						attitude_annual_conn(pDocID);
+					}
+
+					ExcuteInfo("CALLBACK_AFTER", "DRAFT");
+				} else {
+					doCancel_fail(RtnVal);
+				}
 	        }
+
+			function doCancel_fail(errMsg) {
+				if (!errMsg) {
+					errMsg = "";
+				}
+
+				var pAlertContent = "";
+
+				switch (errMsg) {
+					case "ERR01":
+						pAlertContent = strLang895;
+						break;
+					case "ERR02":
+						pAlertContent = strLang896;
+						break;
+					case "ERR03":
+						pAlertContent = strLang897;
+						break;
+					default:
+						pAlertContent = strLang898;
+						break;
+				}
+
+				OpenAlertUI(pAlertContent);
+				ExcuteInfo("CALLBACK_FAIL", "DRAFT");
+			}
 	        
 	        function SendMailToCancel_Function(GetCurrentlinelist) {
 	            var MemberList = loadXMLString(GetCurrentlinelist)
@@ -690,66 +709,64 @@
 	        //2018-07-10 배현상, 강제회수 분기(btnforcecallback_onclick 생성)
 	        function btnforcecallback_onclick() {
 	        	var pMsg = "<spring:message code='ezApprovalG.t68'/>";
-	        	var Ans = OpenInformationUI(pMsg, doForceCancel);
+	        	OpenInformationUI(pMsg, btnforcecallback_onclick_complete);
+	        }
+
+	        function btnforcecallback_onclick_complete(ans) {
+				DivPopUpHidden();
+
+				if (ans) {
+					var retVal = ExcuteInfo("CALLBACK_BEFORE", "DRAFT"); // pdraftflag 정상적으로 가져오게 수정해야함
+					if (!retVal) {
+						return;
+					}
+
+					doForceCancel();
+				}
 	        }
 	        
 	        //2018-07-10 배현상, 강제회수 분기(doForceCancel 생성)
-	        function doForceCancel(ans) {
-	        	DivPopUpHidden();
-	        	if (ans) {
-	        		var GetCurrentlinelist = getAprLinefor("APR", DocID);
-	        		var result = "";
-	        		
-	        		$.ajax({
-	        			type : "POST",
-	        			dataType : "text",
-	        			async : false,
-	        			url : "/ezApprovalG/doCancelForce.do",
-	        			data : {
-	        				docID : pDocID,
-	        				userID : pUserID
-	        			},
-	        			success: function(xml){
-	        				result = xml;
-	        			}, error: function () {
-	        				var pAlertContent = strLang898;
-	        				OpenAlertUI(pAlertContent);
-	        			}
-	        		});
-	        		
-	        		var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
-	        		if (RtnVal == "TRUE") {
-	        			SendMailToCancel_Function(GetCurrentlinelist);
-	        			var pAlertContent = strLang891 + "<br> " + strLang892;
-	        			OpenAlertUI(pAlertContent, OpenAlertUI_Close);
-	        			
-	        			//2020-04-03 김정언 : 근태관리 연동양식일 경우 추가 - 강제회수
-	    		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
-	    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-del-script').getAttribute("code");
-	    		        	var script = document.createElement("script");
-	    					script.type = "text/javascript";
-	    					script.innerHTML = code;
-	    					document.querySelector("head").appendChild(script);
-	    					
-	    		        	attitude_annual_conn(pDocID);
-	    		        }
-	        		}
-	        		else if (RtnVal == "ERR01") {
-	        			var pAlertContent = strLang895;
-	        			OpenAlertUI(pAlertContent);
-	        		}
-	        		else if (RtnVal == "ERR02") {
-	        			var pAlertContent = strLang896;
-	        			OpenAlertUI(pAlertContent);
-	        		}
-	        		else if (RtnVal == "ERR03") {
-	        			var pAlertContent = strLang897;
-	        			OpenAlertUI(pAlertContent);
-	        		} else {
-	        			var pAlertContent = strLang898;
-	        			OpenAlertUI(pAlertContent);
-	        		}
-	        	}
+	        function doForceCancel() {
+				var GetCurrentlinelist = getAprLinefor("APR", DocID);
+				var result = "";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/doCancelForce.do",
+					data : {
+						docID : pDocID,
+						userID : pUserID
+					},
+					success: function(xml){
+						result = xml;
+					}, error: function () {
+						doCancel_fail();
+					}
+				});
+				
+				var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
+				if (RtnVal == "TRUE") {
+					SendMailToCancel_Function(GetCurrentlinelist);
+					var pAlertContent = strLang891 + "<br> " + strLang892;
+					OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+					
+					//2020-04-03 김정언 : 근태관리 연동양식일 경우 추가 - 강제회수
+					if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+						var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-del-script').getAttribute("code");
+						var script = document.createElement("script");
+						script.type = "text/javascript";
+						script.innerHTML = code;
+						document.querySelector("head").appendChild(script);
+						
+						attitude_annual_conn(pDocID);
+					}
+
+					ExcuteInfo("CALLBACK_AFTER", "DRAFT");
+				} else {
+					doCancel_fail(RtnVal);
+				}
 	        }
 	        
 	        function checkIsDrafter() {
@@ -779,6 +796,131 @@
 	        	
 	        	return rtnVal;
 	        }
+	        
+	    	// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
+	    	function setAttachGuideText() {
+	    		// 대용량첨부의 자동삭제 기능, 저장만료기한 사용하지 않음
+                var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                
+                if(bigSizeAttachDownloadLimitCount > 0) {
+                	attachGuideText += strLangHSBAt06 + " <span style='color:#FF0000 ;'>" + bigSizeAttachDownloadLimitCount + strLangHSBAt09 + "</span> " + strLangHSBAt10;
+                }
+                
+                attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += "</td>";
+/*                 
+                var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += strLangHSBAt05 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadPeriod + "</span></td>";
+                attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += strLangHSBAt06 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadDay + strLangHSBAt07 + "</span>" + strLangHSBAt08;
+                 */
+                 
+                 if (bigSizeAttachDownloadLimitCount > 0) {
+                	 document.getElementById("apprAttachGuideTR").innerHTML = attachGuideText;
+                 }
+                 else {
+                	 document.getElementById("apprAttachGuideTR").style.display = "none";
+                 }
+	    	}
+	    	
+		    var apropinion_cross_dialogArguments = new Array();
+		    var temppDocSN = "";
+		    function btnReturn_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+		    	if (deptCheckFlag == "3") {
+		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		return;
+		    	} else if (deptCheckFlag == "4") {
+		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		return;
+		    	} else if (deptCheckFlag == "2") {
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					return;
+				}	
+		    	
+		        var RecevState = getDocRecevState();
+		        if (RecevState != "011" && RecevState != "012" && RecevState != "013" && RecevState != "014") {
+		            if (RecevState == "015") {
+		                var pAlertContent = strLang912;
+		                OpenAlertUI(pAlertContent);
+		            }
+		            return false;
+		        }
+		        var pDocSN = "";
+		        var fields = message.GetFieldsList();
+		        var field = message.GetListItem(fields, "receiptnumber");
+		        if (field) {
+		            var fieldValue = trim(field.textContent);
+		            if (fieldValue && fieldValue.replace("@", "") == fieldValue) {
+		                var tmpDocSN = fieldValue.substr(fieldValue.lastIndexOf("-") + 1);
+		                if (!isNaN(tmpDocSN))
+		                    pDocSN = tmpDocSN;
+		            }
+		        }
+		        temppDocSN = pDocSN;
+		        
+		        openOpinionUI_New("HeSong", btnReturn_onclick_Complete);
+		    }
+		    function btnReturn_onclick_Complete(ret) {
+		        DivPopUpHidden();
+
+		        if (checkAprState()) {
+		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+	    			window.close();
+	    			return;
+		    	}
+
+		        var hesongok = true;
+		        if (ret != "cancel") {
+					var draftFlag = "SUSIN";
+					if (pDocState === "012") {
+						draftFlag = "HAPYUI";
+					}
+					
+					var RtnVal = ExcuteInfo("HESONG_BEFORE", draftFlag);
+		        	if (!RtnVal) {
+		                return;
+		            }
+
+		        	var Rtnxml = loadXMLString(ret);
+		            if (temppDocSN) {
+		                hesongok = setCabinetHeSong(temppDocSN);
+					}
+		
+		            if (hesongok) {
+						var writerID = GetDocInfoData("APR", "writerid");
+						var writerName = GetDocInfoData("APR", "writername");
+						var docTitle = GetDocInfoData("APR", "doctitle");
+		            	SendMailToDrafter_Hesong(writerID, writerName, docTitle);
+		                hesongok = setHeSongDocInfo();
+
+						if (hesongok) {
+							ExcuteInfo("HESONG_AFTER", draftFlag);
+						} else {
+							ExcuteInfo("HESONG_FAIL", draftFlag);
+						}
+		            }
+		        }
+		    }
+			function returnYN() {
+				var req = new XMLHttpRequest();
+				req.open("GET", "/ezApprovalG/returnYN.do?docID=" + pDocID + "&orgDocID=" + pOrgDocID + "&orgCompanyID=" + orgCompanyID);
+				req.send();
+				req.onload = function() {
+					var res = req.responseText;
+					switch (res) {
+						case "Y":
+							document.querySelector("#tbtnReturn").style.display = "";
+							break;
+						case "N":
+							document.querySelector("#tbtnReturn").style.display = "none";
+							break;
+						case "E":
+							console.log("fail returnYN");
+							break;
+					}
+				}
+			}
 		</script>
 	</head>
 	<body class="popup" style="height:100%">
@@ -794,6 +936,7 @@
 				  </c:if>
 				  <li id="tbtncallback" style="display: none;"><span id="btncallback" onclick="return btncallback_onclick()"><spring:message code='ezApprovalG.t66'/></span></li>
                   <li id="tbtnforcecallback" style="display: none;"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
+				  <li id="tbtnReturn" style="display: none;"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
 		          <li id="btnOpinion"><span onClick="return btnOpinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
 		          <li id="btnDocInfo" class="approvalG"><span onClick="return btnDocInfo_onclick()" ><spring:message code='ezApprovalG.t54'/></span></li>
 		          <li id="btnhistory"><span onClick="btnhistory_onclick()" ><spring:message code='ezApprovalG.t61'/></span></li>
@@ -840,12 +983,29 @@
 		  </td>
 		  </tr>
 		  <tr>
-		    <td style="height:20px"><table class="file" style="margin-top:5px;">
-		        <tr>
-		          <th><spring:message code='ezApprovalG.t65'/></th>
-		          <td><div id="lstAttachLink"></div></td>
-		        </tr>
-		      </table></td>
+			<td style="height:20px">
+                <table class="file" style="height:80px;">
+                    <tr>
+                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
+                        <td style=" width:62%; border-right:1px solid #d5d5d5;">
+                            <div id="lstAttachLink" style="height:70px;"></div>
+                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
+                        </td>
+                        <td style=" width:30%;">
+							<div id="lstAttachLinkDoc" style="height:70px;"></div>
+						</td>
+						<td class="pos2" style="width:8%; background:#fffcfa;">
+							<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+							<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
+						</td>
+                    </tr>
+                </table>
+                
+                <%-- 대용량첨부 가이드 메세지 영역 --%>
+                <table class="file" style="height: 20px;">
+                    <tr id="apprAttachGuideTR"></tr>
+                </table>
+			</td>
 		  </tr>
 		</table>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

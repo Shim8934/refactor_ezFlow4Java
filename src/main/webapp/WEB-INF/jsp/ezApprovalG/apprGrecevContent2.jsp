@@ -152,6 +152,10 @@
 	                        FieldCount++;
 	                    }
 	                }
+
+					var controls = getControlList();
+					FieldsList = FieldsList.concat(controls);
+					
 	                return FieldsList;
 	            } catch (e) { return FieldsList; }
 	        }
@@ -300,6 +304,26 @@
 	        }
 	        function Conn_after() {
 	        }
+			function GetDocumentInfo() {
+				var xmlInfo = document.querySelectorAll("#div_Content xml");
+
+				var xmlDom = createXmlDom();
+				var dataRoot = createNodeInsert(xmlDom, null, "DATA");
+				for (var i = 0, ilen = xmlInfo.length; i < ilen; i++) {
+					var info = xmlInfo[i].firstElementChild;
+					var infoName = info.tagName;
+					createNodeAndAppandNodeText(xmlDom, dataRoot, null, infoName, info.outerHTML);
+				}				
+				
+				return xmlDom;
+			}
+			function getConnInfoXml() {
+				var connInfo = document.querySelector("#div_Content xml#conn");
+				if (connInfo) {
+					connInfo = connInfo.cloneNode(true);
+				}
+				return connInfo;
+			}
 	    </script>
 	</head>
 	<body>

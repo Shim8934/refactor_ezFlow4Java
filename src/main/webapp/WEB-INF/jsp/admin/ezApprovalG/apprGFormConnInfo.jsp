@@ -41,21 +41,14 @@
 			});
 	
 			function btnOK_onclick() {
-				var rtnValue = "<conn processidx=\"" +
-	                GetSelectText("processidx") +
-	                "\" processtime=\"" +
-	                GetSelectText("processtime") +
-	                "\">\n	<connstring flag=\"" +
-	                GetSelectText("connstringflag") +
-	                "\">" +
-	                connectionstring.value +
-	                "</connstring>\n	<query qtype=\"" +
-	                GetSelectText("querytype") +
-	                "\">" +
-	                query.value + "</query>";
+				var rtnValue = 
+					"<conn processidx=\"" + GetSelectText("processidx") + "\" processtime=\"" + GetSelectText("processtime") + "\">" + 
+					"\n\t<connstring flag=\"" + GetSelectText("connstringflag") + "\">" + connectionstring.value + "</connstring>" +
+					"\n\t<query qtype=\"" + GetSelectText("querytype") + "\">" + query.value + "</query>" + 
+					"\n\t<servicequery>" + servicequery.value + "</servicequery>";
 	
 	            if (GetSelectText("keykind") != "<spring:message code='ezApproval.t505'/>") {
-	                rtnValue = rtnValue + "\n	<keys>\n		<key kind=\"" + GetSelectText("keykind") + "\"></key>\n	</keys>";
+	                rtnValue = rtnValue + "\n\t<keys>\n\t\t<key kind=\"" + GetSelectText("keykind") + "\"></key>\n\t</keys>";
 	            }
 	            rtnValue = rtnValue + "\n</conn>";
 	
@@ -156,6 +149,11 @@
 		  	<tr>
 		    	<th><spring:message code = 'ezApprovalG.t1453' /></th>
 		    	<td height="23"><input id="query" type="textbox" style="WIDTH:230px">
+		    	</td>
+		  	</tr>
+		  	<tr>
+		    	<th>서비스쿼리입력</th>
+		    	<td height="23"><input id="servicequery" type="textbox" style="WIDTH:230px">
 		    	</td>
 		  	</tr>
 		  	<tr>

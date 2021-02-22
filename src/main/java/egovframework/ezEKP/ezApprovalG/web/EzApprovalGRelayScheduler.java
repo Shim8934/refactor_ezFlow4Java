@@ -1942,7 +1942,7 @@ public class EzApprovalGRelayScheduler {
 		//발송현황 업데이트
 		Map<String, Object> sendOutMap = new HashMap<String, Object>();
 		sendOutMap.put("V_DATABASE", "jmocha");
-		sendOutMap.put("V_TABLE", "tbl_sendoutinfo");
+		sendOutMap.put("V_TABLE", "TBL_SENDOUTINFO");
 		int checkSendOutTable = ezApprovalGAdminDao.checkSendOutInfoTable(sendOutMap);
 		
 		if(checkSendOutTable > 0) {

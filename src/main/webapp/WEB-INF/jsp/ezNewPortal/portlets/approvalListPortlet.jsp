@@ -234,16 +234,23 @@
                     openLocation += "&ListType=" + encodeURIComponent(pArgument[7]);
                 }
                 else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-                	if (isIE()) {
-	                    openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + encodeURIComponent(pArgument[0]) + "&docHref=" + encodeURIComponent(pArgument[1]);
+                	if("${useWebHWP}" == "NO") {
+	                	if (isIE()) {
+		                    openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + encodeURIComponent(pArgument[0]) + "&docHref=" + encodeURIComponent(pArgument[1]);
+		                    openLocation += "&opinionFlag=" + encodeURIComponent(pArgument[2]) + "&docState=" + encodeURIComponent(pArgument[3]) + "&listSusin=" + encodeURIComponent(pArgument[4]) + "&odoc=" + encodeURIComponent(pArgument[5]);
+		                    openLocation += "&isOpinion=" + encodeURIComponent(pArgument[6]);
+		                    openLocation += "&listType=" + encodeURIComponent(pArgument[7]);
+	                	} else {
+	                		var pAlertContent = "<spring:message code='ezNewPortal.t038' />";
+	                        alert(pAlertContent);
+	                        
+	                        return;
+	                	}
+                	} else {
+                		openLocation = "/ezApprovalG/ezviewAprWHWP.do?docID=" + encodeURIComponent(pArgument[0]) + "&docHref=" + encodeURIComponent(pArgument[1]);
 	                    openLocation += "&opinionFlag=" + encodeURIComponent(pArgument[2]) + "&docState=" + encodeURIComponent(pArgument[3]) + "&listSusin=" + encodeURIComponent(pArgument[4]) + "&odoc=" + encodeURIComponent(pArgument[5]);
 	                    openLocation += "&isOpinion=" + encodeURIComponent(pArgument[6]);
 	                    openLocation += "&listType=" + encodeURIComponent(pArgument[7]);
-                	} else {
-                		var pAlertContent = "<spring:message code='ezNewPortal.t038' />";
-                        alert(pAlertContent);
-                        
-                        return;
                 	}
                 } else {
                 	openLocation = "/ezApprovalG/aprDocView.do?docID=";
@@ -305,9 +312,15 @@
 			            openLocation += "&orgCompanyID=" + encodeURIComponent(pArgument[8]);
 		        	}
 		        } else {
-	                openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURIComponent(pArgument[1]) + "&draftFlag=" + encodeURIComponent(pArgument[2]) + "&formDocType=" + encodeURIComponent(pArgument[3]);
-	                openLocation = openLocation + "&susinSN=" + encodeURIComponent(pArgument[4]) + "&docState=" + encodeURIComponent(pArgument[5]) + "&listType=1&aprState=" + encodeURIComponent(pArgument[6]);
-	                openLocation = openLocation + "&isTmpDoc=" + encodeURIComponent(pArgument[7]);
+		        	if("${useWebHWP}" == "YES") {
+		        		openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURIComponent(pArgument[1]) + "&draftFlag=" + encodeURIComponent(pArgument[2]) + "&formDocType=" + encodeURIComponent(pArgument[3]);
+		                openLocation = openLocation + "&susinSN=" + encodeURIComponent(pArgument[4]) + "&docState=" + encodeURIComponent(pArgument[5]) + "&listType=1&aprState=" + encodeURIComponent(pArgument[6]);
+		                openLocation = openLocation + "&isTmpDoc=" + encodeURIComponent(pArgument[7]);
+		        	} else {
+		                openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURIComponent(pArgument[1]) + "&draftFlag=" + encodeURIComponent(pArgument[2]) + "&formDocType=" + encodeURIComponent(pArgument[3]);
+		                openLocation = openLocation + "&susinSN=" + encodeURIComponent(pArgument[4]) + "&docState=" + encodeURIComponent(pArgument[5]) + "&listType=1&aprState=" + encodeURIComponent(pArgument[6]);
+		                openLocation = openLocation + "&isTmpDoc=" + encodeURIComponent(pArgument[7]);
+		        	}
 		        }
 	
 		        openwindow(openLocation, "", 890, 560);
@@ -320,8 +333,12 @@
 		            openLocation = "/ezApprovalG/recev.do?docID=" + encodeURIComponent(pDocID) + "&draftFlag=" + encodeURIComponent(pDraftFlag);
 		        }
 		        else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		            openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do?docID=" + encodeURIComponent(pDocID) + "&draftFlag=" + encodeURIComponent(pDraftFlag);
-		        }
+		        	if("${useWebHWP}" == "YES") {
+		        		openLocation = "/ezApprovalG/ezDeptRecevUI_WHWP.do?docID=" + encodeURIComponent(pDocID) + "&draftFlag=" + encodeURIComponent(pDraftFlag);
+		        	} else {
+		           		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do?docID=" + encodeURIComponent(pDocID) + "&draftFlag=" + encodeURIComponent(pDraftFlag);
+		        	}
+	        	}
 		        else {
 		            if (CrossYN()) {
 		                openLocation = "/ezApprovalG/recev.do?docID=";
@@ -352,17 +369,25 @@
 	                openLocation = openLocation + "&uDeptID=" + encodeURIComponent(pArgument[3]) + "&AllFlag=0";
 	                openLocation = openLocation + "&functionType=" + encodeURIComponent(pFunctionType);
 	            } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	            	if (isIE()) {
-		                openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURIComponent(pArgument[0]);
+	            	if("${useWebHWP}" == "NO") {
+		            	if (isIE()) {
+			                openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURIComponent(pArgument[0]);
+			                openLocation = openLocation + "&id=" + encodeURIComponent(pArgument[1]) + "&name=" + encodeURIComponent(pArgument[2]);
+			                openLocation = openLocation + "&deptID=" + encodeURIComponent(pArgument[3]) + "&allFlag=0" + "&docState=" + encodeURIComponent(pDocState);
+			                openLocation += "&orgCompanyID=" + encodeURIComponent(orgCompanyID);
+			                openLocation += "&functionType=" + encodeURIComponent(pFunctionType);
+		            	} else {
+		            		var pAlertContent = "<spring:message code='ezNewPortal.t038' />";
+		                    alert(pAlertContent);
+		                    
+		                    return;
+		            	}
+	            	} else {
+	            		openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + encodeURIComponent(pArgument[0]);
 		                openLocation = openLocation + "&id=" + encodeURIComponent(pArgument[1]) + "&name=" + encodeURIComponent(pArgument[2]);
 		                openLocation = openLocation + "&deptID=" + encodeURIComponent(pArgument[3]) + "&allFlag=0" + "&docState=" + encodeURIComponent(pDocState);
 		                openLocation += "&orgCompanyID=" + encodeURIComponent(orgCompanyID);
 		                openLocation += "&functionType=" + encodeURIComponent(pFunctionType);
-	            	} else {
-	            		var pAlertContent = "<spring:message code='ezNewPortal.t038' />";
-	                    alert(pAlertContent);
-	                    
-	                    return;
 	            	}
 	            } else {                
                     openLocation = "/ezApprovalG/approvui.do?docID=";

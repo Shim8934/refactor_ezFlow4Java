@@ -21,5 +21,11 @@ public enum CheckName {
 	useSessionMobile,
 	useMailConfirm,
 	MailBigSizeAttachDownloadLimitCount,
-	MailBigSizeAttachLimitCount
+	MailBigSizeAttachLimitCount,
+	ApprTotalAttachLimit,
+	ApprAttachLimit,
+	BigSizeApprAttachLimit,
+	ApprBigSizeAttachDownloadLimitCount,
+	ApprBigSizeAttachLimitCount,
+	BigSizeApprAttachDelDay
 }

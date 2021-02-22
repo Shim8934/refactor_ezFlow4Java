@@ -266,4 +266,6 @@ public interface EzCommonService {
 	public void createTblTabBoard() throws Exception;
 	
 	public void addScehdulegroup() throws Exception;
+
+	public void insertApprBigAttachInfo() throws Exception;
 }

@@ -1655,4 +1655,69 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		}
 	}
+
+	// 전자결재 대용량첨부 관련 컨피그 5개
+	public void insertApprBigAttachConfig(Map<String, Object> map) {
+		String apprAttachLimit = (String) select("EzCommonDAO.getApprAttachLimit", map);
+		if (apprAttachLimit == null) {
+			logger.debug("apprAttachLimit tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertApprAttachLimit", map);
+		}
+		
+		String bigSizeApprAttachLimit = (String) select("EzCommonDAO.getBigSizeApprAttachLimit", map);
+		if (bigSizeApprAttachLimit == null) {
+			logger.debug("bigSizeApprAttachLimit tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertBigSizeApprAttachLimit", map);
+		}
+		
+		String apprBigSizeAttachDownloadLimitCount = (String) select("EzCommonDAO.getApprBigSizeAttachDownloadLimitCount", map);
+		if (apprBigSizeAttachDownloadLimitCount == null) {
+			logger.debug("apprBigSizeAttachDownloadLimitCount tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertApprBigSizeAttachDownloadLimitCount", map);
+		}
+		
+		String apprBigSizeAttachLimitCount = (String) select("EzCommonDAO.getApprBigSizeAttachLimitCount", map);
+		if (apprBigSizeAttachLimitCount == null) {
+			logger.debug("apprBigSizeAttachLimitCount tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertApprBigSizeAttachLimitCount", map);
+		}
+		
+		String bigSizeApprAttachDelDay = (String) select("EzCommonDAO.getBigSizeApprAttachDelDay", map);
+		if (bigSizeApprAttachDelDay == null) {
+			logger.debug("apprAttachLimit tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertBigSizeApprAttachDelDay", map);
+		}
+	}
+
+	// 전자결재 대용량첨부 관련 컬럼 3개
+	public void addApprBigAttachColumn() {
+        try {
+            select("EzCommonDAO.checkApprBigAttachColumn_APR");
+        } catch (Exception e) {
+            logger.debug("tbl_aprattachinfo ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE column doesn't exist. creating the column...");
+            update("EzCommonDAO.updateApprBigAttachColumn_APR");
+        }
+        try {
+            select("EzCommonDAO.checkApprBigAttachColumn_END");
+        } catch (Exception e) {
+            logger.debug("tbl_endattachinfo ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE column doesn't exist. creating the column...");
+            update("EzCommonDAO.updateApprBigAttachColumn_END");
+        }
+        try {
+            select("EzCommonDAO.checkApprBigAttachColumn_TMP");
+        } catch (Exception e) {
+            logger.debug("tbl_tmpattachinfo ISBIGATTACH, ISBIGATTACHDEL, SAVEDATE column doesn't exist. creating the column...");
+            update("EzCommonDAO.updateApprBigAttachColumn_TMP");
+        }
+	}
+
+	// 전자결재 대용량첨부 관련 TBL_APRBIGATTACH_DOWNLOADINFO 테이블
+	public void createApprBigAttachTable() {
+		try {
+			select("EzCommonDAO.checkApprBigAttachTable");
+		} catch (Exception e) {
+			logger.debug("TBL_APRBIGATTACH_DOWNLOADINFO doesn't exist. creating the table...");
+			update("EzCommonDAO.createApprBigAttachTable");
+		}
+	}
 }

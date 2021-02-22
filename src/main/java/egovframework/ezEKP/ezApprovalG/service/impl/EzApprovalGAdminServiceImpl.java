@@ -2524,6 +2524,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
 		String formDescript = doc.getElementsByTagName("FormDescript").item(0).getTextContent();
 		String formKind = doc.getElementsByTagName("FormKind").item(0).getTextContent();
+		String formXslt = doc.getElementsByTagName("FORMXSLT").item(0).getTextContent();
 		
 		String formSihangType = doc.getElementsByTagName("SIHANGTYPE").item(0).getTextContent();
 		
@@ -2598,6 +2599,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_PCOMPANYID", companyID);
 		map.put("v_PFORMCONNFLAG", formConnFlag);
 		map.put("v_POPENGOVFLAG", openGovFlag);
+		map.put("v_FORMXSLT", formXslt);
 		map.put("v_PPASSAPRLINEFLAG", passAprLineFlag);
 		map.put("companyID", companyID);
 		map.put("tenantID", userInfo.getTenantId());
@@ -3058,7 +3060,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
 		String formDescript = doc.getElementsByTagName("FormDescript").item(0).getTextContent();
 		String formKind = doc.getElementsByTagName("FormKind").item(0).getTextContent();
+		String formXslt = doc.getElementsByTagName("FORMXSLT").item(0).getTextContent();
 		
+		String useWHWP = ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId());
+		// 2020-10-19 김민성 - 한글 웹기안기 신규 양식인 경우 파일로 저장하는 형식
+		String hwpFileName = "";
+		if(formID.equals("") && useWHWP.equalsIgnoreCase("YES")) {
+			hwpFileName = doc.getElementsByTagName("HWPFILEPATH").item(0).getTextContent();
+		}
+
 		String formSihangType = doc.getElementsByTagName("SIHANGTYPE").item(0).getTextContent();
 		
 		/* 2020-07-16 홍승비 - 전자결재 일반버전에서도 연동양식을 사용할 수 있도록 수정 */
@@ -3125,6 +3135,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_PFORMCONNFLAG", formConnFlag);
 		map.put("v_PFORMDRAFTALLFLAG", formDraftAllFlag);
 		map.put("v_POPENGOVFLAG", openGovFlag);
+		map.put("v_FORMXSLT", formXslt);
 		map.put("companyID", companyID);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("v_formAprOption", formAprOption);
@@ -3376,6 +3387,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		
 		if (!isUpdate) {
+			// 1. 기존 한글기안기 사용시
 			if (!formMhtInfo.equals("")) {
 				saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".hwp";
 				
@@ -3406,6 +3418,17 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 							logger.debug("IGNORED: {}", ignore.getMessage());
 						}
 					}
+				}
+			} else {
+				// 2. 웹 한글기안기 사용시
+				if(useWHWP.equalsIgnoreCase("YES")) {
+					String beforeFilePath = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator + hwpFileName;
+					String afterFilePath = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".hwp";
+					
+					File beforeFile = new File(beforeFilePath);
+					File afterFile = new File(afterFilePath);
+					
+					FileUtils.moveFile(beforeFile, afterFile);
 				}
 			}
 		}
