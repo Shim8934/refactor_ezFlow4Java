@@ -14689,6 +14689,19 @@ CREATE TABLE `tbl_auditapprline`(
 	`COMPANYID` VARCHAR(20) NOT NULL,
 	CONSTRAINT `auditapprline_pk` PRIMARY KEY (`AUDITAPPRLINEID`, `USERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tbl_auditapprline`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_yearlydoccount`(
+     "DOC_COUNT" mediumint(11),
+     "DOC_TYPE" VARCHAR(100) COMMENT 'INSEND: 내부발송, OUTSEND: 외부발송, OUTRECIEVE: 외부수신',
+     "MONTH_TYPE" VARCHAR(100) COMMENT '1 ~ 12월, 작년-10(2) ~ 0(12) 월',
+     "CREATE_ID" VARCHAR(80) ,
+     "CREATE_DATE" datetime DEFAULT current_timestamp(),
+     "TENANT_ID" mediumint(5),
+     "COMPANYID" VARCHAR(80)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 -- Final view structure for view `svtaskclass`
 --

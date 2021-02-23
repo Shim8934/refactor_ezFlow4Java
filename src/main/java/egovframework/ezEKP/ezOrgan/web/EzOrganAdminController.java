@@ -177,6 +177,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
 	    	ezCommonService.addThemeContentLang(); //2019-06-25 유은정 - 테마명 다국어 처리 관련 컬럼 및 이닛데이터 추가
 	    	ezCommonService.createThemeAndPortletAuth();
+	    	ezCommonService.createTblYearlyDocCount(); // 2021-02-22 박기범 - 차트 통계 테이브 없을시 자동 생성
+			ezCommonService.insertChartPortletInfo(); //2021-02-22 박기범 - 차트 포틀릿 없을시 자동 생성
 	    	ezCommonService.addMenuAndPortletCode(); //2019-07-15 유은정 - 메뉴, 포틀릿 호출 로직 개선 위한 컬럼 추가
 	    	ezCommonService.createAccessCountry(); //2019-0705 김수아 - 접속 허용 국가 테이블
 	    	ezCommonService.addSnMenuAuth(); //2019-07-29 유은정 - 메뉴 권한 설정 시, 정렬이 저장한 순서대로 나오도록 추가

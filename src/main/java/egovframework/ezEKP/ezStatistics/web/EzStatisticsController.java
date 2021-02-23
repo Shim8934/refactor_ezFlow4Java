@@ -1,8 +1,11 @@
 package egovframework.ezEKP.ezStatistics.web;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezStatistics.service.EzStatisticsAdminService;
+import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -47,6 +50,9 @@ public class EzStatisticsController {
 	
 	@Autowired
 	CommonUtil commonUtil;
+
+	@Resource(name = "EzStatisticsAdminService")
+	private EzStatisticsAdminService ezStatisticsAdminService;
 	
 	/**
 	 * 통계 메인화면 호출 함수
@@ -756,5 +762,21 @@ public class EzStatisticsController {
 		
 		logger.debug("qstResultAnalysisSaveM ended");
 	}
-	
+
+	/**
+	 * call yearlyDocCount
+	 */
+	@RequestMapping(value = "/ezStatistics/callYearlyDocCount.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String callYearlyDocCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,Model model, @RequestBody String xmlPara) throws Exception{
+		logger.debug("callYearlyDocCount started  "+ xmlPara);
+
+		StatApprVO statApprVO = new StatApprVO();
+
+		ezStatisticsAdminService.yearlyDocCount(statApprVO);
+
+		logger.debug("callYearlyDocCount ended ");
+
+		return "success";
+	}
 }

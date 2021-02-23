@@ -3173,58 +3173,58 @@
 		VALUES 
 			(#portletId#, #menuId#, #portletUrl#, #portletType#, #defaultOrder#, #portletCode#)
 	</insert>
-	
+
     <select id="EzCommonDAO.getApprAttachLimit" resultClass="String">
-        SELECT 
-            PROPERTY_NAME 
-        FROM 
-            TBL_TENANT_CONFIG 
-        WHERE 
-            PROPERTY_NAME = 'ApprAttachLimit' 
-        AND 
+        SELECT
+            PROPERTY_NAME
+        FROM
+            TBL_TENANT_CONFIG
+        WHERE
+            PROPERTY_NAME = 'ApprAttachLimit'
+        AND
             TENANT_ID = #v_TENANTID#
     </select>
     <select id="EzCommonDAO.getBigSizeApprAttachLimit" resultClass="String">
-        SELECT 
-            PROPERTY_NAME 
-        FROM 
-            TBL_TENANT_CONFIG 
-        WHERE 
-            PROPERTY_NAME = 'BigSizeApprAttachLimit' 
-        AND 
+        SELECT
+            PROPERTY_NAME
+        FROM
+            TBL_TENANT_CONFIG
+        WHERE
+            PROPERTY_NAME = 'BigSizeApprAttachLimit'
+        AND
             TENANT_ID = #v_TENANTID#
     </select>
     <select id="EzCommonDAO.getApprBigSizeAttachDownloadLimitCount" resultClass="String">
-        SELECT 
-            PROPERTY_NAME 
-        FROM 
-            TBL_TENANT_CONFIG 
-        WHERE 
-            PROPERTY_NAME = 'ApprBigSizeAttachDownloadLimitCount' 
-        AND 
+        SELECT
+            PROPERTY_NAME
+        FROM
+            TBL_TENANT_CONFIG
+        WHERE
+            PROPERTY_NAME = 'ApprBigSizeAttachDownloadLimitCount'
+        AND
             TENANT_ID = #v_TENANTID#
     </select>
     <select id="EzCommonDAO.getApprBigSizeAttachLimitCount" resultClass="String">
-        SELECT 
-            PROPERTY_NAME 
-        FROM 
-            TBL_TENANT_CONFIG 
-        WHERE 
-            PROPERTY_NAME = 'ApprBigSizeAttachLimitCount' 
-        AND 
+        SELECT
+            PROPERTY_NAME
+        FROM
+            TBL_TENANT_CONFIG
+        WHERE
+            PROPERTY_NAME = 'ApprBigSizeAttachLimitCount'
+        AND
             TENANT_ID = #v_TENANTID#
     </select>
     <select id="EzCommonDAO.getBigSizeApprAttachDelDay" resultClass="String">
-        SELECT 
-            PROPERTY_NAME 
-        FROM 
-            TBL_TENANT_CONFIG 
-        WHERE 
-            PROPERTY_NAME = 'BigSizeApprAttachDelDay' 
-        AND 
+        SELECT
+            PROPERTY_NAME
+        FROM
+            TBL_TENANT_CONFIG
+        WHERE
+            PROPERTY_NAME = 'BigSizeApprAttachDelDay'
+        AND
             TENANT_ID = #v_TENANTID#
     </select>
-    
+
 	<insert id="EzCommonDAO.insertApprAttachLimit">
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
     		VALUES (#v_TENANTID#, 'ApprAttachLimit', '전자결재 일반 첨부파일 최대 크기', '10', 'MB 단위로 메일 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재')
@@ -3245,12 +3245,12 @@
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
     		VALUES (#v_TENANTID#, 'BigSizeApprAttachDelDay', '전자결재 대용량 첨부파일 보존기간', '14', '일 단위로 보존기간을 지정한다. 지정한 기간이 지나면 메일 대용량 첨부파일을 삭제한다. (default: 14)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재')
 	</insert>
-	
+
 	<select id="EzCommonDAO.checkApprBigAttachColumn_APR">
         <![CDATA[
-        SELECT 
+        SELECT
             ISBIGATTACH
-        FROM 
+        FROM
             TBL_APRATTACHINFO
         WHERE
             ROWNUM <= 1
@@ -3258,9 +3258,9 @@
     </select>
 	<select id="EzCommonDAO.checkApprBigAttachColumn_END">
         <![CDATA[
-        SELECT 
+        SELECT
             ISBIGATTACH
-        FROM 
+        FROM
             TBL_ENDATTACHINFO
         WHERE
             ROWNUM <= 1
@@ -3268,51 +3268,51 @@
     </select>
 	<select id="EzCommonDAO.checkApprBigAttachColumn_TMP">
         <![CDATA[
-        SELECT 
+        SELECT
             ISBIGATTACH
-        FROM 
+        FROM
             TBL_TMPATTACHINFO
         WHERE
             ROWNUM <= 1
         ]]>
     </select>
-    
+
 	<statement id="EzCommonDAO.updateApprBigAttachColumn_APR">
-		ALTER TABLE 
+		ALTER TABLE
 			TBL_APRATTACHINFO
-		ADD 
+		ADD
 			(ISBIGATTACH CHAR(1 CHAR) DEFAULT 'N', ISBIGATTACHDEL CHAR(1 CHAR) DEFAULT 'N', SAVEDATE DATE)
 	</statement>
 	<statement id="EzCommonDAO.updateApprBigAttachColumn_END">
-		ALTER TABLE 
+		ALTER TABLE
 			TBL_ENDATTACHINFO
-		ADD 
+		ADD
 			(ISBIGATTACH CHAR(1 CHAR) DEFAULT 'N', ISBIGATTACHDEL CHAR(1 CHAR) DEFAULT 'N', SAVEDATE DATE)
 	</statement>
 	<statement id="EzCommonDAO.updateApprBigAttachColumn_TMP">
-		ALTER TABLE 
+		ALTER TABLE
 			TBL_TMPATTACHINFO
-		ADD 
+		ADD
 			(ISBIGATTACH CHAR(1 CHAR) DEFAULT 'N', ISBIGATTACHDEL CHAR(1 CHAR) DEFAULT 'N', SAVEDATE DATE)
 	</statement>
 
 	<select id="EzCommonDAO.checkApprBigAttachTable">
 		<![CDATA[
-			SELECT 
+			SELECT
 				DOCID
-			FROM 
+			FROM
 				TBL_APRBIGATTACH_DOWNLOADINFO
 			WHERE
 				ROWNUM <= 1
 		]]>
 	</select>
 	<statement id="EzCommonDAO.createApprBigAttachTable">
-		CREATE TABLE "TBL_APRBIGATTACH_DOWNLOADINFO" (	
-			"DOCID" CHAR(20 BYTE) NOT NULL ENABLE, 
-		    "ATTACHFILESN" NUMBER(10,0) NOT NULL ENABLE, 
-		    "DOWNLOAD_COUNT" NUMBER, 
-		    "TENANT_ID" NUMBER(5,0) DEFAULT 0 NOT NULL ENABLE, 
-		    "COMPANYID" VARCHAR2(20 BYTE) NOT NULL ENABLE, 
+		CREATE TABLE "TBL_APRBIGATTACH_DOWNLOADINFO" (
+			"DOCID" CHAR(20 BYTE) NOT NULL ENABLE,
+		    "ATTACHFILESN" NUMBER(10,0) NOT NULL ENABLE,
+		    "DOWNLOAD_COUNT" NUMBER,
+		    "TENANT_ID" NUMBER(5,0) DEFAULT 0 NOT NULL ENABLE,
+		    "COMPANYID" VARCHAR2(20 BYTE) NOT NULL ENABLE,
 		     CONSTRAINT "TBL_APRBIGATTACH_DOWNLOADINFO_PK" PRIMARY KEY ("DOCID", "ATTACHFILESN", "TENANT_ID", "COMPANYID")
 		)
 	</statement>
@@ -3336,5 +3336,46 @@
 			RejectedMail varchar(4) DEFAULT 'Y'
 		)
     </statement>
-	
+
+	<select id="EzCommonDAO.checkChartPortletInfo" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_PORTAL_PORTLET
+		WHERE
+			PORTLETCODE = 'chart'
+	</select>
+
+	<insert id="EzCommonDAO.insertChartPortletName">
+		INSERT ALL
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+			VALUES (#portletId#, #menuId#, 1, #tenantId#, #companyId#, '전자문서 차트')
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+			VALUES (#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'chart')
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+			VALUES (#portletId#, #menuId#, 3, #tenantId#, #companyId#, '図表')
+		SELECT *
+		FROM DUAL
+	</insert>
+
+	<select id="EzCommonDAO.checkTblYearlyDocCount">
+		SELECT
+			DOC_TYPE
+		FROM
+			TBL_YEARLYDOCCOUNT
+		WHERE
+			rownum = 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblYearlyDocCount">
+		CREATE TABLE "TBL_YEARLYDOCCOUNT" (
+			"DOC_COUNT" NUMBER,
+			"DOC_TYPE" NVARCHAR2(100) ,
+			"MONTH_TYPE" NVARCHAR2(100) ,
+			"CREATE_ID" NVARCHAR2(100) ,
+			"CREATE_DATE" DATE DEFAULT SYSDATE,
+			"TENANT_ID" NUMBER(5,0),
+			"COMPANYID" VARCHAR2(160)
+		)
+	</statement>
 </sqlMap>

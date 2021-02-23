@@ -268,13 +268,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblUserMultiLogin");
 		}
 	}
-	
+
 	public void createTblCompanyConfig() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblCompanyConfig");
 		} catch (Exception e) {
 			logger.debug("tbl_company_config doesn't exist. creating the table...");
-			
+
 			update("EzCommonDAO.createTblCompanyConfig");
 		}
 	}
@@ -1622,7 +1622,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public int checkPortletCodeString(Map<String, Object> map) {
 		return (int) select("EzCommonDAO.checkPortletCodeString", map);
 	}
-	
+
 	public void insertTabBoardPortletInfo(Map<String, Object> map) {
 		String companyId = checkPortletForComapny(map);
 
@@ -1637,9 +1637,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
-	
+
 	public int getNewPortletId() {
 		return (int) select("EzCommonDAO.getNewPortletId");
 	}
@@ -1663,25 +1663,25 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("apprAttachLimit tenant config doesn't exist. insert data...");
 			insert("EzCommonDAO.insertApprAttachLimit", map);
 		}
-		
+
 		String bigSizeApprAttachLimit = (String) select("EzCommonDAO.getBigSizeApprAttachLimit", map);
 		if (bigSizeApprAttachLimit == null) {
 			logger.debug("bigSizeApprAttachLimit tenant config doesn't exist. insert data...");
 			insert("EzCommonDAO.insertBigSizeApprAttachLimit", map);
 		}
-		
+
 		String apprBigSizeAttachDownloadLimitCount = (String) select("EzCommonDAO.getApprBigSizeAttachDownloadLimitCount", map);
 		if (apprBigSizeAttachDownloadLimitCount == null) {
 			logger.debug("apprBigSizeAttachDownloadLimitCount tenant config doesn't exist. insert data...");
 			insert("EzCommonDAO.insertApprBigSizeAttachDownloadLimitCount", map);
 		}
-		
+
 		String apprBigSizeAttachLimitCount = (String) select("EzCommonDAO.getApprBigSizeAttachLimitCount", map);
 		if (apprBigSizeAttachLimitCount == null) {
 			logger.debug("apprBigSizeAttachLimitCount tenant config doesn't exist. insert data...");
 			insert("EzCommonDAO.insertApprBigSizeAttachLimitCount", map);
 		}
-		
+
 		String bigSizeApprAttachDelDay = (String) select("EzCommonDAO.getBigSizeApprAttachDelDay", map);
 		if (bigSizeApprAttachDelDay == null) {
 			logger.debug("apprAttachLimit tenant config doesn't exist. insert data...");
@@ -1731,4 +1731,36 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		   update("EzCommonDAO.updateScheduleMailNotiConfig");
 	   }
     }
+
+	public void createTblYearlyDocCount() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblYearlyDocCount");
+		} catch (Exception e) {
+			logger.debug("tbl_yearlydoccount doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblYearlyDocCount");
+		}
+	}
+
+	public int checkChartPortletInfo() {
+		return (int) select("EzCommonDAO.checkChartPortletInfo");
+	}
+
+	public void insertPortletInfoData(Map<String, Object> map) {
+		String companyId = checkPortletForComapny(map);
+
+		if (companyId == null) {
+			try {
+				logger.debug("insert portlet data");
+				insert("EzCommonDAO.insertPortletComp",map);
+				insert("EzCommonDAO.insertPortletName",map);
+				insert("EzCommonDAO.insertPortalThemePortlet",map);
+				insert("EzCommonDAO.insertPortalPortletAuth",map);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
 }
