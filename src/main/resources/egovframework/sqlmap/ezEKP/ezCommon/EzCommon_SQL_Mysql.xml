@@ -2965,11 +2965,12 @@
     <statement id="EzCommonDAO.updateScehdulegroup">
         ALTER TABLE 
             TBL_SCHEDULEGROUP
-        ADD COLUMN 
+        ADD (
             MODIFYDATE datetime,
             PRECREATORID varchar(100),
             PRECREATORNAME varchar(100),
             PRECREATORNAME2 varchar(100)
+            )
     </statement>
     
     <select id="EzCommonDAO.checkAutoSendOfferFlag" resultClass="int">
