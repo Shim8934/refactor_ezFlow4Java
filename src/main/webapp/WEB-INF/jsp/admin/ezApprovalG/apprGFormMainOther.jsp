@@ -131,7 +131,7 @@
 		        
 		        if (formID != "") {
 		            get_FormInfo();
-		            if (useEditor != "HWP") {
+		            if (!(useEditor == "HWP" || useEditor == "WebHWP")) {
 		                var tempXML = createXmlDom();
 // 		                var XmlBodyATT = createXmlDom();
 		                var XmlBodyDATA = createXmlDom();
@@ -155,23 +155,21 @@
 		
 		                    /* 2020-07-17 홍승비 - 저장한 연동정보의 개행과 탭이 제대로 표출되지 않는 오류 수정 */
 		                    if (TagID == "CONN") {
-		                        ConnData = Doc_ContentHtml.children[i].innerHTML.replace('<CONNINFO>', '').replace('</CONNINFO>', '').replace('<conninfo>', '').replace('</conninfo>', '')
-		                        .replace(/>\t/g, '>\n\t').replace(/<\/?conn[ |>]/g, function($1) {
-									return '\n' + $1;
-								});
+		                        ConnData = Doc_ContentHtml.children[i].innerHTML;
 								
-		                        if (ConnData != "") {
-		                            setNodeText(txt_OpinionContent, ReplaceText(ConnData, "<BR>", "\n"));
+		                        if (ConnData) {
+		                            setNodeText(txt_OpinionContent, ConnData.replace(/<[/]?connroot>/g, "").replace(/conn><conn/g, "conn>\n<conn"));
 		                        }
 		                    }
 		                    else if (TagID == "WORKFLOW") {
-		                        WorkData = GetChildNodes(Doc_ContentHtml)[i].innerHTML.toUpperCase();
-		                        if (WorkData != "") {
-		                            var VALIDATIONS = WorkData.slice(WorkData.indexOf("<VALIDATION>"), WorkData.indexOf("</VALIDATIONS>"));
-		                            setNodeText(txt_OpinionContent1, ReplaceText(VALIDATIONS, "<BR>", "\n"));
+		                        WorkData = Doc_ContentHtml.children[i].innerHTML;
+		                        if (WorkData) {
+									WorkData = Doc_ContentHtml.children[i];
+		                            var VALIDATIONS = GetElementsByTagName(WorkData, "validations")[0].innerHTML;
+		                            setNodeText(txt_OpinionContent1, VALIDATIONS.replace(/><VALIDATION/g, ">\n<VALIDATION"));
 		
-		                            var STATUS = WorkData.slice(WorkData.indexOf("<CHECK>"), WorkData.indexOf("</STATUS>"));
-		                            setNodeText(txt_OpinionContent2, ReplaceText(STATUS, "<BR>", "\n"));
+		                            var STATUS = GetElementsByTagName(WorkData, "aprlines")[0].innerHTML;
+		                            setNodeText(txt_OpinionContent2, STATUS.replace(/><APRLINE/g, ">\n<APRLINE"));
 		                        }
 		                    }
 		                    else if (TagID == "BODYCONTENT") {
@@ -181,11 +179,18 @@
 		                        htmlData += GetChildNodes(Doc_ContentHtml)[i].outerHTML;
 		                    }
 		                }
-		            } else {
+		            } else if(useEditor == "HWP"){
 						setTimeout(function() {
 							Editor_Complete();
 						}, 200);
 		            }
+		        } else {
+		        	// 웹 한글 기안기 최초 작성시 한글 파일 추가 기능으로 사용함
+		        	if(useEditor == "WebHWP") {
+		        		document.getElementById("ApvForm_sub2").style.display = "none";
+		        		document.getElementById("ApvForm_sub3").style.display = "none";
+		        		document.getElementById("ApvForm_sub4").style.display = "none";
+		        	}
 		        }
 		        
 	        	// IE scroll enable
@@ -194,6 +199,14 @@
 	        	}
 		    });
 		
+		        
+		    window.onload = function () {
+		    	<c:if test="${useEditor eq 'WebHWP'}">
+		            var mHeight = document.documentElement.clientHeight - 200 - document.getElementById("message").offsetTop + "px";
+		            message.Resize(mHeight);            
+		        </c:if>
+		    }
+		        
 		    function Editor_Complete() {
 	            if (formURL != "") {
 	                if (useEditor == "HWP") {
@@ -216,6 +229,9 @@
 	                            }
 	                        }
 	                    }
+	                } else if (useEditor == "WebHWP") {
+	                	var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(formURL);
+	                	message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
 	                } else {
 	                    document.getElementById("ApvForm_sub4").style.display = "";
 	                    //위임전결
@@ -224,7 +240,7 @@
 	                    message.SetEditorContent(htmlData);
 	                }
 	            } else {
-	                if (useEditor != "HWP") {
+	                if (useEditor != "HWP" && useEditor != "WebHWP") {
 	                    document.getElementById("ApvForm_sub4").style.display = "";
 	                    //위임전결
 // 		                    document.getElementById("ApvForm_sub6").style.display = "";
@@ -241,6 +257,23 @@
 		        	document.getElementById("ApvForm_sub3").style.display = "none";
 		        	document.getElementById("ApvForm_sub4").style.display = "none";
 		        }
+		    }
+		    
+		    function FieldsAvailable(isTrue) {
+		    	 try {                
+		             if (isTrue) {
+						 message.EditMode(1);	// 0:읽기 전용, 1:일반 편집모드, 2:양식 모드, 16:배포용 문서
+						 var docElemInfo = message.WHWP_GetDocumentElement();
+						 txt_OpinionContent.value = docElemInfo[0];
+						 txt_OpinionContent1.value = docElemInfo[1];
+						 txt_OpinionContent2.value = docElemInfo[2];
+		                //  if (document.getElementById("setConnFlag").checked) {
+		                //      //ConnInfoXmlRead();
+		                //  }
+		              }
+		         } catch (e) {
+		             alert("FieldsAvailable() :: " + e);
+		         }
 		    }
 		
 		    function Attribute_Write(value) {
@@ -293,6 +326,14 @@
 								if (useOpenGov == "YES" && result.vo.openGovFlag == "Y") {
 									document.getElementById("setOpenGovFlag").checked = true;	
 								}
+							}
+
+							var formXslt = result.vo.formXslt;
+							if(formXslt) {
+								formXslt = ConvertEntityReferenceToChar(formXslt);
+
+								document.querySelector("#setBodyXslt").checked = true;
+								document.querySelector("#BodyXslt").value = formXslt;
 							}
 							
 			                /* 2020-05-14 홍승비 - 양식세부옵션 null 체크 추가 */
@@ -734,7 +775,7 @@
 		        FormConnInfo_dialogarguments[0] = "";
 		        FormConnInfo_dialogarguments[1] = FormConnInfo_onclick_Complete;
 		        var url = "/admin/ezApprovalG/formConnInfo.do?companyID=" + encodeURIComponent(companyID);
-		        GetOpenWindow(url, "FormConnInfo", 440, 480, "NO");
+		        GetOpenWindow(url, "FormConnInfo", 440, 500, "NO");
 		    }
 		
 		    function FormConnInfo_onclick_Complete(retVal) {
@@ -921,18 +962,26 @@
 		    }
 		
 		    function btnClose_onclick() {
+		    	btnfiledel();
 		    	window.opener.GetFormInfo(contID, "000", "", "");
 		        window.close();
 		    }
 		
 		    function btn_OpinionAdd1_onclick() {
-		        var SampleXML = "\n <VALIDATION>\n      <FIELD></FIELD>\n       <CLASS></CLASS>\n       <DESC></DESC>\n </VALIDATION>";
-		        txt_OpinionContent1.value = txt_OpinionContent1.value + SampleXML;
+				var SampleXML = "<VALIDATION>\n\t<FIELD></FIELD>\n\t<CLASS></CLASS>\n\t<DESC></DESC>\n</VALIDATION>";
+				if (txt_OpinionContent1.value) {
+					txt_OpinionContent1.value += "\n";
+				}
+		        txt_OpinionContent1.value += SampleXML;
 		    }
 		
 		    function btn_OpinionAdd2_onclick() {
-		        var SampleXML = "\n<CHECK>\n	<CASES>\n		<CASE>\n			<FIELD></FIELD>\n			<VALUE></VALUE>\n			<TYPE></TYPE>\n		</CASE>\n	</CASES>\n		<APRLINES>\n	    <APRLINE>\n			<APRTYPE></APRTYPE>\n			<CLASS></CLASS>\n			<VALUE></VALUE>\n			<DESC></DESC>\n		</APRLINE>\n	</APRLINES>\n</CHECK>";
-		        txt_OpinionContent2.value = txt_OpinionContent2.value + SampleXML;
+		        // var SampleXML = "<CHECK>\n	<CASES>\n		<CASE>\n			<FIELD></FIELD>\n			<VALUE></VALUE>\n			<TYPE></TYPE>\n		</CASE>\n	</CASES>\n		<APRLINES>\n	    <APRLINE>\n			<APRTYPE></APRTYPE>\n			<CLASS></CLASS>\n			<VALUE></VALUE>\n			<DESC></DESC>\n		</APRLINE>\n	</APRLINES>\n</CHECK>";
+				var SampleXML = "<APRLINE>\n\t<APRTYPE></APRTYPE>\n\t<CLASS></CLASS>\n\t<VALUE></VALUE>\n\t<DESC></DESC>\n</APRLINE>";
+				if (txt_OpinionContent2.value) {
+					txt_OpinionContent2.value += "\n";
+				}
+		        txt_OpinionContent2.value += SampleXML;
 		    }
 		    
 		    function btn_FormConnSave_onclick() {
@@ -964,8 +1013,8 @@
 		        }
 		        
 		        OpenInformationUI_Complete();
-		    }
-		    
+			}
+
 		    function GetEntryInfo(_DEPTID) {
 		        var ReceiveDocument = "";
 
@@ -1129,6 +1178,63 @@
 					$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", false);
 				}
 			} */
+			
+			function btnfileup() { document.getElementById("hwpFile").click(); }
+			
+	        var xhr = new XMLHttpRequest();
+			function btn_AttachAdd_onclick() {
+				var extension = document.getElementById("hwpFile").value;
+	            extension = extension.substring(extension.lastIndexOf(".") + 1, extension.length);
+		        
+		        // 첨부파일 확장자 체크(hwp만 가능)
+		        if (extension.toLowerCase() != "hwp") {
+		        	document.getElementById("hwpFile").files[0] = "";
+		        	alert("한글 파일만 가능합니다.");
+		        	return;
+		        }
+		        
+		        var filelist = document.getElementById("hwpFile").files;
+		       
+	            var fd = new FormData();
+	            
+	            if(document.getElementById("hidfileNM").value != "") {
+					btnfiledel();
+				}
+		        
+	            fd.append("fileToUpload", filelist[0]);
+	            
+	            xhr.addEventListener("load", uploadComplete, false);
+	            xhr.open("POST", "/ezApprovalG/uploadAttachForHwp.do");
+	            xhr.send(fd); 
+			}
+			
+			function uploadComplete() {
+                document.getElementById("hwpFile").type = "text";
+                document.getElementById("hwpFile").type = "file";
+	            var xml = loadXMLString(xhr.responseText);
+
+	            document.getElementById("tbFilename").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA1")[0]);
+	            document.getElementById("hidfileNM").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
+			}
+			
+			function btnfiledel() {
+				var file = document.getElementById("hidfileNM").value;
+				
+				if(file !=  "") {
+					$.ajax({
+						async : false,
+						url : '/ezApprovalG/tempUploadFileDelete.do',
+		                type : 'POST',
+		                dataType : 'text',
+		                data : {
+							fileName : file
+		                },
+		                success: function() {
+		                	document.getElementById("hidfileNM").value = "";
+		                }
+					});
+				}
+			}
 		</script>
 		<!-- FormBuilder -->
 		<c:if test="${useReform}">
@@ -1177,6 +1283,7 @@
 					<p id = "ApvForm_sub8" style="display:none;"><span divname="ApvForm_div8" id="1tab8"><spring:message code='reform.menuitem.function'/></span></p>
 				</c:if>
 				<!-- FormBuilder - end -->
+				<p id = "ApvForm_sub10"><span divname="ApvForm_div10" id="1tab10">XSLT</span></p>
 	        </div>
         </div>
         
@@ -1213,6 +1320,18 @@
 						</div>
                     </td>
                 </tr>
+                <c:if test="${useEditor == 'WebHWP' && formID eq null}">
+                <tr>
+                    <th style="width:100px; text-align:center">한글파일</th>
+                    <td style="width:40%;" colspan="7">
+                    	<input type="text" readonly="" id="tbFilename" name="tbFilename" style="width: 350px;">
+                    	<a class="imgbtn imgbck" style="margin-top:1px;">
+        					<span onclick="btnfileup()">본문첨부</span>
+        				</a>
+                    </td>
+                </tr>
+                <input type="file" id="fileBtn" multiple="multiple" class="hiddenBttn">
+                </c:if>
                 <tr>
 					<td colspan="8" style="width:10%; text-align:center;">
 						<input type="checkbox" id="setConnFlag" onclick="changeConnFlag()"/><spring:message code = 'ezApprovalG.t1665' />
@@ -1316,6 +1435,9 @@
                         		<c:when test="${useEditor == 'HWP'}">
 	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/HWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
                         		</c:when>
+                        		<c:when test="${useEditor == 'WebHWP'}">
+	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/WHWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
+                        		</c:when>
                         		<c:otherwise>
 	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectApprovalEditor.do?type=ADMIN&height=770&formID=${formID}" name="message" frameborder="0" style="padding: 0; height: 99%; width: 100%; min-width:800px; overflow: auto;"></iframe>
                         		</c:otherwise>
@@ -1360,9 +1482,9 @@
 	                    &lt;VALIDATIONS&gt;<br>
 	                    <textarea name="txt_OpinionContent1" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:350px" id="txt_OpinionContent1"></textarea>
 	                    <br> &lt;/VALIDATIONS&gt;<br>
-	                    &lt;STATUS&gt;<br>
+	                    &lt;APRLINES&gt;<br>
 	                    <textarea name="txt_OpinionContent2" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:350px" id="txt_OpinionContent2"></textarea>
-	                    <br> &lt;/STATUS&gt;<br>
+	                    <br> &lt;/APRLINES&gt;<br>
 	                    &lt;/WORKFLOW&gt;<br>
 	                    &lt;/xml&gt;
 	                </td>
@@ -1586,11 +1708,59 @@
 		    </div>  
        	</c:if>
        	<!-- FormBuilder - end -->
+		<%-- XSLT --%>
+		<div id="ApvForm_content10" style="width: 100%; height: 828px; padding-top: 10px; overflow-y: auto; display: none;">                          
+            <ul class="contentlayout">
+            	<li class="contentlayout_none">
+                	<h2 class="receiver_tltype01" style="margin-bottom:5px;">
+		            	<span style="min-width: 45px;">XSLT</span>
+		            </h2>
+                    <span><input type="checkbox" style="margin-left: 0; vertical-align: middle;" id="setBodyXslt" name="setBodyXslt"><label for="setBodyXslt">XSLT를 등록하려면 체크하세요.</label></span>
+                    <table class="content" style="width:100%; margin-top: 2px;">
+                        <tbody>
+	                        <tr id="tr_setXslt">
+	                            <th style="width:5%; text-align:center">XSLT</th>
+	                            <td style="width:45%;">                                
+	                                <textarea id="BodyXslt" rows="15" style="resize: none; box-sizing: border-box; margin-top: 3px;"></textarea>
+	                            </td>
+	                            <th style="width:5%; text-align:center">XML</th>
+	                            <td style="width:45%;">                                
+	                                <textarea id="BodyXml" rows="15" style="resize: none; box-sizing: border-box; margin-top: 3px;"></textarea>  
+	                            </td>
+	                        </tr>                        
+	                    </tbody>
+	            	</table>
+                </li>
+                <br/> 
+                <li class="contentlayout_none">
+                	<h2 class="receiver_tltype01" style="margin-bottom:5px;">
+		            	<span style="min-width: 45px;">HTML Sample</span>
+		            </h2>
+                    <a class="imgbtn">
+                    	<span onclick="ViewHTML()" style="font-weight: bold;">HTML변환</span>   
+                    </a>                                                      
+                    <table class="content" style="width:100%; margin-top: 5px;">
+                        <tbody>
+                        	<tr id="tr_htmlView">
+	                            <td> 
+	                                <iframe name="iframeView" id="iframeView" style="height:400px;width:100%;overflow-y:auto" frameborder="0"></iframe>
+	                            </td>
+	                        </tr>
+	                    </tbody>
+	            	</table>
+                </li>
+            </ul>            
+        </div>
+		<%-- XSLT end --%>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background:none rgba(0,0,0,0.5); display:none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
+	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/uploadHwpForm.do" style="display:none">
+			<input type="file" name="file" id="hwpFile" onchange="btn_AttachAdd_onclick()" style="display:none" accept=".hwp"/>
+  		</form>
+        <input type="hidden" id="hidfileNM" name="hidfileNM" value="">
         <form id="bodyForm">
         	<input type="hidden" id="hidCompanyID" value="${companyID}">
         	<input type="hidden" id="hidFormID" value="${formID}">
@@ -1601,6 +1771,49 @@
         </form>
         <script type="text/javascript">
             Tab1_NewTabIni("tab1");
+
+			function ViewHTML() {
+				var pAlertContent = ""
+
+				var xsltCode = document.querySelector("#BodyXslt").value.trim();
+				var xmlCode = document.querySelector("#BodyXml").value.trim();
+
+				if(!xsltCode) {
+					pAlertContent = "XSLT 코드를 입력하세요.";
+		    		OpenAlertUI(pAlertContent);
+		    		return;
+				}
+
+				if(!xmlCode) {
+					pAlertContent = "XML 코드를 입력하세요.";
+		    		OpenAlertUI(pAlertContent);
+		    		return;
+				}
+
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", "/admin/ezApprovalG/convertXmltoHtml.do");
+				xhr.setRequestHeader("Content-Type", "application/json");
+				xhr.onreadystatechange = function() {
+					if(xhr.readyState === XMLHttpRequest.DONE) {
+						if(xhr.status === 200) {
+							var htmlCode = xhr.responseText;
+
+							if(htmlCode) {
+								iframeView.document.body.innerHTML = htmlCode;
+							}
+						} else if(xhr.status === 409) {
+							var pAlertContent = "변환에 실패했습니다.";
+							OpenAlertUI(pAlertContent);
+							return;
+						}
+					}
+				}
+
+				xhr.send(JSON.stringify({
+					xsltCode: xsltCode,
+					xmlCode: xmlCode
+				}));
+			}
         </script>
         <xml id="userlist_h" style="display: none">
             <LISTVIEWDATA>

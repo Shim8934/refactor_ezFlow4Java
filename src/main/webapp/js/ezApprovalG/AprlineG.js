@@ -1731,7 +1731,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN() && ext != 'hwp') {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -1756,7 +1756,7 @@ function OpenConfirmUI(pInformationContent, confirmFunction) {
     var url = "/ezApprovalG/confirmPopup.do";
     confirmInfo = new Array();
     
-    if (CrossYN() && ext != 'hwp') {
+    if (CrossYN()) {
     	confirmInfo[0] = parameter;     
     	confirmInfo[1] = OpenConfirmUI_Complete;
     	confirmInfo[2] = confirmFunction;

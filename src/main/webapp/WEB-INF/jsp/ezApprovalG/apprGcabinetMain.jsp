@@ -92,7 +92,8 @@
 		        var g_DeliveryXmlhttp = createXMLHttpRequest();
 			    var pOpenYaer = "<c:out value ='${openYear}'/>";
 		        var vWriterID;
-				var ext= "";
+		        var ext= "";
+		        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
 				var WriterID = null;
 				var WriterDeptID = null;
 		        var shareDeptId = "${shareDeptId}";
@@ -1123,7 +1124,7 @@
 		        var parameter = pInformationContent;
 		        var url = "/ezApprovalG/ezAprOpinion.do";
 
-		        if (CrossYN() && ext != 'hwp') {
+		        if (CrossYN()) {
 		            ezapropinion_cross_dialogArguments[0] = parameter;
 		            if (CompleteFunction != undefined)
 		                ezapropinion_cross_dialogArguments[1] = CompleteFunction;

@@ -46,6 +46,23 @@
 	function Editor_Complete() {
 		iframe_content_reform.SetEditorContent(reformEditorContent);
 	}
+
+	function getControlList() {
+		var controls = [];
+
+		var controlListElem = document.getElementById("__reform_control_list");
+		if (controlListElem) {
+			var controlIdStr = controlListElem.getAttribute("value");
+			if (controlIdStr) {
+				controlIds = JSON.parse(controlIdStr);
+				controls = controlIds.map(function(id) {
+					return document.getElementById(id);
+				});
+			}
+		}
+
+		return controls;
+	}
 </script>
 <c:if test="${!empty reformFunctionUrl}">
 	<script type="text/javascript" src="${util.addVer(reformFunctionUrl)}"></script>

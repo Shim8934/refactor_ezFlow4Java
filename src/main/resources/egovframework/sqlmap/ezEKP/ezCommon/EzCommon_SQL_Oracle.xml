@@ -3174,6 +3174,149 @@
 			(#portletId#, #menuId#, #portletUrl#, #portletType#, #defaultOrder#, #portletCode#)
 	</insert>
 
+    <select id="EzCommonDAO.getApprAttachLimit" resultClass="String">
+        SELECT
+            PROPERTY_NAME
+        FROM
+            TBL_TENANT_CONFIG
+        WHERE
+            PROPERTY_NAME = 'ApprAttachLimit'
+        AND
+            TENANT_ID = #v_TENANTID#
+    </select>
+    <select id="EzCommonDAO.getBigSizeApprAttachLimit" resultClass="String">
+        SELECT
+            PROPERTY_NAME
+        FROM
+            TBL_TENANT_CONFIG
+        WHERE
+            PROPERTY_NAME = 'BigSizeApprAttachLimit'
+        AND
+            TENANT_ID = #v_TENANTID#
+    </select>
+    <select id="EzCommonDAO.getApprBigSizeAttachDownloadLimitCount" resultClass="String">
+        SELECT
+            PROPERTY_NAME
+        FROM
+            TBL_TENANT_CONFIG
+        WHERE
+            PROPERTY_NAME = 'ApprBigSizeAttachDownloadLimitCount'
+        AND
+            TENANT_ID = #v_TENANTID#
+    </select>
+    <select id="EzCommonDAO.getApprBigSizeAttachLimitCount" resultClass="String">
+        SELECT
+            PROPERTY_NAME
+        FROM
+            TBL_TENANT_CONFIG
+        WHERE
+            PROPERTY_NAME = 'ApprBigSizeAttachLimitCount'
+        AND
+            TENANT_ID = #v_TENANTID#
+    </select>
+    <select id="EzCommonDAO.getBigSizeApprAttachDelDay" resultClass="String">
+        SELECT
+            PROPERTY_NAME
+        FROM
+            TBL_TENANT_CONFIG
+        WHERE
+            PROPERTY_NAME = 'BigSizeApprAttachDelDay'
+        AND
+            TENANT_ID = #v_TENANTID#
+    </select>
+
+	<insert id="EzCommonDAO.insertApprAttachLimit">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+    		VALUES (#v_TENANTID#, 'ApprAttachLimit', '전자결재 일반 첨부파일 최대 크기', '10', 'MB 단위로 메일 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+	</insert>
+	<insert id="EzCommonDAO.insertBigSizeApprAttachLimit">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+			VALUES (#v_TENANTID#, 'BigSizeApprAttachLimit', '전자결재 대용량 첨부파일 최대 크기', '800', 'MB 단위로 대용량 첨부파일의 최대 크기를 지정한다.0: 대용량 첨부파일 사용안함 (default: 800)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+	</insert>
+	<insert id="EzCommonDAO.insertApprBigSizeAttachDownloadLimitCount">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+			VALUES (#v_TENANTID#, 'ApprBigSizeAttachDownloadLimitCount', '전자결재 대용량첨부 다운로드 횟수 제한', '0', '대용량첨부 다운로드 횟수 제한, 0일 경우 무제한', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+	</insert>
+	<insert id="EzCommonDAO.insertApprBigSizeAttachLimitCount">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+    		VALUES (#v_TENANTID#, 'ApprBigSizeAttachLimitCount', '전자결재 대용량첨부 개수 제한', '0', '대용량첨부 개수 제한, 0일 경우 무제한', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+	</insert>
+	<insert id="EzCommonDAO.insertBigSizeApprAttachDelDay">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+    		VALUES (#v_TENANTID#, 'BigSizeApprAttachDelDay', '전자결재 대용량 첨부파일 보존기간', '14', '일 단위로 보존기간을 지정한다. 지정한 기간이 지나면 메일 대용량 첨부파일을 삭제한다. (default: 14)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+	</insert>
+
+	<select id="EzCommonDAO.checkApprBigAttachColumn_APR">
+        <![CDATA[
+        SELECT
+            ISBIGATTACH
+        FROM
+            TBL_APRATTACHINFO
+        WHERE
+            ROWNUM <= 1
+        ]]>
+    </select>
+	<select id="EzCommonDAO.checkApprBigAttachColumn_END">
+        <![CDATA[
+        SELECT
+            ISBIGATTACH
+        FROM
+            TBL_ENDATTACHINFO
+        WHERE
+            ROWNUM <= 1
+        ]]>
+    </select>
+	<select id="EzCommonDAO.checkApprBigAttachColumn_TMP">
+        <![CDATA[
+        SELECT
+            ISBIGATTACH
+        FROM
+            TBL_TMPATTACHINFO
+        WHERE
+            ROWNUM <= 1
+        ]]>
+    </select>
+
+	<statement id="EzCommonDAO.updateApprBigAttachColumn_APR">
+		ALTER TABLE
+			TBL_APRATTACHINFO
+		ADD
+			(ISBIGATTACH CHAR(1 CHAR) DEFAULT 'N', ISBIGATTACHDEL CHAR(1 CHAR) DEFAULT 'N', SAVEDATE DATE)
+	</statement>
+	<statement id="EzCommonDAO.updateApprBigAttachColumn_END">
+		ALTER TABLE
+			TBL_ENDATTACHINFO
+		ADD
+			(ISBIGATTACH CHAR(1 CHAR) DEFAULT 'N', ISBIGATTACHDEL CHAR(1 CHAR) DEFAULT 'N', SAVEDATE DATE)
+	</statement>
+	<statement id="EzCommonDAO.updateApprBigAttachColumn_TMP">
+		ALTER TABLE
+			TBL_TMPATTACHINFO
+		ADD
+			(ISBIGATTACH CHAR(1 CHAR) DEFAULT 'N', ISBIGATTACHDEL CHAR(1 CHAR) DEFAULT 'N', SAVEDATE DATE)
+	</statement>
+
+	<select id="EzCommonDAO.checkApprBigAttachTable">
+		<![CDATA[
+			SELECT
+				DOCID
+			FROM
+				TBL_APRBIGATTACH_DOWNLOADINFO
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createApprBigAttachTable">
+		CREATE TABLE "TBL_APRBIGATTACH_DOWNLOADINFO" (
+			"DOCID" CHAR(20 BYTE) NOT NULL ENABLE,
+		    "ATTACHFILESN" NUMBER(10,0) NOT NULL ENABLE,
+		    "DOWNLOAD_COUNT" NUMBER,
+		    "TENANT_ID" NUMBER(5,0) DEFAULT 0 NOT NULL ENABLE,
+		    "COMPANYID" VARCHAR2(20 BYTE) NOT NULL ENABLE,
+		     CONSTRAINT "TBL_APRBIGATTACH_DOWNLOADINFO_PK" PRIMARY KEY ("DOCID", "ATTACHFILESN", "TENANT_ID", "COMPANYID")
+		)
+	</statement>
+
 	<select id="EzCommonDAO.checkChartPortletInfo" resultClass="int">
 		SELECT
 			COUNT(*)

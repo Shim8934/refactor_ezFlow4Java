@@ -41,6 +41,7 @@ function trim(str) {
  * */
 function setAttachInfo(tempDocID, INGFlag, attachTag) {
     attachTag.innerHTML = "";
+    var docAttachTag = document.getElementById(attachTag.id + "Doc"); // 문서첨부영역 분리
     
 	var result = "";
 	
@@ -80,16 +81,20 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     xmldom =loadXMLString(result);
     var xmlRtn = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
     if (xmlRtn.length > 0) {
-        var strAttach = " &nbsp ";
+        var strAttach = "";
+        var strDocAttach = " &nbsp ";
         var rep = /'/g;
         for (i = 0; i < xmlRtn.length; i++) {
             var Row = xmlRtn[i];
             var Cell = GetChildNodes(Row);
 
+            // 일반 파일 첨부
             if (SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA4") == "File" || SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA4") == strLang1136) {
                 var IncodFileNM = encodeURIComponent(SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA1"));
                 var filename = encodeURIComponent(getNodeText(GetChildNodes(xmlRtn[i])[1]));
                 var filepath = IncodFileNM.replace(rep, "&#39;");
+                var xmlFileName = MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])); // 특문처리를 거쳐서 실제 파일명과 파일경로을 표출
+                var xmlFilePath = MakeXMLString(SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA1"));
                 var strTarget = "target='_blank'";
                 var fileImage = "";
                 var strFileExt = filename.substr(filename.lastIndexOf('.')).toLowerCase();
@@ -129,12 +134,24 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 var protocol = window.location.protocol;
                 var serverName = window.location.hostname;
 
+                /* 2020-11-18 홍승비 - 선택 및 다중 다운로드를 위한 체크박스 추가, 파일 아이콘 위치 정렬 */
+                strAttach = strAttach + "<span style='display:inline-block;'><input type='checkbox' name='fileSelect' fileName=\"" + xmlFileName + "\" filepath=\"" + xmlFilePath +"\">";
                 strAttach = strAttach + "<a href= /ezApprovalG/downloadAttach.do?fileName=" + filename + "&docID=" + tempDocID + "&docStatus=" + INGFlag + "&docAttachSN=" + SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA2") + "&filePath=" + filepath + " onclick='AttachProcess()'>";
                 //strAttach = strAttach + "<a href='/myoffice/Common/downloadattach.aspx?filename=" + filename + "&filepath=" + filepath + "' " + strTarget + "' onclick='AttachProcess()'>";
 
-                strAttach = strAttach + "<IMG SRC='" + fileImage + "' border='0'>";
-                strAttach = strAttach + MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])) + "</a> &nbsp; ";
+                strAttach = strAttach + "<IMG SRC='" + fileImage + "' border='0' style='vertical-align:sub;'>";
+                strAttach = strAttach + MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])) + "</a>";
+                
+                if (SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "ISBIGATTACH") == "Y") { // 대용량첨부파일 표시
+                	strAttach = strAttach + " <font style='color:blue'>[" + strLangHSBAt02 + "]</font> &nbsp;</span>";
+                } else {
+                	strAttach = strAttach + " &nbsp;</span>";
+                }
+                
+                /* 2020-11-17 홍승비 - 일반첨부와 문서첨부 영역의 분리 */
+                attachTag.innerHTML = strAttach + "<iframe frameborder=\"0\" id=\"ifrmDownload\" name=\"ifrmDownload\" src=\"about:blank\" width=\"0\" height=\"0\"></iframe>";
             }
+            // 문서첨부
             else {
                 var FilePath = trim_Cross(SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA1"));
                 var FileExt = getOriginalFileExtension(FilePath);
@@ -143,9 +160,9 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 var FileName = trim_Cross(getNodeText(GetChildNodes(xmlRtn[i])[1]));
                 var OpenLocation = "";
                 if (FileDocID == "" && FilePath == "") {
-                    strAttach = strAttach + "<a style='cursor:pointer' onclick=\"OpenAttachAlertUI('" + strLang260 + "')\">";
-                    strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
-                    strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
+                	strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"OpenAttachAlertUI('" + strLang260 + "')\">";
+                	strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
+                    strDocAttach = strDocAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
                 } else if (FileExt == "hwp") {
                 	//2018-09-12 천성준 - mht결재문서에 hwp문서를 문서첨부 하고 IE가 아닌 chrome으로 mht결재문서를 문서보기 하면 알럿이 뜨면서 첨부파일 정보가 공백이 되어서 IE검사 주석처리함. 대신 문서보기 하단 문서첨부를 클릭해서 열때 hwp이면 IE검사를 하게 로직 추가함
                 	/*if (isIE()) {
@@ -160,22 +177,35 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                         
                         return;
                     }*/ 
-                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escapenew(FileDocID) +
-                	"&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
-                	strAttach = strAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
-                	strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
-                	strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
+                	if(useWebHWP == "NO") {
+	                	if(isIE()) {
+		                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
+	                	} else {
+	                    	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                    	alert(pAlertContent);
+	                        
+	                        return;
+	                    }
+                	} else {
+                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
+                	}
+                	strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
+                	strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
+                	strDocAttach = strDocAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
+                	
                 } else {
                     openLocation = "/ezApprovalG/contDocView.do";
                     openLocation = openLocation + "?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocID=";
-                    strAttach = strAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
-                    strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
-                    strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
+                    strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
+                    strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
+                    strDocAttach = strDocAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
                 }
+                
+                /* 2020-11-17 홍승비 - 일반첨부와 문서첨부 영역의 분리 */
+                docAttachTag.innerHTML = strDocAttach + "<iframe frameborder=\"0\" id=\"ifrmDownload\" name=\"ifrmDownload\" src=\"about:blank\" width=\"0\" height=\"0\"></iframe>";
             }
-
         }
-        attachTag.innerHTML = strAttach + "<iframe frameborder=\"0\" id=\"ifrmDownload\" name=\"ifrmDownload\" src=\"about:blank\" width=\"0\" height=\"0\"></iframe>";
+        
         try {
             pHasAttachYN = "Y";
         } catch (e) { }
@@ -225,12 +255,16 @@ function openAttachView(wfileLocation, wName, wWeigth, wHeigth) {
         }
         //2018-09-12 천성준 - 결재문서 문서보기 시, 첨부파일 중 hwp문서첨부를 열때 IE인지 검사하는 로직 추가
         if (wfileLocation.toLowerCase().indexOf(".hwp") > -1) {
-        	if (isIE()) {
-        		window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+        	if(useWebHWP == "NO") {
+	        	if (isIE()) {
+	        		window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+	        	} else {
+	        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	            	alert(pAlertContent);
+	                return;
+	        	}
         	} else {
-        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-            	alert(pAlertContent);
-                return;
+        		window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
         	}
         } else {
         	window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
@@ -260,3 +294,48 @@ function OpenAlertUI_Complete() {
 }
 // END
 
+/* 2020-11-18 홍승비 - 전자결재 첨부파일 모두선택 함수 */
+function attach_SelectAll() {
+	var attachChkBoxs = $("#lstAttachLink").find("input:checkbox");
+	
+	if (attachChkBoxs.length > 0) {
+		attachChkBoxs.each(function() {
+			this.checked = true;
+		});
+	}
+}
+
+/* 2020-11-18 홍승비 - 전자결재 첨부파일 다중 다운로드 함수 (체크한 파일이 2개 이상이라면 zip으로 다운로드) */
+function attach_Download() {
+    var checkedFiles = $("#lstAttachLink").find("input:checkbox[name='fileSelect']:checked");
+    var checkedFilesLength = checkedFiles.length;
+    var filePath = ""; // 전체파일경로
+    var filePaths = ""; // 각 파일의 저장경로 (/fileroot/...)
+	var fileNames = ""; // 파일이름
+	
+	if (checkedFilesLength == 1) { // 하나만 저장하는 경우
+		checkedFiles.next()[0].click();
+	}
+	else if (checkedFilesLength > 1) { // 여러개는 zip으로 저장
+		for (var i = 0; i < checkedFilesLength; i++) {
+			filePaths += GetAttribute(checkedFiles.get(i), "filepath") + ":::"; // 각 파일의 상대경로 (/fileroot/.../....../파일명) + 구분자
+			fileNames += GetAttribute(checkedFiles.get(i), "fileName") + ":::"; // 각 파일의 이름 + 구분자
+		}
+		
+		var $frm = $("<form></form>");
+    	$frm.attr("action", "/ezApprovalG/downloadAttachAll.do");
+    	$frm.attr("method", "post");
+    	$frm.appendTo("body");
+    	
+    	// 서버단의 HttpServletRequest가 이스케이프 문자를 해석하므로, 다시 한 번 인코딩을 진행하여 값을 전달 
+    	param1 = $("<input type='hidden' value=\"" + MakeXMLString(filePaths) + "\" name='filePaths' />");
+    	param2 = $("<input type='hidden' value=\"" + MakeXMLString(fileNames) + "\" name='fileNames' />");
+    	
+    	$frm.append(param1).append(param2);
+    	$frm.submit();
+	}
+	else { // 체크된 파일 없음
+		alert(strLangHSBAt12);
+		return;
+	}
+}

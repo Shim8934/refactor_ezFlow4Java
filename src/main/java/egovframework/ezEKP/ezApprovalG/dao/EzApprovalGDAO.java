@@ -3562,8 +3562,53 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocList", map);
 	}
 	
+	public int cntAttachFileCanDownload(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.cntAttachFileCanDownload", map);
+	}
+
+	public int cntIsBigAttachFile(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.cntIsBigAttachFile", map);
+	}
+
+	public int cntDownloadLimitCntExists(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.cntDownloadLimitCntExists", map);
+	}
+
+	public int getBigAttachFileDownloadCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getBigAttachFileDownloadCnt", map);
+	}
+
+	public void insertBigAttachFileDownloadCnt(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertBigAttachFileDownloadCnt", map);
+	}
+	
+	public void updateBigAttachFileDownloadCnt(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateBigAttachFileDownloadCnt", map);
+	}
+
+	public void deleteBigAttachFileDownloadCnt(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteBigAttachFileDownloadCnt", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGAttachInfoVO> getBigAttachFileForDelete(Map<String, Object> map) throws Exception {
+		return (List<ApprGAttachInfoVO>) list("EzApprovalG.getBigAttachFileForDelete", map);
+	}
+
+	public void updateIsBigAttachDel(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateIsBigAttachDel", map);
+	}
+
+	public String getAttachFileMinSaveDate(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getAttachFileMinSaveDate", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<ApprGYesanGamsaVO> getGamsaYesanDeptInfo(Map<String, Object> map) throws Exception {
-		return (List<ApprGYesanGamsaVO>) list("EzApprovalG.getGamsaYesanDeptInfo", map);
+	    return (List<ApprGYesanGamsaVO>) list("EzApprovalG.getGamsaYesanDeptInfo", map);
+	}
+	
+	public Map<String, Object> getDocProcessState(Map<String, Object> map) throws Exception {
+		return (Map<String, Object>) select("EzApprovalG.getDocProcessState", map);
 	}
 }

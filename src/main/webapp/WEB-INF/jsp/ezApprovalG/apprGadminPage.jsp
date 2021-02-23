@@ -75,6 +75,7 @@
 	        var OpenWin;
 	        var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 	        var ext = "";
+	        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
 	        
 	        document.onselectstart = function () { return false; };
 	        

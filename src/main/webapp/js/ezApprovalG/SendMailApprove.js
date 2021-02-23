@@ -129,7 +129,10 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     if(Subject == strLang1122) {
     	if (Method != "007") {
     		if (docExt == "hwp") {
-    			Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiHWP.do?docID="+pDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    			if(useWebHWP == "YES")
+    				Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiWHWP.do?docID="+pDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
+    			else
+    				Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiHWP.do?docID="+pDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
     		} else {
     			Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvui.do?docID="+pDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
     		}
@@ -640,14 +643,14 @@ function SendMailToDrafter() {
     sendmail(NextUser, pDocTitle, Drafter, startDate, "approve_complete", "");
 }
 
-function SendMailToDrafter_Hesong() {
-    var pwriterID   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
-    var Drafter     = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
-    var pDocTitle   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
-    var NextUser = pwriterID;
+function SendMailToDrafter_Hesong(pWriterID, pWirterName, pDocTitle) {
+    // var pWriterID   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
+    // var drafter     = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
+    // var pDocTitle   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
+    var NextUser = pWriterID;
     
     getOpinionInfo(pDocID, "APR");
-    sendmail(NextUser, pDocTitle, Drafter, "", "hesong", "");
+    sendmail(NextUser, pDocTitle, pWirterName, "", "hesong", "");
 }
 
 function trim(str)
@@ -791,7 +794,7 @@ function SendMailHesong(CurSelRow) {
 
 }
 
-function SendMailToCancel(DocID) {
+function SendMailToCancel(DocID, pDocTitle, pDrafterName, pDraftDate) {
     var linelist = getAprLinefor("APR", DocID);
     var MemberList = createXmlDom();
     MemberList = loadXMLString(linelist);
@@ -809,34 +812,34 @@ function SendMailToCancel(DocID) {
 
     var nextID = getNodeText(GetChildNodes(GetChildNodes(objNodes[i - 1])[0])[4]);
     
-    var DocList = new ListView();
-    DocList.LoadFromID("DocList");
-    var oArrRows = DocList.GetSelectedRows();
-    var pCurSelRow = oArrRows[0]; 
+    // var DocList = new ListView();
+    // DocList.LoadFromID("DocList");
+    // var oArrRows = DocList.GetSelectedRows();
+    // var pCurSelRow = oArrRows[0]; 
     
     /* 2020-07-31 홍승비 - 의견여부 아이콘이 추가되어 발생한 사이드이펙트 수정 */
-    var doctitle = "";
-    var dratertname = "";
-    var startdate = "";
+    var doctitle = pDocTitle;
+    var dratertname = pDrafterName;
+    var startdate = pDraftDate;
     
     // 제목, 기안자, 기안일 데이터를 리스트뷰의 셀에서 가져온다. (리스트헤더의 colname 속성 활용)
-    var docListHeader = $("#DocList").find("tr[id='DocList_TH']");
+    // var docListHeader = $("#DocList").find("tr[id='DocList_TH']");
     
-    if (docListHeader.length > 0) {
-	    var docTitleIdx = docListHeader.find("th[colname='DOCTITLE']").index();
-	    var drafterNameIdx = docListHeader.find("th[colname='WRITERNAME']").index();
-	    var startDateIdx = docListHeader.find("th[colname='STARTDATE']").index();
+    // if (docListHeader.length > 0) {
+	//     var docTitleIdx = docListHeader.find("th[colname='DOCTITLE']").index();
+	//     var drafterNameIdx = docListHeader.find("th[colname='WRITERNAME']").index();
+	//     var startDateIdx = docListHeader.find("th[colname='STARTDATE']").index();
 	   
-		if (docTitleIdx >= 0) {
-			doctitle = pCurSelRow.cells[docTitleIdx].innerText;
-		}
-		if (drafterNameIdx >= 0) {
-			dratertname = pCurSelRow.cells[drafterNameIdx].innerText;
-		}
-		if (startDateIdx >= 0) {
-			startdate = pCurSelRow.cells[startDateIdx].innerText;
-		}
-    }
+	// 	if (docTitleIdx >= 0) {
+	// 		doctitle = pCurSelRow.cells[docTitleIdx].innerText;
+	// 	}
+	// 	if (drafterNameIdx >= 0) {
+	// 		dratertname = pCurSelRow.cells[drafterNameIdx].innerText;
+	// 	}
+	// 	if (startDateIdx >= 0) {
+	// 		startdate = pCurSelRow.cells[startDateIdx].innerText;
+	// 	}
+    // }
    
     // 기존 리스트뷰에서 하드하게 데이터 가져오는 부분 주석처리
     /*

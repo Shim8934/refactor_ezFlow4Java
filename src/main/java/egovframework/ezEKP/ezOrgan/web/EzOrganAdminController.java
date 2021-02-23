@@ -234,6 +234,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertTabBoardPortlet(); //2020-12-03 박기범 - 탭게시판포틀릿 추가
 	    	ezCommonService.createTblTabBoard(); //2020-12-04 탭게시판 등록 용 테이블 추가
 	    	ezCommonService.addScehdulegroup(); //2021-02-17 그룹일정의 tbl_schedulegroup 컬럼 추가
+	    	ezCommonService.insertApprBigAttachInfo(); //2021-02-10 홍승비 - 전자결재 대용량첨부 컨피그, 칼럼, 테이블 추가
     	} catch (Exception e) {
     		e.printStackTrace();
     	}

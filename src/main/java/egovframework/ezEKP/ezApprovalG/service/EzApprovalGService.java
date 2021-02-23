@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.service;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
@@ -729,4 +730,27 @@ public interface EzApprovalGService {
 	public String getAuditAdd(String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception;
 
 	public String getGamsaYesanDeptInfo(String approvalFlag, String companyID, String lang, int tenantID) throws Exception;
+	
+	/* 2020-11-13 홍승비 - 특정 첨부파일이 대용량첨부인지, 대용량첨부라면 다운로드가 가능한지 체크하여 반환*/
+	public String checkAttachFileCanDownload(String docID, String docAttachSN, String companyID, int tenantID) throws Exception;
+
+	/* 2020-11-13 홍승비 - 대용량첨부파일의 다운로드횟수 초과여부 반환 */
+	public String checkBigAttachFileDownloadCntOver(String docID, String docAttachSN, int bigSizeAttachDownloadLimitCount, String companyID, int tenantID) throws Exception;
+
+	/* 2020-11-13 홍승비 - 대용량첨부파일의 다운로드 성공 시, 다운로드 카운트 증가 */
+	public void updateBigAttachFileDownloadCnt(String docID, String docAttachSN, String companyID, int tenantID) throws Exception;
+
+	/* 2020-11-13 홍승비 - 대용량첨부파일의 삭제 시, 다운로드 카운트 레코드 삭제 */
+	public void deleteBigAttachFileDownloadCnt(String docID, String docAttachSN, String companyID, int tenantID) throws Exception;
+
+	/* 2020-11-13 홍승비 - 자동삭제 스케줄러를 위한 대용량 첨부파일 리스트 리턴 (ISBIGATTACH = Y, ISBIGATTACHDEL = N) */
+	public List<ApprGAttachInfoVO> getBigAttachFileForDelete(int tenantID) throws Exception;
+
+	/* 2020-11-16 홍승비 - 대용량첨부파일의 삭제여부 플래그 갱신 */
+	public void updateIsBigAttachDel(String docID, String docAttachSN, String tblName, String companyID, int tenantID) throws Exception;
+
+	/* 2020-11-16 홍승비 - 첨부파일의 가장 작은 저장일자 리턴 */
+	public String getAttachFileMinSaveDate(String docID, String companyID, int tenantID) throws Exception;
+	 
+	public Map<String, Object> getDocProcessState(String docID, String orgDocID, LoginVO userInfo) throws Exception;
 }

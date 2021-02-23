@@ -109,6 +109,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String useMemo = "";
 		String useExternalMailServer = "";
 		String useContextmenu = "";
+		String useWebHWP = "";
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
@@ -118,6 +119,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			useMemo = data.get("useMemo").toString();
 			useExternalMailServer = data.get("useExternalMailServer").toString();
 			useContextmenu = data.get("useContextmenu").toString();
+			useWebHWP = data.get("useWebHWP").toString();
 			
 			if (startPage != null) {
 				String startUrl = startPage.get("menuUrl").toString();
@@ -150,6 +152,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		model.addAttribute("useMemo", useMemo);
 		model.addAttribute("mainUrl", returnUrl);
 		model.addAttribute("userDeptId", userInfo.getDeptID());
+		model.addAttribute("useWebHWP", useWebHWP);
 
 		logger.debug("returnUrl : " + returnUrl);
 		logger.debug("portalMain End");

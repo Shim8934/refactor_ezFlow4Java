@@ -139,6 +139,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("openYear", openYear);
 		model.addAttribute("contType", contType);
 		model.addAttribute("sFlag", sFlag);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		model.addAttribute("shareDeptId", shareDeptId);
 		
 		logger.debug("cabinetMain ended");
@@ -2420,7 +2421,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 
 		String docID = request.getParameter("docID");
 		StringBuilder saveXML = new StringBuilder("<?xml version=\"1.0\" encoding=\"euc-kr\"?><?xml-stylesheet type=\"text/xsl\" href=\"siheng.xsl\"?><!DOCTYPE pubdoc SYSTEM \"pubdoc.dtd\">");
-		saveXML.append(xmlPara.replace("\n", "").replace("\t", "").replace("&amp;nbsp;", " ").replace("&amp;gt;", "&gt;").replace("&amp;lt;", "&lt;"));
+		saveXML.append(xmlPara.replace("\n", "").replace("\t", "").replace("&amp;nbsp;", " ").replace("&amp;gt;", "&gt;").replace("&amp;lt;", "&lt;").replace("﻿", ""));
 		String realPath = commonUtil.getRealPath(request);
 		String savePath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator	+ "sendXML"	+ commonUtil.separator + docID + "pubdoc.xml";
  		boolean saveFlag = false;

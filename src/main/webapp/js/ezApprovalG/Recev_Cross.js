@@ -2616,12 +2616,13 @@ function SaveDraftDocInfo() {
        	 if (xmlhttp.statusText == "OK") {
        		 var pAlertContent = strLang878;
              OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+             return true;
        	 } else {
        		 var pAlertContent = strLang740;
              OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
-             return;
+             return false;
        	 }
-       } 
+       }
     }
     
     function OpenAlertUI_Close_Complete() {
