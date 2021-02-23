@@ -268,13 +268,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblUserMultiLogin");
 		}
 	}
-	
+
 	public void createTblCompanyConfig() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblCompanyConfig");
 		} catch (Exception e) {
 			logger.debug("tbl_company_config doesn't exist. creating the table...");
-			
+
 			update("EzCommonDAO.createTblCompanyConfig");
 		}
 	}
@@ -1622,7 +1622,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public int checkPortletCodeString(Map<String, Object> map) {
 		return (int) select("EzCommonDAO.checkPortletCodeString", map);
 	}
-	
+
 	public void insertTabBoardPortletInfo(Map<String, Object> map) {
 		String companyId = checkPortletForComapny(map);
 
@@ -1637,9 +1637,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
-	
+
 	public int getNewPortletId() {
 		return (int) select("EzCommonDAO.getNewPortletId");
 	}
@@ -1654,5 +1654,36 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void createTblYearlyDocCount() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblYearlyDocCount");
+		} catch (Exception e) {
+			logger.debug("tbl_yearlydoccount doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblYearlyDocCount");
+		}
+	}
+
+	public int checkChartPortletInfo() {
+		return (int) select("EzCommonDAO.checkChartPortletInfo");
+	}
+
+	public void insertPortletInfoData(Map<String, Object> map) {
+		String companyId = checkPortletForComapny(map);
+
+		if (companyId == null) {
+			try {
+				logger.debug("insert portlet data");
+				insert("EzCommonDAO.insertPortletComp",map);
+				insert("EzCommonDAO.insertPortletName",map);
+				insert("EzCommonDAO.insertPortalThemePortlet",map);
+				insert("EzCommonDAO.insertPortalPortletAuth",map);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 }

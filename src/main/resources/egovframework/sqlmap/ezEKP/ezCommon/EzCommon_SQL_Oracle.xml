@@ -3174,4 +3174,45 @@
 			(#portletId#, #menuId#, #portletUrl#, #portletType#, #defaultOrder#, #portletCode#)
 	</insert>
 
+	<select id="EzCommonDAO.checkChartPortletInfo" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_PORTAL_PORTLET
+		WHERE
+			PORTLETCODE = 'chart'
+	</select>
+
+	<insert id="EzCommonDAO.insertChartPortletName">
+		INSERT ALL
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+			VALUES (#portletId#, #menuId#, 1, #tenantId#, #companyId#, '전자문서 차트')
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+			VALUES (#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'chart')
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+			VALUES (#portletId#, #menuId#, 3, #tenantId#, #companyId#, '図表')
+		SELECT *
+		FROM DUAL
+	</insert>
+
+	<select id="EzCommonDAO.checkTblYearlyDocCount">
+		SELECT
+			DOC_TYPE
+		FROM
+			TBL_YEARLYDOCCOUNT
+		WHERE
+			rownum = 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblYearlyDocCount">
+		CREATE TABLE "TBL_YEARLYDOCCOUNT" (
+			"DOC_COUNT" NUMBER,
+			"DOC_TYPE" NVARCHAR2(100) ,
+			"MONTH_TYPE" NVARCHAR2(100) ,
+			"CREATE_ID" NVARCHAR2(100) ,
+			"CREATE_DATE" DATE DEFAULT SYSDATE,
+			"TENANT_ID" NUMBER(5,0),
+			"COMPANYID" VARCHAR2(160)
+		)
+	</statement>
 </sqlMap>

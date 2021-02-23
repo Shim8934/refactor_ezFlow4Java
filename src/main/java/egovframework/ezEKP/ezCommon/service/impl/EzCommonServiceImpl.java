@@ -2186,4 +2186,45 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.addScehdulegroup();
 		
 	}
+
+	@Override
+    public void createTblYearlyDocCount() throws Exception {
+	    ezCommonDAO.createTblYearlyDocCount();
+    }
+
+    @Override
+    public void insertChartPortletInfo() throws Exception {
+        if (ezCommonDAO.checkChartPortletInfo() > 0){
+            return;
+        }
+
+        logger.debug("insertChartPortletInfo started");
+
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        Map<String, Object> map = new HashMap<String, Object>();
+        int portletId = ezCommonDAO.getNewPortletId();
+        map.put("portletId", portletId);
+        map.put("portletName1", "전자문서 차트");
+        map.put("portletName2", "chart");
+        map.put("portletName3", "図表");
+        map.put("menuId", 3);
+        map.put("portletUrl", "/ezNewPortal/chartPortlet.do");
+        map.put("portletType", "G");
+        map.put("defaultOrder", 24);
+        map.put("portletUsed", 1);
+        map.put("portletOrder", 24);
+        map.put("boardId", null);
+        map.put("portletCode", "chart");
+        ezCommonDAO.insertPortletWithCode(map);
+
+        for (CompanyInfoVO company : companyList) {
+            if (company.getCompanyId() != null) {
+                map.put("companyId", company.getCompanyId());
+                map.put("tenantId", company.getTenantId());
+                ezCommonDAO.insertPortletInfoData(map); // 회사별 있는지 확인후 insert
+            }
+        }
+
+        logger.debug("insertChartPortletInfo poertletId=" + portletId + " ended");
+    }
 }

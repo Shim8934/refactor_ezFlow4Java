@@ -3038,4 +3038,42 @@
 		VALUES 
 			(#portletId#, #menuId#, #portletUrl#, #portletType#, #defaultOrder#, #portletCode#)
 	</insert>
+
+	<select id="EzCommonDAO.checkChartPortletInfo" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_PORTAL_PORTLET
+		WHERE
+			PORTLETCODE = 'chart'
+	</select>
+
+	<insert id="EzCommonDAO.insertChartPortletName">
+		INSERT INTO TBL_PORTAL_PORTLET_NAME
+		(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+		VALUES
+			(#portletId#, #menuId#, 1, #tenantId#, #companyId#, '전자문서 차트'),
+			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'chart'),
+			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, '図表')
+	</insert>
+
+	<select id="EzCommonDAO.checkTblYearlyDocCount">
+		SELECT
+			DOC_TYPE
+		FROM
+			TBL_YEARLYDOCCOUNT
+				LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblYearlyDocCount">
+		CREATE TABLE `tbl_yearlydoccount`(
+			`DOC_COUNT` mediumint(11),
+			`DOC_TYPE` VARCHAR(100) COMMENT 'INSEND: 내부발송, OUTSEND: 외부발송, OUTRECIEVE: 외부수신',
+			`MONTH_TYPE` VARCHAR(100) COMMENT '1 ~ 12월, 작년-10(2) ~ 0(12) 월',
+			`CREATE_ID` VARCHAR(80) ,
+			`CREATE_DATE` datetime DEFAULT current_timestamp(),
+			`TENANT_ID` mediumint(5),
+			`COMPANYID` VARCHAR(80)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
 </sqlMap>
