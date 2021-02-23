@@ -268,4 +268,6 @@ public interface EzCommonService {
 	public void addScehdulegroup() throws Exception;
 
 	public void insertApprBigAttachInfo() throws Exception;
+	
+	public void addScheduleMailNotiConfig() throws Exception;
 }

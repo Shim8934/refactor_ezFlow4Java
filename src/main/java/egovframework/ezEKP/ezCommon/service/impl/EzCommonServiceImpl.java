@@ -2200,4 +2200,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.addApprBigAttachColumn(); // 전자결재 대용량첨부 관련 컬럼
 		ezCommonDAO.createApprBigAttachTable(); // 전자결재 대용량첨부 관련 테이블
 	}
+	
+	@Override
+	public void addScheduleMailNotiConfig() throws Exception {
+		ezCommonDAO.addScheduleMailNotiConfig();
+	}
 }

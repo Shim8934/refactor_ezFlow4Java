@@ -1720,4 +1720,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createApprBigAttachTable");
 		}
 	}
+	
+	// 일정관리 알림메일 기능 추가
+	public void addScheduleMailNotiConfig() {
+	   try {
+		   select("EzCommonDAO.checkScheduleMailNotiConfig");
+	   } catch (Exception e) {
+		   logger.debug("tbl_scheduleconfig InvitationMail, CancellationMail, AttendanceMail, RejectedMail column doesn't exist. creating the column...");
+		   
+		   update("EzCommonDAO.updateScheduleMailNotiConfig");
+	   }
+    }
 }

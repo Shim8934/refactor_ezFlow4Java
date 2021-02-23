@@ -3170,4 +3170,23 @@
 		)
 	</statement>
 	
+    <select id="EzCommonDAO.checkScheduleMailNotiConfig">
+        SELECT 
+            InvitationMail, CancellationMail, AttendanceMail, RejectedMail
+        FROM 
+            TBL_SCHEDULECONFIG
+        LIMIT 1
+    </select>
+    
+    <statement id="EzCommonDAO.updateScheduleMailNotiConfig">
+        ALTER TABLE 
+            TBL_SCHEDULECONFIG
+        ADD (
+            InvitationMail varchar(4) DEFAULT 'Y',
+			CancellationMail varchar(4) DEFAULT 'Y',
+			AttendanceMail varchar(4) DEFAULT 'Y',
+			RejectedMail varchar(4) DEFAULT 'Y'
+		)
+    </statement>
+	
 </sqlMap>
