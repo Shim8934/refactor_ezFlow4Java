@@ -14,7 +14,7 @@
 }
 #chartLeft{
 	z-index: 0;
-	width: 190px;
+	width: 25%;
 	height: 190px;
 }
 #countsDiv{

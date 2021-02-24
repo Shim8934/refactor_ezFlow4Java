@@ -217,7 +217,10 @@
 							var flipsterBtnNext = document.getElementsByClassName('flipster__button--next')[0];
 							if(flipsterBtnPrev !== undefined && flipsterBtnNext !== undefined) {
 								//flipsterBtnPrev.style.top = '9%';
-								//flipsterBtnNext.style.top = '9%';								
+								//flipsterBtnNext.style.top = '9%';
+								// 2021-02-24 박기범 - 화살표 버튼으로도 프레임 선택되게 수정
+								flipsterBtnPrev.addEventListener('click',currentClick);
+								flipsterBtnNext.addEventListener('click',currentClick);
 							}
 							
 							if(listCnt !== 1) {
@@ -433,7 +436,15 @@
 				bodyFrameSetting('off');
 				parent.DivPopUpHidden();
 				window.close();
-			}		
+			}
+
+			function currentClick() {
+				var current = document.getElementsByClassName("flipster__item--current");
+
+				if (current.length > 0) {
+					current[0].click();
+				}
+			}
 		</script>
 	</body>
 </html>
