@@ -3076,7 +3076,7 @@
         ALTER TABLE 
             TBL_SCHEDULEGROUP
         ADD (
-            MODIFYDATE datetime,
+            MODIFYDATE DATE DEFAULT SYSDATE,
             PRECREATORID varchar(100),
             PRECREATORNAME varchar(100),
             PRECREATORNAME2 varchar(100)
@@ -3318,12 +3318,14 @@
 	</statement>
 	
 	<select id="EzCommonDAO.checkScheduleMailNotiConfig">
+	<![CDATA[
         SELECT 
             InvitationMail, CancellationMail, AttendanceMail, RejectedMail
         FROM 
             TBL_SCHEDULECONFIG
         WHERE
             ROWNUM <= 1
+    ]]>
     </select>
     
     <statement id="EzCommonDAO.updateScheduleMailNotiConfig">
