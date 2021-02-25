@@ -32336,6 +32336,10 @@
 		  </isEqual>
            	AND
 				TENANT_ID = #v_TENANTID#
+			AND 
+	            STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
+	        AND 
+	            STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 			AND
 				COMPANYID IN (
 						SELECT 
