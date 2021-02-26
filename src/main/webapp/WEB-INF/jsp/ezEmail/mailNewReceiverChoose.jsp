@@ -1475,7 +1475,7 @@
 	                if (email == arrRows[count2].getAttribute("data2") && arrRows[count2].getAttribute("data2") != "mailgroup")
 	                    return true;
 	                else if (arrRows[count2].getAttribute("data2") == "mailgroup") {
-	                    if (email == arrRows[count2].getAttribute("data4"))
+	                    if (email.split("|!|")[0] == arrRows[count2].getAttribute("data4").split("|!|")[0])
 	                        return true;
 	                }
 	            }
@@ -1486,7 +1486,7 @@
 	                if (email == arrRows[count2].getAttribute("data2") && arrRows[count2].getAttribute("data2") != "mailgroup")
 	                    return true;
 	                else if (arrRows[count2].getAttribute("data2") == "mailgroup") {
-	                    if (email == arrRows[count2].getAttribute("data4"))
+	                    if (email.split("|!|")[0] == arrRows[count2].getAttribute("data4").split("|!|")[0])
 	                        return true;
 	                }
 	            }
@@ -1497,7 +1497,7 @@
 	                if (email == arrRows[count2].getAttribute("data2") && arrRows[count2].getAttribute("data2") != "mailgroup")
 	                    return true;
 	                else if (arrRows[count2].getAttribute("data2") == "mailgroup") {
-	                    if (email == arrRows[count2].getAttribute("data4"))
+	                    if (email.split("|!|")[0] == arrRows[count2].getAttribute("data4").split("|!|")[0])
 	                        return true;
 	                }
 	            }
