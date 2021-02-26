@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
@@ -39,6 +41,7 @@ import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
+import egovframework.ezMobile.ezPortal.vo.MPortalMailTimeLineVO;
 import egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
@@ -178,20 +181,29 @@ public class MPortalGWController extends EgovFileMngUtil {
 					locale = new Locale("ja");
 				}
 				
-				if(useExternalMailServer.equalsIgnoreCase("NO")) {
-				JSONArray mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
-				
-				//안읽은메일 리스트 카운트
-				int mailCnt = 0;
-				
-				if (mailAccess.equals("true")) {
-					mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
-					mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+				if (useExternalMailServer.equalsIgnoreCase("NO")) {
+					JSONArray mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
+
+					//안읽은메일 리스트 카운트
+					int mailCnt = 0;
+
+					if ("true".equals(mailAccess)) {
+						mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
+						mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+
+						// 메일 중요도 색깔 구하기
+						// jgw 요청은 비싸니깐 먼저 중요도 높음 메일이 있는지 체크
+						if (mailList.stream().anyMatch(mail -> ((JSONObject) mail).get("importance").equals(2))) {
+							String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(info.getTenantId()))
+									.map(MailColorVO::getImportanceColor).orElse("#ff0000");
+							dataObject.put("importanceColor", importanceColor);
+						}
+					}
+
+					dataObject.put("mailList", mailList);
+					dataObject.put("mailCnt", mailCnt + "");
 				}
-				
-				dataObject.put("mailList", mailList);
-				dataObject.put("mailCnt", mailCnt+"");
-				}
+
 				/* 2018-07-03 홍승비 - 조건에 companyID 추가 필요 */
 				//새게시물 리스트
 				List<MBoardNewListVO> boardList = new ArrayList<MBoardNewListVO>();
@@ -266,18 +278,34 @@ public class MPortalGWController extends EgovFileMngUtil {
 				if (mailAccess.equals("true") && useExternalMailServer.equalsIgnoreCase("NO")) {
 					//메일 조인
 					List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, jspw, sessionDate, Integer.parseInt(listCnt));
+					boolean hasHighImportance = false;
 					
 					for (Map<String, String> maps : mailList) {
-						MPortalTimeLineVO mPortalTimeLineVO = new MPortalTimeLineVO();
+						MPortalMailTimeLineVO mPortalTimeLineVO = new MPortalMailTimeLineVO();
+						String importance = maps.get("importance");
+
+						if ("2".equals(importance)) {
+							hasHighImportance = true;
+						}
+
 						mPortalTimeLineVO.setTitle(maps.get("subject"));
 						mPortalTimeLineVO.setStartDate(maps.get("receivedDate"));
 						mPortalTimeLineVO.setModule("2");
 						mPortalTimeLineVO.setWriterName(maps.get("sender"));
 						mPortalTimeLineVO.setMailID(maps.get("uid"));
+						mPortalTimeLineVO.setImportance(importance);
 						
 						mPortalTimeLineVOs.add(mPortalTimeLineVO);
 					}
 					
+					// 메일 중요도 색상
+					// jgw 요청은 비싸니깐 먼저 중요도 높음 메일이 있는지 체크
+					if (hasHighImportance) {
+						String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(info.getTenantId()))
+								.map(MailColorVO::getImportanceColor).orElse("#ff0000");
+						dataObject.put("importanceColor", importanceColor);
+					}
+
 					LOGGER.debug("## 메일 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				}
 				
