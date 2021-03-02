@@ -98,6 +98,19 @@ public class EzApprovalScheduler extends EgovFileMngUtil {
 		logger.debug("dailyApprFileManage scheduler ended.");
 	}
 	
+	@Scheduled(cron = "00 0/5 * * * *")
+	public void susinScheduler() throws Exception {
+		List<TenantVO> tenantList = ezCommonService.getTenantList();
+		for (TenantVO tenantVO : tenantList) {
+			if("Y".equals(ezCommonService.getTenantConfig("useSusinSchedulerYn", tenantVO.getTenantId()))) {
+				logger.debug("susinScheduler started.");
+				
+				ezApprovalGService.doSusinSchedule();
+				
+				logger.debug("susinScheduler ended.");
+			}
+		}
+	}
 	/**
 	 * 만료된 전자결재 대용량첨부파일 삭제 함수
 	 */
