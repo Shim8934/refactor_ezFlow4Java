@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th { border-top:0px }
+
 			#excelFile {
 				visibility: hidden;
 				float: left;
@@ -17,6 +18,13 @@
 				width: 58px;
 				height: 31px;
 				right: 122px;
+			}
+
+			.info-message {
+				right: 54px;
+				position: relative;
+				line-height: 31px;
+				color: #ff2828;
 			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -684,7 +692,8 @@
 			<ul class="on">
 				<li class="important off" id="2"><span onclick="excelUpload()"><spring:message code='ezApprovalG.pgb01'/></span></li>
 				<li id="3" class="off"><a href="<c:url value="/files/수신자그룹지정일괄등록양식.xlsx"/>"><span><spring:message code='ezApprovalG.pgb02'/></span></a></li>
-			<input type="file" name="excelFile" class="important off" id="excelFile" onchange="btn_AttachAdd_onclick()" />
+				<input type="file" name="excelFile" class="important off" id="excelFile" onchange="btn_AttachAdd_onclick()" />
+				<span class="info-message"><spring:message code='ezApprovalG.pgb10'/></span>
 			</ul>
 		</div>
 	    <table>
