@@ -10,6 +10,14 @@
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th { border-top:0px }
+			#excelFile {
+				visibility: hidden;
+				float: left;
+				position: relative;
+				width: 58px;
+				height: 31px;
+				right: 122px;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
@@ -32,15 +40,7 @@
 		    
 		    $(document).ready(function(){
 		    	document.getElementById("SCompID").value = "<c:out value='${companyID}'/>";
-
-	            Tree_setconfig();
-	            TreeViewinitialize("", "<c:out value='${topID}'/>", "extensionAttribute2;displayName", "<c:out value='${serverName}'/>", null, null, true);
-	        	InitlvtDeptListView();
-	        	InitlvtDeptSelectListView();
-
-	        	getAdminReceivGroup();
-	        	// 페이지가 열리자마자 최상위 수신자 그룹 선택처리.
-	        	lvtDept_SelChange();
+		    	initializeApprGReceoveGroup();
 		    });
 		    
 		    function Tree_setconfig() {
@@ -602,7 +602,73 @@
 		        	}
 		        });
 		    }
-		    
+
+			var excelUpload = function (obj){
+				tempObj = obj;
+				document.getElementById("excelFile").click();
+			}
+
+			var btn_AttachAdd_onclick = function () {
+				var fd = new FormData();
+				var _file = document.getElementById("excelFile").files[0];
+				var ext = _file.name.split('.').pop().toLowerCase();
+
+				if (_file.size / 1024 / 1024 > 5) {
+					alert("<spring:message code = 'ezPoll.t208' />");
+					return;
+				}
+
+				fd.append("file", _file);
+				fd.append("ext", ext);
+				var request = new XMLHttpRequest();
+
+				if ( ext === "xls" || ext === "xlsx") {
+					request.open("POST", "/admin/ezApprovalG/setGroupWithExcel.do", false);
+
+					request.onload = function() {
+						var result = request.responseText;
+
+						if (result === "") {
+							alert("<spring:message code='ezApprovalG.pgb04'/>");
+						} else if (result === "error") {
+							alert("<spring:message code='ezApprovalG.pgb09'/>");
+						} else if (result === "ext out") {
+							alert("<spring:message code='ezApprovalG.pgb03'/>");
+						} else if (result === "no data") {
+							alert("<spring:message code='ezApprovalG.pgb06'/>");
+						} else if (result.indexOf("none deptId") >= 0 ) {
+							alert("<spring:message code='ezApprovalG.pgb07'/>" + result.split(":")[1]);
+						} else if (result.indexOf("duplicated") >= 0) {
+							alert("<spring:message code='ezApprovalG.pgb08'/>" + result.split(":")[1]);
+						} else {
+							var tempNum = Number(result);
+
+							if (!isNaN(tempNum)) {
+								alert(tempNum + "<spring:message code='ezApprovalG.pgb05'/>");
+							} else {
+								alert("<spring:message code='ezApprovalG.pgb04'/>");
+							}
+						}
+					}
+
+					request.send(fd);
+					window.location.reload();
+				} else {
+					alert("<spring:message code='ezApprovalG.pgb03'/>")
+					return false;
+				}
+			}
+
+			function initializeApprGReceoveGroup() {
+				Tree_setconfig();
+				TreeViewinitialize("", "<c:out value='${topID}'/>", "extensionAttribute2;displayName", "<c:out value='${serverName}'/>", null, null, true);
+				InitlvtDeptListView();
+				InitlvtDeptSelectListView();
+
+				getAdminReceivGroup();
+				// 페이지가 열리자마자 최상위 수신자 그룹 선택처리.
+				lvtDept_SelChange();
+			}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -614,6 +680,13 @@
 				<h1><spring:message code='ezApprovalG.t718'/></h1>
 			</c:otherwise>
 		</c:choose>
+		<div id="mainmenu" style="padding-left: 5px;">
+			<ul class="on">
+				<li class="important off" id="2"><span onclick="excelUpload()"><spring:message code='ezApprovalG.pgb01'/></span></li>
+				<li id="3" class="off"><a href="<c:url value="/files/수신자그룹지정일괄등록양식.xlsx"/>"><span><spring:message code='ezApprovalG.pgb02'/></span></a></li>
+			<input type="file" name="excelFile" class="important off" id="excelFile" onchange="btn_AttachAdd_onclick()" />
+			</ul>
+		</div>
 	    <table>
         	<tr>
         		<td style="vertical-align: top;">

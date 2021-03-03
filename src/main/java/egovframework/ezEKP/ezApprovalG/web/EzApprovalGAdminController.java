@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -5119,5 +5120,29 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		response.setCharacterEncoding("UTF-8");
 		response.setHeader("Cache-Control", "no-cache");
 		response.getWriter().write(ezApprovalGAdminService.getAuditStatisticsDocList(loginCookie, request, response, model).toString());
+	}
+
+	/**
+	 * 2021-02-23 박기범 - 수신자 그룹 일괄등록(엑셀파일)
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/setGroupWithExcel.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String setGroupWithExcel(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request) throws Exception {
+		logger.debug("setGroupWithExcel started.");
+
+		String ext = request.getParameter("ext");
+		String result = "";
+
+		if (ext.equals("xls")){
+			result = ezApprovalGAdminService.xlsSetGroupWithExcel(loginCookie, request);
+		}else if (ext.equals("xlsx")){
+			result = ezApprovalGAdminService.xlsxSetGroupWithExcel(loginCookie, request);
+		}else {
+			result = "ext out";
+		}
+
+		logger.debug("setGroupWithExcel ended.");
+
+		return result;
 	}
 }

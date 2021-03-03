@@ -34,6 +34,14 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -44,6 +52,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -53,23 +63,15 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Stream;
 
 @Service("EzApprovalGAdminService")
@@ -5376,5 +5378,258 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("getAuditStatisticsDocList end");
 		
 		return jo;
+	}
+
+	@Override
+	public String xlsxSetGroupWithExcel(String loginCookie, MultipartHttpServletRequest request) {
+		logger.debug("xlsxSetGroupWithExcel started");
+
+		String result = "";
+		int counts = 0;
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String companyId = user.getCompanyID();
+		int tenantId = user.getTenantId();
+		MultipartFile file = request.getFile("file");
+		LinkedList<HashSet<String>> groupDatas = new LinkedList<>();
+		LinkedList<String> groupNames = new LinkedList<>();
+		boolean isGroup = false;
+		InputStream is = null;
+
+		try {
+			is = file.getInputStream();
+			XSSFWorkbook workbook = new XSSFWorkbook(is);
+			XSSFSheet curSheet;
+			XSSFRow curRow;
+			XSSFCell curCell;
+			ApprGAdminReceiveVO vo;
+			String value;
+			curSheet = workbook.getSheetAt(0);
+			int physicalRows = curSheet.getPhysicalNumberOfRows();
+
+			if (curSheet.getRow(0).getCell(7).getNumericCellValue() > 0) {
+				return "";
+			}
+
+			for(int rowIndex=1; rowIndex < physicalRows; rowIndex++) {
+				isGroup = false;
+				curRow = curSheet.getRow(rowIndex);
+				HashSet<String> data = new HashSet<>();
+
+				if(curRow.getCell(1) != null) {
+
+					for(int cellIndex=1;cellIndex<curRow.getPhysicalNumberOfCells(); cellIndex++) {
+						curCell = curRow.getCell(cellIndex);
+						// 조건부 서식 등에 의해 null값이 들어 올 수 있음.
+						if (curCell == null) {
+							break;
+						}
+
+						value = "";
+						switch (curCell.getCellType()){
+							case XSSFCell.CELL_TYPE_FORMULA:
+							case XSSFCell.CELL_TYPE_BLANK:
+								value = "";
+								break;
+							case XSSFCell.CELL_TYPE_NUMERIC:
+								value = curCell.getNumericCellValue() + "";
+								break;
+							case XSSFCell.CELL_TYPE_STRING:
+								value = curCell.getStringCellValue() + "";
+								break;
+							case XSSFCell.CELL_TYPE_ERROR:
+								value = curCell.getErrorCellValue() + "";
+								break;
+						}
+
+						if ("".equals(value)) {
+							break;
+						} else if (cellIndex == 1) {
+							groupNames.add(value);
+							isGroup = true;
+						} else {
+							if (ezApprovalGAdminDAO.checkDeptId(value) < 1) {
+								return "none deptId :" + value;
+							}
+
+							boolean dataInput = data.add(value);
+							// data 중복일 경우
+							if (!dataInput) {
+								return "duplicated :" + value;
+							}
+						}
+					}
+				}
+
+				// 빈그룹명이 나오는 경우
+				if (!isGroup) {
+					break;
+				} else if (data.isEmpty()) { // 그룹명은 있으나 빈 데이터인경우 리턴
+					return "";
+				} else {
+					groupDatas.offer(data);
+				}
+			}
+
+			if (groupNames.size() == 0) {
+				return "no data";
+			}
+
+			while(!groupNames.isEmpty()) {
+				for (HashSet<String> groupData : groupDatas) {
+					insertReceiveGroupInfo(groupNames.poll(), companyId, tenantId);
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("companyId", companyId);
+					map.put("tenantId", tenantId);
+
+					for (String deptId : groupData) {
+						map.put("deptId", deptId);
+						ezApprovalGAdminDAO.insertReceiveGroupSubWithExcel(map);
+					}
+					counts++;
+				}
+			}
+		} catch (Exception e) {
+			logger.debug("xlsxSetGroupWithExcel ERROR :" + e.getMessage());
+			return "error";
+		} finally {
+			try {
+				if (is != null) {
+					is.close();
+				}
+			} catch (IOException e) {
+				logger.debug("xlsxSetGroupWithExcel inputStream close ERROR :" + e.getMessage());
+			}
+		}
+
+		result = String.valueOf(counts);
+		logger.debug("xlsxSetGroupWithExcel ended, return :" + result);
+		return result;
+	}
+
+	@Override
+	public String xlsSetGroupWithExcel(String loginCookie, MultipartHttpServletRequest request) {
+		logger.debug("xlsSetGroupWithExcel started");
+
+		String result = "";
+		int counts = 0;
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String companyId = user.getCompanyID();
+		int tenantId = user.getTenantId();
+		MultipartFile file = request.getFile("file");
+		LinkedList<HashSet<String>> groupDatas = new LinkedList<>();
+		LinkedList<String> groupNames = new LinkedList<>();
+		boolean isGroup = false;
+		InputStream is = null;
+
+		try {
+			is = file.getInputStream();
+			HSSFWorkbook workbook = new HSSFWorkbook(is);
+			HSSFSheet curSheet;
+			HSSFRow curRow;
+			HSSFCell curCell;
+			ApprGAdminReceiveVO vo;
+			String value;
+			curSheet = workbook.getSheetAt(0);
+			int physicalRows = curSheet.getPhysicalNumberOfRows();
+
+			if (curSheet.getRow(0).getCell(7).getNumericCellValue() > 0) {
+				return "";
+			}
+
+			for(int rowIndex=1; rowIndex < physicalRows; rowIndex++) {
+				isGroup = false;
+				curRow = curSheet.getRow(rowIndex);
+				HashSet<String> data = new HashSet<>();
+
+				if(curRow.getCell(1) != null) {
+
+					for(int cellIndex=1;cellIndex<curRow.getPhysicalNumberOfCells(); cellIndex++) {
+						curCell = curRow.getCell(cellIndex);
+						// 조건부 서식 등에 의해 null값이 들어 올 수 있음.
+						if (curCell == null) {
+							break;
+						}
+
+						value = "";
+						switch (curCell.getCellType()){
+							case HSSFCell.CELL_TYPE_FORMULA:
+							case HSSFCell.CELL_TYPE_BLANK:
+								value = "";
+								break;
+							case HSSFCell.CELL_TYPE_NUMERIC:
+								value = curCell.getNumericCellValue()+"";
+								break;
+							case HSSFCell.CELL_TYPE_STRING:
+								value = curCell.getStringCellValue()+"";
+								break;
+							case HSSFCell.CELL_TYPE_ERROR:
+								value = curCell.getErrorCellValue()+"";
+								break;
+						}
+
+						if ("".equals(value)) {
+							break;
+						} else if (cellIndex == 1) {
+							groupNames.add(value);
+							isGroup = true;
+						} else {
+							if (ezApprovalGAdminDAO.checkDeptId(value) < 1) {
+								return "none deptId :" + value;
+							}
+
+							boolean dataInput = data.add(value);
+							// data 중복일 경우
+							if (!dataInput) {
+								return "duplicated :" + value;
+							}
+						}
+					}
+				}
+
+				// 빈그룹명이 나오는 경우
+				if (!isGroup) {
+					break;
+				} else if (data.isEmpty()) { // 그룹명은 있으나 빈 데이터인경우 리턴
+					return "";
+				} else {
+					groupDatas.offer(data);
+				}
+			}
+
+
+			if (groupNames.size() == 0) {
+				return "no data";
+			}
+
+			while(!groupNames.isEmpty()) {
+				for (HashSet<String> groupData : groupDatas) {
+					insertReceiveGroupInfo(groupNames.poll(), companyId, tenantId);
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("companyId", companyId);
+					map.put("tenantId", tenantId);
+
+					for (String deptId : groupData) {
+						map.put("deptId", deptId);
+						ezApprovalGAdminDAO.insertReceiveGroupSubWithExcel(map);
+					}
+					counts++;
+				}
+			}
+		} catch (Exception e) {
+			logger.debug("xlsSetGroupWithExcel ERROR :" + e.getMessage());
+			return "error";
+		} finally {
+			try {
+				if (is != null) {
+					is.close();
+				}
+			} catch (IOException e) {
+				logger.debug("xlsxSetGroupWithExcel inputStream close ERROR :" + e.getMessage());
+			}
+		}
+
+		result = String.valueOf(counts);
+		logger.debug("xlsSetGroupWithExcel ended, return :" + result);
+		return result;
 	}
 }
