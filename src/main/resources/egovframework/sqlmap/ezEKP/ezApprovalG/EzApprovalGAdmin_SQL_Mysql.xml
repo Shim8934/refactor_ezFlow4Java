@@ -5952,4 +5952,32 @@
 		AND A.COMPANYID = #companyId#
 		ORDER BY A.DOCID ASC
 	</select>
+
+	<insert id="EzApprovalGAdmin.insertReceiveGroupSubWithExcel" parameterClass="Map">
+		INSERT INTO TBL_ADMINRECEIPTGROUP_SUB
+			(mainid,
+			 subid,
+			 deptid,
+			 deptname,
+			 deptname2,
+			 companyid,
+			 tenant_id)
+		VALUES
+			(LAST_INSERT_ID(),
+			 (SELECT MAX(subid) + 1 FROM TBL_ADMINRECEIPTGROUP_SUB AS T1),
+			 #deptId#,
+			 (SELECT DISPLAYNAME FROM tbl_deptmaster WHERE cn = #deptId#),
+			 (SELECT DISPLAYNAME2 FROM tbl_deptmaster WHERE cn = #deptId#),
+			 #companyId#,
+			 #tenantId#)
+	</insert>
+
+	<select id="EzApprovalGAdminDAO.checkDeptId" parameterClass="String" resultClass="Integer">
+		SELECT
+			count(cn)
+		FROM
+			tbl_deptmaster
+		WHERE
+			cn = #deptId#
+	</select>
 </sqlMap>

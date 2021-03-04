@@ -129,8 +129,9 @@ public class EzApprovalGJsonController {
         
         String draftFrom = "";
         
+        // 시작일이라면 makeDate의 startFlag값은 true (DB에는 UTC시간으로 저장되므로 getDateStringInUTC의 timeZoneToUTC값은 true)
         if (draftFromYear != null && !draftFromYear.equals("")) {
-        	draftFrom = commonUtil.getDateStringInUTC(commonUtil.makeDate(draftFromYear, draftFromMonth, draftFromDay, true), offset, false).trim();
+        	draftFrom = commonUtil.getDateStringInUTC(commonUtil.makeDate(draftFromYear, draftFromMonth, draftFromDay, true), offset, true).trim();
         }
         
         //기안일자 끝
@@ -140,8 +141,9 @@ public class EzApprovalGJsonController {
 
         String draftTo = "";
         
+        // 종료일이라면 makeDate의 startFlag값은 false (DB에는 UTC시간으로 저장되므로 getDateStringInUTC의 timeZoneToUTC값은 true)
         if (draftToYear != null && !draftToYear.equals("")) {
-        	draftTo = commonUtil.getDateStringInUTC(commonUtil.makeDate(draftToYear, draftToMonth, draftToDay, true), offset, false).trim();
+        	draftTo = commonUtil.getDateStringInUTC(commonUtil.makeDate(draftToYear, draftToMonth, draftToDay, false), offset, true).trim();
         }
         
         //완료일자 시작
@@ -152,7 +154,7 @@ public class EzApprovalGJsonController {
         String aprFrom = "";
         
         if (apprFromYear != null && !apprFromYear.equals("")) {
-        	aprFrom = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprFromYear, apprFromMonth, apprFromDay, true), offset, false).trim();
+        	aprFrom = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprFromYear, apprFromMonth, apprFromDay, true), offset, true).trim();
         }
         
         //완료일자 끝
@@ -162,7 +164,7 @@ public class EzApprovalGJsonController {
         String aprTo = "";
         
         if (apprToYear != null && !apprToYear.equals("")) {
-        	aprTo = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprToYear, apprToMonth, apprToDay, true), offset, false).trim();
+        	aprTo = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprToYear, apprToMonth, apprToDay, false), offset, true).trim();
         }
         	
         //페이지 번호
