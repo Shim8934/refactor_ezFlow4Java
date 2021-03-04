@@ -5431,7 +5431,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 								value = "";
 								break;
 							case XSSFCell.CELL_TYPE_NUMERIC:
-								value = curCell.getNumericCellValue() + "";
+								value = (int) curCell.getNumericCellValue() + "";
 								break;
 							case XSSFCell.CELL_TYPE_STRING:
 								value = curCell.getStringCellValue() + "";
@@ -5557,7 +5557,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 								value = "";
 								break;
 							case HSSFCell.CELL_TYPE_NUMERIC:
-								value = curCell.getNumericCellValue()+"";
+								value = (int) curCell.getNumericCellValue()+"";
 								break;
 							case HSSFCell.CELL_TYPE_STRING:
 								value = curCell.getStringCellValue()+"";
