@@ -68,6 +68,7 @@ import kr.dogfoot.hwplib.writer.HWPWriter;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -150,6 +151,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -211,6 +213,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Resource(name = "EzApprovalGAdminDAO")
 	private EzApprovalGAdminDAO ezApprovalGAdminDao;
 	
+	@Resource(name = "loginService")
+    private LoginService loginService;
+
 	@Resource(name = "EzOrganAdminService")
 	private EzOrganAdminService ezOrganAdminService;
 	
@@ -1522,6 +1527,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "]]></DATA3>");
 					resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHTYPE").item(k).getTextContent()) + "]]></DATA4>");
 					resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("REALATTACHNAME").item(k).getTextContent()) + "]]></DATA5>");
+					
+					/* 2020-11-13 홍승비 - 대용량첨부 관련 정보 추가 */
+					resultXML.append("<ISBIGATTACH><![CDATA[" + makeListField(docXML.getElementsByTagName("ISBIGATTACH").item(k).getTextContent()) + "]]></ISBIGATTACH>");
+					resultXML.append("<ISBIGATTACHDEL><![CDATA[" + makeListField(docXML.getElementsByTagName("ISBIGATTACH").item(k).getTextContent()) + "]]></ISBIGATTACHDEL>");
 				}
 				
 				resultXML.append("</CELL>");
@@ -6169,6 +6178,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
         for (Paragraph p : pList) {
             fieldCell = findHwpFieldCell(p, fieldName);
+            
+            if (fieldCell != null) {
+                break;
+            }
         }
         
         return fieldCell;
@@ -7089,6 +7102,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String connString, connFlag;
 		String queryString, queryType;
 		String processIdx, processTime;
+		String serviceQueryString;
 		
 		org.jsoup.nodes.Document doc = Jsoup.parse(keywords, "", Parser.xmlParser());
 		
@@ -7100,51 +7114,107 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return true;
 		}
 
-		for (org.jsoup.nodes.Node connNode : htmlConn.childNodes()) {
+		for (Element connNode : htmlConn.children()) {
 			processIdx = connNode.attr("processidx");
 			processTime = connNode.attr("processtime");
 			
 			logger.debug("processIdx = " + processIdx + " || processTime = " + processTime);
 			
 			if (processIdx.equals(pProcessIdx) && processTime.equals(draftFlag)) {
-				connFlag = connNode.childNode(0).attr("flag");
-				connString = ((Element) connNode.childNode(0)).text();
+			    Element connStringElem = connNode.getElementsByTag("connstring").first();
+				connFlag = connStringElem.attr("flag");
+				connString = connStringElem.text();
 				
-				queryType = connNode.childNode(1).attr("qtype");
-				queryString = ((Element) connNode.childNode(1)).text();
+				Element queryElem = connNode.getElementsByTag("query").first();
+				queryType = queryElem.attr("qtype");
+				queryString = queryElem.text();
+				
+				Element serviceQueryElem = connNode.getElementsByTag("servicequery").first();
+				serviceQueryString = serviceQueryElem.text();
+				
+	            Element keysElem = connNode.getElementsByTag("keys").first();
+	            String [] arrItemNames = {
+	                "c_docid",
+	                "c_formid",
+	                "c_draft_userid",
+	                "c_draft_username",
+	                "c_draft_position",
+	                "c_draft_deptid",
+	                "c_draft_deptname",
+	                "c_processidx",
+	                "c_processtime",
+	                "c_connkey",
+	                "c_connformcode"
+	            };
+	            
+	            for (int i = 0, len = arrItemNames.length; i < len; i++) {
+	                keysElem
+	                    .appendElement("key")
+	                    .attr("kind", "single")
+	                    .text(arrItemNames[i]);
+	            }
+	            
+	            Elements keyElems = keysElem.children();
 				
 				logger.debug("connFlag = " + connFlag + " || connString = " + connString);
 				logger.debug("queryType = " + queryType + " || queryString = " + queryString);
+				logger.debug("serviceQueryString = " + serviceQueryString);
 				
-				if (queryType.equals("service")) {
-					Object connBean = context.getBean("EzConnUtil");
-					Class<?> refClass = connBean.getClass();
-					
-					Field fieldDocID = refClass.getDeclaredField("docID");
-					fieldDocID.setAccessible(true);
-					fieldDocID.set(connBean, docID);
-					
-					Field fieldUserID = refClass.getDeclaredField("userID");
-					fieldUserID.setAccessible(true);
-					fieldUserID.set(connBean, userID);
-					
-					Field fieldcompanyID = refClass.getDeclaredField("companyID");
-					fieldcompanyID.setAccessible(true);
-					fieldcompanyID.set(connBean, companyID);
-					
-					Field fieldTenantID = refClass.getDeclaredField("tenantID");
-					fieldTenantID.setAccessible(true);
-					fieldTenantID.set(connBean, tenantID);
-					
-					/** queryString로 호출할 서비스구분*/
-					for (Method method : refClass.getDeclaredMethods()) {
-						if (queryString.equals(method.getName())) {
-							//ezConnUtil connTest() 테스트용도
-							logger.debug("method name = " + method.getName());
-							
-							method.invoke(connBean);
-						}
-					}
+	            if (queryType.equals("UA") || queryType.equals("UA_EX") || connFlag.equals("UI")) {
+	                return false;
+	            }
+				
+				if (!serviceQueryString.isEmpty()) {
+	                StringBuilder sb = new StringBuilder("<PARAMETER>");
+	                
+	                for(int i = 0, len = keyElems.size(); i < len; i++) {
+	                    Element keyElem = keyElems.get(i);
+	                    
+	                    if("single".equals(keyElem.attr("kind"))) {
+	                        String keyName = keyElem.text().toLowerCase();
+	                        String keyValue = "";
+	                        
+	                        switch (keyName) {
+                            case "c_processidx":
+                                keyValue = processIdx;
+                                break;
+                            case "c_processtime":
+                                keyValue = processTime;
+                                break;
+                            default:
+                                if (findHwpField(keyName, hwpFile)) {
+                                    keyValue = getHwpText(keyName, hwpFile);
+                                } else {
+                                    if (htmlConn.getElementsByTag(keyName).first() != null) {
+                                        keyValue = htmlConn.getElementsByTag(keyName).first().text();
+                                    }
+                                }
+                            }
+	                        
+	                        sb.append(String.format("<%s>%s</%s>", keyName, keyValue, keyName));
+	                    }
+	                }
+	                sb.append("</PARAMETER>");
+	                    
+	                Document keyData = commonUtil.convertStringToDocument(sb.toString());
+	                    
+	                Object connServiceBean = context.getBean("EzApprovalGConnService");
+	                Class<? extends Object> refClass = connServiceBean.getClass();
+	                
+	                LoginVO tempLoginVO = new LoginVO();
+	                tempLoginVO.setId(userID);
+	                tempLoginVO.setTenantId(tenantID);
+	                tempLoginVO.setDn("NOPASSWORD");
+	                
+	                LoginVO userInfo = loginService.selectUser(tempLoginVO);
+	                
+	                Method connMethod =  refClass.getDeclaredMethod(serviceQueryString, Document.class, LoginVO.class);
+	                if(connMethod != null) {
+	                    logger.debug("method name = " + connMethod.getName());
+	                    connMethod.invoke(connServiceBean, keyData, userInfo);
+	                } else {
+	                    return false;
+	                }
 				}
 			}
 		}
@@ -7610,7 +7680,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					strDeptName = receiveDeptName;
 				}
 				
-				if (!excuteInfo("DOCNUM_BEFORE", "DRAFT", doc, docID, userID, formURL)) {
+				if (!excuteInfo("DOCNUM_BEFORE", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId())) {
 					return "Link ERROR";
 				}
 
@@ -7637,7 +7707,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					doc.body().attr("deptid", strDeptID);
 				}
 				
-				linkCheck = excuteInfo("DOCNUM_AFTER", "DRAFT", doc, docID, userID, formURL);
+				linkCheck = excuteInfo("DOCNUM_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 				
 				if (!linkCheck) {
 					if (docNumFlag) {
@@ -7653,7 +7723,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 strDeptID = receiveDept;
                 strDeptName = receiveDeptName;
 
-                if (!excuteInfo("DOCNUM_BEFORE", "SUSIN", doc, docID, userID, formURL)) {
+                if (!excuteInfo("DOCNUM_BEFORE", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId())) {
                     return "Link ERROR";
                 }
                 
@@ -7679,7 +7749,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     doc.body().attr("deptid", strDeptID);
                 }
                 
-                linkCheck = excuteInfo("DOCNUM_AFTER", "SUSIN", doc, docID, userID, formURL);
+                linkCheck = excuteInfo("DOCNUM_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
                 
                 if (!linkCheck) {
                     if (docNumFlag) {
@@ -7721,22 +7791,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (result.equals("A")) {
 			if (aprStateSign.equals("011")) {
 				if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-					linkCheck = excuteInfo("LAST_SIGN_BEFORE", "SUSIN", doc, docID, userID, formURL);
+					linkCheck = excuteInfo("LAST_SIGN_BEFORE", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 				} else {
-					linkCheck = excuteInfo("MIDDLE_SIGN_BEFORE", "SUSIN", doc, docID, userID, formURL);
+					linkCheck = excuteInfo("MIDDLE_SIGN_BEFORE", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 				}
 			} else {
 				if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-					linkCheck = excuteInfo("LAST_SIGN_BEFORE", "DRAFT", doc, docID, userID, formURL);
+					linkCheck = excuteInfo("LAST_SIGN_BEFORE", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 				} else {
-					linkCheck = excuteInfo("MIDDLE_SIGN_BEFORE", "DRAFT", doc, docID, userID, formURL);
+					linkCheck = excuteInfo("MIDDLE_SIGN_BEFORE", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 				}
 			}
 		} else if (result.equals("B")) {
 			if (aprStateSign.equals("011")) {
-				linkCheck = excuteInfo("BANSONG_BEFORE", "SUSIN", doc, docID, userID, formURL);
+				linkCheck = excuteInfo("BANSONG_BEFORE", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 			} else {
-				linkCheck = excuteInfo("BANSONG_BEFORE", "DRAFT", doc, docID, userID, formURL);
+				linkCheck = excuteInfo("BANSONG_BEFORE", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 			}
 		}
 		
@@ -7887,15 +7957,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (result.equals("A")) {
 				if (aprStateSign.equals("011")) {
 					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-						linkCheck = excuteInfo("LAST_SIGN_AFTER", "SUSIN", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("LAST_SIGN_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 					} else {
-						linkCheck = excuteInfo("MIDDLE_SIGN_AFTER", "SUSIN", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("MIDDLE_SIGN_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 					}
 				} else {
 					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-						linkCheck = excuteInfo("LAST_SIGN_AFTER", "DRAFT", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("LAST_SIGN_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 					} else {
-						linkCheck = excuteInfo("MIDDLE_SIGN_AFTER", "DRAFT", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("MIDDLE_SIGN_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 					}
 				}
 			}
@@ -7938,22 +8008,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (result.equals("A")) {
 					if (aprStateSign.equals("011")) {
 						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-							linkCheck = excuteInfo("END_FAIL", "SUSIN", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("END_FAIL", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 						} else {
-							linkCheck = excuteInfo("MIDDLE_END_FAIL", "SUSIN", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("MIDDLE_END_FAIL", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 						}
 					} else {
 						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-							linkCheck = excuteInfo("END_FAIL", "DRAFT", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("END_FAIL", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 						} else {
-							linkCheck = excuteInfo("MIDDLE_END_FAIL", "DRAFT", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("MIDDLE_END_FAIL", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 						}
 					}
 				} else if (result.equals("B")) {
 					if (aprStateSign.equals("011")) {
-						linkCheck = excuteInfo("BANSONG_FAIL", "SUSIN", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("BANSONG_FAIL", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 					} else {
-						linkCheck = excuteInfo("BANSONG_FAIL", "DRAFT", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("BANSONG_FAIL", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 					}
 				}
 				
@@ -7992,25 +8062,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (result.equals("A")) {
 					if (aprStateSign.equals("011")) {
 						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-							linkCheck = excuteInfo("LAST_END_AFTER", "SUSIN", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("LAST_END_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 							if (linkCheck) { //근태관리 연동양식 관련된 docId면 근태관리 연동양식 함수 태움.
 								ezAttitudeService.updateApprovalGConnInfo("1", userID, tempXmlDom.getElementsByTagName("ORGDOCID").item(0).getTextContent(), companyID, userInfo.getTenantId());
 							}
 						} else {
-							linkCheck = excuteInfo("MIDDLE_END_AFTER", "SUSIN", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("MIDDLE_END_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 						}
 					} else {
 						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-							linkCheck = excuteInfo("LAST_END_AFTER", "DRAFT", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("LAST_END_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 						} else {
-							linkCheck = excuteInfo("MIDDLE_END_AFTER", "DRAFT", doc, docID, userID, formURL);
+							linkCheck = excuteInfo("MIDDLE_END_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 						}
 					}
 				} else if (result.equals("B")) {
 					if (aprStateSign.equals("011")) {
-						linkCheck = excuteInfo("BANSONG_AFTER", "SUSIN", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("BANSONG_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 					} else {
-						linkCheck = excuteInfo("BANSONG_AFTER", "DRAFT", doc, docID, userID, formURL);
+						linkCheck = excuteInfo("BANSONG_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 					}
 				}
 				
@@ -8132,201 +8202,133 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("rollBackDocNumber ended");
 	}
 
-	public boolean excuteInfo(String pProcessIdx, String draftFlag, org.jsoup.nodes.Document doc, String docID, String userID, String formURL) throws Exception {
+	public boolean excuteInfo(String pProcessIdx, String draftFlag, org.jsoup.nodes.Document doc, String docID, String userID, String formURL, int tenantID) throws Exception {
 		logger.debug("excuteInfo started");
-
-		boolean rtnVal = true;
-		boolean findFlag;
 		
-		@SuppressWarnings("unused")
-		String connString = "";
-		String connFlag = "";
-		@SuppressWarnings("unused")
-		String queryString = "";
-		String queryType = "";
-		String processIdx, processTime;
+        String connString, connFlag;
+        String queryString, queryType;
+        String processIdx, processTime;
+        String serviceQueryString;
+        
+		Element htmlConn = doc.getElementsByTag("connroot").first();
 		
-		Document xmlData = null;
-		NodeList connNodes = null;
-		NodeList keyNodes = null;
-		NodeList listKeyRow = null;
-		Node connNode = null;
-		Node tblInfoRow = null;
-		
-		Element htmlConn = doc.getElementById("conn");
-		
-		if (htmlConn != null && htmlConn.outerHtml().contains("CONNINFO")) {
-			xmlData = commonUtil.convertStringToDocument(htmlConn.html());
-			connNodes = xmlData.getFirstChild().getChildNodes();
-		} else {
-			return true;
+		if (htmlConn == null) {
+		    logger.debug("excuteInfo started");
+		    return true;
 		}
 		
-		findFlag = false;
-		
-		for (int cnt = 0; cnt < connNodes.getLength(); cnt++) {
-			//확인해야됨 문법 제대로 검증안됨
-			processIdx = connNodes.item(cnt).getAttributes().getNamedItem("processidx").getNodeValue();
-			processTime = connNodes.item(cnt).getAttributes().getNamedItem("processtime").getNodeValue();
-			
-			if (processIdx.equals(pProcessIdx) && processTime.equals(draftFlag)) {
-				findFlag = true;
-				connNode = connNodes.item(cnt);
-				break;
-			}
-		}
-		
-		if (findFlag) {
-			connFlag = connNode.getChildNodes().item(0).getAttributes().getNamedItem("flag").getNodeValue();
-			connString = connNode.getChildNodes().item(0).getTextContent();
-			
-			queryType = connNode.getChildNodes().item(1).getAttributes().getNamedItem("qtype").getNodeValue();
-			queryString = connNode.getChildNodes().item(1).getTextContent();
-			
-			if (queryType.equals("UA") || queryType.equals("UA_EX") || connFlag.equals("UI")) {
-				return false;
-			}
-			
-			String strItemNames = "SA_draftUserID,SA_draftUserName,SA_draftDeptID,SA_draftDeptName,SA_draftPosition,SA_DocID,SA_OrgDocID,SYSTEM_ID,FORMID,HELPPATH";
-			String[] arrItemNames = strItemNames.split(",");
-			
-			for (int k = 0; k < arrItemNames.length; k++) {
-				Node root = connNode.getChildNodes().item(2);
-				org.w3c.dom.Element ele = connNode.getChildNodes().item(2).getOwnerDocument().createElement("key");
-				
-				ele.setAttribute("kind", "single");
-				ele.setTextContent(arrItemNames[k]);
-				root.appendChild(ele);
-				
-				root = null;
-				ele = null;
-			}
-			
-			keyNodes = connNode.getChildNodes().item(2).getChildNodes();
-			
-			@SuppressWarnings("unused")
-			String keyValue = "";
-			@SuppressWarnings("unused")
-			String[] arrKeys = null;
-			
-			switch (queryType) {
-			case "Q":
-				for (int cnt = 0; cnt < keyNodes.getLength(); cnt++) {
-					String keys = keyNodes.item(cnt).getTextContent();
-					Element keyHtml = doc.getElementById(keys);
-					keyValue = "";
-					
-					if (keyHtml != null) {
-						keyValue = keyHtml.html();
-					}
-				}
-				break;
-			case "NA":
-				arrKeys = new String[keyNodes.getLength()];
-				
-				StringBuilder sb = new StringBuilder("<PARAMETER>");
-				
-				for (int cnt = 0; cnt < keyNodes.getLength(); cnt++) {
-					if (keyNodes.item(cnt).getAttributes().getNamedItem("kind").getNodeValue().equals("single")) {
-						String keys = keyNodes.item(cnt).getTextContent();
-						Element keyHtml = doc.getElementById(keys);
-						keyValue = "";
-						
-						sb.append("<" + keys + ">");
-						
-						String keyTagName = "";
-						
-						if (keyHtml != null) {
-							keyTagName = keyHtml.tagName().toString();
-						}
-						
-						if (keyTagName.equals("TD")) {
-							sb.append(keyHtml.text());
-						} else if (keyTagName.equals("SELECT")) {
-							Elements selectEle = keyHtml.getElementsByTag("SELECT");
-							sb.append(selectEle.val());
-						} else {
-							if (doc.body().getElementsByAttribute(keys).get(0) != null) {
-								sb.append(doc.body().getElementsByAttribute(keys).get(0).toString());
-							}
-						}
-						sb.append("</" + keys + ">");
-					} else if (keyNodes.item(cnt).getAttributes().getNamedItem("kind").getNodeValue().equals("list")) {
-						Document xmlTbl = null;
-						Element htmlTbl = doc.getElementById("tblinfo");
-						
-						if (htmlTbl != null) {
-							xmlTbl = commonUtil.convertStringToDocument(htmlTbl.text());
-							
-							String tblID = keyNodes.item(cnt).getAttributes().getNamedItem("tableid").getNodeValue();
-							
-							listKeyRow = keyNodes.item(cnt).getChildNodes();
-							
-							HTMLTableElement table = (HTMLTableElement) doc.getElementById(tblID);
-							
-							if (table != null) {
-								sb.append("<RECORDROOT>");
-								
-								HTMLCollection trs = table.getRows();
-								
-								int tagIdx = 0;
-								int offSet = 0;
-								
-								for (int j = 0; j < trs.getLength(); j++) {
-									if (!trs.item(j).getAttributes().getNamedItem("header").toString().equals("") || !trs.item(j).getAttributes().getNamedItem("tail").toString().equals("")) {
-										continue;
-									}
-									
-									sb.append("<R" + tagIdx + " ");
-									
-									for (int k = 0; k < listKeyRow.getLength(); k++) {
-										String fieldName = listKeyRow.item(k).getTextContent();
-										
-										tblInfoRow = (Node) xmlTbl.getElementsByTagName("/TableInfo/" + tblID);
-										offSet = tblInfoRow.getChildNodes().getLength();
-										
-										String colIdx = "";
-										int rowCnt = 0;
-										
-										for (rowCnt = 0; rowCnt < offSet; rowCnt++) {
-											if (tblInfoRow.getChildNodes().item(rowCnt).getAttributes().getNamedItem(fieldName) != null) {
-												colIdx = tblInfoRow.getChildNodes().item(rowCnt).getAttributes().getNamedItem(fieldName).getNodeValue();
-												break;
-											}
-										}
-										
-										HTMLTableRowElement row = (HTMLTableRowElement) trs.item(j + rowCnt);
-										HTMLElement cel = (HTMLElement) row.getCells().item(Integer.parseInt(colIdx));
-										
-										String cellValue = makeXMLString(cel.getTextContent());
-										
-										sb.append(fieldName + "=\"" + cellValue + "\" ");
-										
-									}
-									
-									sb.append("/>");
-									
-									j = j + (offSet - 1);
-									tagIdx = tagIdx + 1;
-								}
-								sb.append("</RECORDROOT>");
-							}
-						}
-					}
-				}
-				
-				sb.append("<processTime>" + draftFlag + "</processTime>");
-				sb.append("<processidx>" + pProcessIdx + "</processidx>");
-				sb.append("</PARAMETER>");
-				
-				//그룹웨어 연동 페이지 인증 및 호출 함수 일단 생략 (추가여부는 추후 고려)
-				break;
-			}
-		}
+        for (Element connNode : htmlConn.children()) {
+            processIdx = connNode.attr("processidx");
+            processTime = connNode.attr("processtime");
+            
+            logger.debug("processIdx = " + processIdx + " || processTime = " + processTime);
+            
+            if (processIdx.equals(pProcessIdx) && processTime.equals(draftFlag)) {
+                Element connStringElem = connNode.getElementsByTag("connstring").first();
+                connFlag = connStringElem.attr("flag");
+                connString = connStringElem.text();
+                
+                Element queryElem = connNode.getElementsByTag("query").first();
+                queryType = queryElem.attr("qtype");
+                queryString = queryElem.text();
+                
+                Element serviceQueryElem = connNode.getElementsByTag("servicequery").first();
+                serviceQueryString = serviceQueryElem.text();
+                
+                Element keysElem = connNode.getElementsByTag("keys").first();
+                String [] arrItemNames = {
+                    "c_docid",
+                    "c_formid",
+                    "c_draft_userid",
+                    "c_draft_username",
+                    "c_draft_position",
+                    "c_draft_deptid",
+                    "c_draft_deptname",
+                    "c_processidx",
+                    "c_processtime",
+                    "c_connkey",
+                    "c_connformcode"
+                };
+                
+                for (int i = 0, len = arrItemNames.length; i < len; i++) {
+                    keysElem
+                        .appendElement("key")
+                        .attr("kind", "single")
+                        .text(arrItemNames[i]);
+                }
+                
+                Elements keyElems = keysElem.children();
+                
+                logger.debug("connFlag = " + connFlag + " || connString = " + connString);
+                logger.debug("queryType = " + queryType + " || queryString = " + queryString);
+                logger.debug("serviceQueryString = " + serviceQueryString);
+                
+                if (queryType.equals("UA") || queryType.equals("UA_EX") || connFlag.equals("UI")) {
+                    return false;
+                }
+                
+                if (!serviceQueryString.isEmpty()) {
+                    StringBuilder sb = new StringBuilder("<PARAMETER>");
+                    
+                    for(int i = 0, len = keyElems.size(); i < len; i++) {
+                        Element keyElem = keyElems.get(i);
+                        
+                        if("single".equals(keyElem.attr("kind"))) {
+                            String keyName = keyElem.text().toLowerCase();
+                            String keyValue = "";
+                            
+                            switch (keyName) {
+                            case "c_processidx":
+                                keyValue = processIdx;
+                                break;
+                            case "c_processtime":
+                                keyValue = processTime;
+                                break;
+                            default:
+                                Element keyTag = doc.getElementById(keyName);
+                                if (keyTag != null) {
+                                    String keyTagName = keyTag.tagName();
+                                    if (keyTagName.equalsIgnoreCase("td")) {
+                                        keyValue = keyTag.text();
+                                    } else {
+                                        keyValue = keyTag.val();
+                                    }
+                                } else {
+                                    keyValue = doc.getElementById("body").attr(keyName);
+                                }
+                            }
+                            
+                            sb.append(String.format("<%s>%s</%s>", keyName, keyValue, keyName));
+                        }
+                    }
+                    sb.append("</PARAMETER>");
+                        
+                    Document keyData = commonUtil.convertStringToDocument(sb.toString());
+                        
+                    Object connServiceBean = context.getBean("EzApprovalGConnService");
+                    Class<? extends Object> refClass = connServiceBean.getClass();
+                    
+                    LoginVO tempLoginVO = new LoginVO();
+                    tempLoginVO.setId(userID);
+                    tempLoginVO.setTenantId(tenantID);
+                    tempLoginVO.setDn("NOPASSWORD");
+                    
+                    LoginVO userInfo = loginService.selectUser(tempLoginVO);
+                    
+                    Method connMethod =  refClass.getDeclaredMethod(serviceQueryString, Document.class, LoginVO.class);
+                    if(connMethod != null) {
+                        logger.debug("method name = " + connMethod.getName());
+                        connMethod.invoke(connServiceBean, keyData, userInfo);
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        }
 
 		logger.debug("excuteInfo ended");
 		
-		return rtnVal;
+		return true;
 	}
 
 	public String getDocInfoDState(String docID, String col, String companyID, int tenantID) throws Exception {
@@ -9013,6 +9015,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE2").item(k).getTextContent()) + "]]></DATA16>");
 					resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "]]></DATA17>");
 					resultXML.append("<DATA18><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME2").item(k).getTextContent()) + "]]></DATA18>");
+					resultXML.append("<ISBIGATTACH><![CDATA[" + makeListField(docXML.getElementsByTagName("ISBIGATTACH").item(k).getTextContent()) + "]]></ISBIGATTACH>");
+					resultXML.append("<ISBIGATTACHDEL><![CDATA[" + makeListField(docXML.getElementsByTagName("ISBIGATTACHDEL").item(k).getTextContent()) + "]]></ISBIGATTACHDEL>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -9127,6 +9131,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("FLAG", "Y");
 				map.put("companyID", companyID);
 				map.put("v_TENANTID", tenantID);
+				
+				/* 2020-11-12 홍승비 - 대용량첨부 플래그, 첨부파일 최초 저장일 추가 */
+				map.put("v_ISBIGATTACH", xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(19).getTextContent());
+				map.put("v_ISBIGATTACHDEL", xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(20).getTextContent());
+				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 				
 				ezApprovalGDAO.insertAprAttachInfo(map);
 				ezApprovalGDAO.updateAttachFileInfo(map);
@@ -27259,7 +27268,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 	}
                 	String parentSpanStyle = doc.getElementsByTag("span").get(i).parent().attr("style").toString();
                 	
-                	htmlStyle.append(parentSpanStyle);
+                	//htmlStyle.append(parentSpanStyle);
 
                     // 상위태그가 P태그일 경우 P태그의 innerText와 span의 innerText가 동일할 경우 span의 Style을 P태그의 style로 입력한다.
                 	if (doc.getElementsByTag("span").get(i).parent().text() != null && !doc.getElementsByTag("span").get(i).parent().text().equals("") 
@@ -27284,7 +27293,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         			htmlStyle.append(spanStyle.substring(spanStyle.indexOf("line-height"), spanStyle.indexOf(";", spanStyle.indexOf("line-height"))+1));
                                 }
                             }
-                            doc.getElementsByTag("span").get(i).parentNode().attr("style",htmlStyle.toString());
+                            
+                            htmlStyle.append(parentSpanStyle);
+                            
+                            if(!htmlStyle.toString().equals("")) {
+                            	doc.getElementsByTag("span").get(i).parentNode().attr("style",htmlStyle.toString());
+                            }
     						htmlStyle.setLength(0);
                         }
                     }
@@ -27493,9 +27507,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					tableElement.attr("height", "0");
 				}
 				
-//				if (tableElement.hasAttr("style")) {
-//					tableElement.removeAttr("style");
-//				}
+				if (tableElement.hasAttr("style")) {
+					tableElement.removeAttr("style");
+				}
 				
 				if (tableElement.hasAttr("align")) {
 					switch (tableElement.attr("align").toString()) {
@@ -27518,6 +27532,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (int k = 0; k < doc.getElementsByTag("td").size(); k++) {
 				Element tdElement = doc.getElementsByTag("td").get(k);
 				String tdStyle = tdElement.attr("style");
+            	if(tdStyle != null && !tdStyle.equals("") && !tdStyle.endsWith(";")){
+            		tdStyle += ";";
+            	}
+            	tdElement.attr("style", tdStyle);
+            	
 				if (tdElement.hasAttr("align")) {
 					switch (tdElement.attr("align").toLowerCase()) {
 					case "left":
@@ -27591,6 +27610,43 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						tdElement.attr("height_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height")))));
 					}
 					tdElement.attr("height", "0");
+				}
+
+				// td에 padding style이 있는 문서에 대해
+				// td에 padding으로 들어간 값을 현재 td 아래 p요소의 margin style로 넣어주고 td의 style은 삭제
+				if(tdStyle.indexOf("padding:") > -1 && tdElement.child(0).tagName().toLowerCase().equals("p")) {
+					tdStyle = tdElement.attr("style");
+					String pdElem = tdStyle.substring(tdStyle.indexOf("padding:")+8, tdStyle.indexOf(";", tdStyle.indexOf("padding:")));
+					String tdStyleForP = "";
+					String[] pdElems = pdElem.split(" ");
+					for(int l=0; l<pdElems.length; l++) {
+						switch(l) { 
+							case 0:
+								tdStyleForP += "margin-top:" + SizeConvertToMM(pdElems[l]) + ";";
+								break;
+							case 1:
+								tdStyleForP += "margin-right:" + SizeConvertToMM(pdElems[l]) + ";";
+								break;
+							case 2:
+								tdStyleForP += "margin-bottom:" + SizeConvertToMM(pdElems[l]) + ";";
+								break;
+							case 3:
+								tdStyleForP += "margin-left:" + SizeConvertToMM(pdElems[l]) + ";";
+								break;
+						}
+					}
+					
+					Element pElement = tdElement.child(0);
+					String pStyle = pElement.attr("style");
+					pElement.attr("style", pStyle + tdStyleForP);
+				}
+				
+				if (tdElement.hasAttr("style")) {
+					tdElement.removeAttr("style");
+				}
+				
+				if (tdElement.hasAttr("bgcolor")) {
+					tdElement.removeAttr("bgcolor");
 				}
 				
 			}
@@ -30389,18 +30445,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		EgovFileMngUtil.writeFile(file, originalFilename, tempUploadPath);
 		
 		// 다른 서버에 설치되어있는 변환솔루션의 경우, 솔루션서버에 마운트된 위치를 filePath로 알려줘야함
-
-//		String filePath = URLEncoder.encode(tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
-		//400장
-// 	 String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4fEa1FIQeYI3%252BPB33JlY%252BCLJjVjx1iVJebmrlmJl1TgrI%253D";
-		// 엑셀
-		String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4fdPYpLmCWzzgjfbPjoEgvsB32hMod332fBGiVzDvdMA9LEhq8SWDfnHXmgXfwqy2hcXehoNGjE9rNOtlr0cyMpd1d0rJz27rnaDFpCcdNoqc%253D";
-		// 10장
-//		String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4ft%252BRV%252FhVxGhN7is8MRVAdmyimyAbMBXvZPRNRArrGlfA%253D";
-//		String filePath = URLEncoder.encode("/home/jmocha/temp/" + originalFilename, "UTF-8"); // 테스트용
-
-//		String filePath = URLEncoder.encode(tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
-
+		String filePath = URLEncoder.encode(tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
 		String fileName = URLEncoder.encode(originalFilename, "UTF-8");
 		String fileExt = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
 		
@@ -32340,4 +32385,146 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         return sb.toString();
 	}
 	
+	/* 2020-11-13 홍승비 - 특정 첨부파일이 대용량첨부인지, 대용량첨부라면 다운로드가 가능한지 체크하여 반환*/
+	@Override
+	public String checkAttachFileCanDownload(String docID, String docAttachSN, String companyID, int tenantID) throws Exception {
+		logger.debug("checkAttachFileCanDownload started.");
+		
+		String result = "NO";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DOCID", docID);
+		map.put("v_ATTACHFILESN", docAttachSN);
+		
+		// 대용량첨부가 아닌 일반 첨부 파일이거나, 저장기간이 남은(스케줄러로 삭제되지 않은) 대용량첨부인 경우 전부 유니온하여 리턴
+		// TBL_APRATTACHINFO, TBL_ENDATTACHINFO 전부 유니온
+		int canDownloadAttachFileCnt = ezApprovalGDAO.cntAttachFileCanDownload(map);
+		
+		if (canDownloadAttachFileCnt > 0) {
+			result = "YES";
+		}
+		
+		logger.debug("checkAttachFileCanDownload ended. canDownloadAttachFileCnt = " + canDownloadAttachFileCnt + ", result = " + result);
+		return result;
+	}
+	
+	/* 2020-11-13 홍승비 - 대용량첨부파일의 다운로드횟수 초과여부 반환 */
+	@Override
+	public String checkBigAttachFileDownloadCntOver(String docID, String docAttachSN, int bigSizeAttachDownloadLimitCount, String companyID, int tenantID) throws Exception {
+		logger.debug("checkBigAttachFileDownloadCntOver started.");
+		
+		String result = "NO";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DOCID", docID);
+		map.put("v_ATTACHFILESN", docAttachSN);
+		
+		// 대용량 첨부파일인지 체크
+		int isBigAttachFileCnt = ezApprovalGDAO.cntIsBigAttachFile(map);
+		// 대용량 첨부파일인 경우, 다운로드 카운트가 존재하는지 체크
+		if (isBigAttachFileCnt > 0) {
+			int isDownloadLimitCntExists = ezApprovalGDAO.cntDownloadLimitCntExists(map);
+			if (isDownloadLimitCntExists <= 0) { // 없다면 신규 레코드 삽입
+				ezApprovalGDAO.insertBigAttachFileDownloadCnt(map);
+			} else { // 존재한다면 카운트 리턴
+				int bigAttachFileDownloadCnt = ezApprovalGDAO.getBigAttachFileDownloadCnt(map);
+				if (bigAttachFileDownloadCnt >= bigSizeAttachDownloadLimitCount) { // 다운로드 카운트 초과
+					result = "YES";
+				}
+			}
+		}
+		// 대용량첨부가 아니라면 그대로 NO 리턴
+		
+		logger.debug("checkBigAttachFileDownloadCntOver ended. result = " + result);
+		return result;
+	}
+	
+	/* 2020-11-13 홍승비 - 대용량첨부파일의 다운로드 성공 시, 다운로드 카운트 증가 */
+	@Override
+	public void updateBigAttachFileDownloadCnt(String docID, String docAttachSN, String companyID, int tenantID) throws Exception {
+		logger.debug("updateBigAttachFileDownloadCnt started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DOCID", docID);
+		map.put("v_ATTACHFILESN", docAttachSN);
+		
+		ezApprovalGDAO.updateBigAttachFileDownloadCnt(map);
+		logger.debug("updateBigAttachFileDownloadCnt ended.");
+	}
+	
+	/* 2020-11-13 홍승비 - 대용량첨부파일의 삭제 시, 다운로드 카운트 레코드 제거 */
+	@Override
+	public void deleteBigAttachFileDownloadCnt(String docID, String docAttachSN, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteBigAttachFileDownloadCnt started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DOCID", docID);
+		map.put("v_ATTACHFILESN", docAttachSN);
+		
+		ezApprovalGDAO.deleteBigAttachFileDownloadCnt(map);
+		logger.debug("deleteBigAttachFileDownloadCnt ended.");
+	}
+	
+	/* 2020-11-13 홍승비 - 자동삭제 스케줄러를 위한 저장기간 만료 대용량 첨부파일 리스트 리턴  (ISBIGATTACH = Y, ISBIGATTACHDEL = N) */
+	@Override
+	public List<ApprGAttachInfoVO> getBigAttachFileForDelete(int tenantID) throws Exception {
+		logger.debug("getBigAttachFileForDelete started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANTID", tenantID);
+		
+		List<ApprGAttachInfoVO> apprGAttachInfoVOList = ezApprovalGDAO.getBigAttachFileForDelete(map);
+		
+		logger.debug("getBigAttachFileForDelete ended.");
+		return apprGAttachInfoVOList;
+	}
+	
+	/* 2020-11-16 홍승비 - 대용량첨부파일의 삭제여부 플래그 갱신 */
+	public void updateIsBigAttachDel(String docID, String docAttachSN, String tblName, String companyID, int tenantID) throws Exception {
+		logger.debug("updateIsBigAttachDel started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TBLNAME", tblName);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DOCID", docID);
+		map.put("v_ATTACHFILESN", docAttachSN);
+		
+		ezApprovalGDAO.updateIsBigAttachDel(map);
+		logger.debug("updateIsBigAttachDel ended.");
+	}
+	
+	/* 2020-11-16 홍승비 - 첨부파일의 가장 작은 저장일자 리턴 */
+	public String getAttachFileMinSaveDate(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("getAttachFileMinSaveDate started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_DOCID", docID);
+		
+		logger.debug("getAttachFileMinSaveDate ended.");
+		return ezApprovalGDAO.getAttachFileMinSaveDate(map);
+	}
+	
+	@Override
+	public Map<String, Object> getDocProcessState(String docID, String orgDocID, LoginVO userInfo) throws Exception {
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("v_DOCID", docID);
+	    map.put("v_ORGDOCID", orgDocID);
+	    map.put("v_TENANTID", userInfo.getTenantId());
+	    map.put("v_COMPANYID", userInfo.getCompanyID());
+	    
+	    Map<String, Object> docProcessState = ezApprovalGDAO.getDocProcessState(map);
+	    
+	    return docProcessState;
+	}
 }

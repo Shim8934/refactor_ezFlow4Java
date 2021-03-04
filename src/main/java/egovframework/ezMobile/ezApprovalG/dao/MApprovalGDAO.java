@@ -110,5 +110,13 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 	public MApprovalGDocInfoVO getEndAprDocInfo(Map<String, Object> map) throws Exception {
 		return (MApprovalGDocInfoVO) select("MApprovalG.getEndAprDocInfo", map);
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public List<MApprovalGAbsenteeAddJobInfoVO> getAbsenteeAddJobInfo(Map<String, Object> map) throws Exception {
+		return (List<MApprovalGAbsenteeAddJobInfoVO>) list("MApprovalG.getAbsenteeAddJobInfo", map);
+	}
+
+	public int updateAbsenteeAddJobInfo(Map<String, Object> map) throws Exception {
+		return update("MApprovalG.updateAbsenteeAddJobInfo", map);
+	}
 }

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleShareVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -16,6 +18,20 @@ public class EzScheduleAdminDAO extends EgovAbstractDAO {
 		return (List<ScheduleShareVO>) list("EzScheduleAdminDAO.scheduleGetShareManage", map);
 	}
 
+
+	@SuppressWarnings("unchecked")
+	public List<ScheduleGroupListVO> getMyGroupList(Map<String, Object> map) throws Exception {
+		return (List<ScheduleGroupListVO>) list("EzScheduleAdminDAO.getMyGroupList", map);
+	}	
+
+	@SuppressWarnings("unchecked")
+	public List<ScheduleGroupVO> getMyGroupList2(Map<String, Object> map) throws Exception {
+		return (List<ScheduleGroupVO>) list("EzScheduleAdminDAO.getMyGroupList2", map);
+	}	
+
+	public int getMyGroupMemberListCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzScheduleAdminDAO.getMyGroupMemberListCnt", map);
+	}
 	public void scheduleDelShareDept(Map<String, Object> map) throws Exception {
 		delete("EzScheduleAdminDAO.scheduleDelShareDept", map);
 	}
@@ -60,5 +76,8 @@ public class EzScheduleAdminDAO extends EgovAbstractDAO {
 		return (int) select("EzScheduleAdminDAO.scheduleShareCheck", map);		
 	}
 
+	
+
+	
 }
 

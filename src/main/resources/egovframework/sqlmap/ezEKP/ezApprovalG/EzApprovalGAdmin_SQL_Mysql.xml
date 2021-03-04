@@ -952,7 +952,8 @@
 					CASE
 						WHEN O.FORMID IS NULL THEN 'N'
 						WHEN O.FORMID IS NOT NULL THEN 'Y'
-                    END AS officeFlag
+                    END AS officeFlag,
+                    formxslt
 				FROM
 					TBL_FORMINFO
 				JOIN 
@@ -997,7 +998,8 @@
 					CASE
 						WHEN O.FORMID IS NULL THEN 'N'
 						WHEN O.FORMID IS NOT NULL THEN 'Y'
-                    END AS officeFlag
+                    END AS officeFlag,
+                    formxslt
 				FROM
 					TBL_FORMINFO
 				LEFT JOIN
@@ -1735,7 +1737,8 @@
 				tenant_id,
 				opengovflag,
 				aprOption,
-				SIHANGTYPE)
+				SIHANGTYPE,
+				formxslt)
 			VALUES
 				(#v_PFORMCONTAINERID#,
 				#v_PFORMID#,
@@ -1751,7 +1754,8 @@
 				#tenantID#,
 				#v_POPENGOVFLAG#,
 				#v_formAprOption#,
-				#v_FORMSIHANGTYPE#)
+				#v_FORMSIHANGTYPE#,
+				#v_FORMXSLT#)
 		]]>
 	</insert>
 
@@ -1772,7 +1776,8 @@
 				opengovflag = #v_POPENGOVFLAG#,
 				aprOption = #v_formAprOption#,
 				passaprlineflag = #v_PPASSAPRLINEFLAG#,
-				SIHANGTYPE = #v_FORMSIHANGTYPE#
+				SIHANGTYPE = #v_FORMSIHANGTYPE#,
+				formxslt = #v_FORMXSLT#
 			WHERE
 				tenant_id = #tenantID#
 			AND
@@ -5946,5 +5951,33 @@
 		AND A.TENANT_ID = #tenantId#
 		AND A.COMPANYID = #companyId#
 		ORDER BY A.DOCID ASC
+	</select>
+
+	<insert id="EzApprovalGAdmin.insertReceiveGroupSubWithExcel" parameterClass="Map">
+		INSERT INTO TBL_ADMINRECEIPTGROUP_SUB
+			(mainid,
+			 subid,
+			 deptid,
+			 deptname,
+			 deptname2,
+			 companyid,
+			 tenant_id)
+		VALUES
+			(LAST_INSERT_ID(),
+			 (SELECT MAX(subid) + 1 FROM TBL_ADMINRECEIPTGROUP_SUB AS T1),
+			 #deptId#,
+			 (SELECT DISPLAYNAME FROM tbl_deptmaster WHERE cn = #deptId#),
+			 (SELECT DISPLAYNAME2 FROM tbl_deptmaster WHERE cn = #deptId#),
+			 #companyId#,
+			 #tenantId#)
+	</insert>
+
+	<select id="EzApprovalGAdminDAO.checkDeptId" parameterClass="String" resultClass="Integer">
+		SELECT
+			count(cn)
+		FROM
+			tbl_deptmaster
+		WHERE
+			cn = #deptId#
 	</select>
 </sqlMap>

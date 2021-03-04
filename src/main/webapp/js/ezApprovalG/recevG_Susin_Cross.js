@@ -97,9 +97,15 @@ function GetDraftAprLineInfo(ret) {
         if (ret[5] == undefined) {
             xmlKuljea = ret[0];
             xmlReDraft = ret[2];
+            if (ret[32] != "Y") {
+                New_DrawAutoLine(ret[0], pDraftFlag);
+            }
         } else {
             xmlKuljea = ret[1];
             xmlReDraft = ret[5];
+            if (ret[32] != "Y") {
+                New_DrawAutoLine(ret[1], pDraftFlag);
+            }
         }
         
         setAprLinesXML(xmlKuljea);
@@ -496,7 +502,11 @@ function SGetDraftAprLineInfo(ret) {
             TempsaveAprlineinfo = ret[1];
             xmlKuljea = ret[1];
             setAprLinesXML(xmlKuljea);
-            DrawAutoAprLine(ret[1], pDraftFlag);
+            // DrawAutoAprLine(ret[1], pDraftFlag);
+            if (ret[32] != "Y") {
+                New_DrawAutoLine(ret[1], pDraftFlag);
+            }
+
         }
         
 //        FieldsAvailable();

@@ -19,6 +19,7 @@
 		    var use_ocs = "<c:out value='${use_ocs}' />";
 		    
 		    window.onload = function () {
+		    	
 		        getGroupList();		      
 		    }
 		    
@@ -276,8 +277,8 @@
 	    <div class="txt" style="margin-top:3px">▒ <spring:message code='ezSchedule.t00008' /></div>
 	    <div id="mainmenu" style="margin-top:20px">
 	        <ul>
-	            <li class="important"><span onClick="add_group()"><spring:message code='ezSchedule.t191' /></span></li>
-	            <li><span onClick="show_groupinfo2('show')"><spring:message code='ezSchedule.t00001' /></span></li>
+	            <li class="important"><span onClick="add_group()"><spring:message code='ezSchedule.shb07' /></span></li>
+	            <li><span onClick="show_groupinfo2('show')"><spring:message code='ezSchedule.shb06' /></span></li>
 	            <li><span class="icon16 icon16_delete" onclick='del_group();'></span></li>
 	        </ul>
 	    </div>

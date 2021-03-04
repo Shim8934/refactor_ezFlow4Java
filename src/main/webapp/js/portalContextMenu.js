@@ -157,6 +157,7 @@ var openForm = function () {
 var openDraftUI = function (pDraftFlag, pCurSelRow,officeFlag) {
     var pArgument = new Array();
     var gb = "";
+    var useWebHWP = "${useWebHWP}";
     
     if ("${userApprovalG}" == ("YES"))
         gb = "G";
@@ -179,12 +180,16 @@ var openDraftUI = function (pDraftFlag, pCurSelRow,officeFlag) {
 
     var openLocation = "";
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-        if (!isIE()) {
-            alert(messages.strLang16);
-            return;
-        } else {
-           var openLocation = "/ezApprovalG/draftuiHWP.do";
-        }
+    	if(useWebHWP == "NO") {
+	        if (!isIE()) {
+	            alert(messages.strLang16);
+	            return;
+	        } else {
+	           var openLocation = "/ezApprovalG/draftuiHWP.do";
+	        }
+    	} else {
+    		var openLocation = "/ezApprovalG/draftuiWHWP.do"; 
+    	}
     } else {
         var openLocation = "/ezApprovalG/draftui.do";
     }

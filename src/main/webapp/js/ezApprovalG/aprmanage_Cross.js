@@ -833,14 +833,20 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
 //            openLocation += "&reformflag=" + encodeURI(reformflag);
 //    	}
     } else {
-    	if (!isIE()) {
-            alert("한글양식은 IE에서만 기안 할 수 있습니다.");
-            return;
-        } else {
-        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    	if(useWebHWP == "NO") {
+	    	if (!isIE()) {
+	            alert("한글양식은 IE에서만 기안 할 수 있습니다.");
+	            return;
+	        } else {
+	        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+	            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+	            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
+	        }
+    	} else {
+    		openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
             openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
             openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
-        }
+    	}
     }
 
     openwindow(openLocation, windowName, 890, 560);
@@ -882,15 +888,21 @@ function openApprovUI(allFlag) {
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
             openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
         } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-        	if (isIE()) {
-        		var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURI(pArgument[0]);
+	        if(useWebHWP == "NO") {
+        		if (isIE()) {
+	        		var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURI(pArgument[0]);
+	        		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
+	        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
+	        	} else {
+	        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	        		alert(pAlertContent);
+	                
+	                return;
+	        	}
+        	} else {
+        		var openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + encodeURI(pArgument[0]);
         		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
         		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
-        	} else {
-        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-        		alert(pAlertContent);
-                
-                return;
         	}
         } else {
             openLocation = "/ezApprovalG/approvui.do?docID=";
@@ -913,19 +925,6 @@ function InitlvAprLine() {
 
     if (oArrRows.length != 0) {
         var tr = oArrRows[0];
-
-        if (pListTypeValue == "1" || pListTypeValue == "11") {
-            document.getElementById("tbtnforcecallback").style.display = "none";
-        }
-
-        if (pListTypeValue == "2") {
-            var DocID = GetAttribute(tr, "DATA1");
-            cancelYN(DocID);
-        }
-        else if (pListTypeValue == "3") {
-            var DocID = GetAttribute(tr, "DATA1");
-            cancelYN(DocID);
-        }
 
         SelectFlag = false;
         getAprLine(tr);
@@ -1063,14 +1062,18 @@ function openViewDocInfo(type) {
 
     if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
         if (formUrlExt === "hwp") {
-            if (CrossYN() && isIE()) {
-            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
-            } else {
-            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-            	alert(pAlertContent);
-                
-                return;
-            }
+        	if(useWebHWP == "NO") {
+	            if (CrossYN() && isIE()) {
+	            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+	            } else {
+	            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	            	alert(pAlertContent);
+	                
+	                return;
+	            }
+        	} else {
+        		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
+        	}
         }
         else {
             openLocation = "/ezApprovalG/contDocView.do";
@@ -1080,14 +1083,18 @@ function openViewDocInfo(type) {
     else {
     	// 2018.07.06 (KLIB) - ezd 확장자 처리
         if (formUrlExt === "hwp") {
-            if (CrossYN() && isIE()) {
-            	openLocation = "/ezApprovalG/ezviewAprHWP.do";
-            } else {
-            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-            	alert(pAlertContent);
-                
-                return;
-            }
+        	if(useWebHWP == "NO") {
+	            if (CrossYN() && isIE()) {
+	            	openLocation = "/ezApprovalG/ezviewAprHWP.do";
+	            } else {
+	            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	            	alert(pAlertContent);
+	                
+	                return;
+	            }
+        	} else {
+        		openLocation = "/ezApprovalG/ezviewAprWHWP.do";
+        	}
         }
         else {
         	openLocation = "/ezApprovalG/aprDocView.do";
@@ -1137,14 +1144,18 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                 openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
                 openLocation = openLocation + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
             } else {
-                if (/chrome/i.test(navigator.userAgent)) {
-                     alert(strLang1103);
-                     return;
-            	 } else {
-            		if (docHref == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
-            			openLocation = "/ezApprovalG/ezRecevGSusinHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag) + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
-                    }
-            	 }
+            	if(useWebHWP == "NO") {
+	                if (/chrome/i.test(navigator.userAgent)) {
+	                     alert(strLang1103);
+	                     return;
+	            	 } else {
+	            		if (docHref == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
+	            			openLocation = "/ezApprovalG/ezRecevGSusinHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag) + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
+	                    }
+	            	 }
+            	} else {
+            		openLocation = "/ezApprovalG/ezRecevGSusinWHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag) + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
+            	}
             }
             openwindow(openLocation, "receive", 880, 550);
         } else {
@@ -1153,11 +1164,15 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             var orgCompanyID = GetAttribute(pCurSelRow, "orgCompanyID");
             
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-            	if (/chrome/i.test(navigator.userAgent)) {
-            		alert(strLang1103);
-            		return;
+            	if(useWebHWP == "NO") {
+	            	if (/chrome/i.test(navigator.userAgent)) {
+	            		alert(strLang1103);
+	            		return;
+	            	} else {
+	            		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do";
+	            	}
             	} else {
-            		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do";
+            		openLocation = "/ezApprovalG/ezDeptRecevUI_WHWP.do";
             	}
             } else if (approvalFlag == "G") {
             	openLocation = "/ezApprovalG/recevGDeptHapyui.do";
@@ -1197,9 +1212,13 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
         
         var openLocation = "";
         if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-        	openLocation = "/ezApprovalG/ezRecevGSusinHWP.do";
-
-            openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
+            if (!useWebHWP) {
+                openLocation = "/ezApprovalG/ezRecevGSusinHWP.do";
+                openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
+            } else {
+                openLocation = "/ezApprovalG/ezRecevGSusinWHWP.do";
+                openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
+            }
         }
         else {
         	//docstate가 012(합의) 일 경우에 부서합의 페이지 띄우도록 수정 2019-02-27 홍대표
@@ -2011,7 +2030,6 @@ function setbuttonenable() {
         document.getElementById("tbtnApprove2").style.displayd = "none";
         //document.getElementById("tbtnApproveALL").style.display = "none";
         document.getElementById("tbtnReceipt").style.display = "none";
-        document.getElementById("tbtnReturn").style.display = "none";
         document.getElementById("tbtnNonElecRec").style.display = "none";
         document.getElementById("tbtnSimsa").style.display = "none";
         document.getElementById("tbtnGongRam").style.display = "none";
@@ -2092,7 +2110,6 @@ function setbuttonenable() {
                 document.getElementById("tbtnApprove2").style.display = "none";
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
-                document.getElementById("tbtnReturn").style.display = "none";
                 document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
             } else if (GetAttribute(tr, "DATA12") == "015") {
@@ -2107,7 +2124,6 @@ function setbuttonenable() {
                 document.getElementById("tbtnApprove2").style.display = "none";
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
-                document.getElementById("tbtnReturn").style.display = "none";
                 document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
             } else if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
@@ -2130,24 +2146,14 @@ function setbuttonenable() {
                 document.getElementById("tbtnApprove2").style.display = "none";
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
-                document.getElementById("tbtnReturn").style.display = "none";
                 document.getElementById("tbtnNonElecRec").style.display = "none";
 
                 if (GetAttribute(tr, "DATA9") != "0") {
                     document.getElementById("tbtnRemoveDoc").style.display = "none";
-                    returnYN(GetAttribute(tr, "DATA1"));
-
-                    if (GetAttribute(tr, "DATA15") == "001")
-                        document.getElementById("tbtnReturn").style.display = "none";;
                 } else if (GetAttribute(tr, "DATA12") == "011" || GetAttribute(tr, "DATA12") == "012") {
                     document.getElementById("tbtnRemoveDoc").style.display = "none";
-                    returnYN(GetAttribute(tr, "DATA1"));
-
-                    if (GetAttribute(tr, "DATA15") == "001")
-                        document.getElementById("tbtnReturn").style.display = "none";;
                 } else {
                     document.getElementById("tbtnRemoveDoc").style.display = "";
-                    document.getElementById("tbtnReturn").style.display = "none";
                 }
             } else {
                 document.getElementById("tbtnDraft").style.display = "";
@@ -2164,7 +2170,6 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "";
 
                 document.getElementById("tbtnReceipt").style.display = "none";
-                document.getElementById("tbtnReturn").style.display = "none";
                 document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
                 document.getElementById("tbtnLinkDraft").style.display = "none";
@@ -2183,7 +2188,6 @@ function setbuttonenable() {
             document.getElementById("tbtnReceipt").style.display = "none";
             document.getElementById("tbtnNonElecRec").style.display = "none";
             document.getElementById("tbtnViewDoc").style.display = "none";
-            document.getElementById("tbtnReturn").style.display = "none";
             document.getElementById("tbtnRegList").style.display = "none";
             document.getElementById("tbtnLinkDraft").style.display = "none";
             document.getElementById("tbtnApproveALL").style.display = "none";
@@ -2215,15 +2219,6 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "";
                 document.getElementById("tbtnRegList").style.display = "none";
-                //G버전 감사는 회송 버튼이 보이도록 수정. 2020-02-25 홍대표.
-                if (tr.getAttribute("DATA9") == "003" || (tr.getAttribute("DATA9") == "014" && approvalFlag == "S"))
-                    document.getElementById("tbtnReturn").style.display = "none";
-                else {
-                    returnYN(tr.getAttribute("DATA1"));
-
-                    if (tr.getAttribute("DATA15") == "001")
-                        document.getElementById("tbtnReturn").style.display = "none";
-                }
             } else if (pFunctionType == "015") {
                 document.getElementById("tbtnDraft").style.display = "";
                 //SwapImage(document.getElementById("btnDraft"), "");
@@ -2236,7 +2231,6 @@ function setbuttonenable() {
                 document.getElementById("tbtnApprove2").style.display = "none";
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
-                document.getElementById("tbtnReturn").style.display = "none";
                 //document.getElementById("tbtnNonElecRec").style.display = "";
                 
                 if(approvalFlag == "G") {
@@ -2258,7 +2252,6 @@ function setbuttonenable() {
             //document.getElementById("tbtnApproveALL").style.display = "none";
             document.getElementById("tbtnReceipt").style.display = "none";
             document.getElementById("tbtnViewDoc").style.display = "none";
-            document.getElementById("tbtnReturn").style.display = "none";
             document.getElementById("tbtnRegList").style.display = "none";
             document.getElementById("tbtnLinkDraft").style.display = "none";
         }
@@ -2279,10 +2272,6 @@ function setbuttonenable() {
     } else
         document.getElementById("tDocInfo").style.display = "none";
 
-    if (pListTypeValue != "2" && pListTypeValue != "3") {
-        document.getElementById("tbtncallback").style.display = "none";
-    }
-
     if (GetBujaeFlag()) {
         document.getElementById("tbtnDraft").style.display = "none";
         //SwapImage(document.getElementById("btnDraft"), "dis");
@@ -2294,9 +2283,7 @@ function setbuttonenable() {
         document.getElementById("tbtnApprove2").style.display = "none";
         //document.getElementById("tbtnApproveALL").style.display = "none";
         document.getElementById("tbtnReceipt").style.display = "none";
-        document.getElementById("tbtnReturn").style.display = "none";
         document.getElementById("tbtnNonElecRec").style.display = "none";
-        document.getElementById("tbtncallback").style.display = "none";
         document.getElementById("tbtnRegList").style.display = "none";
         document.getElementById("tbtnLinkDraft").style.display = "none";
 
@@ -2305,13 +2292,8 @@ function setbuttonenable() {
         } catch (e) { }
     }
 
-    if (pListTypeValue != "4" && pListTypeValue != "1" && pListTypeValue != "11") {
-        document.getElementById("tbtnReturn").style.display = "none";
-    }
-    
     if (approvalFlag == "S") {
 	    if (pListTypeValue == "4") {
-	        document.getElementById("tbtnReturn").style.display = "none";
 	        document.getElementById("tbtnViewDoc").style.display = "none";
 	        document.getElementById("tbtnReceipt").style.display = "";
 	        
@@ -2559,179 +2541,9 @@ function getSimsaDocList() {
 	});
 }
 
-function doCancel(pDocID, tempListType) {
-	var result = "";
-
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : false,
-		url : "/ezApprovalG/doCancel.do",
-		data : {
-			docID : pDocID,
-			userID : pUserID
-		},
-		success: function(xml){
-			result = xml;
-		}, error: function () {
-			var pAlertContent = strLang898;
-	        OpenAlertUI(pAlertContent, "", "OPEN");
-		}
-	});
-	
-	//2018-07-10 배현상, OpenAlertUI에서 브라우저 alert으로 수정
-    var RtnVal = getNodeText(loadXMLString(result).documentElement);
-
-    if (RtnVal == "TRUE") {
-        if (tempListType == "3") {
-            var pAlertContent = strLang891 + "\n" + strLang892;
-            alert(pAlertContent);
-        }
-        else {
-            var pAlertContent = strLang893 + "\n" + strLang894;
-            alert(pAlertContent);
-        }
-        SendMailToCancel(pDocID); 
-        openergetDocInfo();
-        attitude_annual_conn(pDocID);
-
-        try {
-            parent.frames["left"].getAprCount();
-        }
-        catch (e) { }
-    }
-    else if (RtnVal == "ERR01") {
-        var pAlertContent = strLang895;
-        alert(pAlertContent);
-    }
-    else if (RtnVal == "ERR02") {
-        var pAlertContent = strLang896;
-        alert(pAlertContent);
-    }
-    else if (RtnVal == "ERR03") {
-        var pAlertContent = strLang897;
-        alert(pAlertContent);
-    } else {
-    	var pAlertContent = strLang898;
-        alert(pAlertContent);
-    }
-}
 
 var xmlhttp3;
 var temppDocID;
-function cancelYN(pDocID) {
-    temppDocID = pDocID;
-	
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : true,
-		url : "/ezApprovalG/doCanCelYN.do",
-		data : {
-			docID : pDocID,
-			userID : pUserID
-		},
-		success: function(xml){
-			cancelYN_after(loadXMLString(xml));
-		}
-	});
-}
-function cancelYN_after(xml) {
-    var RtnVal = getNodeText(xml.documentElement);
-    if (RtnVal == "CALLBACK" && pListTypeValue == "2" && !GetBujaeFlag()) {
-        document.getElementById("tbtncallback").style.display = "";
-        document.getElementById("tbtnforcecallback").style.display = "none";
-    }
-    else if (RtnVal == "CALLBACK" && pListTypeValue == "3" && !GetBujaeFlag()) {
-    	document.getElementById("tbtncallback").style.display = "";
-    	document.getElementById("tbtnforcecallback").style.display = "none";
-    }
-    else if (RtnVal == "CANCEL" && pListTypeValue == "3" && !GetBujaeFlag()) {
-        document.getElementById("tbtncallback").style.display = "";
-        document.getElementById("tbtnforcecallback").style.display = "none";
-    }
-    else {
-    	if (forceCallBackYN == "YES") {
-    		//강제회수는 기안자만 가능하도록 수정
-    		if (!checkIsDrafter()) {
-                document.getElementById("tbtncallback").style.display = "none";
-                document.getElementById("tbtnforcecallback").style.display = "none";
-
-    			return;
-    		}
-    		
-	    	var result = "";
-	    	
-	    	$.ajax({
-	    		type : "POST",
-	    		dataType : "text",
-	    		async : false,
-	    		url : "/ezApprovalG/doForceCancelYN.do",
-	    		data : {
-	    			docID : temppDocID,
-	    			userID : pUserID
-	    		},
-	    		success: function(xml){
-	    			result = xml;
-	    		}
-	    	});
-	    	
-	        var RtnVal = getNodeText(loadXMLString(result).documentElement);
-	        if (RtnVal == "TRUE")
-	        	document.getElementById("tbtnforcecallback").style.display = "";
-	        else
-	            document.getElementById("tbtnforcecallback").style.display = "none";
-	
-	        document.getElementById("tbtncallback").style.display = "none";
-	        temppDocID = null;
-    	} else {
-    		 document.getElementById("tbtnforcecallback").style.display = "none";
-    	     document.getElementById("tbtncallback").style.display = "none";
-    	}
-    }
-}
-
-function returnYN(pDocID) {
-	var result = "";
-	
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : false,
-		url : "/ezApprovalG/gongRamDocInfo.do",
-		data : {
-			docID : pDocID
-		},
-		success: function(xml){
-			result = xml;
-		}
-	});
-	
-    var RtnVal = getNodeText(loadXMLString(result).documentElement);
-    if (RtnVal == "NONE")
-        document.getElementById("tbtnReturn").style.display = "";
-    else
-        document.getElementById("tbtnReturn").style.display = "none";
-    
-}
-
-function returnYN_after() {
-    if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
-        try {
-            var RtnVal = getNodeText(xmlhttp2.responseXML.documentElement);
-            if (RtnVal == "NONE")
-                document.getElementById("tbtnReturn").style.display = "";
-            else
-                document.getElementById("tbtnReturn").style.display = "none";
-
-            xmlhttp2 = null;
-        }
-        catch (e) {
-        }
-    }
-    else
-        return;
-}
 
 function RemoveDocCabinet(tempDocID, FLAG) {
 	var result = "";
@@ -3008,15 +2820,21 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
             openLocation += "&reformflag=" + encodeURI(reformflag);
     	}
     } else {
-    	if (!isIE()) {
-    		//노티문구가 잘못되었음. 아무래도 한글양식은 IE에서만 지원가능합니다 라고 바꿔야할듯
-            alert(strLang1103);
-            return;
-        } else {
-        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+    	if(useWebHWP == "NO") {
+	    	if (!isIE()) {
+	    		//노티문구가 잘못되었음. 아무래도 한글양식은 IE에서만 지원가능합니다 라고 바꿔야할듯
+	            alert(strLang1103);
+	            return;
+	        } else {
+	        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+	            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+	            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);;
+	        }
+    	} else {
+    		openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
             openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);;
-        }
+            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
+    	}
     }
     
     openwindow(openLocation, windowName, 890, 560);
@@ -3046,22 +2864,6 @@ function RemoveTmpDoc(pDocID) {
 	        alert(pAlertContent);
 		}
 	});
-}
-
-//2019-05-03 김보미 - 근태관리 연동
-function attitude_annual_conn(docId) {		 		
-	$.ajax({ 			
-		type:'POST', 			
-		dataType : 'json', 			
-		async : true, 			
-		url : '/ezAttitude/approvalGConn.do', 			
-		data : { 				
-			status : 'delete', 				
-			docId : docId 			
-		},
-		success : function(result) { 			},
-		error : function() { 			} 		
-	});  
 }
 
 function checkIsDrafter() {
@@ -3187,9 +2989,10 @@ function chk_Passwd_Complete(chkpass) {
         var curAprType = "";
 
         //대결자 결재도 일괄결제 제외
-        if(useAdditionalRole == "YES" && curDeptId != arr_userinfo[4])
+        if(useAdditionalRole == "YES" && curDeptId != arr_userinfo[4]) {
             return false;
-
+        }
+        
         //결재타입 정보
         $.ajax({
             type : "POST",

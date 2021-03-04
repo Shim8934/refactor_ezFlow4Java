@@ -7,7 +7,9 @@ import java.util.Locale;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezMobile.ezApprovalG.vo.*;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +24,6 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGLeftVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
@@ -612,13 +608,13 @@ public class MApprovalGGWController {
 			LOGGER.debug("userId : " + userId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			// 2021-02-15 박기범 : 겸직부재중정보 호출 서비스로 교체
+			List<MApprovalGAbsenteeAddJobInfoVO> resultList = mApprovalGService.getAbsenteeAddJobInfo(userInfo);
 			
-			MApprovalGAbsenteeInfoVO absenteeInfoVO = mApprovalGService.getAbsenteeInfo(userInfo);
-			
-			if (absenteeInfoVO.getAbsenteeId() != null && !absenteeInfoVO.getAbsenteeId().equals("")) {
+			if (resultList != null && resultList.size() > 0) {
 				result.put("status", "ok");
 				result.put("code", "0");
-				result.put("data", absenteeInfoVO);
+				result.put("data", resultList);
 			} else {
 				result.put("status", "ok");
 				result.put("code", "2");
@@ -636,14 +632,15 @@ public class MApprovalGGWController {
 	
 	/**
 	 * 모바일 G/W 전자결재 [PUT] 부재자설정 등록
+	 * 2021-02-18 박기범 - 겸직부재자 등록으로 변경
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/absentee/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject mApprovalSetAbsenteeInfo(@PathVariable String userId, HttpServletRequest request, MApprovalGAbsenteeInfoVO absenteeInfoVO) {
+	public JSONObject mApprovalSetAbsenteeInfo(@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonObject) {
 		LOGGER.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/absentee/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
-		
+
 		try {
 			String serverName = request.getHeader("x-user-host");
 			
@@ -651,11 +648,11 @@ public class MApprovalGGWController {
 			LOGGER.debug("userId : " + userId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			JSONParser jp = new JSONParser();
+			JSONObject data = (JSONObject) jp.parse(jsonObject.toJSONString());
+			int resultCode = mApprovalGService.updateAbsenteeJobInfo(data, userInfo.getUserId(), userInfo.getTenantId());
 			
-			absenteeInfoVO.setUserId(userInfo.getUserId());
-			absenteeInfoVO.setTenantId(userInfo.getTenantId());
-			
-			int resultCode = mApprovalGService.setAbsenteeInfo(absenteeInfoVO);
+			// int resultCode = mApprovalGService.setAbsenteeInfo(absenteeInfoVO);
 			
 			//resultCode 가 0이면 업데이트를 했는데 업데이트가 안된 경우 잘못된 경우지만 흐름은 정상적으로 흘러가기에 코드로 구분 프론트단에서 업데이트가 안됐다고 알려줘야하는데 안될리가 없을듯 하지만 한치앞을 내다볼수없는 세상이라 만들어놓음
 			if (resultCode == 0) {
@@ -812,7 +809,11 @@ public class MApprovalGGWController {
 			if (type.equals("APR")) {
 				String lineMode = ezApprovalGService.getLineModeFlag(docId, userInfo.getUserId(), userInfo.getCompanyId(), userInfo.getTenantId());
 				
-				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, lineMode);
+				if(approvalGDocInfoVO.getHref().endsWith("mht")) {
+					rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, lineMode);
+				} else {
+					rtnVal = ezApprovalGService.mobileSrvConn_HWP(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, lineMode);
+				}
 				
 				/* 2020-07-02 홍승비 - 모바일에서 최종결재 완료 시 서명에 결재날짜 삽입 동작 추가(결재날짜 필드가 없는 경우에만, 웹과 동일하게) */
 				if (rtnVal != null && !rtnVal.equals("ERROR")) {
@@ -839,7 +840,11 @@ public class MApprovalGGWController {
 				}
 			} else if (type.equals("BAN")) {
 			    String lineMode = ezApprovalGService.getLineModeFlag(docId, userInfo.getUserId(), userInfo.getCompanyId(), userInfo.getTenantId());
-			    rtnVal = ezApprovalGService.mobileSrvConn(userId, "B", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, lineMode);
+			    if(approvalGDocInfoVO.getHref().endsWith("mht")) {
+			    	rtnVal = ezApprovalGService.mobileSrvConn(userId, "B", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, lineMode);
+			    } else {
+			    	rtnVal = ezApprovalGService.mobileSrvConn_HWP(userId, "B", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, lineMode);
+				}
 				
 //				String pBansongDeptID = ezApprovalGService.getBansongDeptID(docId, userInfo.getCompanyId(), userInfo.getTenantId(), loginVO);
 				

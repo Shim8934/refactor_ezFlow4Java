@@ -1248,18 +1248,26 @@ function ViewDoc_onclick_Complete(Rtn) {
             }
             
             if (tempUrl.substr(tempUrl.length - 3, tempUrl.length).toLowerCase() == "hwp") {
-            	if (isIE()) {
-                	if (g_uFlag == "m03") {
-                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
+            	if(useWebHWP == "NO") {
+	            	if (isIE()) {
+	                	if (g_uFlag == "m03") {
+	                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
+	                	} else {
+	                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
+	                	}
+	                } else {
+	                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                	alert(pAlertContent);
+	                    
+	                    return;
+	                }
+            	} else {
+            		if (g_uFlag == "m03") {
+                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
                 	} else {
-                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
+                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
                 	}
-                } else {
-                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-                	alert(pAlertContent);
-                    
-                    return;
-                }
+            	}
             } else {
 	            if (g_uFlag == "m03") {
 	                openLocation = "/ezApprovalG/contDocView.do";

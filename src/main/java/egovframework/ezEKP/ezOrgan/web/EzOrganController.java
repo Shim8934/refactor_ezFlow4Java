@@ -323,13 +323,13 @@ public class EzOrganController {
 		
 		if (page == null) {
 			if (companyId.equals("")) {
-				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID, adminOrgan);
+				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 10000, lang, tenantID, adminOrgan);
 			}
 			else {
-				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, companyId, tenantID, noAddJob, adminOrgan);
+				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 10000, lang, companyId, tenantID, noAddJob, adminOrgan);
 			}
 		} else {
-			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID, companyId, adminOrgan);
+			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 10000, lang, page, tenantID, companyId, adminOrgan);
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);

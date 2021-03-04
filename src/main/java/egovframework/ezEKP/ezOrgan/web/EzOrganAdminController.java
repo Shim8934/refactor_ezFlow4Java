@@ -177,6 +177,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
 	    	ezCommonService.addThemeContentLang(); //2019-06-25 유은정 - 테마명 다국어 처리 관련 컬럼 및 이닛데이터 추가
 	    	ezCommonService.createThemeAndPortletAuth();
+	    	ezCommonService.createTblYearlyDocCount(); // 2021-02-22 박기범 - 차트 통계 테이브 없을시 자동 생성
+			ezCommonService.insertChartPortletInfo(); //2021-02-22 박기범 - 차트 포틀릿 없을시 자동 생성
 	    	ezCommonService.addMenuAndPortletCode(); //2019-07-15 유은정 - 메뉴, 포틀릿 호출 로직 개선 위한 컬럼 추가
 	    	ezCommonService.createAccessCountry(); //2019-0705 김수아 - 접속 허용 국가 테이블
 	    	ezCommonService.addSnMenuAuth(); //2019-07-29 유은정 - 메뉴 권한 설정 시, 정렬이 저장한 순서대로 나오도록 추가
@@ -231,6 +233,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertAutoSendOfferFlag(); //2020-11-23 김보혜 전자결재G 문서발송시 발송옵션 추가
 	    	ezCommonService.insertTabBoardPortlet(); //2020-12-03 박기범 - 탭게시판포틀릿 추가
 	    	ezCommonService.createTblTabBoard(); //2020-12-04 탭게시판 등록 용 테이블 추가
+	    	ezCommonService.addScehdulegroup(); //2021-02-17 그룹일정의 tbl_schedulegroup 컬럼 추가
+	    	ezCommonService.insertApprBigAttachInfo(); //2021-02-10 홍승비 - 전자결재 대용량첨부 컨피그, 칼럼, 테이블 추가
+	    	ezCommonService.addScheduleMailNotiConfig();		// 2021-02-23 김민성 - 일정메일알림 컨피그 추가
     	} catch (Exception e) {
     		e.printStackTrace();
     	}

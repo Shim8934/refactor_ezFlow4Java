@@ -679,4 +679,12 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public List<HashMap<String, Object>> getAuditStatisticsDocList(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzApprovalGAdmin.getAuditStatisticsDocList", map);
 	}
+
+	public void insertReceiveGroupSubWithExcel(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.insertReceiveGroupSubWithExcel", map);
+	}
+
+	public Integer checkDeptId(String deptId) throws Exception {
+		return (Integer) select("EzApprovalGAdminDAO.checkDeptId", deptId);
+	}
 }

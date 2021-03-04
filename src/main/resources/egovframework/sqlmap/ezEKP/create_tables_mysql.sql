@@ -10595,7 +10595,8 @@ CREATE TABLE `tbl_recrelayattachinfo` (
   `AttachSN` int(11) DEFAULT NULL,
   `AttachType` char(1) DEFAULT NULL,
   `TENANT_ID` mediumint(5) DEFAULT NULL,
-  `COMPANYID` varchar(20) DEFAULT NULL
+  `COMPANYID` varchar(20) DEFAULT NULL,
+  `CREATEDATE` DATETIME DEFAULT CURRENT_TIMESTAMP() NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -10645,7 +10646,8 @@ CREATE TABLE `tbl_recrelaysigninfo` (
   `SIGNNAME` varchar(255) DEFAULT NULL,
   `REALSIGNNAME` varchar(255) DEFAULT NULL,
   `COMPANYID` varchar(45) DEFAULT NULL,
-  `TENANT_ID` varchar(45) DEFAULT NULL
+  `TENANT_ID` varchar(45) DEFAULT NULL,
+  `CREATEDATE` DATETIME DEFAULT CURRENT_TIMESTAMP() NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -11801,6 +11803,10 @@ CREATE TABLE `tbl_schedulegroup` (
   `CREATEDATE` datetime DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `companyid` varchar(40) DEFAULT NULL,
+  `MODIFYDATE` datetime DEFAULT NULL,
+  `PRECREATORID` varchar(100) DEFAULT NULL,
+  `PRECREATORNAME` varchar(100) DEFAULT NULL,
+  `PRECREATORNAME2` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`GROUPID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -13093,7 +13099,7 @@ CREATE TABLE `tbl_tmpattachinfo` (
   `ATTACHUSERDEPTID` varchar(400) DEFAULT NULL,
   `ATTACHUSERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `PAGENUM` bigint(10) DEFAULT NULL,
-  `DISPLAYNAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DISPLAYNAME` varchar(600) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BODYATTACH` varchar(4) DEFAULT NULL,
   `ATTACHUSERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHUSERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -14682,6 +14688,19 @@ CREATE TABLE `tbl_auditapprline`(
     `TENANT_ID` mediumint(5) DEFAULT 0 NOT NULL, 
 	`COMPANYID` VARCHAR(20) NOT NULL,
 	CONSTRAINT `auditapprline_pk` PRIMARY KEY (`AUDITAPPRLINEID`, `USERID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tbl_auditapprline`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_yearlydoccount`(
+     "DOC_COUNT" mediumint(11),
+     "DOC_TYPE" VARCHAR(100) COMMENT 'INSEND: 내부발송, OUTSEND: 외부발송, OUTRECIEVE: 외부수신',
+     "MONTH_TYPE" VARCHAR(100) COMMENT '1 ~ 12월, 작년-10(2) ~ 0(12) 월',
+     "CREATE_ID" VARCHAR(80) ,
+     "CREATE_DATE" datetime DEFAULT current_timestamp(),
+     "TENANT_ID" mediumint(5),
+     "COMPANYID" VARCHAR(80)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 -- Final view structure for view `svtaskclass`

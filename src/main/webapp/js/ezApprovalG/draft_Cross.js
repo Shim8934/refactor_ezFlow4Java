@@ -34,14 +34,18 @@ function GetDraftAprLineInfo(ret) {
 	var OrderReporter = new Array(); 
 					  
     var xmldom = createXmlDom();
-				
-    if (ret[5] == undefined) {
+
+      //2021-02-19 박희찬 G버전에도 가변결재사용할수 있도록 추가
+      if (ret[5] == undefined) {
         xmlKuljea = ret[0];
         xmlReDraft = ret[2];
+        New_DrawAutoLine(ret[0], pDraftFlag);
     }
     else {
         xmlKuljea = ret[1];
         xmlReDraft = ret[5];
+        New_DrawAutoLine(ret[1], pDraftFlag);
+
     }
 
 	setAprLinesXML(xmlKuljea);
@@ -2810,7 +2814,7 @@ function openFileAttachUI() {
         aprattach_cross_dialogArguments[0] = "";
         aprattach_cross_dialogArguments[1] = "";
 
-        DivPopUpShow(540, 390, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + ext);
+        DivPopUpShow(800, 610, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + ext);
     } catch (e) {
         alert("openFileAttachUI()" + e.description);
     }
@@ -3422,7 +3426,7 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-    if (CrossYN() && ext != 'hwp') {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;

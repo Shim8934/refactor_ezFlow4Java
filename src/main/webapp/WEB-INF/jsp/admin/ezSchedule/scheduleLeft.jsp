@@ -43,7 +43,10 @@
 				        break;
 				    case 5:
 				        url = "/admin/ezSchedule/scheduleAdminRegi.do";
-				        break;    
+				        break;   
+				    case 6: 
+				        url = "/admin/ezSchedule/scheduleAdminGroupTab.do";
+				        break;  
 				}			
 				window.open(url,"right");
 			}      
@@ -75,6 +78,7 @@
 		  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='ezSchedule.t6000' /></span></h2>
 	  			</c:if>
 	  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='ezSchedule.t9990007' /></span></h2>
+	  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='ezSchedule.shb12' /></span></h2>
   			</div>
 		</div>
 	</body>

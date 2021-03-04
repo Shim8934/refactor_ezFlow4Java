@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -729,5 +730,29 @@ row = sheet.createRow(0);
 		logger.debug("customApprStatisticsBatch ended");
 		
 		return "success";
+	}
+
+	/**
+	 * 2021-02-23 박기범 : chartportlet용 통계 호출
+	 */
+	@RequestMapping(value = "/ezStatistics/getYearlyDocCount.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
+	public String getYearlyDocCount(@CookieValue("loginCookie") String loginCookie, Model model) {
+		logger.debug("getYearlyDocCount.do started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		JSONObject resultList = ezStatisticsAdminService.getYearlyDocCount(userInfo.getTenantId(), userInfo.getCompanyID());
+		String result = resultList.get("result").toString();
+
+		if (result.equals("true")) {
+			model.addAttribute("result", "true");
+			resultList.remove("result");
+			model.addAttribute("data", resultList);
+		} else {
+			model.addAttribute("result", "false");
+		}
+
+		logger.debug("getYearlyDocCount,do ended");
+
+		return "json";
 	}
 }

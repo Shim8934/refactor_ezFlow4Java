@@ -1,0 +1,229 @@
+package egovframework.ezEKP.ezApprovalG.task;
+
+import java.io.File;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+
+import javax.annotation.Resource;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.TenantVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
+
+@Component
+public class EzApprovalScheduler extends EgovFileMngUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(EzApprovalScheduler.class);
+
+	@Autowired
+	private Properties config;
+
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource; 
+
+	@Autowired
+	private CommonUtil commonUtil;
+	
+	@Resource(name = "EzApprovalGService")
+	private EzApprovalGService ezApprovalGService;
+	
+	@Resource(name = "EzApprovalGAdminService")
+	private EzApprovalGAdminService ezApprovalGAdminService;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
+	
+	@Resource(name = "loginService")
+    private LoginService loginService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
+	
+	@Resource(name="EzSystemAdminService")
+	private EzSystemAdminService ezSystemAdminService;
+	
+	@Resource(name = "jspw")
+    private String jspw;
+	
+	@Resource(name="crypto") 
+    private EgovFileScrty egovFileScrty;
+	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
+	
+	/**
+	 * delete garbage files // 전자결재 대용량첨부 자동삭제기능 사용하지 않음
+	 */
+	@Scheduled(cron = "${config.cron.dailyApprFileManage}")
+	public void dailyApprFileManage() throws Exception {
+		logger.debug("dailyApprFileManage scheduler started.");
+		logger.debug("dailyApprFileManage scheduler do nothing!");
+		
+		// choose scheduler running server
+		/*if (!preScheduler("dailyApprFileManage")) {
+			logger.debug("dailyApprFileManage scheduler ended.");
+			return;
+		}
+		
+		String realPath = config.getProperty("data_root");
+		
+		// delete expired big-attachment files (Approval)
+		deleteApprExpireAttach(realPath);*/
+		
+		logger.debug("dailyApprFileManage scheduler ended.");
+	}
+	
+	/**
+	 * 만료된 전자결재 대용량첨부파일 삭제 함수
+	 */
+	private void deleteApprExpireAttach(String realPath) throws Exception {
+		logger.debug("deleteApprExpireAttach started.");
+		
+		List<TenantVO> tenantList = ezCommonService.getTenantList();
+		for (TenantVO tenantVO : tenantList) {
+			logger.debug("tenantId=" + tenantVO.getTenantId());
+			
+			String bigSizeApprAttachDelDayStr = ezCommonService.getTenantConfig("BigSizeApprAttachDelDay", tenantVO.getTenantId());
+			int bigSizeApprAttachDelDay = Integer.parseInt(bigSizeApprAttachDelDayStr);
+			
+			// 아직 삭제되지 않은 대용량 첨부파일 리스트를 리턴 (ISBIGATTACH = Y, ISBIGATTACHDEL = N)
+			List<ApprGAttachInfoVO> aprBigAttachInfoVOList = ezApprovalGService.getBigAttachFileForDelete(tenantVO.getTenantId());
+			
+			for (int i = 0; i < aprBigAttachInfoVOList.size(); i++) {
+				ApprGAttachInfoVO tempAprBigAttachInfoVO = aprBigAttachInfoVOList.get(i);
+				File file = new File(realPath + tempAprBigAttachInfoVO.getAttachFileHref());
+				
+				if (file.exists()) { // 삭제할 파일이 존재할때만 동작
+					BasicFileAttributes attrs = null;
+					attrs = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+					
+					// 첨부파일이 서버에 저장된 실제 생성날짜를 계산
+					FileTime time = attrs.creationTime();
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					String fileCreatedTime = simpleDateFormat.format(new Date(time.toMillis()));
+					boolean isBigFileDelDayOver = isDelDayOver(fileCreatedTime, bigSizeApprAttachDelDay);
+					
+					// 대용량 첨부파일의 저장기간이 만료된 경우, 자동삭제 + 대용량파일 다운로드횟수 제거 + 각 테이블의 ISBIGATTACHDEL 플래그를 'Y'로 갱신
+					if (isBigFileDelDayOver == true) {
+						logger.debug("expired appr file name=" + file.getName());
+						if (deleteDirectory(file)) {
+							logger.debug(file.getName() + " is deleted.");
+							// 대용량 첨부파일의 다운로드 제한 횟수 정보 삭제
+							ezApprovalGService.deleteBigAttachFileDownloadCnt(tempAprBigAttachInfoVO.getDocID(), tempAprBigAttachInfoVO.getAttachFileSN(), tempAprBigAttachInfoVO.getCompanyID(), tenantVO.getTenantId());
+							// 대용량 첨부파일의 삭제여부 플래그 갱신
+							ezApprovalGService.updateIsBigAttachDel(tempAprBigAttachInfoVO.getDocID(), tempAprBigAttachInfoVO.getAttachFileSN(), tempAprBigAttachInfoVO.getTblName(), tempAprBigAttachInfoVO.getCompanyID(), tenantVO.getTenantId());
+						}
+					}
+					
+				}
+			}
+		
+		}
+		
+		logger.debug("deleteApprExpireAttach ended.");
+	}
+	
+	// 현재 시간(today)에서 파일의 생성일자(fileDate)를 뺀 날짜가 대용량파일의 저장기간(만료일)을 넘어간다면 true, 넘지 않는다면 false
+	public boolean isDelDayOver(String fileDate, int bigSizeMailAttachDelDay) throws Exception {
+		try{
+			String today = EgovDateUtil.getToday("");
+			int dayDiff = EgovDateUtil.getDaysDiff(fileDate, today);
+			if (dayDiff > bigSizeMailAttachDelDay) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean preScheduler(String scheduler) {
+		logger.debug("preScheduler started.");
+		
+		boolean isSchedulerServer = false;
+		
+		if (config.getProperty("config.Run_Scheduler").equals("YES")) {
+			logger.debug("Elect scheduler server.");
+			try {
+				//set SchedulerServer
+				String server = config.getProperty("config.SchedulerServer");
+								
+				String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setSchedulerServer";
+				
+				String schedulerParam = "scheduler=" + URLEncoder.encode(scheduler, "UTF-8");
+				String serverParam = "server=" + URLEncoder.encode(server, "UTF-8");
+				
+				String inputParams = schedulerParam + "&" + serverParam;
+				logger.debug("inputParams=" + inputParams);
+				
+				String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);		
+				logger.debug("response=" + response);
+				
+				//sleep 20 seconds
+				logger.debug(scheduler + " is sleeping...");
+				Thread.sleep(20000);
+				
+				//get SchedulerServer
+				requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getSchedulerServer";
+				
+				inputParams = schedulerParam;
+				logger.debug("inputParams=" + inputParams);
+				
+				response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+				logger.debug("response=" + response);
+				
+				JSONParser parser = new JSONParser();
+				JSONObject object = (JSONObject)parser.parse(response);
+		        
+		        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+		        	String schedulerServer = (String)object.get("result");
+		        	
+		        	if (schedulerServer.equals(server)) {
+		        		isSchedulerServer = true;
+		        		logger.debug("This is elected as a scheduler server.");
+		        	} else {
+		        		logger.debug("This is not elected.");
+		        	}
+		        } else {
+		        	logger.error("Cannot get SchedulerServer.");
+		        }
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			logger.debug("config.Run_Scheduler property is not YES.");
+		}
+		
+		logger.debug("preScheduler ended.");
+		
+		return isSchedulerServer;
+	}
+}

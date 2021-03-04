@@ -99,6 +99,7 @@
 		    var userLang = "<c:out value = '${userLang}'/>";
  	        var shareDeptId = "<c:out value = '${shareDeptId}'/>";
  	        var share = "<c:out value = '${share}'/>";
+ 	        var useWebHWP = "<c:out value = '${useWebHWP}'/>";
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -837,14 +838,18 @@
 	                }
 		            
 		            if (tempURL.substr(tempURL.length - 3, tempURL.length).toLowerCase() == "hwp") {
-		            	if (isIE()) {
-			                openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
-		                } else {
-		                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-		                	alert(pAlertContent);
-		                    
-		                    return;
-		                }
+		            	if(useWebHWP == "NO") {
+			            	if (isIE()) {
+				                openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+			                } else {
+			                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+			                	alert(pAlertContent);
+			                    
+			                    return;
+			                }
+		            	} else {
+		            		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
+		            	}
 		            } else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }

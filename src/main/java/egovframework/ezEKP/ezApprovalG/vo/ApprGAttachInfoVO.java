@@ -59,6 +59,15 @@ public class ApprGAttachInfoVO {
 	/** */
 	private String docTitle;
 	
+	/** 대용량첨부 여부 */
+	private String isBigAttach;
+	/** 대용량첨부 삭제여부 */
+	private String isBigAttachDel;
+	/** 첨부파일의 테이블명 */
+	private String tblName;
+	/** 첨부파일의 소속회사ID */
+	private String companyID;
+	
 	public String getAttachType() {
 		return attachType;
 	}
@@ -226,5 +235,29 @@ public class ApprGAttachInfoVO {
 	}
 	public void setDocTitle(String docTitle) {
 		this.docTitle = docTitle;
+	}
+	public String getIsBigAttach() {
+		return isBigAttach;
+	}
+	public void setIsBigAttach(String isBigAttach) {
+		this.isBigAttach = isBigAttach;
+	}
+	public String getIsBigAttachDel() {
+		return isBigAttachDel;
+	}
+	public void setIsBigAttachDel(String isBigAttachDel) {
+		this.isBigAttachDel = isBigAttachDel;
+	}
+	public String getTblName() {
+		return tblName;
+	}
+	public void setTblName(String tblName) {
+		this.tblName = tblName;
+	}
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
 	}
 }

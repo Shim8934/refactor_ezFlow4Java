@@ -82,6 +82,9 @@ public class ApprGFormVO {
 	/** 원문정보공개 */
 	private String openGovFlag;
 	
+	/** xslt연동 */
+	private String formXslt;
+	
 	/**양식 세부설정**/
 	private String aprOption;
 	
@@ -411,6 +414,14 @@ public class ApprGFormVO {
 
     public void setSihangType(String sihangType) {
         this.sihangType = sihangType;
+    }
+
+    public String getFormXslt() {
+        return formXslt;
+    }
+
+    public void setFormXslt(String formXslt) {
+        this.formXslt = formXslt;
     }
 
 }

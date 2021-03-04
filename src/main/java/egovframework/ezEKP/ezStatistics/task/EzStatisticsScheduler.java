@@ -45,6 +45,7 @@ public class EzStatisticsScheduler {
 		
 		ezStatisticsAdminService.dailyDocCountLog(statApprVO);
 		ezStatisticsAdminService.dailyFormCountLog(statApprVO);
+		ezStatisticsAdminService.yearlyDocCount(statApprVO);
 		
 		logger.debug("apprStatisticsDailybatch ended");
 	}

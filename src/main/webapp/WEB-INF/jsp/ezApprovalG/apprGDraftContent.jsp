@@ -580,6 +580,12 @@
 	                        FieldCount++;
 	                    }
 	                }
+
+					if (isReform) {
+						var controls = iframe_content.getControlList();
+						FieldsList = FieldsList.concat(controls);
+					}
+
 	                return FieldsList;
 	            } catch (e) {
 	                return FieldsList;
@@ -904,11 +910,11 @@
 						iframe_content.document.body.innerHTML = div_BODY.innerHTML;
 					}
 	                
-	                if (isConDoc) {
-	                    parent.Conn_Initial();
-	                }
-	                
 	                parent.isEditorComplete = true;
+
+					if (isConDoc) {
+						parent.connInit();
+					}
 	            } catch (e) {
 	            }
 	        }
@@ -953,6 +959,20 @@
 		        evt.stopPropagation();
 		        evt.preventDefault();
 		    }
+
+			function GetDocumentInfo() {
+				var xmlInfo = document.querySelectorAll("#div_Content xml");
+
+				var xmlDom = createXmlDom();
+				var dataRoot = createNodeInsert(xmlDom, null, "DATA");
+				for (var i = 0, ilen = xmlInfo.length; i < ilen; i++) {
+					var info = xmlInfo[i].firstElementChild;
+					var infoName = info.tagName;
+					createNodeAndAppandNodeText(xmlDom, dataRoot, null, infoName, info.outerHTML);
+				}				
+				
+				return xmlDom;
+			}
 	        
 	    </script>
 	</head>

@@ -82,6 +82,7 @@
 		    var localValue = "";
 		    var hideSusin = "<c:out value = '${hideSusin}'/>";
 		    var whoKyulYN = "<c:out value = '${whoKyulYN}'/>";
+		    var useWebHWP = "<c:out value = '${useWebHWP}'/>";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -373,6 +374,10 @@
 		            if($(pthis).hasClass('shareCont')){
 	                    cmdOK_onclick('', "<spring:message code='ezApproval.t990042'/>",'',$(pthis).attr("shareUserId"));
 		            }
+		            if($(pthis).hasClass('deptShare')){
+		            	pListTypeValue = "";
+                		window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=docShare&shareDeptId=" + pthis.id;          		 
+		            }
 		            
 		            parent.frames["right"].$('#sel_year').val("ALL");
 		            parent.frames["right"].$('#sel_status').val("ALL");
@@ -571,12 +576,16 @@
 
 	            var openLocation = "";
 	            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	                if (!isIE()) {
-	                    alert("한글양식은 Cross Browser 를 지원하지 않습니다.");
-	                    return;
-	                } else {
-	                   var openLocation = "/ezApprovalG/draftuiHWP.do";
-	                }
+	            	if(useWebHWP == "NO") {
+		                if (!isIE()) {
+		                    alert("한글양식은 Cross Browser 를 지원하지 않습니다.");
+		                    return;
+		                } else {
+		                   var openLocation = "/ezApprovalG/draftuiHWP.do";
+		                }
+	            	} else {
+	            		var openLocation = "/ezApprovalG/draftuiWHWP.do";
+	            	}
 	            } else {
 	                var openLocation = "/ezApprovalG/draftui.do";
 	            }
@@ -1412,6 +1421,48 @@
 					        </c:if>
 				        </ul>
 			        </c:if>
+			        
+			        <c:if test="${fn:length(userShareList) > 0 }">
+			        	<h2 class="off" id="USERSHAREH2">
+			        		<span class="sub_iconLNB tree_arrow_up"></span>
+			        		<span class="h2Title" onclick="openFolder('USERSHARE');">개인공유함</span>
+			        	</h2>
+						<ul class="lnbUL off" id="USERSHAREUL">
+				          	<c:forEach var="userShare" items="${userShareList}" varStatus="status">				          	
+								<img id="imgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;">
+								<img id="subImgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded">
+								<span id="spn_UserShare_${status.index}" class="node_normal" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
+								<div id="UserShare_${status.index}_sub" style="display:none;">
+<%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
+<!-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> -->
+<%-- 										<img id="imgNode_DeptShare_${status.index}_0}" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;"> --%>
+<%-- 										<img id="subImgNode_DeptShare_${status.index}_0" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
+<%-- 										<span onclick="setPresentValue('결재진행문서');convMain('3','','${userShare.shareId}')" style="cursor: pointer; width: 135px;" title="결재진행문서" id="spn_DeptShare_${status.index}_0" class="node_normal">결재진행문서</span> --%>
+<!-- 									</div> -->
+					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename="결재완료문서" nodelevel="1" endnode="true" value="결재완료문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
+										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
+										<img id="imgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
+										<img id="subImgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;">
+										<span onclick="setPresentValue('결재완료문서'); Open_Func(this); setBoldText(this);" style="cursor: pointer; width: 135px;" shareUserId="${userShare.shareId }" title="결재완료문서" id="spn_DeptShare_${status.index}_1" class="node_normal shareCont">결재완료문서</span>
+									</div>
+								</div>
+				          	</c:forEach>
+			          	</ul>
+		          	</c:if>
+		          	<c:if test="${fn:length(deptShareList) > 0 }">
+			        	<h2 class="off" id="DEPTSHAREH2">
+			        		<span class="sub_iconLNB tree_arrow_up"></span>
+			        		<span class="h2Title" onclick="openFolder('DEPTSHARE');">부서공유함</span>
+			        	</h2>
+						<ul class="lnbUL off" id="DEPTSHAREUL">
+				          	<c:forEach var="deptShare" items="${deptShareList}" varStatus="status">	
+				          		<li class="on">
+				          			<span class="sub_iconLNB tree_appr_record1"></span>
+				          			<span class="list_text deptShare" id="${deptShare.shareId}" onclick="Open_Func(this)"><c:out value="${deptShare.shareName }"></c:out></span>
+				          		</li>			          	
+				          	</c:forEach>
+			          	</ul>
+		          	</c:if>
 		        </c:if>
 		        
 	        <!-- 전자결재 G - 이후에 css작업 해야됨 -->
