@@ -140,6 +140,10 @@
 	                        FieldCount++;
 	                    }
 	                }
+
+					var controls = getControlList();
+					FieldsList = FieldsList.concat(controls);
+					
 	                return FieldsList;
 	            } catch (e) { return FieldsList; }
 	        }
@@ -290,6 +294,34 @@
 	        }
 	        function Conn_after() {
 	        }
+			function GetDocumentInfo() {
+				var xmlInfo = document.querySelectorAll("#div_Content xml");
+
+				var xmlDom = createXmlDom();
+				var dataRoot = createNodeInsert(xmlDom, null, "DATA");
+				for (var i = 0, ilen = xmlInfo.length; i < ilen; i++) {
+					var info = xmlInfo[i].firstElementChild;
+					var infoName = info.tagName;
+					createNodeAndAppandNodeText(xmlDom, dataRoot, null, infoName, info.outerHTML);
+				}				
+				
+				return xmlDom;
+			}
+			function setXmlInfo(wrapperDoc) {
+				var connInfo = document.querySelector("#CONNINFO");
+				connInfo.appendChild(wrapperDoc.cloneNode(true));
+
+				var wrapper2 = document.createDocumentFragment();
+				var wrapDiv = wrapper2.insertBefore(document.createElement("div"), null);
+				wrapDiv.appendChild(wrapperDoc);
+				
+				var divContent = document.querySelector("#div_Content");
+				var bodyContent = divContent.querySelector("#BodyContent");
+				wrapDiv.appendChild(bodyContent);
+				
+				divContent.innerHTML = "";
+				divContent.appendChild(wrapDiv);
+			}
 	    </script>
 	</head>
 	<body>

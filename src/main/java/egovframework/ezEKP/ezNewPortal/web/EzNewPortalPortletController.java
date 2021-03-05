@@ -327,6 +327,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		logger.debug("portalApprovalListPortlet ended.");
 		
@@ -400,6 +401,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 //		model.addAttribute("approvalGFlag", ezCommonService.getTenantConfig("approvalGFlag", userInfo.getTenantId()));
 		model.addAttribute("buJaeInfo", buJaeInfo);
 		model.addAttribute("now", commonUtil.getTodayUTCTime(""));
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		logger.debug("favoriteFormsPortlet ended.");
 		
@@ -1250,5 +1252,19 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		logger.debug("getTabBoardPortlet End");
 		return "json";
+	}
+
+	/**
+	 * 포틀릿 - 전자문서 차트 :2021/02/23 박기범
+	 */
+	@RequestMapping(value = "/ezNewPortal/chartPortlet.do", method=RequestMethod.GET)
+	public String elecDocChartPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("ChartPortlet Start");
+
+		model.addAttribute("portletName", req.getParameter("portletName"));
+		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
+
+		logger.debug("ChartPortlet End");
+		return "/ezNewPortal/portlets/chartPortlet";
 	}
 }

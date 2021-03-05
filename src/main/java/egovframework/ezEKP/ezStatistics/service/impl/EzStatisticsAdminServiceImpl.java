@@ -416,5 +416,47 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 		
 		
 	}
-	
+
+	@Override
+	public void yearlyDocCount(StatApprVO statApprVO) throws Exception {
+		logger.debug("yearlyDocCount started");
+
+		ezStatisticsAdminDAO.deleteYearlyDocCount(statApprVO);
+		ezStatisticsAdminDAO.insertYearlyDocCount(statApprVO);
+
+		logger.debug("yearlyDocCount ended");
+	}
+
+	// 2021-02-23 박기범-chartportlet
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject getYearlyDocCount(int tenantID, String companyID) {
+		logger.debug("getYearlyDocCount started");
+
+		JSONObject result = new JSONObject();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantID", tenantID);
+		map.put("companyID", "Top");	// data에 Top일괄적으로 들어가므로 임시적으로 top해놓음
+
+		try {
+			List<HashMap<String, Object>> statisticsList = ezStatisticsAdminDAO.getYearlyDocCount(map);
+
+			if (statisticsList.size() > 0) {
+				result.put("result", "true");
+
+				for (HashMap<String, Object> item : statisticsList) {
+					result.put(item.get("DOC_TYPE").toString() + ":" + item.get("MONTH_TYPE").toString(), item.get("DOC_COUNT"));
+				}
+			} else {
+				result.put("result", "false");
+			}
+
+		} catch (Exception e) {
+			result.put("result", "error");
+			e.printStackTrace();
+		}
+
+		logger.debug("getYearlyDocCount ended/result : " + result.get("result").toString());
+		return result;
+	}
 }

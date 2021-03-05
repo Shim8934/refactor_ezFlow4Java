@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezStatistics.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -112,4 +114,16 @@ public class EzStatisticsAdminDAO extends EgovAbstractDAO{
 		insert("EzStatisticsAdminDAO.insertDailyFormCountLog", statApprVO);
 	}
 
+	public void deleteYearlyDocCount(StatApprVO statApprVO) throws Exception {
+		delete("EzStatisticsAdminDAO.deleteYearlyDocCount", statApprVO);
+	}
+
+	public void insertYearlyDocCount(StatApprVO statApprVO) throws Exception {
+		insert("EzStatisticsAdminDAO.insertYearlyDocCount", statApprVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getYearlyDocCount(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzStatisticsAdminDAO.getYearlyDocCount", map);
+	}
 }

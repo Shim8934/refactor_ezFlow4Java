@@ -21,6 +21,7 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -30,6 +31,7 @@ import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.text.ParseException;
@@ -65,10 +67,12 @@ import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -2342,4 +2346,33 @@ public class CommonUtil {
         
         return result.toString();
 	}
+	
+    public String convertXsltToHtml(String xslStr, String xmlStr) throws Exception {
+        return convertXsltToHtml(xslStr, xmlStr, true);
+    }
+    public String convertXsltToHtml(String xslStr, String xmlStr, boolean isEncodingStr) throws Exception {
+        logger.debug("convertXsltToHtml started");
+        
+        if(isEncodingStr) {
+            xslStr = htmlUnescape(xslStr);
+        }
+        
+        String outputHtml = "";
+        
+        TransformerFactory tfFactory = TransformerFactory.newInstance();
+        
+        StringWriter htmlWriter = new StringWriter();
+        
+        Source xslSource = new StreamSource(new ByteArrayInputStream(xslStr.getBytes(StandardCharsets.UTF_8))); 
+        Source xmlSource = new StreamSource(new ByteArrayInputStream(xmlStr.getBytes(StandardCharsets.UTF_8)));
+    
+        Transformer transformer = tfFactory.newTransformer(xslSource);
+        transformer.transform(xmlSource, new StreamResult(htmlWriter));
+        
+        outputHtml = htmlWriter.toString();
+        
+        logger.debug("convertXsltToHtml ended");
+        
+        return outputHtml;
+    }
 }

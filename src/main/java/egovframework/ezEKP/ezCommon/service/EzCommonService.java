@@ -266,4 +266,12 @@ public interface EzCommonService {
 	public void createTblTabBoard() throws Exception;
 	
 	public void addScehdulegroup() throws Exception;
+
+	public void insertApprBigAttachInfo() throws Exception;
+	
+	public void addScheduleMailNotiConfig() throws Exception;
+
+	public void createTblYearlyDocCount() throws Exception;
+
+	public void insertChartPortletInfo() throws Exception;
 }

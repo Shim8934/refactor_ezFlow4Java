@@ -1,4 +1,4 @@
-﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
+﻿﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
 var emailFlag=false;
 function MailToMe_Onclick() {
     var checked = document.getElementById('toMe').checked;
@@ -1590,24 +1590,34 @@ function CheckMailReceiver(newElem) {
             continue;
         if (newElem.childNodes[0].getAttribute("email") == MsgToGot.childNodes[co].childNodes[0].getAttribute("email") && MsgToGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
             return true;
-        else if (newElem.childNodes[0].getAttribute("href") == MsgToGot.childNodes[co].childNodes[0].getAttribute("href") && MsgToGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup")
-            return true;
+        else if (newElem.childNodes[0].getAttribute("href") != null && MsgToGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
+        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgToGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
+        		return true;
+        	}
+        }
+        
     }
     for (co = 0; co < MsgCCGot.childNodes.length; co++) {
         if (MsgCCGot.childNodes[co].childNodes[0].nodeName == "#text")
             continue;
         if (newElem.childNodes[0].getAttribute("email") == MsgCCGot.childNodes[co].childNodes[0].getAttribute("email") && MsgCCGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
             return true;
-        else if (newElem.childNodes[0].getAttribute("href") == MsgCCGot.childNodes[co].childNodes[0].getAttribute("href") && MsgCCGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup")
-            return true;
+        else if (newElem.childNodes[0].getAttribute("href") != null && MsgCCGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
+        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgCCGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
+        		return true;
+        	}
+        }
     }
     for (co = 0; co < MsgBCCGot.childNodes.length; co++) {
         if (MsgBCCGot.childNodes[co].childNodes[0].nodeName == "#text")
             continue;
         if (newElem.childNodes[0].getAttribute("email") == MsgBCCGot.childNodes[co].childNodes[0].getAttribute("email") && MsgBCCGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
             return true;
-        else if (newElem.childNodes[0].getAttribute("href") == MsgBCCGot.childNodes[co].childNodes[0].getAttribute("href") && MsgBCCGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup")
-            return true;
+        else if (newElem.childNodes[0].getAttribute("href") != null && MsgBCCGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
+        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgBCCGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
+        		return true;
+        	}
+        }
     }
     return rtnValue
 }
@@ -3515,16 +3525,12 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     		success	: function(additionalInfo) {
     			var targetElem = document.querySelector("#infoTable span[itype='" + iWhich + "'][email='" + email + "']");
     			
-    			if (!targetElem || targetElem.innerHTML.trim() != "") {
-    				return;
-    			}
-    			
     			if (type == "mailgroup") {
-    				targetElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + additionalInfo + "</u>; ";
-    				targetElem.parentElement.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + type + "\",\"" + iWhich + "\",\"" + href + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+    				newElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + additionalInfo + "</u>; ";
+    				newElem.parentElement.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + type + "\",\"" + iWhich + "\",\"" + href + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
     			} else {
-    				targetElem.innerHTML = "<u title=\"" + email + "\" alt=\"" + email + "\" >" + name + additionalInfo + "</u>; ";
-    				targetElem.parentElement.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + email + "\",\"" + iWhich + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+    				newElem.innerHTML = "<u title=\"" + email + "\" alt=\"" + email + "\" >" + name + additionalInfo + "</u>; ";
+    				newElem.parentElement.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + email + "\",\"" + iWhich + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
     			}
     		},
     		error	: function(error) {

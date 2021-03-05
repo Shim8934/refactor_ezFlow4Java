@@ -1035,6 +1035,13 @@ function ListView() {
                  	}
                 }
                 
+                /* 2020-11-12 홍승비 - 전자결재 대용량첨부 메세지 추가 */
+                if (_thisID == "attachList" && SelectSingleNodeValue(oCells[0], "ISBIGATTACH")  == "Y") {
+                	if (j == 2) { // 파일크기 우측에 대용량첨부 표출
+                		objTd.innerHTML += "<font style='color:blue'>&nbsp;[" + strLangHSBAt02 + "]</font>";
+                	}
+                }
+                
                 objTr.appendChild(objTd);
 
                 objTd = null;
@@ -1095,8 +1102,7 @@ function ListView() {
             var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
             var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
             var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
-
-
+            
             var oText = document.createTextNode(strValue);
             var objTd = document.createElement("TD");
             
@@ -1108,10 +1114,11 @@ function ListView() {
             		objTd.style.display = "none";
             	}
             }
+            
             objTd.style.whiteSpace = "nowrap";
             objTd.style.overflow = "hidden";
             objTd.style.textOverflow = "ellipsis";
-
+            
             if (strStyle != "") {
                 if (new RegExp(/MSIE/).test(navigator.userAgent)) {
                     objTd.style.setAttribute("cssText", strStyle);
@@ -1141,6 +1148,13 @@ function ListView() {
 
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
+            
+            /* 2020-11-12 홍승비 - 전자결재 대용량첨부 메세지 추가 */
+            if (objTrArr[0] == "attachList" && SelectSingleNodeValue(oCells[0], "ISBIGATTACH")  == "Y") {
+            	if (j == 2) { // 파일크기 우측에 대용량첨부 표출
+            		objTd.innerHTML += "<font style='color:blue'>&nbsp;[" + strLangHSBAt02 + "]</font>";
+            	}
+            }
 
             objTd = null;
             oText = null;

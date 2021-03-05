@@ -183,6 +183,14 @@
 			
 			var isReform = "<c:out value='${isReform}'/>";
 			var formId = "<c:out value='${formId}'/>";
+			
+			var useWebHWP = "<c:out value='${useWebHWP}'/>";
+		    
+	        // 대용량첨부 관련
+	        var bigAttachDownloadPeriod = "<c:out value ='${bigAttachDownloadPeriod}'/>";
+	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
+	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
+	        
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -207,6 +215,7 @@
 		    	} else {
 		    		document.getElementById("message").src = "approvUIcontent.do";
 		    	}
+		    	
 		    	$("#message").load(function() {
 					var selectOp = $("#selectImg option").length;
 					if(selectOp == 1){
@@ -253,6 +262,9 @@
 					}
 					
 				});
+				
+				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
+				setAttachGuideText();
 		    };
 		    
 		    function getNextDocList()
@@ -371,9 +383,13 @@
 		            var openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?DocID="+escape(pArgument[0]);
 		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
 		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
-		        } else if (NextDocExtended.toLowerCase() == "hwp") {
+		        } else if (NextDocExtended.toLowerCase() == "hwp" && useWebHWP == "NO") {
 		            var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
 		            openLocation = openLocation + "&ID=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
+		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
+		        } else if (NextDocExtended.toLowerCase() == "hwp" && useWebHWP == "YES") {
+		            var openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + escape(pArgument[0]);
+		            openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
 		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
 		        } else {
 		            var openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui_CK.aspx?DocID="+escape(pArgument[0]);
@@ -419,10 +435,8 @@
 		            if (noFieldsAvailable) {
 		                noFieldsAvailable = false;
 		            } else {
-		                var rtnVal = ExcuteInfo("MIDDLE_SIGN_INIT","");
+		                var rtnVal = ExcuteInfo("MIDDLE_SIGN_INIT");
 		                if(!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t8'/>";
-		                    OpenAlertUI(pAlertContent);
 		                    return;				
 		                }		
 		                process_AfterOpen();
@@ -797,11 +811,8 @@
 		        //UpdateLineHistory(); //결재선 변경이력 남기는 로직 위치변경 770->1004
 		        if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-		                var rtnVal = ExcuteInfo("DOCNUM_BEFORE", "");
+		                var rtnVal = ExcuteInfo("DOCNUM_BEFORE");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
-		                    setMenuDisable("btnApprove", false);
 		                    return;
 		                }
 		            }
@@ -926,32 +937,23 @@
 		        
 		        if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-		                var rtnVal = ExcuteInfo("DOCNUM_AFTER", "");
+		                var rtnVal = ExcuteInfo("DOCNUM_AFTER");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
-		                    setMenuDisable("btnApprove", false);
 		                    return;
 		                }
 		            }
 		        }
 		        if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-		                var rtnVal = ExcuteInfo("LAST_SIGN_BEFORE", "");
+		                var rtnVal = ExcuteInfo("LAST_SIGN_BEFORE");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
-		                    setMenuDisable("btnApprove", false);
 		                    return;
 		                }
 		            }
 		        }
 		        else {
-		            var rtnVal = ExcuteInfo("MIDDLE_SIGN_BEFORE", "");
+		            var rtnVal = ExcuteInfo("MIDDLE_SIGN_BEFORE");
 		            if (!rtnVal) {
-		                var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                OpenAlertUI(pAlertContent);
-		                setMenuDisable("btnApprove", false);
 		                return;
 		            }
 		        }
@@ -962,21 +964,15 @@
 		        if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 		                SetAutoPropFinal();
-		                var rtnVal = ExcuteInfo("LAST_SIGN_AFTER", "");
+		                var rtnVal = ExcuteInfo("LAST_SIGN_AFTER");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
-		                    setMenuDisable("btnApprove", false);
 		                    return;
 		                }
 		            }
 		        }
 		        else {
-		            var rtnVal = ExcuteInfo("MIDDLE_SIGN_AFTER", "");
+		            var rtnVal = ExcuteInfo("MIDDLE_SIGN_AFTER");
 		            if (!rtnVal) {
-		                var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                OpenAlertUI(pAlertContent);
-		                setMenuDisable("btnApprove", false);
 		                return;
 		            }
 		        }
@@ -1021,22 +1017,15 @@
                     
 		            if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-		                    var rtnVal = ExcuteInfo("END_FAIL", "");
+		                    var rtnVal = ExcuteInfo("END_FAIL");
 		                    if (!rtnVal) {
-		                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                         
-		                        OpenAlertUI(pAlertContent);
-		                        setMenuDisable("btnApprove", false);
 		                        return;
 		                    }
 		                }
 		            }
 		            else {
-		                var rtnVal = ExcuteInfo("MIDDLE_END_FAIL", "");
+		                var rtnVal = ExcuteInfo("MIDDLE_END_FAIL");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
-		                    setMenuDisable("btnApprove", false);
 		                    return;
 		                }
 		            }
@@ -1051,11 +1040,8 @@
 		        	
 		            if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-		                    var rtnVal = ExcuteInfo("LAST_END_AFTER", "");
+		                    var rtnVal = ExcuteInfo("LAST_END_AFTER");
 		                    if (!rtnVal) {
-		                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                        OpenAlertUI(pAlertContent);
-		                        setMenuDisable("btnApprove", false);
 		                        return;
 		                    }
 		                    getOpinionInfo(pDocID, "END");
@@ -1091,11 +1077,8 @@
 		                }
 		            }
 		            else {
-		                var rtnVal = ExcuteInfo("MIDDLE_END_AFTER", "");
+		                var rtnVal = ExcuteInfo("MIDDLE_END_AFTER");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[ " + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
-		                    setMenuDisable("btnApprove", false);
 		                    return;
 		                }
 		                CurrentAprType = pAprLineType;
@@ -1209,10 +1192,8 @@
 		        if (ret != "cancel") {
 		        	pHasOpinionYN = "Y";
 		            UpdateLineHistory(); // '변경내역' 업데이트
-		            var rtnVal = ExcuteInfo("BANSONG_BEFORE", "");
+		            var rtnVal = ExcuteInfo("BANSONG_BEFORE");
 		            if (!rtnVal) {
-		                var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                OpenAlertUI(pAlertContent);
 		                return;
 		            }
 		            
@@ -1242,20 +1223,16 @@
 		            var RtnVal = SaveApproveInfo("2");
 		            if (RtnVal != "TRUE") {
 		            	UndoSignInfo(signInfo);
-		                var rtnVal = ExcuteInfo("BANSONG_FAIL", "");
+		                var rtnVal = ExcuteInfo("BANSONG_FAIL");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
 		                    return;
 		                }
 		                var pAlertContent = "<spring:message code='ezApprovalG.t37'/>";
 		                OpenAlertUI(pAlertContent);
 		                return;
 		            } else {
-		                var rtnVal = ExcuteInfo("BANSONG_AFTER", "");
+		                var rtnVal = ExcuteInfo("BANSONG_AFTER");
 		                if (!rtnVal) {
-		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
-		                    OpenAlertUI(pAlertContent);
       						return;
 		                }
 		                
@@ -2286,6 +2263,32 @@
 		        modeflag = true;
 		    }
 		    
+	    	// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
+	    	function setAttachGuideText() {
+	    		// 대용량첨부의 자동삭제 기능, 저장만료기한 사용하지 않음
+                var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                
+                if(bigSizeAttachDownloadLimitCount > 0) {
+                	attachGuideText += strLangHSBAt06 + " <span style='color:#FF0000 ;'>" + bigSizeAttachDownloadLimitCount + strLangHSBAt09 + "</span> " + strLangHSBAt10;
+                }
+                
+                attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += "</td>";
+/*                 
+                var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += strLangHSBAt05 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadPeriod + "</span></td>";
+                attachGuideText += "<td align='right' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-right:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; border-left:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
+                attachGuideText += strLangHSBAt06 + "<span style='color:#FF0000 ;'>" + bigAttachDownloadDay + strLangHSBAt07 + "</span>" + strLangHSBAt08;
+                 */
+                 
+                 if (bigSizeAttachDownloadLimitCount > 0) {
+                	 document.getElementById("apprAttachGuideTR").innerHTML = attachGuideText;
+                 }
+                 else {
+                	 document.getElementById("apprAttachGuideTR").style.display = "none";
+                 }
+	    	}
+	    	
 		</script>
 	</head>
 	<body class="popup" style="height:100%;">
@@ -2352,12 +2355,41 @@
 		  </td>
 		  </tr>
 		  <tr>
+		  
+		  <%-- 기존 파일첨부 영역 --%>
+		  <%--
 		    <td style="height:20px;"><table class="file">
 		        <tr>
 		          <th><spring:message code='ezApprovalG.t65'/></th>
 		          <td><div id="lstAttachLink"></div></td>
 		        </tr>
 		      </table></td>
+		      --%>
+
+		    <td style="height:20px;">
+                <table class="file" style="height:80px;">
+                    <tr>
+                        <th><spring:message code='ezApprovalG.t65'/></th>
+                        <td style=" width:62%; border-right:1px solid #d5d5d5;">
+                            <div id="lstAttachLink" style="height:70px;"></div>
+                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
+                        </td>
+                        <td style=" width:30%;">
+							<div id="lstAttachLinkDoc" style="height:70px;"></div>
+						</td>
+						<td class="pos2" style="width:8%; background:#fffcfa;">
+							<a class="imgbtn imgbck" style="width:60px;"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+							<a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
+                        </td>
+                    </tr>
+                </table>
+                
+				<%-- 대용량첨부 가이드 메세지 영역 --%>
+                <table class="file" style="height: 20px;">
+                    <tr id="apprAttachGuideTR"></tr>
+                </table>
+			</td>
+
 		  </tr>
 		</table>
 		<script type="text/javascript">

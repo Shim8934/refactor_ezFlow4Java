@@ -3,6 +3,7 @@
  */
 
 //포틀릿 순서 업데이트
+
 function updatePortletOrderUser(usedTheme) {
 	var portlets = $(".portlet");
 	var updateOrder = [];
@@ -505,6 +506,24 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 		});
 		
 		break;
+
+	case "chart" : // 차트 2021-02-22 박기범
+		url = "/js/ezNewPortal/portlets/chartPortlet.js";
+
+		$.getScript(url)
+			.done(function (script, textStatus) {
+				try {
+					getYearlyDocCount();
+				} catch(err) {
+					console.log(err);
+				}
+
+			})
+			.fail(function(jqxhr, settings, exception) {
+				console.log(exception);
+			});
+
+		break;
 	}
 }
 
@@ -711,10 +730,11 @@ function getBirthdayEmployeesList() {
 			if (birthdayList != null && birthdayList != undefined && birthdayList.length > 0) {
 				$("#nodata_NewBirth").css("display", "none");
 				$("#birthcont").css("display", "");
-				
+				var chkList = 0;
 				var strHTML = "";
 				var resultCount = birthdayList.length;
-				
+				var resultMaxCount = birthdayList.length;
+				if(resultCount <6){
 				for (var i = 0; i < resultCount; i++) {
 					var userBirthday = birthdayList[i].userBirthday.substring(5);
 					
@@ -735,17 +755,20 @@ function getBirthdayEmployeesList() {
 					var userInfo = birthdayList[i];
 					$("#B" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
 				}
+				}else{
+					getBirthdayEmployeesLists(birthdayList, resultCount, resultMaxCount, chkList);
+				}
 			} else {
 				$("#nodata_NewBirth").css("display", "block");
 				$("#birthcont").css("display", "none");
 			}
 			// 프로젝트 종료 시 주석 해제
-			timer = window.setInterval(function() {
-				if (birthdayTotalCount > 6) {
-					//birthdayCurPage++;
-					getBirthdayEmployeesList();
-				}
-			}, 5000);
+//			timer = window.setInterval(function() {
+//				if (birthdayTotalCount > 6) {
+//					//birthdayCurPage++;
+//					getBirthdayEmployeesList();
+//				}
+//			}, 5000);
 		},
 		error : function() {
 			//alert(messages.strLang2);
@@ -753,6 +776,67 @@ function getBirthdayEmployeesList() {
 	});
 }
 
+
+
+function getBirthdayEmployeesLists(birthdayList, resultCount, resultMaxCount, chkList){
+	window.clearTimeout(timer);
+	var strHTML = "";
+	var chkListMax = chkList + 6;
+	if(resultMaxCount > chkListMax){
+		for (var i = chkList; i < chkListMax; i++) {
+			var userBirthday = birthdayList[i].userBirthday.substring(5);
+			
+			strHTML += "<li id='B" + birthdayList[i].userId + "'>";
+			strHTML += "<dl class='theme1_birthListDL'>";
+			strHTML += "<dt class='theme1_birthPic'>";
+			strHTML += "<img src='" + birthdayList[i].userImg + "' width = '32' height='32'>";
+			strHTML += "</dt>";
+			strHTML += "<dd class='theme1_birthName'>[" + userBirthday + "] " + birthdayList[i].userName + "</dd>";
+			strHTML += "<dd class='theme1_birthTeam'>" + birthdayList[i].userDeptName + "</dd>";
+			strHTML += "</dl>";
+			strHTML += "</li>";
+		}
+		$("#userList").html(strHTML);
+		
+		for (var i = chkList; i< chkListMax; i++) {
+			var userInfo = birthdayList[i];
+			$("#B" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
+		}
+	}else{
+		for (var i = chkList; i < resultMaxCount; i++) {
+			var userBirthday = birthdayList[i].userBirthday.substring(5);
+			
+			strHTML += "<li id='B" + birthdayList[i].userId + "'>";
+			strHTML += "<dl class='theme1_birthListDL'>";
+			strHTML += "<dt class='theme1_birthPic'>";
+			strHTML += "<img src='" + birthdayList[i].userImg + "' width = '32' height='32'>";
+			strHTML += "</dt>";
+			strHTML += "<dd class='theme1_birthName'>[" + userBirthday + "] " + birthdayList[i].userName + "</dd>";
+			strHTML += "<dd class='theme1_birthTeam'>" + birthdayList[i].userDeptName + "</dd>";
+			strHTML += "</dl>";
+			strHTML += "</li>";
+		}
+		$("#userList").html(strHTML);
+		
+		for (var i = chkList; i< resultMaxCount; i++) {
+			var userInfo = birthdayList[i];
+			$("#B" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
+		}
+	}
+		
+	
+	
+		resultCount = resultCount - 6;
+		chkList = chkList + 6;
+	timer = window.setInterval(function() {
+		if (resultCount > 0) {
+			getBirthdayEmployeesLists(birthdayList, resultCount, resultMaxCount, chkList);
+		}else{
+			resultCount = resultMaxCount;
+			chkList = 0;
+		}
+	}, 5000);
+}
 //사용자 정보 불러오기(윈도우 팝업)
 function openUserInfo(event) {
 	var userId = event.data.userId;
