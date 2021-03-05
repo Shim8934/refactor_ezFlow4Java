@@ -35,6 +35,13 @@
 			function goPage(idx){
 				var url = "";
 
+				if (${dotNetIntegration == 'YES'}) {
+					if (idx < 23  || idx > 29) {
+						$(".lnb H2").attr("class", "off");
+			    		$(".lnb UL").attr("class", "lnbUL off");
+					}
+				}
+
 				switch(idx){
 
 					case 2:
@@ -136,6 +143,19 @@
 			$( window ).resize(function() {
 				leftResize();
 			});
+			
+			function openFolder(val01) {
+		    	if ($("#" + val01 + "H2").attr("class") == "on") {	        	
+		    		$("#" + val01 + "H2").attr("class", "off");
+		    		$("#" + val01 + "UL").attr("class", "lnbUL off");
+		    	} else {
+		    		$(".lnb H2").attr("class", "off");
+		    		$(".lnb UL").attr("class", "lnbUL off");
+		    		
+		    		$("#" + val01 + "H2").attr("class", "on")
+		    		$("#" + val01 + "UL").attr("class", "lnbUL");
+		    	}
+		    }
 		</script>
 	</head>
 	<body class="newLeft">
@@ -189,16 +209,20 @@
 					<h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="goPage(14)" ><spring:message code='main.kms1' /></span>
 					<ul class="on"></ul>
 					</h2>		
-					<h2><span id="MAIL" style="display:inline-block;width:100%;" onClick="goPage(23)"><spring:message code='ezStatistics.t2' /></span></h2>
-					<ul>
-						<li><span style="display:inline-block;width:100%;" onClick="goPage(23)"><spring:message code='ezStatistics.t1001' /></span></li>
-						<li><span style="display:inline-block;width:100%;" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span></li>
-						<li><span style="display:inline-block;width:100%;" onclick="goPage(25)"><spring:message code='ezStatistics.t1018' /></span></li>
-						<li><span style="display:inline-block;width:100%;" onclick="goPage(26)"><spring:message code='ezStatistics.t1023' /></span></li>
-						<li><span style="display:inline-block;width:100%;" onclick="goPage(27)"><spring:message code='ezStatistics.t1025' /></span></li>
-						<li><span style="display:inline-block;width:100%;" onclick="goPage(28)"><spring:message code='ezStatistics.kyj1' /></span></li>
-						<li><span style="display:inline-block;width:100%;" onclick="goPage(29)"><spring:message code='ezStatistics.kyj2' /></span></li>
+					<h2 class="off" id="menu2H2">
+						<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="MAIL" onClick="openFolder('menu2')"><spring:message code='ezStatistics.t2' /></span>
+					</h2>
+					<ul class="lnbUL off" id="menu2UL">
+						<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onClick="goPage(23)"><spring:message code='ezStatistics.t1001' /></span></li>
+						<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span></li>
+						<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(25)"><spring:message code='ezStatistics.t1018' /></span></li>
+						<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(26)"><spring:message code='ezStatistics.t1023' /></span></li>
+						<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(27)"><spring:message code='ezStatistics.t1025' /></span></li>
+						<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(28)"><spring:message code='ezStatistics.kyj1' /></span></li>
+						<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(29)"><spring:message code='ezStatistics.kyj2' /></span></li>
 					</ul>
+					
+					
 				</c:if>
 				<c:if test="${useCopyrightMenu == 'YES'}">
 	  			<h2>
