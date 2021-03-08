@@ -2094,6 +2094,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
             userInfo.setDeptName(userInfo.getDeptName1());
         }
         
+        //2021-03-05 남학선 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 테넌트 값
+        String delAttachByOthers = ezCommonService.getTenantConfig("delAttachByOthers", userInfo.getTenantId()).equals("") ? "0" : ezCommonService.getTenantConfig("delAttachByOthers", userInfo.getTenantId());
+        
 		model.addAttribute("detpID", deptID);
 		model.addAttribute("detpNM1", deptNM1);
 		model.addAttribute("detpNM2", deptNM2);
@@ -2105,6 +2108,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("delAttachByOthers", delAttachByOthers);
 		
 		logger.debug("aprDocAttach ended");
 		
