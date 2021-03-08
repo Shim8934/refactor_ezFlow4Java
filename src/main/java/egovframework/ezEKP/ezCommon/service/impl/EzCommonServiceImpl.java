@@ -1743,6 +1743,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("config_type","메일");
 			put("property","USEEXTERNALMAILSERVERUSERPW"); // property_name
 		}});
+		test.put("useDeleteMailBlob", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useDeleteMailBlob"); // property_name
+			put("property_value","YES");
+			put("config_name","메일 blob 삭제 스케줄러 사용여부");
+			put("regdate","2021-02-19 00:00:00");
+			put("description","메일 blob 삭제 스케줄러 사용여부 (default:YES)");
+			put("config_type","메일");
+			put("property","USEDELETEMAILBLOB"); // property_name
+		}});
 		
 		
 		Iterator<String> keys = test.keySet().iterator();
