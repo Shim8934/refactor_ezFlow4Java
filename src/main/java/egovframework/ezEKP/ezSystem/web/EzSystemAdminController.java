@@ -212,6 +212,7 @@ public class EzSystemAdminController {
 		}
 		String usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
 		
+		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("configMap", configMap);
 		model.addAttribute("licensedUserCount", licensedUserCount);
 		model.addAttribute("userCount", userCount);
