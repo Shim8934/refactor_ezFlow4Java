@@ -7017,7 +7017,10 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"UPDATE_DATE" VARCHAR2(40 BYTE) DEFAULT NULL, 
 	"TOTAL_USER" NUMBER(11,0) DEFAULT 0, 
 	"COMPANY_ID" VARCHAR2(80 BYTE), 
-	"TENANT_ID" NUMBER(5,0)
+	"TENANT_ID" NUMBER(5,0),
+	"MAIL_FLAG" NUMBER(4,0), 
+	"POPUP_FLAG" NUMBER(4,0), 
+	"MAIL_SENT_FLAG" NUMBER(4,0) DEFAULT 0
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_SURVEY_ATTACHFILE
