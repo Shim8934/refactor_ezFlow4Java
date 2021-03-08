@@ -44,6 +44,8 @@
 		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
 		    var companyID = "<c:out value ='${userInfo.companyID}'/>";       
 		 	var orgCompanyID = "<c:out value ='${orgCompanyID}'/>";
+	        /*2021-03-05 남학선 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 값*/
+	        var delAttachByOthers = "<c:out value ='${delAttachByOthers}'/>";
 		 	
 	        subCondition = "";
 	        
@@ -121,8 +123,22 @@
 	                alert("<spring:message code='ezApprovalG.t360'/>");
 	            }
 	            else if (arr_userinfo[1] != trim_Cross(GetAttribute(listview.GetSelectedRows()[0], "DATA4"))) {
-	                alert("<spring:message code='ezApprovalG.t365'/>");
-	                return;
+	            	if(delAttachByOthers == "0"){
+		                alert("<spring:message code='ezApprovalG.t365'/>");
+		                return;	            		
+	            	} else {
+		                if (plength > 0 && plength2 > 0) {
+		                    for (count1 = plength; count1 > 0; count1--) {
+		                        selRow = listview.GetSelectedRows()[count1 - 1];
+		                        listview.DeleteRow(GetAttribute(selRow, "id"));
+		                    }
+		                    if (listview.GetDataRows().length == 0){
+		                    	$("#lvTDoc tbody").append("<tr id='lvTDocList_TR_noItems'><td align='center' colspan='1'>" + strLang944 + "</td></tr>");
+		                    }
+		                }
+		                else
+		                    alert("<spring:message code='ezApprovalG.t360'/>");   		
+	            	}
 	            }
 	            else {
 	                if (plength > 0 && plength2 > 0) {

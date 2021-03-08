@@ -2588,6 +2588,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
         logger.debug("pAttachWarning1=" + pAttachWarning1 + ", pBigAttachLimitCount=" + pBigAttachLimitCount+ ", pBigAttachDownloadLimitCount=" + pBigAttachDownloadLimitCount);
         // 대용량첨부 관련 설정 끝
         
+        //2021-03-05 남학선 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 테넌트 값
+        String delAttachByOthers = ezCommonService.getTenantConfig("delAttachByOthers", userInfo.getTenantId()).equals("") ? "0" : ezCommonService.getTenantConfig("delAttachByOthers", userInfo.getTenantId()); 
+        
 		model.addAttribute("formID", formID);
 		model.addAttribute("docID", docID);
 		model.addAttribute("draftFlag", draftFlag);
@@ -2612,6 +2615,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//model.addAttribute("bigSizeApprAttachDelDay", pBigAttachDownloadDay); // 전자결재 대용량 첨부파일 보존기간
 		model.addAttribute("spanDisplayStyle", commonUtil.stripScriptTagsAndFunctions(spanDisplayStyle)); // 첨부파일 알림 메세지 스타일
 		model.addAttribute("isOuterForm", isOuterForm);
+		model.addAttribute("delAttachByOthers", delAttachByOthers);
 		
 		logger.debug("aprAttach ended");
 		
