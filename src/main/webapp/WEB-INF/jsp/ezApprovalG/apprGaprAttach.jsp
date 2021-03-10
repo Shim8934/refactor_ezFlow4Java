@@ -83,6 +83,9 @@
 	        var isBigAttachBtnClicked = false; // 대용량첨부 버튼으로 파일을 추가하는지 여부
 	        var isOuterForm = "<c:out value ='${isOuterForm}'/>";
 	        
+	        /*2021-03-05 남학선 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 값*/
+	        var delAttachByOthers = "<c:out value ='${delAttachByOthers}'/>";
+	        
 	        // 웹폴더첨부용 변수
 	        var pickerData = "";
 			
@@ -315,61 +318,18 @@
 			    if (pAttachCurSel.length > 0)
 				{
 					var pcheckID =  GetAttribute(pAttachCurSel[0], "DATA4");
-					if (pcheckID.toLowerCase() != pUserID.toLowerCase() && pDraftFlag != "REDRAFT")
+ 					if (pcheckID.toLowerCase() != pUserID.toLowerCase() && pDraftFlag != "REDRAFT")
 					{
-						var pAlertContent = "<spring:message code='ezApprovalG.t277'/>" + "<br>" + "<spring:message code='ezApprovalG.t278'/>";
-						OpenAlertUI(pAlertContent);
+ 						if(delAttachByOthers == "0"){
+							var pAlertContent = "<spring:message code='ezApprovalG.t277'/>" + "<br>" + "<spring:message code='ezApprovalG.t278'/>";
+							OpenAlertUI(pAlertContent);				 							
+ 						} else {
+							btn_AttachDel_onclick_doDel();		
+ 						}
 					}
 					else
-					{
-						var pInformationContent = "<spring:message code='ezApprovalG.t279'/>";
-					    var Ans = OpenInformationUI(pInformationContent, btn_AttachDel_onclick_Complete);
-					    
-					    /* 2020-03-30 홍승비 - 한글기안 시 첨부파일 호환 코드 추가 (Ans가 바로 조건으로 사용됨) */
-					    if (Ans) {
-					        var listview = new ListView();
-					        listview.LoadFromID("attachList");
-					        var pAttachCurSel = listview.GetSelectedRows();
-					        var pAttachRow = listview.GetSelectedRows();
-					        
-							/* 2020-03-19 홍승비 - 첨부파일 다중삭제 동작 구현 */
-					        var Rtnval = ""
-					        var pSelectedRowLength = pAttachRow.length; 
-					        for (var i = 0; i < pSelectedRowLength; i++) {
-						        Rtnval = DeleteFileAtServer(pAttachCurSel[i]);
-						        // 의미없는 미구현 함수 DelfileSize(delfileSize) 동작 제거
-						        
-						        if (Rtnval != "TRUE") {
-						        	break;
-						        } else {
-						            if (totalSize > 0) { // 첨부파일의 크기 계산하는 부분 루프 내부로 이동
-						            	totalSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
-						            }
-						            
-						            // 일반첨부, 대용량첨부의 삭제 후 크기 계산
-						            if (bigAttachSize > 0 && GetAttribute(pAttachRow[i], "ISBIGATTACH") == "Y") {
-						            	bigAttachSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
-						            }
-						            else if (normalAttachSize > 0 && GetAttribute(pAttachRow[i], "ISBIGATTACH") != "Y") {
-						            	normalAttachSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
-						            }
-						        }
-					        }
-					        
-					        if (Rtnval == "TRUE") {
-					            DelAttachFileAtList(pAttachCurSel);
-					            
-					            /* 2018-10-11 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
-					            var totalRows = listview.GetDataRows();
-							    if(totalRows.length == 0) {
-							    	setDeleteRow("attachList");
-							    }
-					        }
-					        else {
-					            var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
-					            OpenAlertUI(pAlertContent);
-					        }
-					    }
+					{ 
+						btn_AttachDel_onclick_doDel();						
 					}
 				}
 				else
@@ -377,6 +337,57 @@
 					var pAlertContent = "<spring:message code='ezApprovalG.t281'/>";
 					OpenAlertUI(pAlertContent);
 				}
+			}
+			
+			function btn_AttachDel_onclick_doDel(){
+				var pInformationContent = "<spring:message code='ezApprovalG.t279'/>";
+			    var Ans = OpenInformationUI(pInformationContent, btn_AttachDel_onclick_Complete);
+			    
+			    /* 2020-03-30 홍승비 - 한글기안 시 첨부파일 호환 코드 추가 (Ans가 바로 조건으로 사용됨) */
+			    if (Ans) {
+			        var listview = new ListView();
+			        listview.LoadFromID("attachList");
+			        var pAttachCurSel = listview.GetSelectedRows();
+			        var pAttachRow = listview.GetSelectedRows();
+			        
+					/* 2020-03-19 홍승비 - 첨부파일 다중삭제 동작 구현 */
+			        var Rtnval = ""
+			        var pSelectedRowLength = pAttachRow.length; 
+			        for (var i = 0; i < pSelectedRowLength; i++) {
+				        Rtnval = DeleteFileAtServer(pAttachCurSel[i]);
+				        // 의미없는 미구현 함수 DelfileSize(delfileSize) 동작 제거
+				        
+				        if (Rtnval != "TRUE") {
+				        	break;
+				        } else {
+				            if (totalSize > 0) { // 첨부파일의 크기 계산하는 부분 루프 내부로 이동
+				            	totalSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
+				            }
+				            
+				            // 일반첨부, 대용량첨부의 삭제 후 크기 계산
+				            if (bigAttachSize > 0 && GetAttribute(pAttachRow[i], "ISBIGATTACH") == "Y") {
+				            	bigAttachSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
+				            }
+				            else if (normalAttachSize > 0 && GetAttribute(pAttachRow[i], "ISBIGATTACH") != "Y") {
+				            	normalAttachSize -= parseInt(GetAttribute(pAttachRow[i], "DATA8"));
+				            }
+				        }
+			        }
+			        
+			        if (Rtnval == "TRUE") {
+			            DelAttachFileAtList(pAttachCurSel);
+			            
+			            /* 2018-10-11 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
+			            var totalRows = listview.GetDataRows();
+					    if(totalRows.length == 0) {
+					    	setDeleteRow("attachList");
+					    }
+			        }
+			        else {
+			            var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
+			            OpenAlertUI(pAlertContent);
+			        }
+			    }
 			}
 			
 			function btn_AttachDel_onclick_Complete(Ans) {

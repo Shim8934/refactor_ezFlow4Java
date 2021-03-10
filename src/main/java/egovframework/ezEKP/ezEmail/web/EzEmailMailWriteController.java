@@ -1261,7 +1261,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (useFromAddress.equals("YES")) {
 				List<String[]> fromAddressList = ezEmailService.getAliasAddress(mailId, loginInfo.getTenantId());
 				
-				if (fromAddressList.size() >= 2) {
+				/* 아래 내용은 료비개발 시에 추가된 내용으로 표준에는 미적용
+				 * if (fromAddressList.size() >= 2) {
 					String companyDomainName = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "DomainName");
 					
 					// 회사별 이메일 도메인명이 설정되어 있으면 Account 이메일 주소를 목록에서 제외한다.								
@@ -1279,7 +1280,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							}
 						}
 					}
-				}
+				}*/
 				
 				if (fromAddressList.size() < 2) {
 					useFromAddress = "NO";
@@ -6790,12 +6791,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (userInfo.getLang().equals("1")) {
 			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
 			
+			String fontFamily = "맑은 고딕"; // jmocha copyright mailet default font css
+			String fontSize = "13px";
+			
 			if (!editorFontStyle.equals("")) {
-				String fontFamily = editorFontStyle.split("\\|")[0];
-				String fontSize = editorFontStyle.split("\\|")[1];
-				
-				defaultFontAndSize = "font-size:" + fontSize + ";font-family:" + fontFamily + ";";
+				fontFamily = editorFontStyle.split("\\|")[0];
+				fontSize = editorFontStyle.split("\\|")[1];
 			}
+			defaultFontAndSize = "font-size:" + fontSize + ";font-family:" + fontFamily + ";";
 		}
 		
 		String copyrightDiv = "<p>&nbsp;</p><div id=\"recipientPharse\" style=\"box-sizing:border-box; padding:5px 3px; border:1px solid #999; "
@@ -6811,7 +6814,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (useCopyrightMenu.equals("YES") && !useCopyright.equals("NO") && !copyrightText.trim().equals("")) {
 			mailBody = mailBody.replaceAll("\\p{Z}", " "); // 유니코드 범주내에서 구분 기호, 공백을  replacAll
 			
-			if ((!copyrightText.equals("id=\"recipientPharse\"")) || (mailBody.indexOf(copyrightText) > -1) || (mailBody.indexOf(copyrightText.replace(" ", "&nbsp;")) > -1)) {
+			if ((copyrightText.indexOf("id=\"recipientPharse\"") > -1) || (mailBody.indexOf(copyrightText) > -1) || (mailBody.indexOf(copyrightText.replace(" ", "&nbsp;")) > -1)) {
 				logger.debug("copyrightText ended.");
 				return addCopyrightStr;
 			}
