@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -98,18 +99,32 @@ public class EzApprovalScheduler extends EgovFileMngUtil {
 		logger.debug("dailyApprFileManage scheduler ended.");
 	}
 	
-	@Scheduled(cron = "00 0/5 * * * *")
+	@Scheduled(cron = "00 0/1 * * * *")
 	public void susinScheduler() throws Exception {
+		if(checkTimer()) {
+			logger.debug("susinScheduler started.");
+			
+			ezApprovalGService.doSusinSchedule();
+			
+			logger.debug("susinScheduler ended.");
+		}
+	}
+	
+	public boolean checkTimer() throws Exception {
+		boolean result = false;
 		List<TenantVO> tenantList = ezCommonService.getTenantList();
 		for (TenantVO tenantVO : tenantList) {
 			if("Y".equals(ezCommonService.getTenantConfig("useSusinSchedulerYn", tenantVO.getTenantId()))) {
-				logger.debug("susinScheduler started.");
-				
-				ezApprovalGService.doSusinSchedule();
-				
-				logger.debug("susinScheduler ended.");
+				String interval = ezCommonService.getTenantConfig("useSusinSchedulerTime", tenantVO.getTenantId());
+				if(interval != null && !"".equals(interval)) {
+					int intInterval = Integer.parseInt(interval);
+					if(intInterval == 0 || Calendar.getInstance().get(Calendar.MINUTE) % intInterval == 0) {
+						result = true;
+					}
+				}
 			}
 		}
+		return result;
 	}
 	/**
 	 * 만료된 전자결재 대용량첨부파일 삭제 함수

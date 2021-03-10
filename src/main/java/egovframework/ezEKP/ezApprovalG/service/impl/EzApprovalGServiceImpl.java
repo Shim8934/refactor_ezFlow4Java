@@ -31,6 +31,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -40,6 +41,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,28 +49,8 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import kr.dogfoot.hwplib.object.HWPFile;
-import kr.dogfoot.hwplib.object.bodytext.Section;
-import kr.dogfoot.hwplib.object.bodytext.control.Control;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
-import kr.dogfoot.hwplib.object.docinfo.BinData;
-import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataCompress;
-import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataState;
-import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataType;
-import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
-import kr.dogfoot.hwplib.reader.HWPReader;
-import kr.dogfoot.hwplib.writer.HWPWriter;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -83,12 +65,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.html.HTMLCollection;
-import org.w3c.dom.html.HTMLElement;
-import org.w3c.dom.html.HTMLTableElement;
-import org.w3c.dom.html.HTMLTableRowElement;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -145,6 +122,7 @@ import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -156,11 +134,25 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
+import kr.dogfoot.hwplib.object.HWPFile;
+import kr.dogfoot.hwplib.object.bodytext.Section;
+import kr.dogfoot.hwplib.object.bodytext.control.Control;
+import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
+import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
+import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
+import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositionShapeIdPair;
-
-import javax.servlet.ServletContext;
-
-import java.util.Iterator;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
+import kr.dogfoot.hwplib.object.docinfo.BinData;
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataCompress;
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataState;
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataType;
+import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
+import kr.dogfoot.hwplib.reader.HWPReader;
+import kr.dogfoot.hwplib.writer.HWPWriter;
 
 @Service("EzApprovalGService")
 public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprovalGService {
@@ -221,6 +213,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Resource(name = "EzOrganDAO")
 	private EzOrganDAO ezOrganDAO;
+
+	@Resource(name = "jspw")
+    private String jspw;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGServiceImpl.class);
 	
@@ -14940,6 +14935,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						subSQL = insertSendDocDB(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
 					}else {
 						subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
+						if (!subSQL.toUpperCase().equals("FALSE")) {
+							sendSusinMail(map, userInfo);
+						}
 					}
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
@@ -17419,27 +17417,40 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public void doSusinSchedule() throws Exception {
 		logger.debug("doSusinSchedule started");
-		try {
-			List<HashMap<String,Object>> sendDocList = ezApprovalGDAO.getSendDocList();
-			if(sendDocList != null) {
-				for(int i = 0 ; i < sendDocList.size(); i++) {
-					HashMap<String,Object> map = sendDocList.get(i);
-					doSendDocSchedule(
-							map.get("DOCID").toString(),
-							map.get("DEPTID").toString(),
-							map.get("DIRPATH").toString(),
-							map.get("DOCSTATE").toString(),
-							map.get("COMPANYID").toString(),
-							map.get("LANG").toString(),
-							Integer.parseInt(map.get("TENANTID").toString())
-							);
+		List<HashMap<String,Object>> sendDocList = ezApprovalGDAO.getSendDocList();
+		if(sendDocList != null) {
+			for(int i = 0 ; i < sendDocList.size(); i++) {
+				HashMap<String,Object> map = sendDocList.get(i);
+				String docid = map.get("DOCID").toString();
+				String companyID = map.get("COMPANYID").toString();
+				int tenantID = Integer.parseInt(map.get("TENANTID").toString());
+				String result = doSendDocSchedule(
+						docid,
+						map.get("DEPTID").toString(),
+						map.get("DIRPATH").toString(),
+						map.get("DOCSTATE").toString(),
+						companyID,
+						map.get("LANG").toString(),
+						tenantID
+						);
+				if("TRUE".equals(result)) {
+					map.put("v_DOCID", docid);
+					map.put("companyID", companyID);
+					map.put("v_TENANTID", tenantID);
+					List<ApprGDocListVO> writer = ezApprovalGDAO.sendoffercheck_enddocinfo(map);
+					
+					LoginVO tempLoginVO = new LoginVO();
+					tempLoginVO.setId(writer.get(0).getWriterID());
+					tempLoginVO.setTenantId(tenantID);
+					tempLoginVO.setDn("NOPASSWORD");
+					
+					LoginVO userInfo = loginService.selectUser(tempLoginVO);
+					sendSusinMail(map, userInfo);
 					ezApprovalGDAO.deleteSendDocList(map);
 				}
 			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+			
 		logger.debug("doSusinSchedule ended");
 	}
 	
@@ -32998,5 +33009,60 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    Map<String, Object> docProcessState = ezApprovalGDAO.getDocProcessState(map);
 	    
 	    return docProcessState;
+	}
+	
+	// 정주환 수신처에 메일 동시 발송
+	public void sendSusinMail(Map<String, Object> map, LoginVO userInfo) throws Exception {
+		logger.debug("sendSusinMail started.");
+		// '진행 문서 수신처 정보' 가져오기, TBL_RECEIPTPOINTINFO
+		List<ApprGReceiptVO> apprGReceiptVOList = null;
+		boolean schedule = map.get("LANG") != null;
+		if(schedule) {
+			apprGReceiptVOList = ezApprovalGDAO.doSendDocReceiptInfo2(map);
+		}else {
+			apprGReceiptVOList = ezApprovalGDAO.doSendDocReceiptInfo(map);
+		}
+		if(apprGReceiptVOList != null){
+			InternetAddress from = new InternetAddress();
+			String fromName = userInfo.getDisplayName();
+			if(fromName == null) {
+				fromName = "1".equals(map.get("LANG")) ? userInfo.getDisplayName1() : userInfo.getDisplayName2();
+			}
+			from.setPersonal(fromName, "UTF-8");
+			from.setAddress(userInfo.getEmail());
+			
+			List<InternetAddress> list = new ArrayList<InternetAddress>();
+			for(int i = 0; i < apprGReceiptVOList.size(); i++){
+				map.put("v_DEPTID", apprGReceiptVOList.get(i).getReceiptPointID());
+				List<OrganUserVO> organProxyVOList = ezOrganDAO.getDeptReceipterIDs(map);
+				for(int l = 0; l < organProxyVOList.size(); l++){
+					String infoXML = ezOrganService.getPropertyList(organProxyVOList.get(l).getCn(), "displayName;mail;department", userInfo.getLang(), userInfo.getTenantId());
+					Document doc = commonUtil.convertStringToDocument(infoXML);
+					String toName = doc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+					String to = doc.getElementsByTagName("MAIL").item(0).getTextContent();
+					InternetAddress to1 = new InternetAddress();
+					to1.setPersonal(toName, "UTF-8");
+					to1.setAddress(to);
+					list.add(to1);
+				}
+			}
+			InternetAddress[] toArr = list.toArray(new InternetAddress[list.size()]);
+			String userId = userInfo.getId();
+			String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+			String userAccount = userId + "@" + domainName;
+			String password  = jspw;
+			map.put("isUsed", "use");
+			map.put("v_COLS", "DocTitle, writername, startdate");
+			if(schedule) {
+				map.put("v_MODE", "END");
+			}else {
+				map.put("v_MODE", "APR");
+			}
+			List<ApprGDocListVO> docInfo = ezApprovalGDAO.getDocInfo(map);
+			ApprGDocListVO vo = docInfo.get(0);
+			String content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td><span>제&nbsp;&nbsp;목: " + vo.getDocTitle() + "</span><br><span>기안자:" + vo.getWriterName() + "</span><br><span>기안일: " + vo.getStartDate() + "</span><br></td></tr></table>";
+			ezEmailService.sendMail(userAccount, password, userInfo.getLocale(), from, toArr, null, null, "[수신문서도착알림] " + vo.getDocTitle(), content, true, EmailImportance.NORMAL);
+		}
+		logger.debug("sendSusinMail ended.");
 	}
 }
