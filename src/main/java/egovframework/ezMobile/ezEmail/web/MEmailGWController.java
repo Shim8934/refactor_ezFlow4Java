@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -62,6 +64,7 @@ import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -122,6 +125,10 @@ public class MEmailGWController extends EgovFileMngUtil {
 
 private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.class);
 	
+	private static final String MOBILE_FILEROOT_DOWNLOAD_URL = "/mobile/ezCommon/mFileDown.do?fileName=*.INLINE.*&amp;filePath=/fileroot";
+
+	private static final Pattern MOBILE_DOWNLOAD_IMAGE_PATTERN = Pattern.compile("src=\"/mobile/ezCommon/mFileDown.do\\?fileName=\\*\\.INLINE\\.\\*&amp;filePath=(/fileroot/[^\"]*)");
+
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -1642,6 +1649,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				break;
 			}
 			
+			signValue = convertFilerootToMobileDownloadURL(signValue);
+
 			JSONObject data = new JSONObject();
 	        data.put("fromEmail",fromEmail);
 			data.put("to", to);
@@ -2477,6 +2486,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				textOption = (String) jsonObject.get("textOption");
 			}
 			
+			boolean isSending = "SEND".equalsIgnoreCase(cmd);
 			String realPath = commonUtil.getRealPath(request);
 	
 			LOGGER.debug("subject = " + subject + ", to = " + to + ", cc = " + cc + ", bcc = " + bcc 
@@ -2680,7 +2690,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					if (info.getLang().equals("1")) {
 						String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", info.getTenantId());
 						
-						if (!editorFontStyle.equals("")) {
+						if (!editorFontStyle.isEmpty()) {
 							String fontFamily = editorFontStyle.split("\\|")[0];
 							String fontSize = editorFontStyle.split("\\|")[1];
 							
@@ -2690,7 +2700,58 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					
 					LOGGER.debug("defaultFontAndSize=" + defaultFontAndSize);
 					
+					//inline image 처리
+					MimeMultipart relatedPart = null;
+					Set<String> contentIdSet = new HashSet<String>();
+
 					if (textOption.equalsIgnoreCase("HTML")) {
+						// 모바일에서 보내오는 서명의 이미지들을 relatedPart 로 넣기
+						List<MimeBodyPart> imageParts = new LinkedList<>();
+
+						Matcher imageMatcher = MOBILE_DOWNLOAD_IMAGE_PATTERN.matcher(textBody);
+						StringBuffer sb = new StringBuffer();
+
+						while (imageMatcher.find()) {
+							String imagePath = realPath + imageMatcher.group(1);
+							File imageFile = new File(imagePath);
+							String imageExt = FilenameUtils.getExtension(imageFile.getName());
+							String imageName = UUID.randomUUID().toString() + "." + imageExt;
+
+							String cid = imageName + "@12345678.87654321";
+							String cidWithBrackets = "<" + cid + ">";
+
+							String contentType;
+
+							try (FileInputStream is = new FileInputStream(imageFile)) {
+								contentType = URLConnection.guessContentTypeFromStream(is);
+
+								if (contentType == null) {
+									contentType = Files.probeContentType(imageFile.toPath());
+								}
+							} catch (Exception ex) {
+								throw ex;
+							}
+
+							MimeBodyPart imagePart = new MimeBodyPart();
+							FileDataSource fileSource = new FileDataSource(imageFile);
+
+							imagePart.setDataHandler(new DataHandler(fileSource));
+							imagePart.setFileName(imageName);
+							imagePart.setHeader("Content-Type", contentType);
+							imagePart.setContentID(cidWithBrackets);
+							imagePart.setDisposition(Part.INLINE);
+
+							imageParts.add(imagePart);
+							imageMatcher.appendReplacement(sb, "src=\"cid:" + cid);
+						}
+
+						textBody = imageMatcher.appendTail(sb).toString();
+
+						// 모드가 SEND 일 때는 메일 서명 div의 id를 MailSignSent로 바꾼다.
+						if (isSending) {
+							textBody = textBody.replace("div id=\"MailSign\"", "div id=\"MailSignSent\"");
+						}
+
 						// p태그에 기본 폰트를 적용한다.
 						textBody = textBody.replace("<p>", "<p " + defaultFontAndSize + ">");
 						
@@ -2709,8 +2770,24 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			            
 			            // text/plain 파트를 추가한다.
 			            alternativePart.addBodyPart(textPlainPart);
-			            // text/html 파트를 추가한다. content가 text/html 파트를 갖고 있다.
-			            alternativePart.addBodyPart(content);
+
+						if (imageParts.isEmpty()) {
+							// text/html 파트를 추가한다. content가 text/html 파트를 갖고 있다.
+							alternativePart.addBodyPart(content);
+						} else {
+							// 이미지가 있을 때 related part를 구성한다.
+							MimeBodyPart wrap = new MimeBodyPart();
+							relatedPart = new MimeMultipart("related");
+
+							relatedPart.addBodyPart(content);
+
+							for (MimeBodyPart imagePart : imageParts) {
+								relatedPart.addBodyPart(imagePart);
+							}
+
+							wrap.setContent(relatedPart);
+							alternativePart.addBodyPart(wrap);
+						}
 //			            
 			            message.setContent(alternativePart);
 					} else if (textOption.equalsIgnoreCase("PLAIN")) {
@@ -2744,9 +2821,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			        // User-Agent 설정
 			        message.setHeader("User-Agent", "JMocha Mail 1.0");	        
 			        		        
-			        //inline image 처리
-			        MimeMultipart relatedPart = null;
-			        Set<String> contentIdSet = new HashSet<String>();
 			        
 		            // 임시 보관함에 메시지가 있는 경우 해당 메시지와 병합 작업을 수행한다.
 			        Message oldMessage = null;
@@ -6291,6 +6365,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 
 			MailSignatureVO mailSignature = ezEmailService.getMailSignature(userInfo.getTenantId(), userId);
 
+			// fileroot를 모바일 다운로드 URL로 변경
+			if (mailSignature != null) {
+				mailSignature.setContent1(convertFilerootToMobileDownloadURL(mailSignature.getContent1()));
+				mailSignature.setContent2(convertFilerootToMobileDownloadURL(mailSignature.getContent2()));
+				mailSignature.setContent3(convertFilerootToMobileDownloadURL(mailSignature.getContent3()));
+			}
+
 			result.put("data", mailSignature);
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -6356,4 +6437,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         
         return returnData;
     }
+
+	private String convertFilerootToMobileDownloadURL(String html) {
+		if (StringUtils.isEmpty(html)) {
+			return "";
+		}
+
+		return html.replace("/fileroot", MOBILE_FILEROOT_DOWNLOAD_URL);
+	}
 }
