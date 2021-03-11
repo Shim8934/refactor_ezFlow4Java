@@ -68,6 +68,7 @@ import kr.dogfoot.hwplib.writer.HWPWriter;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -9218,6 +9219,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		recordListVO.setMultiLang(commonUtil.getMultiData(lang, tenantID));
 		recordListVO.setOffsetMin(commonUtil.getMinuteUTC(offset));
 		recordListVO.setNowDate(commonUtil.getTodayUTCTime(""));
+		recordListVO.setRelayFormID(config.getProperty("Relay_FormID", ""));
 
 		switch (recordListVO.getListFlag()) {
 		case "0" :	// 기록물 대장
@@ -9233,7 +9235,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "3" :	// 목록이관 대상
 			listType = "005";
 			break;
-
 		case "4" :	// 파일이관 대상
 			listType = "005";
 			break;
@@ -9261,10 +9262,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "11" :	// 발송목록
 			listType = "001";
 			recordListVO.setUsePublicFlag(true);
+			recordListVO.setJoinEndReceiptPointInfo(true);
 			break;
+		case "12" :	// 유통 접수목록
+		    listType = "001";
+		    recordListVO.setUsePublicFlag(true);
+		    break;
+        case "13" : // 유통 발송목록
+            listType = "001";
+            recordListVO.setUsePublicFlag(true);
+            recordListVO.setJoinEndReceiptPointInfo(true);
+            break;
 		case "23" :	// 미처리문서
 		    listType = "001";
 		    recordListVO.setUsePublicFlag(true);
+		    recordListVO.setJoinEndReceiptPointInfo(true);
 		    break;
 		}
 		
@@ -9311,10 +9323,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		recordListVO.setExtraSelectClause(extraSelectClause);
 		recordListVO.setTempDeptCode(recordListVO.getDeptCode());
-
-		if (doc.getElementsByTagName("DEPTCODE").item(0) != null && doc.getElementsByTagName("DEPTCODE").item(0).getTextContent().length() > 0) {
-			recordListVO.setTempDeptCode(doc.getElementsByTagName("DEPTCODE").item(0).getTextContent().trim());
-		}
+		
+		Node pDeptCode = doc.getElementsByTagName("DEPTCODE").item(0);
+	    if (pDeptCode != null && pDeptCode.getTextContent().length() > 0) {
+	        recordListVO.setTempDeptCode(pDeptCode.getTextContent().trim());
+	    }
 		
 		String cabinetIDs = "";
 		
@@ -11706,8 +11719,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String listString = "";
 		
-		if (mode.equals("simsa")) {
+		if (mode.endsWith("simsa")) {
 			listString = getListHeader("005", companyID, userLang, tenantID);
+		} else if (mode.endsWith("relay")) {
+		    listString = getListHeader("004", companyID, userLang, tenantID);
 		} else {
 			listString = getListHeader("004", companyID, userLang, tenantID);
 		}
@@ -13043,10 +13058,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	private String getReceiveDocList(String mode, String userID, String deptID, String docManageDeptInfo, int querySize, int querySize2, String orderOption1, String orderOption2, String basicOrder,
 			String basicOrderReverse, String searchQuery, Document xmlDomSub, String companyID ,int tenantID) throws Exception {
 		logger.debug("getReceiveDocList started");
+		
+        String susinAdmin = "N";
+        String [] modeArr = mode.split(";");
+        if (modeArr[0].equals("admin")) {
+            susinAdmin = "Y";
+        }
+        if (modeArr.length > 1) {
+            mode = modeArr[1];
+        }
+        
+        String relayFormID = config.getProperty("Relay_FormID", "");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_MODE", mode.toLowerCase());
+        map.put("v_SUSINADMIN", susinAdmin);
+        map.put("v_RELAYFORMID", relayFormID);
 		map.put("v_USERID", userID);
 		map.put("v_DEPTID", deptID);
 		map.put("v_DEPTIDS", docManageDeptInfo);
@@ -13114,10 +13142,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	private int getReceiveDocListCount(String mode, String userID, String deptID, String docManageDeptInfo, String subQuery, String companyID, Document xmlDomSub, int tenantID) throws Exception {
 		logger.debug("getReceiveDocListCount started");
+		
+		String susinAdmin = "N";
+		String [] modeArr = mode.split(";");
+		if (modeArr[0].equals("admin")) {
+		    susinAdmin = "Y";
+		}
+		if (modeArr.length > 1) {
+		    mode = modeArr[1];
+		}
+		
+		String relayFormID = config.getProperty("Relay_FormID", "");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_MODE", mode.toLowerCase());
+		map.put("v_SUSINADMIN", susinAdmin);
+		map.put("v_RELAYFORMID", relayFormID);
 		map.put("v_USERID", userID);
 		map.put("v_DEPTID", deptID);
 		map.put("v_DEPTIDS", docManageDeptInfo);
@@ -21753,26 +21794,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if(rtnVal.toString().equals("")){
 			String howToSendOffer = ezCommonService.getTenantConfig("howToSendOffer", tenantID);
 	        
-	        if (howToSendOffer.equals("1")) {
-	        	rtnVal.append("<RESULT>TOKIAN</RESULT>");
-			}else{
-			    if ("1".equals(autoSendOfferFlag)) {
-                    List<String> receiptIDs = ezApprovalGDAO.sendOfferCheck_EndReceipt2(map);
-                    
-                    if(receiptIDs.size() == 0){
-                        rtnVal.append("<RESULT>RECEIPT</RESULT>"); //내부발송,민원인발송
+		    if ("1".equals(autoSendOfferFlag)) {
+                List<String> receiptIDs = ezApprovalGDAO.sendOfferCheck_EndReceipt2(map);
+                
+                if(receiptIDs.size() == 0){
+                    rtnVal.append("<RESULT>RECEIPT</RESULT>"); //내부발송
+                } else {
+                    if (receiptIDs.get(0).startsWith("Address")) {
+                        rtnVal.append("<RESULT>RECEIPADDR</RESULT>"); //민원인발송
                     } else {
-                        if (receiptIDs.get(0).startsWith("Address")) {
-                            rtnVal.append("<RESULT>RECEIPADDR</RESULT>"); //외부발송
+                        if ("1".equals(howToSendOffer)) {
+                            rtnVal.append("<RESULT>TOKIAN</RESULT>");
                         } else {
                             rtnVal.append("<RESULT>RECEIPTOUTER</RESULT>"); //외부발송
                         }
                     }
-			    } else {
-			        rtnVal.append("<RESULT>RECEIPTOUTER</RESULT>");
-			    }
-//				rtnVal.append("<RESULT>TRUE</RESULT>");
-			}
+                }
+		    } else {
+		        if ("1".equals(howToSendOffer)) {
+		            rtnVal.append("<RESULT>TOKIAN</RESULT>");
+		        } else {
+		            rtnVal.append("<RESULT>RECEIPTOUTER</RESULT>"); //외부발송
+		        }
+		    }
 		}
 
 		logger.debug("sendOfferCheck ended");
@@ -32021,22 +32065,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String shareApprovalFlag = ezCommonService.getTenantConfig("useShareApproval", tenantID);
 		map.put("v_shareApprovalFlag", shareApprovalFlag);
 		
+		String relayFormID = config.getProperty("Relay_FormID", "");
+		map.put("v_RELAYFORMID", relayFormID);
+		
 		Map<String, Object> result = ezApprovalGDAO.getLeftDocCountNew(map); 
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("<DATA>");
 		
-		result.keySet().stream().sorted(new Comparator<String>() {
-			@Override
-			public int compare(String o1, String o2) {
-				return Integer.parseInt(o1) - Integer.parseInt(o2);
-			}
-			
-		}).forEach(elem -> {
-			sb.append("<ROW>");
-			sb.append("<COUNT>" + String.valueOf(result.get(elem) == null ? "0" : result.get(elem)) + "</COUNT>");
-			sb.append("</ROW>");
-		});
+		for (String key : result.keySet()) {
+		    sb
+	        .append("<").append(key.toUpperCase()).append(">")
+	        .append(ObjectUtils.defaultIfNull(result.get(key), 0))
+	        .append("</").append(key.toUpperCase()).append(">");
+		}
 		
 		sb.append("</DATA>");
 		
