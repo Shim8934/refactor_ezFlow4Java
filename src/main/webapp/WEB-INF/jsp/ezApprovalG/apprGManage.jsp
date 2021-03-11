@@ -238,6 +238,9 @@
 		        else if (pListTypeValue == "4") {
 		            getReceivedDocList();
 		        }
+		        else if (pListTypeValue == "5") {
+		            getReceivedDocList();
+		        }
 		        else if (pListTypeValue == "6") {
 		            getSimsaDocList();
 		        }
@@ -561,7 +564,7 @@
 		        else if (pListTypeValue == "3") {
 		            getDocList();
 		        }
-		        else if (pListTypeValue == "4") {
+		        else if (pListTypeValue == "4" || pListTypeValue == "5") {
 		            getReceivedDocList();
 		        }
 		        else if (pListTypeValue == "6") {
@@ -673,7 +676,7 @@
 		                }
 		                else
 		                    btnRedraft_onclick();
-		            } else if (pListTypeValue == "4") {
+		            } else if (pListTypeValue == "4" || pListTypeValue == "5") {
 		                if (pSusinManagerFlag == "admin" || pCurSelRow.getAttribute("DATA8") == pUserID) {
 		                    var pDraftFlag;
 		                    var tmpDocState = pCurSelRow.getAttribute("DATA9");
@@ -695,8 +698,6 @@
 // 		                var newDocID = MakeTmp2Ing(pDocID);
 		                pURL = pCurSelRow.getAttribute("DATA3");
 		                btnRedraft_onclick();
-		            } else if (pListTypeValue != "5") {
-		                openViewDocInfo();
 		            } else {
 		                var para = new Array();
 		                var tempURL = pURL;
@@ -1810,7 +1811,7 @@
 		            else if (pListTypeValue == "3") {
 		                getDocList();
 		            }
-		            else if (pListTypeValue == "4") {
+		            else if (pListTypeValue == "4" || pListTypeValue == "5") {
 		                getReceivedDocList();
 		            }
 		            else if (pListTypeValue == "6") {
@@ -2045,7 +2046,7 @@
 		        else if (pListTypeValue == "3") {
 		            getDocList();
 		        }
-		        else if (pListTypeValue == "4") {
+		        else if (pListTypeValue == "4" || pListTypeValue == "5") {
 		            getReceivedDocList();
 		        }
 		        else if (pListTypeValue == "6") {

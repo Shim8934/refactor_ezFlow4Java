@@ -186,16 +186,32 @@
 		      		        DeptID = shareDeptId;
 		                    RecordList_onclick();
 		                    break;
+		                case "m12":
+		                    OutReceiptList_onclick();
+		                    break;
+		                case "m13":
+		                    OutSendList_onclick();
+		                    break;
 		                default:
 		                    RecordList_onclick();
 		                    break;
 		            }
 		        }
+
+				function checkRecordAll() {
+					return (g_sFlag === "m12" || g_sFlag === "m13") && szRoleInfo.indexOf("i=1;") > -1 && DeptID === arr_userinfo[4];
+				}
 		
 		        var SelYearFlag = false;
 		        function onSelect_Year() {
 		        	listLoading(true); //20201211 조진호 - 리스트 출력 시 시간이 오래 걸릴 수 있어 로딩바 추가
 		            SelYearFlag = true;
+
+					var tempDeptID = DeptID;
+					if (checkRecordAll()) {
+						tempDeptID = "ALL";
+					}
+
 		            if (GetSelectVal("rec_year") != "ALL" || GetSelectVal("cab_year") != "ALL" || GetSelectVal("del_year") != "ALL") {
 		
 		                //hideProgress();
@@ -206,7 +222,7 @@
 		                    GetCaninetList();
 		                }
 		                else if (DocList_Flag == "RECORD") {
-		                    g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + GetSelectVal("rec_year") + "-01-01 00:00:00</SREGDATE><EREGDATE>" + GetSelectVal("rec_year") + "-12-31 23:59:59</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+		                    g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + GetSelectVal("rec_year") + "-01-01 00:00:00</SREGDATE><EREGDATE>" + GetSelectVal("rec_year") + "-12-31 23:59:59</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
 		                    GetRecordList();
 		                }
 		                else {
@@ -235,7 +251,7 @@
 		                    GetCaninetList();
 		                }
 		                else if (DocList_Flag == "RECORD") {
-		                    g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+		                    g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
 		                    GetRecordList();
 		                }
 		                else {
@@ -1265,11 +1281,26 @@
 		        InitGlobals("RECORD", "10", "1");
 		        GetRecordList();
 		    }
-		    function SendList_onclick() {
-		        document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.t906'/>";
+			function SendList_onclick() {
+				document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.t906'/>";
+				document.getElementById("imgTitle").style.display = "";
+				SwapSubMenuDisplay("1");
+				InitGlobals("RECORD", "11", "1");
+				GetRecordList();
+			}
+		    function OutReceiptList_onclick() {
+		        document.getElementById("imgTitle").innerHTML = "유통접수목록";
 		        document.getElementById("imgTitle").style.display = "";
 		        SwapSubMenuDisplay("1");
-		        InitGlobals("RECORD", "11", "1");
+		
+		        InitGlobals("RECORD", "12", "1");
+		        GetRecordList();
+		    }
+		    function OutSendList_onclick() {
+		        document.getElementById("imgTitle").innerHTML = "유통발송목록";
+		        document.getElementById("imgTitle").style.display = "";
+		        SwapSubMenuDisplay("1");
+		        InitGlobals("RECORD", "13", "1");
 		        GetRecordList();
 		    }
 		    window.onunload = function () {
@@ -1463,11 +1494,16 @@
 		
 		        if (document.getElementById("trRecSubMenu").style.display == "") {
 		            var radiosearch = document.getElementById('selectType');
+
+					var tempDeptID = DeptID;
+					if (checkRecordAll()) {
+						tempDeptID = "ALL";
+					}
 		            
 		            if (radiosearch.value == "rad_Subject") {
-		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE>" + document.getElementById("txt_keyword").value + "</TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE>" + document.getElementById("txt_keyword").value + "</TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
 		            } else if (radiosearch.value == "rad_Writer") {
-		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER>" + document.getElementById("txt_keyword").value + "</DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER>" + document.getElementById("txt_keyword").value + "</DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
 		            }
 		            
 		            switch (ListTypeFlag) {

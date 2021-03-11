@@ -550,7 +550,12 @@ function GetRecordList() {
         if (nowday < 10)
             nowday = "0" + nowday;
 
-        g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+        var tempDeptID = DeptID;
+        if (checkRecordAll()) {
+            tempDeptID = "ALL";
+        }
+
+        g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
     } else if (g_isSearching) {
     	var searchParamXml = loadXMLString(g_RecSearchParamXml);
         var startDate = SelectSingleNodeValue(searchParamXml.firstChild, "SREGDATE");
@@ -1444,6 +1449,8 @@ function btnSearchRec_onclick(opnOption,opentype) {
 
     if (typeof (opnOption) == "undefined") opnOption = "0";
     para[3] = opnOption;	
+    para[4] = g_sFlag;	
+    para[5] = szRoleInfo;	
 
     var url = "/ezApprovalG/searchRec.do";
 
