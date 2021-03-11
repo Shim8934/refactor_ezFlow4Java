@@ -1289,7 +1289,7 @@
 				GetRecordList();
 			}
 		    function OutReceiptList_onclick() {
-		        document.getElementById("imgTitle").innerHTML = "유통접수목록";
+		        document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.kbh06'/>";
 		        document.getElementById("imgTitle").style.display = "";
 		        SwapSubMenuDisplay("1");
 		
@@ -1297,7 +1297,7 @@
 		        GetRecordList();
 		    }
 		    function OutSendList_onclick() {
-		        document.getElementById("imgTitle").innerHTML = "유통발송목록";
+		        document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.kbh07'/>";
 		        document.getElementById("imgTitle").style.display = "";
 		        SwapSubMenuDisplay("1");
 		        InitGlobals("RECORD", "13", "1");
