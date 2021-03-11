@@ -37,6 +37,7 @@
 			border-color: transparent transparent rgba(66, 66, 66, 0.7) transparent;
 		}
 		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC; font-size: 11px;}
+		.tooltip_span .tooltiptext {color: white; }
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>

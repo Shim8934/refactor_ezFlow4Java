@@ -1395,8 +1395,8 @@
 							<ul class="content_layout">
 								<li class="content_layout_center">
 									<span id="datepickerData">
-										<input type="text" id="Sdatepicker" style="height:30px;" disabled="" readonly size="10" > ~ 
-			    						<input type="text" id="Edatepicker" style="height:30px;" size="10" disabled=""></span>
+										<input type="text" id="Sdatepicker" style="height:30px;" disabled="" readonly size="10" readonly> ~ 
+			    						<input type="text" id="Edatepicker" style="height:30px;" size="10" disabled="" readonly></span>
 									</span>
 								</li>
 							</ul>
