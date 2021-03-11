@@ -39,8 +39,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -243,7 +245,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// 한글 웹기안기 사용여부
 		String useWebHWP = ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId());
 		//원문공개사용여부
-		String useOpenGov = config.getProperty("config.useOpenGov"); 
+		String useOpenGov = config.getProperty("config.useOpenGov");
+		String howToSendOffer = ezCommonService.getTenantConfig("howToSendOffer", userInfo.getTenantId());
 		
 		model.addAttribute("useOpenGov", useOpenGov);
 		
@@ -281,6 +284,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String infoXML = ezOrganService.getPropertyValue(userInfo.getDeptID(), "extensionAttribute4", userInfo.getTenantId());
+		String relayShowFlag = "N";
+		if (infoXML != null && infoXML.equals(config.getProperty("config.companyNum", ""))) {
+		    relayShowFlag = "Y";
+		}
 		
 		List<Object> referenceTemp = new ArrayList<Object>();
 		referenceTemp.add(subTitleString);
@@ -336,7 +343,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("viewLeftCount", viewLeftCount);
 		model.addAttribute("subTitleString", referenceTemp.get(0));
 		model.addAttribute("isSubTitle", referenceTemp.get(1));
-		model.addAttribute("infoXML", infoXML);
+		model.addAttribute("relayShowFlag", relayShowFlag);
 		model.addAttribute("userSendOut", userSendOut);
 		model.addAttribute("optGamsabu", optGamsabu);
 		model.addAttribute("firstContainerID", firstContainerID);
@@ -348,6 +355,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useShareApproval", useShareApproval);
 		model.addAttribute("useWebHWP", useWebHWP);
 		model.addAttribute("autoSendOfferFlag", autoSendOfferFlag); // 전자결재G 미처리문서함 사용여부
+		model.addAttribute("howToSendOffer", howToSendOffer);
 		
         logger.debug("apprGLeft Value : listType= " + listType + "containers= " + containers.toString() + "viewLeftCount= " + viewLeftCount);       
         logger.debug("apprGLeft Ended");

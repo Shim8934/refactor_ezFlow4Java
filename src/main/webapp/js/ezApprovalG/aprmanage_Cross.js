@@ -255,6 +255,9 @@ function getReceivedDocList(p_FormCd) {
     	});
     }
 
+    if (pListTypeValue == "5") {
+        manager = manager + ";relay";
+    }
 
     if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
         beforeJob = pListTypeValue;
@@ -1778,9 +1781,8 @@ function openergetDocInfo() {
     	selRowChangeFlag = true;
         if (pListTypeValue == "6")
             getSimsaDocList();
-        else if (pListTypeValue == "4")
+        else if (pListTypeValue == "4" || pListTypeValue == "5")
             getReceivedDocList();
-            
         else if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
             getSendOutDocList();
         else
@@ -2021,7 +2023,7 @@ function setbuttonenable() {
     else
         document.getElementById("tbar1").style.display = "";*/
 
-    if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 10 && pListTypeValue != 99 && pListTypeValue != 11) {
+    if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 5 && pListTypeValue != 10 && pListTypeValue != 99 && pListTypeValue != 11) {
     	document.getElementById("tbtnRedraft").style.display = "none";		
         //SwapImage(document.getElementById("btnRedraft"), "dis");
         document.getElementById("tbtnRemoveDoc").style.display = "none";

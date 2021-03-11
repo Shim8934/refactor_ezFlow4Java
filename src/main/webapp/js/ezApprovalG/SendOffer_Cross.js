@@ -292,7 +292,7 @@ function SendOfferCheckBtn_after() {
         var dataNodes = GetChildNodes(xmlhttp2.responseXML);
         var rtnVal = getNodeText(dataNodes[0]);
 
-        if (rtnVal == "RECEIPTOUTER") {
+        if (rtnVal == "RECEIPTOUTER" || rtnVal == "TOKIAN") {
 			SetMenuBtn("tdichange_Rec", "");
 			SetMenuBtn("tdichangeS_Rec", "none");
 			SetMenuBtn("tdReSend", "none");
