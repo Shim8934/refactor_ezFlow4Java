@@ -1207,10 +1207,10 @@
 					</c:if>
 					<c:if test="${approvalFlag eq 'G'}">
 						<c:if test="${relayShowFlag eq 'Y'}">
-							<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL5" onclick="setPresentValue('유통수신함');convMain('5');">유통수신함<span id="count5"></span></span></li>
+							<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL5" onclick="setPresentValue('<spring:message code='ezApprovalG.kbh04'/>');convMain('5');"><spring:message code='ezApprovalG.kbh04'/><span id="count5"></span></span></li>
 						</c:if>
 						<c:if test="${relayShowFlag eq 'Y' || howToSendOffer eq '1'}">
-							<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL6" onclick="setPresentValue('유통발송함');convMain('6');">유통발송함<span id="count6"></span></span></li>
+							<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL6" onclick="setPresentValue('<spring:message code='ezApprovalG.kbh05'/>');convMain('6');"><spring:message code='ezApprovalG.kbh05'/><span id="count6"></span></span></li>
 						</c:if>
                    	</c:if>
 					<c:if test="${userSendOut == 'YES'}">
@@ -1348,8 +1348,8 @@
 			        	<li><span class="sub_iconLNB tree_appr_record3"></span><span class="list_text" id="m05" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t905'/></span></li>
 			        	<li><span class="sub_iconLNB tree_appr_record4"></span><span class="list_text" id="m06" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span></li>
 			        	<li><span class="sub_iconLNB tree_appr_record5"></span><span class="list_text" id="m02" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span></li>
-						<li><span class="sub_iconLNB tree_appr_record3"></span><span class="list_text" id="m12" onclick="Open_Func(this)">유통접수목록</span></li>
-						<li><span class="sub_iconLNB tree_appr_record4"></span><span class="list_text" id="m13" onclick="Open_Func(this)">유통발송목록</span></li>
+						<li><span class="sub_iconLNB tree_appr_record3"></span><span class="list_text" id="m12" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh06'/></span></li>
+						<li><span class="sub_iconLNB tree_appr_record4"></span><span class="list_text" id="m13" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh07'/></span></li>
 			        </ul>
 			        <c:if test="${fn:contains(userInfo.rollInfo, 'm=1') || fn:contains(userInfo.rollInfo, 'w=1') || fn:contains(userInfo.rollInfo, 'c=1')}">
 				        <h2 class="off" id="manageCabinetH2">

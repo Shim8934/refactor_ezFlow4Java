@@ -3,6 +3,8 @@ package egovframework.ezMobile.ezApprovalG.service;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+
 import egovframework.ezMobile.ezApprovalG.vo.*;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
@@ -44,7 +46,7 @@ public interface MApprovalGService {
 	
 	public int getCheckAprState(String docId, String userId, String aprMemberSN, String mode, String companyId, int tenantId) throws Exception;
 	
-	public void sendApproveNoticeMail(MCommonVO userInfo, MOptionVO optionInfo, MApprovalGDocInfoVO approvalGDocInfoVO, String docId, String type) throws Exception;
+	public void sendApproveNoticeMail(HttpServletRequest request, MCommonVO userInfo, MOptionVO optionInfo, MApprovalGDocInfoVO approvalGDocInfoVO, String docId, String type) throws Exception;
 	
 	/* 2020-07-02 홍승비 - 모바일에서 최종결재 완료 시 서명에 결재날짜 삽입 동작 추가(결재날짜 필드가 없는 경우에만, 웹과 동일하게) */
 	public String insertSeumyungdateMobile(String docId, String realPath, String offset, Locale locale, String domain, String scheme, String companyId, int tenantId) throws Exception;
