@@ -610,15 +610,20 @@ public class MApprovalGGWController {
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			// 2021-02-15 박기범 : 겸직부재중정보 호출 서비스로 교체
 			List<MApprovalGAbsenteeAddJobInfoVO> resultList = mApprovalGService.getAbsenteeAddJobInfo(userInfo);
+			MApprovalGAbsenteeInfoVO absenteeInfoVO = mApprovalGService.getAbsenteeInfo(userInfo);
 			
 			if (resultList != null && resultList.size() > 0) {
 				result.put("status", "ok");
 				result.put("code", "0");
 				result.put("data", resultList);
+				result.put("startDate",absenteeInfoVO.getStartDate());
+				result.put("endDate",absenteeInfoVO.getEndDate());
 			} else {
 				result.put("status", "ok");
 				result.put("code", "2");
 				result.put("data", "");
+				result.put("startDate","");
+				result.put("endDate","");
 			}
 		} catch (Exception e) {
 			result.put("status", "error");
