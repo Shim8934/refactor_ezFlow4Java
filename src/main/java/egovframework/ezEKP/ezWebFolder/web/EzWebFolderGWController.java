@@ -741,6 +741,8 @@ public class EzWebFolderGWController {
 		String actionType = request.getParameter("actionType")  != null ? request.getParameter("actionType")                    : "";
 		String column     = request.getParameter("column")      != null ? request.getParameter("column")                        : "";
 		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
+		String sortType   = request.getParameter("sortType")    != null ? request.getParameter("sortType")                      : "";
+		String sortColumn = request.getParameter("sortColumn")  != null ? request.getParameter("sortColumn")                    : "";
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		fileExt = commonUtil.getWildcardEscapedString(fileExt, dbName);
@@ -797,7 +799,7 @@ public class EzWebFolderGWController {
 			logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
 			
 			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(realColmn, order.toUpperCase(), companyId, 
-					searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, 0, 0, primary, offset, tenantId, "", "");
+					searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, 0, 0, primary, offset, tenantId, sortType, sortColumn);
 			String realPath              = request.getServletContext().getRealPath("");
 			String pDirPath              = ezWebFolderService.getWebFolderDirPath(tenantId);
 			pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
