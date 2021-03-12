@@ -1959,9 +1959,11 @@ function getControlList() {
 		var controlIdStr = controlListElem.getAttribute("value");
 		if (controlIdStr) {
 			controlIds = JSON.parse(controlIdStr);
-			controls = controlIds.map(function(id) {
-				return document.getElementById(id);
-			});
+            controls = controlIds.filter(function(id) {
+                return document.getElementById(id) != null;
+            }).map(function(id) {
+                return document.getElementById(id);
+            });
 		}
 	}
 
