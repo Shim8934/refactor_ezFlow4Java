@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/capacity.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
@@ -147,7 +148,7 @@
 				this.sortColumn = column;
 				init("dept");
 			}
-			
+			/*
 			function optionHidden() {
 		 	    document.getElementById("layer_Viewpopup").style.display = "none";
 		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
@@ -167,7 +168,7 @@
 		   	        optionHidden();
 		   	    }
 		   	}
-			
+			*/
 			function leftFolderCPMV(functionType, folderList, toTargetId) {
 				closeAllPopup();
 				window.close();
