@@ -496,13 +496,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	 * @throws Exception
 	 */
 	@Override
-	public void sendApproveNoticeMail(HttpServletRequest request, MCommonVO userInfo, MOptionVO optionInfo, MApprovalGDocInfoVO approvalGDocInfoVO, String docId, String type) throws Exception {
+	public void sendApproveNoticeMail(MCommonVO userInfo, MOptionVO optionInfo, MApprovalGDocInfoVO approvalGDocInfoVO, String docId, String type) throws Exception {
 		LOGGER.debug("sendApproveNoticeMail started.");
 
 		String subject = null;
 		StringBuilder contentBuilder = null;
 
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String HostName = ezCommonService.getTenantConfig("mobileMailLink", userInfo.getTenantId());
 		String userEmail = userInfo.getUserId() + "@" + domainName;
 		String password = jspw;
 
@@ -686,7 +687,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						if (!"007".equalsIgnoreCase(vo.getAprType())) { // 참조가 아닌 경우에만 결재링크 생성 (웹과 동일)
 							contentBuilder.append("<span style='font-size:13px; font-weight:bold;'>" + approvalGDocInfoVO.getWriterName() + "</span>");
 							contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj14", locale) + "</span>");
-							contentBuilder.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getHeader("x-user-host") + (request.getServerPort() == 80 ? "" : ":" + request.getServerPort()) + "/ezApprovalG/approvui.do?");
+							contentBuilder.append("<a id='approv_a' href ='" + HostName + "/ezApprovalG/approvui.do?");
 							contentBuilder.append("docID=" + approvalGDocInfoVO.getDocID());
 							contentBuilder.append("&id=" + targetUserId + "&name=" + targetUserName + "&deptID=" + ezOrganService.getPropertyValue(targetUserId, "department", tenantId));
 							contentBuilder.append("&allFlag=0&mailchk=Y&orgCompanyID=" + ezOrganService.getPropertyValue(targetUserId, "physicaldeliveryofficename", tenantId));
