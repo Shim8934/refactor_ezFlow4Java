@@ -698,6 +698,8 @@
 // 		                var newDocID = MakeTmp2Ing(pDocID);
 		                pURL = pCurSelRow.getAttribute("DATA3");
 		                btnRedraft_onclick();
+					} else if (pListTypeValue != "5") {
+						openViewDocInfo();
 		            } else {
 		                var para = new Array();
 		                var tempURL = pURL;
