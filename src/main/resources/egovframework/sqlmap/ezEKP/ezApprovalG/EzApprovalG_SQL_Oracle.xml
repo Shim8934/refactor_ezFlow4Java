@@ -32674,7 +32674,7 @@
 					D.TENANT_ID = #v_TENANTID#		
 					
 					) A 
-			 )) AS "1" , <!-- 결재할 문서, 공람문서는 제외한다. AprType <> ''015'' -->
+			 )) AS "count1" , <!-- 결재할 문서, 공람문서는 제외한다. AprType <> ''015'' -->
 	        SUM((
 	        SELECT
 	            COUNT(DISTINCT CONCAT(D.DOCID, D.COMPANYID))
@@ -32747,7 +32747,7 @@
 											TENANT_ID = #v_TENANTID# 
 										)    
 	         ))  
-	         AS "2", <!-- 결재진행문서, 공람문서는 제외한다. AprType <> ''015'' -->
+	         AS "count2", <!-- 결재진행문서, 공람문서는 제외한다. AprType <> ''015'' -->
 	        SUM((  
         	<![CDATA[
 	   		SELECT 
@@ -32824,7 +32824,7 @@
 						AND
 							TENANT_ID = #v_TENANTID# 
 						)					
-        ]]>)) AS "3", <!--기안한 문서-->
+        ]]>)) AS "count3", <!--기안한 문서-->
 			SUM((
 		   		SELECT 
 		   			COUNT(TBL_APRRECEIPTPROCESSINFO.DOCID) AS COUNT
@@ -32890,7 +32890,7 @@
 	   		 	AND	
 		   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 	  		]]>
-			)) AS "4", <!---부서 수신함 -->
+			)) AS "count4", <!---부서 수신함 -->
 			SUM((
 				<![CDATA[
 	   		 	SELECT 
@@ -32918,7 +32918,7 @@
 	   		 	AND	
 		   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 	   		]]>
-			)) AS "5", <!-- 심사할 문서-->
+			)) AS "count5", <!-- 심사할 문서-->
 			SUM((
 			 <![CDATA[
 	   			SELECT 
@@ -32975,7 +32975,7 @@
 							SELECT TO_NCHAR(#companyID#) FROM DUAL
 							)
 	   		]]>			
-			)) AS "6", <!-- 직인 의뢰함 -->
+			)) AS "count6", <!-- 직인 의뢰함 -->
 			SUM((
 	   		<![CDATA[
 	   			SELECT 
@@ -33032,7 +33032,7 @@
 							SELECT TO_NCHAR(#companyID#) FROM DUAL
 							)
 		   	]]>			
-			)) AS "7", <!-- 직인  대장 -->
+			)) AS "count7", <!-- 직인  대장 -->
 			SUM((
 			SELECT
 			SUM(CASE WHEN
@@ -33165,7 +33165,7 @@
 					D.TENANT_ID = #v_TENANTID#		
 					
 					) A
-			)) AS "8", <!-- 공람 문서 --><!-- 2018-04-30 천성준 (#12468) 대리 결재자여도 회람(공람)문서는 제외 -->
+			)) AS "count99", <!-- 공람 문서 --><!-- 2018-04-30 천성준 (#12468) 대리 결재자여도 회람(공람)문서는 제외 -->
 			SUM((
 	             SELECT 
 	                COUNT(TBL_APRDOCINFO.DocID)
@@ -33191,7 +33191,7 @@
 	                TBL_APRLINEINFO.AprState = '010'
 	             AND
 	                TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
-			)) AS "9", <!-- 공람한 문서 -->
+			)) AS "count9", <!-- 공람한 문서 -->
 			SUM((
 			<![CDATA[
 	  			SELECT 
@@ -33209,7 +33209,7 @@
 		   		AND
 					COMPANYID = #companyID#
 		   	]]>
-			)) AS "10", <!-- 임시보관함 -->
+			)) AS "count21", <!-- 임시보관함 -->
 			SUM((
 			SELECT
 			SUM(CASE WHEN
@@ -33342,7 +33342,7 @@
 					D.TENANT_ID = #v_TENANTID#		
 					
 					) A
-			))AS "11" <!-- 후결 -->
+			))AS "countWHO" <!-- 후결 -->
 		<isEqual property="v_shareApprovalFlag" compareValue="YES">
 			, SUM((
 				SELECT 
@@ -33418,8 +33418,66 @@
 			   		AND	
 			   			D.TENANT_ID = #v_TENANTID#
 		   		) A
-			)) AS "12"
+			)) AS "count12"
 		</isEqual> <!-- 공유결재 -->
+            , SUM((
+                SELECT 
+                    COUNT(TBL_APRRECEIPTPROCESSINFO.DOCID)
+                FROM 
+                    TBL_APRRECEIPTPROCESSINFO 
+                INNER JOIN 
+                    TBL_APRDOCINFO 
+                ON 
+                    TBL_APRRECEIPTPROCESSINFO.DOCID = TBL_APRDOCINFO.DOCID
+            <isEqual property="v_aprFlag" compareValue="G">
+                LEFT JOIN 
+                    TBL_RECORD_TEMP
+                ON 
+                    TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+                AND 
+                    TBL_RECORD_TEMP.PROCESSDEPTCODE = TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID
+            </isEqual>
+                WHERE 
+                    TBL_APRRECEIPTPROCESSINFO.PROCESSYN != 'Y'
+                AND 
+                    (((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
+                AND 
+                    (TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
+                    
+            <isEqual property="v_USERFLAG" compareValue="admin">
+                OR 
+                    (
+                        TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID 
+                        IN 
+                        <iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+                            #v_DEPTIDS[]#
+                        </iterate>
+                    AND 
+                        (TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014') OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
+                    )
+            </isEqual>
+            <isEqual property="v_aprFlag" compareValue="G">
+                OR
+                    (
+                        (TBL_APRDOCINFO.WRITERID = #v_USERID# AND TBL_APRDOCINFO.WRITERDEPTID = #v_DEPTID#) 
+                    AND
+                        TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID#
+                    AND
+                        (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# OR TBL_APRRECEIPTPROCESSINFO.PROCESSORID = '')
+                    AND
+                        TBL_APRRECEIPTPROCESSINFO.APRSTATE != '013'
+                    )
+             </isEqual>
+                 )
+             <![CDATA[
+                AND 
+                    PROCESSDATE >= TO_TIMESTAMP(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+                AND 
+                    PROCESSDATE <= TO_TIMESTAMP(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+                AND 
+                    (TBL_APRDOCINFO.FORMID = #v_RELAYFORMID# AND TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011')
+            ]]>
+            )) AS "count14" <!-- 유통접수함 -->
             , SUM((
             <![CDATA[
             SELECT 
@@ -33465,7 +33523,7 @@
             AND 
                 C.PROCESSYN = 'N' 
             ]]>
-            )) AS "23" <!-- 미처리문서함 -->
+            )) AS "countUntreated" <!-- 미처리문서함 -->
 		FROM DUAL ) B
 	</select>
 	
