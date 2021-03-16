@@ -1399,8 +1399,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String userName      = request.getParameter("userName")   != null ? request.getParameter("userName")   : "";
 		String fileType      = request.getParameter("fileType")   != null ? request.getParameter("fileType")   : "";
 		String actionType    = request.getParameter("actionType") != null ? request.getParameter("actionType") : "";
+		String sortType    	 = request.getParameter("sortType")   != null ? request.getParameter("sortType")   : "";
+		String sortColumn    = request.getParameter("sortColumn") != null ? request.getParameter("sortColumn") : "";
 		
-		logger.debug("CompanyId: " + companyId + " Column: " + column + " || order: " + order + " || StartDate: " + startDate + " || EndDate: " + endDate + " || File ext: " + fileExt + " || File Name: " + fileName + " || User Name: " + userName + " || File type: " + fileType + " || Action Type: " + actionType);
+		logger.debug("CompanyId: " + companyId + " Column: " + column + " || order: " + order + " || StartDate: " + startDate + " || EndDate: " + endDate 
+				+ " || File ext: " + fileExt + " || File Name: " + fileName + " || User Name: " + userName + " || File type: " + fileType + " || Action Type: " + actionType
+				+ "||sortType:" + sortType + "||sortColumn:" + sortColumn);
 		
 		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/export-logs";
@@ -1420,6 +1424,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("column", column)
 										.queryParam("order", order)
 										.queryParam("actionType", actionType)
+										.queryParam("sortType", sortType)
+										.queryParam("sortColumn", sortColumn)
 										.queryParam("endDate", endDate);
 		
 		RestTemplate rest             = new RestTemplate();

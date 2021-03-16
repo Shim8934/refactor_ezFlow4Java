@@ -398,7 +398,9 @@
 						"column"      : orderInf.col ? orderInf.col : "",
 						"order"       : orderInf.ord ? orderInf.ord : "",
 						"fileType"    : document.getElementById("fileTypeSelect").value,
-						"companyId"   : document.getElementById("companyList").value
+						"companyId"   : document.getElementById("companyList").value,
+						"sortType"	  : sortType,
+						"sortColumn"  : sortColumn
 					},
 					dataType: "JSON",
 					async: true,
