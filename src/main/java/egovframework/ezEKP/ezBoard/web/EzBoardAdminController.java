@@ -1422,7 +1422,11 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				/* 2018-06-26 홍승비 - 권한전파 시 companyID 삽입 추가 */
 				ezBoardAdminService.setUnderBoardIDAcl2(boardID, vo.getBoardID(), vo.getParentBoardID(), isAllGroupBoard, userInfo.getCompanyID(), userInfo.getTenantId());
 			}
-		}		
+		}
+		
+		/* 2021-03-16 홍승비 - 기존 트리캐시 제거 동작을 루프 바깥으로 분리, 마지막에 한번만 동작하도록 수정 */
+		/* 2018-10-10 홍승비 - 권한전파 시 기존 트리캐시 제거하도록 수정 */
+		ezBoardAdminService.trunkBoard(userInfo.getTenantId());
 
 		logger.debug("setUnderBoardAcl ended");
 	}
