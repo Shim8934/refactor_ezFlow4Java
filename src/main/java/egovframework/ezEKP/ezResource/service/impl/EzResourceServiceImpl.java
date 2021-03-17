@@ -3784,6 +3784,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnList;
 	}
 	
+	// 월간 반복예약된 일자을 리턴하는 메서드
 	public List<Date[]> getchkMonthlyRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, int maxTemp) throws Exception {
 		logger.debug("getMonthlyRepDateTimes started.");
 		int freq = vo.getFreq();
@@ -3801,6 +3802,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		
 		// 자원예약 기간
+		Date resStartDate = vo.getStartDate();
 		Date resEndDate = vo.getEndDate();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -4001,8 +4003,18 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 		}
 		
+		/* 2021-03-16 홍승비 - 월간 예약의 경우, 실제 예약의 시작일보다 이후의 예약일만 리턴하도록 한다. */
+		List<Date[]> returnList2 = new ArrayList<Date[]>();
+		for (Date[] dateVO : returnList) {
+			if (dateVO[0].after(resStartDate) || dateVO[0].equals(resStartDate)) {
+				returnList2.add(dateVO);
+			} else {
+				logger.debug("월간 예약의 실제 시작일보다 이전의 예약일은 제외합니다. (실제시작일 = " + osdf.format(resStartDate) + ", 이전 예약일 = " + osdf.format(dateVO[0]) + ")");
+			}
+		}
+		
 		logger.debug("getMonthlyRepDateTimes End");
-		return returnList;
+		return returnList2;
 	}
 	
 	public List<OrganUserVO> getOwnerInfo(String[] ownerList, int tenantID, String companyID) throws Exception {
