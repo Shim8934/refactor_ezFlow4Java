@@ -426,7 +426,7 @@
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
 		
 		        //DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + pDocID + "&ingFlag=END"); 문서정보 새로 구현해서 주석
-		        DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END");
+		        DivPopUpShow(420, 520, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END");
 		    }
 		    function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();

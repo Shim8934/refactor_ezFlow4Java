@@ -1763,12 +1763,16 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
                         ReturnQuery += " AND WriterDeptName LIKE '%" + xmldomsub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                     }
                 }
-                if (TempQuery.indexOf("KAPR;") != -1) {
-                    ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
-                }
-                if (TempQuery.indexOf("KEND;") != -1) {
-                    ReturnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
-                }
+                
+                // 2021-03-16 박기범 - 키워드 검색 추가
+				if(TempQuery.indexOf("KAPR;") != -1) {
+					ReturnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%" + xmldomsub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+				}
+				
+				if (TempQuery.indexOf("KEND;") != -1) {
+					ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.keyword LIKE '%" + xmldomsub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+				}
+				
                 if (TempQuery.indexOf("CAPR;") != -1) {
                     ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
                 }

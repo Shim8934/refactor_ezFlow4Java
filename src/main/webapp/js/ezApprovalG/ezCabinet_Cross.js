@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿var ListTypeFlag;
+﻿var ListTypeFlag;
 var g_SelCabXml = "";
 var g_TransFlag = "0";
 var g_szParamXml = "";

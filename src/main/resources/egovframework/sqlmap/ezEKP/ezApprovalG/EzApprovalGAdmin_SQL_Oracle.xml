@@ -796,6 +796,10 @@
 			AND 
 				(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
 		</isNotEmpty>
+		<isNotEmpty property="v_KEYWORD">
+			AND
+				KEYWORD LIKE CONCAT('%', #v_KEYWORD#, '%')
+		</isNotEmpty>
 
 		<isNotEqual property="v_DOCSTATE" compareValue="">
 			<![CDATA[
@@ -835,7 +839,7 @@
 		<isNotEqual property="v_SUBQUERY" compareValue="">
 			<![CDATA[
 				AND
-					#v_SUBQUERY#
+					$v_SUBQUERY$
 			]]>
 		</isNotEqual>
 
@@ -2311,6 +2315,10 @@
 			AND 
 				(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
 		</isNotEmpty>
+		<isNotEmpty property="v_KEYWORD">
+			AND
+				KEYWORD LIKE CONCAT('%', #v_KEYWORD#, '%')
+		</isNotEmpty>
 		<isNotEqual property="v_DOCSTATE" compareValue="">
 			<![CDATA[
 				AND
@@ -2344,7 +2352,7 @@
 		<isNotEqual property="v_SUBQUERY" compareValue="">
 			<![CDATA[
 				AND
-					#v_SUBQUERY#
+					$v_SUBQUERY$
 			]]>
 		</isNotEqual>
 	</select>
@@ -5329,8 +5337,8 @@
    		 	FORMID = #v_FORMID#
    		</isNotEmpty>
 		<isNotEmpty property="v_FORMNAME">
-		AND 
-			FORMNAME$v_MULTIDATALANG$ LIKE '%$v_FORMNAME$%'
+		AND
+			(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
 		</isNotEmpty>
    		 AND 
    			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
@@ -5340,6 +5348,12 @@
    		AND 
    			TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%$v_APPROVUSER%$'
    		</isNotEmpty>
+		<isNotEmpty property="v_SUBQUERY">
+			<![CDATA[
+				AND
+					$v_SUBQUERY$
+			]]>
+		</isNotEmpty>
    		)
 	</select>
 	
@@ -5451,9 +5465,15 @@
 							   	 	      FORMID = $v_FORMID$
 							   	</isNotEmpty>
 								<isNotEmpty property="v_FORMNAME">
-							   	 	AND 
-							   	 	    FORMNAME$v_MULTIDATALANG$ LIKE '%$v_FORMNAME$%'
+							   	 	AND
+										(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
 							   	</isNotEmpty>
+								<isNotEmpty property="v_SUBQUERY">
+									<![CDATA[
+										AND
+											$v_SUBQUERY$
+									]]>
+								</isNotEmpty>
 							   		AND
 							    		 TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 							    	AND

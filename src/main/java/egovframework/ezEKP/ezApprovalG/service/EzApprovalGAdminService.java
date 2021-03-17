@@ -241,7 +241,8 @@ public interface EzApprovalGAdminService {
 			int tenantID, 
 			String lang, 
 			String offSet, 
-			String approvalFlag, 
+			String approvalFlag,
+			String keyword,
 			Locale locale
 			) throws Exception;
 
