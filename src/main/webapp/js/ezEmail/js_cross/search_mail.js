@@ -1,4 +1,4 @@
-﻿﻿var g_searchHttp = null;
+﻿﻿﻿var g_searchHttp = null;
 var g_progresswin = null;
 
 function showProgress() {
@@ -908,10 +908,8 @@ function event_toggle_flag_end() {
         	if (flagXmlHttp.responseText != "NEW" && flagXmlHttp.responseText != "DEL") {
         		alert("ERROR");
         	}
-
-            MailListRefresh();
         }
     } else {
-    	set_searchKey();
+    	start_search();
     }
 }
