@@ -484,5 +484,23 @@ function processRowClick(tr) {
         }
     } else if (DocList_Flag == "CABINET") {
         ChkCabRoleInfo(tr);
-    }
+    } else if (DocList_Flag == "Delivery") {
+		switch (jobState) {
+            case "ATTACH":
+                Attach_onclick();
+                break;
+
+            case "OPINION":
+                Opinion_onclick();
+                break;
+
+            case "APPROVAL":
+                Approval_onclick();
+                break;
+
+            case "RECIPENT":
+                Recipent_onclick()
+                break;
+        }
+	}
 }
