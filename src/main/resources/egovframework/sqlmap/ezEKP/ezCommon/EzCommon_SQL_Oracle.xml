@@ -3380,4 +3380,17 @@
 			"COMPANYID" VARCHAR2(160)
 		)
 	</statement>
+	
+	<select id="EzCommonDAO.checkMailTemplateSequence" resultClass="int">
+		SELECT
+			COUNT(SEQUENCE_NAME)
+		FROM 
+			USER_SEQUENCES
+		WHERE 
+			SEQUENCE_NAME = 'SEQ_JMOCHA_MAIL_SIGNATURE_TEMPLATE'
+	</select>
+	
+	<statement id="EzCommonDAO.createMailTemplateSequence">
+		CREATE SEQUENCE "SEQ_JMOCHA_MAIL_SIGNATURE_TEMPLATE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE
+	</statement>
 </sqlMap>

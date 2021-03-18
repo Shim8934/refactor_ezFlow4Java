@@ -1763,4 +1763,17 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 	}
 
+	public void createMailTemplateSequence() throws Exception {
+		if (dbType.equalsIgnoreCase("oracle")) {
+			try {
+				int cnt = (int) select("EzCommonDAO.checkMailTemplateSequence");
+				if (cnt < 1) {throw new Exception(); }
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.debug("MailTemplateSequence doesn't exist. creating the Sequence...");
+				
+				update("EzCommonDAO.createMailTemplateSequence");
+			}
+		}
+	}
 }
