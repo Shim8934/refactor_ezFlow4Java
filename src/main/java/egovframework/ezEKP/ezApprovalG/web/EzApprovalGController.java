@@ -1463,6 +1463,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+		String useDoc24 = ezCommonService.getTenantConfig("useDoc24", userInfo.getTenantId());
 		String chamjoAfterYN = ezCommonService.getTenantConfig("chamjoAfterYN", userInfo.getTenantId());
 		String receptGubunYN = ezCommonService.getTenantConfig("receptGubunYN", userInfo.getTenantId());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
@@ -1565,6 +1566,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useOpenGov", useOpenGov);
 		model.addAttribute("useDynamicAprLine", useDynamicAprLine); //가변 결재선 사용여부 - 1(사용) / 0(사용안함)
 		model.addAttribute("isOuterForm", isOuterForm);
+		model.addAttribute("useDoc24", useDoc24);
 		
 		logger.debug("ezApprovalInfo ended.");
 		

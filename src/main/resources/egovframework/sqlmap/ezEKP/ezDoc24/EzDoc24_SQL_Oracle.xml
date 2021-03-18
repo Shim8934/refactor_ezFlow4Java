@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezDoc24">
+	<typeAlias  alias="EzDoc24VO" type="egovframework.ezEKP.ezDoc24.vo.EzDoc24VO"/>
+	<parameterMap class="HashMap" id="doc24Param">
+        <parameter property="cmpnyNm" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+        <parameter property="SenderNm" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+        <parameter property="bizrno" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+        <parameter property="adres" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+        <parameter property="deleteFlag" jdbcType="CHAR" javaType="java.lang.String" mode="IN"/>
+        <parameter property="updateDe" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+        <parameter property="deleteDe" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+        <parameter property="orgCd" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+        <parameter property="result" jdbcType="NUMERIC" javaType="int" mode="OUT"/>
+    </parameterMap>
+	
+	<select id="EzDoc24DAO.checkId" parameterClass="Map" resultClass="String">
+			SELECT orgCd
+			FROM TBL_DOC24DEPTMASTER
+			WHERE orgCd = #orgCd#
+	</select>
+	
+	<insert id="EzDoc24DAO.insertDept" parameterMap="doc24Param">
+		<![CDATA[
+			INSERT INTO TBL_DOC24DEPTMASTER (cmpnyNm, SenderNm, bizrno, adres, deleteFlag, updateDe, deleteDe, orgCd)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+       	]]>
+	</insert>
+	
+	<update id="EzDoc24DAO.updateDept" parameterMap="doc24Param">
+		<![CDATA[
+			UPDATE
+				TBL_DOC24DEPTMASTER
+			SET cmpnyNm = ?, 
+				SenderNm = ?,
+				bizrno = ?, 
+				adres = ?,
+				deleteFlag = ?, 
+				updateDe = ?,
+				deleteDe = ?
+			WHERE orgCd = ?
+       	]]>
+	</update>
+</sqlMap>

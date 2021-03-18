@@ -26744,8 +26744,34 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			//2020.09.01. 한사대 외부공문 한글 표 붙이기할때 발생하는 주석 제거
 			//2020.09.10. 한사대 주석 제거 방식 때문에 전처리 내용이 사라지는 경우가 발생 하여 주석 제거 방식 수정
 			content = content.replaceAll("(?m)(?s)<!--(.*)-->", "");
-			
+			content = content.replaceAll("&#8203;", "");
+			// 2020-01-12 정주환 태그내 " -> ' 로 처리
+			String[] sp1 = content.split("<");
+			content = "";
+			for (int i = 0; i < sp1.length; i++){
+				if(i == 0) {
+					content += sp1[i];
+					continue;
+				}
+				String[] sp2 = sp1[i].split(">");
+				content += "<";
+				content += sp2[0].replaceAll("\\\\\"", "'") + ">";
+				if(sp2.length > 1) content += sp2[1] ;
+			}
  			content = beforeXmlConverter(content);
+
+ 			sp1 = content.split("<");
+ 			content = "";
+ 			for (int i = 0; i < sp1.length; i++){
+ 				if(i == 0) {
+ 					content += sp1[i];
+ 					continue;
+ 				}
+ 				String[] sp2 = sp1[i].split(">");
+ 				content += "<";
+ 				content += sp2[0].replaceAll("\"", "'") + ">";
+ 				if(sp2.length > 1) content += sp2[1] ;
+ 			}
 
  		    // 전체 태그 처리시 순서에 따라 꼬이는 부분이 존재하기 때문에 선처리가 필요한 태그들에 대해 먼저 처리한다.
  		    // SPAN태그는 제거한다.(font-weight:bold > <B>, font-style:italic > <i>, text-decoration:underline > <u>)
@@ -27202,6 +27228,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strRtnHtml = strRtnHtml.substring(0, strRtnHtml.lastIndexOf(">") + 1);
 			//왜 &nbsp;를 두개 해놓은거지?
 			//strRtnHtml = strRtnHtml.replace("&nbsp;", "&nbsp;&nbsp;");
+
+			//정주환
+			sp1 = strRtnHtml.split("<");
+			strRtnHtml = "";
+			for (int i = 0; i < sp1.length; i++){
+				if(i == 0) {
+					strRtnHtml += sp1[i];
+					continue;
+				}
+				String[] sp2 = sp1[i].split(">");
+				strRtnHtml += "<";
+				strRtnHtml += sp2[0].replaceAll("\"", "'") + ">";
+				if(sp2.length > 1) strRtnHtml += sp2[1] ;
+			}
 			
 			String strRtnContent = "<DATA>" +
 		                "<RESULT>OK</RESULT>" +
