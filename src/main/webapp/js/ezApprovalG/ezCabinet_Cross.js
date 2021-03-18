@@ -269,7 +269,9 @@ function ezCabMunuCtl(MenuType, selRow) {
             }
 
             if (document.getElementById("tdGongRam")) {
-                if ((GetAttribute(selRow, "DATA15") == "011" || GetAttribute(selRow, "DATA15") == "001") && arr_userinfo[1] == GetAttribute(selRow, "DATA3") && GetAttribute(selRow, "DATA8") === "00")
+//                if ((GetAttribute(selRow, "DATA15") == "011" || GetAttribute(selRow, "DATA15") == "001") && arr_userinfo[1] == GetAttribute(selRow, "DATA3") && GetAttribute(selRow, "DATA8") === "00")
+				// 2020-01-08 정주환 공람발송 기안자는 항상 on
+               	if (arr_userinfo[1] == GetAttribute(selRow, "DATA3") && GetAttribute(selRow, "DATA8") === "00")
                     document.getElementById("tdGongRam").style.display = "";
                 else
                     document.getElementById("tdGongRam").style.display = "none";
