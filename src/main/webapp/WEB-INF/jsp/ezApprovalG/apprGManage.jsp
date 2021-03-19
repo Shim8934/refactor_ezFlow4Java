@@ -698,6 +698,8 @@
 // 		                var newDocID = MakeTmp2Ing(pDocID);
 		                pURL = pCurSelRow.getAttribute("DATA3");
 		                btnRedraft_onclick();
+					} else if (pListTypeValue != "5") {
+						openViewDocInfo();
 		            } else {
 		                var para = new Array();
 		                var tempURL = pURL;
@@ -1784,7 +1786,7 @@
 		        setsearchinfo_cross_dialogArguments[0] = para;
 		        setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 		        var type = "APR";
-		        OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do?type=" + type+ "&searchType="+pListTypeValue, "setsearchInfo_Cross", GetOpenWindowfeature(510, 375));
+		        OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do?type=" + type+ "&searchType="+pListTypeValue, "setsearchInfo_Cross", GetOpenWindowfeature(510, 405));
 		        try { OpenWin2.focus(); } catch (e) { }
 		    }
 		
@@ -1892,8 +1894,15 @@
 			            TYPE += "WRITERDEPTNAME;";
 			            DATA += "<WRITERDEPTNAME>" + SearchCond[23] + "</WRITERDEPTNAME>";
 			        }
-			        
-			        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+
+			        // 2021-03-15 키워드 검색 추가 - 박기범
+					if (SearchCond[24] != "" && SearchCond[24] !== undefined )
+					{
+						TYPE += SearchCond[24].slice(0,5);
+						DATA += "<KEYWORD>" + SearchCond[24].slice(5) + "</KEYWORD>";
+					}
+
+					SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 			        
 				} else {
 					if (condition[0] != "") {
@@ -1953,6 +1962,14 @@
 				        TYPE += condition[16];
 				        DATA += condition[17];
 				    }
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (SearchCond[24] != "" && SearchCond[24] !== undefined )
+					{
+						TYPE += SearchCond[24].slice(0,5);
+						DATA += "<KEYWORD>" + SearchCond[24].slice(5) + "</KEYWORD>";
+					}
+
 				    if (typeof (condition[25]) != "undefined" && condition[25] != "") {
 				    	TYPE += "RECVSTARTDATE;"
 				        DATA += "<RECVSTARTDATE>" + condition[25] + "</RECVSTARTDATE>";

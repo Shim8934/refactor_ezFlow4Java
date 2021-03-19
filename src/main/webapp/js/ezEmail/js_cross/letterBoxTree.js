@@ -283,7 +283,10 @@ function submitClick() {
 		formUrl = "/admin/ezEmail/createLetterBox.do";
 	}
 	
-	if (disMsg !== "") {
+	if (selectNode == null || typeof selectNode == "undefined" || selectNode == "") {
+		alert(selectLetterboxMsg);
+		return;
+	} else if (disMsg !== "") {
 		alert(disMsg);
 		return;
 	}

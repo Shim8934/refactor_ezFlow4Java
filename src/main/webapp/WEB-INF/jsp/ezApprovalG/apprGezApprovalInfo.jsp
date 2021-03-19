@@ -1264,6 +1264,9 @@
 		                    return;
 		                }
 
+						// 2021.03.09 박기범 - 키워드 추가
+						ret[6] = document.querySelector("input[name=keyword]").value;
+
 		                if (approvalFlag == "G") {
 			                if (pIniGubun != 5 && pIniGubun != 7 && pIniGubun != 10 && pIniGubun != 12) {
 			                	if (!$("input:checkbox[id='passAprLine']").is(":checked")) {
@@ -1558,8 +1561,7 @@
 		                        var docinfo = MakeDocInfo();
 		                        ret[0] = "OK";
 		                        ret[1] = docinfo;
-		                        ret[6] = "OnlyDocInfo";
-		                        
+
 		                        if (ReturnFunction != null) {
 				                    ReturnFunction(ret);
 				                } else {
@@ -1570,9 +1572,8 @@
 			                var docinfo = MakeDocInfo();
 			                ret[0] = "OK";
 			                ret[1] = docinfo;
-			                ret[6] = "OnlyDocInfo";
 		            	}
-		            	
+
                         window.close();
 		            }
 		        }
@@ -3217,7 +3218,13 @@
 		                    	</div>
 		                    </div>
 		                </td>
-		           </tr>
+		           	</tr>
+					<tr>
+						<th><spring:message code='ezApprovalG.t1200'/></th>
+						<td>
+							<input type="text" name="keyword" style="width: 50%;" value="<c:out value="${keyword}"/>" />
+						</td>
+					</tr>
 				</table>
 				<h2 class="h2_dot" style="margin-left: 5px;">대민공개</h2>
 				<table class="content" style="margin-left: 3px;">
@@ -3375,6 +3382,12 @@
 			                    <input readonly="readonly" id='idDatepicker' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
 			                </td>
 			            </tr>
+						<tr>
+							<th><spring:message code='ezApprovalG.t1200'/></th>
+							<td>
+								<input type="text" name="keyword" style="width: 50%;" value="<c:out value="${keyword}"/>" />
+							</td>
+						</tr>
 		                <%-- <tr>
 		                    <td colspan="2">
 		                        <h2 class="h2_dot"><spring:message code='ezApproval.t339'/></h2>
@@ -3384,7 +3397,7 @@
 		                	<th><spring:message code='ezApproval.t339'/></th>
 		                    <td>		                    	
 		                        <!-- <div class="nobox"> -->
-		                            <textarea id="taSummery" name="taSummery" style="HEIGHT: 370px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin: 2px 2px 2px 2px"></textarea>
+		                            <textarea id="taSummery" name="taSummery" style="HEIGHT: 355px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin: 2px 2px 2px 2px"></textarea>
 		                        <!-- </div> -->
 		                    </td>
 		                </tr>

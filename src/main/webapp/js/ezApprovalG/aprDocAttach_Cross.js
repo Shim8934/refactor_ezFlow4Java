@@ -385,6 +385,13 @@ function MakeSubCondition() {
         DATA += condition[13];
     }
 
+    // 2021-03-15 키워드 검색 추가 - 박기범
+    if (condition[24] != "" && condition[24] !== undefined )
+    {
+        TYPE += condition[24].slice(0,5);
+        DATA += "<KEYWORD>" + condition[24].slice(5) + "</KEYWORD>";
+    }
+
     SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 }
 

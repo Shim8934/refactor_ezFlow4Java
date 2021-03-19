@@ -206,11 +206,11 @@
 	            if (CrossYN()) {
 	            	setsearchinfo_cross_dialogArguments[0] = "";
 	            	setsearchinfo_cross_dialogArguments[1] = SearchCondi_Complete;
-	                DivPopUpShow(510, 375, url);
+	                DivPopUpShow(510, 405, url);
 	            }
 	            else {
-	                var feature = "dialogWidth:510px;dialogHeight:465px;status:no;scroll:no;edge:sunken"
-	                feature = feature + GetShowModalPosition(510, 465);
+	                var feature = "dialogWidth:510px;dialogHeight:495px;status:no;scroll:no;edge:sunken"
+	                feature = feature + GetShowModalPosition(510, 495);
 	                condition = window.showModalDialog(url, para, feature);
 	                if (condition) {
 	                    MakeSubCondition();

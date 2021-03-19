@@ -804,7 +804,7 @@
 	                <input readonly="readonly" id='E1datepicker' type="text" style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
 	            </td>
 	        </tr>
-	        <tr id="KEYWORDTR" style="display: none">
+	        <tr id="KEYWORDTR" style="">
 	            <th><spring:message code ='ezApprovalG.t1200' /></th>
 	            <td>
 	                <input type="text" id="keyword" name="keyword" style="width: 100%" maxlength="50">

@@ -274,4 +274,6 @@ public interface EzCommonService {
 	public void createTblYearlyDocCount() throws Exception;
 
 	public void insertChartPortletInfo() throws Exception;
+	
+	public void createMailTemplateSequence() throws Exception;
 }

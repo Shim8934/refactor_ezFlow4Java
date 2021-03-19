@@ -741,6 +741,8 @@ public class EzWebFolderGWController {
 		String actionType = request.getParameter("actionType")  != null ? request.getParameter("actionType")                    : "";
 		String column     = request.getParameter("column")      != null ? request.getParameter("column")                        : "";
 		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
+		String sortType   = request.getParameter("sortType")    != null ? request.getParameter("sortType")                      : "";
+		String sortColumn = request.getParameter("sortColumn")  != null ? request.getParameter("sortColumn")                    : "";
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		fileExt = commonUtil.getWildcardEscapedString(fileExt, dbName);
@@ -797,7 +799,7 @@ public class EzWebFolderGWController {
 			logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
 			
 			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(realColmn, order.toUpperCase(), companyId, 
-					searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, 0, 0, primary, offset, tenantId, "", "");
+					searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, 0, 0, primary, offset, tenantId, sortType, sortColumn);
 			String realPath              = request.getServletContext().getRealPath("");
 			String pDirPath              = ezWebFolderService.getWebFolderDirPath(tenantId);
 			pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
@@ -2676,7 +2678,7 @@ public class EzWebFolderGWController {
 				String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 				
 				// TODO: 현재 query상에서 .S 형태로 돌아와서 해놓은것이지만 다른 형식으로 돌아올때에는 수정필요함.
-				SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss.S");						// db에서 가져온 folder의 timeUTC를 적용한 -9시간
+				SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");						// db에서 가져온 folder의 timeUTC를 적용한 -9시간
 			    Date date1 = formatter2.parse(folder.getCreateDate());												// folder의 creatreDate를 가져와서 date방식으로 format
 			
 			    SimpleDateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					// 우리가 지원하는 형식으로 다시 포맷

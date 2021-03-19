@@ -223,7 +223,8 @@
 		    		useReceivingChk = true;
 		    		g_foldertype = g_moveUrl;
 		    		p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
-		    		select.selectedIndex = 3;
+	                document.getElementById("select").selectedIndex = 3;
+	                document.getElementById("select").item(3).selected = true;
 		    	} else {
 		    		document.getElementById("MailHeader").style.minWidth = "400px";
 		    		document.getElementById("contentlist").style.minWidth = "400px";

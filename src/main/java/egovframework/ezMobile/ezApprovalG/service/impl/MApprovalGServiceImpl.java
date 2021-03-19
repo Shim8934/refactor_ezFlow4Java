@@ -27,6 +27,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
+import javax.servlet.http.HttpServletRequest;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -501,6 +503,8 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		StringBuilder contentBuilder = null;
 
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String https = "YES".equals(ezCommonService.getTenantConfig("USE_HTTPS", userInfo.getTenantId())) ? "HTTPS://" : "HTTP://";
+		String serverName = ezCommonService.getTenantConfig("serverName", userInfo.getTenantId());
 		String userEmail = userInfo.getUserId() + "@" + domainName;
 		String password = jspw;
 
@@ -684,7 +688,8 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						if (!"007".equalsIgnoreCase(vo.getAprType())) { // 참조가 아닌 경우에만 결재링크 생성 (웹과 동일)
 							contentBuilder.append("<span style='font-size:13px; font-weight:bold;'>" + approvalGDocInfoVO.getWriterName() + "</span>");
 							contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj14", locale) + "</span>");
-							contentBuilder.append("<a id='approv_a' docID=" + approvalGDocInfoVO.getDocID());
+							contentBuilder.append("<a id='approv_a' href ='" + https + serverName + "/ezApprovalG/approvui.do?");
+							contentBuilder.append("docID=" + approvalGDocInfoVO.getDocID());
 							contentBuilder.append("&id=" + targetUserId + "&name=" + targetUserName + "&deptID=" + ezOrganService.getPropertyValue(targetUserId, "department", tenantId));
 							contentBuilder.append("&allFlag=0&mailchk=Y&orgCompanyID=" + ezOrganService.getPropertyValue(targetUserId, "physicaldeliveryofficename", tenantId));
 							contentBuilder.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>");

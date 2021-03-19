@@ -474,6 +474,11 @@
 				var folderUsers = getJsonData(document.getElementById("rangeStr").value);
 				var target      = document.getElementById("newTargetDiv").innerHTML;
 				
+				if (isValidName(folderName) || isValidName(folderName2)) {
+					alert('<spring:message code="ezWebFolder.t211"/>');
+					return;
+				}
+
 				if (!folderName.replace(/\s/g,'')) {
 					alert("<spring:message code='ezWebFolder.t201'/>");
 					document.getElementById("fldName").value = "";

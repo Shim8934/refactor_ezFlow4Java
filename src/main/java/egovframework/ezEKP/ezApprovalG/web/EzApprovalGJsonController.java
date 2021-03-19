@@ -182,13 +182,16 @@ public class EzApprovalGJsonController {
         
         //회사 아이디
         String companyID = request.getParameter("companyID");
-        
+
         //일반/공공구분
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
+        // 2021-03-16 키워드 검색을 위한 subQuery
+        String subQuery = request.getParameter("subQuery");
+
         String result = "";
 
-        Map<String, Object> resultMap =  ezApprovalGJsonService.getAdminSearchDocList(formID,formName, docNumber, docTitle, drafter, approvUser, draftDeptName, draftFrom, draftTo, aprFrom, aprTo, pageSize, pageNum, orderCell, orderOption, companyID, tenantID, lang, offset, approvalFlag, locale);
+        Map<String, Object> resultMap =  ezApprovalGJsonService.getAdminSearchDocList(formID,formName, docNumber, docTitle, drafter, approvUser, draftDeptName, draftFrom, draftTo, aprFrom, aprTo, pageSize, pageNum, orderCell, orderOption, companyID, tenantID, lang, offset, approvalFlag, subQuery, locale);
         
         logger.debug("getStatSearchDocList ended.");
         

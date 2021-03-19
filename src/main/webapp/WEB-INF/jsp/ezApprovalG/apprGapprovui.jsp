@@ -1653,7 +1653,7 @@
 		        var parameter = new Array();
 		        CheckDocCellInfo();
 		        parameter[0] = pDocID;
-		        parameter[1] = pFormID;
+		        parameter[1] = pFormID
 		        parameter[2] = SignCount;
 		        parameter[3] = SignInfo;
 		        parameter[4] = hapyuiCount;
@@ -1817,7 +1817,8 @@
 			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 		                }
-		                
+
+						tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
 		                tempSecurity = ret[7];                // 보안등급 관련
 		                tempUrgent = ret[8];                  // 긴급 결재 여부
 		                pSummery = ret[9];                    // 요약 내용 관련
