@@ -762,6 +762,8 @@
 	    			        retvalue[1] = "NONE";
 	    			        retvalue[2] = "R";
 	    			        retvalue[3] = "";
+
+							btnSendDraftEnable = "true";
 	    			
 	    			        if (approvalFlag == "S") {
 	    	                    SGetDraftAprLineInfo(retvalue);
