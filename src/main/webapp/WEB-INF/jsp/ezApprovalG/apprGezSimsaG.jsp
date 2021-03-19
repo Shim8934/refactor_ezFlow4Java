@@ -334,7 +334,7 @@
 		    function Send_OpenUI(Ans) {
 		        DivPopUpHidden();
 		        if (!Ans) {
-		        	setMenuDisable("btnSend", false);
+		        	//setMenuDisable("btnSend", false);
 		        	return;
 		        }
 		        //if ("${approvalPWD}" != "N") {
