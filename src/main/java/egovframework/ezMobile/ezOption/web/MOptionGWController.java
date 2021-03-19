@@ -68,7 +68,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 				result.put("code", 1);			
 				result.put("data", "");
 			} else {
-				if (opt.getUsePrimaryLangOnly().toString() == "") {
+				if (opt.getUsePrimaryLangOnly() == null || opt.getUsePrimaryLangOnly().toString() == "") {
 					String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 					opt.setUsePrimaryLangOnly(usePrimaryLangOnly);
 				}
