@@ -731,7 +731,7 @@
 			        tempdocnumcode = tempItemCode;
 			
 			    var url = "/myoffice/ezApprovalG/ezDocInfo/ezDocInfo.aspx?arr1=" + escape(tempKeep) + "&arr2=" + escape(tempSecurity);
-			    var feature = "status:no;dialogWidth:370px;dialogHeight:535px;help:no;scroll:no;edge:sunken";
+			    var feature = "status:no;dialogWidth:370px;dialogHeight:555px;help:no;scroll:no;edge:sunken";
 			    var ret = window.showModalDialog(url, parameter, feature);
 			
 			    if (ret[0] == "OK") {
@@ -878,7 +878,8 @@
 				                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 				                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 			                }
-			            	
+
+							tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
 				            tempSecurity = ret[7];
 			                tempUrgent = ret[8];
 			                pSummery = ret[9];

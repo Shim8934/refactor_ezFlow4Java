@@ -205,6 +205,17 @@ function GetDocSearch() {
         
         createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
         createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
+
+        // 2021-03-16 박기범 - 키워드 추가
+        // if (typeof (condition[24]) != "undefined" && (condition[24].indexOf("KAPR;") === 0 || condition[24].indexOf("KEND;") === 0)) {
+        //     if (condition[24].indexOf("KAPR;") === 0) {
+        //         SQLPARADATA = SQLPARADATA.substring(0, SQLPARADATA.indexOf("<TYPE>")+6) + "KAPR;" + SQLPARADATA.substring(SQLPARADATA.indexOf("<TYPE>")+6);
+        //     } else if (condition[24].indexOf("KEND;") === 0) {
+        //         SQLPARADATA = SQLPARADATA.substring(0, SQLPARADATA.indexOf("<TYPE>")+6) + "KEND;" + SQLPARADATA.substring(SQLPARADATA.indexOf("<TYPE>")+6);
+        //     }
+        //     SQLPARADATA = SQLPARADATA.substring(0, SQLPARADATA.indexOf("<DATA>")+6) + "<KEYWORD>" + condition[24].substring(5) + "</KEYWORD>" + SQLPARADATA.substring(SQLPARADATA.indexOf("<DATA>")+6);
+        // }
+
         createNodeAndInsertText(xmlpara, objNode, "pSubQuery", subCondition);
         
         createNodeAndInsertText(xmlpara, objNode, "SearchQuery", SQLPARADATA);
@@ -793,8 +804,6 @@ function getdoclistSub_after(xml) {
 /* 2021-01-19 홍승비 - 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
 var oArrRowsid = "";
 function lvtDoclist_SelChange() {
-	lvtDoclist_onSel_DBclick();
-	
     var SelList = new ListView();
     SelList.LoadFromID("DocList");
     var oArrRows = SelList.GetSelectedRows();
@@ -881,6 +890,7 @@ function lvtDoclist_SelChange() {
             	break;
         }
     }
+    lvtDoclist_onSel_DBclick();
 }
 
 function paging(p_page, p_nowblock) {
@@ -1249,6 +1259,11 @@ function check_presence2() {
         if (typeof (condition[16]) != "undefined" && condition[16] != "") {
             TYPE += condition[16];
             DATA += condition[17];
+        }
+
+        if (typeof (condition[24]) != "undefined" && condition[24] != "") {
+            TYPE += condition[24].slice(0,5);
+            DATA += "<KEYWORD>" + condition[24].slice(5) + "</KEYWORD>";
         }
 
         SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";

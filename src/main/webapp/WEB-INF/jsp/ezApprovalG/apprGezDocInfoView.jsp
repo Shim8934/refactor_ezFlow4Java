@@ -259,6 +259,12 @@
 					<span id="storagePeriod_span"></span>
 				</td>
 			</tr>
+			<tr>
+				<th><spring:message code='ezApproval.t338'/></th>
+				<td>
+					<span id="keyword"><c:out value="${keyword}"/></span>
+				</td>
+			</tr>
 		</table>
 		<h2><spring:message code='ezApprovalG.t1203'/></h2>
 		<textarea id="summary_txta" style="resize:none;" readonly="readonly"><c:out value="${summary}"/></textarea>

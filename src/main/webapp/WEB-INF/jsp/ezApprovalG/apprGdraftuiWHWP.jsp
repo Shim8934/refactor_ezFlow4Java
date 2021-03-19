@@ -1005,7 +1005,7 @@
 			        parameter[7] = tempSecurityDate;
 			
 			        var url = "/myoffice/ezApprovalG/ezDocInfo/ezDocInfoG.aspx";
-			        var feature = "status:no;dialogWidth:430px;dialogHeight:605px;help:no;scroll:no;edge:sunken;";
+			        var feature = "status:no;dialogWidth:430px;dialogHeight:625px;help:no;scroll:no;edge:sunken;";
 			        var RtnVal = window.showModalDialog(url, parameter, feature);
 			
 			        tempSecurity = RtnVal[0];
@@ -1347,7 +1347,8 @@
 		                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 		                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 		            }
-		            
+
+					tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
 		            tempSecurity = ret[7];
 		            tempUrgent = ret[8];
 		            pSummery = ret[9];

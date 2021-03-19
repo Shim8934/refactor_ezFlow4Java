@@ -204,12 +204,13 @@
 
 		// 편지지 이동
 		function letterBoxMove(btn) {
-			var letterBox = selectNode.node.id;
+			var letterBox = "";
 			var letterNo = $(".lmLetterSelect").attr("data-letterno");
 			var letterId = $(".lmLetterSelect").attr("data-letterid");
 
 			// 편지지 목록이 선택 되었을때
 			if (letterNo !== undefined) {
+				letterBox = selectNode.node.id;
 
 				url = "/admin/ezEmail/letterBoxMovePopUp.do?letterBox="
 						+ letterBox + "&letterNo=" + letterNo + "&letterId="
@@ -245,15 +246,17 @@
 			var letterNo = "";
 
 			if (type === "add") {
-
-				if (searchMode == true) {
-					alert("<spring:message code='ezEmail.letter33'/>");
-					return;
-				}
-
 				popUpType = "add";
 				letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo");
 				letterNo = -1;
+
+				if (letterBoxNo == null || (typeof letterBoxNo == "undefined") || letterBoxNo == "") {
+					alert("<spring:message code='ezEmail.letter39'/>");
+					return;
+				} else if (searchMode == true) {
+					alert("<spring:message code='ezEmail.letter33'/>");
+					return;
+				}
 			} else {
 				popUpType = "modify";
 				letterBoxNo = $(btn).parents("li").attr("data-letterboxno");

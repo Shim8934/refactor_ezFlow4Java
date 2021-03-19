@@ -77,14 +77,30 @@
 		            //2018-09-10 이효진 진행중페이지에서 검색 시 문서번호 숨김
 		            document.getElementById("displayTR3").style.display = "none";
 		            //window.resizeBy(0, -60);
-		            window.resizeTo(510, 355);
-		        }
+					if (approvalFlag == "S") {
+			            window.resizeTo(510, 355);
+					} else {
+						if (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) {
+			            	window.resizeTo(510, 325);
+						} else {
+			            	window.resizeTo(510, 375);
+						}
+					}
+		        } else {
+		        	if (approvalFlag == "S"){
+							resizeTo(510,445);
+					} else {
+						if (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) {
+							resizeTo(510,415);
+						}
+					}
+				}
 				if (openPageInfo == "usercontlist") {
 					$("#displayTR2").css("display", "none");
 					//등록일자
 					//$("#Sdatepickerapr").parent().siblings("th").text("<spring:message code='ezApprovalG.t831'/>");
 					$("#Sdatepickerapr").parent().siblings("th").text("<spring:message code='ezApprovalG.bhs01'/>");
-					window.resizeTo(510, 400);
+					window.resizeTo(510, 450);
 				}
 				
 		        reset_onclick();
@@ -326,7 +342,15 @@
 			        RtnVal[21] = document.getElementsByName("FormName")[0].value;
 			        RtnVal[22] = EndAprYear.value;
 			        RtnVal[23] = drafterdept.value;
-			        RtnVal[24] = "";
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (document.getElementById("keyword").value != "") {
+						if (Type === "APR") {
+					 		RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						} else {
+							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						}
+					}
 			       
 			        for (i = 0; i < 25; i++) {
 			            if (RtnVal[i] != "" && typeof (RtnVal[i]) != "undefined") {
@@ -385,6 +409,16 @@
 		            RtnVal[12] = "";
 		            RtnVal[13] = "";
 		            RtnVal[25] = recvfrom;
+
+					 // 2021-03-15 키워드 검색 추가 - 박기범
+					 if (document.getElementById("keyword").value != "") {
+						 if (Type === "APR") {
+							 RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						 } else {
+							 RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						 }
+					 }
+
 		            RtnVal[26] = recvto;
 		            RtnVal[27] = document.getElementById("sendDept").value;
 		            RtnVal[28] = document.getElementById("recDept").value;
@@ -566,8 +600,16 @@
 			        RtnVal[21] = document.getElementsByName("FormName")[0].value;
 			        RtnVal[22] = EndAprYear.value;
 			        RtnVal[23] = drafterdept.value;
-			
-			        RtnVal[24] = "";
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (document.getElementById("keyword").value != "") {
+						if (Type === "APR") {
+							RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						} else {
+							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						}
+					}
+
 			        if (ReturnFunction != null)
 			            ReturnFunction(RtnVal);
 			        else
@@ -590,6 +632,15 @@
 		          RtnVal[11] = document.getElementById("drafterdept").value;
 		          RtnVal[12] = "";
 		          RtnVal[13] = "";
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (document.getElementById("keyword").value != "") {
+						if (Type === "APR") {
+							RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						} else {
+							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						}
+					}
 
 // 		          if (document.getElementById("keyword").value != "") {
 // 		              if (SearchType != "APR") {
@@ -695,8 +746,15 @@
 			        RtnVal[21] = document.getElementsByName("FormName")[0].value;
 			        RtnVal[22] = EndAprYear.value;
 			        RtnVal[23] = drafterdept.value;
-			
-			        RtnVal[24] = "";
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (document.getElementById("keyword").value != "") {
+						if (Type === "APR") {
+							RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						} else {
+							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						}
+					}
 			        
 			        if (ReturnFunction != null)
 			            ReturnFunction(RtnVal);
@@ -723,6 +781,15 @@
 		             RtnVal[12] = "";
 		             RtnVal[12] = "";
 		             RtnVal[13] = "";
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (document.getElementById("keyword").value != "") {
+						if (Type === "APR") {
+							RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						} else {
+							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						}
+					}
 // 		             if (document.getElementById("keyword").value != "") {
 // 		                 if (SearchType != "APR") {
 // 		                     RtnVal[12] += "KAPR;";
@@ -836,8 +903,15 @@
 			        RtnVal[21] = document.getElementsByName("FormName")[0].value;
 			        RtnVal[22] = EndAprYear.value;
 			        RtnVal[23] = drafterdept.value;
-			
-			        RtnVal[24] = "";
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (document.getElementById("keyword").value != "") {
+						if (Type === "APR") {
+							RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						} else {
+							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						}
+					}
 			
 			        if (ReturnFunction != null)
 			            ReturnFunction(RtnVal);
@@ -862,6 +936,15 @@
 		             RtnVal[11] = document.getElementById("drafterdept").value;
 		             RtnVal[12] = "";
 		             RtnVal[13] = "";
+
+					// 2021-03-15 키워드 검색 추가 - 박기범
+					if (document.getElementById("keyword").value != "") {
+						if (Type === "APR") {
+							RtnVal[24] = "KAPR;" + document.getElementById("keyword").value;
+						} else {
+							RtnVal[24] = "KEND;" + document.getElementById("keyword").value;
+						}
+					}
 // 		             if (document.getElementById("keyword").value != "") {
 // 		                 if (SearchType != "APR") {
 // 		                     RtnVal[12] += "KAPR;";
@@ -1010,6 +1093,11 @@
 		    <th ><spring:message code='ezApprovalG.t1330'/></th>
 		    <td ><input type="text" id="DocTitle" name="DocTitle" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
 		    </td>
+		  </tr>
+		  <tr>
+		  	<th ><spring:message code='ezApprovalG.t1200'/></th>
+		  	<td ><input type="text" id="keyword" name="keyword" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
+		  	</td>
 		  </tr>
 		  <c:choose>
 		  	<c:when test="${searchType eq 'recDept'}">

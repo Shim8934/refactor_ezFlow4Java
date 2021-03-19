@@ -799,9 +799,9 @@
 			        var ezStatisticsSearch_Cross;
 			        
 			        if (approvalFlag == "S") {
-				        ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(510, 260));
+				        ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(510, 314));
 			        } else {
-				        ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(510, 350));
+				        ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(510, 404));
 			        }
 
 			        try { ezStatisticsSearch_Cross.focus(); } catch (e) {
@@ -811,9 +811,9 @@
 			        var feature = "";
 			        
 			        if (approvalFlag == "S") {
-			        	feature = "dialogWidth:500px;dialogHeight:260px;status:no;scroll:no;edge:sunken";
+			        	feature = "dialogWidth:500px;dialogHeight:314px;status:no;scroll:no;edge:sunken";
 			        } else {
-			        	feature = "dialogWidth:500px;dialogHeight:280px;status:no;scroll:no;edge:sunken";
+			        	feature = "dialogWidth:500px;dialogHeight:334px;status:no;scroll:no;edge:sunken";
 			        }
 			
 			        var condition = window.showModalDialog(url, para, feature);

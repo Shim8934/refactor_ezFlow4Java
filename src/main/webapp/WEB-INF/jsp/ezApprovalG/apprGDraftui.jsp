@@ -1681,7 +1681,7 @@
 		    var ezapprovalinfo_dialogArguments = new Array();
 		    function btnApprovalInfo(pGubun) {
 	        	var deptCheckFlag = checkDeptAndCabinetId();
-	        	
+
 				if (deptCheckFlag == "3") {
 					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
 					return;
@@ -1861,7 +1861,8 @@
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 			                keepperiod = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/KEEPPERIOD");
 		                }
-		
+
+						tempKeyword = ret[6]; //2021-03-10 박기범 - 키워드 추가
 		                tempSecurity = ret[7];
 		                tempUrgent = ret[8];
 		                pSummery = ret[9];

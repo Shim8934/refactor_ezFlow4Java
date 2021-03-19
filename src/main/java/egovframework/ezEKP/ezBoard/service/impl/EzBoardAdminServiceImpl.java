@@ -1029,9 +1029,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			ezBoardAdminDAO.setUnderBoardIDAcl_I(map);
 		}
 		
-		/* 2018-10-10 홍승비 - 권한전파 시 기존 트리캐시 제거하도록 수정 */
-		trunkBoard(vo.getTenantID());
-
 		logger.debug("setUnderBoardIDAcl ended");
 	}
 
@@ -1054,9 +1051,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		// 권한삽입 시 companyID 필드 추가함
 		ezBoardAdminDAO.setUnderBoardIDAcl2(map);
 		
-		/* 2018-10-10 홍승비 - 권한전파 시 기존 트리캐시 제거하도록 수정 */
-		trunkBoard(tenantID);
-
 		logger.debug("setUnderBoardIDAcl2 ended");
 	}
 

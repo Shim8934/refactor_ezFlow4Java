@@ -8800,6 +8800,11 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 
    CREATE SEQUENCE  "TT_SQ_TMPCLASSINFO_SN"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_MAIL_SIGN_TEMP
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_JMOCHA_MAIL_SIGN_TEMP"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
 --  DDL for Index APPROVCONNKAMCO_PK
 --------------------------------------------------------
 
@@ -17757,19 +17762,6 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
 
   ALTER TABLE "TBL_WEBFOLDER_SHARE_SUB" ADD CONSTRAINT "TBL_WEBFOLDER_SHARE_SUB_FK1" FOREIGN KEY ("SHARE_ID", "TENANT_ID")
 	  REFERENCES "TBL_WEBFOLDER_SHARE" ("SHARE_ID", "TENANT_ID") ON DELETE CASCADE ENABLE;
-
-
---------------------------------------------------------
---  SEARCH_INDEX_APPROVAL_SEQ
---------------------------------------------------------  
-
-CREATE SEQUENCE  "SEARCH_INDEX_APPROVAL_SEQ"  MINVALUE 0 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 0 NOCACHE  NOORDER  NOCYCLE ;
-
---------------------------------------------------------
---  SEARCH_INDEX_BOARD_SEQ
---------------------------------------------------------
-
-CREATE SEQUENCE "SEARCH_INDEX_BOARD_SEQ"  MINVALUE 0 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 0 CACHE 20 NOORDER  NOCYCLE ;
 	  
 --------------------------------------------------------
 --  VIEW_EZAPPROVALG
@@ -17885,34 +17877,6 @@ SELECT
             OR b.APPRFLAG IS NULL;
 
 --------------------------------------------------------
---  SEARCH_INDEX_APPROVAL
---------------------------------------------------------
-
-CREATE TABLE "SEARCH_INDEX_APPROVAL" 
-   (	"ID" NUMBER(22,0) DEFAULT "SEARCH_INDEX_APPROVAL_SEQ"."NEXTVAL" NOT NULL ENABLE, 
-	"DOCID" VARCHAR2(80) NOT NULL ENABLE, 
-	"GUBUN" VARCHAR2(4) NOT NULL ENABLE, 
-	"INSERTDATE" DATE NOT NULL ENABLE, 
-	"STATUS" VARCHAR2(4) NOT NULL ENABLE, 
-	"TENANT_ID" NUMBER(22,0) NOT NULL ENABLE, 
-	"COMPANYID" VARCHAR2(20) NOT NULL ENABLE
-   ) ;
-
---------------------------------------------------------
---  SEARCH_INDEX_BOARD
---------------------------------------------------------
-
-CREATE TABLE "SEARCH_INDEX_BOARD" 
-   (	"ID" NUMBER(22,0) DEFAULT "SEARCH_INDEX_BOARD_SEQ"."NEXTVAL" NOT NULL ENABLE, 
-	"ITEMID" VARCHAR2(80) NOT NULL ENABLE, 
-	"GUBUN" VARCHAR2(4) NOT NULL ENABLE, 
-	"INSERTDATE" DATE NOT NULL ENABLE, 
-	"STATUS" VARCHAR2(4) NOT NULL ENABLE, 
-	"TENANT_ID" NUMBER(22,0) NOT NULL ENABLE, 
-	 CONSTRAINT "SEARCH_INDEX_BOARD_PK" PRIMARY KEY ("ID", "TENANT_ID")
-   ) ;
-
-   --------------------------------------------------------
 --  TBL_SENDOUTINFO
 --------------------------------------------------------   
    

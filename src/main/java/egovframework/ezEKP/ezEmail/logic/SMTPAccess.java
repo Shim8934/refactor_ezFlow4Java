@@ -10,6 +10,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
 
+import com.sun.mail.util.MailSSLSocketFactory;
+
 public class SMTPAccess {
 	
 	private String host;
@@ -42,23 +44,36 @@ public class SMTPAccess {
 		}
 
 		Properties props = new Properties();
-	    props.put("mail.smtp.starttls.enable", "false");
-	    props.put("mail.smtp.host", host);
-	    props.put("mail.smtp.port", port);
-	    
-	    props.put("mail.smtp.connectiontimeout", TIMEOUT);
-	    props.put("mail.smtp.writetimeout", TIMEOUT);
-
-		if (usingAuth) {
-			props.put("mail.smtp.auth", "true");
-
-			return Session.getInstance(props, new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(userName, password);
-				}
-			});
+		try {
+		    props.put("mail.smtp.starttls.enable", "false");
+		    props.put("mail.smtp.host", host);
+		    props.put("mail.smtp.port", port);
+		    
+		    if (port.equals("465")) {
+		    	MailSSLSocketFactory sf = new MailSSLSocketFactory();
+		    	sf.setTrustAllHosts(true);
+		    	
+		    	props.put("mail.smtp.ssl.enable", "true");
+		    	props.put("mail.smtp.ssl.trust", "*");
+		    	props.put("mail.smtp.ssl.socketFactory", sf);
+		    }
+		    
+		    props.put("mail.smtp.connectiontimeout", TIMEOUT);
+		    props.put("mail.smtp.writetimeout", TIMEOUT);
+	
+			if (usingAuth) {
+				props.put("mail.smtp.auth", "true");
+	
+				return Session.getInstance(props, new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(userName, password);
+					}
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
+		
 		return Session.getInstance(props);
 	}
 	
