@@ -7987,7 +7987,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
   CREATE TABLE "TBL_USER_MULTILOGIN" 
    (	"TENANT_ID" NUMBER, 
 	"USER_ID" NVARCHAR2(40), 
-	"LOGIN_TIME" VARCHAR2(15 BYTE)
+	"LOGIN_TIME" VARCHAR2(15 BYTE),
+	"MOBILE_FLAG" NUMBER(1, 0) DEFAULT 0
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_VOTE_ANSWER
@@ -11788,7 +11789,7 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 --  DDL for Index TBL_USER_MULTILOGIN_PK
 --------------------------------------------------------
 
-  CREATE UNIQUE INDEX "TBL_USER_MULTILOGIN_PK" ON "TBL_USER_MULTILOGIN" ("USER_ID", "TENANT_ID") 
+  CREATE UNIQUE INDEX "TBL_USER_MULTILOGIN_PK" ON "TBL_USER_MULTILOGIN" ("USER_ID", "MOBILE_FLAG", "TENANT_ID") 
   ;
 --------------------------------------------------------
 --  DDL for Index TBL_WEATHER_PK
@@ -17115,9 +17116,10 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
 --  Constraints for Table TBL_USER_MULTILOGIN
 --------------------------------------------------------
 
-  ALTER TABLE "TBL_USER_MULTILOGIN" ADD CONSTRAINT "TBL_USER_MULTILOGIN_PK" PRIMARY KEY ("USER_ID", "TENANT_ID")
+  ALTER TABLE "TBL_USER_MULTILOGIN" ADD CONSTRAINT "TBL_USER_MULTILOGIN_PK" PRIMARY KEY ("USER_ID", "MOBILE_FLAG", "TENANT_ID")
   USING INDEX  ENABLE;
   ALTER TABLE "TBL_USER_MULTILOGIN" MODIFY ("LOGIN_TIME" NOT NULL ENABLE);
+  ALTER TABLE "TBL_USER_MULTILOGIN" MODIFY ("MOBILE_FLAG" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_VOTE_ANSWER
 --------------------------------------------------------

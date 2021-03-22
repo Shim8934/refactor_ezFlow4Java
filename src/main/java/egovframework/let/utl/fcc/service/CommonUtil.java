@@ -101,6 +101,7 @@ import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService.Device;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -1768,8 +1769,8 @@ public class CommonUtil {
 		return strSize;
 	}
 	
-	public void setLoginUsers(int tenantID, String userID, String loginTime) throws Exception {
-		ezCommonService.setMultiLoginUser(tenantID, userID, loginTime);
+	public void setLoginUsers(int tenantID, String companyId, String userID, String loginTime, Device deviceType) throws Exception {
+		ezCommonService.setMultiLoginUser(tenantID, companyId, userID, loginTime, deviceType);
 	}
 	
 	public boolean checkMultiLogin(HttpServletRequest request, HttpServletResponse response) {
@@ -1810,7 +1811,7 @@ public class CommonUtil {
 					useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
 					
 					if(useMultiLogin.equalsIgnoreCase("NO")) {
-						result = ezCommonService.matchMultiLoginTime(tenantID, userID, multiLoginCookie.getValue());
+						result = ezCommonService.matchMultiLoginTime(tenantID, companyID, userID, multiLoginCookie.getValue(), Device.PC);
 					} 
 				} else {
 					if(multiLoginCookie != null) {

@@ -236,6 +236,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addScehdulegroup(); //2021-02-17 그룹일정의 tbl_schedulegroup 컬럼 추가
 	    	ezCommonService.insertApprBigAttachInfo(); //2021-02-10 홍승비 - 전자결재 대용량첨부 컨피그, 칼럼, 테이블 추가
 	    	ezCommonService.addScheduleMailNotiConfig();		// 2021-02-23 김민성 - 일정메일알림 컨피그 추가
+			ezCommonService.addTblUserMultiLoginMobileFlagColumn(); // 2021-03-19 중복로그인 모바일 플래그 컬럼 추가
     	} catch (Exception e) {
     		e.printStackTrace();
     	}

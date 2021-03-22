@@ -13390,7 +13390,8 @@ CREATE TABLE `tbl_user_multilogin` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `USER_ID` varchar(80) NOT NULL DEFAULT '',
   `LOGIN_TIME` varchar(15) NOT NULL,
-  PRIMARY KEY (`USER_ID`,`TENANT_ID`)
+  `MOBILE_FLAG` tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`USER_ID`,`TENANT_ID`, `MOBILE_FLAG`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
