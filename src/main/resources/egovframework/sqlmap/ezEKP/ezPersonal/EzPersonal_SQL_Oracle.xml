@@ -429,7 +429,7 @@
            	AND
            		USERID = #v_pUserID#
    			WHERE
-   				COMPANYID = #v_pCompanyID#
+   				COMPANYID = UPPER(#v_pCompanyID#)
             AND
             	STARTDATE <= TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
             AND
