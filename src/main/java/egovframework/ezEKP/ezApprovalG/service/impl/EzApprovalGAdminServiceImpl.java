@@ -4964,7 +4964,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			int tenantID, 
 			String lang, 
 			String offSet, 
-			String approvalFlag, 
+			String approvalFlag,
+			String keyword,
 			Locale locale
 			) throws Exception {
 		
@@ -5003,6 +5004,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_APPROVUSER", approvUser);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_KEYWORD", keyword);		// 2021-03-11 박기범 키워드 검색 추가
+
 		
 		map.put("approvalFlag", approvalFlag);		
 		

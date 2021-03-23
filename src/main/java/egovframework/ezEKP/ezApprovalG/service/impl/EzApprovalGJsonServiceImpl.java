@@ -191,7 +191,8 @@ public class EzApprovalGJsonServiceImpl extends EgovFileMngUtil implements EzApp
 			int tenantID, 
 			String lang, 
 			String offSet, 
-			String approvalFlag, 
+			String approvalFlag,
+			String subQuery,
 			Locale locale
 			) throws Exception {
 		
@@ -230,7 +231,9 @@ public class EzApprovalGJsonServiceImpl extends EgovFileMngUtil implements EzApp
 		map.put("v_APPROVUSER", approvUser);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
-		
+		subQuery = subQuery.replaceAll("\\\\", "");
+		map.put("v_SUBQUERY", subQuery);
+
 		map.put("approvalFlag", approvalFlag);		
 		
 		map.put("v_ORDEROPTION", OrderOption1);

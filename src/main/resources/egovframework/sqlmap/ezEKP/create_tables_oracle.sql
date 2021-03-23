@@ -8810,6 +8810,11 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 
    CREATE SEQUENCE  "TT_SQ_TMPCLASSINFO_SN"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_MAIL_SIGN_TEMP
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_JMOCHA_MAIL_SIGN_TEMP"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
 --  DDL for Index APPROVCONNKAMCO_PK
 --------------------------------------------------------
 

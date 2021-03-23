@@ -762,6 +762,8 @@
 	    			        retvalue[1] = "NONE";
 	    			        retvalue[2] = "R";
 	    			        retvalue[3] = "";
+
+							btnSendDraftEnable = "true";
 	    			
 	    			        if (approvalFlag == "S") {
 	    	                    SGetDraftAprLineInfo(retvalue);
@@ -907,6 +909,7 @@
 	                    }
 		
 		                //문서 정보
+						tempKeyword = ret[6]; 				//2021-03-10 박기범 - 키워드 추가
 		                tempSecurity = ret[7];
 		                tempUrgent = ret[8];
 		                pSummery = ret[9];

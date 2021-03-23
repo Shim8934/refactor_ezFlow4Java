@@ -1,4 +1,4 @@
-﻿var g_searchHttp = null;
+﻿﻿﻿var g_searchHttp = null;
 var g_progresswin = null;
 
 function showProgress() {
@@ -752,7 +752,13 @@ function preparedTD(TR, width, align, valign, innerHTML, title, textmode, nopadd
     td.style.whiteSpace = "nowrap";
     td.align = align;
     td.noWrap = true;
-
+    
+    if (innerHTML == "<img src='/images/ImgIcon/view-flag.gif' border=0>" || innerHTML == "<img src='/images/ImgIcon/icon-flag.gif' border=0>") {
+    	td.onclick = function (event) { 
+    		event.stopPropagation(); 
+    		event_flag(this); 
+    	};
+    }
     if (nopadding) {
         td.style.padding = "0px";
     }
@@ -824,4 +830,86 @@ function onmouseOver() {
 function onmouseOut() {
     this.style.color = "";
     this.style.backgroundColor = "#FFFFFF";
+}
+function event_flag(obj) {
+    var temp_listContentArry = listContentArry;
+    listContentArry = [GetAttribute(obj.parentElement, "id")];
+    toggle_flag();
+//     listContentArry = temp_listContentArry;
+}
+
+var flagXmlHttp;
+function toggle_flag() {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
+        alert(strLang42);
+        return;
+    }
+    var pSelectItem;
+    if (listContentArry.length > 0) {
+        if (listContentArry.length > 1) {
+            pSelectItem = "";
+            for (var i = 1; i <= listContentArry.length; i++) {
+                pSelectItem += listContentArry[i];
+            }
+        }
+        else
+            pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1]).getAttribute("id") + ";";
+	} else if (listSubContentArry.length > 0) {
+		pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1]).getAttribute("id") + ";";
+	} else {
+		pSelectItem = currentFixingId.getAttribute("id") + ";";;
+	}
+
+    var now = new Date();
+    now.setDate(now.getDate() + 1);
+
+    var month = parseInt(now.getMonth()) + 1;
+    var pSDate = now.getFullYear() + "-" + month + "-" + now.getDate();
+    var pEDate = pSDate;
+
+
+    flagXmlHttp = createXMLHttpRequest();
+    var xmlDom = createXmlDom();
+
+
+    var objNode;
+    createNodeInsert(xmlDom, objNode, "DATA");
+    createNodeAndInsertText(xmlDom, objNode, "ITEMID", pSelectItem);
+    createNodeAndInsertText(xmlDom, objNode, "STARTDATE", pSDate);
+    createNodeAndInsertText(xmlDom, objNode, "ENDDATE", pEDate);
+
+    var url = "/ezEmail/mailSetFlag.do";
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		url += "?shareId=" + encodeURIComponent(shareId);
+	}
+    
+    try {
+        flagXmlHttp.open("POST", url, true);
+        flagXmlHttp.onreadystatechange = event_toggle_flag_end;
+        flagXmlHttp.send(xmlDom);
+        
+        // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+        if (listContentArry.length > 0) {
+            for (var i = 1; i <= listContentArry.length; i++) {
+                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+            }
+        }
+    }
+    catch (e) { }
+}
+function event_toggle_flag_end() {
+    if (flagXmlHttp != null && flagXmlHttp.readyState == 4) {
+        if (flagXmlHttp.status < 200 || flagXmlHttp.status > 300) {
+            flagXmlHttp = null;
+            alert("ERROR");
+        }
+        else {
+        	if (flagXmlHttp.responseText != "NEW" && flagXmlHttp.responseText != "DEL") {
+        		alert("ERROR");
+        	}
+        }
+    } else {
+    	start_search();
+    }
 }

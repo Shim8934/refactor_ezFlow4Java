@@ -3175,7 +3175,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 				draftToYear,draftToMonth,draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, formID, formName, draftDeptName, 
 				draftDeptName2,pageNum, pageSize, docState, subQuery, orderCell, orderOption, companyID, userInfo.getLang(), approvUser, userInfo.getOffset(), userInfo.getTenantId());
         
-		logger.debug("getStatSearchAprDocList ended.");
+			logger.debug("getStatSearchAprDocList ended.");
 
         return result; 
 	}
@@ -3393,9 +3393,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         //일반/공공구분
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
+		//키워드 2021.03.11 박기범 추가
+		String keyword = request.getParameter("keyword");
+
         String result = "";
 
-        result = ezApprovalGAdminService.getAdminSearchDocList(formID, formName, docNumber, docTitle, drafter, approvUser, draftDeptName, draftFrom, draftTo, aprFrom, aprTo, pageSize, pageNum, orderCell, orderOption, companyID, tenantID, lang, offset, approvalFlag, locale);
+        result = ezApprovalGAdminService.getAdminSearchDocList(formID, formName, docNumber, docTitle, drafter, approvUser, draftDeptName, draftFrom, draftTo, aprFrom, aprTo, pageSize, pageNum, orderCell, orderOption, companyID, tenantID, lang, offset, approvalFlag, keyword,locale);
         
         logger.debug("getStatSearchDocList ended.");
         
@@ -4439,7 +4442,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String result = "";
         result = ezApprovalGService.getSearchDocListForOpenGov("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, formName, draftFromYear, draftFromMonth, draftFromDay,
                 draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
-                draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "", companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
+                draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "", companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, "", userInfo.getLocale());
 
         logger.debug("getStatSearchDocLlistForOpenGov ended.");
 

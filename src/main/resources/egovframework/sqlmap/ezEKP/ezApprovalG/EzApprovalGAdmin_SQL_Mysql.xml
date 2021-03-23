@@ -829,7 +829,7 @@
 		<isNotEqual property="v_SUBQUERY" compareValue="">
 			<![CDATA[
 				AND
-					#v_SUBQUERY#
+					$v_SUBQUERY$
 			]]>
 		</isNotEqual>
 
@@ -2362,7 +2362,7 @@
 		<isNotEqual property="v_SUBQUERY" compareValue="">
 			<![CDATA[
 				AND
-					#v_SUBQUERY#
+					$v_SUBQUERY$
 			]]>
 		</isNotEqual>
 	</select>
@@ -5554,6 +5554,12 @@
    		AND 
    			TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%$v_APPROVUSER%$'
    		</isNotEmpty>
+		<isNotEmpty property="v_SUBQUERY">
+			<![CDATA[
+				AND
+					$v_SUBQUERY$
+			]]>
+		</isNotEmpty>
    		AND 
    			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 		AND
@@ -5675,6 +5681,12 @@
 							   	 	AND 
 							   	 		(FORMNAME LIKE '%$v_FORMNAME$%' OR FORMNAME2 LIKE '%$v_FORMNAME$%')
 							   	</isNotEmpty>
+								<isNotEmpty property="v_SUBQUERY">
+									<![CDATA[
+										AND
+											$v_SUBQUERY$
+									]]>
+								</isNotEmpty>
 							   	<isNotEmpty property="v_APPROVUSER" >
 								AND 
 									TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%$v_APPROVUSER%$' 

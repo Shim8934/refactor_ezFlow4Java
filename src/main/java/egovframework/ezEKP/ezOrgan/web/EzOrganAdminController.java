@@ -135,6 +135,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public void init() throws Exception {
     	logger.debug("init started.");
     	try {
+	    	ezCommonService.createMailTemplateSequence();
 	    	ezCommonService.createTblCompanyConfig();
 	    	ezCommonService.createReformFlagColumn();
 	    	ezCommonService.addMailToJMochaDistribution();
