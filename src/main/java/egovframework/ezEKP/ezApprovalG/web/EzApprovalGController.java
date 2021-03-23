@@ -668,8 +668,30 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
             String dateReg = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"; //sql injection 처리 
             if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
-                String aprStartDate = domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent();
-                aprStartDate = aprStartDate.substring(0, 10); // 년-월-일 뒤의 시-분-초를 제거 (아래에서 시간을 붙이므로)
+            	String aprStartDate = domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent();
+            	
+            	/* 2021-03-24 심기영 전자결재 -> 문서검색 -> 오늘 문서 검색 시 한 자리수 달, 일로 인해 생기는 오류 조정 */
+                String tempMonth = aprStartDate.split("-")[1];
+                String tempDay = aprStartDate.split("-")[2];
+                
+                if(tempMonth.length() < 2 && tempDay.length() < 2) {
+                	tempMonth = "0" + tempMonth;
+                	tempDay = "0" + tempDay;
+                	aprStartDate = aprStartDate.substring(0,5) + tempMonth + "-" + tempDay;
+                }
+                else if(tempMonth.length() < 2 && tempDay.length() > 1) {
+                	tempMonth = "0" + tempMonth;
+                	aprStartDate = aprStartDate.substring(0,5) + tempMonth + "-" + tempDay;
+                }
+                else if(tempMonth.length() > 1 && tempDay.length() < 2) {
+                	tempDay = "0" + tempDay;
+                	aprStartDate = aprStartDate.substring(0,5) + tempMonth + "-" + tempDay;
+                }
+                else if (aprStartDate.length() == 10) {
+                	aprStartDate = aprStartDate.substring(0, 10); // 년-월-일 뒤의 시-분-초를 제거 (아래에서 시간을 붙이므로)
+                }
+                /* 2021-03-24 심기영 전자결재 -> 문서검색 -> 오늘 문서 검색 시 한 자리수 달, 일로 인해 생기는 오류 조정 끝 */
+                
                 if (!Pattern.matches(dateReg, aprStartDate)) {
                     return "";
                 }
@@ -691,7 +713,29 @@ public class EzApprovalGController extends EgovFileMngUtil{
             
             if (tempQuery.indexOf("APRENDDATE;") != -1) {
                 String aprEndDate = domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent();
-                aprEndDate = aprEndDate.substring(0, 10);
+
+                /* 2021-03-24 심기영 전자결재 -> 문서검색 -> 오늘 문서 검색 시 한 자리수 달, 일로 인해 생기는 오류 조정 */
+                String tempMonth = aprEndDate.split("-")[1];
+                String tempDay = aprEndDate.split("-")[2];
+                
+                if(tempMonth.length() < 2 && tempDay.length() < 2) {
+                	tempMonth = "0" + tempMonth;
+                	tempDay = "0" + tempDay;
+                	aprEndDate = aprEndDate.substring(0,5) + tempMonth + "-" + tempDay;
+                }
+                else if(tempMonth.length() < 2 && tempDay.length() > 1) {
+                	tempMonth = "0" + tempMonth;
+                	aprEndDate = aprEndDate.substring(0,5) + tempMonth + "-" + tempDay;
+                }
+                else if(tempMonth.length() > 1 && tempDay.length() < 2) {
+                	tempDay = "0" + tempDay;
+                	aprEndDate = aprEndDate.substring(0,5) + tempMonth + "-" + tempDay;
+                }
+                else if (aprEndDate.length() == 10) {
+                	aprEndDate = aprEndDate.substring(0, 10); // 년-월-일 뒤의 시-분-초를 제거 (아래에서 시간을 붙이므로)
+                }
+                /* 2021-03-24 심기영 전자결재 -> 문서검색 -> 오늘 문서 검색 시 한 자리수 달, 일로 인해 생기는 오류 조정 끝 */
+                
                 if (!Pattern.matches(dateReg, aprEndDate)) {
                     return "";
                 }
