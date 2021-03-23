@@ -5143,6 +5143,16 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"COMPANYID" NVARCHAR2(20), 
 	"TENANT_ID" NUMBER(5,0)
    ) ;
+   
+ --------------------------------------------------------
+--  DDL for Table TBL_GOVSENDDOCHISTORY
+--------------------------------------------------------  
+CREATE TABLE "TBL_GOVSENDDOCHISTORY" 
+   (	"SN" NUMBER(11,0), 
+	"SENDDATE" DATE, 
+	"SENDFLAG" CHAR(2 BYTE)
+   );
+   
 --------------------------------------------------------
 --  DDL for Table TBL_PERMISSIONGROUPINFO
 --------------------------------------------------------
@@ -11424,6 +11434,14 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 
   CREATE UNIQUE INDEX "TBL_OPENGOVFILEINFO_PK" ON "TBL_OPENGOVFILEINFO" ("DOCID", "SN", "COMPANYID", "TENANT_ID") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_GOVSENDDOCHISTORY_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "TBL_GOVSENDDOCHISTORY_PK" ON "TBL_GOVSENDDOCHISTORY" ("SN") 
+  ;  
+  
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_FRAME_COMP_PK
 --------------------------------------------------------
@@ -15546,6 +15564,16 @@ ALTER TRIGGER "TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "TBL_OPENGOVFILEINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "TBL_OPENGOVFILEINFO" MODIFY ("SN" NOT NULL ENABLE);
   ALTER TABLE "TBL_OPENGOVFILEINFO" MODIFY ("DOCID" NOT NULL ENABLE);
+
+--------------------------------------------------------
+--  Constraints for Table TBL_GOVSENDDOCHISTORY
+--------------------------------------------------------
+
+  ALTER TABLE "TBL_GOVSENDDOCHISTORY" ADD CONSTRAINT "TBL_GOVSENDDOCHISTORY_PK" PRIMARY KEY ("SN")
+  USING INDEX  ENABLE;
+  ALTER TABLE "TBL_GOVSENDDOCHISTORY" MODIFY ("SN" NOT NULL ENABLE);
+ 
+  
 --------------------------------------------------------
 --  Constraints for Table TBL_PERMISSIONGROUPINFO
 --------------------------------------------------------
