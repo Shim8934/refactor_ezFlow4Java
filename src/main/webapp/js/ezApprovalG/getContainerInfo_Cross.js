@@ -264,6 +264,8 @@ function GetDocSearch() {
 	    }
 	    xmlhttp.onreadystatechange = getsearchDocList_after;		
 	    xmlhttp.send(xmlpara);
+		
+			listLoading(false);
 	}
 
     //ShowMailProgress();
