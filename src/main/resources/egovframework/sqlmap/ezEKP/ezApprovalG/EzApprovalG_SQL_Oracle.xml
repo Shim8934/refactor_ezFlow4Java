@@ -21703,7 +21703,7 @@
 <!-- 		  		  </isEqual> -->
 		  		  <isEqual property="listFlag" compareValue="10">
 		  		  		AND 
-		  		  			TBL_CABINETCLASS.CONFIRMFLAG = '0'
+		  		  			TBL_CABINETCLASS.TerminateFlag = '0'
 		  		  </isEqual>
 		  		  <isEqual property="listFlag" compareValue="11">
 		  		  		AND 
