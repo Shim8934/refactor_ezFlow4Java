@@ -5980,6 +5980,16 @@
 				   		TBL_CABINETCLASS
 				   ON
 				   		TBL_CABINETCLASS.CABINETCLASSNO = TBL_CABINET.CABINETCLASSNO
+			  <isEqual property="joinEndReceiptPointInfo" compareValue="true">
+                    JOIN 
+                        TBL_ENDRECEIPTPOINTINFO 
+                    ON 
+                        TBL_RECORD.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID 
+                    AND 
+                        TBL_RECORD.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID 
+                    AND 
+                        TBL_RECORD.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID
+              </isEqual>
 				   WHERE
 				   		1 = 1 			   		  		
 						<isEmpty property="cabinetIDs">
@@ -6118,16 +6128,6 @@
 					  <isNotEmpty property="cabTitle" prepend="AND">
 					  	  		TBL_CABINETCLASS.Title Like CONCAT(CONCAT('%', #cabTitle#), '%')
 					  </isNotEmpty>
-                <isEqual property="joinEndReceiptPointInfo" compareValue="true">
-                    JOIN 
-                        TBL_ENDRECEIPTPOINTINFO 
-                    ON 
-                        TBL_RECORD.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID 
-                    AND 
-                        TBL_RECORD.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID 
-                    AND 
-                        TBL_RECORD.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID
-                </isEqual>
 				<isNotEmpty property="regStartDate" prepend="AND">
 						TBL_RECORD.RegisterDate >= TO_DATE(#regStartDate#, 'YYYY.MM.DD HH24:MI:SS')
 				</isNotEmpty>
