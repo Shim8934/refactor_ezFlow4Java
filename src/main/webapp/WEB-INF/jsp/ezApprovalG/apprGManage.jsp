@@ -615,13 +615,13 @@
 		        var tr = oArrRows[0];
 		        ext =  tr.getAttribute("DATA3").substr(tr.getAttribute("DATA3").length - 3, tr.getAttribute("DATA3").length).toLowerCase();
 		        if (tr.length != 0) {
-		            if (pListTypeValue != "5") {
+		            //if (pListTypeValue != "5") {
 		                if (pDocInfoValue == "1")
 		                    getAprLine(tr);
 		                else {
 		                    getAprDocAproveInfo(tr);
 		                }
-		            }
+		            /* }
 		            else {
 		                if (tr) {
 		                    pDocID = tr.getAttribute("DATA1");
@@ -645,7 +645,7 @@
 		                            break;
 		                    }
 		                }
-		            }
+		            } */
 		            setbuttonenable();
 		            
 		            /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */

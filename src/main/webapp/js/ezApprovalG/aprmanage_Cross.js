@@ -2477,7 +2477,7 @@ function getdoclistSub_after(xml) {
         var AprLine = new ListView();
         AprLine.SetID("AprLine");
         AprLine.SetMulSelectable(false);
-        AprLine.SetTitleIdx(arrySubTab[subTabLastCol]);
+//        AprLine.SetTitleIdx(arrySubTab[subTabLastCol]);
         AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");
         AprLine.DataSource(loadXMLString(xml));
         AprLine.DataBind("lvAprLine");
