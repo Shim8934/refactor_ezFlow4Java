@@ -1234,6 +1234,12 @@
 			}
 			target.className = "tabon";
 		}
+		
+		// adminPage 이므로 항상 true return
+		function checkRecordAll(){
+			return true;
+		}
+		
 	    </script>
 	</head>
 	<body class="mainbody">
