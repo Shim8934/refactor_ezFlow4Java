@@ -23401,6 +23401,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			 if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("DISPCLASSNO")) {
 				 resultXML.append("<COLNAME>DISPCLASSNO</COLNAME>");
 			 }
+			 // 제목 COLNAME 속성 추가
+			 else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("TITLE")) {
+				 resultXML.append("<COLNAME>TITLE</COLNAME>");
+			 }
+			 
 			 resultXML.append("</HEADER>");
 		 }
 		
