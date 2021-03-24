@@ -755,6 +755,10 @@ function ListConstr(data) {
                 }
                 
                 if (headerData.length > 0) {
+                	var colNameUpperCase = headerData[j].colName.toUpperCase();
+                	
+                    objTd.setAttribute("headerName", colNameUpperCase); // 제목 TD임을 구분하기 위한 속성 추가
+                    
                     if (headerData[j].colName == "AttachFlag") {
                         objTd.style.textAlign = "center";
                         if ( oCells[j].HASATTACHYN == "Y" || oCells[j].HASATTACHYN == "1") {
