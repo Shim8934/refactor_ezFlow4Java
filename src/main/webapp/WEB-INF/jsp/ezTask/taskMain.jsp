@@ -161,11 +161,11 @@
 		        }		        
 		    }
 
-		    /* 2021-01-21 홍승비 - 원클릭으로 업무관리 읽기팝업창 표출 */
+		    /* 2021-03-24 홍승비 - 원클릭으로 업무관리 읽기팝업창 표출 */
 		    function ReadTask(elem) {
-		        var taskid = GetAttribute(elem, "taskid");
-		        var repeatcount = GetAttribute(elem, "repeatcount");
-		        var date = GetAttribute(elem, "startdate");
+		        var taskid = GetAttribute(elem.parentElement, "taskid");
+		        var repeatcount = GetAttribute(elem.parentElement, "repeatcount");
+		        var date = GetAttribute(elem.parentElement, "startdate");
 		        var feature = "";
 		        
 		        if (repeatcount == "") {
@@ -1147,18 +1147,18 @@
 							<th style="text-align:center;"><spring:message code='ezTask.t9002'/></th>
 						</tr>
 						</tbody>
-						<tr class="row_body" id="row_body" style="display:none;" startdate="" onclick="select_row(this); ReadTask(this);">
-							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;text-align:center;"></td>
-							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;text-align:center;"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;"></td>
-		                    <td class="tr_Read" style="cursor:pointer;white-space:nowrap;"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;"></td>							
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" id="_tdprogress"></td>							
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;"></td>
+						<tr class="row_body" id="row_body" style="display:none;" startdate="" onclick="select_row(this);">
+							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this);"></td>
+							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this);"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this);"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this);"></td>
+		                    <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" onclick="ReadTask(this);"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this);"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this);"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this);"></td>							
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" id="_tdprogress" ondblclick="ReadTask(this);"></td>							
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this);"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this);"></td>
 						</tr>
 				    </table>
 				    </div>
