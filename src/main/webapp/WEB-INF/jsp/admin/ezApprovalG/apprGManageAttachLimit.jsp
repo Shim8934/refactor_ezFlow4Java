@@ -33,6 +33,7 @@
                 	type : "GET",
                 	url : "/admin/ezApprovalG/getAttachLimit.do",
                 	async : false,
+                	cache : false,
                 	data : {
                 		companyID : pCompanyID
                 	},
