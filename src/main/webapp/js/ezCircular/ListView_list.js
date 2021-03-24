@@ -786,6 +786,13 @@ function ListView() {
                     if (getNodeText(oDatas[1]) != 0) {
                     	titleOneLineCnt = "<span style='color:#c64200'>[" + getNodeText(oDatas[1]) + "]</span>";
                     }
+                    
+                    /* 2021-03-24 홍승비 - 원클릭 이벤트를 "제목" 칼럼에만 적용 */
+                    objTd.onclick = function () {
+                    	if (g_bPrevShow == false) {
+                    		ItemRead_onclick(this.parentElement);
+                    	}
+                    };
                 }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
