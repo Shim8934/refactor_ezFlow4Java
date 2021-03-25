@@ -278,6 +278,7 @@
 						 $.ajax({
 							 url: pURL,
 							 type: "GET",
+							 timeout: 180000,
 							 success: function() {
 								 var pURL = "/admin/ezEmail/statisticsListExcelExport.do" + "?" + params;
 								 leftProgress[0].style.display = "none";
