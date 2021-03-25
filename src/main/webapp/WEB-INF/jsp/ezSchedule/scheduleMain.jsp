@@ -208,6 +208,7 @@
 			    		type : "GET",
 			    		dataType : "text",
 			    		async : false,
+			    		cache : false,
 			    		url : "/ezSchedule/scheduleGetLunarUse.do",
 			    		data : {
 			    			COMPANYID  : "${userInfo.companyID}"		    			
